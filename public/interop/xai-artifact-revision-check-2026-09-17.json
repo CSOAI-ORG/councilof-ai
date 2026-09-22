@@ -1,0 +1,260 @@
+{
+  "schema": "csoai.revision-check/0.1",
+  "id": "xai-artifact-revision-check-2026-09-17",
+  "as_of": "2026-09-17T13:49:17Z",
+  "signed": false,
+  "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+  "subject": "Allegation that two xAI artifacts were silently regenerated at unchanged URLs, deleting UK AI Security Institute attribution and its chemical/biological weapon uplift finding.",
+  "verdict": "CONFIRMED",
+  "verdict_basis": "Two byte-states were obtained and compared for each artifact. A pre-edit state and a post-edit state were each fetched and hashed. The removal is established by byte comparison, not by inference from absence.",
+  "verdict_decomposition": {
+    "a_absent_from_xai_today": {
+      "status": "TRUE",
+      "note": "The sentence and the AISI attribution are absent from both live artifacts fetched 2026-09-17."
+    },
+    "b_once_present_on_xai": {
+      "status": "TRUE",
+      "note": "Both appear verbatim in Internet Archive Wayback captures of the same URLs dated 2025-08-21 and 2025-08-22, fetched and hashed during this check."
+    },
+    "c_removed_without_marking": {
+      "status": "TRUE",
+      "note": "Both artifacts carry the string 'Last updated: August 20, 2025' in the pre-edit state and in the live state today. The date string is unchanged across the edit. No changelog, revision note, or superseding-version marker appears in either artifact. This records the absence of a change marker; it attributes no intent."
+    }
+  },
+  "artifacts": [
+    {
+      "name": "Grok 4 Model Card",
+      "url": "https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+      "discovered_via": "https://x.ai/safety (linked from x.ai's own safety page; x.ai/sitemap.xml lists /safety, and /safety carries the PDF links)",
+      "still_linked_from_x_ai_safety_today": true,
+      "date_string_today": "Last updated: August 20, 2025",
+      "date_string_pre_edit": "Last updated: August 20, 2025",
+      "byte_states": [
+        {
+          "state": "PRE-EDIT",
+          "holder": "Internet Archive Wayback Machine",
+          "capture_utc": "2025-08-22T00:03:03Z",
+          "url": "https://web.archive.org/web/20250822000303id_/https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+          "fetched_utc": "2026-09-17T13:48:10Z",
+          "bytes": 253612,
+          "sha256": "e5056cab544e416cb68887ff558d47e9abe986d3c721528e419f9958ac18be7a",
+          "contains_aisi_attribution": true,
+          "contains_chem_bio_sentence": true
+        },
+        {
+          "state": "POST-EDIT",
+          "holder": "Internet Archive Wayback Machine",
+          "capture_utc": "2025-08-30T02:03:09Z",
+          "url": "https://web.archive.org/web/20250830020309id_/https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+          "fetched_utc": "2026-09-17T13:49:17Z",
+          "bytes": 252686,
+          "sha256": "54068c0d9570d94dfc63c08247707b8c48045a79b5bbe865af709af95ee14415",
+          "contains_aisi_attribution": false,
+          "contains_chem_bio_sentence": false
+        },
+        {
+          "state": "POST-EDIT",
+          "holder": "Common Crawl CC-MAIN-2025-38",
+          "capture_utc": "2025-09-18T08:07:45Z",
+          "url": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2025-38/segments/1757047829565.95/warc/CC-MAIN-20250918080014-20250918110014-00014.warc.gz",
+          "warc_payload_digest": "sha1:AJF4GHIENZQ2XORNXF26ITS3MFXR5MSE",
+          "fetched_utc": "2026-09-17T13:39:14Z",
+          "bytes": 252686,
+          "sha256": "54068c0d9570d94dfc63c08247707b8c48045a79b5bbe865af709af95ee14415",
+          "contains_aisi_attribution": false,
+          "contains_chem_bio_sentence": false
+        },
+        {
+          "state": "POST-EDIT (LIVE)",
+          "holder": "x.ai origin",
+          "capture_utc": "2026-09-17T13:33:58Z",
+          "url": "https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+          "fetched_utc": "2026-09-17T13:33:58Z",
+          "bytes": 252686,
+          "origin_last_modified_header": "Fri, 22 Aug 2025 08:06:17 GMT",
+          "origin_etag": "\"cdd4b61b1c23d3a8dd9b6ea74ece6ba9\"",
+          "sha256": "54068c0d9570d94dfc63c08247707b8c48045a79b5bbe865af709af95ee14415",
+          "contains_aisi_attribution": false,
+          "contains_chem_bio_sentence": false
+        }
+      ],
+      "edit_window_utc": {
+        "after": "2025-08-22T00:03:03Z",
+        "before": "2025-08-22T08:06:17Z",
+        "before_basis": "origin Last-Modified header served by data.x.ai today",
+        "note": "No capture exists inside this window. The window is bounded by observed evidence, not observed directly."
+      },
+      "changes": [
+        {
+          "kind": "DELETION",
+          "location": "Section 2.3.2 Results, after Table 3",
+          "removed_verbatim": "Third-party evaluations. The UK AI Security Institute conducted additional evaluations on the dual-use capabilities of our models on providing chemical and biological uplift, along with autonomously carrying out cyberattacks. Their results largely confirm our internal findings: an un-safeguarded version of Grok 4 poses a plausible risk of assisting a non-expert in the creation of a chemical or biological weapon, similar to other deployed frontier AI models. In terms of autonomous offensive cyber capabilities, AISI also found that Grok 4 is similarly capable to other deployed frontier AI models and currently falls short of human professional performance in a realistic testing environment that requires chaining several exploits with minimal guidance.",
+          "replaced_with": null,
+          "note": "Whole paragraph removed. Text reflowed from the PDF's hard line-wraps; no words altered."
+        },
+        {
+          "kind": "MODIFICATION",
+          "location": "Section 1 Introduction",
+          "removed_verbatim": "third-party testing by the UK AI Security Institute (AISI) shows that Grok 4's end-to-end offensive cyber capabilities remain below the level of a human professional.",
+          "replaced_with": "third-party testing shows that Grok 4's end-to-end offensive cyber capabilities remain below the level of a human professional.",
+          "note": "The claim of third-party testing is retained; the named evaluator is removed."
+        }
+      ],
+      "unchanged": {
+        "numeric_tables": "All numeric values identical across both byte-states. Table 3 (Dual-use capabilities): 0.12, 0.47, 0.44, 0.60, 0.71, 0.87, 0.88, 0.83, 0.85, 0.79, 0.43. Full extracted numeric sequence across all tables is identical in pre and post states. Only column whitespace differs, consistent with text reflow after the deletion.",
+        "date_string": "Last updated: August 20, 2025",
+        "residual_aisi_mention": "One mention of UK AISI survives in both states, in Section 2.3.1: 'We use the open-source Inspect evaluation framework developed by the UK AISI, and report the unguided task success rate.' This is a tooling credit, not an attribution of a finding."
+      }
+    },
+    {
+      "name": "xAI Risk Management Framework",
+      "url": "https://data.x.ai/2025-08-20-xai-risk-management-framework.pdf",
+      "discovered_via": "Common Crawl CC-MAIN-2025-38 index of data.x.ai/*; also cited by ailabwatch.org. Not linked from x.ai/safety today, which links the superseding xAI Frontier AI Framework (30 June 2026). The 2025-08-20 URL still serves HTTP 200.",
+      "still_linked_from_x_ai_safety_today": false,
+      "date_string_today": "Last updated: August 20, 2025",
+      "date_string_pre_edit": "Last updated: August 20, 2025",
+      "byte_states": [
+        {
+          "state": "PRE-EDIT",
+          "holder": "Internet Archive Wayback Machine",
+          "capture_utc": "2025-08-21T22:41:33Z",
+          "url": "https://web.archive.org/web/20250821224133id_/https://data.x.ai/2025-08-20-xai-risk-management-framework.pdf",
+          "fetched_utc": "2026-09-17T13:48:10Z",
+          "bytes": 144255,
+          "sha256": "31eae94d448b5b359220cbb93673e22b11adc9e27b8e8eb87e7646521f322f8a",
+          "contains_aisi_mention": true
+        },
+        {
+          "state": "POST-EDIT",
+          "holder": "Internet Archive Wayback Machine",
+          "capture_utc": "2025-09-03T08:01:59Z",
+          "url": "https://web.archive.org/web/20250903080159id_/https://data.x.ai/2025-08-20-xai-risk-management-framework.pdf",
+          "fetched_utc": "2026-09-17T13:49:17Z",
+          "bytes": 144214,
+          "sha256": "39fab200a4b36f149c6e24ee00d3e31adc84ed59f95a734290ed80a69de73f74",
+          "contains_aisi_mention": false
+        },
+        {
+          "state": "POST-EDIT",
+          "holder": "Common Crawl CC-MAIN-2025-38",
+          "capture_utc": "2025-09-18T09:43:18Z",
+          "url": "https://data.commoncrawl.org/crawl-data/CC-MAIN-2025-38/segments/1757047829565.95/warc/CC-MAIN-20250918080014-20250918110014-00208.warc.gz",
+          "warc_payload_digest": "sha1:CERTNCX4ELPMDKLTS4ID75OSW3CIHT6W",
+          "fetched_utc": "2026-09-17T13:39:14Z",
+          "bytes": 144214,
+          "sha256": "39fab200a4b36f149c6e24ee00d3e31adc84ed59f95a734290ed80a69de73f74",
+          "contains_aisi_mention": false
+        },
+        {
+          "state": "POST-EDIT (LIVE)",
+          "holder": "x.ai origin",
+          "capture_utc": "2026-09-17T13:39:18Z",
+          "url": "https://data.x.ai/2025-08-20-xai-risk-management-framework.pdf",
+          "fetched_utc": "2026-09-17T13:39:18Z",
+          "bytes": 144214,
+          "origin_last_modified_header": "Fri, 22 Aug 2025 16:18:27 GMT",
+          "origin_etag": "\"09f4a24fc026e74f75c4ac08e81b844b\"",
+          "sha256": "39fab200a4b36f149c6e24ee00d3e31adc84ed59f95a734290ed80a69de73f74",
+          "contains_aisi_mention": false
+        }
+      ],
+      "edit_window_utc": {
+        "after": "2025-08-21T22:41:33Z",
+        "before": "2025-08-22T16:18:27Z",
+        "before_basis": "origin Last-Modified header served by data.x.ai today",
+        "note": "No capture exists inside this window."
+      },
+      "changes": [
+        {
+          "kind": "MODIFICATION",
+          "location": "Biological and Chemical Weapons, list of collaborating experts",
+          "removed_verbatim": "These steps were identified in close collaboration with domain matter experts at SecureBio, NIST, AISI, RAND, and EBRC.",
+          "replaced_with": "These steps were identified in close collaboration with domain matter experts at SecureBio, NIST, RAND, and EBRC.",
+          "note": "AISI removed from a list of collaborating organisations. This is the only textual change between the two byte-states."
+        }
+      ],
+      "unchanged": {
+        "numeric_tables": "No numeric differences between the two byte-states. The only diff hunk in the whole document is the expert-list line.",
+        "date_string": "Last updated: August 20, 2025"
+      }
+    }
+  ],
+  "strings_searched": [
+    "poses a plausible risk of assisting a non-expert in the creation of a chemical or biological weapon",
+    "un-safeguarded version of Grok 4",
+    "Third-party evaluations",
+    "UK AI Security Institute",
+    "AISI",
+    "AI Safety Institute",
+    "AI Security Institute",
+    "third-party testing by the UK AI Security Institute (AISI) shows",
+    "third-party testing shows",
+    "plausible",
+    "non-expert",
+    "chemical or biological",
+    "uplift",
+    "Last updated",
+    "SecureBio, NIST, AISI, RAND, and EBRC",
+    "Grok",
+    "xAI",
+    "x.ai"
+  ],
+  "string_findings": {
+    "exact_claim_quote_is_verbatim": true,
+    "exact_claim_quote": "poses a plausible risk of assisting a non-expert in the creation of a chemical or biological weapon",
+    "present_in_pre_edit_model_card": true,
+    "present_in_live_model_card": false,
+    "present_anywhere_on_x_ai_today": false,
+    "present_anywhere_on_aisi_gov_uk": false
+  },
+  "does_uk_aisi_publish_the_finding": {
+    "answer": "NO",
+    "method": "Fetched https://www.aisi.gov.uk/sitemap.xml (206 URLs) and retrieved every one of the 206 pages, searching each for 'grok', 'xai', 'x.ai' case-insensitively.",
+    "result": "0 of 206 pages mention Grok, xAI or x.ai.",
+    "fetched_utc": "2026-09-17T13:42:00Z",
+    "consequence": "The finding is attested only by xAI's own withdrawn text. UK AISI does not corroborate it on its own site, and does not deny it there either. The quoted words are xAI's characterisation of AISI's results, not a quotation of AISI.",
+    "aisi_published_model_evaluations_found": [
+      "https://www.aisi.gov.uk/blog/pre-deployment-evaluation-of-anthropics-upgraded-claude-3-5-sonnet",
+      "https://www.aisi.gov.uk/blog/pre-deployment-evaluation-of-openais-o1-model",
+      "https://www.aisi.gov.uk/blog/our-evaluation-of-openais-gpt-5-5-cyber-capabilities",
+      "https://www.aisi.gov.uk/blog/our-evaluation-of-claude-mythos-previews-cyber-capabilities"
+    ]
+  },
+  "corroborating_third_parties": [
+    {
+      "source": "AI Lab Watch (Zach Stein-Perlman), xAI risk-assessment cell",
+      "url": "https://ailabwatch.org/cell/xai/risk-assessment",
+      "fetched_utc": "2026-09-17T13:46:30Z",
+      "page_states": "Up to date as of September 2025",
+      "quote": "The initial version of the model card mentioned third-party testing \"by the UK AI Security Institute (AISI).\" This was removed on August 21 or 22; the change was not announced and the model card still says \"Last updated: August 20.\"",
+      "weight": "Contemporaneous named observer. Independently consistent with the byte comparison. Not itself a byte-state."
+    },
+    {
+      "source": "aiwiki.ai, Grok 4",
+      "url": "https://aiwiki.ai/wiki/grok_4",
+      "fetched_utc": "2026-09-17T13:45:40Z",
+      "weight": "LOW. Tertiary. Its supporting reference reads 'UK AI Security Institute. Grok 4 evaluation summary, August 2025' with no URL, and no such document was found on aisi.gov.uk. Its paraphrase ('posed plausible risk of providing meaningful uplift to a non-expert attempting to create a chemical or biological weapon') does not match xAI's actual wording. Not relied on."
+    }
+  ],
+  "claim_corrections": [
+    "The claim dated the artifacts 'around the Grok 4 release'. Grok 4 was released 2025-07-09; both artifacts are dated 2025-08-20, roughly six weeks later.",
+    "The claim said the edit deleted UK AISI's attribution. One AISI mention survives in the live model card, in Section 2.3.1, crediting AISI's open-source Inspect evaluation framework. What was removed was AISI's attribution as the evaluator behind the findings.",
+    "In the Risk Management Framework the removal was of 'AISI' from a list of collaborating expert organisations, not of a finding.",
+    "'Roughly two days after publication' is accurate for the model card: the document is dated 2025-08-20 and the origin reports the current bytes were written 2025-08-22T08:06:17Z."
+  ],
+  "method_limitations": [
+    "The exact moment of each edit was not observed. Both edit windows are bounded by a pre-edit capture on one side and the origin's own Last-Modified header on the other. No archival capture exists inside either window.",
+    "The Internet Archive CDX search API was unavailable throughout this check, returning HTTP 503 'Temporarily Offline', HTTP 429, and HTTP 504 on repeated attempts between 13:34Z and 13:47Z. Wayback playback (web.archive.org/web/<timestamp>id_/) was working and was used instead. Had playback also been down, this check would have returned UNCHECKABLE.",
+    "archive.today (archive.ph, archive.is) returned no captures for either URL.",
+    "The Memento TimeTravel aggregator (timetravel.mementoweb.org) no longer resolves in DNS.",
+    "Arquivo.pt holds no captures of either URL.",
+    "Common Crawl has no capture of either artifact between 2025-08-20 and 2025-08-22; its August 2025 crawl (CC-MAIN-2025-33) reached data.x.ai on 2025-08-07, before publication.",
+    "x.ai serves a Cloudflare challenge to scripted fetches; x.ai HTML was read through a real browser. data.x.ai and media.x.ai served PDFs to plain HTTP clients without challenge.",
+    "Document text was compared via pdftotext -layout extraction. Byte-level identity and difference were established separately by sha256 over the raw PDF bytes, which does not depend on extraction.",
+    "Quoted running paragraphs were reflowed from the PDF's hard line-wraps. No words were altered; line breaks were replaced by single spaces.",
+    "Neither xAI nor UK AISI was contacted. Public bytes only.",
+    "Google cache and Bing cache were not separately queried; both have been largely retired as public endpoints, and four independent byte-state holders were already obtained.",
+    "Absence of the sentence from aisi.gov.uk is evidence that AISI does not publish it there. It is not evidence that the evaluation did not occur."
+  ],
+  "no_motive_attributed": "This record states what the bytes were, what they are, and when they changed. It attributes no intent to xAI. 'Removed without a change marker' is an observation about the artifacts; it is not a finding about why."
+}

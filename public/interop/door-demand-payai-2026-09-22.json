@@ -1,0 +1,200 @@
+{
+ "schema": "csoai.door-demand/0.1",
+ "as_of": "2026-09-22T02:35:53Z",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "title": "What the PayAI Bazaar says about our x402 doors",
+ "producer": "scripts/refresh_door_demand.py",
+ "who_measured_it": "PayAI, not CSOAI. Read from GET /discovery/resources/{resource}/stats. We did not write these numbers and cannot edit them.",
+ "critical_caveat_on_attribution": "THESE COUNTS ARE NOT THE ONE NUMBER. Ours counts distinct NON-SELF x402 payers; PayAI's bands count every payer, and we run rail-proof settlements against these same doors, so an unknown share of these settlements is us paying ourselves. Until each buyer address is checked against our own wallets the honest claim is 'settlements occurred', never 'external demand of N'. Bands like '10+' and '1-9' are PayAI's coarsening, not precise counts.",
+ "why_listings_go_stale": "PayAI's OpenAPI 3.1 spec advertises exactly two writes, POST /verify and POST /settle. There is no registration endpoint. A Bazaar row is written when a signed payment passes the facilitator and is never refreshed afterwards. Refreshing a listing requires a signed payment authorisation from the owner's wallet -- including for a zero-amount door, because a zero-value authorisation is still the owner's key signing a payment object. Owner-gated by nature, not by budget.",
+ "bazaar_context": {
+  "total_merchants": 6698,
+  "total_hosts": 778,
+  "note": "presence in an index of this size is distribution, never demand"
+ },
+ "doors_reachable": 10,
+ "doors_probed": 10,
+ "doors": [
+  {
+   "door": "api/free-door",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "10+",
+   "last24h": 1,
+   "last7d": 1,
+   "last30d": 19,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "10+",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 991
+   }
+  },
+  {
+   "door": "api/request-attestation",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "1-9",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 6,
+   "volume_usd_band": "<$10",
+   "unique_buyers_band": "1-9",
+   "reliability_pct": 86,
+   "uptime": {
+    "24h": 97.92,
+    "7d": 99.71,
+    "30d": 99.86,
+    "avgResponseMs": 827
+   }
+  },
+  {
+   "door": "api/evidence-bundle",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   }
+  },
+  {
+   "door": "api/eunomia-data",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "1-9",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 1,
+   "volume_usd_band": "<$10",
+   "unique_buyers_band": "1-9",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 752
+   }
+  },
+  {
+   "door": "api/proof",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 530
+   }
+  },
+  {
+   "door": "api/rwa/evidence",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 308
+   }
+  },
+  {
+   "door": "api/wrapper",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   }
+  },
+  {
+   "door": "api/art50/marking-evidence",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   }
+  },
+  {
+   "door": "api/feeds/provider-diff",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": null,
+    "7d": null,
+    "30d": null,
+    "avgResponseMs": null
+   }
+  },
+  {
+   "door": "api/receipts/batch",
+   "http": 200,
+   "state": "MEASURED_BY_THIRD_PARTY",
+   "settlements_total_band": "0",
+   "last24h": 0,
+   "last7d": 0,
+   "last30d": 0,
+   "volume_usd_band": "$0",
+   "unique_buyers_band": "0",
+   "reliability_pct": 100,
+   "uptime": {
+    "24h": 100,
+    "7d": 100,
+    "30d": 100,
+    "avgResponseMs": 800
+   }
+  }
+ ]
+}
