@@ -8,10 +8,15 @@ import { describe, expect, it } from "vitest";
 
 import { TONE } from "./LiveCounters";
 import {
+  COMMERCIAL_STAGES,
   FOOTER_STAGES,
+  FULL_FUNNEL_STAGES,
   HERO_STAGES,
   FUNNEL_LABELS,
   coverageText,
+  isUnmeasured,
+  plainWindow,
+  stagesFor,
   evidenceHref,
   formatRow,
   pillsFor,
@@ -142,9 +147,8 @@ describe("toPill / pillsFor", () => {
 
   it("hero pills follow HERO_STAGES in order and print state words for the unreadable", () => {
     const pills = pillsFor(payload, HERO_STAGES);
-    expect(pills.map((p) => p.key)).toEqual(["gross_distribution", "economic_use", "registry_listings"]);
-    expect(pills.map((p) => p.text)).toEqual(["≥ 1,175", "UNCHECKABLE", "41"]);
-    expect(pills[1].title).toContain("http 401");
+    expect(pills.map((p) => p.key)).toEqual(["gross_distribution", "registry_listings"]);
+    expect(pills.map((p) => p.text)).toEqual(["≥ 1,175", "41"]);
   });
 
   it("every pill's tone names its state, so PARTIAL and STALE are never coloured as a clean read", () => {
@@ -159,13 +163,14 @@ describe("toPill / pillsFor", () => {
     expect(tones).toEqual(["STALE", "PARTIAL", "numeric"]);
   });
 
-  it("footer pills cover the whole funnel; stages the payload lacks are UNCHECKABLE", () => {
-    const pills = pillsFor(payload, FOOTER_STAGES);
+  it("the funnel view covers all seven stages; stages the payload lacks are UNCHECKABLE", () => {
+    const pills = pillsFor(payload, FULL_FUNNEL_STAGES);
     expect(pills).toHaveLength(7);
     const byKey = Object.fromEntries(pills.map((p) => [p.key, p.text]));
     expect(byKey.qualified_distribution).toBe("UNMEASURED");
     expect(byKey.observed_execution).toBe("UNCHECKABLE");
     expect(byKey.institutional_use).toBe("UNCHECKABLE");
+    expect(byKey.economic_use).toBe("UNCHECKABLE");
     expect(rowTitle("observed_execution", undefined)).toContain("row absent");
   });
 
@@ -174,9 +179,69 @@ describe("toPill / pillsFor", () => {
   });
 
   it("the funnel order is download → execution → customer → recurring, and never sums", () => {
-    expect(FOOTER_STAGES.indexOf("gross_distribution")).toBeLessThan(FOOTER_STAGES.indexOf("observed_execution"));
-    expect(FOOTER_STAGES.indexOf("observed_execution")).toBeLessThan(FOOTER_STAGES.indexOf("economic_use"));
-    expect(FOOTER_STAGES.indexOf("economic_use")).toBeLessThan(FOOTER_STAGES.indexOf("repeat_payers"));
+    const at = (k: string) => FULL_FUNNEL_STAGES.indexOf(k as never);
+    expect(at("gross_distribution")).toBeLessThan(at("observed_execution"));
+    expect(at("observed_execution")).toBeLessThan(at("economic_use"));
+    expect(at("economic_use")).toBeLessThan(at("repeat_payers"));
+  });
+});
+
+describe("the shop window shows reach; the funnel page shows the funnel", () => {
+  it("hero and footer ask for no commercial stage", () => {
+    for (const variant of ["hero", "footer"] as const) {
+      for (const stage of COMMERCIAL_STAGES) {
+        expect(stagesFor(variant), `${variant} asks for ${stage}`).not.toContain(stage);
+      }
+    }
+  });
+
+  it("the funnel variant asks for all seven, commercial stages included", () => {
+    expect(stagesFor("funnel")).toEqual(FULL_FUNNEL_STAGES);
+    for (const stage of COMMERCIAL_STAGES) expect(stagesFor("funnel")).toContain(stage);
+    expect(stagesFor("funnel")).toHaveLength(7);
+  });
+
+  it("hero and footer drop a stage the payload has no source for, and the funnel keeps it", () => {
+    const withUnmeasured = {
+      gross_distribution: { state: "UNMEASURED" as const, value: null },
+      registry_listings: { state: "READ" as const, value: 41 },
+    };
+    const kept = stagesFor("hero").filter((k) => !isUnmeasured(withUnmeasured[k as keyof typeof withUnmeasured]));
+    expect(kept).toEqual(["registry_listings"]);
+    // The funnel page shows it anyway — that is what that page is for.
+    expect(isUnmeasured({ state: "UNMEASURED", value: null })).toBe(true);
+    expect(isUnmeasured({ state: "PARTIAL", value: 1 })).toBe(false);
+  });
+
+  it("nothing a variant does not show is computed for it", () => {
+    // pillsFor maps exactly the stages it is handed; a hidden stage produces no pill at all.
+    const keys = pillsFor({ economic_use: { state: "READ", value: 1 } }, stagesFor("hero")).map((p) => p.key);
+    expect(keys).not.toContain("economic_use");
+    expect(keys).toHaveLength(2);
+  });
+
+  it("the plain window never says gross or cumulative, and is never invented", () => {
+    expect(plainWindow({ window: "2026-08-23..2026-09-21 (30 complete UTC days)" })).toBe("30 days to 21 Sep 2026");
+    expect(plainWindow({ window: "cumulative, all time" })).toBe("since first release");
+    expect(plainWindow({ window: "last month (npm point/last-month)" })).toBe("last 30 days");
+    expect(plainWindow({ window: "last 30 days, each registry over its own 30-day window" })).toBe("last 30 days");
+    expect(plainWindow({ state: "READ", value: 1 })).toBeNull();
+    for (const w of ["cumulative, all time", "2026-08-23..2026-09-21 (30 complete UTC days)", "gross downloads"]) {
+      expect(plainWindow({ window: w })).not.toMatch(/gross|cumulative/i);
+    }
+  });
+
+  it("no pill a hero or footer prints carries the artifact's window adjectives", () => {
+    const rows = {
+      gross_distribution: { state: "PARTIAL" as const, value: 395977, window: "cumulative, all time", unit: "downloads" },
+      registry_listings: { state: "READ" as const, value: 41 },
+    };
+    for (const variant of ["hero", "footer"] as const) {
+      for (const pill of pillsFor(rows, stagesFor(variant))) {
+        expect(`${pill.label} ${pill.text} ${pill.window ?? ""}`).not.toMatch(/gross|cumulative/i);
+      }
+    }
+    expect(FUNNEL_LABELS.gross_distribution).not.toMatch(/gross/i);
   });
 });
 
@@ -232,9 +297,23 @@ describe("LiveCounters.tsx — no typed figure, dash until the payload lands", (
     expect(component).toMatch(/href: null, evidenceHref: null, window: null/);
   });
 
-  it("prints the honesty line once, in the hero variant", () => {
-    expect(component.match(/variant === "hero" && \(/g)).toHaveLength(1);
-    expect(component).toContain("downloads are not users and users are not customers");
+  it("prints one honesty line, and the full doctrine only on the funnel page", () => {
+    expect(component).toContain("Downloads are not users, and users are not customers.");
+    expect(component).toContain("Downloads are not users.");
+    expect(component.match(/const honesty = full/g)).toHaveLength(1);
+  });
+
+  it("never types the word gross or cumulative into anything a reader sees", () => {
+    // Both words appear in the comments that explain why they are banned from the face. Strip
+    // comments first, then no rendered string may carry either.
+    const jsx = component.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
+    expect(jsx).not.toMatch(/gross|cumulative/i);
+  });
+
+  it("filters the hidden stages before it asks for pills, not after it renders them", () => {
+    expect(component).toContain("stages.filter((key) => !isUnmeasured(");
+    expect(component).toContain("pillsFor(payload, shown)");
+    expect(component).toContain('variant: "hero" | "footer" | "funnel"');
   });
 
   it("uses no banned vocabulary", () => {

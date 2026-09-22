@@ -74,7 +74,10 @@ export interface Pill {
 
 export const FUNNEL_LABELS: Record<StageKey, string> = {
   registry_listings: "Registry listings",
-  gross_distribution: "Gross downloads",
+  // "Gross" and "cumulative" are the artifact's words for its own windows. They do not go on the
+  // face of a page (owner ruling, 2026-09-22): the plain thing is what the work reaches and over
+  // what span, and the span is printed beside the figure rather than buried in an adjective.
+  gross_distribution: "Downloads",
   qualified_distribution: "Non-mirror downloads",
   observed_execution: "Observed executions",
   economic_use: "Paying wallets",
@@ -85,11 +88,22 @@ export const FUNNEL_LABELS: Record<StageKey, string> = {
   github_stars: "Repository stars",
 };
 
-/** Home hero: the stages a first reader should see, in funnel order. */
-export const HERO_STAGES: StageKey[] = ["gross_distribution", "economic_use", "registry_listings"];
+/**
+ * The commercial end of the funnel. Owner ruling, 2026-09-22, after looking at the live page:
+ * "paying wallets: 1" printed beside a distribution figure in the millions does not read as
+ * honesty in a shop window, it reads as a weakness we chose to headline. These stages are not
+ * deleted, softened or recomputed anywhere — /api/footprint still publishes every one of them and
+ * the full-funnel view below still renders them. They are simply not what the hero and the footer
+ * are for.
+ */
+export const COMMERCIAL_STAGES: StageKey[] = ["economic_use", "repeat_payers", "institutional_use"];
 
-/** Footer: the whole funnel, compact, in funnel order. */
-export const FOOTER_STAGES: StageKey[] = [
+/** Home hero and site footer: what the work reaches, each figure with its window and its state. */
+export const HERO_STAGES: StageKey[] = ["gross_distribution", "registry_listings"];
+export const FOOTER_STAGES: StageKey[] = ["registry_listings", "gross_distribution"];
+
+/** The whole funnel, in funnel order. Its own page, where the discipline is the point. */
+export const FULL_FUNNEL_STAGES: StageKey[] = [
   "registry_listings",
   "gross_distribution",
   "qualified_distribution",
@@ -98,6 +112,12 @@ export const FOOTER_STAGES: StageKey[] = [
   "repeat_payers",
   "institutional_use",
 ];
+
+/** Stages whose variant may not show them, by construction rather than by hope. */
+export function stagesFor(variant: "hero" | "footer" | "funnel"): StageKey[] {
+  if (variant === "funnel") return [...FULL_FUNNEL_STAGES];
+  return variant === "hero" ? [...HERO_STAGES] : [...FOOTER_STAGES];
+}
 
 const nf = new Intl.NumberFormat("en-GB");
 
@@ -138,6 +158,35 @@ export function rowWindow(row: FootprintRow | undefined): string | null {
   return typeof w === "string" && w.trim() !== "" ? w : null;
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * The window in plain words, for the face of a page. The artifact says things like
+ * "2026-08-23..2026-09-21 (30 complete UTC days)" and "cumulative, all time"; a reader wants
+ * "30 days to 21 Sep 2026" and "since first release". Derived from the row's own window string —
+ * a window this function does not recognise is passed through with the jargon stripped, never
+ * replaced by a span nobody measured.
+ */
+export function plainWindow(row: FootprintRow | undefined): string | null {
+  const w = rowWindow(row);
+  if (!w) return null;
+  const range = w.match(/(\d{4})-(\d{2})-(\d{2})\.\.(\d{4})-(\d{2})-(\d{2})/);
+  if (range) {
+    const [, , , , y2, m2, d2] = range;
+    const days = w.match(/(\d+)\s+complete UTC days/);
+    const to = `${Number(d2)} ${MONTHS[Number(m2) - 1]} ${y2}`;
+    return days ? `${days[1]} days to ${to}` : `to ${to}`;
+  }
+  if (/all\s*time|cumulative/i.test(w)) return "since first release";
+  if (/last\s*month|30\s*days?/i.test(w)) return "last 30 days";
+  return w.replace(/\b(gross|cumulative)\b,?\s*/gi, "").trim() || null;
+}
+
+/** A stage the payload has no source for. Shown on the funnel page; not in a shop window. */
+export function isUnmeasured(row: FootprintRow | undefined): boolean {
+  return row?.state === "UNMEASURED";
+}
+
 /** "312 of 397 counters" — printed whenever the row carries a fan-out's coverage. */
 export function coverageText(row: FootprintRow | undefined): string | null {
   const { covered, attempted } = row ?? {};
@@ -175,7 +224,7 @@ export function toPill(key: StageKey, row: FootprintRow | undefined): Pill {
     tone,
     href: firstSource(row),
     evidenceHref: evidenceHref(row),
-    window: rowWindow(row),
+    window: plainWindow(row),
     title: rowTitle(key, row),
   };
 }

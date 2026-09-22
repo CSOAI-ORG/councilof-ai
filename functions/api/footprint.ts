@@ -147,21 +147,21 @@ const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFin
 /** A page, retried with backoff inside whatever is left of the walk's budget. One 20 s timeout on
  *  page 3 voided the whole count on 2026-09-22; a transient failure is not an unreadable registry,
  *  and neither is a budget that ran out. */
-async function registryPage(deps: Deps, url: string, deadline: number, clock: () => number): Promise<Fetched & { attempts: number }> {
-  let last: Fetched = { ok: false, status: null, reason: "not attempted" };
+async function registryPage(deps: Deps, url: string, deadline: number, clock: () => number): Promise<{ got: Fetched; attempts: number }> {
+  let got: Fetched = { ok: false, status: null, reason: "not attempted" };
   let attempts = 0;
   for (let attempt = 1; attempt <= REGISTRY_PAGE_ATTEMPTS; attempt++) {
     const left = deadline - clock();
-    if (left <= 0) return { ...last, attempts };
+    if (left <= 0) return { got, attempts };
     attempts = attempt;
-    last = await fetchJson(deps, url, {}, Math.min(REGISTRY_TIMEOUT_MS, left));
-    if (last.ok) return { ...last, attempts };
+    got = await fetchJson(deps, url, {}, Math.min(REGISTRY_TIMEOUT_MS, left));
+    if (got.ok) return { got, attempts };
     const backoff = REGISTRY_BACKOFF_MS * 2 ** (attempt - 1);
     if (attempt < REGISTRY_PAGE_ATTEMPTS && deadline - clock() > backoff) {
       await new Promise((r) => setTimeout(r, backoff));
     }
   }
-  return { ...last, attempts };
+  return { got, attempts };
 }
 
 export async function registryListings(deps: Deps): Promise<Row> {
@@ -184,12 +184,12 @@ export async function registryListings(deps: Deps): Promise<Row> {
       break;
     }
     const url = cursor ? `${REGISTRY_SEARCH}&cursor=${encodeURIComponent(cursor)}` : REGISTRY_SEARCH;
-    const got = await registryPage(deps, url, deadline, clock);
+    const { got, attempts } = await registryPage(deps, url, deadline, clock);
     if (!got.ok) {
       // Every attempt at this page failed, or the budget ran out mid-page. What was read before it
       // is still read: report the partial count with the page it stopped on, never a null that
       // erases the pages that worked.
-      failure = { page: pages + 1, reason: got.reason, attempts: got.attempts };
+      failure = { page: pages + 1, reason: got.reason, attempts };
       break;
     }
     pages += 1;

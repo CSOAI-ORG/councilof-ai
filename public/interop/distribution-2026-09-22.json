@@ -1,9 +1,9 @@
 {
   "schema": "csoai.distribution/0.1",
-  "as_of": "2026-09-22T15:44:18Z",
-  "measurement_started": "2026-09-22T15:29:33Z",
+  "as_of": "2026-09-22T16:00:59Z",
+  "measurement_started": "2026-09-22T15:45:28Z",
   "max_age_hours": 48,
-  "stale_after": "2026-09-24T15:44:18Z",
+  "stale_after": "2026-09-24T16:00:59Z",
   "generator": "scripts/distribution-measure.py (runs as /workspace/lanes/loops/distribution-measure.py)",
   "host": "rp-3090-now",
   "package_list": {
@@ -20,8 +20,8 @@
   "window_rule": "30-day and cumulative are different windows over the same packages. They are carried as separate fields and are never added to each other. Neither is a count of people: mirrors, CI and crawlers are inside both.",
   "state_rule": "READ: every counter in the fan-out answered. PARTIAL: some answered and the value is a lower bound over those, with covered/attempted on the row. UNCHECKABLE: a source exists and none of it answered; value null, never 0. UNMEASURED: no source exists.",
   "requests": {
-    "made": 864,
-    "retried_after_429_or_5xx": 78,
+    "made": 926,
+    "retried_after_429_or_5xx": 140,
     "pace_seconds": 0.35
   },
   "registries": {
@@ -33,7 +33,7 @@
         "window": "2026-08-23..2026-09-21 (30 complete UTC days)",
         "covered": 396,
         "attempted": 397,
-        "as_of": "2026-09-22T15:34:28Z",
+        "as_of": "2026-09-22T15:51:13Z",
         "source_url": "https://pepy.tech/api/v2/projects/<name>",
         "kind": "third-party counter (includes mirror and automated traffic)",
         "method": "sum of pepy.tech's daily-by-version series over the 30 complete UTC days",
@@ -46,7 +46,7 @@
         "window": "cumulative, all time",
         "covered": 396,
         "attempted": 397,
-        "as_of": "2026-09-22T15:34:28Z",
+        "as_of": "2026-09-22T15:51:13Z",
         "source_url": "https://pepy.tech/api/v2/projects/<name>",
         "kind": "third-party counter (includes mirror and automated traffic)",
         "method": "sum of pepy.tech total_downloads",
@@ -54,7 +54,10 @@
       },
       "cross_check": {
         "source_url": "https://pypistats.org/api/packages/<name>/recent",
-        "note": "Two third-party counters over the same registry. They need not agree to the unit: pypistats' last_month is its own rolling window and may include or exclude mirrors differently. A large divergence is a reason to look, not a correction to apply.",
+        "samples_compared": 5,
+        "pepy_over_pypistats_median": 2.72,
+        "note": "Two third-party counters over the same registry, and they do not agree. On 2026-09-22 pepy.tech's daily series ran about 2.7x pypistats' last_month on every package sampled. The likeliest reason is that they treat mirror and automated traffic differently, but neither publishes enough to settle it here, so this is recorded as an open divergence and not resolved by picking one. The figure published above is pepy's, the larger of the two, and it is labelled gross precisely because a number that includes mirrors is not a number of people. Anyone quoting it should quote this ratio beside it.",
+        "state": "READ",
         "samples": [
           {
             "name": "a2a-governance-bridge-mcp",
@@ -102,7 +105,7 @@
         "window": "2026-08-23..2026-09-21",
         "covered": 324,
         "attempted": 324,
-        "as_of": "2026-09-22T15:44:17Z",
+        "as_of": "2026-09-22T16:00:58Z",
         "source_url": "https://api.npmjs.org/downloads/point/last-month/<names>",
         "kind": "third-party counter (includes mirror and automated traffic)",
         "method": "api.npmjs.org point/last-month, bulk where the registry allows it"
@@ -111,10 +114,10 @@
         "state": "READ",
         "value": 79890,
         "unit": "downloads",
-        "window": "cumulative, over npm's 18-month range window",
+        "window": "cumulative, all time (every package answered inside npm's 18-month range window, so the window provably covers its whole life)",
         "covered": 324,
         "attempted": 324,
-        "as_of": "2026-09-22T15:44:17Z",
+        "as_of": "2026-09-22T16:00:58Z",
         "source_url": "https://api.npmjs.org/downloads/range/<start>:<end>/<name>",
         "kind": "third-party counter (includes mirror and automated traffic)",
         "method": "sum of the daily range series",
@@ -128,9 +131,9 @@
         "value": 68006,
         "unit": "downloads",
         "window": "last 30 days (Hub `downloads`)",
-        "covered": 111,
-        "attempted": 111,
-        "as_of": "2026-09-22T15:44:18Z",
+        "covered": 112,
+        "attempted": 112,
+        "as_of": "2026-09-22T16:00:59Z",
         "source_url": "https://huggingface.co/api/{models,datasets}?author=csoai&expand[]=downloads&expand[]=downloadsAllTime&limit=1000",
         "kind": "third-party counter (includes mirror and automated traffic)",
         "listings_attempted": 2,
@@ -141,9 +144,9 @@
         "value": 72320,
         "unit": "downloads",
         "window": "cumulative, all time (Hub `downloadsAllTime`)",
-        "covered": 111,
-        "attempted": 111,
-        "as_of": "2026-09-22T15:44:18Z",
+        "covered": 112,
+        "attempted": 112,
+        "as_of": "2026-09-22T16:00:59Z",
         "source_url": "https://huggingface.co/api/{models,datasets}?author=csoai&expand[]=downloads&expand[]=downloadsAllTime&limit=1000",
         "kind": "third-party counter (includes mirror and automated traffic)",
         "listings_attempted": 2,
@@ -157,9 +160,9 @@
       "value": 395977,
       "unit": "downloads",
       "window": "last 30 days, each registry over its own 30-day window",
-      "covered": 831,
-      "attempted": 832,
-      "as_of": "2026-09-22T15:44:18Z",
+      "covered": 832,
+      "attempted": 833,
+      "as_of": "2026-09-22T16:00:59Z",
       "source_url": [
         "https://pepy.tech/api/v2/projects/<name>",
         "https://api.npmjs.org/downloads/point/last-month/<names>",
@@ -174,16 +177,16 @@
       "registries_partial": [
         "pypi"
       ],
-      "reason": "not every counter answered in full; the value is a lower bound over 831 of 832 packages"
+      "reason": "not every counter answered in full; the value is a lower bound over 832 of 833 packages"
     },
     "downloads_all_time": {
       "state": "PARTIAL",
       "value": 2635813,
       "unit": "downloads",
       "window": "cumulative, all time",
-      "covered": 831,
-      "attempted": 832,
-      "as_of": "2026-09-22T15:44:18Z",
+      "covered": 832,
+      "attempted": 833,
+      "as_of": "2026-09-22T16:00:59Z",
       "source_url": [
         "https://pepy.tech/api/v2/projects/<name>",
         "https://api.npmjs.org/downloads/range/<start>:<end>/<name>",
@@ -198,7 +201,7 @@
       "registries_partial": [
         "pypi"
       ],
-      "reason": "not every counter answered in full; the value is a lower bound over 831 of 832 packages"
+      "reason": "not every counter answered in full; the value is a lower bound over 832 of 833 packages"
     }
   },
   "by_entity": {
@@ -209,28 +212,28 @@
         "covered": 317,
         "attempted": 318,
         "state": "PARTIAL",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       },
       "csoai": {
         "value": 88521,
-        "covered": 135,
-        "attempted": 135,
+        "covered": 136,
+        "attempted": 136,
         "state": "READ",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       },
       "joint": {
         "value": 19505,
         "covered": 32,
         "attempted": 32,
         "state": "READ",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       },
       "unattributed": {
         "value": 20708,
         "covered": 347,
         "attempted": 347,
         "state": "READ",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       }
     },
     "downloads_all_time": {
@@ -239,28 +242,28 @@
         "covered": 317,
         "attempted": 318,
         "state": "PARTIAL",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       },
       "csoai": {
         "value": 165784,
-        "covered": 135,
-        "attempted": 135,
+        "covered": 136,
+        "attempted": 136,
         "state": "READ",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       },
       "joint": {
         "value": 45489,
         "covered": 32,
         "attempted": 32,
         "state": "READ",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       },
       "unattributed": {
         "value": 106936,
         "covered": 347,
         "attempted": 347,
         "state": "READ",
-        "as_of": "2026-09-22T15:44:18Z"
+        "as_of": "2026-09-22T16:00:59Z"
       }
     }
   },
@@ -353,6 +356,15 @@
       "entity": "csoai",
       "downloads_30d": 228,
       "downloads_all_time": 228,
+      "source_url": "https://huggingface.co/api/datasets?author=csoai&expand[]=downloads&expand[]=downloadsAllTime&limit=1000"
+    },
+    {
+      "registry": "huggingface",
+      "repo_type": "dataset",
+      "name": "csoai/claim-capture-census",
+      "entity": "csoai",
+      "downloads_30d": 0,
+      "downloads_all_time": 0,
       "source_url": "https://huggingface.co/api/datasets?author=csoai&expand[]=downloads&expand[]=downloadsAllTime&limit=1000"
     },
     {
