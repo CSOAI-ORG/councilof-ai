@@ -8,6 +8,7 @@
 import { Link } from 'wouter';
 import { Github, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
+import LiveCounters from './LiveCounters';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
 
@@ -263,6 +264,9 @@ export function Footer() {
             GET {PAID_STEP_HREF}
           </a>
         </p>
+
+        {/* Adoption funnel, compact — every stage read live from /api/footprint, "—" until it lands */}
+        <LiveCounters variant="footer" />
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
