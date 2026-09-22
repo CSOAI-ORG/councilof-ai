@@ -152,23 +152,23 @@ def qualify(
     )
     digest = guarded.pin()
 
-    print(f"qualifying {model}  ({digest})")
+    print(f"qualifying {model}  ({digest})", flush=True)
     print(f"decode: {json.dumps(guarded.describe()['decode'])}\n")
 
-    print("with the deterministic guard ON")
+    print("with the deterministic guard ON", flush=True)
     on_pass, on_fail, on_notes = _run_probes(guarded, "guard on ")
-    print("\n".join(on_notes))
+    print("\n".join(on_notes), flush=True)
     print("\nwith the deterministic guard OFF (the model alone)")
     off_pass, off_fail, off_notes = _run_probes(unguarded, "guard off")
-    print("\n".join(off_notes))
+    print("\n".join(off_notes), flush=True)
 
     stable, stability_notes = (True, ["  skipped"])
     if not skip_stability:
-        print(f"\nstability across {cycles} unload/reload cycles")
+        print(f"\nstability across {cycles} unload/reload cycles", flush=True)
         stable, stability_notes = check_stability(
             model, base_url=base_url, cycles=cycles, calls=calls, settle=settle
         )
-        print("\n".join(stability_notes))
+        print("\n".join(stability_notes), flush=True)
 
     verdict = {
         "model": model,
@@ -178,14 +178,14 @@ def qualify(
         "stable_across_model_load": stable,
         "qualified": bool(on_fail == 0 and stable),
     }
-    print("\nVERDICT")
+    print("\nVERDICT", flush=True)
     print(f"  guarded probes   : {on_pass} passed, {on_fail} failed")
     print(f"  unguarded probes : {off_pass} passed, {off_fail} failed"
           "   (failures here mean the guard is load-bearing)")
-    print(f"  stable across a model load: {stable}")
+    print(f"  stable across a model load: {stable}", flush=True)
     print(f"  QUALIFIED as a label reader: {verdict['qualified']}")
     if not verdict["qualified"]:
-        print("  -> do not make cards with this model as the parser.")
+        print("  -> do not make cards with this model as the parser.", flush=True)
     return verdict
 
 
