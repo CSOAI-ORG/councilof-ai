@@ -6,7 +6,8 @@
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
 import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
-import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATION_DESCRIPTION } from "../api/_x402_descriptions";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATION_DESCRIPTION, POPULATION_DESCRIPTIONS } from "../api/_x402_descriptions";
+import { POPULATION_IDS } from "../api/_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
@@ -152,6 +153,23 @@ export const onRequestGet: PagesFunction<{
       { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
         description: RECEIPTS_BATCH_DESCRIPTION,
         accepts: [req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)]  },
+      // POPULATION DOORS — derived from the registry (functions/api/_population.ts), never retyped
+      // here: a population added there is advertised here the moment it exists. Each url is
+      // PATH-SCOPED (no query) because PayAI lists only query-less URLs today; the pod's settle
+      // loop walks this list, so a door listed here is settled — and therefore indexed — without
+      // anyone asking. Descriptions are the canonical bytes in x402-descriptions.json.
+      ...POPULATION_IDS.map((id) => {
+        const description = POPULATION_DESCRIPTIONS[id] || `Population door ${id} — a read-transform of the estate's own published artifact.`;
+        return {
+          method: "GET",
+          url: `${origin}/api/pop/${id}`,
+          paid_for: "assembly",
+          population: id,
+          free_preview: `${origin}/api/pop/${id}?preview=1`,
+          description,
+          accepts: [req(`${origin}/api/pop/${id}`, description)],
+        };
+      }),
     ],
     mcp: {
       url: `${origin}/mcp`,

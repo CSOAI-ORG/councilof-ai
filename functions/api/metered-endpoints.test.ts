@@ -218,6 +218,17 @@ describe("catalog + discovery", () => {
       "art50_marking_evidence",
       "provider_diff_feed",
       "receipts_batch",
+      // population doors, in registry order (functions/api/_population.ts)
+      "pop_stablecoins",
+      "pop_swift",
+      "pop_xrpl",
+      "pop_x402-bazaar",
+      "pop_mcp-registry",
+      "pop_a2a",
+      "pop_ots-proofs",
+      "pop_layer0",
+      "pop_corrections",
+      "pop_claim-watch",
     ]);
     expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"]);
     expect(JSON.stringify(c)).not.toContain('"id":"witness_hash"');
