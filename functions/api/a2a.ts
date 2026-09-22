@@ -10,7 +10,7 @@
  *
  * WHAT IT DOES
  *   SendMessage             -> a Message (never a Task). One explicit Part.data
- *                              {skill,input} selects one of the seven skills on the public card.
+ *                              {skill,input} selects one of the SKILL_IDS skills on the public card.
  *                              Each skill calls a fixed same-origin, free handler. The legacy
  *                              one-part text "board" request remains a narrow compatibility alias.
  *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store.
@@ -64,10 +64,25 @@ export const A2A_ERROR = {
   VERSION_NOT_SUPPORTED: -32009,
 } as const;
 
+// The skills the public card advertises and this door serves. The per-tool cards under
+// /.well-known/agents/ are MCP tools on POST /mcp, not skills here (see a2a-tool-cards.test.ts).
+export const SKILL_IDS = [
+  "gspc-board",
+  "east-west-crosswalk",
+  "measured-badge",
+  "benchmark-quality-register",
+  "article50-detect",
+  "eu-ai-act-screen",
+  "x402-discovery",
+  "estate-index",
+] as const;
+type SkillId = (typeof SKILL_IDS)[number];
+const SKILL_ID_SET = new Set<string>(SKILL_IDS);
+
 // Every v1.0 method name and what this door does with it. Exposed on GET so a stranger
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
-  SendMessage: "answered with a Message from one explicit {skill,input} selector; seven card skills route to fixed free handlers",
+  SendMessage: `answered with a Message from one explicit {skill,input} selector; ${SKILL_IDS.length} card skills route to fixed free handlers`,
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
   GetTask: "TaskNotFoundError -32001 (no task store)",
   ListTasks: "UnsupportedOperationError -32004 (no task store)",
@@ -85,18 +100,6 @@ const record = (v: unknown): Json | null =>
 const str = (v: unknown): string | null => (typeof v === "string" && v ? v : null);
 const numOrNull = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 
-export const SKILL_IDS = [
-  "gspc-board",
-  "east-west-crosswalk",
-  "measured-badge",
-  "benchmark-quality-register",
-  "article50-detect",
-  "eu-ai-act-screen",
-  "x402-discovery",
-  "estate-index",
-] as const;
-type SkillId = (typeof SKILL_IDS)[number];
-const SKILL_ID_SET = new Set<string>(SKILL_IDS);
 
 type SkillSelection = { skill: SkillId; input: Json };
 

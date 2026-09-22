@@ -385,7 +385,12 @@ def check_a2a():
     doc = as_json(body)
     count = (doc or {}).get("count")
     agents = (doc or {}).get("agents") or []
-    ok = status == 200 and count == 12 and len(agents) == 12
+    # Names from the fleet lock, never a typed count (12 was stale once mcp_trust joined).
+    lock_path = Path(__file__).resolve().parents[2] / "functions" / "mcp" / "tool-fleet.lock.json"
+    lock = json.loads(lock_path.read_text())
+    locked = sorted(lock["free"] + lock["paid"])
+    ids = sorted(a.get("id") for a in agents if isinstance(a, dict))
+    ok = status == 200 and count == len(agents) and ids == locked
     record("a2a:agents-index", "PASS" if ok else "FAIL", url, status, body,
            {"count": count, "agents": len(agents)})
 
