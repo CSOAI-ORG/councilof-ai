@@ -1,0 +1,28 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/x1-mcp-publisher-concentration-2026-09-22.json",
+      "sha256": "12f4b0922905aa89271cc07f189618ac32ed6c277b45b76db0ef536a39aff5b9",
+      "schema": "csoai.index.x1/0.1",
+      "as_of": "2026-09-22"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the artifact's own instrument measured.",
+    "hhi": "UNAVAILABLE (TypeError)",
+    "names": "UNAVAILABLE (KeyError)",
+    "publishers": "UNAVAILABLE (KeyError)",
+    "our_rank": "UNAVAILABLE (KeyError)"
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "6640a685ae118fa2268b89b0b796b66a6659af3889634673c0496a42f0186f6443ae99d894831262a7be1fca69596b6476a91e883b5b56a5bcce3698f556bb07",
+    "payload_sha256": "6637ed850c4c7cf641f95fcfb2730f74c4d2a512f39432869ab288d680dc4f3c",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-22T12:25:47.937Z"
+  },
+  "verify": "canonicalise payload, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with #board-attestation-1 from https://csoai.org/.well-known/did.json"
+}
