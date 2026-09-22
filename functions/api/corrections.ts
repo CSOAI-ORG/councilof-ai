@@ -34,6 +34,60 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0922-02",
+      date: "2026-09-22",
+      first_observed_at: "2026-09-22T12:48Z",
+      what_was_wrong:
+        "32 signed measurement cards for the jail axis under /interop/mill-cards-signed/ published " +
+        "an accuracy for jailbreak-escape detection that was never measured. They were graded " +
+        "against a placeholder bank — the pod file /workspace/banks-all/gspc-jail.jsonl, sha256 " +
+        "f0f31f9a…, 41 rows whose prompts were the literal strings \"jail-000\", \"jail-001\" and so " +
+        "on, with no code cell in them. Each model was asked to classify a placeholder token and " +
+        "the exact-label grader scored the reply against the gold label; the published accuracies, " +
+        "0.0 to 0.9487, are an artifact of which label a model happens to prefer. By 2026-09-22 " +
+        "15:30Z, 24 of the 32 were already superseded — 21 of those by another card from the same " +
+        "placeholder bank, which cured nothing — and 8 were still the live card for their cell: " +
+        "mistral:7b 0.9487 (n=39), phi3.5:3.8b 0.25 (n=40), qwen2.5:1.5b 0.0732 (n=41), " +
+        "mistral-nemo:12b and qwen2.5:0.5b-instruct 0.0488 (n=41), gemma3:4b 0.0256 (n=39), " +
+        "qwen2.5:7b 0.0244 (n=41), qwen3:4b 0 (n=41). All 32 carried status MEASURED and all 32 " +
+        "verify under did:web:csoai.org#board-attestation-1 — the signature was sound over a " +
+        "measurement that was not.",
+      why_it_was_wrong:
+        "The intake allowlist pinned the bank bytes without anyone reading them. " +
+        "verify_runpod_gspc_intake.py proves that the bank used is the bank pinned; it cannot " +
+        "prove that the pinned bytes are a bank. The real bank existed and was public the whole " +
+        "time — HF csoai/gspc-jail-goldbank, samples.jsonl, sha256 0b45b620…, 71 real code cells, " +
+        "38 ESCAPE and 33 BENIGN — and the board's jail row already cited it, so the number on the " +
+        "card and the bank named beside it were about different things.",
+      what_changed:
+        "Nothing was deleted and no signed byte was edited. The eight cells were re-measured on " +
+        "the goldbank through the same pinned instrument (temperature 0, seed 0, 128 label tokens, " +
+        "the full 71 cells), and seven produced a board-signed MEASURED card that supersedes its " +
+        "placeholder: mistral:7b 0.9853 (n=68), gemma3:4b 0.8169 (n=71), phi3.5:3.8b 0.6308 " +
+        "(n=65), mistral-nemo:12b 0.6056 (n=71), qwen2.5:7b 0.5857 (n=70), qwen2.5:1.5b 0.4648 " +
+        "(n=71), qwen2.5:0.5b-instruct 0.4648 (n=71). The eighth, qwen3:4b, is UNMEASURED: on the " +
+        "real cells it emitted no parsable label on 71 of 71 items, every reply running to the " +
+        "128-token cap, so n=0 and there is no card to point at — its placeholder is superseded " +
+        "with by_id null, because a card graded on stubs must not stand either way. All 32 " +
+        "placeholder cards remain on disk and keep resolving; the eight supersessions are recorded " +
+        "in /interop/mill-cards-signed/SUPERSEDED.jsonl naming this entry and the two bank " +
+        "digests. The producer is fixed at the source: the jail digest in " +
+        "scripts/runpod_gspc_bank_allowlist.current.json is now the goldbank, the worker and the " +
+        "playlist generator read the goldbank as its published Inspect-shaped rows rather than a " +
+        "rewritten copy, the pod bank file holds those bytes, and the hourly mill halts unless the " +
+        "digest matches — so no further placeholder run can be admitted. Card root re-stamped: " +
+        "1423 live leaves, merkle_root 8add6156…, recomputed MATCH; its timestamp proof is " +
+        "PENDING at the calendar and not yet anchored to Bitcoin.",
+      reached_the_public: true,
+      note:
+        "The two 0.4648 figures are the same number for the same reason and should not be read as " +
+        "detection: qwen2.5:0.5b-instruct and qwen2.5:1.5b answered BENIGN on all 71 cells, and 33 " +
+        "of the 71 cells are BENIGN. Found by this estate while restarting the mill on 2026-09-22; " +
+        "the first three cures landed the same day, these eight the same afternoon. The 12 " +
+        "hub-mill jail cards graded through provider APIs on the HF bank are a different corpus " +
+        "and are not covered here.",
+    },
+    {
       id: "C-2026-0922-01",
       date: "2026-09-18",
       first_observed_at: "2026-09-18T00:00Z",
