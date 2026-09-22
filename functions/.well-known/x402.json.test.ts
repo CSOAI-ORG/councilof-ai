@@ -176,9 +176,10 @@ describe("door descriptions are buyer-first (2026-09-06)", () => {
     for (const r of resources) {
       expect(r.description, `${r.url} must carry a description`).toBeTruthy();
       expect(r.description!.length, `${r.url} description too short to rank`).toBeGreaterThan(40);
-      // first clause = the deliverable, not doctrine: must NOT open with estate-speak
+      // first clause = the deliverable, not doctrine: must NOT open with estate-speak.
+      // Population doors open with "<population> slice —": the slice is the deliverable.
       expect(r.description!.toLowerCase()).toMatch(
-        /^(live board totals|a card-v0 commission receipt|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|wrapped-asset parity evidence|art\. 50 marking evidence|provider change record|historical measurement-card batch)/,
+        /^(live board totals|a card-v0 commission receipt|signed compliance evidence bundle|signed derivative data feed|inclusion proof bundle|rwa asset evidence|wrapped-asset parity evidence|art\. 50 marking evidence|provider change record|historical measurement-card batch|[a-z0-9 ,-]+ slice\b)/,
       );
     }
   });

@@ -72,6 +72,11 @@ DESCRIPTION_PATHS = {
     "/api/proof": "proof_bundle",
     "/api/request-attestation": "request_attestation",
     "/api/receipts/batch": "receipts_batch",
+    # Population doors: /api/pop/<id> -> pop_<id> (same bytes the manifest and catalogue read).
+    **{f"/api/pop/{pop}": f"pop_{pop}" for pop in (
+        "stablecoins", "swift", "xrpl", "x402-bazaar", "mcp-registry", "a2a",
+        "ots-proofs", "layer0", "corrections", "claim-watch",
+    )},
 }
 
 

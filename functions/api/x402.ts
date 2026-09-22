@@ -31,7 +31,8 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
 import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
-import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION } from "./_x402_descriptions";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, POPULATION_DESCRIPTIONS } from "./_x402_descriptions";
+import { POPULATIONS } from "./_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 
 export const onRequestGet: PagesFunction<{
@@ -185,6 +186,17 @@ export const onRequestGet: PagesFunction<{
         honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
+      // Population doors — one entry per registry row (functions/api/_population.ts), derived so
+      // the catalogue and the manifest cannot disagree about which populations are metered.
+      ...POPULATIONS.map((p) => ({
+        id: `pop_${p.id}`,
+        name: `Population slice: ${p.title}`,
+        resource: u(`/api/pop/${p.id}`),
+        free_preview: u(`/api/pop/${p.id}?preview=1`),
+        free_preview_note: "state, n, as_of, source paths and caveats, read from the artifact on the request; the source artifacts themselves are free files",
+        deliverable: POPULATION_DESCRIPTIONS[p.id] || `the ${p.title} slice, verbatim from its artifact, with a signed digest of the reading`,
+        never: ["a grade", "a rank", "a verdict about any row", "a paywall on the source artifact", "a certificate"],
+      })),
     ],
     // ONE free_forever. There were two keys of this name in this literal — the same defect the
     // provider_diff_feed comment above records — so the second silently won and the

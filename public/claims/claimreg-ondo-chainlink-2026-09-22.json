@@ -1,0 +1,77 @@
+{
+ "schema": "csoai.claim-registry/0.1",
+ "registry_id": "claimreg-ondo-chainlink-2026-09-22",
+ "created_utc": "2026-09-22",
+ "maintainer": "CSOAI Ltd \u2014 claim maintenance (measurement, not certification)",
+ "signature_state": "UNSIGNED \u2014 signer ceremony pending; OTS-anchored instead (no key required)",
+ "subjects": {
+  "chainlink": {
+   "source": "https://chain.link/ (captured 2026-09-22)",
+   "claims": [
+    {
+     "id": "CL-1",
+     "text": "$34,177,623,388,199 transaction value enabled",
+     "type": "quantitative-cumulative",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "cumulative counter \u2014 capture weekly, track revision/restatement behaviour; independent recomputation not possible from public data, so maintenance = restatement watch + methodology request"
+    },
+    {
+     "id": "CL-2",
+     "text": "the only all-in-one oracle platform",
+     "type": "superlative-exclusivity",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "exclusivity claims are falsifiable by counterexample; log feature-parity counterexamples (API3, Pyth, RedStone, Chronicle) per category"
+    },
+    {
+     "id": "CL-3",
+     "text": "market leader powering the majority of decentralized finance (DeFi)",
+     "type": "market-share",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "majority = >50%; oracle market-share estimable via DeFiLlama oracle TVS breakdown \u2014 weekly capture vs claim"
+    },
+    {
+     "id": "CL-4",
+     "text": "adopted by Swift, Euroclear, Mastercard, Fidelity International, UBS, ANZ, Aave, GMX, Lido",
+     "type": "endorsement-list",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "verify each named adopter's public confirmation; status per name; watch silent removals"
+    },
+    {
+     "id": "CL-5",
+     "text": "proven track record of uptime, accuracy, and resilience",
+     "type": "quality",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "feed-level deviation/uptime measurable on-chain (public data feeds); queue for Layer-0 oracle harness"
+    }
+   ]
+  },
+  "ondo": {
+   "source": "https://ondo.finance/ (captured 2026-09-22) + api.llama.fi/protocol/ondo-finance",
+   "claims": [
+    {
+     "id": "ON-1",
+     "text": "Institutional-grade finance, delivered onchain",
+     "type": "quality-vague",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "non-quantitative; track attached proof-points over time"
+    },
+    {
+     "id": "ON-2",
+     "text": "ABN Amro testimonial \u2014 'purpose-built infrastructure, built by Ondo'",
+     "type": "testimonial",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "testimonial persistence watch; verify ABN Amro public corroboration"
+    },
+    {
+     "id": "ON-3",
+     "text": "(DefiLlama parent record) OUSG: 'liquid exposure to an ETF of short-term U.S. Treasuries'",
+     "type": "backing-composition",
+     "state": "CLAIM_CAPTURED",
+     "measurement_plan": "backing claims measurable vs issuer attestations/NAV publications; queue RWA backing harness \u2014 THIS IS THE /api/pop/rwa PRODUCT SEED"
+    }
+   ]
+  }
+ },
+ "notes": "First live claim-maintenance pass executed permissionlessly from public pages/APIs. States: CLAIM_CAPTURED (hashed, timestamped, source-cited). CLAIM_MEASURED requires the harness runs queued in measurement_plan. No claim of falsity is made about any entry.",
+ "registry_digest": "cbec2409cbce299326f8781d9c1b32095809c2ad38e219d61908c22fe17869e6"
+}
