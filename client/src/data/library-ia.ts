@@ -166,7 +166,10 @@ export const PRIMARY_PATHS = new Set<string>([
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/", "/notes/"];
+// Each /gspc/:axis route renders the current /api/gspc board, including its
+// axis deep-dive. Marking that live measurement view as an archive misleads
+// readers following the axis links from the home page.
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/", "/notes/", "/gspc/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));
