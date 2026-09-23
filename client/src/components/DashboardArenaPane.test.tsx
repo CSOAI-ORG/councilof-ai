@@ -120,6 +120,8 @@ describe("dashboard measured arena", () => {
       <DashboardArenaPane initialData={board} />,
     );
     expect(html).toContain("Practice decisions, then inspect evidence");
+    expect(html).toContain('href="/world/observatory/"');
+    expect(html).toContain("dated, source-linked simulation observatory");
     expect(html).toContain("The Boss&#x27;s Chair");
     expect(html).toContain("Private practice · simulated opponent");
     expect(html).toContain("decisions remain in this browser");
