@@ -11,7 +11,7 @@
  * injected prop so a test can pin the sentence without a network.
  */
 import { useEffect, useState } from "react";
-import type { FootprintPayload } from "@/components/liveCountersFormat";
+import type { FootprintPayload, FootprintRow } from "@/components/liveCountersFormat";
 import {
   POPULATION_DOORS,
   type CorrectionsPayload,
@@ -116,6 +116,19 @@ export function usePopulationDoors(injected?: DoorReads): DoorReads {
  */
 export function useFootprintPayload(injected?: ReadState<FootprintPayload>) {
   return useEndpoint<FootprintPayload>("/api/footprint", injected);
+}
+
+/** The dated package census itself answers quickly, without the full funnel's live registry walk. */
+export interface DistributionArtifact {
+  schema?: string;
+  as_of?: string;
+  max_age_hours?: number;
+  totals?: { downloads_all_time?: FootprintRow; downloads_30d?: FootprintRow };
+  by_entity?: { downloads_all_time?: Record<string, FootprintRow> };
+}
+
+export function useDistributionArtifact(injected?: ReadState<DistributionArtifact>) {
+  return useEndpoint<DistributionArtifact>("/interop/distribution-latest.json", injected);
 }
 
 /** The published x402 manifest: the door list and the MCP tool split, straight off the wire. */

@@ -37,7 +37,7 @@
  *
  * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the verified-record
  * count from /api/state, the ledger count from /api/corrections, package counters from
- * /api/footprint, the timestamp split from the OpenTimestamps door's own free preview, and the participation count from the committed
+ * /interop/distribution-latest.json, the timestamp split from the OpenTimestamps door's own free preview, and the participation count from the committed
  * memberships manifest. Each shows an em dash until it lands and says so in words if it never does.
  */
 import { useEffect, useState } from "react";
