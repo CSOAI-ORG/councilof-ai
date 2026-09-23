@@ -62,17 +62,33 @@ def main() -> int:
                      "schema": art.get("schema"), "as_of": art.get("created_utc")},
         "registry_id": art.get("registry_id"),
         "registry_digest": art.get("registry_digest"),
+        # Two registry shapes exist in public/claims and a signer that reads only one of them pins a
+        # null where a leaf count and a state tally should be. Both spellings are read, and the one
+        # that is present is what gets signed: a payload field that is silently null is worse than
+        # no field, because it looks like an answer.
         "merkle": {"algorithm": art.get("merkle", {}).get("algorithm"),
                    "root": art.get("merkle", {}).get("root"),
-                   "n_leaves": art.get("merkle", {}).get("n_leaves")},
-        "supersedes": {"registry_id": art.get("supersedes", {}).get("registry_id"),
-                       "sha256": art.get("supersedes", {}).get("sha256")},
-        "claim_states": art.get("what_moved", {}).get("states"),
+                   "n_leaves": art.get("merkle", {}).get("n_leaves")
+                   if art.get("merkle", {}).get("n_leaves") is not None
+                   else art.get("merkle", {}).get("tree_size")},
+        "supersedes": {"registry_id": (art.get("supersedes") or {}).get("registry_id"),
+                       "sha256": (art.get("supersedes") or {}).get("sha256")},
+        "claim_states": (art.get("what_moved") or {}).get("states")
+        or (art.get("totals") or {}).get("by_state"),
         "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
         "not_a_grade": ("The signature proves these bytes were signed by the board key on the date below. It "
                         "does not certify, endorse or grade anything in the registry, and it makes no "
                         "statement about any party the registry names."),
     }
+    if payload["merkle"]["root"] and payload["merkle"]["n_leaves"] is None:
+        print("ABORT this registry publishes a Merkle root but this signer could not read its leaf "
+              "count; signing a null there would pin a number that was never read", file=sys.stderr)
+        return 1
+    if not payload["claim_states"]:
+        print("ABORT this registry's state tally could not be read; the signature is meant to pin what "
+              "the registry publishes, and an empty tally pins nothing", file=sys.stderr)
+        return 1
+
     canon = canonical(payload)
     if len(canon) > CAP:
         print(f"ABORT payload {len(canon)} bytes > {CAP}", file=sys.stderr)

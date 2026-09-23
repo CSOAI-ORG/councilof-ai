@@ -368,7 +368,15 @@ def test_watch_names_the_head_of_the_supersession_chain_not_the_last_name_in_a_s
 
 
 def test_watch_refuses_to_guess_when_two_registries_are_superseded_by_nothing():
-    """FAILING CONTROL: two heads is ambiguous, so the watch names none instead of picking one."""
+    """FAILING CONTROL: two heads must never collapse into one named registry.
+
+    Two registries superseded by nothing are two chains, not an ambiguity to be resolved, so the
+    watch names ALL of them and pins each by digest while leaving the single-registry field null.
+    The invariant under control here is the one that matters and has not changed: no single file
+    is ever picked as "the" registry, and the digest published for each is the digest of the bytes
+    on disk rather than a digest copied from anywhere else.
+    """
+    import hashlib
     import tempfile
     from pathlib import Path as _P
     with tempfile.TemporaryDirectory() as t:
@@ -376,10 +384,20 @@ def test_watch_refuses_to_guess_when_two_registries_are_superseded_by_nothing():
         _reg(tmp, "claimreg-a-2026-09-22")
         _reg(tmp, "claimreg-b-2026-09-22")
         got = watch_run.head_registry(tmp)
-        assert got["registry"] is None and "guessing" in got["registry_note"], got
+        assert got["registry"] is None, got
+        assert got["registry_sha256"] is None, got
+        named = got["registries_watched"]
+        assert sorted(x["registry"] for x in named) == [
+            "/claims/claimreg-a-2026-09-22.json", "/claims/claimreg-b-2026-09-22.json"], got
+        for row in named:
+            on_disk = hashlib.sha256(
+                (tmp / "public" / "claims" / row["registry"].split("/")[-1]).read_bytes()).hexdigest()
+            assert row["sha256"] == on_disk, (row, on_disk)
+        assert "picking one" in got["registry_note"], got
     with tempfile.TemporaryDirectory() as t:
         got = watch_run.head_registry(_P(t))
         assert got["registry"] is None and "no registry" in got["registry_note"], got
+        assert got["registries_watched"] == [], got
 
 
 # ---------------------------------------------------------------- language boundary
