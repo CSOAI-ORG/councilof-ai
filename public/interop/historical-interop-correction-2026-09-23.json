@@ -1,0 +1,126 @@
+{
+  "schema": "csoai.historical-interop-correction/1",
+  "status": "CORRECTION_TO_HISTORICAL_SNAPSHOTS",
+  "issued_at": "2026-09-23T08:18:04Z",
+  "issuer": "CSOAI Ltd",
+  "originals": "Retained unchanged at their original URLs so their published bytes and timestamp sidecars can still be checked. These are historical records, not current product state.",
+  "current_board_observation": {
+    "source_url": "https://councilof.ai/api/gspc",
+    "observed_at": "2026-09-23T07:58:23.033Z",
+    "source_sha256": "b11390e0d36a5bf981b21cfdda5fc99e6f9aa0b1d9df62ad04ec7249b5f5eb26",
+    "axis_slots": 23,
+    "measured_axes": 23,
+    "scope": "observation_at_time; re-fetch endpoint for current values"
+  },
+  "corrections": [
+    {
+      "kind": "axis_count",
+      "applies_to": "continuous-churn and master-harness index v0.1-v0.4",
+      "finding": "Historical source labels describe a former board snapshot and a narrower frozen-bank card subset. They must not be read as the current whole-board count.",
+      "current_source": "https://councilof.ai/api/gspc"
+    },
+    {
+      "kind": "rollup_purpose",
+      "applies_to": "master-consolidation-rollup-v0.1.json",
+      "finding": "Its assertion that the manifest proves every card, every OTS proof and every deliverable live is withdrawn. Object-level byte coverage, signature verification, Bitcoin confirmation and public deployment require separate checks; missing checks remain unverified."
+    },
+    {
+      "kind": "version",
+      "applies_to": "master-harness-index-v0.4.json",
+      "finding": "The filename says v0.4 but the embedded version field is 0.3. The original is retained for reproducibility."
+    }
+  ],
+  "records": [
+    {
+      "path": "interop/continuous-churn-engine-v0.1.json",
+      "source_sha256": "680b29f20df6abb43b692d07981609baa3b3c4cb0cec41b5a240fe54e4e6a1d5",
+      "historical_fields": [
+        {
+          "json_pointer": "/adapters/27/source",
+          "value_sha256": "2b804a6a3a5aa3cc29de09c6a87e86b96f059c1725835742bc6490c9be248640"
+        }
+      ],
+      "original_bytes_preserved": true,
+      "ots_sibling_present": true
+    },
+    {
+      "path": "interop/master-harness-index-v0.1.json",
+      "source_sha256": "cce6c72d4ec842bb5a53e8f9b78aacfa89455cc4bd4634483a8f4d24a52e6c0f",
+      "historical_fields": [
+        {
+          "json_pointer": "/sources_bound_to_harness/24/source",
+          "value_sha256": "fdd890125379907be72cfc742f1a66bf0cdae87e88010c85831676b80d45aa9b"
+        },
+        {
+          "json_pointer": "/sources_bound_to_harness/27/source",
+          "value_sha256": "909f2910e18ec74962ac4417b7fb0f8997427f9ab60226386b014ee9dda3299a"
+        }
+      ],
+      "original_bytes_preserved": true,
+      "ots_sibling_present": true
+    },
+    {
+      "path": "interop/master-harness-index-v0.2.json",
+      "source_sha256": "d4e7055f3e3225fb5a8b770b11e52b7ff3a4fb9e5b96450afef2711a541baba5",
+      "historical_fields": [
+        {
+          "json_pointer": "/sources_bound_to_harness/24/source",
+          "value_sha256": "fdd890125379907be72cfc742f1a66bf0cdae87e88010c85831676b80d45aa9b"
+        },
+        {
+          "json_pointer": "/sources_bound_to_harness/27/source",
+          "value_sha256": "909f2910e18ec74962ac4417b7fb0f8997427f9ab60226386b014ee9dda3299a"
+        }
+      ],
+      "original_bytes_preserved": true,
+      "ots_sibling_present": true
+    },
+    {
+      "path": "interop/master-harness-index-v0.3.json",
+      "source_sha256": "4d4922d7c80c3e6ca9c01c52b5d75df05dd7b0eeb8ffb321ed58813d28701d71",
+      "historical_fields": [
+        {
+          "json_pointer": "/sources_bound_to_harness/24/source",
+          "value_sha256": "fdd890125379907be72cfc742f1a66bf0cdae87e88010c85831676b80d45aa9b"
+        },
+        {
+          "json_pointer": "/sources_bound_to_harness/27/source",
+          "value_sha256": "909f2910e18ec74962ac4417b7fb0f8997427f9ab60226386b014ee9dda3299a"
+        }
+      ],
+      "original_bytes_preserved": true,
+      "ots_sibling_present": true
+    },
+    {
+      "path": "interop/master-harness-index-v0.4.json",
+      "source_sha256": "5f5a31448ecd09631d4d32f66096e39aecdf6b004815f164c0dae597bfe8bd00",
+      "historical_fields": [
+        {
+          "json_pointer": "/sources_bound_to_harness/24/source",
+          "value_sha256": "fdd890125379907be72cfc742f1a66bf0cdae87e88010c85831676b80d45aa9b"
+        },
+        {
+          "json_pointer": "/sources_bound_to_harness/27/source",
+          "value_sha256": "909f2910e18ec74962ac4417b7fb0f8997427f9ab60226386b014ee9dda3299a"
+        }
+      ],
+      "original_bytes_preserved": true,
+      "ots_sibling_present": true
+    },
+    {
+      "path": "interop/master-consolidation-rollup-v0.1.json",
+      "source_sha256": "99c8c78479cf66f65850198e9ac729cb9596ab1667f6680fd2cb2a3b3128d45c",
+      "historical_fields": [
+        {
+          "json_pointer": "/purpose",
+          "value_sha256": "991b5768bcf88d1ed591065ee4956efc66265778a1cca3282e26c06b14312b5a"
+        }
+      ],
+      "original_bytes_preserved": true,
+      "ots_sibling_present": true
+    }
+  ],
+  "signature": "NOT_ISSUED",
+  "bitcoin_anchor": "NOT_ASSERTED",
+  "verification": "Match each original file SHA-256 and historical-field SHA-256 against this record; do not infer endorsement or current validity from a timestamp."
+}

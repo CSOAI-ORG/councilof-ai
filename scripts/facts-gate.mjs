@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {currentCountContent,isFrozenBankSubset} from './surface/facts-scope.mjs';
+import {currentCountContent,isFrozenBankSubset,correctedHistoricalContent} from './surface/facts-scope.mjs';
 import {verifyBoardReference,boardCounts} from './surface/render-board-reference.mjs';
 /**
  * facts-gate.mjs — fail any build whose PRERENDERED output contradicts facts.json.
@@ -495,10 +495,11 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
   for (const f of files) {
     const rel = relative(rootDir, f);
     const raw = readFileSync(f, "utf8");
-    const text = contentOf(f, raw);
+    const corrected = correctedHistoricalContent(raw, rel, rootDir);
+    const text = contentOf(f, corrected);
     ruleBoundary(facts, rel, text, add);
-    const countText=contentOf(f,currentCountContent(raw));
-    ruleAxisCount(facts, rel, countText, add, liveCount, raw);
+    const countText=contentOf(f,currentCountContent(corrected));
+    ruleAxisCount(facts, rel, countText, add, liveCount, corrected);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
     ruleAnchorCount(facts, rel, text, add);

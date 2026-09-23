@@ -1,10 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildIndex, hasCurrentAdmission, rowFromCard } from "./build-hub-cards-index.mjs";
+import { buildIndex, hasCurrentAdmission, rowFromCard, writeIndexPreservingStamp } from "./build-hub-cards-index.mjs";
 
 const canonical = (value) => {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
@@ -64,5 +64,32 @@ test("build requires the current receipt and exact evidence bytes", () => {
     assert.equal(buildIndex(cards, evidence).count, 1);
     writeFileSync(join(evidence, sourceBody.evidence.items_file), "changed\n");
     assert.equal(buildIndex(cards, evidence).count, 0);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("stamped index preserves exact bytes while admitted cards are unchanged", () => {
+  const root = mkdtempSync(join(tmpdir(), "hub-index-stamp-"));
+  try {
+    const out = join(root, "hub-cards-index.json");
+    const original = { schema: "csoai.hub-cards-index/0.1", as_of: "2026-09-16T00:00:00Z",
+      source: "admitted cards", count: 1, signed_files_seen: 1,
+      skipped_non_current_or_unreadable: 0, withdrawn_excluded: 0,
+      withdrawn_ledger: "WITHDRAWN.jsonl", cards: [{ id: "a" }] };
+    const originalBytes = JSON.stringify(original, null, 1) + "\n";
+    writeFileSync(out, originalBytes);
+    writeFileSync(out + ".ots", "test stamp");
+    const later = { ...original, as_of: "2026-09-23T00:00:00Z",
+      signed_files_seen: 2, skipped_non_current_or_unreadable: 1 };
+    assert.deepEqual(writeIndexPreservingStamp(out, later),
+      { state: "PRESERVED_STAMPED", count: 1, metadata_drift: true });
+    assert.equal(readFileSync(out, "utf8"), originalBytes);
+    assert.throws(() => writeIndexPreservingStamp(out,
+      { ...later, cards: [{ id: "b" }] }), /versioned index and proof/);
+    assert.throws(() => writeIndexPreservingStamp(out,
+      { ...later, schema: "changed" }), /versioned index and proof/);
+    assert.equal(readFileSync(out, "utf8"), originalBytes);
+    rmSync(out + ".ots");
+    assert.equal(writeIndexPreservingStamp(out, later).state, "WRITTEN");
+    assert.equal(JSON.parse(readFileSync(out, "utf8")).signed_files_seen, 2);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });

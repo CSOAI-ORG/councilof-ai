@@ -105,11 +105,38 @@ export function buildIndex(cardsDir, evidenceDir = "public/interop/mill-evidence
     cards };
 }
 
+/** A sibling OTS proof covers these exact bytes. Rebuilds may observe newer skipped
+ * files, but must not rewrite the proved snapshot while its admitted cards agree.
+ * A changed card set needs a new versioned index and proof, not an in-place edit. */
+export function writeIndexPreservingStamp(out, index) {
+  if (existsSync(`${out}.ots`)) {
+    if (!existsSync(out) || !lstatSync(out).isFile() || lstatSync(out).isSymbolicLink()) {
+      throw new Error(`stamped hub index is missing or not a regular file: ${out}`);
+    }
+    const current = JSON.parse(readFileSync(out, "utf8"));
+    if (current.schema !== index.schema || current.source !== index.source ||
+        current.withdrawn_ledger !== index.withdrawn_ledger ||
+        !Array.isArray(current.cards) || current.count !== current.cards.length ||
+        index.count !== index.cards.length ||
+        canonicalDeep(current.cards) !== canonicalDeep(index.cards)) {
+      throw new Error("stamped hub index differs from current admitted cards; create a versioned index and proof before release");
+    }
+    return { state: "PRESERVED_STAMPED", count: current.count,
+      metadata_drift: current.signed_files_seen !== index.signed_files_seen ||
+        current.skipped_non_current_or_unreadable !== index.skipped_non_current_or_unreadable ||
+        current.withdrawn_excluded !== index.withdrawn_excluded };
+  }
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, JSON.stringify(index, null, 1) + "\n");
+  return { state: "WRITTEN", count: index.count, metadata_drift: false };
+}
+
 const isMain = process.argv[1] && import.meta.url.endsWith(process.argv[1].split("/").pop());
 if (isMain) {
   const args = process.argv.slice(2); const opt = (k, d) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : d; };
   const out = opt("--out", "public/interop/hub-cards-index.json");
   const index = buildIndex(opt("--cards", "public/interop/mill-cards-signed"), opt("--evidence", "public/interop/mill-evidence"));
-  mkdirSync(dirname(out), { recursive: true }); writeFileSync(out, JSON.stringify(index, null, 1) + "\n");
-  console.log(`hub-cards-index: ${index.count} current admitted cards → ${out}`);
+  const result = writeIndexPreservingStamp(out, index);
+  console.log(`hub-cards-index: ${result.count} current admitted cards; ${result.state} → ${out}`);
+  if (result.metadata_drift) console.warn("hub-cards-index: file-census metadata changed; stamped snapshot preserved pending versioned proof migration");
 }

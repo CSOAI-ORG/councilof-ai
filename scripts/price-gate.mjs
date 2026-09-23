@@ -81,32 +81,6 @@ const FOREIGN_MONEY =
   /\bfine|penalt|sanction|turnover|up to|maximum|fund|grant|raise[sd]?\b|valuation|revenue|ARR|market size|competitor|other providers|elsewhere|typical(?:ly)?|charge[sd]?\b|average|estimate|savings?|cost of|budget|salary|calculator|your\b|annulled|GDPR|enforcement|free\s+(?:training|tier)/i;
 const CONTEXT_WINDOW = 240;
 
-// A guard that cannot fail enforces nothing. price-gate blocked a deploy today over an operator
-// runbook served on the open web, so it has to keep working. This proves each rule still does its
-// job without needing a built tree.
-//   node scripts/price-gate.mjs --selftest
-if (SELFTEST) {
-  const checks = [
-    ["IS_FREE allows the free-forever commitment", () => IS_FREE.test("$0")],
-    ["IS_FREE allows £0.00", () => IS_FREE.test("£0.00")],
-    ["IS_FREE does NOT swallow a real price", () => !IS_FREE.test("$49")],
-    ["SOCIAL_PROOF catches an unevidenced claim", () => SOCIAL_PROOF.test("most popular")],
-    ["SOCIAL_PROOF allows an ordinary word", () => !SOCIAL_PROOF.test("Recommended")],
-    ["FOREIGN_MONEY stands down on a penalty", () => FOREIGN_MONEY.test("a fine of up to EUR 15M turnover")],
-    ["FOREIGN_MONEY stands down on a grant", () => FOREIGN_MONEY.test("grant of EUR 50,000 from the fund")],
-    ["FOREIGN_MONEY does NOT stand down on a bare amount", () => !FOREIGN_MONEY.test("Total potential: 280,000")],
-  ];
-  let bad = 0;
-  for (const [what, fn] of checks) {
-    let ok = false;
-    try { ok = !!fn(); } catch { ok = false; }
-    if (!ok) { console.error(`\u2716 selftest: ${what}`); bad++; }
-  }
-  if (bad) { console.error(`\u2716 price-gate selftest FAILED (${bad} of ${checks.length})`); process.exit(1); }
-  console.log(`\u2713 price-gate selftest: ${checks.length}/${checks.length} rules behave as documented`);
-  process.exit(0);
-}
-
 // Named exemptions. Each is a DECISION with a reason, not a regex hole — the same shape
 // as brand-gate's allowOn. If a page is here, someone judged that its money is not a
 // price we are charging. Adding a page requires writing why.
@@ -227,6 +201,14 @@ const MONEY_KEY = /price|(^|_)(fee|cost)(_|$)/i;
 // Money-shaped names that are never OUR published price, even when they contain one of the above.
 const NOT_A_PRICE_KEY = /^(gas_?fee|network_?fee|fee_tier|penalty|fine|turnover|threshold|budget|raised|valuation)$/i;
 
+// This named field contains counts of observed counterexamples by category. A category
+// such as "price-data-feeds" describes an oracle capability, not a CSOAI fee. Keep the
+// exemption on the parent field so a real price_usdc elsewhere remains a finding.
+const isCounterexampleCount = (rel, parentPath, key, value) =>
+  /^claims\/claimreg-[^/]+\.json$/.test(rel) &&
+  parentPath === '$.measurement.counterexample_counts' &&
+  key === 'price-data-feeds' && Number.isSafeInteger(value);
+
 const jsonPriceFindings = (obj, rel, at = "$", out = []) => {
   if (Array.isArray(obj)) {
     obj.forEach((v, i) => jsonPriceFindings(v, rel, `${at}[${i}]`, out));
@@ -235,7 +217,7 @@ const jsonPriceFindings = (obj, rel, at = "$", out = []) => {
   if (!obj || typeof obj !== "object") return out;
   for (const [k, v] of Object.entries(obj)) {
     const here = `${at}.${k}`;
-    if (typeof v === "number" && v > 0 && MONEY_KEY.test(k) && !NOT_A_PRICE_KEY.test(k)) {
+    if (typeof v === "number" && v > 0 && MONEY_KEY.test(k) && !NOT_A_PRICE_KEY.test(k) && !isCounterexampleCount(rel, at, k, v)) {
       out.push({ rel, text: `${k}: ${v}`, rule: "published_price", where: here });
     } else if (typeof v === "object") {
       jsonPriceFindings(v, rel, here, out);
@@ -243,6 +225,38 @@ const jsonPriceFindings = (obj, rel, at = "$", out = []) => {
   }
   return out;
 };
+
+// A guard that cannot fail enforces nothing. price-gate blocked a deploy today over an operator
+// runbook served on the open web, so it has to keep working. This proves each rule still does its
+// job without needing a built tree.
+//   node scripts/price-gate.mjs --selftest
+if (SELFTEST) {
+  const checks = [
+    ["IS_FREE allows the free-forever commitment", () => IS_FREE.test("$0")],
+    ["IS_FREE allows £0.00", () => IS_FREE.test("£0.00")],
+    ["IS_FREE does NOT swallow a real price", () => !IS_FREE.test("$49")],
+    ["SOCIAL_PROOF catches an unevidenced claim", () => SOCIAL_PROOF.test("most popular")],
+    ["SOCIAL_PROOF allows an ordinary word", () => !SOCIAL_PROOF.test("Recommended")],
+    ["FOREIGN_MONEY stands down on a penalty", () => FOREIGN_MONEY.test("a fine of up to EUR 15M turnover")],
+    ["FOREIGN_MONEY stands down on a grant", () => FOREIGN_MONEY.test("grant of EUR 50,000 from the fund")],
+    ["FOREIGN_MONEY does NOT stand down on a bare amount", () => !FOREIGN_MONEY.test("Total potential: 280,000")],
+    ["category count containing price is not a fee", () => jsonPriceFindings({ measurement: { counterexample_counts: { "price-data-feeds": 4 } } }, "claims/claimreg-test.json").length === 0],
+    ["same count field outside claim register is checked", () => jsonPriceFindings({ measurement: { counterexample_counts: { "price-data-feeds": 4 } } }, "other.json").length === 1],
+    ["price_usdc remains a finding", () => jsonPriceFindings({ price_usdc: 0.5 }, "fixture.json").some((x) => x.rule === "published_price")],
+    ["price_usdc inside counterexample_counts remains a finding", () => jsonPriceFindings({ measurement: { counterexample_counts: { price_usdc: 0.5 } } }, "claims/claimreg-test.json").length === 1],
+    ["x402_price_usdc remains a finding", () => jsonPriceFindings({ product: { x402_price_usdc: 0.5 } }, "fixture.json").some((x) => x.rule === "published_price")],
+    ["real price beside category count remains a finding", () => jsonPriceFindings({ measurement: { counterexample_counts: { "price-data-feeds": 4 } }, product: { price_usdc: 0.5 } }, "claims/claimreg-test.json").length === 1],
+  ];
+  let bad = 0;
+  for (const [what, fn] of checks) {
+    let ok = false;
+    try { ok = !!fn(); } catch { ok = false; }
+    if (!ok) { console.error(`\u2716 selftest: ${what}`); bad++; }
+  }
+  if (bad) { console.error(`\u2716 price-gate selftest FAILED (${bad} of ${checks.length})`); process.exit(1); }
+  console.log(`\u2713 price-gate selftest: ${checks.length}/${checks.length} rules behave as documented`);
+  process.exit(0);
+}
 
 // Pull the text content of every leaf element (one with no child tags). Those are the
 // only places a standalone price can live.
