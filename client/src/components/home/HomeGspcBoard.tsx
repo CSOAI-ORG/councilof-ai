@@ -532,7 +532,10 @@ export default function HomeGspcBoard({
             return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · TIE is TIE · not a certificate.` : "";
           })()}
           <span className="block">
-            Root is signed. Witnesses bind exact root bytes and may still be pending. Verify is free.
+            The evidence root is signed separately from this live board. Its signature does not
+            establish that these API rows match the preserved signed board snapshot; check{" "}
+            <a href="/api/state" className="underline">GET /api/state</a> for that snapshot&apos;s status.
+            Witnesses bind exact root bytes and may still be pending. Verify is free.
           </span>
         </p>
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The live API response below is the master view. It is rendered directly here; Hugging Face is a distribution mirror.</p>

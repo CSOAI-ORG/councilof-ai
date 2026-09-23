@@ -305,6 +305,10 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Signed model-card matrix");
     expect(html).toContain('href="/api/gspc"');
     expect(html).toContain("Measurement, not certification. Empty stays empty.");
+    expect(html).toContain("The evidence root is signed separately from this live board.");
+    expect(html).toContain('href="/api/state"');
+    expect(html).toContain("the preserved signed board snapshot");
+    expect(html).not.toContain("Root is signed. Witnesses bind");
     expect(html).toContain("Witnesses bind exact root bytes and may still be pending.");
     expect(html).not.toContain("Root is signed and witnessed.");
     expect(html).not.toMatch(/sovereign|ceasai|byzantine|\bBFT\b/i);

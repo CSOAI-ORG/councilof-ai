@@ -34,6 +34,12 @@ describe("/products anchored page", () => {
     expect(src).not.toMatch(/href: "\/pricing-free"/);
   });
 
+  it("keeps live axis counts separate from the preserved signed board freeze", () => {
+    expect(src).toContain("counts derived from the committed axis arrays");
+    expect(src).toContain("Check GET /api/state for whether the preserved signed board snapshot agrees");
+    expect(src).not.toContain("counts derived from the signed board");
+  });
+
   it("never prints a price-like string (price-gate doctrine)", () => {
     expect(src).not.toMatch(/[£$€]\s?\d/);
     expect(src).not.toMatch(/stripe|subscribe now|most popular|best value/i);
