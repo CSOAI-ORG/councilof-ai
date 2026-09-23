@@ -105,10 +105,11 @@ export function defaultHubAxis(data: HubCardsPayload | null | undefined): string
   return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] ?? "";
 }
 
-export function topHubModels(data: HubCardsPayload | null | undefined, axis: string, limit = STRIP_N): HubCell[] {
+/** The feed omits bank/instrument identity, so cells cannot be ranked against one another. */
+export function hubModelObservations(data: HubCardsPayload | null | undefined, axis: string, limit = STRIP_N): HubCell[] {
   return measuredHubCells(data)
     .filter((cell) => cell.axis === axis)
-    .sort((a, b) => (b.accuracy as number) - (a.accuracy as number) || a.model.localeCompare(b.model))
+    .sort((a, b) => a.model.localeCompare(b.model) || String(a.card_sha256 ?? "").localeCompare(String(b.card_sha256 ?? "")))
     .slice(0, limit);
 }
 
@@ -377,7 +378,7 @@ export function HubResultsBoard({
     if (!selectedAxis || !axes.includes(selectedAxis)) setSelectedAxis(fallbackAxis);
   }, [axes, fallbackAxis, selectedAxis]);
 
-  const rows = topHubModels(data, selectedAxis);
+  const rows = hubModelObservations(data, selectedAxis);
   const cells = measuredHubCells(data);
   const modelCount = new Set(cells.map((cell) => cell.model)).size;
   const complete = data?.counts?.complete === true;
@@ -392,7 +393,7 @@ export function HubResultsBoard({
             Hugging Face measured-model results
           </h3>
           <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-emerald-100/70">
-            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the GSPC board above: model axes rank measured cells; deterministic fact axes do not rank models.
+            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the GSPC board above. Each signed card is an observation; deterministic fact axes do not score models.
           </p>
         </div>
         <a href={HUB_CARDS_PAGE_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
@@ -434,26 +435,25 @@ export function HubResultsBoard({
             ))}
           </div>
 
+          <p className="mt-2 text-xs text-amber-900 dark:text-amber-200">
+            These observations may use different frozen banks or instruments. The feed does not identify a common comparison set, so their scores are not ranked or directly comparable. Check each signed card for its bank and instrument hashes.
+          </p>
+
           <div className="mt-2 overflow-x-auto rounded-2xl border border-slate-200 dark:border-emerald-900/40">
             <table className="w-full min-w-[36rem]" data-testid="hub-results-table">
-              <caption className="sr-only">Top nine published measured model cells for {hubAxisLabel(selectedAxis)}, ordered by score.</caption>
+              <caption className="sr-only">Up to nine signed measured observations for {hubAxisLabel(selectedAxis)}, sorted by model name; scores may come from different banks.</caption>
               <thead className="bg-slate-50 dark:bg-white/5">
                 <tr>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Rank</th>
                   <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Model</th>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Score</th>
+                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Observed score</th>
                   <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Evidence</th>
                 </tr>
               </thead>
               <tbody>
-                {rows.map((cell, index) => {
-                  const rank = rows.findIndex((candidate) => candidate.accuracy === cell.accuracy) + 1;
-                  return (
-                    <tr key={`${cell.model}-${cell.axis}`} data-hub-model-row={cell.model} className="border-t border-slate-100 dark:border-emerald-900/30">
-                      <td className="px-3 py-2 text-sm font-bold text-slate-500 dark:text-emerald-100/60">{rank}</td>
+                {rows.map((cell) => (
+                    <tr key={`${cell.model}-${cell.axis}-${cell.card_sha256 ?? ""}`} data-hub-model-row={cell.model} className="border-t border-slate-100 dark:border-emerald-900/30">
                       <td className="px-3 py-2 text-sm font-semibold text-slate-900 dark:text-emerald-50">
                         {cell.model}
-                        {index === 0 ? <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/55">score order</span> : null}
                       </td>
                       <td className="px-3 py-2 text-sm tabular-nums text-slate-800 dark:text-emerald-100">
                         {fmtPct(cell.accuracy)}{typeof cell.n === "number" ? <span className="ml-2 text-xs text-slate-500 dark:text-emerald-100/55">n {cell.n}</span> : null}
@@ -466,13 +466,12 @@ export function HubResultsBoard({
                         )}
                       </td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           </div>
           <p className="mt-2 text-xs text-slate-500 dark:text-emerald-100/60">
-            Top nine by published score on the selected frozen bank. Ordering is not a separation test, winner claim, compliance verdict, or certificate. Open the signed card to verify a row.
+            Showing up to nine model-name-sorted observations on this axis. The displayed subset is not a top-nine ranking, separation test, winner claim, compliance verdict, or certificate. Open each signed card to verify its own evidence.
           </p>
         </>
       ) : null}
