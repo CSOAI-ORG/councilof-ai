@@ -71,6 +71,10 @@ const EXISTING = [
   // renders our server icon got nothing. Redirected to the icon we already serve rather than
   // committing a second copy in another format: one icon, one source of truth. Browsers accept
   // an SVG here; the content-type is image/svg+xml either way.
+  // /alliance-map published a register of other organisations' claims for one morning.
+  // Maintaining that register is the alliance's job, not ours; our own membership is a
+  // row on /memberships, which is what the page was reached for.
+  "/alliance-map          /memberships         308",
   "/favicon.ico           /csoai-icon.svg      308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
