@@ -68,6 +68,11 @@ export const PRIMARY_PATHS = new Set<string>([
   // Evidence notes index; each /notes/<id> page is covered by PRIMARY_PREFIXES below.
   "/notes",
   // Products — the family, and who it is for
+  // /how-we-work — the eight bands retired from the front door on 2026-09-23 (HomeStrengths,
+  // HomeMachineSurface, HomeReach, ToolStack, LivingStages, HomeFilms, the reviewed reading
+  // list and HomeNavigator). The home page links to it from two places, so unregistered it
+  // would ship the ArchivedBanner under a link the front door actively promotes.
+  "/how-we-work",
   "/products", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes", "/stablecoins", "/wrappers", "/quickstart", "/evaluator-access",
   "/distribution-integrity", "/rlusd", "/embed", "/white-label", "/badge", "/cobol", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",

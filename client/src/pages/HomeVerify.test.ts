@@ -16,6 +16,10 @@ const src = [
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/^\s*\/\/.*$/gm, "");
 const app = readFileSync(resolve(here, "../App.tsx"), "utf8");
+// /how-we-work is where the eight bands retired from the front door on 2026-09-23 now live.
+// It is read here so the "nothing was deleted, it moved" claim is pinned against the file that
+// has to carry it, rather than asserted in a comment.
+const howWeWork = readFileSync(resolve(here, "HowWeWork.tsx"), "utf8");
 // The menu data moved to HeaderNav.tsx; the header behaviour stays in Header.tsx. Pin both.
 const header =
   readFileSync(resolve(here, "../components/Header.tsx"), "utf8") +
@@ -49,14 +53,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain('id="os-chat"');
     expect(src).toContain("The living board");
     expect(src).toContain("HomeHero");
-    expect(src).toContain("HomeStrengths");
-    expect(src).toContain("HomeNavigator");
+    expect(src).toContain("HomeCredibility");
     expect(src).toContain("HomeWeakScore");
-    expect(src).toContain("HomeMachineSurface");
-    expect(src).toContain("HomeReach");
-    expect(src).toContain("HomeFilms");
-    expect(src).toContain("ToolStack");
-    expect(src).toContain("LivingStages");
     expect(src).toContain("What this film is saying");
     expect(src).toContain("HomeGspcTable");
     expect(src).toMatch(/totals\?\.lid/);
@@ -155,7 +153,10 @@ describe("owner rulings on the front door, 2026-09-22", () => {
   it("does not open on a withdrawal notice", () => {
     // The record stays published and stays reachable; it simply does not get a section on the
     // page a stranger lands on. The prop is what carries that, so the prop is what is pinned.
-    expect(home).toContain("showWithdrawn={false}");
+    // Since 2026-09-23 the band it belongs to renders on /how-we-work, so the prop is pinned
+    // there — and the front door satisfies the ruling more strongly, by not mounting it at all.
+    expect(howWeWork).toContain("showWithdrawn={false}");
+    expect(home).not.toContain("<HomeEvidenceShowcase");
   });
 
   it("does not render a column of UNMEASURED stages, on the page or in the chrome", () => {
@@ -172,10 +173,134 @@ describe("owner rulings on the front door, 2026-09-22", () => {
   });
 
   it("leads with the credibility: signed evidence, corrections, anchoring, free re-checking", () => {
-    // HomeStrengths is the second band on the page, above the board and everything after it.
-    expect(home.indexOf("<HomeStrengths")).toBeLessThan(home.indexOf('id="board"'));
-    expect(home.indexOf("<HomeStrengths")).toBeLessThan(home.indexOf("<ToolStack"));
-    expect(home.indexOf("<HomeStrengths")).toBeLessThan(home.indexOf("<LivingStages"));
+    // The band that carries this is HomeCredibility as of 2026-09-23 — the same six claims as
+    // HomeStrengths, in six tiles instead of six essays, because at 27,743px the essays were
+    // published to whoever was still reading and to nobody else. It is still the SECOND band,
+    // above the board and above everything after it, which is what this test has always meant.
+    expect(home.indexOf("<HomeCredibility")).toBeLessThan(home.indexOf('id="board"'));
+    expect(home.indexOf("<HomeCredibility")).toBeGreaterThan(home.indexOf("<HomeHero"));
+    expect(home).toContain("<HomeWeakScore");
+  });
+});
+
+describe("the 2026-09-23 shortening — retired, not deleted", () => {
+  // THE MEASUREMENT BEHIND THIS BLOCK. The front door rendered 27,743px at 1280px and 47,757px
+  // at 390px, so every band below the board was effectively unpublished. Eight bands moved to
+  // /how-we-work. All eight were mounted ONLY on HomeVerify, which means a removal with no
+  // destination would have deleted them outright — so this block pins BOTH halves: gone from
+  // the front door, and present on the page that now carries them.
+  const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
+  const retired = [
+    "HomeStrengths",
+    "HomeMachineSurface",
+    "HomeReach",
+    "ToolStack",
+    "LivingStages",
+    "HomeFilms",
+    "HomeEvidenceShowcase",
+    "HomeNavigator",
+  ];
+
+  it("each retired band is off the front door", () => {
+    for (const band of retired) {
+      expect(home, `${band} is still mounted on the home page`).not.toContain(`<${band}`);
+    }
+  });
+
+  it("every retired band is mounted on /how-we-work", () => {
+    for (const band of retired) {
+      expect(howWeWork, `${band} was removed from home with nowhere to go`).toContain(`<${band}`);
+    }
+  });
+
+  it("carries the owner's two rulings across to the page that now renders the band", () => {
+    // showWithdrawn={false} and sections="reading" were rulings about HomeEvidenceShowcase, not
+    // about the home page. Moving the band must not quietly drop them.
+    expect(howWeWork).toContain("showWithdrawn={false}");
+    expect(howWeWork).toContain('sections="reading"');
+  });
+
+  it("/how-we-work is routed and registered as a primary path", () => {
+    // A new page that is not in PRIMARY_PATHS ships the ArchivedBanner — it would tell every
+    // reader and every answer engine that a page the front door promotes is superseded.
+    expect(app).toContain('path="/how-we-work"');
+    expect(app).toContain('import("./pages/HowWeWork")');
+    const ia = readFileSync(resolve(here, "../data/library-ia.ts"), "utf8");
+    expect(ia).toContain('"/how-we-work"');
+  });
+
+  it("the front door still reaches the retired material", () => {
+    expect(home).toContain("/how-we-work");
+  });
+});
+
+describe("the count is never published without the separation that qualifies it", () => {
+  const hero = readFileSync(resolve(here, "../components/home/HomeHero.tsx"), "utf8");
+
+  it("reads all four separation fields live, or prints none of them", () => {
+    // MEASURED means a run exists behind the slot. It does NOT mean the axis told two models
+    // apart. separationRead returns null unless comparison_axes, separated_leads, ties AND
+    // untested_separations all arrive, so a partial read can never render as a zero.
+    expect(hero).toContain("separationRead");
+    expect(hero).toContain("comparison_axes");
+    expect(hero).toContain("separated_leads");
+    expect(hero).toContain("untested_separations");
+    expect(hero).toMatch(/if \(comparison === null \|\| separated === null \|\| ties === null \|\| untested === null\) return null;/);
+  });
+
+  it("says in words that measured is not separated, on the first screen", () => {
+    expect(hero).toContain("Measured is not the same as separated.");
+    expect(hero).toContain('data-testid="hero-separation"');
+    // A tie is first-class and is never rounded up into a ranking.
+    expect(hero).toMatch(/A tie stays a tie/);
+  });
+});
+
+describe("no third-party mark is redrawn to imply a relationship we do not have", () => {
+  const footer = readFileSync(resolve(here, "../components/Footer.tsx"), "utf8");
+
+  it("ships no framework logo art", () => {
+    // Nine in-house <img> badges imitating other bodies' marks — including the European
+    // emblem's circle of twelve stars in the emblem's own colours — were replaced on
+    // 2026-09-23 with the text-pill pattern MembershipStrip already uses. Participation is
+    // stated in words, with the relationship named and a link to that body's own page.
+    expect(footer).not.toMatch(/src=\{b\.src\}/);
+    expect(footer).not.toContain("src: '/images/badges/frameworks/");
+  });
+
+  it("states the limit of what naming a framework means", () => {
+    expect(footer).toMatch(/Naming a framework is not a claim to comply with it/);
+    // The sentence wraps in the JSX, so match across whitespace rather than pinning the wrap.
+    expect(footer).toMatch(/we hold no\s+certification under any scheme/i);
+  });
+});
+
+describe("no in-page anchor on the front door points at nothing", () => {
+  // THE DEFECT THIS CATCHES. Retiring a band takes its id with it, and any href="#that-id" left
+  // behind becomes a link that silently does nothing. It happened on 2026-09-23 to the hero's
+  // "Reading this as an agent?" link, which pointed at #machine-surface after that band moved to
+  // /how-we-work. A dead in-page anchor is invisible to a type-check and to every other test.
+  const mounted = [
+    "HomeVerify.tsx",
+    "../components/home/HomeHero.tsx",
+    "../components/home/HomeCredibility.tsx",
+    "../components/home/HomeGspcTable.tsx",
+    "../components/home/HomeWeakScore.tsx",
+    "../components/home/HomeComposer.tsx",
+    "../components/MembershipStrip.tsx",
+  ].map((f) => readFileSync(resolve(here, f), "utf8"));
+  const joined = mounted.join("\n");
+  const ids = new Set([...joined.matchAll(/id="([a-z0-9-]+)"/g)].map((m) => m[1]));
+  const anchors = [...joined.matchAll(/href="#([a-z0-9-]+)"/g)].map((m) => m[1]);
+
+  it("finds at least the anchors we know are there", () => {
+    expect(anchors).toContain("board");
+  });
+
+  it("every in-page anchor resolves to an id rendered on the same page", () => {
+    for (const a of anchors) {
+      expect(ids.has(a), `href="#${a}" points at no id on the front door`).toBe(true);
+    }
   });
 });
 

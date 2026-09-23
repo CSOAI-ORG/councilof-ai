@@ -216,6 +216,9 @@ const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Stablecoins = lazy(() => import("./pages/Stablecoins"));
 const Wrappers = lazy(() => import("./pages/Wrappers"));
 const Quickstart = lazy(() => import("./pages/Quickstart"));
+// /how-we-work — the eight bands retired from the front door on 2026-09-23. Lazy, because a
+// reader who never leaves the home page should not pay for LivingStages or the film band.
+const HowWeWork = lazy(() => import("./pages/HowWeWork"));
 const ClaimMaintenance = lazy(() => import("./pages/ClaimMaintenance"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
@@ -664,6 +667,7 @@ function App() {
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
                   <Route path="/quickstart" component={Quickstart} />
+                  <Route path="/how-we-work" component={HowWeWork} />
                   <Route path="/claim-maintenance" component={ClaimMaintenance} />
                   <Route path="/evaluator-access" component={EvaluatorAccess} />
                   <Route path="/gspc/jail" component={JailFolder} />
