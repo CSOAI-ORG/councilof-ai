@@ -99,6 +99,82 @@ async function reserveFor(origin: string, subject: string, axis: string): Promis
   }
 }
 
+
+type InteropAvailability = {
+  state: "ROOT_REFERENCES_AVAILABLE" | "UNCHECKABLE";
+  pointer_url: string;
+  root_url: string | null;
+  root_sha256: string | null;
+  root_as_of: string | null;
+  root_active_leaves: number | null;
+  matching_active_leaves: number | null;
+  sample_card_urls: string[];
+  root_integrity: "BYTE_MATCHES_UNSIGNED_POINTER" | "UNCHECKABLE";
+  signature_verification: "NOT_PERFORMED";
+  included_in_paid_reserve: false;
+  note: string;
+  reason?: string;
+};
+
+/** Free discovery of a separate mill-card root; never silently add its leaves to paid reserve. */
+async function interopAvailabilityFor(origin: string, subject: string, axis: string): Promise<InteropAvailability> {
+  const pointerUrl = new URL("/interop/card-root-latest.json", origin).toString();
+  const base = {
+    pointer_url: pointerUrl,
+    signature_verification: "NOT_PERFORMED" as const,
+    included_in_paid_reserve: false as const,
+    note: "These are active root references in a separate interop collection, not card-v1 reserve entries or new GSPC board scores. Check each card signature independently; this unsigned pointer and root-byte match do not prove Bitcoin anchoring. Payment does not include these references.",
+  };
+  const uncheckable = (reason: string): InteropAvailability => ({
+    ...base, state: "UNCHECKABLE", root_url: null, root_sha256: null, root_as_of: null,
+    root_active_leaves: null, matching_active_leaves: null, sample_card_urls: [],
+    root_integrity: "UNCHECKABLE", reason,
+  });
+  try {
+    const pr = await fetch(pointerUrl);
+    if (!pr.ok) return uncheckable("pointer HTTP " + pr.status);
+    const pointer = await pr.json() as Record<string, any>;
+    const rootPath = String(pointer.root_url || "");
+    const expected = String(pointer.root_sha256 || "");
+    if (pointer.schema !== "csoai.card-root-pointer/1" ||
+        pointer.kind !== "DISCOVERY_POINTER_ONLY" ||
+        !/^\/interop\/card-root-\d{4}-\d{2}-\d{2}(?:-[a-f0-9]{12})?\.json$/.test(rootPath) ||
+        !/^[a-f0-9]{64}$/.test(expected) ||
+        !Number.isSafeInteger(pointer.n_leaves) || pointer.n_leaves < 0) {
+      return uncheckable("pointer shape is not checkable");
+    }
+    const rootUrl = new URL(rootPath, origin).toString();
+    const rr = await fetch(rootUrl);
+    if (!rr.ok) return uncheckable("root HTTP " + rr.status);
+    const bytes = await rr.arrayBuffer();
+    const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))]
+      .map((b) => b.toString(16).padStart(2, "0")).join("");
+    if (digest !== expected) return uncheckable("root bytes differ from pointer digest");
+    const root = JSON.parse(new TextDecoder().decode(bytes)) as Record<string, any>;
+    if (root.kind !== "csoai.card-root/1" || !Array.isArray(root.leaves) ||
+        root.leaves.length !== root.n_leaves || root.n_leaves !== pointer.n_leaves ||
+        root.as_of !== pointer.as_of || !/^[a-f0-9]{64}$/.test(String(root.merkle_root || "")) ||
+        !root.leaves.every((leaf: Record<string, unknown>) =>
+          /^signed-[a-z0-9-]+-[a-f0-9]{12}\.json$/.test(String(leaf.card || "")) &&
+          typeof leaf.model === "string" && typeof leaf.axis === "string")) {
+      return uncheckable("root shape or count differs from pointer");
+    }
+    const needle = subject.toLowerCase();
+    const matching = root.leaves.filter((leaf: Record<string, string>) =>
+      leaf.model.toLowerCase().includes(needle) && (!axis || leaf.axis === axis));
+    return {
+      ...base, state: "ROOT_REFERENCES_AVAILABLE", root_url: rootUrl, root_sha256: digest,
+      root_as_of: String(root.as_of), root_active_leaves: root.n_leaves,
+      matching_active_leaves: matching.length,
+      sample_card_urls: matching.slice(0, 4).map((leaf: Record<string, string>) =>
+        new URL("/interop/mill-cards-signed/" + leaf.card, origin).toString()),
+      root_integrity: "BYTE_MATCHES_UNSIGNED_POINTER",
+    };
+  } catch (e) {
+    return uncheckable((e as Error).message || "root unavailable");
+  }
+}
+
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
@@ -162,6 +238,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   // The free preview is the same whether or not the caller pays: what already exists.
   const reserve = subject ? await reserveFor(origin, subject, axis) : { cells: [], as_of: null, source: "no subject given" };
+  const interop = !payment.ok && subject ? await interopAvailabilityFor(origin, subject, axis) : null;
   const preview = {
     subject: subject || null,
     axis: axis || null,
@@ -170,6 +247,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     cards: reserve.cells.slice(0, 40).map((c) => ({ axis: c.axis, card: c.card, card_url: c.card_url })),
     corpus_as_of: reserve.as_of,
     read_from: reserve.source,
+    interop_collection: interop,
     free_preview: `${origin}/api/request-attestation?subject=<id>`,
         free_verify: `${origin}/gspc-verify`,
     free_board: `${origin}/api/gspc`,
