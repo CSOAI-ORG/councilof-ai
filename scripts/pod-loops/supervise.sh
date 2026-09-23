@@ -1,4 +1,6 @@
 #!/bin/bash
+# Desktop Commander device keepalive (added 2026-09-17)
+[ -x /workspace/tools/dc/keepalive.sh ] && pgrep -f dc/keepalive.sh >/dev/null || setsid nohup /workspace/tools/dc/keepalive.sh >/dev/null 2>&1 < /dev/null &
 # One supervisor for the existing scheduler. No worker or model process starts here.
 set -u
 . "$(dirname "$0")/lib.sh"

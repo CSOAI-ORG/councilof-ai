@@ -60,8 +60,11 @@ if [ -n "$ROOT_SHA" ] && [ -f "$CURRENT_PROOF" ] && ! git diff --quiet -- "$CURR
   fi
 fi
 
-# OTS_NO_GIT=1 (pod chain, scripts/pod-loops/ots.sh): upgrade in place and stop. The pod's
-# outputs reach a branch by their own step; no loop pushes master from a pod.
+# OTS_NO_GIT=1: upgrade in place and stop. The pod's outputs reach a branch by their own step;
+# no loop pushes master from a pod. Added for the pod-chain ots.sh, which was retired on
+# 2026-09-23 without ever having been installed (scripts/pod-loops/superseded/). The pod's
+# hourly :45 trust-chain.sh runs a DIFFERENT upgrader, scripts/pod-loops/ots_trust_upgrade.py,
+# so this flag currently has no scheduled caller — it is a by-hand switch only.
 if [ "${OTS_NO_GIT:-0}" = "1" ]; then
   echo "$(TS) OTS_NO_GIT=1 — upgrades left in the working tree; no commit, no push" >> "$LOG"
 elif ! git diff --quiet -- public 2>/dev/null; then

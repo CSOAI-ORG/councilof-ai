@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # arena-hourly.sh — ONE honest arena round -> Elo reference -> per-axis signals -> branch.
-# NOT registered in loops/scheduler.sh (2026-09-22): run by hand until the owner registers it.
+# Registered in loops/scheduler.sh 2026-09-22 (hourly at :35, owner ruled no more gates).
 #   one round  : --games N games between two Ollama models on ONE frozen bank (deterministic
 #                first-label grader), appended to public/arena/rounds.jsonl with provenance
 #   elo        : scripts/arena/elo_reference.py over the whole rounds file (board-signed envelope)
