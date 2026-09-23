@@ -1,5 +1,7 @@
 import importlib.util
 import base64
+import io
+import json
 from pathlib import Path
 
 import pytest
@@ -117,6 +119,117 @@ def test_built_files_reads_the_snapshot_dir(tmp_path):
     assert built == {"x.json": b"xx", "y.json": b"yy"}
 
 
+def _viewer_truth():
+    axes = [
+        {"axis": "swarm", "family": "agent", "kind": "model-comparison", "status": "MEASURED",
+         "n": 16, "separation": "UNTESTED", "public_leader_state": "NO_SIGNED_CARD", "dataset": "csoai/gspc-swarm"},
+        {"axis": "payments", "family": "finance", "kind": "deterministic-facts", "status": "MEASURED",
+         "n": 4, "separation": None, "dataset": "csoai/gspc-payments"},
+    ]
+    return {"as_of": "2026-09-23T10:00:00Z", "read_at": "2026-09-23T10:01:00Z",
+            "fingerprint": "f" * 64,
+            "board_sha256": "a" * 64,
+            "board": {"axes": axes, "totals": {"axes": 2, "measured_axes": 2}}}
+
+
+def test_hf_viewer_preserves_eight_columns_and_unverified_states():
+    import pyarrow.parquet as pq
+
+    files = spray.hf_viewer_files(_viewer_truth())
+    table = pq.read_table(io.BytesIO(files["board.parquet"]))
+    assert table.schema.names == list(spray.VIEWER_COLUMNS)
+    assert [str(field.type) for field in table.schema] == [
+        "large_string", "large_string", "large_string", "large_string", "int64",
+        "large_string", "large_string", "large_string",
+    ]
+    rows = [json.loads(line) for line in files["board.jsonl"].decode().splitlines()]
+    assert rows == table.to_pylist()
+    assert rows[0]["separation"] == "UNTESTED"
+    assert rows[0]["leader"] == "withheld — no signed card"
+    assert rows[1]["leader"] == "none by design (facts run)"
+
+
+def test_hf_viewer_refuses_inconsistent_printed_totals():
+    truth = _viewer_truth()
+    truth["board"]["totals"]["measured_axes"] = 3
+    with pytest.raises(spray.Refused, match="totals do not agree"):
+        spray.hf_viewer_files(truth)
+
+
+def test_hf_dataset_companions_refresh_only_bounded_provenance_and_inventory():
+    tr = _viewer_truth()
+    paragraph = "The default viewer files (`board.parquet` and `board.jsonl`) were old."
+    readme = f"---\nconfigs: []\n---\n\n# Board\n\n{paragraph}\n\n## Other work\nKeep me.\n".encode()
+    manifest = (json.dumps({"file": "board.jsonl", "sha256": "0" * 64, "bytes": 1, "blob_id": "old"}) + "\n"
+                + json.dumps({"file": "snapshot/board.json", "sha256": "1" * 64, "bytes": 1, "blob_id": "old"}) + "\n").encode()
+    changed = {"board.jsonl": b"new", "snapshot/board.json": b"source"}
+    files = spray.hf_dataset_companions(readme, manifest, tr, changed)
+    card = files["README.md"].decode()
+    assert "## Other work\nKeep me." in card
+    assert "records 2 axes" in card
+    assert "not a new measurement or signature" in card
+    rows = [json.loads(line) for line in files["manifest.jsonl"].decode().splitlines()]
+    assert rows[0]["sha256"] == spray.sha256_hex(b"new")
+    assert rows[1]["sha256"] == spray.sha256_hex(b"source")
+    assert rows[0]["blob_id"] is None
+    with pytest.raises(spray.Refused, match="manual review"):
+        spray.hf_dataset_companions(readme.replace(paragraph.encode(), b"new card"), manifest, tr, changed)
+
+
+def test_hf_dataset_snapshot_and_viewer_are_one_optimistic_commit(monkeypatch, tmp_path):
+    import huggingface_hub
+
+    tr = _viewer_truth()
+    for name in spray.SNAPSHOT_FILES:
+        (tmp_path / name).write_bytes(b"snapshot")
+    old = {"as_of": "2026-09-22T10:00:00Z"}
+    readme = ("# Board\n\nThe default viewer files (`board.parquet` and `board.jsonl`) "
+              "were old.\n\n## Other work\nKeep me.\n").encode()
+    paths = [f"snapshot/{name}" for name in spray.SNAPSHOT_FILES] + ["board.parquet", "board.jsonl"]
+    manifest = "".join(json.dumps({"file": path, "sha256": None, "bytes": None, "blob_id": None}) + "\n"
+                       for path in paths).encode()
+    public = {"snapshot/SNAPSHOT.json": json.dumps(old).encode(), "README.md": readme,
+              "manifest.jsonl": manifest}
+    calls = []
+
+    class FakeApi:
+        def __init__(self, token=None):
+            pass
+
+        def whoami(self):
+            return {"name": "test", "orgs": []}
+
+        def repo_info(self, repo_id, repo_type):
+            assert (repo_id, repo_type) == (spray.HF_DATASET, "dataset")
+            return type("Repo", (), {"sha": "parent-sha"})()
+
+        def create_commit(self, **kwargs):
+            assert kwargs["parent_commit"] == "parent-sha"
+            assert kwargs["repo_type"] == "dataset"
+            operations = kwargs["operations"]
+            assert {op.path_in_repo for op in operations} == set(paths + ["README.md", "manifest.jsonl"])
+            public.update({op.path_in_repo: op.path_or_fileobj for op in operations})
+            calls.append("dataset-atomic")
+
+        def upload_folder(self, **kwargs):
+            assert kwargs["repo_type"] == "space"
+            calls.append("space")
+
+    monkeypatch.setattr(huggingface_hub, "HfApi", FakeApi)
+    monkeypatch.setattr(spray, "remote_snapshot", lambda url: None)
+    monkeypatch.setattr(spray, "_hf_snapshot_bytes_match", lambda page, built: True)
+
+    def fake_fetch(url, timeout=60):
+        path = url.split("/resolve/", 1)[1].split("/", 1)[1].split("?", 1)[0]
+        return public[path]
+
+    monkeypatch.setattr(spray, "fetch_ok", fake_fetch)
+    results = spray.spray_hf(tr, tmp_path, dry_run=False, force=False)
+    assert calls == ["dataset-atomic", "space"]
+    assert [r["status"] for r in results] == ["PUBLISHED", "PUBLISHED"]
+    assert public["board.jsonl"].count(b"\n") == 2
+
+
 def test_hf_snapshot_bytes_match_compares_bytes_not_as_of(monkeypatch):
     built = {"SNAPSHOT.json": b'{"as_of":"X","read_at":"10:26"}'}
     monkeypatch.setattr(spray, "fetch_ok", lambda url, timeout=60: built["SNAPSHOT.json"])
@@ -214,3 +327,48 @@ def test_spray_follows_the_deploy_workflow_by_its_exact_name():
     spray_text = (WORKFLOWS / "gspc-spray.yml").read_text(encoding="utf-8")
     assert "github.event.workflow_run.conclusion == 'success'" in spray_text
     assert _workflow_name(WORKFLOWS / "gspc-spray.yml") == "gspc-spray"
+
+
+
+def test_hf_same_root_second_tick_reuses_read_at_and_does_not_change_dataset_bundle():
+    first = _viewer_truth()
+    second = _viewer_truth()
+    second["read_at"] = "2026-09-23T11:01:00Z"
+    viewer = spray.hf_viewer_files(first)
+    changed = {"snapshot/SNAPSHOT.json": json.dumps({"as_of": first["as_of"],
+                "fingerprint": first["fingerprint"], "read_at": first["read_at"]}).encode(), **viewer}
+    initial_readme = ("# Board\n\nThe default viewer files (`board.parquet` and `board.jsonl`) "
+                      "were old.\n\n## Other work\nKeep me.\n").encode()
+    initial_manifest = "".join(json.dumps({"file": path, "sha256": None, "bytes": None,
+                                           "blob_id": None}) + "\n" for path in changed).encode()
+    first_companions = spray.hf_dataset_companions(initial_readme, initial_manifest, first, changed)
+    remote_snapshot = {"as_of": first["as_of"], "fingerprint": first["fingerprint"],
+                       "read_at": first["read_at"]}
+    assert spray.adopt_remote_read_at(second, remote_snapshot)
+    second_changed = {"snapshot/SNAPSHOT.json": json.dumps({"as_of": second["as_of"],
+                      "fingerprint": second["fingerprint"], "read_at": second["read_at"]}).encode(),
+                      **spray.hf_viewer_files(second)}
+    second_companions = spray.hf_dataset_companions(first_companions["README.md"],
+                                                     first_companions["manifest.jsonl"],
+                                                     second, second_changed)
+    assert spray.byte_parity_reason({**changed, **first_companions},
+                                    {**second_changed, **second_companions}) is None
+
+
+
+def test_board_site_attestation_accepts_live_did_key_and_rejects_tamper():
+    key = Ed25519PrivateKey.generate()
+    raw = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    key_x = base64.urlsafe_b64encode(raw).decode().rstrip("=")
+    did = {"id": "did:web:csoai.org", "verificationMethod": [{"id": spray.ROOT_DID,
+           "publicKeyJwk": {"kty": "OKP", "crv": "Ed25519", "x": key_x}}]}
+    board = {"axes": [{"axis": "swarm", "status": "MEASURED"}], "totals": {"axes": 1}}
+    board["site_attestation"] = {"signer": spray.ROOT_DID, "alg": "Ed25519",
+                                  "public_key_x": key_x, "sig": key.sign(spray.canonical(board)).hex()}
+    spray.verify_board_site_attestation(board, did)
+    board["axes"][0]["status"] = "UNMEASURED"
+    with pytest.raises(ValueError, match="does not verify"):
+        spray.verify_board_site_attestation(board, did)
+    board["site_attestation"]["sig"] = None
+    with pytest.raises(ValueError, match="no 64-byte signature"):
+        spray.verify_board_site_attestation(board, did)

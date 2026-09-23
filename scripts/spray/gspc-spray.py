@@ -219,6 +219,37 @@ def verify_public_root(root: dict, did: dict) -> None:
         raise ValueError(f"Ed25519 signature does not verify under {intended} ({type(e).__name__})") from e
 
 
+
+def verify_board_site_attestation(board: dict, did: dict) -> None:
+    # The board signature covers the canonical served body without site_attestation.
+    import base64
+    from cryptography.exceptions import InvalidSignature
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+    att = board.get("site_attestation")
+    if not isinstance(att, dict) or att.get("signer") != ROOT_DID or att.get("alg") != "Ed25519":
+        raise ValueError("board site_attestation has no pinned Ed25519 signer")
+    signature = att.get("sig")
+    if not isinstance(signature, str) or not re.fullmatch(r"[0-9a-f]{128}", signature):
+        raise ValueError("board site_attestation has no 64-byte signature")
+    methods = did.get("verificationMethod") if isinstance(did, dict) else None
+    method = next((row for row in (methods or []) if isinstance(row, dict) and row.get("id") == ROOT_DID), None)
+    jwk = (method or {}).get("publicKeyJwk") or {}
+    key_x = jwk.get("x")
+    if jwk.get("kty") != "OKP" or jwk.get("crv") != "Ed25519" or not isinstance(key_x, str):
+        raise ValueError("board signer has no Ed25519 public key in live did.json")
+    if att.get("public_key_x") != key_x:
+        raise ValueError("board embedded public key differs from live did.json")
+    try:
+        public_key = base64.urlsafe_b64decode(key_x + "=" * (-len(key_x) % 4))
+        body = {key: value for key, value in board.items() if key != "site_attestation"}
+        Ed25519PublicKey.from_public_bytes(public_key).verify(bytes.fromhex(signature), canonical(body))
+    except InvalidSignature as e:
+        raise ValueError("board site_attestation does not verify under live did.json") from e
+    except (TypeError, ValueError) as e:
+        raise ValueError("board site_attestation key or payload is malformed") from e
+
+
 def read_live_truth() -> dict:
     """Read live inputs; refuse before bank reads or publishing unless the root signature verifies."""
     log(f"[truth] GET {BOARD_URL}")
@@ -243,11 +274,12 @@ def read_live_truth() -> dict:
     try:
         did = json.loads(fetch_ok(DID_URL))
         verify_public_root(root, did)
+        verify_board_site_attestation(board, did)
         did_keys = [{"id": vm.get("id"), "x": (vm.get("publicKeyJwk") or {}).get("x")}
                     for vm in did.get("verificationMethod", [])]
     except Exception as e:  # noqa: BLE001
-        raise Refused(f"live public root signature is not valid under live did.json ({e})")
-    log(f"    VALID Ed25519 signature under {root['did_intended']}")
+        raise Refused(f"live public root or board site_attestation is not valid under live did.json ({e})")
+    log(f"    VALID public-root and board site_attestation Ed25519 under {root['did_intended']}")
 
     banks = read_banks(board["axes"])
 
@@ -681,6 +713,15 @@ def _hf_snapshot_bytes_match(page: str, built: dict[str, bytes]) -> bool:
     return remote == built.get("SNAPSHOT.json")
 
 
+def _hf_dataset_bytes_match(page: str, built: dict[str, bytes]) -> bool:
+    """Confirm the public dataset's snapshot, viewer, and provenance companions together."""
+    try:
+        return all(fetch_ok(f"{page}/resolve/main/{path}?download=true", timeout=60) == data
+                   for path, data in built.items())
+    except Exception:  # noqa: BLE001
+        return False
+
+
 def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str | None:
     """None iff the remote carries exactly the built bytes, file for file.
 
@@ -696,6 +737,91 @@ def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str
     if diff:
         return f"bytes differ: {diff}"
     return None
+
+
+VIEWER_COLUMNS = ("axis", "family", "kind", "status", "n", "separation", "leader", "dataset")
+
+
+def hf_viewer_files(tr: dict) -> dict[str, bytes]:
+    """Derive the dataset's default viewer from the *same* captured board as snapshot/board.json.
+
+    Keep the historical eight-column schema. This is a projection, not a new measurement,
+    signature, or assertion that a withheld leader was measured as a win.
+    """
+    try:
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+    except ImportError as e:
+        raise Refused("pyarrow is required to publish the HF dataset viewer with its snapshot") from e
+
+    axes = tr["board"]["axes"]
+    if not axes or derive_counts(tr["board"])["printed_agrees_with_array"] is not True:
+        raise Refused("board totals do not agree with the axis array; refusing viewer export")
+
+    def leader_cell(a: dict) -> str:
+        if a.get("leader"):
+            return str(a["leader"])
+        if a.get("public_leader_state") == "EXCLUDED_OWN_MODEL":
+            return "withheld — own model led"
+        if a.get("public_leader_state") == "NO_SIGNED_CARD":
+            return "withheld — no signed card"
+        if a.get("kind") == "deterministic-facts":
+            return "none by design (facts run)"
+        return "—"
+
+    rows = [{
+        "axis": a.get("axis"), "family": a.get("family"), "kind": a.get("kind"),
+        "status": a.get("status"), "n": a.get("n"), "separation": a.get("separation"),
+        "leader": leader_cell(a), "dataset": a.get("dataset"),
+    } for a in axes]
+    schema = pa.schema([(name, pa.int64() if name == "n" else pa.large_string()) for name in VIEWER_COLUMNS])
+    table = pa.Table.from_pylist(rows, schema=schema)
+    parquet = io.BytesIO()
+    pq.write_table(table, parquet)
+    jsonl = "".join(json.dumps(row, ensure_ascii=False) + "\n" for row in rows).encode("utf-8")
+    return {"board.parquet": parquet.getvalue(), "board.jsonl": jsonl}
+
+
+def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dict[str, bytes]) -> dict[str, bytes]:
+    """Keep the existing dataset card and file inventory aligned with the atomic export."""
+    text = readme.decode("utf-8")
+    paragraph = (
+        "The default viewer files (`board.parquet` and `board.jsonl`) project the "
+        "[dated `snapshot/` release](snapshot/SNAPSHOT.json): its published root is "
+        f"`{tr['as_of']}`, the source board was read at `{tr['read_at']}`, and its axis array "
+        f"records {len(tr['board']['axes'])} axes. The source `snapshot/board.json` has SHA-256 "
+        f"`{tr['board_sha256']}`. These viewer rows are a derived export, not a new measurement "
+        "or signature; use [the live board](https://councilof.ai/api/gspc) for current state."
+    )
+    text, replacements = re.subn(
+        r"(?m)^The default viewer files \(`board\.parquet` and `board\.jsonl`\).*?(?=\n\n)",
+        lambda _match: paragraph, text, count=1, flags=re.DOTALL,
+    )
+    if replacements != 1:
+        raise Refused("HF dataset README provenance paragraph changed; manual review required")
+    readme_bytes = text.encode("utf-8")
+
+    inventory = []
+    seen = set()
+    for line in manifest.decode("utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        path = row.get("file")
+        if not isinstance(path, str) or path in seen:
+            raise Refused("HF dataset manifest has missing or duplicate file paths")
+        seen.add(path)
+        if path in changed:
+            data = changed[path]
+            row.update(bytes=len(data), sha256=sha256_hex(data), blob_id=None, as_of=tr["read_at"])
+        inventory.append(row)
+    missing = set(changed) - seen
+    if missing:
+        raise Refused(f"HF dataset manifest lacks paths {sorted(missing)}; manual review required")
+    return {
+        "README.md": readme_bytes,
+        "manifest.jsonl": ("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in inventory)).encode("utf-8"),
+    }
 
 
 def refuse_newer_remote(chosen: list[str], tr: dict) -> None:
@@ -759,7 +885,7 @@ def unchanged(remote: dict | None, tr: dict, force: bool) -> str | None:
 def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     out = []
     try:
-        from huggingface_hub import HfApi  # noqa: PLC0415
+        from huggingface_hub import CommitOperationAdd, HfApi  # noqa: PLC0415
     except ImportError:
         return [result("hf", "FAILED", detail="huggingface_hub is not installed (pip install huggingface_hub)")]
     token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGINGFACE_TOKEN") or None
@@ -776,13 +902,40 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     for repo_type, repo_id, page in targets:
         name = f"hf-{repo_type}"
         raw = f"{page}/resolve/main/{HF_PATH_IN_REPO}/SNAPSHOT.json"
-        why = unchanged(remote_snapshot(raw), tr, force)
+        bundle = None
+        parent_commit = None
+        if repo_type == "dataset":
+            # Read one pinned repository revision and use optimistic concurrency so a
+            # concurrent card edit cannot be overwritten by this publication.
+            parent_commit = api.repo_info(repo_id=repo_id, repo_type=repo_type).sha
+            if not parent_commit:
+                raise Refused("HF dataset has no revision SHA; cannot commit against an audited base")
+            pinned = f"{page}/resolve/{parent_commit}"
+            remote = json.loads(fetch_ok(f"{pinned}/{HF_PATH_IN_REPO}/SNAPSHOT.json?download=true"))
+            if remote.get("as_of", "") > tr["as_of"]:
+                raise Refused(f"HF dataset carries newer as_of {remote['as_of']} than captured root {tr['as_of']}")
+            viewer = hf_viewer_files(tr)
+            changed = {f"{HF_PATH_IN_REPO}/{path}": data for path, data in built.items()}
+            changed.update(viewer)
+            companions = hf_dataset_companions(
+                fetch_ok(f"{pinned}/README.md?download=true"),
+                fetch_ok(f"{pinned}/manifest.jsonl?download=true"), tr, changed,
+            )
+            bundle = {**changed, **companions}
+        else:
+            remote = remote_snapshot(raw)
+        why = unchanged(remote, tr, force)
         if why:
             # as_of/fingerprint match is not byte parity — the gate is byte-strict.
             try:
-                remote_bytes = {n: fetch_ok(f"{page}/resolve/main/{HF_PATH_IN_REPO}/{n}?download=true", timeout=60)
-                                for n in built}
-                bp = byte_parity_reason(built, remote_bytes)
+                if bundle is not None:
+                    remote_bytes = {path: fetch_ok(f"{pinned}/{path}?download=true", timeout=60)
+                                    for path in bundle}
+                    bp = byte_parity_reason(bundle, remote_bytes)
+                else:
+                    remote_bytes = {n: fetch_ok(f"{page}/resolve/main/{HF_PATH_IN_REPO}/{n}?download=true", timeout=60)
+                                    for n in built}
+                    bp = byte_parity_reason(built, remote_bytes)
             except Exception as e:  # noqa: BLE001
                 bp = f"remote unreadable file-by-file ({type(e).__name__})"
             if bp:
@@ -792,16 +945,26 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
             out.append(result(name, "UNCHANGED", f"{page}/tree/main/{HF_PATH_IN_REPO}", tr["as_of"], why))
             continue
         if dry_run:
-            out.append(result(name, "DRY-RUN", f"{page}/tree/main/{HF_PATH_IN_REPO}", detail="would upload_folder"))
+            detail = "would atomically commit snapshot + viewer + provenance" if bundle is not None else "would upload_folder"
+            out.append(result(name, "DRY-RUN", f"{page}/tree/main/{HF_PATH_IN_REPO}", detail=detail))
             continue
         try:
-            api.upload_folder(folder_path=str(snap), path_in_repo=HF_PATH_IN_REPO, repo_id=repo_id, repo_type=repo_type,
-                              commit_message=f"gspc-spray: board snapshot as_of {tr['as_of']}",
-                              delete_patterns=[f"{HF_PATH_IN_REPO}/*"])
+            if bundle is not None:
+                api.create_commit(
+                    repo_id=repo_id, repo_type=repo_type, parent_commit=parent_commit,
+                    operations=[CommitOperationAdd(path_in_repo=path, path_or_fileobj=data)
+                                for path, data in bundle.items()],
+                    commit_message=f"gspc-spray: snapshot and viewer as_of {tr['as_of']}",
+                )
+            else:
+                api.upload_folder(folder_path=str(snap), path_in_repo=HF_PATH_IN_REPO, repo_id=repo_id, repo_type=repo_type,
+                                  commit_message=f"gspc-spray: board snapshot as_of {tr['as_of']}",
+                                  delete_patterns=[f"{HF_PATH_IN_REPO}/*"])
         except Exception as e:  # noqa: BLE001
-            out.append(result(name, "FAILED", page, detail=f"upload_folder: {e}"))
+            out.append(result(name, "FAILED", page, detail=f"atomic commit or upload_folder: {e}"))
             continue
-        seen = wait_for(lambda: _hf_snapshot_bytes_match(page, built))
+        seen = wait_for(lambda: _hf_dataset_bytes_match(page, bundle) if bundle is not None
+                        else _hf_snapshot_bytes_match(page, built))
         out.append(result(name, "PUBLISHED" if seen else "PUBLISHED-UNCONFIRMED",
                           f"{page}/tree/main/{HF_PATH_IN_REPO}", seen or None,
                           None if seen else f"re-read of {raw} did not show the uploaded build's bytes yet"))
