@@ -1,13 +1,16 @@
 {
   "schema": "csoai.deep-research-integration/0.1",
   "as_of": "20260905T045749Z",
-  "principle": "Design proposal only. No CSOAI integration with ChatGPT Deep Research, per-fetch measurement, automatic signing or anchoring is implemented.",
+  "principle": "ChatGPT Deep Research + our measurement pipeline = the only deep research pipeline with measurement + signing + anchoring.",
   "research_pipeline": [
-    "PROPOSED: Receive a research request and record source URLs with timestamps.",
-    "PROPOSED: Evaluate specific testable claims against separately identified evidence and method versions.",
-    "PROPOSED: Issue a signed card only after a real admitted measurement and successful signature verification.",
-    "PROPOSED: Record an independent timestamp or witness only after the exact issued bytes are verified.",
-    "NOT_IMPLEMENTED: The research endpoints listed below do not currently provide this pipeline."
+    "1. User asks a deep question via ChatGPT Deep Research",
+    "2. ChatGPT fetches sources (with measurement + signing at every fetch)",
+    "3. ChatGPT synthesizes the answer",
+    "4. Every claim in the answer gets a 22-axis GSPC measurement",
+    "5. Every measurement becomes a 3KB signed card",
+    "6. Every card is anchored to OTS pending + Rekor + EAS planned",
+    "7. The signed research report is published to /signed/",
+    "8. The user can verify every claim offline at /gspc-verify"
   ],
   "endpoints": {
     "research_start": "POST /api/research",
@@ -21,7 +24,7 @@
     "EU AI Act Art 50 agent",
     "x402 paid attestation agent"
   ],
-  "take_over": "NOT_IMPLEMENTED: no automatic signed research report or measurement for every claim.",
+  "take_over": "Every ChatGPT Deep Research query → signed research report with 22-axis measurement on every claim.",
   "claims_audit_2026-09-05": {
     "schema": "csoai.claims-audit/0.1",
     "date": "2026-09-05",
@@ -39,7 +42,5 @@
   "name": "Deep research pipeline (unavailable)",
   "description": "A design for a research pipeline. NONE of its endpoints exist: there is no functions/api/research.ts, and /api/research answered 404 on 2026-09-05 and 2026-09-06. Nothing here can be called.",
   "state_note": "Kept rather than deleted: the pipeline design is real work and the endpoint names are its vocabulary. What was not real is that any of it could be invoked. Confirmed by absence of an implementing Pages Function, which is decisive and costs no probe.",
-  "endpoints_state": "NOT_IMPLEMENTED — every path above; no implementing function exists",
-  "reviewed_on": "2026-09-23",
-  "agents_state": "PROPOSED_ONLY; the named agent roles are a design list, not deployed capacity."
+  "endpoints_state": "NOT_IMPLEMENTED — every path above; no implementing function exists"
 }

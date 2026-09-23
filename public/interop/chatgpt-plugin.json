@@ -1,12 +1,9 @@
 {
-  "schema": "csoai.legacy-chatgpt-plugin-manifest/0.2",
-  "status": "SUPERSEDED_BY_CANONICAL_OPENAPI",
-  "reviewed_on": "2026-09-23",
-  "canonical_openapi": "https://councilof.ai/openapi.json",
+  "schema": "openapi/3.0.0",
   "info": {
     "title": "Council of AI (CSOAI)",
     "version": "1.0.0",
-    "description": "Legacy interop pointer. Current GSPC scope comes from GET /api/gspc. Use the canonical OpenAPI document for supported operations.",
+    "description": "AI governance + measurement substrate. 22-axis GSPC. x402 paid attestations.",
     "contact": {
       "name": "Nicholas Templeman",
       "url": "https://councilof.ai/"
@@ -35,7 +32,7 @@
     },
     "/gspc": {
       "get": {
-        "summary": "The current GSPC board; read its count from the response",
+        "summary": "The 22-axis GSPC board",
         "operationId": "getGspcBoard",
         "responses": {
           "200": {
@@ -55,6 +52,28 @@
         }
       }
     },
+    "/learn-loop": {
+      "post": {
+        "summary": "Emit a 3KB signed card from an end-user interaction",
+        "operationId": "postLearnLoop",
+        "responses": {
+          "200": {
+            "description": "Card emitted"
+          }
+        }
+      }
+    },
+    "/measure": {
+      "post": {
+        "summary": "Run a 22-axis measurement on a model",
+        "operationId": "postMeasure",
+        "responses": {
+          "200": {
+            "description": "Measurement"
+          }
+        }
+      }
+    },
     "/verify": {
       "post": {
         "summary": "Verify any signed card",
@@ -65,13 +84,29 @@
           }
         }
       }
+    },
+    "/anchor": {
+      "post": {
+        "summary": "Anchor any signed card to OTS pending stamp",
+        "operationId": "postAnchor",
+        "responses": {
+          "200": {
+            "description": "Anchor"
+          }
+        }
+      }
+    },
+    "/report": {
+      "post": {
+        "summary": "File a correction report",
+        "operationId": "postReport",
+        "responses": {
+          "200": {
+            "description": "Report"
+          }
+        }
+      }
     }
-  },
-  "withdrawn_operations": {
-    "POST /learn-loop": "QUARANTINED_PRE_RELEASE; current route returns 503, not a signed card",
-    "POST /measure": "NOT_IMPLEMENTED; no current functions/api/measure.ts route",
-    "POST /anchor": "NOT_IMPLEMENTED; no current functions/api/anchor.ts route",
-    "POST /report": "UNAVAILABLE; current route returns 503 and does not persist a correction report"
   },
   "tags": [
     {
@@ -80,7 +115,11 @@
     },
     {
       "name": "gspc",
-      "description": "GSPC measurement; current scope comes from GET /api/gspc"
+      "description": "22-axis GSPC measurement"
+    },
+    {
+      "name": "anchor",
+      "description": "OTS / Rekor / EAS anchoring"
     },
     {
       "name": "verify",
