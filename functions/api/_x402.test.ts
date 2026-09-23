@@ -358,7 +358,7 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
       amount_atomic: amount.toString(),
       settled_amount_atomic: amount.toString(),
       product_id: "csoai.product.request_attestation",
-      funding_class: "EXTERNAL_CUSTOMER",
+      funding_class: "UNKNOWN", // payer ownership cannot be inferred from an unlisted wallet
     });
     expect(store.get("settled:usdc_atomic")).toBe(amount.toString());
 

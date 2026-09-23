@@ -109,6 +109,12 @@ async function metric(
  */
 async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
   const kv = env.REVENUE_KV;
+  const repeatPayerDefinition =
+    "Distinct non-self payer wallets with at least two different recorded transaction IDs for facilitator-confirmed, non-zero settlements. " +
+    "The 30-day count requires both settlements inside that window. A repeated wallet alone does not prove an independent customer.";
+  const repeatPayers = (all_time: number | null, last_30d: number | null) => ({
+    all_time, last_30d, definition: repeatPayerDefinition,
+  });
   const base = {
     id: "distinct_nonself_payers",
     definition:
@@ -118,6 +124,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
   };
   if (!kv) {
     return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null, distinct_payers_by_door: null,
+      repeat_nonself_payers: repeatPayers(null, null),
       source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted" };
   }
   try {
@@ -128,9 +135,12 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       for (const k of page.keys) keys.push(k.name);
       cursor = page.list_complete ? undefined : page.cursor;
     } while (cursor && keys.length < 5000);
-    const since = Date.now() - 30 * 24 * 3600 * 1000;
+    const now = Date.now();
+    const since = now - 30 * 24 * 3600 * 1000;
     const all = new Set<string>();
     const recent = new Set<string>();
+    const transactionsByPayer = new Map<string, Set<string>>();
+    const recentTransactionsByPayer = new Map<string, Set<string>>();
     const byDoor: Record<string, Set<string>> = {};
     let settlements = 0;
     let selfSettlements = 0;
@@ -149,7 +159,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
     for (const name of keys) {
       const raw = await kv.get(name);
       if (!raw) { unreadable++; continue; }
-      let r: { payer?: string | null; self?: boolean; settled_at?: string; zero_value?: boolean;
+      let r: { payer?: string | null; self?: boolean; settled_at?: string; transaction?: string | null; zero_value?: boolean;
                amount_atomic?: string | null; bazaar?: { status?: string } | null; resource?: string | null };
       try { r = JSON.parse(raw); } catch { unreadable++; continue; }
       const bz = r.bazaar?.status ?? "ABSENT";
@@ -184,7 +194,20 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       externalSettledAtomic += BigInt(String(r.amount_atomic));
       if (!payer) continue;
       all.add(payer);
-      if (r.settled_at && Date.parse(r.settled_at) >= since) recent.add(payer);
+      const settledAt = r.settled_at ? Date.parse(r.settled_at) : NaN;
+      const inLast30d = Number.isFinite(settledAt) && settledAt >= since && settledAt <= now;
+      if (inLast30d) recent.add(payer);
+      // A duplicate KV row is not a repeat purchase. Without a transaction ID, the record
+      // remains in the existing payer count but cannot establish the stricter repeat gate.
+      const transaction = typeof r.transaction === "string" ? r.transaction.trim().toLowerCase() : "";
+      if (transaction) {
+        if (!transactionsByPayer.has(payer)) transactionsByPayer.set(payer, new Set());
+        transactionsByPayer.get(payer)!.add(transaction);
+        if (inLast30d) {
+          if (!recentTransactionsByPayer.has(payer)) recentTransactionsByPayer.set(payer, new Set());
+          recentTransactionsByPayer.get(payer)!.add(transaction);
+        }
+      }
       // Per door, the same definition as all_time: distinct non-self wallets that moved a
       // non-zero amount. A record that names no resource is grouped under UNKNOWN_RESOURCE
       // rather than dropped, so the per-door counts always sum to at least all_time.
@@ -194,7 +217,10 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
     const distinct_payers_by_door = Object.fromEntries(
       Object.keys(byDoor).sort().map((d) => [d, byDoor[d].size]),
     );
+    const countRepeat = (transactions: Map<string, Set<string>>) =>
+      [...transactions.values()].filter((ids) => ids.size >= 2).length;
     return { ...base, status: "MEASURED", all_time: all.size, last_30d: recent.size, settlements, self_settlements: selfSettlements,
+      repeat_nonself_payers: repeatPayers(countRepeat(transactionsByPayer), countRepeat(recentTransactionsByPayer)),
       settled_usdc_atomic: Number(externalSettledAtomic),
       // Which doors the non-self wallets actually paid — the only per-door demand signal that is
       // not a listing. Absent (null) when no store is bound; {} when records exist but none count.
@@ -219,6 +245,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" } };
   } catch (e) {
     return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null, distinct_payers_by_door: null,
+      repeat_nonself_payers: repeatPayers(null, null),
       source: `REVENUE_KV read failed (${(e as Error).message}) — count stays null, never substituted` };
   }
 }
@@ -264,8 +291,9 @@ export async function buildRevenue(env: RevenueEnv) {
           ? ` — a facilitator is provisioned, so a settled receipt can be counted; every count stays null until one settles.`
           : ` — no facilitator is provisioned, so no receipt can settle and every count is honestly null.`),
       north_of_truth:
-        "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on " +
-        "Base, single-use. Chain adjudicates, not the CRM.",
+        "settled_usdc is derived from facilitator-confirmed settlement records and the accepted " +
+        "challenge amount, with self and zero-value records excluded. This endpoint does not " +
+        "independently reconcile the on-chain transfer amount or establish a customer relationship.",
       no_prices:
         "This surface never publishes a price. Metered amounts appear only in an x402 402 " +
         "challenge (the accepts array), never here and never on the free board.",

@@ -422,13 +422,13 @@ export async function recordSettlement(
     self,
     zero_value,
     settled_amount_atomic: rec.amount_atomic,
+    // A non-self wallet proves only that it is absent from our known self-wallet list.
+    // It does not prove the owner did not fund it or that a customer bought anything.
     funding_class: zero_value
       ? "ZERO_VALUE_PROBE"
       : self
         ? "INTERNAL_SELF_FUNDED"
-        : rec.payer
-          ? "EXTERNAL_CUSTOMER"
-          : "UNKNOWN",
+        : "UNKNOWN",
     settled_at: new Date().toISOString(),
   };
   try {

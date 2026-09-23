@@ -25,7 +25,7 @@ const call = async (env: Record<string, unknown>) => {
   return (await res.json()) as {
     one_number: Record<string, unknown>;
     settled_usdc: Record<string, unknown>;
-    contract: { null_rule: string };
+    contract: { null_rule: string; north_of_truth: string };
     skus: Record<string, { note: string }>;
   };
 };
@@ -36,7 +36,8 @@ const rec = (tx: string, payer: string, self: boolean, at: string, resource = "r
 describe("/api/revenue — the One Number", () => {
   it("is null, never 0, without a store", async () => {
     const body = await call({});
-    expect(body.one_number).toMatchObject({ status: "UNMEASURED", all_time: null, last_30d: null, distinct_payers_by_door: null });
+    expect(body.one_number).toMatchObject({ status: "UNMEASURED", all_time: null, last_30d: null, distinct_payers_by_door: null,
+      repeat_nonself_payers: { all_time: null, last_30d: null } });
   });
 
   it("counts distinct non-self payers from records, keeps self apart, and windows 30 days", async () => {
@@ -50,7 +51,8 @@ describe("/api/revenue — the One Number", () => {
       "settled:usdc_atomic": "2000000",
     });
     const body = await call({ REVENUE_KV: kv });
-    expect(body.one_number).toMatchObject({ status: "MEASURED", all_time: 2, last_30d: 1, settlements: 3, self_settlements: 1 });
+    expect(body.one_number).toMatchObject({ status: "MEASURED", all_time: 2, last_30d: 1, settlements: 3, self_settlements: 1,
+      repeat_nonself_payers: { all_time: 1, last_30d: 1 } });
     expect(body.settled_usdc).toMatchObject({ count: 1500000, status: "MEASURED", excludes_self: true });
   });
 
@@ -78,6 +80,27 @@ describe("/api/revenue — the One Number", () => {
     const body = await call({ REVENUE_KV: kv });
     expect(body.one_number).toMatchObject({ all_time: 1, settlements: 1, self_settlements: 1 });
     expect(body.settled_usdc).toMatchObject({ count: 500000, status: "MEASURED" });
+  });
+
+  it("requires two distinct non-self paid transaction IDs to evidence a repeat", async () => {
+    const now = new Date();
+    const old = new Date(now.getTime() - 40 * 24 * 3600 * 1000).toISOString();
+    const recent = now.toISOString();
+    const kv = kvFrom({
+      "settled:tx:old": rec("old", "0xAAAA", false, old),
+      "settled:tx:new": rec("new", "0xaaaa", false, recent),
+      "settled:tx:duplicate": rec("new", "0xAAAA", false, recent),
+      "settled:tx:other1": rec("other1", "0xBBBB", false, recent),
+      "settled:tx:other2": rec("other2", "0xbbbb", false, recent),
+      "settled:tx:self": rec("self", "0xSELF", true, recent),
+      "settled:tx:zero": JSON.stringify({ transaction: "zero", payer: "0xCCCC", self: false, amount_atomic: "0", settled_at: recent }),
+      "settled:tx:unknown": JSON.stringify({ transaction: null, payer: "0xDDDD", self: false, amount_atomic: "500000", settled_at: recent }),
+    });
+    const body = await call({ REVENUE_KV: kv });
+    expect(body.one_number).toMatchObject({ all_time: 3, last_30d: 3,
+      repeat_nonself_payers: { all_time: 2, last_30d: 1 } });
+    expect(String((body.one_number.repeat_nonself_payers as { definition: string }).definition)).toContain("does not prove an independent customer");
+    expect(body.contract.north_of_truth).toContain("does not independently reconcile the on-chain transfer amount");
   });
 });
 
