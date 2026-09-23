@@ -1,0 +1,37 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import path from 'node:path';import os from 'node:os';
+import {verifyFeed,canonicalBytes,hash,PROFILE,KEYS} from './verify_feed_delivery.mjs';import {derive,ROOT,render} from './build-feed-delivery-kit.mjs';
+const origin='https://councilof.ai';const paths={signals:'/signals/_index.json',first_fine_watch:'/api/fines',root:'/root.json',card_index:'/signed/card_index.json'};
+function fixture(){const blocks={signals:{signals:[{id:'z'}],as_of:'2026-09-20T00:00:00Z'},first_fine_watch:{schema:'fixture',as_of:'2026-08-24'},root:{card_count:1,merkle_root:'a'.repeat(64),as_of:'2026-09-20T00:00:00Z'},card_index:{cards:[{id:'é'}]}};const raw=canonicalBytes(blocks);const e={blocks_sha256:hash(raw),blocks_bytes:raw.length,hash_covers:'payload.blocks',canonicalization:PROFILE,digest_algorithm:'SHA-256'};
+ const m={schema:'csoai.eunomia-feed-manifest/1.0',resource:origin+'/api/eunomia-data?feed=1',free:true,settlement_attempted:false,coverage:{required_blocks:KEYS,complete_assembly:true},sources:KEYS.map(name=>({name,url:origin+paths[name],as_of:typeof blocks[name].as_of==='string'?blocks[name].as_of:null,block_sha256:hash(canonicalBytes(blocks[name]))})),evidence:e,pinning:{value:e.blocks_sha256,request_header:'x-csoai-expected-feed-sha256',mismatch_http_status:409,checked_before_facilitator:true},claim_boundary:{does_not_prove:['truth']},freshness:{assembly_is_new_measurement:false}};
+ const p={schema:'csoai.eunomia-data/0.2',kind:'feed',blocks,delivery_manifest:structuredClone(m),request_record:{method:'GET',target_sha256:hash(Buffer.from('GET\n'+m.resource)),preimage:'UTF-8(method + LF + Request.url)',signed:false}};return {m,p};}
+const enc=v=>Buffer.from(JSON.stringify(v));
+function reject(mut,regexp){const {m,p}=fixture();mut(m,p);assert.throws(()=>verifyFeed(enc(m),enc(p)),regexp);}
+test('content matches distinct block and response domains',()=>{const {m,p}=fixture();const r=verifyFeed(enc(m),enc(p));assert.equal(r.verified_blocks,4);assert.notEqual(r.blocks_sha256,r.payload_sha256);assert.equal(r.network_calls,0);assert.equal(r.payment_verified,false);});
+test('tampered record fails',()=>reject((m,p)=>p.blocks.root.card_count=2,/block content/));
+test('wrong preflight manifest fails',()=>reject(m=>m.evidence.blocks_sha256='f'.repeat(64),/block content/));
+test('wrong byte count fails',()=>reject(m=>m.evidence.blocks_bytes++,/block content/));
+test('wrong serializer fails',()=>reject(m=>m.evidence.canonicalization='other',/digest contract/));
+test('partial blocks fail',()=>reject((m,p)=>delete p.blocks.card_index,/feed blocks/));
+test('additional block fails',()=>reject((m,p)=>p.blocks.extra={},/feed blocks/));
+test('missing embedded manifest fails',()=>reject((m,p)=>delete p.delivery_manifest,/Embedded manifest/));
+test('wrong embedded digest fails',()=>reject((m,p)=>p.delivery_manifest.evidence.blocks_sha256='f'.repeat(64),/Embedded manifest/));
+test('source block hash fails',()=>reject(m=>m.sources[0].block_sha256='f'.repeat(64),/Individual source/));
+test('source date mismatch fails',()=>reject(m=>m.sources[0].as_of='2099-01-01',/date changed/));
+test('duplicate source name fails',()=>reject(m=>m.sources[1]=m.sources[0],/inventory/));
+test('foreign source URL fails',()=>reject(m=>m.sources[0].url='https://example.com/x',/Individual source/));
+test('no source-freshness invented',()=>{const {m,p}=fixture();assert.equal(verifyFeed(enc(m),enc(p)).source_dates.find(r=>r.name==='card_index').as_of,null);});
+test('no fake settlement in manifest',()=>reject(m=>m.settlement_attempted=true,/free feed manifest/));
+test('preview is not a paid body',()=>reject((m,p)=>p.kind='preview',/assembled feed/));
+test('wrong manifest origin fails',()=>reject(m=>m.resource='https://evil.invalid/api/eunomia-data?feed=1',/resource/));
+test('request record checks exact query',()=>{const {m,p}=fixture();assert.equal(verifyFeed(enc(m),enc(p),{requestUrl:m.resource,method:'GET'}).request_record_matches_supplied_target,true);assert.throws(()=>verifyFeed(enc(m),enc(p),{requestUrl:m.resource+'&other=1',method:'GET'}),/request record/);});
+test('request method must match',()=>{const {m,p}=fixture();assert.throws(()=>verifyFeed(enc(m),enc(p),{requestUrl:m.resource,method:'POST'}),/request record/);});
+test('URL and method supplied together',()=>{const {m,p}=fixture();assert.throws(()=>verifyFeed(enc(m),enc(p),{method:'GET'}),/together/);});
+test('unchanged data but reformatting invalidates exact response pin',()=>{const {m,p}=fixture();const raw=enc(p);assert.throws(()=>verifyFeed(enc(m),Buffer.from(JSON.stringify(p,null,2)),{payloadSha256:hash(raw)}),/response bytes/);});
+test('retained manifest can itself be pinned',()=>{const {m,p}=fixture();assert.throws(()=>verifyFeed(enc(m),enc(p),{manifestSha256:'0'.repeat(64)}),/manifest digest/);});
+test('missing claim boundary rejected',()=>reject(m=>delete m.claim_boundary,/limitations/));
+test('proto key refused',()=>{assert.throws(()=>canonicalBytes(JSON.parse('{"__proto__":1}')),/prototype/);});
+test('nonfinite rejected',()=>assert.throws(()=>canonicalBytes({x:Infinity}),/finite/));
+test('published checker is exact source copy',()=>{const d=derive();assert.deepEqual(d.get('public/verifier/verify_feed_delivery.mjs'),fs.readFileSync(path.join(ROOT,'scripts/verify_feed_delivery.mjs')));});
+test('manifest binds guide/code and disclaims signature verification',()=>{const d=derive();const m=JSON.parse(d.get('public/verifier/feed-delivery-kit.json'));assert.equal(m.artifact.sha256,hash(d.get('public/verifier/verify_feed_delivery.mjs')));assert.equal(m.guide.sha256,hash(d.get('public/verifier/feed-delivery.md')));assert.equal(m.signature_verification,false);});
+test('public files remain generated by source',()=>assert.equal(render(ROOT,true).state,'SOURCE_PARITY_VERIFIED'));
+test('mutation blocks public parity',()=>{const t=fs.mkdtempSync(path.join(os.tmpdir(),'csoai-feed-kit-'));try{fs.mkdirSync(path.join(t,'scripts'));fs.copyFileSync(path.join(ROOT,'scripts/verify_feed_delivery.mjs'),path.join(t,'scripts/verify_feed_delivery.mjs'));render(t);fs.appendFileSync(path.join(t,'public/verifier/verify_feed_delivery.mjs'),'\n// changed');assert.throws(()=>render(t,true),/drift/);}finally{fs.rmSync(t,{recursive:true,force:true});}});

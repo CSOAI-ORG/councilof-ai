@@ -1569,7 +1569,7 @@
     },
     "/api/eunomia-data": {
       "get": {
-        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking. Bare path (no query) is the free preview tier (HTTP 200). Paid signed feed requires feed=1 (HTTP 402).",
+        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking. Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
         "operationId": "x402_eunomia_data",
         "parameters": [
           {
@@ -1582,253 +1582,26 @@
               "const": "1",
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
-                  "type": "object"
-                }
-              }
-            },
-            "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking."
           },
-          "402": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "accepts": [
-                    {
-                      "amount": "10000",
-                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-                      "csoai_pricing": {
-                        "campaign_id": "csoai-launch-30d-20260911",
-                        "ends_at": "2026-10-11T00:00:00Z",
-                        "fresh_compute_excluded": true,
-                        "normal_amount_atomic": "20000",
-                        "offered_amount_atomic": "10000",
-                        "pricing_basis": "PROMO_EXISTING_DATA",
-                        "product_id": "csoai.product.issuance",
-                        "sku_id": "issuance",
-                        "starts_at": "2026-09-11T00:00:00Z",
-                        "tier": "reserve"
-                      },
-                      "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
-                      "extra": {
-                        "decimals": 6,
-                        "name": "USD Coin",
-                        "symbol": "USDC",
-                        "version": "2"
-                      },
-                      "maxAmountRequired": "10000",
-                      "maxTimeoutSeconds": 300,
-                      "mimeType": "application/json",
-                      "network": "eip155:8453",
-                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-                      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
-                      "scheme": "exact"
-                    }
-                  ],
-                  "error": "Payment required",
-                  "extensions": {
-                    "bazaar": {
-                      "info": {
-                        "input": {
-                          "method": "GET",
-                          "queryParams": {
-                            "feed": "1"
-                          },
-                          "type": "http"
-                        },
-                        "output": {
-                          "example": {
-                            "blocks": {
-                              "card_index": {},
-                              "first_fine_watch": {},
-                              "root": {},
-                              "signals": {}
-                            },
-                            "kind": "feed",
-                            "schema": "csoai.eunomia-data/0.2"
-                          },
-                          "type": "json"
-                        }
-                      },
-                      "schema": {
-                        "$schema": "https://json-schema.org/draft/2020-12/schema",
-                        "properties": {
-                          "input": {
-                            "additionalProperties": false,
-                            "properties": {
-                              "method": {
-                                "enum": [
-                                  "GET",
-                                  "HEAD",
-                                  "DELETE"
-                                ],
-                                "type": "string"
-                              },
-                              "queryParams": {
-                                "properties": {
-                                  "feed": {
-                                    "const": "1",
-                                    "type": "string"
-                                  }
-                                },
-                                "required": [
-                                  "feed"
-                                ],
-                                "type": "object"
-                              },
-                              "type": {
-                                "const": "http",
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "type",
-                              "method"
-                            ],
-                            "type": "object"
-                          },
-                          "output": {
-                            "properties": {
-                              "example": {
-                                "type": "object"
-                              },
-                              "type": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "type"
-                            ],
-                            "type": "object"
-                          }
-                        },
-                        "required": [
-                          "input"
-                        ],
-                        "type": "object"
-                      }
-                    },
-                    "offer-receipt": {
-                      "info": {
-                        "offers": [
-                          {
-                            "acceptIndex": 0,
-                            "format": "jws",
-                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGEiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzEsInZlcnNpb24iOjF9.3Btf-3gSTzmI1P6i6B76y-hcPin1K75RkFXa6M_eCscS2XQ7jD7GsC4tV7XhO2MIdhpbV4bJQd6xNEsKTaoQBQ"
-                          }
-                        ]
-                      },
-                      "schema": {
-                        "$schema": "https://json-schema.org/draft/2020-12/schema",
-                        "properties": {
-                          "offers": {
-                            "items": {
-                              "properties": {
-                                "acceptIndex": {
-                                  "type": "integer"
-                                },
-                                "format": {
-                                  "const": "jws",
-                                  "type": "string"
-                                },
-                                "signature": {
-                                  "description": "JWS compact serialization containing the offer payload",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "format",
-                                "signature"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          }
-                        },
-                        "required": [
-                          "offers"
-                        ],
-                        "type": "object"
-                      }
-                    }
-                  },
-                  "resource": {
-                    "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
-                    "mimeType": "application/json",
-                    "serviceName": "CSOAI Data Feed",
-                    "tags": [
-                      "data",
-                      "feed",
-                      "enforcement",
-                      "signed",
-                      "x402"
-                    ],
-                    "url": "https://councilof.ai/api/eunomia-data?feed=1"
-                  },
-                  "x402Version": 2
-                },
-                "schema": {
-                  "$ref": "#/components/schemas/X402PaymentRequired"
-                }
-              }
-            },
-            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
-            "headers": {
-              "PAYMENT-REQUIRED": {
-                "description": "base64(JSON) of this challenge body",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "summary": "Signed data feed (assembly + cadence)",
-        "tags": [
-          "x402",
-          "assembly"
-        ],
-        "x-csoai": {
-          "challenge": {
-            "amount_source": "captured live 402 (challenges/eunomia_data.json)",
-            "captured": true,
-            "payment_required_header_bytes": 6924
-          },
-          "door": "https://councilof.ai/api/eunomia-data?feed=1",
-          "free_preview": "https://councilof.ai/api/eunomia-data",
-          "never": [
-            "scores as a product",
-            "a ranking",
-            "a rating"
-          ],
-          "paid_for": "assembly",
-          "tier": "data_feed"
-        },
-        "x-payment-info": {
-          "protocols": [
-            "x402"
-          ]
-        }
-      },
-      "post": {
-        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking. Bare path (no query) is the free preview tier (HTTP 200). Paid signed feed requires feed=1 (HTTP 402).",
-        "operationId": "x402_eunomia_data_post",
-        "parameters": [
           {
-            "description": "Paid-tier gate. Must be the string 1 to request the signed feed (HTTP 402). Omit for free preview on the bare path (HTTP 200).",
-            "example": "1",
+            "description": "Free manifest; takes priority over feed=1 and never settles a payment.",
             "in": "query",
-            "name": "feed",
-            "required": true,
+            "name": "manifest",
+            "required": false,
             "schema": {
-              "const": "1",
+              "enum": [
+                "1"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Digest retained from the pre-payment manifest. A changed assembled feed is rejected with409 before the facilitator is called.",
+            "in": "header",
+            "name": "x-csoai-expected-feed-sha256",
+            "required": false,
+            "schema": {
+              "pattern": "^[a-f0-9]{64}$",
               "type": "string"
             }
           }
@@ -2037,6 +1810,12 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Retained feed digest differs; no payment settled."
+          },
+          "503": {
+            "description": "Required source unavailable or invalid; no payment settled."
           }
         },
         "summary": "Signed data feed (assembly + cadence)",
@@ -2051,12 +1830,293 @@
             "payment_required_header_bytes": 6924
           },
           "door": "https://councilof.ai/api/eunomia-data?feed=1",
+          "free_manifest": "https://councilof.ai/api/eunomia-data?manifest=1",
           "free_preview": "https://councilof.ai/api/eunomia-data",
           "never": [
             "scores as a product",
             "a ranking",
             "a rating"
           ],
+          "offline_content_verifier": "https://councilof.ai/verifier/verify_feed_delivery.mjs",
+          "paid_for": "assembly",
+          "tier": "data_feed"
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
+      },
+      "post": {
+        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking. Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
+        "operationId": "x402_eunomia_data_post",
+        "parameters": [
+          {
+            "description": "Paid-tier gate. Must be the string 1 to request the signed feed (HTTP 402). Omit for free preview on the bare path (HTTP 200).",
+            "example": "1",
+            "in": "query",
+            "name": "feed",
+            "required": true,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Free manifest; takes priority over feed=1 and never settles a payment.",
+            "in": "query",
+            "name": "manifest",
+            "required": false,
+            "schema": {
+              "enum": [
+                "1"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Digest retained from the pre-payment manifest. A changed assembled feed is rejected with409 before the facilitator is called.",
+            "in": "header",
+            "name": "x-csoai-expected-feed-sha256",
+            "required": false,
+            "schema": {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "10000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "csoai_pricing": {
+                        "campaign_id": "csoai-launch-30d-20260911",
+                        "ends_at": "2026-10-11T00:00:00Z",
+                        "fresh_compute_excluded": true,
+                        "normal_amount_atomic": "20000",
+                        "offered_amount_atomic": "10000",
+                        "pricing_basis": "PROMO_EXISTING_DATA",
+                        "product_id": "csoai.product.issuance",
+                        "sku_id": "issuance",
+                        "starts_at": "2026-09-11T00:00:00Z",
+                        "tier": "reserve"
+                      },
+                      "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "10000",
+                      "maxTimeoutSeconds": 300,
+                      "mimeType": "application/json",
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "feed": "1"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "blocks": {
+                              "card_index": {},
+                              "first_fine_watch": {},
+                              "root": {},
+                              "signals": {}
+                            },
+                            "kind": "feed",
+                            "schema": "csoai.eunomia-data/0.2"
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "feed": {
+                                    "const": "1",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "feed"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    },
+                    "offer-receipt": {
+                      "info": {
+                        "offers": [
+                          {
+                            "acceptIndex": 0,
+                            "format": "jws",
+                            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGEiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzEsInZlcnNpb24iOjF9.3Btf-3gSTzmI1P6i6B76y-hcPin1K75RkFXa6M_eCscS2XQ7jD7GsC4tV7XhO2MIdhpbV4bJQd6xNEsKTaoQBQ"
+                          }
+                        ]
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "offers": {
+                            "items": {
+                              "properties": {
+                                "acceptIndex": {
+                                  "type": "integer"
+                                },
+                                "format": {
+                                  "const": "jws",
+                                  "type": "string"
+                                },
+                                "signature": {
+                                  "description": "JWS compact serialization containing the offer payload",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "format",
+                                "signature"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "offers"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Data Feed",
+                    "tags": [
+                      "data",
+                      "feed",
+                      "enforcement",
+                      "signed",
+                      "x402"
+                    ],
+                    "url": "https://councilof.ai/api/eunomia-data?feed=1"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Retained feed digest differs; no payment settled."
+          },
+          "503": {
+            "description": "Required source unavailable or invalid; no payment settled."
+          }
+        },
+        "summary": "Signed data feed (assembly + cadence)",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/eunomia_data.json)",
+            "captured": true,
+            "payment_required_header_bytes": 6924
+          },
+          "door": "https://councilof.ai/api/eunomia-data?feed=1",
+          "free_manifest": "https://councilof.ai/api/eunomia-data?manifest=1",
+          "free_preview": "https://councilof.ai/api/eunomia-data",
+          "never": [
+            "scores as a product",
+            "a ranking",
+            "a rating"
+          ],
+          "offline_content_verifier": "https://councilof.ai/verifier/verify_feed_delivery.mjs",
           "paid_for": "assembly",
           "tier": "data_feed"
         },

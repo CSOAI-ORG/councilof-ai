@@ -74,6 +74,14 @@
         "format": "x402 compact JWS offer/receipt, not card-v0",
         "default_network": "One public DID-document read; saved DID file supports offline replay",
         "payment_verification": false
+      },
+      "assembled_feed_checker": {
+        "manifest": "https://councilof.ai/api/eunomia-data?manifest=1",
+        "verifier": "https://councilof.ai/verifier/verify_feed_delivery.mjs",
+        "guide": "https://councilof.ai/verifier/feed-delivery.md",
+        "pin_header": "x-csoai-expected-feed-sha256",
+        "scope": "Assembled payload.blocks and optional unsigned response/request records; not signature or payment verification",
+        "network_calls": 0
       }
     }
   ],
