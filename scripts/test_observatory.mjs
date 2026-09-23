@@ -8,6 +8,10 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.getByText('1,201', { exact: true }).waitFor();
+  await page.waitForFunction(() => document.getElementById('city-rows')?.textContent === '480');
+  if (!(await page.locator('#city-date').textContent()).includes('2026-09-23 09:25')) throw new Error('City capture date misstated');
+  if (await page.locator('#city-tick').textContent() !== '476') throw new Error('Latest city tick misstated');
+  if (!(await page.locator('#city-source-hash').textContent()).startsWith('f89c96a25c21')) throw new Error('City source digest missing');
   if (await page.title() !== 'Simulation Observatory | Council of AI') throw new Error('Wrong title');
   if (await page.locator('.record').count() !== 25) throw new Error('Expected first 25 records');
   if (await page.locator('.moment').count() !== 12) throw new Error('Expected 12 source-linked moments');
@@ -23,6 +27,7 @@ try {
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await mobile.goto(url, { waitUntil: 'networkidle' });
   await mobile.getByText('1,201', { exact: true }).waitFor();
+  await mobile.waitForFunction(() => document.getElementById('city-rows')?.textContent === '480');
   await mobile.screenshot({ path: '/workspace/lanes/codex-world-observatory-mobile.png', fullPage: true });
 
   const hostile = await browser.newPage({ viewport: { width: 390, height: 844 } });

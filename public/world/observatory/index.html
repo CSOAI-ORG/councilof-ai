@@ -7,6 +7,7 @@
   <meta name="description" content="Explore source-linked Council simulation summaries. Each row points to a dated public source; imported signature flags are not treated as verified signatures.">
   <link rel="canonical" href="https://councilof.ai/world/observatory/">
   <link rel="alternate" type="application/json" href="./index.json" title="Council simulation index data">
+  <link rel="alternate" type="application/json" href="./city-2026-09-23.json" title="Dated Micropolis DESIGN city projection">
   <title>Simulation Observatory | Council of AI</title>
   <style>
     :root { color-scheme: dark; --bg:#081017; --panel:#101d29; --line:#293b48; --ink:#eaf3f6; --muted:#acc0ca; --accent:#74e6c0; --blue:#9cbeff; }
@@ -70,6 +71,21 @@
       <div class="stat"><div class="label">Source generated</div><div class="value" id="source-date">—</div><div class="small">This is the source date, not today's run count</div></div>
       <div class="stat"><div class="label">Upstream signatures verified here</div><div class="value">0</div><div class="small">Boolean flags are not cryptographic verification</div></div>
     </div>
+    <section aria-labelledby="city-heading">
+      <h2 id="city-heading">Micropolis city snapshot</h2>
+      <p class="section-intro">A bounded DESIGN simulation export from 23 September 2026. The RunPod ingest matched the source delta to its manifest and latest row before this projection was made. This is a dated snapshot, not a continuously served feed or a real city outcome.</p>
+      <div class="stats" aria-live="polite">
+        <div class="stat"><div class="label">Simulation rows in this snapshot</div><div class="value" id="city-rows">—</div><div class="small">Bounded source export; not independent users</div></div>
+        <div class="stat"><div class="label">Source generated</div><div class="value" id="city-date">—</div><div class="small">UTC capture time, not current site activity</div></div>
+        <div class="stat"><div class="label">Latest simulation tick</div><div class="value" id="city-tick">—</div><div class="small">No real-world compliance meaning</div></div>
+      </div>
+      <div class="provenance">
+        <div><span class="label">Public projection</span><span><a href="./city-2026-09-23.json">Download dated city JSON</a></span></div>
+        <div><span class="label">Raw delta SHA-256</span><span class="mono" id="city-source-hash">—</span></div>
+        <div><span class="label">Scope</span><span>The full raw export is not public in this view; its digest was checked during ingestion. The downloadable JSON includes only DESIGN simulation fields.</span></div>
+        <div><span class="label">Snapshot status</span><span id="city-status">Loading dated projection…</span></div>
+      </div>
+    </section>
     <section aria-labelledby="source-heading">
       <h2 id="source-heading">Where these rows came from</h2>
       <p class="section-intro">The source URL and exact digest are included so readers can download the source and compare bytes. The import's hash head is a local linkage check, not a Bitcoin anchor or signed receipt.</p>
@@ -175,6 +191,20 @@
       $('result-count').textContent = `Index unavailable (${error.message}). No counts inferred.`;
       $('import-status').textContent = 'Unavailable';
       $('records').replaceChildren();
+    });
+    fetch('./city-2026-09-23.json', { cache: 'no-store' }).then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }).then(data => {
+      if (data.schema !== 'csoai.simulation-city-snapshot/1' || !Array.isArray(data.rows) || data.kind !== 'dated DESIGN simulation projection') throw new Error('Unrecognised city snapshot');
+      if (data.rows.length !== data.source?.rows_checked || data.latest?.tick !== data.rows.at(-1)?.tick) throw new Error('City row count or latest tick mismatch');
+      $('city-rows').textContent = data.rows.length.toLocaleString();
+      $('city-date').textContent = String(data.source.generated_at || 'unknown').replace('T', ' ').slice(0, 16) + ' UTC';
+      $('city-tick').textContent = String(data.latest.tick);
+      $('city-source-hash').textContent = data.source.delta_sha256 || 'unavailable';
+      $('city-status').textContent = 'Dated DESIGN simulation projection; source digest and latest row checked at ingest. No real-world verdict.';
+    }).catch(error => {
+      $('city-status').textContent = `City snapshot unavailable (${error.message}). No values inferred.`;
     });
   })();
   </script>
