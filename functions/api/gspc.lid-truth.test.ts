@@ -23,12 +23,18 @@ import { onRequestGet } from "./gspc";
 type Totals = {
   measured_axes: number;
   model_fleets: number;
+  separated_leads: number;
   public_leader_count: number;
   fact_runs: number;
+  comparison_axes: number;
+  ties: number;
+  untested_separations: number;
+  separation_public_count: string;
+  count_grammar: string;
   lid: string;
 };
 
-/** The four numbers the lid states, by the noun each one is attached to. */
+/** The five numbers the lid states, by the noun each one is attached to. */
 export function lidNumbers(lid: string): Record<string, number | null> {
   const read = (re: RegExp) => {
     const m = lid.match(re);
@@ -37,6 +43,7 @@ export function lidNumbers(lid: string): Record<string, number | null> {
   return {
     measured_axes: read(/(\d+)\s+axes?\s+measured\b/i),
     model_fleets: read(/(\d+)\s+model\s+fleets?\b/i),
+    separated_leads: read(/(\d+)\s+separated\s+leaders?\b/i),
     public_leader_count: read(/(\d+)\s+public\s+leader\s+scores?\b/i),
     fact_runs: read(/(\d+)\s+fact\s+runs?\b/i),
   };
@@ -63,7 +70,7 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
   it("serves a lid and the four counts this guard reads (not a vacuous pass)", () => {
     expect(typeof totals.lid).toBe("string");
     expect(totals.lid.length).toBeGreaterThan(20);
-    for (const field of ["measured_axes", "model_fleets", "public_leader_count", "fact_runs"] as const) {
+    for (const field of ["measured_axes", "model_fleets", "separated_leads", "public_leader_count", "fact_runs"] as const) {
       expect(typeof totals[field], `totals.${field} must be a number`).toBe("number");
     }
   });
@@ -77,8 +84,8 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
 
   it("the parser is not vacuous — it reads the numbers it is given", () => {
     expect(
-      lidNumbers("7 axes measured · 2 model fleets · 5 public leader scores · 4 fact runs · TIE is TIE."),
-    ).toEqual({ measured_axes: 7, model_fleets: 2, public_leader_count: 5, fact_runs: 4 });
+      lidNumbers("7 axes measured · 2 model fleets · 1 separated leaders · 5 public leader scores · 4 fact runs · TIE is TIE."),
+    ).toEqual({ measured_axes: 7, model_fleets: 2, separated_leads: 1, public_leader_count: 5, fact_runs: 4 });
   });
 
   it("catches the exact 2026-09-22 defect: lid says 8 fact runs, totals says 9", () => {
@@ -89,7 +96,7 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
     expect(drifted.fact_runs).not.toBe(9);
   });
 
-  for (const field of ["measured_axes", "model_fleets", "public_leader_count", "fact_runs"] as const) {
+  for (const field of ["measured_axes", "model_fleets", "separated_leads", "public_leader_count", "fact_runs"] as const) {
     it(`lid's ${field} equals totals.${field}`, () => {
       expect(lidNumbers(totals.lid)[field]).toBe(totals[field]);
     });
@@ -98,5 +105,47 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
   it("the lid keeps its non-numeric promises", () => {
     expect(totals.lid).toContain("TIE is TIE");
     expect(totals.lid).toContain("not a certificate");
+  });
+});
+
+/**
+ * D-2026-09-23T03-02. totals could state how many axis carry a RUN and had no field that
+ * stated how many can tell two models apart, so every surface quoting the headline
+ * inherited the blind spot. The aggregate now sits beside the count, and the three states
+ * stay three states.
+ */
+describe("GET /api/gspc: totals can express the negative, from one derivation", () => {
+  let totals: Totals;
+  beforeAll(async () => {
+    totals = await servedTotals();
+  });
+
+  it("carries a separation aggregate beside the measured count", () => {
+    expect(typeof totals.separation_public_count).toBe("string");
+    expect(totals.separation_public_count).toContain("separated a leader");
+    expect(totals.separation_public_count).toContain("TIE");
+    expect(totals.separation_public_count).toContain("UNTESTED");
+  });
+
+  it("the aggregate states the same three numbers as the tallies beside it", () => {
+    expect(totals.separation_public_count).toBe(
+      `${totals.separated_leads} of ${totals.comparison_axes} model-comparison axis separated a leader · ` +
+        `${totals.ties} TIE · ${totals.untested_separations} UNTESTED`,
+    );
+  });
+
+  it("the three separation states account for every model-comparison axis, none folded into another", () => {
+    expect(totals.separated_leads + totals.ties + totals.untested_separations).toBe(totals.comparison_axes);
+    expect(totals.comparison_axes).toBeGreaterThan(0);
+  });
+
+  it("count_grammar carries the negative, not only the count", () => {
+    expect(totals.count_grammar).toContain("not a separated leader");
+    expect(totals.count_grammar).toContain(totals.separation_public_count);
+  });
+
+  it("measured_axes is never quoted as a separation count", () => {
+    // the defect this guards: a reader taking "N measured" for "N axes told two models apart"
+    expect(totals.measured_axes).not.toBe(totals.separated_leads);
   });
 });

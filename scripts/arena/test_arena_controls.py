@@ -20,6 +20,17 @@ from cryptography.exceptions import InvalidSignature  # noqa: E402
 
 REG = {"axis": "gov", "status": "MEASURED", "scored_items": 237, "models": 19, "majority_baseline": 0.2911}
 
+# The BOARD row the signal now defers to for the axis's separation verdict. Shaped exactly as
+# GET /api/gspc serves a model-comparison axis, including the dataset slug the join reads.
+def board(separation, leader=None, n=237, axis="governance", slug="gov"):
+    return {"axis": axis, "family": "gspc", "kind": "model-comparison", "bench": "GovBench",
+            "dataset": f"csoai/gspc-{slug}", "status": "MEASURED", "n": n,
+            "separation": separation, "leader": leader}
+
+BOARD_SEPARATED = board("SEPARATED", "alpha:7b (base model)")
+BOARD_TIE = board("TIE", "alpha:7b (base model)")
+BOARD_UNTESTED = board("UNTESTED", "qwen2.5:7b (base model)")
+
 
 def rounds(axis, a, b, a_wins, b_wins, ties=0):
     out = []
@@ -41,8 +52,9 @@ def test_planted_winner_is_ranked_first_and_separated():
     rows = body["per_axis"]["gov"]
     assert rows[0]["model"] == "alpha:7b" and rows[0]["games"] == 20 and rows[0]["winrate"] == 1.0
     assert rows[1]["model"] == "beta:7b" and rows[1]["winrate"] == 0.0
-    sig = derive_signal(REG, rows, body, "2026-09-22T00:00:00Z")
+    sig = derive_signal(REG, rows, body, "2026-09-22T00:00:00Z", None, BOARD_SEPARATED)
     assert sig["elo_separation"] == "SEPARATED" and sig["elo_leader"] == "alpha:7b"
+    # MEASURED only because the BOARD separated this axis too — see the control below.
     assert sig["status"] == "MEASURED" and sig["register"] == "MEASURED"
 
 
@@ -56,7 +68,7 @@ def test_reversed_plant_flips_the_leader():
 
 def test_even_split_is_a_tie_never_a_leader():
     body = build(rounds("gov", "alpha:7b", "beta:7b", 10, 10), [])
-    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t")
+    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t", None, BOARD_TIE)
     assert sig["elo_separation"] == "TIE" and sig["elo_leader"] is None
     assert sig["status"] == "TIE" and sig["elo_top"] is not None
 
@@ -64,8 +76,11 @@ def test_even_split_is_a_tie_never_a_leader():
 def test_thin_n_is_unmeasured():
     body = build(rounds("gov", "alpha:7b", "beta:7b", MIN_GAMES - 1, 0), [])
     assert body["per_axis"]["gov"] == []
-    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t")
-    assert sig["status"] == "UNMEASURED" and sig["elo_leader"] is None and sig["elo_top"] is None
+    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t", None, BOARD_UNTESTED)
+    # thin n names no leader HERE; the axis status is the board's, and the board has not
+    # tested this axis, so UNTESTED — not folded into UNMEASURED, which means something else.
+    assert sig["elo_separation"] == "UNMEASURED" and sig["elo_leader"] is None and sig["elo_top"] is None
+    assert sig["status"] == "UNTESTED"
 
 
 def test_ties_carry_no_rating_but_are_counted():
@@ -85,7 +100,9 @@ def test_provenance_keys_are_not_models():
 
 def test_unmeasured_axis_on_register_never_measured_signal():
     body = build(rounds("gov", "alpha:7b", "beta:7b", 20, 0), [])
-    sig = derive_signal(dict(REG, status="UNMEASURED"), body["per_axis"]["gov"], body, "t")
+    sig = derive_signal(dict(REG, status="UNMEASURED"), body["per_axis"]["gov"], body, "t",
+                        None, BOARD_SEPARATED)
+    # even a SEPARATED board verdict cannot promote an axis the register calls UNMEASURED
     assert sig["status"] == "UNMEASURED" and sig["elo_leader"] is None
 
 
@@ -130,6 +147,99 @@ def test_verify_signed_accepts_board_style_and_rejects_forgery():
                          capture_output=True, text=True)
     assert ok.returncode == 0 and "VALID" in ok.stdout, ok.stdout + ok.stderr
     assert bad.returncode == 1 and "INVALID" in bad.stdout, bad.stdout + bad.stderr
+
+
+# ---------------------------------------------------------------------------------------------
+# TWO-SURFACE AGREEMENT CONTROLS (2026-09-23)
+# The live defect these are for: /api/gspc served swarm as UNTESTED with leader qwen2.5:7b
+# while /signals/swarm.signed.json served SEPARATED with leader nemotron-3-nano:30b — both
+# board-signed, both live, one axis id. A reader who checked us found two signatures and two
+# answers. These plant that exact shape and assert the chain can no longer produce it.
+# ---------------------------------------------------------------------------------------------
+
+def test_board_untested_can_never_become_a_measured_signal():
+    """THE control for this lane. Arena evidence that separates, on an axis the BOARD has not
+    tested, must not publish a MEASURED axis status — and must not throw the arena finding
+    away either. Both verdicts survive, in their own fields, with the relation named."""
+    body = build(rounds("gov", "alpha:7b", "beta:7b", 20, 0), [])
+    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t", None, BOARD_UNTESTED)
+    # the arena result is intact and still names its own leader
+    assert sig["elo_separation"] == "SEPARATED" and sig["elo_leader"] == "alpha:7b"
+    # but the AXIS status is the board's, and the board has not tested it
+    assert sig["status"] == "UNTESTED" and sig["register"] == "UNTESTED"
+    a = sig["separation_authority"]
+    assert a["board_separation"] == "UNTESTED" and a["board_axis"] == "governance"
+    assert a["board_leader"] == "qwen2.5:7b (base model)" and a["surface"] == "GET /api/gspc"
+    assert sig["evidence_relation"] == "SEPARATE_EVIDENCE"
+    assert sig["schema"] == "csoai.axis-signal/0.4"
+
+
+def test_the_two_leaders_are_never_the_same_field():
+    """The board's leader and the arena's leader may differ and both stay readable. The bytes
+    must say, in words, that the board's leader is not among the models ranked here."""
+    body = build(rounds("gov", "alpha:7b", "beta:7b", 20, 0), [])
+    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t", None, BOARD_UNTESTED)
+    assert sig["elo_leader"] == "alpha:7b"
+    assert sig["separation_authority"]["board_leader"] == "qwen2.5:7b (base model)"
+    assert "NOT among" in sig["evidence_relation_note"]
+    assert "Never add, reconcile or substitute" in sig["evidence_relation_note"]
+    # and when they DO coincide the note says so rather than crying drift
+    sig2 = derive_signal(REG, body["per_axis"]["gov"], body, "t", None,
+                         board("SEPARATED", "alpha:7b (base model)"))
+    assert "is among" in sig2["evidence_relation_note"]
+
+
+def test_register_board_item_drift_is_published_not_reconciled():
+    """swarm's register row still describes the retired 40-item PROTOCOL bank while the board
+    serves a 37-item one. A signed file may not carry the stale count silently, and may not
+    invent the missing baseline either: it publishes the disagreement."""
+    body = build(rounds("gov", "alpha:7b", "beta:7b", 20, 0), [])
+    sig = derive_signal(REG, body["per_axis"]["gov"], body, "t", None,
+                        board("UNTESTED", "qwen2.5:7b (base model)", n=37))
+    d = sig["register_board_drift"]
+    assert d["state"] == "PUBLISHED_NOT_RECONCILED"
+    assert d["register_scored_items"] == 237 and d["board_n"] == 37
+    # no drift block when the two agree — the field is a defect report, not decoration
+    sig2 = derive_signal(REG, body["per_axis"]["gov"], body, "t", None, BOARD_UNTESTED)
+    assert "register_board_drift" not in sig2
+
+
+def test_a_signal_stays_inside_the_signers_payload_limit():
+    """POST /api/board-sign refuses a payload over 3072 bytes, so prose added to a signal can
+    silently stop the hourly loop signing anything. This plants the heaviest shape a signal
+    can take -- board drift AND a supersedes block -- and holds the line."""
+    # the real worst case on the live board: three ranked models with long ids, on the axis
+    # whose register row ALSO drifts from the board's bank.
+    body = build(rounds("swarm", "nemotron-3-nano:30b", "gemma3:12b", 15, 0)
+                 + rounds("swarm", "gemma3:12b", "mistral:7b", 1, 6), [])
+    assert len(body["per_axis"]["swarm"]) == 3
+    prev = {"content_id": "a" * 64, "generated": "2026-09-23T03:36:33Z",
+            "signer": "did:web:csoai.org#board-attestation-1", "status_then": "MEASURED",
+            "elo_leader_then": "nemotron-3-nano:30b",
+            "note": "superseded, never edited; new bytes, new signature"}
+    sig = derive_signal(dict(REG, axis="swarm", scored_items=40), body["per_axis"]["swarm"],
+                        body, "2026-09-23T00:00:00Z", prev,
+                        board("UNTESTED", "qwen2.5:7b (base model)", n=37,
+                              axis="swarm", slug="swarm"))
+    assert "register_board_drift" in sig and "supersedes" in sig
+    n = len(canonical(sig))
+    assert n <= 3072, f"signal is {n} bytes; POST /api/board-sign would refuse it"
+
+
+def test_board_join_reads_the_boards_own_slug_and_refuses_a_miss():
+    """No typed crosswalk: the slug comes off the board's dataset field. jail's bank extends
+    the register id, and an axis with no board row returns None so main() can refuse it."""
+    from emit_signals import board_rows_by_slug, board_row_for
+    brd = {"axes": [
+        {"axis": "swarm", "kind": "model-comparison", "dataset": "csoai/gspc-swarm", "separation": "UNTESTED"},
+        {"axis": "jail", "kind": "model-comparison", "dataset": "csoai/gspc-jail-goldbank", "separation": "TIE"},
+        {"axis": "financial", "kind": "deterministic-facts", "dataset": "csoai/gspc-fin"},
+    ]}
+    by = board_rows_by_slug(brd)
+    assert set(by) == {"swarm", "jail-goldbank"}, "a fact axis was joined as a model comparison"
+    assert board_row_for("swarm", by)["separation"] == "UNTESTED"
+    assert board_row_for("jail", by)["separation"] == "TIE"
+    assert board_row_for("gov", by) is None
 
 
 # ---------------------------------------------------------------------------------------------

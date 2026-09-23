@@ -395,6 +395,22 @@ export const onRequestGet: PagesFunction = async (context) => {
       // factRunCount counts deterministic-facts axes that carry a MEASURED run. A declared
       // slot with no run behind it is not a run, so it is not counted as one — the same
       // rule measured_axes keeps. Today all 9 are measured, so this number is unchanged.
+      // ── the separation aggregate, derived ONCE (D-2026-09-23T03-02) ──────────
+      // totals carried measured_axes and the count line at the top, and the separation
+      // tallies forty fields below, behind a wall of prose. Every surface that quotes the
+      // headline quoted "23 axis · 23 measured" and inherited the blind spot: the payload
+      // could not express the NEGATIVE — that 0 of the 14 model-comparison axes has been
+      // shown to tell two models apart — although limitations[0] of the same payload
+      // already said so correctly. A count of RUNS is not a count of proven leaders.
+      // These three consts are the single derivation: separated_leads/ties/
+      // untested_separations, separation_public_count, count_grammar and the lid all read
+      // them, so a second derivation cannot drift from the first (see the G-3 note above).
+      const separatedLeads = cmp.filter((a) => a.separation === "SEPARATED").length;
+      const tieCount = cmp.filter((a) => a.separation === "TIE").length;
+      const untestedCount = cmp.filter((a) => a.separation === "UNTESTED").length;
+      const separationPublicCount =
+        `${separatedLeads} of ${cmp.length} model-comparison axis separated a leader · ` +
+        `${tieCount} TIE · ${untestedCount} UNTESTED`;
       const modelFleetCount = selected.filter((a: any) => a.kind === "model-comparison").length;
       const factRunCount = factRuns.filter((a) => a.status === "MEASURED").length;
       const publicLeaderScoreCount = externallyLedAxes.length;
@@ -407,17 +423,30 @@ export const onRequestGet: PagesFunction = async (context) => {
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
+        // Quote this BESIDE public_count. measured counts axis that carry a run; it has
+        // never been a count of axis that can tell two models apart, and until now the
+        // payload had no field that said so at the point the count is read.
+        separation_public_count: separationPublicCount,
+        separation_public_count_note:
+          "Read with public_count, never instead of it. measured_axes counts axis with a RUN behind " +
+          "them; it is not a count of axis with a separated leader. SEPARATED, TIE and UNTESTED are " +
+          "three states and none is folded into another. Derived from the axis array, never typed. " +
+          "The same three numbers appear below as separated_leads / ties / untested_separations and " +
+          "in limitations[0]; there is one derivation.",
         model_fleets: modelFleetCount,
         fact_runs: factRunCount,
         count_grammar:
           unmeasured === 0
             ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
               `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
-              `future slot is added with no run behind it, this line separates the two again on its own.`
+              `future slot is added with no run behind it, this line separates the two again on its own. ` +
+              `A measurement is not a separated leader: ${separationPublicCount}. A point-estimate lead ` +
+              `is not a measured advantage, and UNTESTED is not a tie.`
             : `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
               `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
               `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
-              `so the gap is visible; it is not evidence of anything having been measured.`,
+              `so the gap is visible; it is not evidence of anything having been measured. ` +
+              `A measurement is not a separated leader either: ${separationPublicCount}.`,
         by_family: {
           gspc: {
             ...bySelectedFamily("gspc"),
@@ -469,9 +498,9 @@ export const onRequestGet: PagesFunction = async (context) => {
           "Read items as 'rows behind the board', not as a single comparable sample.",
         // Separation stats are over model-comparison axis ONLY — see comparison_axes.
         comparison_axes: cmp.length,
-        separated_leads: cmp.filter((a) => a.separation === "SEPARATED").length,
-        ties: cmp.filter((a) => a.separation === "TIE").length,
-        untested_separations: cmp.filter((a) => a.separation === "UNTESTED").length,
+        separated_leads: separatedLeads,
+        ties: tieCount,
+        untested_separations: untestedCount,
         separation_scope_note:
           "Separation asks whether a leader's lead over a fleet is statistically real, so it applies " +
           "only to the model-comparison axes. The financial axes have no fleet and no leader: they are " +
@@ -486,11 +515,11 @@ export const onRequestGet: PagesFunction = async (context) => {
         public_leader_count: publicLeaderScoreCount,
         // Every number here is the SAME binding the totals field beside it publishes.
         // functions/api/gspc.lid-truth.test.ts re-parses this string and asserts each
-        // number against measured_axes / model_fleets / public_leader_count / fact_runs,
-        // so a lid can never again read a count the payload contradicts.
+        // number against measured_axes / model_fleets / separated_leads / public_leader_count /
+        // fact_runs, so a lid can never again read a count the payload contradicts.
         lid:
-          `${measured} axes measured · ${modelFleetCount} model fleets · ${publicLeaderScoreCount} public leader scores · ` +
-          `${factRunCount} fact runs · TIE is TIE · not a certificate.`,
+          `${measured} axes measured · ${modelFleetCount} model fleets · ${separatedLeads} separated leaders · ` +
+          `${publicLeaderScoreCount} public leader scores · ${factRunCount} fact runs · TIE is TIE · not a certificate.`,
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
