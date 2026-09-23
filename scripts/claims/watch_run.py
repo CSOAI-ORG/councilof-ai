@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -169,6 +170,67 @@ def previous(out: Path, cid: str) -> dict | None:
     return json.loads((runs[-1] / f"{cid}.json").read_text(encoding="utf-8")) if runs else None
 
 
+def attach_prior_comparisons(out: Path, registry: Path, current: dict, run_dir: Path) -> dict:
+    """Compare old-registry claims with a prior *successful* read of the same URL and extractor.
+
+    Pre-specification registries recorded response-body hashes, while reread.mjs hashes visible
+    text. Those are not comparable. The first successful reread is therefore a baseline; later
+    runs can compare it, without editing or re-signing the immutable registry. A failed read does
+    not become a baseline, and changing a URL or extractor starts a new one.
+    """
+    rows = current.get("readings")
+    if not isinstance(rows, list):
+        return current
+    wanted = {(r.get("claim_id"), r.get("url"), r.get("covers")) for r in rows
+              if isinstance(r, dict) and r.get("changed") is None and r.get("recorded_hash") is None
+              and isinstance(r.get("current_hash"), str)
+              and re.fullmatch(r"[0-9a-f]{64}", r["current_hash"])
+              and isinstance(r.get("http_status"), int) and 200 <= r["http_status"] < 300}
+    prior = {}
+    for old_dir in sorted(out.glob("run-*"), reverse=True):
+        if old_dir == run_dir or len(prior) == len(wanted):
+            continue
+        path = old_dir / f"reread-{registry.stem}.json"
+        if not path.is_file():
+            continue
+        try:
+            raw = path.read_bytes()
+            old = json.loads(raw)
+        except (OSError, ValueError):
+            continue
+        if (not isinstance(old, dict) or old.get("registry_id") != current.get("registry_id")
+                or old.get("extractor") != current.get("extractor")
+                or not isinstance(old.get("read_at_utc"), str)):
+            continue
+        for row in old.get("readings") or []:
+            if not isinstance(row, dict):
+                continue
+            key = (row.get("claim_id"), row.get("url"), row.get("covers"))
+            h = row.get("current_hash")
+            status = row.get("http_status")
+            if (key in wanted and key not in prior and isinstance(h, str)
+                    and re.fullmatch(r"[0-9a-f]{64}", h)
+                    and isinstance(status, int) and 200 <= status < 300
+                    and row.get("recorded_as") != "SEARCH_INCONCLUSIVE"):
+                prior[key] = (h, old["read_at_utc"], c.sha256_hex(raw))
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        key = (row.get("claim_id"), row.get("url"), row.get("covers"))
+        if key not in wanted:
+            continue
+        if key not in prior:
+            row["comparison_basis"] = "FIRST_COMPARABLE_READ"
+            continue
+        h, read_at, artifact_hash = prior[key]
+        row["previous_read_hash"] = h
+        row["previous_read_at_utc"] = read_at
+        row["previous_read_artifact_sha256"] = artifact_hash
+        row["comparison_basis"] = "PREVIOUS_SUCCESSFUL_READ_SAME_URL_AND_EXTRACTOR"
+        row["changed"] = row["current_hash"] != h
+    return current
+
+
 def main() -> int:
     if "--now" not in sys.argv:
         print("REFUSED: --now is required; the scheduler owns the stamp and this script writes none")
@@ -257,6 +319,7 @@ def main() -> int:
     else:
         for regfile in live_registries(repo):
             res = reread_registry(repo, regfile, node)
+            res = attach_prior_comparisons(out, regfile, res, rundir)
             (rundir / f"reread-{regfile.stem}.json").write_text(
                 json.dumps(res, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
             readings = res.get("readings") or []
@@ -270,15 +333,21 @@ def main() -> int:
                 "digests_that_moved": len(moved),
                 "unreachable_this_run": len(unreachable),
                 "no_comparable_recorded_digest": len(baselines),
+                "compared_to_previous_successful_read": sum(
+                    r.get("comparison_basis") == "PREVIOUS_SUCCESSFUL_READ_SAME_URL_AND_EXTRACTOR"
+                    for r in readings),
                 "error": res.get("error"),
             }
             for r in moved:
                 changes.append({
                     "claim": r.get("claim_id"), "kind": "source_digest_differs_from_the_recorded_read",
                     "detail": {"subject": r.get("subject"), "url": r.get("url"),
-                               "previous_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash"),
-                               "covers": r.get("covers")},
-                    "note": ("the bytes at this URL differ from the bytes recorded at the previous read. "
+                               "previous_hash": r.get("previous_read_hash") or r.get("recorded_hash"),
+                               "previous_read_at_utc": r.get("previous_read_at_utc"),
+                               "previous_read_artifact_sha256": r.get("previous_read_artifact_sha256"),
+                               "comparison_basis": r.get("comparison_basis") or "REGISTRY_DIGEST",
+                               "current_hash": r.get("current_hash"), "covers": r.get("covers")},
+                    "note": ("the bytes at this URL differ from a named comparable earlier read. "
                              "That is the entire content of this statement. There are many ordinary "
                              "reasons a page changes and this loop holds no view about which applies")})
             for r in unreachable:
@@ -311,6 +380,8 @@ def main() -> int:
         "states": {k: v.get("state") for k, v in sorted(results.items())},
         "artifacts": {f"{k}.json": c.sha256_hex((rundir / f"{k}.json").read_bytes()) for k in sorted(results)},
         "registry_reread": registry_reads,
+        "registry_reread_artifacts": {
+            p.name: c.sha256_hex(p.read_bytes()) for p in sorted(rundir.glob("reread-*.json"))},
         "reread_extractor": ("scripts/claims/reread.mjs, which imports extractVisibleText from the "
                              "reference implementation named by the specification. One extractor for "
                              "the capture and the re-read, so a digest difference is a difference in "
