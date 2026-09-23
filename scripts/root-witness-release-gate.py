@@ -781,6 +781,35 @@ def witness_ots_targets() -> dict[str, str]:
     return targets
 
 
+def exact_retained_binding(proof: Path, digest: str, index: dict[str, Any]) -> tuple[str, str] | None:
+    """Accept aliases only when both actual proof and target bytes match all declared digests."""
+    bindings = index.get("bindings") if isinstance(index, dict) else None
+    if not isinstance(bindings, dict) or index.get("schema") != "csoai.ots-exact-byte-bindings/0.1" or len(bindings) > 1000:
+        raise ValueError("invalid bounded exact-byte binding registry")
+    key = proof.relative_to(PUBLIC).as_posix()
+    if key not in bindings:
+        return None
+    row = bindings[key]
+    if not isinstance(row, dict) or row.get("digest") != digest or row.get("proof_sha256") != sha256(proof.read_bytes()):
+        raise ValueError("proof binding does not match actual proof bytes and detached digest")
+    rel = row.get("target")
+    if not isinstance(rel, str) or rel.startswith("/") or "\\" in rel or any(part in {"", ".", ".."} for part in rel.split("/")):
+        raise ValueError("unsafe exact-byte target path")
+    target = PUBLIC
+    for part in rel.split("/"):
+        target = target / part
+        if target.is_symlink():
+            raise ValueError("symlink target is not a retained-byte binding")
+    if PUBLIC.resolve() not in target.resolve().parents or not target.is_file() or target.stat().st_size > 8000000:
+        raise ValueError("exact-byte target missing or over budget")
+    before = target.stat()
+    raw = target.read_bytes()
+    after = target.stat()
+    if (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns) or sha256(raw) != digest:
+        raise ValueError("retained target bytes do not match the detached proof commitment")
+    return digest, canonical_public_path(target)
+
+
 def validate_ots(errors: list[str]) -> set[str]:
     try:
         from opentimestamps.core.serialize import StreamDeserializationContext
@@ -790,6 +819,15 @@ def validate_ots(errors: list[str]) -> set[str]:
         return set()
 
     declared_targets = witness_ots_targets()
+    binding_path = INTEROP / "ots-exact-bindings-v1.json"
+    exact_bindings = None
+    if binding_path.exists():
+        try:
+            if binding_path.is_symlink() or binding_path.stat().st_size > 1000000:
+                raise ValueError("unbounded binding registry")
+            exact_bindings = load_json(binding_path)
+        except Exception as exc:
+            errors.append(f"exact-byte binding registry unreadable: {type(exc).__name__}")
     valid: set[str] = set()
     for proof in sorted(PUBLIC.rglob("*.ots")):
         relative = canonical_public_path(proof)
@@ -804,7 +842,16 @@ def validate_ots(errors: list[str]) -> set[str]:
         adjacent = Path(str(proof)[: -len(".ots")])
         target_digest: str | None = None
         target_label: str | None = None
-        if adjacent.is_file():
+        exact = None
+        if exact_bindings is not None:
+            try:
+                exact = exact_retained_binding(proof, digest, exact_bindings)
+            except Exception as exc:
+                errors.append(f"invalid exact-byte proof binding {relative}: {type(exc).__name__}: {exc}")
+                continue
+        if exact is not None:
+            target_digest, target_label = exact
+        elif adjacent.is_file():
             target_digest = sha256(adjacent.read_bytes())
             target_label = canonical_public_path(adjacent)
         elif relative in declared_targets:

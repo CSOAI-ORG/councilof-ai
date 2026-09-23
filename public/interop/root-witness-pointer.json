@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-09-22T08:56:21Z",
+ "as_of": "2026-09-23T05:23:04Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
@@ -24,25 +24,25 @@
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-09-22-ae8bbfce.json"
+  "dated_copy": "public/interop/root-witness-2026-09-23-ae8bbfce-proofrefresh.json"
  },
  "drift": {
-  "status": "DRIFTED",
-  "checked_at": "2026-09-22T08:56:29Z",
+  "status": "MATCH",
+  "checked_at": "2026-09-23T05:26:34Z",
   "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
-  "live_root_sha256": "dedb49d05cf8a37a65a5eb19332881d804240ef741171edf153cbe053b1368e4",
+  "live_root_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
   "witness_artifact_merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
-  "live_root_merkle_root": "07dd5eb3eb0e5c9eae40f56ce859a064dff95f2eed47acad64fb54a1aa0122e2",
-  "live_root_bytes": 24454,
-  "match_sha256": false,
-  "match_merkle_root": false,
-  "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
+  "live_root_merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
+  "live_root_bytes": 24505,
+  "match_sha256": true,
+  "match_merkle_root": true,
+  "reason": "Exact live-root readback against the unchanged witnessed root; no new measurement or signature."
  },
- "witness_status_observed_at": "2026-09-22T08:56:20Z",
+ "witness_status_observed_at": "2026-09-23T05:23:04Z",
  "witnesses": {
   "rekor": "WITNESSED",
-  "ots": "STAMPED_PENDING_BITCOIN",
+  "ots": "CONFIRMED_BITCOIN",
   "eas_base": "NOT_YET",
   "xrpl_memo": "NOT_YET"
  },

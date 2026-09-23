@@ -1,0 +1,6 @@
+// Exact historical proof remains downloadable; do not imply a current target binding.
+const record = {"schema": "csoai.unresolved-timestamp-disposition/0.1", "state": "HISTORICAL_PROOF_TARGET_NOT_RECOVERED", "original_url": "/interop/door-demand-payai-2026-09-17-r2.json.ots", "archive_url": "/archive/timestamp-orphans/ec9757ac78529e00e8f530640d7e87a9553084fd22dc729469ce9b03c33a302d.bin", "proof_sha256": "ec9757ac78529e00e8f530640d7e87a9553084fd22dc729469ce9b03c33a302d", "proof_bytes": 3606, "detached_target_sha256": "4258b65ea426ec41d9be34dd7d4cb256fd815342edc31e01d2522d2839580557", "recorded_at": "2026-09-23T05:26:34Z", "reason": "The detached commitment parses, but its target bytes were not recovered in the checked estate. It must not be advertised as proof of a current artifact.", "original_proof_bytes_preserved": true, "new_timestamp_created": false, "source_truth_verdict": null};
+export const onRequest: PagesFunction = async ({request}) => {
+ if (!["GET","HEAD"].includes(request.method)) return new Response("Method not allowed",{status:405,headers:{allow:"GET, HEAD"}});
+ return new Response(request.method==="HEAD"?null:JSON.stringify(record),{status:410,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-csoai-evidence-state":"HISTORICAL_PROOF_TARGET_NOT_RECOVERED","access-control-allow-origin":"*"}});
+};

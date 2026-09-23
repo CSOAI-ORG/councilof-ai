@@ -1,6 +1,6 @@
 {
  "kind": "csoai.root-witness/v1",
- "as_of": "2026-09-23T05:23:04Z",
+ "as_of": "2026-09-22T08:56:21Z",
  "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
  "artifact": {
   "url": "https://councilof.ai/root.json",
@@ -51,33 +51,13 @@
   "ots": {
    "path": "public/interop/root-ae8bbfce.json.ots",
    "url": "https://councilof.ai/interop/root-ae8bbfce.json.ots",
-   "proof_sha256": "065139efdca74bbebb971bcf9db36241f977134204521a0e8f8199ec2994fa86",
+   "proof_sha256": "9b31c34faae52b33db26f7486784c93b6b4c544e8619ab9c92ca1984927717b8",
    "subject_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
-   "bitcoin_blocks": [
-    968130,
-    968132,
-    968134,
-    968135
-   ],
-   "observed_at": "2026-09-23T05:23:04Z",
+   "bitcoin_blocks": [],
+   "observed_at": "2026-09-22T08:56:20Z",
    "scope": "PUBLIC_ROOT_BYTES_ONLY",
-   "status": "CONFIRMED_BITCOIN",
-   "note": "Exact proof-path Merkle binding plus two-public-API blockheight/header agreement; not a local full-chain Bitcoin-node verification.",
-   "bitcoin_header": {
-    "height": 968130,
-    "block_hash": "00000000000000000000170ef253f4d29e92d87ab5b012977b57f71e93e30adc",
-    "hex": "00e028247ee10158e0c33267ff28ccbfb940edf6496cbbef1ba3010000000000000000007ad78b0242b9c6ed3b1eeef8c0e457e0e8f0182c14f35755cedb1345f488b89dcc52b26ac51e0217686e7666",
-    "header_sha256": "249391c18e3308b1425f3abaf2dbdf1105dfed863c64d8da49fccb239d3aea4f",
-    "block_time_unix": 1790071500,
-    "block_time": "2026-09-22T10:05:00Z",
-    "verified_at": "2026-09-23T05:23:04Z",
-    "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
-    "sources": [
-     "https://blockstream.info/api/block/00000000000000000000170ef253f4d29e92d87ab5b012977b57f71e93e30adc/header",
-     "https://mempool.space/api/block/00000000000000000000170ef253f4d29e92d87ab5b012977b57f71e93e30adc/header"
-    ]
-   },
-   "local_full_node_verified": false
+   "status": "STAMPED_PENDING_BITCOIN",
+   "note": "Status is derived from the proof bytes. Pending is not a Bitcoin timestamp."
   },
   "eas_base": {
    "status": "NOT_YET",
@@ -101,7 +81,5 @@
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
- },
- "supersedes_witness_sha256": "b33ece29a5c8804a55587926177eeb0c96634db36e93ca02a82e9581225d454c",
- "refresh_scope": "Existing exact public-root bytes and original signature preserved. OTS metadata refreshed from parsed proof, exact header-Merkle binding and two-public-API header agreement; not a local full-node chain validation."
+ }
 }
