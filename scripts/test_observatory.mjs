@@ -1,6 +1,6 @@
 import { chromium } from '@playwright/test';
 
-const url = 'http://127.0.0.1:8789/world/observatory/';
+const url = process.env.OBSERVATORY_URL || 'http://127.0.0.1:8789/world/observatory/';
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1365, height: 900 }, deviceScaleFactor: 1 });
@@ -16,6 +16,11 @@ try {
   if (await page.locator('.record').count() !== 1) throw new Error('Search did not isolate source ID');
   if (errors.length) throw new Error(`Page errors: ${errors.join('; ')}`);
 
+  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await mobile.goto(url, { waitUntil: 'networkidle' });
+  await mobile.getByText('1,201', { exact: true }).waitFor();
+  await mobile.screenshot({ path: '/workspace/lanes/codex-world-observatory-mobile.png', fullPage: true });
+
   const hostile = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await hostile.route('**/world/observatory/index.json', route => route.fulfill({
     contentType: 'application/json',
@@ -30,7 +35,6 @@ try {
   if (await hostile.locator('.record img, .record script').count()) throw new Error('Untrusted HTML was parsed');
   if (await hostile.evaluate(() => window.compromised === true)) throw new Error('Untrusted script executed');
   if (await hostile.locator('.record').count() !== 1) throw new Error('Fixture did not render');
-  await hostile.screenshot({ path: '/workspace/lanes/codex-world-observatory-mobile.png', fullPage: true });
   console.log('PASS desktop load, 1201 count, source date, search, mobile load, hostile text escaping');
 } finally {
   await browser.close();
