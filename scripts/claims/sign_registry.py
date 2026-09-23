@@ -67,7 +67,8 @@ def main() -> int:
                    "n_leaves": art.get("merkle", {}).get("n_leaves")},
         "supersedes": {"registry_id": art.get("supersedes", {}).get("registry_id"),
                        "sha256": art.get("supersedes", {}).get("sha256")},
-        "claim_states": art.get("what_moved", {}).get("states"),
+        "claim_states": ((art.get("what_moved") or {}).get("states")
+                         or (art.get("totals") or {}).get("by_specification_state")),
         "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
         "not_a_grade": ("The signature proves these bytes were signed by the board key on the date below. It "
                         "does not certify, endorse or grade anything in the registry, and it makes no "

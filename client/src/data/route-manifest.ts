@@ -138,6 +138,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Gspc Vs Ailuminate"
  },
  {
+  "path": "/alliance-map",
+  "comp": "AllianceMap",
+  "title": "Alliance Map"
+ },
+ {
   "path": "/answers",
   "comp": "AnswersIndex",
   "title": "Answers Index"
@@ -1318,11 +1323,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Memberships"
  },
  {
-  "path": "/reach",
-  "comp": "Reach",
-  "title": "Distribution"
- },
- {
   "path": "/meok-law",
   "comp": "MeokLaw",
   "title": "Meok Law"
@@ -1631,6 +1631,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/rating-the-raters",
   "comp": "RatingTheRaters",
   "title": "Rating The Raters"
+ },
+ {
+  "path": "/reach",
+  "comp": "Reach",
+  "title": "Reach"
  },
  {
   "path": "/readiness",
