@@ -28,10 +28,10 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Get measured', href: '/assess' },
+        { name: 'Request attestation', href: '/assess' },
         { name: 'Board', href: '/dashboard?tab=board' },
         { name: 'Tools — plugin snippet', href: '/tools' },
-        { name: 'Run / re-attest', href: '/assess' },
+        { name: 'Ask about a measured run', href: '/contact?arm=run' },
         { name: 'Ledger', href: '/contact?arm=ledger' },
         { name: 'Data', href: '/contact?arm=data' },
         { name: 'Library', href: '/library' },

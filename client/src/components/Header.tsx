@@ -239,7 +239,7 @@ export function Header() {
                 {!loginlessVerify && (
                   <Button asChild variant="ghost" size="sm" className="text-muted-foreground font-medium"><Link href="/login">Sign In</Link></Button>
                 )}
-                <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm"><Link href="/assess">Get measured</Link></Button>
+                <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm"><Link href="/assess">Request attestation</Link></Button>
               </>
             )}
           </div>
@@ -313,7 +313,7 @@ export function Header() {
                     {!loginlessVerify && (
                       <Button asChild variant="outline" className="w-full"><a href="/login" onClick={() => setMobileMenuOpen(false)}>Sign In</a></Button>
                     )}
-                    <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Get measured</a></Button>
+                    <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a></Button>
                   </>
                 )}
               </div>

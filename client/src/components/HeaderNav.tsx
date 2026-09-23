@@ -102,7 +102,7 @@ export const navigation: NavGroup[] = [
       { name: 'Lobby home', href: '/dashboard?tab=home', description: 'Chat is the OS. The lobby frames the live page — a pane can never drift from the page it shows' },
       { section: 'Panes', name: 'Live board', href: '/dashboard?tab=board', description: 'The living GSPC board, with in-lane measurements beside it — never mixed into board totals' },
       { name: 'Verify a card', href: '/dashboard?tab=verify', description: 'The offline verifier, in the workspace' },
-      { name: 'Get measured', href: '/dashboard?tab=measured', description: 'Booking is not live. Verify stays free.' },
+      { name: 'Request attestation', href: '/dashboard?tab=measured', description: 'Inspect a commission receipt and existing cards; a fresh run is separate. Verify stays free.' },
       { name: 'Council Space', href: '/dashboard?tab=space', description: 'The continuous contest — model against model on one instrument' },
       { name: 'Models', href: '/models', description: 'What we measured, and what it scored' },
       { name: 'Tools', href: '/tools', description: 'The published MCP surface, runnable' },
