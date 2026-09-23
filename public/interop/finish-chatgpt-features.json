@@ -1,68 +1,74 @@
 {
-  "schema": "csoai.finish-chatgpt-features/0.1",
-  "as_of": "20260905T045749Z",
-  "principle": "Take the finishing of what ChatGPT has live. Build every feature ChatGPT has but we don't.",
-  "features_finished": [
+  "schema": "csoai.finish-chatgpt-features/0.2",
+  "original_as_of": "20260905T045749Z",
+  "reviewed_on": "2026-09-23",
+  "status": "SUPERSEDED",
+  "principle": "This was a 2026-09-05 feature plan. No live feature is established by this file; test the actual endpoint and evidence output.",
+  "features_finished": [],
+  "withdrawn_live_claims": [
     {
       "name": "Cross-session memory",
       "endpoint": "/api/memory",
-      "status": "LIVE"
+      "previously_claimed": "LIVE",
+      "current_state": "RETIRED",
+      "evidence": "GET and POST /api/memory return 503 retired-endpoint responses in functions/api/memory.ts"
     },
     {
       "name": "File upload + analysis",
       "endpoint": "/api/files",
-      "status": "LIVE"
+      "previously_claimed": "LIVE",
+      "current_state": "RETIRED",
+      "evidence": "GET and POST /api/files return 503 retired-endpoint responses in functions/api/files.ts"
     },
     {
       "name": "Code interpreter sandbox",
       "endpoint": "/api/sandbox",
-      "status": "LIVE"
+      "previously_claimed": "LIVE",
+      "current_state": "RETIRED",
+      "evidence": "GET and POST /api/sandbox return 503 retired-endpoint responses in functions/api/sandbox.ts"
     },
     {
       "name": "Operator (browser agent)",
       "endpoint": "/api/operator",
-      "status": "LIVE"
+      "previously_claimed": "LIVE",
+      "current_state": "RETIRED",
+      "evidence": "GET and POST /api/operator return 503 retired-endpoint responses in functions/api/operator.ts"
     },
     {
       "name": "Atlas (browser)",
       "endpoint": "/api/atlas",
-      "status": "LIVE"
+      "previously_claimed": "LIVE",
+      "current_state": "RETIRED",
+      "evidence": "GET and POST /api/atlas return 503 retired-endpoint responses in functions/api/atlas.ts"
     }
   ],
-  "features_still_pending": [
+  "proposed_features": [
     {
       "name": "WebSocket realtime voice",
-      "status": "STAGED (needs operator action)"
+      "status": "PROPOSED_NOT_VERIFIED"
     },
     {
       "name": "Mobile app (iOS/Android/Mac)",
-      "status": "STAGED (needs operator action)"
+      "status": "PROPOSED_NOT_VERIFIED"
     },
     {
       "name": "Custom GPTs marketplace",
-      "status": "STAGED (needs GH Pages + npm)"
+      "status": "PROPOSED_NOT_VERIFIED"
     },
     {
       "name": "Group chats",
-      "status": "STAGED (needs WebSocket)"
+      "status": "PROPOSED_NOT_VERIFIED"
     },
     {
       "name": "Deep Research",
-      "status": "STAGED (needs ChatGPT API key)"
+      "status": "PROPOSED_NOT_VERIFIED"
     }
   ],
-  "we_have_chatgpt_doesnt": [
-    "22-axis GSPC measurement",
-    "3KB signed card per response",
-    "33-agent council attestation (23/33 threshold)",
-    "3-anchor ceremony",
-    "PQC scaffold",
-    "Web3-native primitives",
-    "207 well-known standards",
-    "289 interop formats",
-    "12 engines wired",
-    "15 games bound",
-    "x402 paid rail",
-    "335 signed cards"
-  ]
+  "current_public_evidence": {
+    "board": "https://councilof.ai/api/gspc",
+    "verification": "https://councilof.ai/gspc-verify",
+    "signed_card_index": "https://councilof.ai/signed/card_index.json",
+    "note": "These links are specific public artifacts; they do not establish the retired product features above or a comparison with ChatGPT."
+  },
+  "comparison_not_asserted": "The previous we_have_chatgpt_doesnt list mixed dated counts, design proposals and per-response signing claims; it is withdrawn as a product comparison."
 }
