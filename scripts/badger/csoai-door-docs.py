@@ -88,7 +88,7 @@ def discovery_doc(standard: str, kind: str, description: str, url: str, sl: str)
             "did_document": "https://csoai.org/.well-known/did.json",
             "signing_keys": [
                 {"id": "did:web:csoai.org#card-attestation-1", "purpose": "3KB measurement cards"},
-                {"id": "did:web:csoai.org#board-attestation-1", "purpose": "22-axis board snapshot"},
+                {"id": "did:web:csoai.org#board-attestation-1", "purpose": "Current board snapshot; read /api/gspc for axis scope"},
             ],
         },
         "standard": {
