@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.mcp-registry-census/0.1",
+  "kind": "measurement",
+  "registry": "https://registry.modelcontextprotocol.io",
+  "namespace": "io.github.CSOAI-ORG",
+  "measured_utc": "2026-09-23T05:23:59Z",
+  "completed_utc": "2026-09-23T05:25:04Z",
+  "method": "Walked GET /v0/servers?search=<namespace>&version=latest to cursor exhaustion, re-checked the namespace prefix locally, then GET /v0/servers/<name>/versions once per server. Every name and URL below came from the registry's own API; none was guessed.",
+  "servers": 354,
+  "servers_note": "Distinct server names. This is NOT the number of rows in the registry — see version_rows — and the two are never added together.",
+  "version_rows": 1342,
+  "version_rows_note": "Total versions across every server above. null means at least one server's version list could not be read, and a partial sum is not published as a total.",
+  "version_read_failures": [],
+  "status_counts": {
+    "active": 354
+  },
+  "remotes": {
+    "servers_declaring_a_remote": 40,
+    "transport_types": {
+      "streamable-http": 40
+    },
+    "hosts": {
+      "api.meok.ai": 39,
+      "councilof.ai": 1
+    },
+    "host_dns_resolves": {
+      "api.meok.ai": false,
+      "councilof.ai": true
+    },
+    "note": "A declared endpoint is a claim about a machine. host_dns_resolves records whether the host has any DNS answer at measurement time; false means the name does not resolve at all, so nothing behind it can be reached by anyone."
+  },
+  "packages": {
+    "registry_types": {
+      "pypi": 353,
+      "npm": 1
+    }
+  },
+  "repositories": {
+    "declaring_a_url": 326,
+    "no_repository_field": 28,
+    "owners": {
+      "CSOAI-ORG": 322,
+      "meok-ai-labs": 2,
+      "meok-ai": 1,
+      "CarlDog": 1
+    },
+    "anonymous_probe": {
+      "note": "Anonymous GET of every declared repository URL. A GitHub 404 to a signed-out reader means EITHER absent OR hidden; these bytes cannot tell them apart. The only claim made is about what a stranger following our published link receives.",
+      "controls": {
+        "public_repo_we_do_not_own": {
+          "url": "https://github.com/modelcontextprotocol/registry",
+          "status": 200,
+          "expected": 200
+        },
+        "known_absent_path": {
+          "url": "https://github.com/modelcontextprotocol/this-repository-does-not-exist-csoai-control",
+          "status": 404,
+          "expected": 404
+        }
+      },
+      "probed": 326,
+      "by_status": {
+        "404": 325,
+        "200": 1
+      },
+      "reachable_anonymously": [
+        {
+          "server": "io.github.CSOAI-ORG/openchronicle-mcp",
+          "url": "https://github.com/CarlDog/openchronicle-mcp"
+        }
+      ]
+    }
+  }
+}
