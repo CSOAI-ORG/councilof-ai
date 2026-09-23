@@ -17,6 +17,23 @@
  *                                                                      functions/mcp/{gspc,paid}-tools.json
  *   {{AXIS_DOORS_SECTION}} {{AXIS_DEEP_SECTION}}                       GET /api/gspc → axes[] (one entry per row)
  *   {{PAID_DOORS_SECTION}}                                            council-os/capabilities.json (the ONE declaration)
+ *   {{SEPARATED_LEADS}} {{TIES}} {{UNTESTED_SEPARATIONS}} {{COMPARISON_AXES}}  GET /api/gspc -> totals.*
+ *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
+ *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
+ *
+ * The separation fields were the exception that mattered most. Both files said "N axes measured"
+ * and nothing said what measured MEANS here, so the sentence read as "N axes can tell one model
+ * from another" — which is not what the board says and never was. Separation is a SEPARATE
+ * determination that the board publishes in its own totals, and today not one comparison axis
+ * carries a separated lead. Those four counts are now substituted beside the measured count, from
+ * the same fetch, so the two can never drift apart.
+ *
+ * Distribution and the timestamp manifest are derived from artifacts ON DISK rather than a second
+ * live fetch. Both are published artifacts of this repository: the loops land those exact bytes
+ * and the edge serves them. Deriving from the file means these numbers move only when the file
+ * moves, in the same commit, so --check can never go red because a download counter ticked or a
+ * calendar proof upgraded between a lane's push and its gate. A gate that reddens when the estate
+ * is working correctly is a gate that gets deleted.
  *
  * The per-axis sections were the second exception. llms-full.txt typed a "deep reference" block per
  * axis — family, kind, status, n, page URL — for 22 axes, with n values frozen in the template, and
@@ -185,6 +202,89 @@ ${lines.join("\n")}
 ${freeDoors.length ? freeDoors.join("\n") + "\n" : ""}- Free preview: omit \`bundle=1\` or add \`preview=1\` as the 402 body documents. Verify stays free: ${SITE}/gspc-verify`;
 }
 
+const fmtN = (n) => Number(n).toLocaleString("en-US");
+
+// Distribution — every line carries the artifact's own state, coverage and as_of.
+//
+// WHY EVERY LINE NAMES covered/attempted. A distribution figure was once published here that was a
+// partial read presented as the whole estate: a total with no denominator beside it, and nothing in
+// the bytes said which counters had answered. The artifact this derives from already records that
+// (state READ | PARTIAL | UNCHECKABLE | UNMEASURED, with covered and attempted on the row), so the
+// only job here is to refuse to print the value without them. A counter that returned nothing is
+// named on its own line and its value stays null — never 0, never quietly folded into the sum.
+function distributionSection() {
+  const d = readJSON("public/interop/distribution-latest.json");
+  const t = d.totals || {};
+  const pkgs = Array.isArray(d.packages) ? d.packages : [];
+  if (!pkgs.length) throw new Error("distribution-latest.json carries no packages[] — absent is not zero");
+  const by = {};
+  for (const r of pkgs) by[r.registry] = (by[r.registry] || 0) + 1;
+  const perReg = Object.keys(by).sort().map((k) => `${k} ${fmtN(by[k])}`).join(" · ");
+  const totalLine = (key, label) => {
+    const f = t[key];
+    if (!f || f.value === undefined) throw new Error(`distribution-latest.json carries no totals.${key} — absent is not zero`);
+    const bound = f.state === "PARTIAL" ? ", so it is a LOWER BOUND over those, never a total over all of them" : "";
+    return `- ${label}: ${fmtN(f.value)} ${f.unit} — state ${f.state}, ${fmtN(f.covered)} of ${fmtN(f.attempted)} counters answered${bound}. Window: ${f.window}. as_of ${f.as_of}.`;
+  };
+  const silent = pkgs.filter((r) => r.downloads_30d === null || r.downloads_all_time === null);
+  const silentLines = silent.length
+    ? silent.map((r) => `- Counter that did not answer, named rather than absorbed: ${r.registry} \`${r.name}\` — ${r.reason ?? "no reason recorded"}. Its value is null, never 0.`).join("\n")
+    : "- Every counter answered on this run; nothing is a lower bound for want of a reply.";
+  const cc = d.registries?.pypi?.cross_check;
+  const ccLine = cc && cc.pepy_over_pypistats_median
+    ? `- Two third-party counters over the same PyPI packages DISAGREE: on ${cc.samples_compared} sampled packages ${cc.source_url.split("/")[2]} read about ${cc.pepy_over_pypistats_median}x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.`
+    : "";
+  // No heading here: llms.txt and llms-full.txt number their sections differently, so each
+  // template supplies the heading and this returns the body both of them share.
+  return `Derived at generation from https://councilof.ai/interop/distribution-latest.json (same bytes on
+disk at public/interop/distribution-latest.json, schema ${d.schema}, artifact as_of ${d.as_of}).
+Re-read it live; do not quote these figures without the state and coverage beside them.
+
+- Packages published across three registries: ${fmtN(pkgs.length)} (${perReg}). Three registries are
+  three populations. The package ROWS are added; the download counts of different registries are
+  reported per registry and the totals below are the artifact's own, not an arithmetic of this line.
+${totalLine("downloads_30d", "Downloads in the last 30 days")}
+${totalLine("downloads_all_time", "Downloads since first release (cumulative)")}
+- The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
+  added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
+${silentLines}${ccLine ? "\n" + ccLine : ""}
+- A download is distribution. It is not adoption, not a user, not a customer, and not a measurement.
+  Reach says how far the board travels; authority stays GET /api/gspc, the signed cards and free verify.
+- Per-entity shares (CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never
+  filtered) are on the artifact at \`by_entity\`; the estate total is every row.
+`;
+}
+
+// Timestamp proofs — derived from the manifest this repo publishes, on disk.
+//
+// A proof is Bitcoin-attested or it is a submitted request, and the two are not the same claim.
+// The manifest already separates them and names how it was built (every .ots file that actually
+// deserializes, never a list of files we intended to stamp). Printing its counts here without its
+// as_of would be the pretence this file exists to stop: an upgrade loop moves these numbers, so the
+// artifact's own as_of travels with them and the live URL is named for a fresher read.
+function otsSection() {
+  const m = readJSON("public/interop/ots/manifest.json");
+  const c = m.counts || {};
+  for (const k of ["proofs", "bitcoin_attested", "calendar_pending", "subject_absent"]) {
+    if (c[k] === undefined || c[k] === null) throw new Error(`ots manifest carries no counts.${k} — absent is not zero`);
+  }
+  return `Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
+public/interop/ots/manifest.json, schema ${m.schema}, artifact as_of ${m.as_of}). An upgrade loop
+keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
+
+- Detached OpenTimestamps proofs that actually deserialize: ${fmtN(c.proofs)}. The manifest is built by
+  reading every .ots file in its scanned directories and keeping only those that parse — never from a
+  list of files we intended to stamp.
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): ${fmtN(c.bitcoin_attested)}.
+- Still calendar-pending: ${fmtN(c.calendar_pending)}. A calendar-pending proof is a submitted request, not
+  evidence of a time. \`submitted\` is not \`anchored\`.
+- Proofs whose subject is not served beside them: ${fmtN(c.subject_absent)} — an anchor a reader cannot check
+  what was stamped against. Published as a count rather than hidden.
+- This producer does not check block headers against a Bitcoin node. \`ots verify\` against your own
+  node does that, and an .ots is not a proof because of its file extension.
+`;
+}
+
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
@@ -195,6 +295,10 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     DOI: t.doi, BOARD_SNAPSHOT_JSON: snapshotJson, CARD_CORPORA_SECTION: corpora,
     AXIS_DOORS_SECTION: axisDoors, AXIS_DEEP_SECTION: axisDeep,
     PAID_DOORS_SECTION: paidDoorsSection(),
+    // Separation is a different determination from measurement, so it travels as its own numbers.
+    SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
+    UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
+    DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
     ...(() => {
       const m = mcpCounts();
       return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,

@@ -3,6 +3,21 @@
 Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
 Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
 
+## Claim boundary (quote this paragraph; it is the whole of what we assert)
+
+Council of AI is the public name of CSOAI Ltd, a company registered in England and Wales, Companies
+House 16939677, whose machine identity is did:web:csoai.org. We are an independent measurement body.
+We MEASURE; we do not certify, accredit, or issue conformity assessments, and there is no mark,
+badge or grade to buy — verification is free and a grade is never sold. We measure what we probe: a
+result covers the thing we ran a probe against, at the time stated on its row, and nothing wider. We
+do not vet any registry, index, marketplace or directory, ours included; where a third party keeps a
+record about us we LINK that record and let it speak for itself rather than speaking for it, and a
+listing in any directory — ours or anyone's — is not an endorsement, not an accusation and not
+adoption. We hold no certification, designation, registration or accreditation under any independent
+AI-verification or AI-auditor scheme, we have never applied for one, and we claim none. We assert no
+falsity about anyone. Where something is unmeasured we publish it as UNMEASURED, and an empty cell
+stays empty.
+
 ## Live board (always fetch)
 
 Switchboard framing: the estate densifies a recomputable signed record over time (request queue + signed cards); witnesses read the root. It is not a phone company and not a certificate.
@@ -16,6 +31,19 @@ Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO nu
 Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
 {{LID}}
 Also quote `totals.public_leader_count` beside any "{{MEASURED}} measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
+
+What MEASURED means on this board, said plainly, because it is narrower than it sounds: a slot is
+MEASURED when a real run exists behind it and that run's artifact is published. It does NOT mean the
+axis has been shown to distinguish one model from another. Whether a leader's lead over the fleet is
+statistically real is a SEPARATE determination, it has its own live fields, and today not one axis
+carries a separated lead: across `totals.comparison_axes` = {{COMPARISON_AXES}} model-comparison axes,
+`totals.separated_leads` = {{SEPARATED_LEADS}}, `totals.ties` = {{TIES}}, and
+`totals.untested_separations` = {{UNTESTED_SEPARATIONS}}. (The {{FACT_RUNS}} deterministic-fact axes have no
+fleet and no leader, so no separation test applies to them and they are not counted as untested.)
+So "{{MEASURED}} measured of {{AXES}}" is a statement that a run exists behind every slot. It is not a
+statement that any axis can tell two models apart, and it must never be written so that a reader
+could take it that way. Quote the separation fields beside the measured count, every time. UNTESTED
+and TIE are first-class states; neither is a win, and neither is a defect to be hidden.
 
 (Historical note, kept so the correction is legible: this file used to freeze the count at "14 quotable board slots" and to instruct readers not to say 22. That lock was written while the 8 financial/domain axes were ruled in but absent from the signed payload — a guardrail against typing a number the artifact could not back. The 2026-08-26 sweep wired them in and re-signed, so the API now backs the larger count. The guardrail is retired; the rule it protected — never type a count, never call a slot a measurement — is not.)
 
@@ -140,6 +168,22 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 
 - Hugging Face org: https://huggingface.co/csoai
 - MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc
+- MCP Registry footprint: read it live at GET https://councilof.ai/api/footprint ->
+  `registry_listings.value` (distinct server names) and `registry_listings.versions` (distinct
+  name@version rows), each with that payload's own `as_of`, `source_url` and paging state. Every
+  entry sits under ONE namespace, io.github.CSOAI-ORG; there is no second namespace and nothing to
+  deduplicate. Do not freeze either count here — we publish into that registry, so the number moves.
+  WE MEASURE WHAT WE PROBE; WE DO NOT VET THE REGISTRY. A listing is a name we published ourselves:
+  it says a server is registered, not that anyone runs it, and not that we or anyone else reviewed
+  what it does. The registry validates namespace OWNERSHIP at publish time, which is a check on who
+  may use a name, not a review of behaviour. Published research dated 2026-04-15 submitted a benign
+  proof-of-concept server to eleven public MCP registries and nine accepted it without review
+  (OX Security, "The Mother of All AI Supply Chains":
+  https://www.ox.security/blog/the-mother-of-all-ai-supply-chains-critical-systemic-vulnerability-at-the-core-of-the-mcp/
+  — also carried as a Cloud Security Alliance research note, 2026-04-20). We cite that as the reason
+  nobody should read our footprint as a vetting layer, never as an allegation about any registry: we
+  assert no falsity about anyone, and a count of our own listings is not a judgement on the ecosystem
+  they sit in. If you want to know whether a server does what it says, probe it; we did not vet it.
 - npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
@@ -148,6 +192,12 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 
 Lid (quote live `totals.lid`): {{LID}}
 
+## Distribution — measured, PARTIAL, and not adoption
+
+{{DISTRIBUTION_SECTION}}
+## Timestamp proofs (anchored is not the same claim as submitted)
+
+{{OTS_SECTION}}
 {{CARD_CORPORA_SECTION}}
 ## For agents
 
@@ -162,6 +212,29 @@ Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at 
 ## What we do not do
 
 Measurement only. Nothing here is a conformity mark. No SOV names. No invented scores in this file.
+
+On the statute, and it matters now that the category exists in law: US states have begun to create a
+regulated category adjacent to ours. California chaptered two bills on 2026-09-09 — SB 813, which
+defines an "independent verification organization" as an AI auditor designated by the Government
+Operations Agency as having demonstrated expertise in assessing the risks posed by an AI system or
+model, and directs that agency to establish the designation process on or before 1 January 2028; and
+AB 1405, which directs the same agency to stand up an AI Auditor Registry no later than 1 January
+2029, after which an unregistered person may not offer, sell or conduct a covered AI audit. Illinois
+signed SB 315, the Artificial Intelligence Safety Measures Act, on 2026-07-06, effective 1 January
+2027, which the state describes as making Illinois the first to require regular independent
+third-party safety audits of covered AI systems. Sources: California's own bill text at
+https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB813 and
+https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260AB1405 ; the Illinois
+Governor's own announcement at
+https://gov-pritzker-newsroom.prezly.com/gov-pritzker-signs-nation-leading-artificial-intelligence-safety-law
+
+Because that category now exists, a reader could infer that we hold a place in it. We do not.
+Council of AI is an independent measurement board. WE HOLD NO CERTIFICATION, DESIGNATION,
+REGISTRATION OR ACCREDITATION UNDER ANY SUCH SCHEME — not in California, not in Illinois, not
+anywhere — AND WE HAVE NEVER APPLIED FOR ONE. Nothing we publish is an AI audit required by any
+statute, and nothing we publish should be filed as one. We measure, we sign, we publish the method,
+and determination stays with authorities. If that ever changes, this paragraph changes with it and
+the change goes in the corrections ledger.
 
 - Machine-readability & clarity record (signed): https://councilof.ai/api/clarity
 
