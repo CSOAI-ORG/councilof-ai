@@ -36,6 +36,19 @@ export const LEDGER = {
     {
       "date": "2026-09-23",
       "evidence": [
+        "https://councilof.ai/api/gspc"
+      ],
+      "first_observed_at": "2026-09-23T03:55:06Z",
+      "id": "C-2026-0923-02",
+      "note": "Promoted from draft D-2026-09-23T03-02 by the owner. HAND-DRAFTED by the arena-separation lane (feat/arena-separation-2026-09-23), not by drift-draft.py's detector, and placed in the same approve-queue so promote-draft.sh D-2026-09-23T03-02 is the only step. kind summary_omits_measured_negative; fingerprint 236d1c31f796639e. No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark.",
+      "reached_the_public": true,
+      "what_changed": "Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). functions/api/gspc.ts now derives the separation aggregate ONCE, beside the counts it already derived, so a reader meets the negative at the same moment as the measured count. totals.separation_public_count reads \"0 of 14 model-comparison axis separated a leader, 2 TIE, 12 UNTESTED\", with a note saying to read it WITH public_count and never instead of it. totals.count_grammar, the line the payload already points readers to, now carries the same sentence and the rule behind it: a measurement is not a separated leader, a point-estimate lead is not a measured advantage, and UNTESTED is not a tie. totals.lid, the one line the estate asks readers to quote verbatim and the line the home page renders verbatim, now states \"0 separated leaders\". separated_leads, ties and untested_separations read the same three constants instead of re-deriving them, so the headline, the grammar, the tallies and limitations[0] cannot drift apart - the defect this file already records at C-2026-0922 (G-3, two derivations of one quantity) is not reintroduced. functions/api/gspc.lid-truth.test.ts was extended to parse the new lid number against totals.separated_leads and to assert that the three separation states account for every model-comparison axis with none folded into another.",
+      "what_was_wrong": "totals carries axes, measured_axes, unmeasured_axes, quotable_axes and the count line '23 axis · 23 measured', and no aggregate of the separation field at all. The same payload's limitations[0] states the measured position plainly: of the 14 model-comparison axes, 2 TIE, 12 UNTESTED. The count line is the line every other surface quotes, so the figure that travels is the one that cannot carry the negative.",
+      "why_it_was_wrong": "A measured axis and an axis that can tell two models apart are different claims, and only the first is derived into totals. Separation is present per-axis in the array and stated in limitations, so the aggregate is derivable from bytes already served; it is simply not derived. This records the omission, not an intent."
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": [
         "https://councilof.ai/api/gspc",
         "https://councilof.ai/signals/swarm.signed.json"
       ],
@@ -818,20 +831,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "c11c1248abb2b2bf2ea2edf6befcb33fd1e234295eb4f5b6692debd0a69e8df9",
+    id: "9224bbec358ac2f375a84c7dd5d4e92cf2dc9fce4c60aa3cc9c609deb0ded4a1",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "bf1ce17ddeb83372959b5346948ef5a7edeeb0e6078159fafc9fb937427c0eed1ce79bfee1bae0ad87d457bdbcc8fe19c178b8f3f1b969545960944ef4333f0d",
+    signature: "fd5e0b6d4b90f2e34607f523695b5b555fa764249886b502a270364cd9bf97f8a8630e6ca5c22d7b8b30cd357621c0e046caebb520fabeaee59d105a08ac0e03",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "c11c1248abb2b2bf2ea2edf6befcb33fd1e234295eb4f5b6692debd0a69e8df9",
+          "content_id": "9224bbec358ac2f375a84c7dd5d4e92cf2dc9fce4c60aa3cc9c609deb0ded4a1",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 62,
-          "latest_entry_id": "C-2026-0923-01",
-          "ledger_canonical_bytes": 91442,
+          "entries": 63,
+          "latest_entry_id": "C-2026-0923-02",
+          "ledger_canonical_bytes": 94233,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-23T05:31:06Z"
+          "signed_at": "2026-09-23T05:31:18Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
