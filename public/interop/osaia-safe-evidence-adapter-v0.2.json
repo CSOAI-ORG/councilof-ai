@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.osaia-safe-evidence-adapter/0.2",
+  "status": "CSOAI_INTERNAL_REFERENCE_PROPOSAL_NOT_OFFICIAL_SAFE_SCHEMA",
+  "upstream_name": "Shared AI Findings Exchange (SAFE)",
+  "upstream_body": "Open Secure AI Alliance / Linux Foundation",
+  "upstream_state": "Proposal; final production schema and approved submission interface are not established by this adapter.",
+  "sources": [
+    "https://www.linuxfoundation.org/blog/proposing-the-safe-working-group-an-open-community-effort-to-improve-ai-security",
+    "https://secureaialliance.org/"
+  ],
+  "corrects": "/interop/osaia-safe-evidence-adapter-v0.1.json",
+  "superseded_live_bytes_sha256": "611586ad97fa2d6851d692586d5b9a6833dcb6245d171fe74967fbbe4b6afe45",
+  "corrections": [
+    "SAFE means Shared AI Findings Exchange, not Security Analysis Findings Exchange.",
+    "The old illustrative scanner fields are not a verified official SAFE JSON schema.",
+    "Illustrative scanner outputs do not establish executed GSPC measurements, confidence intervals, signatures or a quorum.",
+    "Public claim maintenance and private incident evidence require separate disclosure paths."
+  ],
+  "official_exchange_endpoint": null,
+  "submission_enabled": false,
+  "automatic_notifications": false,
+  "automatic_fixes": false,
+  "private_case_schema": "csoai.safe-informed-case/0.2",
+  "pipeline": [
+    {
+      "stage": "Intake",
+      "action": "Authenticated tenant and operator context must come from the host.",
+      "implementation": "Local self-case integration only; external authenticated intake is not provided."
+    },
+    {
+      "stage": "Preserve",
+      "action": "Account for prompts, model traces, tool calls, system logs, configuration, safeguard versions and approval events.",
+      "implementation": "Bounded private files checked by digest or explicitly missing/not applicable."
+    },
+    {
+      "stage": "Measure",
+      "action": "Preserve method, configuration, runtime, scope and outcome.",
+      "implementation": "Record-consistency gate, not proof of original execution or arbitrary model inference."
+    },
+    {
+      "stage": "Test the check",
+      "action": "Bind a reported negative result to the same declared method, configuration, runtime and scope.",
+      "implementation": "Synthetic gate tests do not substitute for an earlier operation missing its own control."
+    },
+    {
+      "stage": "Remediate and retest",
+      "action": "Keep proposal, authorised execution and comparable retest separate.",
+      "implementation": "Comparison gate only; no fix executor."
+    },
+    {
+      "stage": "Review and share",
+      "action": "Purpose-specific review, redaction and audience approval.",
+      "implementation": "Sharing disabled; no public incident export."
+    }
+  ],
+  "gspc_axis_mapping": {
+    "governance": "actor and approval-scope checks where a declared contract exists",
+    "provenance": "source, method, version and digest lineage",
+    "conformance": "declared schema and executable contract tests",
+    "continuity": "recoverability and observation-gap contracts",
+    "effect-binding": "action-to-evidence binding only when measured",
+    "other_axes": "NOT_APPLICABLE without an explicit matching contract"
+  },
+  "deadline_policy": {
+    "enabled": false,
+    "reason": "Draft intervals are not universal legal duties. A verified applicable policy, trigger and calendar are required before timers."
+  },
+  "privacy": {
+    "default": "CONFIDENTIAL",
+    "public_case_export": false,
+    "raw_content_in_public_graph": false,
+    "note": "Unsalted hashes of low-entropy sensitive content are not a privacy substitute."
+  },
+  "does_not_prove": [
+    "Official SAFE conformance, exchange acceptance or institutional endorsement.",
+    "Safety, legal compliance, source truth or successful original execution from a signature alone.",
+    "Whole-platform completion or customer revenue."
+  ],
+  "reference_revision_date": "2026-09-23"
+}

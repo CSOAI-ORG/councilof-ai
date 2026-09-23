@@ -1,0 +1,16 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+import {verifyDelivery,canonicalBytes} from '../public/spec/population-delivery/v0.1/verify-population-delivery.mjs';
+const rows={a:[{id:'one',price:'1.00'}]};const bytes=canonicalBytes(rows);const manifest={schema:'csoai.population-delivery-manifest/0.1',id:'stablecoins',coverage:{record_count:1,source_state:'INDEXED'},freshness:{as_of:'2026-09-16T12:00:00Z'},evidence:{rows_sha256:createHash('sha256').update(bytes).digest('hex'),rows_bytes:bytes.length}};
+const payload={schema:'csoai.population-door/0.1',kind:'slice',id:'stablecoins',as_of:manifest.freshness.as_of,n:1,state:'INDEXED',rows,delivery_manifest:manifest};
+test('positive exact-byte control',()=>assert.equal(verifyDelivery(manifest,payload).errors.length,0));
+test('tampered rows rejected',()=>{const p=structuredClone(payload);p.rows.a[0].price='2.00';assert.ok(verifyDelivery(manifest,p).errors.includes('rows_digest_mismatch'));});
+test('wrong population rejected',()=>{const p={...payload,id:'xrpl'};assert.ok(verifyDelivery(manifest,p).errors.includes('population_mismatch'));});
+test('wrong source date rejected',()=>{const p={...payload,as_of:'2026-09-23T00:00:00Z'};assert.ok(verifyDelivery(manifest,p).errors.includes('source_time_mismatch'));});
+test('wrong count rejected',()=>assert.ok(verifyDelivery(manifest,{...payload,n:427}).errors.includes('population_count_mismatch')));
+test('injected payment proof creates no payment claim',()=>assert.equal(verifyDelivery(manifest,{...payload,settle:{verified:true}}).payment_verified,false));
+test('injected signature status creates no signature claim',()=>assert.equal(verifyDelivery(manifest,{...payload,attestation:{verified:true}}).signature_verified,false));
+test('consumer staleness limit respected',()=>assert.ok(verifyDelivery(manifest,payload,{maxAgeHours:1,now:Date.parse('2026-09-23T00:00:00Z')}).errors.includes('source_exceeds_consumer_age_limit')));
+test('no invented default freshness',()=>assert.equal(verifyDelivery(manifest,payload).checks.freshness,'NOT_EVALUATED_NO_CONSUMER_LIMIT'));
+test('embedded manifest substitution rejected',()=>{const p=structuredClone(payload);p.delivery_manifest.id='different';assert.ok(verifyDelivery(manifest,p).errors.includes('embedded_manifest_mismatch'));});
+test('missing rows is not an empty success',()=>{const p={...payload};delete p.rows;assert.ok(verifyDelivery(manifest,p).errors.includes('missing_payload_rows'));});
+test('wrong attestation binding rejected',()=>{const p={...payload,attestation:{payload:{rows_sha256:'0'.repeat(64)}}};assert.ok(verifyDelivery(manifest,p).errors.includes('attestation_rows_binding_mismatch'));});

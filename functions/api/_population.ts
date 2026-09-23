@@ -168,6 +168,21 @@ export function pyDumpsSortedIndent1(v: unknown, level = 0): string {
   return "{\n" + keys.map((k) => pad(level + 1) + pyDumpsSortedIndent1(k) + ": " + pyDumpsSortedIndent1(o[k], level + 1)).join(",\n") + "\n" + pad(level) + "}";
 }
 
+/** v0.3 registry digest: the declared compact UTF-8 integer-only claim serializer. */
+export function claimRegistryCompact(value: unknown): string {
+  const walk = (v: unknown): string => {
+    if (v === null || typeof v === "boolean" || typeof v === "string") return JSON.stringify(v);
+    if (typeof v === "number") {
+      if (!Number.isSafeInteger(v)) throw new Error("Registry number is outside the declared integer encoding");
+      return String(v);
+    }
+    if (Array.isArray(v)) return "[" + v.map(walk).join(",") + "]";
+    if (v && typeof v === "object") return "{" + Object.keys(v).sort().map(k => JSON.stringify(k) + ":" + walk((v as Record<string, unknown>)[k])).join(",") + "}";
+    throw new Error("Registry contains an unsupported value");
+  };
+  return walk(value);
+}
+
 // ── the populations ─────────────────────────────────────────────────────────────────────────
 
 const STABLECOIN_INDEX = "/interop/stablecoin-corpus-index-2026-09-16.json";
@@ -693,10 +708,21 @@ const corrections: PopulationEntry = {
 // Newest last. A superseding registry is a NEW file: the prior bytes are never edited, stay
 // served at their own URL and stay covered by their own .ots, so both rows are read and the
 // `supersedes` chain is reported from the bytes rather than asserted here.
-const CLAIM_REGISTRIES = [
-  "/claims/claimreg-ondo-chainlink-2026-09-22.json",
-  "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
-];
+const CLAIM_REGISTER = "/spec/claim-maintenance/register.json";
+/** Bounded same-site registry discovery; never fetch arbitrary URLs from registry content. */
+export function registryPathsFromIndex(value: unknown): string[] {
+  if (!isObj(value) || value.schema !== "csoai.claim-maintenance.register/0.1" || !Array.isArray(value.registries) || value.registries.length === 0 || value.registries.length > 100)
+    throw new Error("The generated claim register is absent, malformed, empty or over its budget");
+  const paths = new Set<string>();
+  for (const item of value.registries) {
+    if (!isObj(item) || typeof item.url !== "string") throw new Error("Registry URL is missing");
+    const u = new URL(item.url, "https://councilof.ai");
+    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || !/^\/claims\/claimreg-[a-z0-9-]+\.json$/.test(u.pathname))
+      throw new Error("Registry URL is outside the public claim-registry scope");
+    paths.add(u.pathname);
+  }
+  return [...paths].sort();
+}
 const claimWatch: PopulationEntry = {
   id: "claim-watch",
   title: "Claim-maintenance registries",
@@ -710,7 +736,13 @@ const claimWatch: PopulationEntry = {
     const registries: Record<string, unknown>[] = [];
     let latest: string | null = null;
     const enc = new TextEncoder();
-    for (const path of CLAIM_REGISTRIES) {
+    const catalogue = await io.get(CLAIM_REGISTER);
+    if (!catalogue.ok) return unread([CLAIM_REGISTER], catalogue.reason, unit);
+    let registryPaths: string[];
+    try { registryPaths = registryPathsFromIndex(catalogue.json); }
+    catch (e) { return unread([CLAIM_REGISTER], (e as Error).message, unit); }
+    source.push(CLAIM_REGISTER);
+    for (const path of registryPaths) {
       source.push(path);
       const got = await io.get(path);
       if (!got.ok) { unmeasured.push(got.reason); continue; }
@@ -720,19 +752,35 @@ const claimWatch: PopulationEntry = {
       let claims = 0;
       const states: Record<string, number> = {};
       const perSubject: Record<string, number> = {};
-      for (const [name, s] of Object.entries(subjects)) {
-        const list = isObj(s) ? arr(s.claims) : null;
-        perSubject[name] = list ? list.length : 0;
-        for (const c of list || []) {
+      const flatClaims = j.schema === "csoai.claim-registry/0.3" ? arr(j.claims) : null;
+      if (flatClaims) {
+        for (const claim of flatClaims) {
           claims += 1;
-          const st = isObj(c) ? String(c.state ?? "unknown") : "unknown";
-          states[st] = (states[st] || 0) + 1;
+          const item = isObj(claim) ? claim : {};
+          const subject = isObj(item.subject) ? item.subject : {};
+          const identity = str(subject.identifier) || str(subject.name) || "unknown-subject";
+          perSubject[identity] = (perSubject[identity] || 0) + 1;
+          const state = String(item.state ?? "unknown");
+          states[state] = (states[state] || 0) + 1;
+        }
+      } else {
+        for (const [name, s] of Object.entries(subjects)) {
+          const list = isObj(s) ? arr(s.claims) : null;
+          perSubject[name] = list ? list.length : 0;
+          for (const c of list || []) {
+            claims += 1;
+            const st = isObj(c) ? String(c.state ?? "unknown") : "unknown";
+            states[st] = (states[st] || 0) + 1;
+          }
         }
       }
       // registry_digest: derived, not typed. The file's own digest is the sha256 of Python
       // json.dumps(sort_keys=True, indent=1) [ensure_ascii default] over the file minus the field.
       const { registry_digest, ...rest } = j as Record<string, unknown> & { registry_digest?: unknown };
-      const recomputed = await sha256HexOf(enc.encode(pyDumpsSortedIndent1(rest)));
+      const compactRule = j.schema === "csoai.claim-registry/0.3";
+      let recomputed: string | null = null;
+      try { recomputed = await sha256HexOf(enc.encode(compactRule ? claimRegistryCompact(rest) : pyDumpsSortedIndent1(rest))); }
+      catch { /* Invalid declared encoding stays unreproduced; never change source bytes. */ }
       const reproducible = typeof registry_digest === "string" && registry_digest === recomputed;
       const otsPath = `${path}.ots`;
       const ots = await io.bytes(otsPath);
@@ -755,9 +803,11 @@ const claimWatch: PopulationEntry = {
         file_sha256: fileSha,
         registry_digest: typeof registry_digest === "string" ? registry_digest : null,
         registry_digest_reproducible: reproducible,
-        registry_digest_rule: reproducible ? "sha256 of python json.dumps(sort_keys=True, indent=1) [ensure_ascii default] over the file minus registry_digest — recomputed from the served bytes at request time" : "not reproduced under sorted-indent-1 ascii serialisation; recomputed value reported beside the file's",
+        registry_digest_rule: compactRule
+          ? "sha256 over compact sorted-key UTF-8 integer-only canonical JSON, omitting registry_digest; v0.3 rule, recomputed from served bytes"
+          : "sha256 over Python sorted-indent-1 ASCII JSON omitting registry_digest; legacy rule, recomputed from served bytes",
         ...(reproducible ? {} : { registry_digest_recomputed: recomputed }),
-        subjects: Object.keys(subjects),
+        subjects: Object.keys(perSubject),
         claims_per_subject: perSubject,
         claims: claims,
         states,

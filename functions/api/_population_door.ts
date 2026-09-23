@@ -34,6 +34,8 @@ import { railMode } from "./_x402_config";
 import { signPayload, canonicalBytes, sha256Hex } from "../_lib/cardSign";
 import { POPULATIONS, POPULATION_IDS, findPopulation, makeIo, toPreview, type Reading } from "./_population";
 
+import { makeDeliveryManifest, deliveryReadFailure, expectedDigest, rowCommitment, EXPECTED_ROWS_HEADER } from "./_population_manifest";
+
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
 export const SCHEMA = "csoai.population-door/0.1";
@@ -66,7 +68,8 @@ export function describe(entry: { title: string; population: string }, r: Readin
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
-  const id = populationIdFromPath(url.pathname);
+  const manifestRequest = /\/manifest\/?$/.test(url.pathname) || url.searchParams.get("manifest") === "1";
+  const id = populationIdFromPath(manifestRequest ? url.pathname.replace(/\/manifest\/?$/, "") : url.pathname);
   const preview = url.searchParams.get("preview") === "1";
   const entry = id && ID_RE.test(id) ? findPopulation(id) : undefined;
   const known = [...POPULATION_IDS];
@@ -82,8 +85,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const io = makeIo(request);
   const resourceUrl = resourceUrlFor(origin, entry.id);
   const paid = hasPaymentHeader(request);
+  let expected: string | null;
+  try { expected = expectedDigest(request); }
+  catch (e) { return json({ schema: SCHEMA, error: "invalid_expected_digest", reason: (e as Error).message, settled: false }, 400); }
   // Read once: the head for a bare GET or a preview, the full slice when a payment is presented.
-  const reading = await entry.read(io, paid && !preview);
+  const reading = await entry.read(io, manifestRequest || (paid && !preview));
+  if (manifestRequest) {
+    const failure = deliveryReadFailure(reading);
+    if (failure) return json({ schema: SCHEMA, kind: "manifest_unavailable", id, state: reading.state, reason: failure, settled: false }, 503);
+    const manifest = await makeDeliveryManifest(entry, reading, origin);
+    return json(manifest, 200, { "x-csoai-rows-sha256": manifest.evidence.rows_sha256, "access-control-allow-headers": `content-type, ${EXPECTED_ROWS_HEADER}` });
+  }
   const head = toPreview(reading);
   const description = describe(entry, reading);
   const accepts = x402Accepts(env, resourceUrl, { ...SKU, description, productId: `csoai.product.population.${entry.id}` });
@@ -124,6 +136,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         never: ["a grade", "a rank", "a verdict about any row", "a paywall on the source artifact", "a certificate"],
         deliverable: `the ${entry.title} slice: ${reading.rows_unit || "the population rows verbatim from the artifact(s) in source[]"}, plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record`,
         free_preview: `${resourceUrl}?preview=1`,
+        free_manifest: `${resourceUrl}/manifest`,
         free_sources: head.source,
         rail: railMode(env),
         not_paid_reason: notPaidReason,
@@ -143,6 +156,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       title: entry.title,
       population: entry.population,
       ...head,
+      manifest: `${resourceUrl}/manifest`,
       buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, all_doors: known.map((k) => resourceUrlFor(origin, k)) },
       rail: railMode(env),
     });
@@ -153,16 +167,22 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // READ BEFORE SETTLE: a slice that could not be read is never charged for.
-  if (reading.state === "UNMEASURED" || reading.rows === undefined) {
+  if (deliveryReadFailure(reading)) {
     return challenge(
       `read before settle: the population read came back ${reading.state}${reading.reason ? ` (${reading.reason})` : ""}. The payment was not sent to the facilitator, so nothing was settled. Check the free preview before paying again.`,
       { error: `Population read ${reading.state} — payment not settled`, csoai: { read_before_settle: { state: reading.state, reason: reading.reason, unmeasured: reading.unmeasured, settled: false } } },
     );
   }
 
+  // Digest pin is checked before any key or payment facilitator operation.
+  const deliverableManifest = await makeDeliveryManifest(entry, reading, origin);
+  const committedRows = deliverableManifest.evidence;
+  if (expected !== null && expected !== committedRows.rows_sha256) {
+    return json({ schema: SCHEMA, error: "population_revision_changed", expected_rows_sha256: expected, current_rows_sha256: committedRows.rows_sha256, manifest: `${resourceUrl}/manifest`, settled: false, signing_attempted: false }, 409);
+  }
   const fetched_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const rowsBytes = canonicalBytes(reading.rows);
-  const rows_sha256 = await sha256Hex(rowsBytes);
+  const rows_sha256 = committedRows.rows_sha256;
   const payload: Record<string, unknown> = {
     kind: LEAF_KIND,
     attests: "a digest of the slice as read from the named artifact(s) at fetched_at — a read, not a grade, not a rank, not a verdict about any row",
@@ -219,6 +239,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       ...head,
       rows_unit: reading.rows_unit || null,
       rows: reading.rows,
+      delivery_manifest: deliverableManifest,
       attestation,
       settle: payment.settlement || null,
       ...(payment.receipt ? { receipt: payment.receipt } : {}),
