@@ -64,6 +64,37 @@ export function heroStats(data: GspcPayload | null): HeroStat[] {
   ];
 }
 
+/**
+ * SEPARATION, read live — the sentence that stops "23 measured" being read as "23 axes that
+ * tell models apart".
+ *
+ * MEASURED means a run exists behind the slot. It does NOT mean the axis separated anybody: a
+ * leader's margin over the fleet still has to survive a statistical test, and on this board most
+ * of them have not been put to one. The board publishes all four figures (comparison_axes,
+ * separated_leads, ties, untested_separations) and this reader prints them together or not at
+ * all — a partial read here would reproduce the exact overstatement it exists to prevent.
+ *
+ * Returns null when the payload does not carry the fields, so the caller can say nothing rather
+ * than imply a zero it did not read.
+ */
+export interface SeparationRead {
+  comparison: number;
+  separated: number;
+  ties: number;
+  untested: number;
+}
+
+export function separationRead(data: GspcPayload | null): SeparationRead | null {
+  const t = data?.totals;
+  const n = (v: unknown) => (typeof v === "number" && Number.isFinite(v) ? v : null);
+  const comparison = n(t?.comparison_axes);
+  const separated = n(t?.separated_leads);
+  const ties = n(t?.ties);
+  const untested = n(t?.untested_separations);
+  if (comparison === null || separated === null || ties === null || untested === null) return null;
+  return { comparison, separated, ties, untested };
+}
+
 /** The stamp line: when the runs behind the board were made, verbatim from measured_on.date. */
 export function heroStamp(data: GspcPayload | null): string | null {
   const d = (data?.measured_on as { date?: unknown } | undefined)?.date;
@@ -94,6 +125,7 @@ export default function HomeHero({
   const error = injected !== undefined ? injectedError : live.error;
   const stats = heroStats(data);
   const stamp = heroStamp(data);
+  const sep = separationRead(data);
 
   return (
     <section
@@ -101,17 +133,31 @@ export default function HomeHero({
       aria-labelledby="home-hero-h"
       data-testid="home-hero"
     >
-      {/* One still, held well back. It carries no claim and no text; the alt says what it is. */}
-      <img
-        src="/images/coliseum_hero_arena.jpg"
-        alt=""
-        aria-hidden="true"
-        width={1376}
-        height={774}
-        fetchPriority="high"
-        decoding="async"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.62]"
-      />
+      {/*
+        One still, held well back. It carries no claim and no text; the alt says what it is.
+
+        RESPONSIVE AND MODERN-FORMAT, because this is the ONE image above the fold and a phone
+        should not wait for a desktop-width JPEG to draw the first screen. The 640px WebP a phone
+        picks is 16 KB against the 140 KB JPEG this used to serve at every width. The JPEG stays
+        as the <img> fallback for a browser with no WebP.
+      */}
+      <picture>
+        <source
+          type="image/webp"
+          srcSet="/images/coliseum_hero_arena-640.webp 640w, /images/coliseum_hero_arena-1024.webp 1024w, /images/coliseum_hero_arena-1376.webp 1376w"
+          sizes="100vw"
+        />
+        <img
+          src="/images/coliseum_hero_arena.jpg"
+          alt=""
+          aria-hidden="true"
+          width={1376}
+          height={774}
+          fetchPriority="high"
+          decoding="async"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.62]"
+        />
+      </picture>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -158,8 +204,14 @@ export default function HomeHero({
           >
             Check a record yourself
           </Link>
+          {/*
+            CROSS-PAGE, NOT AN IN-PAGE HOP. HomeMachineSurface moved to /how-we-work on
+            2026-09-23, so "#machine-surface" became an anchor to nothing — a link that silently
+            does nothing is worse than no link, and this one is the agent's way in. A plain <a>
+            rather than a wouter Link, because the hash has to be honoured on arrival.
+          */}
           <a
-            href="#machine-surface"
+            href="/how-we-work#machine-surface"
             className="inline-flex min-h-12 items-center px-1 font-mono text-[13px] font-semibold text-emerald-300/85 underline decoration-dotted underline-offset-4 hover:text-emerald-200"
             data-testid="hero-cta-agents"
           >
@@ -184,6 +236,35 @@ export default function HomeHero({
                   <Stat key={s.label} stat={s} />
                 ))}
               </dl>
+              {/*
+                THE QUALIFIER ON THE COUNT, and it is not optional. The tile above says how many
+                slots carry a run; this says what that does and does not establish. Every figure
+                is off the same read — nothing here is typed, and if the board stops publishing
+                the four separation fields this block disappears rather than guessing.
+              */}
+              {sep ? (
+                <div
+                  className="mt-8 rounded-2xl border border-amber-300/30 bg-amber-300/[0.07] px-5 py-4"
+                  data-testid="hero-separation"
+                >
+                  <p className="text-[13px] font-bold leading-snug text-amber-100">
+                    Measured is not the same as separated.
+                  </p>
+                  <p className="mt-1.5 text-[12.5px] leading-relaxed text-emerald-100/75">
+                    A slot counts as measured when a real run sits behind it. Whether the axis
+                    actually told two models apart is a second question, and across the{" "}
+                    <span className="font-mono font-bold text-emerald-100">{sep.comparison}</span>{" "}
+                    model-comparison axes the answer today is{" "}
+                    <span className="font-mono font-bold text-emerald-100">{sep.separated}</span>{" "}
+                    separated,{" "}
+                    <span className="font-mono font-bold text-emerald-100">{sep.ties}</span> tied and{" "}
+                    <span className="font-mono font-bold text-emerald-100">{sep.untested}</span>{" "}
+                    untested. A tie stays a tie and an untested axis stays untested; neither is
+                    rounded up into a ranking.
+                  </p>
+                </div>
+              ) : null}
+
               <p className="mt-6 text-[12.5px] leading-relaxed text-emerald-200/65">
                 Read live from{" "}
                 <a href="/api/gspc" className="font-semibold text-emerald-300 underline decoration-dotted underline-offset-2">

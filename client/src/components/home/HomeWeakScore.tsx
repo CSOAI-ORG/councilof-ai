@@ -100,11 +100,23 @@ function useWeakCard(injected?: CardRead): CardRead {
   return injected ?? read;
 }
 
+/**
+ * One field of the card panel.
+ *
+ * INK TOKENS, NOT THEME TOKENS. This panel sits on `surface-ink`, which is dark in BOTH colour
+ * schemes. `text-foreground` and `text-muted-foreground` follow the scheme, so in light mode
+ * they resolved to near-black — and the four values a reader most needs from a signed card (what
+ * was tested, which system, when it was signed, who issued it) rendered dark-on-dark and were
+ * effectively invisible. Caught by looking at a 1280px light-mode screenshot on 2026-09-23.
+ * Every other line in this component already used the --ink-* tokens; this one did not.
+ */
 function Field({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
-      <dt className="t-kicker text-muted-foreground">{label}</dt>
-      <dd className={`mt-1.5 text-[15px] font-bold text-foreground ${mono ? "break-all font-mono text-[13px]" : ""}`}>
+      <dt className="t-kicker ink-muted">{label}</dt>
+      <dd
+        className={`mt-1.5 text-[15px] font-bold text-[color:var(--ink-foreground)] ${mono ? "break-all font-mono text-[13px]" : ""}`}
+      >
         {value}
       </dd>
     </div>

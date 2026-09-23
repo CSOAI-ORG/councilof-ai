@@ -291,7 +291,7 @@ function Independence() {
       // a statement about funding, the alt text never mentioned it, and a hard-coded identifier
       // inside a raster is invisible to every gate this repo runs. The plate is the same artwork
       // with that text cropped away, saved under a name that says what the band is about.
-      image="/images/band/independence.png"
+      image="/images/band/independence.webp"
       objectPosition="72% 50%"
       alt="A pale sphere held inside thin orbital rings studded with green markers"
       panelSide="left"
@@ -541,7 +541,7 @@ function LivingLaw() {
 
   return (
     <HeavyBand
-      image="/images/band/clock.png"
+      image="/images/band/clock.webp"
       objectPosition="28% 50%"
       alt="A plain white clock face with a single green hand"
       panelSide="right"
@@ -613,7 +613,7 @@ function LiveBoard() {
 
   return (
     <HeavyBand
-      image="/images/band/hardened.png"
+      image="/images/band/hardened.webp"
       objectPosition="72% 50%"
       alt="A field of pale solids linked by a lattice of green light"
       panelSide="left"

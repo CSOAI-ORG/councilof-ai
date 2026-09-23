@@ -1,76 +1,53 @@
 /**
- * Home — the front door, rebuilt 2026-09-22.
+ * Home - the front door, shortened 2026-09-23.
  *
- * THE ORDER IS THE ARGUMENT. A reader landing cold gets, in this order: what we do and what is
- * measured right now (HomeHero, off the live board); why this one is different, with a live
- * proof under every claim (HomeStrengths); every door in the business grouped by the question
- * that brings someone here (HomeNavigator); the board itself (HomeGspcTable); the worst score we
- * publish, verified in their own browser (HomeWeakScore); the data doors and the machine
- * addresses (HomeMachineSurface); how far the work travels and how much of it holds up
- * (HomeReach); the nine tools (ToolStack); the long-form answers to funding, limits, offline
- * verification, our own errors and the moving law (LivingStages); and the films and reviewed
- * reading last, for a reader who is still here.
+ * THE MEASUREMENT THAT CAUSED THIS REWRITE. On 2026-09-23 this page rendered 27,743px tall at
+ * 1280px and 47,757px at 390px - twenty-six and fifty-three screens. That is the mechanical
+ * reason the owner could say the lower sections had "been the same for months": a band almost
+ * nobody reaches is a band whose staleness nobody reports. Shortening the page is therefore not
+ * cosmetic; it is what makes the lower material maintainable at all.
  *
- * WHAT WAS RETIRED FROM THIS PAGE, AND WHY (align, do not delete — every component still exists
- * and still ships where it is mounted elsewhere):
- *   · HeroSlides — a seven-slide auto-rotating carousel as the first screen. Six of its seven
- *     claims are never seen, its first frame ("Measured, not modelled") teaches a stranger
- *     nothing, and one slide typed a count ("9 killed bets") the page could not read live.
- *     HomeHero replaces it with one composed screen whose every figure is off /api/gspc.
- *   · HomeCinematicWorlds — a second three-film band whose copy restated ToolStack ("Nine
- *     products. Each tile opens a page that exists today.") and whose third film is also
- *     embedded inside LivingStages. One film band per page.
- *   · The four numbered buttons ("1 · Explore measurements … 4 · Access supported feeds") —
- *     HomeNavigator answers the same intent with five reader questions and every door behind
- *     them, each href checked live.
- *   · HomeEvidenceShowcase's participation grid — its nine hand-written records are a third
- *     copy of the participation story on one page, and the live manifest behind the
- *     participation band has 28 rows with evidence for each. The band is mounted with
- *     sections="reading" so its reviewed-reading half still ships and nothing is lost.
- *   · HomeEvidenceShowcase's withdrawal record — showWithdrawn={false}, on the owner's ruling
- *     of 2026-09-22. A visitor's first impression of a measurement body cannot be a notice
- *     that our own material is under review. It is not hidden: the record is still served on
- *     its own route and still reachable from the refutation ledger, which is where a reader
- *     looking for what we got wrong goes, and the rule that a withdrawn entry can never be
- *     promoted as ready reading is untouched.
- *   · The seven-stage distribution funnel — it stays published in full at /api/footprint. Four
- *     of its seven stages can only say UNMEASURED today, and a column of absences is not what a
- *     first-time reader should be given; the front door carries the stages with something to
- *     say, under a heading that says what they mean.
+ * THE ORDER IS THE ARGUMENT, and it is now five bands:
+ *   1. HomeHero        - what we do, for whom, and what is measured right now, off the live board.
+ *   2. HomeCredibility - the six things a stranger can check about us before trusting a number,
+ *                        each with a live figure behind it.
+ *   3. The board       - every row, every word, every number off GET /api/gspc at render time,
+ *                        with the composer under it.
+ *   4. HomeWeakScore   - one of our own low scores, verified in the reader's own browser.
+ *   5. Participation   - the standards record, as text with evidence, never as a logo row.
+ *   Then a six-card hand-off to the pages that hold everything else.
  *
- * ONE COUNT LINE, AND IT IS IN THE FIRST SCREEN. totals.public_count is printed once on this
- * page (ruling of 2026-09-16). It moved from the middle of HomeGspcTable into HomeHero, where a
- * cold reader actually meets it; the table is mounted with showPublicCount={false} so there is
- * still exactly one.
+ * WHAT WAS RETIRED FROM THIS PAGE AND WHERE IT WENT (align, do not delete). All eight bands
+ * below were mounted ONLY here, so each would have been deleted by removal. They are now the
+ * whole of /how-we-work (client/src/pages/HowWeWork.tsx), which makes the same live reads through
+ * the same shared hooks: HomeStrengths, HomeMachineSurface, HomeReach, ToolStack, LivingStages,
+ * HomeFilms, HomeEvidenceShowcase (reading) and HomeNavigator. HomeStrengths' six claims are not
+ * lost from the front door either - HomeCredibility carries all six in summary and links to the
+ * full argument.
  *
- * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, evidence figures from
- * /api/state and /root.json, the ledger count from /api/corrections, the ten population figures
- * from each door's own free preview, the door and tool counts from /.well-known/x402.json, and
- * distribution from whatever LiveCounters renders. Each one shows "—" until it lands and says so
- * in words if it never does.
+ * ONE COUNT LINE, AND IT IS IN THE FIRST SCREEN. totals.public_count is printed once on this page
+ * (ruling of 2026-09-16), in HomeHero; the table is mounted with showPublicCount={false}.
+ *
+ * MEASURED IS NOT SEPARATED, and the first screen now says so. The public count means a run
+ * exists behind every declared slot. It does NOT mean the axes told models apart: across the
+ * model-comparison axes the board's own totals report separated_leads, ties and
+ * untested_separations, and HomeHero prints all three beside the count. That block reads the four
+ * separation fields live or renders nothing - it never assumes a zero it did not read.
+ *
+ * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the verified-record
+ * count from /api/state, the ledger count from /api/corrections, the timestamp split from the
+ * OpenTimestamps door's own free preview, and the participation count from the committed
+ * memberships manifest. Each shows an em dash until it lands and says so in words if it never does.
  */
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import MembershipStrip from "@/components/MembershipStrip";
 import HomeComposer from "@/components/home/HomeComposer";
-import ToolStack from "@/components/home/ToolStack";
-import LivingStages from "@/components/home/LivingStages";
-import HomeFilms from "@/components/home/HomeFilms";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
-import HomeEvidenceShowcase from "@/components/home/HomeEvidenceShowcase";
 import HomeHero from "@/components/home/HomeHero";
-import HomeStrengths from "@/components/home/HomeStrengths";
-import HomeNavigator from "@/components/home/HomeNavigator";
+import HomeCredibility from "@/components/home/HomeCredibility";
 import HomeWeakScore from "@/components/home/HomeWeakScore";
-import HomeMachineSurface from "@/components/home/HomeMachineSurface";
-import HomeReach from "@/components/home/HomeReach";
-import {
-  useCorrections,
-  useEstateState,
-  usePopulationDoors,
-  usePublicRoot,
-  useX402Manifest,
-} from "@/components/home/useHomeReads";
+import { useCorrections, useEstateState, usePopulationDoors } from "@/components/home/useHomeReads";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -170,11 +147,12 @@ export default function HomeVerify() {
   const [axis, setAxis] = useState<string | null>(null);
 
   // One shared read per endpoint, consumed by several bands. See useHomeReads.
+  // The front door now makes THREE reads, not five: /root.json and /.well-known/x402.json were
+  // only ever needed by HomeStrengths and HomeMachineSurface, and both of those moved to
+  // /how-we-work, which makes the same reads through the same shared hooks.
   const corrections = useCorrections();
-  const root = usePublicRoot();
   const estate = useEstateState();
   const doors = usePopulationDoors();
-  const manifest = useX402Manifest();
 
   useEffect(() => {
     document.title = "Council of AI — independent measurement of AI systems, signed and free to re-check";
@@ -188,8 +166,11 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
-      <HomeStrengths corrections={corrections} root={root} ots={doors["ots-proofs"]?.payload ?? null} />
-      <HomeNavigator />
+      <HomeCredibility
+        state={estate}
+        corrections={corrections}
+        ots={doors["ots-proofs"]?.payload ?? null}
+      />
 
       {/* The board: every row, every word, every number off GET /api/gspc at render time. */}
       <section
@@ -214,8 +195,6 @@ export default function HomeVerify() {
       </section>
 
       <HomeWeakScore />
-      <HomeMachineSurface doors={doors} manifest={manifest} />
-      <HomeReach state={estate} />
 
       {/*
         Participation, with room to be read (owner, 2026-09-22). This was a single wrapping line
@@ -248,22 +227,84 @@ export default function HomeVerify() {
         <MembershipStrip variant="home" />
       </section>
 
-      <ToolStack />
-      <LivingStages />
-      <HomeFilms />
-
       <section className="surface-base section-y border-t border-border">
         <div className="section-shell">
-          <HomeEvidenceShowcase sections="reading" showWithdrawn={false} />
-          <p className="mt-12 border-t border-border pt-8 text-[14px] leading-relaxed text-muted-foreground">
-            Still looking for something?{" "}
-            <Link href="/library" className="font-bold text-emerald-700 underline underline-offset-4 dark:text-emerald-300">
-              The library holds every page this estate has published
-            </Link>
-            , by subject and dated — nothing is deleted when it is superseded.
+          <p className="t-kicker text-emerald-700 dark:text-emerald-300">Keep going</p>
+          <h2 className="t-band mt-4 max-w-3xl text-foreground">
+            That is the whole front door. Everything else is one click, not one scroll.
+          </h2>
+          <p className="t-lede measure mt-5 text-muted-foreground">
+            This page used to run to twenty-six screens on a desktop and fifty-three on a phone.
+            None of it was deleted to shorten it — the bands below the board now have pages of
+            their own, and the full archive is where it always was.
           </p>
+          <ul className="mt-9 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                href: "/how-we-work",
+                title: "How this works, in full",
+                body:
+                  "The method and who pays for it, the machine surface and every data door, the nine products, the films, and the answers on funding, limits and our own errors.",
+              },
+              {
+                href: "/gspc-verify",
+                title: "Check a record yourself",
+                body:
+                  "Paste a signed record and your own browser does the maths. Nothing leaves the device, no account, free forever.",
+              },
+              {
+                href: "/methodology",
+                title: "How a measurement is made",
+                body:
+                  "Frozen tests published before the run, graded by a rule rather than by another AI, with unparsed answers counted as incorrect.",
+              },
+              {
+                href: "/api/corrections",
+                title: "What we got wrong",
+                body:
+                  "The public ledger: what was wrong, how it was caught, what changed, and the date. Signed records are superseded, never edited.",
+              },
+              {
+                href: "/memberships",
+                title: "Where we take part",
+                body:
+                  "Every participation record with its evidence, and a plain statement of what each one does not prove. We hold no certification under any scheme.",
+              },
+              {
+                href: "/library",
+                title: "The library",
+                body:
+                  "Every page this estate has published, by subject and dated. Nothing is deleted when it is superseded.",
+              },
+            ].map((d) => {
+              const inner = (
+                <>
+                  <span className="block text-[16px] font-black leading-snug tracking-tight text-foreground">
+                    {d.title} <span aria-hidden="true">→</span>
+                  </span>
+                  <span className="mt-2 block text-[13.5px] leading-relaxed text-muted-foreground">{d.body}</span>
+                </>
+              );
+              const cls =
+                "block h-full rounded-2xl border border-border bg-card p-5 transition hover:border-emerald-600/40 hover:shadow-[0_18px_40px_-34px_rgba(4,18,12,.5)]";
+              return (
+                <li key={d.href}>
+                  {d.href.startsWith("/api/") ? (
+                    <a href={d.href} className={cls}>
+                      {inner}
+                    </a>
+                  ) : (
+                    <Link href={d.href} className={cls}>
+                      {inner}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
+
     </div>
   );
 }

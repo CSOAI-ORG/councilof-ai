@@ -51,10 +51,18 @@ describe("public entry surfaces use the supply-led evidence hierarchy", () => {
     expect(positions.every((position) => position >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
 
-    // And measurement still precedes commissioning on the front door itself.
+    // And measurement still precedes commissioning on the front door itself. HomeNavigator
+    // moved to /how-we-work on 2026-09-23 (the home page was 27,743px tall, so its lower bands
+    // were published to almost nobody). What this assertion has always been about is the ORDER
+    // of the supply-led hierarchy, so it is pinned where each band now renders: the front door
+    // still leads with what is measured before it asks for anything, and the directory of every
+    // door comes last on the page that carries it.
     const home = source("HomeVerify.tsx");
-    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeNavigator"));
-    expect(home.indexOf("<HomeNavigator")).toBeLessThan(home.indexOf('id="board"'));
+    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeCredibility"));
+    expect(home.indexOf("<HomeCredibility")).toBeLessThan(home.indexOf('id="board"'));
+
+    const deep = source("HowWeWork.tsx");
+    expect(deep.indexOf("<HomeStrengths")).toBeLessThan(deep.indexOf("<HomeNavigator"));
   });
 
   it("quickstart keeps commissioning after the four public reads", () => {

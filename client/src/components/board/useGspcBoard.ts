@@ -67,6 +67,13 @@ export interface GspcTotals {
   public_leader_count?: number;
   /** Lid sentence: measured · fleets · public leaders · fact runs · not a certificate. */
   lid?: string;
+  /**
+   * SEPARATION, over the model-comparison axes only. These four fields are the reason the
+   * board's "N measured" line can never stand alone on a public surface: an axis is MEASURED
+   * when a run exists behind it, which is a different and much weaker fact than the axis
+   * having told two models apart. Read all four together or none of them.
+   */
+  comparison_axes?: number;
   separated_leads?: number;
   ties?: number;
   untested_separations?: number;

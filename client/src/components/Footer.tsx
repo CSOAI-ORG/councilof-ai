@@ -185,93 +185,108 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Framework logos — self-hosted badge art; links to the real framework home */}
+        {/*
+          FRAMEWORKS WE MEASURE AGAINST — text, with the relationship named, never a logo row.
+
+          WHAT WAS HERE UNTIL 2026-09-23, and why it went. Nine <img> badges drawn in-house at
+          /images/badges/frameworks/*.svg: an EU AI Act badge rendering the European emblem's
+          circle of twelve stars in the emblem's own #003399 and #FFCC00, a redrawn Tux for the
+          Linux Foundation, and seven more. They are not those bodies' assets; they are our
+          imitations of their marks, and every one of them sat under our own heading in our own
+          footer. That is the arrangement a reader reads as affiliation.
+
+          The five frameworks in the first group are the sharpest case, because we hold NO
+          standing with any of them — we measure AGAINST the EU AI Act, NIST AI RMF, ISO/IEC
+          42001 and DORA, and there is no relationship to depict. The block had to carry a
+          disclaimer ("we are not certified to SOC 2 or ISO 42001") directly under the art to
+          stay honest, which is the tell: art that needs a disclaimer beside it is the wrong art.
+          The four memberships in the second group ARE real, but a membership is a fact we can
+          state in words with a date and a link, which is strictly more information than a logo.
+
+          No body's brand terms were cited for any of the nine, and none of them licenses a third
+          party to redraw its mark. So this is now the pattern MembershipStrip already uses on
+          /memberships and on the home page: organisation, the kind of participation, and a link
+          to that body's own page. Standing and evidence for every membership stay on
+          /memberships, backed by public/interop/memberships.json, which
+          scripts/memberships-check.mjs re-fetches so a claim cannot outlive its evidence.
+
+          The nine SVGs are left on disk unreferenced rather than deleted, so this decision can
+          be read against the exact bytes it was made about.
+        */}
         <div className="border-t border-border pt-6 mb-6">
           <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
             Frameworks we measure against
           </p>
-          <ul className="flex flex-wrap items-center justify-center gap-2.5 list-none p-0 m-0">
+          <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
             {[
               {
-                src: '/images/badges/frameworks/eu-ai-act.svg',
-                alt: 'EU AI Act',
+                name: 'EU AI Act',
+                detail: 'Regulation (EU) 2024/1689',
                 href: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai',
-                title: 'EU Artificial Intelligence Act — framework we measure against',
               },
               {
-                src: '/images/badges/frameworks/nist-ai-rmf.svg',
-                alt: 'NIST AI RMF',
+                name: 'NIST AI RMF',
+                detail: 'framework we measure against',
                 href: 'https://www.nist.gov/itl/ai-risk-management-framework',
-                title: 'NIST AI Risk Management Framework — we measure against; we are not certified',
               },
               {
-                src: '/images/badges/frameworks/iso-42001.svg',
-                alt: 'ISO/IEC 42001',
+                name: 'ISO/IEC 42001',
+                detail: 'framework we measure against',
                 href: 'https://www.iso.org/standard/81230.html',
-                title: 'ISO/IEC 42001 AI management systems — we are not certified',
               },
               {
-                src: '/images/badges/frameworks/dora.svg',
-                alt: 'DORA',
+                name: 'DORA',
+                detail: 'framework we measure against',
                 href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
-                title: 'Digital Operational Resilience Act — we measure against; we are not certified',
               },
-              {
-                src: '/images/badges/frameworks/c2pa.svg',
-                alt: 'C2PA',
-                href: 'https://c2pa.org/',
-                title: 'C2PA Content Credentials — contributor member',
-              },
-              {
-                src: '/images/badges/frameworks/oin.svg',
-                alt: 'Open Invention Network',
-                href: 'https://openinventionnetwork.com/',
-                title: 'Open Invention Network — member',
-              },
-              {
-                src: '/images/badges/frameworks/lot-network.svg',
-                alt: 'LOT Network',
-                href: 'https://lotnet.com/',
-                title: 'LOT Network — member',
-              },
-              {
-                src: '/images/badges/frameworks/dif.svg',
-                alt: 'Decentralized Identity Foundation',
-                href: 'https://identity.foundation/',
-                title: 'Decentralized Identity Foundation — did:web trust root',
-              },
-              {
-                src: '/images/badges/frameworks/linux-foundation.svg',
-                alt: 'Linux Foundation',
-                href: 'https://www.linuxfoundation.org/',
-                // Standing and evidence live on /memberships (public/interop/memberships.json); this
-                // title states nothing the manifest does not, so it cannot drift from it.
-                title: 'Linux Foundation — our standing and its evidence are on /memberships',
-              },
-            ].map((b) => (
-              <li key={b.alt}>
+            ].map((f) => (
+              <li key={f.name}>
                 <a
-                  href={b.href}
+                  href={f.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={b.title}
-                  className="block rounded-lg border border-border bg-background p-1 shadow-sm transition hover:border-emerald-600/40 hover:shadow"
+                  className="inline-flex items-baseline gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs transition hover:border-emerald-600/40"
                 >
-                  <img
-                    src={b.src}
-                    alt={b.alt}
-                    width={160}
-                    height={40}
-                    className="h-9 w-auto sm:h-10"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <span className="font-bold text-foreground">{f.name}</span>
+                  <span className="text-muted-foreground">· {f.detail}</span>
                 </a>
               </li>
             ))}
           </ul>
+
+          <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mt-6 mb-4">
+            Bodies we take part in
+          </p>
+          <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
+            {[
+              { name: 'C2PA', detail: 'contributor', href: 'https://c2pa.org/' },
+              { name: 'Open Invention Network', detail: 'member', href: 'https://openinventionnetwork.com/' },
+              { name: 'LOT Network', detail: 'member', href: 'https://lotnet.com/' },
+              { name: 'Decentralized Identity Foundation', detail: 'did:web trust root', href: 'https://identity.foundation/' },
+              { name: 'Linux Foundation', detail: 'hosts DIF and C2PA', href: 'https://www.linuxfoundation.org/' },
+            ].map((f) => (
+              <li key={f.name}>
+                <a
+                  href={f.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-baseline gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs transition hover:border-emerald-600/40"
+                >
+                  <span className="font-bold text-foreground">{f.name}</span>
+                  <span className="text-muted-foreground">· {f.detail}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
           <p className="text-muted-foreground text-xs text-center mt-4 font-medium">
-            We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
+            Naming a framework is not a claim to comply with it, and taking part in a body is not
+            that body endorsing us. We are not certified to SOC 2 or ISO 42001, and we hold no
+            certification under any scheme. Measurement credential, never certification.{' '}
+            <Link href="/memberships" className="text-primary hover:underline">
+              Every participation record, with its evidence
+            </Link>
+            .
           </p>
         </div>
 

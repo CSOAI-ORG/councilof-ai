@@ -1083,6 +1083,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Enterprise How It Works"
  },
  {
+  "path": "/how-we-work",
+  "comp": "HowWeWork",
+  "title": "How We Work"
+ },
+ {
   "path": "/hr-ai-act",
   "comp": "SectorAct",
   "title": "Hr Ai Act"
@@ -1316,11 +1321,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/memberships",
   "comp": "Memberships",
   "title": "Memberships"
- },
- {
-  "path": "/reach",
-  "comp": "Reach",
-  "title": "Distribution"
  },
  {
   "path": "/meok-law",
@@ -1631,6 +1631,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/rating-the-raters",
   "comp": "RatingTheRaters",
   "title": "Rating The Raters"
+ },
+ {
+  "path": "/reach",
+  "comp": "Reach",
+  "title": "Reach"
  },
  {
   "path": "/readiness",

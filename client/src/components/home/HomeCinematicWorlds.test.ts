@@ -18,10 +18,16 @@ describe("cinematic three-world merge contract", () => {
     // The component and its merge contract are untouched and still ship - what this test now
     // pins is that contract itself, plus the fact that the retirement was deliberate: the home
     // page carries a single film band, HomeFilms, and it comes after LivingStages.
+    // 2026-09-23: LivingStages and HomeFilms both moved to /how-we-work, so the "one film band,
+    // after the stages" contract is pinned on the page that now renders them. The front door
+    // mounts NEITHER film band, which satisfies the 2026-09-22 ruling more strongly than before.
     const homeFilms = readFileSync(resolve(__dirname, "HomeFilms.tsx"), "utf8");
+    const deep = readFileSync(resolve(__dirname, "../../pages/HowWeWork.tsx"), "utf8");
     expect(home).not.toContain("<HomeCinematicWorlds");
-    expect(home).toContain("<HomeFilms");
-    expect(home.indexOf("<LivingStages")).toBeLessThan(home.indexOf("<HomeFilms"));
+    expect(home).not.toContain("<HomeFilms");
+    expect(deep).not.toContain("<HomeCinematicWorlds");
+    expect(deep).toContain("<HomeFilms");
+    expect(deep.indexOf("<LivingStages")).toBeLessThan(deep.indexOf("<HomeFilms"));
     expect(homeFilms).toContain("What this film is saying");
     expect(v3).not.toContain("HomeCinematicWorlds");
     expect(worlds).toContain("lg:grid-cols-3");
