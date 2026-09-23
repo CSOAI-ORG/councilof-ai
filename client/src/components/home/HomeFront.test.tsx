@@ -392,6 +392,8 @@ describe("HomeWeakScore", () => {
     );
     expect(valid).toContain('data-verdict="VALID"');
     expect(valid).toContain("9.7%");
+    expect(valid).toContain("signed card under our published key");
+    expect(valid).not.toContain("every other result");
 
     const bad = render(<HomeWeakScore read={{ kind: "ready", card, verdict: { state: "INVALID", reason: "the signature does not verify" } }} />,
     );
