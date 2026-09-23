@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/interop/fix-receipts/fix-receipt.schema.json",
+  "title": "csoai.fix-receipt/0.1",
+  "description": "A fix receipt records that a named fault was measured before a named change, measured again after it, and what the two measurements support. It is the fourth verb beside find, name and remedy: prove a fix held. A receipt is a statement about THIS estate's own faults. It is never a statement about anybody else's system, never a conformity mark, and nothing in it is offered for sale. The measurements are what carry the weight; the verdict is a label derived from them under verdict_rule and carries no authority of its own.",
+  "license": "CC-BY-4.0",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "type": "object",
+  "required": [
+    "schema",
+    "chain_id",
+    "seq",
+    "prev_hash",
+    "receipt_id",
+    "observed_at",
+    "fault",
+    "change",
+    "before",
+    "after",
+    "verdict",
+    "verdict_rule",
+    "corrections_ref",
+    "residual",
+    "not_established",
+    "state_digest"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": { "const": "csoai.fix-receipt/0.1" },
+    "chain_id": {
+      "type": "string",
+      "description": "The chain this receipt belongs to. A receipt is only ordered within its own chain."
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Position in the chain, from 0. seq 0 is the GENESIS link and carries no measurement."
+    },
+    "prev_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "The state_digest of the previous link; 64 zeros at seq 0. A removed or reordered receipt breaks this."
+    },
+    "state_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "sha256 of THIS link with the state_digest key removed, canonicalised as json.dumps(link, sort_keys=True, separators=(',',':'), ensure_ascii=True). Recomputable from the published line alone: an edited receipt fails its own digest even if prev_hash still lines up. See digest_rule in the README."
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^FR-[0-9]{4}-[0-9]{4}-[0-9]{2}$",
+      "description": "FR-YYYY-MMDD-NN. Stable; a superseding receipt gets a new id and names the one it supersedes."
+    },
+    "kind": {
+      "enum": ["GENESIS", "FIX_RECEIPT"],
+      "description": "Absent means FIX_RECEIPT."
+    },
+    "observed_at": { "type": "string", "format": "date-time" },
+    "supersedes": {
+      "type": ["string", "null"],
+      "description": "receipt_id this one supersedes. Signed or published bytes are never edited; a wrong receipt is superseded."
+    },
+
+    "fault": {
+      "type": "object",
+      "required": ["summary", "first_observed_at", "source", "ref"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Where the fault is recorded: a corrections ledger id, a lane report path, an evidence bundle, a log line. At least one must be something a reader can fetch or reproduce.",
+          "minItems": 1
+        },
+        "summary": { "type": "string" },
+        "first_observed_at": { "type": ["string", "null"] },
+        "source": {
+          "type": "string",
+          "description": "Who or what found it. 'this estate' is a real answer and so is an external correspondent."
+        },
+        "scope_note": {
+          "type": "string",
+          "description": "The fault as scoped for THIS receipt. A receipt that measures a narrower thing than the fault must say so here, because the verdict then applies only to the narrow thing."
+        }
+      }
+    },
+
+    "change": {
+      "type": "object",
+      "required": ["kind", "ref", "at", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": ["COMMIT", "DEPLOY", "OPERATIONAL", "CONFIG", "PUBLICATION", "NONE"],
+          "description": "NONE is legitimate: a fault can close because the world moved. It is never evidence of a fix on its own."
+        },
+        "ref": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+        "at": { "type": ["string", "null"] },
+        "by": { "type": ["string", "null"] },
+        "note": { "type": "string" }
+      },
+      "description": "What was done. A landed commit is a change, not a fix: the measurements decide."
+    },
+
+    "before": { "$ref": "#/$defs/measurement" },
+    "after": { "$ref": "#/$defs/measurement" },
+
+    "verdict": {
+      "enum": ["VERIFIED_FIX", "FIX_FAILED", "PARTIAL", "UNVERIFIABLE"],
+      "description": "VERIFIED_FIX: both measurements exist, are comparable, and moved in the direction expected_direction names. FIX_FAILED: both exist and the value did not move that way. PARTIAL: the scoped remedy is measurably working while the fault it addresses is measurably still present. UNVERIFIABLE: at least one side cannot be measured — no stated change, no instrument, a destroyed before-state, or an effect that is not observable from outside. UNVERIFIABLE is a first-class outcome and is the honest label for most fixes; recording it is the point of this artifact, not a failure of it."
+    },
+    "verdict_rule": {
+      "type": "string",
+      "description": "The one sentence that derives the verdict from before and after. If this sentence cannot be written, the verdict is UNVERIFIABLE."
+    },
+    "expected_direction": {
+      "type": ["string", "null"],
+      "description": "Stated BEFORE the after-measurement wherever possible: which way the value had to move for the fix to have held."
+    },
+
+    "corrections_ref": {
+      "type": "object",
+      "required": ["state"],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": ["PUBLISHED", "DRAFT_IN_APPROVE_QUEUE", "NONE"],
+          "description": "PUBLISHED: a live /api/corrections entry. DRAFT_IN_APPROVE_QUEUE: written to the owner's approve-queue and not published; only the owner promotes. NONE: no corrections entry is owed, and the receipt says why."
+        },
+        "id": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] },
+        "note": { "type": ["string", "null"] }
+      }
+    },
+
+    "residual": {
+      "type": ["object", "null"],
+      "required": ["summary", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string" },
+        "evidence": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      },
+      "description": "What is still wrong after the change, including faults that are NOT this fault. null only when nothing is known to remain. A VERIFIED_FIX with a residual is common and must not be read as 'working'."
+    },
+
+    "not_established": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "What this receipt does not prove. Always populated. A receipt establishes a measured change of state and nothing else: not the absence of other faults, not the quality of the remedy, and never a conformity statement about anyone."
+    },
+
+    "contents": {
+      "type": "object",
+      "description": "GENESIS only: what the chain is and what it covers."
+    }
+  },
+
+  "$defs": {
+    "measurement": {
+      "type": "object",
+      "required": ["at", "what", "value", "method", "source", "state"],
+      "additionalProperties": false,
+      "properties": {
+        "at": { "type": ["string", "null"] },
+        "what": {
+          "type": "string",
+          "description": "The quantity or state measured. One quantity per receipt; two quantities are two receipts."
+        },
+        "value": {
+          "description": "The reading. Any JSON type. null ONLY with state UNMEASURED or UNMEASURABLE."
+        },
+        "unit": { "type": ["string", "null"] },
+        "method": {
+          "type": "string",
+          "description": "How it was read, in enough detail to repeat. A method nobody can repeat makes the side UNMEASURABLE."
+        },
+        "source": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "The bytes the reading came from."
+        },
+        "state": {
+          "enum": ["MEASURED", "UNMEASURED", "UNMEASURABLE"],
+          "description": "MEASURED: a reading was taken. UNMEASURED: not measured, though it could have been. UNMEASURABLE: no instrument can take this reading now — a destroyed before-state, an effect not observable from outside. Either non-MEASURED state forces verdict UNVERIFIABLE."
+        },
+        "by": {
+          "type": ["string", "null"],
+          "description": "Who took the reading. A reading taken by the party that made the change is worth less than one taken by anybody else, and saying which it was is part of the reading."
+        }
+      }
+    }
+  }
+}
