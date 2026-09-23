@@ -170,7 +170,8 @@ const EXISTING = [
   "/containment/   /blog/what-is-monitored-containment/  308",
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
-  "/gspc                   /dashboard?tab=board         308",
+  "/gspc                   /board/                     308",
+  "/gspc/                  /board/                     308",
   // TUI/plugin help used to 404. Help lives at /tools (seven MCP tools).
   "/plugin                 /tools                       301",
   "/plugin/                /tools                       301",
