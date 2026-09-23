@@ -5,10 +5,22 @@
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
   "kinds": [
-    { "id": "added", "label": "Row added" },
-    { "id": "corrected", "label": "Row corrected" },
-    { "id": "verified", "label": "Evidence re-checked" },
-    { "id": "recorded", "label": "Recorded" }
+    {
+      "id": "added",
+      "label": "Row added"
+    },
+    {
+      "id": "corrected",
+      "label": "Row corrected"
+    },
+    {
+      "id": "verified",
+      "label": "Evidence re-checked"
+    },
+    {
+      "id": "recorded",
+      "label": "Recorded"
+    }
   ],
   "entries": [
     {
@@ -16,7 +28,7 @@
       "kind": "recorded",
       "row": null,
       "headline": "The mailbox was swept for memberships we hold and were not showing; five were missing and three claims did not survive the sweep",
-      "detail": "Every message in nicholas@csoai.org for 2026 was read by header, and the bodies were searched server-side for each body by name. Five things we hold had no row and now have one: Open Invention Network, LOT Network, the EU AI Pact, our comments to BSI committee ART/1, and the mcpservers.org listing. Three did not survive. MLCommons has no membership record at all \u2014 the only message naming it is one we wrote about a measurement we published concerning them. OpenML got as far as a verification request and no further. Glama's listings are real but have no public URL a stranger can open. Those three are recorded under Named, and not listed, with the reason, because a membership we cannot show is not the same as one we do not have, and neither may be displayed as current.",
+      "detail": "Every message in nicholas@csoai.org for 2026 was read by header, and the bodies were searched server-side for each body by name. Five things we hold had no row and now have one: Open Invention Network, LOT Network, the EU AI Pact, our comments to BSI committee ART/1, and the mcpservers.org listing. Three did not survive. MLCommons has no membership record at all — the only message naming it is one we wrote about a measurement we published concerning them. OpenML got as far as a verification request and no further. Glama's listings are real but have no public URL a stranger can open. Those three are recorded under Named, and not listed, with the reason, because a membership we cannot show is not the same as one we do not have, and neither may be displayed as current.",
       "evidence": "https://councilof.ai/interop/memberships.json",
       "evidence_kind": "public_url"
     },
@@ -34,7 +46,7 @@
       "kind": "added",
       "row": "lot-network",
       "headline": "LOT Network's public member directory lists CSOAI LTD",
-      "detail": "LOT Network wrote \"Welcome CSOAI LTD to LOT Network\" on 2026-08-23. Like the OIN row this is a patent arrangement \u2014 licence-on-transfer against patent assertion entities \u2014 and nothing about AI governance.",
+      "detail": "LOT Network wrote \"Welcome CSOAI LTD to LOT Network\" on 2026-08-23. Like the OIN row this is a patent arrangement — licence-on-transfer against patent assertion entities — and nothing about AI governance.",
       "evidence": "https://lotnet.com/members/?dir=1&name_directory_startswith=C",
       "evidence_kind": "public_url"
     },
@@ -132,18 +144,18 @@
       "date": "2026-09-21",
       "kind": "added",
       "row": "linux-foundation",
-      "headline": "Linux Foundation membership agreement completed at Silver, record M-018884",
-      "detail": "Completed via Docusign. The onboarding record states Silver Membership with an expiry of 2027-09-30. The public Linux Foundation members page did not name us on 2026-09-22, so the row is marked private evidence until it does. Silver is a paid participation tier and not an endorsement of anything we publish.",
-      "evidence": "INBOX 8987 (Docusign completed, 2026-09-21) and INBOX 8988 (2026-09-21)",
+      "headline": "Linux Foundation membership agreement completed by all parties",
+      "detail": "DocuSign reported the envelope completed by all parties on 2026-09-21. The member portal record M-018884 (login required) gives the tier as Silver. The public members page did not name us on 2026-09-22, so the row is marked private evidence. Membership is a paid participation tier, not an endorsement of anything we publish.",
+      "evidence": "INBOX 8955 (the Linux Foundation, 2026-09-21: one DocuSign envelope carrying the membership agreement for both the Open Secure AI Alliance and the Linux Foundation memberships) and INBOX 8987 (DocuSign, 2026-09-21 22:56 UTC: 'All parties have completed')",
       "evidence_kind": "private_email"
     },
     {
       "date": "2026-09-21",
       "kind": "added",
       "row": "osaia",
-      "headline": "Recorded as a General Member of the Open Secure AI Alliance",
-      "detail": "The Alliance's onboarding mail opens \"Thank you for becoming a member\", following an application received on 2026-09-18. secureaialliance.org did not list members on 2026-09-22, so the evidence is private. The note we contributed to the Alliance's SAFE discussion asks the group questions; it proposes nothing for adoption.",
-      "evidence": "INBOX 8988 (The Linux Foundation, 2026-09-21) and INBOX 8859 (2026-09-18)",
+      "headline": "Became a member of the Open Secure AI Alliance",
+      "detail": "The participation agreement was completed by all parties via DocuSign, and the Alliance's onboarding mail opened 'Thank you for becoming a member', following an application received on 2026-09-18. The Alliance publishes no member list, so the evidence is private. The note CSOAI published to the Alliance's SAFE discussion is our own; we have no record of SAFE adopting or acknowledging it.",
+      "evidence": "INBOX 8987 (DocuSign completed, 2026-09-21), INBOX 8988 (2026-09-21) and INBOX 8859 (2026-09-18)",
       "evidence_kind": "private_email"
     },
     {
