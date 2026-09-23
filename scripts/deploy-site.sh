@@ -310,7 +310,13 @@ LOCK
   exit 0
 fi
 
-: "${CLOUDFLARE_API_TOKEN:?FATAL: CLOUDFLARE_API_TOKEN not set — the deploy would fail halfway}"
+# Wrangler may already hold a scoped OAuth session on the dedicated publisher.
+# Check the actual Pages write permission before the first upload; never echo credentials.
+if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+  AUTH_STATE="$(npx wrangler whoami 2>&1)" || { echo "FATAL: Wrangler authentication is unavailable" >&2; exit 11; }
+  printf '%s\n' "$AUTH_STATE" | grep -q 'pages (write)' || { echo "FATAL: Wrangler session lacks Pages write permission" >&2; exit 11; }
+  ok "Wrangler OAuth session has Pages write permission"
+fi
 say "DEPLOY-LOCK deliberately overridden (--break-deploy-lock) by $(git config user.name 2>/dev/null || echo unknown) at $(date -u +%FT%TZ)"
 say "Deploying $DIST to $PROJECT on ALL alias names: ${BRANCHES[*]}"
 for b in "${BRANCHES[@]}"; do
