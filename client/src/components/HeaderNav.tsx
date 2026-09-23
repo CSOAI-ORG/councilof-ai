@@ -11,7 +11,7 @@ export const PRIMARY_LINKS: { name: string; href: string }[] = [
   // Services sits between Board and Verify: it is the list of doors the rail
   // publishes, read live from /.well-known/x402.json — not a brochure.
   { name: "Services", href: "/services" },
-  { name: "Board", href: "/dashboard?tab=board" },
+  { name: "Board", href: "/board/" },
   { name: "Council OS", href: "/dashboard" },
   { name: "Tools", href: "/tools" },
 ];
@@ -19,11 +19,11 @@ export const PRIMARY_LINKS: { name: string; href: string }[] = [
 export const navigation: NavGroup[] = [
   {
     name: 'Measure',
-    href: '/dashboard?tab=board',
+    href: '/board/',
     icon: BarChart2,
     description: 'The instrument and its living board',
     submenu: [
-      { section: 'The board', name: 'The GSPC board', href: '/dashboard?tab=board', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
+      { section: 'The board', name: 'The GSPC board', href: '/board/', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
       { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head on the same frozen items. Deterministic grading — no model judges another' },
       { name: 'Arena — benchmarks', href: '/gspc-arena?view=benchmarks', description: 'The per-bank view of the arena: which instrument, which rows, which result' },
       { name: 'Arena — live training', href: '/gspc-arena?view=training', description: 'Runs in progress. Practice stays practice and is never quoted' },
