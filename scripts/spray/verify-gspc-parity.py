@@ -12,8 +12,12 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+# Must stay equal to gspc-spray.py's SNAPSHOT_FILES: this gate compares the surfaces file by file, and
+# a name the publisher pushes but this tuple does not know is a file nobody checks. The spray's test suite
+# pins the two tuples together (test_gspc_parity.py).
 FILES = ("README.md", "board.json", "root.json", "SNAPSHOT.json", "gspc-axes.csv",
-         "gspc-axes.jsonl", "check-board.sh", "manifest.jsonl")
+         "gspc-axes.jsonl", "check-board.sh", "claim-maintenance-spec.md", "claim-maintenance-spec.json",
+         "claim-artifact-schema.json", "claim-maintenance-register.json", "manifest.jsonl")
 HF = "https://huggingface.co/datasets/csoai/gspc-board/resolve/main/snapshot"
 KAGGLE_ID = "nicktempleman/csoai-gspc-living-board"
 KAGGLE_API = "https://www.kaggle.com/api/v1/datasets"

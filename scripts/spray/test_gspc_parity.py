@@ -38,6 +38,13 @@ def fixture(as_of: str = "2026-09-12T13:27:43Z") -> dict[str, bytes]:
     return files
 
 
+def test_the_parity_gate_knows_every_file_the_publisher_pushes():
+    """Two tuples, one list. A name the spray pushes but the gate does not know is a file nobody
+    compares across the surfaces, and a name the gate demands but the spray never writes is a
+    permanent red. Neither shows up anywhere else, so it is pinned here."""
+    assert tuple(parity.FILES) == tuple(spray.SNAPSHOT_FILES)
+
+
 def test_validate_accepts_a_self_consistent_snapshot():
     result = parity.validate("fixture", fixture())
     assert result["card_count"] == 2

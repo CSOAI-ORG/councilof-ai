@@ -15,6 +15,11 @@ ONE snapshot directory is built from LIVE truth and pushed, unchanged, to each s
                     how a stranger verifies (gspc-verify, root.json inclusion, did:web key)
     gspc-axes.csv / gspc-axes.jsonl   one row per slot
     check-board.sh  re-derives the totals from the live array and recomputes the Merkle root
+    claim-maintenance-spec.md · claim-maintenance-spec.json · claim-artifact-schema.json
+                    the Claim Maintenance specification (CC0), its record and its artifact schema, carried
+                    from public/spec/claim-maintenance/ — the category the register below belongs to
+    claim-maintenance-register.json
+                    the generated register of maintained subjects, carried at ITS OWN as_of
     manifest.jsonl  file · bytes · sha256
 
 RULES this script enforces on itself
@@ -89,6 +94,19 @@ ROOT_PREIMAGE_KEYS = ("kind", "schema", "as_of", "merkle_root", "card_count", "d
 ROOT_DID = "did:web:csoai.org#board-attestation-1"
 ROOT_KIND = "csoai.public-root/v1"
 ROOT_SCHEMA = "https://councilof.ai/schema/public-root-v1.json"
+
+# The Claim Maintenance specification and its register are committed here and served from the apex. The
+# snapshot carries them so the dataset that already exists names the category it maintains claims under —
+# a second dataset would split the record in two. The SOURCE paths are derived at run time (index.json
+# says which version is current; spec.json says where its own document and schema live). The names they
+# take IN the snapshot are fixed, so a reader of the dataset can address them across spec versions, and
+# so the flat archives Kaggle and Zenodo serve carry no directories.
+SPEC_DIR = HERE.parent.parent / "public" / "spec" / "claim-maintenance"
+SPEC_DOC_NAME = "claim-maintenance-spec.md"
+SPEC_JSON_NAME = "claim-maintenance-spec.json"
+SPEC_SCHEMA_NAME = "claim-artifact-schema.json"
+SPEC_REGISTER_NAME = "claim-maintenance-register.json"
+SPEC_FILES = (SPEC_DOC_NAME, SPEC_JSON_NAME, SPEC_SCHEMA_NAME, SPEC_REGISTER_NAME)
 
 
 # ----------------------------------------------------------------------------------------------- helpers
@@ -249,15 +267,20 @@ def read_live_truth() -> dict:
         raise Refused(f"live public root signature is not valid under live did.json ({e})")
     log(f"    VALID Ed25519 signature under {root['did_intended']}")
 
+    claim_maintenance = read_claim_maintenance()
     banks = read_banks(board["axes"])
 
     body_wo_att = {k: v for k, v in board.items() if k != "site_attestation"}
     board_content_sha = sha256_hex(canonical(body_wo_att))
-    fingerprint = sha256_hex(f"{board_content_sha}|{root['merkle_root']}|{root['card_count']}".encode())
+    # The specification and the register are part of what the snapshot publishes, so they are part of
+    # what makes two snapshots the same snapshot. A register that moved and a board that did not is a
+    # changed dataset, and the fingerprint every surface is keyed on has to say so.
+    fingerprint = sha256_hex(f"{board_content_sha}|{root['merkle_root']}|{root['card_count']}"
+                             f"|{claim_maintenance['bundle_sha256']}".encode())
 
     return {
         "board": board, "board_bytes": board_bytes, "root": root, "root_bytes": root_bytes,
-        "did_keys": did_keys, "banks": banks, "lid": lid,
+        "did_keys": did_keys, "banks": banks, "lid": lid, "claim_maintenance": claim_maintenance,
         "as_of": root["as_of"], "read_at": utc_now(),
         "board_sha256": sha256_hex(board_bytes), "board_content_sha256": board_content_sha,
         "root_sha256": sha256_hex(root_bytes), "fingerprint": fingerprint,
@@ -313,6 +336,204 @@ def read_banks(axes: list[dict]) -> list[dict]:
     return out
 
 
+# ------------------------------------------------------------------------------------ claim maintenance
+
+def _read_repo_file(path: Path, what: str) -> bytes:
+    try:
+        return path.read_bytes()
+    except OSError as e:
+        raise Refused(f"{what} is unreadable at {path} ({e}). Absent is not zero.")
+
+
+def _read_repo_json(path: Path, what: str) -> tuple[dict, bytes]:
+    raw = _read_repo_file(path, what)
+    try:
+        obj = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise Refused(f"{what} at {path} is not valid JSON ({e})")
+    if not isinstance(obj, dict):
+        raise Refused(f"{what} at {path} is not a JSON object")
+    return obj, raw
+
+
+def _spec_relative(canonical_url: str, url: object, field: str) -> str:
+    """The path a published spec URL has under its own version directory.
+
+    The version, the document's filename and the schema's filename are all read from the spec's own
+    records rather than typed here, so a v0.2 that renames either is followed, not silently missed."""
+    if not isinstance(url, str) or not url.startswith(canonical_url) or url == canonical_url:
+        raise Refused(f"spec.json {field} {url!r} is not under its own canonical_url {canonical_url!r}")
+    rel = url[len(canonical_url):]
+    if rel.startswith("/") or ".." in rel.split("/"):
+        raise Refused(f"spec.json {field} {url!r} resolves outside the specification directory")
+    return rel
+
+
+def register_counts(register: dict) -> dict:
+    """Recount the register from its own arrays, and say whether its printed totals agree.
+
+    The register generates its own `totals` block, exactly as the board prints its own. This publisher
+    takes neither on trust: it counts the arrays and reports a disagreement rather than reconciling one."""
+    subjects, registries = register.get("subjects"), register.get("registries")
+    if not isinstance(subjects, list) or not isinstance(registries, list):
+        raise Refused("the claim-maintenance register carries no subjects/registries arrays to count")
+    by_state: dict[str, int] = {}
+    claims = 0
+    for subject in subjects:
+        states = subject.get("states") if isinstance(subject, dict) else None
+        if not isinstance(states, dict) or not states:
+            raise Refused(f"a claim-maintenance register subject carries no states block: {subject!r:.120}")
+        for state, n in states.items():
+            if type(n) is not int:
+                raise Refused(f"register state {state!r} is {n!r}, not an integer — a count that is not a number")
+            by_state[state] = by_state.get(state, 0) + n
+        n_claims = subject.get("claim_count")
+        if type(n_claims) is not int:
+            raise Refused(f"register subject {subject.get('subject')!r} has claim_count {n_claims!r}, not an integer")
+        claims += n_claims
+    counted = {
+        "subjects": len(subjects),
+        "claims": claims,
+        "by_state": by_state,
+        "registries": sum(1 for r in registries if isinstance(r, dict) and r.get("status") == "LIVE"),
+        "registries_superseded": sum(1 for r in registries if isinstance(r, dict) and r.get("status") == "SUPERSEDED"),
+    }
+    printed = register.get("totals")
+    printed = printed if isinstance(printed, dict) else {}
+    disagrees = sorted(key for key, value in counted.items() if key in printed and printed[key] != value)
+    return {
+        "counted": counted,
+        "printed": {key: printed.get(key) for key in counted},
+        "states_sum_equals_claim_counts": sum(by_state.values()) == claims,
+        "printed_agrees_with_arrays": not disagrees and bool(printed),
+        "printed_disagrees_on": disagrees,
+    }
+
+
+def version_index_url(spec: dict, version: str) -> str:
+    """The version index this spec version sits under — its canonical URL minus the `v<version>/` tail."""
+    suffix = f"v{version}/"
+    canonical_url = spec["canonical_url"]
+    if not canonical_url.endswith(suffix):
+        raise Refused(f"canonical_url {canonical_url!r} does not end in {suffix!r}; cannot name the version index")
+    return canonical_url[: -len(suffix)]
+
+
+def claim_maintenance_block(cm: dict) -> dict:
+    """What SNAPSHOT.json records about the carried specification and register."""
+    spec = cm["spec"]
+    return {
+        "specification": spec["name"],
+        "version": cm["version"],
+        "specification_date": spec.get("date"),
+        "canonical_url": spec["canonical_url"],
+        "version_index_url": version_index_url(spec, cm["version"]),
+        "doi": spec["doi"],
+        "doi_url": spec["doi_url"],
+        "concept_doi": spec["concept_doi"],
+        "licence": spec["licence"],
+        "states": spec.get("states"),
+        "document": SPEC_DOC_NAME,
+        "document_sha256": cm["document_sha256"],
+        "spec_record": SPEC_JSON_NAME,
+        "artifact_schema": SPEC_SCHEMA_NAME,
+        "artifact_schema_id": cm["schema_id"],
+        "register": SPEC_REGISTER_NAME,
+        "register_as_of": cm["register_as_of"],
+        "register_digest": cm["register_digest"],
+        "register_counts": cm["register_counts"],
+        "bundle_sha256": cm["bundle_sha256"],
+        "note": "Carried from this repository's public/spec/claim-maintenance/, byte-for-byte. The register is "
+                "generated from public/claims/ by scripts/claim-maintenance-register.mjs; it is read here, never "
+                "recomputed, so register_as_of is the register's own instant and not this snapshot's read_at. "
+                "A listing in it is neither an endorsement nor an accusation.",
+    }
+
+
+def read_claim_maintenance() -> dict:
+    """The Claim Maintenance specification, its schema and the committed register — bound to themselves.
+
+    The register is GENERATED from `public/claims/` by `scripts/claim-maintenance-register.mjs`. This
+    publisher reads the committed bytes and never regenerates them: it has no business deciding what the
+    register says, and a register rebuilt inside a board spray would carry this run's clock instead of the
+    instant the claims were actually read. The snapshot therefore records the register's OWN `as_of`.
+
+    Nothing here is typed and nothing is assumed present: a file that cannot be read, a document that does
+    not hash to the digest its own record declares, or a register whose self-declared digest does not bind
+    its bytes, refuses the whole publish. Absent is not zero.
+    """
+    log(f"[truth] read {SPEC_DIR}")
+    index, _ = _read_repo_json(SPEC_DIR / "index.json", "the claim-maintenance version index")
+    version = index.get("latest")
+    if not isinstance(version, str) or not version:
+        raise Refused("the claim-maintenance version index names no `latest` version")
+    version_dir = SPEC_DIR / f"v{version}"
+
+    spec, spec_bytes = _read_repo_json(version_dir / "spec.json", f"the claim-maintenance v{version} spec record")
+    canonical_url = spec.get("canonical_url")
+    if not isinstance(canonical_url, str) or not canonical_url.endswith("/"):
+        raise Refused("the spec record carries no canonical_url ending in '/'")
+    if spec.get("version") != version:
+        raise Refused(f"the version index says {version!r} but the spec record says {spec.get('version')!r}")
+    for field in ("name", "doi", "doi_url", "concept_doi", "licence"):
+        if not isinstance(spec.get(field), str) or not spec[field]:
+            raise Refused(f"the spec record carries no {field} — the README would have nothing to name or link")
+
+    doc_bytes = _read_repo_file(
+        version_dir / _spec_relative(canonical_url, spec.get("document_of_record"), "document_of_record"),
+        "the claim-maintenance document of record")
+    document_sha256 = sha256_hex(doc_bytes)
+    if document_sha256 != spec.get("document_sha256"):
+        raise Refused(f"the document of record hashes to {document_sha256} but its spec record declares "
+                      f"{spec.get('document_sha256')!r} — one of the two moved after the other was written")
+    entry = next((row for row in index.get("versions", [])
+                  if isinstance(row, dict) and row.get("version") == version), None)
+    if not isinstance(entry, dict) or entry.get("document_sha256") != document_sha256:
+        raise Refused(f"the version index has no v{version} entry pinning the document digest {document_sha256}")
+
+    schema_url = spec.get("artifact_schema_url")
+    schema, schema_bytes = _read_repo_json(
+        version_dir / _spec_relative(canonical_url, schema_url, "artifact_schema_url"), "the claim artifact schema")
+    if schema.get("$id") != schema_url:
+        raise Refused(f"the artifact schema calls itself {schema.get('$id')!r}, not {schema_url!r}")
+
+    register, register_bytes = _read_repo_json(SPEC_DIR / "register.json", "the claim-maintenance register")
+    if register.get("specification") != canonical_url:
+        raise Refused(f"the register was generated against {register.get('specification')!r}, "
+                      f"not the current version at {canonical_url}")
+    register_as_of = register.get("as_of")
+    if not isinstance(register_as_of, str) or not register_as_of:
+        raise Refused("the claim-maintenance register carries no as_of — a register that cannot say when it was "
+                      "generated cannot be published as of anything")
+    declared_digest = register.get("register_digest")
+    if not isinstance(declared_digest, str) or not re.fullmatch(r"[0-9a-f]{64}", declared_digest):
+        raise Refused("the claim-maintenance register carries no register_digest")
+    recomputed = sha256_hex(canonical({k: v for k, v in register.items() if k != "register_digest"}))
+    if recomputed != declared_digest:
+        raise Refused(f"the register's own register_digest does not bind its bytes "
+                      f"(it declares {declared_digest}, these bytes canonicalise to {recomputed})")
+    for field in ("what_this_is", "non_allegation"):
+        if not isinstance(register.get(field), str) or not register[field]:
+            raise Refused(f"the claim-maintenance register carries no {field}")
+    if not isinstance(register.get("what_this_is_not"), list) or not register["what_this_is_not"]:
+        raise Refused("the claim-maintenance register carries no what_this_is_not")
+
+    files = {SPEC_DOC_NAME: doc_bytes, SPEC_JSON_NAME: spec_bytes,
+             SPEC_SCHEMA_NAME: schema_bytes, SPEC_REGISTER_NAME: register_bytes}
+    counts = register_counts(register)
+    bundle_sha256 = sha256_hex(canonical({name: sha256_hex(body) for name, body in files.items()}))
+    log(f"    {spec['name']} {version}: document {document_sha256[:16]}… matches its own record · register "
+        f"as_of {register_as_of} · {counts['counted']['subjects']} subjects, {counts['counted']['claims']} claims")
+    return {
+        "files": files, "version": version, "spec": spec,
+        "document_sha256": document_sha256, "schema_id": schema.get("$id"),
+        "register_as_of": register_as_of, "register_digest": declared_digest, "register_counts": counts,
+        "what_this_is": register["what_this_is"], "non_allegation": register["non_allegation"],
+        "what_this_is_not": [str(x) for x in register["what_this_is_not"]],
+        "bundle_sha256": bundle_sha256,
+    }
+
+
 # --------------------------------------------------------------------------------------------- snapshot
 
 def derive_counts(board: dict) -> dict:
@@ -364,6 +585,64 @@ def axis_rows(board: dict, banks: list[dict]) -> list[dict]:
             "bank_state": b.get("bank_state"), "bank_rows": b.get("bank_rows"),
         })
     return rows
+
+
+def render_claim_maintenance(cm: dict) -> list[str]:
+    """The README section that names the category, links the canonical URL and the DOI, and counts the register.
+
+    Every value is read from the committed specification and register at build time. The dates here are the
+    specification's date and the register's own `as_of` — never this run's clock, which would date a register
+    by when a board happened to be sprayed."""
+    spec, counts = cm["spec"], cm["register_counts"]
+    counted, name, version = counts["counted"], spec["name"], cm["version"]
+    lines = [f"## {name} — the category these claim files belong to", ""]
+    lines.append(f"This snapshot also carries **{name} {version}**, the specification that defines that category, "
+                 f"its artifact schema, and the register of the subjects maintained under it. It is a separate "
+                 f"discipline from the board above: the board measures models against frozen banks, claim "
+                 f"maintenance observes what organisations publish about themselves.")
+    lines.append("")
+    lines.append(f"- **Canonical URL:** <{spec['canonical_url']}> · version index: <{version_index_url(spec, version)}> "
+                 "— a published version is never edited; a later one supersedes it by existing, and the earlier URL "
+                 "keeps its original bytes")
+    lines.append(f"- **DOI:** <{spec['doi_url']}> — `{spec['doi']}`; the version-independent concept DOI is "
+                 f"`{spec['concept_doi']}`, and it resolves to whichever version is current")
+    lines.append(f"- **Licence:** {spec['licence']} — adopt it, fork it, translate it, re-publish it, without asking us")
+    lines.append(f"- **Document of record:** `{SPEC_DOC_NAME}`, sha256 `{cm['document_sha256']}` — the digest "
+                 f"`{SPEC_JSON_NAME}` declares for it, recomputed before this snapshot was built")
+    lines.append(f"- **Artifact schema:** `{SPEC_SCHEMA_NAME}` (`{cm['schema_id']}`)")
+    lines.append("- **States, and nothing else:** " + " · ".join(f"`{state}`" for state in (spec.get("states") or []))
+                 + " — `UNMEASURED` is first-class, and `UNCHECKABLE` is a statement about the evidence, never "
+                   "about the subject")
+    lines.append("")
+    lines.append("The register describes itself, quoted here rather than paraphrased:")
+    lines.append("")
+    lines.append(f"> {cm['what_this_is']}")
+    lines.append("")
+    lines.append(f"> {cm['non_allegation']}")
+    lines.append("")
+    lines.append(f"`{SPEC_REGISTER_NAME}` is that register, as of `{cm['register_as_of']}` — the instant it was "
+                 f"generated from the registry files on disk, not the moment this snapshot was built. Its "
+                 f"`register_digest` `{cm['register_digest']}` was recomputed over its own bytes before publishing.")
+    lines.append("")
+    lines.append("| register, counted from its own arrays | |")
+    lines.append("|---|---:|")
+    lines.append(f"| subjects maintained | {counted['subjects']} |")
+    lines.append(f"| claims under maintenance | {counted['claims']} |")
+    for state, n in sorted(counted["by_state"].items()):
+        lines.append(f"| — in `{state}` | {n} |")
+    lines.append(f"| live registries | {counted['registries']} |")
+    lines.append(f"| superseded registries (bytes unchanged, still served) | {counted['registries_superseded']} |")
+    lines.append("")
+    lines.append("- the register's own `totals` block "
+                 + ("**agrees** with those arrays" if counts["printed_agrees_with_arrays"]
+                    else f"**DISAGREES** with those arrays on {counts['printed_disagrees_on']} "
+                         "(see SNAPSHOT.json `claim_maintenance.register_counts`)"))
+    lines.append("- the per-state counts "
+                 + ("sum to the per-subject `claim_count` totals" if counts["states_sum_equals_claim_counts"]
+                    else "**do not** sum to the per-subject `claim_count` totals — reported, not reconciled"))
+    lines.append("- what this register is not: " + "; ".join(cm["what_this_is_not"]) + ".")
+    lines.append("")
+    return lines
 
 
 def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
@@ -441,6 +720,7 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
                  "`n` is the graded count the board carries; `bank rows` is what the frozen `items.jsonl` holds today, canary "
                  "rows excluded — the two need not be equal, and a difference is reported, not reconciled here.")
     lines.append("")
+    lines.extend(render_claim_maintenance(tr["claim_maintenance"]))
     lines.append("## How to verify — a stranger, no account, no CSOAI code beyond `curl` and `python3`")
     lines.append("")
     lines.append("1. **The board's totals are derived, not typed.** `./check-board.sh` fetches the live GET, recounts "
@@ -473,6 +753,10 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
     lines.append("| `SNAPSHOT.json` | as_of, read_at, digests, derived counts, bank rows, and the fingerprint every surface is keyed on |")
     lines.append("| `gspc-axes.csv` / `gspc-axes.jsonl` | one row per slot |")
     lines.append("| `check-board.sh` | re-derive the totals and the Merkle root yourself |")
+    lines.append(f"| `{SPEC_DOC_NAME}` | the Claim Maintenance specification, the document of record, byte-for-byte |")
+    lines.append(f"| `{SPEC_JSON_NAME}` | its machine record: version, canonical URL, DOI, document digest, states |")
+    lines.append(f"| `{SPEC_SCHEMA_NAME}` | the JSON Schema a conforming claim artifact validates against |")
+    lines.append(f"| `{SPEC_REGISTER_NAME}` | the register of maintained subjects, at its own `as_of` |")
     lines.append("| `manifest.jsonl` | file, bytes, sha256 |")
     lines.append("")
     lines.append("## Everywhere this snapshot lives")
@@ -577,6 +861,11 @@ def build_snapshot(tr: dict, out: Path) -> Path:
         w.writerows(rows)
     (out / "check-board.sh").write_text(CHECK_BOARD_SH, encoding="utf-8")
     os.chmod(out / "check-board.sh", 0o755)
+    # Carried byte-for-byte, like board.json and root.json: the digests the README prints are the digests of
+    # these bytes, so the specification is not scanned or rewritten on the way through. (The README is our own
+    # text and is scanned above; a register quotes a subject's words verbatim and must never be edited for them.)
+    for name, body in tr["claim_maintenance"]["files"].items():
+        (out / name).write_bytes(body)
 
     snap = {
         "kind": "csoai.gspc-spray-snapshot/1",
@@ -588,9 +877,12 @@ def build_snapshot(tr: dict, out: Path) -> Path:
         "did_intended": tr["root"].get("did_intended"),
         "board_signer": (tr["board"].get("site_attestation") or {}).get("signer"),
         "fingerprint": tr["fingerprint"],
-        "fingerprint_rule": "sha256(board_content_sha256 | merkle_root | card_count); board_content_sha256 = sha256 of "
-                            "canonical JSON (sorted keys, no whitespace, UTF-8 literal) of board.json minus site_attestation",
+        "fingerprint_rule": "sha256(board_content_sha256 | merkle_root | card_count | "
+                            "claim_maintenance.bundle_sha256); board_content_sha256 = sha256 of canonical JSON "
+                            "(sorted keys, no whitespace, UTF-8 literal) of board.json minus site_attestation; "
+                            "bundle_sha256 = sha256 of canonical JSON of {carried file name: sha256 of its bytes}",
         "counts": counts, "banks": tr["banks"], "did_keys": tr["did_keys"],
+        "claim_maintenance": claim_maintenance_block(tr["claim_maintenance"]),
         "generator": GENERATOR,
         "note": "Snapshot of a live GET. The live GET is the authority. Measurement, not certification.",
     }
@@ -607,7 +899,7 @@ def build_snapshot(tr: dict, out: Path) -> Path:
 
 
 SNAPSHOT_FILES = ("README.md", "board.json", "root.json", "SNAPSHOT.json", "gspc-axes.csv", "gspc-axes.jsonl",
-                  "check-board.sh", "manifest.jsonl")
+                  "check-board.sh", *SPEC_FILES, "manifest.jsonl")
 
 
 # ---------------------------------------------------------------------------------------------- results
@@ -815,6 +1107,8 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
     A hand-added line (a Hub triple, a lane note) is exactly what this text is compared against."""
     subtitle = f"Snapshot of GET councilof.ai/api/gspc · as_of {tr['as_of']}"
     assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
+    cm = tr["claim_maintenance"]
+    spec, counted = cm["spec"], cm["register_counts"]["counted"]
     description = (
         f"{tr['lid']}\n\n"
         f"AUTHORITY: GET {BOARD_URL}. This Kaggle copy is a snapshot read at {tr['read_at']}, aligned to the transparency "
@@ -822,7 +1116,16 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
         "is UNCHECKABLE, never a fabricated 0.\n\n"
         "FILES: board.json (the whole GET, unmodified) · root.json (the transparency root, unmodified) · SNAPSHOT.json "
         "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
-        "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
+        f"totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify) · {SPEC_DOC_NAME}, "
+        f"{SPEC_JSON_NAME} and {SPEC_SCHEMA_NAME} (the specification, its record and its artifact schema) · "
+        f"{SPEC_REGISTER_NAME} (the register of maintained subjects).\n\n"
+        f"{spec['name'].upper()}: this dataset also carries {spec['name']} {cm['version']}, the specification defining "
+        f"the category — the continuous, independent observation of the public claims an organisation makes about "
+        f"itself — with its artifact schema and register. Canonical URL: {spec['canonical_url']} · DOI: "
+        f"{spec['doi_url']} · concept DOI: {spec['concept_doi']} · licence: {spec['licence']}. The register is carried "
+        f"at its own as_of {cm['register_as_of']}: {counted['subjects']} subjects, {counted['claims']} claims. A "
+        "listing in it is neither an endorsement nor an accusation, and no mark, grade or score arises from any "
+        "state in it.\n\n"
         f"VERIFY: {VERIFY_URL} (free, no account) · {HOWTO_URL} · pip install \"csoai-gspc[verify]\" then csoai-gspc verify "
         f"<card_id> · keys resolve via did:web:csoai.org ({DID_URL}).\n\n"
         "Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.\n\n"
@@ -1099,6 +1402,8 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     prev = latest["metadata"]
     counts = json.loads((snap / "SNAPSHOT.json").read_text())["counts"]
     st = counts["by_status"]
+    cm = tr["claim_maintenance"]
+    cm_spec, cm_counted = cm["spec"], cm["register_counts"]["counted"]
     desc = (
         f"<p><strong>The live board at <a href=\"{BOARD_URL}\">{BOARD_URL}</a> is the authority.</strong> This record is a "
         f"snapshot of that GET, read at {tr['read_at']} and aligned to the transparency root published at {tr['as_of']}. "
@@ -1113,7 +1418,15 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         + f". Transparency root: {tr['root']['card_count']} signed cards, merkle_root <code>{tr['root']['merkle_root']}</code>.</p>"
         f"<p>Files: board.json and root.json are the live bytes, unmodified; SNAPSHOT.json carries digests, derived counts and "
         "frozen-bank row counts; gspc-axes.csv/.jsonl one row per slot; check-board.sh re-derives the totals and recomputes "
-        "the Merkle root; README.md explains how a stranger verifies.</p>"
+        f"the Merkle root; README.md explains how a stranger verifies; {SPEC_DOC_NAME}, {SPEC_JSON_NAME}, "
+        f"{SPEC_SCHEMA_NAME} and {SPEC_REGISTER_NAME} carry the specification below and its register.</p>"
+        f"<p><strong>{cm_spec['name']} {cm['version']}</strong> — the category of the claim files in this record: the "
+        "continuous, independent observation of the public claims an organisation makes about itself. Canonical URL: "
+        f"<a href=\"{cm_spec['canonical_url']}\">{cm_spec['canonical_url']}</a> · DOI: "
+        f"<a href=\"{cm_spec['doi_url']}\">{cm_spec['doi']}</a> · concept DOI {cm_spec['concept_doi']} · licence "
+        f"{cm_spec['licence']}. The register is carried at its own as_of {cm['register_as_of']}: "
+        f"{cm_counted['subjects']} subjects, {cm_counted['claims']} claims. A listing in it is neither an endorsement "
+        "nor an accusation.</p>"
         f"<p>Verify a card, free, no account: <a href=\"{VERIFY_URL}\">{VERIFY_URL}</a> · by hand: "
         f"<a href=\"{HOWTO_URL}\">{HOWTO_URL}</a> · keys via did:web:csoai.org.</p>"
         "<p>Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.</p>"
@@ -1123,6 +1436,8 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     if BANNED.search(desc):
         return [result("zenodo", "FAILED", concept_url, detail="description would carry a banned word")]
     related = [{"identifier": ZENODO_METHODOLOGY_DOI, "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "publication-report"},
+               # The record carries the specification's bytes, so it cites the specification's own DOI.
+               {"identifier": cm_spec["doi"], "relation": "references", "scheme": "doi"},
                {"identifier": BOARD_URL, "relation": "isSupplementTo", "scheme": "url"},
                {"identifier": f"https://github.com/{GITHUB_REPO}", "relation": "isSupplementTo", "scheme": "url"},
                {"identifier": f"https://huggingface.co/spaces/{HF_SPACE}", "relation": "isSupplementTo", "scheme": "url"},
