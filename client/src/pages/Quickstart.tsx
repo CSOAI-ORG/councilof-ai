@@ -311,7 +311,8 @@ jq '{x402Version, accepts: [.accepts[] | {scheme, network, asset, payTo, amount,
         )}
         {challenge === null && <p className="mt-3 text-sm text-amber-700">The live 402 did not load in this browser. The command above reads it directly.</p>}
         <Code>{`# check the signed offer offline (needs: pip install cryptography)
-curl -sO https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/verify_receipt.py
+curl --fail --silent --show-error --proto '=https' --output verify_receipt.py https://councilof.ai/verifier/verify_receipt.py
+# Source-parity manifest and dependency instructions: https://councilof.ai/verifier/receipt-toolkit.md
 python3 verify_receipt.py --url 'https://councilof.ai${EXAMPLE_DOOR}'
 # observed: VALID    offer signed by did:web:csoai.org#board-attestation-1`}</Code>
 

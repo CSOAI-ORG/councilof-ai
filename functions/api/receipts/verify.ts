@@ -151,7 +151,7 @@ export async function handle(
     spec_commit: OFFER_RECEIPT_SPEC_SHA,
     did_document: DID_DOC_URL,
     honesty:
-      "This endpoint is a convenience. The same check runs offline with scripts/verify_receipt.py " +
+      "This endpoint is a convenience. Download https://councilof.ai/verifier/verify_receipt.py " +
       "and /.well-known/did.json; if our answer and yours differ, ours is not the one that counts.",
   };
   const bad = (reason: string, status = 400) =>
@@ -203,7 +203,7 @@ export async function handle(
       signature_valid: verdict.checks.signature === true,
       signer_authorised: verdict.checks.kid_resolved === true,
       recompute:
-        "python3 scripts/verify_receipt.py --jws <the string you sent> — it fetches the DID document " +
+        "python3 verify_receipt.py --jws <the string you sent> — it fetches the DID document " +
         "itself and never contacts this endpoint.",
     },
     { status: 200, headers: { "cache-control": "no-store", "access-control-allow-origin": "*" } },
@@ -232,7 +232,7 @@ export const onRequestGet: PagesFunction = async ({ request }) =>
       also_accepts: { offer: "<the same, for a signed offer from a 402>" },
       spec: OFFER_RECEIPT_SPEC_URL,
       did_document: DID_DOC_URL,
-      offline: "scripts/verify_receipt.py in the councilof-ai repository does this without us.",
+      offline: "https://councilof.ai/verifier/verify_receipt.py; guide https://councilof.ai/verifier/receipt-toolkit.md. Saved-DID replay can be offline; signature verification is not settlement verification.",
       example: `curl -sX POST ${new URL(request.url).origin}/api/receipts/verify -H 'content-type: application/json' -d '{"receipt":"eyJ…"}'`,
     },
     { headers: { "cache-control": "no-store", "access-control-allow-origin": "*" } },

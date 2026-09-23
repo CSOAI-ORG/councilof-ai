@@ -73,7 +73,7 @@ export const onRequestGet: PagesFunction<{
         kid: X402_SIGNER_KID,
         spec_commit: OFFER_RECEIPT_SPEC_SHA,
         verify_free: u("/api/receipts/verify"),
-        verify_without_us: "scripts/verify_receipt.py — reads /.well-known/did.json and nothing else",
+        verify_without_us: "https://councilof.ai/verifier/verify_receipt.py — checks JWS bytes under the public or retained DID key; no payment verification; guide https://councilof.ai/verifier/receipt-toolkit.md",
         by_payer: u("/api/receipts?payer=0x…"),
       },
     },

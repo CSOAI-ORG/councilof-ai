@@ -198,6 +198,7 @@ this register's whole discipline is that it counts what exists, and a number typ
 number nothing retires.
 
 Reference implementation (MIT), runnable by a stranger with no dependencies:
+  # Same-site reference: https://councilof.ai/spec/claim-maintenance/v0.1/reference/claim-capture.mjs
   node scripts/claim-capture.mjs --url <url> --claim "<verbatim text>" --out artifact.json
   node scripts/claim-capture.mjs --verify artifact.json
 It extracts visible text by the specification's §6.3 rules, computes the claim and artifact digests
@@ -313,3 +314,6 @@ ledger at https://councilof.ai/api/corrections rather than quietly edited into t
 # the endpoints named above, not against a date printed here.
 # Published route: https://councilof.ai/llms-full.txt
 # A signature claim applies only when the returned artefact contains verifiable signature material.
+
+## Same-site x402 offer and receipt checker
+Download https://councilof.ai/verifier/verify_receipt.py; source-parity manifest https://councilof.ai/verifier/receipt-toolkit.json; dependency and offline-replay guide https://councilof.ai/verifier/receipt-toolkit.md. It is a separate format from card-v0 and GSPC cards. Signature verification is not settlement, freshness or measurement-truth verification. Default mode reads the public DID document; retained-key replay can be offline.

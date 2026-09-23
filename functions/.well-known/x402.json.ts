@@ -76,7 +76,7 @@ export const onRequestGet: PagesFunction<{
           "rail as unsigned rather than expect a format we cannot produce.",
         verify: {
           hosted: `${origin}/api/receipts/verify`,
-          offline: "scripts/verify_receipt.py in github.com/CSOAI-ORG/councilof-ai — reads did.json, asks us nothing",
+          offline: "https://councilof.ai/verifier/verify_receipt.py — same-site checker; reads the public DID document or replays a retained local copy; guide https://councilof.ai/verifier/receipt-toolkit.md",
         },
         receipts_by_payer: `${origin}/api/receipts?payer=0x…`,
       },

@@ -205,7 +205,7 @@ export async function attachOffers(
       "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the " +
       "publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over " +
       "`header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run " +
-      "scripts/verify_receipt.py to do it without us.",
+      "the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement.",
   });
 
   const withSidecar = (offers: SignedOffer[] | null, note: OfferReceiptSidecar) => ({

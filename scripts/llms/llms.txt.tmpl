@@ -70,7 +70,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Specification v0.1 (CC0 1.0, adopt it without asking us): https://councilof.ai/spec/claim-maintenance/v0.1/ · Markdown of record: https://councilof.ai/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md · machine metadata: https://councilof.ai/spec/claim-maintenance/v0.1/spec.json · all versions: https://councilof.ai/spec/claim-maintenance/
 - Artifact schema: https://councilof.ai/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json
 - Register of every subject we maintain claims on (generated from the registries on disk, never hand-listed): GET https://councilof.ai/api/claims/register — read `totals` and `as_of` live; filter with `?subject=` or `?state=`. Never freeze a subject count or a claim count in this file.
-- Reference implementation anyone can run, including against us (MIT): scripts/claim-capture.mjs in https://github.com/CSOAI-ORG/councilof-ai — captures a claim, hashes it, writes a conforming artifact, and REJECTS a tampered one.
+- Reference implementation anyone can run, including against us (MIT): https://councilof.ai/spec/claim-maintenance/v0.1/reference/claim-capture.mjs (same-site source copy) — captures a claim, hashes it, writes a conforming artifact, and REJECTS a tampered one.
 - Human page: https://councilof.ai/claim-maintenance/
 - Citable archival deposit with a persistent identifier we do not control: DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0. A DOI makes a document citable and permanent; it does not make it right.
 - States, and there are exactly four: CLAIM_CAPTURED · CLAIM_MEASURED · UNMEASURED · UNCHECKABLE. UNMEASURED and UNCHECKABLE are first-class and are published as prominently as the others.
@@ -84,7 +84,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Free door (amount 0): GET https://councilof.ai/api/free-door — settles, charges nothing; proves the rail
 - Signed offers: a 402 carries `extensions["offer-receipt"].info.offers[]` only when the Pages signing key is available — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
 - Signed receipts: a settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt` only when settlement exposes the required payer and transaction evidence and the Pages signing key is available
-- Check either without trusting us: run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json or POST https://councilof.ai/api/receipts/verify
+- Check either without trusting us: download https://councilof.ai/verifier/verify_receipt.py (exact-byte manifest and dependency guide: https://councilof.ai/verifier/receipt-toolkit.json and https://councilof.ai/verifier/receipt-toolkit.md), then verify against https://csoai.org/.well-known/did.json or POST https://councilof.ai/api/receipts/verify
 - Your receipts: GET https://councilof.ai/api/receipts?payer=0x… — status UNRECORDED means no store is bound on that deployment, never that you did not pay
 - We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself

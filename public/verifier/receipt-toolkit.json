@@ -1,0 +1,39 @@
+{
+  "schema": "csoai.public-receipt-toolkit/1.0",
+  "artifact": {
+    "url": "https://councilof.ai/verifier/verify_receipt.py",
+    "source_path": "scripts/verify_receipt.py",
+    "bytes": 12129,
+    "sha256": "dd310cbd62add18f83a535e4d442b4c891c7b967f33fd74d04874c2b36739336",
+    "exact_source_copy": true
+  },
+  "guide": {
+    "url": "https://councilof.ai/verifier/receipt-toolkit.md",
+    "bytes": 3017,
+    "sha256": "be721a06a066454a2c62c5c3c08f31060de1e0f61452cc59b6779c4ecaa6b162"
+  },
+  "runtime": {
+    "python": ">=3.9",
+    "external_dependency": "cryptography",
+    "dependency_install_performed": false
+  },
+  "scope": {
+    "format": "x402 Offer & Receipt compact JWS",
+    "algorithm": "Ed25519",
+    "default_key_document": "https://csoai.org/.well-known/did.json",
+    "saved_key_document_supported": true,
+    "signature_replay_requires_wallet": false,
+    "signature_replay_requires_API_key": false,
+    "default_signature_check_public_DID_reads": 1,
+    "payment_verified": false,
+    "receipt_freshness_verified": false,
+    "measurement_truth_verified": false,
+    "source_identity_independently_verified": false
+  },
+  "related_verifiers": {
+    "card_v0": "https://councilof.ai/verifier/card-v0-verify.mjs",
+    "gspc_card": "https://councilof.ai/verifier/gspc-verify.mjs",
+    "claim_artifact": "https://councilof.ai/spec/claim-maintenance/v0.1/reference/claim-capture.mjs"
+  },
+  "generation": "Deterministic from owned source bytes. Manifest is not signed or independently trusted."
+}
