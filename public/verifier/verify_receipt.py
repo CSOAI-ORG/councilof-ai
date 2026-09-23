@@ -22,6 +22,8 @@ return exit 2 rather than allowing signature validity to imply a completed chain
 privacy-minimal by design (spec §5.2) and is not weaker for it. With an explicit
 --check-chain request it returns exit 2 because that additional check is unavailable.
 Successful execution alone does not verify token transfer details, finality or customer delivery.
+--expect-transfer FILE additionally requires an exact ERC-20 event matching caller-pinned intent.
+It makes no transfer and does not establish net balance change, finality, delivery or revenue.
 
 Dependencies: cryptography (pip install cryptography). Standard library otherwise.
 Exit codes: 0 VALID · 1 INVALID · 2 could not be determined (network, no key material, bad input).
@@ -224,6 +226,169 @@ def tx_exists(tx: str, rpc: str = BASE_RPC, expected_network: str = "eip155:8453
         return "UNCHECKED", f"RPC check could not be completed ({type(exc).__name__}); no fallback or payment attempted"
 
 
+TRANSFER_TOPIC = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+TRANSFER_PROFILE = 'eip155-exact-erc20-event/1.0'
+
+
+def evm_address(value: Any) -> str:
+    if not isinstance(value, str) or not re.fullmatch(r'0x[0-9a-fA-F]{40}', value):
+        raise ValueError('expected a 20-byte EVM address')
+    return value.lower()
+
+
+def strict_transfer_json(raw: bytes) -> dict[str, Any]:
+    if not isinstance(raw, bytes) or len(raw) > 65536:
+        raise ValueError('transfer expectation exceeds 64-KiB limit')
+    def pairs(values: list[tuple[str, Any]]) -> dict[str, Any]:
+        out: dict[str, Any] = {}
+        for key, value in values:
+            if key in out:
+                raise ValueError('duplicate transfer-expectation member')
+            out[key] = value
+        return out
+    def invalid(value: str) -> None:
+        raise ValueError('non-finite expectation value')
+    data = json.loads(raw, object_pairs_hook=pairs, parse_constant=invalid)
+    if not isinstance(data, dict):
+        raise ValueError('transfer expectation must be an object')
+    return data
+
+
+def validate_transfer_expectation(value: Any, signed: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Intent is a caller-pinned input, never derived from whichever event happens to match."""
+    required = {'schema', 'network', 'transaction', 'asset', 'payer', 'pay_to', 'amount_atomic', 'resource_url'}
+    if not isinstance(value, dict) or not required <= set(value) or set(value) - required - {'log_index', 'known_internal_wallets'}:
+        raise ValueError('unsupported or incomplete transfer expectation')
+    e = dict(value)
+    if e['schema'] != 'csoai.erc20-transfer-expectation/1.0':
+        raise ValueError('unknown transfer-expectation schema')
+    if not isinstance(e['network'], str) or not re.fullmatch(r'eip155:[1-9][0-9]{0,19}', e['network']):
+        raise ValueError('canonical EIP-155 network required')
+    if not isinstance(e['transaction'], str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}', e['transaction']):
+        raise ValueError('transaction hash required')
+    e['transaction'] = e['transaction'].lower()
+    for field in ('asset', 'payer', 'pay_to'):
+        e[field] = evm_address(e[field])
+        if int(e[field], 16) == 0:
+            raise ValueError('mint/burn/zero addresses are outside this payment-transfer profile')
+    amount = e['amount_atomic']
+    if not isinstance(amount, str) or not re.fullmatch(r'[1-9][0-9]{0,77}', amount) or int(amount) >= 2**256:
+        raise ValueError('positive canonical uint256 atomic amount required; zero is not a purchase')
+    if not isinstance(e['resource_url'], str):
+        raise ValueError('exact requested resource URL required')
+    u = urllib.parse.urlsplit(e['resource_url'])
+    if u.scheme != 'https' or u.hostname not in AUTHORISED_HOSTS or u.username or u.password or u.fragment or u.port not in (None, 443):
+        raise ValueError('resource URL outside caller-verifier service scope')
+    if 'log_index' in e and (type(e['log_index']) is not int or not 0 <= e['log_index'] < 2**64):
+        raise ValueError('log index must be a nonnegative integer')
+    wallets = e.get('known_internal_wallets', [])
+    if not isinstance(wallets, list) or len(wallets) > 32:
+        raise ValueError('bounded caller-owned wallet policy required')
+    e['known_internal_wallets'] = sorted(set(evm_address(x) for x in wallets))
+    if signed is not None:
+        if (not isinstance(signed, dict) or signed.get('network') != e['network']
+                or signed.get('resourceUrl') != e['resource_url']
+                or not isinstance(signed.get('transaction'), str)
+                or signed['transaction'].lower() != e['transaction']
+                or evm_address(signed.get('payer')) != e['payer']):
+            raise ValueError('caller intent differs from signed network, transaction, payer or resource')
+    return e
+
+
+def transfer_result(state: str, reason: str, e: dict[str, Any], **fields: Any) -> dict[str, Any]:
+    internal = e.get('known_internal_wallets', [])
+    classification = ('SELF_TRANSFER' if e['payer'] == e['pay_to'] else
+                      'CALLER_IDENTIFIED_INTERNAL_PARTICIPANT' if e['payer'] in internal else
+                      'PARTICIPANT_OWNERSHIP_UNESTABLISHED')
+    return {'schema': 'csoai.erc20-transfer-check/1.0', 'profile': TRANSFER_PROFILE,
+            'state': state, 'reason': reason, 'expectation_sha256': __import__('hashlib').sha256(
+                json.dumps(e, sort_keys=True, separators=(',', ':'), allow_nan=False).encode()).hexdigest(),
+            'network': e['network'], 'transaction': e['transaction'], 'resource_url': e['resource_url'],
+            'asset': e['asset'], 'payer': e['payer'], 'pay_to': e['pay_to'], 'amount_atomic': e['amount_atomic'],
+            'participant_classification': classification, 'rpc_is_trust_source': True,
+            'finality_verified': False, 'net_balance_change_verified': False,
+            'receipt_replay_prevention_verified': False, 'delivered_payload_verified': False,
+            'customer_acceptance_verified': False, 'revenue_added': False, **fields}
+
+
+def assess_erc20_transfer(receipt: Any, expectation: dict[str, Any]) -> dict[str, Any]:
+    """Pure, exact log matching. No aggregation, inferred payer, network access or payment."""
+    e = validate_transfer_expectation(expectation)
+    unknown = lambda reason: transfer_result('UNDETERMINED', reason, e)
+    if receipt is None:
+        return unknown('No mined receipt available')
+    try:
+        if not isinstance(receipt, dict) or not isinstance(receipt.get('transactionHash'), str) or receipt['transactionHash'].lower() != e['transaction']:
+            return unknown('Receipt does not identify the expected transaction')
+        bh = receipt.get('blockHash')
+        if not isinstance(bh, str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}', bh):
+            return unknown('Receipt has no valid mined block hash')
+        bn = evm_quantity(receipt.get('blockNumber'))
+        status = evm_quantity(receipt.get('status'))
+        if status == 0:
+            return transfer_result('NOT_MATCHED', 'Transaction execution reverted', e, block_number=bn, block_hash=bh.lower())
+        if status != 1:
+            return unknown('Unknown execution status')
+        logs = receipt.get('logs')
+        if not isinstance(logs, list) or len(logs) > 2048:
+            return unknown('Log inventory missing or beyond inspection budget')
+        matches = []; identities = set()
+        for log in logs:
+            if not isinstance(log, dict):
+                return unknown('Malformed log inventory')
+            contract = evm_address(log.get('address'))
+            if contract != e['asset']:
+                continue
+            topics = log.get('topics')
+            if not isinstance(topics, list) or not topics or not all(isinstance(x, str) and re.fullmatch(r'0x[0-9a-fA-F]{64}', x) for x in topics):
+                return unknown('Malformed expected-token log topics')
+            if topics[0].lower() != TRANSFER_TOPIC:
+                continue
+            if len(topics) != 3:
+                return unknown('Transfer is not the expected ERC-20 event layout')
+            if log.get('removed', False) is not False:
+                return unknown('Removed or ambiguous transfer log')
+            if (not isinstance(log.get('transactionHash'), str) or log['transactionHash'].lower() != e['transaction']
+                    or not isinstance(log.get('blockHash'), str) or log['blockHash'].lower() != bh.lower()
+                    or evm_quantity(log.get('blockNumber')) != bn):
+                return unknown('Transfer log/receipt provenance mismatch')
+            index = evm_quantity(log.get('logIndex'))
+            if index in identities:
+                return unknown('Duplicate transfer log identity')
+            identities.add(index)
+            if any(x[2:26] != '0'*24 for x in topics[1:]):
+                return unknown('Noncanonical address padding')
+            data = log.get('data')
+            if not isinstance(data, str) or not re.fullmatch(r'0x[0-9a-fA-F]{64}', data):
+                return unknown('Transfer amount is not one uint256 word')
+            payer = '0x' + topics[1][-40:].lower(); payee = '0x' + topics[2][-40:].lower()
+            if payer == e['payer'] and payee == e['pay_to'] and int(data, 16) == int(e['amount_atomic']):
+                if 'log_index' not in e or index == e['log_index']:
+                    matches.append(index)
+        if not matches:
+            return transfer_result('NOT_MATCHED', 'No exact asset/payer/payee/amount event in returned receipt', e, block_number=bn, block_hash=bh.lower())
+        if len(matches) != 1:
+            return unknown('Multiple exact events; caller must pin a log index rather than sum them')
+        return transfer_result('MATCHED', 'One exact ERC-20 Transfer event in the successful RPC-reported receipt', e,
+                               block_number=bn, block_hash=bh.lower(), log_index=matches[0], matched_events=1)
+    except (ValueError, TypeError, KeyError):
+        return unknown('Malformed receipt or expected-token event; no payment result inferred')
+
+
+def check_erc20_transfer(expectation: dict[str, Any], signed: dict[str, Any], rpc: str = BASE_RPC) -> dict[str, Any]:
+    e = validate_transfer_expectation(expectation, signed)
+    try:
+        network = evm_quantity(rpc_result(rpc, 'eth_chainId', [], 1))
+        if network != int(e['network'].split(':')[1]):
+            return transfer_result('UNDETERMINED', 'RPC network differs from caller intent and signed receipt', e, rpc_reads=1)
+        receipt = rpc_result(rpc, 'eth_getTransactionReceipt', [e['transaction']], 2)
+        result = assess_erc20_transfer(receipt, e)
+        result['rpc_reads'] = 2
+        return result
+    except Exception as exc:
+        return transfer_result('UNDETERMINED', 'RPC transfer read failed ('+type(exc).__name__+'); no retry or payment', e, rpc_reads=None)
+
+
 def verify_one(compact: str, doc: dict, args: argparse.Namespace) -> int:
     try:
         header, payload, sig, signing_input = split_jws(compact)
@@ -291,7 +456,22 @@ def verify_one(compact: str, doc: dict, args: argparse.Namespace) -> int:
     print(f"  authorised {host} is governed by {args.did}")
 
     tx = payload.get("transaction")
-    if args.check_chain:
+    expectation = getattr(args, "transfer_expectation", None)
+    if expectation is not None:
+        if kind != "receipt":
+            print("UNDETERMINED  exact transfer checking requires a signed receipt, not an offer.")
+            return 2
+        try:
+            result = check_erc20_transfer(expectation, payload, args.rpc)
+        except (ValueError, TypeError):
+            print("UNDETERMINED  caller-pinned transfer intent does not match the signed receipt or schema.")
+            return 2
+        print("TRANSFER_RESULT " + json.dumps(result, sort_keys=True))
+        if result['state'] != 'MATCHED':
+            print("INVALID  requested transfer did not match." if result['state'] == 'NOT_MATCHED' else "UNDETERMINED  requested transfer check could not be completed.")
+            return 1 if result['state'] == 'NOT_MATCHED' else 2
+        print("  transfer   MATCHED; not finality, net balance, customer receipt of content or revenue.")
+    elif args.check_chain:
         if kind != "receipt" or not tx:
             print("UNDETERMINED  signature verified, but no transaction reference is available for the requested chain check.")
             print("              A privacy-minimal receipt is not invalid; omit --check-chain for signature-only verification.")
@@ -325,7 +505,19 @@ def main() -> int:
     ap.add_argument("--did", default=DID_URL, help=f"DID document to trust (default {DID_URL})")
     ap.add_argument("--check-chain", action="store_true", help="require a matching successful transaction receipt from an RPC on the signed EIP-155 network; not a token-transfer/finality check")
     ap.add_argument("--rpc", default=BASE_RPC, help=f"Base RPC endpoint (default {BASE_RPC})")
+    ap.add_argument("--expect-transfer", metavar="FILE", help="require one exact ERC-20 event against a caller-pinned expectation JSON file; implies chain readback, never pays")
     args = ap.parse_args()
+    args.transfer_expectation = None
+    if args.expect_transfer:
+        try:
+            from pathlib import Path
+            p = Path(args.expect_transfer)
+            if p.is_symlink() or not p.is_file() or p.stat().st_size > 65536:
+                raise ValueError('not a bounded regular expectation file')
+            args.transfer_expectation = validate_transfer_expectation(strict_transfer_json(p.read_bytes()))
+        except Exception:
+            print("UNDETERMINED  transfer expectation file is missing, oversized or invalid.")
+            return 2
 
     print(f"x402 Offer & Receipt extension — {SPEC}")
     print(f"trust root: {args.did}\n")
@@ -355,6 +547,10 @@ def main() -> int:
         print("UNDETERMINED  no offer or receipt artefact found in that input.")
         print("              A 402 with no `extensions['offer-receipt']` block is a door that did not")
         print("              sign its terms — which is a real finding, not a failure of this script.")
+        return 2
+
+    if args.transfer_expectation is not None and len(artefacts) != 1:
+        print("UNDETERMINED  pin one signed receipt per transfer expectation; bulk matching is not inferred.")
         return 2
 
     try:

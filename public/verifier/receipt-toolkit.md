@@ -34,10 +34,27 @@ Offline replay establishes validity under those retained key bytes, not that the
 
 Exit 0 is VALID under the supplied DID key and this checker's payload rules; exit 1 is INVALID; exit 2 is UNDETERMINED. A malformed outer JSON file may raise an input error; that is not a successful verification. Signature validity does not establish payment settlement, asset transfer, receipt freshness, replay protection, the truth of a measurement or customer acceptance. The optional --check-chain requires the chosen RPC to match the signed EIP-155 network and return the same transaction hash with successful mined execution. Reverted execution returns exit 1. Pending or missing receipts, unavailable RPC, wrong network, malformed responses, or a missing transaction reference return exit 2: a valid signature alone cannot make that requested chain check pass. It makes at most two read-only RPC calls per artifact, with bounded responses, no redirects or retries. This is not a transfer amount/asset/payer/payee, finality, replay-protection or customer-delivery check. Omit the flag for signature-only replay, including privacy-minimal receipts.
 
+## Optional exact token-transfer check
+
+A successful transaction can transfer the wrong token, amount, or recipient. To require an exact ERC-20 event, retain the ORIGINAL quote/request terms locally and create an expectation file. Do not fill those terms by copying whichever log happened to appear.
+
+Run: `python3 verify_receipt.py --file saved-receipt.json --expect-transfer expected-transfer.json`. The expectation must contain schema `csoai.erc20-transfer-expectation/1.0`, network (canonical EIP-155), transaction (32-byte hex), asset (token contract), payer (token sender), pay_to (token recipient), amount_atomic (positive decimal integer string), and resource_url (the exact signed resource). Optional log_index selects a specific event; optional known_internal_wallets identifies caller-known internal payers. Use one signed receipt per expectation. No wallet key is required.
+
+The signature must match the expected network, transaction, payer and exact resource including query. A historical signature that omits a requested query does NOT prove that query: this checker refuses that stronger claim. The token payer comes from the ERC-20 Transfer event, not the outer transaction sender, which can be a facilitator relayer.
+
+The selected RPC is asked only for chain ID and the named transaction receipt. Exactly one matching asset/payer/payee/amount event is required, with matching transaction/block metadata. No sum of unrelated logs, mint/burn event, zero-value purchase, removed log, ambiguous duplicate or ERC-721 layout is accepted. An ambiguous exact match requires the caller to pin a log index. No network retries, scans or fallback RPCs are added.
+
+The output line prefixed TRANSFER_RESULT is machine-readable JSON: MATCHED, NOT_MATCHED or UNDETERMINED. A valid signature plus MATCHED yields exit0; explicit non-match yields exit1; unavailable or ambiguous evidence yields exit2. Self transfers stay labelled SELF_TRANSFER. An unknown payer is not inferred to be an external customer.
+
+This is an RPC-reported EVENT match, not independent chain consensus, finality, net balance credit, replay prevention, source truth, delivered content or customer acceptance. A token emitting an event does not establish the trustworthiness of its contract. Keep the expected artifact revision/digest and verify the separately retained payload with its own format-specific verifier. This checker never moves money or increments revenue.
+
+To integrate safely, save the caller expectation and the reported transaction/logIndex tuple with the order. Your application still owns order uniqueness, finality policy, payload retention, receipt-to-payload binding and privacy. Do not publish buyer wallet/case records merely because a local checker succeeded.
+
+
 ## Separate verifiers
 
 - card-v0 payloads: https://councilof.ai/verifier/card-v0-verify.mjs
 - GSPC measurement cards: https://councilof.ai/verifier/gspc-verify.mjs
 - Claim Maintenance artifacts: https://councilof.ai/spec/claim-maintenance/v0.1/reference/claim-capture.mjs
 
-Source checksum: sha256:834a0864e157833f19ad165893ee7a2d422b60d592160f04dbcf2f88a62708f8. The build checks that this public copy is byte-identical to scripts/verify_receipt.py; no production signing key is accessed.
+Source checksum: sha256:e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab. The build checks that this public copy is byte-identical to scripts/verify_receipt.py; no production signing key is accessed.
