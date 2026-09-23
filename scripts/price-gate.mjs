@@ -206,7 +206,7 @@ const NOT_A_PRICE_KEY = /^(gas_?fee|network_?fee|fee_tier|penalty|fine|turnover|
 // exemption on the parent field so a real price_usdc elsewhere remains a finding.
 const isCounterexampleCount = (rel, parentPath, key, value) =>
   /^claims\/claimreg-[^/]+\.json$/.test(rel) &&
-  parentPath === '$.measurement.counterexample_counts' &&
+  parentPath.endsWith('.measurement.counterexample_counts') &&
   key === 'price-data-feeds' && Number.isSafeInteger(value);
 
 const jsonPriceFindings = (obj, rel, at = "$", out = []) => {
@@ -241,6 +241,7 @@ if (SELFTEST) {
     ["FOREIGN_MONEY stands down on a grant", () => FOREIGN_MONEY.test("grant of EUR 50,000 from the fund")],
     ["FOREIGN_MONEY does NOT stand down on a bare amount", () => !FOREIGN_MONEY.test("Total potential: 280,000")],
     ["category count containing price is not a fee", () => jsonPriceFindings({ measurement: { counterexample_counts: { "price-data-feeds": 4 } } }, "claims/claimreg-test.json").length === 0],
+    ["nested claim count containing price is not a fee", () => jsonPriceFindings({ subjects: { chainlink: { claims: [{ measurement: { counterexample_counts: { "price-data-feeds": 4 } } }] } } }, "claims/claimreg-test.json").length === 0],
     ["same count field outside claim register is checked", () => jsonPriceFindings({ measurement: { counterexample_counts: { "price-data-feeds": 4 } } }, "other.json").length === 1],
     ["price_usdc remains a finding", () => jsonPriceFindings({ price_usdc: 0.5 }, "fixture.json").some((x) => x.rule === "published_price")],
     ["price_usdc inside counterexample_counts remains a finding", () => jsonPriceFindings({ measurement: { counterexample_counts: { price_usdc: 0.5 } } }, "claims/claimreg-test.json").length === 1],
