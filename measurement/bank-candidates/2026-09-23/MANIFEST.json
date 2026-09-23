@@ -1,0 +1,212 @@
+{
+  "schema": "csoai.bank-candidates/0.1",
+  "as_of": "2026-09-23",
+  "status": "CANDIDATE — proposed, not live, not signed, not swapped into any run",
+  "not_this": [
+    "Not a replacement for any live bank. No file under /workspace/banks-all/ was written.",
+    "Not signed. No measurement card binds any digest below.",
+    "Not a measurement. No model answered any item in this build; no GPU was used."
+  ],
+  "generator": "measurement/bank-candidates/2026-09-23/build_bank_candidates.py",
+  "regenerate": "python3 measurement/bank-candidates/2026-09-23/build_bank_candidates.py --out-root .",
+  "where_the_bytes_are": "measurement/bank-candidates/2026-09-23/banks/<bank>.jsonl — in the repository, NOT under public/",
+  "why_not_public": "Two items of csoai/gspc-jail-goldbank (ben-pad-15, ben-pad-25) contain an internal codename inside their code cell. The items are not edited here, because a candidate that silently differs from its upstream is worse than one that carries a known defect. Serving those bytes from councilof.ai would put a banned public string on our own domain, so the candidates live in the repository instead. On adoption they are published to Hugging Face like every other register bank, after that defect is cured AT SOURCE in the goldbank.",
+  "stranger_recomputability": "Every candidate is a deterministic function of an upstream that is already public: the HF revision or the GitHub commit named in sources, digest-checked. A stranger re-runs the generator and gets these exact bytes without needing us to host them.",
+  "licence_of_output": "CC-BY-4.0 for candidates derived from our own banks; MIT-derived candidates carry the upstream MIT notice per item",
+  "graders_targeted": {
+    "arena": "harness/arena/axis_arena.py score_first_label — label vocabulary is the bank's own expected set minus {\"\", \"0\", \"1\", \"KEYWORD_MATCH\"}",
+    "worker": "scripts/runpod_gspc_worker.py parse_exact_label — strict equality against the run config's allowed_labels; refuses an exact-label bank with fewer than two labels"
+  },
+  "sources": {
+    "gspc-jail-goldbank": {
+      "kind": "own",
+      "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+      "url": "https://huggingface.co/datasets/csoai/gspc-jail-goldbank/resolve/7bf0395b15719a670d5d94db2d002009a3aabb08/samples.jsonl",
+      "revision": "7bf0395b15719a670d5d94db2d002009a3aabb08",
+      "licence": "CC-BY-4.0",
+      "licence_source": "HF dataset cardData.license, read from the HF API 2026-09-23",
+      "sha256": "0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a"
+    },
+    "gspc-care": {
+      "kind": "own",
+      "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+      "url": "https://huggingface.co/datasets/csoai/gspc-care/resolve/7a46ee2663cf6bb4e45720c4f25bd22a2906d1ea/items.jsonl",
+      "revision": "7a46ee2663cf6bb4e45720c4f25bd22a2906d1ea",
+      "licence": "CC-BY-4.0",
+      "licence_source": "HF dataset cardData.license",
+      "sha256": "3cf9c16dbb6bf5b4b64e342fb3481c1d0d6ceee09c5a1a2e6936b0d4775f2aad"
+    },
+    "pyrit-exploits": {
+      "kind": "third-party",
+      "publisher": "Microsoft Corporation (PyRIT)",
+      "url": "https://raw.githubusercontent.com/microsoft/PyRIT/b3db914fd4784efc23a15078cc44954a0bd1646e/pyrit/datasets/scorer_evals/objective/exploits.csv",
+      "revision": "b3db914fd4784efc23a15078cc44954a0bd1646e",
+      "licence": "MIT",
+      "licence_source": "microsoft/PyRIT LICENSE (MIT, Copyright (c) Microsoft Corporation). THIRD_PARTY_NOTICES.txt at the same repo enumerates the only third-party material in the tree (garak source portions, PromptInject, dora regexes) and does NOT list pyrit/datasets/scorer_evals/, so these rows fall under the repository licence.",
+      "sha256": "315f4220f8533059b7d1ee86a492fb348e860e7f5e5fe17190c87b5736a2dc27"
+    },
+    "pyrit-refusal": {
+      "kind": "third-party",
+      "publisher": "Microsoft Corporation (PyRIT)",
+      "url": "https://raw.githubusercontent.com/microsoft/PyRIT/e6fdded274286e531cb707acbaafc6957a1f06a2/pyrit/datasets/scorer_evals/refusal_scorer/refusal.csv",
+      "revision": "e6fdded274286e531cb707acbaafc6957a1f06a2",
+      "licence": "MIT",
+      "licence_source": "as pyrit-exploits",
+      "sha256": "1ebc42ef7dadd97962cc00d04edd6a52a321f7936c063ff3453d2bbcef30a5d7"
+    }
+  },
+  "candidates": [
+    {
+      "bank": "gspc-jail-goldbank-arena",
+      "axis": "jail",
+      "file": "gspc-jail-goldbank-arena.jsonl",
+      "sha256": "17a4779d3d4321e900da2d8e047f4b1c8166b8145c0a7cd0ed92277845332970",
+      "bytes": 55960,
+      "rows": 72,
+      "items": 71,
+      "canary_rows": 1,
+      "label_vocabulary": [
+        "BENIGN",
+        "ESCAPE"
+      ],
+      "label_count": 2,
+      "label_distribution": {
+        "BENIGN": 33,
+        "ESCAPE": 38
+      },
+      "majority_share": 0.5352,
+      "arena_readable": true,
+      "worker_readable": true,
+      "label_substring_collisions": [],
+      "labels_that_are_ordinary_prose": [],
+      "echo_attack": {
+        "strategy": "answer each item with its own prompt text",
+        "items": 71,
+        "graded": 3,
+        "ungraded": 68,
+        "score": 0.0423,
+        "chance_baseline": 0.5,
+        "beats_chance": false
+      },
+      "checks": [
+        "PASS: two or more labels, no class above 90%, no collision, echo at or under chance"
+      ],
+      "verdict": "PROPOSE",
+      "candidate": "J1"
+    },
+    {
+      "bank": "gspc-jail-pyrit-exploits",
+      "axis": "jail",
+      "file": "gspc-jail-pyrit-exploits.jsonl",
+      "sha256": "dcff0fc5450240f64d5258e88ea291654dd9942f6c64203f3671db2d13d7652a",
+      "bytes": 145139,
+      "rows": 67,
+      "items": 66,
+      "canary_rows": 1,
+      "label_vocabulary": [
+        "DELIVERED",
+        "WITHHELD"
+      ],
+      "label_count": 2,
+      "label_distribution": {
+        "DELIVERED": 38,
+        "WITHHELD": 28
+      },
+      "majority_share": 0.5758,
+      "arena_readable": true,
+      "worker_readable": true,
+      "label_substring_collisions": [],
+      "labels_that_are_ordinary_prose": [],
+      "echo_attack": {
+        "strategy": "answer each item with its own prompt text",
+        "items": 66,
+        "graded": 1,
+        "ungraded": 65,
+        "score": 0.0152,
+        "chance_baseline": 0.5,
+        "beats_chance": false
+      },
+      "checks": [
+        "PASS: two or more labels, no class above 90%, no collision, echo at or under chance"
+      ],
+      "verdict": "PROPOSE",
+      "candidate": "J2"
+    },
+    {
+      "bank": "gspc-care-labelled",
+      "axis": "care",
+      "file": "gspc-care-labelled.jsonl",
+      "sha256": "f49332b62d5ed40b31bb7a677d4d970695858a16f8ee996e7966505473e7df15",
+      "bytes": 130378,
+      "rows": 200,
+      "items": 199,
+      "canary_rows": 1,
+      "label_vocabulary": [
+        "ASSIST_USER",
+        "PROTECT_THIRD_PARTY"
+      ],
+      "label_count": 2,
+      "label_distribution": {
+        "ASSIST_USER": 100,
+        "PROTECT_THIRD_PARTY": 99
+      },
+      "majority_share": 0.5025,
+      "arena_readable": true,
+      "worker_readable": true,
+      "label_substring_collisions": [],
+      "labels_that_are_ordinary_prose": [],
+      "echo_attack": {
+        "strategy": "answer each item with its own prompt text",
+        "items": 199,
+        "graded": 0,
+        "ungraded": 199,
+        "score": 0.0,
+        "chance_baseline": 0.5,
+        "beats_chance": false
+      },
+      "checks": [
+        "PASS: two or more labels, no class above 90%, no collision, echo at or under chance"
+      ],
+      "verdict": "PROPOSE",
+      "candidate": "C1"
+    },
+    {
+      "bank": "gspc-care-pyrit-refusal",
+      "axis": "care",
+      "file": "gspc-care-pyrit-refusal.jsonl",
+      "sha256": "0b95f00b7e113e78445dafcac39adae8ded47087b4acfc24270243f20754a03a",
+      "bytes": 135531,
+      "rows": 71,
+      "items": 70,
+      "canary_rows": 1,
+      "label_vocabulary": [
+        "ANSWERED",
+        "REFUSED"
+      ],
+      "label_count": 2,
+      "label_distribution": {
+        "ANSWERED": 35,
+        "REFUSED": 35
+      },
+      "majority_share": 0.5,
+      "arena_readable": true,
+      "worker_readable": true,
+      "label_substring_collisions": [],
+      "labels_that_are_ordinary_prose": [],
+      "echo_attack": {
+        "strategy": "answer each item with its own prompt text",
+        "items": 70,
+        "graded": 0,
+        "ungraded": 70,
+        "score": 0.0,
+        "chance_baseline": 0.5,
+        "beats_chance": false
+      },
+      "checks": [
+        "PASS: two or more labels, no class above 90%, no collision, echo at or under chance"
+      ],
+      "verdict": "PROPOSE",
+      "candidate": "C2"
+    }
+  ]
+}
