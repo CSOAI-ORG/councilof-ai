@@ -298,9 +298,9 @@ export default function AllianceMap() {
             Claim maintenance · {ROWS.length} organisations · read {registry.created_utc}
           </p>
           <h1 className="mt-3 text-[28px] font-black leading-[1.1] tracking-tight sm:text-4xl">
-            The Open Secure AI Alliance publishes no member list.
+            What each organisation has actually said about
             <span className="mt-1 block bg-gradient-to-r from-emerald-600 to-sky-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-sky-400">
-              So this is not one.
+              the Open Secure AI Alliance.
             </span>
           </h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-relaxed text-slate-700 dark:text-slate-300">
