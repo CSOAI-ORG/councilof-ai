@@ -154,6 +154,9 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                           {acc.detail && <span className="mt-0.5 block text-[11px]">{acc.detail}</span>}
                         </span>
                       )}
+                      {acc.state === "no-public-leader" && (
+                        <span title={acc.title} className={`font-sans ${t.muted}`}>{acc.text}</span>
+                      )}
                       {acc.state === "unmeasured" && (
                         <span title={acc.title} className={`font-sans ${t.muted}`}>{acc.text}</span>
                       )}

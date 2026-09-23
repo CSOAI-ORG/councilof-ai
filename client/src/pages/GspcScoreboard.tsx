@@ -480,6 +480,9 @@ export default function GspcScoreboard() {
                       comparison{acc.detail ? <> · coverage <strong>{acc.detail}</strong></> : null}
                     </span>
                   )}
+                  {acc.state === "no-public-leader" && (
+                    <span title={acc.title}>leader accuracy <strong>{acc.text}</strong> — axis measured</span>
+                  )}
                   {acc.state === "unmeasured" && (
                     <span title={acc.title}>leader accuracy <strong>{acc.text}</strong></span>
                   )}
@@ -579,6 +582,9 @@ export default function GspcScoreboard() {
                               <span className="ml-1 block font-sans text-[11px] text-gray-600">{acc.detail}</span>
                             )}
                           </span>
+                        )}
+                        {acc.state === "no-public-leader" && (
+                          <span title={acc.title} className="font-sans text-gray-600">{acc.text}</span>
                         )}
                         {acc.state === "unmeasured" && (
                           <span title={acc.title} className="font-sans text-gray-600">{acc.text}</span>
