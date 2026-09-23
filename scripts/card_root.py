@@ -178,6 +178,47 @@ def _validate_existing_root(path: Path, root: str, leaves: list[dict]) -> None:
         raise ValueError("existing root path contains a different commitment")
 
 
+def write_discovery_pointer(root_path: Path, ots_path: Path, out_dir: Path) -> Path:
+    """Point visitors at the most recently built immutable mill-card root.
+
+    This is an unsigned discovery aid, never a root, signature, or Bitcoin
+    attestation. The hourly mill already stages ``public/interop/card-root-*``;
+    keeping the pointer under that pattern makes it land with the root bytes.
+    """
+    doc = json.loads(root_path.read_text(encoding="utf-8"))
+    if doc.get("kind") != "csoai.card-root/1":
+        raise ValueError("discovery pointer source is not a card root")
+    if root_path.parent != out_dir or ots_path.parent != out_dir:
+        raise ValueError("discovery pointer source is outside output directory")
+    if not root_path.name.startswith("card-root-") or not root_path.name.endswith(".json"):
+        raise ValueError("discovery pointer source name is not a card root")
+    body = {
+        "schema": "csoai.card-root-pointer/1",
+        "kind": "DISCOVERY_POINTER_ONLY",
+        "as_of": doc["as_of"],
+        "root_url": f"/interop/{root_path.name}",
+        "root_sha256": hashlib.sha256(root_path.read_bytes()).hexdigest(),
+        "n_leaves": doc["n_leaves"],
+        "ots_url": f"/interop/{ots_path.name}" if ots_path.is_file() else None,
+        "scope": (
+            "This unsigned pointer selects immutable mill-card root bytes. Its count is separate "
+            "from /signed/card_index.json, /root.json and /api/gspc. Read the OTS sidecar's "
+            "verified state; its existence is not proof of a Bitcoin anchor."
+        ),
+    }
+    path = out_dir / "card-root-latest.json"
+    encoded = (json.dumps(body, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    if path.exists() and path.read_bytes() == encoded:
+        return path
+    temp = path.with_name(path.name + ".tmp")
+    if temp.exists():
+        raise ValueError("discovery pointer temporary path already exists")
+    with temp.open("xb") as handle:
+        handle.write(encoded)
+    temp.replace(path)
+    return path
+
+
 def build(*, stamp: bool = False, now: datetime | None = None,
           signed_dir: Path = SIGNED, out_dir: Path = OUT, submitter=None) -> dict:
     """Build one current commitment and optionally create its OTS sidecar.
@@ -258,6 +299,10 @@ def build(*, stamp: bool = False, now: datetime | None = None,
         exact = exact_proof_state(parse(proof, hashlib.sha256(root_path.read_bytes()).hexdigest()))
         proof_state = {"state": "pending" if exact["state"] == "STAMPED_PENDING_BITCOIN" else "bitcoin"}
 
+    # The immutable root and any sidecar are checked above. A mutable discovery
+    # pointer can now move to these exact bytes without changing evidence.
+    pointer_path = write_discovery_pointer(root_path, ots_path, out_dir)
+
     return {
         "root_path": root_path,
         "ots_path": ots_path,
@@ -267,6 +312,7 @@ def build(*, stamp: bool = False, now: datetime | None = None,
         "n_skipped": len(skipped),
         "subject_sha256": hashlib.sha256(root_path.read_bytes()).hexdigest(),
         "proof_state": proof_state,
+        "pointer_path": pointer_path,
     }
 
 

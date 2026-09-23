@@ -87,6 +87,95 @@ const TONE: Record<CardVerdict["state"], string> = {
   UNCHECKABLE: "border-amber-700/30 bg-amber-50 text-amber-900",
 };
 
+type MillLeaf = { card: string; id: string; model: string; axis: string };
+type MillRoot = { asOf: string; nLeaves: number; rootUrl: string; otsUrl: string | null; samples: MillLeaf[] };
+type MillState = { phase: "loading" } | { phase: "ready"; root: MillRoot } | { phase: "failed"; error: string };
+
+/** The mill's active-card root is a separate corpus from the card-v1 index above. */
+function MillRootPanel() {
+  const [state, setState] = useState<MillState>({ phase: "loading" });
+
+  useEffect(() => {
+    const ac = new AbortController();
+    (async () => {
+      try {
+        const pointerResponse = await fetch("/interop/card-root-latest.json", { signal: ac.signal });
+        if (!pointerResponse.ok) throw new Error(`pointer HTTP ${pointerResponse.status}`);
+        const pointer = await pointerResponse.json();
+        const rootUrl = String(pointer?.root_url || "");
+        if (pointer?.schema !== "csoai.card-root-pointer/1" ||
+            pointer?.kind !== "DISCOVERY_POINTER_ONLY" ||
+            !/^\/interop\/card-root-\d{4}-\d{2}-\d{2}(?:-[a-f0-9]{12})?\.json$/.test(rootUrl) ||
+            !/^[a-f0-9]{64}$/.test(String(pointer?.root_sha256 || ""))) {
+          throw new Error("pointer shape is not checkable");
+        }
+        const rootResponse = await fetch(rootUrl, { signal: ac.signal });
+        if (!rootResponse.ok) throw new Error(`root HTTP ${rootResponse.status}`);
+        const bytes = await rootResponse.arrayBuffer();
+        if (!crypto.subtle) throw new Error("browser SHA-256 is unavailable");
+        const digest = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)))
+          .map((b) => b.toString(16).padStart(2, "0")).join("");
+        if (digest !== pointer.root_sha256) throw new Error("root bytes differ from pointer digest");
+        const root = JSON.parse(new TextDecoder().decode(bytes));
+        if (root?.kind !== "csoai.card-root/1" || !Array.isArray(root.leaves) ||
+            root.leaves.length !== root.n_leaves || root.n_leaves !== pointer.n_leaves ||
+            root.as_of !== pointer.as_of) {
+          throw new Error("root count or timestamp differs from pointer");
+        }
+        const otsUrl = pointer.ots_url === `${rootUrl}.ots` ? pointer.ots_url : null;
+        const samples: MillLeaf[] = root.leaves.slice(0, 4).filter((leaf: any) =>
+          /^signed-[a-z0-9-]+-[a-f0-9]{12}\.json$/.test(String(leaf?.card || ""))
+        ).map((leaf: any) => ({
+          card: String(leaf.card), id: String(leaf.id || ""),
+          model: String(leaf.model || ""), axis: String(leaf.axis || ""),
+        }));
+        if (!ac.signal.aborted) setState({ phase: "ready", root: {
+          asOf: String(root.as_of), nLeaves: root.n_leaves, rootUrl, otsUrl, samples,
+        } });
+      } catch (e: any) {
+        if (!ac.signal.aborted) setState({ phase: "failed", error: String(e?.message || e) });
+      }
+    })();
+    return () => ac.abort();
+  }, []);
+
+  return (
+    <section className="mt-5 rounded-2xl border border-sky-200 bg-sky-50/80 p-4" aria-label="Signed measurement cards · separate collection">
+      <h3 className="text-[14px] font-semibold text-slate-900">Signed measurement cards · separate collection</h3>
+      {state.phase === "loading" && <p className="mt-2 text-[12px] text-slate-700">Checking the published root bytes…</p>}
+      {state.phase === "failed" && (
+        <p className="mt-2 text-[12px] text-amber-900">UNCHECKABLE — {state.error}. No current mill-card count is shown.</p>
+      )}
+      {state.phase === "ready" && (
+        <>
+          <p className="mt-2 text-[12px] leading-relaxed text-slate-700">
+            {state.root.nLeaves.toLocaleString("en-GB")} active leaves in the mill-card root dated {state.root.asOf}.
+            The root bytes match the discovery pointer. This count is separate from the card-v1 index,
+            public root and GSPC board; it does not add board scores.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[12px]">
+            <a className="text-emerald-800 underline" href={state.root.rootUrl} target="_blank" rel="noreferrer">Open exact root JSON</a>
+            {state.root.otsUrl && <a className="text-emerald-800 underline" href={state.root.otsUrl} target="_blank" rel="noreferrer">Inspect OTS sidecar</a>}
+          </div>
+          <p className="mt-2 text-[11px] text-slate-600">An OTS sidecar may still be pending. A Bitcoin anchor requires independent chain verification.</p>
+          {state.root.samples.length > 0 && (
+            <div className="mt-3 text-[11px] text-slate-700">
+              <p className="font-semibold">Sample active leaves (not the newest cards)</p>
+              <ul className="mt-1 space-y-1">
+                {state.root.samples.map((leaf) => <li key={leaf.id}>
+                  <a className="break-all text-emerald-800 underline" href={`/interop/mill-cards-signed/${leaf.card}`} target="_blank" rel="noreferrer">
+                    {leaf.model || leaf.card} · {leaf.axis || "axis unstated"}
+                  </a>
+                </li>)}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  );
+}
+
 export default function LobbyCardsPane({
   onOpenRoute,
 }: {
@@ -176,6 +265,8 @@ export default function LobbyCardsPane({
         browser, with no account. The result is something you established, not something we told you.
         Card-v1 only — VALID · INVALID · UNCHECKABLE. No attachment table on the card.
       </PaneHead>
+
+      <MillRootPanel />
 
       {state.phase === "loading" && (
         <p className={`mt-6 rounded-xl border border-slate-900/10 bg-white/80 px-4 py-3 ${TYPE.muted}`}>
