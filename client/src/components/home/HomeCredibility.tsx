@@ -251,9 +251,9 @@ export default function HomeCredibility({
           Six things you can verify about this business before you trust a single number on it.
         </h2>
         <p className="t-lede measure mt-5 text-muted-foreground">
-          Each figure below is read from the endpoint that owns it as this page loads. None is
-          typed into the page, none is cached, and a read that fails says so rather than showing a
-          number that would be a guess.
+          The six figures in this section are read from their owning public sources as this page
+          loads. If a read fails, we say so rather than substitute a number. Open each source to
+          check its date and limits before citing it.
         </p>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
