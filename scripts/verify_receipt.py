@@ -16,10 +16,12 @@ Artefacts: x402 Offer & Receipt extension, x402-foundation/x402 @
 WHAT A GREEN ANSWER MEANS, EXACTLY. It means the named key signed those bytes, and the key is
 published in the DID document at csoai.org today. It does NOT mean money moved: the receipt's
 `transaction` field, when present, is a claim about a chain, and the only way to check that claim
-is to ask the chain. --check-chain does exactly that, against a public Base RPC, and reports
-UNCHECKED rather than guessing when it cannot reach one. A receipt with no `transaction` is
-privacy-minimal by design (spec §5.2) and is not weaker for it — it simply carries no chain claim
-to check.
+is to ask the chain. --check-chain checks the signed network, transaction identity and successful execution
+reported by the chosen RPC (Base by default). Unavailable, pending or malformed responses
+return exit 2 rather than allowing signature validity to imply a completed chain check. A receipt with no `transaction` is
+privacy-minimal by design (spec §5.2) and is not weaker for it. With an explicit
+--check-chain request it returns exit 2 because that additional check is unavailable.
+Successful execution alone does not verify token transfer details, finality or customer delivery.
 
 Dependencies: cryptography (pip install cryptography). Standard library otherwise.
 Exit codes: 0 VALID · 1 INVALID · 2 could not be determined (network, no key material, bad input).
@@ -30,6 +32,8 @@ from __future__ import annotations
 import argparse
 import base64
 import json
+import ipaddress
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -111,19 +115,113 @@ def extract_jws(blob: Any) -> list[str]:
     return list(dict.fromkeys(found))
 
 
-def tx_exists(tx: str, rpc: str = BASE_RPC) -> tuple[str, str]:
-    """Ask the chain whether the receipt's transaction is real. ('YES'|'NO'|'UNCHECKED', detail)."""
-    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "eth_getTransactionReceipt", "params": [tx]}).encode()
-    req = urllib.request.Request(rpc, data=body, headers={"content-type": "application/json"})
+CHAIN_RESPONSE_CAP = 2_000_000
+
+
+class ChainReadError(ValueError):
+    """The chosen RPC did not establish the requested fact; never a payment verdict."""
+
+
+class NoChainRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args: Any, **kwargs: Any) -> None:
+        raise ChainReadError("RPC redirects are not followed")
+
+
+def rpc_origin_check(url: str) -> None:
+    """HTTPS RPC, or an explicitly chosen local HTTP node. Never forward credentials."""
+    parsed = urllib.parse.urlsplit(url)
+    if (not parsed.hostname or parsed.username is not None or parsed.password is not None
+            or parsed.fragment or parsed.port == 0):
+        raise ChainReadError("RPC URL has no host or contains credentials/fragment")
+    if parsed.scheme == "https":
+        return
+    local = parsed.hostname == "localhost"
+    if not local:
+        try:
+            local = ipaddress.ip_address(parsed.hostname).is_loopback
+        except ValueError:
+            pass
+    if parsed.scheme != "http" or not local:
+        raise ChainReadError("RPC requires HTTPS, except for an explicitly selected loopback node")
+
+
+def rpc_result(rpc: str, method: str, params: list[Any], request_id: int) -> Any:
+    """One bounded read, no retries or redirects. RPC method allowlist has no writes."""
+    if method not in ("eth_chainId", "eth_getTransactionReceipt"):
+        raise ChainReadError("RPC method is outside this read-only verifier")
+    rpc_origin_check(rpc)
+    body = json.dumps({"jsonrpc": "2.0", "id": request_id, "method": method, "params": params}).encode()
+    req = urllib.request.Request(rpc, data=body, headers={
+        "content-type": "application/json", "accept": "application/json",
+        "user-agent": "CSOAI-Receipt-Chain-Check/1.1 (+https://councilof.ai)",
+    })
+    with urllib.request.build_opener(NoChainRedirect()).open(req, timeout=15) as response:
+        raw = response.read(CHAIN_RESPONSE_CAP + 1)
+    if len(raw) > CHAIN_RESPONSE_CAP:
+        raise ChainReadError("RPC response exceeds read budget")
+
+    def unique_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ChainReadError("duplicate JSON member in RPC response")
+            result[key] = value
+        return result
+
+    def finite_json(value: str) -> None:
+        raise ChainReadError("non-finite RPC JSON constant")
+
+    out = json.loads(raw, object_pairs_hook=unique_keys, parse_constant=finite_json)
+    if (not isinstance(out, dict) or out.get("jsonrpc") != "2.0"
+            or type(out.get("id")) is not int or out["id"] != request_id
+            or "error" in out or "result" not in out):
+        raise ChainReadError("RPC error, wrong response ID or invalid envelope")
+    return out["result"]
+
+
+def evm_quantity(value: Any) -> int:
+    if not isinstance(value, str) or not re.fullmatch(r"0x(?:0|[1-9a-fA-F][0-9a-fA-F]{0,63})", value):
+        raise ChainReadError("invalid EVM quantity")
+    return int(value, 16)
+
+
+def tx_exists(tx: str, rpc: str = BASE_RPC, expected_network: str = "eip155:8453") -> tuple[str, str]:
+    """Check matching successful inclusion reported by one RPC, not token transfer or finality.
+
+    YES = matching transaction receipt with status 1 on the signed network.
+    NO = matching transaction receipt reports status 0 (reverted).
+    UNCHECKED = pending/missing receipt, wrong RPC network, malformed data or read failure.
+    """
+    if not isinstance(tx, str) or not re.fullmatch(r"0x[0-9a-fA-F]{64}", tx):
+        return "UNCHECKED", "signed transaction is not a 32-byte EVM hash"
+    network = re.fullmatch(r"eip155:([1-9][0-9]{0,19})", expected_network) if isinstance(expected_network, str) else None
+    if network is None:
+        return "UNCHECKED", "signed network is not a supported canonical EIP-155 identifier"
     try:
-        with urllib.request.urlopen(req, timeout=20) as r:
-            out = json.loads(r.read().decode("utf-8"))
-    except Exception as e:  # noqa: BLE001 — any failure here is UNCHECKED, never NO
-        return "UNCHECKED", f"could not reach {rpc}: {e}"
-    res = out.get("result")
-    if res is None:
-        return "NO", "the node has no receipt for that transaction hash"
-    return ("YES", f"status {res.get('status')} in block {int(res.get('blockNumber', '0x0'), 16)}")
+        chain_id = evm_quantity(rpc_result(rpc, "eth_chainId", [], 1))
+        if chain_id != int(network[1]):
+            return "UNCHECKED", "chosen RPC network differs from the signed receipt network"
+        receipt = rpc_result(rpc, "eth_getTransactionReceipt", [tx], 2)
+        if receipt is None:
+            return "UNCHECKED", "node returned no mined receipt; it may be pending, unknown or unavailable"
+        if not isinstance(receipt, dict):
+            raise ChainReadError("transaction receipt is not an object")
+        returned_hash = receipt.get("transactionHash")
+        if not isinstance(returned_hash, str) or returned_hash.lower() != tx.lower():
+            raise ChainReadError("returned transaction hash does not match the requested hash")
+        block_hash = receipt.get("blockHash")
+        if not isinstance(block_hash, str) or not re.fullmatch(r"0x[0-9a-fA-F]{64}", block_hash):
+            raise ChainReadError("mined receipt has no valid block hash")
+        block = evm_quantity(receipt.get("blockNumber"))
+        status = evm_quantity(receipt.get("status"))
+        if status == 0:
+            return "NO", f"RPC reports REVERTED execution in block {block} on {expected_network}"
+        if status != 1:
+            raise ChainReadError("unknown transaction execution status")
+        return "YES", (f"RPC reports successful execution in block {block} on {expected_network}; "
+                       "transfer amount, asset, payer/payee, finality and customer delivery NOT checked")
+    except Exception as exc:  # any unavailable/malformed RPC answer remains unknown
+        return "UNCHECKED", f"RPC check could not be completed ({type(exc).__name__}); no fallback or payment attempted"
 
 
 def verify_one(compact: str, doc: dict, args: argparse.Namespace) -> int:
@@ -193,18 +291,24 @@ def verify_one(compact: str, doc: dict, args: argparse.Namespace) -> int:
     print(f"  authorised {host} is governed by {args.did}")
 
     tx = payload.get("transaction")
-    if kind == "receipt":
+    if args.check_chain:
+        if kind != "receipt" or not tx:
+            print("UNDETERMINED  signature verified, but no transaction reference is available for the requested chain check.")
+            print("              A privacy-minimal receipt is not invalid; omit --check-chain for signature-only verification.")
+            return 2
+        state, detail = tx_exists(tx, args.rpc, expected_network=payload.get("network"))
+        print(f"  chain      {state}  {tx}  ({detail})")
+        if state == "NO":
+            print("INVALID  signature verified, but the matching RPC receipt reports reverted execution.")
+            return 1
+        if state != "YES":
+            print("UNDETERMINED  signature verified; requested chain check did not establish successful inclusion.")
+            return 2
+    elif kind == "receipt":
         if not tx:
-            print("  chain      no `transaction` in this receipt — privacy-minimal by design (spec §5.2),")
-            print("             so there is no chain claim to check. This is not a weakness.")
-        elif args.check_chain:
-            state, detail = tx_exists(tx, args.rpc)
-            print(f"  chain      {state}  {tx}  ({detail})")
-            if state == "NO":
-                print("INVALID  the receipt names a transaction the chain does not have.")
-                return 1
+            print("  chain      no transaction reference: signature-only verification; no payment inferred.")
         else:
-            print(f"  chain      UNCHECKED  {tx}  (pass --check-chain to ask {args.rpc})")
+            print(f"  chain      UNCHECKED  {tx}  (pass --check-chain to query the signed network)")
 
     print(json.dumps(payload, indent=2, sort_keys=True))
     print(f"VALID    {kind} signed by {kid}")
@@ -219,7 +323,7 @@ def main() -> int:
     src.add_argument("--file", help="a JSON file containing artefacts")
     src.add_argument("--stdin", action="store_true", help="read JSON from stdin")
     ap.add_argument("--did", default=DID_URL, help=f"DID document to trust (default {DID_URL})")
-    ap.add_argument("--check-chain", action="store_true", help="also ask a Base RPC whether the transaction exists")
+    ap.add_argument("--check-chain", action="store_true", help="require a matching successful transaction receipt from an RPC on the signed EIP-155 network; not a token-transfer/finality check")
     ap.add_argument("--rpc", default=BASE_RPC, help=f"Base RPC endpoint (default {BASE_RPC})")
     args = ap.parse_args()
 

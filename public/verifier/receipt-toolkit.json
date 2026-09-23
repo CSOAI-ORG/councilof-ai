@@ -3,14 +3,14 @@
   "artifact": {
     "url": "https://councilof.ai/verifier/verify_receipt.py",
     "source_path": "scripts/verify_receipt.py",
-    "bytes": 12129,
-    "sha256": "dd310cbd62add18f83a535e4d442b4c891c7b967f33fd74d04874c2b36739336",
+    "bytes": 17714,
+    "sha256": "834a0864e157833f19ad165893ee7a2d422b60d592160f04dbcf2f88a62708f8",
     "exact_source_copy": true
   },
   "guide": {
     "url": "https://councilof.ai/verifier/receipt-toolkit.md",
-    "bytes": 3017,
-    "sha256": "be721a06a066454a2c62c5c3c08f31060de1e0f61452cc59b6779c4ecaa6b162"
+    "bytes": 3544,
+    "sha256": "966533c623bdfbbaa76c586bfaebac55331159588fc8f67e68068a97bac48ac3"
   },
   "runtime": {
     "python": ">=3.9",
@@ -25,6 +25,17 @@
     "signature_replay_requires_wallet": false,
     "signature_replay_requires_API_key": false,
     "default_signature_check_public_DID_reads": 1,
+    "chain_check_profile": "eip155-receipt-status/1.1",
+    "chain_check": {
+      "rpc_network_must_match_signed_network": true,
+      "transaction_hash_must_match": true,
+      "execution_status_must_equal": 1,
+      "unknown_exit": 2,
+      "reverted_exit": 1,
+      "maximum_read_only_RPC_calls_per_artifact": 2,
+      "transfer_details_verified": false,
+      "finality_verified": false
+    },
     "payment_verified": false,
     "receipt_freshness_verified": false,
     "measurement_truth_verified": false,
