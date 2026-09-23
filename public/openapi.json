@@ -170,14 +170,14 @@
       "name": "CSOAI Ltd",
       "url": "https://councilof.ai/"
     },
-    "description": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence \u2014 never a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate. Operations with security [] are free and unauthenticated. Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example).",
+    "description": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence \u2014 never a grade. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 3 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate. Operations with security [] are free and unauthenticated. Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example).",
     "license": {
       "name": "CC-BY-4.0",
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.2+b355bee2bc20",
-    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
+    "version": "0.3+3f9df82bb3fc",
+    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 3 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
   "paths": {
@@ -338,12 +338,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
+                  "description": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
                   "type": "object"
                 }
               }
             },
-            "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion."
+            "description": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time."
           },
           "402": {
             "content": {
@@ -554,7 +554,7 @@
             }
           }
         },
-        "summary": "CSOAI Article 50 marking evidenc",
+        "summary": "Article 50 machine-readable marking evidence",
         "tags": [
           "x402",
           "assembly"
@@ -567,7 +567,14 @@
           },
           "door": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
           "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a conformity opinion",
+            "a guarantee about the generator",
+            "a certificate",
+            "legal advice"
+          ],
+          "paid_for": "assembly",
+          "tier": "art50_marking_evidence"
         },
         "x-payment-info": {
           "protocols": [
@@ -605,12 +612,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
+                  "description": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
                   "type": "object"
                 }
               }
             },
-            "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion."
+            "description": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time."
           },
           "402": {
             "content": {
@@ -821,7 +828,7 @@
             }
           }
         },
-        "summary": "CSOAI Article 50 marking evidenc",
+        "summary": "Article 50 machine-readable marking evidence",
         "tags": [
           "x402",
           "assembly"
@@ -834,7 +841,14 @@
           },
           "door": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
           "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a conformity opinion",
+            "a guarantee about the generator",
+            "a certificate",
+            "legal advice"
+          ],
+          "paid_for": "assembly",
+          "tier": "art50_marking_evidence"
         },
         "x-payment-info": {
           "protocols": [
@@ -3383,12 +3397,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+                  "description": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero.",
                   "type": "object"
                 }
               }
             },
-            "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification."
+            "description": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero."
           },
           "402": {
             "content": {
@@ -3552,7 +3566,7 @@
             }
           }
         },
-        "summary": "CSOAI Free Door",
+        "summary": "Free board + public-root discovery door",
         "tags": [
           "x402",
           "free"
@@ -3564,8 +3578,16 @@
             "payment_required_header_bytes": 5380
           },
           "door": "https://councilof.ai/api/free-door",
+          "free_preview": "https://councilof.ai/api/free-door",
           "indexed_in": "x402 Bazaar (PayAI)",
-          "paid_for": null
+          "never": [
+            "a paid artefact",
+            "a grade",
+            "a rank",
+            "a certificate"
+          ],
+          "paid_for": null,
+          "tier": "free_door"
         },
         "x-payment-info": {
           "protocols": [
@@ -3582,12 +3604,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+                  "description": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero.",
                   "type": "object"
                 }
               }
             },
-            "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification."
+            "description": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero."
           },
           "402": {
             "content": {
@@ -3751,7 +3773,7 @@
             }
           }
         },
-        "summary": "CSOAI Free Door",
+        "summary": "Free board + public-root discovery door",
         "tags": [
           "x402",
           "free"
@@ -3763,8 +3785,16 @@
             "payment_required_header_bytes": 5380
           },
           "door": "https://councilof.ai/api/free-door",
+          "free_preview": "https://councilof.ai/api/free-door",
           "indexed_in": "x402 Bazaar (PayAI)",
-          "paid_for": null
+          "never": [
+            "a paid artefact",
+            "a grade",
+            "a rank",
+            "a certificate"
+          ],
+          "paid_for": null,
+          "tier": "free_door"
         },
         "x-payment-info": {
           "protocols": [
@@ -4451,7 +4481,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: A2A agent registry population",
         "tags": [
           "x402",
           "assembly"
@@ -4464,7 +4494,15 @@
           },
           "door": "https://councilof.ai/api/pop/a2a",
           "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_a2a"
         },
         "x-payment-info": {
           "protocols": [
@@ -4697,7 +4735,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: A2A agent registry population",
         "tags": [
           "x402",
           "assembly"
@@ -4710,7 +4748,15 @@
           },
           "door": "https://councilof.ai/api/pop/a2a",
           "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_a2a"
         },
         "x-payment-info": {
           "protocols": [
@@ -4945,7 +4991,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Claim-maintenance registries",
         "tags": [
           "x402",
           "assembly"
@@ -4958,7 +5004,15 @@
           },
           "door": "https://councilof.ai/api/pop/claim-watch",
           "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_claim-watch"
         },
         "x-payment-info": {
           "protocols": [
@@ -5191,7 +5245,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Claim-maintenance registries",
         "tags": [
           "x402",
           "assembly"
@@ -5204,7 +5258,15 @@
           },
           "door": "https://councilof.ai/api/pop/claim-watch",
           "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_claim-watch"
         },
         "x-payment-info": {
           "protocols": [
@@ -5438,7 +5500,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Corrections ledger, full history",
         "tags": [
           "x402",
           "assembly"
@@ -5451,7 +5513,15 @@
           },
           "door": "https://councilof.ai/api/pop/corrections",
           "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_corrections"
         },
         "x-payment-info": {
           "protocols": [
@@ -5683,7 +5753,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Corrections ledger, full history",
         "tags": [
           "x402",
           "assembly"
@@ -5696,7 +5766,15 @@
           },
           "door": "https://councilof.ai/api/pop/corrections",
           "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_corrections"
         },
         "x-payment-info": {
           "protocols": [
@@ -5931,7 +6009,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Layer-0 machine-surface ceremony",
         "tags": [
           "x402",
           "assembly"
@@ -5944,7 +6022,15 @@
           },
           "door": "https://councilof.ai/api/pop/layer0",
           "free_preview": "https://councilof.ai/api/pop/layer0?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_layer0"
         },
         "x-payment-info": {
           "protocols": [
@@ -6177,7 +6263,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Layer-0 machine-surface ceremony",
         "tags": [
           "x402",
           "assembly"
@@ -6190,7 +6276,15 @@
           },
           "door": "https://councilof.ai/api/pop/layer0",
           "free_preview": "https://councilof.ai/api/pop/layer0?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_layer0"
         },
         "x-payment-info": {
           "protocols": [
@@ -6425,7 +6519,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: MCP registry listings",
         "tags": [
           "x402",
           "assembly"
@@ -6438,7 +6532,15 @@
           },
           "door": "https://councilof.ai/api/pop/mcp-registry",
           "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_mcp-registry"
         },
         "x-payment-info": {
           "protocols": [
@@ -6671,7 +6773,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: MCP registry listings",
         "tags": [
           "x402",
           "assembly"
@@ -6684,7 +6786,15 @@
           },
           "door": "https://councilof.ai/api/pop/mcp-registry",
           "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_mcp-registry"
         },
         "x-payment-info": {
           "protocols": [
@@ -6918,7 +7028,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: OpenTimestamps proof manifest",
         "tags": [
           "x402",
           "assembly"
@@ -6931,7 +7041,15 @@
           },
           "door": "https://councilof.ai/api/pop/ots-proofs",
           "free_preview": "https://councilof.ai/api/pop/ots-proofs?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_ots-proofs"
         },
         "x-payment-info": {
           "protocols": [
@@ -7163,7 +7281,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: OpenTimestamps proof manifest",
         "tags": [
           "x402",
           "assembly"
@@ -7176,7 +7294,15 @@
           },
           "door": "https://councilof.ai/api/pop/ots-proofs",
           "free_preview": "https://councilof.ai/api/pop/ots-proofs?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_ots-proofs"
         },
         "x-payment-info": {
           "protocols": [
@@ -7409,7 +7535,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Stablecoin universe",
         "tags": [
           "x402",
           "assembly"
@@ -7422,7 +7548,15 @@
           },
           "door": "https://councilof.ai/api/pop/stablecoins",
           "free_preview": "https://councilof.ai/api/pop/stablecoins?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_stablecoins"
         },
         "x-payment-info": {
           "protocols": [
@@ -7653,7 +7787,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: Stablecoin universe",
         "tags": [
           "x402",
           "assembly"
@@ -7666,7 +7800,15 @@
           },
           "door": "https://councilof.ai/api/pop/stablecoins",
           "free_preview": "https://councilof.ai/api/pop/stablecoins?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_stablecoins"
         },
         "x-payment-info": {
           "protocols": [
@@ -7900,7 +8042,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: SWIFT-linked bank census",
         "tags": [
           "x402",
           "assembly"
@@ -7913,7 +8055,15 @@
           },
           "door": "https://councilof.ai/api/pop/swift",
           "free_preview": "https://councilof.ai/api/pop/swift?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_swift"
         },
         "x-payment-info": {
           "protocols": [
@@ -8145,7 +8295,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: SWIFT-linked bank census",
         "tags": [
           "x402",
           "assembly"
@@ -8158,7 +8308,15 @@
           },
           "door": "https://councilof.ai/api/pop/swift",
           "free_preview": "https://councilof.ai/api/pop/swift?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_swift"
         },
         "x-payment-info": {
           "protocols": [
@@ -8392,7 +8550,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: x402 Bazaar listings",
         "tags": [
           "x402",
           "assembly"
@@ -8405,7 +8563,15 @@
           },
           "door": "https://councilof.ai/api/pop/x402-bazaar",
           "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_x402-bazaar"
         },
         "x-payment-info": {
           "protocols": [
@@ -8637,7 +8803,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: x402 Bazaar listings",
         "tags": [
           "x402",
           "assembly"
@@ -8650,7 +8816,15 @@
           },
           "door": "https://councilof.ai/api/pop/x402-bazaar",
           "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_x402-bazaar"
         },
         "x-payment-info": {
           "protocols": [
@@ -8887,7 +9061,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: XRPL issued-asset set",
         "tags": [
           "x402",
           "assembly"
@@ -8900,7 +9074,15 @@
           },
           "door": "https://councilof.ai/api/pop/xrpl",
           "free_preview": "https://councilof.ai/api/pop/xrpl?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_xrpl"
         },
         "x-payment-info": {
           "protocols": [
@@ -9135,7 +9317,7 @@
             }
           }
         },
-        "summary": "CSOAI Population Door",
+        "summary": "Population slice: XRPL issued-asset set",
         "tags": [
           "x402",
           "assembly"
@@ -9148,7 +9330,15 @@
           },
           "door": "https://councilof.ai/api/pop/xrpl",
           "free_preview": "https://councilof.ai/api/pop/xrpl?preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a grade",
+            "a rank",
+            "a verdict about any row",
+            "a paywall on the source artifact",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "pop_xrpl"
         },
         "x-payment-info": {
           "protocols": [
@@ -9443,7 +9633,7 @@
             }
           }
         },
-        "summary": "CSOAI Proof Bundle",
+        "summary": "Public-root inclusion-proof bundle",
         "tags": [
           "x402",
           "assembly"
@@ -9458,7 +9648,15 @@
           "free_forever_on_this_path": [
             "https://councilof.ai/api/proof?sha=<64-hex>"
           ],
-          "paid_for": "assembly"
+          "free_preview": "https://councilof.ai/api/proof?sha=<64-hex>",
+          "never": [
+            "a grade",
+            "a rank",
+            "a certificate",
+            "a private evidence claim"
+          ],
+          "paid_for": "assembly",
+          "tier": "proof_bundle"
         },
         "x-payment-info": {
           "protocols": [
@@ -9696,7 +9894,7 @@
             }
           }
         },
-        "summary": "CSOAI Proof Bundle",
+        "summary": "Public-root inclusion-proof bundle",
         "tags": [
           "x402",
           "assembly"
@@ -9711,7 +9909,15 @@
           "free_forever_on_this_path": [
             "https://councilof.ai/api/proof?sha=<64-hex>"
           ],
-          "paid_for": "assembly"
+          "free_preview": "https://councilof.ai/api/proof?sha=<64-hex>",
+          "never": [
+            "a grade",
+            "a rank",
+            "a certificate",
+            "a private evidence claim"
+          ],
+          "paid_for": "assembly",
+          "tier": "proof_bundle"
         },
         "x-payment-info": {
           "protocols": [
@@ -10039,7 +10245,7 @@
             }
           }
         },
-        "summary": "Receipts batch \u2014 historical measurement leaves for a window (assembly)",
+        "summary": "Historical measurement-card batch (assembly)",
         "tags": [
           "x402",
           "assembly"
@@ -10335,7 +10541,7 @@
             }
           }
         },
-        "summary": "Receipts batch \u2014 historical measurement leaves for a window (assembly)",
+        "summary": "Historical measurement-card batch (assembly)",
         "tags": [
           "x402",
           "assembly"
@@ -12667,12 +12873,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Delta of wrapped supply and escrow for usdc.e:arbitrum since the previous ledger snapshot. Returns per-field changes, not a rate or grade.",
+                  "description": "Delta of wrapped supply and escrow between two ledger snapshots. A diff \u2014 not a rate, a grade or a reserve attestation.",
                   "type": "object"
                 }
               }
             },
-            "description": "Delta of wrapped supply and escrow for usdc.e:arbitrum since the previous ledger snapshot. Returns per-field changes, not a rate or grade."
+            "description": "Delta of wrapped supply and escrow between two ledger snapshots. A diff \u2014 not a rate, a grade or a reserve attestation."
           },
           "402": {
             "content": {
@@ -12865,7 +13071,7 @@
             }
           }
         },
-        "summary": "CSOAI Wrapped-Asset Changes",
+        "summary": "Wrapped-asset change feed (per pair)",
         "tags": [
           "x402",
           "assembly"
@@ -12878,7 +13084,16 @@
           },
           "door": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
           "free_preview": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
-          "paid_for": "assembly"
+          "never": [
+            "a rating",
+            "a guarantee",
+            "a verdict",
+            "a rank",
+            "a reserve attestation",
+            "a paywall on the free ledger or /root.json"
+          ],
+          "paid_for": "assembly",
+          "tier": "wrapper_changes"
         },
         "x-payment-info": {
           "protocols": [
@@ -13085,7 +13300,7 @@
     ],
     "revenue_truth": "https://councilof.ai/api/revenue",
     "schema_of_source": {
-      "catalog": "csoai.x402-catalog/0.2",
+      "catalog": "csoai.x402-catalog/0.3",
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
