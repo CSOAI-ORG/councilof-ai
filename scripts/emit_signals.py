@@ -41,21 +41,51 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "are
 from board_sign import canonical, norm, sha256_hex, assert_ascii, BOARD_KID  # noqa: E402
 
 REGISTER_URL = "https://councilof.ai/api/axis-register"
+BOARD_URL = "https://councilof.ai/api/gspc"
 MIN_GAMES = 5
-SCHEMA = "csoai.axis-signal/0.3"
+SCHEMA = "csoai.axis-signal/0.4"
 
 
-def fetch_register(url=REGISTER_URL):
+def fetch_json(url):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 CSOAI-signal-emitter/1.1"})
     with urllib.request.urlopen(req, timeout=20) as r:
         return json.load(r)
+
+
+def fetch_register(url=REGISTER_URL):
+    return fetch_json(url)
+
+
+def board_rows_by_slug(board):
+    """Join the BOARD to the register on the board's OWN bytes.
+
+    Every model-comparison axis on GET /api/gspc carries dataset "csoai/gspc-<slug>", and
+    <slug> is the register axis id. A typed crosswalk between two surfaces would only be a
+    third place for them to disagree, so there is none: the slug is read off the board.
+    """
+    out = {}
+    for a in board.get("axes", []):
+        if a.get("kind") != "model-comparison":
+            continue
+        ds = a.get("dataset") or ""
+        if "gspc-" in ds:
+            out[ds.split("gspc-", 1)[1]] = a
+    return out
+
+
+def board_row_for(slug, by_slug):
+    """Exact slug, else the ONE board slug that extends it ("jail" -> "jail-goldbank")."""
+    if slug in by_slug:
+        return by_slug[slug]
+    ext = [v for k, v in by_slug.items() if k.startswith(slug + "-")]
+    return ext[0] if len(ext) == 1 else None
 
 
 def _row(r):
     return {k: r[k] for k in ("model", "elo", "games", "winrate", "ci") if k in r}
 
 
-def derive_signal(axis_entry, rows, lb, generated, supersedes=None):
+def derive_signal(axis_entry, rows, lb, generated, supersedes=None, board_entry=None):
     """axis_entry: one row of the register; rows: per_axis[axis] from elo_reference (ranked,
     sorted by elo desc, each with n>=MIN_GAMES). Pure function — tested with planted controls."""
     axis = axis_entry["axis"]
@@ -95,15 +125,71 @@ def derive_signal(axis_entry, rows, lb, generated, supersedes=None):
         separation = "SEPARATED"
     else:
         separation = "TIE"
+    # ── 0.4 (2026-09-23): THE AXIS'S SEPARATION VERDICT IS THE BOARD'S ─────────
+    # Until now this file derived a top-level status from its OWN arena determination and
+    # published it under the board's axis id, signed with the board's key. On swarm that
+    # put two live board-signed answers to one question on the estate: GET /api/gspc said
+    # UNTESTED with leader qwen2.5:7b, /signals/swarm.signed.json said SEPARATED with
+    # leader nemotron-3-nano:30b. Neither file was wrong about its own bytes. They measure
+    # different instruments — a frozen 37-item bank graded for per-item accuracy vs.
+    # recorded pairwise arena rounds — over fleets that share no model on that axis. The
+    # defect was two verdicts wearing one word, the same shape as the three card counts.
+    #
+    # Fixed at the cause: ONE surface stops claiming the axis's separation. The board is
+    # the separation authority for a board axis, so status/register below report the
+    # board's verdict verbatim, and this file's own determination stays in the elo_*
+    # namespace scoped by separation_of / separation_authority / evidence_relation.
+    # Nothing is collapsed: SEPARATED, TIE, UNTESTED and UNMEASURED all stay first-class
+    # and the arena's leader is still named. A register axis with no board row is refused
+    # in main() rather than signed with an unknown authority.
+    board_sep = (board_entry or {}).get("separation")
     if axis_status != "MEASURED":
         register = "UNMEASURED"
-    elif separation == "SEPARATED":
+    elif board_sep == "SEPARATED":
         register = "MEASURED"
-    elif separation == "TIE":
-        register = "TIE"
+    elif board_sep in ("TIE", "UNTESTED"):
+        register = board_sep
     else:
         register = "UNMEASURED"
-    leader = sep_leader if register == "MEASURED" else None   # never a leader on a non-MEASURED axis
+    # elo_leader is THIS instrument's finding and is named whenever the arena separates.
+    # It is never the axis leader; separation_authority.board_leader is.
+    leader = sep_leader if axis_status == "MEASURED" else None
+    b = board_entry or {}
+    board_leader_model = str(b.get("leader") or "").split(" ")[0] or None
+    arena_models = [r["model"] for r in ranked]
+    authority = {
+        "surface": "GET /api/gspc",
+        "board_axis": b.get("axis"),
+        "board_separation": b.get("separation"),
+        "board_leader": b.get("leader"),
+        "board_bench": b.get("bench"),
+        "board_n": b.get("n"),
+        "note": "This axis's separation authority. status/register are ITS verdict. Where "
+                "elo_separation differs, the board governs the AXIS separation; this file "
+                "governs only the arena rounds.",
+    }
+    relation_note = (
+        "Never add, reconcile or substitute the two (cf. corpus_relation "
+        "SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. "
+        f"Here: win-rate over recorded pairwise rounds. Board leader "
+        f"{board_leader_model or 'none'} is "
+        f"{'among' if board_leader_model in arena_models else 'NOT among'} the models "
+        f"ranked here ({', '.join(arena_models) or 'none'}). Fleet overlap UNMEASURED: "
+        "no per-axis fleet roster is published and none is invented."
+    )
+    drift = None
+    bn, sn = b.get("n"), axis_entry.get("scored_items")
+    if isinstance(bn, int) and isinstance(sn, int) and bn != sn:
+        drift = {
+            "fields": ["scored_items", "models"],
+            "register_scored_items": sn,
+            "board_n": bn,
+            "state": "PUBLISHED_NOT_RECONCILED",
+            "note": "scored_items/models above are register fields and do NOT describe the "
+                    "bank the board now serves; board_n does. Published, not retyped: the row "
+                    "also needs majority_baseline re-derived on the current bank, undone, and "
+                    "a baseline is never invented to tidy a row.",
+        }
     body = {
         "schema": SCHEMA,
         "axis": axis,
@@ -124,18 +210,24 @@ def derive_signal(axis_entry, rows, lb, generated, supersedes=None):
         "elo_leader": leader["model"] if leader else None,
         "elo_leader_score": leader["elo"] if leader else None,
         "games_leader": leader["games"] if leader else None,
-        "rank_rule": f"leader named only when >=2 models each have >={MIN_GAMES} decided games on this "
-                     "axis and ONE model's Wilson 95% win-rate CI lower bound exceeds EVERY other "
-                     "ranked model's upper bound; TIE = ranked, not separated; UNMEASURED = not "
-                     "sufficient to rank. The test is on the win-rate intervals, not on Elo order: "
-                     "Elo is path-dependent and the verdict must not be. elo_top/elo_runner_up below "
-                     "are the Elo ordering, shown for continuity, and may differ from the leader.",
+        "separation_of": "recorded pairwise arena rounds, NOT the axis's frozen bank; "
+                         "never the axis's verdict.",
+        "separation_authority": authority,
+        "evidence_relation": "SEPARATE_EVIDENCE",
+        "evidence_relation_note": relation_note,
+        "rank_rule": f"arena rule: >=2 models with >={MIN_GAMES} decided games each and ONE model's "
+                     "Wilson 95% win-rate CI lower bound above EVERY other ranked model's upper "
+                     "bound; else TIE. UNMEASURED = not enough to rank. On win-rate intervals, "
+                     "never path-dependent Elo order.",
         "not_a_certification": True,
         "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds "
-                "(deterministic grader on frozen banks). Honest signals only; thin-n axes say so. "
-                "Measurement, not certification.",
+                "(deterministic grader on frozen banks). Thin-n axes say so. "
+                "scored_items/models/majority_baseline are REGISTER fields about the axis's frozen "
+                "bank, not these rounds. Measurement, not certification.",
         "generated": generated,
     }
+    if drift:
+        body["register_board_drift"] = drift
     if supersedes:
         body["supersedes"] = supersedes
     return norm(body)
@@ -193,6 +285,8 @@ def main():
     ap.add_argument("--leaderboard", default="public/arena/elo_reference.json")
     ap.add_argument("--register-url", default=REGISTER_URL)
     ap.add_argument("--register-file", default=None)
+    ap.add_argument("--board-url", default=BOARD_URL)
+    ap.add_argument("--board-file", default=None, help="a saved GET /api/gspc payload instead of fetching")
     ap.add_argument("--key", default=None, help="city_ed25519 PEM (style B)")
     ap.add_argument("--pod-token-file", default=None, help="board-sign caller token file (style B-DID)")
     ap.add_argument("--did-doc", default=None)
@@ -208,6 +302,11 @@ def main():
     lb = json.load(open(args.leaderboard))
     if not lb.get("per_axis"):
         sys.exit(f"GATE: {args.leaderboard} has no per_axis — refusing to emit signals from nothing")
+    board = json.load(open(args.board_file)) if args.board_file else fetch_json(args.board_url)
+    by_slug = board_rows_by_slug(board)
+    if not by_slug:
+        sys.exit("GATE: the board payload carries no model-comparison axes — refusing to emit "
+                 "signals with no separation authority behind them")
     did_doc = json.load(open(args.did_doc)) if args.did_doc else None
     os.makedirs(args.out, exist_ok=True)
     generated = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -215,7 +314,11 @@ def main():
     for a in axes:
         axis = a["axis"]
         rows = (lb.get("per_axis") or {}).get(axis, [])
-        body = derive_signal(a, rows, lb, generated, previous_signal(args.out, axis))
+        b_entry = board_row_for(axis, by_slug)
+        if b_entry is None:
+            sys.exit(f"GATE: register axis {axis!r} has no board row — refusing to board-sign a "
+                     "signal whose separation authority is unknown")
+        body = derive_signal(a, rows, lb, generated, previous_signal(args.out, axis), b_entry)
         if args.key:
             cid, sig = sign_city(body, args.key)
         else:
@@ -226,13 +329,24 @@ def main():
         open(fp, "w").write(json.dumps(body, indent=1, sort_keys=True, ensure_ascii=False) + "\n")
         index.append({"axis": axis, "status": body["status"], "elo_leader": body["elo_leader"],
                       "elo_top": body["elo_top"]["model"] if body["elo_top"] else None,
-                      "elo_separation": body["elo_separation"], "content_id": cid[:16]})
+                      "elo_separation": body["elo_separation"],
+                      "board_axis": body["separation_authority"]["board_axis"],
+                      "board_separation": body["separation_authority"]["board_separation"],
+                      "board_leader": body["separation_authority"]["board_leader"],
+                      "content_id": cid[:16]})
         print(f"  signed {axis}.signed.json  cid={cid[:16]}  {body['status']:<10} top={index[-1]['elo_top']} leader={body['elo_leader']}")
-    idx = {"schema": "csoai.signals-index/0.2", "signals": index, "generated": generated,
+    idx = {"schema": "csoai.signals-index/0.3", "signals": index, "generated": generated,
            "signer": BOARD_KID if args.pod_token_file else "city_ed25519",
            "elo_source_content_id": lb.get("content_id"),
-           "status_rule": "MEASURED = separated Elo leader on a MEASURED axis; TIE = ranked, not separated; "
-                          "UNMEASURED = not sufficient to rank. A leader is named only when separated."}
+           "board_source": args.board_file or args.board_url,
+           "status_rule":
+               "status is THE BOARD'S separation verdict for the axis, read from GET /api/gspc: "
+               "MEASURED = the board separated a leader; TIE = ranked, not separated; UNTESTED = "
+               "the board publishes no separation determination; UNMEASURED = the axis is not "
+               "MEASURED on the register. elo_separation is a DIFFERENT instrument's verdict over "
+               "recorded pairwise arena rounds and is never the axis's verdict; the two are "
+               "SEPARATE_EVIDENCE and are never reconciled or substituted. Each signal carries "
+               "separation_authority with the board row it defers to."}
     open(os.path.join(args.out, "_index.json"), "w").write(json.dumps(idx, indent=1, ensure_ascii=False) + "\n")
     print(f"SIGNED {len(axes)} per-axis signals -> {args.out}")
 
