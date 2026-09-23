@@ -69,7 +69,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "#machine-surface", label: "The data doors", what: "ten published populations, each with a free preview" },
       { href: "/tools", label: "Tools for the editor you already use", what: "ask the live board from inside your own assistant" },
       { href: "/api-docs", label: "The API", what: "every endpoint, its shape and what it will not claim" },
-      { href: "/assess", label: "Get your own system measured", what: "your run, your signed record, publishing it is your call" },
+      { href: "/contact?arm=run", label: "Ask about measuring your system", what: "a scoped run is arranged by enquiry; the receipt-only API does not start one" },
       { href: "/embed", label: "Put a record on your own site", what: "a badge that re-checks its own signature in each reader's browser" },
     ],
   },

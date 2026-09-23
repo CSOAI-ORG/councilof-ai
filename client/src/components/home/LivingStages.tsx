@@ -588,7 +588,7 @@ function LivingLaw() {
           </ul>
         </>
       )}
-      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/assess", label: "Request a scoped measurement" }} />
+      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/contact?arm=run", label: "Enquire about a scoped run" }} />
     </HeavyBand>
   );
 }

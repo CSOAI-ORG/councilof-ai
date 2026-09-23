@@ -128,13 +128,12 @@ const TOOLS: Tool[] = [
       "You keep the signed card. Publishing it is your decision.",
       "Slots we could not fill stay empty and are named.",
     ],
-    // /assess matches /measure: measurement is metered; verify free. OWNER RULING 6 Sep 2026 — no prices,
-    // no tiers, no payment-processor names anywhere: free, or pay-as-you-go x402 at the 402.
-    // Verify stays free. Do not claim a free signed run on this tile.
-    note: "Measurement is metered; verify stays free.",
+    // /assess currently commissions a receipt over existing evidence. A fresh
+    // scoped run starts with an enquiry, not that x402 receipt workflow.
+    note: "Scoped runs are arranged by enquiry; card verification stays free.",
     image: "/images/detail/evidence_vault_detail.jpg",
     alt: "Clay figures pointing at a card reading “3KB credential” in front of an open vault",
-    door: { kind: "pane", pane: "measured" },
+    door: { kind: "route", path: "/contact?arm=run" },
   },
   {
     id: "tool-gpai",
@@ -318,7 +317,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           )}
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
-            Open this tool
+            {tool.id === "tool-measured" ? "Enquire about a run" : "Open this tool"}
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </div>
