@@ -1,0 +1,43 @@
+# Correction C-2026-0923-01: swarm: the board says the separation of two models is UNTESTED; the board-signed axis signal says SEPARATED, and names a different leader
+
+**Register id C-2026-0923-01. Promoted from draft D-2026-09-23T03-01.** Generated 2026-09-23T03:55:06Z by the arena-separation lane
+(hand-drafted, not detector output). Not published, not merged, no ledger id.
+
+Kind: `measured_surfaces_disagree` - fingerprint `7d98363c444e75d8`
+
+## The byte-sources compared
+
+- **A** (measured): `https://councilof.ai/api/gspc`  
+  sha256 `bcd2ff15b03180106d3ae48ef0be8682da0c1d0976e9624180aededdcd744230` - as_of `2026-09-23T03:55:06Z` (fetched_at (payload carries no as_of))
+- **B** (measured): `https://councilof.ai/signals/swarm.signed.json`  
+  sha256 `4c7cf03085d7baf9ed12814c1ae821cc66b5e0d4ad741aa843675699c41b4bb1` - as_of `2026-09-23T02:35:51Z` (generated (board-signed signal))
+
+## The field
+
+`swarm separation and leader`
+
+```
+was: /api/gspc: separation UNTESTED, leader 'qwen2.5:7b (base model)', n 37
+now: /signals/swarm.signed.json: elo_separation SEPARATED, elo_leader 'nemotron-3-nano:30b', decided games 18
+```
+
+## Why it matters
+
+They are two different determinations over two different corpora — the board's is a paired McNemar test on the 2026-08-12 fleet run, the signal's is a Wilson interval over the hourly arena rounds — and neither surface says so where the other can be read. Nothing here establishes which is right. Recording the disagreement is the point; a surface that is silent about a second published answer is the defect.
+
+## What was wrong
+
+Two surfaces this organisation publishes and signs give different answers to the same question about the same axis. GET /api/gspc reports swarm separation UNTESTED with leader 'qwen2.5:7b (base model)' over n=37. /signals/swarm.signed.json reports elo_separation SEPARATED with elo_leader 'nemotron-3-nano:30b' over 18 decided arena games. A reader asking whether we can tell two models apart on swarm gets two answers and two different model names, both carrying the board signature.
+
+## Proposed remedy (owner decides)
+
+Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). Establishing which surface was right came first, and the answer is that neither was wrong about its own bytes: the board grades a frozen 37-item SwarmBench v2b bank for per-item accuracy, the signal ranks recorded pairwise arena rounds by win-rate, and on this axis the two fleets share no model at all - the board's leader qwen2.5:7b is not among the three models ranked in the arena. Two determinations were wearing one word. Regenerating the signals under the 0.3 all-other-ranked-models rule that landed earlier the same day does NOT resolve it: nemotron-3-nano:30b's Wilson lower bound 0.796 clears both other ranked models' upper bounds (0.513, 0.435), so the arena verdict stays SEPARATED. The disagreement was never a rule-version artefact. The remedy is that one surface stops claiming the axis's separation. scripts/emit_signals.py (schema csoai.axis-signal/0.4) now joins every signal to its board row on the board's own dataset slug, with no typed crosswalk, and defers status and register to the board's separation verdict; it refuses to sign a signal whose board row it cannot find. The arena determination is not discarded: it stays in full in the elo_ fields, scoped by separation_of, by separation_authority (carrying the board's verdict, leader, bench and n) and by evidence_relation SEPARATE_EVIDENCE, which states in the signed bytes that the two are never added, reconciled or substituted. All 14 per-axis signals were regenerated through the producer and re-signed under did:web:csoai.org#board-attestation-1; no signed artifact was edited in place. swarm's published status moves MEASURED to UNTESTED and the superseded bytes are recorded in the new file's supersedes block. Separately, the signal now publishes register_board_drift on swarm rather than carrying the stale count silently: the axis register still describes the retired 40-item PROTOCOL bank while the board serves 37. That row is published as PUBLISHED_NOT_RECONCILED and deliberately not retyped, because reconciling it also requires majority_baseline re-derived on the current bank, which has not been done and is not invented. Four planted controls in scripts/arena/test_arena_controls.py hold the shape, including one that plants arena evidence that separates on an axis the board has not tested and asserts the chain cannot publish it as MEASURED.
+
+## Reproduce
+
+```bash
+curl -sS 'https://councilof.ai/api/gspc' | sha256sum   # expect bcd2ff15b03180106d3ae48ef0be8682da0c1d0976e9624180aededdcd744230
+curl -sS 'https://councilof.ai/signals/swarm.signed.json' | sha256sum   # expect 4c7cf03085d7baf9ed12814c1ae821cc66b5e0d4ad741aa843675699c41b4bb1
+```
+
+Measurement, not a mark of conformity. UNMEASURED, UNTESTED and TIE stay first-class; nothing here is a grade.
