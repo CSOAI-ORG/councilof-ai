@@ -309,10 +309,36 @@ class IntakeTests(unittest.TestCase):
             },
         )
         self.assertEqual(verification["subject"], SUBJECT)
+        self.assertEqual(verification["card_hash_mode"], "canonical-card")
         self.assertEqual(
             json.loads((destination / "candidate.json").read_text())["signature"],
             None,
         )
+
+    def test_legacy_worker_body_id_hash_is_verified_without_rewriting_source(self) -> None:
+        # The deployed 091a616a worker used card.id for run.card_sha256.
+        self.fixture.run["card_sha256"] = self.fixture.card["id"]
+        self.fixture.write_run()
+        original_run = (self.fixture.source / "run.json").read_bytes()
+        original_card = (self.fixture.source / "card-unsigned.json").read_bytes()
+        destination, verification = intake.verify_to_quarantine(
+            self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+        )
+        self.assertEqual(verification["card_hash_mode"], "canonical-body-id-legacy")
+        self.assertEqual(verification["source_hashes"]["card_id"], self.fixture.card["id"])
+        self.assertEqual(
+            verification["source_hashes"]["card_sha256"],
+            intake.sha256_bytes(original_card.rstrip(b"\n")),
+        )
+        self.assertEqual(verification["source_hashes"]["run_sha256"], intake.sha256_bytes(original_run))
+        self.assertEqual((destination / "run.json").read_bytes(), original_run)
+        self.assertEqual((destination / "candidate.json").read_bytes(), original_card)
+        self.assertFalse(verification["authority"]["admitted"])
+
+    def test_unrecognised_declared_card_hash_still_fails_closed(self) -> None:
+        self.fixture.run["card_sha256"] = "0" * 64
+        self.fixture.write_run()
+        self.assert_rejects("CARD_HASH_MISMATCH")
 
     def test_accepts_current_worker_protocol_output(self) -> None:
         workspace = self.root / "current-worker"
