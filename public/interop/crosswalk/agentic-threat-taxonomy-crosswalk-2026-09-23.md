@@ -43,6 +43,12 @@ Four of fifteen classes have a DIRECT axis. Four have no axis at all. Seven are 
 - No bank contains an adversarial human or a live opponent, so T14 cannot be measured by anything on the board.
 - Detection is not prevention. Where an axis grades whether a model NOTICES a hostile input (T11), that is a different quantity from whether a system stops it, and no axis measures the second.
 
+## The other half
+
+A sibling lane maps the same axes the other way: axis to the open tools whose own published material claims to address it, with the axes no open tool addresses called out. Threat class on this side, available remedy on that side; read them together. — `measurement/remediation-crosswalk/2026-09-23/failure-class-to-open-remediation.json`
+
+That file is CC-BY-4.0: it cites the taxonomy's identifiers for navigation and reproduces no prose from it. This file is CC-BY-SA-4.0 because it adapts the taxonomy's class names and structure, and share-alike carries over. Two artifacts, two licences, on purpose — name the artifact, never “the licence”.
+
 ## What this is not
 
 - Not coverage. Relation DIRECT means the axis's task is a measurement of that class's failure mode, at the sample size the board publishes, and nothing more.

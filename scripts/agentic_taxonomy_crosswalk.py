@@ -215,6 +215,20 @@ def build_doc() -> dict:
         "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
         "attribution": ATTRIBUTION,
         "source": SOURCE,
+        "companion": {
+            "artifact": "measurement/remediation-crosswalk/2026-09-23/"
+                        "failure-class-to-open-remediation.json",
+            "what": "A sibling lane maps the same axes the other way: axis to the open tools "
+                    "whose own published material claims to address it, with the axes no open "
+                    "tool addresses called out. Threat class on this side, available remedy on "
+                    "that side; read them together.",
+            "licence_differs_and_why": (
+                "That file is CC-BY-4.0: it cites the taxonomy's identifiers for navigation and "
+                "reproduces no prose from it. This file is CC-BY-SA-4.0 because it adapts the "
+                "taxonomy's class names and structure, and share-alike carries over. Two "
+                "artifacts, two licences, on purpose — name the artifact, never “the licence”."
+            ),
+        },
         "what_this_is": (
             "A mapping from the axes on GET /api/gspc to the threat classes of a published "
             "agentic-risk taxonomy, built to align with that taxonomy's vocabulary. A named "
@@ -324,6 +338,12 @@ def render_md(doc: dict) -> str:
     A("")
     for s in g["structural_limits_behind_the_gaps"]:
         A("- " + s)
+    A("")
+    A("## The other half")
+    A("")
+    A(doc["companion"]["what"] + " — `" + doc["companion"]["artifact"] + "`")
+    A("")
+    A(doc["companion"]["licence_differs_and_why"])
     A("")
     A("## What this is not")
     A("")
