@@ -16,6 +16,10 @@
  * because the prerender writes real HTML per route — every route NOT prerendered
  * was a silent 404.
  *
+ * Usage:
+ *   node scripts/generate-redirects.mjs           # rewrite public/_redirects
+ *   node scripts/generate-redirects.mjs --check   # compare only; NEVER writes; exit 1 on drift
+ *
  * Therefore: EMIT EVERY SPLAT-FREE RULE FIRST, THEN THE SPLAT RULES, CATCH-ALL LAST.
  * That keeps the dynamic budget spent on splats only (currently 11 of 100) and
  * puts the ~136 exact-path rules on the 2000-rule static budget where they belong.
@@ -30,6 +34,27 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/_redirects");
 const FUNCTIONS_DIR = join(ROOT, "functions");
+
+// --check RENDERS TO MEMORY AND COMPARES. It must never touch OUT, for the same reason
+// scripts/llms-txt.mjs --check does not: a check that rewrites its own subject dirties every
+// lane's working tree with a change that lane did not make, and the diff then rides along into
+// an unrelated commit.
+//
+// Until 2026-09-23 this script had NO argv handling at all. `--check` was not unimplemented in
+// the sense of erroring — it was silently ignored, so the flag read as a check and behaved as a
+// regeneration. Anyone who ran it on a clean tree to ask "is _redirects in sync?" got the answer
+// by having the file rewritten underneath them, exit 0 either way. Unknown arguments are now
+// REJECTED rather than ignored, because that silence is what kept the defect invisible: the only
+// visible symptom was an unexplained modified file.
+const ARGS = process.argv.slice(2);
+const CHECK = ARGS.includes("--check");
+const UNKNOWN = ARGS.filter((a) => a !== "--check");
+if (UNKNOWN.length) {
+  console.error(`[redirects] unknown argument(s): ${UNKNOWN.join(" ")}`);
+  console.error("[redirects] usage: node scripts/generate-redirects.mjs [--check]");
+  console.error("[redirects]   (no flag) rewrite public/_redirects;  --check compare only, never write");
+  process.exit(2);
+}
 
 // Function-owned routes must not receive generic bare-to-slash redirects. A
 // sparse checkout without functions/ cannot make that decision safely.
@@ -513,8 +538,23 @@ const lines = [
   "",
 ];
 
-writeFileSync(OUT, lines.join("\n"));
+const rendered = lines.join("\n");
 const nStatic = STATIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length;
 const nDynamic = DYNAMIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length + 1; // +1 catch-all
 console.log(`[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`);
 console.log(`[redirects] ${nStatic} static rules (cap 2000) + ${nDynamic} dynamic rules incl. catch-all (cap 100)`);
+
+if (CHECK) {
+  // Read-only on BOTH branches of the comparison: no writeFileSync, no utimes, nothing that
+  // moves the file's mtime. On drift it reports and exits 1 — it does not "helpfully" fix the
+  // file, because fixing it is what made the check indistinguishable from a regeneration.
+  const committed = existsSync(OUT) ? readFileSync(OUT, "utf8") : "";
+  if (committed !== rendered) {
+    console.error("\u2716 public/_redirects does not match what this script derives from client/src/App.tsx.");
+    console.error("   Regenerate and commit the result:  node scripts/generate-redirects.mjs");
+    process.exit(1);
+  }
+  console.log(`\u2713 public/_redirects matches its producer (${nStatic} static + ${nDynamic} dynamic)`);
+} else {
+  writeFileSync(OUT, rendered);
+}
