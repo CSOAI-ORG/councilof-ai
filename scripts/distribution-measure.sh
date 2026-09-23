@@ -80,3 +80,25 @@ else
 fi
 
 log distribution-measure "RESULT rc=0 | $(grep '^RESULT' "$RUN_LOG" | tail -1)"
+
+# The measured branch is not a public release. A separate worker checks its
+# dated bytes, refreshes the two discovery texts, and uses the pod's existing
+# build and Cloudflare gates. This is deliberately queued only after a real
+# branch push; smoke runs and failed pushes cannot trigger publication.
+if [ "$PUSH" = "1" ]; then
+  if [ "${push:-skipped}" = "skipped" ]; then
+    log distribution-measure "RELEASE skipped: artifact already byte-identical to master"
+  elif [ "$push" != "0" ]; then
+    log distribution-measure "RELEASE HOLD: branch push failed; no public release queued"
+    exit 1
+  elif [ "${DISTRIBUTION_AUTO_RELEASE:-1}" != "1" ]; then
+    log distribution-measure "RELEASE disabled by DISTRIBUTION_AUTO_RELEASE"
+  elif [ ! -s "$LOOPS/distribution-release.py" ]; then
+    log distribution-measure "RELEASE HOLD: installed worker absent at $LOOPS/distribution-release.py"
+    exit 1
+  else
+    nohup python3 "$LOOPS/distribution-release.py" "$(date -u +%Y-%m-%d)" \
+      >"$LOGS/distribution-release.run.log" 2>&1 < /dev/null &
+    log distribution-measure "RELEASE queued pid=$!; public result requires separate SERVED receipt"
+  fi
+fi
