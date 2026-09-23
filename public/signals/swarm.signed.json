@@ -1,7 +1,7 @@
 {
  "axis": "swarm",
  "axis_status": "MEASURED",
- "content_id": "a9a09fb1a606c613c6451a7ede9c607cba84853b6e1eef98d4de4c7206a95935",
+ "content_id": "d27c8b02a0ddfeb4eec86fd4293d00e0cd181c2367e0b12591ef9c6863575b59",
  "elo_decided_games": 18,
  "elo_leader": "nemotron-3-nano:30b",
  "elo_leader_score": 1662.7,
@@ -18,8 +18,8 @@
  },
  "elo_separation": "SEPARATED",
  "elo_source": {
-  "content_id": "9835419f56b41d82148d51eb69aff3a9aec473e923225aa39546ae948f22bef3",
-  "generated": "2026-09-23T06:36:54Z",
+  "content_id": "9b8683e481d1b98a02b0871a3239b3203c1c1f400bc681159bcc4c475152b278",
+  "generated": "2026-09-23T08:40:09Z",
   "path": "/arena/elo_reference.json",
   "schema": "csoai.arena-elo-reference/0.2"
  },
@@ -37,7 +37,7 @@
  "evidence_relation": "SEPARATE_EVIDENCE",
  "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader qwen2.5:7b is NOT among the models ranked here (nemotron-3-nano:30b, gemma3:12b, mistral:7b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
  "games_leader": 15,
- "generated": "2026-09-23T06:36:55Z",
+ "generated": "2026-09-23T08:40:11Z",
  "majority_baseline": 0.04,
  "models": 19,
  "not_a_certification": true,
@@ -69,21 +69,21 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "a9a09fb1a606c613c6451a7ede9c607cba84853b6e1eef98d4de4c7206a95935",
+  "content_id": "d27c8b02a0ddfeb4eec86fd4293d00e0cd181c2367e0b12591ef9c6863575b59",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "a9a09fb1a606c613c6451a7ede9c607cba84853b6e1eef98d4de4c7206a95935",
+  "payload_sha256": "d27c8b02a0ddfeb4eec86fd4293d00e0cd181c2367e0b12591ef9c6863575b59",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "64161d9d880ee8c28c3321cc5e29fe2cc695ce8f6628026d9b3c8db096f2acd14fd48f4cad6bea38643acb4450ea3ed3a89bb6543bd65c5a9ec825ace21deb0a",
-  "signed_at": "2026-09-23T06:36:58.495Z",
+  "sig_ed25519": "a8ec4901933b431faaee7caa7c46b5dcaf72f73564338dd5d4a31e4f27df339d3be89904d4d0d274da6d8c3aa565278f6d7b18a6f7a0df0e3d6e21cfe430d10d",
+  "signed_at": "2026-09-23T08:40:24.864Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "UNTESTED",
  "supersedes": {
-  "content_id": "668b8d07defed15b470d032ca64cd9e0ccda56d57546c424b948d3062ad7b9f5",
+  "content_id": "a9a09fb1a606c613c6451a7ede9c607cba84853b6e1eef98d4de4c7206a95935",
   "elo_leader_then": "nemotron-3-nano:30b",
-  "generated": "2026-09-23T05:21:59Z",
+  "generated": "2026-09-23T06:36:55Z",
   "note": "superseded, never edited; new bytes, new signature",
   "signer": "did:web:csoai.org#board-attestation-1",
   "status_then": "UNTESTED"
