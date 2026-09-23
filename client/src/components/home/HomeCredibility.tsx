@@ -114,7 +114,7 @@ export function credibilityTiles(input: {
     },
     {
       id: "recheck",
-      claim: "Anyone can re-check any of it, for nothing",
+      claim: "Anyone can re-check our signed cards, for nothing",
       figure: cards ? nf.format(cards.value) : null,
       unit: cards ? `signed records verified — kind: ${cards.kind}` : "signed records verified",
       caveat:
@@ -131,7 +131,7 @@ export function credibilityTiles(input: {
         ? `the lowest fleet mean on the board — the ${weak.axis} axis, published like every other`
         : "the lowest fleet mean on the board",
       caveat:
-        "A measurement body that publishes only its wins is a marketing department. One of our own low scores is further down this page, signed like every other record.",
+        "A measurement body that publishes only its wins is a marketing department. One of our own low scores is further down this page as a signed card; supporting runs elsewhere may be unsigned and are labelled as such.",
       href: "#weak-score",
       cta: "See one of our own low scores",
       failure: input.board.error ?? undefined,

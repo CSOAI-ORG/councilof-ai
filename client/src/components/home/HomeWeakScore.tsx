@@ -30,7 +30,7 @@ import { fetchPinnedCardKey, verifyCard, type CardVerdict } from "@/lib/cardVeri
  * NOT "the lowest" - that superlative was on this page until it was counted, and it was wrong.
  * Across all 335 signed bodies the minimum accuracy is 0.0, not this one: eighty-five records
  * sit at zero. What this card is, exactly, is a single-digit score on a model we trained
- * ourselves, signed under the same key as every other result and still on the board. Three
+ * ourselves, signed under the published card key and still on the board. Three
  * cards share this accuracy on this axis; this is the one whose chain begins at genesis.
  */
 export const WEAK_CARD_ID = "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c";

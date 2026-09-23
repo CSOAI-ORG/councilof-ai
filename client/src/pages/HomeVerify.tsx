@@ -7,14 +7,15 @@
  * nobody reaches is a band whose staleness nobody reports. Shortening the page is therefore not
  * cosmetic; it is what makes the lower material maintainable at all.
  *
- * THE ORDER IS THE ARGUMENT, and it is now five bands:
+ * THE ORDER IS THE ARGUMENT, with a compact distribution evidence band before the board:
  *   1. HomeHero        - what we do, for whom, and what is measured right now, off the live board.
  *   2. HomeCredibility - the six things a stranger can check about us before trusting a number,
  *                        each with a live figure behind it.
- *   3. The board       - every row, every word, every number off GET /api/gspc at render time,
+ *   3. HomeDistribution - dated gross package-download events, not adoption or customers.
+ *   4. The board       - every row, every word, every number off GET /api/gspc at render time,
  *                        with the composer under it.
- *   4. HomeWeakScore   - one of our own low scores, verified in the reader's own browser.
- *   5. Participation   - the standards record, as text with evidence, never as a logo row.
+ *   5. HomeWeakScore   - one of our own low scores, verified in the reader's own browser.
+ *   6. Participation   - the standards record, as text with evidence, never as a logo row.
  *   Then a six-card hand-off to the pages that hold everything else.
  *
  * WHAT WAS RETIRED FROM THIS PAGE AND WHERE IT WENT (align, do not delete). All eight bands
@@ -35,8 +36,8 @@
  * separation fields live or renders nothing - it never assumes a zero it did not read.
  *
  * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the verified-record
- * count from /api/state, the ledger count from /api/corrections, the timestamp split from the
- * OpenTimestamps door's own free preview, and the participation count from the committed
+ * count from /api/state, the ledger count from /api/corrections, package counters from
+ * /api/footprint, the timestamp split from the OpenTimestamps door's own free preview, and the participation count from the committed
  * memberships manifest. Each shows an em dash until it lands and says so in words if it never does.
  */
 import { useEffect, useState } from "react";
@@ -46,6 +47,7 @@ import HomeComposer from "@/components/home/HomeComposer";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeHero from "@/components/home/HomeHero";
 import HomeCredibility from "@/components/home/HomeCredibility";
+import HomeDistribution from "@/components/home/HomeDistribution";
 import HomeWeakScore from "@/components/home/HomeWeakScore";
 import { useCorrections, useEstateState, usePopulationDoors } from "@/components/home/useHomeReads";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
@@ -68,7 +70,7 @@ const HOME_LD = {
       url: "https://councilof.ai",
       identifier: "UK Companies House 16939677",
       description:
-        "Independent measurement of how AI systems behave. Every result is published as an Ed25519-signed record anyone can re-verify for free. Measurement, not certification: no conformity mark is issued and no accreditation chain stands behind it.",
+        "Independent measurement of how AI systems behave. Issued measurement cards carry Ed25519 signatures and can be checked for free; supporting runs disclose when they are unsigned. Measurement, not certification: no conformity mark is issued and no accreditation chain stands behind it.",
       email: "contact@csoai.org",
       address: {
         "@type": "PostalAddress",
@@ -103,7 +105,7 @@ const HOME_LD = {
           name: "What does Council of AI actually do?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "It runs AI systems against frozen, published tests, grades every answer by a fixed rule rather than by another AI, and publishes each result as an Ed25519-signed record. The live board is at https://councilof.ai/api/gspc.",
+            text: "It runs AI systems against frozen, published tests and grades answers by fixed rules rather than by another AI. Issued measurement cards are Ed25519-signed; supporting runs are labelled when unsigned. The live board is at https://councilof.ai/api/gspc.",
           },
         },
         {
@@ -157,7 +159,7 @@ export default function HomeVerify() {
   useEffect(() => {
     document.title = "Council of AI — independent measurement of AI systems, signed and free to re-check";
     setMetaDescription(
-      "We measure how AI systems behave against frozen, published tests, sign every result, and publish it where anyone can re-verify it for free. Read the live board, check a record yourself, and see every claim we have corrected.",
+      "We measure how AI systems behave against frozen, published tests and publish checkable evidence. Issued measurement cards are signed; unsigned supporting runs are labelled. Read the live board and corrections ledger.",
     );
   }, []);
 
@@ -171,6 +173,7 @@ export default function HomeVerify() {
         corrections={corrections}
         ots={doors["ots-proofs"]?.payload ?? null}
       />
+      <HomeDistribution />
 
       {/* The board: every row, every word, every number off GET /api/gspc at render time. */}
       <section

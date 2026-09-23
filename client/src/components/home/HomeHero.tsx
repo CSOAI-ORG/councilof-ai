@@ -179,14 +179,14 @@ export default function HomeHero({
         >
           We measure how AI systems behave,
           <span className="block bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-200 bg-clip-text text-transparent">
-            and sign the answer so you never take our word for it.
+            and publish the evidence so you can check it yourself.
           </span>
         </h1>
 
         <p className="mt-6 max-w-2xl text-lg leading-[1.55] text-emerald-50/90 sm:text-xl">
-          Frozen, published tests. Every answer graded by a rule, never by another AI. Every
-          result signed, and free for anyone to re-check — forever, without an account. What we
-          have not measured, the board says so.
+          Frozen, published tests. Answers are graded by a rule, never by another AI. We sign
+          the measurement cards we issue and label supporting runs that are unsigned. Check
+          the evidence for free, without an account. What we have not measured, the board says so.
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">

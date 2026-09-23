@@ -249,6 +249,7 @@ export function BoardStrip({
   const [expanded, setExpanded] = useState(initiallyExpanded);
   const [view, setView] = useState<"list" | "table">(initialView);
   const listId = useId();
+  const scrollHintId = `${listId}-scroll-hint`;
   const rows = visibleAxes(axes, expanded);
   const hidden = axes.length - Math.min(axes.length, STRIP_N);
 
@@ -270,8 +271,12 @@ export function BoardStrip({
       </div>
 
       {view === "table" ? (
-        <div className="mt-2 overflow-x-auto rounded-xl border border-slate-200 dark:border-emerald-900/40">
-          <table className="w-full min-w-[40rem]" data-testid="board-table" id={listId}>
+        <>
+          <p id={scrollHintId} className="mt-2 text-xs text-slate-600 dark:text-emerald-100/70 sm:hidden">
+            Swipe sideways to read all columns, or choose List view for a compact layout.
+          </p>
+          <div className="mt-2 overflow-x-auto rounded-xl border border-slate-200 dark:border-emerald-900/40" role="region" tabIndex={0} aria-label="Scrollable GSPC axis table" aria-describedby={scrollHintId}>
+            <table className="w-full min-w-[64rem]" data-testid="board-table" id={listId}>
             <caption className="sr-only">Every board axis with its n, status, separation and public leader state.</caption>
             <thead className="bg-slate-50 dark:bg-white/5">
               <tr>
@@ -287,10 +292,10 @@ export function BoardStrip({
             <tbody>
               {rows.map((a) => (
                 <tr key={a.axis} data-axis-row={a.axis} className="border-t border-slate-100 dark:border-emerald-900/30">
-                  <td className={`${td} font-semibold`}>{boardAxisLabel(a.axis)}</td>
-                  <td className={td}>{String(a.kind ?? "")}</td>
-                  <td className={td}>{nText(a)}</td>
-                  <td className={td}>{String(a.status ?? "UNMEASURED")}</td>
+                  <td className={`${td} whitespace-nowrap font-semibold`}>{boardAxisLabel(a.axis)}</td>
+                  <td className={`${td} whitespace-nowrap`}>{String(a.kind ?? "")}</td>
+                  <td className={`${td} whitespace-nowrap`}>{nText(a)}</td>
+                  <td className={`${td} whitespace-nowrap`}>{String(a.status ?? "UNMEASURED")}</td>
                   <td className={td}>{separationLabel(a)}</td>
                   <td className={td}>
                     <LeaderText a={a} />
@@ -307,8 +312,9 @@ export function BoardStrip({
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </>
       ) : (
         <ol id={listId} className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3" aria-label="Board axes in board order; position is layout, not rank">
           {rows.map((a) => {
@@ -501,9 +507,9 @@ export default function HomeGspcBoard({
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 id="home-gspc-board-h" className="text-xl font-bold">
+          <h1 id="home-gspc-board-h" className="text-xl font-bold">
             GSPC board
-          </h2>
+          </h1>
           <p className="mt-1 text-sm font-semibold text-emerald-800 dark:text-emerald-300" data-testid="gspc-public-count">
             {error
               ? "Board is unreachable right now. Empty stays empty."

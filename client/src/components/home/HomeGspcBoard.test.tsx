@@ -250,6 +250,9 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
   it("table view carries the same rows", () => {
     const table = renderToStaticMarkup(<BoardStrip axes={payload.axes as GspcAxis[]} initiallyExpanded initialView="table" />);
     expect(table).toContain('data-testid="board-table"');
+    expect(table).toContain('aria-label="Scrollable GSPC axis table"');
+    expect(table).toContain('tabindex="0"');
+    expect(table).toContain("Swipe sideways to read all columns");
     expect(rowCount(table)).toBe(payload.axes!.length);
     expect(table).toContain('data-leader-state="EXCLUDED_OWN_MODEL"');
     expect(table).toContain("deterministic facts · no leader accuracy");
