@@ -306,6 +306,26 @@ def test_kaggle_page_text_is_derived_from_the_truth_only():
     assert not spray.BANNED.search(description)
 
 
+def test_zenodo_record_text_names_the_category_and_cites_its_doi(tmp_path):
+    """Reachable without a token, which is the point: this text used to be built half-way through
+    minting a version, with the files already uploaded, so nothing could read it until it was live."""
+    import json
+    truth = _truth()
+    truth["root"] = {"card_count": 168, "merkle_root": "ab" * 32}
+    (tmp_path / "SNAPSHOT.json").write_text(json.dumps({"counts": {
+        "slots": 23, "by_status": {"MEASURED": 23}, "by_kind": {"model-comparison": 14, "deterministic-facts": 9},
+        "separation_over_model_comparison": {"SEPARATED": 3, "TIE": 11},
+    }}))
+    desc, related = spray.zenodo_record_text(truth, tmp_path)
+    cm = truth["claim_maintenance"]
+    assert cm["spec"]["name"] in desc and cm["spec"]["canonical_url"] in desc and cm["spec"]["doi"] in desc
+    assert cm["register_as_of"] in desc
+    for name in spray.SPEC_FILES:
+        assert name in desc, f"the record's file list does not mention {name}"
+    assert {"identifier": cm["spec"]["doi"], "relation": "references", "scheme": "doi"} in related
+    assert spray.BANNED.search(desc) is None
+
+
 def test_kaggle_metadata_drift_is_none_when_the_page_matches_modulo_whitespace():
     subtitle, description = spray.kaggle_page_text(_truth())
     info = {"subtitle": subtitle, "description": description.replace("\n\n", "\n")}

@@ -1347,6 +1347,55 @@ def zenodo_token() -> str | None:
     return f.read_text().strip() if f.exists() else None
 
 
+def zenodo_record_text(tr: dict, snap: Path) -> tuple[str, list[dict]]:
+    """The Zenodo record's description and related identifiers, derived from the captured truth only.
+
+    Pulled out of the publish path deliberately: everything below used to be reachable only with a live
+    token, half-way through minting a version, with the files already uploaded. A pure function is a
+    function the tests can read."""
+    counts = json.loads((snap / "SNAPSHOT.json").read_text())["counts"]
+    st = counts["by_status"]
+    cm = tr["claim_maintenance"]
+    cm_spec, cm_counted = cm["spec"], cm["register_counts"]["counted"]
+    desc = (
+        f"<p><strong>The live board at <a href=\"{BOARD_URL}\">{BOARD_URL}</a> is the authority.</strong> This record is a "
+        f"snapshot of that GET, read at {tr['read_at']} and aligned to the transparency root published at {tr['as_of']}. "
+        "If the live GET and these files disagree, the live GET wins. A fetch that fails is <code>UNCHECKABLE</code> — "
+        "never a fabricated 0.</p>"
+        f"<p><strong>Lid:</strong> {tr['lid']}</p>"
+        f"<p>Derived from the axis array, never typed: {counts['slots']} slots; "
+        + "; ".join(f"{k} {v}" for k, v in sorted(st.items()))
+        + f"; model-comparison {counts['by_kind'].get('model-comparison', 0)}, deterministic-fact "
+          f"{counts['by_kind'].get('deterministic-facts', 0)}; separation over the model-comparison axes "
+        + ", ".join(f"{k} {v}" for k, v in sorted(counts['separation_over_model_comparison'].items()))
+        + f". Transparency root: {tr['root']['card_count']} signed cards, merkle_root <code>{tr['root']['merkle_root']}</code>.</p>"
+        f"<p>Files: board.json and root.json are the live bytes, unmodified; SNAPSHOT.json carries digests, derived counts and "
+        "frozen-bank row counts; gspc-axes.csv/.jsonl one row per slot; check-board.sh re-derives the totals and recomputes "
+        f"the Merkle root; README.md explains how a stranger verifies; {SPEC_DOC_NAME}, {SPEC_JSON_NAME}, "
+        f"{SPEC_SCHEMA_NAME} and {SPEC_REGISTER_NAME} carry the specification below and its register.</p>"
+        f"<p><strong>{cm_spec['name']} {cm['version']}</strong> — the category of the claim files in this record: the "
+        "continuous, independent observation of the public claims an organisation makes about itself. Canonical URL: "
+        f"<a href=\"{cm_spec['canonical_url']}\">{cm_spec['canonical_url']}</a> · DOI: "
+        f"<a href=\"{cm_spec['doi_url']}\">{cm_spec['doi']}</a> · concept DOI {cm_spec['concept_doi']} · licence "
+        f"{cm_spec['licence']}. The register is carried at its own as_of {cm['register_as_of']}: "
+        f"{cm_counted['subjects']} subjects, {cm_counted['claims']} claims. A listing in it is neither an endorsement "
+        "nor an accusation.</p>"
+        f"<p>Verify a card, free, no account: <a href=\"{VERIFY_URL}\">{VERIFY_URL}</a> · by hand: "
+        f"<a href=\"{HOWTO_URL}\">{HOWTO_URL}</a> · keys via did:web:csoai.org.</p>"
+        "<p>Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.</p>"
+        f"<p>Derived from the methodology record <a href=\"https://doi.org/{ZENODO_METHODOLOGY_DOI}\">{ZENODO_METHODOLOGY_DOI}</a>. "
+        f"spray-fingerprint: {tr['fingerprint']}</p>"
+    )
+    related = [{"identifier": ZENODO_METHODOLOGY_DOI, "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "publication-report"},
+               # The record carries the specification's bytes, so it cites the specification's own DOI.
+               {"identifier": cm_spec["doi"], "relation": "references", "scheme": "doi"},
+               {"identifier": BOARD_URL, "relation": "isSupplementTo", "scheme": "url"},
+               {"identifier": f"https://github.com/{GITHUB_REPO}", "relation": "isSupplementTo", "scheme": "url"},
+               {"identifier": f"https://huggingface.co/spaces/{HF_SPACE}", "relation": "isSupplementTo", "scheme": "url"},
+               {"identifier": f"https://www.kaggle.com/datasets/{KAGGLE_ID}", "relation": "isSupplementTo", "scheme": "url"}]
+    return desc, related
+
+
 def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     concept_url = f"https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}"
     token = zenodo_token()
@@ -1400,48 +1449,9 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
             return [result("zenodo", "FAILED", f"https://zenodo.org/deposit/{did}", detail=f"upload {name} HTTP {status}: {body[:200]!r}")]
     # 3. metadata
     prev = latest["metadata"]
-    counts = json.loads((snap / "SNAPSHOT.json").read_text())["counts"]
-    st = counts["by_status"]
-    cm = tr["claim_maintenance"]
-    cm_spec, cm_counted = cm["spec"], cm["register_counts"]["counted"]
-    desc = (
-        f"<p><strong>The live board at <a href=\"{BOARD_URL}\">{BOARD_URL}</a> is the authority.</strong> This record is a "
-        f"snapshot of that GET, read at {tr['read_at']} and aligned to the transparency root published at {tr['as_of']}. "
-        "If the live GET and these files disagree, the live GET wins. A fetch that fails is <code>UNCHECKABLE</code> — "
-        "never a fabricated 0.</p>"
-        f"<p><strong>Lid:</strong> {tr['lid']}</p>"
-        f"<p>Derived from the axis array, never typed: {counts['slots']} slots; "
-        + "; ".join(f"{k} {v}" for k, v in sorted(st.items()))
-        + f"; model-comparison {counts['by_kind'].get('model-comparison', 0)}, deterministic-fact "
-          f"{counts['by_kind'].get('deterministic-facts', 0)}; separation over the model-comparison axes "
-        + ", ".join(f"{k} {v}" for k, v in sorted(counts['separation_over_model_comparison'].items()))
-        + f". Transparency root: {tr['root']['card_count']} signed cards, merkle_root <code>{tr['root']['merkle_root']}</code>.</p>"
-        f"<p>Files: board.json and root.json are the live bytes, unmodified; SNAPSHOT.json carries digests, derived counts and "
-        "frozen-bank row counts; gspc-axes.csv/.jsonl one row per slot; check-board.sh re-derives the totals and recomputes "
-        f"the Merkle root; README.md explains how a stranger verifies; {SPEC_DOC_NAME}, {SPEC_JSON_NAME}, "
-        f"{SPEC_SCHEMA_NAME} and {SPEC_REGISTER_NAME} carry the specification below and its register.</p>"
-        f"<p><strong>{cm_spec['name']} {cm['version']}</strong> — the category of the claim files in this record: the "
-        "continuous, independent observation of the public claims an organisation makes about itself. Canonical URL: "
-        f"<a href=\"{cm_spec['canonical_url']}\">{cm_spec['canonical_url']}</a> · DOI: "
-        f"<a href=\"{cm_spec['doi_url']}\">{cm_spec['doi']}</a> · concept DOI {cm_spec['concept_doi']} · licence "
-        f"{cm_spec['licence']}. The register is carried at its own as_of {cm['register_as_of']}: "
-        f"{cm_counted['subjects']} subjects, {cm_counted['claims']} claims. A listing in it is neither an endorsement "
-        "nor an accusation.</p>"
-        f"<p>Verify a card, free, no account: <a href=\"{VERIFY_URL}\">{VERIFY_URL}</a> · by hand: "
-        f"<a href=\"{HOWTO_URL}\">{HOWTO_URL}</a> · keys via did:web:csoai.org.</p>"
-        "<p>Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.</p>"
-        f"<p>Derived from the methodology record <a href=\"https://doi.org/{ZENODO_METHODOLOGY_DOI}\">{ZENODO_METHODOLOGY_DOI}</a>. "
-        f"spray-fingerprint: {tr['fingerprint']}</p>"
-    )
+    desc, related = zenodo_record_text(tr, snap)
     if BANNED.search(desc):
         return [result("zenodo", "FAILED", concept_url, detail="description would carry a banned word")]
-    related = [{"identifier": ZENODO_METHODOLOGY_DOI, "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "publication-report"},
-               # The record carries the specification's bytes, so it cites the specification's own DOI.
-               {"identifier": cm_spec["doi"], "relation": "references", "scheme": "doi"},
-               {"identifier": BOARD_URL, "relation": "isSupplementTo", "scheme": "url"},
-               {"identifier": f"https://github.com/{GITHUB_REPO}", "relation": "isSupplementTo", "scheme": "url"},
-               {"identifier": f"https://huggingface.co/spaces/{HF_SPACE}", "relation": "isSupplementTo", "scheme": "url"},
-               {"identifier": f"https://www.kaggle.com/datasets/{KAGGLE_ID}", "relation": "isSupplementTo", "scheme": "url"}]
     meta = {
         "title": f"GSPC board snapshot, {tr['as_of']} — {tr['lid']}",
         "upload_type": "dataset",
