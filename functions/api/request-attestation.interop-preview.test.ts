@@ -117,3 +117,56 @@ describe("free x402 preview: separate interop corpus", () => {
     expect(body.csoai.preview.interop_collection.matching_active_leaves).toBe(2);
   });
 });
+
+describe("interop preview fetch cost and subject scope", () => {
+  it("reads the small pointer each time but reuses one verified root across subjects", async () => {
+    const nextRoot = { ...root, as_of: "2026-09-23T14:20:19Z" };
+    const raw = JSON.stringify(nextRoot);
+    const sha = createHash("sha256").update(raw).digest("hex");
+    const nextPointer = { ...pointer, as_of: nextRoot.as_of, root_sha256: sha };
+    let pointerReads = 0;
+    let rootReads = 0;
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === origin + "/signed/card-matrix.json") return Response.json({ as_of: asOf, cells: [] });
+      if (url === origin + "/interop/card-root-latest.json") {
+        pointerReads++;
+        return Response.json(nextPointer);
+      }
+      if (url === origin + rootPath) {
+        rootReads++;
+        return new Response(raw);
+      }
+      throw new Error("unexpected fetch " + url);
+    }));
+    const first = await call();
+    const second = await call();
+    expect(first.body.csoai.preview.interop_collection.matching_active_leaves).toBe(2);
+    expect(second.body.csoai.preview.interop_collection.matching_active_leaves).toBe(2);
+    expect(pointerReads).toBe(2);
+    expect(rootReads).toBe(1);
+    expect(first.body.csoai.preview.interop_collection.match_basis).toBe("CASE_INSENSITIVE_MODEL_SUBSTRING");
+  });
+
+  it("reports an oversized root as uncheckable without reading or claiming a zero count", async () => {
+    const oversizedPointer = { ...pointer, root_sha256: "e".repeat(64) };
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url === origin + "/signed/card-matrix.json") return Response.json({ as_of: asOf, cells: [] });
+      if (url === origin + "/interop/card-root-latest.json") return Response.json(oversizedPointer);
+      if (url === origin + rootPath) return new Response("not read", {
+        headers: { "content-length": String(8 * 1024 * 1024 + 1) },
+      });
+      throw new Error("unexpected fetch " + url);
+    }));
+    const { response, body } = await call();
+    expect(response.status).toBe(402);
+    expect(body.csoai.preview.interop_collection).toMatchObject({
+      state: "UNCHECKABLE",
+      matching_active_leaves: null,
+      root_active_leaves: null,
+      reason: "source exceeds byte limit",
+      included_in_paid_reserve: false,
+    });
+  });
+});
