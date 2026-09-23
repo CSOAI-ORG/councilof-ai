@@ -442,21 +442,14 @@ try {
 // route-manifest; prerendering it writes a 300-char THIN snapshot and fails deploy.
 // #888 only removed the MUST entry — the route still arrived via discovery.
 const FUNCTION_308 = new Set(["/pricing-legacy", "/.well-known/x402"]);
-// Pages whose content is third-party text derived live at load (open PR titles from
-// api.github.com on /merge-me) must never be baked: a snapshot freezes whatever a lane typed
-// into a PR title as a public claim. 2026-09-14 01:30Z — deploy 34795144188 failed the facts
-// gate because /merge-me's snapshot carried "9 axes" from PR #2210's title. Served as the SPA
-// shell instead; the page still hydrates and reads live.
-const LIVE_ONLY = new Set(["/merge-me"]);
 const normRoute = (r) => r.split("?")[0].replace(/\/$/, "") || "/";
 
 const discovered = discover();
 const skippedStatic = discovered.filter(publicOwns);
 const skippedRedirect = discovered.filter((r) => !publicOwns(r) && REDIRECTED_ELSEWHERE.has(normRoute(r)));
 const skippedFn308 = discovered.filter((r) => !publicOwns(r) && FUNCTION_308.has(normRoute(r)));
-const skippedLive = discovered.filter((r) => LIVE_ONLY.has(normRoute(r)));
 const routes = discovered.filter(
-  (r) => !skippedStatic.includes(r) && !skippedRedirect.includes(r) && !skippedFn308.includes(r) && !skippedLive.includes(r),
+  (r) => !skippedStatic.includes(r) && !skippedRedirect.includes(r) && !skippedFn308.includes(r),
 );
 // Routes written as dir/index.html: an alias canonical naming one without its slash 308s, so the
 // rewrite names the served URL (scripts/surface/canonical-url.mjs). public/-owned files are excluded.
@@ -464,8 +457,6 @@ const SERVED_ROUTES = new Set(routes.map(normRoute));
 // Per-route <title> + meta description for client-only shells, read from client/src/data/seo-head.json —
 // the same map the app applies at runtime (scripts/surface/route-title.mjs, client/src/lib/seoHead.ts).
 const ROUTE_HEAD_MAP = loadRouteHeads();
-if (skippedLive.length)
-  console.log(`prerender: ${skippedLive.length} route(s) skipped — content is derived live from a third-party API and must not be baked: ${skippedLive.join(", ")}`);
 if (skippedStatic.length)
   console.log(`prerender: ${skippedStatic.length} route(s) skipped — public/ already owns the file: ${skippedStatic.join(", ")}`);
 if (skippedRedirect.length)

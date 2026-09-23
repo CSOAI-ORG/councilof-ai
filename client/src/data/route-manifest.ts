@@ -1328,11 +1328,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Meok Law"
  },
  {
-  "path": "/merge-me",
-  "comp": "MergeMe",
-  "title": "Merge Me"
- },
- {
   "path": "/methodology",
   "comp": "Methodology",
   "title": "Methodology"

@@ -128,7 +128,6 @@ const YieldInternal = lazy(() => import("./pages/YieldInternal"));
 const YieldDashboard = lazy(() => import("./pages/YieldDashboard"));
 const ClaritySpecimen = lazy(() => import("./pages/ClaritySpecimen"));
 const CustodyDisclosure = lazy(() => import("./pages/CustodyDisclosure"));
-const MergeMe = lazy(() => import("./pages/MergeMe"));
 const HealthInventory = lazy(() => import("./pages/HealthInventory"));
 const RlusdSpecimen = lazy(() => import("./pages/RlusdSpecimen"));
 const Rlusd = lazy(() => import("./pages/Rlusd"));
@@ -1091,7 +1090,6 @@ function App() {
                   <Route path="/feed" component={ContentReviewNotice} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
-                  <Route path="/merge-me" component={MergeMe} />
                   <Route path="/specimens/clarity" component={ClaritySpecimen} />
                   <Route path="/specimens/rlusd" component={RlusdSpecimen} />
                   <Route path="/rlusd" component={Rlusd} />
