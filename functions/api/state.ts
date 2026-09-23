@@ -723,10 +723,11 @@ export const onRequestGet: PagesFunction = async () => {
       pubkey: (cardIndex as any).pubkey ?? null,
       how_to_verify: {
         steps: [
-          "1. Fetch /signed/card_index.json — the index and its chain head.",
-          "2. Fetch /.well-known/did.json — the estate's published keys. Trust anchors HERE, not in the payload.",
-          "3. Verify each card's Ed25519 signature against the kid on its entry.",
-          "4. Re-walk the SHA-256 hash chain and check it terminates at `head`.",
+          "1. Fetch /signed/card_index.json for card URLs and IDs. Its head field is not a signed sequence proof.",
+          "2. Fetch /signed/chain.json and verify the manifest envelope's ID and Ed25519 signature; this is the separately signed sequence declaration.",
+          "3. Fetch /.well-known/did.json and pin the card-attestation key independently of the payload.",
+          "4. Fetch each card, recompute its SHA-256 ID from the specified canonical body bytes, and verify its Ed25519 signature under that key.",
+          "5. Compare manifest links with each signed card body's prev, walk head to genesis_prev, reconcile IDs with the index, and report any withheld bodies separately.",
         ],
         offline: "The whole path runs offline. It needs neither our servers nor our permission.",
         guide: "/signed/HOW-TO-VERIFY.md",
