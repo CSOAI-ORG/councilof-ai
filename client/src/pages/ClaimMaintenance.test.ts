@@ -61,7 +61,7 @@ describe("/claim-maintenance — the page states the category and links every ar
       "/api/claims/register",
       "/spec/claim-maintenance/register.json",
       "/api/corrections",
-      "scripts/claim-capture.mjs",
+      "/spec/claim-maintenance/v0.1/reference/claim-capture.mjs",
     ]) {
       expect(page, `page does not link ${href}`).toContain(href);
     }
@@ -143,4 +143,15 @@ describe("the published specification is citable and self-describing", () => {
     expect(deposit.does_not_prove.join(" ")).toMatch(/not a review/);
     expect(page).toMatch(/does not make it right/);
   });
+});
+
+// Same-site source distribution is an exact copy, not a rewritten implementation.
+it("downloads the existing reference without GitHub and pins its bytes", async () => {
+  const { createHash } = await import("node:crypto");
+  const original = readFileSync(resolve(ROOT, "scripts/claim-capture.mjs"));
+  const served = readFileSync(resolve(ROOT, "public/spec/claim-maintenance/v0.1/reference/claim-capture.mjs"));
+  const manifest = JSON.parse(readFileSync(resolve(ROOT, "public/spec/claim-maintenance/v0.1/reference/manifest.json"), "utf8"));
+  expect(served.equals(original)).toBe(true);
+  expect(manifest.files["claim-capture.mjs"].sha256).toBe(createHash("sha256").update(served).digest("hex"));
+  expect(page).not.toContain("git clone https://github.com/");
 });

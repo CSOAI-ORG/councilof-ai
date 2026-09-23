@@ -1,0 +1,12 @@
+import {expect,it} from 'vitest';
+import {registryPathsFromIndex} from '../_population';
+const make=(urls:string[])=>({schema:'csoai.claim-maintenance.register/0.1',registries:urls.map(url=>({url}))});
+it('discovers new registry files without a source edit',()=>expect(registryPathsFromIndex(make(['https://councilof.ai/claims/claimreg-one.json','https://councilof.ai/claims/claimreg-new-2026-09-23.json']))).toHaveLength(2));
+it('duplicate URLs do not inflate the file population',()=>expect(registryPathsFromIndex(make(['/claims/claimreg-one.json','/claims/claimreg-one.json']))).toHaveLength(1));
+it('external registry URL is rejected before any fetch',()=>expect(()=>registryPathsFromIndex(make(['https://example.invalid/claims/claimreg-one.json']))).toThrow());
+it('internal secret path rejected',()=>expect(()=>registryPathsFromIndex(make(['https://councilof.ai/api/private']))).toThrow());
+it('query injection rejected',()=>expect(()=>registryPathsFromIndex(make(['/claims/claimreg-one.json?redirect=private']))).toThrow());
+it('sidecar is not a registry',()=>expect(()=>registryPathsFromIndex(make(['/claims/claimreg-one.signed.json']))).toThrow());
+it('empty discovery fails closed',()=>expect(()=>registryPathsFromIndex(make([]))).toThrow());
+it('bounded discovery fails closed',()=>expect(()=>registryPathsFromIndex(make(Array(101).fill('/claims/claimreg-one.json')))).toThrow());
+it('wrong schema rejected',()=>expect(()=>registryPathsFromIndex({schema:'fake',registries:[]})).toThrow());

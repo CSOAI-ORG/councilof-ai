@@ -20,7 +20,7 @@ const SPEC_INDEX = "/spec/claim-maintenance/";
 const SPEC_SCHEMA = "/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json";
 const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
-const IMPL = "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs";
+const IMPL = "/spec/claim-maintenance/v0.1/reference/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
 /** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
 const DOI = "10.5281/zenodo.22901908";
@@ -295,15 +295,15 @@ export default function ClaimMaintenance() {
             after the digest was taken — including a rewritten evidence URL, which is the field that has historically
             sat outside the hash.
           </p>
-          <Code>{`git clone https://github.com/CSOAI-ORG/councilof-ai && cd councilof-ai
+          <Code>{`curl -fL https://councilof.ai/spec/claim-maintenance/v0.1/reference/claim-capture.mjs -o claim-capture.mjs
 
-node scripts/claim-capture.mjs --url https://example.com/ \\
+node claim-capture.mjs --url https://example.com/ \\
   --subject "Example Corp" --identifier example.com --identifier-kind domain \\
   --claim "market leader powering the majority of the sector" \\
   --plan "majority = >50%; capture weekly against the public breakdown" \\
   --out artifact.json
 
-node scripts/claim-capture.mjs --verify artifact.json`}</Code>
+node claim-capture.mjs --verify artifact.json`}</Code>
           <p className="mt-4 leading-7 text-slate-700">
             Verification answers whether these bytes are internally consistent and conform to the state machine. It
             never answers whether a claim is true, and a sound signature over a measurement performed wrongly is a

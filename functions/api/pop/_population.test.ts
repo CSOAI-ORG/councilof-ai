@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { POPULATIONS, POPULATION_IDS, otsStateFromBytes, pyDumpsSortedIndent1 } from "../_population";
+import { POPULATIONS, POPULATION_IDS, otsStateFromBytes, pyDumpsSortedIndent1, claimRegistryCompact } from "../_population";
 import { onRequestGet as door, SKU } from "../_population_door";
 import { onRequestGet as eunomia } from "../eunomia-data";
 import { onRequestGet as xrplReader } from "../xrpl";
@@ -231,7 +231,8 @@ describe("free preview — every reading is derived from the artifact bytes", ()
       const file = JSON.parse(raw.toString("utf8"));
       const row = rows.find((r) => r.file === path) as Record<string, unknown>;
       expect(row, path).toBeTruthy();
-      const n = Object.values(file.subjects as Record<string, { claims: unknown[] }>).reduce((a, s) => a + s.claims.length, 0);
+      const sourceClaims = file.schema === "csoai.claim-registry/0.3" ? file.claims : Object.values(file.subjects as Record<string, { claims: unknown[] }>).flatMap((s) => s.claims);
+      const n = sourceClaims.length;
       claims += n;
       expect(row.registry_id).toBe(file.registry_id);
       expect(row.file_sha256).toBe(sha256(raw));
@@ -239,9 +240,7 @@ describe("free preview — every reading is derived from the artifact bytes", ()
       expect(row.signature_state).toBe(file.signature_state);
       // States are tallied from the file's own claim rows, never typed on either side.
       const states: Record<string, number> = {};
-      for (const s of Object.values(file.subjects as Record<string, { claims: { state: string }[] }>)) {
-        for (const cl of s.claims) states[cl.state] = (states[cl.state] || 0) + 1;
-      }
+      for (const cl of sourceClaims as { state: string }[]) states[cl.state] = (states[cl.state] || 0) + 1;
       expect(row.states).toEqual(states);
       // A superseding registry names its predecessor by that file's real sha256.
       if (file.supersedes) {
@@ -260,10 +259,10 @@ describe("free preview — every reading is derived from the artifact bytes", ()
     const { registry_digest, ...rest } = file;
     let py: string | null = null;
     try {
-      py = execFileSync("python3", ["-c", "import json,sys,hashlib;o=json.load(sys.stdin);print(hashlib.sha256(json.dumps(o,sort_keys=True,indent=1).encode()).hexdigest())"], { input: JSON.stringify(rest) }).toString().trim();
+      py = execFileSync("python3", ["-c", "import json,sys,hashlib;o=json.load(sys.stdin);print(hashlib.sha256((json.dumps(o,sort_keys=True,separators=(',',':'),ensure_ascii=False) if o.get('schema')=='csoai.claim-registry/0.3' else json.dumps(o,sort_keys=True,indent=1)).encode()).hexdigest())"], { input: JSON.stringify(rest) }).toString().trim();
     } catch { /* no python here: the JS port below is still checked against the file */ }
-    if (py) expect(py, "python json.dumps(sort_keys=True, indent=1) must reproduce the file's registry_digest").toBe(registry_digest);
-    expect(sha256(pyDumpsSortedIndent1(rest))).toBe(registry_digest);
+    if (py) expect(py, "independent Python reproduction must use the declared schema serializer").toBe(registry_digest);
+    expect(sha256(file.schema === "csoai.claim-registry/0.3" ? claimRegistryCompact(rest) : pyDumpsSortedIndent1(rest))).toBe(registry_digest);
     expect(row.registry_digest_reproducible).toBe(true);
     // .ots: state from bytes, checked here with an independent tag scan.
     const ots = readFileSync(resolve(PUBLIC, "." + path + ".ots"));
