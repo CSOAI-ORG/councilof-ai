@@ -20,8 +20,11 @@
  * and this endpoint reads that artifact out, with the artifact's own as_of and a STALE state when
  * it is older than the max age the artifact itself declares. No number here is typed.
  *
- * Every remaining upstream read has its own try/catch and an 8 s timeout, so one slow registry
- * cannot take the others down or turn them into zeros. The whole payload is cached in memory for
+ * registry_listings also reads an off-edge, cursor-exhausted measurement instead of walking the
+ * MCP Registry during a Cloudflare request. The dated census is labelled STALE after 48 hours;
+ * it is never passed off as a fresh registry read. Every remaining upstream read has its own
+ * try/catch and an 8 s timeout, so one slow source cannot take the others down or turn them
+ * into zeros. The whole payload is cached in memory for
  * an hour and served with `cache-control: public, max-age=3600`; `as_of` is the moment the reads
  * were made, not the moment the cached copy was served.
  *
@@ -36,25 +39,17 @@
 
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
+import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
 
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
 export const FETCH_TIMEOUT_MS = 8000;
-// The official MCP registry answered the first page in >8 s from Cloudflare's edge on 2026-09-22
-// (row read UNCHECKABLE with "timeout after 8000ms"); it gets its own, longer budget. Everything
-// else keeps the 8 s cap so one slow counter cannot hold the whole payload.
-export const REGISTRY_TIMEOUT_MS = 20000;
-export const REGISTRY_PAGE_CAP = 20;
-/** One page may fail transiently; the listing is only unread if a page fails every attempt. */
-export const REGISTRY_PAGE_ATTEMPTS = 3;
-export const REGISTRY_BACKOFF_MS = 400;
-/** The whole registry walk, retries included. registry.modelcontextprotocol.io answered page 1 in
- *  64.6 s on 2026-09-22 (HTTP 200, 77,593 bytes, from the pod); the census that read all 14 pages
- *  ran off-edge. A walk that cannot finish inside this budget reports what it read as PARTIAL —
- *  it never holds the whole payload open, and it never turns the pages it did read into a null. */
-export const REGISTRY_BUDGET_MS = 25000;
+export const REGISTRY_CENSUS_PATH = "/interop/mcp-registry-2026-09-23/census.json";
+/** Endpoint freshness policy: a dated registry measurement is still evidence after this age,
+ *  but readers must see STALE first. It does not create a new measurement. */
+export const REGISTRY_CENSUS_MAX_AGE_HOURS = 48;
 export const REGISTRY_SEARCH =
-  "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG&limit=100";
+  "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG&limit=100&version=latest";
 export const REGISTRY_PREFIX = "io.github.CSOAI-ORG/";
 export const HF_DATASETS = "https://huggingface.co/api/datasets?author=csoai&expand[]=downloads&limit=1000";
 export const GITHUB_REPO = "https://api.github.com/repos/CSOAI-ORG/councilof-ai";
@@ -70,9 +65,9 @@ const KIND_SELF_LISTING = "self-published listing";
 
 /** READ: the source answered and the value is its number. PARTIAL: some of a fan-out answered
  *  and the value is a lower bound over what did. STALE: a measured artifact was read, but it is
- *  older than the max age it declares for itself — the number is real and out of date, and both
- *  facts travel together. UNCHECKABLE: a source exists and did not answer. UNMEASURED: no source
- *  exists. */
+ *  older than its declared or endpoint-specified max age — the number is real and out of date,
+ *  and both facts travel together. UNCHECKABLE: a source exists and did not answer. UNMEASURED:
+ *  no source exists. */
 export type RowState = "READ" | "PARTIAL" | "STALE" | "UNCHECKABLE" | "UNMEASURED";
 
 export interface Row {
@@ -94,8 +89,6 @@ export interface Deps {
   fetch: typeof fetch;
   /** ISO timestamp of "now" — injectable so a test can pin as_of. */
   now: () => string;
-  /** Monotonic-ish milliseconds, for the registry walk's budget. Injectable so a test can pin it. */
-  nowMs?: () => number;
   /** Same-origin base for /api/revenue, /api/gspc, /api/state. */
   origin: string;
 }
@@ -144,116 +137,55 @@ const unmeasured = (reason: string, extra: Record<string, unknown> = {}): Row =>
 const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 
 // ── registry_listings ─────────────────────────────────────────────────────────
-/** A page, retried with backoff inside whatever is left of the walk's budget. One 20 s timeout on
- *  page 3 voided the whole count on 2026-09-22; a transient failure is not an unreadable registry,
- *  and neither is a budget that ran out. */
-async function registryPage(deps: Deps, url: string, deadline: number, clock: () => number): Promise<{ got: Fetched; attempts: number }> {
-  let got: Fetched = { ok: false, status: null, reason: "not attempted" };
-  let attempts = 0;
-  for (let attempt = 1; attempt <= REGISTRY_PAGE_ATTEMPTS; attempt++) {
-    const left = deadline - clock();
-    if (left <= 0) return { got, attempts };
-    attempts = attempt;
-    got = await fetchJson(deps, url, {}, Math.min(REGISTRY_TIMEOUT_MS, left));
-    if (got.ok) return { got, attempts };
-    const backoff = REGISTRY_BACKOFF_MS * 2 ** (attempt - 1);
-    if (attempt < REGISTRY_PAGE_ATTEMPTS && deadline - clock() > backoff) {
-      await new Promise((r) => setTimeout(r, backoff));
-    }
-  }
-  return { got, attempts };
-}
-
-export async function registryListings(deps: Deps): Promise<Row> {
-  const names = new Set<string>();
-  const versions = new Set<string>();
-  const clock = deps.nowMs ?? (() => Date.now());
-  const deadline = clock() + REGISTRY_BUDGET_MS;
-  let cursor: string | null = null;
-  let pages = 0;
-  let capHit = false;
-  let budgetHit = false;
-  let failure: { page: number; reason: string; attempts: number } | null = null;
-  for (;;) {
-    if (pages >= REGISTRY_PAGE_CAP) {
-      capHit = true;
-      break;
-    }
-    if (clock() >= deadline) {
-      budgetHit = true;
-      break;
-    }
-    const url = cursor ? `${REGISTRY_SEARCH}&cursor=${encodeURIComponent(cursor)}` : REGISTRY_SEARCH;
-    const { got, attempts } = await registryPage(deps, url, deadline, clock);
-    if (!got.ok) {
-      // Every attempt at this page failed, or the budget ran out mid-page. What was read before it
-      // is still read: report the partial count with the page it stopped on, never a null that
-      // erases the pages that worked.
-      failure = { page: pages + 1, reason: got.reason, attempts };
-      break;
-    }
-    pages += 1;
-    const body = got.body as { servers?: unknown[]; metadata?: Record<string, unknown> };
-    for (const entry of Array.isArray(body.servers) ? body.servers : []) {
-      const s = ((entry as { server?: Record<string, unknown> })?.server ?? entry) as Record<string, unknown>;
-      const name = typeof s?.name === "string" ? s.name : "";
-      if (!name.startsWith(REGISTRY_PREFIX)) continue;
-      names.add(name);
-      const version = typeof s.version === "string" ? s.version : "";
-      versions.add(`${name}@${version}`);
-    }
-    const meta = body.metadata ?? {};
-    const next = (meta.nextCursor ?? meta.next_cursor) as unknown;
-    if (typeof next !== "string" || next === "" || next === cursor) break;
-    cursor = next;
-  }
-  if (failure && pages === 0) {
-    // Nothing was read at all: there is no lower bound to publish, only an unread source.
-    return uncheckable(`registry page 1 failed ${failure.attempts} attempt(s): ${failure.reason}`, {
-      kind: KIND_SELF_LISTING,
-      source_url: REGISTRY_SEARCH,
-      pages_read: 0,
-      page_attempts: failure.attempts,
-      page_attempt_cap: REGISTRY_PAGE_ATTEMPTS,
-      budget_ms: REGISTRY_BUDGET_MS,
-      distinct_names_before_failure: 0,
-    });
-  }
-  const partial = capHit || budgetHit || failure !== null;
-  return {
-    state: partial ? "PARTIAL" : "READ",
-    value: names.size,
-    unit: "distinct server names",
-    versions: versions.size,
-    versions_unit: "distinct name@version listings",
-    population: `servers named ${REGISTRY_PREFIX}* in the MCP Registry search result`,
+/** The off-edge census walks the registry to cursor exhaustion and records both distinct names
+ *  and version rows. The API reads its committed bytes; it never turns a 25 s request budget into
+ *  a misleading partial population. An old measurement remains visible but explicitly STALE. */
+export function registryListings(nowIso: string, art: unknown = registryCensus): Row {
+  const base = {
     kind: KIND_SELF_LISTING,
-    source_url: REGISTRY_SEARCH,
-    as_of: deps.now(),
-    pages_read: pages,
-    page_cap: REGISTRY_PAGE_CAP,
-    page_cap_hit: capHit,
-    page_attempt_cap: REGISTRY_PAGE_ATTEMPTS,
-    budget_ms: REGISTRY_BUDGET_MS,
-    budget_exhausted: budgetHit || (failure?.attempts ?? 1) === 0,
-    ...(partial ? { distinct_names_before_failure: names.size } : {}),
-    ...(failure
-      ? {
-          failed_page: failure.page,
-          reason:
-            failure.attempts === 0
-              ? `the ${REGISTRY_BUDGET_MS} ms budget ran out before page ${failure.page}; ` +
-                `${names.size} names over ${pages} page(s) is a lower bound, not the listing`
-              : `page ${failure.page} failed ${failure.attempts} attempt(s) (${failure.reason}); ` +
-                `${names.size} names over ${pages} page(s) is a lower bound, not the listing`,
-        }
-      : budgetHit
-        ? {
-            reason: `the ${REGISTRY_BUDGET_MS} ms budget ran out after ${pages} page(s); ` +
-              `${names.size} names is a lower bound, not the listing`,
-          }
-        : {}),
-    ...(capHit ? { reason: `stopped at the ${REGISTRY_PAGE_CAP}-page cap; the count is a lower bound` } : {}),
+    source_url: REGISTRY_CENSUS_PATH,
+    upstream_url: REGISTRY_SEARCH,
+    artifact: REGISTRY_CENSUS_PATH,
+    max_age_hours: REGISTRY_CENSUS_MAX_AGE_HOURS,
+    freshness_policy: "endpoint policy; the census artifact itself declares no max age",
+  };
+  if (!art || typeof art !== "object") return uncheckable("registry census is absent or malformed", base);
+  const census = art as Record<string, unknown>;
+  if (census.schema !== "csoai.mcp-registry-census/0.1" ||
+      census.kind !== "measurement" ||
+      census.registry !== "https://registry.modelcontextprotocol.io" ||
+      census.namespace !== "io.github.CSOAI-ORG") {
+    return uncheckable("registry census schema, kind, registry or namespace does not match", base);
+  }
+  const count = census.servers;
+  const completed = census.completed_utc;
+  const measured = census.measured_utc;
+  if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 0 ||
+      typeof completed !== "string" || typeof measured !== "string" ||
+      !Number.isFinite(Date.parse(completed)) || !Number.isFinite(Date.parse(measured)) ||
+      Date.parse(completed) < Date.parse(measured)) {
+    return uncheckable("registry census count or measurement timestamps are invalid", base);
+  }
+  const age = ageHours(completed, nowIso);
+  if (age === null || age < -1) return uncheckable("registry census age is invalid", base);
+  const failures = census.version_read_failures;
+  const versionsComplete = Array.isArray(failures) && failures.length === 0 &&
+    typeof census.version_rows === "number" && Number.isSafeInteger(census.version_rows) && census.version_rows >= 0;
+  const stale = age > REGISTRY_CENSUS_MAX_AGE_HOURS;
+  return {
+    state: stale ? "STALE" : "READ",
+    value: count,
+    unit: "distinct server names",
+    versions: versionsComplete ? census.version_rows : null,
+    versions_state: versionsComplete ? "READ" : "UNCHECKABLE",
+    versions_unit: "distinct name@version listings",
+    population: `servers named ${REGISTRY_PREFIX}* in the MCP Registry census`,
+    as_of: completed,
+    measured_from: measured,
+    artifact_schema: census.schema,
+    age_hours: Math.round(age * 10) / 10,
+    ...base,
+    ...(stale ? { reason: `registry census measured ${age.toFixed(1)} h ago, past this endpoint's ${REGISTRY_CENSUS_MAX_AGE_HOURS} h freshness policy` } : {}),
     note: "A listing we published ourselves. It says a server is registered, not that anyone runs it.",
   };
 }
@@ -494,8 +426,9 @@ export const FUNNEL_ORDER = [
 
 export async function buildFootprint(deps: Deps) {
   const nowIso = deps.now();
-  const [registry_listings, economic_use, repeat_payers, boardRow, signed_cards, github_stars] =
-    await Promise.all([registryListings(deps), economicUse(deps), repeatPayers(deps), board(deps), signedCards(deps), githubStars(deps)]);
+  const registry_listings = registryListings(nowIso);
+  const [economic_use, repeat_payers, boardRow, signed_cards, github_stars] =
+    await Promise.all([economicUse(deps), repeatPayers(deps), board(deps), signedCards(deps), githubStars(deps)]);
   // No network: the 832 per-package counters were measured on the pod, once, into the artifact.
   const gross_distribution = grossDistribution(nowIso);
 
@@ -523,7 +456,7 @@ export async function buildFootprint(deps: Deps) {
   return {
     schema: SCHEMA,
     as_of: deps.now(),
-    as_of_meaning: "when the upstream reads for this payload were made; a cached copy may be served for up to ttl_seconds after",
+    as_of_meaning: "when this payload was assembled; each row carries its own source measurement time, and a cached copy may be served for up to ttl_seconds after",
     ttl_seconds: TTL_SECONDS,
     honesty: HONESTY,
     funnel: {
@@ -543,7 +476,7 @@ export async function buildFootprint(deps: Deps) {
     package_list: PACKAGES_PATH,
     state_rule:
       "READ: the source answered and the value is its number. PARTIAL: part of a fan-out answered and the value is a lower bound. " +
-        "STALE: a measured artifact was read and is older than the max age it declares for itself. " +
+        "STALE: a measured artifact was read and is older than its declared or endpoint-specified freshness limit. " +
       "UNCHECKABLE: a source exists and did not answer; value null, never 0. UNMEASURED: no source exists.",
     note: "Aggregate-only. No telemetry, no per-user data. We measure; we issue no marks.",
   };
@@ -572,7 +505,6 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const deps: Deps = {
     fetch: globalThis.fetch.bind(globalThis),
     now: () => new Date().toISOString(),
-    nowMs: () => Date.now(),
     origin,
   };
   const { payload, cache } = await getFootprint(deps);

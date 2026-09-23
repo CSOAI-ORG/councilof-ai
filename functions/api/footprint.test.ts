@@ -6,22 +6,19 @@
 //     assert the endpoint makes no package request, that it reports the artifact's own as_of,
 //     that it says STALE when the artifact is older than the max age the artifact declares, and
 //     that the 30-day and cumulative windows stay in separate rows.
-//  2. registry_listings turned a single 20 s timeout on page 3 into UNCHECKABLE with a null,
-//     discarding the two pages that had answered. It now retries inside a budget and reports
-//     PARTIAL with pages_read and distinct_names_before_failure.
+//  2. registry_listings walked 14 pages inside a Cloudflare request; the 25 s budget made the
+//     result a partial count and held a cold request open. It now reads the dated off-edge census,
+//     preserves the measurement time, and labels an old or invalid census honestly.
 //
 // Everywhere: a failed upstream is UNCHECKABLE with value null, never 0; sums are over what
 // answered and say so.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 
 import {
   DISTRIBUTION_PATH,
-  REGISTRY_BUDGET_MS,
-  REGISTRY_PAGE_ATTEMPTS,
-  REGISTRY_PAGE_CAP,
+  REGISTRY_CENSUS_MAX_AGE_HOURS,
+  REGISTRY_CENSUS_PATH,
   TTL_SECONDS,
   _resetCache,
   ageHours,
@@ -35,15 +32,10 @@ import {
 } from "./footprint";
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
+import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
 
 const ORIGIN = "https://councilof.ai";
-const NOW = "2026-09-22T12:00:00.000Z";
-
-/** A real page 1 of the MCP registry search, fetched 2026-09-22 (HTTP 200 in 64.6 s), trimmed to
- *  four servers. Its metadata.nextCursor and count are the bytes the registry actually sent. */
-const REAL_REGISTRY_PAGE = JSON.parse(
-  readFileSync(resolve(__dirname, "__fixtures__/mcp-registry-page1-2026-09-22.json"), "utf8"),
-) as { servers: unknown[]; metadata: { nextCursor?: string; count: number }; _fixture: Record<string, string> };
+const NOW = "2026-09-23T10:00:00.000Z";
 
 type Route = (url: string) => Response | Promise<Response>;
 
@@ -59,17 +51,7 @@ function fakeFetch(routes: Record<string, Route>, calls: string[] = []): typeof 
   }) as unknown as typeof fetch;
 }
 
-const registryPage = (names: string[], nextCursor?: string) =>
-  Response.json({
-    servers: names.map((name) => ({ server: { name, version: "1.0.0" } })),
-    metadata: { count: names.length, ...(nextCursor ? { nextCursor } : {}) },
-  });
-
 const healthy = (): Record<string, Route> => ({
-  "registry.modelcontextprotocol.io": (url) =>
-    url.includes("cursor=")
-      ? registryPage(["io.github.CSOAI-ORG/b", "io.github.CSOAI-ORG/c", "io.github.someone-else/x"])
-      : registryPage(["io.github.CSOAI-ORG/a", "io.github.CSOAI-ORG/b"], "page-2"),
   "/api/revenue": () => Response.json({ one_number: { status: "MEASURED", all_time: 2, last_30d: 1 } }),
   "/api/gspc": () =>
     Response.json({
@@ -81,10 +63,9 @@ const healthy = (): Record<string, Route> => ({
   "api.github.com": () => Response.json({ stargazers_count: 4 }),
 });
 
-const deps = (routes: Record<string, Route>, calls: string[] = [], nowMs?: () => number): Deps => ({
+const deps = (routes: Record<string, Route>, calls: string[] = []): Deps => ({
   fetch: fakeFetch(routes, calls),
   now: () => NOW,
-  ...(nowMs ? { nowMs } : {}),
   origin: ORIGIN,
 });
 
@@ -258,109 +239,63 @@ describe("the committed artifact on disk", () => {
   });
 });
 
-describe("registry_listings — a failed page is a lower bound, not a null", () => {
-  it("reads the real registry page shape (fixture fetched 2026-09-22) and counts our prefix only", async () => {
-    const row = await registryListings(
-      deps({ "registry.modelcontextprotocol.io": () => Response.json({ servers: REAL_REGISTRY_PAGE.servers, metadata: { count: 4 } }) }),
-    );
-    expect(REAL_REGISTRY_PAGE._fixture.fetched).toBe("2026-09-22T15:35Z");
-    expect(row.state).toBe("READ");
-    // The registry paginates by name@version, not by name: these four real rows are four
-    // versions of ONE server. That is why a 100-per-page walk needs many pages for ~350 servers,
-    // and why `value` counts distinct names while `versions` counts the rows.
-    expect(row.value).toBe(1);
-    expect(row.versions).toBe(4);
+describe("registry_listings — read a dated, complete off-edge census", () => {
+  it("reads the committed census's distinct names and version rows with the artifact's timestamp", () => {
+    const row = registryListings(NOW);
+    expect(row).toMatchObject({
+      state: "READ",
+      value: registryCensus.servers,
+      versions: registryCensus.version_rows,
+      as_of: registryCensus.completed_utc,
+      source_url: REGISTRY_CENSUS_PATH,
+      upstream_url: expect.stringContaining("registry.modelcontextprotocol.io"),
+    });
+    expect(row.value).toBe(354);
+    expect(row.versions).toBe(1342);
+    expect(row.as_of).not.toBe(NOW);
   });
 
-  it("retries a failing page before giving up on it", async () => {
+  it("makes no registry request when the whole footprint is built", async () => {
     const calls: string[] = [];
-    let attempts = 0;
-    const row = await registryListings(
-      deps(
-        {
-          "registry.modelcontextprotocol.io": () => {
-            attempts += 1;
-            return attempts < 3 ? new Response("boom", { status: 503 }) : registryPage(["io.github.CSOAI-ORG/a"]);
-          },
-        },
-        calls,
-      ),
-    );
-    expect(attempts).toBe(3);
-    expect(row.state).toBe("READ");
-    expect(row.value).toBe(1);
+    await buildFootprint(deps(healthy(), calls));
+    expect(calls.some((url) => url.includes("registry.modelcontextprotocol.io"))).toBe(false);
   });
 
-  it("a page that fails every attempt after other pages read is PARTIAL with what was read", async () => {
-    const row = await registryListings(
-      deps({
-        "registry.modelcontextprotocol.io": (url) =>
-          url.includes("cursor=") ? new Response("timeout", { status: 504 }) : registryPage(["io.github.CSOAI-ORG/a", "io.github.CSOAI-ORG/b"], "page-2"),
-      }),
-    );
-    expect(row.state).toBe("PARTIAL");
-    expect(row.value).toBe(2);
-    expect(row.pages_read).toBe(1);
-    expect(row.distinct_names_before_failure).toBe(2);
-    expect(row.failed_page).toBe(2);
-    expect(String(row.reason)).toContain("lower bound");
+  it("shows an old census as STALE without discarding its measured count", () => {
+    const staleAt = new Date(Date.parse(registryCensus.completed_utc) + (REGISTRY_CENSUS_MAX_AGE_HOURS + 1) * 3_600_000).toISOString();
+    const row = registryListings(staleAt);
+    expect(row).toMatchObject({ state: "STALE", value: 354, versions: 1342, as_of: registryCensus.completed_utc });
+    expect(String(row.reason)).toContain("freshness policy");
   });
 
-  it("page 1 failing every attempt is still UNCHECKABLE — there is no lower bound to publish", async () => {
-    const row = await registryListings(deps({ "registry.modelcontextprotocol.io": () => new Response("x", { status: 504 }) }));
-    expect(row.state).toBe("UNCHECKABLE");
-    expect(row.value).toBeNull();
-    expect(row.pages_read).toBe(0);
-    expect(row.page_attempts).toBe(REGISTRY_PAGE_ATTEMPTS);
+  it("does not label a census stale exactly at the policy boundary", () => {
+    const boundary = new Date(Date.parse(registryCensus.completed_utc) + REGISTRY_CENSUS_MAX_AGE_HOURS * 3_600_000).toISOString();
+    expect(registryListings(boundary).state).toBe("READ");
   });
 
-  it("a walk that runs out of budget reports what it read, not a null", async () => {
-    // A clock that stays inside the budget long enough for page 1 to answer, then jumps past it.
-    let ticks = 0;
-    const clock = () => (ticks++ < 3 ? 0 : REGISTRY_BUDGET_MS + 1);
-    const row = await registryListings(
-      deps({ "registry.modelcontextprotocol.io": () => registryPage(["io.github.CSOAI-ORG/a"], "page-2") }, [], clock),
-    );
-    expect(row.state).toBe("PARTIAL");
-    expect(row.value).toBe(1);
-    expect(String(row.reason)).toContain("budget");
+  it("rejects a wrong schema, namespace, count or timestamp as UNCHECKABLE, never zero", () => {
+    for (const bad of [
+      { ...registryCensus, schema: "other" },
+      { ...registryCensus, namespace: "io.github.someone-else" },
+      { ...registryCensus, servers: -1 },
+      { ...registryCensus, servers: "354" },
+      { ...registryCensus, completed_utc: "not-a-date" },
+      null,
+    ]) {
+      expect(registryListings(NOW, bad)).toMatchObject({ state: "UNCHECKABLE", value: null, source_url: REGISTRY_CENSUS_PATH });
+    }
   });
 
-  it("stops at the page cap and labels the count a lower bound", async () => {
-    let page = 0;
-    const row = await registryListings(
-      deps({
-        "registry.modelcontextprotocol.io": () => {
-          page += 1;
-          return registryPage([`io.github.CSOAI-ORG/s${page}`], `cursor-${page}`);
-        },
-      }),
-    );
-    expect(row.state).toBe("PARTIAL");
-    expect(row.page_cap_hit).toBe(true);
-    expect(row.pages_read).toBe(REGISTRY_PAGE_CAP);
-    expect(row.value).toBe(REGISTRY_PAGE_CAP);
-  });
-
-  it("stops when the cursor stops advancing", async () => {
-    const row = await registryListings(
-      deps({ "registry.modelcontextprotocol.io": (url) => registryPage(["io.github.CSOAI-ORG/a"], url.includes("cursor=") ? "same" : "same") }),
-    );
-    expect(row.state).toBe("READ");
-    expect(row.pages_read).toBe(2);
-  });
-
-  it("a 200 that is not JSON is UNCHECKABLE", async () => {
-    const row = await registryListings(deps({ "registry.modelcontextprotocol.io": () => new Response("<html>", { status: 200 }) }));
-    expect(row.state).toBe("UNCHECKABLE");
-    expect(String(row.reason)).toContain("not json");
+  it("keeps a complete server count but withholds incomplete version totals", () => {
+    const row = registryListings(NOW, { ...registryCensus, version_rows: null, version_read_failures: ["one-server"] });
+    expect(row).toMatchObject({ state: "READ", value: 354, versions: null, versions_state: "UNCHECKABLE" });
   });
 });
 
 describe("/api/footprint — the same-origin rows", () => {
   it("reads each stage from its own source and never derives one from another", async () => {
     const p = await buildFootprint(deps(healthy()));
-    expect(p.registry_listings).toMatchObject({ state: "READ", value: 3 });
+    expect(p.registry_listings).toMatchObject({ state: "READ", value: 354 });
     expect(p.economic_use).toMatchObject({ state: "READ", value: 2 });
     expect(p.board).toMatchObject({ state: "READ", value: "23 axis · 23 measured" });
     expect(p.signed_cards).toMatchObject({ state: "READ", value: 335 });
