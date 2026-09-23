@@ -1,30 +1,12 @@
 {
  "axis": "oss",
  "axis_status": "MEASURED",
- "content_id": "68f28e2247fc5c1acc6639e06c1790bd033f008d8bfed57b4074e3f094179a3c",
- "elo_decided_games": 12,
+ "content_id": "fd83db6fdd9cfa55685c4b363fb5aca5f12d2a236326f9e154ae59e4878b9b81",
+ "elo_decided_games": 18,
  "elo_leader": null,
  "elo_leader_score": null,
- "elo_ranked_models": 2,
+ "elo_ranked_models": 4,
  "elo_runner_up": {
-  "ci": [
-   0.022,
-   0.471
-  ],
-  "elo": 1417.3,
-  "games": 8,
-  "model": "phi4:14b",
-  "winrate": 0.125
- },
- "elo_separation": "TIE",
- "elo_source": {
-  "content_id": "4309863fd43c08ea9f8cb01714347818067496b9a91abeff7687b889d001125a",
-  "generated": "2026-09-23T13:37:10Z",
-  "path": "/arena/elo_reference.json",
-  "schema": "csoai.arena-elo-reference/0.2"
- },
- "elo_ties": 53,
- "elo_top": {
   "ci": [
    0.3,
    0.903
@@ -34,10 +16,28 @@
   "model": "gemma3:12b",
   "winrate": 0.667
  },
+ "elo_separation": "TIE",
+ "elo_source": {
+  "content_id": "2795fc5311289dfbc1ee3b0112db21b14549ebe08fb971b8545fef7de56f79e8",
+  "generated": "2026-09-23T15:36:53Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 87,
+ "elo_top": {
+  "ci": [
+   0.646,
+   1
+  ],
+  "elo": 1588,
+  "games": 7,
+  "model": "qwen3:8b",
+  "winrate": 1
+ },
  "evidence_relation": "SEPARATE_EVIDENCE",
- "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (gemma3:12b, phi4:14b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
+ "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (qwen3:8b, gemma3:12b, mistral:7b, phi4:14b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
  "games_leader": null,
- "generated": "2026-09-23T13:37:11Z",
+ "generated": "2026-09-23T15:36:54Z",
  "majority_baseline": 0.5,
  "models": 19,
  "not_a_certification": true,
@@ -59,21 +59,21 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "68f28e2247fc5c1acc6639e06c1790bd033f008d8bfed57b4074e3f094179a3c",
+  "content_id": "fd83db6fdd9cfa55685c4b363fb5aca5f12d2a236326f9e154ae59e4878b9b81",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "68f28e2247fc5c1acc6639e06c1790bd033f008d8bfed57b4074e3f094179a3c",
+  "payload_sha256": "fd83db6fdd9cfa55685c4b363fb5aca5f12d2a236326f9e154ae59e4878b9b81",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "db68b2383fbc873b46f6d7ef50ae135fb43ff9580e86056d3cd6ba9fe4b38050d03b98d9d69d455edd0c0a8704d36ce8f9cd4425489f8041acf23424f152420a",
-  "signed_at": "2026-09-23T13:37:13.270Z",
+  "sig_ed25519": "c093c2f2ee0451d8012c8fd4b04b4f5ab3bf92fe2845c05078f65c0c4fe10abb01b24b053666ad6067065ceb32a7dce2fadc4b2024ba9935b8194fbb06da3008",
+  "signed_at": "2026-09-23T15:36:56.980Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "UNTESTED",
  "supersedes": {
-  "content_id": "ad2ec72a3a73d8373e9d48653cc2562c512f1197d0739af69e2ddbe8e069cdbd",
+  "content_id": "68f28e2247fc5c1acc6639e06c1790bd033f008d8bfed57b4074e3f094179a3c",
   "elo_leader_then": null,
-  "generated": "2026-09-23T12:38:47Z",
+  "generated": "2026-09-23T13:37:11Z",
   "note": "superseded, never edited; new bytes, new signature",
   "signer": "did:web:csoai.org#board-attestation-1",
   "status_then": "UNTESTED"
