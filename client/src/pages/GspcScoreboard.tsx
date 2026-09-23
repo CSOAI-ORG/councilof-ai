@@ -3,7 +3,7 @@ import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
-import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
+import { BOARD_COUNT_OBSERVED, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
@@ -274,6 +274,7 @@ export default function GspcScoreboard() {
   // and no typed literal. Before the payload lands we show the dated observation
   // recorded in facts.json rather than a placeholder or a zero.
   const board = boardCountFromPayload(data) ?? BOARD_COUNT_OBSERVED;
+  const kindSplit = boardKindSplitFromPayload(data);
 
   const [finAxis, setFinAxis] = useState<any>(null);
   const [finRun, setFinRun] = useState<any>(null);
@@ -336,7 +337,7 @@ export default function GspcScoreboard() {
           className="mb-8 h-48 w-full rounded-2xl object-cover sm:h-64"
         />
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
-          Live from GET /api/gspc — recompute anything, free
+          Board source: GET /api/gspc — recompute published results, free
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
@@ -344,11 +345,10 @@ export default function GspcScoreboard() {
           {board.public_leader_count != null && !board.lid && (
             <> · {board.public_leader_count} public leader scores</>
           )}
-          {board.gspc_family && board.financial_family && (
+          {kindSplit && (
             <>
-              {" "}({board.gspc_family.axes} model-comparison + {board.financial_family.axes} fact
-              cards — the fact cards are deterministic disclosure/component reads with no fleet, so
-              they carry no leader and no accuracy)
+              {" "}({kindSplit.comparison_axes} model-comparison + {kindSplit.fact_runs} fact
+              runs — deterministic fact checks have no model fleet, leader or accuracy)
             </>
           )}{" "}
           · deterministic grading on

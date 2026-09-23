@@ -40,8 +40,8 @@
         "model_fleets": 14,
         "fact_runs": 9,
         "items": 1230,
-        "lid": "23 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
-        "observed_at": "2026-09-22",
+        "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+        "observed_at": "2026-09-23",
         "binding": false,
         "producer": "scripts/refresh-board-observation.mjs — every field is copied verbatim from the endpoint's totals; never hand-edited.",
         "note": "Observation only, recorded so a surface that has not yet fetched the board can render the last observed state, dated, and so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale: run `node scripts/refresh-board-observation.mjs` (or `--check` to fail on drift). The slot count and the measured count are different kinds and travel together; quote `value` (totals.public_count) or `lid`, never one integer alone."

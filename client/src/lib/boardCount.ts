@@ -56,6 +56,21 @@ export interface FamilyCount {
   sentence: string;
 }
 
+/** Instrument kinds across all families; a GSPC-family fact run is still a fact run. */
+export interface BoardKindSplit {
+  comparison_axes: number;
+  fact_runs: number;
+}
+
+/** Use axis kinds, not family totals: effect-binding is a GSPC-family fact run. */
+export function boardKindSplitFromPayload(payload: unknown): BoardKindSplit | null {
+  const axes = (payload as { axes?: unknown })?.axes;
+  if (!Array.isArray(axes) || axes.length === 0) return null;
+  const comparison_axes = axes.filter((axis) => axis?.kind === "model-comparison").length;
+  const fact_runs = axes.filter((axis) => axis?.kind === "deterministic-facts").length;
+  return comparison_axes + fact_runs === axes.length ? { comparison_axes, fact_runs } : null;
+}
+
 export interface BoardCount {
   /** Slots on the board. NOT a count of measurements. */
   axes: number;
