@@ -39,7 +39,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // sortable by any axis, every cell verifiable. /rankings folds into it. Primary,
   // or it ships flagged "archived" under a route the nav actively promotes.
   "/leaderboard",
-  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
+  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/verify-leaderboard", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/watchdog-hub",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
