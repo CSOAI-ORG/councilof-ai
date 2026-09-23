@@ -45,7 +45,7 @@ const FACTS = [
   },
   {
     k: "Live evidence",
-    v: "305 signed cards, 22 measured axes, 500 MCP servers probed, 100 x402 hosts. Every number is fetchable at councilof.ai/api/state — we do not type them here.",
+    v: "Signed cards, measured axes, MCP servers probed, x402 hosts. Every number is fetchable at councilof.ai/api/state and councilof.ai/api/gspc — we do not type them here.",
   },
 ];
 const QUOTES = [

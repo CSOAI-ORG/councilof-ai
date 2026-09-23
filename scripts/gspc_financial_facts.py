@@ -10,8 +10,8 @@ Axes:
   regulatory-framework         n=16 same roster
   distribution-integrity       n=16 same roster (reader classification + supply + holders)
   custody-disclosure           n=16 same roster
-  ai-adoption-components       n=2  public Eurostat series
-  labour-components            n=2  public World Bank series
+  ai-adoption-components       n=2  public Eurostat series (10+ and 250+ size classes)
+  labour-components            n=2  public Eurostat series (activity + unemployment)
   humanoid-labour-index        n=8  frozen vendor URLs (dated deployment count Y/N)
 
 Usage:
@@ -93,8 +93,39 @@ EUROSTAT_AI = (
     "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai"
     "?format=JSON&lang=EN&indic_is=E_AI_TANY&unit=PC_ENT&geo=EU27_2020"
 )
-WB_PARTICIPATION = "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&per_page=8"
-WB_UNEMPLOYMENT = "https://api.worldbank.org/v2/country/EUU/indicator/SL.UEM.TOTL.ZS?format=json&per_page=8"
+# Both AI series come out of the ONE response above. The size class is a dimension of
+# it (size_emp), so isolating them is a dimension walk, not a second fetch -- the
+# earlier "sizeclas split not isolated this run" note described a limitation of the
+# old extractor, not of the data.
+EUROSTAT_AI_SERIES = [
+    ("EU27 enterprises with 10+ employees using any AI", {"size_emp": "GE10"}),
+    ("EU27 large enterprises 250+ using any AI", {"size_emp": "GE250"}),
+]
+
+# LABOUR BENCH = EUROSTAT, and the board row says Eurostat because that is now what is
+# fetched. It previously fetched api.worldbank.org SL.TLF.CACT.ZS / SL.UEM.TOTL.ZS --
+# the World Bank's redistribution of MODELLED ILO estimates for its "EUU" aggregate --
+# while the row was labelled Eurostat. Two ways to end that: relabel the row World
+# Bank, or fetch what the label claims. Eurostat is chosen because it is the EU's own
+# observed source (the Labour Force Survey rather than a model), it is the fresher of
+# the two, and this axis's sibling ai-adoption-components already reads Eurostat.
+#
+# THE DEFINITIONS CHANGED WITH THE SOURCE and the series names carry it. The World Bank
+# participation rate was a share of TOTAL population (all ages, ~57%); the Eurostat
+# activity rate is a share of the population aged 15-64 (~75%). They are different
+# quantities, not a jump, and must never be charted as one series.
+EUROSTAT_ACTIVITY = (
+    "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/lfsi_emp_a"
+    "?format=JSON&lang=EN&geo=EU27_2020&sex=T&age=Y15-64&unit=PC_POP&indic_em=ACT"
+)
+EUROSTAT_UNEMPLOYMENT = (
+    "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/une_rt_a"
+    "?format=JSON&lang=EN&geo=EU27_2020&sex=T&age=Y15-74&unit=PC_ACT"
+)
+EUROSTAT_LABOUR_SERIES = [
+    ("EU27 activity rate, age 15-64 (% of population)", EUROSTAT_ACTIVITY),
+    ("EU27 unemployment rate, age 15-74 (% of labour force)", EUROSTAT_UNEMPLOYMENT),
+]
 
 ATTEST_RE = re.compile(
     r"\b(attestation|attested|reserve report|examination report|"
@@ -382,41 +413,95 @@ def three_state_tally(states: list[str]) -> dict[str, int]:
     return {k: v for k, v in out.items() if v}
 
 
-def eurostat_extract_2024(payload: Any) -> float | None:
-    """Pull EU27 2024 PC_ENT value if the JSON-stat shape is present. None = UNCHECKABLE."""
+def jsonstat_cells(payload: Any) -> list[dict[str, Any]]:
+    """Decode a Eurostat JSON-stat response into fully labelled cells.
+
+    Eurostat returns one flat `value` map keyed by a row-major index over the
+    dimensions named in `id` with the extents in `size`. Walking that index is the
+    only way to know WHICH series and WHICH year a number belongs to.
+
+    The extractor this replaces did not walk it: it took the last value that
+    happened to fall in 0..100 and stamped `"year": 2024` on whatever came back.
+    On the live isoc_eb_ai response that is the 250+/2025 cell (55.03), so the run
+    published a 2025 number labelled 2024 and called the second series
+    unisolable. An unrecognised shape returns [] and the caller reports
+    UNCHECKABLE -- it never guesses a cell.
+    """
     if not isinstance(payload, dict):
-        return None
+        return []
     value = payload.get("value")
+    ids = payload.get("id")
+    sizes = payload.get("size")
+    dimension = payload.get("dimension")
+    if not (isinstance(ids, list) and isinstance(sizes, list) and isinstance(dimension, dict)):
+        return []
+    if len(ids) != len(sizes) or not ids:
+        return []
+
+    # position -> category key, per dimension
+    labels: list[dict[int, str]] = []
+    for name in ids:
+        index = ((dimension.get(name) or {}).get("category") or {}).get("index")
+        if isinstance(index, dict):
+            labels.append({int(pos): str(key) for key, pos in index.items() if isinstance(pos, int)})
+        elif isinstance(index, list):
+            labels.append({pos: str(key) for pos, key in enumerate(index)})
+        else:
+            return []
+
+    strides: list[int] = []
+    step = 1
+    for extent in reversed(sizes):
+        strides.insert(0, step)
+        step *= int(extent)
+    total = step
+
     if isinstance(value, dict):
-        # JSON-stat id/size/dimension — take any numeric 2024 cell.
-        dim = payload.get("dimension") or {}
-        time = ((dim.get("time") or {}).get("category") or {}).get("index") or {}
-        if "2024" in time and isinstance(time["2024"], int):
-            # Without a full id walk this is UNCHECKABLE rather than guessed.
-            pass
-        nums = [v for v in value.values() if isinstance(v, (int, float))]
-        if nums:
-            # Prefer values in the plausible percent range; otherwise first number.
-            pct = [n for n in nums if 0 <= float(n) <= 100]
-            return float(pct[-1] if pct else nums[-1])
-    if isinstance(value, list):
-        nums = [v for v in value if isinstance(v, (int, float))]
-        if nums:
-            pct = [n for n in nums if 0 <= float(n) <= 100]
-            return float(pct[-1] if pct else nums[-1])
-    return None
+        flat = {int(k): v for k, v in value.items() if str(k).lstrip("-").isdigit()}
+    elif isinstance(value, list):
+        flat = {i: v for i, v in enumerate(value)}
+    else:
+        return []
+
+    cells = []
+    for offset, raw in flat.items():
+        if not isinstance(raw, (int, float)) or not 0 <= offset < total:
+            continue
+        cell: dict[str, Any] = {}
+        rest = offset
+        for i, stride in enumerate(strides):
+            key = labels[i].get(rest // stride)
+            if key is None:
+                cell = {}
+                break
+            cell[ids[i]] = key
+            rest %= stride
+        if cell:
+            cells.append({**cell, "value": float(raw)})
+    return cells
 
 
-def worldbank_latest(payload: Any) -> tuple[float | None, str | None]:
-    if not isinstance(payload, list) or len(payload) < 2 or not isinstance(payload[1], list):
+def _year_key(cell: dict[str, Any]) -> tuple[int, str]:
+    time = str(cell.get("time") or "")
+    return (int(time) if time.lstrip("-").isdigit() else -(10 ** 9), time)
+
+
+def eurostat_latest(payload: Any, selector: dict[str, str] | None = None) -> tuple[float | None, str | None]:
+    """Latest (value, year) among the cells matching every dimension in `selector`.
+
+    The year is READ OFF the response, never assumed: a series that stops being
+    published simply reports its real last year instead of silently ageing under a
+    hardcoded one. (None, None) means UNCHECKABLE -- no matching cell this run.
+    """
+    wanted = selector or {}
+    matching = [
+        c for c in jsonstat_cells(payload)
+        if all(str(c.get(dim)) == str(key) for dim, key in wanted.items())
+    ]
+    if not matching:
         return None, None
-    for row in payload[1]:
-        if isinstance(row, dict) and row.get("value") is not None:
-            try:
-                return float(row["value"]), str(row.get("date") or "")
-            except (TypeError, ValueError):
-                continue
-    return None, None
+    best = max(matching, key=_year_key)
+    return best["value"], (str(best.get("time")) or None)
 
 
 # ── assemble ──────────────────────────────────────────────────────────────────
@@ -469,7 +554,7 @@ def emit_as_of_ts(snapshot: dict[str, Any]) -> str:
     )
 
 
-def run(write: bool = True) -> dict[str, Any]:
+def run(write: bool = True, only: set[str] | None = None) -> dict[str, Any]:
     as_of = now_iso()
     probe_n = 0
 
@@ -573,48 +658,52 @@ def run(write: bool = True) -> dict[str, Any]:
     # series
     euro_payload, euro_raw = fetch_json(EUROSTAT_AI, timeout=30)
     probe_n += 1
-    ai_val = eurostat_extract_2024(euro_payload) if euro_payload is not None else None
-    # JSON-stat dumps every cell; two series (10+ / 250+) are not separable without the
-    # sizeclas dimension. One live number is MEASURED; the second stays UNCHECKABLE
-    # rather than invented as a twin of the first.
     ai_measured = []
     if euro_raw["page_state"] != "OK":
         ai_status, ai_n = "UNREACHABLE", 0
-        ai_measured.append({"series": "EU27 enterprises using any AI (isoc_eb_ai)", "status": "UNREACHABLE", "source": EUROSTAT_AI, "error": euro_raw.get("error")})
-    elif ai_val is None:
-        ai_status, ai_n = "UNMEASURED", 0
-        ai_measured.append({"series": "EU27 enterprises using any AI (isoc_eb_ai)", "status": "UNCHECKABLE", "source": EUROSTAT_AI, "note": "JSON-stat shape had no numeric cell this run"})
+        for name, _sel in EUROSTAT_AI_SERIES:
+            ai_measured.append({"series": name, "status": "UNREACHABLE", "source": EUROSTAT_AI, "error": euro_raw.get("error")})
     else:
-        ai_status, ai_n = "MEASURED", 1
-        ai_measured.append({"series": "EU27 enterprises using any AI (isoc_eb_ai)", "status": "MEASURED", "year": 2024, "value": ai_val, "unit": "%", "source": EUROSTAT_AI})
-        ai_measured.append({"series": "EU27 large enterprises 250+ using any AI", "status": "UNCHECKABLE", "note": "sizeclas split not isolated this run; not invented from the headline cell", "source": EUROSTAT_AI})
+        ai_n = 0
+        for name, selector in EUROSTAT_AI_SERIES:
+            val, year = eurostat_latest(euro_payload, selector)
+            if val is None:
+                ai_measured.append({
+                    "series": name, "status": "UNCHECKABLE", "source": EUROSTAT_AI,
+                    "note": f"no cell for {selector} in this run's JSON-stat response; not taken from another size class",
+                })
+            else:
+                ai_n += 1
+                ai_measured.append({
+                    "series": name, "status": "MEASURED", "year": year, "value": val,
+                    "unit": "%", "dimensions": selector, "source": EUROSTAT_AI,
+                })
+        ai_status = "MEASURED" if ai_n else "UNMEASURED"
 
-    wb_p, wb_p_raw = fetch_json(WB_PARTICIPATION, timeout=20)
-    probe_n += 1
-    wb_u, wb_u_raw = fetch_json(WB_UNEMPLOYMENT, timeout=20)
-    probe_n += 1
-    p_val, p_year = worldbank_latest(wb_p)
-    u_val, u_year = worldbank_latest(wb_u)
     labour_measured = []
-    if wb_p_raw["page_state"] != "OK" and wb_u_raw["page_state"] != "OK":
-        labour_status, labour_n = "UNREACHABLE", 0
-        labour_measured.append({"series": "EU labour-force participation", "status": "UNREACHABLE", "source": WB_PARTICIPATION})
-        labour_measured.append({"series": "EU unemployment", "status": "UNREACHABLE", "source": WB_UNEMPLOYMENT})
-    else:
-        labour_status = "MEASURED"
-        labour_n = 0
-        if p_val is not None:
-            labour_n += 1
-            labour_measured.append({"series": "EU participation rate", "status": "MEASURED", "year": p_year, "value": p_val, "unit": "%", "source": WB_PARTICIPATION})
+    labour_n = 0
+    labour_reachable = 0
+    for name, url in EUROSTAT_LABOUR_SERIES:
+        payload, raw = fetch_json(url, timeout=30)
+        probe_n += 1
+        if raw["page_state"] != "OK":
+            labour_measured.append({"series": name, "status": "UNREACHABLE", "source": url, "error": raw.get("error")})
+            continue
+        labour_reachable += 1
+        val, year = eurostat_latest(payload)
+        if val is None:
+            labour_measured.append({
+                "series": name, "status": "UNCHECKABLE", "source": url,
+                "note": "response fetched but carried no numeric cell this run",
+            })
         else:
-            labour_measured.append({"series": "EU participation rate", "status": "UNREACHABLE" if wb_p_raw["page_state"] != "OK" else "UNCHECKABLE", "source": WB_PARTICIPATION})
-        if u_val is not None:
             labour_n += 1
-            labour_measured.append({"series": "EU unemployment rate", "status": "MEASURED", "year": u_year, "value": u_val, "unit": "%", "source": WB_UNEMPLOYMENT})
-        else:
-            labour_measured.append({"series": "EU unemployment rate", "status": "UNREACHABLE" if wb_u_raw["page_state"] != "OK" else "UNCHECKABLE", "source": WB_UNEMPLOYMENT})
-        if labour_n == 0:
-            labour_status = "UNREACHABLE"
+            labour_measured.append({
+                "series": name, "status": "MEASURED", "year": year, "value": val,
+                "unit": "%", "source": url,
+            })
+    labour_status = "MEASURED" if labour_n else ("UNMEASURED" if labour_reachable else "UNREACHABLE")
+
 
     humanoid_measured = []
     for url in HUMANOID_URLS:
@@ -660,12 +749,12 @@ def run(write: bool = True) -> dict[str, Any]:
         ),
         "ai-adoption-components": axis_envelope(
             "ai-adoption-components", ai_n, ai_status, as_of, ai_measured,
-            {"n_unit": "public series", "index_formula": False, "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
+            {"n_unit": "public series", "bench": "Eurostat", "index_formula": False, "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
              "tally": three_state_tally([m.get("status") for m in ai_measured])},
         ),
         "labour-components": axis_envelope(
             "labour-components", labour_n, labour_status, as_of, labour_measured,
-            {"n_unit": "public series", "index_formula": False, "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
+            {"n_unit": "public series", "bench": "Eurostat", "index_formula": False, "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
              "tally": three_state_tally([m.get("status") for m in labour_measured])},
         ),
         "humanoid-labour-index": axis_envelope(
@@ -712,9 +801,20 @@ def run(write: bool = True) -> dict[str, Any]:
             "labour-components": "financial-measure-run-labour-components.json",
             "humanoid-labour-index": "financial-measure-run-humanoid-labour-index.json",
         }
+        if only:
+            unknown = only - set(mapping)
+            if unknown:
+                raise SystemExit(f"--only names no such axis: {sorted(unknown)}")
+            mapping = {k: v for k, v in mapping.items() if k in only}
         for name, fname in mapping.items():
             write_json(os.path.join(INTEROP, fname), runs[name])
             write_json(os.path.join(PUBLIC_INTEROP, fname), runs[name])
+        if only:
+            # A partial re-run refreshes only the axes it names. The board-wide as_of
+            # stamp is deliberately left alone: moving it would date the other seven
+            # artifacts to a run that did not rewrite them.
+            print(f"wrote {len(mapping)} run artifact(s) for {sorted(only)}; board as_of left untouched")
+            return {"as_of": as_of, "reader_state": reader_state, "probe_count": probe_n, "runs": runs, "snapshot": snapshot}
         write_json(os.path.join(INTEROP, "financial-facts-as-of.json"), snapshot)
         write_json(os.path.join(PUBLIC_INTEROP, "financial-facts-as-of.json"), snapshot)
         os.makedirs(os.path.dirname(AS_OF_TS), exist_ok=True)
@@ -732,8 +832,10 @@ def run(write: bool = True) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--only", default="", help="comma-separated axis ids to rewrite; others are fetched but not written")
     args = p.parse_args(argv)
-    run(write=not args.dry_run)
+    only = {a.strip() for a in args.only.split(",") if a.strip()} or None
+    run(write=not args.dry_run, only=only)
     return 0
 
 

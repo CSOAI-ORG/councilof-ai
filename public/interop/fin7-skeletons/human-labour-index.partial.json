@@ -11,6 +11,7 @@
       "as_of": "2026-08-25",
       "component": "eu_participation",
       "role": "reference_input",
+      "source": "api.worldbank.org SL.TLF.CACT.ZS (EUU, modelled ILO estimate; share of TOTAL population)",
       "unit": "percent",
       "value": 57.58,
       "vintage": 2024
@@ -19,6 +20,7 @@
       "as_of": "2026-08-25",
       "component": "eu_unemployment",
       "role": "reference_input",
+      "source": "api.worldbank.org SL.UEM.TOTL.ZS (EUU, modelled ILO estimate)",
       "unit": "percent",
       "value": 5.92,
       "vintage": 2024
@@ -37,5 +39,6 @@
     }
   ],
   "rule": "UNMEASURED-first. A skeleton is not a score. Board GET /api/gspc is authority.",
+  "source_correction": "2026-09-17: these two rows were mined from the World Bank's modelled-ILO EUU series, not Eurostat, and are kept at their mined 2026-08-25 values. The live axis labour-components now fetches Eurostat (lfsi_emp_a activity rate age 15-64, une_rt_a unemployment age 15-74); its activity rate is a share of the 15-64 population and is NOT comparable to the share-of-total-population figure below.",
   "status": "UNMEASURED"
 }

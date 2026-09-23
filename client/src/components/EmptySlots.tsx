@@ -2,7 +2,7 @@ import { BOARD_LIVE_RULING, CENSUS_SITES, EMPTY_SLOTS } from "@/lib/emptySlots";
 
 /**
  * /products board-honesty panel. Component name EmptySlots kept for imports.
- * Strangers see 22·22·0 — not seven-empty chrome. Cards are MEASURED instrument
+ * Strangers see the live counts from GET /api/gspc — not seven-empty chrome. Cards are MEASURED instrument
  * notes with live axis ids (data-testid axis-note-*), never empty-slot-*.
  */
 export default function EmptySlots({ tone = "dark" }: { tone?: "dark" | "light" }) {
@@ -25,7 +25,7 @@ export default function EmptySlots({ tone = "dark" }: { tone?: "dark" | "light" 
           {BOARD_LIVE_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
-          Board 22·22·0 — zero declared empty on GET /api/gspc. Notes below are MEASURED
+          Board counts are derived live on GET /api/gspc (quote totals.public_count). Notes below are MEASURED
           instrument history for financial/domain axes (live ids). Empty-as-finding only when{" "}
           <code className="text-[12px]">unmeasured_axes &gt; 0</code>. Not a certificate.
         </p>

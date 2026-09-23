@@ -1,0 +1,97 @@
+{
+ "schema": "csoai.corrections-propagation/0.3",
+ "supersedes": "public/interop/corrections-that-did-not-travel-2026-09-17-v0.2.json",
+ "supersedes_note": "v0.2 is left exactly as published. v0.3 adds one field per row: what the page showed when re-fetched five days after the corrector was notified.",
+ "signed": false,
+ "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
+ "method": "On 2026-09-17 nine organisations named in v0.2 were notified by email from nicholas@csoai.org (Sent 413-422). On 2026-09-22 03:26-03:48Z every cited page was re-fetched with a browser user-agent and the stale value looked for again, verbatim.",
+ "notified_2026_09_17": [
+  "METR",
+  "Hugging Face",
+  "ARC Prize",
+  "OpenAI",
+  "xAI",
+  "Vals AI",
+  "LiveBench",
+  "Anthropic",
+  "Scale AI (bounced: security@ routes to a Jira that rejects mail)"
+ ],
+ "refetched_2026_09_22": [
+  {
+   "corrector": "METR",
+   "page": "https://metr.substack.com/p/2026-01-19-early-work-on-monitorability-evaluations",
+   "fetched": "2026-09-22T03:47:18Z",
+   "still_shows": "averaged monitor catch rate is 30% ... up to 88%",
+   "corrected_value_present": false,
+   "state": "UNCHANGED"
+  },
+  {
+   "corrector": "Hugging Face",
+   "page": "https://huggingface.co/search/full-text?q=%22DROP+(3-shot)%22&type=model",
+   "fetched": "2026-09-22T03:48:10Z",
+   "still_shows": "totalHits 1334 (was 1332 on 17 Sep)",
+   "corrected_value_present": false,
+   "state": "UNCHANGED_AND_GREW"
+  },
+  {
+   "corrector": "ARC Prize",
+   "page": "https://arcprize.org/blog/r1-zero-r1-results-analysis",
+   "fetched": "2026-09-22T03:28:27Z",
+   "still_shows": "o3-preview (low) ... $20 / o3-preview (high) ... $3.4K",
+   "corrected_value_present": false,
+   "state": "UNCHANGED"
+  },
+  {
+   "corrector": "OpenAI",
+   "page": "https://deploymentsafety.openai.com/gpt-5-5/gpt-5-5.pdf",
+   "fetched": "2026-09-22T03:36:29Z",
+   "still_shows": "solved one of UK AISI's cyber ranges end-to-end in 1/10 attempts",
+   "corrected_value_present": false,
+   "state": "RE_SERVED_UNCHANGED",
+   "note": "PDF Last-Modified 2026-09-22T03:20:44Z, sixteen minutes before the fetch; bytes rebuilt, value kept."
+  },
+  {
+   "corrector": "xAI",
+   "page": "https://data.x.ai/2025-08-20-grok-4-model-card.pdf",
+   "fetched": "2026-09-22T03:48:09Z",
+   "still_shows": "Last updated: August 20, 2025 (PDF CreationDate 20250822)",
+   "corrected_value_present": false,
+   "state": "UNCHANGED"
+  },
+  {
+   "corrector": "Vals AI",
+   "page": "https://www.vals.ai/",
+   "fetched": "2026-09-22T03:26:15Z",
+   "still_shows": "ties Claude Opus 5 for first at 99% ... $8.80 per task",
+   "corrected_value_present": false,
+   "state": "UNCHANGED_NEWER_ITEM_ADDED_ABOVE",
+   "note": "A newer Fable 5.1 item now sits above the stale one; the stale one was left in place."
+  },
+  {
+   "corrector": "LiveBench",
+   "page": "https://livebench.ai/livebench.pdf",
+   "fetched": "2026-09-22T03:28:27Z",
+   "still_shows": "Contamination-Free ... immune to ... 0.5B to 110B ... below 65%",
+   "corrected_value_present": false,
+   "state": "RE_SERVED_UNCHANGED",
+   "note": "last-modified Mon, 21 Sep 2026 22:34:56 GMT, four days after notification; still the v1 text (CreationDate 20240625)."
+  },
+  {
+   "corrector": "Scale AI",
+   "page": "https://labs.scale.com/leaderboard/mcp_atlas",
+   "fetched": "2026-09-22T03:26:18Z",
+   "still_shows": "62.3% pass rate alongside 'We re-scored all leaderboard models' and 69.80 in the table",
+   "corrected_value_present": true,
+   "state": "UNCHANGED_BOTH_VALUES_PRESENT",
+   "note": "Notification bounced; this row records no delivery."
+  }
+ ],
+ "summary": {
+  "pages_refetched": 8,
+  "corrected_since_notification": 0,
+  "re_served_without_correction": 2,
+  "grew_worse": 1
+ },
+ "what_this_does_not_establish": "Five days is a short window and two notifications went to security desks that auto-route to bug-bounty programmes; one bounced. A non-correction here is an observation about the page, not about anyone's intent.",
+ "generated_at": "2026-09-22T03:55:00Z"
+}

@@ -75,6 +75,9 @@ export const onRequestGet: PagesFunction<{
           "rail as unsigned rather than expect a format we cannot produce.",
         verify: {
           hosted: `${origin}/api/receipts/verify`,
+          independent_source: "https://huggingface.co/datasets/csoai/councilof-ai-source/resolve/6ff9855a2e2bc32d25d6474ce7e2da50f6f5fadb/source/scripts/verify_receipt.py",
+          source_sha256: "dd310cbd62add18f83a535e4d442b4c891c7b967f33fd74d04874c2b36739336",
+          note: "The script fetches the public DID key and verifies the JWS without calling the hosted verifier API.",
         },
         receipts_by_payer: `${origin}/api/receipts?payer=0x0000000000000000000000000000000000000000`,
       },

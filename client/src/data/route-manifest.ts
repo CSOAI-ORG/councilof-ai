@@ -1308,6 +1308,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Membership Agreement"
  },
  {
+  "path": "/memberships",
+  "comp": "Memberships",
+  "title": "Memberships"
+ },
+ {
   "path": "/meok-law",
   "comp": "MeokLaw",
   "title": "Meok Law"
@@ -1451,6 +1456,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/packs/eu-article-50",
   "comp": "Article50Pack",
   "title": "Article50 Pack"
+ },
+ {
+  "path": "/pay",
+  "comp": "PayEveryDoor",
+  "title": "Pay Every Door"
  },
  {
   "path": "/payg",

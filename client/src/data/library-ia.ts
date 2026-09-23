@@ -108,6 +108,10 @@ export const PRIMARY_PATHS = new Set<string>([
   "/watchdog-hub",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
+  // /pay — the buyer surface: every x402 door from the live manifest, one settle each from the
+  // owner's own wallet. A current page the coordinator deep-links (?door=); unregistered it
+  // would ship flagged "archived" under a link we actively use.
+  "/pay",
   // /services is a primary nav destination (HeaderNav PRIMARY_LINKS). Without an
   // entry here it renders under the "Reference / archive" banner — a nav item
   // leading to a page that calls itself archived.
@@ -124,6 +128,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // /press is the estate's press hub — must be primary or journalists
   // land on an "archived reference" page.
   "/press",
+  // /memberships — where we take part, from public/interop/memberships.json. Linked from the
+  // home strip and the footer; unregistered it would ship under the "archived" banner.
+  "/memberships",
   // /pricing — real pricing page (was a 308 redirect, now a live surface).
   "/pricing",
   // /governance — governance framework page.

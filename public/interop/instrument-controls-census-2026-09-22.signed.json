@@ -1,0 +1,69 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/instrument-controls-census-2026-09-22.json",
+      "sha256": "ff04a12f32a7dd54366eca9c7b3551adf20f8876007aa101be3029d19c94635b",
+      "schema": "csoai.instrument-controls/0.1",
+      "as_of": "2026-09-22T08:44:54Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the artifact's own instrument measured.",
+    "totals": {
+      "DEMONSTRATED": 3,
+      "NOT_RECORDED": 586,
+      "UNCHECKABLE": 3,
+      "by_reason_code": {
+        "CONTROL_NEVER_NEGATIVE": 1,
+        "FLAG_OR_COUNT_ONLY": 5,
+        "NEGATIVE_OBSERVED": 3,
+        "NO_CONTROL_RECORDED": 580,
+        "PROSE_ONLY": 3
+      },
+      "by_corpus": {
+        "interop": {
+          "DEMONSTRATED": 3,
+          "NOT_RECORDED": 570,
+          "UNCHECKABLE": 3
+        },
+        "signed": {
+          "DEMONSTRATED": 0,
+          "NOT_RECORDED": 16,
+          "UNCHECKABLE": 0
+        }
+      },
+      "n": 592,
+      "demonstrated_files": [
+        "public/interop/effect-binding-server-probe-2026-09-22.controls.json",
+        "public/interop/effect-binding-server-probe-2026-09-22.json",
+        "public/interop/ots-chain-verification-2026-09-17.json"
+      ],
+      "uncheckable_files": [
+        "public/interop/card-store-verification.json",
+        "public/interop/master-consolidation-2026-09-16.json",
+        "public/interop/master-consolidation-summary.json"
+      ],
+      "never_negative_files": [
+        "public/interop/financial-ledger-n-unsigned.json"
+      ],
+      "flag_only_files": [
+        "public/interop/emilia-identity-independent-2026-08-29.json",
+        "public/interop/ledger-card-a2a-agent-unsigned.json",
+        "public/interop/ledger-card-a2a-agent.json",
+        "public/interop/ledger-cards-compact.json",
+        "public/interop/thin-banks-gold-80-20260831.json"
+      ]
+    }
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "9f83cff2222bfaf3aab28d87c347a0bbe3e7b8133828ff0d2f683afc18c244a73afa63393bc2100a531c7bd936482322d2243178ee486c31b37ff7c330f36803",
+    "payload_sha256": "ad7464cccb5b79b1755ca0f4f472cd48bcd4aec0cc716473bb6ca5cb0fbd7356",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-22T12:25:48.920Z"
+  },
+  "verify": "canonicalise payload, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with #board-attestation-1 from https://csoai.org/.well-known/did.json"
+}

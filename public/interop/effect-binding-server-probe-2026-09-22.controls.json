@@ -1,0 +1,328 @@
+{
+ "ran_at": "2026-09-22T05:42:44.406Z",
+ "controls": {
+  "control:binds": {
+   "expected": "BINDS",
+   "got": "BINDS",
+   "P1": true,
+   "P2": "REJECTS",
+   "P3": "REPLAY_REJECTED",
+   "P4": true,
+   "passed": true
+  },
+  "control:nobind": {
+   "expected": "DOES_NOT_BIND",
+   "got": "DOES_NOT_BIND",
+   "P1": false,
+   "P2": "ACCEPTS_SILENTLY",
+   "P3": "NOT_APPLICABLE",
+   "P4": false,
+   "passed": true
+  }
+ },
+ "both_behaved": true,
+ "grader_can_fail": {
+  "injected_defect": "EB_FLIP=p2_errors_are_acceptance: P2 no longer counts a JSON-RPC/HTTP/tool error as rejection",
+  "control": "control:binds",
+  "verdict_without_defect": "BINDS",
+  "verdict_with_defect": "UNCHECKABLE",
+  "P2_with_defect": "INDETERMINATE",
+  "changed_as_required": true
+ },
+ "abort_rule": "if either control misgraded or the injected defect left the verdict unchanged, ABORT.json is written and no public server is probed",
+ "raw": {
+  "control:binds": {
+   "name": "control:binds",
+   "title": null,
+   "url": "http://127.0.0.1:8771/mcp",
+   "declared_transport": "streamable-http",
+   "self": true,
+   "started_at": "2026-09-22T05:42:04.161Z",
+   "well_known": {
+    "http://127.0.0.1:8771/.well-known/oauth-protected-resource": {
+     "status": 404,
+     "keys": null
+    },
+    "http://127.0.0.1:8771/.well-known/oauth-protected-resource/mcp": {
+     "status": 404,
+     "keys": null
+    }
+   },
+   "initialize": {
+    "status": "ok",
+    "detail": "streamable-http HTTP 200",
+    "transport": "streamable-http"
+   },
+   "server_info": {
+    "name": "csoai-control-binds",
+    "version": "0.1"
+   },
+   "protocol_version": "2025-06-18",
+   "n_tools": 1,
+   "tool_names": [
+    "get_echo"
+   ],
+   "P1": {
+    "declared": true,
+    "fields": [
+     {
+      "where": "tools/list.get_echo.inputSchema.properties",
+      "field": "nonce"
+     }
+    ]
+   },
+   "read_only_tools": [
+    "get_echo"
+   ],
+   "calls_used": 3,
+   "P2": {
+    "status": "REJECTS",
+    "attempts": [
+     {
+      "tool": "get_echo",
+      "documented_args": {
+       "message": "csoai",
+       "nonce": "csoai-probe-nonce-1790055732"
+      },
+      "baseline": {
+       "kind": "ok",
+       "detail": null
+      },
+      "extra": {
+       "kind": "rpc_error",
+       "detail": "code=-32602 msg=unexpected argument(s): ['csoai_probe_unauthorised']",
+       "arg": "csoai_probe_unauthorised"
+      },
+      "read": "baseline ok, extra-arg rejected"
+     }
+    ]
+   },
+   "P3": {
+    "status": "REPLAY_REJECTED",
+    "field": "nonce",
+    "value": "csoai-probe-nonce-1790055732",
+    "first": {
+     "kind": "ok",
+     "detail": null
+    },
+    "second": {
+     "kind": "rpc_error",
+     "detail": "code=-32602 msg=nonce already consumed"
+    }
+   },
+   "P4": {
+    "present": true,
+    "fields": [
+     {
+      "where": "tools/call:get_echo#baseline",
+      "field": "tools/call:get_echo#baseline.result.structuredContent.receipt",
+      "value_shape": "object"
+     },
+     {
+      "where": "tools/call:get_echo#baseline",
+      "field": "tools/call:get_echo#baseline.result.structuredContent.receipt.request_sha256",
+      "value_shape": "string[64]"
+     },
+     {
+      "where": "tools/call:get_echo#baseline",
+      "field": "tools/call:get_echo#baseline.result.structuredContent.receipt.signature",
+      "value_shape": "string[64]"
+     }
+    ],
+    "scanned": [
+     "tools/call:get_echo#baseline",
+     "tools/call:get_echo#replay",
+     "tools/call:get_echo#extra-arg"
+    ]
+   },
+   "outcome": "BINDS",
+   "finished_at": "2026-09-22T05:42:18.215Z",
+   "http_requests": 6
+  },
+  "control:nobind": {
+   "name": "control:nobind",
+   "title": null,
+   "url": "http://127.0.0.1:8772/mcp",
+   "declared_transport": "streamable-http",
+   "self": true,
+   "started_at": "2026-09-22T05:42:18.215Z",
+   "well_known": {
+    "http://127.0.0.1:8772/.well-known/oauth-protected-resource": {
+     "status": 404,
+     "keys": null
+    },
+    "http://127.0.0.1:8772/.well-known/oauth-protected-resource/mcp": {
+     "status": 404,
+     "keys": null
+    }
+   },
+   "initialize": {
+    "status": "ok",
+    "detail": "streamable-http HTTP 200",
+    "transport": "streamable-http"
+   },
+   "server_info": {
+    "name": "csoai-control-nobind",
+    "version": "0.1"
+   },
+   "protocol_version": "2025-06-18",
+   "n_tools": 1,
+   "tool_names": [
+    "get_echo"
+   ],
+   "P1": {
+    "declared": false,
+    "fields": []
+   },
+   "read_only_tools": [
+    "get_echo"
+   ],
+   "calls_used": 2,
+   "P2": {
+    "status": "ACCEPTS_SILENTLY",
+    "attempts": [
+     {
+      "tool": "get_echo",
+      "documented_args": {
+       "message": "csoai"
+      },
+      "baseline": {
+       "kind": "ok",
+       "detail": null
+      },
+      "extra": {
+       "kind": "ok",
+       "detail": null,
+       "arg": "csoai_probe_unauthorised"
+      },
+      "read": "baseline ok, extra-arg ok"
+     }
+    ]
+   },
+   "P3": {
+    "status": "NOT_APPLICABLE"
+   },
+   "P4": {
+    "present": false,
+    "fields": [],
+    "scanned": [
+     "tools/call:get_echo#baseline",
+     "tools/call:get_echo#extra-arg"
+    ]
+   },
+   "outcome": "DOES_NOT_BIND",
+   "finished_at": "2026-09-22T05:42:30.310Z",
+   "http_requests": 5
+  }
+ },
+ "raw_flipped": {
+  "name": "control:binds",
+  "title": null,
+  "url": "http://127.0.0.1:8771/mcp",
+  "declared_transport": "streamable-http",
+  "self": true,
+  "started_at": "2026-09-22T05:42:30.310Z",
+  "well_known": {
+   "http://127.0.0.1:8771/.well-known/oauth-protected-resource": {
+    "status": 404,
+    "keys": null
+   },
+   "http://127.0.0.1:8771/.well-known/oauth-protected-resource/mcp": {
+    "status": 404,
+    "keys": null
+   }
+  },
+  "initialize": {
+   "status": "ok",
+   "detail": "streamable-http HTTP 200",
+   "transport": "streamable-http"
+  },
+  "server_info": {
+   "name": "csoai-control-binds",
+   "version": "0.1"
+  },
+  "protocol_version": "2025-06-18",
+  "n_tools": 1,
+  "tool_names": [
+   "get_echo"
+  ],
+  "P1": {
+   "declared": true,
+   "fields": [
+    {
+     "where": "tools/list.get_echo.inputSchema.properties",
+     "field": "nonce"
+    }
+   ]
+  },
+  "read_only_tools": [
+   "get_echo"
+  ],
+  "calls_used": 3,
+  "P2": {
+   "status": "INDETERMINATE",
+   "attempts": [
+    {
+     "tool": "get_echo",
+     "documented_args": {
+      "message": "csoai",
+      "nonce": "csoai-probe-nonce-1790055758"
+     },
+     "baseline": {
+      "kind": "ok",
+      "detail": null
+     },
+     "extra": {
+      "kind": "rpc_error",
+      "detail": "code=-32602 msg=unexpected argument(s): ['csoai_probe_unauthorised']",
+      "arg": "csoai_probe_unauthorised"
+     },
+     "read": "baseline ok, extra-arg rpc_error; cannot discriminate"
+    }
+   ]
+  },
+  "P3": {
+   "status": "REPLAY_REJECTED",
+   "field": "nonce",
+   "value": "csoai-probe-nonce-1790055758",
+   "first": {
+    "kind": "ok",
+    "detail": null
+   },
+   "second": {
+    "kind": "rpc_error",
+    "detail": "code=-32602 msg=nonce already consumed"
+   }
+  },
+  "P4": {
+   "present": true,
+   "fields": [
+    {
+     "where": "tools/call:get_echo#baseline",
+     "field": "tools/call:get_echo#baseline.result.structuredContent.receipt",
+     "value_shape": "object"
+    },
+    {
+     "where": "tools/call:get_echo#baseline",
+     "field": "tools/call:get_echo#baseline.result.structuredContent.receipt.request_sha256",
+     "value_shape": "string[64]"
+    },
+    {
+     "where": "tools/call:get_echo#baseline",
+     "field": "tools/call:get_echo#baseline.result.structuredContent.receipt.signature",
+     "value_shape": "string[64]"
+    }
+   ],
+   "scanned": [
+    "tools/call:get_echo#baseline",
+    "tools/call:get_echo#replay",
+    "tools/call:get_echo#extra-arg"
+   ]
+  },
+  "drop_reason": "p2_indeterminate",
+  "outcome": "UNCHECKABLE",
+  "finished_at": "2026-09-22T05:42:44.406Z",
+  "http_requests": 6
+ },
+ "passed": true
+}

@@ -6,6 +6,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import HeroSlides from "@/components/HeroSlides";
+import LiveCounters from "@/components/LiveCounters";
+import MembershipStrip from "@/components/MembershipStrip";
 import HomeComposer from "@/components/home/HomeComposer";
 import ToolStack from "@/components/home/ToolStack";
 import LivingStages from "@/components/home/LivingStages";
@@ -63,6 +65,15 @@ export default function HomeVerify() {
           with nothing to show. The board table below is the first thing now, and it reads its
           counts live from /api/gspc. */}
       <HeroSlides />
+
+      {/* Adoption funnel, read live from /api/footprint: gross downloads, paying wallets, registry
+          listings — one pill per stage, each from its own source, "—" until the payload lands.
+          No board count here: the one count line on this page is HomeGspcTable's. */}
+      <LiveCounters variant="hero" />
+      <MembershipStrip variant="badges" />
+
+      {/* Where we take part — text pills read from the committed manifest, each linking to its
+          evidence. No logos, no count. Participation is not endorsement. */}
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
         <section aria-labelledby="os-h1">

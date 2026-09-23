@@ -10,23 +10,21 @@ const footer = readFileSync(join(here, "Footer.tsx"), "utf8");
 const clientIndex = readFileSync(join(root, "client/index.html"), "utf8");
 const rootIndex = readFileSync(join(root, "index.html"), "utf8");
 
-const SOURCE_REPOSITORY = "https://github.com/CSOAI-ORG/councilof-ai";
-const PUBLIC_PROFILE = "https://github.com/CouncilofAI-CSOAI";
-const EVIDENCE_MIRROR = "https://github.com/CouncilofAI-CSOAI/csoai-public-evidence";
+const SOURCE_SNAPSHOT = "https://huggingface.co/datasets/csoai/councilof-ai-source";
+const EVIDENCE_MIRROR = "https://huggingface.co/datasets/csoai/councilof-ai-mirror";
 
-test("public footer distinguishes source, continuity profile, and evidence mirror", () => {
-  assert.match(footer, new RegExp(SOURCE_REPOSITORY.replace(/[./]/g, "\\$&")));
-  assert.match(footer, new RegExp(PUBLIC_PROFILE.replace(/[./]/g, "\\$&")));
+test("public footer names the dated source snapshot and evidence mirror", () => {
+  assert.match(footer, new RegExp(SOURCE_SNAPSHOT.replace(/[./]/g, "\\$&")));
   assert.match(footer, new RegExp(EVIDENCE_MIRROR.replace(/[./]/g, "\\$&")));
-  assert.match(footer, /name: 'CSOAI source repository'/);
-  assert.match(footer, /name: 'CSOAI public GitHub profile'/);
+  assert.match(footer, /name: 'Dated source snapshot'/);
   assert.match(footer, /name: 'Public evidence mirror'/);
+  assert.doesNotMatch(footer, /github\.com\/(?:CSOAI-ORG|CouncilofAI-CSOAI)/);
 });
 
-test("organization metadata uses exact public targets rather than the generic org root", () => {
+test("organization metadata points to publicly readable evidence", () => {
   for (const markup of [clientIndex, rootIndex]) {
-    assert.match(markup, new RegExp(SOURCE_REPOSITORY.replace(/[./]/g, "\\$&")));
-    assert.match(markup, new RegExp(PUBLIC_PROFILE.replace(/[./]/g, "\\$&")));
-    assert.doesNotMatch(markup, /"https:\/\/github\.com\/CSOAI-ORG"/);
+    assert.match(markup, new RegExp(SOURCE_SNAPSHOT.replace(/[./]/g, "\\$&")));
+    assert.match(markup, new RegExp(EVIDENCE_MIRROR.replace(/[./]/g, "\\$&")));
+    assert.doesNotMatch(markup, /github\.com\/(?:CSOAI-ORG|CouncilofAI-CSOAI)/);
   }
 });

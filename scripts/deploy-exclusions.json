@@ -1,0 +1,18 @@
+{
+  "schema": "csoai.deploy-exclusions/0.1",
+  "note": "Paths removed from dist/client before pages-size-guard and brand-gate. Each MUST have a matching redirect in public/_redirects so the URL keeps resolving (the drop script refuses otherwise). Nothing here leaves the repository.",
+  "entries": [
+    {
+      "path": "proofs",
+      "kind": "dir",
+      "since": "2026-09-22",
+      "why": "3,993 .ots files; Cloudflare Pages 20,000-file cap; served via 302 from the HF mirror"
+    },
+    {
+      "path": "interop/effect-binding-server-probe-2026-09-22.json",
+      "kind": "file",
+      "since": "2026-09-22",
+      "why": "signed-pinned run artifact whose bytes list third-party registry names the brand gate refuses; served via 302 from the HF mirror; the signed companion stays on-site"
+    }
+  ]
+}

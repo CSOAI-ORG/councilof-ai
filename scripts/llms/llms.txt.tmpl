@@ -13,9 +13,9 @@ GET https://councilof.ai/api/gspc
 Public lock (language only — every count lives on the API, none is frozen here):
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
 
-Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the 11 withheld model axes):
+Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
 {{LID}}
-Also quote `totals.public_leader_count` beside any "22 measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
+Also quote `totals.public_leader_count` beside any "{{MEASURED}} measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
 (Historical note, kept so the correction is legible: this file used to freeze the count at "14 quotable board slots" and to instruct readers not to say 22. That lock was written while the 8 financial/domain axes were ruled in but absent from the signed payload — a guardrail against typing a number the artifact could not back. The 2026-08-26 sweep wired them in and re-signed, so the API now backs the larger count. The guardrail is retired; the rule it protected — never type a count, never call a slot a measurement — is not.)
 
@@ -29,6 +29,7 @@ Jail is a measured containment floor on the behavioural half of the board — no
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
 Do not quote scores, n, leaders, or stamp tables from this file.
 
+{{AXIS_DOORS_SECTION}}
 ## Agent-UI stream (agents)
 - Living GSPC as AG-UI events: GET https://councilof.ai/api/agui/gspc-state — SSE STATE_DELTA + TEXT_MESSAGE_CONTENT, derived from GET /api/gspc per request. Read-only presentation transport; it renders the board, it never awards a state. Empty cells stay visible; no score is invented to fill a frame.
 - Human view of the same board: https://councilof.ai/dashboard
@@ -42,7 +43,7 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 - Free door (amount 0): GET https://councilof.ai/api/free-door — settles, charges nothing; proves the rail
 - Signed offers: a 402 carries `extensions["offer-receipt"].info.offers[]` only when the Pages signing key is available — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
 - Signed receipts: a settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt` only when settlement exposes the required payer and transaction evidence and the Pages signing key is available
-- Check the JWS with the free hosted receipt verifier: POST https://councilof.ai/api/receipts/verify
+- Check the JWS with POST https://councilof.ai/api/receipts/verify or the pinned verifier source at https://huggingface.co/datasets/csoai/councilof-ai-source/resolve/6ff9855a2e2bc32d25d6474ce7e2da50f6f5fadb/source/scripts/verify_receipt.py (SHA-256 dd310cbd62add18f83a535e4d442b4c891c7b967f33fd74d04874c2b36739336). The script fetches the public DID key and does not call the hosted verifier API.
 - Your receipts: GET https://councilof.ai/api/receipts?payer=0x0000000000000000000000000000000000000000 — replace the all-zero example with your payer address. status UNRECORDED means no store is bound on that deployment, never that you did not pay
 - We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
@@ -77,7 +78,7 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 
 ## Overlay notes (ARC-AGI is an overlay, not an axis)
 
-notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; it is an overlay, not an axis. The board's 23rd slot (since ADR-002, 2026-09-16) is effect-binding, a declared slot with no run behind it — not ARC-AGI. Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze any pair in this file (live derives {{AXES}}·{{MEASURED}}·{{UNMEASURED}} after #1077). Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
+notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; it is an overlay, not an axis. The newest slot on the board (ADR-002, 2026-09-16) is effect-binding — not ARC-AGI; whether that slot is MEASURED or still a declared slot is on its own row, GET https://councilof.ai/api/gspc?axis=effect-binding, never typed here (this file once froze it as "no run behind it" and was stale within a week). Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze any pair in this file (live derives {{AXES}}·{{MEASURED}}·{{UNMEASURED}} after #1077). Do not add ARC-AGI as an axis. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
 
 ## Census leftover (not a grade)
 
@@ -141,6 +142,7 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
 - Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/{{DOI}}
+- Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
 Lid (quote live `totals.lid`): {{LID}}
 

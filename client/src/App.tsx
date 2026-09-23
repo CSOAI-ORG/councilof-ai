@@ -189,9 +189,12 @@ const GSPCVerify = lazy(() => import("./pages/GSPCVerify"));
 const Methodology = lazy(() => import("./pages/Methodology"));
 const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
+// /memberships — where we take part, every row from public/interop/memberships.json with its evidence.
+const Memberships = lazy(() => import("./pages/Memberships"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
+const PayEveryDoor = lazy(() => import("./pages/PayEveryDoor"));
 const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const OwaspAsiMapping = lazy(() => import("./pages/OwaspAsiMapping"));
@@ -632,11 +635,13 @@ function App() {
                   <Route path="/library" component={Library} />
                   <Route path="/library/:sector" component={Library} />
                   <Route path="/honesty" component={Honesty} />
+                  <Route path="/memberships" component={Memberships} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/doctrine" component={Doctrine} />
+                  <Route path="/pay" component={PayEveryDoor} />
                   <Route path="/launch" component={Launch} />
                   <Route path="/owasp-agentic" component={OwaspAgentic} />
                   <Route path="/owasp-asi" component={OwaspAsiMapping} />

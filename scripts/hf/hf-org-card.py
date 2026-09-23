@@ -38,6 +38,10 @@ TARGETS = {"README": "space", "gspc-board": "space"}
 BOARD_DATASET = f"{ORG}/gspc-board"
 OPEN, CLOSE = "<!-- csoai-live-board -->", "<!-- /csoai-live-board -->"
 HUB_OPEN, HUB_CLOSE = "<!-- csoai-hubcard-v2 -->", "<!-- /csoai-hubcard-v2 -->"
+# One line per bank card that names the ONE board row this bank stands behind. Spliced before the
+# hubcard block under its own markers, so a hand edit and a producer run land the same bytes and
+# neither appends twice. scripts/hf/hf_live_row.py (run on the pod) uses this same function.
+LIVE_ROW_OPEN, LIVE_ROW_CLOSE = "<!-- csoai-live-row -->", "<!-- /csoai-live-row -->"
 DOI = "10.5281/zenodo.21991104"
 SNAPSHOT_DOI = "10.5281/zenodo.22293341"
 LINKS = {
@@ -163,6 +167,28 @@ def render(d: dict) -> str:
     out += [f"| {k} | <{v}> |" for k, v in LINKS.items()]
     out += ["", "Measurement, not certification. Signed means Ed25519 under `did:web:csoai.org`; nothing here is a certificate, a rank for sale, or a conformity mark.", CLOSE]
     return "\n".join(out) + "\n"
+
+
+def axis_for_repo(repo: str, d: dict) -> str | None:
+    """The board row whose `dataset` field names this repo — read off the live board, never a typed map.
+    Two rows naming one repo would be a board defect; the first is returned and the rest are the
+    board's problem to surface, not this card's to hide."""
+    for a in d.get("axes") or []:
+        if a.get("dataset") == repo:
+            return a.get("axis")
+    return None
+
+
+def live_row_block(axis: str) -> str:
+    """No status, no n, no lid: those live on the row and this block only points at it."""
+    return "\n".join([
+        LIVE_ROW_OPEN,
+        f"**Live measurement.** This bank stands behind the `{axis}` row of the live GSPC board: "
+        f"`GET {API}?axis={axis}` (family, kind, status and n are on that row, never typed here; "
+        f"the whole board is `GET {API}`). Measurement, not certification.",
+        LIVE_ROW_CLOSE,
+        "",
+    ])
 
 
 def splice(readme: str, block: str, open_: str = OPEN, close: str = CLOSE, before: str | None = HUB_OPEN) -> str:
@@ -731,6 +757,9 @@ def hubcard(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") ->
             print(f"{repo}: items.jsonl unreadable ({type(e).__name__}) — canary state UNCHECKABLE", file=sys.stderr)
     block = hubcard_block(repo, kind, d, tree, rows, as_of, canary)
     body = splice(body, block, HUB_OPEN, HUB_CLOSE, before=None)
+    axis = axis_for_repo(repo, d) if d.get("state") == "DERIVED" else None
+    if axis:
+        body = splice(body, live_row_block(axis), LIVE_ROW_OPEN, LIVE_ROW_CLOSE, before=HUB_OPEN)
     new = join_front_matter(fm, body)
     (dest / "README.md").write_text(new, encoding="utf-8")
     uploads.append((dest / "README.md", "README.md"))

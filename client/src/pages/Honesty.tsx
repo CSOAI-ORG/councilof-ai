@@ -229,7 +229,10 @@ export default function Honesty() {
 
         {/* ── 2. what the chain does not prove ───────────────────────── */}
         <h2 className="mt-12 text-xl font-bold">2. Where our cryptography stops</h2>
-        <p className="mt-3 leading-relaxed text-slate-700">{facts.verifiedSentence}</p>
+        <p className="mt-3 leading-relaxed text-slate-700">
+          {facts.verifiedSentence}
+          {facts.provenanceNote}
+        </p>
         <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-5 text-sm leading-relaxed text-amber-950">
           <p className="font-semibold">The limit, stated precisely.</p>
           <p className="mt-2">{facts.withheldSentence}</p>

@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.effect-binding-server-run/0.1",
+    "axis": "effect-binding",
+    "board_slot": 23,
+    "ruling_ref": "council-os/ADR-002-axis-23-effect-binding.md",
+    "kind": "deterministic-facts",
+    "status": "MEASURED",
+    "n": 261,
+    "n_unit": "tool-call servers probed",
+    "as_of": "2026-09-22T05:43:05Z",
+    "artifact": {
+      "path": "/interop/effect-binding-server-probe-2026-09-22.json",
+      "sha256": "e7083086fedf34d528caecf5771e0019ef34282c24727532e70ede8b1b87fc69",
+      "mirror": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json"
+    },
+    "raw_log": {
+      "path": "public/interop/effect-binding-server-probe-2026-09-22.log.jsonl (HF mirror only)",
+      "sha256": "b615413e559e084a2c589d537b0a7414c5914d9c5b2e1c9cc437fda2cc8f19aa"
+    },
+    "verdicts": {
+      "BINDS": 0,
+      "PARTIAL": 23,
+      "DOES_NOT_BIND": 238
+    },
+    "tried": 600,
+    "dropped": {
+      "UNCHECKABLE": 230,
+      "UNREACHABLE": 78,
+      "NO_TOOLS": 1,
+      "NO_READONLY_TOOL": 30
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token; the PKCS8 never left Cloudflare)",
+    "not_a_grade": "A signature proves these bytes were signed by the board key; it does not prove any claim inside the artifact beyond what its instrument measured (SCITT rule)."
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "0363028ac72de6fcba6632332c6f0785f12e698cfee605b4648ad38f574d67adcd916094737139d8963faca1e4a4650ed05d999842b34757452ffeb84a6d4504",
+    "payload_sha256": "d2196fe478ec37d1833a3b4526a6cd893c366bc44e29a8ec590aa5a1c8d84dac",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-22T08:06:53.196Z"
+  },
+  "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
+}

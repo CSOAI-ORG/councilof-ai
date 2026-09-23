@@ -1,0 +1,345 @@
+{
+ "schema": "csoai.index.x1/0.1",
+ "index": "X-1 MCP Publisher Concentration Index",
+ "method_version": "0.1",
+ "method_doc": "X1-METHOD-v0.1.md",
+ "signed": false,
+ "as_of": "2026-09-22",
+ "generated_at": "2026-09-22T08:58:38Z",
+ "kind": "measured",
+ "intended_use": "informational",
+ "financial_reference_allowed": false,
+ "correction_policy": "supersede, never edit; corrections ledger at /api/corrections",
+ "population_id": "mcp-registry-official-full-walk",
+ "population": {
+  "source": "https://registry.modelcontextprotocol.io/v0/servers?limit=100 (cursor walk)",
+  "walk": {
+   "sharded": true,
+   "shards": 12,
+   "seeds": [
+    null,
+    "com.",
+    "dev.",
+    "io.github.a",
+    "io.github.d",
+    "io.github.h",
+    "io.github.l",
+    "io.github.n",
+    "io.github.r",
+    "io.github.t",
+    "me.",
+    "org."
+   ],
+   "abutment": [
+    {
+     "shard": 1,
+     "next_shard": 2,
+     "final_next_cursor": "com.1102tools/bls-oews-mcp:1.0.9",
+     "next_seed": "com.",
+     "ok": true
+    },
+    {
+     "shard": 2,
+     "next_shard": 3,
+     "final_next_cursor": "dev.agentsim/mcp:0.25.1",
+     "next_seed": "dev.",
+     "ok": true
+    },
+    {
+     "shard": 3,
+     "next_shard": 4,
+     "final_next_cursor": "io.github.a202-protocol/a202-mcp:0.1.0",
+     "next_seed": "io.github.a",
+     "ok": true
+    },
+    {
+     "shard": 4,
+     "next_shard": 5,
+     "final_next_cursor": "io.github.dacode-dev/agent-context-api:0.6.1",
+     "next_seed": "io.github.d",
+     "ok": true
+    },
+    {
+     "shard": 5,
+     "next_shard": 6,
+     "final_next_cursor": "io.github.haiiibin/acb-tax-mcp:0.1.2",
+     "next_seed": "io.github.h",
+     "ok": true
+    },
+    {
+     "shard": 6,
+     "next_shard": 7,
+     "final_next_cursor": "io.github.l33tdawg/sage:11.18.26",
+     "next_seed": "io.github.l",
+     "ok": true
+    },
+    {
+     "shard": 7,
+     "next_shard": 8,
+     "final_next_cursor": "io.github.n24q02m/better-code-review-graph:3.26.21",
+     "next_seed": "io.github.n",
+     "ok": true
+    },
+    {
+     "shard": 8,
+     "next_shard": 9,
+     "final_next_cursor": "io.github.r2cuerdame/codesamplex:0.1.163",
+     "next_seed": "io.github.r",
+     "ok": true
+    },
+    {
+     "shard": 9,
+     "next_shard": 10,
+     "final_next_cursor": "io.github.t4dhg/mcp-factorial:7.1.0",
+     "next_seed": "io.github.t",
+     "ok": true
+    },
+    {
+     "shard": 10,
+     "next_shard": 11,
+     "final_next_cursor": "me.identik/electronica:1.0.1",
+     "next_seed": "me.",
+     "ok": true
+    },
+    {
+     "shard": 11,
+     "next_shard": 12,
+     "final_next_cursor": "org.californiabitcoin/agent-commerce:1.0.1",
+     "next_seed": "org.",
+     "ok": true
+    }
+   ],
+   "abutment_all_ok": true,
+   "pages": 1128,
+   "first_fetch": "2026-09-22T08:26:17Z",
+   "last_fetch": "2026-09-22T08:57:48Z",
+   "pages_sha256_chain": "d84eb2eaed050f397dc4b6848294f2789dbb2d1f8215a740ca70abbff4b5e217"
+  },
+  "records_returned": 112771,
+  "duplicates_across_shards": 498,
+  "versions_total": 112273,
+  "names_total": 34788,
+  "publishers_total": 20160,
+  "status_counts_of_versions": {
+   "active": 110895,
+   "deprecated": 1378
+  },
+  "names_without_slash": 0
+ },
+ "controls": {
+  "two_publisher_50_50": {
+   "expected": 0.5,
+   "got": 0.5,
+   "pass": true
+  },
+  "single_publisher": {
+   "expected": 1.0,
+   "got": 1.0,
+   "pass": true
+  }
+ },
+ "share_sum_check": true,
+ "hhi": {
+  "over_names": {
+   "value": 0.008533229062729726,
+   "scale_10000": 85.33229062729725,
+   "denominator": "34788 names across 20160 publishers",
+   "effective_publishers_1_over_hhi": 117.18893195632866
+  },
+  "over_versions_sensitivity": {
+   "value": 0.002495492717059127,
+   "denominator": "112273 versions across 20160 publishers"
+  },
+  "over_names_active_only_sensitivity": {
+   "value": 0.008698030615378105,
+   "denominator": "34432 names with >=1 active version across 20047 publishers"
+  },
+  "publishers_after_case_folding_sensitivity": 20156
+ },
+ "top_20_publishers_by_names": [
+  {
+   "rank": 1,
+   "publisher": "io.github.sadri-dridi",
+   "names": 2341,
+   "share_of_names": 0.067293319535472,
+   "versions": 2341
+  },
+  {
+   "rank": 2,
+   "publisher": "io.github.pipeworx-io",
+   "names": 1589,
+   "share_of_names": 0.045676670116132,
+   "versions": 1719
+  },
+  {
+   "rank": 3,
+   "publisher": "io.github.mcp-dir",
+   "names": 1113,
+   "share_of_names": 0.03199379096240083,
+   "versions": 1117
+  },
+  {
+   "rank": 4,
+   "publisher": "io.github.mrfentmen",
+   "names": 689,
+   "share_of_names": 0.019805680119581465,
+   "versions": 881
+  },
+  {
+   "rank": 5,
+   "publisher": "io.github.Evozim",
+   "names": 375,
+   "share_of_names": 0.01077957916522939,
+   "versions": 377
+  },
+  {
+   "rank": 6,
+   "publisher": "io.github.CSOAI-ORG",
+   "names": 354,
+   "share_of_names": 0.010175922731976544,
+   "versions": 1342
+  },
+  {
+   "rank": 7,
+   "publisher": "ai.smithery",
+   "names": 213,
+   "share_of_names": 0.006122800965850293,
+   "versions": 288
+  },
+  {
+   "rank": 8,
+   "publisher": "io.github.theluckystrike",
+   "names": 144,
+   "share_of_names": 0.004139358399448086,
+   "versions": 1488
+  },
+  {
+   "rank": 9,
+   "publisher": "io.github.cyanheads",
+   "names": 129,
+   "share_of_names": 0.00370817523283891,
+   "versions": 2321
+  },
+  {
+   "rank": 10,
+   "publisher": "io.github.codespar",
+   "names": 127,
+   "share_of_names": 0.0036506841439576864,
+   "versions": 300
+  },
+  {
+   "rank": 11,
+   "publisher": "app.wishpool",
+   "names": 125,
+   "share_of_names": 0.003593193055076463,
+   "versions": 136
+  },
+  {
+   "rank": 12,
+   "publisher": "io.github.Wxt-ai",
+   "names": 122,
+   "share_of_names": 0.003506956421754628,
+   "versions": 150
+  },
+  {
+   "rank": 13,
+   "publisher": "io.github.jmshinhwa",
+   "names": 109,
+   "share_of_names": 0.003133264344026676,
+   "versions": 170
+  },
+  {
+   "rank": 14,
+   "publisher": "eu.ansvar",
+   "names": 106,
+   "share_of_names": 0.003047027710704841,
+   "versions": 121
+  },
+  {
+   "rank": 15,
+   "publisher": "com.a2awire",
+   "names": 105,
+   "share_of_names": 0.003018282166264229,
+   "versions": 158
+  },
+  {
+   "rank": 16,
+   "publisher": "io.github.Br0ski777",
+   "names": 101,
+   "share_of_names": 0.0029032999885017824,
+   "versions": 253
+  },
+  {
+   "rank": 17,
+   "publisher": "io.usefulapi",
+   "names": 98,
+   "share_of_names": 0.002817063355179947,
+   "versions": 154
+  },
+  {
+   "rank": 18,
+   "publisher": "ai.getvda",
+   "names": 94,
+   "share_of_names": 0.0027020811774175002,
+   "versions": 94
+  },
+  {
+   "rank": 19,
+   "publisher": "io.github.WYRE-AI",
+   "names": 79,
+   "share_of_names": 0.0022708980108083246,
+   "versions": 158
+  },
+  {
+   "rank": 20,
+   "publisher": "com.mcparmory",
+   "names": 76,
+   "share_of_names": 0.0021846613774864896,
+   "versions": 167
+  }
+ ],
+ "ours": {
+  "publisher": "io.github.CSOAI-ORG",
+  "names": 354,
+  "share_of_names": 0.010175922731976544,
+  "denominator": 34788,
+  "rank_by_names": 6,
+  "publishers_tied_at_this_count": 1,
+  "versions": 1342,
+  "share_of_versions": 0.011953007401601453
+ },
+ "versions_per_name": {
+  "denominator": "34788 names",
+  "min": 1,
+  "p50": 1,
+  "p90": 5,
+  "p99": 35,
+  "max": 1177,
+  "mean": 3.227348510980798,
+  "histogram": {
+   "2-5": 9502,
+   "1": 21861,
+   "6-20": 2696,
+   "21-100": 674,
+   ">100": 55
+  },
+  "max_name": "io.github.brilliantdirectories/brilliant-directories-mcp"
+ },
+ "latest_version_transport": {
+  "denominator": "34788 names",
+  "counts": {
+   "remote_only": 19434,
+   "packages_only": 13259,
+   "both": 1659,
+   "neither": 436
+  },
+  "latest_fallback_no_isLatest": 0,
+  "declares_remote": 21093,
+  "packages_only": 13259
+ },
+ "honesty": [
+  "Name count measures publishing activity, not adoption or use.",
+  "io.github.CSOAI-ORG's count is inflated by bulk self-publishing; see mcp-registry-self-listings-2026-09-22.json for what those listings are and which of their remotes are dead.",
+  "Namespaces are not organisations; one organisation may hold several."
+ ]
+}

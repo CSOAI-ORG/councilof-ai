@@ -1,0 +1,224 @@
+---
+title: "Where Council of AI takes part, and what each listing does not mean"
+slug: where-council-of-ai-takes-part-and-what-it-does-not-mean
+date: 2026-09-22
+updated: 2026-09-22
+canonical: https://councilof.ai/memberships
+source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-09-22, signed: false)
+generated_by: scripts/memberships-post.mjs — do not hand-edit; edit the manifest and re-run
+description: "Every standards body, registry, scholarly identifier and regulator filing Council of AI takes part in, each with its evidence link, its date, what it proves and what it does not. Participation is not endorsement; a listing is not adoption."
+---
+
+# Where Council of AI takes part, and what each listing does not mean
+
+Council of AI (CSOAI Ltd, UK Companies House 16939677) takes part in standards bodies as a participant or member, publishes into open registries and archives, holds scholarly identifiers, and files comments with regulators. Each entry below links to the page that proves it, or names the dated mailbox record when that is the only evidence, and states in its own row what it does not prove. Participation is not endorsement, and a listing is not adoption. Every entry links to its evidence. The routed page is <https://councilof.ai/memberships>; the machine-readable manifest is <https://councilof.ai/interop/memberships.json>.
+
+## Is Council of AI a W3C member?
+
+No. Council of AI takes part in W3C Community Groups as a participant, representing csoai ltd, starting with the AI KR Community Group on 2026-09-22; the public participants page at https://www.w3.org/community/aikr/participants is the evidence. Community Groups are free and open, so this is participation, not W3C Membership, and it carries no W3C endorsement or review of anything we publish.
+
+## Does an IETF Internet-Draft mean the IETF endorses it?
+
+No. Council of AI has one individual-submission Internet-Draft, draft-templeman-scitt-framing-space, posted on 2026-09-05 at https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/. Individual submissions are posted without review or sponsorship, carry the boilerplate that they are not endorsed by the IETF, and have not been adopted by any working group; there is no such thing as IETF membership.
+
+## Is Council of AI a C2PA member?
+
+Yes, at the Contributor Member tier: CSOAI LTD is on the public roster at https://c2pa.org/membership/ under Contributor Members, following a membership contract completed on 2026-08-06. Contributor is the entry tier with no steering role, and membership does not mean C2PA has reviewed or approved anything Council of AI has built.
+
+## Is Council of AI a member of the Decentralized Identity Foundation?
+
+Council of AI holds a DIF Contributor Member agreement completed on 2026-08-18, and DIF's membership team confirmed the listing name with us on 2026-09-21. The only evidence is private correspondence, because DIF publishes no member roster we could find, so this row is marked private evidence. It is membership, not adoption of anything we publish by any DIF working group.
+
+## Is Council of AI a member of the Linux Foundation?
+
+Yes, at the Silver tier: CSOAI LTD completed the Linux Foundation membership agreement on 2026-09-21 and holds membership record M-018884, valid to 2027-09-30. The evidence is currently private (the signed agreement and the onboarding record) because the public members page had not been updated on 2026-09-22. Silver membership is a paid participation tier, not an endorsement by the Foundation or by any of its projects.
+
+## Is Council of AI a member of the Open Secure AI Alliance?
+
+Yes, as a General Member: the Alliance's onboarding mail of 2026-09-21 records CSOAI LTD as a member after an application received on 2026-09-18. The evidence is private correspondence because the Alliance's site did not list members on 2026-09-22. Membership is not adoption: the note we contributed to the Alliance's SAFE discussion asks questions of the group and requests nothing be adopted.
+
+## Does being in the MCP Registry mean the servers are endorsed?
+
+No. Servers under io.github.CSOAI-ORG are in the official MCP Registry, and the registry API at https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG returns them. Entries are self-published under a GitHub namespace; the registry reviews and ranks nothing, and a listing says nothing about whether any client uses them.
+
+## Do the ORCID, DOI and Wikidata entries mean the work is peer reviewed?
+
+No. They are identifiers: an ORCID iD for the founder (https://orcid.org/0009-0001-3869-1068), a Zenodo DOI for a published methodology record (https://doi.org/10.5281/zenodo.21991104), and a Wikidata item for the organisation (https://www.wikidata.org/wiki/Q141128616). Each makes the thing citable and findable; none of them is peer review, notability, or endorsement.
+
+## Has NIST or the Bank of England endorsed Council of AI?
+
+No. Council of AI has filed public comments with NIST (on AI 200-2, AI 300-1 and SP 800-239) and a consultation response with the Bank of England on its draft Code of Practice for sterling systemic stablecoin issuers, the last of these on 2026-09-22. Each is a filing from us to a regulator, evidenced by the dated, message-identified mail in our own records; none has been published by the regulator at a URL we can cite, and a filing is never recognition, adoption or endorsement.
+
+## Has Council of AI filed with the US Treasury on the GENIUS Act docket?
+
+Not yet. A comment for docket TREAS-DO-2026-0496 at https://www.regulations.gov/docket/TREAS-DO-2026-0496 is drafted and will be submitted by hand; until a tracking number exists this entry is marked PENDING and claims nothing. The docket closes on 2026-10-19.
+
+## Every entry, with what it proves and what it does not
+
+### Standards bodies
+
+- **W3C AI KR (Artificial Intelligence Knowledge Representation) Community Group** — a participant in this body, since 2026-09-22; state VERIFIED.
+  - Evidence: <https://www.w3.org/community/aikr/participants>
+  - Date basis: W3C Accounts Team notice: Nicholas Templeman became a participant representing csoai ltd at 2026-09-22 04:27 UTC (INBOX 9001; welcome INBOX 9002).
+  - What it proves: Nicholas Templeman is listed on the group's public participants page, representing csoai ltd, which means the organisation signed the W3C Community Contributor License Agreement for this group.
+  - What it does not prove: Council of AI is not a W3C Member. Community Groups are free and open to anyone; joining one confers no W3C membership, no vote, and no W3C review of our work. The group has adopted nothing of ours.
+- **W3C Agent Conformance and Benchmarking Community Group** — a participant in this body, since 2026-09-22; state VERIFIED.
+  - Evidence: <https://www.w3.org/community/agent-conformance/participants>
+  - Date basis: Joined on behalf of csoai ltd on 2026-09-22 (the W3C join page reported the organisation had already signed the group's CLA); the participants page names us on the same day.
+  - What it proves: Nicholas Templeman is listed on the group's public participants page, representing csoai ltd.
+  - What it does not prove: Not W3C Membership. The group has not adopted, reviewed or endorsed any Council of AI benchmark or conformance method; participation is the whole of the claim.
+- **W3C Agent Identity Registry Protocol Community Group** — a participant in this body, since 2026-09-22; state VERIFIED.
+  - Evidence: <https://www.w3.org/community/agent-identity/participants>
+  - Date basis: On or before 2026-09-22: the W3C join page on that date reported Nicholas Templeman as an existing individual participant. The exact join date was not recovered, so the date given is the day it was verified, not the day it began.
+  - What it proves: Nicholas Templeman is listed on the group's public participants page.
+  - What it does not prove: Individual participation, not an organisational seat and not W3C Membership. The group has adopted nothing of ours.
+- **IETF Datatracker — Internet-Draft draft-templeman-scitt-framing-space** — filed with this body, since 2026-09-05; state VERIFIED.
+  - Evidence: <https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/>
+  - Date basis: Posted to the Datatracker on 2026-09-05 as an individual submission by the sole author.
+  - What it proves: One individual-submission Internet-Draft, authored by Nicholas Templeman, is live on the IETF Datatracker. It is the only active Internet-Draft in our name.
+  - What it does not prove: An Internet-Draft is not endorsed by the IETF and holds no formal standing; the draft's own boilerplate says so. It has not been adopted by the SCITT working group or any other. There is no such status as 'IETF member'.
+- **IETF SCITT working group mailing list** — a participant in this body, since 2026-08-29; state VERIFIED.
+  - Evidence: <https://mailarchive.ietf.org/arch/msg/scitt/ETVUZjsZ8XgkWR2XUW5oMexkdug/>
+  - Date basis: Earliest archived post by Nicholas Templeman that this check retrieved (2026-08-29). Earlier posts may exist; the archive search was rate-limited during verification.
+  - What it proves: A message from Nicholas Templeman is in the public IETF mail archive for the scitt list.
+  - What it does not prove: Posting to an open mailing list is participation only. It is not working-group membership (there is none), not consensus, and not adoption of anything we proposed.
+- **IETF agentproto mailing list** — a participant in this body, since 2026-09-05; state VERIFIED.
+  - Evidence: <https://mailarchive.ietf.org/arch/msg/agentproto/LeKdTLTa6e_XBUfSO7Q8tiDuMvE/>
+  - Date basis: Earliest archived post by Nicholas Templeman that this check retrieved (2026-09-05).
+  - What it proves: A message from Nicholas Templeman is in the public IETF mail archive for the agentproto list.
+  - What it does not prove: Open-list participation only; no adoption, no consensus, no standing.
+- **IETF audit mailing list** — a participant in this body, since 2026-09-05; state VERIFIED.
+  - Evidence: <https://mailarchive.ietf.org/arch/msg/audit/P6BcIxUmlzk3F6zz51bM-U6KDjI/>
+  - Date basis: Earliest archived post by Nicholas Templeman that this check retrieved (2026-09-05 04:32 +0100, 'Control-delivery evidence as an input to audit semantics').
+  - What it proves: A message from Nicholas Templeman is in the public IETF mail archive for the audit list.
+  - What it does not prove: Open-list participation only. The audit effort is a proposed charter, not a working group we belong to; no adoption, no consensus, no standing.
+- **C2PA — Coalition for Content Provenance and Authenticity** — a member of this body, since 2026-08-06; state VERIFIED.
+  - Evidence: <https://c2pa.org/membership/>
+  - Date basis: Membership contract completed 2026-08-06; welcome 2026-08-17; logo supplied for the roster 2026-09-18 (INBOX 8835, 8885). The public roster now carries the entry.
+  - What it proves: CSOAI LTD appears on the public C2PA membership page under Contributor Members.
+  - What it does not prove: Contributor is the entry tier: no steering role, no vote on the specification. Membership does not mean C2PA has reviewed or approved any Council of AI implementation, and no Council of AI product has passed the C2PA conformance program.
+- **Decentralized Identity Foundation (DIF)** — a member of this body, since 2026-08-18; state VERIFIED.
+  - Evidence: private evidence (private email): INBOX 8945 (DIF Membership, 2026-09-21) and Sent 487 (2026-09-21)
+  - Date basis: Contributor agreement completed in the name of CSOAI LTD on 2026-08-18; DIF's membership team asked on 2026-09-21 which name to display for our Contributor Member listing (INBOX 8945) and we replied the same day (Sent 487).
+  - What it proves: DIF's operations team treats CSOAI LTD as a Contributor Member and is preparing a website listing.
+  - What it does not prove: DIF publishes no member roster we could find (identity.foundation/members answered 404 on 2026-09-22), so no public page confirms this yet. No DIF working group has adopted any Council of AI specification.
+- **The Linux Foundation** — a member of this body, since 2026-09-21; state VERIFIED.
+  - Evidence: private evidence (account page): INBOX 8987 (Docusign completed, 2026-09-21) and INBOX 8988 (2026-09-21); LF onboarding record M-018884 (login required)
+  - Date basis: Linux Foundation membership agreement completed via Docusign on 2026-09-21 (INBOX 8987); the LF onboarding record M-018884 states Silver Membership with an expiry of 2027-09-30.
+  - What it proves: CSOAI LTD signed the Linux Foundation membership agreement and holds a Silver membership record with the Foundation.
+  - What it does not prove: The public Linux Foundation members page did not list us on 2026-09-22, so a stranger cannot yet confirm this from a public URL. Silver is a paid participation tier; it is not a Linux Foundation endorsement of our method, and no LF project has adopted our work.
+- **Open Secure AI Alliance (a Linux Foundation project)** — a member of this body, since 2026-09-21; state VERIFIED.
+  - Evidence: private evidence (private email): INBOX 8988 (The Linux Foundation, 2026-09-21) and INBOX 8859 (2026-09-18)
+  - Date basis: Application received 2026-09-18 (INBOX 8859); the Alliance's onboarding mail of 2026-09-21 opens 'Thank you for becoming a member' (INBOX 8988), the same day the participation agreement was completed.
+  - What it proves: The Open Secure AI Alliance records CSOAI LTD as a General Member and has begun onboarding.
+  - What it does not prove: secureaialliance.org did not list us on 2026-09-22. The discussion note we sent to the Alliance's SAFE thread on 2026-09-21 is a contribution, not adoption; membership is not an endorsement of Council of AI tooling.
+
+### Registries & indexes
+
+- **MCP Registry (registry.modelcontextprotocol.io), namespace io.github.CSOAI-ORG** — listed in this body, since 2026-05-07; state VERIFIED.
+  - Evidence: <https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG>
+  - Date basis: Earliest publishedAt among the io.github.CSOAI-ORG servers returned by the registry API on 2026-09-22.
+  - What it proves: Servers published under the io.github.CSOAI-ORG namespace are in the official MCP Registry; the API answers with them.
+  - What it does not prove: Registry entries are self-published under a GitHub namespace. The registry reviews nothing, ranks nothing, and a listing does not mean any client ships, installs or recommends these servers.
+- **PayAI x402 discovery index** — listed in this body, since 2026-09-22; state VERIFIED.
+  - Evidence: <https://facilitator.payai.network/discovery/resources>
+  - Date basis: The index carries no listing date; the date given is when this check first walked the index and found councilof.ai doors in it.
+  - What it proves: councilof.ai x402 doors appear in the PayAI facilitator's public discovery index (the check walks every page of the index until it finds them).
+  - What it does not prove: A discovery listing is self-registered. It is not a settlement, a buyer, revenue, or PayAI's opinion of the doors. Read live settlement counts from GET /api/revenue, never from this row.
+- **Hugging Face organisation csoai** — registered with this body, since 2026-09-22; state VERIFIED.
+  - Evidence: <https://huggingface.co/csoai>
+  - Date basis: The organisation page shows no creation date; the date given is when this check verified it. Datasets under it carry their own dates.
+  - What it proves: An organisation named Council of AI exists on Hugging Face under the handle csoai and publishes datasets and models there.
+  - What it does not prove: Hosting is not curation: Hugging Face reviews nothing we upload. Download counters are distribution, not adoption or a grade.
+- **PyPI (packages csoai and csoai-gspc)** — registered with this body, since 2026-08-13; state VERIFIED.
+  - Evidence: <https://pypi.org/project/csoai/>
+  - Date basis: First release upload of the csoai package on 2026-08-13 (PyPI JSON API); csoai-gspc first released 2026-09-04.
+  - What it proves: Packages published by CSOAI Ltd are on the Python Package Index.
+  - What it does not prove: PyPI reviews nothing. Download counts are distribution, not adoption; a package on PyPI is not a standard.
+- **npm (package csoai-gspc-mcp)** — registered with this body, since 2026-08-28; state VERIFIED.
+  - Evidence: <https://www.npmjs.com/package/csoai-gspc-mcp>
+  - Date basis: Package created on 2026-08-28 per the npm registry's time.created.
+  - What it proves: The csoai-gspc-mcp package is published on the npm registry.
+  - What it does not prove: npm reviews nothing. Download counts are distribution, not adoption.
+- **OpenSSF Best Practices badge programme (project 14391)** — registered with this body, since 2026-09-01; state VERIFIED.
+  - Evidence: <https://www.bestpractices.dev/en/projects/14391>
+  - Date basis: Project entry created 2026-09-01.
+  - What it proves: The councilof-ai project is registered in the OpenSSF Best Practices badge programme.
+  - What it does not prove: Badge criteria are self-attested by the project. Registration is not a badge, and a badge is not a security audit. The completion state is whatever the project page says on the day, not what this row says.
+- **Software Heritage archive (origin github.com/CSOAI-ORG/councilof-ai)** — registered with this body, since 2026-09-02; state VERIFIED.
+  - Evidence: <https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CSOAI-ORG/councilof-ai>
+  - Date basis: First full archive visit recorded 2026-09-02; a second full snapshot on 2026-09-15. The save request of 2026-09-22 failed with visit status not_found because GitHub hides the organisation profile while the account is flagged.
+  - What it proves: The repository has been archived by Software Heritage with at least one full snapshot.
+  - What it does not prove: Archival is preservation, not review or endorsement. The most recent snapshot may lag the repository; the latest save request failed and is recorded as such.
+- **Smithery MCP directory (csoai/gspc)** — listed in this body, since 2026-09-22; state VERIFIED.
+  - Evidence: <https://smithery.ai/servers/csoai/gspc>
+  - Date basis: The directory shows no listing date; the date given is when this check verified it.
+  - What it proves: The gspc server has a page in the Smithery directory.
+  - What it does not prove: A directory page is a listing. Any score the directory shows is the directory's, not a measurement of ours, and a listing is not adoption.
+
+### Scholarly ids
+
+- **ORCID iD 0009-0001-3869-1068 (Nicholas Templeman)** — registered with this body, since 2026-08-22; state VERIFIED.
+  - Evidence: <https://orcid.org/0009-0001-3869-1068>
+  - Date basis: Record created 2026-08-22.
+  - What it proves: A public ORCID record exists for the founder, naming Council of AI (CSOAI Ltd).
+  - What it does not prove: An ORCID iD is an identifier. It is not a credential, an affiliation check, or a review of any work attached to it.
+- **Zenodo record with DataCite DOI 10.5281/zenodo.21991104** — registered with this body, since 2026-08-18; state VERIFIED.
+  - Evidence: <https://doi.org/10.5281/zenodo.21991104>
+  - Date basis: Version 1 published 2026-08-18 (author Templeman, Nicholas; CSOAI Ltd).
+  - What it proves: A methodology record by Council of AI is published on Zenodo with a resolving DOI.
+  - What it does not prove: Zenodo hosts; it does not referee. A DOI is a persistent identifier, not peer review and not an endorsement of the method.
+- **Wikidata item Q141128616 (Council of AI)** — registered with this body, since 2026-08-19; state VERIFIED.
+  - Evidence: <https://www.wikidata.org/wiki/Q141128616>
+  - Date basis: Item created 2026-08-19 (first revision timestamp from the Wikidata API).
+  - What it proves: A Wikidata item exists for Council of AI (CSOAI Ltd).
+  - What it does not prove: A Wikidata item is not notability, recognition or endorsement; its statements are community-editable and only as good as their sources.
+- **Research Organization Registry (ROR) — registration request ror-updates#39647** — an applicant to this body, since 2026-09-02; state PENDING.
+  - Evidence: <https://github.com/ror-community/ror-updates/issues/39647>
+  - Date basis: Request opened on the public ror-updates issue tracker on 2026-09-02 (issue created_at from the GitHub API); still open, no ROR identifier assigned.
+  - What it proves: A request to add Council of AI to ROR is open and public.
+  - What it does not prove: No ROR identifier has been issued. A request is not a registration; ROR curators may decline it.
+
+### Regulatory filings
+
+- **NIST AI 200-2 (TEVV-Athlon) — public comment** — filed with this body, since 2026-09-17; state VERIFIED.
+  - Evidence: private evidence (private email): Sent 417 (2026-09-17, to TEVV-Athlon@nist.gov)
+  - Date basis: Comment sent from nicholas@csoai.org to TEVV-Athlon@nist.gov on 2026-09-17 with Date and Message-ID headers (Sent 417).
+  - What it proves: A public comment on NIST AI 200-2 left our mailbox to the address NIST published for it.
+  - What it does not prove: NIST has not published the comment where we can link to it and has not replied on it. A comment is input to a process; it is not NIST recognition, adoption or endorsement.
+- **NIST AI 300-1 (initial public draft) — public comment** — filed with this body, since 2026-09-16; state VERIFIED.
+  - Evidence: private evidence (private email): Sent 345 (2026-09-16) and Sent 465 (2026-09-19)
+  - Date basis: Comment sent 2026-09-16 (Sent 345); a NIST reply thread followed, to which we answered on 2026-09-19 (Sent 465).
+  - What it proves: A public comment on NIST AI 300-1 ipd left our mailbox, and a reply from a NIST address was received on the same thread.
+  - What it does not prove: A reply acknowledging a comment is not agreement with it. Nothing has been published by NIST at a URL we can cite.
+- **NIST SP 800-239 (initial public draft) — public comment** — filed with this body, since 2026-09-21; state VERIFIED.
+  - Evidence: private evidence (private email): Sent 485 (2026-09-21, to sp800-239-comments@nist.gov)
+  - Date basis: Comment sent to sp800-239-comments@nist.gov on 2026-09-21 (Sent 485).
+  - What it proves: A public comment on NIST SP 800-239 ipd left our mailbox to the address NIST published for it.
+  - What it does not prove: Not published by NIST at a URL we can cite; not recognition or adoption.
+- **Bank of England — consultation on the draft Code of Practice for sterling-denominated systemic stablecoin issuers** — filed with this body, since 2026-09-22; state VERIFIED.
+  - Evidence: private evidence (private email): Sent 499 (2026-09-22, Message-ID <1509486989.87654.1790069007934@privateemail.com>)
+  - Date basis: Response sent to CP-systemicstablecoin@bankofengland.co.uk on 2026-09-22 05:23 -0400, Message-ID <1509486989.87654.1790069007934@privateemail.com> (Sent 499).
+  - What it proves: A consultation response left our mailbox to the address the Bank published for this consultation, with Date and Message-ID headers.
+  - What it does not prove: The Bank publishes no acknowledgement we can link to. A consultation response is a submission; it is not recognition, and it does not make Council of AI a Bank of England stakeholder in any formal sense.
+- **US Department of the Treasury — docket TREAS-DO-2026-0496 (GENIUS Act implementation) comment** — filed with this body, no date yet; state PENDING.
+  - Evidence: <https://www.regulations.gov/docket/TREAS-DO-2026-0496>
+  - Date basis: Comment drafted; the owner submits it on regulations.gov by hand. Until a tracking number exists the row stays PENDING and claims nothing.
+  - What it proves: The docket is open for comment. Nothing more: no comment from Council of AI is on it yet.
+  - What it does not prove: Not filed. When it is filed, the row will carry the regulations.gov tracking number; a filing is still not recognition.
+  - Closes: 2026-10-19
+
+## Named and not listed
+
+- **World Economic Forum** — A personal Strategic Intelligence account was opened on 2026-09-21. That is an account, not a membership or partnership, so it is not listed.
+- **NVIDIA Inception** — No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed.
+- **Agentry** — The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page.
+
+## How this is kept honest
+
+- One committed manifest is the only source for the home-page strip, the footer line, the /memberships table, its FAQ, and this post. It is unsigned and says so.
+- A row exists only when a stranger can open its evidence, or a dated, message-identified mail exists and the row says the evidence is private.
+- `node scripts/memberships-check.mjs` re-fetches every public evidence URL and exits non-zero when one stops answering 200 with our name; `--selftest` proves it goes red on a bogus row.
+- regulator publication ≠ endorsement · standards participation ≠ standards adoption · registry listing ≠ adoption. Nothing here is a score, a rank or a mark; we measure AI systems and do not grade the bodies we take part in.
+
+Nicholas Templeman · nicholas@csoai.org · https://councilof.ai

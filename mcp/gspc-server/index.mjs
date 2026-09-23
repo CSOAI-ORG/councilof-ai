@@ -197,6 +197,13 @@ async function getAxis(args) {
     interval: row.interval ?? null,
     leader: row.leader ?? null,
     dataset: row.dataset ?? null,
+    // Same three door fields the HTTP door returns (functions/mcp/_board.ts): copied from the row,
+    // null when the row carries none, never invented.
+    kind: row.kind ?? null,
+    dataset_url: row.dataset_url ?? null,
+    evidence_url: typeof row.evidence_url === "string" && row.evidence_url.startsWith("/")
+      ? `${ORIGIN}${row.evidence_url}` : (row.evidence_url ?? null),
+    row_url: `${ORIGIN}/api/gspc?axis=${encodeURIComponent(String(row.axis))}`,
     note: row.note ?? null,
     as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
     source: `${ORIGIN}/api/gspc`,

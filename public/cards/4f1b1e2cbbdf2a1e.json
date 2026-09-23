@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-22T08:45:38.618Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Commodities",
+      "holders": 581,
+      "issuer": "GateHub",
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4132.852267201553,
+      "symbol": "XAU.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "product": {
+      "sku": "xrpl-asset-state",
+      "tier": "free",
+      "free_fields": [
+        "issuer",
+        "currency",
+        "holders",
+        "supply",
+        "trust_lines"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4f1b1e2cbbdf2a1ebea5c86af4e514f2647ae3a4f45106d721aafd328dedd09e",
+    "sig_ed25519": "9e9adc5f85eeb6e95329367bdd64f9779cdebd9e2893dee38dbab6ccdfc874d0651451f4d2a657580324dd4509be91ae28025bb75d413fa59693230838e2980a",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL XAU.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "f1f4841de220287b1f2dad660c13f93fa534a32a84c1cc9d1916d2a3fd7a400b",
+    "0c94ca13385629e82375def81c5f27d5741849ca84e00e50ff76b6b2974a45ef",
+    "e25136f7cf9c401bd20fe9551564cd4c3911e6682168a72a7143ce5103172362",
+    "45d286baa09ff83d417cd4edb0d0f30590d46f64393fb05fb20c83a05cc1c0dd",
+    "42bead95c24b1083352b01cd495fd9ab7ea2d695dce9a216d80f44f21aeb49f0",
+    "3a15901dff2e484b6a9bbbffe215c101e60739da1338837ef8cb8e2cf1ed9011",
+    "cc05688b0128b2df8b373efd832edc683f926688530e820a8c814e6099772d38",
+    "afe81754a325cb9a9851eb9adf1a09b0a6f5ab638bfb302b55e6ee63cf62ff53",
+    "6b08948158e0fbc2cdc8388434c5cae8ed2797c65f7074439cd12330623557cd"
+  ]
+}

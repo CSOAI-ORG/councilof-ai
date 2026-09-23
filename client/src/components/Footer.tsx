@@ -6,8 +6,10 @@
  */
 
 import { Link } from 'wouter';
-import { Archive, Github, Linkedin, Mail } from 'lucide-react';
+import { Archive, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
+import LiveCounters from './LiveCounters';
+import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
 
@@ -71,9 +73,8 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'CSOAI source repository', icon: Github, href: 'https://github.com/CSOAI-ORG/councilof-ai' },
-    { name: 'CSOAI public GitHub profile', icon: Github, href: 'https://github.com/CouncilofAI-CSOAI' },
-    { name: 'Public evidence mirror', icon: Archive, href: 'https://github.com/CouncilofAI-CSOAI/csoai-public-evidence' },
+    { name: 'Dated source snapshot', icon: Archive, href: 'https://huggingface.co/datasets/csoai/councilof-ai-source/tree/main/source' },
+    { name: 'Public evidence mirror', icon: Archive, href: 'https://huggingface.co/datasets/csoai/councilof-ai-mirror' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];
@@ -227,7 +228,9 @@ export function Footer() {
                 src: '/images/badges/frameworks/linux-foundation.svg',
                 alt: 'Linux Foundation',
                 href: 'https://www.linuxfoundation.org/',
-                title: 'Linux Foundation — hosts our DIF and C2PA memberships (LFX profile). Not a Linux Foundation corporate membership.',
+                // Standing and evidence live on /memberships (public/interop/memberships.json); this
+                // title states nothing the manifest does not, so it cannot drift from it.
+                title: 'Linux Foundation — our standing and its evidence are on /memberships',
               },
             ].map((b) => (
               <li key={b.alt}>
@@ -265,6 +268,13 @@ export function Footer() {
             GET {PAID_STEP_HREF}
           </a>
         </p>
+
+        {/* Adoption funnel, compact — every stage read live from /api/footprint, "—" until it lands */}
+        <LiveCounters variant="footer" />
+
+        {/* Where we take part — one line from public/interop/memberships.json; every name links to
+            its evidence. Participation is not endorsement, a listing is not adoption. */}
+        <MembershipStrip variant="footer" />
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">

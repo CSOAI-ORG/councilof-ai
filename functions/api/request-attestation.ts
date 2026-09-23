@@ -12,6 +12,13 @@
  *                                                        Pages key is present, else sig_ed25519:null
  *                                                        with "sig_ed25519" in unmeasured[]. ≤3KB.
  *
+ * THE PROMISE IS DERIVED, NEVER TYPED. Until 2026-09-22 the 402 copy read "signed when the Pages
+ * signing key is available" — a conditional with no date and no way for a buyer to check it before
+ * paying. The 402 now carries csoai.signer, computed from the SAME env field signPayload() reads,
+ * so the challenge says SIGNED or UNSIGNED (with the reason) for the receipt it would issue right
+ * now. The offer on the same 402 is signed with the same key, so a buyer can verify the claim
+ * against extensions["offer-receipt"] before spending anything.
+ *
  * What the buyer gets: the commission receipt (their settle tx cited in source_urls), references
  * to at most 24 signed measurement cards whose model field contains the requested subject text
  * (reserve_count reports the full match count), and an honest `fresh_run` state. A payment NEVER
@@ -34,7 +41,7 @@ import {
 import { railMode } from "./_x402_config";
 import { REQUEST_ATTESTATION_DESCRIPTION } from "./_x402_descriptions";
 import { AXES } from "./_axis_register";
-import { signPayload, cardV0 } from "../_lib/cardSign";
+import { signPayload, cardV0, BOARD_ATTESTATION_DID } from "../_lib/cardSign";
 import { classifyCommissionTarget } from "./_commission_target";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
@@ -56,6 +63,24 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
 
 const SUBJECT_RE = /^[A-Za-z0-9._:/@+-]{1,120}$/;
 const AXIS_RE = /^[a-z0-9-]{1,48}$/;
+
+/**
+ * What the receipt WOULD carry if issued now, read from the same env field signPayload() consumes.
+ * Presence is the only thing checked here (an unparseable key surfaces as unsigned_reason at issue
+ * time, exactly as signPayload reports it). Never a promise about a future date.
+ */
+export function signerState(env: { BOARD_SIGN_KEY_PKCS8_B64?: string }) {
+  const present = Boolean((env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim());
+  return {
+    did: BOARD_ATTESTATION_DID,
+    key_present: present,
+    receipt_will_be: present ? "SIGNED" : "UNSIGNED",
+    unsigned_reason: present ? null : "BOARD_SIGN_KEY_PKCS8_B64 absent in Pages env",
+    checked_how:
+      "read at challenge time from the Pages env field the paid path signs with; the offer in " +
+      'extensions["offer-receipt"] on this same response is signed with the same key, so verify that before paying',
+  };
+}
 
 /** Signed measurement cards already on file for this subject (× axis). Read, never typed. */
 async function reserveFor(origin: string, subject: string, axis: string): Promise<{ cells: Cell[]; as_of: string | null; source: string }> {
@@ -160,6 +185,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         lid: CSOAI_LID,
         never: ["rank", "certificate", "grade", "score-sale"],
         deliverable: description,
+        signer: signerState(env),
         preview,
         rail: railMode(env),
         not_paid_reason: payment.reason,

@@ -15,6 +15,15 @@
  *   {{CARD_CORPORA_SECTION}}                                           the three corpora files
  *   {{MCP_TOOLS}} {{MCP_FREE}} {{MCP_PAID}} {{MCP_FREE_WORD}} {{MCP_PAID_WORD}}
  *                                                                      functions/mcp/{gspc,paid}-tools.json
+ *   {{AXIS_DOORS_SECTION}} {{AXIS_DEEP_SECTION}}                       GET /api/gspc → axes[] (one entry per row)
+ *
+ * The per-axis sections were the second exception. llms-full.txt typed a "deep reference" block per
+ * axis — family, kind, status, n, page URL — for 22 axes, with n values frozen in the template, and
+ * no block at all for the slot ADR-002 added. A reader asking "which door serves axis X" got a
+ * hand-copied list that the board had already outgrown. Both sections are now rendered from the
+ * same axes[] array the snapshot is taken from: one row-door line per axis in llms.txt (no status,
+ * no n — those live on the row) and one block per axis in llms-full.txt (status and n copied from
+ * the same fetch as the snapshot above it, so the two can never disagree).
  *
  * The tool counts were the exception this file forgot about itself. The header said "DERIVED,
  * never typed" while the template typed "11 tools ... seven free readers plus four x402-metered"
@@ -90,7 +99,59 @@ index and it does not anchor GSPC.
 `;
 }
 
-function render(tmpl, t, snapshotJson, corpora) {
+// One door per axis, addressed the way the board spells the axis id. Every URL below is a shape
+// the edge serves today (/api/gspc?axis= filters the board to one row; /axis/<id> is the
+// per-axis page the deep builder writes from the same board, served slashless). The bank or evidence URL is copied
+// from the row: a model-comparison axis carries a frozen bank on the Hub, a deterministic-facts
+// axis carries a run artifact, and a row that carries neither says so rather than inventing one.
+const SITE = "https://councilof.ai";
+const rowDoor = (a) => `${SITE}/api/gspc?axis=${encodeURIComponent(a.axis)}`;
+// The edge serves the per-axis page slashless and answers /axis/<id>.html with a 308 to it, so the
+// door named here is the one the edge serves, not the file name the builder writes.
+const pageDoor = (a) => `${SITE}/axis/${a.axis}`;
+const abs = (u) => (typeof u === "string" && u.startsWith("/") ? `${SITE}${u}` : u);
+function bankOrEvidence(a) {
+  const parts = [];
+  if (a.dataset_url) parts.push(`bank ${a.dataset_url}`);
+  if (a.evidence_url) parts.push(`evidence ${abs(a.evidence_url)}`);
+  return parts.length ? parts.join(" · ") : "bank: none on this row (the board row is the evidence pointer)";
+}
+
+function axisDoorsSection(b) {
+  const rows = b.axes || [];
+  if (!rows.length) throw new Error("GET /api/gspc carried no axes[] — nothing to derive a door list from");
+  const lines = rows.map((a) =>
+    `- ${a.axis} (${a.family ?? "?"}, ${a.kind ?? "?"}): row GET ${rowDoor(a)} · page ${pageDoor(a)} · ${bankOrEvidence(a)} · MCP get_axis {"axis":"${a.axis}"}`);
+  return `## Axis doors (one line per axis on the live board, derived from GET /api/gspc at generation)
+
+Each line names the doors that serve ONE axis's result: the board row filtered to that axis, the
+per-axis page, and the frozen bank or run artifact behind it. Status, n, leader and separation
+live on the row and are deliberately not printed here — read the row. The same row is served by
+the MCP tool get_axis (POST https://councilof.ai/mcp) for every axis the board carries.
+Measurement, not certification.
+
+${lines.join("\n")}
+`;
+}
+
+function axisDeepSection(b) {
+  const rows = b.axes || [];
+  const block = (a) => {
+    const l = [`### ${a.axis}`,
+      `- family: \`${a.family ?? null}\``,
+      `- kind: \`${a.kind ?? null}\``,
+      `- status: \`${a.status ?? null}\``,
+      `- n: ${a.n ?? null}${a.n_unit ? ` (${a.n_unit})` : ""}`];
+    if (a.kind === "model-comparison") l.push(`- separation: \`${a.separation ?? null}\``);
+    l.push(`- row: ${rowDoor(a)}`, `- page: ${pageDoor(a)}`);
+    if (a.dataset_url) l.push(`- bank: ${a.dataset_url}`);
+    if (a.evidence_url) l.push(`- evidence: ${abs(a.evidence_url)}`);
+    return l.join("\n");
+  };
+  return rows.map(block).join("\n\n") + "\n";
+}
+
+function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
     PUBLIC_COUNT: t.public_count,
@@ -98,6 +159,7 @@ function render(tmpl, t, snapshotJson, corpora) {
     PUBLIC_LEADER_COUNT: t.public_leader_count,
     MODEL_FLEETS: t.model_fleets, FACT_RUNS: t.fact_runs,
     DOI: t.doi, BOARD_SNAPSHOT_JSON: snapshotJson, CARD_CORPORA_SECTION: corpora,
+    AXIS_DOORS_SECTION: axisDoors, AXIS_DEEP_SECTION: axisDeep,
     ...(() => {
       const m = mcpCounts();
       return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,
@@ -153,6 +215,8 @@ const snapshot = JSON.stringify(
   { schema: b.schema, as_of: b.as_of ?? null, totals: totalsForSnapshot, axes_count: axesRows.length, axes: axesRows },
   null, 2);
 const corpora = corporaSection();
+const axisDoors = axisDoorsSection(b);
+const axisDeep = axisDeepSection(b);
 
 const OUT = [
   ["scripts/llms/llms.txt.tmpl", "public/llms.txt"],
@@ -161,7 +225,7 @@ const OUT = [
 
 let drift = 0;
 for (const [tf, of] of OUT) {
-  const want = render(fs.readFileSync(p(tf), "utf8"), t, snapshot, corpora);
+  const want = render(fs.readFileSync(p(tf), "utf8"), t, snapshot, corpora, axisDoors, axisDeep);
   if (CHECK) {
     const have = fs.existsSync(p(of)) ? fs.readFileSync(p(of), "utf8") : "";
     if (have !== want) {

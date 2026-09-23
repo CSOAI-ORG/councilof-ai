@@ -183,6 +183,9 @@ def bank_labels(path: Path) -> tuple[str, ...]:
             if isinstance(row, dict) and "_canary" in row and "expected" not in row:
                 continue
             expected = row.get("expected") if isinstance(row, dict) else None
+            if expected is None and isinstance(row, dict):
+                # Inspect-style sample rows (csoai/gspc-jail-goldbank samples.jsonl): gold label is `target`.
+                expected = row.get("target")
             if not isinstance(expected, str) or not expected.strip():
                 raise GenerationError(f"{path.name}:{line_number} lacks expected")
             expected = expected.strip()

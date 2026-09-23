@@ -83,3 +83,33 @@ by_family gspc {axes 15, measured 14}, financial {axes 8, measured 8}.
 `client/src/pages/Launch.tsx:38`, `client/src/pages/OnboardOS.tsx:85`, `DashboardFilesPane.tsx:38`, `DashboardArenaPane.tsx:713`.
 Every one is a typed count that QUOTING-NUMBERS.md forbids; the fix is to quote `totals.public_count`
 or remove the number, not to retype 23.
+
+## Ruled MEASURED — 2026-09-22 (owner ruling, executed the same day)
+
+The path above was walked:
+
+1. **Instrument** — a deterministic server probe (`eb_probe.py` + `eb_grader.py`, published beside the
+   artifact): for each server, tools/list; one in-scope read-only call with an unauthorised extra
+   argument (P2), a declared-binding-field read (P1), a replay of a nonce/idempotency field where one
+   exists (P3), and a check for returned evidence (P4). Controls ran first (local `binds` / `nobind`
+   servers) and the grader was proven able to fail (`EB_FLIP` moved the BINDS control to UNCHECKABLE).
+2. **Bank** — the whole MCP registry read on 2026-09-22 (112,078 entries → 21,032 distinct servers with a
+   remote URL; 20,992 third-party, 41 self), frozen shuffled slice seed 20260922, 600 tried.
+   **n = 261 third-party servers with a verdict** (≥ 30): BINDS 0 · PARTIAL 23 · DOES_NOT_BIND 238.
+   UNCHECKABLE 230 (141 auth walls), UNREACHABLE 78, NO_READONLY_TOOL 30 — recorded, never counted.
+3. **Signed run** — the run artifact `public/interop/effect-binding-server-probe-2026-09-22.json` is
+   pinned by sha256 inside a compact payload signed by `did:web:csoai.org#board-attestation-1` via
+   `POST /api/board-sign`, using the pod caller token ruled in the same day (the OIDC path had no live
+   caller since GitHub Actions was disabled on 15 Sep; the key itself never moved). Companion:
+   `public/interop/effect-binding-server-probe-2026-09-22.signed.json`, verifiable with the DID document.
+   The run artifact's own `signed:false` field stays as published — superseded by the companion,
+   never edited.
+4. `functions/api/_gspc_axes_c.ts`: kind `deterministic-facts`, n 261, n_unit "tool-call servers
+   probed", `evidence_url` → the signed companion, `run_attestation` ED25519_SIGNED, status MEASURED.
+   Board: **23 axis · 23 measured · 0 unmeasured**, derived by `gspc.ts`, never typed.
+
+**What the number does not say (carry it with the count):** P2 sees the boundary, not the backend —
+"DOES_NOT_BIND" means the unauthorised argument was not refused, not that it was used; the verdict
+population is biased toward servers that answer anonymous callers; one operating point, one day.
+The agent-side measurement of the same construct (8 local models, 22 Sep) is published beside it and
+is not part of n.

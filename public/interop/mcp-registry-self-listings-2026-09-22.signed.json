@@ -1,0 +1,25 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/mcp-registry-self-listings-2026-09-22.json",
+      "sha256": "b263f59c6c89d374c5629d4871ecb1a76c99f084cc409f373cb48621ffe24801",
+      "schema": "csoai.registry-self-listings/0.1",
+      "as_of": "2026-09-22"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the artifact's own instrument measured.",
+    "totals": "UNAVAILABLE (KeyError)"
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "f94261ee070170610ee3bb02e475fe23a8326a87a0ad5588260e436247875a0ffd457dad9690f2ccc48fdd91bc56b7b171f60c3797de0791e8d87508cf65b502",
+    "payload_sha256": "5d9081e8da339531efe71e51c5554b822ede69162fcf4865c8a01ab8faee3d8b",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-22T12:25:48.461Z"
+  },
+  "verify": "canonicalise payload, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with #board-attestation-1 from https://csoai.org/.well-known/did.json"
+}

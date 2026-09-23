@@ -54,6 +54,9 @@ PROMPT_KEYS = (
     "operation",
     "case",
     "question",
+    # Inspect-style sample rows (csoai/gspc-jail-goldbank samples.jsonl) carry the prompt as
+    # `input`. Last, so a bank that also names one of the keys above keeps its own field.
+    "input",
 )
 UNSUPPORTED_PREDICATE_KEYS = frozenset(
     {
@@ -511,6 +514,11 @@ def load_frozen_bank(config: WorkerConfig) -> tuple[list[BankItem], str]:
             None,
         )
         expected = row.get("expected")
+        if expected is None:
+            # Inspect-style sample rows (csoai/gspc-jail-goldbank samples.jsonl, 2026-09-22) carry
+            # the gold label as `target`. It is read only when `expected` is absent; a row that
+            # names both keeps `expected`, and a row that names neither is still BAD_BANK.
+            expected = row.get("target")
         if prompt is None or not isinstance(expected, str) or not expected.strip():
             raise WorkerError(
                 "BAD_BANK", f"bank item {index} lacks a prompt or string expected value"

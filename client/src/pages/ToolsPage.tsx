@@ -71,7 +71,7 @@ export default function ToolsPage() {
         Use this in Claude / Cursor / Kimi / Grok
       </h1>
       <p className="mt-3 text-slate-600">
-        Ask: board totals. Paste a card to verify. HTTP <code>https://councilof.ai/mcp</code> lists
+        Ask: board totals. Paste a card to verify. HTTP <code>https://councilof.ai/mcp</code> lists{" "}
         {ALL_TOOL_NAMES.length} tools: {FREE_TOOL_NAMES.length} free readers ({FREE_TOOL_NAMES.join(" · ")})
         and {PAID_TOOL_NAMES.length} x402-metered evidence tools. <code>witness_hash</code> is
         quarantined and is not advertised. A package or registry listing is not proof that a paid

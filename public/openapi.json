@@ -176,8 +176,8 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.2+820f7aa0ad7a",
-    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check it without trusting this document: POST it to /api/receipts/verify. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
+    "version": "0.2+ca28828cb0ef",
+    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check the JWS with POST /api/receipts/verify or use the pinned verifier source at https://huggingface.co/datasets/csoai/councilof-ai-source/resolve/6ff9855a2e2bc32d25d6474ce7e2da50f6f5fadb/source/scripts/verify_receipt.py; the script fetches the public DID key and does not call our hosted verifier API. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
   "paths": {
@@ -732,7 +732,7 @@
     },
     "/api/board-sign": {
       "post": {
-        "description": "GitHub OIDC bearer required; token claims are validated by the handler. POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
+        "description": "GitHub OIDC bearer required; token claims are validated by the handler. POST /api/board-sign \u2014 two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
         "operationId": "post__api_board-sign",
         "responses": {
           "200": {
@@ -750,7 +750,7 @@
             "githubOidc": []
           }
         ],
-        "summary": "POST /api/board-sign \u2014 GitHub OIDC only. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
+        "summary": "POST /api/board-sign \u2014 two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
       }
     },
     "/api/body-state": {
@@ -2199,6 +2199,22 @@
         },
         "security": [],
         "summary": "GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record."
+      }
+    },
+    "/api/footprint": {
+      "get": {
+        "description": "GET /api/footprint \u2014 the adoption funnel, one stage per row, nothing summed across stages.",
+        "operationId": "get__api_footprint",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/footprint \u2014 the adoption funnel, one stage per row, nothing summed across stages."
       }
     },
     "/api/free-door": {
@@ -3666,7 +3682,7 @@
     },
     "/api/request-attestation": {
       "get": {
-        "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+        "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
         "operationId": "x402_request_attestation",
         "parameters": [
           {
@@ -3695,12 +3711,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+                  "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
                   "type": "object"
                 }
               }
             },
-            "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell."
+            "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell."
           },
           "402": {
             "content": {
@@ -3874,7 +3890,7 @@
                     }
                   },
                   "resource": {
-                    "description": "A card-v0 commission receipt for one named subject, signed when the Pages signing key is available, plus references to up to 24 signed measurement cards whose model field contains the requested subject text. reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+                    "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Request Attest",
                     "tags": [
@@ -4974,6 +4990,22 @@
         "summary": "GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE."
       }
     },
+    "/api/x402-listing": {
+      "get": {
+        "description": "GET /api/x402-listing \u2014 what the PayAI discovery index holds for OUR doors, read live.",
+        "operationId": "get__api_x402-listing",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/x402-listing \u2014 what the PayAI discovery index holds for OUR doors, read live."
+      }
+    },
     "/api/x402-trust-seller": {
       "get": {
         "description": "GET /api/x402-trust-seller?host=<catalog-host>",
@@ -5097,10 +5129,12 @@
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
       "supported": true,
       "verify_hosted": "https://councilof.ai/api/receipts/verify",
+      "verify_source": "https://huggingface.co/datasets/csoai/councilof-ai-source/resolve/6ff9855a2e2bc32d25d6474ce7e2da50f6f5fadb/source/scripts/verify_receipt.py",
+      "verify_source_sha256": "dd310cbd62add18f83a535e4d442b4c891c7b967f33fd74d04874c2b36739336",
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 104,
+    "public_operations": 106,
     "quarantined": [
       {
         "buyable": false,

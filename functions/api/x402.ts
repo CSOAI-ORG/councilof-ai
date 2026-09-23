@@ -72,6 +72,8 @@ export const onRequestGet: PagesFunction<{
         kid: X402_SIGNER_KID,
         spec_commit: OFFER_RECEIPT_SPEC_SHA,
         verify_free: u("/api/receipts/verify"),
+        verify_source: "https://huggingface.co/datasets/csoai/councilof-ai-source/resolve/6ff9855a2e2bc32d25d6474ce7e2da50f6f5fadb/source/scripts/verify_receipt.py",
+        verify_source_sha256: "dd310cbd62add18f83a535e4d442b4c891c7b967f33fd74d04874c2b36739336",
         by_payer: u("/api/receipts?payer=0x0000000000000000000000000000000000000000"),
       },
     },

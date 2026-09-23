@@ -405,7 +405,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         by_family: {
           gspc: {
             ...bySelectedFamily("gspc"),
-            note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
+            note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically. " +
+              "Plus effect-binding (ADR-002), a deterministic-facts probe of tool-call SERVERS, not a fleet: " +
+              "n counts servers probed, it has no leader, no accuracy and no separation, and it joins no mean.",
           },
           financial: {
             ...financialFamilyBlock(bySelectedFamily("financial").axes, bySelectedFamily("financial").measured),
@@ -425,7 +427,7 @@ export const onRequestGet: PagesFunction = async (context) => {
           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
           "state. All 8 now carry published deterministic-facts run artifacts. Today " +
           `${measured} of ${selected.length} axis on the board carry a run behind them: ` +
-          `${bySelectedFamily("gspc").measured} model-comparison and ${bySelectedFamily("financial").measured} deterministic-fact ` +
+          `${comparisonSlots.length} model-comparison and ${factRuns.filter((a) => a.status === "MEASURED").length} deterministic-fact ` +
           "axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. " +
           `${signedFactRuns.length} run artifact${signedFactRuns.length === 1 ? "" : "s"} ` +
           `${signedFactRuns.length === 1 ? "carries" : "carry"} an Ed25519 signature; ` +
@@ -438,7 +440,8 @@ export const onRequestGet: PagesFunction = async (context) => {
           signed_axes: signedFactRuns.map((a) => a.axis),
           unsigned_axes: unsignedFactRuns.map((a) => a.axis),
           note:
-            "Derived from each deterministic-facts axis's run_attestation field. " +
+            "Derived from each deterministic-facts axis's run_attestation field, in BOTH families since " +
+            "2026-09-22 (effect-binding is a gspc-family fact run). " +
             "A content_id proves identity of bytes, not signer authorization.",
         },
         license: "CC-BY-4.0",
