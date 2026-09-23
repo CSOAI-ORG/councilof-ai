@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useRoute } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
-import { sha256Hex, verifyEd25519Detached } from "@/lib/verify";
+import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 import { BOARD_COUNT_OBSERVED, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
@@ -79,7 +79,7 @@ function ArenaEloPanel() {
   const [elo, setElo] = useState<any>(null);
   const [elErr, setElErr] = useState<string | null>(null);
   const [axis, setAxis] = useState<string>("overall");
-  const [verifyState, setVerifyState] = useState<"idle" | "checking" | "ok" | "bad">("idle");
+  const [verifyState, setVerifyState] = useState<"idle" | "checking" | "ok" | "bad" | "uncheckable">("idle");
 
   useEffect(() => {
     fetch("/arena/elo_reference.json")
@@ -91,24 +91,8 @@ function ArenaEloPanel() {
   async function verifySigned() {
     if (!elo) return;
     setVerifyState("checking");
-    try {
-      const body: Record<string, unknown> = {};
-      for (const [k, v] of Object.entries(elo)) {
-        if (k !== "content_id" && k !== "signature") body[k] = v;
-      }
-      const canonSorted = JSON.stringify(sortKeysDeep(body));
-      const want = await sha256Hex(canonSorted);
-      const res = await verifyEd25519Detached(
-        new TextEncoder().encode(canonSorted),
-        elo.signature?.sig || "",
-        elo.signature?.pubkey || "",
-        want,
-        undefined,
-      );
-      setVerifyState(res.ok ? "ok" : "bad");
-    } catch (e) {
-      setVerifyState("bad");
-    }
+    const result = await verifyPublishedArenaElo(elo);
+    setVerifyState(result.state === "VALID" ? "ok" : result.state === "INVALID" ? "bad" : "uncheckable");
   }
 
   const rows =
@@ -125,10 +109,11 @@ function ArenaEloPanel() {
         <div>
           <h2 className="text-lg font-bold text-gray-900">Arena Elo — signed</h2>
           <p className="mt-1 text-sm text-gray-600">
-            Per-axis winner-specific Elo from the live arena (<code>{elo.models || "—"}</code> models,{" "}
+            Per-axis Elo from the published arena snapshot (<code>{elo.models || "—"}</code> models,{" "}
             {elo.axes?.length || 0} <strong>arena</strong> axis — the arena&apos;s own set, not the
-            board&apos;s count above). Every score carries n + 95% CI. This leaderboard is{" "}
-            <strong>signed</strong> — verify it below.
+            board&apos;s count above). Snapshot: <time dateTime={elo.generated}>{elo.generated || "unknown"}</time>.
+            New arena rounds do not change GSPC board axes without admission. The board DID signature
+            is present; use the check below to verify these bytes.
           </p>
         </div>
         <button
@@ -141,12 +126,17 @@ function ArenaEloPanel() {
       </div>
       {verifyState === "ok" && (
         <p role="status" className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-800" data-testid="verify-arena-elo-ok">
-          ✓ Signature verified — this leaderboard matches the signed body.
+          ✓ Board DID signature verified over this arena snapshot and its content ID.
         </p>
       )}
       {verifyState === "bad" && (
         <p role="alert" className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-700" data-testid="verify-arena-elo-bad">
           ✗ Signature does NOT verify — content may have been altered.
+        </p>
+      )}
+      {verifyState === "uncheckable" && (
+        <p role="status" className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800">
+          Signature UNCHECKABLE here — the attestation could not be checked in this browser.
         </p>
       )}
       <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-emerald-600/10 pt-4">
@@ -215,16 +205,6 @@ function ArenaEloPanel() {
       </div>
     </div>
   );
-}
-
-function sortKeysDeep(v: any): any {
-  if (Array.isArray(v)) return v.map(sortKeysDeep);
-  if (v && typeof v === "object") {
-    const out: Record<string, any> = {};
-    for (const k of Object.keys(v).sort()) out[k] = sortKeysDeep(v[k]);
-    return out;
-  }
-  return v;
 }
 
 // Short axis ids (HF dataset slugs, spine ids) → board axis names, so /gspc/gov

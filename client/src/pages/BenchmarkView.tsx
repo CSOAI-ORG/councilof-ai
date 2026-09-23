@@ -5,7 +5,7 @@
 // and (2) the assessed third-party benchmark-quality register (/api/benchmark-quality).
 // MEASURED (ours, signed) vs REPORTED (third-party, attributed) — never blended.
 import { useEffect, useState } from "react";
-import { verifyCard } from "../../../functions/_lib/cardVerify";
+import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 
 interface EloRow { model: string; elo: number; games: number; winrate: number; ci: number[] }
 interface EloRef {
@@ -14,7 +14,7 @@ interface EloRef {
   leaderboard?: EloRow[];
   per_axis?: Record<string, EloRow[]>;
   content_id?: string;
-  signature?: { sig?: string; pubkey?: string };
+  signature?: { sig_ed25519?: string; did?: string };
   register?: string;
   method?: string;
 }
@@ -26,7 +26,7 @@ export default function BenchmarkView() {
   const [reg, setReg] = useState<RegRecord[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [axis, setAxis] = useState<string>("overall");
-  const [verifyState, setVerifyState] = useState<"idle" | "checking" | "ok" | "bad">("idle");
+  const [verifyState, setVerifyState] = useState<"idle" | "checking" | "ok" | "bad" | "uncheckable">("idle");
 
   useEffect(() => {
     Promise.all([
@@ -41,16 +41,8 @@ export default function BenchmarkView() {
   async function verifySigned() {
     if (!elo) return;
     setVerifyState("checking");
-    try {
-      // The shared verifier (functions/_lib/cardVerify) decides against its pinned anchor
-      // set: the board-signed reference (did:web:csoai.org#board-attestation-1, signature
-      // over the canonical envelope) and the older inline-pubkey style are both recognised;
-      // a key that is not published is reported, never trusted.
-      const v = await verifyCard(elo, []);
-      setVerifyState(v.valid ? "ok" : "bad");
-    } catch (e) {
-      setVerifyState("bad");
-    }
+    const result = await verifyPublishedArenaElo(elo);
+    setVerifyState(result.state === "VALID" ? "ok" : result.state === "INVALID" ? "bad" : "uncheckable");
   }
 
   const rows = axis === "overall" ? (elo?.leaderboard || []) : (elo?.per_axis?.[axis] || []);
@@ -61,16 +53,17 @@ export default function BenchmarkView() {
       <div className="mb-6">
         <h1 className="text-2xl font-black text-emerald-100">Benchmarks</h1>
         <p className="mt-1 text-xs text-emerald-200/60">
-          Our measured arena Elo (deterministic, Wilson 95% CIs) beside the assessed
-          third-party benchmark register. <span className="text-emerald-300">MEASURED</span> (ours,
-          signed) vs <span className="text-amber-300">REPORTED</span> (third-party, attributed) — never blended.
+          Published arena Elo (deterministic, Wilson 95% CIs) beside the assessed
+          third-party benchmark register. <span className="text-emerald-300">MEASURED</span> (arena)
+          vs <span className="text-amber-300">REPORTED</span> (third-party) — never blended.
+          Arena rounds are separate from admitted GSPC board axes.
         </p>
       </div>
 
       {/* Our Elo leaderboard — same signed feed as /gspc-scoreboard */}
       <section className="mb-8 rounded-2xl border border-emerald-400/20 bg-emerald-950/30 p-5">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-sm font-bold text-emerald-100">🏟 Arena Elo — measured, signed</h2>
+          <h2 className="text-sm font-bold text-emerald-100">Arena Elo — signed snapshot</h2>
           <button
             onClick={verifySigned}
             className="rounded-lg border border-emerald-400/30 px-3 py-1 text-[10px] font-bold text-emerald-200 hover:bg-emerald-400/10"
@@ -80,7 +73,7 @@ export default function BenchmarkView() {
         </div>
         {verifyState === "ok" && (
           <p className="mb-3 rounded-lg bg-emerald-400/10 px-3 py-2 text-[10px] font-semibold text-emerald-300">
-            ✓ Signature verified — this leaderboard matches the signed body.
+            ✓ Board DID signature verified over this arena snapshot and its content ID.
           </p>
         )}
         {verifyState === "bad" && (
@@ -88,8 +81,14 @@ export default function BenchmarkView() {
             ✗ Signature does NOT verify — content may have been altered.
           </p>
         )}
+        {verifyState === "uncheckable" && (
+          <p className="mb-3 rounded-lg bg-amber-400/10 px-3 py-2 text-[10px] font-semibold text-amber-300">
+            Signature UNCHECKABLE here — the attestation could not be checked in this browser.
+          </p>
+        )}
         {err && <p className="text-xs text-red-300">{err}</p>}
         {!elo && !err && <p className="text-xs text-emerald-200/50">loading leaderboard…</p>}
+        {elo && <p className="mb-3 text-xs text-emerald-200/70">Published snapshot: <time dateTime={elo.generated}>{elo.generated || "unknown"}</time> · <a className="underline" href="/arena/elo_reference.json">source JSON</a>. A signature is present; use the button to check it.</p>}
         {elo && rows.length === 0 && <p className="text-xs text-emerald-200/50">no models with n\u22655 yet.</p>}
         {elo && rows.length > 0 && (
           <>
