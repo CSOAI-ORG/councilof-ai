@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-23T15:36:52Z",
+ "as_of": "2026-09-23T16:36:56Z",
  "axes": [
   "accountability",
   "affect",
@@ -151,11 +151,11 @@
    "ties": 70
   },
   "mach": {
-   "decided_games": 28,
+   "decided_games": 33,
    "models_below_min_games": 0,
-   "models_ranked": 5,
-   "models_seen": 5,
-   "ties": 31
+   "models_ranked": 6,
+   "models_seen": 6,
+   "ties": 66
   },
   "mcp": {
    "decided_games": 5,
@@ -228,8 +228,8 @@
    "ties": 91
   }
  },
- "content_id": "2795fc5311289dfbc1ee3b0112db21b14549ebe08fb971b8545fef7de56f79e8",
- "generated": "2026-09-23T15:36:53Z",
+ "content_id": "9d78e2f1fc952bf4248909a8a30f7249142fa8ec30650a20eac5c2e17778e00a",
+ "generated": "2026-09-23T16:36:56Z",
  "leaderboard": [
   {
    "ci": [
@@ -240,6 +240,16 @@
    "games": 155,
    "model": "qwen3:8b",
    "winrate": 0.723
+  },
+  {
+   "ci": [
+    0.566,
+    1
+   ],
+   "elo": 1557.5,
+   "games": 5,
+   "model": "llama3.1:8b",
+   "winrate": 1
   },
   {
    "ci": [
@@ -263,13 +273,13 @@
   },
   {
    "ci": [
-    0.584,
-    0.67
+    0.578,
+    0.664
    ],
-   "elo": 1448.4,
-   "games": 479,
+   "elo": 1391,
+   "games": 484,
    "model": "mistral:7b",
-   "winrate": 0.628
+   "winrate": 0.622
   },
   {
    "ci": [
@@ -293,8 +303,8 @@
   }
  ],
  "method": "Bradley-Terry Elo, K=32, base 1500, per-axis and overall; Wilson 95% CI on win-rate; ranked only with n>=5 decided games; ties counted, not rated; style_controlled_weight honoured when a round carries it.",
- "models": 6,
- "n_rounds": 2363,
+ "models": 7,
+ "n_rounds": 2403,
  "per_axis": {
   "accountability": [
    {
@@ -923,13 +933,13 @@
    {
     "axis": "mach",
     "ci": [
-     0.28,
-     0.787
+     0.566,
+     1
     ],
-    "elo": 1507.7,
-    "games": 11,
-    "model": "mistral:7b",
-    "winrate": 0.545
+    "elo": 1568.3,
+    "games": 5,
+    "model": "llama3.1:8b",
+    "winrate": 1
    },
    {
     "axis": "mach",
@@ -952,6 +962,17 @@
     "games": 9,
     "model": "nemotron-3-nano:30b",
     "winrate": 0.444
+   },
+   {
+    "axis": "mach",
+    "ci": [
+     0.185,
+     0.614
+    ],
+    "elo": 1439.5,
+    "games": 16,
+    "model": "mistral:7b",
+    "winrate": 0.375
    },
    {
     "axis": "mach",
@@ -1362,9 +1383,9 @@
  "rank_rule": "leader named on an axis only when >=2 ranked models and the top model's Wilson 95% win-rate CI lower bound exceeds the runner-up's upper bound; otherwise TIE (ranked, not separated).",
  "register": "MEASURED for a ranked row (n>=5 decided games, deterministic grader on the recorded rounds); an axis with no ranked row is UNMEASURED: not sufficient to rank. Measurement, not certification.",
  "rounds": {
-  "decided": 904,
+  "decided": 909,
   "style_weighted_rounds": 0,
-  "ties": 1459,
+  "ties": 1494,
   "unusable": 0
  },
  "schema": "csoai.arena-elo-reference/0.2",
@@ -1373,38 +1394,38 @@
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
   "did": "did:web:csoai.org#board-attestation-1",
   "envelope": {
-   "content_id": "2795fc5311289dfbc1ee3b0112db21b14549ebe08fb971b8545fef7de56f79e8",
-   "generated": "2026-09-23T15:36:53Z",
-   "n_rounds": 2363,
+   "content_id": "9d78e2f1fc952bf4248909a8a30f7249142fa8ec30650a20eac5c2e17778e00a",
+   "generated": "2026-09-23T16:36:56Z",
+   "n_rounds": 2403,
    "not_a_grade": "A signature proves these bytes were signed by the board key; it proves no claim inside them beyond what the recorded rounds measured.",
    "schema": "csoai.arena-elo-reference-attestation/0.1",
    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
    "sources": [
     {
      "path": "public/arena/rounds.jsonl",
-     "rounds": 2363,
-     "sha256": "518ca87735a5dc611e3a3b05864bd05206b01daa947e5ea276a4f11643a1ad85"
+     "rounds": 2403,
+     "sha256": "d28c31d936d0d8da12efd724af295f458374e9374a162832de03d69151422f5e"
     }
    ]
   },
-  "payload_sha256": "fa10156bd9931a207776e8da4352cab60186de3d97807ec50dcb59b08592b3d5",
+  "payload_sha256": "7b16e5ec5a53a50f93f1e2b087a74e81c4d453c4d165a826deef523a5d51cc25",
   "preimage": "canonical(envelope); envelope.content_id == sha256(canonical(body minus content_id, signature))",
-  "sig_ed25519": "dd5a744e822d88f9574e98f80ee6159df3c0d996843a8bfeef9776fa3dc83a484a61791cbf3dd7384805ecdb9d3af7f657ede99eb5ce8d1d71e99d755702df08",
-  "signed_at": "2026-09-23T15:36:53.844Z",
+  "sig_ed25519": "5b149f287eb4bc006b5ea65167bda81dc0b5e438cf3e68c0e19932bd125ccd6609aa16652bede24c593a5e555af898c550f8ce0ec94354dee5c51022750a3a0e",
+  "signed_at": "2026-09-23T16:36:56.902Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "sources": [
   {
    "path": "public/arena/rounds.jsonl",
-   "rounds": 2363,
-   "sha256": "518ca87735a5dc611e3a3b05864bd05206b01daa947e5ea276a4f11643a1ad85",
+   "rounds": 2403,
+   "sha256": "d28c31d936d0d8da12efd724af295f458374e9374a162832de03d69151422f5e",
    "unparsable_lines": 0
   }
  ],
  "supersedes": {
-  "content_id": "4309863fd43c08ea9f8cb01714347818067496b9a91abeff7687b889d001125a",
-  "generated": "2026-09-23T13:37:10Z",
+  "content_id": "2795fc5311289dfbc1ee3b0112db21b14549ebe08fb971b8545fef7de56f79e8",
+  "generated": "2026-09-23T15:36:53Z",
   "note": "previous file superseded, never edited",
   "signer": "did:web:csoai.org#board-attestation-1"
  }
