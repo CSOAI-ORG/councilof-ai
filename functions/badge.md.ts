@@ -19,14 +19,15 @@
  * tomorrow: if the board changes, the reader's badge changes with it.
  */
 
+import { currentBoardLid } from "./api/gspc";
+
 const SITE = "https://councilof.ai";
-const LID =
-  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+const LID = currentBoardLid();
 
 export function onRequestGet(): Response {
   const body = `# Badges — copy and paste
 
-The badge renders live from \`GET ${SITE}/api/gspc\`. Nothing below hard-codes a number, so a
+The badge derives from the same public axis data as \`GET ${SITE}/api/gspc\`. Nothing below hard-codes a number, so a
 badge you paste today cannot drift into a false claim tomorrow — if the board changes, your
 badge changes with it. No account, no key, no sign-up, and no rate limit to negotiate.
 

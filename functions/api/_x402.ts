@@ -43,6 +43,7 @@ import {
   toLegacyNetwork,
 } from "./_x402_config";
 import { maybeMintCdpJwt, type CdpEnv } from "./_cdp_jwt";
+import { currentBoardLid } from "./gspc";
 import { facilitatorDialect, toDialectPayload } from "./_x402_negotiate";
 import { attachOffers } from "./_x402_offer";
 import {
@@ -823,9 +824,8 @@ export async function verifyX402Payment(
 // a conformant `extensions.bazaar` block (info + schema) on the PaymentRequired
 // response and completing a CDP Facilitator settle. We never invent that field.
 
-/** Board lid language — never a certificate. */
-export const CSOAI_LID =
-  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+/** Board lid language from the same public axes as GET /api/gspc. */
+export const CSOAI_LID = currentBoardLid();
 
 export type BazaarHttpGetOpts = {
   method?: "GET" | "HEAD" | "DELETE";

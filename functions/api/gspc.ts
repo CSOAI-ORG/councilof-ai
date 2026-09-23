@@ -211,6 +211,21 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
 export const publicView = (axes: typeof AXES) =>
   axes.map(excludeOwnLeader).map(dropUncardedLeader);
 
+// One formatter for the board and every catalogue that quotes it. The source is
+// the public view, so an excluded own-model leader never reappears in a lid.
+export const boardLidFromAxes = (axes: typeof AXES): string => {
+  const measured = axes.filter((a) => a.status === "MEASURED");
+  const comparisons = axes.filter((a) => a.kind === "model-comparison");
+  const facts = measured.filter((a) => a.kind === "deterministic-facts");
+  const measuredComparisons = comparisons.filter((a) => a.status === "MEASURED");
+  const separated = measuredComparisons.filter((a) => a.separation === "SEPARATED").length;
+  const publicLeaders = measuredComparisons.filter((a) => typeof a.leader === "string").length;
+  return `${measured.length} axes measured · ${comparisons.length} model fleets · ${separated} separated leaders · ` +
+    `${publicLeaders} public leader scores · ${facts.length} fact runs · TIE is TIE · not a certificate.`;
+};
+
+export const currentBoardLid = (): string => boardLidFromAxes(publicView(AXES));
+
 export const publicLeaderCount = (axes: typeof AXES): number =>
   publicView(axes).filter(
     (a) => a.kind === "model-comparison" && a.status === "MEASURED" && typeof a.leader === "string",
@@ -517,9 +532,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         // functions/api/gspc.lid-truth.test.ts re-parses this string and asserts each
         // number against measured_axes / model_fleets / separated_leads / public_leader_count /
         // fact_runs, so a lid can never again read a count the payload contradicts.
-        lid:
-          `${measured} axes measured · ${modelFleetCount} model fleets · ${separatedLeads} separated leaders · ` +
-          `${publicLeaderScoreCount} public leader scores · ${factRunCount} fact runs · TIE is TIE · not a certificate.`,
+        lid: boardLidFromAxes(selected),
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
