@@ -45,7 +45,7 @@ const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      // shell (soft 404) instead of the directory index.
                      "/signed",
                      // 48h thesis stack JSON (index + watches) — serve as assets.
-                     "/stack"];
+                     "/stack", "/world/observatory"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -91,6 +91,7 @@ const EXISTING = [
   // functions/api/card_index.ts instead of a rule here.
   "/card_index.json        /signed/card_index.json  301",
   "/cards/card_index.json  /signed/card_index.json  301",
+  "/world/observatory      /world/observatory/       308",
   // Revenue densify leftover 2026-09-07: GET /public/openapi.json 404. The
   // OpenAPI document lives at public/openapi.json in git and is served at
   // /openapi.json on Pages (public/ is the site root). /public/openapi.json
