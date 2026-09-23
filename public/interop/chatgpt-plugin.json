@@ -35,7 +35,7 @@
     },
     "/gspc": {
       "get": {
-        "summary": "The 22-axis GSPC board",
+        "summary": "The current GSPC board; read its count from the response",
         "operationId": "getGspcBoard",
         "responses": {
           "200": {
@@ -80,7 +80,7 @@
     },
     {
       "name": "gspc",
-      "description": "22-axis GSPC measurement"
+      "description": "GSPC measurement; current scope comes from GET /api/gspc"
     },
     {
       "name": "verify",
