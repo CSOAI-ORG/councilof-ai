@@ -301,7 +301,7 @@ jobs:
       - name: Python tests (spray parity + skip rules, publisher kinds index)
         if: steps.scope.outputs.gated == 'true'
         run: |
-          python3 -m pip install -q pytest cryptography
+          python3 -m pip install -q pytest cryptography opentimestamps-client==0.7.2
           python3 -m pytest -q scripts/spray/test_gspc_parity.py scripts/spray/test_gspc_spray_skip.py
           python3 -m pytest -q scripts/test_public_root.py -k kinds_index
           python3 -m pytest -q harness/gspc-top100/test_priority_pick.py harness/gspc-top100/test_inflight_cells.py
@@ -312,6 +312,10 @@ jobs:
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
           # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
           python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
+          # The OTS batch receipt names itself for the day it ran. A hardcoded date sat in the
+          # generator, so a run on 2026-09-23 wrote a receipt called ...-2026-09-17.json. Offline:
+          # the calendars are mocked, nothing is submitted and nothing is anchored.
+          PYTHONPATH=scripts python3 -m pytest -q scripts/test_ots_stamp_new.py
 
       # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
       # run by any gate. These test council-os compose locks, chrome extension verify vectors,

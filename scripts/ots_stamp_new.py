@@ -26,22 +26,58 @@ CALENDARS = [
     "https://finney.calendar.eternitywall.com",
 ]
 
-def main():
+def receipt_location(out_dir, source_parents):
+    """Where the batch receipt lands, and why.
+
+    --out-dir when one is given; otherwise the single directory the stamped
+    artifacts live in. Only when the inputs span several directories is there
+    no one place that is "alongside" them, and only then does the receipt fall
+    back to the working directory -- announced, not silently.
+    """
+    if out_dir is not None:
+        return pathlib.Path(out_dir), "--out-dir"
+    parents = {p.resolve() for p in source_parents}
+    if len(parents) == 1:
+        return parents.pop(), "alongside the stamped artifacts"
+    if not parents:
+        return pathlib.Path.cwd(), "the working directory: no input path was a readable file"
+    return pathlib.Path.cwd(), (
+        f"the working directory: the inputs span {len(parents)} directories, so no single "
+        "directory is alongside them -- pass --out-dir to place the receipt deliberately")
+
+
+def receipt_name(now):
+    """The receipt is named for the instant it records as `as_of`, never a literal.
+
+    A hardcoded 2026-09-17 sat here; a run on 2026-09-23 wrote a file whose name
+    claimed the 17th. The date a generator prints is a claim like any other.
+    """
+    return f"ots-stamp-batch-{now.strftime('%Y-%m-%d')}.json"
+
+
+def main(argv=None, now=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("paths", nargs="+")
     ap.add_argument("--out-dir", default=None)
-    a = ap.parse_args()
+    a = ap.parse_args(argv)
 
     from opentimestamps.calendar import RemoteCalendar
     from opentimestamps.core.timestamp import Timestamp, DetachedTimestampFile
     from opentimestamps.core.op import OpSHA256
     from opentimestamps.core.serialize import BytesSerializationContext
 
+    # --out-dir is a destination, not a precondition: create it before the first
+    # proof is written, or a run with a fresh directory loses every .ots it made.
+    if a.out_dir is not None:
+        pathlib.Path(a.out_dir).mkdir(parents=True, exist_ok=True)
+
     rows = []
+    source_parents = []
     for sp in a.paths:
         p = pathlib.Path(sp)
         if not p.is_file():
             print(f"  SKIP  {sp}: not a file"); continue
+        source_parents.append(p.parent)
         raw = p.read_bytes()
         digest = hashlib.sha256(raw).digest()
         ts = Timestamp(digest)
@@ -91,9 +127,12 @@ def main():
                              "verify against the chain, before any file is called anchored."),
         })
 
+    # One instant serves both the recorded `as_of` and the receipt filename, so
+    # the name can never disagree with the bytes it names.
+    now = datetime.datetime.now(datetime.timezone.utc) if now is None else now
     manifest = {
         "schema": "csoai.ots-stamp-batch/0.1",
-        "as_of": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "as_of": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
         "signed": False,
         "unsigned_reason": "The board signer runs as OIDC inside GitHub Actions, disabled account-wide.",
         "anchoring_is_not_signing": ("Anchoring proves WHEN bytes existed. Signing proves WHO "
@@ -102,9 +141,11 @@ def main():
         "calendars": CALENDARS,
         "stamps": rows,
     }
-    mp = pathlib.Path(a.out_dir or ".") / "ots-stamp-batch-2026-09-17.json"
+    where, why = receipt_location(a.out_dir, source_parents)
+    where.mkdir(parents=True, exist_ok=True)
+    mp = where / receipt_name(now)
     mp.write_text(json.dumps(manifest, indent=1))
-    print(f"\nwrote {mp}")
+    print(f"\nwrote {mp}  ({why})")
     return 0 if any(r.get("state") == "PENDING_CALENDAR_COMMITMENT" for r in rows) else 1
 
 if __name__ == "__main__":
