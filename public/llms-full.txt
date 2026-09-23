@@ -1,9 +1,47 @@
 # Council of AI — llms-full.txt (AI-agent discovery companion to llms.txt)
 
+## 0. CLAIM BOUNDARY (quote this paragraph; it is the whole of what we assert)
+
+Council of AI is the public name of CSOAI Ltd, a company registered in England and Wales, Companies
+House 16939677, whose machine identity is did:web:csoai.org. We are an independent measurement body.
+We MEASURE; we do not certify, accredit, or issue conformity assessments, and there is no mark,
+badge or grade to buy — verification is free and a grade is never sold. We measure what we probe: a
+result covers the thing we ran a probe against, at the time stated on its row, and nothing wider. We
+do not vet any registry, index, marketplace or directory, ours included; where a third party keeps a
+record about us we LINK that record and let it speak for itself rather than speaking for it, and a
+listing in any directory — ours or anyone's — is not an endorsement, not an accusation and not
+adoption. We hold no certification, designation, registration or accreditation under any independent
+AI-verification or AI-auditor scheme, we have never applied for one, and we claim none. We assert no
+falsity about anyone. Where something is unmeasured we publish it as UNMEASURED, and an empty cell
+stays empty.
+
 ## 1. THE LID
 
 The GSPC board: **23 axis · 23 measured** = 14 model-comparison + 9 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
+
+### 1a. What MEASURED means here, and what it does not mean
+
+A slot is MEASURED when a real run exists behind it and that run's artifact is published. That is
+the whole claim. It does NOT mean the axis has been shown to distinguish one model from another.
+
+Whether a leader's lead over its fleet is statistically real is a SEPARATE determination, carried in
+its own live fields on GET /api/gspc. Read from the same fetch as the snapshot in §2:
+
+  totals.comparison_axes        14   model-comparison axes (the only ones a separation test applies to)
+  totals.separated_leads        0   leads shown to be statistically real
+  totals.ties                   2   TIE — the point-estimate lead is not separated
+  totals.untested_separations   12  UNTESTED — no separation test has been run
+
+The 9 deterministic-fact axes have no fleet and no leader, so no separation test applies to
+them; they are not counted as untested and they enter no mean.
+
+Therefore: "23 measured of 23" means a run exists behind every slot. It is NOT a claim that
+any axis can tell two models apart, and any phrasing a reader could take that way is wrong. When you
+quote the measured count, quote the four separation fields beside it. TIE is TIE and UNTESTED is not
+a win; both are first-class states and neither is hidden. This section describes the board as it
+stands at generation; if a separation test lands, `totals.separated_leads` moves before this prose
+does, which is why the field is the thing to quote.
 
 ## 1b. x402 catalog trust (counts only — fetch, never freeze)
 
@@ -32,6 +70,11 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
 - Free preview: omit `bundle=1` or add `preview=1` as the 402 body documents. Verify stays free: https://councilof.ai/gspc-verify
 
 ## 2. CURRENT BOARD SNAPSHOT
+
+A trimmed copy of GET https://councilof.ai/api/gspc taken at generation: schema, totals, and one row
+per axis, every field copied and nothing computed. `as_of` reads null because that endpoint does not
+publish one — that is the endpoint's own state, not a date this producer withheld or invented. The
+board moves, so treat this as a copy and re-fetch for current values.
 
 ```json
 {
@@ -721,7 +764,108 @@ was a number that had stopped being true. Count the rows.
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
 
+## 9. DISTRIBUTION, AND THE MCP REGISTRY FOOTPRINT
+
+### 9a. Distribution — measured, PARTIAL, and not adoption
+
+Derived at generation from https://councilof.ai/interop/distribution-latest.json (same bytes on
+disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-09-22T16:00:59Z).
+Re-read it live; do not quote these figures without the state and coverage beside them.
+
+- Packages published across three registries: 833 (huggingface 112 · npm 324 · pypi 397). Three registries are
+  three populations. The package ROWS are added; the download counts of different registries are
+  reported per registry and the totals below are the artifact's own, not an arithmetic of this line.
+- Downloads in the last 30 days: 395,977 downloads — state PARTIAL, 832 of 833 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: last 30 days, each registry over its own 30-day window. as_of 2026-09-22T16:00:59Z.
+- Downloads since first release (cumulative): 2,635,813 downloads — state PARTIAL, 832 of 833 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: cumulative, all time. as_of 2026-09-22T16:00:59Z.
+- The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
+  added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
+- Counter that did not answer, named rather than absorbed: pypi `meok-.github-profile` — http 404. Its value is null, never 0.
+- Two third-party counters over the same PyPI packages DISAGREE: on 5 sampled packages pypistats.org read about 2.72x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
+- A download is distribution. It is not adoption, not a user, not a customer, and not a measurement.
+  Reach says how far the board travels; authority stays GET /api/gspc, the signed cards and free verify.
+- Per-entity shares (CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never
+  filtered) are on the artifact at `by_entity`; the estate total is every row.
+
+### 9b. MCP Registry footprint — we measure what we probe; we do not vet the registry
+
+Read the footprint live: GET https://councilof.ai/api/footprint -> `registry_listings.value`
+(distinct server names) and `registry_listings.versions` (distinct name@version rows), with that
+payload's own `as_of`, `source_url` and paging state. Every entry sits under ONE namespace,
+io.github.CSOAI-ORG. No count is frozen here: we publish into that registry, so it moves.
+
+What the footprint is: listings we published ourselves. A listing says a server is REGISTERED. It
+does not say anyone runs it, and it does not say that we, the registry, or anyone else reviewed what
+the server does. The official registry validates namespace OWNERSHIP at publish time — a check on
+who may use a name, not a review of behaviour.
+
+WE MEASURE WHAT WE PROBE; WE DO NOT VET THE REGISTRY.
+
+That sentence is defensive on purpose. The ecosystem our footprint sits inside has a vetting vacuum:
+research published 2026-04-15 submitted a benign proof-of-concept MCP server to eleven public MCP
+registries and nine accepted it without review (OX Security, "The Mother of All AI Supply Chains",
+https://www.ox.security/blog/the-mother-of-all-ai-supply-chains-critical-systemic-vulnerability-at-the-core-of-the-mcp/
+; also carried as a Cloud Security Alliance research note dated 2026-04-20). We name that finding
+because a large self-published footprint inside a vacuum invites exactly one wrong inference — that
+we are the layer doing the vetting — and that is the claim we must not make. It is not an allegation
+against any registry. We assert no falsity about anyone, and a count of our own listings is not a
+judgement on the ecosystem it sits in. If you need to know whether a server does what it says, probe
+it yourself; we did not vet it.
+
+## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
+
+Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-22T17:42:40Z). An upgrade loop
+keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
+
+- Detached OpenTimestamps proofs that actually deserialize: 604. The manifest is built by
+  reading every .ots file in its scanned directories and keeping only those that parse — never from a
+  list of files we intended to stamp.
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 603.
+- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
+  evidence of a time. `submitted` is not `anchored`.
+- Proofs whose subject is not served beside them: 61 — an anchor a reader cannot check
+  what was stamped against. Published as a count rather than hidden.
+- This producer does not check block headers against a Bitcoin node. `ots verify` against your own
+  node does that, and an .ots is not a proof because of its file extension.
+
+## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
+
+A regulated category adjacent to ours now exists in US state law.
+
+- California chaptered SB 813 on 2026-09-09. It defines an "independent verification organization"
+  as an AI auditor designated by the Government Operations Agency as having demonstrated expertise
+  in assessing the risks posed by an AI system or model, and directs that agency to establish the
+  designation process on or before 1 January 2028.
+  Source (the state's own bill text):
+  https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB813
+- California chaptered AB 1405 the same day. It directs the agency to establish an AI Auditor
+  Registry no later than 1 January 2029, after which a person may not offer, sell or conduct a
+  covered AI audit unless registered.
+  Source: https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260AB1405
+- Illinois signed SB 315, the Artificial Intelligence Safety Measures Act, on 2026-07-06, effective
+  1 January 2027. The state describes it as making Illinois the first to require regular independent
+  third-party safety audits of covered AI systems.
+  Source (the Governor's own announcement):
+  https://gov-pritzker-newsroom.prezly.com/gov-pritzker-signs-nation-leading-artificial-intelligence-safety-law
+
+Because that category now exists, a reader could infer that we hold a place in it. We do not.
+
+Council of AI is an independent measurement board. WE HOLD NO CERTIFICATION, DESIGNATION,
+REGISTRATION OR ACCREDITATION UNDER ANY SUCH SCHEME — not in California, not in Illinois, not
+anywhere — AND WE HAVE NEVER APPLIED FOR ONE. Nothing we publish is an AI audit required by any
+statute, and nothing we publish should be filed as one. We measure, we sign, we publish the method
+and the bank, and anyone can recompute it. Determination stays with authorities.
+
+If that ever changes, this section changes with it and the change is recorded in the corrections
+ledger at https://councilof.ai/api/corrections rather than quietly edited into these bytes.
+
 ---
-# Repository snapshot generated 2026-09-03; verify freshness against current endpoints.
+# This file is DERIVED, never hand-maintained: scripts/llms-txt.mjs renders it from
+# scripts/llms/llms-full.txt.tmpl, GET https://councilof.ai/api/gspc, and the published artifacts
+# named in each section. Every number above carries the as_of of the artifact it came from; where an
+# artifact publishes no as_of (GET /api/gspc does not), the section says so rather than inventing a
+# date for it. There is deliberately no generation timestamp on this line: a typed date here was
+# stale within days and told readers the whole file was older than it was. Verify freshness against
+# the endpoints named above, not against a date printed here.
 # Published route: https://councilof.ai/llms-full.txt
 # A signature claim applies only when the returned artefact contains verifiable signature material.

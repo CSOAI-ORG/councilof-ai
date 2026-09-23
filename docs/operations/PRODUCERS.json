@@ -109,6 +109,16 @@
       "gated": false,
       "reason": "Already gated separately in pr-gates.yml, and its --check fetches the LIVE board, so running it here too would double-spend the <=20/hour self-probe budget for no extra coverage.",
       "verified_2026_09_06": "check passes",
+      "verified_2026_09_23": "check passes after the separation/distribution/timestamp sections were added",
+      "derives_from": [
+        "GET https://councilof.ai/api/gspc (totals.*, axes[], and the separation fields separated_leads / ties / untested_separations / comparison_axes)",
+        "public/cards-bundle.json, public/root.json, public/signed/card_index.json (the three card corpora)",
+        "council-os/capabilities.json (the paid-door declaration)",
+        "functions/mcp/gspc-tools.json, functions/mcp/paid-tools.json (the door's tool counts)",
+        "public/interop/distribution-latest.json (package population, 30-day and cumulative downloads, coverage, the counters that did not answer)",
+        "public/interop/ots/manifest.json (proofs, Bitcoin-attested, calendar-pending, subject-absent)"
+      ],
+      "why_two_of_those_are_read_from_disk": "distribution-latest.json and ots/manifest.json are published artifacts of this repository: the loops land those exact bytes and the edge serves them. Deriving from the file rather than a second live fetch means these figures move only when the file moves, in the same commit, so --check cannot go red because a download counter ticked or a calendar proof upgraded between a lane push and its gate. A gate that reddens while the estate is working correctly is a gate that gets deleted.",
       "volatile": true
     },
     {

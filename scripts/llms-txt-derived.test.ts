@@ -81,7 +81,9 @@ describe("llms.txt derives the tool counts it publishes", () => {
 describe("llms.txt derives one row door per axis on the live board", () => {
   const snapshotAxes = (): string[] => {
     const full = R("public/llms-full.txt");
-    const m = full.match(/## 2\. CURRENT BOARD SNAPSHOT\s*```json\s*([\s\S]*?)```/);
+    // §2 now carries a sentence about why the copy's as_of is null before the fence, so match the
+    // FIRST json fence after the heading rather than requiring the fence to touch it.
+    const m = full.match(/## 2\. CURRENT BOARD SNAPSHOT[\s\S]*?```json\s*([\s\S]*?)```/);
     expect(m, "llms-full.txt carries the board snapshot").toBeTruthy();
     const snap = JSON.parse(m![1]);
     return (snap.axes as { axis: string }[]).map((a) => a.axis);
@@ -129,4 +131,207 @@ describe("llms.txt derives one row door per axis on the live board", () => {
     expect(t).not.toMatch(/Do not bump the board to 23/);
     expect(t, "the status of the newest slot is read from its row, never typed").not.toMatch(/effect-binding, a declared slot with no run behind it/);
   });
+});
+
+/**
+ * MEASURED is not SEPARATED, and the documents that teach a model who we are are the last place
+ * that distinction may blur. Across the board the live totals read zero separated leads, two ties
+ * and twelve untested — so "N measured of N" means a run exists behind every slot and nothing more.
+ * A reader who takes it to mean "N axes can tell models apart" has been misled by us, in the file
+ * they read first. These tests hold the four separation fields beside the measured count, derived
+ * from the same fetch, so the two can never be published apart.
+ */
+describe("llms.txt and llms-full.txt say what MEASURED means, and what it does not", () => {
+  const files = ["public/llms.txt", "public/llms-full.txt"] as const;
+  const tmpls = ["scripts/llms/llms.txt.tmpl", "scripts/llms/llms-full.txt.tmpl"] as const;
+
+  it("both templates carry the separation placeholders, never typed separation counts", () => {
+    for (const t of tmpls) {
+      const src = R(t);
+      for (const ph of ["{{SEPARATED_LEADS}}", "{{TIES}}", "{{UNTESTED_SEPARATIONS}}", "{{COMPARISON_AXES}}"]) {
+        expect(src, `${t} must substitute ${ph}, not type it`).toContain(ph);
+      }
+      expect(src, "a typed separation count is a number nothing retires")
+        .not.toMatch(/totals\.separated_leads`?\s*=\s*\d/);
+    }
+  });
+
+  it("the producer names GET /api/gspc totals as the source of the separation fields", () => {
+    const src = R("scripts/llms-txt.mjs");
+    expect(src).toMatch(/SEPARATED_LEADS:\s*t\.separated_leads/);
+    expect(src).toMatch(/TIES:\s*t\.ties/);
+    expect(src).toMatch(/UNTESTED_SEPARATIONS:\s*t\.untested_separations/);
+    expect(src).toMatch(/COMPARISON_AXES:\s*t\.comparison_axes/);
+  });
+
+  it("each published file states that measured does not mean the axis separates models", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out, `${f} must define MEASURED`).toMatch(/a run exists behind|a real run exists behind/i);
+      expect(out, `${f} must deny the separation reading outright`)
+        .toMatch(/does\s+NOT\s+mean\s+the\s+axis\s+has\s+been\s+shown\s+to\s+distinguish|not\s+a\s+claim\s+that\s+any\s+axis\s+can\s+tell/i);
+      expect(out, `${f} must name all four live separation fields`).toContain("totals.separated_leads");
+      expect(out).toContain("totals.untested_separations");
+      expect(out).toContain("totals.comparison_axes");
+      expect(out).toContain("totals.ties");
+    }
+  });
+
+  it("neither file phrases the board as axes that separate or beat models", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out, `${f} must not claim separated leads in prose`)
+        .not.toMatch(/\b\d+\s+axes?\s+(?:separate|separated|distinguish|rank)\b/i);
+      expect(out, `${f} must not present the measured count as a win`)
+        .not.toMatch(/\b\d+\s+axes?\s+(?:won|beat|outperform)/i);
+    }
+  });
+});
+
+/**
+ * Distribution. A figure was published here that was a partial read presented as the whole estate:
+ * a total with no denominator beside it. The fix is not a better number — it is that no number may
+ * be printed without the state and coverage the artifact already records. Both sections derive from
+ * the committed artifact, so a value that is not the artifact's cannot survive a regeneration; these
+ * tests check the derivation offline and check that every figure still carries its denominator.
+ */
+describe("llms distribution and timestamp sections are derived, stated and bounded", () => {
+  const dist = J("public/interop/distribution-latest.json");
+  const ots = J("public/interop/ots/manifest.json");
+  const files = ["public/llms.txt", "public/llms-full.txt"] as const;
+  const fmt = (n: number) => Number(n).toLocaleString("en-US");
+
+  it("the templates hold the section placeholders and type none of the figures", () => {
+    for (const t of ["scripts/llms/llms.txt.tmpl", "scripts/llms/llms-full.txt.tmpl"] as const) {
+      const src = R(t);
+      expect(src).toContain("{{DISTRIBUTION_SECTION}}");
+      expect(src).toContain("{{OTS_SECTION}}");
+      expect(src, "a typed download figure is a number nothing retires")
+        .not.toMatch(/[\d,]{6,}\s+downloads/);
+    }
+  });
+
+  it("the producer derives both sections from artifacts on disk, not a second live fetch", () => {
+    const src = R("scripts/llms-txt.mjs");
+    expect(src).toMatch(/readJSON\("public\/interop\/distribution-latest\.json"\)/);
+    expect(src).toMatch(/readJSON\("public\/interop\/ots\/manifest\.json"\)/);
+  });
+
+  it("every published download figure is the artifact's own value", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out, `${f} must print the artifact's 30-day total`).toContain(fmt(dist.totals.downloads_30d.value));
+      expect(out, `${f} must print the artifact's cumulative total`).toContain(fmt(dist.totals.downloads_all_time.value));
+      expect(out, `${f} must print the package population`).toContain(fmt(dist.packages.length));
+    }
+  });
+
+  it("no download figure is printed without its state and its denominator", () => {
+    for (const f of files) {
+      const out = R(f);
+      for (const key of ["downloads_30d", "downloads_all_time"] as const) {
+        const row = dist.totals[key];
+        const line = out.split("\n").find((l: string) => l.includes(fmt(row.value)) && l.includes("state"));
+        expect(line, `${f}: ${key} is printed without a state`).toBeTruthy();
+        expect(line, `${f}: ${key} is printed without covered/attempted`)
+          .toContain(`${fmt(row.covered)} of ${fmt(row.attempted)}`);
+        expect(line, `${f}: ${key} is printed without the artifact's as_of`).toContain(row.as_of);
+      }
+      expect(out, `${f} must say a PARTIAL total is a lower bound`).toMatch(/LOWER BOUND/);
+    }
+  });
+
+  it("a counter that did not answer is named, and its value stays null rather than zero", () => {
+    const silent = dist.packages.filter((p: { downloads_30d: number | null }) => p.downloads_30d === null);
+    for (const f of files) {
+      const out = R(f);
+      for (const row of silent) {
+        expect(out, `${f} must name the counter that did not answer`).toContain(row.name);
+      }
+      if (silent.length) expect(out).toMatch(/null,\s+never\s+0/);
+    }
+  });
+
+  it("the timestamp section separates Bitcoin-attested from calendar-pending and carries its as_of", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out).toContain(fmt(ots.counts.proofs));
+      expect(out).toContain(fmt(ots.counts.bitcoin_attested));
+      expect(out).toContain(ots.as_of);
+      expect(out, `${f} must say submitted is not anchored`).toMatch(/submitted.{0,20}not.{0,20}anchored|not\s+evidence\s+of\s+a\s+time/i);
+    }
+  });
+});
+
+/**
+ * The two defensive sentences. Both exist because a reader could otherwise infer a claim we have
+ * never made: that our registry footprint is a vetting layer, and that we hold a place in the
+ * statutory category that now exists around us. They are load-bearing prose, so they are tested.
+ */
+describe("llms.txt and llms-full.txt carry the two precision sentences", () => {
+  const files = ["public/llms.txt", "public/llms-full.txt"] as const;
+
+  it("we measure what we probe; we do not vet the registry", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out, `${f} must carry the vetting disclaimer`)
+        .toMatch(/WE MEASURE WHAT WE PROBE;\s*WE DO NOT VET THE REGISTRY/);
+      expect(out, `${f} must say what a listing is and is not`)
+        .toMatch(/says a server is (?:REGISTERED|registered)/);
+      expect(out, `${f} must not freeze a registry count`)
+        .not.toMatch(/\b\d{3,}\s+(?:servers|listings)\s+(?:in|on)\s+the\s+(?:MCP\s+)?registry/i);
+      expect(out, `${f} must point at the live footprint field`).toContain("registry_listings.value");
+    }
+  });
+
+  it("we hold no certification under any statutory scheme, and never applied", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out, `${f} must disclaim every form of the designation`)
+        .toMatch(/WE HOLD NO CERTIFICATION, DESIGNATION,\s*\n?REGISTRATION OR ACCREDITATION UNDER ANY SUCH SCHEME/);
+      expect(out, `${f} must say we never applied`).toMatch(/NEVER APPLIED FOR ONE/);
+      expect(out, `${f} must not claim to be an auditor under a statute`)
+        .not.toMatch(/\bwe are (?:a |an )?(?:registered|designated|certified) (?:AI )?(?:auditor|verification organization)/i);
+      expect(out, `${f} must cite the state's own source`)
+        .toMatch(/leginfo\.legislature\.ca\.gov/);
+    }
+  });
+});
+
+/**
+ * The claim boundary. A model that reads one paragraph of ours should read this one: it is the
+ * whole of what we assert, and every clause in it is a thing we have been read as claiming and do
+ * not. It is quoted verbatim into both files from one string in the template, so the two cannot
+ * drift into saying different things about the same boundary.
+ */
+describe("both files open with one quotable claim boundary", () => {
+  const files = ["public/llms.txt", "public/llms-full.txt"] as const;
+  const clauses: [string, RegExp][] = [
+    ["the registered identity", /CSOAI Ltd, a company registered in England and Wales, Companies\s*\n?House 16939677/],
+    ["the machine identity", /did:web:csoai\.org/],
+    ["measurement, never certification", /we do not certify, accredit, or issue conformity assessments/],
+    ["a grade is never sold", /verification is free and a grade is never sold/],
+    ["we measure what we probe", /We measure what we probe/],
+    ["we vet no registry, ours included", /do not vet any registry, index, marketplace or directory, ours included/],
+    ["we link third-party records rather than speak for them", /LINK that record and let it speak for itself/],
+    ["a listing is not an endorsement", /is not an endorsement, not an accusation and not\s*\n?adoption/],
+    ["no certification under any scheme, and none claimed", /never applied for one, and we claim none/],
+    ["we assert no falsity about anyone", /We assert no\s*\n?falsity about anyone/],
+    ["UNMEASURED stays first-class", /publish it as UNMEASURED/],
+  ];
+
+  it("the paragraph is one string in the producer, not two hand-kept copies", () => {
+    const a = R("scripts/llms/llms.txt.tmpl");
+    const b = R("scripts/llms/llms-full.txt.tmpl");
+    const grab = (src: string) => src.match(/Council of AI is the public name of CSOAI Ltd[\s\S]*?stays empty\./)?.[0];
+    expect(grab(a), "llms.txt.tmpl carries the boundary").toBeTruthy();
+    expect(grab(b), "llms-full.txt.tmpl carries the boundary").toBeTruthy();
+    expect(grab(a), "the two files must not drift into different boundaries").toBe(grab(b));
+  });
+
+  for (const [name, re] of clauses) {
+    it(`states ${name}`, () => {
+      for (const f of files) expect(R(f), `${f} is missing: ${name}`).toMatch(re);
+    });
+  }
 });
