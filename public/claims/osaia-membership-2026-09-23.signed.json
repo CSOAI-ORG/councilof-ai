@@ -4,15 +4,15 @@
     "schema": "csoai.signed-artifact/0.1",
     "artifact": {
       "path": "/claims/osaia-membership-2026-09-23.json",
-      "sha256": "75c769e0a54647780bcb1bfef54b1342fa48948d3973b1cd644fdb7aa61dd878",
+      "sha256": "cdc6921aab318d0295df43759b29d9d5d1a3013f96a5476a374891b0c489c0ac",
       "schema": "csoai.claim-registry/0.3",
       "as_of": "2026-09-23"
     },
     "registry_id": "osaia-membership-2026-09-23",
-    "registry_digest": "8884aecb3d670a4d16dd604b7cb59a44b6c862317c599b8cc5cc6cf7efdb7404",
+    "registry_digest": "c5b181f90995c34b5b3757679eb798e058cee3c85b7aebc91f037cdb41da12b5",
     "merkle": {
       "algorithm": "RFC 9162 §2.1 Merkle Tree Hash (leaf 0x00, node 0x01, split at the largest power of two below n; no odd-node duplication)",
-      "root": "536317e6a1c6df0bfea2ec8add15643035d1c7986446e7191345c525cd2f472d",
+      "root": "fba81fba75ebb43e50fb9740347abc5db8dcc753bde3decc30939b2a6fcfce39",
       "n_leaves": 24
     },
     "supersedes": {
@@ -31,11 +31,11 @@
   "signature": {
     "did": "did:web:csoai.org#board-attestation-1",
     "alg": "Ed25519",
-    "sig_ed25519": "4736694f3986958d469b6770895fc9eced8dbe52f54110420373a6c4121ec18c7fbc8fe27a6ee00ddc82e2ecfa5ca87aa0ca0fcb1ac2bb42e198062e9595170a",
-    "payload_sha256": "9158ddb446bd11ee03477d1e281c7178a836f2f7d86050067758820fa9acae41",
+    "sig_ed25519": "3efaccc42aa3864834216ee5d047abb5e87659668c9d7de92b487d7c1e1e1f72fcfec667565d3afb68e9e8342d202e262edd34719a66e054ef89c6e088356109",
+    "payload_sha256": "4241a11765f4191ea9edb09be7c03936a936e76a1b3c57f480f984b11e7ebf82",
     "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
     "signer_auth": "pod-token",
-    "signed_at": "2026-09-23T05:09:44.235Z"
+    "signed_at": "2026-09-23T05:28:01.484Z"
   },
   "verify": "canonicalise payload (sort_keys, separators=(',',':'), ensure_ascii=False, UTF-8); its sha256 must equal signature.payload_sha256; verify sig_ed25519 (hex) with #board-attestation-1 from https://csoai.org/.well-known/did.json. Then check payload.artifact.sha256 against the registry file's bytes, and recompute the Merkle root from the registry's claim records with scripts/claims/merkle_rfc9162.py.",
   "control_run": "the same signature over the payload plus one trailing space was rejected before this file was written"

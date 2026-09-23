@@ -183,8 +183,17 @@ function OrgRow({ r }: { r: Row }) {
 
       {r.read_outcome ? (
         <p className="mt-2 text-[12px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Their own page answered <span className="font-mono">{r.read_outcome}</span> to our reader.{" "}
-          {r.read_note}
+          {/* Two sentences, not one template: "answered no HTTP status: timed out to our reader"
+              is not English, and a server that never answered did not answer anything. */}
+          {typeof r.http_status === "number" ? (
+            <>
+              Their own page answered <span className="font-mono">HTTP {r.http_status}</span> to our
+              reader.
+            </>
+          ) : (
+            <>Their own page did not answer our reader: {r.read_outcome.replace(/^no HTTP status: /, "")}.</>
+          )}{" "}
+          {r.read_note ? `${r.read_note[0].toUpperCase()}${r.read_note.slice(1)}.` : ""}
           {r.attempts?.length ? ` Attempts: ${r.attempts.join("; ")}.` : ""}
         </p>
       ) : null}
@@ -375,12 +384,14 @@ export default function AllianceMap() {
             {probe.organisations_named_note}
           </p>
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[420px] border-collapse text-left">
+            {/* 320px, not 420: at a 390px viewport the third column was clipped off the end of
+                the scroll container and a reader saw two of three columns with no hint of a third. */}
+            <table className="w-full min-w-[320px] border-collapse text-left">
               <thead>
                 <tr className="border-b border-slate-300 font-mono text-[10px] uppercase tracking-wide text-slate-500 dark:border-slate-700 dark:text-slate-400">
                   <th scope="col" className="py-2 pr-3">URL</th>
                   <th scope="col" className="py-2 pr-3">HTTP</th>
-                  <th scope="col" className="py-2">Visible text</th>
+                  <th scope="col" className="py-2 whitespace-nowrap">Chars read</th>
                 </tr>
               </thead>
               <tbody>
@@ -392,7 +403,7 @@ export default function AllianceMap() {
                     <td className="py-2 pr-3 font-mono text-[11px]">{p.http_status ?? "—"}</td>
                     <td className="py-2 font-mono text-[11px] text-slate-500 dark:text-slate-400">
                       {typeof p.extracted_chars === "number"
-                        ? `${p.extracted_chars.toLocaleString("en-GB")} chars`
+                        ? p.extracted_chars.toLocaleString("en-GB")
                         : "—"}
                     </td>
                   </tr>
@@ -410,7 +421,7 @@ export default function AllianceMap() {
             How many organisations are in it? The published answers differ.
           </h2>
           <p className="mt-2 max-w-3xl text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
-            {registry.published_counts.note}
+            {registry.published_counts_of_the_membership.note}
           </p>
           <ul className="mt-4 space-y-3">
             <li className="rounded-lg border border-slate-200 p-3 dark:border-slate-800">
@@ -418,10 +429,10 @@ export default function AllianceMap() {
                 The alliance itself
               </p>
               <p className="mt-1 text-[13px] text-slate-700 dark:text-slate-300">
-                {registry.published_counts.the_alliance_itself}
+                {registry.published_counts_of_the_membership.the_alliance_itself}
               </p>
             </li>
-            {registry.published_counts.as_published_elsewhere.map((p) => (
+            {registry.published_counts_of_the_membership.as_published_elsewhere.map((p) => (
               <li key={p.url} className="rounded-lg border border-slate-200 p-3 dark:border-slate-800">
                 <p className="font-mono text-[10px] uppercase tracking-wide text-slate-500 dark:text-slate-400">
                   {p.publisher}
@@ -439,8 +450,8 @@ export default function AllianceMap() {
                 Our own count
               </p>
               <p className="mt-1 text-[13px] text-slate-700 dark:text-slate-200">
-                {registry.published_counts.our_own_count_of_the_founding_announcement.n} —{" "}
-                {registry.published_counts.our_own_count_of_the_founding_announcement.basis}. We take no view
+                {registry.published_counts_of_the_membership.our_own_count_of_the_founding_announcement.n} —{" "}
+                {registry.published_counts_of_the_membership.our_own_count_of_the_founding_announcement.basis}. We take no view
                 on which of the numbers above is right. They are other people&rsquo;s counts of other
                 people&rsquo;s membership, and we publish them because a map that printed one number would
                 hide that the published numbers differ.

@@ -419,7 +419,10 @@ async function main() {
       "Our own evidence for this is private correspondence, which the specification puts out of scope as a public " +
       "claim (§1.3), and neither the alliance nor the Linux Foundation names us on a surface a stranger can reach. " +
       "So no public evidence can settle it, and we hold our own claim in exactly the state we hold everybody else's " +
-      "unreadable one. If either body publishes a list that names us, this moves to UNMEASURED and records what appeared.",
+      "unreadable one. If either body publishes a list that names us, this moves to UNMEASURED and records what appeared. " +
+      "The source_url is the page on which we publish this statement. Until that page is served, the digest here covers " +
+      "the statement's own bytes rather than a page's visible text, which is why this one artifact records covers: raw-bytes, " +
+      "and the weekly loop records a read that did not happen rather than a reading it did not take.",
     does_not_prove: [
       ...DOES_NOT_PROVE_BASE,
       "that the Open Secure AI Alliance or the Linux Foundation endorses, has reviewed, or has seen this registry or the page that renders it",
