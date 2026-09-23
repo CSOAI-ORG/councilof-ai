@@ -149,15 +149,15 @@ export function credibilityTiles(input: {
     },
     {
       id: "timestamped",
-      claim: "The evidence carries a time we did not set",
+      claim: "Timestamp proofs show what is attested and what is pending",
       figure: ots ? nf.format(ots.attested) : null,
       unit: ots
-        ? `proofs confirmed in the Bitcoin chain — ${ots.pending} still pending, of ${ots.total}`
+        ? `proofs containing Bitcoin block-header attestations — ${ots.pending} calendar-pending, of ${ots.total}`
         : "OpenTimestamps proofs",
       caveat:
-        "A pending proof is a submission, not a time. The two are counted separately here and a pending one is never called anchored.",
+        "The manifest parses proof bytes; it does not independently check the block headers against a Bitcoin node or verify every named subject file. A pending proof is a submission, not an anchor.",
       href: "/api/pop/ots-proofs?preview=1",
-      cta: "Open the timestamp door",
+      cta: "View the free timestamp preview",
     },
     {
       id: "standards",

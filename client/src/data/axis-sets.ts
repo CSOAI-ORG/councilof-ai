@@ -824,7 +824,7 @@ export const AXIS_SETS: AxisSet[] = [
       "A different instrument over a different axis list. It was mistaken for a stale copy of the board for a long time; it is not one, and forcing its number to match the board's would destroy information rather than fix a contradiction.",
     countAuthority: "/arena/elo_reference.json → axes[]",
     artifact: { href: "/arena/elo_reference.json", label: "/arena/elo_reference.json" },
-    detailPage: { href: "/arena-scoreboard", label: "the arena leaderboard" },
+    detailPage: { href: "/arena-scoreboard", label: "the historical arena replay (29 August)" },
     freshness:
       "The date is the `generated` field inside the signed reference — when the ratings were computed from the rounds played. It is not a render time.",
     fetchUrl: "/arena/elo_reference.json",

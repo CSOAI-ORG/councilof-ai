@@ -24,8 +24,8 @@ export const navigation: NavGroup[] = [
     description: 'The instrument and its living board',
     submenu: [
       { section: 'The board', name: 'The GSPC board', href: '/board/', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
-      { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head on the same frozen items. Deterministic grading — no model judges another' },
-      { name: 'Arena — benchmarks', href: '/gspc-arena?view=benchmarks', description: 'The per-bank view of the arena: which instrument, which rows, which result' },
+      { name: 'Arena practice world', href: '/gspc-arena', description: 'Practice and historical replay, separate from the current signed Elo reference' },
+      { name: 'Arena — current reference', href: '/board/?set=arena', description: 'The dated signed Elo reference, its measured and empty rows, and its source file' },
       { name: 'Arena — live training', href: '/gspc-arena?view=training', description: 'Runs in progress. Practice stays practice and is never quoted' },
       { name: 'Measured models', href: '/models', description: 'Ranked by signed GSPC results, not by parameter count' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact — the losses included' },

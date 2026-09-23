@@ -905,6 +905,11 @@ export default function MeasurementBoard() {
     setMetaDescription(
       "One navigable board across every axis set this estate publishes. Each set states what it measures, over what, when, what it establishes and what it does not; evidence links preserve their actual signed or unsigned state.",
     );
+    // The navigation's arena link must open the current signed reference, not
+    // the separate historical practice replay. Keep the first server render
+    // deterministic, then apply this validated deep link after hydration.
+    const requested = new URLSearchParams(window.location.search).get("set");
+    if (AXIS_SETS.some((set) => set.id === requested)) setActiveId(requested!);
   }, []);
 
   const active = AXIS_SETS.find((s) => s.id === activeId)!;
@@ -987,6 +992,9 @@ export default function MeasurementBoard() {
                   setActiveId(set.id);
                   setQuery("");
                   setStatusFilter("all");
+                  const url = new URL(window.location.href);
+                  url.searchParams.set("set", set.id);
+                  window.history.replaceState(null, "", url.pathname + url.search + url.hash);
                 }}
               />
             );

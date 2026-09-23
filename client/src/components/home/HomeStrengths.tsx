@@ -2,9 +2,9 @@
  * HomeStrengths — the six things that make this different, in the order they are worth saying.
  *
  * THE ORDER IS THE ARGUMENT (owner, 2026-09-22): we measure independently and publish every
- * result signed so anyone can re-check it free and forever; we publish our weak scores too;
- * every claim we have ever corrected is in a public ledger; the evidence is anchored so nobody
- * can quietly rewrite history; we sit in the standards rooms where this is being decided; and
+ * issued cards are signed so anyone can re-check them free and forever; we publish our weak
+ * scores too; corrections are public; timestamp proofs disclose attested and pending states; we
+ * participate in standards work; and
  * the whole thing runs as a machine on a schedule rather than a report somebody writes.
  *
  * EVERY CARD CARRIES ITS OWN LIVE PROOF. The proof chip under each claim is read at render time
@@ -68,7 +68,7 @@ export function anchorProof(root: ReadState<RootPayload>, ots: PopPreview | null
   // manifest names /root.json as its subject, and /root.json.ots is a 404. Saying "of this
   // root" would be the same overstatement the card body used to carry.
   const stamps = split
-    ? ` · separately, ${split.attested} of ${split.total} timestamps over published artifacts are confirmed in a Bitcoin block; the other ${split.pending} are submitted and still pending`
+    ? ` · separately, ${split.attested} of ${split.total} published proof files contain Bitcoin block-header attestations; ${split.pending} remain calendar-pending. This manifest parses the proof bytes but does not verify block headers against a node or every named subject file`
     : "";
   return {
     text: `${r.leaves} records under one ${r.signed ? "signed" : "unsigned"} root ${shortRoot(r.root)}, rebuilt ${r.asOf}${stamps}`,
@@ -187,7 +187,7 @@ export function strengthCards({
       n: "04",
       title: "The history cannot be quietly rewritten",
       body:
-        "Every published record is hashed into one tree, and the top of that tree is signed. Change a byte in any record and the top stops matching, so a quiet edit is not something we could do without it showing. Separately, published artifacts are submitted to a public timestamping service — and a timestamp only counts once it is confirmed in a Bitcoin block, so until then we call it submitted rather than anchored.",
+        "Published records are hashed into a tree whose root is signed. Change a covered record and the root stops matching. Separately, artifacts are submitted to OpenTimestamps. The public manifest distinguishes proofs carrying Bitcoin block-header attestations from calendar-pending submissions; independent verification must also check the block header and the named subject file.",
       proof: anchorProof(root, ots),
       link: { href: "/root.json", label: "Open the signed root", external: true },
     },

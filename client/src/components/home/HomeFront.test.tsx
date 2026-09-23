@@ -157,8 +157,8 @@ describe("HomeStrengths", () => {
 
   it("never calls a pending timestamp anchored", () => {
     const p = anchorProof(root, ots);
-    expect(p.text).toContain("56 of 600 timestamps over published artifacts are confirmed in a Bitcoin block");
-    expect(p.text).toContain("544 are submitted and still pending");
+    expect(p.text).toContain("56 of 600 published proof files contain Bitcoin block-header attestations");
+    expect(p.text).toContain("544 remain calendar-pending");
     expect(p.text).not.toMatch(/600 (?:proofs )?anchored/i);
   });
 
@@ -166,7 +166,7 @@ describe("HomeStrengths", () => {
     // /root.json.ots is a 404 and no proof in the timestamp manifest names /root.json as its
     // subject. The card said "signed and timestamped" until that was probed.
     const anchor = strengthCards({ corrections, root, ots })[3];
-    expect(anchor.body).toContain("the top of that tree is signed");
+    expect(anchor.body).toContain("whose root is signed");
     expect(anchor.body).not.toMatch(/signed and timestamped/i);
     expect(anchor.body).toContain("Separately");
     expect(anchorProof(root, ots).text).toContain("separately");
