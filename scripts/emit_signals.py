@@ -24,6 +24,12 @@ Honest register (2026-09-22): the 24 Aug signals said status MEASURED with elo_l
 elo_leader is named only when SEPARATED; elo_top is always the top ranked row (with n and CI)
 so a reader sees who is ahead and how thin it is. Measurement, not certification.
 
+0.3 (2026-09-23): the SEPARATED test moved off Elo order and onto the Wilson win-rate intervals
+it was always described in terms of, and a leader must now clear every other ranked model rather
+than only the runner-up. Elo is path-dependent -- a planted 17-7 corpus separated or tied
+depending only on the order the rounds were recorded -- so a verdict resting on Elo order was
+resting on bookkeeping. Field names are unchanged; the version moved because the meaning did.
+
 Usage:
   python3 scripts/emit_signals.py --leaderboard public/arena/elo_reference.json \
       --out public/signals --pod-token-file /workspace/secrets/board-sign-pod-token
@@ -36,7 +42,7 @@ from board_sign import canonical, norm, sha256_hex, assert_ascii, BOARD_KID  # n
 
 REGISTER_URL = "https://councilof.ai/api/axis-register"
 MIN_GAMES = 5
-SCHEMA = "csoai.axis-signal/0.2"
+SCHEMA = "csoai.axis-signal/0.3"
 
 
 def fetch_register(url=REGISTER_URL):
@@ -56,13 +62,36 @@ def derive_signal(axis_entry, rows, lb, generated, supersedes=None):
     axis_status = axis_entry.get("status", "UNMEASURED")
     ranked = [r for r in rows if r.get("games", 0) >= MIN_GAMES]
     meta = ((lb.get("axis_meta") or {}).get(axis)) or {}
-    top = ranked[0] if ranked else None
+    top = ranked[0] if ranked else None          # Elo order, for display; see below
     runner = ranked[1] if len(ranked) > 1 else None
+    # The separation test is made on the quantity the rule is stated in: the Wilson 95%
+    # win-rate interval. It is NOT made on Elo order.
+    #
+    # Two defects are being closed here, both found by planted controls on 2026-09-23:
+    #  1. Elo is path-dependent. A planted 17-7 corpus separates when the rounds interleave
+    #     and TIES when the same 17 wins are recorded before the same 7 losses, because
+    #     sequential K=32 updating leaves the LOSER Elo-first. The verdict then compared the
+    #     loser's lower bound against the winner's upper bound and reported TIE on evidence
+    #     that plainly separates. An instrument whose answer depends on the order its own
+    #     rounds were written down is not measuring the models.
+    #  2. With more than two ranked models the old test consulted only ranked[0] and ranked[1],
+    #     so a third model whose interval overlapped the leader could not prevent a SEPARATED
+    #     verdict. A leader must clear EVERY other ranked model, not just the runner-up.
+    # The leader is therefore the model whose Wilson lower bound exceeds every other ranked
+    # model's Wilson upper bound. There can be at most one, the result does not depend on the
+    # order of the corpus, and on two models with a consistent record it is exactly the rule
+    # as previously published.
+    by_winrate = sorted(ranked, key=lambda r: (-r["winrate"], r["model"]))
+    sep_leader = None
+    if len(ranked) > 1:
+        cand = by_winrate[0]
+        if all(cand["ci"][0] > other["ci"][1] for other in by_winrate[1:]):
+            sep_leader = cand
     if not ranked:
         separation = "UNMEASURED"
-    elif runner is None:
+    elif len(ranked) < 2:
         separation = "TIE"          # one ranked model is not a ranking
-    elif top["ci"][0] > runner["ci"][1]:
+    elif sep_leader is not None:
         separation = "SEPARATED"
     else:
         separation = "TIE"
@@ -74,7 +103,7 @@ def derive_signal(axis_entry, rows, lb, generated, supersedes=None):
         register = "TIE"
     else:
         register = "UNMEASURED"
-    leader = top if register == "MEASURED" else None   # never a leader on a non-MEASURED axis
+    leader = sep_leader if register == "MEASURED" else None   # never a leader on a non-MEASURED axis
     body = {
         "schema": SCHEMA,
         "axis": axis,
@@ -95,9 +124,12 @@ def derive_signal(axis_entry, rows, lb, generated, supersedes=None):
         "elo_leader": leader["model"] if leader else None,
         "elo_leader_score": leader["elo"] if leader else None,
         "games_leader": leader["games"] if leader else None,
-        "rank_rule": f"leader named only when >=2 models each have >={MIN_GAMES} decided games on this axis "
-                     "and the top model's Wilson 95% win-rate CI lower bound exceeds the runner-up's "
-                     "upper bound; TIE = ranked, not separated; UNMEASURED = not sufficient to rank.",
+        "rank_rule": f"leader named only when >=2 models each have >={MIN_GAMES} decided games on this "
+                     "axis and ONE model's Wilson 95% win-rate CI lower bound exceeds EVERY other "
+                     "ranked model's upper bound; TIE = ranked, not separated; UNMEASURED = not "
+                     "sufficient to rank. The test is on the win-rate intervals, not on Elo order: "
+                     "Elo is path-dependent and the verdict must not be. elo_top/elo_runner_up below "
+                     "are the Elo ordering, shown for continuity, and may differ from the leader.",
         "not_a_certification": True,
         "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds "
                 "(deterministic grader on frozen banks). Honest signals only; thin-n axes say so. "

@@ -53,30 +53,50 @@ def ask(model, prompt, timeout=600):
     # think:false but still fall back to thinking if response is empty.
     return r.get("response") or r.get("thinking") or ""
 
+# Every key a published gspc bank has ever used to carry the thing the model is shown.
+# Measured over the fourteen register banks on 2026-09-23: text (gov, care, swarm),
+# item (asi, affect, jail), operation (prv), request (agi), case (mach, det). The four
+# outside the old list -- operation, request, case and action -- loaded as items with no
+# text, and the main loop skips a textless item WITHOUT consuming a game, so prv, agi,
+# mach and det could not be played at all: the loop span forever instead of failing.
+TEXT_KEYS = ("text", "scenario", "item", "tool", "prompt", "operation", "request", "case", "action")
+
+
 def load_bank_file(f):
-    """A frozen bank as published (HF items.jsonl: scenario/item/tool + expected, with a
-    canary row) or the pod projection (text + expected). Canary rows are skipped and counted."""
-    items, canary = [], 0
+    """A frozen bank as published (HF items.jsonl: one of TEXT_KEYS + expected, with a canary
+    row) or the pod projection (text + expected). Canary rows are skipped and counted.
+
+    A row is a canary when its _canary field is TRUTHY, not merely present. The affect and
+    jail banks carry a null "_canary" key on every row and a real marker on exactly one, so
+    the old presence test discarded all 42 and all 37 rows and left those two axes unplayable.
+    Verified 2026-09-23 across all fourteen register banks: exactly one truthy canary each
+    (swarm publishes none), and the loaded count is unchanged for the twelve that already
+    loaded. Returns (items, canary_rows, textless_rows) -- a textless row is dropped HERE and
+    counted, so a caller can fail on a bank it cannot play instead of spinning on one."""
+    items, canary, textless = [], 0, 0
     for l in Path(f).read_text().splitlines():
         if not l.strip():
             continue
         d = json.loads(l)
-        if "_canary" in d:
+        if d.get("_canary"):
             canary += 1
             continue
         if not d.get("text"):
-            for k in ("scenario", "item", "tool", "prompt"):
+            for k in TEXT_KEYS:
                 if d.get(k):
                     d["text"] = d[k]
                     break
+        if not d.get("text"):
+            textless += 1
+            continue
         items.append(d)
-    return items, canary
+    return items, canary, textless
 
 def load_banks():
     banks = {}
     root = Path("/workspace/banks-all")
     for f in sorted(root.glob("gspc-*.jsonl")):
-        items, _ = load_bank_file(f)
+        items, _, _ = load_bank_file(f)
         if items:
             banks[f.stem.replace("gspc-", "")] = items
     return banks
@@ -167,18 +187,30 @@ def main():
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--grader", choices=("legacy", "first-label"), default="legacy")
     ap.add_argument("--sleep", type=float, default=2.0)
+    ap.add_argument("--require-items", type=int, default=2,
+                    help="fail (exit 2) if the bank yields fewer playable items than this, "
+                         "instead of looping on a bank that can never produce a game")
+    ap.add_argument("--max-attempts", type=int, default=None,
+                    help="hard ceiling on loop iterations; default 20x --games. A run that "
+                         "cannot reach --games says so and exits 3; it never spins.")
     args = ap.parse_args()
     n_games = args.games if args.games is not None else args.rounds
     models = [m for m in (args.models.split(",") if args.models else MODELS) if m]
     out = Path(args.out) if args.out else OUT
     rng = random.Random(args.seed)
     if args.bank:
-        items, canary = load_bank_file(args.bank)
+        items, canary, textless = load_bank_file(args.bank)
         axis = args.axis or Path(args.bank).stem.replace("gspc-", "").replace(".items", "")
         banks = {axis: items}
         bank_sha = hashlib.sha256(Path(args.bank).read_bytes()).hexdigest()
         bank_meta = {"bank_path": str(args.bank), "bank_sha256": bank_sha, "bank_items": len(items),
-                     "bank_canary_rows": canary}
+                     "bank_canary_rows": canary, "bank_textless_rows": textless}
+        if len(items) < args.require_items:
+            # An axis whose published bank yields nothing playable is a FINDING, reported here
+            # as a non-zero exit with its counts, not a loop that runs until the pod is killed.
+            log("GATE: bank", args.bank, "yields", len(items), "playable items <",
+                args.require_items, "| canary rows", canary, "| textless rows", textless)
+            sys.exit(2)
     else:
         banks = load_banks()
         bank_meta = {}
@@ -189,11 +221,21 @@ def main():
         "| round", round_no, "| test_mode", n_games or "forever", "| grader", args.grader, "| seed", args.seed)
 
     n_run = 0
+    attempts = 0
+    max_attempts = args.max_attempts if args.max_attempts is not None else (
+        20 * n_games if n_games else None)
     while n_games is None or n_run < n_games:
+        attempts += 1
+        if max_attempts is not None and attempts > max_attempts:
+            # Ungraded answers and model errors consume attempts without producing a game.
+            # A run that burns its budget reports what it got and exits 3 rather than looping.
+            log("GATE:", attempts - 1, "attempts produced only", n_run, "of", n_games,
+                "games on", args.axis or "?", "— exiting rather than spinning")
+            sys.exit(3)
         # pick a bank with enough items
         usable = [(ax, items) for ax, items in banks.items() if len(items) >= min_n]
         if not usable:
-            log("WARN: no bank has >=2 items"); time.sleep(60); continue
+            log("GATE: no bank has >=", min_n, "playable items"); sys.exit(2)
         axis, items = rng.choice(usable)
         idx = rng.randrange(len(items))
         item = items[idx]
