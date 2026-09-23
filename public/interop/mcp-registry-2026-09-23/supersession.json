@@ -1,0 +1,121 @@
+{
+  "schema": "csoai.supersession-record/0.1",
+  "kind": "disclosure",
+  "title": "What we published to the official MCP registry, what is wrong with it, and what we cannot fix",
+  "record_id": "mcp-registry-supersession-2026-09-23",
+  "created_utc": "2026-09-23T00:00:00Z",
+  "canonical_url": "https://councilof.ai/interop/mcp-registry-2026-09-23/supersession.json",
+  "subject_registry": "https://registry.modelcontextprotocol.io",
+  "about": "our own published entries only",
+
+  "what_this_is": "A dated, public statement about entries WE published. It asserts nothing about the registry, its operators, or any other publisher. Where a link we published returns 404 to a stranger, that is a finding about us. We cannot edit or withdraw what we published, so instead of editing we supersede: we state plainly what is there, why it stands, and what we have published in its place. This is the same supersede-never-edit rule we apply to our own signed bytes.",
+
+  "measurement": {
+    "artifact": "https://councilof.ai/interop/mcp-registry-2026-09-23/census.json",
+    "sha256": "a92446533f9108bca52b5d60df1fa1350cfc3795a67d731b19bd2bc6995902da",
+    "producer": "scripts/registry-census.py in this repository; re-runnable by anyone",
+    "measured_utc": "2026-09-23",
+    "namespace": "io.github.CSOAI-ORG/*"
+  },
+
+  "what_we_published": {
+    "servers": 354,
+    "version_rows": 1342,
+    "counts_are_different_things": "354 is the number of distinct server names. 1342 is the number of version rows across those names. They are never summed and never substituted for one another.",
+    "status_counts": { "active": 354 },
+    "packages": { "pypi": 353, "npm": 1 }
+  },
+
+  "findings": [
+    {
+      "id": "F1",
+      "finding": "39 of the 40 entries that declare a remote endpoint point at a host with no DNS record at all.",
+      "detail": "40 of the 354 declare a `remotes` entry; all 40 are streamable-http. 39 name https://api.meok.ai/..., and api.meok.ai returns NXDOMAIN — the name does not resolve, so nothing behind it is reachable by anyone, by any route. The apex meok.ai answers; the api subdomain does not exist. The remaining 1 names https://councilof.ai/mcp, which answers.",
+      "measured": { "declaring_a_remote": 40, "dead_host": 39, "answering_host": 1 },
+      "whose_defect": "ours"
+    },
+    {
+      "id": "F2",
+      "finding": "325 of the 326 entries that publish a source-code link return 404 to anyone who is not signed in as us.",
+      "detail": "326 of the 354 declare a repository URL. Fetched anonymously, 325 return 404 and 1 returns 200. The cause is that the GitHub organisation has been hidden under an account flag since early September 2026, not that the repositories were deleted. A GitHub 404 to a signed-out reader means EITHER absent OR hidden, and the bytes are identical, so we do not claim the repositories are gone. We claim only what we can measure: a stranger following a link we published gets a 404. The remaining 28 entries declare no repository field at all.",
+      "measured": { "declaring_a_url": 326, "status_404_anonymous": 325, "status_200_anonymous": 1, "no_repository_field": 28 },
+      "control": "The same sweep fetched a public repository we do not own (200) and a path we know is absent (404). Without those controls a throttled client would have reported every link as broken and looked like a finding.",
+      "whose_defect": "ours"
+    },
+    {
+      "id": "F3",
+      "finding": "The one entry that does point at a live endpoint understates that endpoint.",
+      "detail": "io.github.CSOAI-ORG/gspc declares https://councilof.ai/mcp and describes it as '12 HTTP tools (8 free, 4 x402)'. The endpoint answered tools/list with 13 tools on 2026-09-23. The description is stale, and because published versions are immutable it can only be corrected by publishing a new version.",
+      "whose_defect": "ours"
+    }
+  ],
+
+  "why_we_cannot_fix_them_in_place": {
+    "statement": "Every repair that would touch the existing entries is closed to us, for reasons in the registry's own published source rather than any refusal by its operators.",
+    "reasons": [
+      {
+        "reason": "A domain proof cannot reach the io.github.* namespace.",
+        "evidence": "internal/api/handlers/v0/auth/common.go, BuildPermissions(): a verified domain grants exactly `ReverseString(domain) + '/*'`. Proving councilof.ai grants ai.councilof/* and nothing else. The registry routes io.github.* publishers to GitHub authentication, and for an organisation namespace it additionally requires org-Owner role."
+      },
+      {
+        "reason": "There is no rename, move or transfer.",
+        "evidence": "The publisher CLI exposes only init, login, publish, status and validate. Names are the primary identifier; published version metadata is immutable."
+      },
+      {
+        "reason": "Withdrawal hides but does not remove.",
+        "evidence": "Setting a server's status to `deleted` removes it from discovery while preserving the historical record. It is not an erasure, and we do not describe it as one."
+      },
+      {
+        "reason": "A withdrawn entry still holds its remote URL.",
+        "evidence": "internal/service/registry_service.go, validateNoDuplicateRemoteURLs(): a publish is rejected if any server with a different name already declares the same remote URL. The lookup in internal/database/postgres.go filters on the URL alone with no status condition, so the reservation is not released by marking the old entry deleted. This is why our new entry does not and cannot reuse the exact URL string the old one holds."
+      }
+    ],
+    "what_would_still_need_a_credential_we_do_not_hold": "Marking any existing io.github.CSOAI-ORG/* entry deprecated or deleted, and publishing a corrected version of io.github.CSOAI-ORG/gspc, both require GitHub authentication as an Owner of the organisation. This lane holds no such credential and created no account."
+  },
+
+  "what_we_have_published_instead": {
+    "namespace": "ai.councilof/*",
+    "route": "HTTP domain proof at https://councilof.ai/.well-known/mcp-registry-auth, exchanged at POST /v0/auth/http",
+    "state": "PREPARED_NOT_PUBLISHED",
+    "state_meaning": "The payload is written and passes the registry's own POST /v0/validate. Nothing has been published under ai.councilof/*, because completing the domain proof requires signing a timestamp with the private half of the key we serve, and that private key was not found in any store this lane swept. We do not describe a prepared payload as a published entry.",
+    "prepared": [
+      {
+        "name": "ai.councilof/gspc",
+        "payload": "https://councilof.ai/interop/mcp-registry-2026-09-23/prepared/ai.councilof-gspc.server.json",
+        "declares_endpoint": "https://councilof.ai/mcp/",
+        "endpoint_verified": "tools/list returned 13 tools over JSON-RPC on 2026-09-23",
+        "why_this_url_spelling": "The exact string https://councilof.ai/mcp is permanently reserved by io.github.CSOAI-ORG/gspc (see the duplicate-remote-URL rule above), and that reservation is not released by withdrawing the old entry. https://councilof.ai/mcp/ is a different string that serves the identical surface and was verified by probe. We state this plainly rather than presenting it as a fresh endpoint.",
+        "no_package_declared": "The npm package csoai-gspc-mcp carries the ownership marker mcpName: io.github.CSOAI-ORG/gspc. The registry's npm validator compares that field exactly against the server name, so the package cannot be attached to a name in a different namespace until it is republished with the new marker. Rather than declare a package that would fail validation, this entry declares none."
+      }
+    ],
+    "deliberately_not_done": "We did not prepare 354 replacement entries. A fresh namespace filled with entries pointing at the same unreachable host would be the original defect with a new prefix. Every entry we prepare declares an endpoint verified by probe, or declares no endpoint at all."
+  },
+
+  "the_publication_route_itself": {
+    "verified": true,
+    "mechanism": "The registry fetches https://<domain>/.well-known/mcp-registry-auth as text/plain, follows no redirects, accepts at most 4096 bytes, and parses the first record matching `v=MCPv1; k=<algo>; p=<base64 key>`. The caller signs an RFC3339 timestamp, valid for ±15 seconds, and sends it hex-encoded.",
+    "our_document": {
+      "url": "https://councilof.ai/.well-known/mcp-registry-auth",
+      "status": 200,
+      "sha256": "d07bbdeec2d7bc45698e96c52d7f8f2bb94a9335462b4602d8962771f2047414",
+      "parses": true,
+      "algorithm": "ed25519",
+      "public_key": "AVkgKTDwpzB8d2/De+7w3RHVkgIyc/jh+GIGjBBCSZA="
+    },
+    "blocker": {
+      "id": "F4",
+      "finding": "The private half of the key we publish was not found in any store this lane swept.",
+      "detail": "The key was added on 2026-09-15. The change that added it recorded 'Public key only (no secrets, no private material)' and did not record where the private half was kept. A sweep of the estate's key stores on this machine and on the deploy pod — deriving the public key from every candidate PEM and from every 64-character hex string in files that mention this record — found no match. This lane cannot read the Cloudflare Pages secret store, so the key is NOT asserted to be lost; it is asserted to be unlocated by this sweep. Until it is produced or the record is rotated to a key we hold, POST /v0/auth/http cannot be completed by us or by anyone.",
+      "whose_defect": "ours"
+    }
+  },
+
+  "doctrine": {
+    "we_measure_never_certify": true,
+    "no_claim_about_others": "Nothing in this record asserts any falsity about the registry, its operators, or any other publisher. The defects recorded here are ours.",
+    "absence_is_not_inferred_from_a_guess": "Every server name and URL measured here came from the registry's own paginated API. No URL was constructed by pattern and no 404 on an invented path is treated as evidence of anything."
+  },
+
+  "signature_state": "see supersession.signed.json beside this file",
+  "timestamp_state": "see supersession.json.ots and supersession.ots.json beside this file; a fresh OpenTimestamps stamp is a pending calendar commitment, NOT a Bitcoin attestation, and is described as submitted-and-pending until it is upgraded and verified against the chain"
+}
