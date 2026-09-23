@@ -37,12 +37,11 @@ PATHS = [
     "/.well-known/did.json",
 ]
 
-UA = {"User-Agent": "Mozilla/5.0 (csoai-mirror)"}
+UA = {"User-Agent": "CSOAI-Public-Mirror/1.0 (+https://councilof.ai)"}
 
 
 def fetch(path):
-    """Fetch from the origin. We send a browser UA because our own edge blocks the honest one —
-    that is the defect this script exists for, and it is recorded rather than hidden."""
+    """Fetch with an identifying client; access failures remain failures, not UA-bypass retries."""
     r = urllib.request.urlopen(urllib.request.Request(ORIGIN + path, headers=UA), timeout=60)
     b = r.read()
     return b, r.status
@@ -86,9 +85,9 @@ def main():
         "schema": "csoai.mirror-manifest/0.1",
         "as_of": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "origin": ORIGIN,
-        "authoritative": ("councilof.ai is authoritative. This mirror exists because the origin "
-                          "refuses common HTTP clients and our GitHub account is restricted. If a "
-                          "file here disagrees with the origin, the origin wins and the mirror is stale."),
+        "authoritative": ("councilof.ai is authoritative for its site artifacts. The why section is a "
+                          "dated access observation, not a permanent outage declaration. Later "
+                          "capture, operations and reader-kit families carry their own manifests."),
         "why": {
             "origin_status_to_a_plain_python_client": plain_client_status(ORIGIN + "/api/gspc"),
             "mirror_host_status_to_the_same_client": plain_client_status(
@@ -123,18 +122,23 @@ def main():
         ok += 1
 
     (tmp / "MIRROR-MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    (tmp / "README.md").write_text(
-        "---\nlicense: cc-by-4.0\n---\n\n"
-        "# Council of AI — public evidence mirror\n\n"
-        f"Mirrored from {ORIGIN} at {manifest['as_of']}.\n\n"
-        "**councilof.ai is authoritative.** This mirror exists for one measured reason: the origin "
-        "answers HTTP 403 (Cloudflare error 1010) to a plain Python or Perl client, on the API as "
-        "well as the site, so a machine consumer following our own published instructions is "
-        "refused. Hugging Face serves those same clients.\n\n"
-        "Every file carries the URL it came from and the sha256 of the bytes as fetched, in "
-        "`MIRROR-MANIFEST.json`. If a file here disagrees with the origin, the origin wins and this "
-        "mirror is stale.\n\n"
-        "Nothing here is a certification. We measure and we never certify, and verification is free.\n")
+    # Later release families are described by their own manifests. Keep the root
+    # reader page and its inspected tools derived from the same owned source.
+    kit = pathlib.Path(__file__).resolve().parents[1] / "public" / "consumer-kit" / "v1"
+    kit_manifest = json.loads((kit / "manifest.json").read_text())
+    expected = {"csoai_read.py", "test_csoai_read.py", "README.md", "MIRROR_README.md",
+                "discovery.json", "public_evidence_walkthrough.ipynb"}
+    if kit_manifest.get("schema") != "csoai.public-consumer-kit/1.0" or set(kit_manifest["files"]) != expected:
+        raise ValueError("Unexpected reader-kit manifest")
+    for name, meta in kit_manifest["files"].items():
+        body = (kit / name).read_bytes()
+        if hashlib.sha256(body).hexdigest() != meta["sha256"] or len(body) != meta["bytes"]:
+            raise ValueError("Reader-kit digest mismatch: " + name)
+        destination = tmp / "consumer-kit" / "v1" / name
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(body)
+    (tmp / "consumer-kit" / "v1" / "manifest.json").write_bytes((kit / "manifest.json").read_bytes())
+    (tmp / "README.md").write_bytes((kit / "MIRROR_README.md").read_bytes())
 
     if a.dry_run:
         print(f"DRY RUN: would mirror {ok} file(s), {failed} unfetchable, to {a.repo}")
