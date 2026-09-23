@@ -77,10 +77,10 @@ const EXISTING = [
   "/alliance-map          /memberships         308",
   "/alliance-map/         /memberships         308",
   // The noindex GitHub PR train is retired: its API returns 404 and the live
-  // lazy chunk is missing. Send old bookmarks to the working Council OS rather
-  // than keep an error page or advertise a frozen GitHub snapshot.
-  "/merge-me             /dashboard?tab=home   308",
-  "/merge-me/            /dashboard?tab=home   308",
+  // lazy chunk is missing. Send old bookmarks to the indexed explanation of
+  // the live measurement workflow rather than advertise a frozen PR queue.
+  "/merge-me             /how-we-work   308",
+  "/merge-me/            /how-we-work   308",
   "/favicon.ico           /csoai-icon.svg      308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
