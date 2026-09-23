@@ -12,7 +12,7 @@
   </entry>
   <entry>
     <url>https://councilof.ai/api/gspc</url>
-    <description>LIVE 22-axis GSPC board (GET returns JSON; cite `totals.public_count`, never a typed integer).</description>
+    <description>Current GSPC board JSON; cite `totals.public_count` from the response rather than a count copied into this sitemap.</description>
     <category>api · json</category>
     <priority>1.0</priority>
   </entry>
@@ -54,7 +54,7 @@
   </entry>
   <entry>
     <url>https://councilof.ai/axes-deep.html</url>
-    <description>The canonical 22-axis reference — each axis: scope, what's MEASURED, the discipline (TIE is TIE), the lane (where to look).</description>
+    <description>Axis reference — scope and measurement discipline. For the current axis count and status, read GET /api/gspc.</description>
     <category>reference</category>
     <priority>0.9</priority>
   </entry>

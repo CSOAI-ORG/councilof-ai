@@ -2,7 +2,7 @@
  * GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).
  *
  * Sell path: pay-to-recompute / re-attest per request — never a rank, never a certificate,
- * never a score. Lid: 22 axes · 14 fleets · 3 public leaders · 8 fact runs.
+ * never a score. The current lid is imported from _x402 and must match GET /api/gspc.
  *
  *   free   GET ?subject=<id>[&axis=<slug>]            → 402 challenge + a FREE PREVIEW of what
  *                                                        already exists for that subject (signed
