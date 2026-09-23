@@ -51,6 +51,10 @@
     .record-head { display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; color:var(--muted); font-size:13px; }
     .axis { color:var(--accent); text-transform:uppercase; font-weight:750; letter-spacing:.08em; }
     .intent { margin:9px 0; overflow-wrap:anywhere; }
+    .source-detail { margin-top:10px; color:var(--muted); }
+    .source-detail summary { cursor:pointer; color:var(--accent); }
+    .source-detail pre { white-space:pre-wrap; overflow-wrap:anywhere; margin:10px 0 0; padding:12px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); }
+    .source-check { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
     .empty { color:var(--muted); font-style:italic; }
     .pager { display:flex; align-items:center; gap:14px; margin-top:20px; }
     .pager button:disabled { opacity:.45; cursor:not-allowed; }
@@ -60,7 +64,7 @@
   </style>
 </head>
 <body>
-  <header><div class="shell"><a class="brand" href="/">Council of AI</a><nav aria-label="Primary"><a href="/world/">Council OS world</a><a href="/dashboard/?tab=measured">GSPC board</a><a href="/gspc-verify/">Verify a record</a></nav></div></header>
+  <header><div class="shell"><a class="brand" href="/">Council of AI</a><nav aria-label="Primary"><a href="/world/">Council OS world</a><a href="/dashboard/?tab=board">GSPC board</a><a href="/gspc-verify/">Verify a record</a></nav></div></header>
   <main class="shell">
     <div class="eyebrow">Council OS · source-linked research view</div>
     <h1>Simulation Observatory</h1>
@@ -92,6 +96,7 @@
       <div class="provenance">
         <div><span class="label">Public source</span><span><a id="source-link" href="/j-space/events.json">/j-space/events.json</a></span></div>
         <div><span class="label">Source SHA-256</span><span class="mono" id="source-hash">—</span></div>
+        <div><span class="label">Visitor verification</span><span class="source-check"><button type="button" id="verify-source">Check public source bytes</button><span id="source-verify-status" role="status">Not checked in this browser.</span></span></div>
         <div><span class="label">Import head hash</span><span class="mono" id="import-hash">—</span></div>
         <div><span class="label">Import status</span><span id="import-status">Loading…</span></div>
         <div><span class="label">Machine-readable index</span><span><a href="./index.json">Download index.json</a></span></div>
@@ -115,8 +120,41 @@
   (() => {
     const $ = id => document.getElementById(id);
     const size = 25;
-    let rows = [], filtered = [], page = 0;
+    let rows = [], filtered = [], page = 0, indexData = null, sourcePromise = null;
     const date = epoch => Number.isFinite(epoch) ? new Date(epoch * 1000).toISOString().slice(0, 10) : 'date unavailable';
+    const sourceStatus = message => { $('source-verify-status').textContent = message; };
+    const verifiedSource = () => {
+      if (!indexData) return Promise.reject(new Error('index has not loaded'));
+      if (!sourcePromise) {
+        sourcePromise = (async () => {
+          if (indexData.source?.url !== 'https://councilof.ai/j-space/events.json' || !/^[a-f0-9]{64}$/.test(indexData.source?.sha256 || '')) {
+            throw new Error('source URL or digest is not the expected public source');
+          }
+          const response = await fetch('/j-space/events.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`source HTTP ${response.status}`);
+          const bytes = await response.arrayBuffer();
+          const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))]
+            .map(value => value.toString(16).padStart(2, '0')).join('');
+          if (digest !== indexData.source.sha256) throw new Error('source SHA-256 differs from the published index');
+          const source = JSON.parse(new TextDecoder().decode(bytes));
+          if (!Array.isArray(source.events) || source.events.length !== indexData.source.event_count || source.n_events !== source.events.length) {
+            throw new Error('source event count differs from the published index');
+          }
+          return source;
+        })();
+        sourcePromise.catch(() => { sourcePromise = null; });
+      }
+      return sourcePromise;
+    };
+    $('verify-source').addEventListener('click', async () => {
+      sourceStatus('Checking public source bytes…');
+      try {
+        const source = await verifiedSource();
+        sourceStatus(`MATCH — SHA-256 and ${source.events.length.toLocaleString()} source rows checked in this browser. Upstream signatures remain unverified.`);
+      } catch (error) {
+        sourceStatus(`UNCHECKABLE — ${error.message}. No signature or outcome claim made.`);
+      }
+    });
     const addText = (parent, tag, value, className) => {
       const child = document.createElement(tag);
       if (className) child.className = className;
@@ -138,6 +176,28 @@
         addText(head, 'span', `${date(row.source_epoch)} · source ID ${row.source_id || 'missing'}`, 'mono');
         card.appendChild(head);
         addText(card, 'div', row.intent || 'No intent text in source.', row.intent ? 'intent' : 'intent empty');
+        const detail = document.createElement('details'); detail.className = 'source-detail';
+        addText(detail, 'summary', 'Inspect exact source row');
+        const detailBody = addText(detail, 'div', 'Open to check the public source bytes and this row.');
+        detail.addEventListener('toggle', async () => {
+          if (!detail.open || detail.dataset.checked === 'true') return;
+          detailBody.textContent = 'Checking public source bytes and row…';
+          try {
+            const source = await verifiedSource();
+            const original = source.events[row.source_index];
+            if (!original || original.id !== row.source_id || original.axis !== row.axis ||
+                (original.intent || '') !== row.intent || original.epoch !== row.source_epoch) {
+              throw new Error('source row differs from the indexed summary');
+            }
+            detailBody.replaceChildren();
+            addText(detailBody, 'p', `MATCH — source row ${row.source_index + 1} of ${source.events.length}. The upstream signed flag is ${String(original.signed)}; its signature was not verified here.`);
+            addText(detailBody, 'pre', JSON.stringify(original, null, 2), 'mono');
+            detail.dataset.checked = 'true';
+          } catch (error) {
+            detailBody.textContent = `UNCHECKABLE — ${error.message}. No source match inferred.`;
+          }
+        });
+        card.appendChild(detail);
         $('records').appendChild(card);
       }
       if (!filtered.length) addText($('records'), 'p', 'No summaries match these filters.', 'empty');
@@ -175,7 +235,8 @@
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();
     }).then(data => {
-      if (data.schema !== 'csoai.simulation-observatory/1' || !Array.isArray(data.events)) throw new Error('Unrecognised index schema');
+      if (data.schema !== 'csoai.simulation-observatory/1' || !Array.isArray(data.events) || data.events.length !== data.source?.event_count) throw new Error('Unrecognised index schema or row count');
+      indexData = data;
       rows = data.events;
       renderMoments(Array.isArray(data.cards) ? data.cards : []);
       $('count').textContent = rows.length.toLocaleString();
