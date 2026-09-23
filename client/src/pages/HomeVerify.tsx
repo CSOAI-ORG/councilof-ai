@@ -80,7 +80,6 @@ const HOME_LD = {
         addressCountry: "GB",
       },
       sameAs: [
-        "https://github.com/CSOAI-ORG",
         "https://huggingface.co/csoai",
         "https://www.wikidata.org/wiki/Q141128616",
         "https://orcid.org/0009-0001-3869-1068",

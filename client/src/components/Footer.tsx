@@ -6,7 +6,7 @@
  */
 
 import { Link } from 'wouter';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { BookOpen, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
@@ -90,7 +90,7 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/CSOAI-ORG' },
+    { name: 'Public source mirror', icon: BookOpen, href: 'https://huggingface.co/datasets/csoai/councilof-ai-source' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];
