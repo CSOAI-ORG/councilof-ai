@@ -424,7 +424,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       const tieCount = cmp.filter((a) => a.separation === "TIE").length;
       const untestedCount = cmp.filter((a) => a.separation === "UNTESTED").length;
       const separationPublicCount =
-        `${separatedLeads} of ${cmp.length} model-comparison axis separated a leader · ` +
+        `${separatedLeads} of ${cmp.length} model-comparison ${cmp.length === 1 ? "axis" : "axes"} separated a leader · ` +
         `${tieCount} TIE · ${untestedCount} UNTESTED`;
       const modelFleetCount = selected.filter((a: any) => a.kind === "model-comparison").length;
       const factRunCount = factRuns.filter((a) => a.status === "MEASURED").length;
@@ -452,12 +452,12 @@ export const onRequestGet: PagesFunction = async (context) => {
         fact_runs: factRunCount,
         count_grammar:
           unmeasured === 0
-            ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
+            ? `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board and every one carries a measurement — no ` +
               `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
               `future slot is added with no run behind it, this line separates the two again on its own. ` +
               `A measurement is not a separated leader: ${separationPublicCount}. A point-estimate lead ` +
               `is not a measured advantage, and UNTESTED is not a tie.`
-            : `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
+            : `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board; ${measured} of them carry a measurement and ` +
               `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
               `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
               `so the gap is visible; it is not evidence of anything having been measured. ` +
@@ -609,8 +609,8 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      `Of the ${comparisonSlots.length} model-comparison axis, ${separationTestedCount} have a published statistical-separation determination: ${separatedNames.length} SEPARATED${separatedNames.length ? ` (${separatedNames.join(", ")})` : ""} and ${tieCount} TIE. Methods are stated per axis; most use paired McNemar tests, while any alternative must publish its basis and supporting evidence. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axis are not model comparisons and are not in this denominator.`,
-      `${selected.length} axis are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. The financial-fact axis are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
+      `Of the ${comparisonSlots.length} model-comparison ${comparisonSlots.length === 1 ? "axis" : "axes"}, ${separationTestedCount} have a published statistical-separation determination: ${separatedNames.length} SEPARATED${separatedNames.length ? ` (${separatedNames.join(", ")})` : ""} and ${tieCount} TIE. Methods are stated per axis; most use paired McNemar tests, while any alternative must publish its basis and supporting evidence. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axes are not model comparisons and are not in this denominator.`,
+      `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board and ${selected.filter((a) => a.status === "MEASURED").length} ${selected.filter((a) => a.status === "MEASURED").length === 1 ? "carries" : "carry"} a measurement. See totals.count_grammar. The financial-fact axes are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
       "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
       "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. Those slots are now component-fact objects (ai-adoption-components, labour-components), not indexes. Do not restore the v0.1 sticker.",

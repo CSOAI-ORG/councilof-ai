@@ -129,7 +129,7 @@ describe("GET /api/gspc: totals can express the negative, from one derivation", 
 
   it("the aggregate states the same three numbers as the tallies beside it", () => {
     expect(totals.separation_public_count).toBe(
-      `${totals.separated_leads} of ${totals.comparison_axes} model-comparison axis separated a leader · ` +
+      `${totals.separated_leads} of ${totals.comparison_axes} model-comparison ${totals.comparison_axes === 1 ? "axis" : "axes"} separated a leader · ` +
         `${totals.ties} TIE · ${totals.untested_separations} UNTESTED`,
     );
   });
