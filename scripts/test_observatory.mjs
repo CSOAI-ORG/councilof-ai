@@ -10,6 +10,10 @@ try {
   await page.getByText('1,201', { exact: true }).waitFor();
   if (await page.title() !== 'Simulation Observatory | Council of AI') throw new Error('Wrong title');
   if (await page.locator('.record').count() !== 25) throw new Error('Expected first 25 records');
+  if (await page.locator('.moment').count() !== 12) throw new Error('Expected 12 source-linked moments');
+  await page.locator('.moment button').first().click();
+  if (!await page.locator('#query').inputValue() || await page.locator('.record').count() < 1) throw new Error('Moment did not find its source');
+  await page.locator('#query').fill('');
   if (await page.locator('#source-date').textContent() !== '2026-08-15') throw new Error('Source date mislabeled');
   await page.screenshot({ path: '/workspace/lanes/codex-world-observatory-desktop.png', fullPage: true });
   await page.locator('#query').fill('1c8899583e');
@@ -29,13 +33,14 @@ try {
       source: { generated_at: '2026-08-15T16:59:38Z', sha256: 'fixture', url: 'https://councilof.ai/j-space/events.json' },
       import: { head_hash: 'fixture' },
       events: [{ source_id: 'fixture', axis: '<img src=x onerror=alert(1)>', intent: '<script>window.compromised=true</script>', source_epoch: 1786780977 }],
+      cards: [{ source_id: 'fixture', axis: '<svg onload=alert(1)>', title: '<img src=x onerror=alert(1)>', hook: '<script>window.compromised=true</script>', disclosure: 'Simulation; upstream signature not verified.' }],
     }),
   }));
   await hostile.goto(url, { waitUntil: 'networkidle' });
-  if (await hostile.locator('.record img, .record script').count()) throw new Error('Untrusted HTML was parsed');
+  if (await hostile.locator('.record img, .record script, .moment img, .moment script, .moment svg').count()) throw new Error('Untrusted HTML was parsed');
   if (await hostile.evaluate(() => window.compromised === true)) throw new Error('Untrusted script executed');
   if (await hostile.locator('.record').count() !== 1) throw new Error('Fixture did not render');
-  console.log('PASS desktop load, 1201 count, source date, search, mobile load, hostile text escaping');
+  console.log('PASS desktop load, 1201 rows, 12 candidate moments linked to source, source date, search, mobile load, hostile text escaping');
 } finally {
   await browser.close();
 }

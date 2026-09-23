@@ -39,6 +39,12 @@
     input, select, button { background:#0c1823; border:1px solid #506575; border-radius:9px; color:var(--ink); padding:10px 12px; font:inherit; }
     input { flex:1; min-width:210px; }
     button { cursor:pointer; }
+    .moments { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .moment { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px; }
+    .moment h3 { font-size:18px; line-height:1.25; margin:0; }
+    .moment p { margin:0; color:var(--muted); }
+    .moment .disclosure { font-size:12px; }
+    .moment button { margin-top:auto; align-self:flex-start; }
     .records { display:grid; gap:10px; }
     .record { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px 18px; }
     .record-head { display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; color:var(--muted); font-size:13px; }
@@ -48,7 +54,8 @@
     .pager { display:flex; align-items:center; gap:14px; margin-top:20px; }
     .pager button:disabled { opacity:.45; cursor:not-allowed; }
     footer { border-top:1px solid var(--line); color:var(--muted); padding:22px 0 36px; font-size:13px; }
-    @media(max-width:700px) { .stats { grid-template-columns:1fr; } .provenance div { grid-template-columns:1fr; gap:3px; } header .shell { align-items:flex-start; flex-direction:column; padding-top:15px; padding-bottom:15px; } }
+    @media(max-width:900px) { .moments { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:700px) { .moments { grid-template-columns:1fr; } .stats { grid-template-columns:1fr; } .provenance div { grid-template-columns:1fr; gap:3px; } header .shell { align-items:flex-start; flex-direction:column; padding-top:15px; padding-bottom:15px; } }
   </style>
 </head>
 <body>
@@ -73,6 +80,11 @@
         <div><span class="label">Import status</span><span id="import-status">Loading…</span></div>
         <div><span class="label">Machine-readable index</span><span><a href="./index.json">Download index.json</a></span></div>
       </div>
+    </section>
+    <section aria-labelledby="moments-heading">
+      <h2 id="moments-heading">Candidate moments from the snapshot</h2>
+      <p class="section-intro" id="moments-intro">Loading source-linked cards…</p>
+      <div class="moments" id="moments" aria-live="polite"></div>
     </section>
     <section aria-labelledby="browse-heading">
       <h2 id="browse-heading">Browse the summaries</h2>
@@ -117,6 +129,28 @@
       $('previous').disabled = page === 0;
       $('next').disabled = (page + 1) * size >= filtered.length;
     };
+    const renderMoments = cards => {
+      $('moments').replaceChildren();
+      $('moments-intro').textContent = `${cards.length} source-linked editorial leads. These are simulation summaries, not findings about real organisations or verified signatures.`;
+      for (const item of cards) {
+        const article = document.createElement('article'); article.className = 'moment';
+        addText(article, 'div', item.axis || 'unclassified', 'axis');
+        addText(article, 'h3', item.title || 'Untitled candidate');
+        addText(article, 'p', item.hook || 'No summary available.');
+        addText(article, 'p', item.disclosure || 'Simulation; upstream signature not verified.', 'disclosure');
+        const button = document.createElement('button'); button.type = 'button';
+        button.textContent = `Find source ${item.source_id || 'event'}`;
+        button.addEventListener('click', () => {
+          $('query').value = String(item.source_id || '');
+          $('axis-filter').value = '';
+          page = 0; render();
+          $('browse-heading').scrollIntoView({ behavior: 'smooth' });
+          $('query').focus({ preventScroll: true });
+        });
+        article.appendChild(button);
+        $('moments').appendChild(article);
+      }
+    };
     $('query').addEventListener('input', () => { page = 0; render(); });
     $('axis-filter').addEventListener('change', () => { page = 0; render(); });
     $('previous').addEventListener('click', () => { if (page) { page--; render(); } });
@@ -127,6 +161,7 @@
     }).then(data => {
       if (data.schema !== 'csoai.simulation-observatory/1' || !Array.isArray(data.events)) throw new Error('Unrecognised index schema');
       rows = data.events;
+      renderMoments(Array.isArray(data.cards) ? data.cards : []);
       $('count').textContent = rows.length.toLocaleString();
       $('source-date').textContent = String(data.source.generated_at || 'unknown').slice(0, 10);
       $('source-hash').textContent = data.source.sha256 || 'unavailable';
