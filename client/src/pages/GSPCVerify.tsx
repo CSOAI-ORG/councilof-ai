@@ -195,12 +195,13 @@ export default function GSPCVerify() {
             data-testid="governance-retrieve-raas"
           >
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">
-              RaaS · free preview → paid proof
+              Free verification → optional commission receipt
             </p>
             <p className="text-[13px] text-emerald-100/80 leading-relaxed">
-              Stranger path for the live governance measurement retrieve. Free preview loads the published
-              bytes into the verifier below — measurement credential only, never a certificate. Paid
-              proof, commission, or feed stays on the commission door after you have seen the preview.
+              Free preview loads this published governance card into the verifier below. The paid
+              commission door issues a receipt for a named subject and re-serves signed cards already
+              on file; it does not run a new measurement. Before paying, check the 402 challenge for
+              the signer state, corpus date and cards available for your subject.
             </p>
             <p className="font-mono text-[12px] text-emerald-200/90 break-all">
               <a
@@ -226,14 +227,14 @@ export default function GSPCVerify() {
                 className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/15"
                 data-testid="governance-commission-cta"
               >
-                Paid proof · commission
+                Commission receipt · existing evidence
               </Link>
               <a
                 href="/pay"
                 className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/25 px-4 py-2 text-sm font-semibold text-emerald-200/90 hover:bg-emerald-500/10"
                 data-testid="governance-pay-cta"
               >
-                Feed / pay door
+                Browse all metered doors
               </a>
             </div>
           </div>
