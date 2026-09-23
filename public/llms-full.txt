@@ -86,11 +86,11 @@ board moves, so treat this as a copy and re-fetch for current values.
     "unmeasured_axes": 0,
     "quotable_axes": 23,
     "public_count": "23 axis · 23 measured",
-    "separation_public_count": "0 of 14 model-comparison axis separated a leader · 2 TIE · 12 UNTESTED",
+    "separation_public_count": "0 of 14 model-comparison axes separated a leader · 2 TIE · 12 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axis with a RUN behind them; it is not a count of axis with a separated leader. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
     "fact_runs": 9,
-    "count_grammar": "23 axis are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axis separated a leader · 2 TIE · 12 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
+    "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 2 TIE · 12 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
     "by_family": {
       "gspc": {
         "axes": 15,
@@ -775,18 +775,18 @@ It is a dated simulation archive; its source date and upstream signature-verific
 ### 9a. Distribution — measured, PARTIAL, and not adoption
 
 Derived at generation from https://councilof.ai/interop/distribution-latest.json (same bytes on
-disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-09-22T16:00:59Z).
+disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-09-23T07:17:45Z).
 Re-read it live; do not quote these figures without the state and coverage beside them.
 
-- Packages published across three registries: 833 (huggingface 112 · npm 324 · pypi 397). Three registries are
+- Packages published across three registries: 837 (huggingface 116 · npm 324 · pypi 397). Three registries are
   three populations. The package ROWS are added; the download counts of different registries are
   reported per registry and the totals below are the artifact's own, not an arithmetic of this line.
-- Downloads in the last 30 days: 395,977 downloads — state PARTIAL, 832 of 833 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: last 30 days, each registry over its own 30-day window. as_of 2026-09-22T16:00:59Z.
-- Downloads since first release (cumulative): 2,635,813 downloads — state PARTIAL, 832 of 833 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: cumulative, all time. as_of 2026-09-22T16:00:59Z.
+- Downloads in the last 30 days: 386,765 downloads — state PARTIAL, 836 of 837 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: last 30 days, each registry over its own 30-day window. as_of 2026-09-23T07:17:45Z.
+- Downloads since first release (cumulative): 2,640,224 downloads — state PARTIAL, 836 of 837 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: cumulative, all time. as_of 2026-09-23T07:17:45Z.
 - The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
   added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
 - Counter that did not answer, named rather than absorbed: pypi `meok-.github-profile` — http 404. Its value is null, never 0.
-- Two third-party counters over the same PyPI packages DISAGREE: on 5 sampled packages pypistats.org read about 2.72x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
+- Two third-party counters over the same PyPI packages DISAGREE: on 4 sampled packages pypistats.org read about 2.71x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
 - A download is distribution. It is not adoption, not a user, not a customer, and not a measurement.
   Reach says how far the board travels; authority stays GET /api/gspc, the signed cards and free verify.
 - Per-entity shares (CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never
