@@ -5,7 +5,7 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 13/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 14/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
@@ -17,6 +17,7 @@
 /signed/publisher-health.json  /publisher-health.json  308
 /card_index.json        /signed/card_index.json  301
 /cards/card_index.json  /signed/card_index.json  301
+/world/observatory      /world/observatory/       308
 /public/openapi.json   /openapi.json   308
 /public/openapi.json/  /openapi.json   308
 /arena                 /dashboard?tab=play  308
@@ -695,6 +696,7 @@
 /datasets/*  /datasets/:splat  200
 /signed/*  /signed/:splat  200
 /stack/*  /stack/:splat  200
+/world/observatory/*  /world/observatory/:splat  200
 
 # --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---
 # canary-2026-08-22-7fb8: if /zzz-spa-test-7fb8 is still honest-404, this file did not reach the edge
