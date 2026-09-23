@@ -39,12 +39,12 @@
 
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
-import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
+import registryLatest from "../../public/interop/mcp-registry-latest.json";
 
 export const SCHEMA = "csoai.footprint/0.1";
 export const TTL_SECONDS = 3600;
 export const FETCH_TIMEOUT_MS = 8000;
-export const REGISTRY_CENSUS_PATH = "/interop/mcp-registry-2026-09-23/census.json";
+export const REGISTRY_CENSUS_PATH = "/interop/mcp-registry-latest.json";
 /** Endpoint freshness policy: a dated registry measurement is still evidence after this age,
  *  but readers must see STALE first. It does not create a new measurement. */
 export const REGISTRY_CENSUS_MAX_AGE_HOURS = 48;
@@ -138,12 +138,14 @@ const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFin
 
 // ── registry_listings ─────────────────────────────────────────────────────────
 /** The off-edge census walks the registry to cursor exhaustion and records both distinct names
- *  and version rows. The API reads its committed bytes; it never turns a 25 s request budget into
- *  a misleading partial population. An old measurement remains visible but explicitly STALE. */
-export function registryListings(nowIso: string, art: unknown = registryCensus): Row {
+ *  and version rows. The API reads a staged pointer whose source, digest and measured fields are
+ *  checked against immutable source bytes before a guarded site build. It never turns a 25 s
+ *  request budget into a misleading partial population. An old measurement remains STALE. */
+export function registryListings(nowIso: string, art: unknown = registryLatest): Row {
   const base = {
     kind: KIND_SELF_LISTING,
     source_url: REGISTRY_CENSUS_PATH,
+    latest_url: REGISTRY_CENSUS_PATH,
     upstream_url: REGISTRY_SEARCH,
     artifact: REGISTRY_CENSUS_PATH,
     max_age_hours: REGISTRY_CENSUS_MAX_AGE_HOURS,
@@ -151,11 +153,17 @@ export function registryListings(nowIso: string, art: unknown = registryCensus):
   };
   if (!art || typeof art !== "object") return uncheckable("registry census is absent or malformed", base);
   const census = art as Record<string, unknown>;
-  if (census.schema !== "csoai.mcp-registry-census/0.1" ||
-      census.kind !== "measurement" ||
+  if (census.schema !== "csoai.mcp-registry-latest/0.1" ||
       census.registry !== "https://registry.modelcontextprotocol.io" ||
       census.namespace !== "io.github.CSOAI-ORG") {
-    return uncheckable("registry census schema, kind, registry or namespace does not match", base);
+    return uncheckable("registry pointer schema, registry or namespace does not match", base);
+  }
+  const source = census.source_artifact;
+  const digest = census.source_sha256;
+  if (typeof source !== "string" || !/^\/interop\/mcp-registry-(?:\d{4}-\d{2}-\d{2}\/census|census\/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}Z)\.json$/.test(source) ||
+      typeof digest !== "string" || !/^[0-9a-f]{64}$/.test(digest) ||
+      typeof census.source_bytes !== "number" || !Number.isSafeInteger(census.source_bytes) || census.source_bytes <= 0) {
+    return uncheckable("registry pointer lacks a valid immutable source and checksum", base);
   }
   const count = census.servers;
   const completed = census.completed_utc;
@@ -183,8 +191,10 @@ export function registryListings(nowIso: string, art: unknown = registryCensus):
     as_of: completed,
     measured_from: measured,
     artifact_schema: census.schema,
-    age_hours: Math.round(age * 10) / 10,
     ...base,
+    source_url: source,
+    source_sha256: digest,
+    age_hours: Math.round(age * 10) / 10,
     ...(stale ? { reason: `registry census measured ${age.toFixed(1)} h ago, past this endpoint's ${REGISTRY_CENSUS_MAX_AGE_HOURS} h freshness policy` } : {}),
     note: "A listing we published ourselves. It says a server is registered, not that anyone runs it.",
   };

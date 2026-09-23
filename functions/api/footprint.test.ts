@@ -14,6 +14,9 @@
 // answered and say so.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 import {
   DISTRIBUTION_PATH,
@@ -33,6 +36,7 @@ import {
 import packages from "../../public/interop/footprint-packages.json";
 import distribution from "../../public/interop/distribution-latest.json";
 import registryCensus from "../../public/interop/mcp-registry-2026-09-23/census.json";
+import registryLatest from "../../public/interop/mcp-registry-latest.json";
 
 const ORIGIN = "https://councilof.ai";
 const NOW = "2026-09-23T10:00:00.000Z";
@@ -240,19 +244,33 @@ describe("the committed artifact on disk", () => {
 });
 
 describe("registry_listings — read a dated, complete off-edge census", () => {
-  it("reads the committed census's distinct names and version rows with the artifact's timestamp", () => {
+  it("reads the pointer's distinct names and version rows with the source measurement's timestamp", () => {
     const row = registryListings(NOW);
     expect(row).toMatchObject({
       state: "READ",
-      value: registryCensus.servers,
-      versions: registryCensus.version_rows,
-      as_of: registryCensus.completed_utc,
-      source_url: REGISTRY_CENSUS_PATH,
+      value: registryLatest.servers,
+      versions: registryLatest.version_rows,
+      as_of: registryLatest.completed_utc,
+      source_url: registryLatest.source_artifact,
+      latest_url: REGISTRY_CENSUS_PATH,
       upstream_url: expect.stringContaining("registry.modelcontextprotocol.io"),
     });
     expect(row.value).toBe(354);
     expect(row.versions).toBe(1342);
     expect(row.as_of).not.toBe(NOW);
+  });
+
+  it("committed latest pointer matches the immutable source's exact bytes and measured fields", () => {
+    const raw = readFileSync(resolve(__dirname, "../../public", registryLatest.source_artifact.slice(1)));
+    expect(createHash("sha256").update(raw).digest("hex")).toBe(registryLatest.source_sha256);
+    expect(raw.byteLength).toBe(registryLatest.source_bytes);
+    expect(JSON.parse(raw.toString("utf8"))).toMatchObject({
+      servers: registryLatest.servers,
+      version_rows: registryLatest.version_rows,
+      measured_utc: registryLatest.measured_utc,
+      completed_utc: registryLatest.completed_utc,
+    });
+    expect(registryCensus.servers).toBe(registryLatest.servers);
   });
 
   it("makes no registry request when the whole footprint is built", async () => {
@@ -262,24 +280,26 @@ describe("registry_listings — read a dated, complete off-edge census", () => {
   });
 
   it("shows an old census as STALE without discarding its measured count", () => {
-    const staleAt = new Date(Date.parse(registryCensus.completed_utc) + (REGISTRY_CENSUS_MAX_AGE_HOURS + 1) * 3_600_000).toISOString();
+    const staleAt = new Date(Date.parse(registryLatest.completed_utc) + (REGISTRY_CENSUS_MAX_AGE_HOURS + 1) * 3_600_000).toISOString();
     const row = registryListings(staleAt);
-    expect(row).toMatchObject({ state: "STALE", value: 354, versions: 1342, as_of: registryCensus.completed_utc });
+    expect(row).toMatchObject({ state: "STALE", value: 354, versions: 1342, as_of: registryLatest.completed_utc });
     expect(String(row.reason)).toContain("freshness policy");
   });
 
   it("does not label a census stale exactly at the policy boundary", () => {
-    const boundary = new Date(Date.parse(registryCensus.completed_utc) + REGISTRY_CENSUS_MAX_AGE_HOURS * 3_600_000).toISOString();
+    const boundary = new Date(Date.parse(registryLatest.completed_utc) + REGISTRY_CENSUS_MAX_AGE_HOURS * 3_600_000).toISOString();
     expect(registryListings(boundary).state).toBe("READ");
   });
 
   it("rejects a wrong schema, namespace, count or timestamp as UNCHECKABLE, never zero", () => {
     for (const bad of [
-      { ...registryCensus, schema: "other" },
-      { ...registryCensus, namespace: "io.github.someone-else" },
-      { ...registryCensus, servers: -1 },
-      { ...registryCensus, servers: "354" },
-      { ...registryCensus, completed_utc: "not-a-date" },
+      { ...registryLatest, schema: "other" },
+      { ...registryLatest, namespace: "io.github.someone-else" },
+      { ...registryLatest, source_artifact: "/interop/../secret.json" },
+      { ...registryLatest, source_sha256: "bad" },
+      { ...registryLatest, servers: -1 },
+      { ...registryLatest, servers: "354" },
+      { ...registryLatest, completed_utc: "not-a-date" },
       null,
     ]) {
       expect(registryListings(NOW, bad)).toMatchObject({ state: "UNCHECKABLE", value: null, source_url: REGISTRY_CENSUS_PATH });
@@ -287,7 +307,7 @@ describe("registry_listings — read a dated, complete off-edge census", () => {
   });
 
   it("keeps a complete server count but withholds incomplete version totals", () => {
-    const row = registryListings(NOW, { ...registryCensus, version_rows: null, version_read_failures: ["one-server"] });
+    const row = registryListings(NOW, { ...registryLatest, version_rows: null, version_read_failures: ["one-server"] });
     expect(row).toMatchObject({ state: "READ", value: 354, versions: null, versions_state: "UNCHECKABLE" });
   });
 });
