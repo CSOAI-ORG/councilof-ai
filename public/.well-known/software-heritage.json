@@ -1,56 +1,84 @@
 {
-  "schema": "csoai.well-known/0.1",
+  "schema": "csoai.well-known/0.2",
   "slug": "software-heritage",
-  "name": "Software Heritage — independent archival of this estate",
-  "description": "Third-party archival state. Software Heritage records an archived visit for this estate; this door records what its API returned, with the SWHID, so the durability claim is checkable rather than asserted.",
-  "as_of": "20260905T180000Z",
-  "state": "ARCHIVED_BY_THIRD_PARTY",
-  "why_this_matters": "Every other durability claim in this estate rests on our own signature. This one does not: Software Heritage is an independent archive whose API records a full visit and snapshot for this origin. Archival is a third-party fact, not our endorsement or a promise of permanence.",
+  "name": "Software Heritage \u2014 independent archival of this estate",
+  "description": "Third-party archival state, re-read from the Software Heritage API on every run. Records failed visits as facts.",
+  "as_of": "2026-09-23T03:37:32Z",
+  "generated_by": "scripts/watch_swh_archival.py",
+  "state": "ARCHIVED_BY_THIRD_PARTY_DEGRADED",
+  "why_this_matters": "Every other durability claim in this estate rests on our own signature. This one does not. But an archive that has stopped accepting visits is not archival, and a save request that was merely 'accepted' is not a visit \u2014 so this door reports the failures alongside the successes.",
   "primary_snapshot": {
     "origin": "https://github.com/CSOAI-ORG/councilof-ai",
-    "swhid": "swh:1:snp:7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c",
-    "visit_date": "2026-09-02T15:13:58.885000+00:00",
+    "swhid": "swh:1:snp:894aa7e162eb90d4e66f1a549e4d133503f84c02",
+    "visit_date": "2026-09-15T06:03:14.919000+00:00",
     "visit_status": "full",
-    "probe": "curl -s 'https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visits/?limit=1'"
+    "is_latest_visit": false,
+    "caveat": "This is the most recent SUCCESSFUL visit, not proof that archival is currently working. See origins[].state."
   },
-  "independent_verification": {
-    "checked_at": "2026-09-09T13:14:44Z",
-    "visit_api": "https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visits/?per_page=10",
-    "visit_response_sha256": "2587f96852d6d94ee7745cee055a63c90bfdcd756a983a4df4fdbc68aacddbed",
-    "visit_observed": {
+  "origins": [
+    {
       "origin": "https://github.com/CSOAI-ORG/councilof-ai",
-      "visit": 1,
-      "date": "2026-09-02T15:13:58.885000+00:00",
-      "status": "full",
-      "snapshot": "7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c"
+      "role": "canonical",
+      "note": "Canonical remote. Anonymous fetchers get HTTP 404 while the authenticated API reports visibility: public, so the SWH loader has nothing to clone.",
+      "visits_read": 5,
+      "latest_visit": {
+        "date": "2026-09-22T16:49:33.801000+00:00",
+        "status": "not_found",
+        "snapshot": null
+      },
+      "failed_visits_since_last_full": [
+        {
+          "date": "2026-09-22T16:49:33.801000+00:00",
+          "status": "not_found"
+        },
+        {
+          "date": "2026-09-22T15:26:04.586000+00:00",
+          "status": "not_found"
+        },
+        {
+          "date": "2026-09-22T08:32:40.679000+00:00",
+          "status": "not_found"
+        }
+      ],
+      "last_full_visit": {
+        "date": "2026-09-15T06:03:14.919000+00:00",
+        "swhid": "swh:1:snp:894aa7e162eb90d4e66f1a549e4d133503f84c02",
+        "visit_status": "full"
+      },
+      "days_since_last_full_visit": 7,
+      "state": "ARCHIVAL_FAILING"
     },
-    "snapshot_api": "https://archive.softwareheritage.org/api/1/snapshot/7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c/",
-    "snapshot_response_sha256": "fd099b7013df7931a399d306ff4aa419672b442cf76523c85196092b57935764",
-    "snapshot_id_observed": "7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c",
-    "scope": "These digests bind the exact API responses observed at checked_at. They verify the archived visit and snapshot identifier, not the current release."
-  },
-  "origins_archived": {
-    "total": 57,
-    "by_host": { "pkg.go.dev": 30, "github.com": 14, "pypi.org": 7, "www.npmjs.com": 6 },
-    "probe": "curl -s 'https://archive.softwareheritage.org/api/1/origin/search/csoai/?limit=100'"
-  },
-  "the_30_pkg_go_dev_entries_are_NOT_go_packages": {
-    "finding": "A first read of these counts suggested the estate publishes 30 Go modules that its own registry census (329 PyPI + 1 npm, no Go) had missed. It does not.",
-    "probe": "curl -o /dev/null -w '%{http_code}' https://pkg.go.dev/github.com/csoai-org/cybersecurity-ai-mcp",
-    "result": "404 — and the GitHub repository behind it is Python, not Go.",
-    "explanation": "pkg.go.dev synthesises a page for any importable-looking path, and Software Heritage archived those pages. The origins are real archive records of URLs; they are not evidence of Go packages.",
-    "conclusion": "The registry census was correct. This entry exists so the next reader does not rediscover the same false lead and publish it."
-  },
+    {
+      "origin": "https://huggingface.co/datasets/csoai/councilof-ai-source",
+      "role": "public_mirror",
+      "note": "Public, anonymously clonable. Carries a dated snapshot of the tracked working tree plus a full-history git bundle. Archiving it preserves the bytes, NOT councilof-ai's revision graph.",
+      "visits_read": 2,
+      "latest_visit": {
+        "date": "2026-09-23T03:32:51.016000+00:00",
+        "status": "full",
+        "snapshot": "74f739ddde1752ad58cfd32a133b8b7597e551b7"
+      },
+      "failed_visits_since_last_full": [],
+      "last_full_visit": {
+        "date": "2026-09-23T03:32:51.016000+00:00",
+        "swhid": "swh:1:snp:74f739ddde1752ad58cfd32a133b8b7597e551b7",
+        "visit_status": "full"
+      },
+      "days_since_last_full_visit": 0,
+      "state": "ARCHIVED_CURRENT"
+    }
+  ],
   "what_this_does_not_establish": [
     "Software Heritage does not endorse, review or verify the Council of AI. It archives source code, and archival is not approval.",
-    "An archived snapshot proves the bytes existed at the visit date. It is not a timestamp anchor for a measurement, and it does not substitute for the missing root anchor recorded at /.well-known/anchor-posture.json.",
-    "57 origins is what a keyword search returns; it is not a curated inventory of what the estate considers its own."
+    "An archived snapshot proves the bytes existed at the visit date. It is not a timestamp anchor for a measurement.",
+    "A save request with save_request_status 'accepted' proves nothing: the loading task can fail afterwards, and did here.",
+    "Archiving the public mirror preserves the source bytes and a history bundle. It does not archive councilof-ai's commit graph as revisions."
   ],
+  "probe": "curl -s 'https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visits/?per_page=20'",
   "links": {
     "self": "https://councilof.ai/.well-known/software-heritage.json",
-    "browse": "https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai",
     "anchor_posture": "https://councilof.ai/.well-known/anchor-posture.json",
     "verify_yourself": "https://councilof.ai/.well-known/verify-yourself.json"
   },
-  "doctrine": "An independent archive is worth more than our own copy, and worth less than an anchor. Both are stated."
+  "doctrine": "An independent archive is worth more than our own copy, and worth less than an anchor. A broken archive is worth less than saying so."
 }

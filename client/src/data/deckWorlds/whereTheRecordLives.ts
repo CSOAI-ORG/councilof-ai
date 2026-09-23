@@ -74,7 +74,7 @@ export const RECORD_SLIDES: Slide[] = [
       { tag: "benefit", text: "Published to Hugging Face, PyPI, GitHub and Zenodo — each checked live" },
       { tag: "benefit", text: "Verification is client-side: no account, no server call, no permission" },
       { tag: "benefit", text: "DOI 10.5281/zenodo.21991104 — an archival identifier we do not control" },
-      { tag: "usp", text: "Software Heritage snapshot 7b219f85… records the repository visit dated 2 September 2026" },
+      { tag: "usp", text: "Software Heritage snapshot 894aa7e1… records the repository visit dated 15 September 2026" },
     ],
   },
   {
@@ -97,7 +97,8 @@ export const RECORD_NOT_CLAIMED = [
   "We do not claim the record is indestructible. It is mirrored. Those are different words and the difference matters.",
   "We do not claim censorship resistance. Every host we publish to has terms of service, a jurisdiction and the ability to remove content, and an actor with enough legal reach could pressure more than one of them.",
   "We do not claim independent hosts give independent failure modes. We published a claim of exactly that shape once and withdrew it under DR-0007. Its historical numeric result is unbound because the cited artifact is absent; the latest published point test measured rho=1 and n_eff=1. That retraction stands and this page is bound by it.",
-  "Software Heritage records snapshot swh:1:snp:7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c from a full visit dated 2 September 2026. That identifier covers the archived snapshot, not today's release, and archival is not endorsement or a measurement timestamp.",
+  "Software Heritage records snapshot swh:1:snp:894aa7e162eb90d4e66f1a549e4d133503f84c02 from a full visit dated 15 September 2026. That identifier covers the archived snapshot, not today's release, and archival is not endorsement or a measurement timestamp.",
+  "We do not claim that archival is currently working. Every Software Heritage visit to the GitHub origin since 15 September 2026 has failed with visit_status not_found, because the account answers HTTP 404 to anonymous fetchers and the archive's loader has nothing to clone. The public mirror at huggingface.co/datasets/csoai/councilof-ai-source is still being archived; the canonical origin is not. The live state is generated at /.well-known/software-heritage.json and is not retyped by hand.",
   "We do not describe the DOI as immutable. It is an archival identifier administered by someone else, which is the useful property — not permanence we can promise on their behalf.",
   "We do not claim the mirrors are complete or continuously monitored. Each link on this page returned HTTP 200 when the page was written; that is a check, not a guarantee, and there is no uptime claim attached to it.",
 ];
