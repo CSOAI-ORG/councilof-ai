@@ -182,6 +182,7 @@ const Harness = lazy(() => import("./pages/Harness"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
 const XrplAttest = lazy(() => import("./pages/XrplAttest"));
 const RatingTheRaters = lazy(() => import("./pages/RatingTheRaters"));
+const AllianceMap = lazy(() => import("./pages/AllianceMap"));
 const ClaimsRegister = lazy(() => import("./pages/ClaimsRegister"));
 const GSPCGapMap = lazy(() => import("./pages/GSPCGapMap"));
 const GSPCAnchors = lazy(() => import("./pages/GSPCAnchors"));
@@ -690,6 +691,7 @@ function App() {
                   <Route path="/gspc-anchors" component={GSPCAnchors} />
                   <Route path="/xrpl-attest" component={XrplAttest} />
                   <Route path="/rating-the-raters" component={RatingTheRaters} />
+                  <Route path="/alliance-map" component={AllianceMap} />
                   <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />

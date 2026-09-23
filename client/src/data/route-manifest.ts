@@ -138,6 +138,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Gspc Vs Ailuminate"
  },
  {
+  "path": "/alliance-map",
+  "comp": "AllianceMap",
+  "title": "Alliance Map"
+ },
+ {
   "path": "/answers",
   "comp": "AnswersIndex",
   "title": "Answers Index"

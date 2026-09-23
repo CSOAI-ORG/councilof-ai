@@ -198,6 +198,9 @@ function discover() {
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/embed", "/white-label",
     "/challenge",
+    // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
+    // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.
+    "/alliance-map",
     "/regulator-findings",
     "/arena-scoreboard",
     "/watchdog", "/disclaimers", "/csoai-law",

@@ -73,8 +73,12 @@ def main() -> int:
                    else art.get("merkle", {}).get("tree_size")},
         "supersedes": {"registry_id": (art.get("supersedes") or {}).get("registry_id"),
                        "sha256": (art.get("supersedes") or {}).get("sha256")},
-        "claim_states": (art.get("what_moved") or {}).get("states")
-        or (art.get("totals") or {}).get("by_state"),
+        # Two registries in this estate carry their state tally under different keys.
+        # Read both rather than picking one: a signer that cannot see a tally pins a null,
+        # and pinning a null is the defect this function was hardened against.
+        "claim_states": ((art.get("what_moved") or {}).get("states")
+                         or (art.get("totals") or {}).get("by_state")
+                         or (art.get("totals") or {}).get("by_specification_state")),
         "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
         "not_a_grade": ("The signature proves these bytes were signed by the board key on the date below. It "
                         "does not certify, endorse or grade anything in the registry, and it makes no "

@@ -125,7 +125,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // entry here it renders under the "Reference / archive" banner — a nav item
   // leading to a page that calls itself archived.
   "/services",
-  "/xrpl-attest", "/claims-register",
+  "/xrpl-attest", "/claims-register", "/alliance-map",
   // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/verify-certificate", "/accreditation",
   // Company
