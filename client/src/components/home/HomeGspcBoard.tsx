@@ -554,7 +554,7 @@ export default function HomeGspcBoard({
         <a href="/quickstart" className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/40">4 · Access supported feeds</a>
       </nav>
       <p className="mt-2 text-xs text-slate-500 dark:text-emerald-100/60">
-        Need a new scoped run? <a href="/assess" className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">Request a measurement</a> after reviewing the public evidence.
+        Need evidence for a named subject? <a href="/assess" className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">Inspect the attestation request</a>. The paid route issues a commission receipt and re-serves signed cards already on file; it does not start a new GSPC run.
       </p>
 
       {/* The /api/gspc data is the source of truth and renders directly below;

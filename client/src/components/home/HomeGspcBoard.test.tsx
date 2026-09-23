@@ -17,6 +17,8 @@
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import HomeGspcBoard, {
   BoardStrip,
   HubResultsBoard,
@@ -158,6 +160,20 @@ async function loadThroughMockedFetch(): Promise<GspcPayload> {
 
 describe("HomeGspcBoard (mocked /api/gspc)", () => {
   afterEach(() => vi.unstubAllGlobals());
+
+  it("describes the actual attestation request reached from the live board", () => {
+    const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
+    const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
+    const seo = JSON.parse(readFileSync(resolve(__dirname, "../../data/seo-head.json"), "utf8"));
+    expect(app).toContain('if (["/assess", "/assessment", "/readiness-assessment"].includes(path))');
+    expect(app).toContain('<DashboardDoor defaultTab="measured" />');
+    expect(html).toContain('href="/assess"');
+    expect(html).toContain("Inspect the attestation request");
+    expect(html).toContain("it does not start a new GSPC run");
+    expect(html).not.toContain("Need a new scoped run?");
+    expect(seo.routes["/assess"].description).toContain("does not trigger a new GSPC run");
+    expect(seo.routes["/assess"].description).not.toContain("Runs are metered per call");
+  });
 
   it("quotes the mocked totals.public_count verbatim, read through the shared loader", async () => {
     const data = await loadThroughMockedFetch();
