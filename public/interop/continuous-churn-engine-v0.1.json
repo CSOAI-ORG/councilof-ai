@@ -181,9 +181,15 @@
     },
     {
       "id": "gspc.board",
-      "source": "GSPC board (22 axis slots)",
+      "source": "GSPC board",
       "tick": "per-run",
-      "credential": "none"
+      "credential": "none",
+      "count_source_map": {
+        "axes": "https://councilof.ai/api/gspc -> totals.axes (live)",
+        "measured_axes": "https://councilof.ai/api/gspc -> totals.measured_axes (live)",
+        "unmeasured_axes": "https://councilof.ai/api/gspc -> totals.unmeasured_axes (live)",
+        "sentence": "https://councilof.ai/api/gspc -> totals.public_count (live, quote verbatim)"
+      }
     },
     {
       "id": "rwa.attest",
@@ -291,5 +297,24 @@
     }
   ],
   "sha256": "6a32c31c8250aa956aa281e3134320f51651fc05888a0de01dd23afc26d7d7ac",
-  "byte_size": 6359
+  "byte_size": 6359,
+  "grammar_correction": {
+    "correction_id": "C-2026-0923-01",
+    "as_of": "2026-09-23",
+    "producer": "NONE - this artifact is hand-maintained. No script regenerates it (docs/operations/PRODUCERS.json has no entry; master_orchestrator.py and master_closed_loop.py only READ it via --harness). There is therefore no producer to fix, so the pointer lives in these bytes.",
+    "what_changed": "Typed GSPC board counts were replaced by live pointers. A count here is a POINTER, never a typed integer (council-os/QUOTING-NUMBERS.md).",
+    "declared_sha256_and_byte_size": "The sha256 and byte_size fields in this artifact describe the document AT GENERATION TIME. They already did not match these bytes before this correction (the file was edited after being stamped), and they do not match now. They are left untouched rather than recomputed, because the preimage they covered is not recoverable.",
+    "superseded_strings": [
+      {
+        "previously read": "GSPC board (22 axis slots)",
+        "superseded_by": {
+          "axes": "https://councilof.ai/api/gspc -> totals.axes (live)",
+          "measured_axes": "https://councilof.ai/api/gspc -> totals.measured_axes (live)",
+          "unmeasured_axes": "https://councilof.ai/api/gspc -> totals.unmeasured_axes (live)",
+          "sentence": "https://councilof.ai/api/gspc -> totals.public_count (live, quote verbatim)"
+        },
+        "note": "This string previously read a typed integer, which contradicts the live board. Whether it was ever accurate is not established here and is not asserted; it is superseded as of 2026-09-23 and retained verbatim so the correction is auditable rather than silently edited."
+      }
+    ]
+  }
 }

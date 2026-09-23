@@ -2,7 +2,7 @@
   "schema": "csoai.master-consolidation-rollup/0.1",
   "generated_at": "2026-09-17T04:34:50.832035+00:00",
   "title": "Master Consolidation Roll-up \u2014 GSPC Estate",
-  "purpose": "One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC.",
+  "purpose": "One manifest that LISTS every signed and unsigned card, every OpenTimestamps stamp and every strategic deliverable published on GSPC. It does not prove anchoring: anchoring an atom to Bitcoin is a PLANNED rail, not yet a live one. A stamp listed here is a calendar receipt that is not attested until a calendar commits it to a block and the proof is upgraded.",
   "disclaimer": "Measurement, not certification. Empty is not zero. Engine calculates; nothing fabricated.",
   "totals": {
     "ledger_cards": 11539,
@@ -103,5 +103,13 @@
     }
   },
   "sha256": "d407ac7cb3cdb4cfc66320ac8d6461efb4034f341c1e04bab75fc9bd8e577428",
-  "byte_size": 7948
+  "byte_size": 7948,
+  "grammar_correction": {
+    "correction_id": "C-2026-0923-01",
+    "as_of": "2026-09-23",
+    "producer": "NONE - hand-maintained; no script regenerates it.",
+    "what_changed": "The purpose line claimed every OTS proof 'is live on GSPC'. facts.json rail ots_atom_anchor has status 'planned', and this artifact's own .ots is PENDING with 0 Bitcoin attestations (public/interop/ots-chain-verification-2026-09-17.json). The line is corrected to future tense rather than left standing.",
+    "declared_sha256_and_byte_size": "The sha256 and byte_size fields in this artifact describe the document AT GENERATION TIME. They already did not match these bytes before this correction (the file was edited after being stamped), and they do not match now. They are left untouched rather than recomputed, because the preimage they covered is not recoverable.",
+    "previously read": "[RETIRED 2026-09-23; quoted, not claimed - the OTS atom rail is planned, not yet live] One manifest that proves every signed/unsigned card, every OTS proof, and every strategic deliverable is live on GSPC."
+  }
 }

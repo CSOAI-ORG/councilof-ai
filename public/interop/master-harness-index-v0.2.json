@@ -274,12 +274,16 @@
     },
     {
       "category": "gspc_self",
-      "source": "GSPC measurement cards (3,998 across 14 axes \u00d7 165 models)",
+      "source": "GSPC measurement cards",
       "status": "MEASURED",
       "goal_objects": [
         "assurance",
         "provenance"
-      ]
+      ],
+      "count_source_map": {
+        "comparison_axes": "https://councilof.ai/api/gspc -> totals.comparison_axes (live)",
+        "card_corpora": "council-os/CARD-CORPORA.md -- THREE separate corpora, zero overlap; never add them"
+      }
     },
     {
       "category": "gspc_self",
@@ -300,12 +304,18 @@
     },
     {
       "category": "gspc_self",
-      "source": "GSPC board (22 axis slots, 21 measured, 1 unmeasured)",
+      "source": "GSPC board",
       "status": "ACTIVE",
       "goal_objects": [
         "governance",
         "conformance"
-      ]
+      ],
+      "count_source_map": {
+        "axes": "https://councilof.ai/api/gspc -> totals.axes (live)",
+        "measured_axes": "https://councilof.ai/api/gspc -> totals.measured_axes (live)",
+        "unmeasured_axes": "https://councilof.ai/api/gspc -> totals.unmeasured_axes (live)",
+        "sentence": "https://councilof.ai/api/gspc -> totals.public_count (live, quote verbatim)"
+      }
     },
     {
       "category": "rwa",
@@ -857,6 +867,33 @@
       "provenance",
       "safety",
       "transaction_integrity"
+    ]
+  },
+  "grammar_correction": {
+    "correction_id": "C-2026-0923-01",
+    "as_of": "2026-09-23",
+    "producer": "NONE - this artifact is hand-maintained. No script regenerates it (docs/operations/PRODUCERS.json has no entry; master_orchestrator.py and master_closed_loop.py only READ it via --harness). There is therefore no producer to fix, so the pointer lives in these bytes.",
+    "what_changed": "Typed GSPC board counts were replaced by live pointers. A count here is a POINTER, never a typed integer (council-os/QUOTING-NUMBERS.md).",
+    "declared_sha256_and_byte_size": "The sha256 and byte_size fields in this artifact describe the document AT GENERATION TIME. They already did not match these bytes before this correction (the file was edited after being stamped), and they do not match now. They are left untouched rather than recomputed, because the preimage they covered is not recoverable.",
+    "superseded_strings": [
+      {
+        "previously read": "GSPC measurement cards (3,998 across 14 axes \u00d7 165 models)",
+        "superseded_by": {
+          "comparison_axes": "https://councilof.ai/api/gspc -> totals.comparison_axes (live)",
+          "card_corpora": "council-os/CARD-CORPORA.md -- THREE separate corpora, zero overlap; never add them"
+        },
+        "note": "This string previously read a typed integer, which contradicts the live board. Whether it was ever accurate is not established here and is not asserted; it is superseded as of 2026-09-23 and retained verbatim so the correction is auditable rather than silently edited. Its '14 axes' reads as the model-comparison subset rather than the board total, but the artifact never said so, which is why it was indistinguishable from a board claim. Its card figure matches none of the three card corpora."
+      },
+      {
+        "previously read": "GSPC board (22 axis slots, 21 measured, 1 unmeasured)",
+        "superseded_by": {
+          "axes": "https://councilof.ai/api/gspc -> totals.axes (live)",
+          "measured_axes": "https://councilof.ai/api/gspc -> totals.measured_axes (live)",
+          "unmeasured_axes": "https://councilof.ai/api/gspc -> totals.unmeasured_axes (live)",
+          "sentence": "https://councilof.ai/api/gspc -> totals.public_count (live, quote verbatim)"
+        },
+        "note": "This string previously read a typed integer, which contradicts the live board. Whether it was ever accurate is not established here and is not asserted; it is superseded as of 2026-09-23 and retained verbatim so the correction is auditable rather than silently edited. The harness's own instrument counts (axes_total_declared / axes_measured_quotable) are a DIFFERENT instrument from the board and are left alone; never print the harness's measured count as the board's."
+      }
     ]
   }
 }
