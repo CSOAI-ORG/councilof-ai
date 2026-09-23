@@ -6,7 +6,14 @@ What it does, once per run:
   * CL-4 / ON-1 / ON-2  re-read the presence baselines (adopter list, proof-points, testimonial)
         and diff them against the previous run;
   * CL-3  recompute the oracle share from the keyless public breakdown;
-  * CL-5  re-read the feeds and recompute cadence and deviation against their declared parameters.
+  * CL-5  re-read the feeds and recompute cadence and deviation against their declared parameters;
+  * EVERY OTHER CLAIM IN EVERY PUBLISHED REGISTRY  re-read its own source URL, recompute the
+        digest with the SAME extractor that produced the recorded one, and compare. This is the
+        general case and it needs no edit when a subject is added: a subject appears in the watch
+        because a registry on disk carries it, exactly as the register itself is generated from the
+        registries on disk (spec 7.5). Adding a subject is adding a file;
+  * DATED CLAIMS  any claim whose registry records a resolution_date that has arrived is raised for
+        review. Reaching a date is not a finding and carries no view about the outcome.
 
 What it emits. One receipt line per run, appended to receipts.jsonl, carrying the run id, the
 time, the state of every claim it touched, the digest of every artifact it wrote, and a list of
@@ -21,8 +28,12 @@ The SCHEDULER owns the stamp. This script takes --now and never writes a stamp o
 from __future__ import annotations
 
 import json
+import os
+import shutil
+import subprocess
 import sys
 import traceback
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -65,14 +76,92 @@ def head_registry(repo: Path) -> dict:
         if isinstance(sup, dict) and sup.get("file"):
             superseded.add(str(sup["file"]).split("/")[-1])
     heads = [p for p in parsed if p.name not in superseded]
+    if len(heads) > 1:
+        # More than one head is the ordinary case once the register holds more than one chain: two
+        # independent registries are two chains, not an ambiguity. The watch names all of them and
+        # pins each by digest, rather than reporting a null that reads like a failure.
+        return {
+            "registry": None,
+            "registry_sha256": None,
+            "registries_watched": [
+                {"registry": f"/claims/{h.name}",
+                 "registry_id": parsed[h].get("registry_id"),
+                 "sha256": c.sha256_hex(h.read_bytes()),
+                 "supersedes": (parsed[h].get("supersedes") or {}).get("registry_id")}
+                for h in sorted(heads)
+            ],
+            "registry_note": (f"{len(heads)} registries on disk are superseded by nothing. They are separate "
+                              "chains over separate subjects, so no single one is 'the' registry; all of "
+                              "them are named above and each is pinned by its digest. The single-registry "
+                              "field stays null because filling it would mean picking one"),
+        }
     if len(heads) != 1:
-        return {"registry": None, "registry_sha256": None,
-                "registry_note": (f"{len(heads)} registries are superseded by nothing ({sorted(p.name for p in heads)}); "
-                                  "the watch names none rather than guessing which one it maintains")
-                if parsed else "no registry is present in this checkout"}
+        return {"registry": None, "registry_sha256": None, "registries_watched": [],
+                "registry_note": "no registry is present in this checkout"}
     p = heads[0]
     return {"registry": f"/claims/{p.name}", "registry_sha256": c.sha256_hex(p.read_bytes()),
             "registry_supersedes": (parsed[p].get("supersedes") or {}).get("registry_id")}
+
+
+def find_node() -> str | None:
+    """The re-read runs through the reference implementation's own extractor, so the digest it
+    produces is comparable with the recorded one. A second implementation of the extraction rule
+    would disagree on whitespace and entity decoding, and every disagreement would surface as an
+    observed change that carried no information about any claim. If Node is not present the
+    re-read is SKIPPED and said to be skipped — never approximated with a different extractor."""
+    for cand in (os.environ.get("CLAIM_WATCH_NODE"), shutil.which("node"),
+                 "/workspace/node24/bin/node", "/workspace/node20/bin/node"):
+        if cand and Path(cand).exists():
+            return cand
+    return None
+
+
+def live_registries(repo: Path) -> list[Path]:
+    """Every registry file nothing else supersedes. Generated from what is on disk, never listed."""
+    d = repo / "public" / "claims"
+    if not d.exists():
+        return []
+    files = [p for p in sorted(d.glob("claimreg-*.json")) if not p.name.endswith(".signed.json")]
+    superseded: set[str] = set()
+    for p in files:
+        try:
+            j = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        sup = j.get("supersedes") or {}
+        if isinstance(sup, dict) and sup.get("file"):
+            superseded.add(str(sup["file"]).split("/")[-1])
+    return [p for p in files if p.name not in superseded]
+
+
+def reread_registry(repo: Path, registry: Path, node: str) -> dict:
+    """One pass of `reread.mjs` over one registry. Transport and HTTP failures come back as data."""
+    script = repo / "scripts" / "claims" / "reread.mjs"
+    if not script.exists():
+        return {"error": f"{script} is not in this checkout; refusing to re-read with other code"}
+    try:
+        out = subprocess.run([node, str(script), "--registry", str(registry)],
+                             capture_output=True, text=True, timeout=1800)
+    except Exception as e:
+        return {"error": f"re-reader did not run: {type(e).__name__}"}
+    if out.returncode != 0:
+        return {"error": f"re-reader exited {out.returncode}: {out.stderr[-300:]}"}
+    try:
+        return json.loads(out.stdout)
+    except Exception:
+        return {"error": "re-reader produced no parseable output"}
+
+
+def resolution_due(registry_doc: dict, today_iso: str) -> list[dict]:
+    """Dated claims whose resolution date has arrived. A date arriving is not a finding."""
+    due = []
+    for row in registry_doc.get("resolution_calendar") or []:
+        rd = str(row.get("resolution_date") or "")
+        if rd and rd <= today_iso:
+            due.append({"claim_id": row.get("claim_id"), "subject": row.get("subject"),
+                        "resolution_date": rd, "state_at_registration": row.get("state_at_registration"),
+                        "claim_verbatim": row.get("claim_verbatim")})
+    return due
 
 
 def previous(out: Path, cid: str) -> dict | None:
@@ -151,6 +240,67 @@ def main() -> int:
             "previous_totals": p5.get("totals"), "current_totals": f5.get("totals")}
         (rundir / "CL-5.json").write_text(json.dumps(f5, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
 
+    # ── the general watch: every claim in every live registry, re-read through the reference
+    # extractor. A subject added to a registry on disk is watched from the next run with no edit
+    # here, which is the property that makes this a loop rather than a list.
+    node = find_node()
+    registry_reads: dict[str, dict] = {}
+    today_iso = date.today().isoformat()
+    if node is None:
+        registry_reads["_skipped"] = {
+            "reason": "no Node runtime found on this host, and the re-read must use the reference "
+                      "implementation's own extractor for its digests to be comparable with the "
+                      "recorded ones. The re-read did not run; it is not reported as no changes.",
+        }
+        print("REREAD-SKIPPED no node runtime — the absence of a read is recorded as an event, "
+              "never as an absence of change")
+    else:
+        for regfile in live_registries(repo):
+            res = reread_registry(repo, regfile, node)
+            (rundir / f"reread-{regfile.stem}.json").write_text(
+                json.dumps(res, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+            readings = res.get("readings") or []
+            moved = [r for r in readings if r.get("changed") is True]
+            unreachable = [r for r in readings if r.get("recorded_as") == "SEARCH_INCONCLUSIVE"]
+            baselines = [r for r in readings if r.get("changed") is None
+                         and r.get("recorded_as") != "SEARCH_INCONCLUSIVE"]
+            registry_reads[regfile.name] = {
+                "registry_id": res.get("registry_id"),
+                "claims_read": len(readings),
+                "digests_that_moved": len(moved),
+                "unreachable_this_run": len(unreachable),
+                "no_comparable_recorded_digest": len(baselines),
+                "error": res.get("error"),
+            }
+            for r in moved:
+                changes.append({
+                    "claim": r.get("claim_id"), "kind": "source_digest_differs_from_the_recorded_read",
+                    "detail": {"subject": r.get("subject"), "url": r.get("url"),
+                               "previous_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash"),
+                               "covers": r.get("covers")},
+                    "note": ("the bytes at this URL differ from the bytes recorded at the previous read. "
+                             "That is the entire content of this statement. There are many ordinary "
+                             "reasons a page changes and this loop holds no view about which applies")})
+            for r in unreachable:
+                changes.append({
+                    "claim": r.get("claim_id"), "kind": "source_not_reachable_this_run",
+                    "detail": {"subject": r.get("subject"), "url": r.get("url"),
+                               "http_status": r.get("http_status"), "reason": r.get("reason")},
+                    "note": ("this reader could not obtain the page on this run, with the status recorded. "
+                             "The absence of a read is recorded as an event rather than as nothing "
+                             "(spec 1.1); it is not an absence and not a statement about the subject")})
+            try:
+                doc = json.loads(regfile.read_text(encoding="utf-8"))
+            except Exception:
+                doc = {}
+            for row in resolution_due(doc, today_iso):
+                changes.append({
+                    "claim": row["claim_id"], "kind": "dated_claim_has_reached_its_resolution_date",
+                    "detail": row,
+                    "note": ("this claim carried a date on which public evidence can settle it, and that "
+                             "date has arrived. Raising it is a prompt for a person to look. It is not a "
+                             "finding, it is not a measurement, and it carries no view about the outcome")})
+
     receipt = {
         "schema": "csoai.claim-watch-receipt/0.1",
         "run_id": run_id,
@@ -160,6 +310,11 @@ def main() -> int:
         "claims_touched": sorted(results),
         "states": {k: v.get("state") for k, v in sorted(results.items())},
         "artifacts": {f"{k}.json": c.sha256_hex((rundir / f"{k}.json").read_bytes()) for k in sorted(results)},
+        "registry_reread": registry_reads,
+        "reread_extractor": ("scripts/claims/reread.mjs, which imports extractVisibleText from the "
+                             "reference implementation named by the specification. One extractor for "
+                             "the capture and the re-read, so a digest difference is a difference in "
+                             "the source and never a difference between two readers"),
         "observed_changes_requiring_review": changes,
         "observed_changes_count": len(changes),
         "discipline": ("an observed change is a prompt for a human to look. This loop makes no allegation, "
