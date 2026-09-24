@@ -853,6 +853,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Faq Page"
  },
  {
+  "path": "/games/ruler",
+  "comp": "GamesRuler",
+  "title": "Games Ruler"
+ },
+ {
   "path": "/get-listed",
   "comp": "GetListed",
   "title": "Get Listed"
@@ -1811,6 +1816,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/signals",
   "comp": "Signals",
   "title": "Signals"
+ },
+ {
+  "path": "/signals/2026-09-24",
+  "comp": "SignedMillBatch20260924",
+  "title": "Signed Mill Batch20260924"
  },
  {
   "path": "/simulate",

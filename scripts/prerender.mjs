@@ -312,6 +312,9 @@ function discover() {
       // static files, but this route is React and must be snapshotted or a crawler cold-loading
       // the name of the category gets the SPA shell.
       "/claim-maintenance",
+      // /games/ruler — THE RULER. React-only; snapshot it so a cold load reads the page and its
+      // standing "nothing is sent" notice rather than the SPA shell.
+      "/games/ruler",
   ];
   for (const p of MUST) found.add(p);
 
