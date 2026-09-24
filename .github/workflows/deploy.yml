@@ -278,6 +278,12 @@ jobs:
       # to the verified production branch only (the preflight fails on branch drift).
       # Same limit, checked again on the tree that is actually uploaded — the build itself
       # can emit a large asset that never existed in public/.
+      - name: Pack retired proof bytes while preserving historical URLs
+        run: |
+          node --test scripts/retired-proof-archive.node-test.mjs
+          test -f 'dist/client/functions/interop/[[path]].ts'
+          node scripts/retired-proof-archive.mjs --dir dist/client
+
       - name: Pages size guard — 25 MiB per-file limit (built tree)
         run: node scripts/pages-size-guard.mjs dist/client
 
