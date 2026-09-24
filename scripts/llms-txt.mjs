@@ -20,6 +20,7 @@
  *   {{SEPARATED_LEADS}} {{TIES}} {{UNTESTED_SEPARATIONS}} {{COMPARISON_AXES}}  GET /api/gspc -> totals.*
  *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
+ *   {{DATED_MILL_ROOT_LINE}}                                          public/interop/card-root-latest.json -> immutable root bytes
  *
  * The separation fields were the exception that mattered most. Both files said "N axes measured"
  * and nothing said what measured MEANS here, so the sentence read as "N axes can tell one model
@@ -58,6 +59,7 @@
  *   node scripts/llms-txt.mjs --check    # CI: committed files must equal what we derive
  */
 import fs from "fs";
+import { createHash } from "node:crypto";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -285,6 +287,29 @@ keeps advancing these, so read the manifest for a fresher count rather than quot
 `;
 }
 
+// A direct immutable link for machine readers, derived from the same pointer the
+// browser card panel checks. Keep the pointer as the moving entry point.
+function datedMillRootLine() {
+  const pointer = readJSON("public/interop/card-root-latest.json");
+  const rootUrl = pointer.root_url;
+  if (pointer.schema !== "csoai.card-root-pointer/1" ||
+      pointer.kind !== "DISCOVERY_POINTER_ONLY" ||
+      !/^\/interop\/card-root-\d{4}-\d{2}-\d{2}(?:-[a-f0-9]{12})?\.json$/.test(rootUrl) ||
+      !/^[a-f0-9]{64}$/.test(pointer.root_sha256)) {
+    throw new Error("mill-card root pointer is not checkable");
+  }
+  const bytes = fs.readFileSync(p(`public${rootUrl}`));
+  const digest = createHash("sha256").update(bytes).digest("hex");
+  if (digest !== pointer.root_sha256) throw new Error("mill-card root bytes differ from pointer digest");
+  const root = JSON.parse(bytes);
+  if (root.kind !== "csoai.card-root/1" || root.as_of !== pointer.as_of ||
+      root.n_leaves !== pointer.n_leaves || !Array.isArray(root.leaves) ||
+      root.leaves.length !== root.n_leaves) {
+    throw new Error("mill-card root count or timestamp differs from pointer");
+  }
+  return `- Dated immutable mill-card root (as of ${root.as_of}, ${root.n_leaves} leaves): ${SITE}${rootUrl} (SHA-256 ${digest}). Its .ots sidecar is a calendar receipt until Bitcoin verification succeeds.`;
+}
+
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
   const map = {
     LID: t.lid,                                  // verbatim, never re-phrased
@@ -299,6 +324,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
+    DATED_MILL_ROOT_LINE: datedMillRootLine(),
     ...(() => {
       const m = mcpCounts();
       return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,
