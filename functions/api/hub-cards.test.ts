@@ -55,6 +55,16 @@ afterEach(() => {
 });
 
 describe("/api/hub-cards", () => {
+  it("keeps the population boundary accurate without freezing the board axis count", async () => {
+    installFetch([]);
+    const { body } = await invoke();
+    const honesty = body.honesty as unknown as Record<string, string>;
+
+    expect(honesty.not_the_board).toContain("These cells are not the GSPC board.");
+    expect(honesty.not_the_board).toContain("GET /api/gspc");
+    expect(honesty.not_the_board).not.toMatch(/\d+-axis board/);
+  });
+
   it("publishes totals only when discovery, every index and the ledger answered", async () => {
     installFetch([]);
     const { res, body } = await invoke();

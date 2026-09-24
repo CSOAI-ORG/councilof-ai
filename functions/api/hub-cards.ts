@@ -560,7 +560,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       status_is_passed_through:
         "Each row's status is exactly as published. This endpoint never upgrades a cell. A valid signature over a body that says UNMEASURED means the cell is UNMEASURED.",
       not_the_board:
-        "These cells are not the 22-axis board. The board is GET /api/gspc; quote totals.public_count.",
+        "These cells are not the GSPC board. The board is GET /api/gspc; quote totals.public_count.",
       own_fleet_is_elsewhere:
         "GET /api/findings carries the CSOAI fleet, which is a different population and is measured against the same frozen banks.",
       unreachable_is_not_empty: allIndexesRead
