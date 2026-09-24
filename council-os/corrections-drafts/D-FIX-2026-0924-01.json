@@ -1,0 +1,33 @@
+{
+ "DRAFT": true,
+ "schema": "csoai.corrections-draft/0.1",
+ "status": "DRAFT - owner approval required",
+ "draft_id": "D-FIX-2026-0924-01",
+ "not_published": "Never merged or published by this lane. Only the owner promotes a draft, and no ledger id is assigned until they do.",
+ "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+ "license": "CC-BY-4.0",
+ "generated_at": "2026-09-24T15:00:00Z",
+ "generator": "hand-written by the harness-outcomes lane from a byte count over public/interop/mill-cards-signed/ at master 62a404da0; not auto-drafted by drift-draft.py",
+ "promotion_note": "Hand-written, so it is NOT in the drift-draft queue and `promote-draft.sh D-FIX-2026-0924-01` will not find it. Copy this object into out/drift-draft/queue/ first, or lift the fields into functions/api/corrections.ts as a new entry that supersedes the count in C-2026-0922-02 (never edit that entry's text), then re-sign the ledger.",
+ "corrections": [
+  {
+   "id": "D-FIX-2026-0924-01",
+   "date": "2026-09-24",
+   "first_observed_at": "2026-09-24T13:15:45Z",
+   "corrects": "C-2026-0922-02",
+   "what_was_wrong": "Correction C-2026-0922-02 counted 32 signed jail-axis cards graded against the placeholder bank (sha256 f0f31f9a556266ce…), 24 of them already superseded by 2026-09-22 15:30Z, 21 of those by another card from the same placeholder bank. The directory holds 33 such cards, and 25 of them were already superseded, every one of the 25 by another card from the same placeholder bank: 21 through #1155 and 4 through the 2026-09-09 run, whose replacements (signed-jail-f662d6630f5e, -b9c4fe9d02d4, -dc3f93652782, -57cee141b062) were themselves graded on the placeholder bank. The eight live cards, their accuracies, the 0.0 to 0.9487 range and the fix stand as published.",
+   "why_it_was_wrong": "The count was taken from the supersession chain rather than from the bank digest in each card body. The four 2026-09-09 supersessions read as new evidence, but the new evidence was graded on the same placeholder bytes, so it cured nothing, the same as the 21.",
+   "what_changed": "Nothing is deleted and no signed byte is edited. The number of placeholder-graded cards is now counted by reading compute_evidence.bank_sha256 in every card, not by walking supersessions: the hourly harness-outcomes loop on the measurement pod checks every attributable card against the pinned bank for its axis and records the result (bank_provenance: 824 confirmed, 33 refuted, 2026-09-24). All 33 are superseded today, and all 33 verify under did:web:csoai.org#board-attestation-1: the signatures are sound over measurements that were not.",
+   "evidence": {
+    "method": "for every public/interop/mill-cards-signed/signed-*.json produced by the pod mill, compare body.compute_evidence.bank_sha256 with the axis entry in scripts/runpod_gspc_bank_allowlist.current.json",
+    "placeholder_bank_sha256": "f0f31f9a556266ce6f06660440b5ff819a19ee0b7801d72e78020a1ceda3a66e",
+    "cards_on_placeholder_bank": 33,
+    "superseded_before_2026-09-22T15:30Z": {"total": 25, "via_1155": 21, "via_2026-09-09_run": 4},
+    "superseded_by_C-2026-0922-02": 8,
+    "all_added_to_master_before": "2026-09-14T15:29Z (git log --diff-filter=A)",
+    "the_four_not_counted": ["signed-jail-71eb4412d064.json", "signed-jail-37e18c321859.json", "signed-jail-37d590185313.json", "signed-jail-4171b09be9b1.json"],
+    "reproduce": "Condor branch csoai/gspc-harness-fabric-20260924: scripts/gspc_ingest_pod_outcomes.py --dry-run --cards public/interop/mill-cards-signed --allowlist scripts/runpod_gspc_bank_allowlist.current.json  -> failed_by_check.bank_pinned = 33"
+   }
+  }
+ ]
+}
