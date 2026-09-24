@@ -34,6 +34,23 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0924-03",
+      date: "2026-09-24",
+      first_observed_at: "2026-09-24T17:09:33Z",
+      what_was_wrong: "The 14 signed cards from the 16:10 UTC hourly local-model run were served from /interop/mill-cards-signed/ even though their exact intake receipts remained VERIFIED_QUARANTINE with authority.admitted=false. Thirteen wrappers said quotable=true; the safety wrapper was already UNMEASURED/quotable=false. A valid byte signature and a public URL did not establish canonical admission.",
+      why_it_was_wrong: "The hourly lander accepted rc=0 and merged signed-card files to the public master without checking admission authority. The signer checked evidence integrity but the RunPod path did not require a separate admission transition. The GSPC fleet board did not consume this cohort.",
+      what_changed: "The original signed bytes remain available for audit. Fourteen exact card IDs and SHA-256 digests are appended to public/interop/mill-cards-signed/WITHDRAWN.jsonl, and public/corrections/mill16-unadmitted-2026-09-24.json provides a machine-readable reader notice. The proposed hourly lander now holds any new signed card whose matching intake receipt is not explicitly admitted before master push and deploy. This correction does not grant admission or assert Bitcoin anchoring.",
+      status: "WITHDRAWN FROM QUOTABLE USE; signed bytes preserved; GSPC board unchanged",
+      reached_the_public: true,
+      evidence: [
+        "https://councilof.ai/corrections/mill16-unadmitted-2026-09-24.json",
+        "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl",
+        "docs/operations/MILL_20260924T16_ADMISSION_REVIEW.md @ be2a26e45",
+        "https://councilof.ai/api/gspc"
+      ],
+      note: "The notice identifies the exact 14 URLs, IDs, hashes and intake receipts. This is a publication-authority correction, not a verdict that the underlying graded observations are false. No score from this cohort should be represented as admitted measurement pending a separate review."
+    },
+    {
       "date": "2026-09-22",
       "evidence": [
         "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify",

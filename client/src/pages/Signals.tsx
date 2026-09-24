@@ -52,6 +52,12 @@ export default function Signals() {
           )}.
           The pointer and root are unsigned; verify card signatures and OTS status separately.
         </p>
+        <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+          <strong>24 September correction:</strong> 14 signed mill card files were served before
+          admission. Their original bytes remain available, but these scores are withdrawn from
+          quotable use and did not enter the GSPC board. <a className="font-semibold underline"
+          href="/corrections/mill16-unadmitted-2026-09-24.json">Read the exact card IDs and evidence →</a>
+        </p>
         <p className="mt-2 text-sm text-gray-700">
           <a className="font-semibold text-emerald-800 underline" href="/signals/2026-09-24">
             Historical example, 13:10 UTC on 24 September: 14 cards, 13 MEASURED and one UNMEASURED →

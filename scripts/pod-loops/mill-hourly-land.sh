@@ -36,6 +36,12 @@ for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/ar
 done
 [ "$merged" -gt 0 ] || log mill-hourly-land "nothing to land (no unmerged mill/auto-* or arena/auto-* with a receipt)"
 if [ "$merged" -gt 0 ]; then
+  # Signed mill cards remain quarantine evidence until a reviewed admission
+  # authority exists. Refuse the entire push/deploy if this merge would expose
+  # a new signed card whose bound intake receipt is still unadmitted.
+  python3 scripts/pod-loops/mill_publication_admission_gate.py --base origin/master --head HEAD \
+    >"$LOGS/mill-hourly-admission-gate.log" 2>&1 || {
+    log mill-hourly-land "HOLD unadmitted signed mill card; no push or deploy"; exit 1; }
   # The :45 trust-chain branch scanned master BEFORE this :50 landing. Rebuild the
   # manifest from the newly merged root/proof bytes before master can be served.
   # A failed producer or binding check holds the push and the queued deploy.
