@@ -24,6 +24,9 @@ describe("/api/proof buyer description", () => {
     expect(challenge.csoai.deliverable).toContain("full root signature envelope is free at /root.json");
     expect(challenge.csoai.deliverable).toContain("/api/proof?sha=<64-hex>");
     expect(challenge.csoai.deliverable).not.toContain("one inclusion proof for the given leaf");
+    expect(challenge.csoai.bazaar_note).toContain("may trigger Bazaar catalog processing");
+    expect(challenge.csoai.bazaar_note).toContain("Catalog inclusion requires separate public readback");
+    expect(challenge.csoai.bazaar_note).not.toContain("CDP indexes after first settled payment");
     expect(challenge.csoai.free.one_inclusion).toBe("/api/proof?sha=<64-hex>");
     expect(challenge.resource.url).toBe(ORIGIN + "/api/proof?bundle=1");
     expect(challenge.accepts[0].amount).toBe("10000");

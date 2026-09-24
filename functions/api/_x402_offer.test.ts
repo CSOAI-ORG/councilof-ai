@@ -71,8 +71,11 @@ describe("offerPayload (spec §4.2)", () => {
     const { amount, ...noAmount } = FREE_ACCEPT;
     expect(offerPayload(RESOURCE, noAmount, 0)!.amount).toBe("0");
   });
-  it("strips the query string — an offer commits to the resource, not to one call's arguments", () => {
-    expect(offerPayload(`${RESOURCE}?subject=csoai`, FREE_ACCEPT, 0)!.resourceUrl).toBe(RESOURCE);
+  it("commits to the exact paid resource URL, including the query that selects the deliverable", () => {
+    expect(offerPayload(`${RESOURCE}?bundle=1`, FREE_ACCEPT, 0)!.resourceUrl).toBe(`${RESOURCE}?bundle=1`);
+    expect(offerPayload(`${RESOURCE}?bundle=1`, FREE_ACCEPT, 0)!.resourceUrl).not.toBe(
+      offerPayload(`${RESOURCE}?sha=abc`, FREE_ACCEPT, 0)!.resourceUrl,
+    );
   });
   it("refuses to commit when payTo is null — no address means no terms to sign", () => {
     expect(offerPayload(RESOURCE, { ...FREE_ACCEPT, payTo: null }, 0)).toBeNull();
@@ -205,6 +208,16 @@ describe("attachOffers — the one call every door makes", () => {
     expect(ext.bazaar).toEqual({ info: {}, schema: {} });
     expect(ext[OFFER_RECEIPT_EXTENSION]!.info.offers).toHaveLength(1);
     expect((ext[OFFER_RECEIPT_EXTENSION]!.info.offers[0] as { signature: string }).signature).toBe(GOLDEN_OFFER_JWS);
+  });
+
+  it("signs the same exact resource URL advertised by a paid query challenge", async () => {
+    const paid = { ...pr, resource: { ...pr.resource, url: `${RESOURCE}?bundle=1` }, accepts: [{ ...FREE_ACCEPT, resource: `${RESOURCE}?bundle=1` }] };
+    const out = await attachOffers(paid, TEST_PKCS8, 1767224700, KID);
+    const offers = (out.extensions as Record<string, { info: { offers: { signature: string }[] } }>)[OFFER_RECEIPT_EXTENSION]!.info.offers;
+    const signed = await verifyOffer(offers[0]!.signature, resolveTestKey, 1767224701);
+    expect(signed.ok).toBe(true);
+    expect(signed.payload!.resourceUrl).toBe(paid.resource.url);
+    expect(signed.payload!.resourceUrl).toBe(paid.accepts[0]!.resource);
   });
 
   it("does not mutate the object it was given", async () => {

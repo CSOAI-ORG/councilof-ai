@@ -618,7 +618,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     // sentence on this endpoint states how many there are.
     skills: [...SKILL_IDS],
     version_rule:
-      "Send `A2A-Version: 1.0`. An absent header is served as 1.0 for v1.0 method names; any other version, and the 0.3 method names such as message/send, get VersionNotSupportedError -32009.",
+      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3, which this interface does not serve; it returns VersionNotSupportedError -32009. The 0.3 method names such as message/send are also unsupported.",
     tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
     register: REGISTER,
     example: {
@@ -667,7 +667,16 @@ export const onRequestPost: PagesFunction = async (context) => {
   }
 
   const requested = (request.headers.get("a2a-version") ?? "").trim();
-  if (requested && !/^1\.0(\.\d+)?$/.test(requested)) {
+  if (!requested) {
+    return rpcError(
+      id,
+      A2A_ERROR.VERSION_NOT_SUPPORTED,
+      `An absent A2A-Version means 0.3, which this interface does not serve; send A2A-Version: ${A2A_PROTOCOL_VERSION} and the v1.0 method name (for example SendMessage)`,
+      "VERSION_NOT_SUPPORTED",
+      { requested: "0.3", supported: [A2A_PROTOCOL_VERSION], missingVersionHeader: true },
+    );
+  }
+  if (requested !== A2A_PROTOCOL_VERSION) {
     return rpcError(
       id,
       A2A_ERROR.VERSION_NOT_SUPPORTED,

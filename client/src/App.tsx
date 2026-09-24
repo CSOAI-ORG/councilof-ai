@@ -299,6 +299,7 @@ const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const SectorsAtlas = lazy(() => import("./pages/SectorsAtlas"));
 const Signals = lazy(() => import("./pages/Signals"));
+const SignedMillBatch20260924 = lazy(() => import("./pages/SignedMillBatch20260924"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
 const CouncilHub = lazy(() => import("./pages/CouncilHub"));
@@ -821,6 +822,7 @@ function App() {
                   <Route path="/how-it-works" component={HowItWorks} />
                   <Route path="/sectors" component={SectorsAtlas} />
                   <Route path="/registers" component={Registers} />
+                  <Route path="/signals/2026-09-24" component={SignedMillBatch20260924} />
                   <Route path="/signals" component={Signals} />
                   <Route path="/regions" component={RegionsMap} />
                   {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}

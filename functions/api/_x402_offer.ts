@@ -61,7 +61,7 @@ export function offerPayload(resourceUrl: string, accept: OfferTerms, nowSeconds
   if (!accept.payTo || typeof amount !== "string" || !/^\d+$/.test(amount)) return null;
   return {
     version: 1,
-    resourceUrl: resourceUrl.split("?")[0]!,
+    resourceUrl,
     scheme: accept.scheme,
     network: toCaip2Network(accept.network),
     asset: accept.asset,

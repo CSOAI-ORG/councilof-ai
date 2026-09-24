@@ -110,7 +110,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
             "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
           not_paid_reason: payment.reason,
           bazaar_note:
-            "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+            "A qualifying settlement may trigger Bazaar catalog processing; it can remain processing or be rejected. Catalog inclusion requires separate public readback.",
           catalog: u("/api/x402"),
         },
       });

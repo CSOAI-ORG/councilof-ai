@@ -37,6 +37,11 @@ export default function Signals() {
           The chain reaction as rows, never adjectives
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">Signals</h1>
+        <p className="mt-4 text-sm text-gray-700">
+          <a className="font-semibold text-emerald-800 underline" href="/signals/2026-09-24">
+            24 September signed mill batch: 14 cards, 13 MEASURED and one UNMEASURED →
+          </a>
+        </p>
         <p className="mt-3 max-w-3xl text-gray-600">
           Every signal on this page is <strong>signed</strong> (content_id + Ed25519, did:web
           verification method) and independently verifiable: recompute the canonical body, derive the

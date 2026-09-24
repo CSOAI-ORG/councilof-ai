@@ -41,7 +41,9 @@ const stubBoard = (ok = true) =>
 
 afterEach(() => vi.unstubAllGlobals());
 
-const rpc = async (body: unknown, headers: Record<string, string> = {}) => {
+const V1_HEADERS = { "a2a-version": "1.0" };
+
+const rpc = async (body: unknown, headers: Record<string, string> = V1_HEADERS) => {
   const request = new Request("https://councilof.ai/api/a2a", {
     method: "POST",
     headers: { "content-type": "application/json", ...headers },
@@ -52,7 +54,7 @@ const rpc = async (body: unknown, headers: Record<string, string> = {}) => {
   return { status: res.status, headers: res.headers, json: (await res.json()) as any };
 };
 
-const send = (extra: Record<string, unknown> = {}, headers: Record<string, string> = {}) =>
+const send = (extra: Record<string, unknown> = {}, headers: Record<string, string> = V1_HEADERS) =>
   rpc(
     {
       jsonrpc: "2.0",
@@ -237,6 +239,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        "a2a-version": "1.0",
         authorization: "Bearer caller-secret",
         cookie: "session=caller-secret",
         "x-payment": "caller-payment",
@@ -412,13 +415,27 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
 });
 
 describe("POST /api/a2a — versions and the rest of the method table", () => {
+  it("treats an absent version as unsupported 0.3 rather than silently serving 1.0", async () => {
+    stubBoard();
+    const unversioned = await rpc({ jsonrpc: "2.0", id: 1, method: "SendMessage", params: {} }, {});
+    expect(unversioned.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    expect(unversioned.json.error.message).toContain("absent A2A-Version means 0.3");
+    expect(unversioned.json.error.data[0].metadata).toMatchObject({
+      requested: "0.3",
+      supported: ["1.0"],
+      missingVersionHeader: true,
+    });
+  });
+
   it("names the fix for 0.3 method names and refuses other A2A-Version values", async () => {
     stubBoard();
-    const legacy = await rpc({ jsonrpc: "2.0", id: 1, method: "message/send", params: {} });
+    const legacy = await rpc({ jsonrpc: "2.0", id: 1, method: "message/send", params: {} }, V1_HEADERS);
     expect(legacy.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
     expect(legacy.json.error.message).toContain("SendMessage");
     const v03 = await send({}, { "a2a-version": "0.3" });
     expect(v03.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    const malformed = await send({}, { "a2a-version": "1.0.1" });
+    expect(malformed.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
     const v10 = await send({}, { "a2a-version": "1.0" });
     expect(v10.json.error).toBeUndefined();
   });
@@ -455,6 +472,7 @@ describe("GET /api/a2a and the card that points here", () => {
     expect(json.protocolVersion).toBe(A2A_PROTOCOL_VERSION);
     expect(json.agent_card).toBe("https://councilof.ai/.well-known/agent-card.json");
     expect(Object.keys(json.methods as object)).toContain("SendMessage");
+    expect(json.version_rule).toContain("an absent or empty header means 0.3");
   });
 
   it("the card's first supportedInterface is this door at protocolVersion 1.0, with no 0.3 fields left", () => {
