@@ -56,8 +56,9 @@ export const AXES_ACCEPTING_DOIS: Record<string, string> = {
 /** The estate's canonical publisher node. */
 export const GSPC_CREATOR = {
   "@type": "Organization",
+  "@id": BASE + "/#org",
   name: "Council of AI",
-  legalName: "CSOAI Ltd",
+  legalName: "CSOAI LTD",
   url: BASE + "/",
   identifier: "UK Companies House 16939677",
 } as const;
