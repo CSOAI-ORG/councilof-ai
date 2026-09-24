@@ -126,10 +126,11 @@ def _viewer_truth():
         {"axis": "payments", "family": "finance", "kind": "deterministic-facts", "status": "MEASURED",
          "n": 4, "separation": None, "dataset": "csoai/gspc-payments"},
     ]
+    board = {"axes": axes, "totals": {"axes": 2, "measured_axes": 2}}
+    board_bytes = json.dumps(board, separators=(",", ":")).encode()
     return {"as_of": "2026-09-23T10:00:00Z", "read_at": "2026-09-23T10:01:00Z",
-            "fingerprint": "f" * 64,
-            "board_sha256": "a" * 64,
-            "board": {"axes": axes, "totals": {"axes": 2, "measured_axes": 2}}}
+            "fingerprint": "f" * 64, "board_bytes": board_bytes,
+            "board_sha256": spray.sha256_hex(board_bytes), "board": board}
 
 
 def test_hf_viewer_preserves_eight_columns_and_unverified_states():
@@ -176,16 +177,49 @@ def test_hf_dataset_companions_refresh_only_bounded_provenance_and_inventory():
         spray.hf_dataset_companions(readme.replace(paragraph.encode(), b"new card"), manifest, tr, changed)
 
 
+def test_hf_dataset_card_removes_stale_counts_and_alias_inventory():
+    tr = _viewer_truth()
+    readme = (
+        "# GSPC Board Export\n\n"
+        "The default viewer files (`board.parquet` and `board.jsonl`) were old.\n\n"
+        "At the dated snapshot read, the board had **23 declared slots and 23 measured axes**.\n"
+        "For current counts, separation states and withheld leader fields, a past viewer was stale.\n"
+        "## What is in this repository\n| file | bytes | rows | what |\n|---|---:|---:|---|\n"
+        "| `snapshot/board.json` | 71889 |  | old |\n"
+        "| `board.json` | old alias |\n| `living-board.json` | old alias |\n"
+        "| `board.parquet` | 5775 | 23 | old viewer |\n"
+        "| `manifest.jsonl` | — | 3 | file inventory |\n"
+        "## Citation\n**Lid:** this dated export records 23 axis rows.\n"
+        "Card refreshed 2026-09-22T17:14:17Z.\n"
+    ).encode()
+    changed = {"snapshot/board.json": tr["board_bytes"], "board.json": tr["board_bytes"],
+               "living-board.json": tr["board_bytes"], "board.parquet": b"parquet"}
+    manifest = "".join(json.dumps({"file": path, "bytes": 1, "sha256": "0" * 64}) + "\n"
+                       for path in changed).encode()
+    files = spray.hf_dataset_companions(readme, manifest, tr, changed)
+    text = files["README.md"].decode()
+    assert "2 declared slots and 2 measured axes" in text
+    assert "23 declared slots" not in text
+    assert f"| `board.json` | {len(tr['board_bytes'])} |" in text
+    assert f"| `living-board.json` | {len(tr['board_bytes'])} |" in text
+    assert "| `board.parquet` | 7 | 2 |" in text
+    assert "| `manifest.jsonl` | — | 4 |" in text
+    assert "Card refreshed 2026-09-23T10:01:00Z" in text
+    rows = [json.loads(line) for line in files["manifest.jsonl"].decode().splitlines()]
+    assert rows[1]["sha256"] == spray.sha256_hex(tr["board_bytes"])
+
+
 def test_hf_dataset_snapshot_and_viewer_are_one_optimistic_commit(monkeypatch, tmp_path):
     import huggingface_hub
 
     tr = _viewer_truth()
     for name in spray.SNAPSHOT_FILES:
-        (tmp_path / name).write_bytes(b"snapshot")
+        (tmp_path / name).write_bytes(tr["board_bytes"] if name == "board.json" else b"snapshot")
     old = {"as_of": "2026-09-22T10:00:00Z"}
     readme = ("# Board\n\nThe default viewer files (`board.parquet` and `board.jsonl`) "
               "were old.\n\n## Other work\nKeep me.\n").encode()
-    paths = [f"snapshot/{name}" for name in spray.SNAPSHOT_FILES] + ["board.parquet", "board.jsonl"]
+    paths = ([f"snapshot/{name}" for name in spray.SNAPSHOT_FILES]
+             + ["board.parquet", "board.jsonl", "board.json", "living-board.json"])
     manifest = "".join(json.dumps({"file": path, "sha256": None, "bytes": None, "blob_id": None}) + "\n"
                        for path in paths).encode()
     public = {"snapshot/SNAPSHOT.json": json.dumps(old).encode(), "README.md": readme,
@@ -228,6 +262,7 @@ def test_hf_dataset_snapshot_and_viewer_are_one_optimistic_commit(monkeypatch, t
     assert calls == ["dataset-atomic", "space"]
     assert [r["status"] for r in results] == ["PUBLISHED", "PUBLISHED"]
     assert public["board.jsonl"].count(b"\n") == 2
+    assert public["board.json"] == public["living-board.json"] == public["snapshot/board.json"] == tr["board_bytes"]
 
 
 def test_hf_snapshot_bytes_match_compares_bytes_not_as_of(monkeypatch):

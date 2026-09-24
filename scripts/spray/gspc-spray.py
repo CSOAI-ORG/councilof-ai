@@ -784,6 +784,9 @@ def hf_viewer_files(tr: dict) -> dict[str, bytes]:
 
 def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dict[str, bytes]) -> dict[str, bytes]:
     """Keep the existing dataset card and file inventory aligned with the atomic export."""
+    counts = derive_counts(tr["board"])
+    if not counts["printed_agrees_with_array"]:
+        raise Refused("board totals disagree with the axis array; refusing the HF dataset card")
     text = readme.decode("utf-8")
     paragraph = (
         "The default viewer files (`board.parquet` and `board.jsonl`) project the "
@@ -799,7 +802,6 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     )
     if replacements != 1:
         raise Refused("HF dataset README provenance paragraph changed; manual review required")
-    readme_bytes = text.encode("utf-8")
 
     inventory = []
     seen = set()
@@ -818,6 +820,43 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
     missing = set(changed) - seen
     if missing:
         raise Refused(f"HF dataset manifest lacks paths {sorted(missing)}; manual review required")
+    updated_lines = []
+    in_inventory = False
+    for line in text.splitlines():
+        if line == "## What is in this repository":
+            in_inventory = True
+        elif in_inventory and line.startswith("## "):
+            in_inventory = False
+        if line.startswith("At the dated snapshot read,"):
+            line = (f"At the dated snapshot read, the board had **{counts['slots']} declared slots and "
+                    f"{counts['by_status'].get('MEASURED', 0)} measured axes**. "
+                    "Model-comparison and deterministic-facts runs must not be pooled into one accuracy figure.")
+        elif line.startswith("For current counts, separation states and withheld leader fields"):
+            line = ("For current counts, separation states and withheld leader fields, read the live JSON and "
+                    "retain the retrieval time. A tie is not a win; untested separation is not a separated lead. "
+                    "The dataset remains measurement evidence, not certification or a ranking guarantee.")
+        elif line.startswith("**Lid:** this dated export records"):
+            line = (f"**Lid:** this dated export records {counts['slots']} axis rows. "
+                    "For current measured counts and separated leaders, read the live board; "
+                    "TIE and UNTESTED are not wins. Measurement, not certification.")
+        elif "Card refreshed " in line:
+            line = re.sub(r"Card refreshed [0-9TZ:\-]+", f"Card refreshed {tr['read_at']}", line)
+        elif line.startswith("`manifest.jsonl` is derived from this repository's own file tree at "):
+            line = (f"`manifest.jsonl` was updated from this repository's file tree at {tr['read_at']}; "
+                    "it lists every file with its")
+        elif in_inventory and line.startswith("| `"):
+            for path, data in changed.items():
+                if line.startswith(f"| `{path}` |"):
+                    rows = counts["slots"] if path in ("board.parquet", "board.jsonl") else ""
+                    what = ("exact copied board JSON; measurement, not a new signature"
+                            if path in ("snapshot/board.json", "board.json", "living-board.json")
+                            else "dated snapshot or derived viewer file")
+                    line = f"| `{path}` | {len(data)} | {rows} | {what} |"
+                    break
+            if line.startswith("| `manifest.jsonl` |"):
+                line = f"| `manifest.jsonl` | — | {len(inventory)} | file inventory; download for current bytes |"
+        updated_lines.append(line)
+    readme_bytes = ("\n".join(updated_lines) + "\n").encode("utf-8")
     return {
         "README.md": readme_bytes,
         "manifest.jsonl": ("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in inventory)).encode("utf-8"),
@@ -915,8 +954,11 @@ def spray_hf(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
             if remote.get("as_of", "") > tr["as_of"]:
                 raise Refused(f"HF dataset carries newer as_of {remote['as_of']} than captured root {tr['as_of']}")
             viewer = hf_viewer_files(tr)
+            if built.get("board.json") != tr["board_bytes"]:
+                raise Refused("built snapshot board bytes differ from the captured live GET")
             changed = {f"{HF_PATH_IN_REPO}/{path}": data for path, data in built.items()}
             changed.update(viewer)
+            changed.update({"board.json": tr["board_bytes"], "living-board.json": tr["board_bytes"]})
             companions = hf_dataset_companions(
                 fetch_ok(f"{pinned}/README.md?download=true"),
                 fetch_ok(f"{pinned}/manifest.jsonl?download=true"), tr, changed,
