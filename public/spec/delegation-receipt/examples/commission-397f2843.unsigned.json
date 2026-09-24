@@ -1,0 +1,175 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "agent": {
+      "a2a_agent_card_sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "a2a_agent_card_url": "https://councilof.ai/.well-known/agent-card.json",
+      "card_observed_at": "2026-09-24T15:17:02Z",
+      "erc8004": null,
+      "evidence": [
+        {
+          "kind": "HTTP_BYTES",
+          "locator": "https://councilof.ai/.well-known/agent-card.json",
+          "observed_at": "2026-09-24T15:17:02Z",
+          "party": "AGENT",
+          "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+          "what_it_shows": "the agent's own card as served at card_observed_at (not as of the job date); no ERC-8004 agent id is known"
+        }
+      ],
+      "state": "SELF_ASSERTED"
+    },
+    "delivery": {
+      "artifacts": [
+        {
+          "content_id": "5bea4064b8b7239baa86d8c9cf5e8f06d92705319c559adf9caff9b98025b79c",
+          "observed_at": "2026-09-24T15:17:02Z",
+          "sha256": "b7104005f15ac540f971603db0e6dffc14ac885e2c713d8cda30f1846c764d06",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-5bea4064b8b7.json"
+        },
+        {
+          "content_id": "9dc3243f69217b35adacda4d5fafd390004200a36385609c533c377ea8598eb1",
+          "observed_at": "2026-09-24T15:17:03Z",
+          "sha256": "c45ded30e3e9a4b3befbec045dd80f1e941119e383e64568af8fe175eb995360",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-9dc3243f6921.json"
+        },
+        {
+          "content_id": "e9bc92b7b39be3dda65573dc571fd5fd544d17aab7b875783f78f082234ee294",
+          "observed_at": "2026-09-24T15:17:03Z",
+          "sha256": "41c2959f4b7d7149e348c48391721e4e3ea450fa59c620d56f74dd2685aea318",
+          "url": "https://councilof.ai/interop/mill-cards-signed/signed-governan-e9bc92b7b39b.json"
+        }
+      ],
+      "binding": "JOINED_BY_SUBJECT",
+      "evidence": [
+        {
+          "kind": "RECORDER_LOG",
+          "locator": "https://councilof.ai/api/commissions",
+          "observed_at": "2026-09-24T15:17:02Z",
+          "party": "RECORDER",
+          "sha256": "015e0663c0ae47a7d56cd91fdd07baf4714f34d3a3ae9094682a874e3f6475fa",
+          "what_it_shows": "cards[] joined to this commission by subject and axis match (functions/api/commissions.ts joinDelivery); no card body names this receipt or tx"
+        }
+      ],
+      "state": "SELF_ASSERTED"
+    },
+    "job": {
+      "ref": "request-attestation receipt_sha 397f28437448a39a3775fd7f215393874be48bb556ea5a75c5d8f320e0f70c65",
+      "summary": "x402-paid commission at /api/request-attestation for subject llama3.2:3b, axis governance. SELF_TEST: the estate paid its own door."
+    },
+    "not_evidence_of": [
+      "the quality, correctness or fitness of the delivered work",
+      "the identity of any natural person",
+      "that the agent is safe, reliable or suitable for any other job",
+      "revenue, or a buyer outside the recorder: this is SELF_TEST",
+      "that any signing key is still unrevoked at the time of reading"
+    ],
+    "notes": [
+      "SELF_TEST: the estate paid its own door. This is not revenue and not an outside buyer; never count it as either.",
+      "UNSIGNED: signing under a CSOAI key is a separate, owner-reviewed step. signed:false is the honest state.",
+      "timestamps.delivered is the earliest run_id among the joined cards: a run time, not a publication time.",
+      "The agent card hash is the card as read at recorded_at; the card as it stood on the job date was not captured.",
+      "The job ran over HTTP x402, not as an A2A task; linking it to the A2A agent card is the recorder's own statement."
+    ],
+    "outcome_check": {
+      "check_id": null,
+      "checker_kind": "NONE",
+      "checker_ref": null,
+      "evidence": [],
+      "finding": null,
+      "method_url": null,
+      "result": "UNCHECKED",
+      "state": "ABSENT"
+    },
+    "payment": {
+      "amount_units": "10000",
+      "asset": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+      "evidence": [
+        {
+          "kind": "CHAIN_RECORD",
+          "locator": "eip155:8453/tx/0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807",
+          "observed_at": "2026-09-24T15:17:02Z",
+          "party": "THIRD_PARTY",
+          "sha256": null,
+          "what_it_shows": "eth_getTransactionReceipt on https://mainnet.base.org: status 0x1, block 51202203, exactly one ERC-20 Transfer of amount_units of asset to pay_to. Payer address deliberately not copied."
+        },
+        {
+          "kind": "RECORDER_LOG",
+          "locator": "https://councilof.ai/api/commissions",
+          "observed_at": "2026-09-24T15:17:02Z",
+          "party": "RECORDER",
+          "sha256": "015e0663c0ae47a7d56cd91fdd07baf4714f34d3a3ae9094682a874e3f6475fa",
+          "what_it_shows": "payer_class SELF_TEST is the recorder's own classification (origin field), not a chain fact"
+        }
+      ],
+      "kind": "X402",
+      "network": "eip155:8453",
+      "pay_to": "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31",
+      "payer_class": {
+        "state": "SELF_ASSERTED",
+        "value": "SELF_TEST"
+      },
+      "settlement_ref": null,
+      "state": "EVIDENCED_BY_THIRD_PARTY",
+      "tx_hash": "0xeaaafb8a8e087cf5148f5fa59cfe7b773689bf686e2e99be8f7c4a7c393e8807"
+    },
+    "principal": {
+      "evidence": [
+        {
+          "kind": "RECORDER_LOG",
+          "locator": "https://councilof.ai/api/commissions",
+          "observed_at": "2026-09-24T15:17:02Z",
+          "party": "RECORDER",
+          "sha256": "015e0663c0ae47a7d56cd91fdd07baf4714f34d3a3ae9094682a874e3f6475fa",
+          "what_it_shows": "origin SELF_TEST under origin_rule 'an estate wallet paid itself'. No AP2 mandate, proof-of-human reference or KYA token exists for this job."
+        }
+      ],
+      "kind": "SELF_TEST",
+      "ref": "/api/commissions origin SELF_TEST for receipt_sha 397f28437448a39a",
+      "ref_sha256": null,
+      "state": "SELF_ASSERTED"
+    },
+    "record_kind": "MEASUREMENT_RECORD",
+    "recorded_at": "2026-09-24T15:17:03Z",
+    "recorder": {
+      "did": "did:web:csoai.org",
+      "name": "Council of AI (CSOAI Ltd)"
+    },
+    "schema": "csoai.delegation-receipt/0.1",
+    "timestamps": {
+      "checked": {
+        "asserted_at": null,
+        "asserted_by": null,
+        "observed_at": null,
+        "observed_via": null,
+        "state": "ABSENT"
+      },
+      "delivered": {
+        "asserted_at": "2026-09-14T03:26:26.887163Z",
+        "asserted_by": "RECORDER",
+        "observed_at": null,
+        "observed_via": null,
+        "state": "SELF_ASSERTED"
+      },
+      "paid": {
+        "asserted_at": "2026-09-12T06:15:53.111Z",
+        "asserted_by": "RECORDER",
+        "observed_at": "2026-09-12T06:15:53Z",
+        "observed_via": "Base block 51202203 timestamp",
+        "state": "EVIDENCED_BY_THIRD_PARTY"
+      },
+      "requested": {
+        "asserted_at": null,
+        "asserted_by": null,
+        "observed_at": null,
+        "observed_via": null,
+        "state": "ABSENT"
+      }
+    }
+  },
+  "id": "8a4c118573beac5389b7744e874ce0e0d297e784e5f9558610ca1ded9531e824",
+  "kid": null,
+  "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('utf-8')",
+  "pubkey": null,
+  "signature": null,
+  "signed": false
+}

@@ -1,0 +1,163 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "agent": {
+      "a2a_agent_card_sha256": "f5f013e28c1ae6046f64df4d317cfb041f51707fc7b8f3a3e1ce68ae9b6b3643",
+      "a2a_agent_card_url": "https://agent.example/.well-known/agent-card.json",
+      "card_observed_at": "2026-09-24T00:00:00Z",
+      "erc8004": {
+        "agent_id": "4242",
+        "chain": "eip155:1",
+        "identity_registry": "0xcff282eae3dc90ad3c8029188bf90532e0957c02"
+      },
+      "evidence": [
+        {
+          "kind": "HTTP_BYTES",
+          "locator": "https://agent.example/.well-known/agent-card.json",
+          "observed_at": "2026-09-24T00:00:00Z",
+          "party": "AGENT",
+          "sha256": "f5f013e28c1ae6046f64df4d317cfb041f51707fc7b8f3a3e1ce68ae9b6b3643",
+          "what_it_shows": "agent card bytes as served, hashing to a2a_agent_card_sha256"
+        },
+        {
+          "kind": "CHAIN_RECORD",
+          "locator": "eip155:1/erc8004-identity/4242",
+          "observed_at": "2026-09-24T00:00:00Z",
+          "party": "THIRD_PARTY",
+          "sha256": null,
+          "what_it_shows": "identity registry entry whose registration file points at the agent card URL"
+        }
+      ],
+      "state": "EVIDENCED_BY_THIRD_PARTY"
+    },
+    "delivery": {
+      "artifacts": [
+        {
+          "content_id": null,
+          "observed_at": "2026-09-24T00:00:00Z",
+          "sha256": "fc646fb6fd1a69af7faf270b155e54d418f1e7622bb132ef92ddd40dedbccb2d",
+          "url": "https://store.example/objects/fc646fb6fd1a69af7faf270b155e54d418f1e7622bb132ef92ddd40dedbccb2d"
+        }
+      ],
+      "binding": "REFERENCED_IN_JOB",
+      "evidence": [
+        {
+          "kind": "HTTP_BYTES",
+          "locator": "https://store.example/objects/fc646fb6fd1a69af7faf270b155e54d418f1e7622bb132ef92ddd40dedbccb2d",
+          "observed_at": "2026-09-24T00:00:00Z",
+          "party": "THIRD_PARTY",
+          "sha256": "fc646fb6fd1a69af7faf270b155e54d418f1e7622bb132ef92ddd40dedbccb2d",
+          "what_it_shows": "content-addressed store serving bytes that hash to the artifact sha256"
+        }
+      ],
+      "state": "EVIDENCED_BY_THIRD_PARTY"
+    },
+    "job": {
+      "ref": "test-job-08",
+      "summary": "TEST VECTOR - fictional job: translate one document. Every reference in this record is fictional."
+    },
+    "not_evidence_of": [
+      "the quality, correctness or fitness of the delivered work",
+      "the identity of any natural person",
+      "that the agent is safe, reliable or suitable for any other job",
+      "revenue, or a buyer outside the recorder, unless payer_class is OUTSIDE and so evidenced",
+      "that any signing key is still unrevoked at the time of reading"
+    ],
+    "notes": [
+      "TEST VECTOR 08 - a well-formed record nobody has signed yet."
+    ],
+    "outcome_check": {
+      "check_id": null,
+      "checker_kind": "NONE",
+      "checker_ref": null,
+      "evidence": [],
+      "finding": null,
+      "method_url": null,
+      "result": "UNCHECKED",
+      "state": "ABSENT"
+    },
+    "payment": {
+      "amount_units": "10000",
+      "asset": "0x483853590246fafa6f2d3182a8b61bbbf01c98ec",
+      "evidence": [
+        {
+          "kind": "CHAIN_RECORD",
+          "locator": "eip155:8453/tx/0xcadc5fc070612c35d12c0441a260d0b118638bdbb453b2edd1d569a839c830b3",
+          "observed_at": "2026-09-24T00:00:00Z",
+          "party": "THIRD_PARTY",
+          "sha256": null,
+          "what_it_shows": "successful transfer of amount_units of asset to pay_to from a wallet the recorder does not control"
+        }
+      ],
+      "kind": "X402",
+      "network": "eip155:8453",
+      "pay_to": "0x730de79ed8007741845783e4bfdcfb4dd68e93d3",
+      "payer_class": {
+        "state": "EVIDENCED_BY_THIRD_PARTY",
+        "value": "OUTSIDE"
+      },
+      "settlement_ref": null,
+      "state": "EVIDENCED_BY_THIRD_PARTY",
+      "tx_hash": "0xcadc5fc070612c35d12c0441a260d0b118638bdbb453b2edd1d569a839c830b3"
+    },
+    "principal": {
+      "evidence": [
+        {
+          "kind": "SIGNED_DOCUMENT",
+          "locator": "https://credentials.example/mandates/test-01",
+          "observed_at": "2026-09-24T00:00:00Z",
+          "party": "THIRD_PARTY",
+          "sha256": "e55d6dc3c062dae8061dd28a35709e67e18038f7f8ee8a55d9fb0e4caa0d78ea",
+          "what_it_shows": "mandate document, signed by a credential provider that is neither recorder nor agent, whose bytes hash to ref_sha256"
+        }
+      ],
+      "kind": "AP2_MANDATE",
+      "ref": "urn:example:ap2-mandate:test-01",
+      "ref_sha256": "e55d6dc3c062dae8061dd28a35709e67e18038f7f8ee8a55d9fb0e4caa0d78ea",
+      "state": "EVIDENCED_BY_THIRD_PARTY"
+    },
+    "record_kind": "MEASUREMENT_RECORD",
+    "recorded_at": "2026-09-24T00:00:00Z",
+    "recorder": {
+      "did": "did:web:test-vectors.example",
+      "name": "TEST VECTOR recorder"
+    },
+    "schema": "csoai.delegation-receipt/0.1",
+    "timestamps": {
+      "checked": {
+        "asserted_at": null,
+        "asserted_by": null,
+        "observed_at": null,
+        "observed_via": null,
+        "state": "ABSENT"
+      },
+      "delivered": {
+        "asserted_at": "2026-09-23T10:04:00Z",
+        "asserted_by": "AGENT",
+        "observed_at": "2026-09-23T10:04:02Z",
+        "observed_via": "store.example first-seen time for the artifact",
+        "state": "EVIDENCED_BY_THIRD_PARTY"
+      },
+      "paid": {
+        "asserted_at": "2026-09-23T10:00:05Z",
+        "asserted_by": "AGENT",
+        "observed_at": "2026-09-23T10:00:07Z",
+        "observed_via": "block timestamp of tx_hash",
+        "state": "EVIDENCED_BY_THIRD_PARTY"
+      },
+      "requested": {
+        "asserted_at": "2026-09-23T10:00:00Z",
+        "asserted_by": "PRINCIPAL",
+        "observed_at": "2026-09-23T10:00:00Z",
+        "observed_via": "mandate document issued_at",
+        "state": "EVIDENCED_BY_THIRD_PARTY"
+      }
+    }
+  },
+  "id": "65d09a7840d92ca3290f6624e159751703e18108ece03896cfd83d5a09bc512f",
+  "kid": null,
+  "preimage_rule": "json.dumps(body, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('utf-8')",
+  "pubkey": null,
+  "signature": null,
+  "signed": false
+}

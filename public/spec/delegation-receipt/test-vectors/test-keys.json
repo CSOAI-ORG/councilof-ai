@@ -1,0 +1,20 @@
+{
+  "_label": "TEST KEYS - PUBLISHED ON PURPOSE. Anything signed by these keys proves nothing. Never the board key.",
+  "derivation": "private_key = sha256(label.encode('utf-8')) used as the Ed25519 seed",
+  "keys": [
+    {
+      "in_test_did_document": true,
+      "kid": "did:web:test-vectors.example#test-key-a",
+      "label": "csoai delegation-receipt v0.1 TEST KEY A - never trust",
+      "private_seed_hex": "bee555b4be57137f3f95b698905372354d29b5e6064b95f6a37e8d4bf520746e",
+      "public_hex": "6284bd62db3c4c7e218c838f420ad5c266fda4a11dfd182a97446155f4924b1d"
+    },
+    {
+      "in_test_did_document": false,
+      "kid": "did:web:test-vectors.example#test-key-b",
+      "label": "csoai delegation-receipt v0.1 TEST KEY B - never trust, deliberately NOT in the test DID document",
+      "private_seed_hex": "87abb16e858d8597d84f54cd7d9df93500aa73a5ac6df5caa34129d6d5bd6215",
+      "public_hex": "b37838055c38437e4b246c36a6a8f420c0640fe953d747282517f4991fef7b74"
+    }
+  ]
+}
