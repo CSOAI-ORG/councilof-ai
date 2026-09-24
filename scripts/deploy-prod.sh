@@ -25,7 +25,7 @@ set -euo pipefail
 
 PROJECT="csoai-org"
 BRANCH="main"
-DOMAIN="www.csoai.org"
+DOMAIN="${CSOAI_PROD_DOMAIN:-councilof.ai}"
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
@@ -172,7 +172,7 @@ echo ""
 echo "Verifying $DOMAIN now serves the new bundle..."
 sleep 4
 SERVED_BUNDLE=$(curl -s --max-time 10 -L "https://$DOMAIN/?$(date +%s%N)" \
-  | grep -oE 'index(\.r2)?-[A-Za-z0-9_-]+\.js' | head -1)
+  | grep -oE 'index(\.r2)?-[A-Za-z0-9_-]+\.js' | head -1 || true)
 
 if [ "$SERVED_BUNDLE" = "$LOCAL_BUNDLE" ]; then
   echo "OK: $DOMAIN serves $SERVED_BUNDLE (matches local build)"
