@@ -1029,7 +1029,7 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
         "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
         "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
         f"VERIFY: {VERIFY_URL} (free, no account) · {HOWTO_URL} · pip install \"csoai-gspc[verify]\" then csoai-gspc verify "
-        f"<card_id> · keys resolve via did:web:csoai.org ({DID_URL}).\n\n"
+        f"CARD_ID · keys resolve via did:web:csoai.org ({DID_URL}).\n\n"
         "Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.\n\n"
         f"Methodology DOI: https://doi.org/{ZENODO_METHODOLOGY_DOI} · snapshot series: https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}\n"
         f"Issuer: {tr['board'].get('issuer', 'CSOAI Ltd')}.\n\n"
