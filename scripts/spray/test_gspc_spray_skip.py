@@ -189,6 +189,8 @@ def test_hf_dataset_card_removes_stale_counts_and_alias_inventory():
         "| `board.json` | old alias |\n| `living-board.json` | old alias |\n"
         "| `board.parquet` | 5775 | 23 | old viewer |\n"
         "| `manifest.jsonl` | — | 3 | file inventory |\n"
+        "`manifest.jsonl` was updated from this repository's file tree at 2026-09-22T17:14:17Z; "
+        "it lists every file with its\nsize, its blob hash and a direct URL.\n"
         "## Citation\n**Lid:** this dated export records 23 axis rows.\n"
         "Card refreshed 2026-09-22T17:14:17Z.\n"
     ).encode()
@@ -204,7 +206,10 @@ def test_hf_dataset_card_removes_stale_counts_and_alias_inventory():
     assert f"| `living-board.json` | {len(tr['board_bytes'])} |" in text
     assert "| `board.parquet` | 7 | 2 |" in text
     assert "| `manifest.jsonl` | — | 4 |" in text
-    assert "Card refreshed 2026-09-23T10:01:00Z" in text
+    assert "Card refreshed" not in text
+    assert "was updated from this repository's file tree at" not in text
+    assert "`manifest.jsonl` lists every file with its\nsize, its blob hash" in text
+    assert spray.hf_dataset_companions(files["README.md"], files["manifest.jsonl"], tr, changed) == files
     rows = [json.loads(line) for line in files["manifest.jsonl"].decode().splitlines()]
     assert rows[1]["sha256"] == spray.sha256_hex(tr["board_bytes"])
 

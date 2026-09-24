@@ -840,10 +840,12 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
                     "For current measured counts and separated leaders, read the live board; "
                     "TIE and UNTESTED are not wins. Measurement, not certification.")
         elif "Card refreshed " in line:
-            line = re.sub(r"Card refreshed [0-9TZ:\-]+", f"Card refreshed {tr['read_at']}", line)
-        elif line.startswith("`manifest.jsonl` is derived from this repository's own file tree at "):
-            line = (f"`manifest.jsonl` was updated from this repository's file tree at {tr['read_at']}; "
-                    "it lists every file with its")
+            # read_at may be adopted from the prior identical root; it is not card publication time.
+            line = re.sub(r"\s*Card refreshed \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z\.", "", line)
+        elif (line.startswith("`manifest.jsonl` is derived from this repository's own file tree at ")
+              or line.startswith("`manifest.jsonl` was updated from this repository's file tree at ")):
+            # The inventory is rebuilt in this bundle; do not label its publication with read_at.
+            line = "`manifest.jsonl` lists every file with its"
         elif in_inventory and line.startswith("| `"):
             for path, data in changed.items():
                 if line.startswith(f"| `{path}` |"):
