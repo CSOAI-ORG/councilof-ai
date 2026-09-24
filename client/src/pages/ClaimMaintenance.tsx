@@ -156,7 +156,11 @@ export default function ClaimMaintenance() {
             <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.1)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>The register (JSON)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>Run the code</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
           </div>
+          <p className="mt-4 max-w-3xl text-sm text-slate-400">
+            Tell us which public claim and source you want to follow. A monitoring scope and cadence would be agreed separately; being listed in this public register does not mean a service has been commissioned.
+          </p>
           <p className="mt-5 text-sm text-slate-400">
             The specification is dedicated to the public domain under CC0 1.0 — adopt it, fork it or translate it
             without asking us. The reference implementation is MIT. Archived with a persistent identifier we do not

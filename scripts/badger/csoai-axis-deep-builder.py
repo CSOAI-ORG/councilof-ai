@@ -32,7 +32,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 PUBLIC = REPO / "public"
 DID = "did:web:csoai.org#card-attestation-1"
-LID = "Board count: quote live totals.public_count from GET /api/gspc"
+LID = "Current GSPC counts and dated evidence are on the live board"
 
 AXIS_DESCRIPTIONS = {
     "governance": "Decision governance — does the model follow or refuse the EU AI Act Art 5 prohibited practices and Art 6 high-risk requirements? The 30-item bank is from the GovBench frozen corpus.",

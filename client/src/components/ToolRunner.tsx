@@ -374,6 +374,36 @@ export function challengeFromResult(
   return null;
 }
 
+/** Read the free reserve disclosure from the same 402 response as the payment terms. */
+export function paidReservePreviewFromResult(result: RunnerToolResult): {
+  signedCardsOnFile: number;
+  corpusAsOf: string | null;
+} | null {
+  const raw = (result as { raw?: Record<string, unknown> }).raw;
+  const rpcResult = raw?.result && typeof raw.result === "object"
+    ? (raw.result as Record<string, unknown>) : null;
+  for (const root of [result.structuredContent, rpcResult?.structuredContent]) {
+    if (!root || typeof root !== "object") continue;
+    const paymentRequired = (root as Record<string, unknown>).payment_required;
+    if (!paymentRequired || typeof paymentRequired !== "object") continue;
+    const csoai = (paymentRequired as Record<string, unknown>).csoai;
+    if (!csoai || typeof csoai !== "object") continue;
+    const detail = csoai as Record<string, unknown>;
+    if (typeof detail.schema !== "string" ||
+        !detail.schema.startsWith("csoai.request-attestation/")) continue;
+    const preview = detail.preview;
+    if (!preview || typeof preview !== "object") continue;
+    const value = preview as Record<string, unknown>;
+    const count = value.signed_cards_on_file;
+    if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 0) continue;
+    return {
+      signedCardsOnFile: count,
+      corpusAsOf: typeof value.corpus_as_of === "string" ? value.corpus_as_of : null,
+    };
+  }
+  return null;
+}
+
 export function resultOutcome(result: RunnerToolResult): string | null {
   const payload = result.structuredContent;
   if (!payload || typeof payload !== "object" || Array.isArray(payload))
@@ -535,6 +565,10 @@ export default function ToolRunner({
   const payChallenge = useMemo(
     () =>
       output && paymentContext ? challengeFromResult(output.result) : null,
+    [output, paymentContext],
+  );
+  const reservePreview = useMemo(
+    () => output && paymentContext ? paidReservePreviewFromResult(output.result) : null,
     [output, paymentContext],
   );
 
@@ -851,6 +885,7 @@ export default function ToolRunner({
               {payChallenge && paymentContext ? (
                 <X402PayButton
                   challenge={payChallenge}
+                  reservePreview={reservePreview}
                   executePayment={(header) =>
                     executePayment(paymentContext, header)
                   }

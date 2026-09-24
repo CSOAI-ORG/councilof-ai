@@ -60,6 +60,7 @@ export const navigation: NavGroup[] = [
       { name: 'Council Verify', href: '/gspc-verify', description: 'Paste a card. Your browser recomputes the signature. Free forever' },
       { name: 'Council Ledger', href: '/council-licensing', description: 'Signed evidence feed for insurers, procurement and deployers — never a purchased rank' },
       { name: 'Council Data', href: '/licensing-agreement', description: 'Licensed signed corpus. Buy data, never a score' },
+      { name: 'Claim maintenance', href: '/claim-maintenance/', description: 'Public claims register, dated corrections and an enquiry route; monitoring is scoped separately' },
       { section: 'Modules', name: 'GPAI Evidence Pack', href: '/gpai-evidence', description: 'Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark' },
       { name: 'CRA Readiness Kit', href: '/cra-readiness', description: 'The 24h / 72h / 14-day ENISA runbook and signed SBOM workflow we run on ourselves' },
       { name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots, coverage stated first — never a credit rating' },

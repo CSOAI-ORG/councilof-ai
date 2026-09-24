@@ -96,7 +96,7 @@ def fix_spa_page(path: Path, title: str) -> tuple[bool, str]:
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
+    <span class="lid-phrase">Current GSPC counts and dated evidence are on the live board</span>
   </div>
 </footer>"""
 

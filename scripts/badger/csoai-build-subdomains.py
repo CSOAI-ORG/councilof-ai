@@ -32,7 +32,7 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE.parent.parent / "public" / "subdomains"
 DID = "did:web:csoai.org#card-attestation-1"
 
-LID = "Board count: quote live totals.public_count from GET /api/gspc."
+LID = "Current GSPC counts and dated evidence are on the live board."
 
 # (slug, title, description, schema_type, cta_text, cta_url, body)
 SUBDOMAINS = [
@@ -229,7 +229,7 @@ def build_html(slug: str, title: str, description: str, schema_type: str,
 
 <footer>
 <p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
-<p style="margin-top: 8px;">Board count: quote live totals.public_count from GET /api/gspc. Measurement, not certification. Anyone can re-check.</p>
+<p style="margin-top: 8px;">Current GSPC counts and dated evidence are on the live board. Measurement, not certification. Anyone can re-check.</p>
 </footer>
 
 </body>

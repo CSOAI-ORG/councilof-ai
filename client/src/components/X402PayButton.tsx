@@ -71,11 +71,13 @@ export default function X402PayButton({
   challenge,
   executePayment,
   isContextCurrent,
+  reservePreview = null,
   className = "",
 }: {
   challenge: X402Challenge;
   executePayment: (paymentHeader: string) => Promise<X402ExecutionResult>;
   isContextCurrent: () => boolean;
+  reservePreview?: { signedCardsOnFile: number; corpusAsOf: string | null } | null;
   className?: string;
 }) {
   const [state, setState] = useState<PayState>({ kind: "idle" });
@@ -94,6 +96,12 @@ export default function X402PayButton({
   const network = challenge.accepted?.network || challenge.network;
   const payee = challenge.accepted?.payTo || challenge.payTo;
   const resource = challenge.resourceInfo?.url || challenge.resource;
+  const reserveSummary = reservePreview
+    ? reservePreview.signedCardsOnFile === 0
+      ? "No signed measurement cards are on file for this subject in the paid reserve. Payment delivers a signed commission receipt, not a new measurement."
+      : `${reservePreview.signedCardsOnFile} signed measurement cards are on file in the paid reserve. Payment delivers a signed commission receipt and may include those existing cards; it does not trigger a new measurement.`
+    : null;
+  const reserveDate = reservePreview?.corpusAsOf?.slice(0, 10) || null;
   let chain: number | null = null;
   try {
     chain = challenge.chainId ?? (network ? chainIdFromNetwork(network) : null);
@@ -200,6 +208,11 @@ export default function X402PayButton({
             <dt className="font-semibold">Resource</dt>
             <dd className="break-all">{resource}</dd>
           </dl>
+          {reserveSummary ? (
+            <p className="mt-3 rounded-lg border border-amber-700/25 bg-white px-3 py-2 text-xs leading-relaxed text-amber-950" data-testid="x402-reserve-review">
+              {reserveSummary} {reserveDate ? `Reserve snapshot: ${reserveDate}.` : "Reserve snapshot date unavailable."}
+            </p>
+          ) : null}
           <p className="mt-2 text-[11px] leading-relaxed text-amber-900">
             Your wallet will sign these terms. The original MCP job will then be
             retried once with the signed x402 payload. Cancel leaves the job
@@ -224,7 +237,13 @@ export default function X402PayButton({
           </div>
         </div>
       ) : (
-        <button
+        <div>
+          {reserveSummary ? (
+            <p className="mb-3 rounded-lg border border-amber-700/25 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950" data-testid="x402-reserve-preview">
+              {reserveSummary} {reserveDate ? `Reserve snapshot: ${reserveDate}.` : "Reserve snapshot date unavailable."}
+            </p>
+          ) : null}
+          <button
           type="button"
           onClick={() => setState({ kind: "reviewing" })}
           disabled={busy}
@@ -238,7 +257,8 @@ export default function X402PayButton({
                 ? "Requesting the paid result…"
                 : "Looking for a wallet…"
             : `Review payment · ${price}`}
-        </button>
+          </button>
+        </div>
       )}
 
       <p
