@@ -743,7 +743,13 @@ def promote(did, clone, out):
     subject = draft["drift"]["subject"]
     slug = re.sub(r"[^a-z0-9]+", "-", subject.lower()).strip("-")[:60] or "drift"
     supersedes = subject.startswith("public/corrections/")
-    note_name = f"{slug}-{entry['date']}{'-SUPERSEDES' if supersedes else ''}.md"
+    # The ledger id is in the name: two corrections to one subject on one date used to write the same
+    # file, and the second promotion silently overwrote the first note (C-2026-0924-01/02).
+    note_name = f"{slug}-{entry['date']}-{real}{'-SUPERSEDES' if supersedes else ''}.md"
+    if supersedes:
+        # A promoted supersession is done, not proposed: say what was published, not the draft's options.
+        entry["what_changed"] = (f"Published a dated supersession note, public/corrections/{note_name}, beside "
+                                 f"{subject}, which is not edited: it was true when written.")
     m = re.search(r"^(\s*)corrections:\s*\[\s*$", t, re.M)
     if not m:
         print("ABORT could not find `corrections: [` in functions/api/corrections.ts"); return 2
@@ -753,7 +759,7 @@ def promote(did, clone, out):
     t = t[:m.end()] + "\n" + block + t[m.end():]
     ledger.write_text(t, encoding="utf-8")
     md = mf.read_text(encoding="utf-8") if mf.is_file() else f"# Correction {real}\n"
-    md = md.replace(f"# DRAFT correction {did}:", f"# Correction {real}:").replace("**Status: DRAFT - owner approval required.**", f"**Register id {real}. Promoted from draft {did}.**")
+    md = md.replace(f"# DRAFT correction {did}:", f"# Correction {real}:").replace("**Status: DRAFT - owner approval required.**", f"**Register id {real}. Promoted from draft {did}.**").replace(" Not published, not merged, no ledger id.", " Published on promotion with the owner's approval.")
     notes = clone / "public/corrections"; notes.mkdir(parents=True, exist_ok=True)
     (notes / note_name).write_text(md, encoding="utf-8")
     if supersedes:
