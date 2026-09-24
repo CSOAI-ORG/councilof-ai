@@ -4,7 +4,8 @@
  *
  * Parses `<Route path="...">` declarations (static string paths only), drops
  * :param routes, duplicates, and auth/admin/legacy junk, then emits a sitemap
- * with real lastmod (today) and hand-tuned priorities for flagship surfaces.
+ * with hand-tuned priorities for flagship surfaces. Omit lastmod until the
+ * source can provide each page's actual last significant content change.
  *
  * Run: node scripts/generate-sitemap.mjs   (wired into `npm run build:client`)
  */
@@ -403,6 +404,124 @@ for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
+// --- Delisted: served pages that tell crawlers not to index them ---------------
+// An outside crawl of every sitemap URL on 2026-09-24 found 43 entries whose own HTML says
+// "do not index me": 20 carry <meta name="robots" content="noindex"> (the 15 withdrawn industry
+// pages among them) and 23 declare a canonical elsewhere (13 aliases of /dashboard/, /faqs/,
+// three interop aliases, six /subdomains/* pages). A sitemap asking to index a page that
+// refuses indexing is a contradiction crawlers report as an error. The pages stay served;
+// they only leave the sitemap. The generated output and regression checks preserve
+// this evidence boundary while the pages themselves remain available.
+const DELISTED = new Map([
+  ...["agent-rails", "care", "critical-infrastructure", "defence", "emotion-ai", "government", "humanoid",
+      "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
+    .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
+  ["/proof-receipt", "noindex"], ["/status/internal", "noindex"], ["/yield", "noindex"],
+  ["/grants", "noindex"], ["/subdomains/verifier", "noindex"],
+  ...["arena-scoreboard", "coliseum", "demo", "ecosystem", "governance-commons", "gspc-arena", "heatmap",
+      "home-v3", "integrations", "os-demo", "safe-space", "try", "watchdog/report"]
+    .map((s) => [`/${s}`, "canonical: /dashboard/"]),
+  ["/faqs", "canonical: /faq/"],
+  ["/interop/incident", "canonical: /interop/incident-openai-hf-2026-07/"],
+  ["/interop/swift", "canonical: /interop/swift-census-2026-09/"],
+  ["/interop/xrpl", "canonical: /interop/xrpl-toml-gap-2026-09/"],
+  ...["blog", "dashboards", "issuance", "marketplace", "press", "proofs"]
+    .map((s) => [`/subdomains/${s}`, `canonical: https://${s}.councilof.ai`]),
+  // Duplicate addresses of one page; canonical named in scripts/surface/canonical-url.mjs.
+  ["/usp", "canonical: /why/"],
+  ["/why-csoai", "canonical: /why/"],
+  ["/our-difference", "canonical: /why/"],
+  ["/agents", "canonical: /council-vs-agents/"],
+  ["/governance-council", "canonical: /council-vs-agents/"],
+  ["/vs", "canonical: /compare/"],
+  ["/vs-competitors", "canonical: /compare/"],
+  ["/cookies", "canonical: /cookie-policy/"],
+  ["/legal/cookies", "canonical: /cookie-policy/"],
+  ["/personal-protection", "canonical: /protect/"],
+  ["/deepfake-protection", "canonical: /protect/"],
+  ["/rfc-0024", "canonical: /fedramp/"],
+  ["/oscal-readiness", "canonical: /fedramp/"],
+  ["/graph", "canonical: /governance-graph/"],
+  ["/world-data", "canonical: /governance-graph/"],
+  ["/privacy", "canonical: /privacy-policy/"],
+  ["/legal/privacy", "canonical: /privacy-policy/"],
+  ["/agents-network", "canonical: /network/"],
+  ["/eu-ai-act-faq", "canonical: /ai-act-faq/"],
+  ["/ai-act-timeline", "canonical: /eu-ai-act-timeline/"],
+  ["/ailuminate", "canonical: /gspc-vs-ailuminate/"],
+  ["/competitors", "canonical: /battlecards/"],
+  ["/trust", "canonical: /boards/mcp/"],
+  ["/checklist", "canonical: /eu-ai-act-checklist/"],
+  ["/legal/disclaimers", "canonical: /disclaimers/"],
+  ["/guides/eu-ai-act", "canonical: /eu-ai-act/"],
+  ["/frequently-asked-questions", "canonical: /faq/"],
+  ["/fines", "canonical: /penalties/"],
+  ["/foundation-models", "canonical: /gpai/"],
+  ["/framework-temples", "canonical: /temples/"],
+  ["/regulation-tracker", "canonical: /global-regulations/"],
+  ["/how", "canonical: /how-it-works/"],
+  ["/industry-solutions", "canonical: /industries/"],
+  ["/industry-playbooks", "canonical: /playbooks/"],
+  ["/iso-eu", "canonical: /iso-42001-vs-eu-ai-act/"],
+  ["/tracks", "canonical: /learn/"],
+  ["/legal/licensing", "canonical: /licensing-agreement/"],
+  ["/legal/membership", "canonical: /membership-agreement/"],
+  ["/voice", "canonical: /minds/"],
+  ["/nist-eu", "canonical: /nist-vs-eu-ai-act/"],
+  ["/sector-atlas", "canonical: /sectors/"],
+  ["/meok-law", "canonical: /law/"],
+  ["/csoai-law", "canonical: /law/"],
+  ["/eu-ai-act-explained", "canonical: /ai-act-summary/"],
+  ["/ai-act-vs-gdpr", "canonical: /eu-ai-act-vs-gdpr/"],
+  ["/ai-glossary", "canonical: /glossary/"],
+  ["/ai-governance-guide", "canonical: /ai-governance/"],
+  ["/aug-2026", "canonical: /readiness/"],
+  ["/cobol", "canonical: /cobolbridge/"],
+  ["/open-media", "canonical: /commons/"],
+  ["/connect-ai", "canonical: /connect-gspc/"],
+  ["/framework-crosswalks", "canonical: /crosswalks/"],
+  ["/drift-product", "canonical: /drift-audit/"],
+  ["/white-label", "canonical: /embed/"],
+  ["/legal/founding-council", "canonical: /founding-council-agreement/"],
+  ["/guides/iso-42001", "canonical: /iso-42001/"],
+  ["/guides/nist-ai-rmf", "canonical: /nist-ai-rmf/"],
+  ["/guides/tc260", "canonical: /tc260/"],
+  ["/help-center", "canonical: /help/"],
+  ["/high-risk-ai", "canonical: /high-risk-ai-systems/"],
+  ["/rediscovered", "canonical: /lineage/"],
+  ["/relevance-map", "canonical: /map/"],
+  ["/map-regions", "canonical: /regions/"],
+  ["/mcp-tools", "canonical: /tool-commons/"],
+  ["/prosperity", "canonical: /prosperity-fund/"],
+  ["/real-world", "canonical: /world-3d/"],
+  ["/regulator-atlas", "canonical: /regulators/"],
+  ["/x402-leaderboard", "canonical: /x402-board/"],
+  // Anonymous full-sitemap crawl on 2026-09-24: these served 200 but declared
+  // noindex. They remain reachable for users and evidence history, not search.
+  ...["/compliance-training-world/bond-quest", "/compliance-training-world/insurance-quest",
+      "/embed/spray-demo", "/embed/verify", "/grants/ford-foundation", "/grants/ngi-zero",
+      "/grants/nlnet-ngi0-entrust", "/grants/sloan-foundation", "/gspc-leaderboard",
+      "/livecam", "/mcpbench", "/ossbench", "/paper-district", "/pqcbench",
+      "/regulator-console", "/swarmbench", "/visual-board", "/visual-verify"]
+    .map((p) => [p, "noindex: served page"]),
+  ["/legal/terms", "canonical: /terms-of-service/"],
+  ["/terms", "canonical: /terms-of-service/"],
+]);
+// These captured copies self-canonicalise to third-party owners. Other
+// /mirrors/ pages are original CSOAI evidence and must stay listed.
+const CROSS_CANONICAL_MIRRORS = new Set(
+  ["118", "120", "129", "14", "195", "2", "246", "250", "262", "286", "347"]
+    .map((id) => `/interop/stablecoin-deep-2026-09/mirrors/${id}`),
+);
+const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") ||
+  CROSS_CANONICAL_MIRRORS.has(p.replace(/\/+$/, "")) ||
+  p.startsWith("/interop/rwa-reconciliation-2026-09/mirrors/rwa-xyz-");
+
+// Prerendered as <path>/index.html with no bare->slash rule in _redirects, so Pages answers the
+// bare form with a 308. Emit the served form.
+const SLASH_FAMILIES = [/^\/library\/[a-z0-9-]+$/, /^\/vs\/[a-z0-9-]+$/];
+const servedForm = (p) => (SLASH_FAMILIES.some((re) => re.test(p)) ? `${p}/` : p);
+
 // --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
 // prime agent/AEO citation surface. Kept here so regeneration never drops them.
 const MACHINE_PATHS = [
@@ -551,16 +670,18 @@ for (const sp of collectStaticPages(join(ROOT, "public"))) {
 console.log(`[sitemap] static public/*.html pages considered: +${staticAdded} before canonicalise`);
 
 // --- Emit XML ---------------------------------------------------------------
-const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
 let rewritten = 0;
 let droppedRedirect = 0;
+let delisted = 0;
 const finalPaths = [];
 const finalSeen = new Set();
 for (const p of paths) {
-  const c = canonicalise(p);
-  if (c === null) { droppedRedirect++; continue; }
+  const c0 = canonicalise(p);
+  if (c0 === null) { droppedRedirect++; continue; }
+  if (isDelisted(c0)) { delisted++; continue; }
+  const c = servedForm(c0);
   if (c !== p) rewritten++;
   // Distinct source routes can canonicalise to the same served URL. For example,
   // the React route /benchmarks and public/benchmarks/index.html both resolve to
@@ -579,7 +700,6 @@ const urls = finalPaths
     return [
       "  <url>",
       `    <loc>${loc}</loc>`,
-      `    <lastmod>${today}</lastmod>`,
       `    <changefreq>${cf}</changefreq>`,
       `    <priority>${pr}</priority>`,
       "  </url>",
@@ -597,10 +717,10 @@ writeFileSync(OUT, xml);
 console.log(
   `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
     `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ${skippedAlias} client-side <Redirect> aliases, ` +
-    `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
+    `${droppedRedirect} redirect-to-elsewhere, ${delisted} delisted (noindex or canonical elsewhere), ${blogUnbuilt} unbuilt blog slugs (404), ` +
     `${blogSkipped} redirected or withdrawn blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
-    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
+    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=omitted)`
 );
 
 // Flagship sanity check — these MUST be present.
