@@ -401,10 +401,10 @@
         "http"
       ],
       "title": "Body state",
-      "description": "/api/body-state — per-workflow last run / last success / last failure.",
+      "description": "/api/body-state — live route reporting the retired GitHub Actions run-history source; no current workflow timestamps.",
       "endpoint": "/api/body-state",
       "method": "GET",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
     },
