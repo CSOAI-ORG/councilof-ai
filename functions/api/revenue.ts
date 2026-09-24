@@ -49,11 +49,13 @@ export type RevenueEnv = {
 // facilitator was provisioned (2026-09-03) this endpoint said "live" in one field and "mock" in
 // another, on the same payload, about money. Same defect, second field. A note about the rail
 // reads itself off railMode(env); counters.json keeps the doctrine and nothing about the env.
+// A rail clause must not assert that a metric is null: recorded settlements can leave a
+// non-null count even when the current configuration changes.
 function withRailState(env: RevenueEnv, canonNote: string | undefined): string {
   const r = railMode(env);
-  const rail = r.facilitator_configured
-    ? `x402 rail: ${r.mode} — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.`
-    : `x402 rail: ${r.mode} — no facilitator is provisioned, so no receipt can settle and this count is honestly null.`;
+  const rail = r.mode === "live"
+    ? `x402 rail: ${r.mode} — a facilitator is provisioned; settled receipts can be counted when recorded.`
+    : `x402 rail: ${r.mode} — no live settlement path is configured; new receipts cannot settle through this configuration.`;
   return [(canonNote || "").trim(), rail].filter(Boolean).join(" ");
 }
 
@@ -299,11 +301,11 @@ export async function buildRevenue(env: RevenueEnv) {
         "Counts read from counters.json (the counter canon) and, where bound, the REVENUE_KV " +
         "tallies. Nothing is fetched over HTTP and no count is typed by hand.",
       null_rule:
-        `A count is null, never 0, when there is no source. The x402 rail is currently ` +
+        `A count is null, never 0, when its source has no measured value. The x402 rail is currently ` +
         `${railMode(env).mode}` +
-        (railMode(env).facilitator_configured
-          ? ` — a facilitator is provisioned, so a settled receipt can be counted; every count stays null until one settles.`
-          : ` — no facilitator is provisioned, so no receipt can settle and every count is honestly null.`),
+        (railMode(env).mode === "live"
+          ? ` — a facilitator is provisioned; settled receipts can be counted when recorded.`
+          : ` — no live settlement path is configured; new receipts cannot settle through this configuration.`),
       north_of_truth:
         "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on " +
         "Base, single-use. Chain adjudicates, not the CRM.",
