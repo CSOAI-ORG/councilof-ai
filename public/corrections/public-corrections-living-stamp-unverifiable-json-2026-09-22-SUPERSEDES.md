@@ -1,0 +1,46 @@
+# Correction C-2026-0924-01: public/corrections/living-stamp-unverifiable.json lists 7 slots as UNMEASURED; the live board carries 0 UNMEASURED axes
+
+**Register id C-2026-0924-01. Promoted from draft D-2026-09-22T14-04.** Generated 2026-09-22T14:25:42Z by drift-draft.py on the pod. Not published, not merged, no ledger id.
+
+Kind: `typed_claim_disagrees` - fingerprint `d1520d8783752683`
+
+## The two byte-sources compared
+
+- **A** (typed): `public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged`  
+  sha256 `ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49` - as_of `2026-08-28T17:19:43+01:00` (last commit touching the file)
+- **B** (measured): `https://councilof.ai/api/gspc`  
+  sha256 `6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e` - as_of `behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25` (measured_on.date (prose, not compared as a timestamp))
+
+## The field that moved
+
+`unmeasured_slots_unchanged`
+
+```
+A: [
+ "ai-economy-index",
+ "custody-disclosure",
+ "distribution-integrity",
+ "human-labour-index",
+ "humanoid-labour-index",
+ "regulatory-framework",
+ "reserve-attestation"
+]
+B: []
+```
+
+## Why it matters
+
+A number typed on a static surface. The endpoint derives its count from the axis array (or the card index) at request time, so a typed copy goes stale the moment the measured surface moves. This loop records the disagreement; it does not establish why the copy was typed.
+
+## Proposed remedy (owner decides)
+
+PROPOSED, nothing has changed yet: supersede the stale surface with one that derives the value from the measured surface (or a dated note beside it naming the value at 2026-09-22T14:25:27Z); never edit signed or dated bytes in place. The owner decides the remedy on promotion; this draft records the disagreement only.
+
+## Reproduce
+
+```bash
+git show cb773b2f9894:public/corrections/living-stamp-unverifiable.json | sha256sum   # expect ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49
+curl -sS 'https://councilof.ai/api/gspc' | sha256sum   # expect 6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e
+```
+
+Measurement, not a mark of conformity. UNMEASURED and UNCHECKABLE stay first-class; nothing here is a grade.
