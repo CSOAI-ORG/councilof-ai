@@ -68,6 +68,7 @@ named 9 of the 25 registered jobs.
 | :40 | `drift-draft.sh` *(scheduler stamps)* | Snapshots the live surfaces (`/api/gspc`, `/api/state` corpora, every `/api/pop/{id}`, each door artifact in-repo **and** as served), diffs against the previous hour and against the typed claim surfaces, and writes a DRAFT correction per mismatch into the owner's approve-queue. **Never publishes.** | `logs/drift-draft.log` |
 | :45 | `trust-chain.sh` *(scheduler stamps)* | Upgrades every published `.ots` whose calendar has completed, rebuilds the OTS manifest from the bytes, and re-derives the corrections-ledger signature from the **served** bytes. One RESULT line per run including "nothing changed". On 2026-09-22, 547 of 603 published proofs read pending and 543 were already attested. **Supersedes the retired `ots.sh`** — see `scripts/pod-loops/superseded/`. | `logs/trust-chain.log` |
 | :50 | `mill-hourly-land.sh` | Merges every `mill/auto-<hour>` branch whose receipt says `rc=0` into master (`--no-ff`) in the merge clone, pushes to the bare repo, and queues one deploy. Branches with `rc!=0` are left for a human. | `logs/mill-hourly-land.log` |
+| :57 | `harness-outcomes.sh` *(scheduler stamps)* | Scores the `pod-measurement` harness from the signed cards on master: each card re-checked (id, Ed25519 signature, pinned bank) and appended once as a task-matched outcome by the Condor GSPC ingest (`/workspace/condor-gspc`). Scores the harness, never the model; signs, publishes and spends nothing. | `logs/harness-outcomes.log`, `out/harness/` |
 
 ### Daily
 

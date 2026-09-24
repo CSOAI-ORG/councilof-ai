@@ -120,6 +120,8 @@ while true; do
   if [ "${M#0}" -ge 10 ] && stamp mill-hourly hour;      then nohup bash "$LOOPS/mill-hourly.sh" --now 8>&- >/dev/null 2>&1 & fi
   # and forty minutes later land every finished slice into master and queue one deploy
   if [ "${M#0}" -ge 50 ] && stamp mill-hourly-land hour; then nohup bash "$LOOPS/mill-hourly-land.sh" --now 8>&- >/dev/null 2>&1 & fi
+  # :57 score the pod-measurement harness from master's signed cards (Condor GSPC ingest; scores the harness, never the model)
+  if [ "${M#0}" -ge 57 ] && stamp harness-outcomes hour; then nohup bash "$LOOPS/harness-outcomes.sh" 8>&- >/dev/null 2>&1 & fi
   if [ "${M#0}" -ge 35 ] && stamp arena-hourly hour;    then nohup bash "$LOOPS/arena-hourly.sh" --now 8>&- >/dev/null 2>&1 & fi
   # :40 drift? -> corrections AUTO-DRAFT -> owner approve-queue (never auto-publish); the stamp is the scheduler's, the script gets --now
   if [ "${M#0}" -ge 40 ] && stamp drift-draft hour;     then nohup bash "$LOOPS/drift-draft.sh" --now 8>&- >/dev/null 2>&1 & fi
