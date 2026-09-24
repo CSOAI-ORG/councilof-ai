@@ -1,7 +1,7 @@
 {
  "DRAFT": true,
  "schema": "csoai.corrections-draft/0.1",
- "status": "DRAFT - owner approval required",
+ "status": "WITHDRAWN by its author before promotion - the correction it proposed was wrong",
  "draft_id": "D-FIX-2026-0924-01",
  "not_published": "Never merged or published by this lane. Only the owner promotes a draft, and no ledger id is assigned until they do.",
  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -22,12 +22,23 @@
     "method": "for every public/interop/mill-cards-signed/signed-*.json produced by the pod mill, compare body.compute_evidence.bank_sha256 with the axis entry in scripts/runpod_gspc_bank_allowlist.current.json",
     "placeholder_bank_sha256": "f0f31f9a556266ce6f06660440b5ff819a19ee0b7801d72e78020a1ceda3a66e",
     "cards_on_placeholder_bank": 33,
-    "superseded_before_2026-09-22T15:30Z": {"total": 25, "via_1155": 21, "via_2026-09-09_run": 4},
+    "superseded_before_2026-09-22T15:30Z": {
+     "total": 25,
+     "via_1155": 21,
+     "via_2026-09-09_run": 4
+    },
     "superseded_by_C-2026-0922-02": 8,
     "all_added_to_master_before": "2026-09-14T15:29Z (git log --diff-filter=A)",
-    "the_four_not_counted": ["signed-jail-71eb4412d064.json", "signed-jail-37e18c321859.json", "signed-jail-37d590185313.json", "signed-jail-4171b09be9b1.json"],
+    "the_four_not_counted": [
+     "signed-jail-71eb4412d064.json",
+     "signed-jail-37e18c321859.json",
+     "signed-jail-37d590185313.json",
+     "signed-jail-4171b09be9b1.json"
+    ],
     "reproduce": "Condor branch csoai/gspc-harness-fabric-20260924: scripts/gspc_ingest_pod_outcomes.py --dry-run --cards public/interop/mill-cards-signed --allowlist scripts/runpod_gspc_bank_allowlist.current.json  -> failed_by_check.bank_pinned = 33"
    }
   }
- ]
+ ],
+ "withdrawn_at": "2026-09-24T15:40:00Z",
+ "withdrawal": "Checked from public bytes only before promotion (SUPERSEDED.jsonl -> every signed-jail-*.json it names, fetched from councilof.ai, ids recomputed, signatures verified under the live did.json). 33 jail cards carry the placeholder bank digest f0f31f9a...; 32 carry status MEASURED (accuracy 0.0 to 0.9487) and one, signed-jail-93152fee78d0.json (llama3.2:3b, n=2, accuracy 0.5), carries status UNMEASURED. C-2026-0922-02 counts the cards that 'carried status MEASURED', so its 32, its 24 already superseded (21 by another placeholder card) and its 8 live cells are all correct. This draft's '25 superseded' double-counted the four 2026-09-09 replacements, which are themselves among the 21. The harness check's 33 answers a different question - which cards were produced on a bank that is not the pinned one, whatever their status - and is labelled as such in the Condor fabric doc. Nothing to correct in the ledger."
 }
