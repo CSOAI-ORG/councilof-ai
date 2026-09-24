@@ -1050,18 +1050,18 @@
     },
     "/api/body-state": {
       "get": {
-        "description": "/api/body-state \u2014 per-workflow last run / last success / last failure.",
+        "description": "/api/body-state \u2014 retired GitHub Actions run-history observer; see /api/worker and /api/observability for current separate surfaces.",
         "operationId": "get__api_body-state",
         "responses": {
-          "503": {
+          "200": {
             "content": {
               "application/json": {}
             },
-            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+            "description": "SOURCE_RETIRED \u2014 no current per-workflow timestamps are asserted"
           }
         },
-        "summary": "/api/body-state \u2014 per-workflow last run / last success / last failure.",
-        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+        "summary": "/api/body-state \u2014 retired GitHub Actions run-history observer; see /api/worker and /api/observability for current separate surfaces.",
+        "x-csoai-lifecycle": "SOURCE_RETIRED"
       }
     },
     "/api/cards": {

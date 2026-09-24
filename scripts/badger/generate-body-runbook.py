@@ -86,7 +86,7 @@ def main() -> None:
 
     md += [
         "",
-        "## Pipeline the workflows serve",
+        "## Pipeline represented by this historical workflow inventory",
         "",
         "request (free door/402) → measure → sign → flip → anchor → deliver → ledger → report",
         "",
@@ -104,7 +104,9 @@ def main() -> None:
         "1. `cadence` is read from the workflow's own `schedule:`/`periodic:` block — if a stage shows",
         "   'on push / manual' it was never scheduled; that is honest, not a gap.",
         "2. `trigger` is the `on:` key. `schedule` workflows only run at their cron.",
-        "3. Live status per workflow: `curl https://councilof.ai/api/body-state` (last run, last success, last failure).",
+        "3. These GitHub workflow definitions are historical inventory, not evidence that they currently run.",
+        "   The retired GitHub observer is /api/body-state. Current RunPod compute state is /api/worker;",
+        "   served-artifact freshness is separately reported by /api/observability.",
         "",
         "## Stage truth",
         "",
