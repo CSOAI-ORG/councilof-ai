@@ -36,7 +36,21 @@ for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/ar
 done
 [ "$merged" -gt 0 ] || log mill-hourly-land "nothing to land (no unmerged mill/auto-* or arena/auto-* with a receipt)"
 if [ "$merged" -gt 0 ]; then
-  git push -q origin master && log mill-hourly-land "pushed master $(git rev-parse --short HEAD) ($merged slice(s))"
+  # The :45 trust-chain branch scanned master BEFORE this :50 landing. Rebuild the
+  # manifest from the newly merged root/proof bytes before master can be served.
+  # A failed producer or binding check holds the push and the queued deploy.
+  python3 scripts/ots_guard.py >"$LOGS/mill-hourly-ots-guard.log" 2>&1 || {
+    log mill-hourly-land "HOLD invalid OTS proof; no push or deploy"; exit 1; }
+  python3 scripts/ots_manifest_rebuild.py --apply >"$LOGS/mill-hourly-ots-manifest.log" 2>&1 || {
+    log mill-hourly-land "HOLD OTS manifest rebuild failed; no push or deploy"; exit 1; }
+  python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public >"$LOGS/mill-hourly-root-ots-gate.log" 2>&1 || {
+    log mill-hourly-land "HOLD latest root absent from OTS manifest; no push or deploy"; exit 1; }
+  git add -- public/interop/ots/manifest.json
+  if ! git diff --cached --quiet -- public/interop/ots/manifest.json; then
+    git -c user.name=CSOAI -c user.email=nicholas@csoai.org commit -q -m       "ots: rebuild proof manifest after hourly root landing" || exit 1
+  fi
+  git push -q origin master || { log mill-hourly-land "HOLD master push failed; no deploy"; exit 1; }
+  log mill-hourly-land "pushed master $(git rev-parse --short HEAD) ($merged slice(s), OTS manifest checked)"
   nohup bash "$LOOPS/deploy-when-idle.sh" > "$LOGS/deploy-when-idle.log" 2>&1 < /dev/null &
   # the hub surface (/api/hub-cards) reads HF gspc-hub-cards + hub-queue, not the repo: flip after every landing
   bash "$LOOPS/hub-flip.sh" >> "$LOGS/hub-flip.log" 2>&1 && log mill-hourly-land "hub flip ok" || log mill-hourly-land "hub flip FAILED (see logs/hub-flip.log)"

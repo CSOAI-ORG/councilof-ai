@@ -14,6 +14,10 @@ echo "  sitemap-source ok" | tee -a "$LOG"
 # Required exact-byte root-witness gate. No stale proof aliases pass into another release.
 /usr/bin/python3 scripts/root-witness-release-gate.py --phase candidate --public-dir public >/workspace/ci/root-witness-candidate.log 2>&1 || { echo "  root-witness-candidate FAILED; upload blocked" | tee -a "$LOG"; exit 11; }
 echo "  root-witness-candidate ok" | tee -a "$LOG"
+# The mill may land a new root after the :45 trust-chain pass. Refuse a
+# pointer whose exact OTS sidecar is missing from the manifest in this ref.
+/usr/bin/python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir public >/workspace/ci/root-ots-source.log 2>&1 || { echo "  root-ots-source FAILED; upload blocked" | tee -a "$LOG"; exit 14; }
+echo "  root-ots-source ok" | tee -a "$LOG"
 # Always rebuild (22 Sep 2026): a ref change with a stale dist/ shipped Functions from the new ref over static files from the old one.
 rm -rf dist/client; npm ci --no-audit --no-fund --loglevel=error >/dev/null 2>&1; npm run build:client >/workspace/ci/build.log 2>&1 && echo "  build ok: $(find dist/client -type f | wc -l) files" | tee -a $LOG || { echo "  build FAILED" | tee -a $LOG; tail -5 /workspace/ci/build.log; exit 4; }
 t0=$(date +%s)
@@ -53,5 +57,9 @@ PYW
 # Recheck the actual built sitemap and the four served-only/protected pages.
 /usr/bin/python3 /workspace/csoai-scale-engine/release_guard/sitemap_guard.py --public-dir dist/client --baseline /workspace/csoai-scale-engine/release_guard/sitemap-known-public.json --receipt /workspace/ci/sitemap-built-check.json --built >/workspace/ci/sitemap-built-check.log 2>&1 || { echo "  sitemap-built FAILED; upload blocked" | tee -a "$LOG"; exit 13; }
 echo "  sitemap-built ok" | tee -a "$LOG"
+# Recheck the exact tree about to upload. Prerender must not drop or rewrite
+# the pointer, root, proof, or the manifest row binding all three.
+/usr/bin/python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir dist/client >/workspace/ci/root-ots-built.log 2>&1 || { echo "  root-ots-built FAILED; upload blocked" | tee -a "$LOG"; exit 14; }
+echo "  root-ots-built ok" | tee -a "$LOG"
 npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true >/workspace/ci/wrangler-deploy.log 2>&1 && echo "  DEPLOYED: $(grep -oE "https://[a-z0-9]+\.councilof-ai\.pages\.dev" /workspace/ci/wrangler-deploy.log | tail -1)" | tee -a $LOG || { echo "  deploy FAILED" | tee -a $LOG; tail -4 /workspace/ci/wrangler-deploy.log | sed "s/^/    /"; exit 8; }
 echo "=== done $(date -u +%FT%TZ)" | tee -a $LOG
