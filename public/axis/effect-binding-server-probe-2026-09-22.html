@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>A dated MCP boundary test: 261 verdicts from 600 server attempts · Council of AI</title>
-  <meta name="description" content="CSOAI probed 600 public remote MCP servers, obtained 261 bounded effect-binding verdicts, and published the instrument, exclusions, raw responses, and an Ed25519-signed run envelope." />
+  <meta name="description" content="CSOAI probed 600 public remote MCP servers, obtained 261 bounded effect-binding verdicts, and published the instrument, exclusions, bounded results, and an Ed25519-signed run envelope." />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://councilof.ai/axis/effect-binding-server-probe-2026-09-22" />
   <meta property="og:type" content="article" />
@@ -49,7 +49,7 @@
       <header>
         <p class="eyebrow">GSPC · Method and evidence</p>
         <h1>A dated MCP boundary test: 261 verdicts from 600 server attempts</h1>
-        <p class="dek">A read-only probe tested whether public remote MCP servers refused one undocumented tool argument. The signed result is reproducible from the published instrument and logs, with the unanswered cases kept visible.</p>
+        <p class="dek">A read-only probe tested whether public remote MCP servers refused one undocumented tool argument. The signed run, method and exclusions are available for inspection, with the unanswered cases kept visible.</p>
         <p class="meta">Run date: <time datetime="2026-09-22">22 September 2026</time> · CSOAI Ltd</p>
       </header>
 
@@ -80,7 +80,7 @@
       <p>The other <strong>339</strong> attempts received no binding verdict. Every authenticated service was excluded by rule, so the verdict set is biased toward services that answer anonymous requests. Replay was not exercised: none of the 349 eligible tool calls exposed the nonce-like field that would have triggered that part of the instrument. One day, one RunPod network vantage point, and only one read-only tool per server (a second candidate if the first baseline failed) do not support fleet-wide or longitudinal conclusions.</p>
 
       <h2>How to inspect the evidence</h2>
-      <p>The <a href="https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.json">run artifact</a> records the selection rule, denominator, controls, exclusions, definitions, and each server response classification. The <a href="https://huggingface.co/datasets/csoai/councilof-ai-mirror/tree/255760cc11c4e7909d684476edbcf4c7cde3eff3/public/interop/effect-binding-server-probe-2026-09-22.code">instrument code</a> and <a href="https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/255760cc11c4e7909d684476edbcf4c7cde3eff3/public/interop/effect-binding-server-probe-2026-09-22.log.jsonl">raw request/response log</a> are at a pinned Hugging Face revision. Positive and negative controls ran before public probes; an injected grader defect changed the control verdict as expected. A later tightening of the returned-evidence rule regraded two rows from the recorded bytes, without rerunning them.</p>
+      <p>The <a href="https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.json">run artifact</a> records the selection rule, denominator, controls, exclusions, definitions, and each server response classification. The <a href="https://huggingface.co/datasets/csoai/councilof-ai-mirror/tree/255760cc11c4e7909d684476edbcf4c7cde3eff3/public/interop/effect-binding-server-probe-2026-09-22.code">instrument code</a> is at a pinned Hugging Face revision. The raw response transcript is under redaction review because it may contain session headers and other third-party data; use the run artifact and signed envelope for the public result. Positive and negative controls ran before public probes; an injected grader defect changed the control verdict as expected. A later tightening of the returned-evidence rule regraded two rows from the recorded bytes, without rerunning them.</p>
       <p>At 08:06 UTC on 22 September, the existing board key signed an <a href="https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json">Ed25519 envelope</a> that binds this result to the run file and raw-log SHA-256 digests. The run file itself still says <code>signed:false</code> because it was produced before that separate signature; its historical bytes were not rewritten. We checked the envelope against <a href="https://csoai.org/.well-known/did.json"><code>did:web:csoai.org#board-attestation-1</code></a>, and the pinned file and log digests match. <strong>Bitcoin-root inclusion or anchoring of this probe has not been verified.</strong> A valid signature proves which bytes the board key signed, not that every interpretation of those bytes is true.</p>
 
       <h2>Where it sits in GSPC</h2>
