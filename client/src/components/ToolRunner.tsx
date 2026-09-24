@@ -1083,7 +1083,9 @@ export default function ToolRunner({
                   {busy
                     ? "Calling POST /mcp…"
                     : isPaidTool(active)
-                      ? "Call metered path"
+                      ? typeof draft.x_payment === "string" && draft.x_payment.trim()
+                        ? "Submit signed payment"
+                        : "Check terms · no payment"
                       : "Run tool"}
                 </button>
               </form>
@@ -1139,9 +1141,20 @@ export default function ToolRunner({
                       </button>
                     </div>
                   </header>
-                  <pre className="max-h-[30rem] overflow-auto bg-[#04120c] p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
-                    <code>{output.result.text}</code>
-                  </pre>
+                  {output.result.text.length > 4000 ? (
+                    <details className="bg-[#04120c]">
+                      <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-emerald-50">
+                        View complete machine response ({output.result.text.length.toLocaleString()} characters)
+                      </summary>
+                      <pre className="max-h-[30rem] overflow-auto p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
+                        <code>{output.result.text}</code>
+                      </pre>
+                    </details>
+                  ) : (
+                    <pre className="max-h-[30rem] overflow-auto bg-[#04120c] p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
+                      <code>{output.result.text}</code>
+                    </pre>
+                  )}
                   <footer className="border-t border-slate-900/10 bg-slate-50 px-4 py-2.5 text-[10px] leading-relaxed text-slate-600">
                     Source:{" "}
                     <code className="font-mono">POST {MCP_RPC_ENDPOINT}</code> ·
