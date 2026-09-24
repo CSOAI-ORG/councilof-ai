@@ -10,7 +10,7 @@ from GET /api/gspc and the repository's own file tree. Nothing numeric is typed 
     python3 scripts/hf/hf-org-card.py --hubcard csoai/x402-bazaar-census [...]   # refresh the 16-point block on a dataset
 
 Two idempotent blocks, each replaced between its own markers and never appended twice:
-    <!-- csoai-live-board --> … <!-- /csoai-live-board -->   the derived 22-axis table (Spaces + board datasets)
+    <!-- csoai-live-board --> … <!-- /csoai-live-board -->   the live-derived axis table (Spaces + board datasets)
     <!-- csoai-hubcard-v2 --> … <!-- /csoai-hubcard-v2 -->   the 16-point rubric block (every card)
 
 The ONE living Space rule: this script never creates a Space or a repo. The viewer rule: a
@@ -568,6 +568,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "Status words: `LOADING` / `UNREACHABLE` / `UNMEASURED` / `UNCHECKABLE`.",
         "",
         f"**Lid:** {d['lid']}" if d["state"] == "DERIVED" else f"**Lid:** UNCHECKABLE — `GET {API}` did not answer at {as_of}.",
+        "A public leader score is a published field, not proof of a separated leader; read each row's status and separation.",
         "",
         f"**This repository:** {ONE_LINERS.get(repo, GENERIC_ONE_LINER)}",
         "",
@@ -805,7 +806,7 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
         "## Files",
         "",
         "| file | what |", "|---|---|",
-        "| `board.parquet` | the 22 derived rows — the only file the viewer reads |",
+        f"| `board.parquet` | the {len(rows)} derived rows — the only file the viewer reads |",
         "| `board.jsonl` | the same rows, one JSON object per line |",
         "| `manifest.jsonl` | sha256 + byte length of the derived files, with the as_of |",
         "| `axis-register.json`, `board-axes.json` | axis register and slot list, mirrored from the live API |",
@@ -818,7 +819,9 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
         "Verify a card free at <https://councilof.ai/gspc-verify>; the signed Merkle root is <https://councilof.ai/root.json>; "
         f"every CSOAI repo is at <https://huggingface.co/csoai>; the methodology DOI is <https://doi.org/{DOI}>.",
         "",
-        f"**Lid:** {d['lid']}",
+        f"**Lid:** this dated export records {len(rows)} axis rows. "
+        "For current measured counts and separated leaders, read the live board; "
+        "TIE and UNTESTED are not wins. Measurement, not certification.",
         "",
         "## Citation", "", "```bibtex", "@misc{csoai_dataset_gspc_board,",
         "  title        = {GSPC Board Export — Council of AI / GSPC},", "  author       = {{CSOAI Ltd}},",
