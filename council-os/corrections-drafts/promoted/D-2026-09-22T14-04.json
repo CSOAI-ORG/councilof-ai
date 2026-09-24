@@ -1,0 +1,66 @@
+{
+ "DRAFT": true,
+ "brand_gate_redactions": 0,
+ "corrections": [
+  {
+   "date": "2026-09-22",
+   "evidence": [
+    "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged",
+    "https://councilof.ai/api/gspc",
+    "drift-draft/snapshots/2026-09-22T14.json"
+   ],
+   "first_observed_at": "2026-09-22T14:25:27Z",
+   "id": "D-2026-09-22T14-04",
+   "note": "DRAFT - owner approval required. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint d1520d8783752683; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
+   "reached_the_public": true,
+   "what_changed": "PROPOSED, nothing has changed yet: supersede the stale surface with one that derives the value from the measured surface (or a dated note beside it naming the value at 2026-09-22T14:25:27Z); never edit signed or dated bytes in place. The owner decides the remedy on promotion; this draft records the disagreement only.",
+   "what_was_wrong": "public/corrections/living-stamp-unverifiable.json reads unmeasured_slots_unchanged = [\"ai-economy-index\", \"custody-disclosure\", \"distribution-integrity\", \"human-labour-index\", \"humanoid-labour-index\", \"regulatory-framework\", \"reserve-attestation\"] while the compared surface reads []. Source A: public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged (sha256 ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49; as_of 2026-08-28T17:19:43+01:00 = last commit touching the file). Source B: https://councilof.ai/api/gspc (sha256 6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e; as_of behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25 = measured_on.date (prose, not compared as a timestamp)). Compared at 2026-09-22T14:25:27Z (snapshot 2026-09-22T14).",
+   "why_it_was_wrong": "A number typed on a static surface. The endpoint derives its count from the axis array (or the card index) at request time, so a typed copy goes stale the moment the measured surface moves. This loop records the disagreement; it does not establish why the copy was typed."
+  }
+ ],
+ "draft_id": "D-2026-09-22T14-04",
+ "drift": {
+  "field": "unmeasured_slots_unchanged",
+  "fingerprint": "d1520d8783752683",
+  "kind": "typed_claim_disagrees",
+  "now": [],
+  "severity": "draft",
+  "sources": [
+   {
+    "as_of": "2026-08-28T17:19:43+01:00",
+    "as_of_field": "last commit touching the file",
+    "commit": "cb773b2f9894e5bc80091a6551e09c9354887255",
+    "locator": "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged",
+    "path": "public/corrections/living-stamp-unverifiable.json",
+    "role": "typed",
+    "sha256": "ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49"
+   },
+   {
+    "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+    "as_of_field": "measured_on.date (prose, not compared as a timestamp)",
+    "http_status": 200,
+    "locator": "https://councilof.ai/api/gspc",
+    "role": "measured",
+    "sha256": "6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e"
+   }
+  ],
+  "subject": "public/corrections/living-stamp-unverifiable.json",
+  "summary": "public/corrections/living-stamp-unverifiable.json lists 7 slots as UNMEASURED; the live board carries 0 UNMEASURED axes",
+  "was": [
+   "ai-economy-index",
+   "custody-disclosure",
+   "distribution-integrity",
+   "human-labour-index",
+   "humanoid-labour-index",
+   "regulatory-framework",
+   "reserve-attestation"
+  ]
+ },
+ "generated_at": "2026-09-22T14:25:42Z",
+ "generator": "drift-draft.py (pod, hourly :40)",
+ "license": "CC-BY-4.0",
+ "not_published": "never merged or published by drift-draft; promote-draft.sh <id> is the owner's approve step",
+ "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+ "schema": "csoai.corrections/0.1",
+ "status": "DRAFT - owner approval required"
+}
