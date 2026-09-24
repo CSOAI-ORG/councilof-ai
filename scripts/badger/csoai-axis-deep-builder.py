@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""csoai-axis-deep-builder.py — generate the 22 per-axis deep reference pages.
+"""csoai-axis-deep-builder.py — generate per-axis deep reference pages.
 
-Lane-doable: reads /api/gspc, generates 22 public/axis/<slug>-deep.html
+Lane-doable: reads /api/gspc, generates public/axis/<slug>.html
 pages with the canonical lid, the family/kind/scope, the n value, the
 separation state, and a per-axis note explaining what it measures.
 
@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import html
 import json
 import subprocess
 import sys
@@ -56,6 +57,7 @@ AXIS_DESCRIPTIONS = {
     "ai-adoption-components": "Public statistical series — AI-adoption component breakdown. n=2, measured as component facts, never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05).",
     "labour-components": "Public statistical series — labour-market component breakdown. n=2.",
     "humanoid-labour-index": "Public statistical series — humanoid-labour component index. n=8.",
+    "effect-binding": "A dated, read-only boundary probe of remote MCP tool-call servers: whether an unauthorised extra argument is refused at the tool boundary. It does not observe backend effects or establish a vendor's security posture.",
 }
 
 AXIS_NOTES = {
@@ -125,13 +127,35 @@ def curl_json(url: str) -> object:
 
 def page(axis: dict) -> str:
     name = axis.get("axis", "?")
-    n = axis.get("n", 0)
+    n = axis.get("n")
     acc = axis.get("accuracy")
-    sep = axis.get("separation", "UNTRIED")
     family = AXIS_FAMILY.get(name, axis.get("family", "?"))
     kind = AXIS_KIND.get(name, axis.get("kind", "?"))
+    is_fact = kind == "deterministic-facts"
+    sep = axis.get("separation")
     description = AXIS_DESCRIPTIONS.get(name, "See the live board for the canonical definition.")
     note = AXIS_NOTES.get(name, "")
+    canonical = f"https://councilof.ai/axis/{name}"
+    n_unit = html.escape(str(axis.get("n_unit") or ("observations in this run" if is_fact else "frozen bank items")))
+    evidence_path = axis.get("evidence_url")
+    evidence_url = html.escape(f"https://councilof.ai{evidence_path}", quote=True) if isinstance(evidence_path, str) and evidence_path.startswith("/") else None
+    scope_note = html.escape(str(axis.get("n_note") or ""))
+    coverage_note = html.escape(str(axis.get("coverage_note") or ""))
+    scope_section = (
+        f'<h2>Scope and exclusions</h2><p>{scope_note}</p>'
+        + (f'<p>{coverage_note}</p>' if coverage_note else '')
+        if is_fact and scope_note else ''
+    )
+    stats = "" if is_fact else (
+        (f'<span class="pill">accuracy: {acc}</span>' if acc is not None else '')
+        + (f'<span class="pill">separation: {sep}</span>' if sep is not None else '')
+    )
+    numbers = (
+        f'<p><strong>n={n if n is not None else "unavailable"}</strong> {n_unit}. This is a count within the declared run scope, not a model-bank size, accuracy or statistical separation. Read the live row for exclusions and limitations.</p>'
+        if is_fact else
+        '<ul><li><strong>n</strong> is the number of frozen bank items in this model-comparison run.</li><li><strong>accuracy</strong> is the deterministic grade when present.</li><li><strong>separation</strong> is a separate statistical conclusion; TIE and UNTESTED are not wins.</li></ul>'
+    )
+    evidence_link = f'<a href="{evidence_url}">published run evidence</a>' if evidence_url else '<a href="https://councilof.ai/api/gspc">live board row</a>'
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -143,16 +167,16 @@ def page(axis: dict) -> str:
 <meta property="og:title" content="{name} · Council of AI axis" />
 <meta property="og:description" content="{description}" />
 <meta property="og:image" content="https://councilof.ai/og-image.png" />
-<meta property="og:url" content="https://councilof.ai/axis/{name}.html" />
+<meta property="og:url" content="{canonical}" />
 <meta property="og:type" content="article" />
-<link rel="canonical" href="https://councilof.ai/axis/{name}.html" />
+<link rel="canonical" href="{canonical}" />
 <script type="application/ld+json">
 {json.dumps({
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": f"GSPC axis: {name}",
     "description": description,
-    "url": f"https://councilof.ai/axis/{name}.html",
+    "url": canonical,
     "inLanguage": "en",
     "publisher": {"@type": "Organization", "name": "CSOAI Ltd", "url": "https://councilof.ai"},
     "license": "https://creativecommons.org/licenses/by/4.0/",
@@ -185,34 +209,31 @@ def page(axis: dict) -> str:
   <div class="meta">
     <span class="pill lid-pill">family: {family}</span>
     <span class="pill">kind: {kind}</span>
-    <span class="pill">n: {n}</span>
-    {f'<span class="pill">accuracy: {acc}</span>' if acc is not None else ''}
-    <span class="pill">separation: {sep}</span>
+    <span class="pill">n: {n if n is not None else 'unavailable'}</span>
+    {stats}
   </div>
 
   <h2>What this axis measures</h2>
   <p>{description}</p>
 
   <h2>Why it matters</h2>
-  <p>The GSPC board reports its count in the lid phrase — <strong>totals.public_count</strong>, read live. This axis is one of them; the live board at <code>GET /api/gspc</code> is the authority. Anything frozen or quoted is hearsay.</p>
+  <p>The GSPC board reports its current count in <strong>totals.public_count</strong>. A dated snapshot is useful for reproduction when its date and scope stay attached. Read the live board for the latest state.</p>
+
+  {scope_section}
 
   {f'<div class="note"><strong>Note.</strong> {note}</div>' if note else ''}
 
   <h2>What's NOT here</h2>
-  <p>This is a <strong>measurement</strong> axis, not a certification axis. The board never claims this model is "approved" or "compliant". A passing score is a public, signed record of what was measured, on which instrument, with which confidence interval — verifiable in your browser at <a href="https://councilof.ai/gspc-verify">/gspc-verify</a>.</p>
+  <p>This is <strong>measurement, not certification</strong>. A board row does not by itself prove a signature, Merkle-root inclusion, Bitcoin anchoring, a model approval or compliance. Check each evidence step separately.</p>
 
   <h2>The numbers</h2>
-  <ul>
-    <li><strong>n</strong> = the number of frozen item bank cells the model was scored against</li>
-    <li><strong>accuracy</strong> = the deterministic grade (only on model-comparison axes)</li>
-    <li><strong>separation</strong> = SEPARATED (one model is statistically the leader), TIE (multiple models tied), or UNTRIED (n too small)</li>
-  </ul>
+  {numbers}
 
   <h2>Verify this axis</h2>
-  <p>The live data is on <a href="https://councilof.ai/api/gspc">/api/gspc</a>. The canonical form is at <a href="https://councilof.ai/root.json">/root.json</a>. The witness receipts are at <a href="https://councilof.ai/signed/">/signed/</a>. The corrections ledger is at <a href="https://councilof.ai/api/corrections">/api/corrections</a>. The OTS anchor is at <a href="https://councilof.ai/api/state">/api/state</a>.</p>
+  <p>Read the <a href="https://councilof.ai/api/gspc">live board</a> and {evidence_link}. The <a href="https://councilof.ai/api/corrections">corrections ledger</a> records later changes. Signature verification and any root or OTS inclusion are distinct checks; none is inferred from this page.</p>
 
   <footer>
-    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · did:web:csoai.org#card-attestation-1</p>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a></p>
     <p style="margin-top:.5rem;font-style:italic;">Measurement, not certification. Anyone can re-check.</p>
   </footer>
 </main>
@@ -223,7 +244,7 @@ def page(axis: dict) -> str:
 
 def main():
     ap = argparse.ArgumentParser(description="Per-axis deep reference page builder.")
-    ap.add_argument("--axis", default=None, help="Single axis (default: all 22)")
+    ap.add_argument("--axis", default=None, help="Single axis (default: all live board axes)")
     args = ap.parse_args()
 
     print(f"=== PER-AXIS DEEP REFERENCE BUILDER ===")
