@@ -115,7 +115,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
-  "/signals/2026-09-24",
+  // /signals is an actively promoted evidence page. Without this exact path the
+  // global archive banner incorrectly says the current Signals page is superseded.
+  "/signals", "/signals/2026-09-24",
   "/benchmark-quality", "/mcps",
   // Promoted to a first-class Council OS read-only Watchdog destination.
   "/watchdog-hub",
