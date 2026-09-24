@@ -1,6 +1,6 @@
 # Correction C-2026-0924-01: public/corrections/living-stamp-unverifiable.json lists 7 slots as UNMEASURED; the live board carries 0 UNMEASURED axes
 
-**Register id C-2026-0924-01. Promoted from draft D-2026-09-22T14-04.** Generated 2026-09-22T14:25:42Z by drift-draft.py on the pod. Not published, not merged, no ledger id.
+**Register id C-2026-0924-01. Promoted from draft D-2026-09-22T14-04.** Generated 2026-09-22T14:25:42Z by drift-draft.py on the pod. Promoted and published 2026-09-24 with the owner's approval.
 
 Kind: `typed_claim_disagrees` - fingerprint `d1520d8783752683`
 
@@ -44,3 +44,7 @@ curl -sS 'https://councilof.ai/api/gspc' | sha256sum   # expect 6496ac94d3cadfff
 ```
 
 Measurement, not a mark of conformity. UNMEASURED and UNCHECKABLE stay first-class; nothing here is a grade.
+
+## Read on 2026-09-24
+
+The live board lists 23 axes, 0 unmeasured. Five of the seven slot names above are axes marked MEASURED. `ai-economy-index` and `human-labour-index` are retired names kept as dataset slugs; the axes are now `ai-adoption-components` and `labour-components`, both MEASURED. The 2026-08-28 note is not edited.
