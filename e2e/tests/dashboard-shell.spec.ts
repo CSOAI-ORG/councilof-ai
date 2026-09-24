@@ -110,7 +110,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= links", async ({
+test("sidebar exposes the twelve primary user jobs as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -130,6 +130,7 @@ test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= lin
     "/dashboard?tab=measured",
     "/dashboard?tab=verify",
     "/dashboard?tab=board",
+    "/dashboard?tab=evidence-index",
     "/dashboard?tab=swift",
     "/dashboard?tab=evidence",
     "/dashboard?tab=tools",
