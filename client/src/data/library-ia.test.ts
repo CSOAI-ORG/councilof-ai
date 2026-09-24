@@ -16,3 +16,14 @@ describe("live GSPC axis routes", () => {
     expect(isLibraried("/pdca")).toBe(true);
   });
 });
+
+describe("current legal terms", () => {
+  it("does not mark any operative Terms alias as an archived reference", () => {
+    expect(app).toContain('<Route path="/terms-of-service" component={TermsOfService} />');
+    expect(app).toContain('<Route path="/terms" component={TermsOfService} />');
+    expect(app).toContain('<Route path="/legal/terms" component={TermsOfService} />');
+    for (const path of ["/terms-of-service/", "/terms/", "/legal/terms/"]) {
+      expect(isLibraried(path)).toBe(false);
+    }
+  });
+});
