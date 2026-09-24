@@ -13,6 +13,7 @@ and when. Each of those carries its own evidence state. Nothing in the record ad
 | Schema | [`schema-v0.1.json`](schema-v0.1.json) (JSON Schema 2020-12) |
 | Test vectors | [`test-vectors/`](test-vectors/) — signed with published **TEST KEYS** only |
 | Example | [`examples/commission-397f2843.unsigned.json`](examples/commission-397f2843.unsigned.json) — one of our own self-test commissions, **unsigned** |
+| Crosswalk | [`CROSSWALK.md`](CROSSWALK.md) — where each field comes from in MCP elicitation, A2A task states, x402 (incl. offer-and-receipt), AP2 mandates, ERC-8004 and the AAIF trace model |
 | Reference verifier | `scripts/receipts/verify_receipt.py` (Python 3, `cryptography`) |
 
 The key words MUST, MUST NOT, SHOULD and MAY are to be read as in RFC 2119 / RFC 8174 when,
