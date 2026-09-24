@@ -122,18 +122,18 @@ export default function DashboardLayout({
 
   return (
     <div
-      className="flex h-dvh min-h-svh overflow-hidden bg-[var(--surface-canvas,#fafaf7)]"
+      className="flex h-dvh min-h-svh overflow-hidden bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.07),transparent_28%),var(--surface-canvas,#f7f8f4)]"
       data-testid="dashboard-shell"
     >
       {sidebarOpen ? (
         <aside
           className={cn(
-            "z-40 flex w-[17rem] shrink-0 flex-col border-r border-sidebar-border bg-sidebar",
+            "z-40 flex w-[17.5rem] shrink-0 flex-col border-r border-emerald-950/10 bg-white/95 shadow-[10px_0_30px_rgba(6,21,15,0.04)] backdrop-blur-xl",
             isSmall && "fixed inset-y-0 left-0 shadow-2xl",
           )}
           aria-label="Council of AI workspace navigation"
         >
-          <div className="flex h-[4.5rem] items-center justify-between border-b border-border px-4">
+          <div className="flex h-[4.75rem] items-center justify-between border-b border-emerald-950/10 bg-[linear-gradient(135deg,#f8fffb_0%,#f1faf5_100%)] px-4">
             <Link
               href="/dashboard?tab=home"
               className="min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -163,7 +163,7 @@ export default function DashboardLayout({
             ref={navRef}
             tabIndex={-1}
             aria-label="Workspace destinations"
-            className="min-h-0 flex-1 overflow-y-auto px-3 py-3"
+            className="min-h-0 flex-1 overflow-y-auto px-3 py-5"
           >
             {DASHBOARD_NAV_GROUPS.map((group) => (
               <section
@@ -189,9 +189,9 @@ export default function DashboardLayout({
                           if (isSmall) setSidebarOpen(false);
                         }}
                         className={cn(
-                          "relative flex min-h-10 items-center rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                          "relative flex min-h-10 items-center rounded-xl px-3 py-2.5 text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                           active
-                            ? "bg-[var(--surface-selection,#ecfdf5)] font-semibold text-emerald-950 before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--brand-institutional,#04624a)]"
+                            ? "bg-emerald-50 font-semibold text-emerald-950 shadow-[inset_0_0_0_1px_rgba(4,98,74,0.10)] before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--brand-institutional,#04624a)]"
                             : "text-muted-foreground hover:bg-accent hover:text-foreground",
                         )}
                       >
@@ -207,7 +207,7 @@ export default function DashboardLayout({
           <div className="border-t border-border p-3">
             <Link
               href="/dashboard?tab=explore"
-              className="mb-3 flex min-h-10 items-center rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent"
+              className="mb-3 flex min-h-11 items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm font-semibold text-emerald-950 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-100"
             >
               All tools
             </Link>
@@ -238,7 +238,7 @@ export default function DashboardLayout({
       ) : null}
 
       <Landmark className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <header className="flex h-[4.5rem] shrink-0 items-center justify-between gap-3 border-b border-border bg-card/95 px-3 sm:px-4">
+        <header className="flex h-[4.75rem] shrink-0 items-center justify-between gap-3 border-b border-emerald-400/15 bg-[#06150f]/[0.97] px-3 text-white shadow-[0_10px_30px_rgba(3,17,11,0.08)] backdrop-blur-xl sm:px-5">
           <div className="flex min-w-0 items-center gap-3">
             <Button
               ref={menuButtonRef}
@@ -252,15 +252,15 @@ export default function DashboardLayout({
                   ? "Close workspace navigation"
                   : "Open workspace navigation"
               }
-              className="h-10 w-10 shrink-0"
+              className="h-10 w-10 shrink-0 text-emerald-100 hover:bg-white/10 hover:text-white"
             >
               <Menu className="h-4 w-4" aria-hidden="true" />
             </Button>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-foreground">
+              <p className="truncate text-sm font-semibold text-emerald-50">
                 {activeLabel}
               </p>
-              <p className="truncate text-[11px] text-muted-foreground">
+              <p className="truncate text-[11px] text-emerald-100/55">
                 Council of AI · measure, sign, verify
               </p>
             </div>
@@ -272,7 +272,7 @@ export default function DashboardLayout({
                 size="icon"
                 onClick={toggleTheme}
                 aria-label="Toggle light or dark theme"
-                className="h-9 w-9"
+                className="h-9 w-9 text-emerald-100/80 hover:bg-white/10 hover:text-white"
               >
                 {theme === "dark" ? (
                   <Sun className="h-4 w-4" />
@@ -284,7 +284,7 @@ export default function DashboardLayout({
             <Link
               href={dashboardViewHref("/settings", "Settings")}
               aria-label="Open settings in workspace"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-emerald-100/75 transition hover:bg-white/10 hover:text-white"
             >
               <Settings className="h-4 w-4" aria-hidden="true" />
             </Link>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
 import SignedAgentTravel from "@/components/SignedAgentTravel";
 import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
@@ -66,51 +67,90 @@ export default function ToolsPage() {
   }, []);
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-16" data-testid="tools-mcp">
-      <h1 className="text-3xl font-black tracking-tight text-slate-900">
-        Use this in Claude / Cursor / Kimi / Grok
-      </h1>
-      <p className="mt-3 text-slate-600">
-        Ask: board totals. Paste a card to verify. HTTP <code>https://councilof.ai/mcp</code> lists{" "}
-        {ALL_TOOL_NAMES.length} tools: {FREE_TOOL_NAMES.length} free readers ({FREE_TOOL_NAMES.join(" · ")})
-        and {PAID_TOOL_NAMES.length} x402-metered evidence tools. <code>witness_hash</code> is
-        quarantined and is not advertised. A package or registry listing is not proof that a paid
-        route will settle or deliver. Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
-      </p>
-      <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
-      <pre className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
-        <code>{MCP_SNIPPET}</code>
-      </pre>
-      <button
-        type="button"
-        data-testid="copy-mcp-snippet"
-        className="mt-3 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(MCP_SNIPPET);
-            setCopied(true);
-          } catch {
-            setCopied(false);
-          }
-        }}
-      >
-        {copied ? "Copied" : "Copy the snippet"}
-      </button>
-      <p className="mt-6 text-slate-700">
-        A third party verifying a card is the signal.{" "}
-        <a className="font-semibold text-emerald-800 underline" href="/gspc-verify">
-          /gspc-verify
-        </a>{" "}
-        — paste a signed card; the browser recomputes Ed25519. Free. Not a certificate.
-      </p>
-      <ol className="mt-8 space-y-4">
-        {HOSTS.map((h) => (
-          <li key={h.name} className="rounded-xl border border-slate-200 bg-white p-4">
-            <div className="font-semibold text-slate-900">{h.name}</div>
-            <code className="mt-1 block text-[13px] text-slate-600">{h.how}</code>
-          </li>
+    <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16" data-testid="tools-mcp">
+      <div className="overflow-hidden rounded-[2rem] border border-emerald-400/15 bg-[#06150f] text-white shadow-[0_28px_80px_rgba(3,17,11,0.18)]">
+        <div className="grid gap-0 lg:grid-cols-[1.12fr_0.88fr]">
+          <div className="p-6 sm:p-8 lg:p-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200">
+              <PlugZap className="h-3.5 w-3.5" />
+              Agent tools · MCP endpoint
+            </div>
+            <h1 className="mt-5 max-w-3xl text-4xl font-black tracking-tight text-white sm:text-5xl">
+              Give your AI a verifiable evidence layer.
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-emerald-100/72">
+              Connect Council of AI to Claude, Cursor, Kimi, or Grok. Read the board, inspect evidence,
+              and verify signed records without turning a directory listing into a trust claim.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2 text-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
+                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
+                {FREE_TOOL_NAMES.length} free readers
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
+                <ShieldCheck className="h-4 w-4 text-emerald-300" />
+                client-side verification
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
+                <Terminal className="h-4 w-4 text-emerald-300" />
+                {ALL_TOOL_NAMES.length} listed tools
+              </span>
+            </div>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                data-testid="copy-mcp-snippet"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-[#03110b] transition hover:bg-emerald-300"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(MCP_SNIPPET);
+                    setCopied(true);
+                  } catch {
+                    setCopied(false);
+                  }
+                }}
+              >
+                <Copy className="h-4 w-4" />
+                {copied ? "Copied" : "Copy MCP config"}
+              </button>
+              <a
+                href="/gspc-verify"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/15 px-4 py-2.5 text-sm font-semibold text-emerald-50 transition hover:bg-white/10"
+              >
+                Verify a record <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+          <div className="border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection config</p>
+            <p className="mt-2 break-all font-mono text-xs text-emerald-100/65">{MCP_URL}</p>
+            <pre className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
+              <code>{MCP_SNIPPET}</code>
+            </pre>
+            <p className="mt-4 text-xs leading-5 text-emerald-100/55">
+              A package, registry listing, or successful connection proves discoverability only. It does not prove settlement,
+              delivery, or the truth of an underlying claim.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {HOSTS.map((h, index) => (
+          <div key={h.name} className="rounded-2xl border border-emerald-950/10 bg-white p-5 shadow-[0_10px_32px_rgba(6,21,15,0.04)]">
+            <div className="flex items-center justify-between gap-3">
+              <div className="font-bold text-slate-950">{h.name}</div>
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-700">0{index + 1}</span>
+            </div>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{h.how}</p>
+          </div>
         ))}
-      </ol>
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 text-sm leading-6 text-emerald-950">
+        <strong>Trust boundary:</strong> a third party verifying a signed record is meaningful evidence. Connecting an MCP server is not.
+        The browser verifier stays free and recomputes Ed25519 locally.
+      </div>
       <section aria-labelledby="badge-spec-h" className="mt-12">
         <h2 id="badge-spec-h" className="text-xl font-black tracking-tight text-slate-900">
           The three subject states — and the badge that is only a link

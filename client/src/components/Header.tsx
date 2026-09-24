@@ -81,7 +81,7 @@ export function Header() {
   if (hideChrome) return null;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 shadow-sm backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-emerald-950/10 bg-white/[0.94] shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
       <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <div className="flex h-14 items-center justify-between sm:h-16">
           <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
@@ -99,7 +99,8 @@ export function Header() {
                 <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
               </svg>
             </div>
-            <span className="whitespace-nowrap text-lg font-bold tracking-tight text-emerald-700 sm:text-xl 2xl:text-2xl">Council of AI</span>
+            <span className="whitespace-nowrap text-lg font-black tracking-tight text-emerald-800 sm:text-xl 2xl:text-2xl">Council of AI</span>
+            <span className="hidden 2xl:inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-emerald-800">measurement · not certification</span>
           </a>
 
           <div className="hidden md:flex items-center" ref={dropdownRef}>
@@ -205,7 +206,8 @@ export function Header() {
           </div>
 
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
-            <button onClick={() => setSearchOpen(true)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors" aria-label="Search">
+            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/gspc-verify">Verify</Link></Button>
+            <button onClick={() => setSearchOpen(true)} className="rounded-xl p-2 text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
             {user ? (
@@ -239,7 +241,7 @@ export function Header() {
                 {!loginlessVerify && (
                   <Button asChild variant="ghost" size="sm" className="text-muted-foreground font-medium"><Link href="/login">Sign In</Link></Button>
                 )}
-                <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm"><Link href="/assess">Request attestation</Link></Button>
+                <Button asChild size="sm" className="rounded-xl bg-emerald-700 font-semibold text-white shadow-sm hover:bg-emerald-800"><Link href="/assess">Request attestation</Link></Button>
               </>
             )}
           </div>
