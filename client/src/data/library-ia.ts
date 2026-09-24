@@ -58,6 +58,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // A current front-door page; unregistered it would ship the ArchivedBanner under the one
   // route that has to read as authoritative to a stranger who has never met us.
   "/claim-maintenance",
+  // /games/ruler — GAMES_SLATE slot 2, local-only practice over the frozen jail goldbank with
+  // published signed model answers. A current page; unregistered it would ship "archived".
+  "/games/ruler",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
