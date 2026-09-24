@@ -86,6 +86,12 @@ async function main() {
   const seriesDir = arg('series');
   const outPath = arg('out');
   const registryId = arg('registry-id', 'claimreg-ai-assurance-and-settlement-2026-09-23');
+  // A subjects file may name its own harness and its own registry-level statements. Each default
+  // below is the text this builder has always written, so a registry built without these keys is
+  // byte-identical to one built before they existed. A statement about signing, timestamping or
+  // sources that is true of one registry is not thereby true of another, so a second registry
+  // must be able to say what is true of IT rather than inherit the first one's sentences.
+  const HARNESS = defs.harness || 'scripts/claims/measure_growth.py';
 
   const prefetchMap = prefetchDir && existsSync(join(prefetchDir, 'index.json'))
     ? JSON.parse(readFileSync(join(prefetchDir, 'index.json'), 'utf8')) : {};
@@ -213,7 +219,7 @@ async function main() {
       if (cl.measurement) {
         measurementsReferenced[cl.measurement] = {
           state: m ? m.state : 'ABSENT',
-          harness_output: 'scripts/claims/measure_growth.py -> ' + cl.measurement + '.json',
+          harness_output: HARNESS + ' -> ' + cl.measurement + '.json',
           ...(m && m.state !== 'CLAIM_MEASURED' ? { why_not_attached: m.reason || 'harness did not report a measurement' } : {}),
           ...(m ? {} : { why_not_attached: 'the harness produced no output for this id in this run' }),
         };
@@ -227,7 +233,7 @@ async function main() {
           denominator: m.denominator ?? null,
           method: {
             description: m.method,
-            harness: 'scripts/claims/measure_growth.py :: ' + cl.measurement,
+            harness: HARNESS + ' :: ' + cl.measurement,
             measured_at: m.measured_at,
             evidence: (m.sources || m.detail?.sources || []).slice(0, 12),
           },
@@ -368,7 +374,7 @@ async function main() {
         + 'and uses no domain-separation prefixes; it is a separate structure over a separate corpus and '
         + 'the two are never added, reconciled or substituted for one another (spec 7.3).',
     },
-    boundaries: [
+    boundaries: defs.registry_boundaries || [
       'No claim of falsity is made about any party, anywhere in this file. Where a measurement differs '
       + 'from a claim, the claim, the measured value, the window, the denominator and the method are '
       + 'recorded and nothing further is said. The reader draws the conclusion; this maintainer does not.',
@@ -389,20 +395,20 @@ async function main() {
       + '(spec 10.6).',
     ],
     how_to_rerun: {
-      capture: 'node scripts/claims/capture-growth.mjs --subjects scripts/claims/subjects-2026-09-23.json '
+      capture: 'node scripts/claims/capture-growth.mjs --subjects ' + (defs.subjects_file || 'scripts/claims/subjects-2026-09-23.json') + ' '
         + '--measurements <dir> --out public/claims/' + registryId + '.json',
-      measure: 'python3 scripts/claims/measure_growth.py <dir>',
+      measure: 'python3 ' + HARNESS + ' <dir>',
       verify_any_artifact: 'node scripts/claim-capture.mjs --verify <file containing the artifact>',
       requirements: 'Node 18+ and the Python standard library. No key, no account, no paid API.',
     },
-    signature_state:
+    signature_state: defs.signature_state ||
       'SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes '
       + 'are superseded and never edited (spec 9.4). See /claims/' + registryId + '.signed.json, '
       + 'which pins this file by sha256 and carries the Ed25519 signature by '
       + 'did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that '
       + 'time; it grades nothing, certifies nobody, and says nothing about any party named here '
       + '(spec 9.5).',
-    timestamp_state:
+    timestamp_state: defs.timestamp_state ||
       'SUBMITTED, and therefore PENDING. An OpenTimestamps receipt is written beside this file at '
       + '/claims/' + registryId + '.json.ots. At the time of writing it carries a calendar '
       + 'commitment and no attestation path, its upgrade has not been run, and nothing has been '

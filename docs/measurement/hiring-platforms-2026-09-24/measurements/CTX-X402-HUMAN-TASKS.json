@@ -1,0 +1,68 @@
+{
+ "record_kind": "CONTEXT_NOT_A_CLAIM_MEASUREMENT",
+ "evidence_state": "MEASURED",
+ "measured_at": "2026-09-24T15:31:40Z",
+ "patterns": [
+  "\\bhire (?:a )?humans?\\b",
+  "\\brent (?:a )?humans?\\b",
+  "\\bhuman[- ]task",
+  "\\breal (?:person|human)\\b",
+  "\\bhuman worker",
+  "\\bhuman-in-the-loop\\b"
+ ],
+ "index_meta": {
+  "cdp": {
+   "index": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources",
+   "resources_read": 16888,
+   "reported_total": 16888,
+   "complete": true,
+   "pages": 169,
+   "page_failures": [],
+   "read_utc": "2026-09-24T15:30:31Z"
+  },
+  "payai": {
+   "index": "https://facilitator.payai.network/discovery/resources",
+   "resources_read": 6871,
+   "reported_total": 6871,
+   "complete": true,
+   "pages": 7,
+   "page_failures": [],
+   "read_utc": "2026-09-24T15:30:41Z"
+  }
+ },
+ "hosts_with_matching_descriptions": [
+  {
+   "host": "human.twin3.ai",
+   "indexes": [
+    "cdp"
+   ],
+   "resources": 1,
+   "example_description": "Human verification for AI agents — proof of humanity, sybil resistance, and 'is this wallet a real person' answers in one paid call. Returns two ZK-style outputs about any EVM wallet: (1) total humani"
+  },
+  {
+   "host": "www.productclank.com",
+   "indexes": [
+    "cdp"
+   ],
+   "resources": 1,
+   "example_description": "Boost any social post with real human engagement from ProductClank's creator community. $20 per boost: 10 authentic AI-drafted replies posted by real community members (or 30 likes / 10 reposts). Work"
+  },
+  {
+   "host": "intel.rallylive.ca",
+   "indexes": [
+    "cdp"
+   ],
+   "resources": 1,
+   "example_description": "Human-verified local business records: a real person visited the place and confirmed, on a dated visit, whether it was open as posted, that the menu prices are current (full menu with prices included)"
+  },
+  {
+   "host": "api.instahuman.com",
+   "indexes": [
+    "payai"
+   ],
+   "resources": 1,
+   "example_description": "Real human feedback on your web product; testers paid in USDC."
+  }
+ ],
+ "note": "a description match is a statement by each resource's publisher about its own resource. It selects rows for reading; it does not establish that a human performs anything"
+}

@@ -1,0 +1,2494 @@
+{
+ "schema": "csoai.claim-registry/0.3",
+ "registry_id": "claimreg-hiring-platforms-2026-09-24",
+ "created_utc": "2026-09-24",
+ "built_at_utc": "2026-09-24T15:39:29Z",
+ "maintainer": "CSOAI Ltd — claim maintenance (measurement, never certification)",
+ "conforms_to": "https://councilof.ai/spec/claim-maintenance/v0.1/",
+ "conforms_to_licence": "CC0-1.0",
+ "artifact_schema": "csoai.claim-maintenance.artifact/0.1",
+ "selection_rule": "Platforms on which an AI agent engages a human to perform a task, or a human engages an agent, and which publish a machine interface for it (an MCP server, a REST API or an x402 resource). Three were named to this lane (RentAHuman, gotoHuman, Payman); two more were added from third-party indexes: Invoke, because the official MCP registry lists a hosted server for it that describes hiring a human, and InstaHuman, because it is one of four hosts in the two public x402 discovery indexes whose resource descriptions offer work done by a person, and the only one of the four whose own page describes a marketplace of paid human workers engaged by agents. Both publish their own site and terms. Candidates were dropped where the operator is a single natural person (humanforai.dev, yourhuman.ai, missionforhire.com), because a measurement of such a subject is a measurement of a person, or where the service is not a hiring platform on its own page (human4ai.ai, parahuman.co). Within each subject the claims selected are those specific enough to capture verbatim and about something a worker, an agent operator or a regulator would rely on: headcount, interfaces, payment rails, escrow and dispute, identity checks, worker classification and the operating entity. Where a subject states a limit on what it does, that statement is captured on the same footing as any other claim, because a scoped claim is a result and not an absence. No person is named, and no personal data is captured.",
+ "totals": {
+  "subjects": 5,
+  "claims": 29,
+  "by_state": {
+   "CLAIM_CAPTURED": 0,
+   "CLAIM_MEASURED": 8,
+   "UNMEASURED": 5,
+   "UNCHECKABLE": 16
+  }
+ },
+ "claims": [
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-1",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "RentAHuman is a live marketplace with 787,000+ registered humans across 100+ countries.",
+   "claim_type": "quantitative-count",
+   "source_url": "https://rentahuman.ai/",
+   "access_date": "2026-09-24T15:39:22Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "14eb81f202e56ae523307c2fbd24e03ba458c785a5dd7add36138fdc5fa2e5fe",
+    "covers": "visible-text",
+    "extracted_chars": 3970
+   },
+   "claim_hash": "db81b0b816c04067d97aa04f260dab9f513371629f781200e07643c1a7a0880b",
+   "state": "UNMEASURED",
+   "measurement_plan": "restatement watch: a registered-user count rests on an internal counter no third party can recompute, and the only public enumeration is the subject's own worker directory, so counting it would be the claim again rather than evidence about it (spec 4.6). Capture the figure weekly with the page digest and record every revision. The same page also renders a live counter labelled Rentable humans; that figure changes between reads and is recorded in the lane's evidence file, not captured as a claim. Never recomputed, never asserted.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNMEASURED and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:22Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "e55e77c239617a9b7c54546f06795f4628101e415c7d1586acc6e49454231524"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-2",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Connect your AI agent via our MCP server or REST API.",
+   "claim_type": "interface-availability",
+   "source_url": "https://rentahuman.ai/",
+   "access_date": "2026-09-24T15:39:22Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "14eb81f202e56ae523307c2fbd24e03ba458c785a5dd7add36138fdc5fa2e5fe",
+    "covers": "visible-text",
+    "extracted_chars": 3970
+   },
+   "claim_hash": "1c4198030ba2e5ce8fb98ce584297bb7b300f2a040db5138e5b2d9738af057d8",
+   "state": "CLAIM_MEASURED",
+   "window": "the registries as served at measured_at; npm downloads over the window npm states in the result",
+   "denominator": {
+    "registries_read": 2,
+    "declared_repositories": 1
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers whether the MCP server this sentence names is published in the official MCP registry and on npm, as those two registries record it, and whether the repository the registry entry declares is served by the code host. The REST API is not measured.",
+    "that the MCP server works, is safe, or does what the subject says it does. A registry entry records that a publisher who controls the namespace submitted metadata; the registry does not test the server",
+    "that any agent has hired any human through this server. npm download counts include CI systems, mirrors and caches and are not users, installs or transactions",
+    "that a repository which was not served to an unauthenticated reader does not exist; the code host answers the same way for a private repository",
+    "anything about the number of workers, tasks or payments on the platform",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:22Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "841b8980e8abce48e0b0b3eac84b827f9f9e49c4197f06e6f5776f791625c27a",
+   "method": {
+    "description": "read the official MCP registry search API for the term (keyless), filter to the named server where one is given, and record every version entry and the repository URL it declares; read the npm registry document and the npm downloads API for the package the entry names; read the unauthenticated GitHub REST record for every declared repository. Each of those records is held by the registry or code host, not by the subject",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-MCP-RENTAHUMAN",
+    "measured_at": "2026-09-24T15:27:18Z",
+    "evidence": [
+     {
+      "url": "https://registry.modelcontextprotocol.io/v0/servers?search=rentahuman",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:17Z",
+      "response_bytes": 9008,
+      "response_sha256": "d9a672f71e2563842329173e387097d56767b3c9ec2db3e9d23ab87474d21ab8",
+      "note": "official MCP registry search for 'rentahuman'"
+     },
+     {
+      "url": "https://registry.npmjs.org/rentahuman-mcp",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:17Z",
+      "response_bytes": 180307,
+      "response_sha256": "83a2ef5d05c5427461f64c6a6265acbe0e2aa0b4195ed9a761b5e13ee4f3e341",
+      "note": "npm registry document for rentahuman-mcp"
+     },
+     {
+      "url": "https://api.npmjs.org/downloads/point/last-week/rentahuman-mcp",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:17Z",
+      "response_bytes": 84,
+      "response_sha256": "0cf87a5a647e2b4a9228e8577bc6665eef115ac1fd368f77388bd27cffb865c2",
+      "note": "npm downloads last-week for rentahuman-mcp"
+     },
+     {
+      "url": "https://api.npmjs.org/downloads/point/last-month/rentahuman-mcp",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:17Z",
+      "response_bytes": 85,
+      "response_sha256": "5c831b1032f75175c0cd4d9cfc44fc8f861ee302860b40220b4f726bda71cc8b",
+      "note": "npm downloads last-month for rentahuman-mcp"
+     },
+     {
+      "url": "https://api.github.com/repos/rentahuman-ai/human-rental-marketplace",
+      "status": 404,
+      "accessed_utc": "2026-09-24T15:27:18Z",
+      "response_bytes": 118,
+      "response_sha256": "4f50e254a719a6b1b06b529bdaa08980e4acf0878aad0090cba7771f6ebdf0b9",
+      "reason": "HTTP 404",
+      "note": "GitHub public repository record for rentahuman-ai/human-rental-marketplace"
+     }
+    ]
+   },
+   "result": {
+    "subject": "RentAHuman",
+    "mcp_registry_search_term": "rentahuman",
+    "mcp_registry_entries_matching": "9",
+    "mcp_registry_latest_version": "3.7.0",
+    "mcp_registry_latest_published_utc": "2026-09-18T02:19:35.400043Z",
+    "mcp_registry_declared_repositories": [
+     "https://github.com/rentahuman-ai/human-rental-marketplace"
+    ],
+    "declared_repositories_readable_by_unauthenticated_reader": "0",
+    "declared_repositories_not_served": "1",
+    "n": 1,
+    "npm_package": "rentahuman-mcp",
+    "npm_latest": "3.7.0",
+    "npm_versions_published": "55",
+    "npm_first_published_utc": "2026-02-04T14:19:20.090Z",
+    "npm_downloads_last_month": "3330",
+    "npm_downloads_last_month_window": [
+     "2026-08-23",
+     "2026-09-21"
+    ]
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-3",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Sign up and fund your wallet by paying USDC on Base — no card, no checkout page.",
+   "claim_type": "payment-rail",
+   "source_url": "https://rentahuman.ai/docs",
+   "access_date": "2026-09-24T15:39:23Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "148ece4a579f13981a6fcee94ebdaca1e44d9279eac298128b804fc0246df1f4",
+    "covers": "visible-text",
+    "extracted_chars": 96006
+   },
+   "claim_hash": "f638519dbbcf26320d8f6d79ebbe7223fd411c88b25e91913fbc3b17fc3ffee2",
+   "state": "CLAIM_MEASURED",
+   "window": "each index as served during this run; the read instants are in denominator",
+   "denominator": {
+    "cdp": {
+     "resources_read": "16888",
+     "reported_total": "16888",
+     "complete": true,
+     "read_utc": "2026-09-24T15:30:31Z"
+    },
+    "payai": {
+     "resources_read": "6871",
+     "reported_total": "6871",
+     "complete": true,
+     "read_utc": "2026-09-24T15:30:41Z"
+    }
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers whether either public x402 discovery index lists a resource on the subject's hosts. Whether the payment route works, and whether wallet funds are held as described, are not measured.",
+    "that the subject does or does not accept x402 payments. A discovery index lists a resource after it has been registered with, or settled through, that facilitator with discovery metadata; a working x402 endpoint that settles elsewhere or omits the metadata is not listed",
+    "NOT_FOUND_IN_INDEXES is a fact about two indexes at one time, not an absence of the rail and not a finding that any statement is false",
+    "that a listed resource settles, delivers, or is safe to pay. A listing is not a settlement",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:23Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "4c54dd9bcee2816f3cb55877bb661fe356b744aab6361e791242325dbc6b6c67",
+   "method": {
+    "description": "enumerate every page of the two public, keyless x402 discovery indexes (Coinbase CDP Bazaar at limit=100 per page, PayAI at limit=1000 per page) to the total each index reports, and select the resources whose URL host is one of the subject's declared hosts. Each index is held by its facilitator, not by the subject",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-X402-RENTAHUMAN",
+    "measured_at": "2026-09-24T15:30:41Z",
+    "evidence": [
+     {
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:31Z",
+      "note": "169 page(s), 16888 resource(s) of a reported 16888; page digests are in the lane evidence index"
+     },
+     {
+      "url": "https://facilitator.payai.network/discovery/resources",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:41Z",
+      "note": "7 page(s), 6871 resource(s) of a reported 6871; page digests are in the lane evidence index"
+     }
+    ]
+   },
+   "result": {
+    "subject": "RentAHuman",
+    "hosts_searched": [
+     "rentahuman.ai",
+     "www.rentahuman.ai",
+     "api.rentahuman.ai"
+    ],
+    "resources_listed_on_subject_hosts": "0",
+    "status": "NOT_FOUND_IN_INDEXES",
+    "indexes_read_completely": true,
+    "per_index": {
+     "cdp": [],
+     "payai": []
+    },
+    "n": 2
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-4",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Funds are held until the task is done",
+   "claim_type": "custody-of-funds",
+   "source_url": "https://rentahuman.ai/",
+   "access_date": "2026-09-24T15:39:23Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "14eb81f202e56ae523307c2fbd24e03ba458c785a5dd7add36138fdc5fa2e5fe",
+    "covers": "visible-text",
+    "extracted_chars": 3970
+   },
+   "claim_hash": "1642cd57f8b54d2ad9828ff5063b9e704ad08b576dce6c907d49e1978968fd66",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "Where task funds are held, by whom and under what licence is not recorded on any public surface this reader found. The subject's terms name a card processor, but a processor does not publish which merchants hold balances for others, and no escrow ledger is public. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:23Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "6fa472f0dd3c388077ff22b8eaa05b5195949faa9cfc1d2450eab426ad961a9c"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-5",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "RentAHuman does not perform background checks of users of the Platform and is not required to verify all users, although we may require identity, payment, location, or other verification for certain users or transactions in our discretion.",
+   "claim_type": "scope-statement",
+   "source_url": "https://rentahuman.ai/terms",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+    "covers": "visible-text",
+    "extracted_chars": 80523
+   },
+   "claim_hash": "99ea59a43aa08d691d885c1f30fc97bb71568955428e0cc151de191ea0b6932b",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "A statement of the subject's own verification practice. Which users were checked, and how, is held only by the subject and its identity vendor, if any; no public record shows it. The statement is captured because a scoped claim is a result, and it sits beside the subject's API documentation, which describes an optional per-task government-ID requirement. This is a statement about the evidence, never about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "857ac0142a34e6de72db05704941160e7d80a7efe7ee4064d964c8007e3c3c73"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-6",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Workers using the Platform are not independent contractors or employees of RentAHuman, including where a Task is offered, priced, or paid at an hourly rate.",
+   "claim_type": "worker-classification-statement",
+   "source_url": "https://rentahuman.ai/terms",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+    "covers": "visible-text",
+    "extracted_chars": 80523
+   },
+   "claim_hash": "0c296a68fb60fa380b0524ec183185b08b98ba6a2f6d6cc65369e245584d475d",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "How a working relationship is classified is decided by a court or tribunal applying the law of the place where the work is done, on the facts of the relationship, and not by the wording of a contract. No public decision about this subject was found by this reader, and none was searched for in any court register. The statement is captured as the subject's own words; nothing here is a finding about any worker's status.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "6245666a38c94c3a9a4f8b0ae1114900854a3477eaa4bbcaf30c5329ac08c9b3"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-7",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "RentAHuman provides a dispute resolution mechanism for transactions conducted through our escrow system.",
+   "claim_type": "dispute-process",
+   "source_url": "https://rentahuman.ai/terms",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+    "covers": "visible-text",
+    "extracted_chars": 80523
+   },
+   "claim_hash": "77bdea704ee0ddef9f8145cd1dc09ccffa9053965eeb41b985b2fd2d51d76fda",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "Dispute outcomes, volumes and times are held only by the subject; no public register or third-party record carries them. The subject's API documentation describes a buyer-only dispute call, which is the subject describing its own interface again. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "f8009b83d82101255d5bfb01929e76c1ac40e78e944a9ffd76d78528c6311728"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-8",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "RawLabs, Inc. dba RentAHuman.ai",
+   "claim_type": "entity-identity",
+   "source_url": "https://rentahuman.ai/terms",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "f9bf7a19cfb25b2954ed4d205a2920430dbc3998a80ba69b332d653d2ebe9a87",
+    "covers": "visible-text",
+    "extracted_chars": 80523
+   },
+   "claim_hash": "07fd4f4cd840d0efb27d0777c1b9945f6965202ea39dffea892b29fe0c3322de",
+   "state": "UNMEASURED",
+   "measurement_plan": "settleable in principle from the incorporation register of the entity's home state. The terms name the entity and a San Francisco business address but no state of incorporation; the state registers answer only through an interactive search form, which this harness does not submit. The keyless SEC route was tried and cannot settle incorporation either way. — this run attempted the measurement and did not reach one. The harness reported UNMEASURED; its own account of why, in its own words, is carried in this registry under measurements_referenced.M-HP-ENTITY-RAWLABS.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNMEASURED and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "ce7a273af3cc3add9bf39e9f2898092b6832fbac870e44179b2ea99737a3d04c"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "RH-9",
+   "subject": {
+    "name": "RentAHuman",
+    "identifier": "rentahuman.ai",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "\"license\":\"MIT\"",
+   "claim_type": "licence",
+   "source_url": "https://registry.npmjs.org/rentahuman-mcp/latest",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "573e3916a0ff7e2956c1dab5d5307e8c5632f7774a8e99b2a978cb080b89c709",
+    "covers": "raw-bytes",
+    "extracted_chars": 2578
+   },
+   "claim_hash": "808b32cf4f6ada9c708cad9a467e007add9cef8ec9dd2e8af6e6aa1a0517ee4e",
+   "state": "UNMEASURED",
+   "measurement_plan": "a licence field in a package manifest is written by the publisher. The independent reading is the code host's own licence detection for the repository the official MCP registry entry declares; read it with the unauthenticated GitHub API. — this run attempted the measurement and did not reach one. The harness reported UNMEASURED; its own account of why, in its own words, is carried in this registry under measurements_referenced.M-HP-LICENCE-RENTAHUMAN.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNMEASURED and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "3324adab2ab98e0a3ceb17c4bba6436f1898eebb7aca4e237eaea706ae005688"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "GT-1",
+   "subject": {
+    "name": "gotoHuman",
+    "identifier": "gotohuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "We are GDPR-compliant and your data is stored on secure European servers.",
+   "claim_type": "data-protection",
+   "source_url": "https://www.gotohuman.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "cf01e96429f1a9ed24e17ab897b4bc659f7c02e08d7edc8256b9455268d644f9",
+    "covers": "visible-text",
+    "extracted_chars": 5185
+   },
+   "claim_hash": "19c3ee5c6b99a407fbe0cfdc04adfd0fb98229b76c00a7e75e7b226d1787f58e",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "No public register records GDPR compliance, and where data is stored is not observable from outside: the network location of a public endpoint shows where requests are served, not where data is kept. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "0eaf81ffe8b3835066be1e439999ea4197c60f1d63ac2aeb4014bc91eaba0db5"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "GT-2",
+   "subject": {
+    "name": "gotoHuman",
+    "identifier": "gotohuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "How PayFacto, a leading global payment processing company handling $10 billion in annual transaction volume, is using gotoHuman",
+   "claim_type": "third-party-attribution",
+   "source_url": "https://www.gotohuman.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "cf01e96429f1a9ed24e17ab897b4bc659f7c02e08d7edc8256b9455268d644f9",
+    "covers": "visible-text",
+    "extracted_chars": 5185
+   },
+   "claim_hash": "842e771dc9b1812e9c1fdd4b25ad51813555ac43fa2903b49e3a83fb2bfb7159",
+   "state": "CLAIM_MEASURED",
+   "window": "PayFacto's public web presence as served at measured_at",
+   "denominator": {
+    "third_parties_searched": 1,
+    "pages_read_successfully": 3,
+    "sitemap_urls_seen": 117,
+    "commoncrawl_pages_indexed_seen": 200
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers whether the named third party's own public site names gotoHuman. The description of that third party's size and standing is about the third party and is not measured (spec 1.4).",
+    "this search read 3 page(s) of this party's own site and saw 117 URL(s) in its published index and 200 page(s) for it in the keyless Common Crawl index. It cannot pass a registration wall, a paywall, a bot challenge or a robots rule, and research and analyst firms commonly place report content behind one. Content there would not be found by this search, and its absence from this result is a property of the routes used",
+    "NOT_FOUND is a fact about this search by the stated routes. It is not a denial by the third party, not a contradiction of the claim, and not a finding that anything is false",
+    "SEARCH_INCONCLUSIVE means this host could not reach enough of that party's own index to conclude anything, and is reported separately for exactly that reason",
+    "CORROBORATED means the third party's own site names the term. It does not establish the scale, status, commercial terms or currency of any relationship",
+    "whole-site full text is not searched: slugs across the published index plus the full text of the pages actually fetched",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "8775657b0d740206c66eb9dd794194534c29366175cd03a8474399b1f641fc9a",
+   "method": {
+    "description": "search the named third party's OWN published index — its robots.txt and sitemaps, plus the keyless Common Crawl URL index for its domain — fetch every URL whose slug carries the term together with a bounded set of its own news pages, and quote the term from the visible text served by that party itself",
+    "harness": "scripts/claims/measure_hiring.py :: M-CORR-PAYFACTO-GOTOHUMAN",
+    "measured_at": "2026-09-24T15:31:38Z",
+    "evidence": [
+     {
+      "url": "https://payfacto.com/robots.txt",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:43Z",
+      "response_bytes": 172,
+      "response_sha256": "936ed2a0b83087c17d5b0fb6cba6c23a6e444793788e47be67b11314bdf08f41",
+      "note": "the organisation's own robots.txt, for its Sitemap: lines"
+     },
+     {
+      "url": "https://payfacto.com/sitemap_index.xml",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:44Z",
+      "response_bytes": 642,
+      "response_sha256": "2677bff9dcf8d3ffdbe6a18bb2ac219facedb7dae75ce1500bb2e3f894f8c655",
+      "note": "sitemap named by robots.txt"
+     },
+     {
+      "url": "https://payfacto.com/post-sitemap.xml",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:45Z",
+      "response_bytes": 7043,
+      "response_sha256": "20d4522be9b782df68454067208872091f744e87e8774f47d5e677cf32989ff6",
+      "note": "sitemap named by robots.txt"
+     },
+     {
+      "url": "https://payfacto.com/page-sitemap.xml",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:46Z",
+      "response_bytes": 172390,
+      "response_sha256": "ef3aa3cfc41903079d07381bdb3398aa013d1c6eeed34f7072873e197c00a05a",
+      "note": "sitemap named by robots.txt"
+     },
+     {
+      "url": "https://payfacto.com/local-sitemap.xml",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:47Z",
+      "response_bytes": 383,
+      "response_sha256": "caada8bfc4ff74733b00f63912be21a1c6d8efc51f4efccddceafd9655fe1664",
+      "note": "sitemap named by robots.txt"
+     },
+     {
+      "url": "https://index.commoncrawl.org/collinfo.json",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:48Z",
+      "response_bytes": 35226,
+      "response_sha256": "fdfe1131836096ec8ff6047997a035acbf464036a2ea09887239c949e0df41f9",
+      "note": "Common Crawl collection list (newest collection used)"
+     },
+     {
+      "url": "https://index.commoncrawl.org/CC-MAIN-2026-39-index?url=payfacto.com&matchType=domain&output=json&limit=200",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:53Z",
+      "response_bytes": 134688,
+      "response_sha256": "ce8375c5e9a8858b8a8a65d1c686d8a23d007c856fa1bd6edf8c3915db31ad4a",
+      "note": "control: does the Common Crawl index hold ANY page for this domain"
+     },
+     {
+      "url": "https://index.commoncrawl.org/CC-MAIN-2026-39-index?url=payfacto.com&matchType=domain&output=json&limit=200&filter=~url%3A%28%3Fi%29.%2A%5Cbgotohuman%5Cb.%2A",
+      "status": 404,
+      "accessed_utc": "2026-09-24T15:31:33Z",
+      "response_bytes": 50,
+      "response_sha256": "f163e9c17816e5de720c0468d79253d0920040a12123dd73f06b8690c2c645b4",
+      "reason": "HTTP 404",
+      "note": "Common Crawl URLs on this domain whose slug contains 'gotoHuman'"
+     }
+    ]
+   },
+   "result": {
+    "third_party": "PayFacto",
+    "term": "gotoHuman",
+    "status": "NOT_FOUND",
+    "quotes": [],
+    "quote_urls": [],
+    "n": 1
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "GT-3",
+   "subject": {
+    "name": "gotoHuman",
+    "identifier": "gotohuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "\"license\": \"MIT\"",
+   "claim_type": "licence",
+   "source_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/package.json",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "a0f2778032146427156086f6b4ad0513e9d81f8addd69baa5565616532e5de13",
+    "covers": "raw-bytes",
+    "extracted_chars": 764
+   },
+   "claim_hash": "5edff0d3404e97f7ff84b9b063c9e417abeb7f83e2fb88d3d3bbfc82d5f0ea63",
+   "state": "CLAIM_MEASURED",
+   "window": "the repository as GitHub served it at 2026-09-24T15:30:42Z",
+   "denominator": {
+    "repositories_checked": 1
+   },
+   "does_not_prove": [
+    "that every file in the repository carries that licence; GitHub's detector reads the repository licence file and is a heuristic over it",
+    "that a detector result of NOASSERTION or 'Other' indicates the asserted licence is wrong. GitHub reports that value for any repository whose licensing its heuristic cannot reduce to a single SPDX identifier, which routinely includes repositories that carry a standard licence plus a second licence for part of the tree. The licence file text is recorded beside the detector result for exactly that reason",
+    "that the vendor product, the hosted service or any other repository is under that licence",
+    "anything about whether the software works, is maintained, or is safe to use",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "e6dda1fe51ac1da8064fb51f1ccb7de35e1e89a9b0f88d22471053ccd1eea9cf",
+   "method": {
+    "description": "read the unauthenticated GitHub REST record for the named repository and take the SPDX identifier GitHub's own licence detector reports for it",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-LICENCE-GOTOHUMAN",
+    "measured_at": "2026-09-24T15:30:42Z",
+    "evidence": [
+     {
+      "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:42Z",
+      "response_bytes": 5676,
+      "response_sha256": "0252a5ea9c4f87c8d4f47e900dd56d154a813c7d9fc71ad50f8ea62115b391b4",
+      "note": "GitHub public repository record for gotohuman/gotohuman-mcp-server"
+     },
+     {
+      "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server/license",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:30:42Z",
+      "response_bytes": 2440,
+      "response_sha256": "3469a813d2f92b79c5d7a16db9ac7e143dec6d0328bf57ce6f4fc704c668c08a",
+      "note": "the LICENCE file GitHub detects in gotohuman/gotohuman-mcp-server"
+     }
+    ]
+   },
+   "result": {
+    "repository": "gotohuman/gotohuman-mcp-server",
+    "asserted": "MIT",
+    "assertion_kind": "spdx-identifier",
+    "spdx_reported_by_github": "MIT",
+    "matches_asserted": true,
+    "licence_file_path": "LICENSE",
+    "licence_file_opening_text": "MIT License Copyright (c) 2025 gotoHuman Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge",
+    "n": 1
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "GT-4",
+   "subject": {
+    "name": "gotoHuman",
+    "identifier": "gotohuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Use our MCP server to request human approvals from your AI workflows via MCP or add it to your IDE to help with integration.",
+   "claim_type": "interface-availability",
+   "source_url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/README.md",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "c1aa1764efdd1ad014aab9df7685d1eae25f1d18b55e12e11655654e01ffae81",
+    "covers": "raw-bytes",
+    "extracted_chars": 3813
+   },
+   "claim_hash": "a072106aff4fb1c51d7a9ed8318f906eb7e5dd7c381babb08dba9e81c07b9d44",
+   "state": "CLAIM_MEASURED",
+   "window": "the registries as served at measured_at; npm downloads over the window npm states in the result",
+   "denominator": {
+    "registries_read": 2,
+    "declared_repositories": 1
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers how the official MCP registry, the npm registry and the code host each record the MCP server this sentence names. Whether it requests approvals as described is not measured.",
+    "that the MCP server works, is safe, or does what the subject says it does. A registry entry records that a publisher who controls the namespace submitted metadata; the registry does not test the server",
+    "that any agent has hired any human through this server. npm download counts include CI systems, mirrors and caches and are not users, installs or transactions",
+    "that a repository which was not served to an unauthenticated reader does not exist; the code host answers the same way for a private repository",
+    "anything about the number of workers, tasks or payments on the platform",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "a5de57f4eaf425b9792e3fefd62bf8bcbaa2ae4824592e418b942fa0aaddb43b",
+   "method": {
+    "description": "read the official MCP registry search API for the term (keyless), filter to the named server where one is given, and record every version entry and the repository URL it declares; read the npm registry document and the npm downloads API for the package the entry names; read the unauthenticated GitHub REST record for every declared repository. Each of those records is held by the registry or code host, not by the subject",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-MCP-GOTOHUMAN",
+    "measured_at": "2026-09-24T15:27:36Z",
+    "evidence": [
+     {
+      "url": "https://registry.modelcontextprotocol.io/v0/servers?search=gotohuman",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:35Z",
+      "response_bytes": 38,
+      "response_sha256": "bd77acb780201187e66256677f13e4145d6839a056c477181355b19589b40f23",
+      "note": "official MCP registry search for 'gotohuman'"
+     },
+     {
+      "url": "https://registry.npmjs.org/@gotohuman%2fmcp-server",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:36Z",
+      "response_bytes": 11067,
+      "response_sha256": "d6165f0b3a89d283a931df3f43d56998fe1293d0a7d9c2b28f64956a2d6d3a07",
+      "note": "npm registry document for @gotohuman/mcp-server"
+     },
+     {
+      "url": "https://api.npmjs.org/downloads/point/last-week/@gotohuman/mcp-server",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:36Z",
+      "response_bytes": 90,
+      "response_sha256": "2d8b3afe29419ab5ea1a85018ef2035b691baf8d412a0281718e32cb5afef751",
+      "note": "npm downloads last-week for @gotohuman/mcp-server"
+     },
+     {
+      "url": "https://api.npmjs.org/downloads/point/last-month/@gotohuman/mcp-server",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:36Z",
+      "response_bytes": 91,
+      "response_sha256": "689fe04d6211c010b4ccd2adaa045a86b9e9fa66d6d262fa849bf1ea58fef379",
+      "note": "npm downloads last-month for @gotohuman/mcp-server"
+     },
+     {
+      "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:27:36Z",
+      "response_bytes": 5676,
+      "response_sha256": "0252a5ea9c4f87c8d4f47e900dd56d154a813c7d9fc71ad50f8ea62115b391b4",
+      "note": "GitHub public repository record for gotohuman/gotohuman-mcp-server"
+     }
+    ]
+   },
+   "result": {
+    "subject": "gotoHuman",
+    "mcp_registry_search_term": "gotohuman",
+    "mcp_registry_entries_matching": "0",
+    "mcp_registry_latest_version": null,
+    "mcp_registry_latest_published_utc": null,
+    "mcp_registry_declared_repositories": [
+     "https://github.com/gotohuman/gotohuman-mcp-server"
+    ],
+    "declared_repositories_readable_by_unauthenticated_reader": "1",
+    "declared_repositories_not_served": "0",
+    "n": 1,
+    "npm_package": "@gotohuman/mcp-server",
+    "npm_latest": "0.2.2",
+    "npm_versions_published": "4",
+    "npm_first_published_utc": "2025-04-24T21:57:41.439Z",
+    "npm_downloads_last_month": "206",
+    "npm_downloads_last_month_window": [
+     "2026-08-23",
+     "2026-09-21"
+    ]
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "GT-5",
+   "subject": {
+    "name": "gotoHuman",
+    "identifier": "gotohuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "gotoHuman UG (haftungsbeschränkt)",
+   "claim_type": "entity-identity",
+   "source_url": "https://www.gotohuman.com/imprint",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "89029fd72f99bba0deeb5a53a5b425797e711571d5f645d6f3391a6b7b48435a",
+    "covers": "visible-text",
+    "extracted_chars": 170
+   },
+   "claim_hash": "ef6ffc575b2e912a5846175debbe95e41f2a3bd4e9eb815cea2314de1f7ca8fa",
+   "state": "UNMEASURED",
+   "measurement_plan": "settleable in principle from the German commercial register. The imprint names the entity and a Berlin address but no register number, and the register answers only through an interactive search form, which this harness does not submit. — this run attempted the measurement and did not reach one. The harness reported UNMEASURED; its own account of why, in its own words, is carried in this registry under measurements_referenced.M-HP-ENTITY-GOTOHUMAN.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNMEASURED and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "dfe1857055f8579de9cd40abc770e50b25104af68addb5a9cc203b3cc045ad25"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "GT-6",
+   "subject": {
+    "name": "gotoHuman",
+    "identifier": "gotohuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "the core services we use are certified under SOC 3 and ISO 27001",
+   "claim_type": "third-party-attestation",
+   "source_url": "https://www.gotohuman.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "cf01e96429f1a9ed24e17ab897b4bc659f7c02e08d7edc8256b9455268d644f9",
+    "covers": "visible-text",
+    "extracted_chars": 5185
+   },
+   "claim_hash": "63c14308aad8f01972f1d9851f561e13fc3653f54fbefd73ae6bdc44a283cad4",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "The sentence attributes attestations to unnamed service providers. With no provider named, there is no third party whose own record could be read. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "a61c7c8fc3d77faf026a93d2c6253cf5c2c1c9659d49ca216ca92345116ee9eb",
+   "excerpt": true
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "PM-1",
+   "subject": {
+    "name": "Payman",
+    "identifier": "paymanai.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "SOC 2 Certified",
+   "claim_type": "third-party-attestation",
+   "source_url": "https://paymanai.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "622ed950c07b50fed5e07d9c297c83d571e82dc0fb69c6824d38b4b8fe85e5de",
+    "covers": "visible-text",
+    "extracted_chars": 712
+   },
+   "claim_hash": "7499e9674053e54b0ab8f5d07dc9a95adb6d78c8b7e137518973d6622e354f9c",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "A SOC 2 report is an attestation issued by an audit firm to the organisation and distributed under restricted use. No public register of SOC 2 reports exists, the auditor is not named on the page, and the subject's trust portal is an access-request surface. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "92c7f6c53e3420494d0f07fd51e1dc9d1b7f79b0ed176980bdd973eda453f468"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "PM-2",
+   "subject": {
+    "name": "Payman",
+    "identifier": "paymanai.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Already trusted by financial institutions across the country",
+   "claim_type": "adoption",
+   "source_url": "https://paymanai.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "622ed950c07b50fed5e07d9c297c83d571e82dc0fb69c6824d38b4b8fe85e5de",
+    "covers": "visible-text",
+    "extracted_chars": 712
+   },
+   "claim_hash": "005790c85bcebedd76c935cb5211e497b2e64e2b535df2c47f6c0c8c96c5bb84",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "No institution is named in the claim, so no public evidence identifies a set to check. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "d0dce74e4995344ac64ed30ff1385fa16c984f2db3c7f7ca4284959f8ac5e349"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "PM-3",
+   "subject": {
+    "name": "Payman",
+    "identifier": "paymanai.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "© 2026 Payman AI, Inc. All rights reserved.",
+   "claim_type": "entity-identity",
+   "source_url": "https://paymanai.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "622ed950c07b50fed5e07d9c297c83d571e82dc0fb69c6824d38b4b8fe85e5de",
+    "covers": "visible-text",
+    "extracted_chars": 712
+   },
+   "claim_hash": "7472c5c7f19407558f032c327fa0bc1c5c186109af956051d632568e9c6389a6",
+   "state": "CLAIM_MEASURED",
+   "window": "the EDGAR record as served at measured_at",
+   "denominator": {
+    "registers_read": 1
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers whether the SEC's own EDGAR record holds a filer under the exact entity name this notice carries, with its state of incorporation and filing history. The copyright assertion itself is not measured.",
+    "anything the filings say. A Form D is completed by the issuer; the SEC records that it was filed and does not review its contents. Only the existence of the filer record and its registered name are measured here",
+    "that the entity currently operates the website, or is in good standing in its state of incorporation",
+    "anything about the product, its safety, or its users",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "e08ca5bdc573b99cf202c534bedc22e273efdb31e4bd8eda2fb8cfe722bb0f5c",
+   "method": {
+    "description": "read the SEC's own EDGAR submissions record for the CIK that EDGAR full-text search returns for the exact entity name the subject publishes, and compare the registered name byte for byte",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-ENTITY-PAYMAN",
+    "measured_at": "2026-09-24T15:31:39Z",
+    "evidence": [
+     {
+      "url": "https://efts.sec.gov/LATEST/search-index?q=%22Payman%20AI%2C%20Inc.%22",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:31:39Z",
+      "response_bytes": 2126,
+      "response_sha256": "4a873da0861b738dced9994bef15dbd9fcb8a8fdef7419c351c54481935042f7",
+      "note": "SEC EDGAR full-text search for \"Payman AI, Inc.\""
+     },
+     {
+      "url": "https://data.sec.gov/submissions/CIK0002025647.json",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:31:39Z",
+      "response_bytes": 1525,
+      "response_sha256": "c29da685f7ad656d6c92845b7f1d5b5414eb7755393dc9d2502486b0d3d1aff4",
+      "note": "SEC EDGAR submissions record for CIK 2025647"
+     }
+    ]
+   },
+   "result": {
+    "subject": "Payman",
+    "entity_name_published_by_subject": "Payman AI, Inc.",
+    "edgar_registered_name": "Payman AI, Inc.",
+    "cik": "0002025647",
+    "name_matches_exactly": true,
+    "state_of_incorporation_on_record": "DE",
+    "filings_on_record": [
+     {
+      "form": "D",
+      "filing_date": "2024-11-05"
+     },
+     {
+      "form": "D",
+      "filing_date": "2024-06-18"
+     }
+    ],
+    "n": 1
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "PM-4",
+   "subject": {
+    "name": "Payman",
+    "identifier": "paymanai.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "We deploy AI agents that handle money.",
+   "claim_type": "product-description",
+   "source_url": "https://paymanai.com/",
+   "access_date": "2026-09-24T15:39:24Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "622ed950c07b50fed5e07d9c297c83d571e82dc0fb69c6824d38b4b8fe85e5de",
+    "covers": "visible-text",
+    "extracted_chars": 712
+   },
+   "claim_hash": "27bc63abc3426397996c207e373caf2be83bc17d68ae183fd0565d3cca61bb33",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "No deployment, customer or transaction is named, and deployments of this kind are recorded only by the subject and its customers. This is a statement about the evidence available to the public and not about the subject. The Internet Archive holds earlier copies of this page describing a different product; that history is recorded in the lane's evidence file as dated copies of the subject's own words, and it is not a measurement of this claim.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:24Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "88e21d80e9e17ccc67acf00be7bfb1fe60f950be32b98c29b11d18584e2ada47"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "PM-5",
+   "subject": {
+    "name": "Payman",
+    "identifier": "paymanai.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Payman is the first AI to Human platform that allows AI to pay people for what it needs.",
+   "claim_type": "superlative",
+   "source_url": "https://web.archive.org/web/20241005225726id_/https://paymanai.com/",
+   "access_date": "2026-09-24T15:39:25Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "77c27f08929009c90149a4cef4d28b36804ca1806ee4bdc98ada996d3abf5d31",
+    "covers": "visible-text",
+    "extracted_chars": 3919
+   },
+   "claim_hash": "54f85527e49a874575f41d9c98c92ed94c235350221aadf008cd945b88b14bf9",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "This sentence is read from the Internet Archive's copy of the subject's home page made on 2024-10-05, not from the live page. A claim to be first is published without a population, a date of first operation or a method, so no public evidence identifies a set within which an order could be recomputed. It is captured so the record of what this subject said about paying humans has a dated, hashed anchor; its absence from the live page at this read is an observation about two pages and not a finding about the claim (spec 4.9).",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:25Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "140b18a37a358de179404f62208a06371bf7ecda0d681954bb541c01d67afac0"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IN-1",
+   "subject": {
+    "name": "Invoke",
+    "identifier": "invoke.nanocorp.app",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "a vetted human delivers the structured result within 24 hours",
+   "claim_type": "service-level",
+   "source_url": "https://invoke.nanocorp.app/",
+   "access_date": "2026-09-24T15:39:27Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "8bdc5c755896c016b179314ae2e33bc8bc1d3227ad206c180c33e21dc9de59fa",
+    "covers": "visible-text",
+    "extracted_chars": 7941
+   },
+   "claim_hash": "980cccd53312879e7198eee8d9cfa2ba92b52a4bf381784dba861d1f855a04e8",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "The only public record of task timings is the subject's own task board, which is the claim again (spec 4.6). How workers are vetted is not published. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:27Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "fa716af86b4765575ea75b3d3c8b66ac63b88348502b446b9a3d4dc95a5df65b",
+   "excerpt": true
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IN-2",
+   "subject": {
+    "name": "Invoke",
+    "identifier": "invoke.nanocorp.app",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Proven end-to-end: A local-data agent posted a phone-hours task, a human applied, completed it in 43 minutes, and the poster approved the $22 payout.",
+   "claim_type": "transaction-record",
+   "source_url": "https://invoke.nanocorp.app/",
+   "access_date": "2026-09-24T15:39:27Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "8bdc5c755896c016b179314ae2e33bc8bc1d3227ad206c180c33e21dc9de59fa",
+    "covers": "visible-text",
+    "extracted_chars": 7941
+   },
+   "claim_hash": "c7569f23f2ddf21c4a6b4d2977f72a70adda50e3203e0f5da4176e37c85e6b3d",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "The proof the page links to is a page on the subject's own site, which is the subject speaking again (spec 4.6). No payment processor, ledger or third party publishes a record of the payout. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:27Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "9c23f65860473f692ea8257a524dea87b02c3807d4ce69665487837c5c200561"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IN-3",
+   "subject": {
+    "name": "Invoke",
+    "identifier": "invoke.nanocorp.app",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Task posting fees are processed through Stripe and are non-refundable unless required by law.",
+   "claim_type": "payment-rail",
+   "source_url": "https://invoke.nanocorp.app/terms",
+   "access_date": "2026-09-24T15:39:27Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "dbfb240f7f4a11b35df3a5d15b161ed9af84001a81085eeebe4b259dfa5ae111",
+    "covers": "visible-text",
+    "extracted_chars": 1469
+   },
+   "claim_hash": "406a228932ac816794928556656d250bbcc9722ce5fc5b290f6bca47562a9c4c",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "A card processor does not publish its merchant list, and the checkout host named in the subject's API documentation is the subject's own domain. No public record shows which processor settles these fees. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:27Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "10406647280e9325cd24c91cf09fd4d3aec560bcd4a0c5cd83f9b8f1b2013dba"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IN-4",
+   "subject": {
+    "name": "Invoke",
+    "identifier": "invoke.nanocorp.app",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "We facilitate the connection but are not a party to agreements between Task Posters and Workers.",
+   "claim_type": "worker-classification-statement",
+   "source_url": "https://invoke.nanocorp.app/terms",
+   "access_date": "2026-09-24T15:39:27Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "dbfb240f7f4a11b35df3a5d15b161ed9af84001a81085eeebe4b259dfa5ae111",
+    "covers": "visible-text",
+    "extracted_chars": 1469
+   },
+   "claim_hash": "4974c50322af00ba2268721f10bdd7b5d96c2d06e208f426fa544359bf816a26",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "Whether a platform is a party to, or controls, the work arranged through it is decided by a court or tribunal on the facts, not by the wording of terms. No public decision about this subject was found by this reader, and none was searched for in any court register. The statement is captured as the subject's own words; nothing here is a finding about any worker's status. The terms read name no legal entity.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:27Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "855c09955697eb303087b6688e0a3f51dc50adb1fb02719e27400311516c89a1"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IN-5",
+   "subject": {
+    "name": "Invoke",
+    "identifier": "invoke.nanocorp.app",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Add the hosted MCP endpoint to Claude Desktop, Cursor, or any Streamable HTTP MCP client.",
+   "claim_type": "interface-availability",
+   "source_url": "https://invoke.nanocorp.app/for-agents",
+   "access_date": "2026-09-24T15:39:27Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "334abf407d0cf2dc6fd9d25d11c2c2b1a1c2001b2ab475a59c2a2515937cb4f2",
+    "covers": "visible-text",
+    "extracted_chars": 9589
+   },
+   "claim_hash": "4d8408cb3a1c6dfbe9ac527a342d2e4d4018047fd5f1cf4bb3b18682c71677cb",
+   "state": "CLAIM_MEASURED",
+   "window": "the registries as served at measured_at; npm downloads over the window npm states in the result",
+   "denominator": {
+    "registries_read": 1,
+    "declared_repositories": 1
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers how the official MCP registry records the hosted server this sentence names, and whether the repository that registry entry declares is served by the code host. Whether the endpoint works is not measured.",
+    "that the MCP server works, is safe, or does what the subject says it does. A registry entry records that a publisher who controls the namespace submitted metadata; the registry does not test the server",
+    "that any agent has hired any human through this server. npm download counts include CI systems, mirrors and caches and are not users, installs or transactions",
+    "that a repository which was not served to an unauthenticated reader does not exist; the code host answers the same way for a private repository",
+    "anything about the number of workers, tasks or payments on the platform",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:27Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "beaccd999f8c05366ae52f4ab65adaa3929147738f37cb1737aa344e67fea41a",
+   "method": {
+    "description": "read the official MCP registry search API for the term (keyless), filter to the named server where one is given, and record every version entry and the repository URL it declares; read the npm registry document and the npm downloads API for the package the entry names; read the unauthenticated GitHub REST record for every declared repository. Each of those records is held by the registry or code host, not by the subject",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-MCP-INVOKE",
+    "measured_at": "2026-09-24T15:28:07Z",
+    "evidence": [
+     {
+      "url": "https://registry.modelcontextprotocol.io/v0/servers?search=nanocorp",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:28:07Z",
+      "response_bytes": 12163,
+      "response_sha256": "81f2f7c0d0c1ebb967d74852279fb50ab0e7c0cf90b12c6b26cb73d19b507d5e",
+      "note": "official MCP registry search for 'nanocorp'"
+     },
+     {
+      "url": "https://api.github.com/repos/nanocorp-hq/invoke",
+      "status": 404,
+      "accessed_utc": "2026-09-24T15:28:07Z",
+      "response_bytes": 118,
+      "response_sha256": "4f50e254a719a6b1b06b529bdaa08980e4acf0878aad0090cba7771f6ebdf0b9",
+      "reason": "HTTP 404",
+      "note": "GitHub public repository record for nanocorp-hq/invoke"
+     }
+    ]
+   },
+   "result": {
+    "subject": "Invoke",
+    "mcp_registry_search_term": "nanocorp",
+    "mcp_registry_entries_matching": "4",
+    "mcp_registry_latest_version": "0.1.4",
+    "mcp_registry_latest_published_utc": "2026-08-22T18:33:30.993772Z",
+    "mcp_registry_declared_repositories": [
+     "https://github.com/nanocorp-hq/invoke"
+    ],
+    "declared_repositories_readable_by_unauthenticated_reader": "0",
+    "declared_repositories_not_served": "1",
+    "n": 1
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IH-1",
+   "subject": {
+    "name": "InstaHuman",
+    "identifier": "instahuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Funds are reserved when the job is posted. Only valid completed tests are paid.",
+   "claim_type": "custody-of-funds",
+   "source_url": "https://instahuman.com/",
+   "access_date": "2026-09-24T15:39:29Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "8a4cc8db37eff6e4019804795723c56fd4d48ea6da525c13acc5fab7eec044cb",
+    "covers": "visible-text",
+    "extracted_chars": 7931
+   },
+   "claim_hash": "796be16673a945026d448c4eaf8700cd751b7a887e17c9cdd6ea984100911acb",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "Where reserved funds are held, and which tests were paid, is recorded only by the subject and its payment providers; no public ledger or register carries it. This is a statement about the evidence available to the public and not about the subject.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:29Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "d6640691ba0b1e12500bde56524c66815ca2d68e9ee7aefce2416e71ef0e4475"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IH-2",
+   "subject": {
+    "name": "InstaHuman",
+    "identifier": "instahuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Testers act as independent contractors",
+   "claim_type": "worker-classification-statement",
+   "source_url": "https://instahuman.com/legal/terms-of-use",
+   "access_date": "2026-09-24T15:39:29Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "3e23bd23bd08d08e09499a04f4d38a33db4858bbdf57e19848de32e26f2fb9ac",
+    "covers": "visible-text",
+    "extracted_chars": 3491
+   },
+   "claim_hash": "4492458c0760f3eea008d20519cac45d9127d340568c406d7ba62399ffd199de",
+   "state": "UNCHECKABLE",
+   "uncheckable_reason": "How a working relationship is classified is decided by a court or tribunal applying the law of the place where the work is done, on the facts of the relationship, and not by the wording of terms. No public decision about this subject was found by this reader, and none was searched for in any court register. The statement is captured as the subject's own words; nothing here is a finding about any tester's status.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNCHECKABLE and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:29Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "ae073bfbacafab1a12a4473094ae0318d288e1f12a6aa0e72f19e27521504bd4"
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IH-3",
+   "subject": {
+    "name": "InstaHuman",
+    "identifier": "instahuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "Payments and payouts are handled by third-party providers (e.g., Stripe).",
+   "claim_type": "payment-rail",
+   "source_url": "https://instahuman.com/legal/terms-of-use",
+   "access_date": "2026-09-24T15:39:29Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "3e23bd23bd08d08e09499a04f4d38a33db4858bbdf57e19848de32e26f2fb9ac",
+    "covers": "visible-text",
+    "extracted_chars": 3491
+   },
+   "claim_hash": "1eb079908628a649a1dd2093452c7dedb6f8221c1b98525552e0c2e52e2da8f8",
+   "state": "CLAIM_MEASURED",
+   "window": "each index as served during this run; the read instants are in denominator",
+   "denominator": {
+    "cdp": {
+     "resources_read": "16888",
+     "reported_total": "16888",
+     "complete": true,
+     "read_utc": "2026-09-24T15:37:05Z"
+    },
+    "payai": {
+     "resources_read": "6871",
+     "reported_total": "6871",
+     "complete": true,
+     "read_utc": "2026-09-24T15:37:17Z"
+    }
+   },
+   "does_not_prove": [
+    "that the rest of this sentence has been checked. The measurement beside it covers whether either public x402 discovery index, each held by a payment facilitator other than the subject, lists a resource on the subject's hosts. Which providers handle the subject's payments and payouts, and whether Stripe is one, is not measured.",
+    "that the subject does or does not accept x402 payments. A discovery index lists a resource after it has been registered with, or settled through, that facilitator with discovery metadata; a working x402 endpoint that settles elsewhere or omits the metadata is not listed",
+    "NOT_FOUND_IN_INDEXES is a fact about two indexes at one time, not an absence of the rail and not a finding that any statement is false",
+    "that a listed resource settles, delivers, or is safe to pay. A listing is not a settlement",
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that a measurement existing beside a claim is a verdict on it. CLAIM_MEASURED means a measurement exists here; it is not a pass, a fail, a tick or a cross"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:29Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "81980b2d3c5b70aafa9af84d515cf131c9463e0e4a685fe71eb074b95a4aa77d",
+   "method": {
+    "description": "enumerate every page of the two public, keyless x402 discovery indexes (Coinbase CDP Bazaar at limit=100 per page, PayAI at limit=1000 per page) to the total each index reports, and select the resources whose URL host is one of the subject's declared hosts. Each index is held by its facilitator, not by the subject",
+    "harness": "scripts/claims/measure_hiring.py :: M-HP-X402-INSTAHUMAN",
+    "measured_at": "2026-09-24T15:37:18Z",
+    "evidence": [
+     {
+      "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:37:05Z",
+      "note": "169 page(s), 16888 resource(s) of a reported 16888; page digests are in the lane evidence index"
+     },
+     {
+      "url": "https://facilitator.payai.network/discovery/resources",
+      "status": 200,
+      "accessed_utc": "2026-09-24T15:37:17Z",
+      "note": "7 page(s), 6871 resource(s) of a reported 6871; page digests are in the lane evidence index"
+     }
+    ]
+   },
+   "result": {
+    "subject": "InstaHuman",
+    "hosts_searched": [
+     "instahuman.com",
+     "www.instahuman.com",
+     "api.instahuman.com"
+    ],
+    "resources_listed_on_subject_hosts": "1",
+    "status": "LISTED",
+    "indexes_read_completely": true,
+    "per_index": {
+     "cdp": [],
+     "payai": [
+      {
+       "resource": "https://api.instahuman.com/x402/feedback",
+       "networks": [
+        "base"
+       ],
+       "assets": [
+        "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+       ],
+       "last_updated": "2026-07-15T18:08:51.965Z"
+      }
+     ]
+    },
+    "n": 2
+   }
+  },
+  {
+   "schema": "csoai.claim-maintenance.artifact/0.1",
+   "claim_id": "IH-4",
+   "subject": {
+    "name": "InstaHuman",
+    "identifier": "instahuman.com",
+    "identifier_kind": "domain"
+   },
+   "claim_verbatim": "operated by Hallway LLC (DBA InstaHuman)",
+   "claim_type": "entity-identity",
+   "source_url": "https://instahuman.com/legal/terms-of-use",
+   "access_date": "2026-09-24T15:39:29Z",
+   "source_content_hash": {
+    "alg": "sha256",
+    "value": "3e23bd23bd08d08e09499a04f4d38a33db4858bbdf57e19848de32e26f2fb9ac",
+    "covers": "visible-text",
+    "extracted_chars": 3491
+   },
+   "claim_hash": "e2c5766c939565d9542123b141ec954d084a8e914b9a567484184076993cd579",
+   "state": "UNMEASURED",
+   "measurement_plan": "settleable in principle from the business register of the state the entity is formed in. The terms name the entity and select the law of Maryland but do not state where the entity is formed, and state business registers answer only through an interactive search form, which this harness does not submit. No route was run in this capture.",
+   "window": null,
+   "denominator": null,
+   "does_not_prove": [
+    "that the claim is false — nothing in this record states or implies that, and nothing derived from it may be read that way",
+    "that the claim is true — presence on a page is the page saying it, not a fact established",
+    "who wrote the page, or why it says what it says",
+    "that anything here has been checked; this claim is in UNMEASURED and that state means exactly what the specification says it means"
+   ],
+   "observed_changes": [],
+   "conflicts": [],
+   "first_captured_utc": "2026-09-24T15:39:29Z",
+   "next_read_utc": "2026-10-01T09:20:00Z",
+   "artifact_sha256": "01e00745121bedc765077fad47a3484f899da2c49f406f3653e204d5cd556324"
+  }
+ ],
+ "resolution_calendar": [],
+ "resolution_calendar_note": "A dated claim resolves on a known day, after which public evidence can settle it without any judgement from this maintainer. The date is recorded here at REGISTRY level and not inside the artifacts, because the v0.1 artifact schema sets additionalProperties:false and an artifact carrying an unlisted field would fail the schema its own conformance clause points at. Moving the field into the artifact is a v0.2 change; v0.1 is published and is never edited (spec 12).",
+ "measurements_referenced": {
+  "M-HP-MCP-RENTAHUMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-MCP-RENTAHUMAN.json"
+  },
+  "M-HP-X402-RENTAHUMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-X402-RENTAHUMAN.json"
+  },
+  "M-HP-ENTITY-RAWLABS": {
+   "state": "UNMEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-ENTITY-RAWLABS.json",
+   "why_not_attached": "EDGAR is a register of SEC filings, not of incorporations. A full-text search that finds no filing under this name says nothing about whether the entity exists, because most private companies never file with the SEC. The incorporation registers that could settle the claim answer only through an interactive search form, which this harness does not submit; so this run reached no measurement"
+  },
+  "M-HP-LICENCE-RENTAHUMAN": {
+   "state": "UNMEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-LICENCE-RENTAHUMAN.json",
+   "why_not_attached": "GitHub's record for rentahuman-ai/human-rental-marketplace could not be read (status 404); nothing is concluded"
+  },
+  "M-CORR-PAYFACTO-GOTOHUMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-CORR-PAYFACTO-GOTOHUMAN.json"
+  },
+  "M-HP-LICENCE-GOTOHUMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-LICENCE-GOTOHUMAN.json"
+  },
+  "M-HP-MCP-GOTOHUMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-MCP-GOTOHUMAN.json"
+  },
+  "M-HP-ENTITY-GOTOHUMAN": {
+   "state": "UNMEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-ENTITY-GOTOHUMAN.json",
+   "why_not_attached": "The German commercial register (Handelsregister) answers only through an interactive search form, which this harness does not submit. The keyless aggregator route was tried: its web search served a body reading 'HAProxy Challenge We need to verify you are human before you can continue. Please solve this Captcha and we will get you' (HTTP 200), and its API answered HTTP 401 because it requires a token, so it was dropped rather than worked around. Nothing is concluded about the entity"
+  },
+  "M-HP-ENTITY-PAYMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-ENTITY-PAYMAN.json"
+  },
+  "M-HP-MCP-INVOKE": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-MCP-INVOKE.json"
+  },
+  "M-HP-X402-INSTAHUMAN": {
+   "state": "CLAIM_MEASURED",
+   "harness_output": "scripts/claims/measure_hiring.py -> M-HP-X402-INSTAHUMAN.json"
+  }
+ },
+ "not_captured": [],
+ "capture_notes": {
+  "RH-1": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-2": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-3": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-4": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-5": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-6": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-7": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-8": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "RH-9": {
+   "claim_located": "EXACT_IN_RESPONSE_BYTES",
+   "searched_in": "the response body itself, decoded as UTF-8; the published digest covers those same bytes",
+   "source_content_hash_covers": "raw-bytes"
+  },
+  "GT-1": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "GT-2": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "GT-3": {
+   "claim_located": "EXACT_IN_RESPONSE_BYTES",
+   "searched_in": "the response body itself, decoded as UTF-8; the published digest covers those same bytes",
+   "source_content_hash_covers": "raw-bytes"
+  },
+  "GT-4": {
+   "claim_located": "EXACT_IN_RESPONSE_BYTES",
+   "searched_in": "the response body itself, decoded as UTF-8; the published digest covers those same bytes",
+   "source_content_hash_covers": "raw-bytes"
+  },
+  "GT-5": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "GT-6": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "PM-1": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "PM-2": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "PM-3": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "PM-4": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "PM-5": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IN-1": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IN-2": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IN-3": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IN-4": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IN-5": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IH-1": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IH-2": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IH-3": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  },
+  "IH-4": {
+   "claim_located": "EXACT",
+   "searched_in": "the visible text extracted from this page by the published rule",
+   "source_content_hash_covers": "visible-text"
+  }
+ },
+ "capture_notes_explained": "For every claim: how this reader located the claim string inside what it read, and on which surface. EXACT means byte-for-byte in the extracted text. MATCHED_AFTER_NORMALISING_EXTRACTOR_ARTEFACTS means the string is there once this extractor's own stray spaces before punctuation and its inline footnote markers are removed. A reader of the page sees neither, and the specification anticipates that extractors differ and asks for exactly this disclosure (spec 6.3). MATCHED_IN_DOCUMENT_TEXT_LAYER means the source is a filed document whose published digest covers its bytes, and the sentence was located in the text layer extracted from those bytes. EXACT_IN_RESPONSE_BYTES means the source is plain text with no extractor between the bytes and the reader, so the string is in the same bytes the digest covers. The mode is published rather than normalised away, so a reader can tell an extractor difference from a content change.",
+ "merkle": {
+  "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+  "leaf_hash": "SHA-256(0x00 || entry)",
+  "node_hash": "SHA-256(0x01 || left || right)",
+  "split": "largest power of two strictly below n",
+  "odd_leaf_handling": "none — no duplication and no carry-up; the split rule handles every n",
+  "entry_bytes": "canonical JSON of the claim artifact (spec 6.1: keys sorted by code point, no insignificant whitespace, UTF-8, no floating-point numbers), with the sig field omitted",
+  "leaf_order": "the order of the claims array in this file",
+  "root": "72bfe56d27ebb82e368e722963b29f53b416e65914c8a5f694e36f4fb6435358",
+  "tree_size": 29,
+  "inclusion_proofs": {
+   "RH-1": {
+    "leaf_index": 0,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "d2b77695a88170beaa3862453b158451020f6647b27727a336870be6f0ca58a0"
+     },
+     {
+      "side": "right",
+      "sibling": "48a8af49b9e20907209e52ee2e1c34513e137562701687782a2af23bb25cd438"
+     },
+     {
+      "side": "right",
+      "sibling": "97b81777884298edac476ccb9c4b552e7ec1cccad5861c989fbc9eb6d15cb38c"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-2": {
+    "leaf_index": 1,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "e089ef1a6f0021fc8e6841b79c6f908920424f09241d5b2634c027a6aa54d984"
+     },
+     {
+      "side": "right",
+      "sibling": "48a8af49b9e20907209e52ee2e1c34513e137562701687782a2af23bb25cd438"
+     },
+     {
+      "side": "right",
+      "sibling": "97b81777884298edac476ccb9c4b552e7ec1cccad5861c989fbc9eb6d15cb38c"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-3": {
+    "leaf_index": 2,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "024ab4a6f02b59848f2e341eccbf92493f87c198a5d9b903aea5764755a85cef"
+     },
+     {
+      "side": "left",
+      "sibling": "b12228e8e839add9070b00eb03ca4955f4e48ad7495620bcd2bf41395ad74561"
+     },
+     {
+      "side": "right",
+      "sibling": "97b81777884298edac476ccb9c4b552e7ec1cccad5861c989fbc9eb6d15cb38c"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-4": {
+    "leaf_index": 3,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "001d8982b4b56450130784c0704a5e225231e287b4bce76897060cdf50c122a7"
+     },
+     {
+      "side": "left",
+      "sibling": "b12228e8e839add9070b00eb03ca4955f4e48ad7495620bcd2bf41395ad74561"
+     },
+     {
+      "side": "right",
+      "sibling": "97b81777884298edac476ccb9c4b552e7ec1cccad5861c989fbc9eb6d15cb38c"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-5": {
+    "leaf_index": 4,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "8a31b41fea232849c597e429cdcc440610446ab1269a238f934530daff2274f6"
+     },
+     {
+      "side": "right",
+      "sibling": "4843750845c63b5c3edc266cf4f085e2c2dc5c4a4911f299d30ed3cf94c436ab"
+     },
+     {
+      "side": "left",
+      "sibling": "bf31a0bb9d9fd6e031d3afe29c26101d1fb12bd0d6511edd434ce2b67977fac0"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-6": {
+    "leaf_index": 5,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "d359818a24fde0826218fa6a829c00b4fc242e71e42650a7f6c77aeb526d78c0"
+     },
+     {
+      "side": "right",
+      "sibling": "4843750845c63b5c3edc266cf4f085e2c2dc5c4a4911f299d30ed3cf94c436ab"
+     },
+     {
+      "side": "left",
+      "sibling": "bf31a0bb9d9fd6e031d3afe29c26101d1fb12bd0d6511edd434ce2b67977fac0"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-7": {
+    "leaf_index": 6,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "79a2439c5fbc4a9c48455b75eb05c090e8c714f13b28a5bc0381925f02e86b8f"
+     },
+     {
+      "side": "left",
+      "sibling": "a445aa256b90b824cdafd1f5b3cf135cc0cd0bf8dc7e855db4a3c20b661daf44"
+     },
+     {
+      "side": "left",
+      "sibling": "bf31a0bb9d9fd6e031d3afe29c26101d1fb12bd0d6511edd434ce2b67977fac0"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-8": {
+    "leaf_index": 7,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "8c44203254db8fa820ddfb0c1b35a12c26edb12215abaf76423ac6d2be87e45d"
+     },
+     {
+      "side": "left",
+      "sibling": "a445aa256b90b824cdafd1f5b3cf135cc0cd0bf8dc7e855db4a3c20b661daf44"
+     },
+     {
+      "side": "left",
+      "sibling": "bf31a0bb9d9fd6e031d3afe29c26101d1fb12bd0d6511edd434ce2b67977fac0"
+     },
+     {
+      "side": "right",
+      "sibling": "bd0061369c2eb4ffb201051623bf554a5cb56b0e9a9ad8d689af0c913e1e6617"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "RH-9": {
+    "leaf_index": 8,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "7fb70f0e5f12d76a6df1cbbe559c791dab37250846dc3f53e96f6512a56c0167"
+     },
+     {
+      "side": "right",
+      "sibling": "baa40945506657e4498ccd1a731526d77a4547cb527d97ea24abead56bb32c8a"
+     },
+     {
+      "side": "right",
+      "sibling": "f6d7b8b0ce5f933f0fcd5e372b966fc651087c142d18088a7eb35aaaef49c040"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "GT-1": {
+    "leaf_index": 9,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "c3f544e9f0b10d6cdfc9d17c746a830981ce6636cdb518eeec4fd751b7768952"
+     },
+     {
+      "side": "right",
+      "sibling": "baa40945506657e4498ccd1a731526d77a4547cb527d97ea24abead56bb32c8a"
+     },
+     {
+      "side": "right",
+      "sibling": "f6d7b8b0ce5f933f0fcd5e372b966fc651087c142d18088a7eb35aaaef49c040"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "GT-2": {
+    "leaf_index": 10,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "f42e7a7c73233743b1b61fff38ca31b1d9e99654cb3dfdbf7ec1adf8ec7c6ebf"
+     },
+     {
+      "side": "left",
+      "sibling": "6571955ebfafe3e7f36afccd7e61bbf9547651e630ab16c8b5d3466dada1b2c5"
+     },
+     {
+      "side": "right",
+      "sibling": "f6d7b8b0ce5f933f0fcd5e372b966fc651087c142d18088a7eb35aaaef49c040"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "GT-3": {
+    "leaf_index": 11,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "c8f8de271c5711581fdb54f6fd77176e0ea70169f99eb4cb59991502b35f3902"
+     },
+     {
+      "side": "left",
+      "sibling": "6571955ebfafe3e7f36afccd7e61bbf9547651e630ab16c8b5d3466dada1b2c5"
+     },
+     {
+      "side": "right",
+      "sibling": "f6d7b8b0ce5f933f0fcd5e372b966fc651087c142d18088a7eb35aaaef49c040"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "GT-4": {
+    "leaf_index": 12,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "83262b0213b2e9e6734eba41cc28568a99e2bc14661a6817e135513256c3a189"
+     },
+     {
+      "side": "right",
+      "sibling": "91f2b2b7a43dcbca1d686e1a8df185e00599f666279481c0338251fc22205ab1"
+     },
+     {
+      "side": "left",
+      "sibling": "fce886ef40c74b61ea127ef3c03eda1519a8ad85201b63ad9408adf472a23777"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "GT-5": {
+    "leaf_index": 13,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "0ad89ef78ff4d0f6793390472225c6e762dae8d1c315220ca3f65434092b4ed4"
+     },
+     {
+      "side": "right",
+      "sibling": "91f2b2b7a43dcbca1d686e1a8df185e00599f666279481c0338251fc22205ab1"
+     },
+     {
+      "side": "left",
+      "sibling": "fce886ef40c74b61ea127ef3c03eda1519a8ad85201b63ad9408adf472a23777"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "GT-6": {
+    "leaf_index": 14,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "621187bec298943dab3d29d02eb2c75f519ea8fdf91f7ddec81b16d5003b271a"
+     },
+     {
+      "side": "left",
+      "sibling": "51e5c08df57341e36715553ac6c5095ad14fb8ff475fb50dcb15ef81da242eb3"
+     },
+     {
+      "side": "left",
+      "sibling": "fce886ef40c74b61ea127ef3c03eda1519a8ad85201b63ad9408adf472a23777"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "PM-1": {
+    "leaf_index": 15,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "39d61f161901211e399ca179bf1ea9e58b60e050d4d5417e1a00c7521bee29dd"
+     },
+     {
+      "side": "left",
+      "sibling": "51e5c08df57341e36715553ac6c5095ad14fb8ff475fb50dcb15ef81da242eb3"
+     },
+     {
+      "side": "left",
+      "sibling": "fce886ef40c74b61ea127ef3c03eda1519a8ad85201b63ad9408adf472a23777"
+     },
+     {
+      "side": "left",
+      "sibling": "6c33bbe5b82e8222930f1aea23b29434b5ed4ada1d48d0a5c8dcc95297c5f2d1"
+     },
+     {
+      "side": "right",
+      "sibling": "ff419f1f6606d30e4ad1bb19cfa922e1f3993558490cceb9f5b61c237156a2d6"
+     }
+    ]
+   },
+   "PM-2": {
+    "leaf_index": 16,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "b2699c82ec8748be95923038b803292eac3192c538e29991f5cacc29c86e8d30"
+     },
+     {
+      "side": "right",
+      "sibling": "39da79e7c5237157d4f71ef8f71050f3afbd887322aed0f416bfe1609f32e3ab"
+     },
+     {
+      "side": "right",
+      "sibling": "766f447c7a0acd86b637cece55551407bacba230df3e4d8af814915f6b5a5765"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "PM-3": {
+    "leaf_index": 17,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "d391df2ce14751bc7a86514f114993441e684db2f24dcaea251d38d7806c4fc8"
+     },
+     {
+      "side": "right",
+      "sibling": "39da79e7c5237157d4f71ef8f71050f3afbd887322aed0f416bfe1609f32e3ab"
+     },
+     {
+      "side": "right",
+      "sibling": "766f447c7a0acd86b637cece55551407bacba230df3e4d8af814915f6b5a5765"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "PM-4": {
+    "leaf_index": 18,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "0adeed3e038a6035eb616c85b0ca9b0831a1f69557cdb723a58fa4c8a61527d2"
+     },
+     {
+      "side": "left",
+      "sibling": "2dd5662b6c449b0c548316efdaf31e874c533e811b9ac93b04c6fc2316dfd1c5"
+     },
+     {
+      "side": "right",
+      "sibling": "766f447c7a0acd86b637cece55551407bacba230df3e4d8af814915f6b5a5765"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "PM-5": {
+    "leaf_index": 19,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "017ce092994ca34f6f2f33351331f4f487f65a62df0f88c6a7a2e00ca2c6afa2"
+     },
+     {
+      "side": "left",
+      "sibling": "2dd5662b6c449b0c548316efdaf31e874c533e811b9ac93b04c6fc2316dfd1c5"
+     },
+     {
+      "side": "right",
+      "sibling": "766f447c7a0acd86b637cece55551407bacba230df3e4d8af814915f6b5a5765"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IN-1": {
+    "leaf_index": 20,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "0de34e9d6fc8f1cecc022e5b12896f455bb13d48bc9ef261cc6414a11db825f0"
+     },
+     {
+      "side": "right",
+      "sibling": "981473973a990e4c941216be8e95fee68e946d0904f077e4ecae2e363f2d9e1d"
+     },
+     {
+      "side": "left",
+      "sibling": "0a3f2fb2246ea1271e96de9df39559e556087f105b0c11f89c7b9cbca41c1a21"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IN-2": {
+    "leaf_index": 21,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "beaadb1335b247b6d117d672b716d89606e88adcb85494582309c9ce06c68e1d"
+     },
+     {
+      "side": "right",
+      "sibling": "981473973a990e4c941216be8e95fee68e946d0904f077e4ecae2e363f2d9e1d"
+     },
+     {
+      "side": "left",
+      "sibling": "0a3f2fb2246ea1271e96de9df39559e556087f105b0c11f89c7b9cbca41c1a21"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IN-3": {
+    "leaf_index": 22,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "e068cbc02cb9851448e4170adc915e15d2a11314a64ed336650cbd9e9c434767"
+     },
+     {
+      "side": "left",
+      "sibling": "1a8ec4bdfaaf1d68ae7c49a19467c4f2157ef12c8289e7e053d1132e8a44bbdc"
+     },
+     {
+      "side": "left",
+      "sibling": "0a3f2fb2246ea1271e96de9df39559e556087f105b0c11f89c7b9cbca41c1a21"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IN-4": {
+    "leaf_index": 23,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "0b5adca72026d8b4eccded6d2ae012a92ff5798ff18a0e3894b03434ea6e4a35"
+     },
+     {
+      "side": "left",
+      "sibling": "1a8ec4bdfaaf1d68ae7c49a19467c4f2157ef12c8289e7e053d1132e8a44bbdc"
+     },
+     {
+      "side": "left",
+      "sibling": "0a3f2fb2246ea1271e96de9df39559e556087f105b0c11f89c7b9cbca41c1a21"
+     },
+     {
+      "side": "right",
+      "sibling": "d1ddf1592cfbccd2d272cd260b19f9e4c945b30cd00e8a04522fbb1610fb216a"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IN-5": {
+    "leaf_index": 24,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "7a6257fd157a5c77a6ca5834e00f01567c667d1ed9dcd1dede4ad2e9dcb8e61c"
+     },
+     {
+      "side": "right",
+      "sibling": "028c5847e424b5a2a57fefc345eb16b09f7ffb60bffe70bddb9e61b183956b40"
+     },
+     {
+      "side": "right",
+      "sibling": "bdfce9a2ce59c7291511e96fd2b0e1f4cd025097a8c92b475bd519e000ee9f55"
+     },
+     {
+      "side": "left",
+      "sibling": "552754cf191316420d92227adda35c822948c4ee0302c476bac6b6c9a3888406"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IH-1": {
+    "leaf_index": 25,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "f3eee8e025fa040ae6d6cb826cd3767aa62ae913e1269a558f50b528d157dbe2"
+     },
+     {
+      "side": "right",
+      "sibling": "028c5847e424b5a2a57fefc345eb16b09f7ffb60bffe70bddb9e61b183956b40"
+     },
+     {
+      "side": "right",
+      "sibling": "bdfce9a2ce59c7291511e96fd2b0e1f4cd025097a8c92b475bd519e000ee9f55"
+     },
+     {
+      "side": "left",
+      "sibling": "552754cf191316420d92227adda35c822948c4ee0302c476bac6b6c9a3888406"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IH-2": {
+    "leaf_index": 26,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "right",
+      "sibling": "62e3a65ef218af92ffed26e79d4eee5e8950a93620f7f94f98b57eb7cbab1313"
+     },
+     {
+      "side": "left",
+      "sibling": "896fd42a50bf28f1b87a738254eb099143f8d8e631bfa5397f10673a4a9bfde6"
+     },
+     {
+      "side": "right",
+      "sibling": "bdfce9a2ce59c7291511e96fd2b0e1f4cd025097a8c92b475bd519e000ee9f55"
+     },
+     {
+      "side": "left",
+      "sibling": "552754cf191316420d92227adda35c822948c4ee0302c476bac6b6c9a3888406"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IH-3": {
+    "leaf_index": 27,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "ca24d6fd1235665a768c9883c6a89fce8c68ac0e17d491a9228cd0e52087c71f"
+     },
+     {
+      "side": "left",
+      "sibling": "896fd42a50bf28f1b87a738254eb099143f8d8e631bfa5397f10673a4a9bfde6"
+     },
+     {
+      "side": "right",
+      "sibling": "bdfce9a2ce59c7291511e96fd2b0e1f4cd025097a8c92b475bd519e000ee9f55"
+     },
+     {
+      "side": "left",
+      "sibling": "552754cf191316420d92227adda35c822948c4ee0302c476bac6b6c9a3888406"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   },
+   "IH-4": {
+    "leaf_index": 28,
+    "tree_size": 29,
+    "audit_path": [
+     {
+      "side": "left",
+      "sibling": "6a87d665d3292609e086d357533bc61eef5bc14008ee79919f3a24b92a678e76"
+     },
+     {
+      "side": "left",
+      "sibling": "552754cf191316420d92227adda35c822948c4ee0302c476bac6b6c9a3888406"
+     },
+     {
+      "side": "left",
+      "sibling": "f70a8e89da6530a1d3477c6b5bc7a35df8571869c0a1ee2733bab878189be1f9"
+     }
+    ]
+   }
+  },
+  "not_the_other_root": "This is NOT the estate public card root at /root.json. That root duplicates an odd final node and uses no domain-separation prefixes; it is a separate structure over a separate corpus and the two are never added, reconciled or substituted for one another (spec 7.3)."
+ },
+ "boundaries": [
+  "No claim of falsity is made about any party, anywhere in this file. Where a measurement differs from a claim, the claim, the measured value, the window, the denominator and the method are recorded and nothing further is said. The reader draws the conclusion; this maintainer does not.",
+  "A listing here is not an endorsement and it is not an accusation. It means a public page is being read on a schedule.",
+  "Nothing here is a finding about the employment status of any worker, the lawfulness of any platform, or the adequacy of any human oversight. Statements a subject makes about worker classification, identity checks, escrow or dispute resolution are captured as that subject's statements; the only bodies that can settle the first of those are courts and tribunals, and none of their records was read.",
+  "Every source was read without a key, an account or a payment. No account was created, no form was submitted, no task was posted and no payment was made. A source that required a token was dropped and recorded in the harness output, never worked around.",
+  "A page or register this reader could not obtain is SEARCH_INCONCLUSIVE with its HTTP status recorded. It is never recorded as an absence. The code host answers 404 both for a repository that does not exist and for a private one, so a 404 there is read as neither.",
+  "A /.well-known file that is PRESENT is evidence that the file was published and nothing more; what it says is the subject speaking again. Where this lane read one, it is used only as that.",
+  "No personal data is carried. Package-registry maintainer names and e-mail addresses, and the street address and telephone number on a regulator's filer record, were present in bytes that were read and hashed; they are not reproduced here.",
+  "The maintainer publishes its own MCP servers in the official MCP registry and its own x402 resources in the same discovery indexes read here. That is co-listing in a public index, not a relationship with any subject, and it is stated so a reader can weigh it."
+ ],
+ "how_to_rerun": {
+  "capture": "node scripts/claims/capture-growth.mjs --subjects scripts/claims/subjects-hiring-platforms-2026-09-24.json --measurements <dir> --out public/claims/claimreg-hiring-platforms-2026-09-24.json",
+  "measure": "python3 scripts/claims/measure_hiring.py <dir>",
+  "verify_any_artifact": "node scripts/claim-capture.mjs --verify <file containing the artifact>",
+  "requirements": "Node 18+ and the Python standard library. No key, no account, no paid API."
+ },
+ "signature_state": "UNSIGNED DRAFT. This registry has not been signed. It was built on a lane branch for review and has no .signed.json sidecar; nothing in it may be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, when one exists, will prove only that these bytes were committed to at that time; it grades nothing and certifies nobody (spec 9.5).",
+ "timestamp_state": "NOT SUBMITTED. No OpenTimestamps receipt has been requested for this file. The three words of spec 8.1 are reserved, and none of them applies to this file yet.",
+ "does_not_prove": [
+  "that any claim here is false. This registry makes no such statement about anyone.",
+  "that a claim in UNMEASURED or UNCHECKABLE has been checked; it has not, and the state says so.",
+  "that CLAIM_MEASURED is a verdict. It means a measurement exists beside the claim.",
+  "that the subjects here are the organisations most worth observing. This is what is maintained, not a survey and not a ranking."
+ ],
+ "registry_digest": "ca951f4c45fec358358efd7440537df98d8d382bce6c60562459fb0d565444ea"
+}
