@@ -5,9 +5,9 @@ import { setMetaDescription } from "@/lib/utils";
 /** A dated directory of already-published evidence, never a live board or ranking. */
 export default function SignedMillBatch20260924() {
   useEffect(() => {
-    document.title = "24 September signed measurement batch | Council of AI";
+    document.title = "13:10 UTC signed measurement batch | Council of AI";
     setMetaDescription(
-      "Fourteen signed measurement cards from 24 September 2026: thirteen MEASURED and one UNMEASURED, each linked to its exact public JSON and card root.",
+      "Fourteen signed measurement cards from the 13:10 UTC run on 24 September 2026: thirteen MEASURED and one UNMEASURED, linked to exact public JSON and root.",
     );
   }, []);
 
@@ -21,6 +21,9 @@ export default function SignedMillBatch20260924() {
           Dated evidence directory · 24 September 2026
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">Signed mill batch</h1>
+        <p className="mt-2 text-sm font-semibold text-amber-900">
+          This page records the 13:10 UTC run only. Later runs are separate and are not represented here.
+        </p>
         <p className="mt-4 max-w-3xl text-gray-700">
           {batch.cards.length} signed cards from one {batch.model} run: {measured} marked MEASURED
           and {unmeasured} marked UNMEASURED. The latter has 28 graded items, below the
