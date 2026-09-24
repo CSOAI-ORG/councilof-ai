@@ -21,9 +21,43 @@ export function servedUrl(route, origin) {
 
 // The footer names /terms-of-service as the one current contract. The two
 // working aliases remain readable, but must not advertise duplicate canonicals.
-const CANONICAL_ALIAS = new Map([
+//
+// The same holds for 27 more addresses measured 2026-09-24: across the live sitemap, each serves
+// the same title, description and body as the route it maps to, and each advertised itself as the
+// original, so search engines saw duplicate pages. The alias stays readable; its canonical names
+// the route the site's own links use most (ties: the more descriptive path; /law over /meok-law,
+// which names the sister project on a CSOAI page). client/index.html carries the same map for
+// crawlers that run JavaScript; canonical-url.node-test.mjs holds the two copies equal.
+export const CANONICAL_ALIAS = new Map([
   ["/terms", "/terms-of-service"],
   ["/legal/terms", "/terms-of-service"],
+  ["/meok-law", "/law"],
+  ["/csoai-law", "/law"],
+  ["/eu-ai-act-explained", "/ai-act-summary"],
+  ["/ai-act-vs-gdpr", "/eu-ai-act-vs-gdpr"],
+  ["/ai-glossary", "/glossary"],
+  ["/ai-governance-guide", "/ai-governance"],
+  ["/aug-2026", "/readiness"],
+  ["/cobol", "/cobolbridge"],
+  ["/open-media", "/commons"],
+  ["/connect-ai", "/connect-gspc"],
+  ["/framework-crosswalks", "/crosswalks"],
+  ["/drift-product", "/drift-audit"],
+  ["/white-label", "/embed"],
+  ["/legal/founding-council", "/founding-council-agreement"],
+  ["/guides/iso-42001", "/iso-42001"],
+  ["/guides/nist-ai-rmf", "/nist-ai-rmf"],
+  ["/guides/tc260", "/tc260"],
+  ["/help-center", "/help"],
+  ["/high-risk-ai", "/high-risk-ai-systems"],
+  ["/rediscovered", "/lineage"],
+  ["/relevance-map", "/map"],
+  ["/map-regions", "/regions"],
+  ["/mcp-tools", "/tool-commons"],
+  ["/prosperity", "/prosperity-fund"],
+  ["/real-world", "/world-3d"],
+  ["/regulator-atlas", "/regulators"],
+  ["/x402-leaderboard", "/x402-board"],
 ]);
 
 /**

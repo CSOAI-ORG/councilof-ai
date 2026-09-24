@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
-import { normRoute, rewriteCanonical, servedUrl } from "./canonical-url.mjs";
+import { CANONICAL_ALIAS, normRoute, rewriteCanonical, servedUrl } from "./canonical-url.mjs";
 
 const O = "https://councilof.ai";
 
@@ -83,5 +83,23 @@ test("browser self-canonical script keeps Terms aliases on the same canonical", 
     assert.equal(nodes['link[rel=canonical]'].href, expected);
     assert.equal(nodes['meta[property="og:url"]'].content, expected);
     assert.equal(nodes['meta[name="twitter:url"]'].content, expected);
+  }
+});
+
+test("browser alias map is the build alias map, entry for entry", () => {
+  const shell = readFileSync(new URL("../../client/index.html", import.meta.url), "utf8");
+  const m = shell.match(/var A=(\{[^}]*\});/);
+  assert.ok(m, "inline alias map exists");
+  assert.deepEqual(JSON.parse(m[1]), Object.fromEntries(CANONICAL_ALIAS));
+});
+
+test("a duplicate address names its original; the original keeps itself", () => {
+  const self = `${O}/help-center/`;
+  const html = `<link rel="canonical" href="${self}">`;
+  assert.equal(rewriteCanonical(html, "/help-center", O), `<link rel="canonical" href="${O}/help/">`);
+  const orig = `<link rel="canonical" href="${O}/help/">`;
+  assert.equal(rewriteCanonical(orig, "/help", O), orig);
+  for (const [alias, target] of CANONICAL_ALIAS) {
+    assert.ok(!CANONICAL_ALIAS.has(target), `${alias} -> ${target} must not chain`);
   }
 });
