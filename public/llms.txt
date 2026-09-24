@@ -89,6 +89,10 @@ Measurement, not certification.
 - labour-components (financial, deterministic-facts): row GET https://councilof.ai/api/gspc?axis=labour-components · page https://councilof.ai/axis/labour-components · bank https://huggingface.co/datasets/csoai/gspc-human-labour-index · evidence https://councilof.ai/interop/financial-measure-run-labour-components.json · MCP get_axis {"axis":"labour-components"}
 - humanoid-labour-index (financial, deterministic-facts): row GET https://councilof.ai/api/gspc?axis=humanoid-labour-index · page https://councilof.ai/axis/humanoid-labour-index · bank https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index · evidence https://councilof.ai/interop/financial-measure-run-humanoid-labour-index.json · MCP get_axis {"axis":"humanoid-labour-index"}
 
+## Dated effect-binding probe account
+
+- Bounded 22 September 2026 server-probe account: https://councilof.ai/axis/effect-binding-server-probe-2026-09-22 — a dated result, not a current score or security grade. Read the live effect-binding board row for current state.
+
 ## Agent-UI stream (agents)
 - Living GSPC as AG-UI events: GET https://councilof.ai/api/agui/gspc-state — SSE STATE_DELTA + TEXT_MESSAGE_CONTENT, derived from GET /api/gspc per request. Read-only presentation transport; it renders the board, it never awards a state. Empty cells stay visible; no score is invented to fill a frame.
 - Human view of the same board: https://councilof.ai/dashboard
