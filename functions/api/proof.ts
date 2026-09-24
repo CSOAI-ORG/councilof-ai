@@ -30,6 +30,18 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
   const u = (p: string) => new URL(p, origin).toString();
+  // Some directories cached the bare route. Send them to the existing x402 door;
+  // payment verification and settlement remain bound to its canonical URL.
+  if (!url.search) {
+    return new Response(null, {
+      status: 307,
+      headers: {
+        location: u("/api/proof?bundle=1"),
+        "cache-control": "no-store",
+        "access-control-allow-origin": "*",
+      },
+    });
+  }
   const sha = (url.searchParams.get("sha") || "").trim().toLowerCase();
   const bundle = url.searchParams.get("bundle") === "1";
   // Payment is VERIFIED, not assumed from header presence. Only evaluated for the paid
