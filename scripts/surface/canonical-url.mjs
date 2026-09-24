@@ -22,7 +22,7 @@ export function servedUrl(route, origin) {
 // The footer names /terms-of-service as the one current contract. The two
 // working aliases remain readable, but must not advertise duplicate canonicals.
 //
-// The same holds for 27 more addresses measured 2026-09-24: across the live sitemap, each serves
+// The same holds for 68 more addresses measured 2026-09-24: across the live sitemap, each serves
 // the same title, description and body as the route it maps to, and each advertised itself as the
 // original, so search engines saw duplicate pages. The alias stays readable; its canonical names
 // the route the site's own links use most (ties: the more descriptive path; /law over /meok-law,
@@ -58,6 +58,48 @@ export const CANONICAL_ALIAS = new Map([
   ["/real-world", "/world-3d"],
   ["/regulator-atlas", "/regulators"],
   ["/x402-leaderboard", "/x402-board"],
+  // Second batch 2026-09-24: 32 groups whose bodies differ in one related-section link only.
+  ["/usp", "/why"],
+  ["/why-csoai", "/why"],
+  ["/our-difference", "/why"],
+  ["/agents", "/council-vs-agents"],
+  ["/governance-council", "/council-vs-agents"],
+  ["/vs", "/compare"],
+  ["/vs-competitors", "/compare"],
+  ["/cookies", "/cookie-policy"],
+  ["/legal/cookies", "/cookie-policy"],
+  ["/personal-protection", "/protect"],
+  ["/deepfake-protection", "/protect"],
+  ["/rfc-0024", "/fedramp"],
+  ["/oscal-readiness", "/fedramp"],
+  ["/graph", "/governance-graph"],
+  ["/world-data", "/governance-graph"],
+  ["/privacy", "/privacy-policy"],
+  ["/legal/privacy", "/privacy-policy"],
+  ["/agents-network", "/network"],
+  ["/eu-ai-act-faq", "/ai-act-faq"],
+  ["/ai-act-timeline", "/eu-ai-act-timeline"],
+  ["/ailuminate", "/gspc-vs-ailuminate"],
+  ["/competitors", "/battlecards"],
+  ["/trust", "/boards/mcp"],
+  ["/checklist", "/eu-ai-act-checklist"],
+  ["/legal/disclaimers", "/disclaimers"],
+  ["/guides/eu-ai-act", "/eu-ai-act"],
+  ["/frequently-asked-questions", "/faq"],
+  ["/fines", "/penalties"],
+  ["/foundation-models", "/gpai"],
+  ["/framework-temples", "/temples"],
+  ["/regulation-tracker", "/global-regulations"],
+  ["/how", "/how-it-works"],
+  ["/industry-solutions", "/industries"],
+  ["/industry-playbooks", "/playbooks"],
+  ["/iso-eu", "/iso-42001-vs-eu-ai-act"],
+  ["/tracks", "/learn"],
+  ["/legal/licensing", "/licensing-agreement"],
+  ["/legal/membership", "/membership-agreement"],
+  ["/voice", "/minds"],
+  ["/nist-eu", "/nist-vs-eu-ai-act"],
+  ["/sector-atlas", "/sectors"],
 ]);
 
 /**
