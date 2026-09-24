@@ -403,6 +403,37 @@ for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
+// --- Delisted: served pages that tell crawlers not to index them ---------------
+// An outside crawl of every sitemap URL on 2026-09-24 found 43 entries whose own HTML says
+// "do not index me": 20 carry <meta name="robots" content="noindex"> (the 15 withdrawn industry
+// pages among them) and 23 declare a canonical elsewhere (13 aliases of /dashboard/, /faqs/,
+// three interop aliases, six /subdomains/* pages). A sitemap asking to index a page that
+// refuses indexing is a contradiction crawlers report as an error. The pages stay served;
+// they only leave the sitemap. Owner-authorised 2026-09-24; each removal is recorded in the
+// release guard's baseline under delistings[], and the guard re-checks the built page.
+const DELISTED = new Map([
+  ...["agent-rails", "care", "critical-infrastructure", "defence", "emotion-ai", "government", "humanoid",
+      "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
+    .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
+  ["/proof-receipt", "noindex"], ["/status/internal", "noindex"], ["/yield", "noindex"],
+  ["/grants", "noindex"], ["/subdomains/verifier", "noindex"],
+  ...["arena-scoreboard", "coliseum", "demo", "ecosystem", "governance-commons", "gspc-arena", "heatmap",
+      "home-v3", "integrations", "os-demo", "safe-space", "try", "watchdog/report"]
+    .map((s) => [`/${s}`, "canonical: /dashboard/"]),
+  ["/faqs", "canonical: /faq/"],
+  ["/interop/incident", "canonical: /interop/incident-openai-hf-2026-07/"],
+  ["/interop/swift", "canonical: /interop/swift-census-2026-09/"],
+  ["/interop/xrpl", "canonical: /interop/xrpl-toml-gap-2026-09/"],
+  ...["blog", "dashboards", "issuance", "marketplace", "press", "proofs"]
+    .map((s) => [`/subdomains/${s}`, `canonical: https://${s}.councilof.ai`]),
+]);
+const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/");
+
+// Prerendered as <path>/index.html with no bare->slash rule in _redirects, so Pages answers the
+// bare form with a 308. Emit the served form.
+const SLASH_FAMILIES = [/^\/library\/[a-z0-9-]+$/, /^\/vs\/[a-z0-9-]+$/];
+const servedForm = (p) => (SLASH_FAMILIES.some((re) => re.test(p)) ? `${p}/` : p);
+
 // --- Machine contracts (audit rec 5, lane d971a38) — not App.tsx routes, but
 // prime agent/AEO citation surface. Kept here so regeneration never drops them.
 const MACHINE_PATHS = [
@@ -556,11 +587,14 @@ const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, 
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
 let rewritten = 0;
 let droppedRedirect = 0;
+let delisted = 0;
 const finalPaths = [];
 const finalSeen = new Set();
 for (const p of paths) {
-  const c = canonicalise(p);
-  if (c === null) { droppedRedirect++; continue; }
+  const c0 = canonicalise(p);
+  if (c0 === null) { droppedRedirect++; continue; }
+  if (isDelisted(c0)) { delisted++; continue; }
+  const c = servedForm(c0);
   if (c !== p) rewritten++;
   // Distinct source routes can canonicalise to the same served URL. For example,
   // the React route /benchmarks and public/benchmarks/index.html both resolve to
@@ -597,7 +631,7 @@ writeFileSync(OUT, xml);
 console.log(
   `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
     `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ${skippedAlias} client-side <Redirect> aliases, ` +
-    `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
+    `${droppedRedirect} redirect-to-elsewhere, ${delisted} delisted (noindex or canonical elsewhere), ${blogUnbuilt} unbuilt blog slugs (404), ` +
     `${blogSkipped} redirected or withdrawn blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
     `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
