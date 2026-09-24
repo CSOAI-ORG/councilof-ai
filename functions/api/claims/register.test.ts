@@ -28,9 +28,18 @@ describe("GET /api/claims/register", () => {
     const onDiskSubjects = new Set<string>();
     for (const r of liveFiles) {
       const doc = JSON.parse(readFileSync(resolve(ROOT, "public/claims", r.url.split("/").pop()!), "utf8"));
-      for (const [k, s] of Object.entries(doc.subjects as Record<string, { claims: unknown[] }>)) {
-        onDiskSubjects.add(k);
-        onDiskClaims += s.claims.length;
+      if (doc.subjects && !Array.isArray(doc.subjects)) {
+        for (const [k, s] of Object.entries(doc.subjects as Record<string, { claims: unknown[] }>)) {
+          onDiskSubjects.add(k);
+          onDiskClaims += s.claims.length;
+        }
+      } else if (Array.isArray(doc.claims)) {
+        for (const claim of doc.claims as Array<{ subject?: { identifier?: string; name?: string } }>) {
+          onDiskSubjects.add(claim.subject?.identifier || claim.subject?.name || "unattributed");
+          onDiskClaims += 1;
+        }
+      } else {
+        throw new Error(`registry ${r.registry_id} has neither supported claim shape`);
       }
     }
     expect(register.totals.claims).toBe(onDiskClaims);
