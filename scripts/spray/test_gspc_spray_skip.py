@@ -208,7 +208,7 @@ def test_hf_dataset_card_removes_stale_counts_and_alias_inventory():
     assert "| `manifest.jsonl` | — | 4 |" in text
     assert "Card refreshed" not in text
     assert "was updated from this repository's file tree at" not in text
-    assert "`manifest.jsonl` lists every file with its\nsize, its blob hash" in text
+    assert "`manifest.jsonl` lists every other file with its\nsize, its blob hash" in text
     assert spray.hf_dataset_companions(files["README.md"], files["manifest.jsonl"], tr, changed) == files
     rows = [json.loads(line) for line in files["manifest.jsonl"].decode().splitlines()]
     assert rows[1]["sha256"] == spray.sha256_hex(tr["board_bytes"])

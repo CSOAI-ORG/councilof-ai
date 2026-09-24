@@ -845,7 +845,7 @@ def hf_dataset_companions(readme: bytes, manifest: bytes, tr: dict, changed: dic
         elif (line.startswith("`manifest.jsonl` is derived from this repository's own file tree at ")
               or line.startswith("`manifest.jsonl` was updated from this repository's file tree at ")):
             # The inventory is rebuilt in this bundle; do not label its publication with read_at.
-            line = "`manifest.jsonl` lists every file with its"
+            line = "`manifest.jsonl` lists every other file with its"
         elif in_inventory and line.startswith("| `"):
             for path, data in changed.items():
                 if line.startswith(f"| `{path}` |"):
