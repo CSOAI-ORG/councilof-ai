@@ -1,34 +1,43 @@
 {
  "axis": "care",
  "axis_status": "MEASURED",
- "content_id": "befb274ccab4c73ef6992ce7d20b05d822a66629afc18a6388999b9dab5f265e",
- "elo_decided_games": 10,
- "elo_leader": null,
- "elo_leader_score": null,
- "elo_ranked_models": 1,
- "elo_runner_up": null,
- "elo_separation": "TIE",
+ "content_id": "cffda39ceba3ed4f0e056af94c6a1975c7f26936078f7e2a90f051254f150112",
+ "elo_decided_games": 23,
+ "elo_leader": "mistral:7b",
+ "elo_leader_score": 1612,
+ "elo_ranked_models": 2,
+ "elo_runner_up": {
+  "ci": [
+   0.011,
+   0.283
+  ],
+  "elo": 1360.9,
+  "games": 16,
+  "model": "gemma3:12b",
+  "winrate": 0.062
+ },
+ "elo_separation": "SEPARATED",
  "elo_source": {
-  "content_id": "5e01fb24c74866efd0948dc65ce7dba0b0bc3ecfee4798fcd76f79abe902a275",
-  "generated": "2026-09-24T06:38:29Z",
+  "content_id": "ec550295cfeca4dd514af9a01f5d30554f2f8087c579b51e511ffee636095ab5",
+  "generated": "2026-09-24T07:39:16Z",
   "path": "/arena/elo_reference.json",
   "schema": "csoai.arena-elo-reference/0.2"
  },
- "elo_ties": 58,
+ "elo_ties": 85,
  "elo_top": {
   "ci": [
-   0.231,
-   0.882
+   0.608,
+   0.942
   ],
-  "elo": 1519.3,
-  "games": 5,
+  "elo": 1612,
+  "games": 18,
   "model": "mistral:7b",
-  "winrate": 0.6
+  "winrate": 0.833
  },
  "evidence_relation": "SEPARATE_EVIDENCE",
- "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (mistral:7b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
- "games_leader": null,
- "generated": "2026-09-24T06:38:30Z",
+ "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (mistral:7b, gemma3:12b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
+ "games_leader": 18,
+ "generated": "2026-09-24T07:39:17Z",
  "majority_baseline": 0.5,
  "models": 19,
  "not_a_certification": true,
@@ -50,21 +59,21 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "befb274ccab4c73ef6992ce7d20b05d822a66629afc18a6388999b9dab5f265e",
+  "content_id": "cffda39ceba3ed4f0e056af94c6a1975c7f26936078f7e2a90f051254f150112",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "befb274ccab4c73ef6992ce7d20b05d822a66629afc18a6388999b9dab5f265e",
+  "payload_sha256": "cffda39ceba3ed4f0e056af94c6a1975c7f26936078f7e2a90f051254f150112",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "f4a8df77c59aa366e23c44db05a7f04c84247f185cd6b6051b39268759ad87ac93feb718fd42b3addfd89944638bcf92a50fc8754ceb201fd1a8764eb6d5dc0a",
-  "signed_at": "2026-09-24T06:38:32.700Z",
+  "sig_ed25519": "248cab3e086c13d1b55f3a18f19d9ed3f33e6ddb7a0ea182cc5255c02bc52bdd5df4a59c7533a5da3b0ca23798c0da5a5b6de946c676c2e5d321871f09587300",
+  "signed_at": "2026-09-24T07:39:21.462Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "UNTESTED",
  "supersedes": {
-  "content_id": "e53f1fe8d2b78eecce7147c31b67c4d50d9048f1a1b623c8baba3592f524cbda",
+  "content_id": "befb274ccab4c73ef6992ce7d20b05d822a66629afc18a6388999b9dab5f265e",
   "elo_leader_then": null,
-  "generated": "2026-09-24T05:37:18Z",
+  "generated": "2026-09-24T06:38:30Z",
   "note": "superseded, never edited; new bytes, new signature",
   "signer": "did:web:csoai.org#board-attestation-1",
   "status_then": "UNTESTED"
