@@ -211,7 +211,8 @@ export default function GSPCVerify() {
               Free verification → optional commission receipt
             </p>
             <p className="text-[13px] text-emerald-100/80 leading-relaxed">
-              Free preview loads this published governance card into the verifier below. The paid
+              Free preview loads a historical signed governance card into the verifier below. Its
+              current board admission and quotability are not established by this example. The paid
               commission door issues a receipt for a named subject and re-serves signed cards already
               on file; it does not run a new measurement. Before paying, check the 402 challenge for
               the signer state, corpus date and cards available for your subject.
