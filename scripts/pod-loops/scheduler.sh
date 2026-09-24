@@ -63,6 +63,9 @@ set -u
 exec 8>"$STATE/scheduler.lock"
 flock -n 8 || exit 0
 log scheduler "START pid=$$ loops=$LOOPS"
+# bash parses this while-loop once: a job added to this file after START never fires until a restart
+# (harness-outcomes missed 13:57Z on 24 Sep that way). Exit when the file changes; supervise.sh restarts it.
+SELF_SHA=$(sha256sum "$LOOPS/scheduler.sh" | cut -d" " -f1)
 while true; do
   H=$(date -u +%H); M=$(date -u +%M)
   # Repository shell files are intentionally safe to install as 0644. Invoke
@@ -142,5 +145,8 @@ while true; do
   # daily because HF keeps every version; Oracle and the laptop are the copies that track the tip.
   # THE STAMP IS THIS SCHEDULER'S; the script gets --now and must not stamp itself.
   if [ "$(date -u +%u)" = "7" ] && due 09 00 && stamp durability-hf-publish; then nohup bash "$LOOPS/durability-hf-publish.sh" --now 8>&- >/dev/null 2>&1 & fi
+  if [ "$(sha256sum "$LOOPS/scheduler.sh" 2>/dev/null | cut -d" " -f1)" != "$SELF_SHA" ]; then
+    log scheduler "scheduler.sh changed on disk; exiting so the supervisor starts the new version"; exit 0
+  fi
   sleep 60 8>&-
 done
