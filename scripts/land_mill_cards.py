@@ -12,7 +12,8 @@ already carries a signed card is skipped — one cell, one card.
 Never signs. Never stamps MEASURED. Never touches master (the workflow lands on a branch and
 opens a PR; a human merge is the gate).
 
-Pod cards (2026-09-16, scripts/pod-loops/land.sh). A RunPod worker card carries its item
+Pod cards (2026-09-16; called hourly by scripts/pod-loops/mill-hourly.sh since the
+pod-chain land.sh was retired unrun on 2026-09-23). A RunPod worker card carries its item
 evidence as body.compute_evidence (schema csoai.runpod-gspc-item-evidence/0.1) and its
 provenance as compute_evidence.run_id, not as body.evidence/run_id. Under --require-evidence
 such a card is admitted only when the intake receipt verify_runpod_gspc_intake.py wrote
