@@ -5,13 +5,13 @@
 #
 #   -> /workspace/ci/corrections-lane: branch corrections/<draft-id> from origin/master
 #   -> drift-draft.py --promote: next ledger id C-<today>-<NN> read from functions/api/corrections.ts bytes; the entry
-#      inserted at the top of LEDGER.corrections; public/corrections/<slug>-<date>[-SUPERSEDES].md written from the
+#      inserted at the top of LEDGER.corrections; public/corrections/<slug>-<date>-<ledger-id>[-SUPERSEDES].md written from the
 #      draft note (+ SUPERSESSIONS.md row when the subject is itself a public/corrections file); the draft moved to
 #      council-os/corrections-drafts/promoted/ and out/drift-draft/queue/promoted/
 #   -> commit + push the branch. The owner opens the PR and merges. This script never merges, never deploys.
 #   GET /api/corrections serves signature_state STALE after the merge until the ledger signature is re-issued
 #   (owner-gated): a stale signature is a published defect, never a silent edit.
-set -eu
+set -euo pipefail
 . "$(dirname "$0")/lib.sh"
 ID=${1:?usage: promote-draft.sh <draft-id, e.g. D-2026-09-22T14-01>}
 CLONE=${DRIFT_CLONE:-/workspace/ci/corrections-lane}

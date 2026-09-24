@@ -49,7 +49,7 @@ APPROVE PATH (owner, one command, NOT run by this loop):
   -> clone /workspace/ci/corrections-lane, branch corrections/D-2026-09-22T14-01 from origin/master
   -> next ledger id from functions/api/corrections.ts bytes (C-<today>-<max+1>)
   -> entry inserted at the top of LEDGER.corrections (ledger fields + evidence[])
-  -> public/corrections/<slug>-<date>[-SUPERSEDES].md written from the draft note; SUPERSESSIONS.md row
+  -> public/corrections/<slug>-<date>-<ledger-id>[-SUPERSEDES].md written from the draft note; SUPERSESSIONS.md row
      added when the subject is itself a public/corrections file
   -> the draft moved to council-os/corrections-drafts/promoted/ ; commit ; push the branch
   -> the owner opens the PR and merges. GET /api/corrections will serve signature_state STALE until the
@@ -720,6 +720,40 @@ def hf_upload(files_with_paths):
 
 
 # ── promote (owner path; invoked by promote-draft.sh only) ────────────────────────────────────────
+def promoted_note(md, did, real, what_changed, supersedes, promoted_on):
+    """Keep the archived draft intact; publish a note describing what promotion actually did."""
+    md = (md.replace(f"# DRAFT correction {did}:", f"# Correction {real}:")
+          .replace("**Status: DRAFT - owner approval required.**",
+                   f"**Register id {real}. Promoted from draft {did}.**")
+          .replace(" Not published, not merged, no ledger id.",
+                   " Published on promotion with the owner's approval."))
+    before, marker, after = md.partition("## Proposed remedy (owner decides)\n\n")
+    if not marker:
+        raise ValueError("draft note has no proposed remedy section")
+    _, marker, after = after.partition("\n## Reproduce\n")
+    if not marker:
+        raise ValueError("draft note has no reproduction commands")
+    heading = f"## Remedy published on {promoted_on}" if supersedes else f"## Status on promotion ({promoted_on})"
+    md = before + f"{heading}\n\n{what_changed}\n\n## Reproduce\n" + after
+    marker = "## Reproduce\n\n```bash"
+    if marker not in md:
+        raise ValueError("draft note has no reproduction code block")
+    md = md.replace(marker,
+                    "## Check recorded sources and current endpoints\n\n"
+                    "Recorded SHA-256 values identify the source bytes in the dated comparison. "
+                    "A fresh GET of a live endpoint reads current bytes and may differ from its historical digest."
+                    "\n\n```bash", 1)
+    lines = []
+    for line in md.splitlines():
+        if line.startswith("curl -sS '") and " | sha256sum   # expect " in line:
+            line = line.replace("curl -sS", "curl -fsS", 1).split("   # expect ", 1)[0]
+            line += "   # current response; historical digest above"
+        if line.startswith("curl ") and "# expect " in line:
+            raise ValueError("published note still expects a historical digest from a live URL")
+        lines.append(line)
+    return "\n".join(lines) + ("\n" if md.endswith("\n") else "")
+
+
 def promote(did, clone, out):
     q = out / "queue"
     jf, mf = q / f"{did}.json", q / f"{did}.md"
@@ -729,7 +763,8 @@ def promote(did, clone, out):
     entry = draft["corrections"][0]
     ledger = clone / "functions/api/corrections.ts"
     t = ledger.read_text(encoding="utf-8")
-    today = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m%d")
+    promoted_at = dt.datetime.now(dt.timezone.utc)
+    today = promoted_at.strftime("%Y-%m%d")
     # The ledger holds BOTH key styles: hand-written entries write `id: "C-..."` and every
     # entry this function inserts is json.dumps'd, so it writes `"id": "C-..."`. The regex
     # used to match only the unquoted form, so a promoted entry was invisible to the next
@@ -738,8 +773,9 @@ def promote(did, clone, out):
     nums = [int(m) for m in re.findall(rf'"?id"?:\s*"C-{today}-(\d{{2}})"', t)]
     real = f"C-{today}-{(max(nums) + 1) if nums else 1:02d}"
     entry = {**entry, "id": real}
-    entry["note"] = entry["note"].replace("DRAFT - owner approval required. ", f"Promoted from draft {did} by the owner. ")
-    entry["what_changed"] = entry["what_changed"].replace("PROPOSED, nothing has changed yet: ", "")
+    entry["note"] = (entry["note"].replace("DRAFT - owner approval required. ", f"Promoted from draft {did} by the owner. ")
+                     .replace("No ledger id is assigned until promote-draft.sh runs.", f"Ledger id {real} assigned on promotion."))
+    remedy_was_proposed = entry["what_changed"].startswith("PROPOSED, nothing has changed yet: ")
     subject = draft["drift"]["subject"]
     slug = re.sub(r"[^a-z0-9]+", "-", subject.lower()).strip("-")[:60] or "drift"
     supersedes = subject.startswith("public/corrections/")
@@ -750,6 +786,9 @@ def promote(did, clone, out):
         # A promoted supersession is done, not proposed: say what was published, not the draft's options.
         entry["what_changed"] = (f"Published a dated supersession note, public/corrections/{note_name}, beside "
                                  f"{subject}, which is not edited: it was true when written.")
+    elif remedy_was_proposed:
+        entry["what_changed"] = (f"Published a dated correction note, public/corrections/{note_name}. "
+                                 "This promotion records the disagreement; it does not verify source remediation.")
     m = re.search(r"^(\s*)corrections:\s*\[\s*$", t, re.M)
     if not m:
         print("ABORT could not find `corrections: [` in functions/api/corrections.ts"); return 2
@@ -757,9 +796,14 @@ def promote(did, clone, out):
     block = json.dumps(entry, indent=2, ensure_ascii=False)
     block = "\n".join(ind + l for l in block.splitlines()) + ","
     t = t[:m.end()] + "\n" + block + t[m.end():]
+    if not mf.is_file():
+        print(f"ABORT no draft note {mf}"); return 2
+    try:
+        md = promoted_note(mf.read_text(encoding="utf-8"), did, real, entry["what_changed"],
+                           supersedes, promoted_at.date().isoformat())
+    except ValueError as e:
+        print(f"ABORT {e}"); return 2
     ledger.write_text(t, encoding="utf-8")
-    md = mf.read_text(encoding="utf-8") if mf.is_file() else f"# Correction {real}\n"
-    md = md.replace(f"# DRAFT correction {did}:", f"# Correction {real}:").replace("**Status: DRAFT - owner approval required.**", f"**Register id {real}. Promoted from draft {did}.**").replace(" Not published, not merged, no ledger id.", " Published on promotion with the owner's approval.")
     notes = clone / "public/corrections"; notes.mkdir(parents=True, exist_ok=True)
     (notes / note_name).write_text(md, encoding="utf-8")
     if supersedes:
