@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A dated MCP boundary test: 261 verdicts from 600 server attempts · Council of AI</title>
+  <meta name="description" content="CSOAI probed 600 public remote MCP servers, obtained 261 bounded effect-binding verdicts, and published the instrument, exclusions, raw responses, and an Ed25519-signed run envelope." />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://councilof.ai/axis/effect-binding-server-probe-2026-09-22" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="A dated MCP boundary test: 261 verdicts from 600 server attempts" />
+  <meta property="og:description" content="A read-only test of whether public remote MCP servers refuse one undocumented tool argument, with the unanswered cases kept visible." />
+  <meta property="og:url" content="https://councilof.ai/axis/effect-binding-server-probe-2026-09-22" />
+  <meta property="og:image" content="https://councilof.ai/og-image.png" />
+  <style>
+    :root { color-scheme: light dark; --bg:#fff; --fg:#0b1a12; --muted:#42564a; --line:#d4e1d9; --accent:#075f59; --tint:#eef7f3; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#0b1a12; --fg:#eafff4; --muted:#b0cfc0; --line:#3b5b4b; --accent:#6ee7c4; --tint:#102b20; } }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--fg); font:1rem/1.65 -apple-system,BlinkMacSystemFont,system-ui,sans-serif; }
+    .wrap { max-width:50rem; margin:0 auto; padding:1.5rem 1.25rem 4rem; }
+    a { color:var(--accent); text-underline-offset:.18em; }
+    a:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+    .skip { position:absolute; left:-9999px; top:.5rem; background:var(--bg); padding:.5rem; }
+    .skip:focus { left:.5rem; z-index:10; }
+    nav { font-size:.9rem; border-bottom:1px solid var(--line); padding-bottom:1rem; }
+    nav a + a { margin-left:1rem; }
+    h1 { font-size:clamp(2rem,5vw,3rem); line-height:1.15; letter-spacing:-.025em; margin:1rem 0; }
+    h2 { font-size:1.35rem; line-height:1.3; margin:2.2rem 0 .5rem; }
+    p { margin:.9rem 0; }
+    .eyebrow { margin:2rem 0 .4rem; color:var(--accent); font-size:.8rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+    .dek { font-size:1.2rem; color:var(--muted); }
+    .meta { color:var(--muted); font-size:.9rem; }
+    .callout { border-left:4px solid var(--accent); background:var(--tint); padding:.75rem 1rem; margin:1.75rem 0; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; }
+    caption { text-align:left; font-weight:700; padding-bottom:.4rem; }
+    th,td { text-align:left; border-bottom:1px solid var(--line); padding:.55rem .6rem; vertical-align:top; }
+    th { background:var(--tint); }
+    code { background:var(--tint); border-radius:3px; padding:.1rem .25rem; overflow-wrap:anywhere; }
+    footer { border-top:1px solid var(--line); margin-top:3rem; padding-top:1rem; color:var(--muted); font-size:.9rem; }
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to article</a>
+<div class="wrap">
+  <nav aria-label="Breadcrumb"><a href="/">Council of AI</a><a href="/axis/effect-binding">Effect-binding axis</a></nav>
+  <main id="main">
+    <article>
+      <header>
+        <p class="eyebrow">GSPC · Method and evidence</p>
+        <h1>A dated MCP boundary test: 261 verdicts from 600 server attempts</h1>
+        <p class="dek">A read-only probe tested whether public remote MCP servers refused one undocumented tool argument. The signed result is reproducible from the published instrument and logs, with the unanswered cases kept visible.</p>
+        <p class="meta">Run date: <time datetime="2026-09-22">22 September 2026</time> · CSOAI Ltd</p>
+      </header>
+
+      <p>On 22 September, CSOAI attempted a narrow, read-only test of <strong>600</strong> third-party remote MCP servers. <strong>261</strong> produced a bounded verdict: <strong>0 <code>BINDS</code>, 23 <code>PARTIAL</code>, and 238 <code>DOES_NOT_BIND</code></strong> under the published EffectBench v0.1 rule. These labels describe what this instrument observed at a tool-call boundary on one day. They are not security grades, claims that an attack succeeded, or assessments of any provider's overall posture.</p>
+
+      <h2>What the probe actually asked</h2>
+      <p>When a caller supplies an argument that a read-only tool did not declare, does the server refuse that argument? For each eligible server, the probe first made a baseline call with documented arguments, then repeated that call with <code>csoai_probe_unauthorised: true</code> added. It used no credentials, selected tools whose names and descriptions indicated reading without mutation, excluded tools annotated as destructive, limited calls per server, and stopped on rate limiting. The 600 names came from a seeded shuffle of <strong>20,992 third-party servers with a remote URL</strong> in a 22 September snapshot of the public MCP Registry. CSOAI's own entries were kept in a separate table and never included in the 261.</p>
+
+      <h2>What the responses showed</h2>
+      <p>Only <strong>349</strong> of the 600 attempts reached an eligible read-only tool call. Of those, 240 accepted the extra argument without an error, 21 rejected it, and 88 were indeterminate under the rule. The final verdict combines that response with whether a binding-related field was declared and whether receipt-like evidence appeared in the response.</p>
+      <div class="callout"><strong><code>DOES_NOT_BIND</code> is a boundary observation.</strong> It means the extra argument was not refused and the rule found no returned binding evidence. It does not mean the server passed that argument to a backend or performed a different action. Silent stripping and downstream pass-through can look the same from this vantage point.</div>
+      <p><code>BINDS</code> requires the declared field, rejection, and returned evidence together; no server in the bounded verdict set met all three conditions.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>Disposition of all 600 attempted servers</caption>
+          <thead><tr><th scope="col">Disposition</th><th scope="col">Servers</th><th scope="col">Meaning</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Bounded verdict</th><td>261</td><td>0 BINDS; 23 PARTIAL; 238 DOES_NOT_BIND</td></tr>
+            <tr><th scope="row">UNCHECKABLE</th><td>230</td><td>Includes 141 requiring authentication</td></tr>
+            <tr><th scope="row">UNREACHABLE</th><td>78</td><td>No eligible response</td></tr>
+            <tr><th scope="row">No eligible read-only tool</th><td>30</td><td>No tool selected under the safety rule</td></tr>
+            <tr><th scope="row">No tools</th><td>1</td><td>No tool call possible</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Limits kept in the result</h2>
+      <p>The other <strong>339</strong> attempts received no binding verdict. Every authenticated service was excluded by rule, so the verdict set is biased toward services that answer anonymous requests. Replay was not exercised: none of the 349 eligible tool calls exposed the nonce-like field that would have triggered that part of the instrument. One day, one RunPod network vantage point, and only one read-only tool per server (a second candidate if the first baseline failed) do not support fleet-wide or longitudinal conclusions.</p>
+
+      <h2>How to inspect the evidence</h2>
+      <p>The <a href="https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.json">run artifact</a> records the selection rule, denominator, controls, exclusions, definitions, and each server response classification. The <a href="https://huggingface.co/datasets/csoai/councilof-ai-mirror/tree/255760cc11c4e7909d684476edbcf4c7cde3eff3/public/interop/effect-binding-server-probe-2026-09-22.code">instrument code</a> and <a href="https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/255760cc11c4e7909d684476edbcf4c7cde3eff3/public/interop/effect-binding-server-probe-2026-09-22.log.jsonl">raw request/response log</a> are at a pinned Hugging Face revision. Positive and negative controls ran before public probes; an injected grader defect changed the control verdict as expected. A later tightening of the returned-evidence rule regraded two rows from the recorded bytes, without rerunning them.</p>
+      <p>At 08:06 UTC on 22 September, the existing board key signed an <a href="https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json">Ed25519 envelope</a> that binds this result to the run file and raw-log SHA-256 digests. The run file itself still says <code>signed:false</code> because it was produced before that separate signature; its historical bytes were not rewritten. We checked the envelope against <a href="https://csoai.org/.well-known/did.json"><code>did:web:csoai.org#board-attestation-1</code></a>, and the pinned file and log digests match. <strong>Bitcoin-root inclusion or anchoring of this probe has not been verified.</strong> A valid signature proves which bytes the board key signed, not that every interpretation of those bytes is true.</p>
+
+      <h2>Where it sits in GSPC</h2>
+      <p>The <a href="https://councilof.ai/api/gspc">live GSPC board</a> carries effect-binding as a <strong>deterministic-facts</strong> run with <strong>261 tool-call servers probed</strong>. That <code>n</code> is a server denominator, not a model-bank size or model score. Read the live board for current totals. The practical next question for test design is how to distinguish silent argument stripping from actual downstream use without crossing the read-only boundary.</p>
+    </article>
+  </main>
+  <footer><p><strong>CSOAI Ltd</strong> · <a href="/axis/effect-binding">Effect-binding axis</a> · <a href="/gspc">GSPC board</a></p><p>Measurement, not certification. Anyone can re-check.</p></footer>
+</div>
+</body>
+</html>
