@@ -632,9 +632,18 @@ export default function GspcScoreboard() {
             >
               Download CSV — the rows above, columns fixed to the published parquet schema
             </button>
+            <a
+              className="ml-3 inline-block text-xs font-semibold text-emerald-800 underline hover:text-emerald-600"
+              href="https://huggingface.co/datasets/csoai/gspc-board"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Board dataset on Hugging Face
+            </a>
             <span className="ml-2 text-[11px] text-gray-600">
               axis,bench,status,n,accuracy,interval_lo,interval_hi,separation,fleet_mean,dataset,as_of ·
-              empty cells stay empty — never zeroed, never interpolated.
+              empty cells stay empty — never zeroed, never interpolated. The dataset is a versioned
+              mirror; compare its timestamp with live GET /api/gspc.
             </span>
           </p>
         )}
