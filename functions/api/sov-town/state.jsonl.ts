@@ -1,3 +1,4 @@
+// @openapi-unavailable
 /**
  * GET /api/sov-town/state.jsonl — live SOV Town sim state (STAGING, DESIGN-labelled).
  *

@@ -1,3 +1,4 @@
+// @openapi-unavailable
 /**
  * /api/body-state — per-workflow last run / last success / last failure.
  *

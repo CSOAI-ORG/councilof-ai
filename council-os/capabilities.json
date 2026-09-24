@@ -1028,7 +1028,7 @@
       "description": "/api/body-state — per-workflow last run / last success / last failure.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
       "payment": "free",
       "schema_refs": [
         "csoai.body-state/0.1"
@@ -1040,11 +1040,12 @@
         "method": "GET",
         "request": "/api/body-state",
         "expect_status": [
-          200
+          503
         ],
         "safe": true
       },
-      "source": "functions/api/body-state.ts"
+      "source": "functions/api/body-state.ts",
+      "lifecycle_note": "503 by design while its source is unreadable: it lists GitHub Actions workflow runs, and that API answers 404 while the CSOAI-ORG account is flagged. CI and deploys run on the pod now, so the route cannot report them either. Measured 2026-09-24."
     },
     {
       "id": "api-cards",
@@ -4402,7 +4403,7 @@
       "description": "GET /api/sov-town/state.jsonl — live SOV Town sim state (STAGING, DESIGN-labelled).",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
       "payment": "free",
       "schema_refs": [],
       "surfaces": [],
@@ -4410,11 +4411,12 @@
         "method": "GET",
         "request": "/api/sov-town/state.jsonl",
         "expect_status": [
-          200
+          503
         ],
         "safe": true
       },
-      "source": "functions/api/sov-town/state.jsonl.ts"
+      "source": "functions/api/sov-town/state.jsonl.ts",
+      "lifecycle_note": "503 by design: a staging, DESIGN-labelled page whose KV binding SOV_TOWN_STATE is not attached to this deployment, so it says 'no live state' rather than inventing one. Measured 2026-09-24."
     },
     {
       "id": "api-specialists",
