@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 
 /**
@@ -260,6 +261,35 @@ describe("llms distribution and timestamp sections are derived, stated and bound
       expect(out).toContain(ots.as_of);
       expect(out, `${f} must say submitted is not anchored`).toMatch(/submitted.{0,20}not.{0,20}anchored|not\s+evidence\s+of\s+a\s+time/i);
     }
+  });
+});
+
+describe("dated mill-card root timestamp state is tied to proof bytes", () => {
+  it("the public machine guide never freezes the current proof as calendar-only", () => {
+    const out = R("public/llms.txt");
+    expect(out).not.toContain("Its .ots sidecar is a calendar receipt until Bitcoin verification succeeds");
+    expect(out).toContain("not local Bitcoin full-node chain validation");
+    expect(out).toContain("not local full-node chain validation or a certificate");
+  });
+
+  it("an audit claim is printed only for matching subject and proof digests", () => {
+    const pointer = J("public/interop/card-root-latest.json");
+    const url = pointer.root_url as string;
+    const auditUrl = url.replace(/\.json$/, ".header-audit.json");
+    const auditFile = resolve(ROOT, `public${auditUrl}`);
+    if (!existsSync(auditFile)) return; // A new moving pointer may have no audited proof yet.
+    const audit = J(`public${auditUrl}`);
+    const digest = (p: string) => createHash("sha256").update(readFileSync(resolve(ROOT, p))).digest("hex");
+    expect(audit.subject_sha256).toBe(digest(`public${url}`));
+    expect(audit.dated_root_has_ed25519_envelope).toBe(false);
+    expect(J(`public${url}`)).not.toHaveProperty("sig_ed25519");
+    expect(audit.isolated_upgraded_proof_sha256).toBe(digest(`public${url}.ots`));
+    const out = R("public/llms.txt");
+    expect(out).toContain(`https://councilof.ai${auditUrl}`);
+    expect(out).toContain(audit.isolated_upgraded_proof_sha256);
+    expect(out).toContain("dated root JSON has no Ed25519 signature envelope");
+    expect(out).toContain("public-header corroboration");
+    expect(out).toContain("verification of individual card measurements");
   });
 });
 

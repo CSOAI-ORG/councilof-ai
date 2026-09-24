@@ -307,7 +307,37 @@ function datedMillRootLine() {
       root.leaves.length !== root.n_leaves) {
     throw new Error("mill-card root count or timestamp differs from pointer");
   }
-  return `- Dated immutable mill-card root (as of ${root.as_of}, ${root.n_leaves} leaves): ${SITE}${rootUrl} (SHA-256 ${digest}). Its .ots sidecar is a calendar receipt until Bitcoin verification succeeds.`;
+  const proofUrl = `${rootUrl}.ots`;
+  const proof = fs.readFileSync(p(`public${proofUrl}`));
+  const proofDigest = createHash("sha256").update(proof).digest("hex");
+  const auditUrl = rootUrl.replace(/\.json$/, ".header-audit.json");
+  const auditPath = p(`public${auditUrl}`);
+  let proofState = "Read its .ots sidecar: calendar-only receipts remain pending, while BitcoinBlockHeaderAttestation paths require independent block-header and chain checks. No local Bitcoin full-node validation is claimed.";
+  if (fs.existsSync(auditPath)) {
+    const audit = readJSON(`public${auditUrl}`);
+    const rows = Array.isArray(audit.public_header_evidence) ? audit.public_header_evidence : [];
+    const heights = [...new Set(rows.map((row) => row.height))].sort((a, b) => a - b);
+    const providers = [...new Set(rows.map((row) => row.provider))];
+    const cells = new Set(rows.map((row) => `${row.provider}:${row.height}`));
+    if (audit.schema !== "csoai.ots-public-header-audit/1" ||
+        audit.record_state !== "UNSIGNED_PUBLIC_HEADER_AUDIT" ||
+        audit.subject_sha256 !== digest ||
+        audit.dated_root_has_ed25519_envelope !== false ||
+        audit.individual_card_signature_checks !== "NOT_PERFORMED" ||
+        root.sig_ed25519 || root.signature || root.ed25519_signature ||
+        audit.isolated_upgraded_proof_sha256 !== proofDigest ||
+        audit.finding !== "BITCOIN_BLOCK_HEADER_ATTESTATIONS_PUBLIC_API_CORROBORATED" ||
+        heights.length < 1 || providers.length < 2 ||
+        rows.length !== heights.length * providers.length || cells.size !== rows.length ||
+        rows.some((row) => !audit.attestations?.some((attestation) =>
+          attestation.height === row.height && attestation.merkle_root_from_proof === row.merkle_root)) ||
+        rows.some((row) => !row.proof_merkle_match || !row.header_hash_recomputed || !row.pow_target_check ||
+          !/^[a-f0-9]{64}$/.test(row.merkle_root))) {
+      throw new Error("mill-card root public-header audit is not bound to root/proof bytes");
+    }
+    proofState = `Its .ots sidecar (SHA-256 ${proofDigest}) carries BitcoinBlockHeaderAttestation paths for block heights ${heights.join(" and ")}. An unsigned audit recomputed those paths against raw headers from ${providers.join(" and ")}: ${SITE}${auditUrl}. The dated root JSON has no Ed25519 signature envelope; any leaf-card signatures are separate. This is public-header corroboration, not local Bitcoin full-node chain validation or verification of individual card measurements.`;
+  }
+  return `- Dated immutable mill-card root (as of ${root.as_of}, ${root.n_leaves} leaves): ${SITE}${rootUrl} (SHA-256 ${digest}). ${proofState}`;
 }
 
 function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
