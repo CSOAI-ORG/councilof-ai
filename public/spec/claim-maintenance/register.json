@@ -1,7 +1,7 @@
 {
   "schema": "csoai.claim-maintenance.register/0.1",
   "title": "Claim maintenance register — the subjects Council of AI maintains public claims on",
-  "as_of": "2026-09-24T04:42:08Z",
+  "as_of": "2026-09-24T15:39:37Z",
   "specification": "https://councilof.ai/spec/claim-maintenance/v0.1/",
   "specification_licence": "CC0-1.0",
   "maintainer": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -24,19 +24,19 @@
   "selection_criteria": "Subjects are selected where a public claim is (a) specific enough to capture verbatim and (b) about infrastructure a third party relies on. Selection is published because a selection rule is the one place an agenda can hide (spec 10.3).",
   "right_of_reply": "A defect in any record here is a defect in this register. Report it to nicholas@csoai.org; corrections are published at https://councilof.ai/api/corrections.",
   "totals": {
-    "registries": 2,
-    "registry_files_on_disk": 3,
+    "registries": 3,
+    "registry_files_on_disk": 4,
     "registries_superseded": 1,
-    "subjects": 23,
-    "claims": 70,
+    "subjects": 28,
+    "claims": 99,
     "by_state": {
       "CLAIM_CAPTURED": 1,
-      "CLAIM_MEASURED": 25,
-      "UNMEASURED": 34,
-      "UNCHECKABLE": 10
+      "CLAIM_MEASURED": 33,
+      "UNMEASURED": 39,
+      "UNCHECKABLE": 26
     },
-    "claims_conforming_to_artifact_schema": 62,
-    "subjects_with_a_scheduled_next_read": 21
+    "claims_conforming_to_artifact_schema": 91,
+    "subjects_with_a_scheduled_next_read": 26
   },
   "disclosures": [
     {
@@ -346,6 +346,33 @@
       "claims_without_a_specification_state": 0
     },
     {
+      "subject": "InstaHuman",
+      "subject_key": "instahuman.com",
+      "identifier": "instahuman.com",
+      "identifier_kind": "domain",
+      "source": "https://instahuman.com/",
+      "claim_count": 4,
+      "states": {
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 1,
+        "UNMEASURED": 1,
+        "UNCHECKABLE": 2
+      },
+      "first_captured": "2026-09-24T15:39:29Z",
+      "first_captured_basis": "artifact.first_captured_utc",
+      "last_read": "2026-09-24T15:39:29Z",
+      "last_read_basis": "artifact.access_date",
+      "next_scheduled_read": "2026-10-01T09:20:00Z",
+      "next_scheduled_read_state": "SCHEDULED",
+      "registry_id": "claimreg-hiring-platforms-2026-09-24",
+      "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "registry_schema": "csoai.claim-registry/0.3",
+      "timestamp_receipt": null,
+      "timestamp_state": "NONE",
+      "conforming_artifacts": 4,
+      "claims_without_a_specification_state": 0
+    },
+    {
       "subject": "Invariant Guardrails",
       "subject_key": "github.com/invariantlabs-ai/invariant",
       "identifier": "github.com/invariantlabs-ai/invariant",
@@ -370,6 +397,33 @@
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 3,
+      "claims_without_a_specification_state": 0
+    },
+    {
+      "subject": "Invoke",
+      "subject_key": "invoke.nanocorp.app",
+      "identifier": "invoke.nanocorp.app",
+      "identifier_kind": "domain",
+      "source": "https://invoke.nanocorp.app/",
+      "claim_count": 5,
+      "states": {
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 1,
+        "UNMEASURED": 0,
+        "UNCHECKABLE": 4
+      },
+      "first_captured": "2026-09-24T15:39:27Z",
+      "first_captured_basis": "artifact.first_captured_utc",
+      "last_read": "2026-09-24T15:39:27Z",
+      "last_read_basis": "artifact.access_date",
+      "next_scheduled_read": "2026-10-01T09:20:00Z",
+      "next_scheduled_read_state": "SCHEDULED",
+      "registry_id": "claimreg-hiring-platforms-2026-09-24",
+      "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "registry_schema": "csoai.claim-registry/0.3",
+      "timestamp_receipt": null,
+      "timestamp_state": "NONE",
+      "conforming_artifacts": 5,
       "claims_without_a_specification_state": 0
     },
     {
@@ -454,6 +508,33 @@
       "claims_without_a_specification_state": 0
     },
     {
+      "subject": "Payman",
+      "subject_key": "paymanai.com",
+      "identifier": "paymanai.com",
+      "identifier_kind": "domain",
+      "source": "https://paymanai.com/",
+      "claim_count": 5,
+      "states": {
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 1,
+        "UNMEASURED": 0,
+        "UNCHECKABLE": 4
+      },
+      "first_captured": "2026-09-24T15:39:24Z",
+      "first_captured_basis": "artifact.first_captured_utc",
+      "last_read": "2026-09-24T15:39:25Z",
+      "last_read_basis": "artifact.access_date",
+      "next_scheduled_read": "2026-10-01T09:20:00Z",
+      "next_scheduled_read_state": "SCHEDULED",
+      "registry_id": "claimreg-hiring-platforms-2026-09-24",
+      "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "registry_schema": "csoai.claim-registry/0.3",
+      "timestamp_receipt": null,
+      "timestamp_state": "NONE",
+      "conforming_artifacts": 5,
+      "claims_without_a_specification_state": 0
+    },
+    {
       "subject": "Purple Llama",
       "subject_key": "github.com/meta-llama/PurpleLlama",
       "identifier": "github.com/meta-llama/PurpleLlama",
@@ -505,6 +586,33 @@
       "timestamp_receipt": "https://councilof.ai/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json.ots",
       "timestamp_state": "RECEIPT_PRESENT_UPGRADE_UNVERIFIED",
       "conforming_artifacts": 1,
+      "claims_without_a_specification_state": 0
+    },
+    {
+      "subject": "RentAHuman",
+      "subject_key": "rentahuman.ai",
+      "identifier": "rentahuman.ai",
+      "identifier_kind": "domain",
+      "source": "https://rentahuman.ai/",
+      "claim_count": 9,
+      "states": {
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 2,
+        "UNMEASURED": 3,
+        "UNCHECKABLE": 4
+      },
+      "first_captured": "2026-09-24T15:39:22Z",
+      "first_captured_basis": "artifact.first_captured_utc",
+      "last_read": "2026-09-24T15:39:24Z",
+      "last_read_basis": "artifact.access_date",
+      "next_scheduled_read": "2026-10-01T09:20:00Z",
+      "next_scheduled_read_state": "SCHEDULED",
+      "registry_id": "claimreg-hiring-platforms-2026-09-24",
+      "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "registry_schema": "csoai.claim-registry/0.3",
+      "timestamp_receipt": null,
+      "timestamp_state": "NONE",
+      "conforming_artifacts": 9,
       "claims_without_a_specification_state": 0
     },
     {
@@ -643,6 +751,33 @@
       "claims_without_a_specification_state": 0
     },
     {
+      "subject": "gotoHuman",
+      "subject_key": "gotohuman.com",
+      "identifier": "gotohuman.com",
+      "identifier_kind": "domain",
+      "source": "https://www.gotohuman.com/",
+      "claim_count": 6,
+      "states": {
+        "CLAIM_CAPTURED": 0,
+        "CLAIM_MEASURED": 3,
+        "UNMEASURED": 1,
+        "UNCHECKABLE": 2
+      },
+      "first_captured": "2026-09-24T15:39:24Z",
+      "first_captured_basis": "artifact.first_captured_utc",
+      "last_read": "2026-09-24T15:39:24Z",
+      "last_read_basis": "artifact.access_date",
+      "next_scheduled_read": "2026-10-01T09:20:00Z",
+      "next_scheduled_read_state": "SCHEDULED",
+      "registry_id": "claimreg-hiring-platforms-2026-09-24",
+      "registry_url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "registry_schema": "csoai.claim-registry/0.3",
+      "timestamp_receipt": null,
+      "timestamp_state": "NONE",
+      "conforming_artifacts": 6,
+      "claims_without_a_specification_state": 0
+    },
+    {
       "subject": "ondo",
       "subject_key": "ondo",
       "identifier": "ondo",
@@ -697,6 +832,18 @@
     },
     {
       "status": "LIVE",
+      "registry_id": "claimreg-hiring-platforms-2026-09-24",
+      "url": "https://councilof.ai/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "schema": "csoai.claim-registry/0.3",
+      "created": "2026-09-24T00:00:00Z",
+      "signature_state_verbatim": "UNSIGNED DRAFT. This registry has not been signed. It was built on a lane branch for review and has no .signed.json sidecar; nothing in it may be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, when one exists, will prove only that these bytes were committed to at that time; it grades nothing and certifies nobody (spec 9.5).",
+      "signed": false,
+      "signature_binding": "none",
+      "subjects": 5,
+      "claims": 29
+    },
+    {
+      "status": "LIVE",
       "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
       "url": "https://councilof.ai/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
       "schema": "csoai.claim-registry/0.2",
@@ -732,5 +879,5 @@
     "that a superseded registry was wrong; it was replaced, its bytes are unchanged, and it is still served at its own URL",
     "that a timestamp receipt is anchored in a block; a receipt file is submitted, not confirmed, until its upgrade is verified"
   ],
-  "register_digest": "7465a4f2b39d80ff1b1c5d196aff328e7fb16a20fc1dc8984df62aa22a48f86d"
+  "register_digest": "505e480d4d8f1bfe118b2a2d66d595c300c20b03a036d180efb84facc80cbae6"
 }

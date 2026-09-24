@@ -1,0 +1,62 @@
+{
+ "state": "CLAIM_MEASURED",
+ "evidence_state": "MEASURED",
+ "measured_at": "2026-09-24T15:31:39Z",
+ "method": "read the SEC's own EDGAR submissions record for the CIK that EDGAR full-text search returns for the exact entity name the subject publishes, and compare the registered name byte for byte",
+ "window": "the EDGAR record as served at measured_at",
+ "denominator": {
+  "registers_read": 1
+ },
+ "result": {
+  "subject": "Payman",
+  "entity_name_published_by_subject": "Payman AI, Inc.",
+  "edgar_registered_name": "Payman AI, Inc.",
+  "cik": "0002025647",
+  "name_matches_exactly": true,
+  "state_of_incorporation_on_record": "DE",
+  "filings_on_record": [
+   {
+    "form": "D",
+    "filing_date": "2024-11-05"
+   },
+   {
+    "form": "D",
+    "filing_date": "2024-06-18"
+   }
+  ],
+  "n": 1
+ },
+ "edgar_full_text": {
+  "total": 2,
+  "filers": [
+   "Payman AI, Inc.  (CIK 0002025647)"
+  ],
+  "forms": [
+   "D"
+  ]
+ },
+ "sources": [
+  {
+   "url": "https://efts.sec.gov/LATEST/search-index?q=%22Payman%20AI%2C%20Inc.%22",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:31:39Z",
+   "response_bytes": 2126,
+   "response_sha256": "4a873da0861b738dced9994bef15dbd9fcb8a8fdef7419c351c54481935042f7",
+   "note": "SEC EDGAR full-text search for \"Payman AI, Inc.\""
+  },
+  {
+   "url": "https://data.sec.gov/submissions/CIK0002025647.json",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:31:39Z",
+   "response_bytes": 1525,
+   "response_sha256": "c29da685f7ad656d6c92845b7f1d5b5414eb7755393dc9d2502486b0d3d1aff4",
+   "note": "SEC EDGAR submissions record for CIK 2025647"
+  }
+ ],
+ "personal_data_note": "the EDGAR record also carries a street address and a telephone number. They are not carried here: this lane records no data that could identify a person",
+ "does_not_prove": [
+  "anything the filings say. A Form D is completed by the issuer; the SEC records that it was filed and does not review its contents. Only the existence of the filer record and its registered name are measured here",
+  "that the entity currently operates the website, or is in good standing in its state of incorporation",
+  "anything about the product, its safety, or its users"
+ ]
+}
