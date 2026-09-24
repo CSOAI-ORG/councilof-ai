@@ -55,7 +55,7 @@ const PAGE_LD = {
 /** What each stage counts, in the reader's words. The state and the reason come off the wire. */
 export const STAGE_MEANING: Record<StageKey, string> = {
   registry_listings: "How many named things we publish are actually listed in a public registry.",
-  gross_distribution: "How many times those packages have been fetched, counted package by package from each registry's own counter.",
+  gross_distribution: "Reported package-download events, counted package by package. PyPI uses third-party Pepy; npm and Hugging Face use their public APIs.",
   qualified_distribution: "The same downloads with mirrors, build servers and crawlers taken out.",
   observed_execution: "How many times something we published was actually run, rather than fetched.",
   economic_use: "How many distinct wallets, that are not ours, have paid for something.",

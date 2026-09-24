@@ -55,7 +55,7 @@ export const NAV_GROUPS: NavGroup[] = [
     links: [
       { href: "/gspc-verify", label: "Verify a record", what: "paste one; your browser does the maths, nothing is sent to us" },
       { href: "/signed/HOW-TO-VERIFY.md", label: "The rule, written out", what: "do it offline in your own language, without our code", raw: true },
-      { href: "/root.json", label: "The signed evidence root", what: "one signed fingerprint covering every published record", raw: true },
+      { href: "/root.json", label: "The signed evidence root", what: "one signed fingerprint for its dated record list, separate from signed cards", raw: true },
       { href: "/.well-known/did.json", label: "Our public key", what: "pin this first — a record that signs itself proves nothing", raw: true },
       { href: "/honesty", label: "What we hold back, and why", what: "the limits, stated by us before anyone else states them" },
     ],

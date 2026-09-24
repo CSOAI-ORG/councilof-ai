@@ -40,7 +40,7 @@ export const MACHINE_DOORS: MachineDoor[] = [
   { href: "/.well-known/agent.json", name: "/.well-known/agent.json", what: "the A2A agent card: skills, endpoints and what they refuse" },
   { href: "/.well-known/x402.json", name: "/.well-known/x402.json", what: "every metered door, its payment terms and its free preview" },
   { href: "/.well-known/did.json", name: "/.well-known/did.json", what: "our public keys — pin one before you trust any signature" },
-  { href: "/root.json", name: "/root.json", what: "the signed root over every published record" },
+  { href: "/root.json", name: "/root.json", what: "the signed root for its own dated record list, separate from the signed-card index" },
   { href: "/openapi.json", name: "/openapi.json", what: "the full HTTP surface, described" },
   { href: "/llms.txt", name: "/llms.txt", what: "what this site is, written for you rather than for a crawler" },
 ];
