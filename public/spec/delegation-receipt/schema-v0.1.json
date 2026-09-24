@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/spec/delegation-receipt/schema-v0.1.json",
+  "title": "Delegation receipt v0.1 (DRAFT) - envelope",
+  "description": "A measurement record of one job an agent did for someone: who authorised it, which agent, what was paid, what was delivered, who checked the outcome, and when. Every section carries its own evidence state; there is no aggregate. Not an endorsement and not a rating of the agent. CC0-1.0. Normative text: README.md in this directory. Coherence rules between fields (section 3.2 of README.md) are enforced by the reference verifier, not by this schema.",
+  "type": "object",
+  "required": ["body", "id", "alg", "preimage_rule", "signed", "kid", "pubkey", "signature"],
+  "additionalProperties": false,
+  "properties": {
+    "body": { "$ref": "#/$defs/body" },
+    "id": { "$ref": "#/$defs/sha256" },
+    "alg": { "const": "Ed25519" },
+    "preimage_rule": { "const": "json.dumps(body, sort_keys=True, separators=(',', ':'), ensure_ascii=True).encode('utf-8')" },
+    "signed": { "type": "boolean" },
+    "kid": { "type": ["string", "null"], "minLength": 1 },
+    "pubkey": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "signature": { "type": ["string", "null"], "pattern": "^[0-9a-f]{128}$" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "sha256_or_null": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "utc": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,9})?Z$" },
+    "utc_or_null": { "type": ["string", "null"], "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,9})?Z$" },
+    "url_or_null": { "type": ["string", "null"], "pattern": "^https?://[^\\s]+$" },
+    "text_or_null": { "type": ["string", "null"], "minLength": 1, "maxLength": 512 },
+    "evidence_state": {
+      "enum": ["EVIDENCED_BY_THIRD_PARTY", "SELF_ASSERTED", "ABSENT"]
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["party", "kind", "locator", "sha256", "observed_at", "what_it_shows"],
+      "additionalProperties": false,
+      "properties": {
+        "party": { "enum": ["THIRD_PARTY", "RECORDER", "AGENT", "PRINCIPAL"] },
+        "kind": { "enum": ["CHAIN_RECORD", "HTTP_BYTES", "SIGNED_DOCUMENT", "PROTOCOL_MESSAGE", "RECORDER_LOG"] },
+        "locator": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "sha256": { "$ref": "#/$defs/sha256_or_null" },
+        "observed_at": { "$ref": "#/$defs/utc" },
+        "what_it_shows": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    },
+    "evidence_list": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+    "timestamp": {
+      "type": "object",
+      "required": ["state", "asserted_at", "asserted_by", "observed_at", "observed_via"],
+      "additionalProperties": false,
+      "properties": {
+        "state": { "$ref": "#/$defs/evidence_state" },
+        "asserted_at": { "$ref": "#/$defs/utc_or_null" },
+        "asserted_by": { "enum": ["RECORDER", "AGENT", "PRINCIPAL", null] },
+        "observed_at": { "$ref": "#/$defs/utc_or_null" },
+        "observed_via": { "$ref": "#/$defs/text_or_null" }
+      }
+    },
+    "body": {
+      "type": "object",
+      "required": [
+        "schema", "record_kind", "recorded_at", "recorder", "job",
+        "principal", "agent", "payment", "delivery", "outcome_check",
+        "timestamps", "not_evidence_of", "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schema": { "const": "csoai.delegation-receipt/0.1" },
+        "record_kind": { "const": "MEASUREMENT_RECORD" },
+        "recorded_at": { "$ref": "#/$defs/utc" },
+        "recorder": {
+          "type": "object",
+          "required": ["did", "name"],
+          "additionalProperties": false,
+          "properties": {
+            "did": { "type": ["string", "null"], "pattern": "^did:[a-z0-9]+:[^#\\s]+$" },
+            "name": { "type": "string", "minLength": 1, "maxLength": 120 }
+          }
+        },
+        "job": {
+          "type": "object",
+          "required": ["ref", "summary"],
+          "additionalProperties": false,
+          "properties": {
+            "ref": { "type": "string", "minLength": 1, "maxLength": 256 },
+            "summary": { "type": "string", "minLength": 1, "maxLength": 512 }
+          }
+        },
+        "principal": {
+          "type": "object",
+          "required": ["state", "kind", "ref", "ref_sha256", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "$ref": "#/$defs/evidence_state" },
+            "kind": { "enum": ["AP2_MANDATE", "WORLD_ID_PROOF", "SKYFIRE_KYA_TOKEN", "SELF_TEST", "OTHER", "UNSTATED"] },
+            "ref": { "$ref": "#/$defs/text_or_null" },
+            "ref_sha256": { "$ref": "#/$defs/sha256_or_null" },
+            "evidence": { "$ref": "#/$defs/evidence_list" }
+          }
+        },
+        "agent": {
+          "type": "object",
+          "required": ["state", "a2a_agent_card_url", "a2a_agent_card_sha256", "card_observed_at", "erc8004", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "$ref": "#/$defs/evidence_state" },
+            "a2a_agent_card_url": { "$ref": "#/$defs/url_or_null" },
+            "a2a_agent_card_sha256": { "$ref": "#/$defs/sha256_or_null" },
+            "card_observed_at": { "$ref": "#/$defs/utc_or_null" },
+            "erc8004": {
+              "type": ["object", "null"],
+              "required": ["chain", "identity_registry", "agent_id"],
+              "additionalProperties": false,
+              "properties": {
+                "chain": { "type": "string", "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$" },
+                "identity_registry": { "type": "string", "pattern": "^0x[0-9a-fA-F]{40}$" },
+                "agent_id": { "type": "string", "pattern": "^[0-9]{1,78}$" }
+              }
+            },
+            "evidence": { "$ref": "#/$defs/evidence_list" }
+          }
+        },
+        "payment": {
+          "type": "object",
+          "required": ["state", "kind", "network", "asset", "amount_units", "pay_to", "tx_hash", "settlement_ref", "payer_class", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "$ref": "#/$defs/evidence_state" },
+            "kind": { "enum": ["X402", "OTHER", "UNPAID", "UNSTATED"] },
+            "network": { "type": ["string", "null"], "pattern": "^[-a-z0-9]{3,8}:[-_a-zA-Z0-9]{1,32}$" },
+            "asset": { "$ref": "#/$defs/text_or_null" },
+            "amount_units": { "type": ["string", "null"], "pattern": "^(0|[1-9][0-9]{0,77})$" },
+            "pay_to": { "$ref": "#/$defs/text_or_null" },
+            "tx_hash": { "$ref": "#/$defs/text_or_null" },
+            "settlement_ref": { "$ref": "#/$defs/text_or_null" },
+            "payer_class": {
+              "type": "object",
+              "required": ["value", "state"],
+              "additionalProperties": false,
+              "properties": {
+                "value": { "enum": ["OUTSIDE", "SELF_TEST", "ZERO_VALUE", "UNKNOWN"] },
+                "state": { "$ref": "#/$defs/evidence_state" }
+              }
+            },
+            "evidence": { "$ref": "#/$defs/evidence_list" }
+          }
+        },
+        "delivery": {
+          "type": "object",
+          "required": ["state", "artifacts", "binding", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "$ref": "#/$defs/evidence_state" },
+            "artifacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["url", "sha256", "content_id", "observed_at"],
+                "additionalProperties": false,
+                "properties": {
+                  "url": { "type": "string", "pattern": "^https?://[^\\s]+$" },
+                  "sha256": { "$ref": "#/$defs/sha256" },
+                  "content_id": { "$ref": "#/$defs/sha256_or_null" },
+                  "observed_at": { "$ref": "#/$defs/utc" }
+                }
+              }
+            },
+            "binding": { "enum": ["REFERENCED_IN_JOB", "JOINED_BY_SUBJECT", "ASSERTED_BY_AGENT", "NONE"] },
+            "evidence": { "$ref": "#/$defs/evidence_list" }
+          }
+        },
+        "outcome_check": {
+          "type": "object",
+          "required": ["state", "result", "checker_kind", "checker_ref", "check_id", "method_url", "finding", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "state": { "$ref": "#/$defs/evidence_state" },
+            "result": { "enum": ["CHECKED", "UNCHECKED"] },
+            "checker_kind": { "enum": ["HUMAN_PSEUDONYMOUS", "AUTOMATED", "NONE"] },
+            "checker_ref": { "$ref": "#/$defs/text_or_null" },
+            "check_id": { "$ref": "#/$defs/text_or_null" },
+            "method_url": { "$ref": "#/$defs/url_or_null" },
+            "finding": { "$ref": "#/$defs/text_or_null" },
+            "evidence": { "$ref": "#/$defs/evidence_list" }
+          }
+        },
+        "timestamps": {
+          "type": "object",
+          "required": ["requested", "paid", "delivered", "checked"],
+          "additionalProperties": false,
+          "properties": {
+            "requested": { "$ref": "#/$defs/timestamp" },
+            "paid": { "$ref": "#/$defs/timestamp" },
+            "delivered": { "$ref": "#/$defs/timestamp" },
+            "checked": { "$ref": "#/$defs/timestamp" }
+          }
+        },
+        "not_evidence_of": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+        },
+        "notes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+        }
+      }
+    }
+  }
+}

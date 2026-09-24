@@ -1,0 +1,22 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1"
+  ],
+  "_label": "TEST DID DOCUMENT for the delegation-receipt v0.1 test vectors. Publishes TEST KEY A only.",
+  "assertionMethod": [
+    "did:web:test-vectors.example#test-key-a"
+  ],
+  "id": "did:web:test-vectors.example",
+  "verificationMethod": [
+    {
+      "controller": "did:web:test-vectors.example",
+      "id": "did:web:test-vectors.example#test-key-a",
+      "publicKeyJwk": {
+        "crv": "Ed25519",
+        "kty": "OKP",
+        "x": "YoS9Yts8TH4hjIOPQgrVwmb9pKEd_Rgql0RhVfSSSx0"
+      },
+      "type": "JsonWebKey2020"
+    }
+  ]
+}
