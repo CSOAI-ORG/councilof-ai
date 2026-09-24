@@ -415,7 +415,26 @@ const DELISTED = new Map([
   ...["agent-rails", "care", "critical-infrastructure", "defence", "emotion-ai", "government", "humanoid",
       "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
     .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
-  ["/proof-receipt", "noindex"], ["/status/internal", "noindex"], ["/yield", "noindex"],
+  ["/proof-receipt", "noindex"],
+  // Flat public/*.html pages carrying robots noindex (found 2026-09-24 by a live crawl).
+  ["/compliance-training-world/bond-quest", "noindex"],
+  ["/compliance-training-world/insurance-quest", "noindex"],
+  ["/embed/spray-demo", "noindex"],
+  ["/embed/verify", "noindex"],
+  ["/grants/ford-foundation", "noindex"],
+  ["/grants/ngi-zero", "noindex"],
+  ["/grants/nlnet-ngi0-entrust", "noindex"],
+  ["/grants/sloan-foundation", "noindex"],
+  ["/gspc-leaderboard", "noindex"],
+  ["/livecam", "noindex"],
+  ["/mcpbench", "noindex"],
+  ["/ossbench", "noindex"],
+  ["/paper-district", "noindex"],
+  ["/pqcbench", "noindex"],
+  ["/regulator-console", "noindex"],
+  ["/swarmbench", "noindex"],
+  ["/visual-board", "noindex"],
+  ["/visual-verify", "noindex"], ["/status/internal", "noindex"], ["/yield", "noindex"],
   ["/grants", "noindex"], ["/subdomains/verifier", "noindex"],
   ...["arena-scoreboard", "coliseum", "demo", "ecosystem", "governance-commons", "gspc-arena", "heatmap",
       "home-v3", "integrations", "os-demo", "safe-space", "try", "watchdog/report"]
@@ -502,7 +521,10 @@ const DELISTED = new Map([
   ["/regulator-atlas", "canonical: /regulators/"],
   ["/x402-leaderboard", "canonical: /x402-board/"],
 ]);
-const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/");
+// Evidence copies of third-party pages under an /interop report's mirrors/ folder; public/_headers
+// sends X-Robots-Tag noindex for the same pattern.
+const MIRROR_RE = /^\/interop\/[^/]+\/mirrors\//;
+const isDelisted = (p) => DELISTED.has(p.replace(/\/+$/, "") || "/") || MIRROR_RE.test(p);
 
 // Prerendered as <path>/index.html with no bare->slash rule in _redirects, so Pages answers the
 // bare form with a 308. Emit the served form.
