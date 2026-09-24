@@ -62,29 +62,9 @@ import { setMetaDescription } from "@/lib/utils";
 const HOME_LD = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://councilof.ai/#org",
-      name: "Council of AI",
-      legalName: "CSOAI Ltd",
-      url: "https://councilof.ai",
-      identifier: "UK Companies House 16939677",
-      description:
-        "Independent measurement of how AI systems behave. Issued measurement cards carry Ed25519 signatures and can be checked for free; supporting runs disclose when they are unsigned. Measurement, not certification: no conformity mark is issued and no accreditation chain stands behind it.",
-      email: "contact@csoai.org",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "3rd Floor, 86–90 Paul Street",
-        addressLocality: "London",
-        postalCode: "EC2A 4NE",
-        addressCountry: "GB",
-      },
-      sameAs: [
-        "https://huggingface.co/csoai",
-        "https://www.wikidata.org/wiki/Q141128616",
-        "https://orcid.org/0009-0001-3869-1068",
-      ],
-    },
+    // The Organization is declared once, in client/index.html; this graph refers to it by @id so the
+    // page never carries two versions of the company that disagree.
+    { "@id": "https://councilof.ai/#org" },
     {
       "@type": "SoftwareApplication",
       name: "Council of AI — the living board and the record verifier",

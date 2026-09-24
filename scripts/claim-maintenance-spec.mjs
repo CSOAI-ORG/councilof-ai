@@ -394,6 +394,12 @@ stage(
 <title>Claim Maintenance — all versions | Council of AI</title>
 <meta name="description" content="Every published version of the Claim Maintenance specification, with its date, its persistent identifier and the digest of the document of record.">
 <link rel="canonical" href="https://councilof.ai/spec/claim-maintenance/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Claim Maintenance — all versions">
+<meta property="og:description" content="Every published version of the Claim Maintenance specification, with its date, its persistent identifier and the digest of the document of record.">
+<meta property="og:url" content="https://councilof.ai/spec/claim-maintenance/">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 :root{color-scheme:light dark;--fg:#0f172a;--muted:#475569;--line:#cbd5e1;--bg:#ffffff}
 @media (prefers-color-scheme:dark){:root{--fg:#e2e8f0;--muted:#94a3b8;--line:#334155;--bg:#0b1220}}
