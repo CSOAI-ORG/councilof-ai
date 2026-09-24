@@ -303,3 +303,32 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+/**
+ * HEAD is a read-only availability probe for directories. Never validate a
+ * payment or fetch a proof from a HEAD request, even if it carries headers.
+ */
+export const onRequestHead: PagesFunction = async (context) => {
+  const url = new URL(context.request.url);
+  if (!url.search) {
+    return new Response(null, {
+      status: 307,
+      headers: {
+        location: new URL("/api/proof?bundle=1", url.origin).toString(),
+        "cache-control": "no-store",
+        "access-control-allow-origin": "*",
+      },
+    });
+  }
+  if (url.searchParams.get("bundle") === "1") {
+    const response = await onRequestGet({
+      ...context,
+      request: new Request(url.toString(), { method: "GET" }) as unknown as typeof context.request,
+    });
+    return new Response(null, { status: response.status, headers: response.headers });
+  }
+  return new Response(null, {
+    status: 405,
+    headers: { allow: "GET", "cache-control": "no-store" },
+  });
+};

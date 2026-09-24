@@ -1,9 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { onRequestGet } from "./proof";
+import { onRequestGet, onRequestHead } from "./proof";
 
 const call = (url: string, headers: Record<string, string> = {}) =>
   (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
     request: new Request(url, { headers }),
+    env: {},
+  });
+
+const head = (url: string, headers: Record<string, string> = {}) =>
+  (onRequestHead as unknown as (c: unknown) => Promise<Response>)({
+    request: new Request(url, { method: "HEAD", headers }),
     env: {},
   });
 
@@ -53,6 +59,39 @@ describe("/api/proof directory compatibility", () => {
     const response = await call("https://councilof.ai/api/proof", { "x-payment": "untrusted" });
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe("https://councilof.ai/api/proof?bundle=1");
+    expect(fetch).not.toHaveBeenCalled();
+  });
+});
+
+describe("/api/proof HEAD directory probes", () => {
+  it("redirects the bare URL without fetching or accepting payment", async () => {
+    const fetch = vi.fn(() => { throw new Error("HEAD must not fetch"); });
+    vi.stubGlobal("fetch", fetch);
+    const response = await head("https://councilof.ai/api/proof", { "x-payment": "untrusted" });
+    expect(response.status).toBe(307);
+    expect(response.headers.get("location")).toBe("https://councilof.ai/api/proof?bundle=1");
+    expect(response.headers.get("cache-control")).toBe("no-store");
+    expect(response.body).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("returns the canonical unsigned-client challenge headers without a body", async () => {
+    const fetch = vi.fn(() => { throw new Error("unpaid HEAD must not fetch"); });
+    vi.stubGlobal("fetch", fetch);
+    const response = await head("https://councilof.ai/api/proof?bundle=1", { "x-payment": "untrusted" });
+    expect(response.status).toBe(402);
+    expect(response.headers.get("payment-required")).toBeTruthy();
+    expect(response.body).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("keeps a named inclusion GET-only", async () => {
+    const fetch = vi.fn(() => { throw new Error("HEAD must not fetch a proof"); });
+    vi.stubGlobal("fetch", fetch);
+    const response = await head(`https://councilof.ai/api/proof?sha=${"a".repeat(64)}`);
+    expect(response.status).toBe(405);
+    expect(response.headers.get("allow")).toBe("GET");
+    expect(response.body).toBeNull();
     expect(fetch).not.toHaveBeenCalled();
   });
 });
