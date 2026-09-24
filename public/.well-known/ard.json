@@ -1,0 +1,30 @@
+{
+  "entries": [
+    {
+      "@context": "https://agenticresourcediscovery.org/context/v1",
+      "identifier": "urn:air:councilof.ai:server:gspc-mcp",
+      "displayName": "Council of AI — GSPC Measurement Tools",
+      "type": "application/mcp-server-card+json",
+      "url": "https://councilof.ai/.well-known/mcp/server.json",
+      "description": "MCP tools for reading the public GSPC measurement board and published evidence, including card signature and root-inclusion checks. Measurement, not certification.",
+      "representativeQueries": [
+        "Show the current public GSPC measurement board",
+        "Find a published measurement card and check its signature",
+        "Check whether a published card is included in a published root"
+      ],
+      "capabilities": [
+        "board_totals",
+        "get_card",
+        "verify_card",
+        "get_root",
+        "verify_inclusion"
+      ],
+      "tags": [
+        "GSPC",
+        "MCP",
+        "AI governance measurement",
+        "evidence verification"
+      ]
+    }
+  ]
+}

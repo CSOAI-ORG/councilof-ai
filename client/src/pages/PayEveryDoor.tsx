@@ -753,8 +753,8 @@ export default function PayEveryDoor() {
           facilitator's reason as the door relayed it. REJECTED means the wallet declined and nothing left this page.
         </p>
         <p className="mt-2">
-          Measurement, not a mark: paying a door catalogues it in an index; it grades nothing and proves nothing about the artefact
-          beyond the settle reference shown.
+          Measurement, not a mark: a successful payment can create a facilitator settlement record; check each directory
+          listing separately. It grades nothing and proves nothing about the artefact beyond the settle reference shown.
         </p>
       </section>
     </main>
