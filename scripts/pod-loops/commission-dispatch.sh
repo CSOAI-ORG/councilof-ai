@@ -43,6 +43,19 @@ if [ ! -r "$DISPATCH_PY" ] || [ ! -r "$CONTROL_REPO/scripts/generate_runpod_gspc
 fi
 
 fallback=()
+# Workers on releases that predate health.json config_dir (091a616a, running since 22 Sep)
+# made every tick HALT from 14 Sep. When WORKER_JOBS_DIR is unset, take --config-dir from the
+# command line of the process that holds worker.lock: the live worker's own configuration,
+# the same thing health.json would have recorded. No lock holder, no fallback, still HALT.
+if [ -z "${WORKER_JOBS_DIR:-}" ] && [ -e "$WORKER_STATE_DIR/worker.lock" ]; then
+  lock_real=$(readlink -f "$WORKER_STATE_DIR/worker.lock")
+  for fd in /proc/[0-9]*/fd/*; do
+    [ "$(readlink "$fd" 2>/dev/null)" = "$lock_real" ] || continue
+    pid=${fd#/proc/}; pid=${pid%%/*}
+    WORKER_JOBS_DIR=$(tr '\0' '\n' < "/proc/$pid/cmdline" 2>/dev/null | grep -A1 -x -- --config-dir | sed -n 2p)
+    break
+  done 2>/dev/null
+fi
 [ -n "${WORKER_JOBS_DIR:-}" ] && fallback=(--jobs-dir "$WORKER_JOBS_DIR")
 resolved=$(PYTHONPATH="$CONTROL_REPO/scripts" python3 "$DISPATCH_PY" --resolve-jobs-dir \
   --worker-state-dir "$WORKER_STATE_DIR" ${fallback[@]+"${fallback[@]}"} 2>>"$LOGS/commission-dispatch.run.log")
