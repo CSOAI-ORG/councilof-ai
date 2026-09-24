@@ -172,6 +172,19 @@ export default function ClaimMaintenance() {
             Cite as: Council of AI. <em>Claim Maintenance, version 0.1.</em> CSOAI Ltd, 2026-09-22.{" "}
             <a className="underline" href={DOI_URL}>{DOI_URL}</a>
           </p>
+          <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Live claim register summary">
+            {[
+              ["Subjects", reg?.totals?.subjects],
+              ["Claims", reg?.totals?.claims],
+              ["Measured", reg?.totals?.by_state?.CLAIM_MEASURED],
+              ["Unmeasured", reg?.totals?.by_state?.UNMEASURED],
+            ].map(([label, value]) => (
+              <div key={String(label)} className="rounded-xl border border-slate-700 bg-white/[0.035] px-3.5 py-3">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">{label}</p>
+                <p className="mt-1 text-2xl font-black tabular-nums text-white">{value == null ? "—" : String(value)}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </header>
 
