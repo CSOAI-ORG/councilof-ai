@@ -82,7 +82,7 @@ describe("Tier 1 — /api/request-attestation", () => {
       new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })),
     );
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
-    const r = await ras(ctx("/api/request-attestation?subject=qwen3", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    const r = await ras(ctx("/api/request-attestation?subject=qwen3&api_key=DO_NOT_PUBLISH", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
     expect(r.status).toBe(200);
     expect(r.headers.get("x-payment-response")).toBeTruthy();
     const b = await r.json();
@@ -91,6 +91,8 @@ describe("Tier 1 — /api/request-attestation", () => {
     expect(b.card.sig_ed25519).toBeNull();
     expect(b.card.unmeasured).toEqual(expect.arrayContaining(["root_inclusion", "sig_ed25519", "fresh_run_schedule"]));
     expect(b.card.source_urls).toContain("https://basescan.org/tx/0xtx");
+    expect(b.card.source_urls[0]).toBe("https://councilof.ai/api/request-attestation?subject=qwen3");
+    expect(JSON.stringify(b)).not.toContain("DO_NOT_PUBLISH");
     expect(b.card.payload).toMatchObject({ status: "COMMISSIONED", reserve_count: 2, fresh_run: "UNMEASURED" });
     expect(b.bytes).toBeLessThanOrEqual(3072);
     expect(JSON.stringify(b.card)).not.toMatch(/accuracy/);

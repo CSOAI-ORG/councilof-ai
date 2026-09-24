@@ -73,6 +73,56 @@ const send = (extra: Record<string, unknown> = {}, headers: Record<string, strin
   );
 
 describe("POST /api/a2a — SendMessage", () => {
+  it("answers the registry SDK's generic discovery probe with capability help, not a measurement", async () => {
+    const sourceFetch = vi.fn();
+    vi.stubGlobal("fetch", sourceFetch);
+    // a2aregistry.org's a2a-sdk 1.1.2 sends this text as a single Part and
+    // includes configuration:{} when probing a v1 JSON-RPC interface.
+    const probe = {
+      jsonrpc: "2.0",
+      id: "registry-task-probe",
+      method: "SendMessage",
+      params: {
+        message: {
+          messageId: "probe-message",
+          role: "ROLE_USER",
+          parts: [{ text: "Hello, what can you do?" }],
+        },
+        configuration: {},
+      },
+    };
+    const { status, headers, json } = await rpc(probe);
+    expect(status).toBe(200);
+    expect(headers.get("a2a-version")).toBe("1.0");
+    expect(json.error).toBeUndefined();
+    expect(json.result.message.role).toBe("ROLE_AGENT");
+    expect(json.result.message.parts[0].text).toContain("not a measurement or certification");
+    expect(json.result.message.parts[1].data).toMatchObject({
+      kind: "CAPABILITY_HELP",
+      state: "DESCRIPTIVE_ONLY",
+      protocolVersion: "1.0",
+      skills: [...SKILL_IDS],
+    });
+    expect(sourceFetch).not.toHaveBeenCalled();
+
+    const unversioned = await rpc(probe, {});
+    expect(unversioned.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    expect(unversioned.json.result).toBeUndefined();
+    expect(sourceFetch).not.toHaveBeenCalled();
+  });
+
+  it("does not turn unrelated free text into a measurement or task", async () => {
+    const sourceFetch = vi.fn();
+    vi.stubGlobal("fetch", sourceFetch);
+    const { json } = await rpc({
+      jsonrpc: "2.0", id: 1, method: "SendMessage", params: {
+        message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "measure all models" }] },
+      },
+    });
+    expect(json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
+    expect(sourceFetch).not.toHaveBeenCalled();
+  });
+
   it("answers with a Message whose text carries totals.lid verbatim and whose data is derived", async () => {
     stubBoard();
     const { status, headers, json } = await send();

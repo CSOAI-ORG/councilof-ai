@@ -2,10 +2,10 @@
  * payEveryDoor — the /pay page's flow, kept out of the component so it can be tested without a
  * DOM and so the per-door button and "pay all remaining" share ONE path.
  *
- * WHY THE PAGE EXISTS. An x402 index (PayAI today, Coinbase CDP once settles route through it)
- * catalogues a resource only off a confirmed settle through its facilitator. Nothing else lists a
- * door — not metadata, not a manifest, not a registration call (there is none). The owner pays
- * each door once from his own wallet; the index notices. This module is that one settle per door.
+ * WHY THE PAGE EXISTS. A successful payment can create a facilitator settlement record
+ * relevant to settlement-based discovery. PayAI and the 402 Index are separate observed
+ * catalogues; an index row or a self-funded settle does not prove independent demand.
+ * This module implements the one-settle-per-door wallet path.
  *
  * WHAT IT REUSES, DELIBERATELY. The EIP-3009 typed data and the wallet round trip come from
  * `@/lib/x402Wallet` (`buildTypedData`, `signX402Challenge`, `discoverEIP6963`) — the same
@@ -37,7 +37,7 @@ export const DOOR_SETTLES_PATH = "/api/door-settles";
 
 /** The one sentence the page must carry, verbatim. */
 export const THE_LINE =
-  "Each payment is one settle through the estate's facilitator; an index catalogues a door only after that. This page never holds a key.";
+  "A successful payment can create a facilitator settlement record. PayAI and 402 Index listings are checked separately. This page never holds a key.";
 
 export type Door = {
   url: string;
@@ -492,10 +492,10 @@ export function settleFor(door: Door, reading: DoorSettlesReading | null | undef
 }
 
 /**
- * THE DELIST ALARM. An x402 index drops a resource that has not settled for 30 days; the page
- * turns a door red at 25 so the heartbeat lands before the drop. Risk is true when the last
- * settle is null (UNMEASURED — nothing on record is not "recent"), unparseable, or 25 days or
- * more before `now`. At exactly 25 days it is red; one millisecond short of 25 days it is not.
+ * SETTLEMENT-FRESHNESS HEURISTIC. The page uses a 30-day internal review window and
+ * turns a door red at 25 days. This does not assert an index's delisting rule. Risk is true when
+ * the last settle is null (UNMEASURED — nothing on record is not "recent"), unparseable, or
+ * 25 days or more before `now`. At exactly 25 days it is red; one millisecond short is not.
  */
 export const DELIST_AFTER_DAYS = 30;
 export const DELIST_RISK_DAYS = 25;

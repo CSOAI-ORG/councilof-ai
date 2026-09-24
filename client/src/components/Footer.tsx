@@ -58,6 +58,7 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
+        { name: 'Current evidence mirror', href: 'https://huggingface.co/datasets/csoai/councilof-ai-mirror', external: true },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Honesty gate', href: '/honesty' },
         // The readable ledger (DashboardAttestationsPane renders /api/corrections), not raw JSON.
@@ -90,7 +91,7 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'Public source mirror', icon: BookOpen, href: 'https://huggingface.co/datasets/csoai/councilof-ai-source' },
+    { name: 'Source snapshot', icon: BookOpen, href: 'https://huggingface.co/datasets/csoai/councilof-ai-source' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];

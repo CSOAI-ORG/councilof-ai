@@ -9,10 +9,9 @@
  * population, so that absence is a measurement and not a guess — and returns only the rows whose
  * resource host is ours.
  *
- * WHAT A ROW MEANS. An index catalogues a resource off a CONFIRMED SETTLE through its facilitator
- * (docs/product/X402-BAZAAR-AUDIT.md, CDP-REGISTRATION.md). A row here says the index holds a
- * record for that route and when it last wrote it. It is the index's claim, verified by nothing
- * here; it is not settlement, revenue or demand.
+ * WHAT A ROW MEANS. A PayAI row says its facilitator discovery index holds a record for
+ * that route and when it last wrote it. It is the index's claim, verified by nothing here; it
+ * is not a verified settlement, revenue or demand. The 402 Index is a separate catalogue.
  *
  * ABSENCE. `absence_determinate` is true only when every declared row was read. A short scan,
  * a changed total mid-walk, an oversized index or a network failure is reported as UNCHECKABLE
@@ -147,8 +146,8 @@ export function rowFrom(item: Record<string, unknown>): ListingRow {
 }
 
 const NOTE =
-  "A row is the index's own record for one of our routes, read live and verified by nothing here. " +
-  "An index catalogues a resource only after a confirmed settle through its facilitator. " +
+  "A row is PayAI's own discovery record for one of our routes, read live and verified by nothing here. " +
+  "It does not verify a settle or independent demand; the 402 Index is a separate listing. " +
   "Absence is a finding only when absence_determinate is true.";
 
 /**

@@ -107,6 +107,7 @@ type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
 
 type SkillSelection = { skill: SkillId; input: Json };
+type CapabilityHelp = { kind: "CAPABILITY_HELP" };
 
 class SourceError extends Error {
   constructor(
@@ -274,7 +275,7 @@ const exactKeys = (input: Json, required: string[], optional: string[] = []): bo
     && Object.keys(input).every((key) => allowed.has(key));
 };
 
-function parseSkillSelection(message: Json): SkillSelection | string {
+function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
   if (parts.length !== 1) {
     return "exactly one Part is required; additional semantic parts are not ignored";
@@ -287,8 +288,14 @@ function parseSkillSelection(message: Json): SkillSelection | string {
     return "Part content is a oneof: supply exactly one of text, data, url, or raw";
   }
   if (semanticKeys[0] === "text") {
-    if (str(part.text)?.trim().toLowerCase() === "board") return { skill: "gspc-board", input: {} };
-    return "structured Part.data {skill,input} is required (legacy text compatibility is only the exact word `board`)";
+    const text = str(part.text)?.trim().replace(/\s+/g, " ").toLowerCase();
+    if (text === "board") return { skill: "gspc-board", input: {} };
+    // A2A directory task probes send this generic greeting. Answer with the
+    // declared capability contract, never with a measurement or a guessed skill.
+    if (text === "hello, what can you do?" || text === "what can you do?" || text === "help") {
+      return { kind: "CAPABILITY_HELP" };
+    }
+    return "structured Part.data {skill,input} is required (text accepts only board or a capability-help greeting)";
   }
   if (semanticKeys[0] !== "data") {
     return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
@@ -556,6 +563,34 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
   if (typeof selection === "string") {
     return rpcError(id, A2A_ERROR.INVALID_PARAMS, selection, "INVALID_SKILL_SELECTOR", {
       field: "params.message.parts",
+    });
+  }
+  if ("kind" in selection) {
+    return reply(id, {
+      result: {
+        message: {
+          messageId: crypto.randomUUID(),
+          contextId: str(message.contextId) ?? crypto.randomUUID(),
+          role: "ROLE_AGENT",
+          parts: [
+            {
+              text: `I publish AI-governance measurements and evidence. For a result, send one Part.data {skill,input}; available skill IDs: ${SKILL_IDS.join(", ")}. This capability description is not a measurement or certification.`,
+              mediaType: "text/plain",
+            },
+            {
+              data: {
+                kind: "CAPABILITY_HELP",
+                state: "DESCRIPTIVE_ONLY",
+                protocolVersion: A2A_PROTOCOL_VERSION,
+                skills: [...SKILL_IDS],
+                selector: { skill: "gspc-board", input: {} },
+                register: REGISTER,
+              },
+              mediaType: "application/json",
+            },
+          ],
+        },
+      },
     });
   }
   const invalidInput = validateSkillInput(selection);

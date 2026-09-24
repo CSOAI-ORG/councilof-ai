@@ -17,9 +17,9 @@ interface VerifyBadge {
 
 const BADGES: VerifyBadge[] = [
   {
-    label: 'Hugging Face · public source mirror',
+    label: 'Hugging Face · source snapshot',
     href: 'https://huggingface.co/datasets/csoai/councilof-ai-source',
-    title: 'Public source mirror on Hugging Face; repository publication is separate from site deployment',
+    title: 'Dated source snapshot on Hugging Face; repository publication is separate from site deployment',
     logo: '/images/badges/verify/huggingface.svg',
     wide: true,
   },

@@ -244,7 +244,6 @@ async function interopAvailabilityFor(origin: string, subject: string, axis: str
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
-  const resourceUrl = new URL("/api/request-attestation", origin).toString();
   const subject = (url.searchParams.get("subject") || "").trim();
   const axis = (url.searchParams.get("axis") || "").trim().toLowerCase();
 
@@ -275,6 +274,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       lid: CSOAI_LID,
     }, 400);
   }
+
+  // Canonicalize only the validated inputs this route uses. Copying request.url would
+  // leak ignored tracking or credential query parameters into a signed offer and paid receipt.
+  const resource = new URL("/api/request-attestation", origin);
+  if (subject) resource.searchParams.set("subject", subject);
+  if (axis) resource.searchParams.set("axis", axis);
+  const resourceUrl = resource.toString();
 
   const description = REQUEST_ATTESTATION_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
@@ -349,7 +355,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
   const source_urls = [
-    resourceUrl + `?subject=${encodeURIComponent(subject)}` + (axis ? `&axis=${encodeURIComponent(axis)}` : ""),
+    resourceUrl,
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
     reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];

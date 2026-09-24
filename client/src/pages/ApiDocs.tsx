@@ -376,7 +376,7 @@ console.log({
               <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" variant="outline" className="gap-2">
                   <Globe className="w-4 h-4" />
-                  Public source mirror
+                  Source snapshot
                 </Button>
               </a>
             </div>

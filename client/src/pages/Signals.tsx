@@ -10,6 +10,7 @@ export default function Signals() {
   const [dashboard, setDashboard] = useState<any>(null);
   const [signals, setSignals] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [latestRoot, setLatestRoot] = useState<{ as_of: string; n_leaves: number; root_url: string } | null>(null);
 
   useEffect(() => {
     document.title = "Signals — signed measurement, verifiable | Council of AI";
@@ -17,10 +18,17 @@ export default function Signals() {
     Promise.all([
       fetch("/signals/wave-dashboard.signed.json").then((r) => (r.ok ? r.json() : null)),
       fetch("/signals/_index.json").then((r) => (r.ok ? r.json() : null)),
+      fetch("/interop/card-root-latest.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
     ])
-      .then(([dash, idx]) => {
+      .then(([dash, idx, root]) => {
         setDashboard(dash);
         setSignals((idx?.signals || []).filter((s: any) => s.axis));
+        if (root?.kind === "DISCOVERY_POINTER_ONLY" && typeof root.as_of === "string" &&
+            Number.isInteger(root.n_leaves) && root.n_leaves >= 0 &&
+            typeof root.root_url === "string" &&
+            /^\/interop\/card-root-\d{4}-\d{2}-\d{2}-[0-9a-f]{12}\.json$/.test(root.root_url)) {
+          setLatestRoot({ as_of: root.as_of, n_leaves: root.n_leaves, root_url: root.root_url });
+        }
       })
       .catch((e) => setError(String(e)));
   }, []);
@@ -38,15 +46,23 @@ export default function Signals() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">Signals</h1>
         <p className="mt-4 text-sm text-gray-700">
+          Current mill evidence: <a className="font-semibold text-emerald-800 underline" href="/interop/card-root-latest.json">open the latest root pointer</a>
+          {latestRoot && (
+            <> · {latestRoot.as_of} · {latestRoot.n_leaves.toLocaleString()} total corpus leaves · <a className="font-semibold text-emerald-800 underline" href={latestRoot.root_url}>immutable dated root</a></>
+          )}.
+          The pointer and root are unsigned; verify card signatures and OTS status separately.
+        </p>
+        <p className="mt-2 text-sm text-gray-700">
           <a className="font-semibold text-emerald-800 underline" href="/signals/2026-09-24">
-            24 September signed mill batch: 14 cards, 13 MEASURED and one UNMEASURED →
+            Historical example, 13:10 UTC on 24 September: 14 cards, 13 MEASURED and one UNMEASURED →
           </a>
         </p>
         <p className="mt-3 max-w-3xl text-gray-600">
-          Every signal on this page is <strong>signed</strong> (content_id + Ed25519, did:web
+          The per-axis signals below are <strong>signed</strong> (content_id + Ed25519, did:web
           verification method) and independently verifiable: recompute the canonical body, derive the
-          content_id, check the signature. Measurement, not certification — no wave, score, or count
-          is claimed without a row (JL.5).
+          content_id, check the signature. The latest root pointer above is unsigned discovery
+          metadata; its leaf count is the corpus size, not the latest run's graded count.
+          Measurement, not certification — no wave, score, or count is claimed without a row (JL.5).
         </p>
 
         {error && <p className="mt-4 text-sm text-red-600">Signals not yet available: {error}</p>}

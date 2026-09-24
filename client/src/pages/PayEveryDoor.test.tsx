@@ -96,7 +96,7 @@ describe("/pay ships clean copy", () => {
 
   it("carries the one line verbatim", () => {
     expect(THE_LINE).toBe(
-      "Each payment is one settle through the estate's facilitator; an index catalogues a door only after that. This page never holds a key.",
+      "A successful payment can create a facilitator settlement record. PayAI and 402 Index listings are checked separately. This page never holds a key.",
     );
     expect(page.replace(/&#x27;/g, "'")).toContain(THE_LINE);
   });
@@ -349,6 +349,8 @@ describe("Settle all is the monthly heartbeat, on one page", () => {
     expect(page.replace(/&#x27;/g, "'")).toContain(`${DELIST_RISK_DAYS} days, or when there is nothing on record`);
     expect(page).toContain("one wallet confirmation per door");
     expect(page).toContain("self-settlement, never as a buyer");
+    expect(page).toContain("That flag is a heuristic, not an index");
+    expect(page).toContain("neither listing proves an independent buyer");
     // the tally appears only once a walk has queued doors
     expect(page).not.toContain('data-testid="settle-all-tally"');
   });

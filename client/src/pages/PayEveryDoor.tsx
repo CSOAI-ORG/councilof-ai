@@ -43,9 +43,9 @@ import {
 /**
  * /pay — pay every x402 door of the estate from the owner's own wallet, one click each.
  *
- * WHY. An x402 index catalogues a resource only off a CONFIRMED SETTLE through its facilitator
- * (docs/product/X402-BAZAAR-AUDIT.md). There is no registration call. The manifest can be
- * perfect and the door invisible until someone settles through it. This page is the someone.
+ * WHY. A successful settle can create a facilitator record used by settlement-based
+ * discovery. The 402 Index is a separate directory with its own listing and health state.
+ * Neither a manifest entry nor an index row proves an independent buyer.
  *
  * WHAT IT READS, NEVER TYPES. The door list is /.well-known/x402.json, live. Each door's terms
  * — amount, asset, network, payTo — are its own 402 challenge, live. The listing column is the
@@ -64,11 +64,11 @@ import {
  * THE STATUS COLUMN (2026-09-22, the owner's build spec §D). Three cells per door, each from its
  * own reader: PayAI indexed (/api/x402-listing), 402 Index listed with the index's health word
  * (/api/x402-listing-402index), and the last settle THIS SITE recorded (/api/door-settles, the
- * same settled:tx:* records /api/revenue counts). An index drops a door inactive for
- * DELIST_AFTER_DAYS; the settle cell turns red at DELIST_RISK_DAYS, or when there is nothing on
- * record — null is UNMEASURED and is treated as risk, never as "recent". "Settle all" walks every
- * door with a live challenge through the same one-settle path, one wallet confirmation each, and
- * keeps a running tally: it is the monthly heartbeat, on one page.
+ * same settled:tx:* records /api/revenue counts). The site's settlement-freshness warning
+ * uses DELIST_AFTER_DAYS as a review window and turns red at DELIST_RISK_DAYS, or when there is
+ * nothing on record — null is UNMEASURED, never "recent". This is a heuristic, not an index
+ * delisting policy. "Settle all" walks each live challenge through the same one-settle path,
+ * one wallet confirmation each, and keeps a running tally.
  */
 
 const TITLE = "Pay every x402 door — one settle each | Council of AI";
@@ -207,7 +207,7 @@ export function SettleCell({ settle, state, now }: { settle: SettleReading; stat
         {risk ? (
           <>
             {" "}
-            · <span className="font-bold uppercase tracking-wide">{DELIST_RISK_TEXT}</span> — an index drops a door {DELIST_AFTER_DAYS} days after its last settle
+            · <span className="font-bold uppercase tracking-wide">{DELIST_RISK_TEXT}</span> — this site's settlement-freshness warning; check each index's listing status separately
           </>
         ) : null}
         <span className="block text-slate-500">
@@ -624,8 +624,8 @@ export default function PayEveryDoor() {
           {MANIFEST_PATH}
         </a>{" "}
         as it stands now, each with the terms its own live 402 states and a Pay with wallet button that signs those exact terms
-        in your wallet and retries the door once. An index catalogues a door only after a confirmed settle, so this is how a
-        door becomes findable: not by describing it, by paying it.
+        in your wallet and retries the door once. A successful settle can support facilitator-based discovery. The 402 Index
+        is a separate directory whose listing status is read independently; neither listing proves an independent buyer.
       </p>
       <p className="mt-3 rounded-lg border border-slate-900/10 bg-slate-50 px-3 py-2 text-[12px] font-medium leading-relaxed text-slate-800" data-testid="pay-the-line">
         {THE_LINE}
@@ -648,9 +648,9 @@ export default function PayEveryDoor() {
 
       <p className="mt-3 text-[11px] leading-relaxed text-slate-600" data-testid="pay-status-legend">
         Each door carries three status cells: whether the PayAI index holds a row for it, whether the 402 Index lists it and
-        the health word that index gives it, and the last settle this site recorded through it. An index drops a door that
-        has not settled for {DELIST_AFTER_DAYS} days, so the settle cell turns red with the words <q>{DELIST_RISK_TEXT}</q> at{" "}
-        {DELIST_RISK_DAYS} days, or when there is nothing on record; none on record is UNMEASURED and is treated as risk, not as recent.
+        the health word that index gives it, and the last settle this site recorded through it. This site uses a {DELIST_AFTER_DAYS}-day
+        settlement-review window and flags <q>{DELIST_RISK_TEXT}</q> at {DELIST_RISK_DAYS} days, or when there is nothing on record.
+        That flag is a heuristic, not an index's delisting decision; none on record is UNMEASURED, not a recent settle.
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -675,8 +675,9 @@ export default function PayEveryDoor() {
       </div>
       <p className="mt-2 text-[11px] leading-relaxed text-slate-500">
         Settle all queues every door with a live challenge, in manifest order, through the same one-settle path as each
-        door's own button: one wallet confirmation per door, nothing batched, nothing signed in advance. This is the monthly
-        heartbeat that keeps the listings alive; a settle from our own wallet is recorded as a self-settlement, never as a buyer.
+        door's own button: one wallet confirmation per door, nothing batched, nothing signed in advance. A successful settle
+        updates this site's record; check each index's listing status separately. A settle from our own wallet is recorded as a
+        self-settlement, never as a buyer.
       </p>
       {walkQueue.length > 0 ? (
         <p className="mt-2 text-[12px] text-slate-700" data-testid="settle-all-tally">
