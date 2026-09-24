@@ -1,12 +1,11 @@
 /**
  * GET /api/cards — live signed-measurement surface (G4 fix).
  *
- * Serves the SIGNED living board + the index of signed measurement cards so the
- * public can verify the measurements the estate has actually signed (not a
- * stale static snapshot). Uses the same fetch-static-asset pattern as the rest
- * of the API (e.g. /city/board.json), reading the bundled /signed/*.json.
+ * Serves the historical living-board file with its explicit signature verification
+ * state, plus the index of measurement cards. Uses the same fetch-static-asset
+ * pattern as the rest of the API (e.g. /city/board.json), reading bundled files.
  *
- * The signed measurement pack is 14 behavioural axes. Living board counts come
+ * The historical, unsigned measurement package contains 14 behavioural axes. Living board counts come
  * from GET /api/gspc (quote totals.public_count). Do not treat 14 as the living
  * slot count. Do not type a fake MEASURED count. Cite live GET /api/gspc totals.
  */
@@ -126,9 +125,14 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
           schema: meas.schema,
           gspc_registry_axes: meas.gspc_registry_axes,
           axes: (meas.axes || []).length,
-          pack: "14 behavioural (signed gspc-measurement.json snapshot — not the living board)",
+          artifact: "/signed/gspc-measurement.json",
+          artifact_state: "HISTORICAL_UNSIGNED",
+          packaged_at: meas.packaged_at ?? null,
+          pack: "14 behavioural axes in a historical unsigned package. GET /api/gspc is the current board.",
           living_board: livingTotals,
-          publish_readiness: meas.publish_readiness,
+          historical_publish_readiness: meas.publish_readiness ?? null,
+          history_note:
+            "The package's 2026-08-26 amendment records a stale jail row. Its old board: live declaration is historical, not a current status claim.",
         }
       : { living_board: livingTotals },
     board: {
@@ -137,7 +141,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       signer: board.signer,
       axes: Object.keys(board.axes || {}),
       axes_note:
-        "This signed living-board snapshot lists 14 behavioural axes. Living board: GET /api/gspc. Do not treat 14 as the living slot count.",
+        "This historical living-board file lists 14 behavioural axes. Its signature verification state is published below. Current board: GET /api/gspc.",
       signature,
     },
     living_board: livingTotals,
