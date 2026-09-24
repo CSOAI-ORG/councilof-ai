@@ -107,6 +107,11 @@ jobs:
       - name: Pages size guard — 25 MiB per-file limit (source assets)
         run: node scripts/pages-size-guard.mjs public --packed-history-projection
 
+      - name: Historical OTS quarantine — retained bytes and public inventory agree
+        run: |
+          node --test scripts/quarantined-ots.node-test.mjs
+          node scripts/quarantined-ots-gate.mjs
+
       - name: Install deps
         run: npm ci --no-audit --no-fund
 
