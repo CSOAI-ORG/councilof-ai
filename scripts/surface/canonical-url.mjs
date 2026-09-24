@@ -22,7 +22,7 @@ export function servedUrl(route, origin) {
 // The footer names /terms-of-service as the one current contract. The two
 // working aliases remain readable, but must not advertise duplicate canonicals.
 //
-// The same holds for 68 more addresses measured 2026-09-24: across the live sitemap, each serves
+// The same holds for 72 more addresses measured 2026-09-24: across the live sitemap, each serves
 // the same title, description and body as the route it maps to, and each advertised itself as the
 // original, so search engines saw duplicate pages. The alias stays readable; its canonical names
 // the route the site's own links use most (ties: the more descriptive path; /law over /meok-law,
@@ -100,6 +100,11 @@ export const CANONICAL_ALIAS = new Map([
   ["/voice", "/minds"],
   ["/nist-eu", "/nist-vs-eu-ai-act"],
   ["/sector-atlas", "/sectors"],
+  // Third batch 2026-09-24: /frameworks/* copies of the top-level framework pages.
+  ["/frameworks/eu-ai-act", "/eu-ai-act"],
+  ["/frameworks/iso-42001", "/iso-42001"],
+  ["/frameworks/nist", "/nist-ai-rmf"],
+  ["/frameworks/tc260", "/tc260"],
 ]);
 
 /**

@@ -427,6 +427,12 @@ const DELISTED = new Map([
   ...["blog", "dashboards", "issuance", "marketplace", "press", "proofs"]
     .map((s) => [`/subdomains/${s}`, `canonical: https://${s}.councilof.ai`]),
   // Duplicate addresses of one page; canonical named in scripts/surface/canonical-url.mjs.
+  ["/frameworks/eu-ai-act", "canonical: /eu-ai-act/"],
+  ["/frameworks/iso-42001", "canonical: /iso-42001/"],
+  ["/frameworks/nist", "canonical: /nist-ai-rmf/"],
+  ["/frameworks/tc260", "canonical: /tc260/"],
+  ["/terms", "canonical: /terms-of-service/"],
+  ["/legal/terms", "canonical: /terms-of-service/"],
   ["/usp", "canonical: /why/"],
   ["/why-csoai", "canonical: /why/"],
   ["/our-difference", "canonical: /why/"],
