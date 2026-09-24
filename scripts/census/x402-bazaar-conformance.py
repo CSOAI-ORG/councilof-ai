@@ -151,7 +151,8 @@ def main():
             if name not in e["indexes"]:
                 e["indexes"].append(name)
     order = sorted(hosts)
-    partial = False
+    # Failed enumeration cannot establish an absent host or complete daily run.
+    partial = not (cdp_meta.get("complete") is True and payai_meta.get("complete") is True)
     if a.max_hosts and len(order) > a.max_hosts:
         order = order[: a.max_hosts]; partial = True
     log(f"{len(hosts)} distinct hosts; probing {len(order)} at {CONCURRENCY} concurrent, {TIMEOUT}s timeout")
