@@ -228,7 +228,7 @@ export default function Dashboard() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {metrics.map((metric, idx) => {
             const Icon = metric.icon;
             return (
@@ -238,7 +238,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: idx * 0.05 }}
               >
-                <Card className="bg-card border-border hover:shadow-md transition-shadow">
+                <Card className="card-quiet card-quiet-hover h-full bg-card">
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -483,9 +483,9 @@ export default function Dashboard() {
                   DEFAULT_DATA as if it were this account's measurements. No
                   per-framework comparison is measured for the account yet, so the
                   cell says so — it does not chart example numbers. */}
-              <div className="flex h-full flex-col justify-center rounded-xl border border-gray-200 bg-white p-8 text-center">
-                <p className="font-semibold text-gray-900">Framework comparison — UNMEASURED</p>
-                <p className="mt-1 text-sm text-gray-500">
+              <div className="flex h-full flex-col justify-center rounded-xl border border-border bg-card p-8 text-center">
+                <p className="font-semibold text-foreground">Framework comparison — UNMEASURED</p>
+                <p className="mt-1 text-sm text-muted-foreground">
                   No per-framework scores are measured for this account, so nothing is plotted.
                   Example data is never charted as yours.
                 </p>
@@ -493,9 +493,9 @@ export default function Dashboard() {
             </motion.div>
           </div>
         ) : (
-          <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-            <p className="text-gray-900 font-semibold">No trend data yet</p>
-            <p className="mt-1 text-sm text-gray-500">
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="font-semibold text-foreground">No trend data yet</p>
+            <p className="mt-1 text-sm text-muted-foreground">
               Charts appear once your AI systems have real measurements behind them —
               we don&apos;t plot example data as if it were yours.
             </p>

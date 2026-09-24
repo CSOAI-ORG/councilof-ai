@@ -167,7 +167,7 @@ export default function HomeHero({
         }}
       />
 
-      <div className="section-shell relative z-10 py-14 sm:py-24 lg:py-32">
+      <div className="section-shell relative z-10 py-12 sm:py-24 lg:py-28">
         <p className="font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-300/80">
           Independent measurement · signed evidence · free to re-check
         </p>
@@ -183,13 +183,13 @@ export default function HomeHero({
           </span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-lg leading-[1.55] text-emerald-50/90 sm:text-xl">
-          Frozen, published tests. Answers are graded by a rule, never by another AI. We sign
-          the measurement cards we issue and label supporting runs that are unsigned. Check
-          the evidence for free, without an account. What we have not measured, the board says so.
+        <p className="mt-6 max-w-2xl text-[1.05rem] leading-[1.55] text-emerald-50/90 sm:text-xl">
+          Frozen, published tests. Answers are graded by fixed rules, never by another AI.
+          Issued measurement cards are signed; unsigned supporting runs are labelled. Re-check
+          the evidence for free, without an account. Unmeasured stays visible.
         </p>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <a
             href="#board"
             className="inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-7 text-base font-black text-[#03110b] shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-300"
@@ -220,7 +220,7 @@ export default function HomeHero({
         </div>
 
         {/* The live board, at a glance. One read, four fields, nothing typed. */}
-        <div className="mt-12 max-w-4xl" data-testid="hero-board-glance">
+        <div className="mt-10 max-w-4xl rounded-3xl border border-white/10 bg-black/15 p-5 backdrop-blur-[2px] sm:p-6" data-testid="hero-board-glance">
           {error ? (
             <p className="rounded-2xl border border-amber-400/40 bg-amber-400/10 px-5 py-4 text-sm text-amber-100">
               The board is unread right now — {error}. Nothing is shown in its place.{" "}
@@ -244,7 +244,7 @@ export default function HomeHero({
               */}
               {sep ? (
                 <div
-                  className="mt-8 rounded-2xl border border-amber-300/30 bg-amber-300/[0.07] px-5 py-4"
+                  className="mt-5 rounded-2xl border border-amber-300/30 bg-amber-300/[0.07] px-5 py-4"
                   data-testid="hero-separation"
                 >
                   <p className="text-[13px] font-bold leading-snug text-amber-100">

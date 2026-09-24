@@ -181,7 +181,7 @@ function Tile({ tile }: { tile: CredibilityTile }) {
   );
   return (
     <div
-      className="flex flex-col rounded-2xl border border-border bg-card p-6 shadow-[0_18px_40px_-34px_rgba(4,18,12,.5)]"
+      className="group flex flex-col border-t border-border pt-5"
       data-testid={`credibility-${tile.id}`}
     >
       <h3 className="text-[17px] font-black leading-snug tracking-tight text-foreground">{tile.claim}</h3>
@@ -256,7 +256,7 @@ export default function HomeCredibility({
           check its date and limits before citing it.
         </p>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-x-8 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
           {tiles.map((t) => (
             <Tile key={t.id} tile={t} />
           ))}

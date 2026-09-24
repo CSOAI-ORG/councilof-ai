@@ -83,9 +83,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 shadow-sm backdrop-blur-md">
       <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex h-14 items-center justify-between sm:h-16">
           <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="relative w-10 h-10">
+            <div className="relative h-9 w-9 sm:h-10 sm:w-10">
               <svg viewBox="0 0 100 100" className="w-full h-full" role="img" aria-label="Council of AI">
                 <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
                 <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
@@ -99,7 +99,7 @@ export function Header() {
                 <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
               </svg>
             </div>
-            <span className="text-xl 2xl:text-2xl font-bold text-emerald-700 tracking-tight whitespace-nowrap">Council of AI</span>
+            <span className="whitespace-nowrap text-lg font-bold tracking-tight text-emerald-700 sm:text-xl 2xl:text-2xl">Council of AI</span>
           </a>
 
           <div className="hidden md:flex items-center" ref={dropdownRef}>

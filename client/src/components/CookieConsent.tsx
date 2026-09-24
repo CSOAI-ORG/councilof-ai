@@ -82,38 +82,39 @@ export default function CookieConsent() {
       ref={ref}
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-0 inset-x-0 z-[60] border-t border-border bg-card/95 px-3 py-1.5 text-foreground"
+      className="fixed inset-x-3 bottom-3 z-[60] rounded-2xl border border-border bg-card/95 p-3 text-foreground shadow-[0_18px_48px_-24px_rgba(4,18,12,.45)] backdrop-blur-md sm:inset-x-0 sm:bottom-0 sm:rounded-none sm:border-x-0 sm:border-b-0 sm:px-3 sm:py-1.5 sm:shadow-none"
     >
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2">
-      <p className="text-[11px] leading-snug text-muted-foreground">
-        Essential cookies only by default. Analytics need consent.{" "}
-        <a href="/cookie-policy" className="text-primary underline underline-offset-2 hover:opacity-80">Details</a>
-      </p>
-      <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
-          onClick={() => choose("declined")}
-          className="rounded-md border border-primary bg-primary px-2 py-1 text-[11px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          Essential only
-        </button>
-        <button
-          type="button"
-          onClick={() => choose("accepted")}
-          className="rounded-md border border-primary/40 px-2 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/10"
-        >
-          Accept analytics
-        </button>
-        <button
-          type="button"
-          onClick={() => choose("declined")}
-          aria-label="Dismiss cookie notice"
-          title="Dismiss — essential cookies only"
-          className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
-          Dismiss
-        </button>
-      </div>
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-3">
+        <p className="min-w-0 flex-1 text-[10.5px] leading-snug text-muted-foreground sm:text-[11px]">
+          Essential cookies only by default. Analytics need consent.{" "}
+          <a href="/cookie-policy" className="text-primary underline underline-offset-2 hover:opacity-80">Details</a>
+        </p>
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <button
+            type="button"
+            onClick={() => choose("declined")}
+            className="rounded-lg border border-primary bg-primary px-2.5 py-1.5 text-[10.5px] font-semibold text-primary-foreground transition-opacity hover:opacity-90 sm:rounded-md sm:px-2 sm:py-1 sm:text-[11px]"
+          >
+            Essential only
+          </button>
+          <button
+            type="button"
+            onClick={() => choose("accepted")}
+            className="rounded-lg border border-primary/40 px-2.5 py-1.5 text-[10.5px] font-semibold text-primary transition-colors hover:bg-primary/10 sm:rounded-md sm:px-2 sm:py-1 sm:text-[11px]"
+          >
+            Accept analytics
+          </button>
+          <button
+            type="button"
+            onClick={() => choose("declined")}
+            aria-label="Dismiss cookie notice"
+            title="Dismiss — essential cookies only"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:h-auto sm:w-auto sm:rounded-md sm:px-2 sm:py-1 sm:text-[11px]"
+          >
+            <span className="sm:hidden" aria-hidden="true">×</span>
+            <span className="hidden sm:inline">Dismiss</span>
+          </button>
+        </div>
       </div>
     </div>
   );
