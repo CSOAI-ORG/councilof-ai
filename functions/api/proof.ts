@@ -104,7 +104,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
           // free and exactly what settling buys. Five of nine doors carried neither on 2026-09-06,
           // so a buyer reading the challenge could not tell what they were paying for.
           free_preview: "/api/proof?sha=<64-hex>",
-          deliverable: "one inclusion proof for the given leaf against the signed public root, with the root and the path — verification of it stays free forever",
+          deliverable: "Available inclusion proofs for the last published signed public root: leaf hashes, indexes, paths, Merkle root and card count. The full root signature envelope is free at /root.json, and a single inclusion proof is free at /api/proof?sha=<64-hex>.",
           settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
           verification:
             "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
