@@ -1,0 +1,66 @@
+{
+  "schema": "csoai.public-claim-boundary/1.0",
+  "as_of": "2026-09-24",
+  "canonical_url": "https://councilof.ai/notes/pontes-evidence-boundary-2026-09/",
+  "sources": [
+    {
+      "publisher": "European Central Bank",
+      "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+      "published_on": "2026-09-21",
+      "scope": "Eurosystem Pontes launch and announced initial onboarding"
+    },
+    {
+      "publisher": "TAS",
+      "url": "https://www.tasgroup.eu/insight/news/tas-and-blockinvest-sign-strategic-partnership-to-accelerate-innovation-in-digital-assets-and-capital-markets/",
+      "published_on": "2026-09-22",
+      "scope": "TAS and BlockInvest announcement of a first joint use case in the Pontes pilot phase; project details and institutional partner not yet named"
+    },
+    {
+      "publisher": "Financial Conduct Authority",
+      "url": "https://www.fca.org.uk/firms/innovation/digital-securities-sandbox",
+      "scope": "UK Digital Securities Sandbox, separate from Pontes"
+    },
+    {
+      "publisher": "Financial Conduct Authority",
+      "url": "https://www.fca.org.uk/publications/calls-input/call-input-tokenised-gold-opportunities-and-risk-uk-wholesale-markets",
+      "published_on": "2026-09-14",
+      "closes_on": "2026-10-23",
+      "scope": "UK tokenised-gold Call for Input"
+    },
+    {
+      "publisher": "Council of AI",
+      "url": "https://councilof.ai/api/gspc",
+      "scope": "Existing bounded board instruments, not a Pontes transaction run"
+    }
+  ],
+  "claim_states": [
+    {
+      "claim": "The Eurosystem announced that Pontes launched on 21 September 2026",
+      "state": "PUBLISHER_STATEMENT_OBSERVED",
+      "source_index": 0
+    },
+    {
+      "claim": "The announced initial participant group completed onboarding and was ready to use Pontes",
+      "state": "PUBLISHER_STATEMENT_OBSERVED",
+      "source_index": 0,
+      "limit": "No individual participant activity independently replayed"
+    },
+    {
+      "claim": "TAS and BlockInvest say a first joint use case is in the Pontes pilot phase",
+      "state": "PUBLISHER_STATEMENT_OBSERVED",
+      "source_index": 1,
+      "limit": "Institutional partner, instrument and transaction details are not present in the release"
+    },
+    {
+      "claim": "A specific named tokenised instrument settled through Pontes",
+      "state": "UNMEASURED",
+      "required_next_input": "Named instrument and public transaction or authoritative settlement record"
+    },
+    {
+      "claim": "A specific named instrument is FCA-authorised or its gold reserves are verified",
+      "state": "UNMEASURED",
+      "required_next_input": "Instrument, UK permission claim, legal scope and dated reserve/custody sources"
+    }
+  ],
+  "scope": "Publisher statements and explicit unmeasured claims; no Pontes transaction or UK permission verified"
+}
