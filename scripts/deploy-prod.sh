@@ -76,7 +76,7 @@ except Exception:
 fi
 
 # Pull the current bundle hash — verify the build is real
-LOCAL_BUNDLE=$(grep -oE 'index-[A-Za-z0-9_-]+\.js' dist/client/index.html 2>/dev/null | head -1)
+LOCAL_BUNDLE=$(grep -oE 'index(\.r2)?-[A-Za-z0-9_-]+\.js' dist/client/index.html 2>/dev/null | head -1)
 if [ -z "$LOCAL_BUNDLE" ]; then
   echo "FATAL: could not find main bundle hash in dist/client/index.html — build looks broken"
   exit 4
@@ -160,7 +160,7 @@ echo ""
 echo "Verifying $DOMAIN now serves the new bundle..."
 sleep 4
 SERVED_BUNDLE=$(curl -s --max-time 10 -L "https://$DOMAIN/?$(date +%s%N)" \
-  | grep -oE 'index-[A-Za-z0-9_-]+\.js' | head -1)
+  | grep -oE 'index(\.r2)?-[A-Za-z0-9_-]+\.js' | head -1)
 
 if [ "$SERVED_BUNDLE" = "$LOCAL_BUNDLE" ]; then
   echo "OK: $DOMAIN serves $SERVED_BUNDLE (matches local build)"
