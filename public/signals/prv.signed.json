@@ -1,30 +1,12 @@
 {
  "axis": "prv",
  "axis_status": "MEASURED",
- "content_id": "dc1e92eff83ac8ecf585d0a4d30954e0801b70dd8d479b5facdd87b321549dba",
- "elo_decided_games": 12,
+ "content_id": "18ccb33d1b52ec66670a13523497b18b7e453c1175bce6578908e8233c3982c5",
+ "elo_decided_games": 15,
  "elo_leader": null,
  "elo_leader_score": null,
  "elo_ranked_models": 4,
  "elo_runner_up": {
-  "ci": [
-   0.3,
-   0.903
-  ],
-  "elo": 1515.7,
-  "games": 6,
-  "model": "phi3.5:3.8b",
-  "winrate": 0.667
- },
- "elo_separation": "TIE",
- "elo_source": {
-  "content_id": "e898c823cc547f7e0464408bc7c087e260f55bb645cee9fc5154c59246f2fd53",
-  "generated": "2026-09-24T14:37:16Z",
-  "path": "/arena/elo_reference.json",
-  "schema": "csoai.arena-elo-reference/0.2"
- },
- "elo_ties": 137,
- "elo_top": {
   "ci": [
    0.436,
    0.97
@@ -34,10 +16,28 @@
   "model": "qwen3:8b",
   "winrate": 0.833
  },
+ "elo_separation": "TIE",
+ "elo_source": {
+  "content_id": "ce720a767e553ace834166734856d11a9bd4e1c5b0371e295ec9d719484bea94",
+  "generated": "2026-09-24T15:38:14Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 174,
+ "elo_top": {
+  "ci": [
+   0.453,
+   0.937
+  ],
+  "elo": 1555.5,
+  "games": 9,
+  "model": "phi3.5:3.8b",
+  "winrate": 0.778
+ },
  "evidence_relation": "SEPARATE_EVIDENCE",
- "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (qwen3:8b, phi3.5:3.8b, llama3.1:8b, gemma3:12b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
+ "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (phi3.5:3.8b, qwen3:8b, gemma3:12b, llama3.1:8b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
  "games_leader": null,
- "generated": "2026-09-24T14:37:17Z",
+ "generated": "2026-09-24T15:38:15Z",
  "majority_baseline": 0.5312,
  "models": 19,
  "not_a_certification": true,
@@ -59,21 +59,21 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "dc1e92eff83ac8ecf585d0a4d30954e0801b70dd8d479b5facdd87b321549dba",
+  "content_id": "18ccb33d1b52ec66670a13523497b18b7e453c1175bce6578908e8233c3982c5",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "dc1e92eff83ac8ecf585d0a4d30954e0801b70dd8d479b5facdd87b321549dba",
+  "payload_sha256": "18ccb33d1b52ec66670a13523497b18b7e453c1175bce6578908e8233c3982c5",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "b972110244bcf76c87bb723e084ee003eaff12e67ed9740690c4bd2bd096abdfd4a5590a5882d556b99b4500508a13f45b7275aa79ea4dd58a99fa540d37190a",
-  "signed_at": "2026-09-24T14:37:17.617Z",
+  "sig_ed25519": "856cff1de14879f1337a0ff4aad234ee9db1ae41740da329caf46716fce37860bd987ab5756789d6077b31d38f017e7cf90f5438f7234d140aa38065d73aa30c",
+  "signed_at": "2026-09-24T15:38:15.727Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "UNTESTED",
  "supersedes": {
-  "content_id": "ac9a53def01da5d5e209af926f02ee294f63d3766a4c01a8f066a10a2063e757",
+  "content_id": "dc1e92eff83ac8ecf585d0a4d30954e0801b70dd8d479b5facdd87b321549dba",
   "elo_leader_then": null,
-  "generated": "2026-09-24T13:39:16Z",
+  "generated": "2026-09-24T14:37:17Z",
   "note": "superseded, never edited; new bytes, new signature",
   "signer": "did:web:csoai.org#board-attestation-1",
   "status_then": "UNTESTED"
