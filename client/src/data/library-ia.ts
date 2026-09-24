@@ -130,6 +130,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/academy", "/verify-certificate", "/accreditation",
   // Company
   "/about", "/library", "/contact", "/disclaimers",
+  // These three routes serve the operative Terms v1.1 and are indexed. Calling
+  // the current contract a "reference / archive" contradicts its acceptance text.
+  "/terms-of-service", "/terms", "/legal/terms",
   "/faq", "/traction",
   // #148 — /dispute is a live Charter Article 18 page, not an archive.
   // Without this entry it shipped under the "Reference / archive" banner.
