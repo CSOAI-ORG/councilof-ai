@@ -13,7 +13,7 @@ Source: https://modelcontextprotocol.io/specification/2025-11-25/client/elicitat
 |---|---|
 | `ElicitResult.action = "accept"` | `principal` evidence item, `kind: PROTOCOL_MESSAGE`, `party: PRINCIPAL`; the approval is recorded, it is **not** proof the action was then enforced |
 | `action = "decline"` / `"cancel"` | the job did not proceed: `delivery.state` must not be EVIDENCED for an effect the decline covered; a delivery that exists anyway is itself the finding |
-| form-mode request for a sensitive field | not a receipt field; measured separately by an elicitation-decline probe (in development, not yet published) |
+| form-mode request for a sensitive field | not a receipt field; measured separately by the elicitation-decline probe (`docs/measurement/HITL-PROBE.md`, pilot) |
 | field values the human entered | **never recorded** — names of requested fields at most |
 
 ## A2A — task lifecycle (a2a.proto, `TaskState`)
@@ -84,3 +84,34 @@ Source: https://github.com/aaif/wg-observability-and-traceability/issues/44 (sta
 |---|---|
 | World AgentKit proof (https://world.org/blog/announcements/now-available-agentkit-proof-of-human-for-the-agentic-web) | `principal.kind: WORLD_ID_PROOF`, a nullifier-style reference only — never an identity |
 | Skyfire KYA token (https://docs.skyfire.xyz/docs/kya) | `principal.kind: SKYFIRE_KYA_TOKEN`, `ref_sha256` of the token — never the token |
+
+## IETF RATS — roles (RFC 9334) and attestation results (EAR)
+
+Sources: https://www.rfc-editor.org/rfc/rfc9334 ; https://datatracker.ietf.org/doc/draft-ietf-rats-ear/ (draft-04, 26 May 2026)
+
+| RATS | Receipt |
+|---|---|
+| Attester (produces Evidence about itself) | the agent; what it says about its own job is `party: AGENT` → `SELF_ASSERTED` |
+| Endorser / Reference Value Provider (vouches from outside) | a `party: THIRD_PARTY` evidence item (a chain record, a service's own report) → `EVIDENCED_BY_THIRD_PARTY` |
+| Verifier (appraises Evidence) | closest to the recorder, **with one deliberate difference**: a receipt records what could be established and by whom; it never produces an appraisal |
+| Relying Party | whoever reads the receipt; it applies its own policy |
+| Passport model / background-check model | both work: a receipt can travel with the job, or a relying party can fetch it by `job.ref` |
+| EAR `status` (`affirming` / `warning` / `contraindicated` / `none`) and the AR4SI trustworthiness vector | **no mapping, by design** — a receipt emits no trust tier. Where an EAR exists for the job it is referenced as evidence (`kind: SIGNED_DOCUMENT`) with its status quoted in `what_it_shows`, never translated into an evidence state |
+
+## LF TRACE — Trust Records (spec v0.2)
+
+Sources: https://github.com/agentrust-io/trace-spec (spec: Community Specification License 1.0; code: Apache-2.0) ;
+https://www.linuxfoundation.org/press/linux-foundation-welcomes-trace-to-advance-verifiable-runtime-evidence-for-ai-workloads
+
+TRACE proves what executed, where and under which policy, from hardware attestation. A receipt records
+who authorised the job, what was paid, what was delivered and who checked it. They meet at TRACE's
+`references` block, which "is a pointer, not evidence" (spec §3):
+
+| TRACE | Receipt |
+|---|---|
+| a Trust Record for the job's execution | referenced from `agent` or `delivery` evidence, `kind: SIGNED_DOCUMENT`, with its SCITT anchor if it has one; hardware claims stay `UNCHECKABLE` where no record exists |
+| `references[].rel = "approval-outcome"` ("an attributable human approval attached to a step-up or defer decision") | a receipt can be the referenced object: its `principal` section is the approval, with its own evidence state |
+| `references[].rel = "condition-appraisal"` ("an independent check's finding … in the checker's own vocabulary") | a receipt's `outcome_check`, or a result from the elicitation-decline probe (`docs/measurement/HITL-PROBE.md`) |
+| `references[].resolver` ("names who must retain, not who adjudicates") | the recorder, when it undertakes to keep the receipt resolvable at a stable URL |
+| `delegation.parent_record_hash` = `sha256:` + hex(SHA-256(JCS(parent))) | not a receipt field; a receipt for a sub-job names its parent receipt in `notes` until a later version adds a field. Note the canonicalisation differs: TRACE uses JCS (RFC 8785); a receipt uses sorted-keys compact JSON with `ensure_ascii=True` |
+| §2.4 scope boundary: TRACE does not protect against "UX-layer attacks against the human in the loop" | that is the ground the elicitation-decline probe measures — adjacent, not overlapping |
