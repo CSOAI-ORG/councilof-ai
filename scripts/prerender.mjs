@@ -90,9 +90,9 @@ const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
 // stop; skipping the snapshot leaves the SPA shell, which hydrates on the
 // live host. Added 2026-09-09 after #1847 blocked every master deploy.
 const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
-  // /pay reads /.well-known/x402.json, every door's 402 and /api/x402-listing — all Functions.
-  "/pay",
-  "/pay/",
+  // /pay-all reads /.well-known/x402.json, every door's 402 and /api/x402-listing — all Functions.
+  "/pay-all",
+  "/pay-all/",
   "/assess",
   "/assess/",
   "/assessment",

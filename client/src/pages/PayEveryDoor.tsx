@@ -28,7 +28,7 @@ import {
 } from "@/lib/payEveryDoor";
 
 /**
- * /pay — pay every x402 door of the estate from the owner's own wallet, one click each.
+ * /pay-all — pay every x402 door of the estate from the owner's own wallet, one click each.
  *
  * WHY. An x402 index catalogues a resource only off a CONFIRMED SETTLE through its facilitator
  * (docs/product/X402-BAZAAR-AUDIT.md). There is no registration call. The manifest can be
@@ -452,7 +452,7 @@ export default function PayEveryDoor() {
 
       {selected ? (
         <p className="mt-4 text-[12px] text-slate-700" data-testid="pay-deep-link">
-          Showing one door from the link. <Link href="/pay" className="underline underline-offset-2">Show every door</Link>
+          Showing one door from the link. <Link href="/pay-all" className="underline underline-offset-2">Show every door</Link>
         </p>
       ) : wanted && doors ? (
         <p className="mt-4 text-[12px] text-amber-800" data-testid="pay-deep-link">

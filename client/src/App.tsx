@@ -641,7 +641,7 @@ function App() {
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/doctrine" component={Doctrine} />
-                  <Route path="/pay" component={PayEveryDoor} />
+                  <Route path="/pay-all" component={PayEveryDoor} />
                   <Route path="/launch" component={Launch} />
                   <Route path="/owasp-agentic" component={OwaspAgentic} />
                   <Route path="/owasp-asi" component={OwaspAsiMapping} />

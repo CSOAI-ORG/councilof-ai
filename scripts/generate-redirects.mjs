@@ -71,6 +71,8 @@ const EXISTING = [
   // renders our server icon got nothing. Redirected to the icon we already serve rather than
   // committing a second copy in another format: one icon, one source of truth. Browsers accept
   // an SVG here; the content-type is image/svg+xml either way.
+  // The static buyer page owns /pay; retire the former app page at /pay/ to it.
+  "/pay/                  /pay                  308",
   "/favicon.ico           /csoai-icon.svg      308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
