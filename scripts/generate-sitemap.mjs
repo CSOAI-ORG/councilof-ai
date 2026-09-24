@@ -416,6 +416,15 @@ const DELISTED = new Map([
       "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
     .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
   ["/proof-receipt", "noindex"],
+  // Game-concept placeholders sharing one template (no playable turn); noindex since 2026-09-24.
+  ["/civic", "noindex: game concept placeholder"],
+  ["/council-town", "noindex: game concept placeholder"],
+  ["/games-charter", "noindex: game concept placeholder"],
+  ["/games-compliance", "noindex: game concept placeholder"],
+  ["/incident", "noindex: game concept placeholder"],
+  ["/judge", "noindex: game concept placeholder"],
+  ["/swarm", "noindex: game concept placeholder"],
+  ["/tournament", "noindex: game concept placeholder"],
   // Flat public/*.html pages carrying robots noindex (found 2026-09-24 by a live crawl).
   ["/compliance-training-world/bond-quest", "noindex"],
   ["/compliance-training-world/insurance-quest", "noindex"],
