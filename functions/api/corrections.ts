@@ -36,6 +36,21 @@ export const LEDGER = {
     {
       "date": "2026-09-22",
       "evidence": [
+        "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify",
+        "https://councilof.ai/api/state",
+        "drift-draft/snapshots/2026-09-22T14.json"
+      ],
+      "first_observed_at": "2026-09-22T14:25:27Z",
+      "id": "C-2026-0924-02",
+      "note": "Promoted from draft D-2026-09-22T14-05 by the owner. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint 025f75a98669c0d4; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
+      "reached_the_public": true,
+      "what_changed": "supersede the stale surface with one that derives the value from the measured surface (or a dated note beside it naming the value at 2026-09-22T14:25:27Z); never edit signed or dated bytes in place. The owner decides the remedy on promotion; this draft records the disagreement only.",
+      "what_was_wrong": "public/corrections/living-stamp-unverifiable.json reads attestations_that_do_verify (measurement cards) = 150 while the compared surface reads 335. Source A: public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify (sha256 ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49; as_of 2026-08-28T17:19:43+01:00 = last commit touching the file). Source B: https://councilof.ai/api/state (sha256 efc1ffbbba84b4d20bf1e4e16c249fdbf901063563e07775841c8b33d224e300; as_of 2026-09-22T14:25:28Z = fetched_at (payload carries no as_of)). Compared at 2026-09-22T14:25:27Z (snapshot 2026-09-22T14).",
+      "why_it_was_wrong": "A number typed on a static surface. The endpoint derives its count from the axis array (or the card index) at request time, so a typed copy goes stale the moment the measured surface moves. This loop records the disagreement; it does not establish why the copy was typed."
+    },
+    {
+      "date": "2026-09-22",
+      "evidence": [
         "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged",
         "https://councilof.ai/api/gspc",
         "drift-draft/snapshots/2026-09-22T14.json"

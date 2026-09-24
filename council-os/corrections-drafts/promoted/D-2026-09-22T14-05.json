@@ -1,0 +1,58 @@
+{
+ "DRAFT": true,
+ "brand_gate_redactions": 0,
+ "corrections": [
+  {
+   "date": "2026-09-22",
+   "evidence": [
+    "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify",
+    "https://councilof.ai/api/state",
+    "drift-draft/snapshots/2026-09-22T14.json"
+   ],
+   "first_observed_at": "2026-09-22T14:25:27Z",
+   "id": "D-2026-09-22T14-05",
+   "note": "DRAFT - owner approval required. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint 025f75a98669c0d4; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
+   "reached_the_public": true,
+   "what_changed": "PROPOSED, nothing has changed yet: supersede the stale surface with one that derives the value from the measured surface (or a dated note beside it naming the value at 2026-09-22T14:25:27Z); never edit signed or dated bytes in place. The owner decides the remedy on promotion; this draft records the disagreement only.",
+   "what_was_wrong": "public/corrections/living-stamp-unverifiable.json reads attestations_that_do_verify (measurement cards) = 150 while the compared surface reads 335. Source A: public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify (sha256 ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49; as_of 2026-08-28T17:19:43+01:00 = last commit touching the file). Source B: https://councilof.ai/api/state (sha256 efc1ffbbba84b4d20bf1e4e16c249fdbf901063563e07775841c8b33d224e300; as_of 2026-09-22T14:25:28Z = fetched_at (payload carries no as_of)). Compared at 2026-09-22T14:25:27Z (snapshot 2026-09-22T14).",
+   "why_it_was_wrong": "A number typed on a static surface. The endpoint derives its count from the axis array (or the card index) at request time, so a typed copy goes stale the moment the measured surface moves. This loop records the disagreement; it does not establish why the copy was typed."
+  }
+ ],
+ "draft_id": "D-2026-09-22T14-05",
+ "drift": {
+  "field": "attestations_that_do_verify (measurement cards)",
+  "fingerprint": "025f75a98669c0d4",
+  "kind": "typed_claim_disagrees",
+  "now": 335,
+  "severity": "draft",
+  "sources": [
+   {
+    "as_of": "2026-08-28T17:19:43+01:00",
+    "as_of_field": "last commit touching the file",
+    "commit": "cb773b2f9894e5bc80091a6551e09c9354887255",
+    "locator": "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify",
+    "path": "public/corrections/living-stamp-unverifiable.json",
+    "role": "typed",
+    "sha256": "ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49"
+   },
+   {
+    "as_of": "2026-09-22T14:25:28Z",
+    "as_of_field": "fetched_at (payload carries no as_of)",
+    "http_status": 200,
+    "locator": "https://councilof.ai/api/state",
+    "role": "measured",
+    "sha256": "efc1ffbbba84b4d20bf1e4e16c249fdbf901063563e07775841c8b33d224e300"
+   }
+  ],
+  "subject": "public/corrections/living-stamp-unverifiable.json",
+  "summary": "public/corrections/living-stamp-unverifiable.json: attestations_that_do_verify (measurement cards) 150 -> 335",
+  "was": 150
+ },
+ "generated_at": "2026-09-22T14:25:42Z",
+ "generator": "drift-draft.py (pod, hourly :40)",
+ "license": "CC-BY-4.0",
+ "not_published": "never merged or published by drift-draft; promote-draft.sh <id> is the owner's approve step",
+ "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+ "schema": "csoai.corrections/0.1",
+ "status": "DRAFT - owner approval required"
+}
