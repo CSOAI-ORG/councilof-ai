@@ -1025,13 +1025,13 @@
       "path": "/api/body-state",
       "method": "GET",
       "name": "Body state",
-      "description": "/api/body-state — per-workflow last run / last success / last failure.",
+      "description": "/api/body-state — live route reporting the retired GitHub Actions run-history source; no current workflow timestamps.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [
-        "csoai.body-state/0.1"
+        "csoai.body-state/0.2"
       ],
       "surfaces": [
         "openapi"
@@ -1040,12 +1040,12 @@
         "method": "GET",
         "request": "/api/body-state",
         "expect_status": [
-          503
+          200
         ],
         "safe": true
       },
       "source": "functions/api/body-state.ts",
-      "lifecycle_note": "503 by design while its source is unreadable: it lists GitHub Actions workflow runs, and that API answers 404 while the CSOAI-ORG account is flagged. CI and deploys run on the pod now, so the route cannot report them either. Measured 2026-09-24."
+      "lifecycle_note": "The route itself is live, but its former GitHub Actions data source is retired as a current operations observer. Its SOURCE_RETIRED body has null stage timestamps and points separately to the RunPod compute and served-artifact observability surfaces. It asserts neither signing nor publication."
     },
     {
       "id": "api-cards",

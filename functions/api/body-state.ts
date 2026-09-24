@@ -1,6 +1,5 @@
-// @openapi-unavailable
 /**
- * /api/body-state is the retired GitHub Actions run-history observer.
+ * /api/body-state — returns SOURCE_RETIRED for the former GitHub workflow observer; current separate surfaces are /api/worker and /api/observability.
  *
  * The former source cannot describe current Cloudflare/RunPod operations.
  * Keep the old route explicit so a client cannot mistake a GitHub 403/404,

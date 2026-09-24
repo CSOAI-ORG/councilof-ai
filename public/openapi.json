@@ -1050,18 +1050,18 @@
     },
     "/api/body-state": {
       "get": {
-        "description": "/api/body-state \u2014 retired GitHub Actions run-history observer; see /api/worker and /api/observability for current separate surfaces.",
+        "description": "/api/body-state \u2014 returns SOURCE_RETIRED for the former GitHub workflow observer; current separate surfaces are /api/worker and /api/observability.",
         "operationId": "get__api_body-state",
         "responses": {
           "200": {
             "content": {
               "application/json": {}
             },
-            "description": "SOURCE_RETIRED \u2014 no current per-workflow timestamps are asserted"
+            "description": "OK"
           }
         },
-        "summary": "/api/body-state \u2014 retired GitHub Actions run-history observer; see /api/worker and /api/observability for current separate surfaces.",
-        "x-csoai-lifecycle": "SOURCE_RETIRED"
+        "security": [],
+        "summary": "/api/body-state \u2014 returns SOURCE_RETIRED for the former GitHub workflow observer; current separate surfaces are /api/worker and /api/observability."
       }
     },
     "/api/cards": {
@@ -13288,7 +13288,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 107,
+    "public_operations": 108,
     "quarantined": [
       {
         "buyable": false,
