@@ -1,7 +1,7 @@
 {
  "axis": "xr",
  "axis_status": "MEASURED",
- "content_id": "e364de7fa56945e87d49f46667412fa3699a40cff32be0cfc45de028d0fdea4a",
+ "content_id": "5d44e89b28dc38fa1d44bf0e6f7caff290f597508d9d651631dfe301d14d1b8f",
  "elo_decided_games": 20,
  "elo_leader": null,
  "elo_leader_score": null,
@@ -18,8 +18,8 @@
  },
  "elo_separation": "TIE",
  "elo_source": {
-  "content_id": "e35b71656d87f5bf01f59d45beab4107784b29e8ea4a9e436899c7708d8e232d",
-  "generated": "2026-09-24T03:36:56Z",
+  "content_id": "8ad186bcef9a035b7531f5dd802b87e62414936ef4def2d9cef96018ba905663",
+  "generated": "2026-09-24T05:37:16Z",
   "path": "/arena/elo_reference.json",
   "schema": "csoai.arena-elo-reference/0.2"
  },
@@ -37,7 +37,7 @@
  "evidence_relation": "SEPARATE_EVIDENCE",
  "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (phi3.5:3.8b, gemma3:12b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
  "games_leader": null,
- "generated": "2026-09-24T03:36:57Z",
+ "generated": "2026-09-24T05:37:18Z",
  "majority_baseline": 0.4062,
  "models": 19,
  "not_a_certification": true,
@@ -59,21 +59,21 @@
  "signature": {
   "alg": "Ed25519",
   "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
-  "content_id": "e364de7fa56945e87d49f46667412fa3699a40cff32be0cfc45de028d0fdea4a",
+  "content_id": "5d44e89b28dc38fa1d44bf0e6f7caff290f597508d9d651631dfe301d14d1b8f",
   "did": "did:web:csoai.org#board-attestation-1",
-  "payload_sha256": "e364de7fa56945e87d49f46667412fa3699a40cff32be0cfc45de028d0fdea4a",
+  "payload_sha256": "5d44e89b28dc38fa1d44bf0e6f7caff290f597508d9d651631dfe301d14d1b8f",
   "preimage": "canonical(body minus content_id, signature)",
-  "sig_ed25519": "2a27fbc4a554a2974acda4c118729146921a0fd63745e9a67a4d299d9bd9486521ad16f414ffe3c1c240a6464e881fcbcb0bac28e7fca9e5a5121f84db1fcf0f",
-  "signed_at": "2026-09-24T03:36:59.333Z",
+  "sig_ed25519": "648526da1d772266befd68c069b78736b9a8667e1caff9244569e0742b2c2614d2f7ee05c72251ba05f728fb693b2bdfa8c2068f4e81a41f45402b1c9c2b930e",
+  "signed_at": "2026-09-24T05:37:20.726Z",
   "signer_auth": "pod-token",
   "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
  "signer": "did:web:csoai.org#board-attestation-1",
  "status": "UNTESTED",
  "supersedes": {
-  "content_id": "f3581cece9039bf85c4f66d5401cb51c82fc22604e9c9484435e5f1cdbc8b11e",
+  "content_id": "e364de7fa56945e87d49f46667412fa3699a40cff32be0cfc45de028d0fdea4a",
   "elo_leader_then": null,
-  "generated": "2026-09-24T02:37:28Z",
+  "generated": "2026-09-24T03:36:57Z",
   "note": "superseded, never edited; new bytes, new signature",
   "signer": "did:web:csoai.org#board-attestation-1",
   "status_then": "UNTESTED"
