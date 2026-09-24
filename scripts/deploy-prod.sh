@@ -120,18 +120,30 @@ fi
 # that make the site show an error to the user — before the code reaches CDN.
 if [ "${1:-}" != "--skip-test" ]; then
   echo "Running pre-deploy smoke test against local build..."
-  # Start Vite preview server in background (serves dist/client on port 4173)
-  npx vite preview --config client/vite.config.ts --port 4173 --strictPort &
+  # Allocate an isolated free port so concurrent lanes cannot make us test the wrong preview.
+  PREVIEW_PORT=$(python3 -c 'import socket; s=socket.socket(); s.bind(("127.0.0.1",0)); print(s.getsockname()[1]); s.close()')
+  npx vite preview --config client/vite.config.ts --port "$PREVIEW_PORT" --strictPort &
   PREVIEW_PID=$!
-  # Wait for server to be ready
+  # Wait for this exact server to be ready; fail if it exits before binding.
+  READY=0
   for i in $(seq 1 15); do
-    if curl -s --max-time 1 http://localhost:4173/ > /dev/null 2>&1; then
+    if ! kill -0 "$PREVIEW_PID" 2>/dev/null; then
+      echo "FAIL: preview server exited before smoke test"
+      exit 6
+    fi
+    if curl -s --max-time 1 "http://localhost:$PREVIEW_PORT/" > /dev/null 2>&1; then
+      READY=1
       break
     fi
     sleep 1
   done
+  if [ "$READY" -ne 1 ]; then
+    kill "$PREVIEW_PID" 2>/dev/null || true
+    echo "FAIL: preview server did not become ready"
+    exit 6
+  fi
   # Run the smoke test (chromium only — fast, ~15s)
-  BASE_URL=http://localhost:4173 npx playwright test -c e2e/playwright.config.ts tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line 2>&1 | tail -20
+  BASE_URL="http://localhost:$PREVIEW_PORT" npx playwright test -c e2e/playwright.config.ts tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line 2>&1 | tail -20
   TEST_RC=${PIPESTATUS[0]}
   # Kill the preview server
   kill $PREVIEW_PID 2>/dev/null || true
