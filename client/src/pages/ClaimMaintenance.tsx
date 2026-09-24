@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import seoHead from "../data/seo-head.json";
 
 /**
  * /claim-maintenance — the category page.
@@ -27,8 +28,7 @@ const DOI = "10.5281/zenodo.22901908";
 const DOI_URL = "https://doi.org/10.5281/zenodo.22901908";
 const CONCEPT_DOI_URL = "https://doi.org/10.5281/zenodo.22901781";
 
-const PAGE_DESCRIPTION =
-  "Claim maintenance: the continuous, independent observation of the public claims an organisation makes about itself — captured verbatim with source and date, hashed and timestamped, re-read on a schedule, every observed change recorded, and measured only where public evidence can settle it. Specification, live register and runnable code from Council of AI.";
+const PAGE_DESCRIPTION = seoHead.routes["/claim-maintenance"].description;
 
 const STATES: Array<[string, string]> = [
   ["CLAIM_CAPTURED", "Read from its public source, recorded verbatim, hashed, dated and scheduled for re-reading. Nothing has been measured."],
@@ -133,11 +133,6 @@ export default function ClaimMaintenance() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Helmet>
-        <title>Claim maintenance — the specification, the register, and the code | Council of AI</title>
-        <meta name="description" content={PAGE_DESCRIPTION} />
-        <meta property="og:title" content="Claim maintenance" />
-        <meta property="og:description" content={PAGE_DESCRIPTION} />
-        <meta property="og:url" content={CANONICAL} />
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
 

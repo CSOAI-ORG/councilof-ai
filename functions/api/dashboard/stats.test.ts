@@ -28,4 +28,24 @@ describe("dashboard stats semantics", () => {
     expect(body.council).toMatchObject({ totalSessions: 0, pendingReview: 0, consensusReached: 0, state: "NOT_LIVE" });
     expect(body.pdca).toMatchObject({ totalCycles: 0, activeCycles: 0, completedCycles: 0, state: "UNMEASURED" });
   });
+
+  it("does not count a separate cross-border card as part of the signed measurement index", async () => {
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.endsWith("/api/cards")) {
+        return Response.json({
+          cards: { count: 336, signed: 336 },
+          cross_border: { card: "cross-border-card", signed: true },
+        });
+      }
+      return Response.json({});
+    }));
+
+    const response = await onRequestGet({
+      request: new Request("https://councilof.ai/api/dashboard/stats"),
+    } as Parameters<typeof onRequestGet>[0]);
+    const body = await response.json() as { cards: { count: number; signed: number } };
+
+    expect(body.cards).toEqual({ count: 335, signed: 335 });
+  });
 });
