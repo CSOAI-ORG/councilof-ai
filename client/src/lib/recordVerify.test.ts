@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readFileSync } from "node:fs";
-import { verifyRecord } from "./recordVerify";
+import { lookupRecordUseStatus, verifyRecord } from "./recordVerify";
 
 /**
  * The Council OS "Verify a card" pane's actual entry point.
@@ -83,5 +83,38 @@ describe("verifyRecord — family dispatch", () => {
     expect(line(r, "Family")?.detail).toMatch(/Estate envelope/);
     expect(line(r, "content_id")?.ok).toBe(false);
     expect(line(r, "Signature")?.ok).toBeNull();
+  });
+});
+
+
+describe("lookupRecordUseStatus — independent of signature validity", () => {
+  const boardCard = JSON.stringify({ did: "did:web:csoai.org#board-attestation-1", id: "card-123" });
+
+  it("marks a withdrawn, unadmitted card using the public ledger and links its correction", async () => {
+    vi.stubGlobal("fetch", async (url: any) => {
+      if (String(url).includes("WITHDRAWN.jsonl")) return {
+        ok: true,
+        text: async () => JSON.stringify({ withdrawn_id: "card-123", correction: "C-2026-0924-03" }) + "\n",
+      } as unknown as Response;
+      throw new Error("unexpected fetch");
+    });
+    const status = await lookupRecordUseStatus(boardCard);
+    expect(status.state).toBe("WITHDRAWN");
+    expect(status.detail).toMatch(/unadmitted and withdrawn from quotable use/);
+    expect(status.reference).toBe("/corrections/mill16-unadmitted-2026-09-24.json");
+  });
+
+  it("does not mistake absence from the withdrawal ledger for admission", async () => {
+    vi.stubGlobal("fetch", async () => ({ ok: true, text: async () => "" }) as unknown as Response);
+    const status = await lookupRecordUseStatus(boardCard);
+    expect(status.state).toBe("NOT_ESTABLISHED");
+    expect(status.detail).toMatch(/does not establish GSPC admission or quotability/);
+  });
+
+  it("fails closed when the withdrawal ledger is unreachable or malformed", async () => {
+    vi.stubGlobal("fetch", async () => { throw new Error("offline"); });
+    expect((await lookupRecordUseStatus(boardCard)).state).toBe("UNCHECKABLE");
+    vi.stubGlobal("fetch", async () => ({ ok: true, text: async () => "{bad json" }) as unknown as Response);
+    expect((await lookupRecordUseStatus(boardCard)).state).toBe("UNCHECKABLE");
   });
 });

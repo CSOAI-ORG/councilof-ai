@@ -35,6 +35,53 @@ export interface RecordVerdict {
   family: string;
 }
 
+export type RecordUseStatus = {
+  state: "WITHDRAWN" | "NOT_ESTABLISHED" | "UNCHECKABLE" | "NOT_APPLICABLE";
+  detail: string;
+  reference?: string;
+};
+
+/** A signature check does not establish that a card was admitted or remains quotable. */
+export async function lookupRecordUseStatus(raw: string): Promise<RecordUseStatus> {
+  let record: any;
+  try { record = JSON.parse(raw); } catch {
+    return { state: "NOT_APPLICABLE", detail: "No parsed card to check." };
+  }
+  if (record?.did !== "did:web:csoai.org#board-attestation-1") {
+    return { state: "NOT_APPLICABLE", detail: "Withdrawal lookup applies to board-signed cards." };
+  }
+  if (typeof record?.id !== "string" || !record.id) {
+    return { state: "UNCHECKABLE", detail: "Card id is missing; use status cannot be checked." };
+  }
+  const ledger = "/interop/mill-cards-signed/WITHDRAWN.jsonl";
+  try {
+    const response = await fetch(ledger, { headers: { accept: "application/jsonl" }, cache: "no-store" });
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    const rows = (await response.text()).split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
+    if (rows.some((row) => typeof row?.withdrawn_id !== "string")) throw new Error("Malformed withdrawal ledger");
+    const match = rows.find((row) => row.withdrawn_id === record.id);
+    if (!match) return {
+      state: "NOT_ESTABLISHED",
+      detail: "No withdrawal entry was found for this id. This check does not establish GSPC admission or quotability.",
+      reference: ledger,
+    };
+    const currentCorrection = match.correction === "C-2026-0924-03";
+    return {
+      state: "WITHDRAWN",
+      detail: currentCorrection
+        ? "Signed bytes were served before admission. This card is unadmitted and withdrawn from quotable use; its signature may still be valid."
+        : "This card is listed as withdrawn from quotable use; its signature may still be valid.",
+      reference: currentCorrection ? "/corrections/mill16-unadmitted-2026-09-24.json" : ledger,
+    };
+  } catch {
+    return {
+      state: "UNCHECKABLE",
+      detail: "The current withdrawal ledger could not be checked. A valid signature does not establish admission or quotability.",
+      reference: ledger,
+    };
+  }
+}
+
 async function loadAnchors(): Promise<Anchor[]> {
   try {
     const did = await (await fetch("/.well-known/did.json")).json();
