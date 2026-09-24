@@ -110,7 +110,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= links", async ({
+test("master sidebar exposes every working workspace as a direct /dashboard?tab= link", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -130,14 +130,32 @@ test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= lin
     "/dashboard?tab=measured",
     "/dashboard?tab=verify",
     "/dashboard?tab=board",
+    "/dashboard?tab=models",
+    "/dashboard?tab=evidence-index",
+    "/dashboard?tab=xrpl",
     "/dashboard?tab=swift",
+    "/dashboard?tab=state",
+    "/dashboard?tab=cards",
+    "/dashboard?tab=attestations",
+    "/dashboard?tab=archive",
     "/dashboard?tab=evidence",
+    "/dashboard?tab=art50",
+    "/dashboard?tab=embed",
     "/dashboard?tab=tools",
+    "/dashboard?tab=harness",
+    "/dashboard?tab=fabric",
+    "/dashboard?tab=space",
     "/dashboard?tab=learn",
+    "/dashboard?tab=play",
     "/dashboard?tab=watchdog",
     "/dashboard?tab=standards",
-    "/dashboard?tab=fabric",
+    "/dashboard?tab=matrix",
+    "/dashboard?tab=claimguard",
+    "/dashboard?tab=products",
+    "/dashboard?tab=library",
+    "/dashboard?tab=workbench",
   ]);
+  expect(new Set(hrefs).size).toBe(hrefs.length);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
   await expect(
     page.getByRole("link", { name: "All tools", exact: true }),
@@ -145,6 +163,25 @@ test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= lin
   // No door on the shell hops through the legacy /os redirect.
   const legacy = await page.locator('a[href^="/os?"]').count();
   expect(legacy, "no /os?lobby= hops inside the shell").toBe(0);
+
+  await page.getByRole("searchbox", { name: "Find a workspace tool" }).fill("article 50");
+  await expect(navigation.locator('a[href^="/dashboard?tab="]')).toHaveCount(1);
+  await expect(navigation.getByRole("link", { name: "Article 50 marking" })).toBeVisible();
+});
+
+test("mobile All tools opens the catalogue and closes the navigation drawer", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(!isMobile, "mobile drawer contract");
+  await openTab(page, "board");
+  await page.getByRole("button", { name: "Open workspace navigation" }).click();
+  const sidebar = page.locator('aside[aria-label="Council of AI workspace navigation"]');
+  await expect(sidebar).toBeVisible();
+  await sidebar.getByRole("link", { name: "All tools", exact: true }).click();
+  await expect(page).toHaveURL(/\/dashboard\/?\?tab=explore/);
+  await expect(sidebar).toHaveCount(0);
+  await expect(page.locator('[data-testid="dashboard-pane-explore"]')).toHaveCount(1);
 });
 
 test("the canonical dashboard accepts its optional trailing slash", async ({

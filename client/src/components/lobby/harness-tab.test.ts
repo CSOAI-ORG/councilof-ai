@@ -17,9 +17,9 @@ describe("harness tab", () => {
     expect(matchTab("show the products")?.id).toBe("products");
     expect(matchTab("verify a card")?.id).not.toBe("harness");
   });
-  it("stays in the full catalogue without duplicating the permanent dashboard rail", () => {
+  it("has one direct sidebar link as well as its full catalogue entry", () => {
     expect(LOBBY_TABS.some((t) => t.id === "harness")).toBe(true);
-    expect(DASHBOARD_TABS.some((t) => t.id === "harness")).toBe(false);
+    expect(DASHBOARD_TABS.filter((t) => t.id === "harness").length).toBe(1);
   });
   it("has no duplicate path across tabs", () => {
     const paths = LOBBY_TABS.map((t) => t.path).filter(Boolean);

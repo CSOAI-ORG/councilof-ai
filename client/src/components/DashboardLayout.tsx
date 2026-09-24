@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
-import { ChevronLeft, Menu, Moon, Settings, Sun } from "lucide-react";
+import { ChevronLeft, Menu, Moon, Search, Settings, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -56,6 +56,7 @@ export default function DashboardLayout({
         window.matchMedia?.(SMALL_QUERY).matches
       ),
   );
+  const [navQuery, setNavQuery] = useState("");
   const { theme, toggleTheme } = useTheme();
   const framed = isEmbedded();
 
@@ -99,6 +100,17 @@ export default function DashboardLayout({
   const rawTab = params.get("tab") || "home";
   const activeTab = normalizeLobbyTabId(rawTab);
   const activeLabel = dashboardActiveLabel(activeTab, search);
+  const navNeedle = navQuery.trim().toLowerCase();
+  const visibleNavGroups = DASHBOARD_NAV_GROUPS.map((group) => ({
+    ...group,
+    tabs: navNeedle
+      ? group.tabs.filter((tab) =>
+          `${tab.label} ${tab.blurb} ${group.label}`
+            .toLowerCase()
+            .includes(navNeedle),
+        )
+      : group.tabs,
+  })).filter((group) => group.tabs.length > 0);
   const pane =
     activeTab === "home" || activeTab === "software" ? null : (
       <DashboardPane id={activeTab} />
@@ -136,6 +148,9 @@ export default function DashboardLayout({
           <div className="flex h-[4.5rem] items-center justify-between border-b border-border px-4">
             <Link
               href="/dashboard?tab=home"
+              onClick={() => {
+                if (isSmall) setSidebarOpen(false);
+              }}
               className="min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               <CouncilBrand
@@ -158,6 +173,21 @@ export default function DashboardLayout({
             </Button>
           </div>
 
+          <label className="relative mx-3 mt-3 block">
+            <span className="sr-only">Find a workspace tool</span>
+            <Search
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+            <input
+              type="search"
+              value={navQuery}
+              onChange={(event) => setNavQuery(event.target.value)}
+              placeholder="Find a workspace tool…"
+              className="h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20"
+            />
+          </label>
+
           <nav
             id={NAV_ID}
             ref={navRef}
@@ -165,7 +195,7 @@ export default function DashboardLayout({
             aria-label="Workspace destinations"
             className="min-h-0 flex-1 overflow-y-auto px-3 py-3"
           >
-            {DASHBOARD_NAV_GROUPS.map((group) => (
+            {visibleNavGroups.map((group) => (
               <section
                 key={group.id}
                 className="mb-4"
@@ -202,11 +232,19 @@ export default function DashboardLayout({
                 </div>
               </section>
             ))}
+            {visibleNavGroups.length === 0 ? (
+              <p role="status" className="px-3 py-4 text-sm text-muted-foreground">
+                No workspace tool matches. Search all published pages below.
+              </p>
+            ) : null}
           </nav>
 
           <div className="border-t border-border p-3">
             <Link
               href="/dashboard?tab=explore"
+              onClick={() => {
+                if (isSmall) setSidebarOpen(false);
+              }}
               className="mb-3 flex min-h-10 items-center rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent"
             >
               All tools
@@ -218,6 +256,9 @@ export default function DashboardLayout({
               <DashboardAccountMenu />
               <Link
                 href={dashboardViewHref("/settings", "Settings")}
+                onClick={() => {
+                  if (isSmall) setSidebarOpen(false);
+                }}
                 aria-label="Open settings in workspace"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
               >

@@ -182,7 +182,7 @@ export default function DashboardCataloguePane() {
   const embeddedLabel =
     dashboardViewLabel(search) || embeddedPath || "Published surface";
   const [query, setQuery] = useState("");
-  const [kind, setKind] = useState<"all" | CatalogueKind>("workflow");
+  const [kind, setKind] = useState<"all" | CatalogueKind>("all");
   const catalogue = useMemo(buildDashboardCatalogue, []);
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -204,17 +204,19 @@ export default function DashboardCataloguePane() {
   if (embeddedPath)
     return <DashboardEmbeddedView path={embeddedPath} label={embeddedLabel} />;
 
-  const counts = KIND_FILTERS.slice(1).map((filter) => ({
-    ...filter,
-    count: catalogue.filter((entry) => entry.kind === filter.id).length,
-  }));
+  const counts = KIND_FILTERS.slice(1)
+    .map((filter) => ({
+      ...filter,
+      count: catalogue.filter((entry) => entry.kind === filter.id).length,
+    }))
+    .filter(({ count }) => count > 0);
 
   return (
     <section
-      className="mx-auto max-w-6xl px-5 py-7 sm:px-8"
+      className="mx-auto max-w-6xl px-4 py-4 sm:px-8 sm:py-7"
       aria-labelledby="dashboard-catalogue-title"
     >
-      <div className="rounded-2xl border border-emerald-900/10 bg-[linear-gradient(135deg,#04120c_0%,#073b2b_100%)] p-6 text-white shadow-sm">
+      <div className="rounded-2xl border border-emerald-900/10 bg-[linear-gradient(135deg,#04120c_0%,#073b2b_100%)] p-4 text-white shadow-sm sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div className="max-w-2xl">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-200">
@@ -222,11 +224,11 @@ export default function DashboardCataloguePane() {
             </p>
             <h1
               id="dashboard-catalogue-title"
-              className="mt-2 text-3xl font-semibold tracking-tight"
+              className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
             >
               Everything useful. One door.
             </h1>
-            <p className="mt-3 text-sm leading-relaxed text-emerald-50/80">
+            <p className="mt-3 hidden text-sm leading-relaxed text-emerald-50/80 sm:block">
               Search working instruments, current pages, sectors and the dated
               library. Core workflows open natively; supporting pages stay in
               this centre pane so the composer and workspace history remain
@@ -241,7 +243,7 @@ export default function DashboardCataloguePane() {
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
-        <dl className="mt-6 grid grid-cols-2 gap-2 text-center sm:max-w-2xl sm:grid-cols-4">
+        <dl className="mt-6 hidden grid-cols-2 gap-2 text-center sm:grid sm:max-w-2xl sm:grid-cols-4">
           {counts.map(({ id, label, count }) => (
             <div
               key={id}
@@ -277,7 +279,10 @@ export default function DashboardCataloguePane() {
           className="mt-2 flex flex-wrap gap-1.5"
           aria-label="Filter catalogue"
         >
-          {KIND_FILTERS.map((filter) => (
+          {KIND_FILTERS.filter(
+            (filter) =>
+              filter.id === "all" || counts.some(({ id }) => id === filter.id),
+          ).map((filter) => (
             <button
               key={filter.id}
               type="button"

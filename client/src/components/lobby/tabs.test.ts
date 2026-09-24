@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  DASHBOARD_NAV_GROUPS,
   DASHBOARD_TABS,
   DEFAULT_TAB,
   isDashboardTab,
@@ -228,36 +229,31 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
 
-  it("gives the canonical dashboard one curated permanent rail", () => {
-    const ids = DASHBOARD_TABS.map((t) => t.id);
-    expect(ids).toEqual([
-      "home",
-      "measured",
-      "verify",
-      "board",
-      "evidence-index",
-      "swift",
-      "evidence",
-      "tools",
-      "learn",
-      "watchdog",
-      "standards",
-      "fabric",
+  it("groups every distinct working destination once in the dashboard sidebar", () => {
+    expect(DASHBOARD_NAV_GROUPS.map((group) => group.label)).toEqual([
+      "Start",
+      "Measure",
+      "Evidence & proof",
+      "Operate",
+      "Govern",
+      "Explore",
     ]);
-    expect(DASHBOARD_TABS.map((t) => t.label)).toEqual([
-      "Ask",
-      "Requests",
-      "Verify",
-      "GSPC board",
-      "Evidence index",
-      "SWIFT · x402",
-      "Evidence",
-      "Improve",
-      "Learning",
-      "Watchdog",
-      "Standards",
-      "Connections",
-    ]);
+    const tabs = DASHBOARD_NAV_GROUPS.flatMap((group) => group.tabs);
+    const ids = tabs.map((tab) => tab.id);
+    expect(DASHBOARD_TABS).toEqual(tabs);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(DASHBOARD_NAV_GROUPS.every((group) => group.tabs.length > 0)).toBe(true);
+    expect(tabs.every((tab) => tab.label.trim().length > 0)).toBe(true);
+
+    // Results repeats the board; RAS repeats Requests; Software points back to
+    // this shell; All tools has its own catalogue link below the grouped nav.
+    const aliases = new Set(["results", "ras", "software", "explore"]);
+    expect(ids.slice().sort()).toEqual(
+      LOBBY_TABS.filter((tab) => !aliases.has(tab.id))
+        .map((tab) => tab.id)
+        .sort(),
+    );
+    for (const alias of aliases) expect(ids).not.toContain(alias);
     expect(
       LOBBY_TABS.filter(isDashboardTab)
         .map((t) => t.id)
@@ -323,10 +319,10 @@ describe("the two panes added by the OS-tools sweep", () => {
     expect(matchTab("show the estate state")?.id).toBe("state");
   });
 
-  it("keeps signed cards and diagnostic state in All tools", () => {
+  it("shows signed cards and diagnostic state directly in the sidebar", () => {
     const ids = DASHBOARD_TABS.map((t) => t.id);
-    expect(ids).not.toContain("cards");
-    expect(ids).not.toContain("state");
+    expect(ids).toContain("cards");
+    expect(ids).toContain("state");
   });
 
   it("gives the newly-opened pages a real route to open", () => {

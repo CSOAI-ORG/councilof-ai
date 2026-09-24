@@ -32,8 +32,8 @@ describe("attestations tab — one door, /dashboard?tab=attestations", () => {
     expect(matchRoute("open the attestations")).toBeNull();
   });
 
-  it("stays out of the DSH sidebar (no URL) and out of LOBBY_ROUTES (one owner)", () => {
-    expect(DASHBOARD_TABS.some((t) => t.id === "attestations")).toBe(false);
+  it("has one dashboard sidebar link and no duplicate LOBBY_ROUTES destination", () => {
+    expect(DASHBOARD_TABS.filter((t) => t.id === "attestations").length).toBe(1);
     expect(LOBBY_ROUTES.some((r) => /attest/i.test(r.path))).toBe(false);
     expect(LOBBY_TABS.filter((t) => t.id === "attestations").length).toBe(1);
   });

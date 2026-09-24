@@ -761,14 +761,9 @@ export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
   return LOBBY_ROUTES.filter((r) => r.group === group);
 }
 
-/**
- * The OS destinations that have a standalone URL — the DSH sidebar links to
- * `tab.path`, so a pane with no page of its own (Home, Play, and the native
- * workflow panes, which carry `path: ""`) cannot appear there. That is honest:
- * they exist only inside the OS. Software is excluded because it IS this surface.
- */
+/** The dashboard sidebar links to tab ids, including native in-process panes. */
 export type DashboardNavGroupId =
-  "start" | "work" | "govern";
+  "start" | "measure" | "proof" | "operate" | "govern" | "explore";
 
 export type DashboardNavGroup = {
   id: DashboardNavGroupId;
@@ -791,42 +786,58 @@ const DASHBOARD_NAV_DEFINITION: {
     ],
   },
   {
-    id: "work",
-    label: "Work",
+    id: "measure",
+    label: "Measure",
     tabs: [
       { id: "board", label: "GSPC board" },
+      { id: "models", label: "Model registry" },
       { id: "evidence-index", label: "Evidence index" },
+      { id: "xrpl", label: "XRPL instruments" },
       { id: "swift", label: "SWIFT · x402" },
-      { id: "evidence", label: "Evidence" },
-      { id: "tools", label: "Improve" },
+      { id: "state", label: "Estate state" },
+    ],
+  },
+  {
+    id: "proof",
+    label: "Evidence & proof",
+    tabs: [
+      { id: "cards", label: "Signed cards" },
+      { id: "attestations", label: "Attestations" },
+      { id: "archive", label: "Provable archive" },
+      { id: "evidence", label: "Evidence pack" },
+      { id: "art50", label: "Article 50 marking" },
+      { id: "embed", label: "Embed kit" },
+    ],
+  },
+  {
+    id: "operate",
+    label: "Operate",
+    tabs: [
+      { id: "tools", label: "MCP tools" },
+      { id: "harness", label: "Measurement harness" },
+      { id: "fabric", label: "Connections" },
+      { id: "space", label: "Council Space" },
       { id: "learn", label: "Learning" },
+      { id: "play", label: "Play gallery" },
       { id: "watchdog", label: "Watchdog" },
     ],
   },
-  // A "Tools" group naming memory / files / sandbox / operator / atlas was added here on
-  // 2026-09-05 and removed the same day, because none of those five ids exists in LOBBY_TABS.
-  // DASHBOARD_NAV_GROUPS resolves each id through LOBBY_TABS.find(...) and .filter(Boolean), so
-  // every one of them resolved to null: the group rendered EMPTY and the five panes were
-  // unreachable. The type errors it raised ("memory" is not assignable to LobbyTabId, and four
-  // more) were TypeScript correctly reporting a dangling reference, not noise to be widened away
-  // — adding the ids to the union would have silenced the checker and left the group just as
-  // empty at runtime.
-  //
-  // THE COMPONENTS ARE NOT DELETED. client/src/components/Dashboard{Memory,Files,Sandbox,
-  // Operator,Atlas}Pane.tsx all exist and are intact — they are simply referenced by nothing
-  // (checked: zero imports across client/src). To land the feature, each pane needs, in order:
-  //   1. a LOBBY_TABS entry — id, label, blurb, path, cues, like every other tab above;
-  //   2. the id added to LobbyTabId (and "tools" to DashboardNavGroupId) — after step 1, not
-  //      instead of it;
-  //   3. a route so the path resolves, and the pane component actually imported;
-  //   4. the path in PRIMARY_PATHS, or the page ships flagged as archived.
-  // Restoring this group before those four exist reproduces exactly the state removed here.
   {
     id: "govern",
     label: "Govern",
     tabs: [
       { id: "standards", label: "Standards" },
-      { id: "fabric", label: "Connections" },
+      { id: "matrix", label: "Regulation matrix" },
+      { id: "claimguard", label: "Honesty gate" },
+    ],
+  },
+  {
+    id: "explore",
+    label: "Explore",
+    tabs: [
+      { id: "products", label: "Products" },
+      { id: "library", label: "Library" },
+      { id: "workbench", label: "Workbench · sign in" },
     ],
   },
 ];
@@ -843,7 +854,7 @@ export const DASHBOARD_NAV_GROUPS: DashboardNavGroup[] =
       .filter((tab): tab is LobbyTab => Boolean(tab)),
   }));
 
-/** The intentionally small permanent rail. Every other destination remains in All tools. */
+/** Working destinations only. The full published-page catalogue remains in All tools. */
 export const DASHBOARD_TABS: LobbyTab[] = DASHBOARD_NAV_GROUPS.flatMap(
   (group) => group.tabs,
 );
@@ -853,27 +864,13 @@ export function isDashboardTab(tab: LobbyTab): boolean {
 }
 
 const DASHBOARD_HIDDEN_GROUPS: Record<string, DashboardNavGroupId> = {
-  archive: "work",
-  state: "work",
-  embed: "work",
-  cards: "work",
-  attestations: "work",
-  claimguard: "work",
-  results: "work",
-  models: "work",
-  matrix: "govern",
-  art50: "govern",
-  leaderboard: "work",
-  ras: "work",
-  terminal: "work",
-  console: "work",
-  harness: "work",
-  space: "work",
-  play: "work",
-  explore: "work",
-  products: "work",
-  library: "work",
-  workbench: "work",
+  results: "measure",
+  leaderboard: "measure",
+  ras: "start",
+  terminal: "operate",
+  console: "operate",
+  explore: "explore",
+  software: "explore",
 };
 
 export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
