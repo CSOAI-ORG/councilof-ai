@@ -19,6 +19,13 @@ export function servedUrl(route, origin) {
   return r === "/" ? origin : `${origin}${r}/`;
 }
 
+// The footer names /terms-of-service as the one current contract. The two
+// working aliases remain readable, but must not advertise duplicate canonicals.
+const CANONICAL_ALIAS = new Map([
+  ["/terms", "/terms-of-service"],
+  ["/legal/terms", "/terms-of-service"],
+]);
+
 /**
  * Rewrite canonical/og:url/twitter:url values that name this route WITHOUT its trailing slash, or
  * name the bare origin (the shell default), to the served URL. Query-string routes are not rewritten.
@@ -34,8 +41,8 @@ export function rewriteCanonical(html, route, origin, servedRoutes = null) {
   if (String(route).includes("?")) return html;
   const r = normRoute(route);
   if (r === "/") return html;
-  const target = servedUrl(r, origin);
-  const from = new Set([`${origin}${r}`, origin, `${origin}/`]);
+  const target = servedUrl(CANONICAL_ALIAS.get(r) || r, origin);
+  const from = new Set([`${origin}${r}`, servedUrl(r, origin), origin, `${origin}/`]);
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   let out = html;
   for (const f of from) {
