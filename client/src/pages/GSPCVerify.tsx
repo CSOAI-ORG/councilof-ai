@@ -137,6 +137,19 @@ export default function GSPCVerify() {
             living stamp, missing PQC seal, or verify path not wired) — never paint UNCHECKABLE as
             INVALID by default.
           </p>
+          <div className="mt-6 grid gap-2 sm:grid-cols-3" aria-label="What verification checks">
+            {[
+              ["01", "Hash", "Recompute the content identifier from the exact bytes."],
+              ["02", "Signature", "Check Ed25519 against the published key named by the record."],
+              ["03", "Inclusion", "Where applicable, bind the leaf proof to the published root."],
+            ].map(([n, label, copy]) => (
+              <div key={label} className="rounded-2xl border border-emerald-400/15 bg-white/[0.035] p-4">
+                <p className="font-mono text-[10px] font-bold tracking-[0.18em] text-emerald-400/70">{n}</p>
+                <p className="mt-2 text-sm font-bold text-emerald-50">{label}</p>
+                <p className="mt-1 text-xs leading-5 text-emerald-100/60">{copy}</p>
+              </div>
+            ))}
+          </div>
           <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Verify mode">
             <button
               type="button"

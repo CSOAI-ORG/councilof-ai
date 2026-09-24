@@ -498,6 +498,12 @@ export default function HomeGspcBoard({
   const { data: hubData, error: hubError, loading: hubLoading } = useHubCardsFeed(injectedHub, injectedHubError);
   const count = publicCountOf(data);
   const axes: GspcAxis[] = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
+  const totals = (data?.totals ?? {}) as any;
+  const measuredAxes = typeof totals.measured_axes === "number" ? totals.measured_axes : axes.filter((a) => a.status === "MEASURED").length;
+  const comparisonAxes = typeof totals.comparison_axes === "number" ? totals.comparison_axes : axes.filter((a) => a.kind === "model-comparison").length;
+  const factRuns = typeof totals.fact_runs === "number" ? totals.fact_runs : axes.filter((a) => a.kind === "deterministic-facts").length;
+  const separated = typeof totals.separated_leads === "number" ? totals.separated_leads : axes.filter((a) => a.separation === "SEPARATED").length;
+  const ties = typeof totals.ties === "number" ? totals.ties : axes.filter((a) => a.separation === "TIE").length;
 
   return (
     <section
@@ -548,6 +554,22 @@ export default function HomeGspcBoard({
             /api/gspc
           </a>
         </p>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-5" aria-label="Live board summary">
+        {[
+          ["Measured axes", loading ? "…" : String(measuredAxes), `${axes.length || "—"} declared`],
+          ["Model fleets", loading ? "…" : String(comparisonAxes), "comparison axes"],
+          ["Separated", loading ? "…" : String(separated), `${ties} TIE`],
+          ["Fact runs", loading ? "…" : String(factRuns), "public facts"],
+          ["Status", error ? "UNREACHABLE" : loading ? "READING" : "LIVE", error ? "no value inferred" : "from /api/gspc"],
+        ].map(([label, value, note]) => (
+          <div key={label} className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
+            <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">{value}</p>
+            <p className="mt-0.5 text-[11px] text-slate-500 dark:text-emerald-100/55">{note}</p>
+          </div>
+        ))}
       </div>
 
       <nav aria-label="Published evidence path" className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4" data-testid="board-supply-led-entry">
