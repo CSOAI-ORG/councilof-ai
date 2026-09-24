@@ -1,23 +1,31 @@
-# Correction C-2026-0924-02: public/corrections/living-stamp-unverifiable.json: attestations_that_do_verify (measurement cards) 150 -> 335
+# Correction C-2026-0924-01: public/corrections/living-stamp-unverifiable.json lists 7 slots as UNMEASURED; the live board carries 0 UNMEASURED axes
 
-**Register id C-2026-0924-02. Promoted from draft D-2026-09-22T14-05.** Generated 2026-09-22T14:25:42Z by drift-draft.py on the pod. Not published, not merged, no ledger id.
+**Register id C-2026-0924-01. Promoted from draft D-2026-09-22T14-04.** Generated 2026-09-22T14:25:42Z by drift-draft.py on the pod. Promoted and published 2026-09-24 with the owner's approval.
 
-Kind: `typed_claim_disagrees` - fingerprint `025f75a98669c0d4`
+Kind: `typed_claim_disagrees` - fingerprint `d1520d8783752683`
 
 ## The two byte-sources compared
 
-- **A** (typed): `public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify`  
+- **A** (typed): `public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged`  
   sha256 `ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49` - as_of `2026-08-28T17:19:43+01:00` (last commit touching the file)
-- **B** (measured): `https://councilof.ai/api/state`  
-  sha256 `efc1ffbbba84b4d20bf1e4e16c249fdbf901063563e07775841c8b33d224e300` - as_of `2026-09-22T14:25:28Z` (fetched_at (payload carries no as_of))
+- **B** (measured): `https://councilof.ai/api/gspc`  
+  sha256 `6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e` - as_of `behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25` (measured_on.date (prose, not compared as a timestamp))
 
 ## The field that moved
 
-`attestations_that_do_verify (measurement cards)`
+`unmeasured_slots_unchanged`
 
 ```
-A: 150
-B: 335
+A: [
+ "ai-economy-index",
+ "custody-disclosure",
+ "distribution-integrity",
+ "human-labour-index",
+ "humanoid-labour-index",
+ "regulatory-framework",
+ "reserve-attestation"
+]
+B: []
 ```
 
 ## Why it matters
@@ -32,7 +40,11 @@ PROPOSED, nothing has changed yet: supersede the stale surface with one that der
 
 ```bash
 git show cb773b2f9894:public/corrections/living-stamp-unverifiable.json | sha256sum   # expect ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49
-curl -sS 'https://councilof.ai/api/state' | sha256sum   # expect efc1ffbbba84b4d20bf1e4e16c249fdbf901063563e07775841c8b33d224e300
+curl -sS 'https://councilof.ai/api/gspc' | sha256sum   # expect 6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e
 ```
 
 Measurement, not a mark of conformity. UNMEASURED and UNCHECKABLE stay first-class; nothing here is a grade.
+
+## Read on 2026-09-24
+
+The live board lists 23 axes, 0 unmeasured. Five of the seven slot names above are axes marked MEASURED. `ai-economy-index` and `human-labour-index` are retired names kept as dataset slugs; the axes are now `ai-adoption-components` and `labour-components`, both MEASURED. The 2026-08-28 note is not edited.
