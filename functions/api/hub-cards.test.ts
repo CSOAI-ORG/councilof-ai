@@ -517,6 +517,70 @@ describe("/api/hub-cards — a withdrawn card is not counted", () => {
     expect(counts.cells).toBe(0);
     expect(counts.measured).toBe(0);
   });
+
+  const noReplacement = (superseded_id: string) =>
+    JSON.stringify({
+      superseded_id,
+      by_id: null,
+      by_file: null,
+      model: "a/one",
+      axis: "swarm",
+      reason: "NO REPLACEMENT CARD: the reviewed run had no parsable labels",
+    });
+
+  it("accepts an explicit no-replacement marker for a card absent from published indexes", async () => {
+    installWithdrawn("", ONE_OPTION, noReplacement("unindexedsha"));
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.complete).toBe(true);
+    expect(counts.cells).toBe(2);
+    expect(counts.no_replacement_markers).toBe(1);
+    expect(counts.superseded_ledger_read).toBe(true);
+    expect(counts.supersessions_unresolved).toEqual([]);
+  });
+
+  it("withholds totals when a no-replacement card is observed without a withdrawal", async () => {
+    installWithdrawn("", ONE_OPTION, noReplacement("badsha"));
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.complete).toBe(false);
+    expect(counts.cells).toBeNull();
+    expect(counts.superseded_ledger_read).toBe(true);
+    expect(counts.supersessions_unresolved).toEqual([
+      expect.objectContaining({
+        superseded_id: "badsha",
+        by_id: null,
+        reason: "no replacement and no matching withdrawal record",
+      }),
+    ]);
+    expect(counts.read_so_far).toMatchObject({ cells: 2, measured: 2 });
+  });
+
+  it("uses a matching withdrawal to retire an observed no-replacement card", async () => {
+    installWithdrawn(withdrawal("badsha", "a/one", "swarm"), ONE_OPTION, noReplacement("badsha"));
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.complete).toBe(true);
+    expect(counts.cells).toBe(1);
+    expect(counts.superseded_excluded).toBe(0);
+    expect(counts.withdrawn_excluded).toBe(1);
+    expect(counts.no_replacement_markers).toBe(1);
+    expect(body.withdrawn_cells).toEqual([
+      expect.objectContaining({ card_sha256: "badsha", correction: "C-2026-0914-01" }),
+    ]);
+  });
+
+  it("still rejects an unexplained null by_id", async () => {
+    installWithdrawn("", ONE_OPTION, JSON.stringify({
+      superseded_id: "badsha", by_id: null, by_file: null, model: "a/one", axis: "swarm",
+    }));
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.complete).toBe(false);
+    expect(counts.superseded_ledger_read).toBe(false);
+    expect(counts.no_replacement_markers).toBeNull();
+    expect((body.honesty as unknown as Record<string, string>).superseded_ledger).toMatch(/invalid jsonl row 1/);
+  });
 });
 
 // ---------------------------------------------------------------------------
