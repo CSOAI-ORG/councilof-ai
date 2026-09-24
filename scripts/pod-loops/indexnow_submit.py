@@ -46,6 +46,7 @@ reading its receipt should either.
 import argparse, hashlib, json, os, re, sys, time
 import urllib.request, urllib.error, xml.etree.ElementTree as ET
 import concurrent.futures as cf
+from html.parser import HTMLParser
 
 HOST = "councilof.ai"
 # Three key files are committed under public/ and all three answer 200 live.
@@ -83,14 +84,50 @@ VOLATILE = [
 ]
 
 
-def fingerprint(body):
-    """sha256 of the response body with the measured volatile ranges masked.
+class _Substance(HTMLParser):
+    """What a search engine indexes on an HTML page: title, description, canonical, robots,
+    JSON-LD, and the visible text outside the site chrome. Measured 2026-09-24 by diffing
+    /about/, /faq/ and /blog/ across production deployments a35ca8f1 and 1fba94ac: every
+    difference was build-level (hashed /assets/ names, the shared inline shell script) or a
+    site-wide header restyle, and it made ~400 of 559 pages "change" on every build. None of
+    that is a change to the page, so none of it is announced."""
+    SKIP = {"script", "style", "noscript", "svg", "template", "header", "nav", "footer"}
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.parts, self.skip, self.ld = [], 0, False
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "script" and (a.get("type") or "").lower() == "application/ld+json":
+            self.ld = True; return
+        if tag in self.SKIP: self.skip += 1; return
+        if tag == "meta" and (a.get("name") or "").lower() in ("description", "robots"):
+            self.parts.append(f"meta:{a.get('name')}={a.get('content')}")
+        if tag == "link" and (a.get("rel") or "").lower() == "canonical":
+            self.parts.append(f"canonical={a.get('href')}")
+    def handle_endtag(self, tag):
+        if self.ld and tag == "script": self.ld = False; return
+        if tag in self.SKIP and self.skip: self.skip -= 1
+    def handle_data(self, data):
+        if self.ld: self.parts.append("ld:" + " ".join(data.split())); return
+        if not self.skip:
+            t = " ".join(data.split())
+            if t: self.parts.append(t)
+
+
+def fingerprint(body, content_type=""):
+    """sha256 of what the response says, not of how it was built.
 
     This is a SUBSTANCE fingerprint, and the distinction matters: a page whose only
-    difference is the moment it was rendered has not changed, and announcing it
-    would be the resubmission the protocol asks publishers not to make."""
+    difference is the moment it was rendered, or the build that rendered it, has not
+    changed, and announcing it would be the resubmission the protocol asks publishers
+    not to make. HTML pages hash their indexable substance (_Substance); everything
+    else hashes its bytes with the measured volatile ranges masked."""
     for rx, repl in VOLATILE:
         body = rx.sub(repl, body)
+    if "html" in content_type.lower() or body.lstrip()[:15].lower().startswith((b"<!doctype html", b"<html")):
+        p = _Substance()
+        p.feed(body.decode("utf-8", errors="replace")); p.close()
+        return "s1:" + hashlib.sha256("\n".join(p.parts).encode()).hexdigest()
     return hashlib.sha256(body).hexdigest()
 
 
@@ -139,7 +176,7 @@ def probe(url):
             body = resp.read()
             if final.rstrip("/") != url.rstrip("/"):
                 return url, f"REDIRECT->{final}", None
-            return url, resp.status, fingerprint(body)
+            return url, resp.status, fingerprint(body, resp.headers.get("Content-Type", ""))
     except urllib.error.HTTPError as e:
         return url, e.code, None
     except Exception as e:
