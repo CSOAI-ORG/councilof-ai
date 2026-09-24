@@ -29,6 +29,9 @@ describe("/api/worker — the pod's own health, proxied, never remembered", () =
     const out = await buildWorker({}, fetcherWith(200, health));
     expect(out.status).toBe("LIVE");
     expect(out.source).toBe(DEFAULT_HEALTH_URL);
+    expect(out.what).toContain("separate admission and guarded release");
+    expect(out.what).toContain("unadmitted or withdrawn rows");
+    expect(out.what).not.toMatch(/OIDC signer|human-merged PR/);
     expect(out.worker).toMatchObject({ state: "RUNNING", jobs_total: 168, successful_runs: 180, failed_runs: 0, model: "qwen3:4b", axis: "care" });
     expect(JSON.stringify(out)).not.toContain("secret_looking_field");
   });
