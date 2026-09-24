@@ -238,7 +238,9 @@ def main():
               "would be rejected, and a 'submitted N URLs' line would be a false success.")
         return 2
 
-    cands = sitemap_urls() + a.extra
+    # A URL may already be in the sitemap when supplied with --extra. Probe,
+    # diff and submit each canonical URL once.
+    cands = sorted(set(sitemap_urls()).union(a.extra))
     print(f"[sitemap] {len(cands)} candidate URLs")
 
     live, dead = [], []
