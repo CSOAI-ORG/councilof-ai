@@ -44,6 +44,17 @@
 #                                           appeared in it at all. Runs AFTER swh-archive so it reads back
 #                                           the visits today's requests produced. Submits nothing.)
 #   07:00Z         distribution-measure.sh  logs/distribution-measure.log  (measure every confirmed PyPI/npm/HF package; publish public/interop/distribution-<date>.json)
+#   04:20Z         cross-ledger.sh          logs/cross-ledger.log  (read USDC on the seven core ledgers Circle lists
+#                                           plus its extra EVM chains -> out/cross-ledger; when all seven core
+#                                           ledgers were READ, commit the dated artifact to ledger/auto-<date> in
+#                                           /workspace/ci/ledger-lane and push that branch. Signs nothing, never
+#                                           pushes master; mill-hourly-land lands it path-restricted.)
+#   Sun 05:30Z     hitl-probe-weekly.sh     logs/hitl-probe-weekly.log  (MCP elicitation decline/cancel probe:
+#                                           controls gate the instrument, then the 2026-09-24 seeded panel on the
+#                                           byte-identified 2026-09-22 bank -> out/hitl-probe/<date>. Publishes nothing.)
+#   Sun :27-:40    garak-weekly.sh          logs/garak-weekly.log  (NVIDIA garak 0.17.0, pinned wheel, third-party
+#                                           instrument; GPU gap only, hard stop :48, one model per Sunday hour
+#                                           -> out/garak/<date>. Separate population; publishes nothing.)
 #   Mon 09:20Z     claim-watch-measure.sh   logs/claim-watch-measure.log  (WEEKLY claim maintenance on
 #                                           the published registry's named subjects: extend the CL-1
 #                                           counter series, re-read the CL-4/ON-1/ON-2 presence
@@ -82,6 +93,16 @@ while true; do
   if due 03 30 && stamp settlement-dry;      then nohup bash "$LOOPS/settlement-dry.sh" --now 8>&- >/dev/null 2>&1 & fi
   if due 04 00 && stamp revenue-snapshot;    then nohup bash "$LOOPS/revenue-snapshot.sh" --now 8>&- >/dev/null 2>&1 & fi
   if due 05 00 && stamp hubcard-refresh;     then nohup bash "$LOOPS/hubcard-refresh.sh" --now 8>&- >/dev/null 2>&1 & fi
+  # 04:20Z the cross-ledger USDC read -> out/cross-ledger, and a ledger/auto-<date> branch only when all seven core
+  # ledgers were read. THE STAMP IS THIS SCHEDULER'S; the script gets --now and must not stamp itself.
+  if due 04 20 && stamp cross-ledger;        then nohup bash "$LOOPS/cross-ledger.sh" --now 8>&- >/dev/null 2>&1 & fi
+  # Sundays 05:30Z the HITL elicitation probe on its fixed seeded panel -> out/hitl-probe/<date>; publishes nothing.
+  # THE STAMP IS THIS SCHEDULER'S (daily key, %u=7 gate, so a scheduler down at 05:30 still runs it that Sunday).
+  if [ "$(date -u +%u)" = "7" ] && due 05 30 && stamp hitl-probe-weekly; then nohup bash "$LOOPS/hitl-probe-weekly.sh" --now 8>&- >/dev/null 2>&1 & fi
+  # Sundays, the :27-:40 GPU gap after the mill slice: garak (third-party instrument) -> out/garak/<date>, one model
+  # per hour until the queue is done; the script re-checks the minute and nvidia-smi itself and stops at :48.
+  # THE STAMP IS THIS SCHEDULER'S (hourly key); the script gets --now.
+  if [ "$(date -u +%u)" = "7" ] && [ "${M#0}" -ge 27 ] && [ "${M#0}" -le 40 ] && stamp garak-weekly hour; then nohup bash "$LOOPS/garak-weekly.sh" --now 8>&- >/dev/null 2>&1 & fi
   if due 05 30 && stamp hf-flush;            then (exec 8>&-; python3 "$LOOPS/hf_upload.py" --flush 2>&1 | while read -r l; do log hf-flush "$l"; done) & fi
   # Refresh the public GSPC HF snapshot and default viewer from the same verified live board.
   if [ "${M#0}" -ge 20 ] && stamp gspc-hf hour; then

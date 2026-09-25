@@ -1,0 +1,153 @@
+{
+  "schema": "csoai.layer-o-registration/0.1",
+  "registration_id": "2026-09-25-measurement-harnesses",
+  "status": "OFFERED — a registration offered to the Layer O umbrella lane (layer-o-umbrella-20260924); not an edit of its registry, not merged into it, not a board change",
+  "registered_at": "2026-09-25",
+  "registered_by": "lane cross-ledger-usdc-20260925",
+  "signed": false,
+  "registry_read": {
+    "path": "~/lanes/layer-o-umbrella-20260924/axis-harness-registry.json (Oracle; read only)",
+    "file_sha256": "a330ac7e8cf92b55bc6482a135f9d5a0e8be0ce6bfefc30b9d491becfc5f589b",
+    "content_id": "cdcd624e323f1e1343e7d91dcdd4a398e0bca62f7aa042dd167f7d6ed4513400",
+    "generated_at": "2026-09-24T08:48:49.469266+00:00",
+    "schema": "csoai.layer-o-umbrella/0.1",
+    "vocabulary_used": "umbrella.authority_states and umbrella.evidence_states exactly as the registry lists them; wedge ids and axis ids exactly as its wedges{} and axes[].axis list them"
+  },
+  "mapping_rule": "A wedge is named only if it exists in the registry's wedges{}. An axis is named under a wedge only when (a) the registry lists it in that wedge's axes, (b) it is on the live board (registry axes[]), and (c) the board axis's own task reads the same kind of fact this harness reads. Otherwise the wedge is named with axes [] and the reason, and near-miss axes go under adjacent_board_axes, which contribute nothing. No harness here contributes to any axis value: each wedge's contract is honoured as application_view_only=true and cannot_override_axis_truth=true, and reverify_only_affected_dependencies=true is carried through as depends_on.",
+  "contract_honoured": {
+    "application_view_only": true,
+    "cannot_override_axis_truth": true,
+    "reverify_only_affected_dependencies": true,
+    "contributes_to_axis_value": false
+  },
+  "harnesses": [
+    {
+      "harness_id": "harness:cross-ledger-usdc",
+      "name": "Cross-ledger supply reader: is USDC the same thing on every ledger its issuer lists?",
+      "producer": ["scripts/readers/cross_ledger_supply.py", "scripts/pod-loops/cross-ledger.sh (daily 04:20Z, pending pod install)"],
+      "spec": "measurement/cross-ledger-supply-spec.md",
+      "artifact_url": "https://councilof.ai/interop/cross-ledger-usdc-2026-09-25.json",
+      "served_at_registration": "404 on 2026-09-25 — lands with this lane's bundle and the next deploy",
+      "evidence_kind": "deterministic-facts, labelled per read: STATE_PROOF_VERIFIED (ethereum, noble), OPERATOR_API (solana, stellar, hedera, sui, xrpl) on 2026-09-25; UNCHECKABLE and REJECTED are first-class",
+      "evidence_state": "DRAFT",
+      "evidence_state_reason": "unsigned PILOT, not on the board",
+      "authority_state": "READ_ONLY",
+      "population": "one asset (USDC) across the ledgers on Circle's own deployment list: 7 core + extra EVM chains",
+      "wedges": [
+        {"wedge": "pontes-fca-tokenisation", "axes": ["distribution-integrity"],
+         "fit": "distribution-integrity's task includes chain supply; this reads chain supply per ledger. Adjacent reading on a different population (the board axis: 16 xrpl.fi issuer accounts); it adds nothing to that axis's value",
+         "excluded_axes": {"reserve-attestation": "explicitly NOT: this is not a reserve attestation and not a proof of backing",
+                           "provenance": "the board's provenance axis is Article 50 marking survival (model-comparison); it does not fit",
+                           "provenance-controls": "no issuer-control facts (allowlist, freeze, identity domain) are read",
+                           "custody-disclosure": "no custodian or auditor is read",
+                           "regulatory-framework": "no governing regime is read"}},
+        {"wedge": "cross-border-east-west", "axes": [],
+         "fit": "no axis of this wedge reads ledger supply. View use only: one asset read on seven ledgers in different operator jurisdictions, each from its own endpoint"},
+        {"wedge": "legacy-cobol-private-deployment", "axes": [],
+         "fit": "no axis of this wedge reads ledger supply. View use only: the artifact's iso20022_camt053_shape block puts the per-ledger reads in the shape of a camt.053 statement for legacy statement consumers. It is a shape, not a bank statement"},
+        {"wedge": "stablecoin-rwa-xrpl", "axes": ["distribution-integrity"],
+         "fit": "added by the registry's own logic: its watch list names stablecoins and XRPL, and its axes include distribution-integrity. Same adjacency and exclusions as under pontes-fca-tokenisation"}
+      ],
+      "not_an_axis_yet": "council-os/ADR-003-DRAFT-axis-24-issued-supply.md is PROPOSED and not ruled; this registration assumes no axis 24",
+      "depends_on": ["https://developers.circle.com/stablecoins/usdc-contract-addresses (md + HTML sha256 in the artifact)", "each ledger's public endpoint named in the artifact's request_log"]
+    },
+    {
+      "harness_id": "harness:hitl-elicitation-probe",
+      "name": "HITL elicitation probe: when a live MCP server's elicitation is DECLINED or CANCELLED, does it stop?",
+      "producer": ["scripts/hitl/hitl_probe.py", "scripts/hitl/hitl_fake_server.py (controls)", "scripts/pod-loops/hitl-probe-weekly.sh (Sun 05:30Z, pending pod install)"],
+      "spec": "docs/measurement/HITL-PROBE.md",
+      "artifact_url": "https://councilof.ai/interop/hitl-elicitation-probe-2026-09-24.json",
+      "served_at_registration": "200 on 2026-09-25",
+      "evidence_kind": "deterministic-facts (code, not model); 10 local controls, grader-can-fail checked",
+      "evidence_state": "UNMEASURED",
+      "evidence_state_reason": "n = 0: no elicitation was observed on 300 registry servers during read-only calls (random 0, registry_text_hint 0). The construct has no observation to grade yet. The controls pass",
+      "authority_state": "READ_ONLY",
+      "population": "MCP registry harvest bank of 2026-09-22 (sha256 5043ce0b…), seed 20260924, 240 random + 60 hint; each weekly re-run is its own population",
+      "wedges": [
+        {"wedge": "agent-economy-mcp-a2a-x402", "axes": [], "adjacent_board_axes": ["effect-binding"],
+         "fit": "same transport and safety rules as the effect-binding server probe. Whether a decline binds is adjacent to whether authorization binds, but it is not the effect-binding axis's measurement and adds nothing to it"},
+        {"wedge": "linux-ossai-trace-safe", "axes": [], "adjacent_board_axes": ["effect-binding"],
+         "trace_reference": {"rel": "condition-appraisal", "meaning": "a probe result is an independent check's finding in the checker's own vocabulary (LF TRACE v0.2 references[])"},
+         "fit": "TRACE §2.4 leaves UX-layer attacks on the human in the loop out of scope; this probe measures that adjacent ground"}
+      ],
+      "depends_on": ["https://registry.modelcontextprotocol.io/v0/servers", "MCP spec 2025-11-25 elicitation/create"]
+    },
+    {
+      "harness_id": "harness:delegation-receipt",
+      "name": "Delegation receipt v0.1: who authorised the job, what was paid, what was delivered, who checked it",
+      "producer": ["scripts/receipts/verify_receipt.py", "scripts/receipts/make_test_vectors.py", "scripts/receipts/build_commission_example.py"],
+      "spec": "public/spec/delegation-receipt/README.md (CC0), schema-v0.1.json, CROSSWALK.md, 9 test vectors",
+      "artifact_url": "https://councilof.ai/spec/delegation-receipt/schema-v0.1.json",
+      "served_at_registration": "200 on 2026-09-25 (README.md and CROSSWALK.md also 200)",
+      "evidence_kind": "record format + verifier; not a measurement",
+      "evidence_state": "SPEC",
+      "evidence_state_reason": "v0.1 DRAFT; the one example is an unsigned self-test",
+      "authority_state": "READ_ONLY",
+      "population": "none (a format, not a sample)",
+      "wedges": [
+        {"wedge": "agent-economy-mcp-a2a-x402", "axes": [],
+         "fit": "crosswalked to MCP elicitation (ElicitResult.action), A2A TaskState, x402 offer-and-receipt, AP2 and ERC-8004. A record, so it adds nothing to any axis"},
+        {"wedge": "linux-ossai-trace-safe", "axes": [],
+         "trace_reference": {"rel": "approval-outcome", "meaning": "a receipt's principal section can be the attributable human approval a TRACE record references; its outcome_check, or a HITL probe result, can be a condition-appraisal"},
+         "fit": "observed approval is not proof of enforcement; stated in every body's not_evidence_of"}
+      ],
+      "depends_on": ["https://github.com/agentrust-io/trace-spec (v0.2)", "public/.well-known/ietf-rats.json"]
+    },
+    {
+      "harness_id": "nvidia-garak",
+      "name": "NVIDIA garak 0.17.0: third-party LLM vulnerability scanner",
+      "producer": ["Condor branch csoai/gspc-harness-fabric-20260924: condor/gspc_garak.py, data/gspc_garak/manifest-nvidia-garak.json", "scripts/pod-loops/garak-weekly.sh (Sundays in the :27-:40 GPU gap, pending pod install)"],
+      "pin": {"package": "garak==0.17.0", "wheel_sha256": "9a67e6298e4d7025358fecafa9d473c77ff70acdae103aa5251ad60fca3db145", "config_sha256": "cff6c19bfd53de598080de9393bf0d860ad15bf2812bf5901a2ab073de66ade4", "method_owner": "NVIDIA", "licence_spdx": "Apache-2.0"},
+      "artifact_url": null,
+      "served_at_registration": "not published; the pilot summary is data/gspc_garak/pilot-2026-09-24.json in the Condor repository",
+      "evidence_kind": "third-party instrument: garak's own eval counts, copied verbatim per (model, probe, detector). Deterministic detectors only; LLM-judge and classifier detectors are excluded",
+      "evidence_state": "UNMEASURED",
+      "evidence_state_reason": "the manifest declares outcome_state UNMEASURED. The 2026-09-24 pilot (qwen2.5:1.5b, llama3.2:3b; 20 prompts per probe) is a DRAFT and claims no per-model comparison",
+      "authority_state": "READ_ONLY",
+      "authority_note": "manifest execution_authority none; it only prompts local Ollama models and writes local reports",
+      "population": "third-party-instrument:nvidia-garak — never mixed into pod-measurement or the GSPC board (manifest never_mixed_into); fusion lane: witness",
+      "wedges": [
+        {"wedge": "linux-ossai-trace-safe", "axes": [], "adjacent_board_axes": ["safety", "jail"],
+         "fit": "by the registry's logic: this wedge carries safety and watches the open secure-AI ecosystem, and garak is an Apache-2.0 open scanner. A garak hit count is what garak's heuristic detector reported, not a safety grade, so it adds nothing to safety or jail"},
+        {"wedge": "product-r4-reproduce", "axes": [],
+         "fit": "the watch list names benchmark version, runtime, grader and dependency drift. A pinned third-party instrument re-run weekly on fixed models is that view"}
+      ],
+      "depends_on": ["https://pypi.org/project/garak/0.17.0/", "local Ollama model digests recorded per run"]
+    },
+    {
+      "harness_id": "the-ruler-human-arm",
+      "name": "THE RULER: local-only human labelling over the jail goldbank (/games/ruler)",
+      "producer": ["client/src/pages/GamesRuler.tsx", "client/src/lib/ruler.ts", "client/src/lib/rulerAdmission.ts", "scripts/games/build-ruler-bank.mjs"],
+      "artifact_url": "https://councilof.ai/games/ruler/",
+      "served_at_registration": "200 on 2026-09-25",
+      "evidence_kind": "human arm, in-lane only (sessionStorage; the page contains no network primitive)",
+      "evidence_state": "UNMEASURED",
+      "evidence_state_reason": "admission OFF (RULER_HUMAN_ADMISSION_ENABLED = false), so no human observation is collected; n = 0",
+      "authority_state": "READ_ONLY",
+      "population": "frozen public csoai/gspc-jail-goldbank (sha256 0b45b620…), 69 of 71 items playable. A human arm is never pooled with model rows",
+      "in_lane_only": true,
+      "board_axis": null,
+      "wedges": [],
+      "fit": "not a board axis and not a wedge input. Its place in the registry's own shape is measured_in_lane (like the human-vs-ai entry there), and only once admission is ruled (DPIA, DPO/ICO, an intake that accepts a human-labelling observation) and n > 0. Today there is nothing to route",
+      "depends_on": ["https://councilof.ai/interop/jail-peritem-v3.json (signed per-item evidence)"]
+    },
+    {
+      "harness_id": "pod-measurement",
+      "name": "Pod-measurement self-check: the harness scored from its own signed cards on master",
+      "producer": ["scripts/pod-loops/harness-outcomes.sh (hourly :57 on the pod)", "Condor scripts/gspc_ingest_pod_outcomes.py"],
+      "artifact_url": null,
+      "path_on_pod": "/workspace/lanes/out/harness/pod-measurement-scorecard.json (+ pod-outcomes-receipt.json); not published",
+      "evidence_kind": "harness scorecard: task-matched outcomes from signed cards. Each card is re-checked (id, Ed25519 under did:web:csoai.org#board-attestation-1, pinned bank, root inclusion), with one verdict per witness and no vote",
+      "evidence_state": "MEASURED",
+      "evidence_state_reason": "read on the pod 2026-09-25: last run 2026-09-24T18:57:18Z at master 809fa981c, 185 unique measured cohorts (913 raw runs, 728 uncohorted or repeated not counted), mean 0.9351, conservative lb95 0.8996, performance_state MEASURED. This scores the harness, never a model",
+      "authority_state": "READ_ONLY",
+      "population": "pod-measurement (distinct named cohorts only)",
+      "wedges": [
+        {"wedge": "product-r1-verify", "axes": [],
+         "fit": "the watch list names card state, root state and proof dependency, which is what the self-check re-verifies. It scores the instrument, so it adds nothing to the value of any of the 14 model-comparison axes it reads cards from"}
+      ],
+      "depends_on": ["public/interop/mill-cards-signed/", "public/interop/card-root-latest.json", "scripts/runpod_gspc_bank_allowlist.current.json"]
+    }
+  ],
+  "not_evidence_of": "No row here is a grade, a conformity mark, a reserve attestation or a proof of backing. None changes the board's axis count or any axis value. Offered for the Layer O lane to accept, amend or refuse."
+}

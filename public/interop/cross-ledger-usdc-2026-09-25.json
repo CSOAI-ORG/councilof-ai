@@ -1,0 +1,2001 @@
+{
+  "schema": "csoai.cross-ledger-supply/0.1",
+  "status": "PILOT — unsigned, not on the board",
+  "signed": false,
+  "writes_board": false,
+  "kind": "deterministic-facts (per-read evidence labelled; see evidence_kind_legend)",
+  "question": "Is USDC the same thing on every ledger its issuer says it lives on?",
+  "asset": "USDC",
+  "issuer": "Circle",
+  "started_at": "2026-09-25T04:18:40Z",
+  "finished_at": "2026-09-25T04:19:14Z",
+  "reader": "scripts/readers/cross_ledger_supply.py",
+  "issuer_list_evidence": {
+    "page": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+    "fetched": "https://developers.circle.com/stablecoins/usdc-contract-addresses.md",
+    "fetched_at": "2026-09-25T04:18:40Z",
+    "md_sha256": "15a692cfa55bba37f19e2470f4d759fe2b24ebd690669341d89e9894c1b3a3c2",
+    "md_bytes": 19749,
+    "mainnet_rows_parsed": 38,
+    "html_sha256": "2c2d04389ee9773df06a8aaf2e9cdef56d3395277fea66071710f36a21326dd2",
+    "html_bytes": 377839,
+    "identifiers_confirmed_in_html": 38,
+    "state": "READ",
+    "method": "Mintlify serves the page as server-rendered HTML and as text/markdown (same path + .md). The table is parsed from the markdown bytes; each identifier is then searched for in the rendered HTML bytes. Both sha256s are recorded. Not JS-rendered: no data file needed."
+  },
+  "issuer_list_notes_verbatim": [
+    "**The X Layer entry in the mainnet table is Circle-issued native USDC.** X Layer also has a separate bridged USDC representation, labeled `USDC.e`, which is not issued or backed by Circle. Use the address in the table for integrations that expect Circle-issued USDC."
+  ],
+  "evidence_kind_legend": {
+    "STATE_PROOF_VERIFIED": "A Merkle proof returned by the node was verified by this reader against the state commitment in a block header (Ethereum stateRoot via EIP-1186; Noble app_hash via ICS-23), and the proven value equals the plain API answer. The header is not checked against consensus (no light client); a second operator's copy of the header is compared and recorded.",
+    "STATE_PROOF_RECORDED": "A proof was returned and its bytes kept (sha256, height, header commitment), but it was not verified by this reader.",
+    "OPERATOR_API": "One operator's API answer. Not a proof. Where a second independent operator exists it is read too and two_operators_agree is recorded — agreement between operators is still not a proof.",
+    "UNCHECKABLE": "The read failed; the HTTP status or error is recorded. Never a zero, never 'absent'.",
+    "REJECTED": "The endpoint answered but the on-chain identity check (symbol()) did not return USDC; no supply is recorded against USDC."
+  },
+  "two_operators_agree_legend": {
+    "true": "an independent second operator returned the same supply (at the same pinned height where the ledger allows pinning)",
+    "false": "an independent second operator returned a different supply at the same pinned height",
+    "NOT_COMPARABLE": "the second read differed but the ledger/API cannot pin a height, so the two reads are at different heights",
+    "NOT_TRIED": "no keyless second operator was found or the second read failed (reason in the row)"
+  },
+  "per_ledger": [
+    {
+      "ledger": "ethereum",
+      "scope": "core",
+      "supply_decimal": "50430781860.131977",
+      "decimals": 6,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 26051941
+    },
+    {
+      "ledger": "solana",
+      "scope": "core",
+      "supply_decimal": "8217034486.977972",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 450242496
+    },
+    {
+      "ledger": "stellar",
+      "scope": "core",
+      "supply_decimal": "351156763.2854447",
+      "decimals": 7,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 64604829
+    },
+    {
+      "ledger": "hedera",
+      "scope": "core",
+      "supply_decimal": "450010110.000000",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 100361996
+    },
+    {
+      "ledger": "sui",
+      "scope": "core",
+      "supply_decimal": "308316102.717780",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 326606936
+    },
+    {
+      "ledger": "noble",
+      "scope": "core",
+      "supply_decimal": "103762748.544811",
+      "decimals": 6,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 60056091
+    },
+    {
+      "ledger": "xrpl",
+      "scope": "core",
+      "supply_decimal": "4617919.108900781",
+      "decimals": null,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 107218481
+    },
+    {
+      "ledger": "arbitrum",
+      "scope": "extra_evm",
+      "supply_decimal": "2936979871.811699",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 508654840
+    },
+    {
+      "ledger": "avalanche",
+      "scope": "extra_evm",
+      "supply_decimal": "400293471.158739",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 96099554
+    },
+    {
+      "ledger": "base",
+      "scope": "extra_evm",
+      "supply_decimal": "4294533060.719965",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 51760296
+    },
+    {
+      "ledger": "celo",
+      "scope": "extra_evm",
+      "supply_decimal": "15228623.488166",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 78409182
+    },
+    {
+      "ledger": "hyperevm",
+      "scope": "extra_evm",
+      "supply_decimal": "6833999685.532186",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 46821059
+    },
+    {
+      "ledger": "linea",
+      "scope": "extra_evm",
+      "supply_decimal": "24249450.507182",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 32136842
+    },
+    {
+      "ledger": "optimism",
+      "scope": "extra_evm",
+      "supply_decimal": "166249049.371377",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 157355585
+    },
+    {
+      "ledger": "polygon",
+      "scope": "extra_evm",
+      "supply_decimal": "605542291.149054",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 94403206
+    },
+    {
+      "ledger": "sonic",
+      "scope": "extra_evm",
+      "supply_decimal": "126238586.178445",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 79869922
+    },
+    {
+      "ledger": "unichain",
+      "scope": "extra_evm",
+      "supply_decimal": "23588472.591813",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 59561588
+    },
+    {
+      "ledger": "zksync",
+      "scope": "extra_evm",
+      "supply_decimal": "10636491.412155",
+      "decimals": 6,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "height": 72209107
+    }
+  ],
+  "rows": [
+    {
+      "ledger": "ethereum",
+      "circle_label": "Ethereum",
+      "deployment_id": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "scope": "core",
+      "supply_base_units": "50430781860131977",
+      "decimals": 6,
+      "supply_decimal": "50430781860.131977",
+      "observed_at": "2026-09-25T04:18:41Z",
+      "height": {
+        "kind": "block (finalized tag)",
+        "number": 26051941,
+        "hash": "0xfda8a7b3158a7973a3f6b13a863bd8827b763431a6c1f07d46abbc37506e5b83",
+        "state_root": "0x8841692e872dc21bf62e1197d123c7f5178d7b9250e323a9a8d21337547d7c9a",
+        "timestamp": 1790308823,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://eth.drpc.org",
+      "operator": "dRPC",
+      "response_sha256": "bac3bd342410bf4e9ca56d897f4e32e79f81b1d82b0c8a857465469ada56352c",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://rpc.mevblocker.io",
+        "operator": "MEV Blocker",
+        "independent": true,
+        "block_hash": "0xfda8a7b3158a7973a3f6b13a863bd8827b763431a6c1f07d46abbc37506e5b83",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "50430781860131977",
+        "response_sha256": "da1d13e7dd6bf04e9e5817c9921451a2912950c7791056ba31857af6efd6001c",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "decimals": 6
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": 11,
+        "response_sha256": "0f4361550f91612292ca6e2f1cdc04f249a114ee75e781be3329a4b3378c3b39",
+        "account_proof_nodes": 9,
+        "storage_proof_nodes": 8,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 50430781860131977,
+        "error": null,
+        "proven_storage_root": "0x541755cfb3fdbef176e395442c76f40f0a33132ecc4dc616268d92874161985e",
+        "proven_code_hash": "0xd80d4b7c890cb9d6a4893e6b52bc34b56b25335cb13716e0d1d31383e6b41505",
+        "eth_call_value": 50430781860131977,
+        "file": {
+          "path": "/interop/cross-ledger-usdc-2026-09-25/ethereum-proof.json",
+          "sha256": "3e846f5b081b986b0189931709cf0a450a34a8a65649cb0b01d7a14a2c948f13"
+        }
+      },
+      "notes": [
+        "slot 11 found empirically (only slot 0..24 equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply()"
+      ],
+      "slot_search": {
+        "slots_scanned": "0..24",
+        "matching_slots": [
+          11
+        ],
+        "method": "eth_getStorageAt at the pinned block, compared to eth_call totalSupply()"
+      },
+      "issuer_listed": {
+        "identifier": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "solana",
+      "circle_label": "Solana",
+      "deployment_id": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "scope": "core",
+      "supply_base_units": "8217034486977972",
+      "decimals": 6,
+      "supply_decimal": "8217034486.977972",
+      "observed_at": "2026-09-25T04:18:49Z",
+      "height": {
+        "kind": "slot (context.slot, commitment=finalized)",
+        "number": 450242496
+      },
+      "endpoint": "https://api.mainnet-beta.solana.com",
+      "operator": "Solana Foundation (api.mainnet-beta)",
+      "response_sha256": "17375258c7afac06519b3ac6755a2bd127acf40c92c4367d4257c8776596d6e1",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://solana.leorpc.com/",
+        "operator": "LeoRPC (published free key 'FREE')",
+        "independent": true,
+        "supply_base_units": "8217034486977972",
+        "slot": 450242498,
+        "response_sha256": "971f8faab6cdf64fb35e553674ec75473c644f8be05a81ffe85f1e70673f95e2"
+      },
+      "identity": {
+        "decimals": 6,
+        "note": "an SPL mint carries no symbol() to call; identification rests on Circle's list"
+      },
+      "proof": null,
+      "notes": [],
+      "issuer_listed": {
+        "identifier": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "stellar",
+      "circle_label": "Stellar",
+      "deployment_id": "USDC-GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "scope": "core",
+      "supply_base_units": "3511567632854447",
+      "decimals": 7,
+      "supply_decimal": "351156763.2854447",
+      "observed_at": "2026-09-25T04:18:50Z",
+      "height": {
+        "kind": "ledger (Horizon history_latest_ledger read just before /assets)",
+        "number": 64604829,
+        "closed_at": "2026-09-25T04:18:44Z"
+      },
+      "endpoint": "https://horizon.stellar.org",
+      "operator": "Stellar Development Foundation (Horizon)",
+      "response_sha256": "8f407b146d6fb878824b9e2a74beef7797233f80e54d4f430c38a088c41c671a",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://horizon.stellar.lobstr.co",
+        "operator": "LOBSTR (Horizon)",
+        "independent": true,
+        "ledger": 64604830,
+        "supply_decimal": "351156763.2854447",
+        "response_sha256": "1836b6306e441f716700758796333331d5fde1a78f44bfe0cac63420050bcb3f"
+      },
+      "identity": {
+        "asset_code": "USDC",
+        "asset_issuer": "GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "decimals": "7 (Stellar protocol fixed precision)"
+      },
+      "proof": null,
+      "notes": [
+        "supply = sum of Horizon balances (authorized + authorized_to_maintain_liabilities + unauthorized) + claimable balances + liquidity pools + Soroban contract balances; components kept"
+      ],
+      "supply_components": {
+        "balances.authorized": "291578247.2812803",
+        "balances.authorized_to_maintain_liabilities": "0.0000000",
+        "balances.unauthorized": "0.0000000",
+        "claimable_balances_amount": "24626.0232674",
+        "liquidity_pools_amount": "3069431.1586891",
+        "contracts_amount": "56484458.8222079"
+      },
+      "issuer_listed": {
+        "identifier": "USDC-GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "hedera",
+      "circle_label": "Hedera",
+      "deployment_id": "0.0.456858",
+      "scope": "core",
+      "supply_base_units": "450010110000000",
+      "decimals": 6,
+      "supply_decimal": "450010110.000000",
+      "observed_at": "2026-09-25T04:18:52Z",
+      "height": {
+        "kind": "mirror-node record file (latest block before the token read)",
+        "number": 100361996,
+        "hash": "0x11940bbc9b169c366bbdc4cf9c168d890234377efa38ad0eea5f15e80c07a1a4397dc67a868800d23c942aadbcc71583",
+        "timestamp_to": "1790309927.027663080",
+        "token_modified_timestamp": "1724954703.071334003"
+      },
+      "endpoint": "https://mainnet-public.mirrornode.hedera.com",
+      "operator": "Hedera (public mirror node)",
+      "response_sha256": "ea183e353e52b0f9354ffa9f257b06d834a316c252e5c134c3d03dea1a140791",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": {
+        "endpoint": "https://mainnet.mirrornode.hedera.com",
+        "operator": "Hedera (second mirror host, same operator)",
+        "independent": false,
+        "supply_base_units": "450010110000000",
+        "response_sha256": "ea183e353e52b0f9354ffa9f257b06d834a316c252e5c134c3d03dea1a140791",
+        "same_operator_host_agrees": true
+      },
+      "identity": {
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "decimals": 6,
+        "type": "FUNGIBLE_COMMON",
+        "supply_type": "INFINITE"
+      },
+      "proof": null,
+      "notes": [
+        "no keyless mirror node from a second operator was found; the second host is Hedera's own, so its agreement is recorded as same_operator_host_agrees, not two_operators_agree. Hedera block proofs (HIP-1200) are not yet available."
+      ],
+      "issuer_listed": {
+        "identifier": "0.0.456858",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "sui",
+      "circle_label": "Sui",
+      "deployment_id": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+      "scope": "core",
+      "supply_base_units": "308316102717780",
+      "decimals": 6,
+      "supply_decimal": "308316102.717780",
+      "observed_at": "2026-09-25T04:18:52Z",
+      "height": {
+        "kind": "checkpoint (same GraphQL response)",
+        "number": 326606936,
+        "digest": "2pA76saVKwaSREMbWY5L3bwTAJ7Aq4dxPrac51YzhvUD",
+        "timestamp": "2026-09-25T04:18:51.363Z"
+      },
+      "endpoint": "https://graphql.mainnet.sui.io/graphql",
+      "operator": "Mysten Labs (GraphQL)",
+      "response_sha256": "d80e44ee00f9c9171f5200eb665f617e66642a382fe09cef3e32cc7629904c9b",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://sui-mainnet-endpoint.blockvision.org",
+        "operator": "BlockVision (JSON-RPC)",
+        "independent": true,
+        "supply_base_units": "308316102717780",
+        "latest_checkpoint_after_read": "326606944",
+        "response_sha256": "fee0929f5d6661d1b112f75d89679f148db6252a2dedab6386ac0a9e6fa75017",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "USDC",
+        "name": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [],
+      "issuer_listed": {
+        "identifier": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "noble",
+      "circle_label": "Noble",
+      "deployment_id": "uusdc",
+      "scope": "core",
+      "supply_base_units": "103762748544811",
+      "decimals": 6,
+      "supply_decimal": "103762748.544811",
+      "observed_at": "2026-09-25T04:18:54Z",
+      "height": {
+        "kind": "block height (LCD pinned via x-cosmos-block-height)",
+        "number": 60056091,
+        "app_hash_in_header_h_plus_1": "DB6EC4569B49E7A2791EC342D3C8C06E75F6945CBC63071154EBEEBB61AFB2BC",
+        "header_h_plus_1_block_id": "EAB53C6254468A2A25D78820E469236A306A2DA7579555CCB10C2AFC80205157",
+        "chain_id": "noble-1",
+        "time_h_plus_1": "2026-09-25T04:18:51.161495726Z",
+        "rpc_node_id": "0fb9e58a19191dd8c568604221de8096dfcc809c"
+      },
+      "endpoint": "https://noble-api.polkachu.com",
+      "operator": "Polkachu (LCD)",
+      "response_sha256": "a6285e0324e5a91fb3978c7ee1b8fa780aab515c3c51a9011bdbfadf5a40e099",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://rest.lavenderfive.com:443/noble",
+        "operator": "Lavender.Five (LCD)",
+        "rpc_node_id": "b2e387f9818ddd4cfe547087e3c6983a29be9983",
+        "independent": true,
+        "supply_base_units": "103762748544811",
+        "response_sha256": "a6285e0324e5a91fb3978c7ee1b8fa780aab515c3c51a9011bdbfadf5a40e099",
+        "same_app_hash_h_plus_1": true,
+        "same_block_id_h_plus_1": true
+      },
+      "identity": {
+        "denom": "uusdc",
+        "display": "",
+        "symbol": "",
+        "decimals_from_denom_metadata": 6
+      },
+      "proof": {
+        "type": "CometBFT abci_query prove=true (ICS-23 iavl + simple)",
+        "store_key_hex": "007575736463",
+        "query_height": 60056091,
+        "abci_response_sha256": "d176a7d6a638c14095991340bd8ff63e55c4456da952b009e30084d9787145d2",
+        "proof_ops_sha256": "3dd966928c9d5a67e5b36a9b064f041b771a10fc5910651167b3d2d49733b80b",
+        "op_types": [
+          "ics23:iavl",
+          "ics23:simple"
+        ],
+        "raw_value": "103762748544811",
+        "verified": true,
+        "error": null,
+        "iavl_root": "20a3f3257982af2b8210dcad3e5f0245688749478e9d99fa0cb556805072d9e5",
+        "computed_app_hash": "DB6EC4569B49E7A2791EC342D3C8C06E75F6945CBC63071154EBEEBB61AFB2BC",
+        "iavl_path_len": 19,
+        "multistore_path_len": 5,
+        "file": {
+          "path": "/interop/cross-ledger-usdc-2026-09-25/noble-proof.json",
+          "sha256": "846de4519eaced48e745ac378b046d6f92b2a07c006aee0a1e6a3fb0f4a9fef4"
+        }
+      },
+      "notes": [
+        "ICS-23 verified here: bank store key 0x00||uusdc → IAVL root → multistore root == app_hash in header h+1; value == LCD amount. Header not checked against validator signatures (no light client)."
+      ],
+      "issuer_listed": {
+        "identifier": "uusdc",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "xrpl",
+      "circle_label": "XRPL",
+      "deployment_id": "5553444300000000000000000000000000000000.rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "scope": "core",
+      "supply_base_units": null,
+      "decimals": null,
+      "supply_decimal": "4617919.108900781",
+      "observed_at": "2026-09-25T04:18:56Z",
+      "height": {
+        "kind": "validated ledger",
+        "number": 107218481,
+        "hash": "038A18037B4DA753239227E10E5168F984286CC927E6C2B3B430BD12B04E73BF",
+        "requested": "ledger_index=validated"
+      },
+      "endpoint": "https://s1.ripple.com:51234/",
+      "operator": "Ripple (s1)",
+      "response_sha256": "cf423164b07da0b63b3aa28eac7c90070b6ddb72e1a388a0c26d624cb41353e9",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://xrplcluster.com/",
+        "operator": "XRPL Labs (xrplcluster)",
+        "independent": true,
+        "ledger_index": 107218481,
+        "ledger_hash": "038A18037B4DA753239227E10E5168F984286CC927E6C2B3B430BD12B04E73BF",
+        "same_ledger_hash": true,
+        "supply_decimal": "4617919.108900781",
+        "response_sha256": "dcf83599639a17ee20102d14f71246ea68bb6474a234743b3f4747bb205b08ee"
+      },
+      "identity": {
+        "currency_hex": "5553444300000000000000000000000000000000",
+        "currency_ascii": "USDC",
+        "issuer": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+        "decimals": null
+      },
+      "proof": null,
+      "notes": [
+        "XRPL issued currencies are decimal floating point (≤16 significant digits) with no integer base unit; supply_base_units is null and supply_decimal is gateway_balances.obligations verbatim"
+      ],
+      "issuer_listed": {
+        "identifier": "5553444300000000000000000000000000000000.rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "arbitrum",
+      "circle_label": "Arbitrum",
+      "deployment_id": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "scope": "extra_evm",
+      "supply_base_units": "2936979871811699",
+      "decimals": 6,
+      "supply_decimal": "2936979871.811699",
+      "observed_at": "2026-09-25T04:18:57Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 508654840,
+        "hash": "0x78147aa1488ea995eaeb69f8546e5f325c0e0468c6c7d4c4a5fb582d072c7a10",
+        "timestamp": 1790309936
+      },
+      "endpoint": "https://arb1.arbitrum.io/rpc",
+      "operator": "arb1.arbitrum.io",
+      "response_sha256": "7c39b1a9cbe73a3f6b6a0e1cb4fb31700b59374fa6898308576447c1fecb1bf0",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "avalanche",
+      "circle_label": "Avalanche C-Chain",
+      "deployment_id": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+      "scope": "extra_evm",
+      "supply_base_units": "400293471158739",
+      "decimals": 6,
+      "supply_decimal": "400293471.158739",
+      "observed_at": "2026-09-25T04:18:59Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 96099554,
+        "hash": "0x90ceb2f2cb9a3a34222001553b14da55c6067f4cece0c29acc1a10acafaee3a3",
+        "timestamp": 1790309937
+      },
+      "endpoint": "https://avalanche-c-chain-rpc.publicnode.com",
+      "operator": "avalanche-c-chain-rpc.publicnode.com",
+      "response_sha256": "3e172b75ef78aee97cd83ad07467eb6c7acccf778f3dcc56a8cc6bbcb0dc4f92",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "base",
+      "circle_label": "Base",
+      "deployment_id": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "scope": "extra_evm",
+      "supply_base_units": "4294533060719965",
+      "decimals": 6,
+      "supply_decimal": "4294533060.719965",
+      "observed_at": "2026-09-25T04:19:00Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 51760296,
+        "hash": "0x175fc5ebc7b7995f401cebbaf07fb0b180231f7b0d15284a530e70198458228c",
+        "timestamp": 1790309939
+      },
+      "endpoint": "https://mainnet.base.org",
+      "operator": "mainnet.base.org",
+      "response_sha256": "cb62376e6c020431878e57588d2a47b230113f4a8d50bb200b54c1c75b40a1b7",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "celo",
+      "circle_label": "Celo",
+      "deployment_id": "0xcebA9300f2b948710d2653dD7B07f33A8B32118C",
+      "scope": "extra_evm",
+      "supply_base_units": "15228623488166",
+      "decimals": 6,
+      "supply_decimal": "15228623.488166",
+      "observed_at": "2026-09-25T04:19:02Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 78409182,
+        "hash": "0x1d02c6b7588bcd8b4de1c88d91834b183ba89c564f2b2e513a95f7fdacd6767c",
+        "timestamp": 1790309940
+      },
+      "endpoint": "https://forno.celo.org",
+      "operator": "forno.celo.org",
+      "response_sha256": "6ad3ae126aed050cc6ad1191f64c2382e9d997e00d0c3e5f5dabb04705bea3b3",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0xcebA9300f2b948710d2653dD7B07f33A8B32118C",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "hyperevm",
+      "circle_label": "HyperEVM",
+      "deployment_id": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+      "scope": "extra_evm",
+      "supply_base_units": "6833999685532186",
+      "decimals": 6,
+      "supply_decimal": "6833999685.532186",
+      "observed_at": "2026-09-25T04:19:03Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 46821059,
+        "hash": "0x6237febf1b9dc93790c748935efe40a7280a1cd56468e461bbd09459cda420d5",
+        "timestamp": 1790309943
+      },
+      "endpoint": "https://rpc.hyperliquid.xyz/evm",
+      "operator": "rpc.hyperliquid.xyz",
+      "response_sha256": "105d541303154a99c8eae760b34e0cc40d42f5106bbcaa65c6eb1994cb621b90",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "linea",
+      "circle_label": "Linea",
+      "deployment_id": "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+      "scope": "extra_evm",
+      "supply_base_units": "24249450507182",
+      "decimals": 6,
+      "supply_decimal": "24249450.507182",
+      "observed_at": "2026-09-25T04:19:05Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 32136842,
+        "hash": "0x11e9ecb0190cf8e5d7d3684fd6257ffac9b3cdac67e3e90218e19161f63fe92d",
+        "timestamp": 1790309927
+      },
+      "endpoint": "https://rpc.linea.build",
+      "operator": "rpc.linea.build",
+      "response_sha256": "f09c5394fce62f634046529382c6ec8f7c079c5b0ebd243d03ce9ba7a71671cb",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "optimism",
+      "circle_label": "OP Mainnet",
+      "deployment_id": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+      "scope": "extra_evm",
+      "supply_base_units": "166249049371377",
+      "decimals": 6,
+      "supply_decimal": "166249049.371377",
+      "observed_at": "2026-09-25T04:19:07Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 157355585,
+        "hash": "0x2987997ace9bb4608ae51acc86c2f7b85762842ad0a51a1c82b97083c23c20b3",
+        "timestamp": 1790309947
+      },
+      "endpoint": "https://mainnet.optimism.io",
+      "operator": "mainnet.optimism.io",
+      "response_sha256": "1ce0b1cd293f4007f8a4d1d6b637c6f8fd43a563984b93d772de1248c8a7208d",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "polygon",
+      "circle_label": "Polygon PoS",
+      "deployment_id": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+      "scope": "extra_evm",
+      "supply_base_units": "605542291149054",
+      "decimals": 6,
+      "supply_decimal": "605542291.149054",
+      "observed_at": "2026-09-25T04:19:08Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 94403206,
+        "hash": "0xbffb371f9230ba687c7757fc99aea6641893c2ea058c4398279235617ceac773",
+        "timestamp": 1790309949
+      },
+      "endpoint": "https://polygon-bor-rpc.publicnode.com",
+      "operator": "polygon-bor-rpc.publicnode.com",
+      "response_sha256": "b8f7cd4a03e1592ab094ecacfca9685a85837039de6b0a71689fc6bb419831ee",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "sonic",
+      "circle_label": "Sonic",
+      "deployment_id": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+      "scope": "extra_evm",
+      "supply_base_units": "126238586178445",
+      "decimals": 6,
+      "supply_decimal": "126238586.178445",
+      "observed_at": "2026-09-25T04:19:09Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 79869922,
+        "hash": "0x7d1b34b60d2f68c4e299d7c30d027a77bb60a0b95436003dff7185c6c779540a",
+        "timestamp": 1790309947
+      },
+      "endpoint": "https://rpc.soniclabs.com",
+      "operator": "rpc.soniclabs.com",
+      "response_sha256": "7b15d2508f50defd30808cec0b20642ef33168a2e8ecfb80f060bfb4ef8a373e",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "unichain",
+      "circle_label": "Unichain",
+      "deployment_id": "0x078D782b760474a361dDA0AF3839290b0EF57AD6",
+      "scope": "extra_evm",
+      "supply_base_units": "23588472591813",
+      "decimals": 6,
+      "supply_decimal": "23588472.591813",
+      "observed_at": "2026-09-25T04:19:11Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 59561588,
+        "hash": "0xa63fb27292def3ba4cdbc676def426be9f9428d4b5c9c10a4644f44605aad29f",
+        "timestamp": 1790309947
+      },
+      "endpoint": "https://mainnet.unichain.org",
+      "operator": "mainnet.unichain.org",
+      "response_sha256": "33d4d621c07ee0e5766be80c0e318d046484442c3a4b3f96002f64bfcf5742bf",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x078D782b760474a361dDA0AF3839290b0EF57AD6",
+        "in_rendered_html": true
+      }
+    },
+    {
+      "ledger": "zksync",
+      "circle_label": "ZKsync Era",
+      "deployment_id": "0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
+      "scope": "extra_evm",
+      "supply_base_units": "10636491412155",
+      "decimals": 6,
+      "supply_decimal": "10636491.412155",
+      "observed_at": "2026-09-25T04:19:13Z",
+      "height": {
+        "kind": "block (latest at read time, then pinned)",
+        "number": 72209107,
+        "hash": "0xff050208107daa6495b57c4549aed0257b8781f930b1572a2af7732898fb4925",
+        "timestamp": 1790309952
+      },
+      "endpoint": "https://mainnet.era.zksync.io",
+      "operator": "mainnet.era.zksync.io",
+      "response_sha256": "45093ea00c965c778bd5d74c010b05e9dc27c2047ce03bb3690671a2a5717b24",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "NOT_TRIED",
+      "second_read": null,
+      "identity": {
+        "symbol": "USDC",
+        "decimals": 6
+      },
+      "proof": null,
+      "notes": [
+        "extra EVM chain on Circle's list, outside the seven-ledger pilot core; one keyless RPC, eth_call only"
+      ],
+      "issuer_listed": {
+        "identifier": "0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
+        "in_rendered_html": true
+      }
+    }
+  ],
+  "listed_not_read": [
+    {
+      "circle_label": "Algorand",
+      "identifier": "31566704",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Aptos",
+      "identifier": "0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Arc",
+      "identifier": "0x3600000000000000000000000000000000000000",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Codex",
+      "identifier": "0xd996633a415985DBd7D6D12f4A4343E31f5037cf",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Cronos",
+      "identifier": "0x3D7F2C478aAfdB65542BCB44bCeeC05849999d2D",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "EDGE",
+      "identifier": "0x98d2919b9A214E6Fa5384AC81E6864bA686Ad74c",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Injective",
+      "identifier": "0xa00C59fF5a080D2b954d0c75e46E22a0c371235a",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Ink",
+      "identifier": "0x2D270e6886d130D724215A266106e6832161EAEd",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Monad",
+      "identifier": "0x754704Bc059F8C67012fEd69BC8A327a5aafb603",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Morph",
+      "identifier": "0xCfb1186F4e93D60E60a8bDd997427D1F33bc372B",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "NEAR",
+      "identifier": "17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Pharos",
+      "identifier": "0xC879C018dB60520F4355C26eD1a6D572cdAC1815",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Plasma",
+      "identifier": "0x2d661C89D812261039AF9764eceaAee884f5F67F",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Plume",
+      "identifier": "0x222365EF19F7947e5484218551B56bb3965Aa7aF",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Polkadot Asset Hub",
+      "identifier": "1337",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Sei",
+      "identifier": "0xe15fC38F6D8c56aF07bbCBe3BAf5708A2Bf42392",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "Starknet",
+      "identifier": "0x033068F6539f8e6e6b131e6B2B814e6c34A5224bC66947c47DaB9dFeE93b35fb",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "World Chain",
+      "identifier": "0x79A02482A880bCe3F13E09da970dC34dB4cD24D1",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "X Layer",
+      "identifier": "0xB6CEceAB302E2E4948951eE7843FC24E92933061",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    },
+    {
+      "circle_label": "XDC",
+      "identifier": "0xfA2958CB79b0491CC627c1557F441eF849Ca8eb1",
+      "reason": "outside this pilot's scope (no reader wired); not read — not zero, not absent"
+    }
+  ],
+  "missing_core_ledgers_on_issuer_list": [],
+  "sum_by_evidence_kind": {
+    "STATE_PROOF_VERIFIED": {
+      "n_rows": 2,
+      "ledgers": [
+        "ethereum",
+        "noble"
+      ],
+      "sum_usdc_decimal": "50534544608.676788"
+    },
+    "OPERATOR_API": {
+      "n_rows": 16,
+      "ledgers": [
+        "solana",
+        "stellar",
+        "hedera",
+        "sui",
+        "xrpl",
+        "arbitrum",
+        "avalanche",
+        "base",
+        "celo",
+        "hyperevm",
+        "linea",
+        "optimism",
+        "polygon",
+        "sonic",
+        "unichain",
+        "zksync"
+      ],
+      "sum_usdc_decimal": "24768674436.010878481"
+    }
+  },
+  "sum_by_evidence_kind_core_seven_only": {
+    "STATE_PROOF_VERIFIED": {
+      "n_rows": 2,
+      "ledgers": [
+        "ethereum",
+        "noble"
+      ],
+      "sum_usdc_decimal": "50534544608.676788"
+    },
+    "OPERATOR_API": {
+      "n_rows": 5,
+      "ledgers": [
+        "solana",
+        "stellar",
+        "hedera",
+        "sui",
+        "xrpl"
+      ],
+      "sum_usdc_decimal": "9331135382.090097481"
+    }
+  },
+  "arithmetic_sum_of_mixed_evidence_reads": {
+    "label": "arithmetic sum of mixed-evidence reads, not a measured total",
+    "usdc_decimal": "75303219044.687666481",
+    "why_it_is_not_a_total": "rows are at different heights on different ledgers (never simultaneous); evidence strength differs per row; a CCTP burn on one ledger and its mint on another can fall on either side of two reads; ledgers listed by Circle but not read here are excluded; this is not Circle's outstanding USDC."
+  },
+  "same_thing_findings": {
+    "decimals_by_core_ledger": [
+      "ethereum=6",
+      "hedera=6",
+      "noble=6",
+      "solana=6",
+      "stellar=7",
+      "sui=6",
+      "xrpl=None"
+    ],
+    "note": "'Same thing' is tested only on what each ledger's own state exposes: the identifier Circle lists resolves on that ledger, the on-ledger symbol/metadata where one exists, the decimals, and a readable supply. Base-unit precision is not uniform (see decimals); XRPL has no integer base unit. Nothing here tests fungibility, redemption or backing."
+  },
+  "canonical_vs_bridged": {
+    "rule": "Only what Circle's page labels. Nothing is inferred.",
+    "every_row_is": "listed in Circle's 'USDC Mainnet Address' table",
+    "explicit_labels_on_page": [
+      "**The X Layer entry in the mainnet table is Circle-issued native USDC.** X Layer also has a separate bridged USDC representation, labeled `USDC.e`, which is not issued or backed by Circle. Use the address in the table for integrations that expect Circle-issued USDC."
+    ],
+    "unlabelled": "apart from the note(s) above, the page carries no per-row native/bridged label; no row here is called native or bridged on our own inference."
+  },
+  "not_evidence_of": [
+    "reserves",
+    "backing",
+    "redeemability",
+    "issuer solvency",
+    "the value of anything",
+    "circulating supply (issued supply only; no holder is excluded)",
+    "that a ledger's USDC is interchangeable with another's — only what each ledger's state says"
+  ],
+  "honesty": "Not a reserve attestation, not a proof of backing. A number labelled OPERATOR_API is one operator's API answer and is not a proof; two operators agreeing is still not a proof. STATE_PROOF_VERIFIED means a Merkle proof was checked here against a header's state commitment — the header itself was not checked against consensus. We measure and sign; we never tokenize, mint, custody or sell an instrument. No investment advice or price view.",
+  "iso20022_camt053_shape": {
+    "what_this_is": "A field mapping only: each per-ledger read laid out in the shape of an ISO 20022 camt.053 (BankToCustomerStatement) closing-balance row, which is what a bank reconciliation reads. BIS Project Agorá names pacs.008 / pacs.009 / camt.053 as its message set (https://www.bis.org/about/bisih/topics/fmis/agora/rvt.htm). No conformance is claimed; no message is produced or validated against the XSD.",
+    "field_map": {
+      "Stmt/Acct/Id/Othr/Id": "deployment_id (the ledger's token identifier as Circle lists it)",
+      "Stmt/Acct/Svcr": "ledger (the ledger is the 'servicer' in this mapping — an analogy, not a role)",
+      "Stmt/Bal/Tp/CdOrPrtry/Cd": "CLBD (closing booked) — here: supply at the recorded height",
+      "Stmt/Bal/Amt": "supply_decimal",
+      "Stmt/Bal/Amt/@Ccy": "UNMAPPED — USDC has no ISO 4217 code; camt.053 requires one. We do not choose a proprietary convention.",
+      "Stmt/Bal/Dt/DtTm": "observed_at",
+      "Stmt/ElctrncSeqNb": "height.number (block / ledger / slot / checkpoint)",
+      "Stmt/AddtlStmtInf": "evidence_kind + response_sha256",
+      "Stmt/Ntry": "UNMAPPED — no entries are read; this is a balance-only snapshot"
+    },
+    "rows": [
+      {
+        "Acct.Id": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "Acct.Svcr": "ethereum",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "50430781860.131977",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:41Z",
+        "ElctrncSeqNb": 26051941,
+        "AddtlStmtInf": "STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "Acct.Svcr": "solana",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "8217034486.977972",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:49Z",
+        "ElctrncSeqNb": 450242496,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "USDC-GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+        "Acct.Svcr": "stellar",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "351156763.2854447",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:50Z",
+        "ElctrncSeqNb": 64604829,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0.0.456858",
+        "Acct.Svcr": "hedera",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "450010110.000000",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:52Z",
+        "ElctrncSeqNb": 100361996,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+        "Acct.Svcr": "sui",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "308316102.717780",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:52Z",
+        "ElctrncSeqNb": 326606936,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "uusdc",
+        "Acct.Svcr": "noble",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "103762748.544811",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:54Z",
+        "ElctrncSeqNb": 60056091,
+        "AddtlStmtInf": "STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "5553444300000000000000000000000000000000.rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+        "Acct.Svcr": "xrpl",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "4617919.108900781",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:56Z",
+        "ElctrncSeqNb": 107218481,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+        "Acct.Svcr": "arbitrum",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "2936979871.811699",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:57Z",
+        "ElctrncSeqNb": 508654840,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+        "Acct.Svcr": "avalanche",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "400293471.158739",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:18:59Z",
+        "ElctrncSeqNb": 96099554,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "Acct.Svcr": "base",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "4294533060.719965",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:00Z",
+        "ElctrncSeqNb": 51760296,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0xcebA9300f2b948710d2653dD7B07f33A8B32118C",
+        "Acct.Svcr": "celo",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "15228623.488166",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:02Z",
+        "ElctrncSeqNb": 78409182,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0xb88339CB7199b77E23DB6E890353E22632Ba630f",
+        "Acct.Svcr": "hyperevm",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "6833999685.532186",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:03Z",
+        "ElctrncSeqNb": 46821059,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x176211869cA2b568f2A7D4EE941E073a821EE1ff",
+        "Acct.Svcr": "linea",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "24249450.507182",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:05Z",
+        "ElctrncSeqNb": 32136842,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85",
+        "Acct.Svcr": "optimism",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "166249049.371377",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:07Z",
+        "ElctrncSeqNb": 157355585,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+        "Acct.Svcr": "polygon",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "605542291.149054",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:08Z",
+        "ElctrncSeqNb": 94403206,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x29219dd400f2Bf60E5a23d13Be72B486D4038894",
+        "Acct.Svcr": "sonic",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "126238586.178445",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:09Z",
+        "ElctrncSeqNb": 79869922,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x078D782b760474a361dDA0AF3839290b0EF57AD6",
+        "Acct.Svcr": "unichain",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "23588472.591813",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:11Z",
+        "ElctrncSeqNb": 59561588,
+        "AddtlStmtInf": "OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4",
+        "Acct.Svcr": "zksync",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "10636491.412155",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T04:19:13Z",
+        "ElctrncSeqNb": 72209107,
+        "AddtlStmtInf": "OPERATOR_API"
+      }
+    ],
+    "statement_date": "2026-09-25"
+  },
+  "request_log": [
+    {
+      "url": "https://developers.circle.com/stablecoins/usdc-contract-addresses.md",
+      "status": 200,
+      "sha256": "15a692cfa55bba37f19e2470f4d759fe2b24ebd690669341d89e9894c1b3a3c2",
+      "bytes": 19749
+    },
+    {
+      "url": "https://developers.circle.com/stablecoins/usdc-contract-addresses",
+      "status": 200,
+      "sha256": "2c2d04389ee9773df06a8aaf2e9cdef56d3395277fea66071710f36a21326dd2",
+      "bytes": 377839
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "c5e652b908bcc731e8b401c9cac77267062654f71e681e4da9cad5d991f05dde",
+      "bytes": 26714
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "cba4159c19cfb3982bbc9ce9d8068a7a441099a07eb255cf01c809d1b2836e71",
+      "bytes": 230
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "502ae477ea7837e5d42e135a3c8bdcb19c686ee1bfe27800b559a053c3fc76c7",
+      "bytes": 230
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "11cac781562ceb07d4561d96647b60f7f6d3489f0c9b41e6f5f8ffb1bb2fa490",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "bac3bd342410bf4e9ca56d897f4e32e79f81b1d82b0c8a857465469ada56352c",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "4a14d0091da504ae0003a51f569871c7f046a12a4d4b50734dc967a7102145a4",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "c826ac8cc1730208cb0bbf68267ba32245613efd6f494ce496880172c622c60a",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "4d1991f97346835daffc0d4c3962ffc4fcd23e903ea375f81d854f08219aecbb",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "c388f46b5fb3a850ecaff6cf21c763badae476571f480ea738727e4d4ffe762d",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "dc7fdc43d2ce0b2c73ddfa520f340d5f0112ffcbe074ed7e122bd092612732e6",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "11cac781562ceb07d4561d96647b60f7f6d3489f0c9b41e6f5f8ffb1bb2fa490",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "a740e462d0f0c5fb2cfb8b5f7fbca5a3a134a7de7ac16e11467b49f22619c985",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "30fca5307f28eef9dc52990c1e9e2f8f5021f97ceb33c9a7051eb78c8e109052",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "bac3bd342410bf4e9ca56d897f4e32e79f81b1d82b0c8a857465469ada56352c",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "f899e20aec0892e31ee3593c36956e6c03ff695c8951cc1fca46bf4992645e36",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "9861cf2f99027fa7e8e2ce1fe795f9720f882526a4fd730e66ec6efc159fecd2",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "03eeba832ea35e4ad5f8f6f5ee499c42ca9440322d561dfea607806e95cb508f",
+      "bytes": 102
+    },
+    {
+      "url": "https://eth.drpc.org",
+      "status": 200,
+      "sha256": "0f4361550f91612292ca6e2f1cdc04f249a114ee75e781be3329a4b3378c3b39",
+      "bytes": 14585
+    },
+    {
+      "url": "https://rpc.mevblocker.io",
+      "status": 200,
+      "sha256": "24952947823e088146bcdd312991bd7e15c22f98c7eb8d1b8735addc1e3cee4e",
+      "bytes": 26714
+    },
+    {
+      "url": "https://rpc.mevblocker.io",
+      "status": 200,
+      "sha256": "da1d13e7dd6bf04e9e5817c9921451a2912950c7791056ba31857af6efd6001c",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.mainnet-beta.solana.com",
+      "status": 200,
+      "sha256": "17375258c7afac06519b3ac6755a2bd127acf40c92c4367d4257c8776596d6e1",
+      "bytes": 203
+    },
+    {
+      "url": "https://solana.leorpc.com/?api_key=FREE",
+      "status": 200,
+      "sha256": "971f8faab6cdf64fb35e553674ec75473c644f8be05a81ffe85f1e70673f95e2",
+      "bytes": 203
+    },
+    {
+      "url": "https://horizon.stellar.org/",
+      "status": 200,
+      "sha256": "de5194843772b5a8acbe43e4e5ee65f83cb9a97795f16902d79f3e1183b4f765",
+      "bytes": 4332
+    },
+    {
+      "url": "https://horizon.stellar.org/assets?asset_code=USDC&asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "status": 200,
+      "sha256": "8f407b146d6fb878824b9e2a74beef7797233f80e54d4f430c38a088c41c671a",
+      "bytes": 2085
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/",
+      "status": 200,
+      "sha256": "b185940dcba8209b81f0be77ca2e35d1900a1013819e7ba3e8c03c23a115a3c3",
+      "bytes": 4470
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/assets?asset_code=USDC&asset_issuer=GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN",
+      "status": 200,
+      "sha256": "1836b6306e441f716700758796333331d5fde1a78f44bfe0cac63420050bcb3f",
+      "bytes": 2103
+    },
+    {
+      "url": "https://mainnet-public.mirrornode.hedera.com/api/v1/blocks?limit=1&order=desc",
+      "status": 200,
+      "sha256": "a268507da98208b437e0bc3a4bdd08073644f5295809b04cd44068425211ab94",
+      "bytes": 530
+    },
+    {
+      "url": "https://mainnet-public.mirrornode.hedera.com/api/v1/tokens/0.0.456858",
+      "status": 200,
+      "sha256": "ea183e353e52b0f9354ffa9f257b06d834a316c252e5c134c3d03dea1a140791",
+      "bytes": 1760
+    },
+    {
+      "url": "https://mainnet.mirrornode.hedera.com/api/v1/tokens/0.0.456858",
+      "status": 200,
+      "sha256": "ea183e353e52b0f9354ffa9f257b06d834a316c252e5c134c3d03dea1a140791",
+      "bytes": 1760
+    },
+    {
+      "url": "https://graphql.mainnet.sui.io/graphql",
+      "status": 200,
+      "sha256": "d80e44ee00f9c9171f5200eb665f617e66642a382fe09cef3e32cc7629904c9b",
+      "bytes": 234
+    },
+    {
+      "url": "https://sui-mainnet-endpoint.blockvision.org",
+      "status": 200,
+      "sha256": "fee0929f5d6661d1b112f75d89679f148db6252a2dedab6386ac0a9e6fa75017",
+      "bytes": 61
+    },
+    {
+      "url": "https://sui-mainnet-endpoint.blockvision.org",
+      "status": 200,
+      "sha256": "11aefd7c84a14337578b2de81ae514436ce3241b8699e3d4f031f15b9c427d9b",
+      "bytes": 45
+    },
+    {
+      "url": "https://noble-rpc.polkachu.com/status",
+      "status": 200,
+      "sha256": "68ada3a0451768033c46d44b9fd18a4f2b44e49289daae0e1a6a891065da2785",
+      "bytes": 961
+    },
+    {
+      "url": "https://noble-api.polkachu.com/cosmos/bank/v1beta1/denoms_metadata/uusdc",
+      "status": 200,
+      "sha256": "5c55a7e6f18e17c658748a62c4529edcf619981e97796af4fd5a72f91116f56f",
+      "bytes": 230
+    },
+    {
+      "url": "https://noble-api.polkachu.com/cosmos/bank/v1beta1/supply/by_denom?denom=uusdc",
+      "status": 200,
+      "sha256": "a6285e0324e5a91fb3978c7ee1b8fa780aab515c3c51a9011bdbfadf5a40e099",
+      "bytes": 55
+    },
+    {
+      "url": "https://noble-rpc.polkachu.com/block?height=60056092",
+      "status": 200,
+      "sha256": "53b094a68dee160ddbaa16fe33490b40a5ec85759f673616af1c850e00874bed",
+      "bytes": 3167
+    },
+    {
+      "url": "https://noble-rpc.polkachu.com/abci_query?path=%22/store/bank/key%22&data=0x007575736463&height=60056091&prove=true",
+      "status": 200,
+      "sha256": "d176a7d6a638c14095991340bd8ff63e55c4456da952b009e30084d9787145d2",
+      "bytes": 1929
+    },
+    {
+      "url": "https://rpc.lavenderfive.com:443/noble/status",
+      "status": 200,
+      "sha256": "b29cdf03b62e7bb06dc3a5bb5e6440a57c2c0f5acfe0706e8593bb50e08e056a",
+      "bytes": 1123
+    },
+    {
+      "url": "https://rest.lavenderfive.com:443/noble/cosmos/bank/v1beta1/supply/by_denom?denom=uusdc",
+      "status": 200,
+      "sha256": "a6285e0324e5a91fb3978c7ee1b8fa780aab515c3c51a9011bdbfadf5a40e099",
+      "bytes": 55
+    },
+    {
+      "url": "https://rpc.lavenderfive.com:443/noble/block?height=60056092",
+      "status": 200,
+      "sha256": "53b094a68dee160ddbaa16fe33490b40a5ec85759f673616af1c850e00874bed",
+      "bytes": 3167
+    },
+    {
+      "url": "https://s1.ripple.com:51234/",
+      "status": 200,
+      "sha256": "cf423164b07da0b63b3aa28eac7c90070b6ddb72e1a388a0c26d624cb41353e9",
+      "bytes": 571
+    },
+    {
+      "url": "https://xrplcluster.com/",
+      "status": 200,
+      "sha256": "dcf83599639a17ee20102d14f71246ea68bb6474a234743b3f4747bb205b08ee",
+      "bytes": 414
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "7702a9534531e94786c2f6241facde0db0cc71c4e1d731aefa3da6adb32e965e",
+      "bytes": 47
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "99f125db544110229b224070023dc640c5de91da2673a06971b5bd7289e3012f",
+      "bytes": 1755
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "787e294e4262cf75f90ccdf0ed6f59c65b253f4a0ce939d7ff15a732b0f50007",
+      "bytes": 231
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "f470abc1e2ed21fbb5f74ae7897a7b902ed5e7b134d7f0cd5a5731ebff2690da",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "7c39b1a9cbe73a3f6b6a0e1cb4fb31700b59374fa6898308576447c1fecb1bf0",
+      "bytes": 103
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "5db08b5602e7bc0d3c3b24231f2ef3cb235f886147ca1f718529caecbdad3d99",
+      "bytes": 46
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "ece35df871cdadc738a6efb12530baffe4b1a0e7bf48d96c65c5b35c4de1988e",
+      "bytes": 2340
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "787e294e4262cf75f90ccdf0ed6f59c65b253f4a0ce939d7ff15a732b0f50007",
+      "bytes": 231
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f470abc1e2ed21fbb5f74ae7897a7b902ed5e7b134d7f0cd5a5731ebff2690da",
+      "bytes": 103
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "3e172b75ef78aee97cd83ad07467eb6c7acccf778f3dcc56a8cc6bbcb0dc4f92",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "1af32abe3abe22a4796261d557d72dfd64095f0310c604cee0f6393351b78b54",
+      "bytes": 46
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "b82e79f53a0565d5b19b93d67b026877a2effcc985c5ad21ba66cf6068a2d84f",
+      "bytes": 15168
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
+      "bytes": 231
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "cb62376e6c020431878e57588d2a47b230113f4a8d50bb200b54c1c75b40a1b7",
+      "bytes": 103
+    },
+    {
+      "url": "https://forno.celo.org",
+      "status": 200,
+      "sha256": "1460d91245f56a08dffd62473fc13a43864f6ac8965b75c9a0b9cd8027679765",
+      "bytes": 46
+    },
+    {
+      "url": "https://forno.celo.org",
+      "status": 200,
+      "sha256": "3c9bc17ab3de1ff23c8ef1a47a1f46053f414b95a60a167a6acfdeaa08c5d3fe",
+      "bytes": 2054
+    },
+    {
+      "url": "https://forno.celo.org",
+      "status": 200,
+      "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
+      "bytes": 231
+    },
+    {
+      "url": "https://forno.celo.org",
+      "status": 200,
+      "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
+      "bytes": 103
+    },
+    {
+      "url": "https://forno.celo.org",
+      "status": 200,
+      "sha256": "6ad3ae126aed050cc6ad1191f64c2382e9d997e00d0c3e5f5dabb04705bea3b3",
+      "bytes": 103
+    },
+    {
+      "url": "https://rpc.hyperliquid.xyz/evm",
+      "status": 200,
+      "sha256": "eb86e3ded1b01f925f87fb3664b262880e4dff2c28d62e3839515523491e954f",
+      "bytes": 45
+    },
+    {
+      "url": "https://rpc.hyperliquid.xyz/evm",
+      "status": 200,
+      "sha256": "c305e29997cfb1c64587437632ee037b3425593b54773ba5a13c4583f7bb790e",
+      "bytes": 1721
+    },
+    {
+      "url": "https://rpc.hyperliquid.xyz/evm",
+      "status": 200,
+      "sha256": "1327ae5ea5e35139befdbbb03e44a308ef176092224ec000b05c3f8d5143b287",
+      "bytes": 230
+    },
+    {
+      "url": "https://rpc.hyperliquid.xyz/evm",
+      "status": 200,
+      "sha256": "0665affd45e46e65eca43e938fe63e22a8ceece0894abfa49d43d468655f681e",
+      "bytes": 102
+    },
+    {
+      "url": "https://rpc.hyperliquid.xyz/evm",
+      "status": 200,
+      "sha256": "105d541303154a99c8eae760b34e0cc40d42f5106bbcaa65c6eb1994cb621b90",
+      "bytes": 102
+    },
+    {
+      "url": "https://rpc.linea.build",
+      "status": 200,
+      "sha256": "acffaaa0c6bc2bf8d184a7e9a191945ce74e7a2b958afb575638256264042593",
+      "bytes": 45
+    },
+    {
+      "url": "https://rpc.linea.build",
+      "status": 200,
+      "sha256": "5b974681ab2d2d4a7ea91d00ea85271e9b369158736aa17f0cc917df16d9083f",
+      "bytes": 1865
+    },
+    {
+      "url": "https://rpc.linea.build",
+      "status": 200,
+      "sha256": "787e294e4262cf75f90ccdf0ed6f59c65b253f4a0ce939d7ff15a732b0f50007",
+      "bytes": 231
+    },
+    {
+      "url": "https://rpc.linea.build",
+      "status": 200,
+      "sha256": "f470abc1e2ed21fbb5f74ae7897a7b902ed5e7b134d7f0cd5a5731ebff2690da",
+      "bytes": 103
+    },
+    {
+      "url": "https://rpc.linea.build",
+      "status": 200,
+      "sha256": "f09c5394fce62f634046529382c6ec8f7c079c5b0ebd243d03ce9ba7a71671cb",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.optimism.io",
+      "status": 200,
+      "sha256": "f185f0c1d5e41ee3d1f6ffd6d5c9a6dc0ea1723a5cfe6a3eb7b1158aadbeaf3c",
+      "bytes": 46
+    },
+    {
+      "url": "https://mainnet.optimism.io",
+      "status": 200,
+      "sha256": "e7461433ce0bb0a4dfb34e742e7068e1c5b3ac55086908004e5051d0f3d75eb4",
+      "bytes": 5296
+    },
+    {
+      "url": "https://mainnet.optimism.io",
+      "status": 200,
+      "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
+      "bytes": 231
+    },
+    {
+      "url": "https://mainnet.optimism.io",
+      "status": 200,
+      "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.optimism.io",
+      "status": 200,
+      "sha256": "1ce0b1cd293f4007f8a4d1d6b637c6f8fd43a563984b93d772de1248c8a7208d",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "c358f190c9dc2410e95a9a2199ae0425686f3e1f08d0728837415afc4cceeece",
+      "bytes": 46
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "545835978b86d3aefacc8c24738f45b532ef8054539e04ea66a25ad9d72cd076",
+      "bytes": 9292
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "787e294e4262cf75f90ccdf0ed6f59c65b253f4a0ce939d7ff15a732b0f50007",
+      "bytes": 231
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f470abc1e2ed21fbb5f74ae7897a7b902ed5e7b134d7f0cd5a5731ebff2690da",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "b8f7cd4a03e1592ab094ecacfca9685a85837039de6b0a71689fc6bb419831ee",
+      "bytes": 103
+    },
+    {
+      "url": "https://rpc.soniclabs.com",
+      "status": 200,
+      "sha256": "040841cd81da9ec5fd2370b6255422a36e0f4438c6c1a90c49cb51282be15486",
+      "bytes": 45
+    },
+    {
+      "url": "https://rpc.soniclabs.com",
+      "status": 200,
+      "sha256": "d1c49025b0ed9e286359629a36fb3486535487ed885b4366c90c1293570facb9",
+      "bytes": 1722
+    },
+    {
+      "url": "https://rpc.soniclabs.com",
+      "status": 200,
+      "sha256": "787e294e4262cf75f90ccdf0ed6f59c65b253f4a0ce939d7ff15a732b0f50007",
+      "bytes": 231
+    },
+    {
+      "url": "https://rpc.soniclabs.com",
+      "status": 200,
+      "sha256": "f470abc1e2ed21fbb5f74ae7897a7b902ed5e7b134d7f0cd5a5731ebff2690da",
+      "bytes": 103
+    },
+    {
+      "url": "https://rpc.soniclabs.com",
+      "status": 200,
+      "sha256": "7b15d2508f50defd30808cec0b20642ef33168a2e8ecfb80f060bfb4ef8a373e",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.unichain.org",
+      "status": 200,
+      "sha256": "262482bebb21313744bc04b094070b4bf07e87f3bc6be34e0d5ad25ec4e162dc",
+      "bytes": 46
+    },
+    {
+      "url": "https://mainnet.unichain.org",
+      "status": 200,
+      "sha256": "c5057cac5527c91ed477df67072feca31fc6259a9a6ad15d1163e7b647016395",
+      "bytes": 2673
+    },
+    {
+      "url": "https://mainnet.unichain.org",
+      "status": 200,
+      "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
+      "bytes": 231
+    },
+    {
+      "url": "https://mainnet.unichain.org",
+      "status": 200,
+      "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.unichain.org",
+      "status": 200,
+      "sha256": "33d4d621c07ee0e5766be80c0e318d046484442c3a4b3f96002f64bfcf5742bf",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.era.zksync.io",
+      "status": 200,
+      "sha256": "578f6e555fffa23bff5713107a7357df2537fe6f3044a1aa81d7ea931182a7d9",
+      "bytes": 46
+    },
+    {
+      "url": "https://mainnet.era.zksync.io",
+      "status": 200,
+      "sha256": "d2e7e44b24bfff44ad0e12b352e594663da4c9cdc7f3365f73e3c01a66759c9a",
+      "bytes": 1574
+    },
+    {
+      "url": "https://mainnet.era.zksync.io",
+      "status": 200,
+      "sha256": "9f08a6876fc69f4db84065558eb4d30d696a0a1846c247950484639905382c59",
+      "bytes": 231
+    },
+    {
+      "url": "https://mainnet.era.zksync.io",
+      "status": 200,
+      "sha256": "b9affdcdc9ebdd0148b7e901e8839657e1a9bb488878788e7234df75a6d8099e",
+      "bytes": 103
+    },
+    {
+      "url": "https://mainnet.era.zksync.io",
+      "status": 200,
+      "sha256": "45093ea00c965c778bd5d74c010b05e9dc27c2047ce03bb3690671a2a5717b24",
+      "bytes": 103
+    }
+  ]
+}
