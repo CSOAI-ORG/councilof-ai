@@ -1,6 +1,22 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import {
+  FEED_GROUPS,
+  FLEET_STATUS_URL,
+  EVIDENCE_MANIFEST_URL,
+  SITE_OTS_MANIFEST_URL,
+  fleetView,
+  fundingRow,
+  evidenceRows,
+  censusRows,
+  proofUrlsFrom,
+  timestampRows,
+  type FleetJob,
+  type FleetStatusPublic,
+  type EvidenceManifest,
+  type SiteOtsManifest,
+} from "../lib/statusFeeds";
 
 /**
  * /status — service status, read live, component by component.
@@ -23,14 +39,19 @@ import { Link } from "wouter";
  *   · No uptime percentage, no incident history and no SLA are invented. The
  *     incident row is UNAVAILABLE until a producer publishes one.
  *   · Measurement, not certification. Not a grade.
+ *   · 2026-09-25 (publication bus): fleet jobs, funding colour, evidence records, census as_of
+ *     and timestamp proofs are read live too (client/src/lib/statusFeeds.ts). A source that
+ *     cannot be read there is UNMEASURED and shows no figure — never a cached one.
  */
 
-type State = "OK" | "DEGRADED" | "UNAVAILABLE" | "UNKNOWN";
+type State = "OK" | "DEGRADED" | "UNAVAILABLE" | "UNKNOWN" | "UNMEASURED";
 
 type Row = {
   group: string;
   label: string;
   state: State;
+  /** Display word for the badge when it is not the state itself (e.g. a funding colour). */
+  badge?: string;
   observation: string;
   /** ISO timestamp the SOURCE published, or null when it publishes none. */
   observedAt: string | null;
@@ -40,6 +61,17 @@ type Row = {
 };
 
 type Read<T> = { ok: true; body: T; readAt: string } | { ok: false; error: string; readAt: string };
+
+async function readBytes(url: string): Promise<Read<Uint8Array>> {
+  const readAt = new Date().toISOString();
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) return { ok: false, error: `HTTP ${response.status}`, readAt };
+    return { ok: true, body: new Uint8Array(await response.arrayBuffer()), readAt };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "unreachable", readAt };
+  }
+}
 
 async function readJson<T>(path: string, init?: RequestInit): Promise<Read<T>> {
   const readAt = new Date().toISOString();
@@ -67,6 +99,7 @@ const GROUPS = [
   "Verification resources",
   "Measurement queue",
   "Publication mirrors",
+  ...FEED_GROUPS,
   "Incidents",
 ] as const;
 
@@ -75,6 +108,7 @@ const STATE_TONE: Record<State, string> = {
   DEGRADED: "border-amber-400/40 bg-amber-500/10 text-amber-200",
   UNAVAILABLE: "border-rose-400/40 bg-rose-500/10 text-rose-200",
   UNKNOWN: "border-slate-500/40 bg-slate-500/10 text-slate-300",
+  UNMEASURED: "border-slate-400/50 bg-slate-800 text-slate-200",
 };
 
 function unknownRow(group: string, label: string, error: string, readAt: string, href: string): Row {
@@ -91,6 +125,7 @@ function unknownRow(group: string, label: string, error: string, readAt: string,
 
 export default function YieldStatus() {
   const [rows, setRows] = useState<Row[]>([]);
+  const [fleetJobs, setFleetJobs] = useState<FleetJob[]>([]);
   const [loadedAt, setLoadedAt] = useState<string | null>(null);
 
   useEffect(() => {
@@ -118,6 +153,24 @@ export default function YieldStatus() {
           headers: { accept: "application/vnd.github+json" },
         }),
       ]);
+
+      // Fleet, funding, evidence records and timestamps — each from its own source, no-store.
+      // readJson never rejects (a failure is a Read with ok:false), so each row stays independent.
+      const fleetP = readJson<FleetStatusPublic>(FLEET_STATUS_URL);
+      const evidenceP = readJson<EvidenceManifest>(EVIDENCE_MANIFEST_URL);
+      const siteOtsP = readJson<SiteOtsManifest>(SITE_OTS_MANIFEST_URL);
+      const fleetRead = await fleetP;
+      const evidenceRead = await evidenceP;
+      const siteOtsRead = await siteOtsP;
+      const proofReads = await Promise.all(proofUrlsFrom(evidenceRead).map((u) => readBytes(u)));
+      const fleet = fleetView(fleetRead);
+      const feedRows: Row[] = [
+        ...fleet.rows,
+        fundingRow(fleetRead),
+        ...evidenceRows(evidenceRead, Date.now()),
+        ...censusRows(evidenceRead),
+        ...timestampRows(siteOtsRead, proofReads, evidenceRead),
+      ];
 
       const settled = <T,>(entry: PromiseSettledResult<Read<T>>): Read<T> =>
         entry.status === "fulfilled"
@@ -331,7 +384,10 @@ export default function YieldStatus() {
         href: "/refutation-ledger",
       });
 
+      next.push(...feedRows);
+
       if (!cancelled) {
+        setFleetJobs(fleet.jobs);
         setRows(next);
         setLoadedAt(new Date().toISOString());
       }
@@ -365,6 +421,7 @@ export default function YieldStatus() {
           <div><dt className="inline font-bold text-amber-200">DEGRADED</dt> — <dd className="inline">it answered, but not with that field.</dd></div>
           <div><dt className="inline font-bold text-rose-200">UNAVAILABLE</dt> — <dd className="inline">the source says the component is down, or no source exists.</dd></div>
           <div><dt className="inline font-bold text-slate-200">UNKNOWN</dt> — <dd className="inline">this page could not read it. Not evidence either way.</dd></div>
+          <div><dt className="inline font-bold text-slate-200">UNMEASURED</dt> — <dd className="inline">the source could not be read, so no figure is shown; a cached value is never substituted.</dd></div>
         </dl>
         <p className="mt-3 font-mono text-[11px] text-slate-500">
           {loadedAt ? `page read completed at ${loadedAt} (this browser's clock)` : "reading…"}
@@ -388,7 +445,7 @@ export default function YieldStatus() {
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="text-sm font-semibold text-slate-100">{r.label}</div>
                         <span className={`rounded-full border px-2 py-0.5 font-mono text-[11px] font-bold ${STATE_TONE[r.state]}`}>
-                          {r.state}
+                          {r.badge ?? r.state}
                         </span>
                       </div>
                       <div className="mt-2 text-sm text-slate-300">{r.observation}</div>
@@ -414,6 +471,28 @@ export default function YieldStatus() {
                   ))
                 )}
               </ul>
+              {group === "Fleet jobs" && fleetJobs.length > 0 ? (
+                <div className="mt-3 overflow-x-auto" data-testid="fleet-jobs">
+                  <table className="w-full text-left font-mono text-[11px] text-slate-300">
+                    <thead>
+                      <tr className="border-b border-slate-700 text-slate-500">
+                        <th className="py-1 pr-3">job</th>
+                        <th className="py-1 pr-3">state</th>
+                        <th className="py-1">last OK (the job&apos;s own signal)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {fleetJobs.map((j) => (
+                        <tr key={j.id} className="border-b border-slate-800">
+                          <td className="py-1 pr-3">{j.id}</td>
+                          <td className="py-1 pr-3">{j.state}</td>
+                          <td className="py-1">{j.last_ok ?? "never read OK"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : null}
             </section>
           );
         })}
