@@ -74,13 +74,20 @@
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache, must-revalidate
 
-# The original MPC bytes remain verifiable but are not current: their signed
-# summary overstates financial-run signatures and preserves unscoped historical
-# leader notes. Keep the bytes untouched and make the relying-party state visible
-# at the HTTP boundary as well as in the adjacent status document.
+# The 2026-09-02 MPC bytes remain verifiable but are not current: superseded on
+# 2026-09-25 by a dated freeze of the 23-slot board (single key #board-attestation-1).
+# Their signed summary also overstates financial-run signatures and custody separation.
+# Keep the bytes untouched and make the relying-party state visible at the HTTP
+# boundary as well as in the adjacent status document.
 /signed/gspc-board.signed.json
-  X-CSOAI-Artifact-State: SUPERSEDED_KNOWN_CLAIM_DEFECT
-  Link: </signed/gspc-board.status.json>; rel="status", </api/gspc>; rel="current"
+  X-CSOAI-Artifact-State: SUPERSEDED_BY
+  Link: </signed/gspc-board.status.json>; rel="status", </signed/gspc-board.2026-09-25.signed.json>; rel="successor-version", </api/gspc>; rel="current"
+  Cache-Control: no-cache, must-revalidate
+
+# The dated freeze. Its bytes never change; whether it is still current is decided per
+# request by /api/state (board.live_derivation_crosscheck.signed_snapshot_agrees).
+/signed/gspc-board.2026-09-25.signed.json
+  Link: </signed/gspc-board.2026-09-25.status.json>; rel="status", </signed/gspc-board.signed.json>; rel="predecessor-version", </api/gspc>; rel="current"
   Cache-Control: no-cache, must-revalidate
 
 # The generated human indexes for the evidence tree (scripts/generate-signed-index.mjs).

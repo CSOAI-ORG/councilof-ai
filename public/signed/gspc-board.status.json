@@ -1,17 +1,49 @@
 {
   "schema": "csoai.signed-artifact-status/1",
   "artifact": "/signed/gspc-board.signed.json",
-  "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+  "state": "SUPERSEDED_BY",
   "current": false,
-  "identified_on": "2026-09-04",
-  "relying_party_action": "DO_NOT_USE_AS_CURRENT_BOARD; use GET /api/gspc",
+  "superseded_by": "/signed/gspc-board.2026-09-25.signed.json",
+  "superseded_by_status": "/signed/gspc-board.2026-09-25.status.json",
+  "superseded_on": "2026-09-25",
+  "frozen_at": "2026-09-02",
+  "frozen_at_source": "ceremony C-2026-0902-09 (GET /api/corrections); commit 3b3f3706d landed the file 2026-09-02",
+  "relying_party_action": "DO_NOT_USE_AS_CURRENT_BOARD; read the superseding freeze or GET /api/gspc",
   "current_authority": "/api/gspc",
+  "history": [
+    {
+      "state": "CURRENT",
+      "from": "2026-09-02",
+      "note": "22 axis · 22 measured, agreeing with the live axis arrays of that date."
+    },
+    {
+      "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+      "from": "2026-09-04",
+      "note": "Reliance withdrawn for the two known claim defects below; counts still agreed."
+    },
+    {
+      "state": "COUNTS_STALE",
+      "from": "2026-09-16",
+      "note": "Slot 23 (effect-binding) was added as a declared slot (commit 03fa1aa80): live 23 slots vs this file's 22. Measured count diverged 2026-09-22 (commit dba6efea6, live 23 · 23)."
+    },
+    {
+      "state": "SUPERSEDED_BY",
+      "from": "2026-09-25",
+      "note": "A new dated freeze of the live board, signed under a different key, supersedes this file. This file's bytes are unchanged and still verify."
+    }
+  ],
   "integrity": {
     "state": "VERIFIED",
     "sha256_file_bytes": "9b892fbe46648787096b7d218bfa6aa91536a07f6de37650b98eace84eb2d34b",
     "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
     "signer": "did:web:csoai.org#gspc-board-22axis-2026",
     "note": "The original MPC-signed bytes remain unchanged and verify. Integrity of a signed historical statement does not make every statement inside it true."
+  },
+  "custody_truth": {
+    "claimed_in_signed_bytes": "3-party MPC (Coinbase cb-mpc, Ed25519 additive), owner's own Oracle tenancy",
+    "measured_2026_09_25": "All three additive shares of key gspc-board-22axis-2026 are files in ONE directory (custody-store/keys/gspc-board-22axis-2026/share_0..2.blob) on ONE host (oracle-micro-2), used by ONE loopback service process (custody.service, running since 2026-09-02). That is one failure domain: whoever holds that account can sign. The 2-of-3 split described in the host's CEREMONY.md (one share off the host) has not been carried out — no board-2of3 store exists.",
+    "reading": "The signature is a stock Ed25519 signature and verifies. 'Multi-party' describes the signing protocol, not separated custody. Read '3-party MPC' in this file as three shares on one machine.",
+    "not_verified_here": "That the cb-mpc helper never assembles a whole private scalar is the helper's design claim; it was not audited in this correction."
   },
   "known_claim_defects": [
     {
@@ -26,13 +58,18 @@
       "location": "axes[*].measurement_note",
       "evidence_state": "SUPERSEDED_FOR_PUBLIC_RANKING",
       "note": "Some historical notes describe excluded or uncarded leaders as separated or tied while the current public fields correctly say separation=UNTESTED. GET /api/gspc now scopes those notes as historical records that do not assert current public fields."
+    },
+    {
+      "code": "CUSTODY_SEPARATION_OVERCLAIM",
+      "location": "custody_attestation.custody, custody_attestation.custody_note",
+      "evidence_state": "THREE_SHARES_ONE_HOST",
+      "note": "The custody text implies three independent parties; all three shares are on oracle-micro-2. See custody_truth. Identified 2026-09-25."
     }
   ],
+  "known_claim_defects_note": "These remain true of THIS file's signed bytes, which are never edited. The superseding freeze is a snapshot of the board as served on 2026-09-25, which already corrects the first two (sweep_note now states 2 signed and 7 content-addressed run artifacts; historical leader notes are scoped).",
   "replacement": {
-    "state": "OWNER_MPC_RESIGN_REQUIRED",
-    "snapshot_command": "node scripts/gspc-board-snapshot.mjs .gspc-work/gspc-board.snapshot.json",
-    "sign_command": "node scripts/gspc-board-sign.mjs .gspc-work/gspc-board.snapshot.json public/signed/gspc-board.signed.json",
-    "verification_command": "node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json",
-    "note": "Do not change this status to CURRENT until the replacement snapshot is produced by the live-board snapshot script, signed through the documented three-party MPC custody, and verified offline."
+    "state": "DONE_BY_SUPERSESSION",
+    "superseded_by": "/signed/gspc-board.2026-09-25.signed.json",
+    "note": "Not re-signed through the MPC custody. The replacement is a new file signed by did:web:csoai.org#board-attestation-1 (single key, Pages secret) via scripts/gspc-board-attest.mjs. Its custody is stated as exactly that. See docs/corrections/2026-09-25-board-snapshot-refreeze.md."
   }
 }
