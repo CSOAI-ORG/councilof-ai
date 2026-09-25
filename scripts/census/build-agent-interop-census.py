@@ -27,6 +27,13 @@ _src = _full if _os.path.exists(_full) else _bounded
 mcp = json.load(open(_src)); mcp["_source_file"]=_src
 hfs = json.load(open("/tmp/hf_spaces_census.json"))
 
+# Fail closed (2026-09-25): completeness is the collector's EXPLICIT read_state, never
+# "anything but in-progress". Legacy files without read_state are PARTIAL. See read_state.py.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from read_state import walk_read_state, EXHAUSTED  # noqa: E402
+MCP_READ_STATE = walk_read_state(mcp, _src, bounded_files=(_bounded,))
+HFS_READ_STATE = walk_read_state(hfs)
+
 rows = []
 
 # 1. official MCP registry
@@ -218,10 +225,13 @@ totals = {
     "mcp_registry_pages_read": mcp["pages"],
     "mcp_registry_source_file": mcp.get("_source_file"),
     "mcp_registry_stop_reason": mcp["stop_reason"],
-    "mcp_registry_enumeration_complete": mcp["stop_reason"] != "in-progress",
+    "mcp_registry_read_state": MCP_READ_STATE,
+    "mcp_registry_enumeration_complete": MCP_READ_STATE == EXHAUSTED,
+    "mcp_registry_population_total": mcp["unique_entries"] if MCP_READ_STATE == EXHAUSTED else None,
     "mcp_registry_is_latest": latest,
     "mcp_registry_exposing_remote_endpoint": remote,
     "hf_spaces_pages_read": hfs["pages"],
+    "hf_spaces_read_state": HFS_READ_STATE,
     "rows_with_repo_url": with_repo,
     "github_topic_repo_counts": topics,
     "github_mcp_server_by_licence": licences,

@@ -61,3 +61,28 @@ The 31 Aug 2026 baseline digest is committed as
 
 Hub webhooks are limited to 1,000 events/day and cannot replace this census.
 SOV3 registration is out of band (port 3101).
+
+## Census frame (`frame.py`) — every public agent-endpoint catalogue, read to exhaustion or labelled
+
+```bash
+python3 scripts/census/frame.py --out /evac-bulk/census-frame-YYYY-MM-DD   # ~10 min, 1 req/s
+python3 scripts/census/frame.py --top20 --frame /evac-bulk/census-frame-YYYY-MM-DD   # plan only
+python3 scripts/census/frame.py --self-test        # offline: truncated page -> null totals
+python3 -m unittest scripts/census/test_frame.py   # offline, fixtures in fixtures/frame/
+```
+
+Sources: official MCP registry (`version=latest`, cursor), HF Spaces `filter=mcp-server`
+(Link header), a2aregistry.org (offset, declared total), docker/mcp-registry (tree + tarball
+of one commit), Smithery (anonymous cap: always PARTIAL). x402 bazaars are read by
+`x402-bazaar-conformance.py`, not here.
+
+Each source ends `EXHAUSTED`, `PARTIAL` or `FAILED`; `population_total` is `null` unless
+`EXHAUSTED`, and the union total is `null` unless every source is. An error body, a non-200,
+a cut page or a repeated cursor is never an end. Raw pages are kept gzipped under `raw/<source>/`
+with per-page sha256 and a `page_set_sha256`. Outputs: `summary.json`, `endpoints.jsonl.gz`
+(one row per canonical endpoint, with every catalogue that lists it), `entries.jsonl.gz`.
+Every row is DISCOVERED / UNMEASURED. `--top20` joins npm weekly downloads and writes
+`plan-top20.json(l.gz)`; it contacts no endpoint.
+
+`read_state.py` is the shared fail-closed predicate; `build-agent-interop-census.py` uses it
+(see `docs/measurement/CORRECTION-agent-interop-census-2026-09-25.md`).
