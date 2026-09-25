@@ -327,7 +327,7 @@ def read_board(axis: Optional[str] = None) -> dict:
 const pyInput = `class GSPCBoardInput(BaseModel):
     axis: Optional[str] = Field(default=None, description="Axis name for one board row; omit for the board totals.")
 `;
-const pyProject = ({ name, desc, deps, pkgs, kw }) => `[build-system]
+const pyProject = ({ name, desc, deps, pkgs, kw, py = "3.9" }) => `[build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
@@ -336,7 +336,7 @@ name = "${name}"
 version = "${AV}"
 description = ${JSON.stringify(desc)}
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=${py}"
 license = { text = "Apache-2.0" }
 authors = [{ name = "${ID.publisher}", email = "${ID.email}" }]
 keywords = [${["csoai", "gspc", "layer0", "measurement", ...kw].map((k) => JSON.stringify(k)).join(", ")}]
@@ -454,6 +454,7 @@ __all__ = ["CSOAIGSPCToolSpec", "read_board", "DOCTRINE_SHA256", "__version__"]
 `);
 // crewai-csoai
 emit("distribution/python/crewai-csoai/pyproject.toml", pyProject({
+  py: "3.10", // crewai itself requires Python >= 3.10
   name: "crewai-csoai", desc: "CrewAI tool for the Council of AI GSPC measurement board (wraps csoai-gspc).",
   deps: ["crewai>=0.100"], pkgs: ["crewai_csoai"], kw: ["crewai"],
 }));
