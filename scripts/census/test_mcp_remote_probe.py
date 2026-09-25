@@ -337,7 +337,14 @@ class Limiter(unittest.TestCase):
             self.assertGreaterEqual(min(gaps), 0.15)  # client side: the limiter's own promise
             ts = sorted(t for t, *_ in srv.stats["reqs"])
             srv_gaps = [b - a for a, b in zip(ts, ts[1:])]
-            self.assertGreaterEqual(min(srv_gaps), 0.15 * 0.7)  # server side: plus network jitter
+            # Server side: the server stamps each request when its handler thread runs, i.e. after
+            # connect, accept and request parsing. That latency is not constant, so
+            # server_gap = 0.15 + (latency_next - latency_prev) can fall well under 0.15 without
+            # the limiter releasing early. 0.15 * 0.7 = 0.105 s failed at 0.101 s on the 1-vCPU
+            # Oracle host (25 Sep 2026) while the client-side assertion above held. The limiter's
+            # promise is asserted exactly, client side; this check only has to catch a limiter
+            # that does not pace at all (gaps near 0 s), and half the interval still does.
+            self.assertGreaterEqual(min(srv_gaps), 0.15 * 0.5)
             self.assertEqual(sorted(r["state"] for r in run.results), ["RESPONDED"] * 4)
         finally:
             srv.close()
