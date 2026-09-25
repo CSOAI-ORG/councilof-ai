@@ -138,6 +138,12 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
 
+      - name: Governance discovery — JSON, Council pointers and built bytes
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node --test scripts/governance-discovery-gate.node-test.mjs
+          node scripts/governance-discovery-gate.mjs dist/client
+
       # --selftest first: a gate that has never been seen failing is decoration,
       # so it proves it can go red on every run before it is trusted on our bytes.
       - name: Brand gate — selftest, then the real dist
