@@ -75,3 +75,8 @@ Writer: Claude (one writer, clone `~/lanes/rights-gate` on oracle-micro-2, based
 Rights gate over frame 2026-09-25 (47,730 catalogue rows; population total null, smithery PARTIAL): MEASURE_PUBLIC 33,043 ALLOWED / 14,687 RESTRICTED (14,578 no advertised endpoint). REUSE_CODE = VENDOR = TRAIN: 15,953 ALLOWED / 643 RESTRICTED / 31,134 UNKNOWN (65.2%). Output `/evac-bulk/rights-gate-2026-09-25/` (not published).
 Private store `csoai/private-calibration` (HF, private, 1 org member): first commit daadf2d7 = census reach join; anonymous API and file reads 401. Nothing published to PyPI or npm; no outreach; no push.
 Other lanes: do not copy anything the manifest names into a public tree; add a protected class to the manifest in the same change that creates it.
+
+## lane/harness-x-20260925 — Claude (agent, 25 Sep 2026) — Layer 0, one source, every platform's format
+Writer: Claude (one writer, sparse clone on oracle-micro-2). Files: `council-os/distribution.json` (new: pinned doctrine + one row per target), `scripts/harness-x/{render,check}.mjs` + `render.test.mjs` + vendored MCP schema, `distribution/**` (generated, committed for review), derived fields of `public/.well-known/mcp/server-card.json` + `public/.well-known/mcp.json`, `client/src/lib/staleCopy.test.ts` (boundary case now derives from the fleet lock + registry file instead of pinning 12 / 1.4.0 / 0.2.1).
+Nothing published, submitted or registered; every listing step is an owner action in `distribution/SUBMIT.md`.
+Other lanes: do not hand-edit `distribution/**` or the two well-known files' derived fields — edit the source and run `node scripts/harness-x/render.mjs`; `node scripts/harness-x/check.mjs` must stay green.

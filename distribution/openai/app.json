@@ -1,0 +1,200 @@
+{
+  "form": "OpenAI Apps SDK — app submission (remote MCP connector)",
+  "status": "PREPARED — NOT SUBMITTED",
+  "app_name": "Council of AI GSPC",
+  "mcp_server_url": "https://councilof.ai/mcp",
+  "authentication": "none",
+  "description": "Read the live GSPC measurement board and verify Ed25519-signed measurement cards. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "developer": {
+    "name": "CSOAI Ltd",
+    "website": "https://councilof.ai",
+    "email": "nicholas@csoai.org"
+  },
+  "privacy_policy_url": "https://councilof.ai/privacy/",
+  "terms_url": "https://councilof.ai/terms/",
+  "support_url": "https://councilof.ai/contact/",
+  "logo_url": "https://councilof.ai/csoai-icon.svg",
+  "server_version": "1.4.2",
+  "tools": [
+    {
+      "name": "board_totals",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "get_axis",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "verify_card",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "list_cards",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "get_root",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "get_card",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "verify_inclusion",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "x402_trust",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "mcp_trust",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "commission_card",
+      "payment": "x402",
+      "suggested_annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "art50_marking_evidence",
+      "payment": "x402",
+      "suggested_annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "rwa_evidence",
+      "payment": "x402",
+      "suggested_annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
+      "name": "receipts_batch",
+      "payment": "x402",
+      "suggested_annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    }
+  ],
+  "tool_count": 13,
+  "live_tools_carry_annotations": false,
+  "test_prompts": [
+    {
+      "prompt": "What does the GSPC board say right now?",
+      "expected_tool": "board_totals"
+    },
+    {
+      "prompt": "Verify this measurement card: <card JSON>",
+      "expected_tool": "verify_card"
+    },
+    {
+      "prompt": "Show the GSPC provenance axis.",
+      "expected_tool": "get_axis"
+    }
+  ],
+  "custom_gpt_actions": {
+    "import_url": "https://councilof.ai/api/openapi.json",
+    "authentication": "none"
+  },
+  "links": {
+    "self": "https://councilof.ai/.well-known/openai.json",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "x402_catalog": "https://councilof.ai/api/x402"
+  },
+  "derived_from_well_known": [
+    {
+      "path": "public/.well-known/openai.json",
+      "sha256": "6b616f57f50392844b2c32decce314c6b111a0111d6c561f7a202f317682ba73",
+      "slug": "openai"
+    },
+    {
+      "path": "public/.well-known/openai-tools.json",
+      "sha256": "ffd2c5e190b1b73eafb2408546c8f8546062ce47b2aaf5f00b3ab7dd269b63ec",
+      "slug": "openai-tools"
+    },
+    {
+      "path": "public/.well-known/openai-functions.json",
+      "sha256": "98e8265d738c7944caebb5da89c01a231b4ec5ad9be7f5e84e188b05a8ea3aac",
+      "slug": "openai-functions"
+    },
+    {
+      "path": "public/.well-known/openai-responses.json",
+      "sha256": "4fb5fc0497cfe21fa5a535e4e3c2c9e7afa8e3c25749d5fdd2d92c17fb8748f0",
+      "slug": "openai-responses"
+    },
+    {
+      "path": "public/.well-known/openai-assistants.json",
+      "sha256": "a5bcf19a64b37a986e9d15e2f95285f6b7960b2d372d47feaf0b375e4c4b6829",
+      "slug": "openai-assistants"
+    },
+    {
+      "path": "public/.well-known/openai-structured-outputs.json",
+      "sha256": "9e6178f81da3e4bb8879d74c93fa5c80adea659d6182f98a30a2942e6ce36deb",
+      "slug": "openai-structured-outputs"
+    }
+  ],
+  "doctrine": {
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/"
+  }
+}
