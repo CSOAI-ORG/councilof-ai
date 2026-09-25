@@ -1,0 +1,44 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "index.json",
+      "sha256": "99d48d11023c44b6638ac8ad2db6bc63517399fa08fef6a4c11defaedf3f4124",
+      "schema": "csoai.evidence-index/0.1",
+      "as_of": "2026-09-25T14:00:53Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these index bytes were signed by the board key on the date below. It does not make any indexed item correct, complete, or endorsed.",
+    "items": 212,
+    "by_kind": {
+      "trust-anchor": 1,
+      "board": 2,
+      "surface": 3,
+      "signed-record": 32,
+      "dataset": 120,
+      "space": 39,
+      "model": 2,
+      "package": 13
+    },
+    "read_state": "COMPLETE_FOR_STATED_SOURCES"
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "6bef12ce2e8019c4dd14892e4181fc2ab31797db01867dbc19f38138391a23052b78335190069772c5485f1172072b3e0d21c9459ab73d05a7b5e4f93e223c0f",
+    "payload_sha256": "f44702c4c7276879b82af366a3cfbc43884d917b08f8e4f1f152625151c290ae",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-25T14:01:24.323Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "index sha256 altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload (sort_keys, separators=(',',':'), ensure_ascii=False, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(index.json); verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
+}
