@@ -174,7 +174,7 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 
 ## Owner decisions (not taken in this lane)
 
-1. **Licences.** `councilof-mcp` (PyPI, 1.0.1) and `@csoai/layer0` (`packages/layer0-js`, 0.1.0) are MIT against the
+1. **Licences.** `councilof-mcp` (PyPI, 1.0.1) and `@csoai/layer0` (`packages/layer0-js`, 0.2.0) are MIT against the
    Apache-2.0 default. Not changed here. `@csoai/layer0` is also not on npm, so the TS adapters take it as an optional peer.
 2. **Layer0 gateway.** `@csoai/layer0` defaults to https://api.csoai.org, which did not answer on 2026-09-25; the TS adapters
    therefore call https://councilof.ai/mcp directly and use Layer0 only when a caller passes an instance.
