@@ -270,9 +270,11 @@ class Plan(unittest.TestCase):
         self.assertEqual(plan["candidates"], 2)
         self.assertEqual(plan["top_n"], 1)
         self.assertEqual(top[0]["endpoint"], "https://mcp.example.com/mcp")
-        self.assertEqual(top[0]["signal"], "npm_weekly_downloads")
+        self.assertEqual(top[0]["ranked_by"], "npm_weekly_downloads")
         self.assertEqual(plan["signal_mix_all"], {"npm_weekly_downloads": 1, "registry_order:mcp-registry": 1})
-        self.assertEqual(plan["npm_lookup_status"], {"ok": 1, "not_found": 1})
+        self.assertEqual(plan["npm_weekly_downloads"]["status"], {"ok": 1, "not_found": 1})
+        self.assertEqual(top[0]["ranked_by"], "npm_weekly_downloads")
+        self.assertFalse(plan["github_stars"]["used"])
         self.assertTrue(any("templated" in k for k in plan["excluded"]))
         self.assertTrue(all(u.startswith(frame.NPM_DOWNLOADS) for u, _h in pt.calls))  # no endpoint contacted
 

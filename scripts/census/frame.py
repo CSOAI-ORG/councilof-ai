@@ -33,7 +33,7 @@ root is '/'). A URL whose HOST is templated is not an endpoint and is counted as
 
 Usage:
   frame.py --out DIR [--sources mcp-registry,hf-spaces,a2aregistry,docker-mcp-registry,smithery]
-  frame.py --top20 --frame DIR          # plan only: npm reach join, prints counts, no probing
+  frame.py --top20 --frame DIR          # plan only: npm/PyPI/Docker Hub/Smithery reach join, no probing
   frame.py --self-test                  # offline: a truncated page must yield null totals
 """
 from __future__ import annotations
@@ -59,7 +59,7 @@ import urllib.parse
 import urllib.request
 import zlib
 
-UA = "CSOAI-census/0.1 (+https://councilof.ai)"
+UA = "CSOAI-census/0.1 (+https://councilof.ai/census)"
 SCHEMA = "csoai.census-frame/0.1"
 EXHAUSTED, PARTIAL, FAILED = "EXHAUSTED", "PARTIAL", "FAILED"
 
@@ -680,6 +680,8 @@ def npm_weekly(packages, fetcher, cache_path=None):
 
 
 def plan_top20(frame, fetcher=None, frac=0.2):
+    """Top-fraction probe plan. Joins every keyless reach signal (reach.py); never probes."""
+    import reach  # sibling module; kept separate so the signal definitions stay in one place
     fetcher = fetcher or Fetcher()
     with open(os.path.join(frame, "summary.json")) as fh:
         summary = json.load(fh)
@@ -703,43 +705,97 @@ def plan_top20(frame, fetcher=None, frac=0.2):
             pk = set().union(*(npm_of.get((l["source"], l["id"]), set()) for l in mcp))
             reg = [l["order"] for l in mcp if l["source"] == "mcp-registry"]
             dock = [l["order"] for l in mcp if l["source"] == "docker-mcp-registry"]
-            cands.append({"endpoint": r["endpoint"], "npm": sorted(pk),
+            cands.append({"endpoint": r["endpoint"], "host": r["host"], "npm": sorted(pk),
+                          "registry_ids": sorted({l["id"] for l in mcp if l["source"] == "mcp-registry"}),
+                          "transports": sorted({str(l.get("transport")) for l in mcp}),
                           "registry_order": min(reg) if reg else None,
                           "docker_order": min(dock) if dock else None})
+    wanted = {i for c in cands for i in c["registry_ids"]}
+    regpk = reach.registry_packages(frame, wanted)
+    smithery = reach.smithery_use_counts(frame)
+    for c in cands:
+        ids = c.pop("registry_ids")
+        c["pypi"] = sorted(set().union(*(regpk.get(i, {}).get("pypi", set()) for i in ids)))
+        c["oci"] = sorted(set().union(*(regpk.get(i, {}).get("oci", set()) for i in ids)))
+        c["_github_repo"] = any(regpk.get(i, {}).get("github_repo") for i in ids)
     all_pk = sorted({p for c in cands for p in c["npm"]})
     npm = npm_weekly(all_pk, fetcher, os.path.join(frame, "npm-weekly-downloads.json"))
+    all_py = sorted({p for c in cands for p in c["pypi"]})
+    pypi = reach.pepy_weekly(all_py, fetcher, os.path.join(frame, "pypi-downloads-7d.json"), FetchError)
+    all_oci = sorted({p for c in cands for p in c["oci"]})
+    dock = reach.dockerhub_pulls(all_oci, fetcher, os.path.join(frame, "dockerhub-pulls.json"), FetchError)
+    smithery_matched = 0
     for c in cands:
+        sig = {}
         known = [npm[p]["downloads"] for p in c["npm"] if npm.get(p, {}).get("downloads") is not None]
         if known:
-            c["signal"], c["value"] = "npm_weekly_downloads", max(known)
-        elif c["registry_order"] is not None:
-            c["signal"], c["value"] = "registry_order:mcp-registry", c["registry_order"]
-        else:
-            c["signal"], c["value"] = "registry_order:docker-mcp-registry", c["docker_order"]
+            sig["npm_weekly_downloads"] = max(known)
         if c["npm"] and not known:
             c["npm_lookup"] = "no downloads figure: " + ",".join(sorted({npm.get(p, {}).get("status", "?")
                                                                          for p in c["npm"]}))
-    tier = {"npm_weekly_downloads": 0, "registry_order:mcp-registry": 1,
-            "registry_order:docker-mcp-registry": 2}
-    cands.sort(key=lambda c: (tier[c["signal"]],
-                              -c["value"] if c["signal"] == "npm_weekly_downloads" else c["value"],
-                              c["endpoint"]))
+        py = [pypi[p]["downloads_7d"] for p in c["pypi"] if pypi.get(p, {}).get("downloads_7d") is not None]
+        if py:
+            sig["pypi_downloads_7d"] = max(py)
+        dk = [dock[i]["pull_count"] for i in c["oci"] if dock.get(i, {}).get("pull_count") is not None]
+        if dk:
+            sig["dockerhub_pull_count"] = max(dk)
+        qn = reach.smithery_name(c["endpoint"])
+        if qn is not None:
+            for cand in (qn, qn.lstrip("@")):
+                if cand in smithery:
+                    sig["smithery_use_count"] = smithery[cand]
+                    smithery_matched += 1
+                    break
+        c["signals"] = sig
+    reach.rank_candidates(cands)
     k = math.ceil(frac * len(cands))
     top = cands[:k]
+    gh_repos = sum(1 for c in cands if c.pop("_github_repo"))
     with gzip.open(os.path.join(frame, "plan-top20.jsonl.gz"), "wt") as f:
         for i, c in enumerate(top, 1):
             f.write(json.dumps({"rank": i, **c}, sort_keys=True) + "\n")
+    counter = lambda rows, key: dict(collections.Counter(key(c) for c in rows))
     npm_status = collections.Counter(npm[p]["status"].split(":")[0] for p in all_pk)
     plan = {
         "schema": SCHEMA + "/plan-top20", "as_of": utcnow(), "frame_run": summary["run_started"],
         "candidates": len(cands), "excluded": dict(excluded), "fraction": frac, "top_n": k,
-        "signal_mix_top": dict(collections.Counter(c["signal"] for c in top)),
-        "signal_mix_all": dict(collections.Counter(c["signal"] for c in cands)),
-        "npm_packages_looked_up": len(all_pk), "npm_lookup_status": dict(npm_status),
-        "ranking_rule": ("tier 1: endpoints with an npm package that has a weekly-downloads figure, "
-                         "by max weekly downloads desc (0 is a measured figure). tier 2: the rest, by "
-                         "MCP registry listing order, then Docker catalogue order. Listing order is "
-                         "NOT a reach signal - it is a deterministic tie-break, labelled as such."),
+        "signal_mix_top": counter(top, lambda c: c["ranked_by"]),
+        "signal_mix_all": counter(cands, lambda c: c["ranked_by"]),
+        "endpoints_with_signal": {s: sum(1 for c in cands if s in c["signals"]) for s in reach.SIGNALS},
+        "endpoints_with_any_signal": sum(1 for c in cands if c["signals"]),
+        "npm_weekly_downloads": {"source": NPM_DOWNLOADS, "packages_looked_up": len(all_pk),
+                                 "status": dict(npm_status)},
+        "pypi_downloads_7d": {"source": reach.PEPY, "packages_looked_up": len(all_py),
+                              "status": dict(collections.Counter(pypi[p]["status"].split(":")[0]
+                                                                 for p in all_py)),
+                              "windows": dict(collections.Counter(
+                                  "..".join(pypi[p]["window"]) for p in all_py if pypi[p].get("window"))),
+                              "days_present_in_window": dict(collections.Counter(
+                                  str(pypi[p]["days_present"]) for p in all_py)),
+                              "definition": ("sum, all versions, over one 7-day calendar window shared by "
+                                             "every package; dates absent from pepy's map add nothing")},
+        "dockerhub_pull_count": {"source": reach.DOCKERHUB, "oci_identifiers": len(all_oci),
+                                 "status": dict(collections.Counter(dock[i]["status"].split(" ")[0]
+                                                                    for i in all_oci)),
+                                 "definition": "all-time pull_count; not a window"},
+        "smithery_use_count": {"source": "frame raw/smithery (the rows the anonymous API served)",
+                               "rows_served": len(smithery),
+                               "endpoints_on_" + reach.SMITHERY_HOST: sum(
+                                   1 for c in cands if reach.smithery_name(c["endpoint"]) is not None),
+                               "matched": smithery_matched,
+                               "read_state": summary["sources"].get("smithery", {}).get("read_state")},
+        "github_stars": {"used": False,
+                         "why": ("api.github.com serves 60 unauthenticated requests/hour; no key is used "
+                                 "by rule"),
+                         "candidates_with_github_repo": gh_repos,
+                         "hours_at_60_per_hour": round(gh_repos / 60.0, 1)},
+        "ranking_rule": ("tier 1: endpoints with at least one reach signal, by reach_pct = the fraction of "
+                         "THAT signal's candidates with a strictly larger figure (best standing across "
+                         "the endpoint's signals; ranked_by names the signal). Signals are different "
+                         "units and are never added or converted; reach_pct only orders the probe. "
+                         "tier 2: the rest, by MCP registry listing order, then Docker catalogue order. "
+                         "Listing order is NOT a reach signal - it is a deterministic tie-break, "
+                         "labelled as such."),
         "probing": "none. This is a plan; no endpoint was contacted.",
         "frame_population_total_null": summary["union"]["population_total"] is None,
     }
@@ -802,8 +858,8 @@ def main(argv=None):
             ap.error("--top20 needs --frame DIR")
         plan = plan_top20(a.frame, frac=a.fraction)
         print(json.dumps({k: plan[k] for k in ("candidates", "excluded", "top_n", "signal_mix_top",
-                                               "signal_mix_all", "npm_packages_looked_up",
-                                               "npm_lookup_status")}, indent=1))
+                                               "signal_mix_all", "endpoints_with_signal",
+                                               "endpoints_with_any_signal")}, indent=1))
         return 0
     if not a.out:
         ap.error("--out DIR, --top20 --frame DIR, or --self-test")
