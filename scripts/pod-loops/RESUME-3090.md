@@ -27,3 +27,7 @@ The script is `scripts/ops/resume-3090.sh`. It runs on the operator's machine, n
 ## Offload location (backup volume)
 
 `/workspace` on this pod is local, not a network volume, and was 96% full on 2026-09-22. Large outputs that must outlive the pod go to the network volume **`csoai-backup-ro`** (`u6bcx7p3uc`, 150 GB, EU-RO-1). It is mounted on CPU pod `dgj6roe9sazwsd` (ssh `213.173.105.108:24817`; the Mac's runpodctl key and the pod mirror key are both authorised there). Each item is stored as `/workspace/offload/<name>` with `<name>.sha256` beside it, and the sha256 is read back after the copy.
+
+**Python packages.** If a loop fails with ModuleNotFoundError after a restart, reinstall into the persistent path: `python3 -m pip install --root-user-action=ignore --target /workspace/tools/pylib -r scripts/pod-loops/requirements-pod.txt` (lib.sh exports PYTHONPATH to it).
+
+**CPU-only start is for copying data only.** When the host GPU is taken, the console offers "Start Pod using CPUs": that container has a 512 MB memory cgroup (despite `free` showing 251 GB), no GPU, and its /root is wiped on every restart. Do not start the scheduler there; copy data off, then migrate ("Automatically migrate your Pod data") or restart when the GPU frees.

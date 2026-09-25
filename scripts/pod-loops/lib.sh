@@ -65,3 +65,7 @@ repo_sparse_ensure() {
   for p in ${*:-$REPO_SPARSE}; do printf '%s\n' "$have" | grep -qxF "$p" || missing="$missing $p"; done
   [ -z "$missing" ] || git -C "$REPO" sparse-checkout add $missing
 }
+
+# Third-party Python packages for the loops live on /workspace so a container wipe cannot remove them
+# (25 Sep 2026: huggingface_hub et al. vanished with /root). List: requirements-pod.txt; lock: /workspace/tools/pylib.lock
+export PYTHONPATH=/workspace/tools/pylib${PYTHONPATH:+:$PYTHONPATH}
