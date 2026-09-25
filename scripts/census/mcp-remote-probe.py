@@ -1,11 +1,30 @@
 #!/usr/bin/env python3
-"""Read-only discovery probe of remote MCP endpoints: initialize + tools/list, nothing else.
+"""Read-only discovery probe of remote MCP endpoints: discover/initialize + tools/list, nothing else.
+
+Protocol eras (MCP 2026-07-28, basic/versioning and basic/transports/streamable-http):
+  * MODERN (2026-07-28 and later): no handshake, no session. Every request carries its version in
+    `_meta["io.modelcontextprotocol/protocolVersion"]` AND the `MCP-Protocol-Version` header, plus
+    an `Mcp-Method` header. Servers MUST implement `server/discover`. An unsupported version is
+    answered 400 + JSON-RPC -32022 UnsupportedProtocolVersion with `data.supported`.
+  * LEGACY (2025-11-25 and earlier): `initialize` handshake; the server answers the requested
+    version if it supports it, else another it supports.
+  This probe is dual-era, as the spec's Backward Compatibility section describes for HTTP:
+  it sends a MODERN `server/discover` first. A result -> modern. A recognised modern error body
+  (-32020/-32021/-32022) -> the server is modern: on -32022 it picks the highest version in
+  `supported` that it speaks (a legacy one means a legacy initialize with THAT version); it never
+  falls back past a recognised modern error. Anything else short of auth or a network failure
+  (4xx/5xx without a modern error body, a non-modern JSON-RPC error, a read timeout, a body that
+  is not a discover result) -> fall back to a LEGACY `initialize` requesting PROTO_LEGACY.
+  Every row records what was offered, what was requested on the exchange that was graded, and what
+  was negotiated, separately (protocol_versions_offered / protocol_version_requested /
+  protocol_version_negotiated, era). `protocol_version` is kept == negotiated for older readers.
 
 What it sends to an endpoint, and nothing more:
-  robots.txt (once per host)  ->  POST initialize  ->  POST notifications/initialized
-  ->  POST tools/list (following nextCursor, at most MAX_TOOL_PAGES pages)  ->  DELETE session
-  (only if the server issued an Mcp-Session-Id). A legacy-SSE endpoint gets one GET that reads
-  the `endpoint` event and closes (see SSE below).
+  robots.txt (once per host)  ->  POST server/discover (modern)  ->  modern: POST tools/list;
+  legacy fallback: POST initialize  ->  POST notifications/initialized  ->  POST tools/list
+  (following nextCursor, at most MAX_TOOL_PAGES pages)  ->  DELETE session (only if the server
+  issued an Mcp-Session-Id). A legacy-SSE endpoint gets one GET that reads the `endpoint` event
+  and closes (see SSE below).
 It never calls a tool, never authenticates, never pays, never wakes a Hugging Face Space.
 
 Politeness (enforced by HostGate, tested offline):
@@ -19,13 +38,16 @@ Politeness (enforced by HostGate, tested offline):
     host for the run. No other retries, except one retry of a connection the server reset.
 
 States (exactly one per attempted endpoint):
-  RESPONDED          initialize returned a JSON-RPC result. Carries protocolVersion, serverInfo,
+  RESPONDED          server/discover (modern) or initialize (legacy) returned a JSON-RPC result.
+                     Carries era, requested and negotiated protocol version, serverInfo,
                      and the tools/list outcome: tool count + sha256 of the sorted tool names
                      (tools_complete is false if a nextCursor was left unfollowed).
   AUTH_REQUIRED      HTTP 401/403 (or 402, recorded separately as http_status 402), or a
                      JSON-RPC error to initialize whose message names auth/credentials.
   MCP_ERROR          a JSON-RPC error to initialize that does not name auth: it speaks JSON-RPC,
-                     it did not initialize.
+                     it did not initialize. Also: a recognised modern error that is not resolvable
+                     (HeaderMismatch, MissingRequiredClientCapability, or -32022 with no version
+                     in `supported` that this probe speaks).
   SSE_ENDPOINT_ONLY  legacy SSE: the GET stream announced its `endpoint` event, and initialize was
                      NOT sent, because a legacy SSE session needs a second concurrent connection
                      to the host and the limit is one. Not counted as RESPONDED. (A server that
@@ -37,8 +59,9 @@ States (exactly one per attempted endpoint):
 Not attempted (never counted in any state): robots.txt disallow, *.hf.space (sleep state not
 checked, a request could wake it), host stopped by 429, time budget spent.
 
-The grade of an initialize exchange is a pure function (grade_initialize). The offline suite
-runs it against fixture servers, and a deliberately broken grader must FAIL the same suite
+The grade of an initialize exchange (grade_initialize) and of a server/discover exchange
+(grade_discover) are pure functions. The offline suite runs them against fixture servers (legacy,
+modern-only, dual-era, SSE-bodied, version-pinned), and deliberately broken graders must FAIL the same suite
 (--self-test); a suite that a broken grader passes proves nothing.
 
 Usage:
@@ -68,8 +91,17 @@ import urllib.robotparser
 
 UA = "CSOAI-census/0.1 (+https://councilof.ai/census)"
 ROBOTS_TOKEN = "CSOAI-census"
-PROTO_REQUESTED = "2025-11-25"
-SCHEMA = "csoai.census-probe/0.1"
+CLIENT_INFO = {"name": "csoai-census-probe", "version": "0.2"}
+# Versions this probe speaks, newest first. Source: modelcontextprotocol.io/specification/2026-07-28
+# (basic/versioning: "Modern" = 2026-07-28 and later, "Legacy" = 2025-11-25 and earlier).
+MODERN_VERSIONS = ("2026-07-28",)
+LEGACY_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+PROTO_MODERN = MODERN_VERSIONS[0]
+PROTO_LEGACY = LEGACY_VERSIONS[0]
+PROTO_REQUESTED = PROTO_LEGACY  # what the 0.1 probe requested (initialize only); kept for readers
+MODERN_ERROR_CODES = {-32020: "HeaderMismatch", -32021: "MissingRequiredClientCapability",
+                      -32022: "UnsupportedProtocolVersion"}
+SCHEMA = "csoai.census-probe/0.2"
 STATES = ("RESPONDED", "AUTH_REQUIRED", "MCP_ERROR", "SSE_ENDPOINT_ONLY", "NOT_MCP",
           "UNREACHABLE", "TIMEOUT")
 MAX_BODY = 1 << 20
@@ -333,6 +365,81 @@ def broken_grade_initialize(r, want_id=1):
     return grade_initialize(r, want_id)
 
 
+def _modern_error(found):
+    """A recognised modern JSON-RPC error (code in MODERN_ERROR_CODES) or None."""
+    if not isinstance(found, dict) or not isinstance(found.get("error"), dict):
+        return None
+    code = found["error"].get("code")
+    return found["error"] if isinstance(code, int) and code in MODERN_ERROR_CODES else None
+
+
+def grade_discover(r, want_id=1):
+    """Grade the modern server/discover exchange (pure).
+
+    -> (verdict, reason, payload). verdict is one of
+       MODERN      a DiscoverResult: payload = the result dict
+       UNSUPPORTED -32022: payload = the server's `supported` list (may be empty)
+       MCP_ERROR   another recognised modern error (-32020/-32021): the server is modern; no fallback
+       AUTH_REQUIRED, UNREACHABLE, TIMEOUT: final, no fallback (not era-specific)
+       FOLLOW      307/308: payload None, reason = Location
+       FALLBACK    anything else: not a modern answer -> legacy initialize
+    """
+    if isinstance(r, BaseException):
+        s, why = grade_exception(r)
+        if s == "TIMEOUT" and why.startswith("read"):
+            return "FALLBACK", f"modern request: {why}", None  # a legacy stream may hold an unknown method open
+        return s, why, None
+    if r.status in (401, 403, 402):
+        return "AUTH_REQUIRED", f"HTTP {r.status}", None
+    found = next((m for m in r.messages if m.get("id") == want_id and ("result" in m or "error" in m)), None)
+    me = _modern_error(found)
+    if me is not None:
+        code = me.get("code")
+        data = me.get("data") if isinstance(me.get("data"), dict) else {}
+        if code == -32022:
+            sup = [v for v in (data.get("supported") or []) if isinstance(v, str)]
+            return "UNSUPPORTED", f"HTTP {r.status} code=-32022 supported={sup[:12]}", sup
+        return "MCP_ERROR", f"modern error HTTP {r.status} code={code} {MODERN_ERROR_CODES[code]}: {clip(str(me.get('message')), 120)}", None
+    if found is not None and 200 <= r.status < 300 and isinstance(found.get("result"), dict) \
+            and isinstance(found["result"].get("supportedVersions"), list):
+        return "MODERN", f"HTTP {r.status}{' sse' if r.sse else ''}", found["result"]
+    if r.status in (307, 308):
+        return "FOLLOW", r.headers.get("location", ""), None
+    if r.status == 429:
+        return "UNREACHABLE", f"HTTP {r.status}: rate limited (retries recorded)", None
+    what = (f"JSON-RPC error code={found['error'].get('code')}" if found is not None and isinstance(found.get("error"), dict)
+            else "result without supportedVersions" if found is not None else "no JSON-RPC response")
+    return "FALLBACK", f"modern request: HTTP {r.status} {what}", None
+
+
+def broken_grade_discover(r, want_id=1):
+    """CONTROL ONLY. Any 2xx whose body parses as JSON, and any 401/403, counts as a modern answer."""
+    if not isinstance(r, BaseException) and (200 <= r.status < 300 and r.messages or r.status in (401, 403)):
+        return "MODERN", "defective grader", {"supportedVersions": [PROTO_MODERN]}
+    return grade_discover(r, want_id)
+
+
+def pick_version(supported):
+    """Highest version in `supported` that this probe speaks -> (era, version) or (None, None)."""
+    for v in MODERN_VERSIONS:
+        if v in supported:
+            return "modern", v
+    for v in LEGACY_VERSIONS:
+        if v in supported:
+            return "legacy", v
+    return None, None
+
+
+def modern_meta(version):
+    return {"io.modelcontextprotocol/protocolVersion": version,
+            "io.modelcontextprotocol/clientInfo": dict(CLIENT_INFO),
+            "io.modelcontextprotocol/clientCapabilities": {}}
+
+
+def modern_headers(base, version, method):
+    return {**base, "MCP-Protocol-Version": version, "Mcp-Method": method}
+
+
 def p1_fields(init_result, tools):
     found = []
 
@@ -405,17 +512,19 @@ def _find(r, rid):
     return None
 
 
-def probe_endpoint(row, gate, cfg, grader=grade_initialize, sleep=time.sleep):
+def probe_endpoint(row, gate, cfg, grader=grade_initialize, sleep=time.sleep, modern_grader=grade_discover):
     url = row["endpoint"]
     u = urllib.parse.urlsplit(url)
     target = (u.path or "/") + (f"?{u.query}" if u.query else "")
     rec = {"rank": row.get("rank"), "endpoint": url, "host": u.hostname, "ranked_by": row.get("ranked_by"),
            "declared_transports": row.get("transports"), "state": None, "reason": None,
-           "started": utcnow(), "retries": 0, "mcp_request_sent": False}
+           "started": utcnow(), "retries": 0, "mcp_request_sent": False,
+           "era": None, "protocol_versions_offered": [], "protocol_version_requested": None,
+           "protocol_version_negotiated": None, "protocol_version": None}
     t0 = time.monotonic()
     sess = Session(url, gate, cfg["connect_timeout"], cfg["read_timeout"], cfg.get("ssl_context"))
     try:
-        _probe(rec, sess, target, row, gate, cfg, grader, sleep)
+        _probe(rec, sess, target, row, gate, cfg, grader, sleep, modern_grader)
     finally:
         sess.close()
         rec["requests"] = sess.n_requests
@@ -425,15 +534,81 @@ def probe_endpoint(row, gate, cfg, grader=grade_initialize, sleep=time.sleep):
     return rec
 
 
-def _probe(rec, sess, target, row, gate, cfg, grader, sleep):
+def _modern(rec, sess, target, gate, sleep, modern_grader, base, version):
+    """One modern server/discover (following one same-host 307/308).
+    -> (verdict, reason, payload, target, resp)."""
+    body = rpc_body("server/discover", 1, {"_meta": modern_meta(version)})
+    rec["protocol_versions_offered"].append(version)
+    rec["protocol_version_requested"] = version
+    try:
+        r = send_once_with_retry(sess, rec, "POST", target, modern_headers(base, version, "server/discover"), body,
+                                 want_id=1, sleep=sleep)
+    except PhaseError as e:
+        r = e
+    if isinstance(r, Resp) and r.status == 429:
+        gate.stop(sess.hostname, "HTTP 429 after Retry-After and one retry")
+    verdict, reason, payload = modern_grader(r)
+    if verdict == "FOLLOW":
+        loc = urllib.parse.urljoin(sess.url, reason)
+        lu = urllib.parse.urlsplit(loc)
+        if lu.hostname == sess.hostname and lu.scheme == sess.scheme:
+            target = (lu.path or "/") + (f"?{lu.query}" if lu.query else "")
+            rec["followed_redirect"] = loc
+            try:
+                r = sess.request("POST", target, modern_headers(base, version, "server/discover"), body, want_id=1)
+            except PhaseError as e:
+                r = e
+            verdict, reason, payload = modern_grader(r)
+            if verdict == "FOLLOW":
+                verdict, reason = "FALLBACK", "modern request: second redirect not followed"
+        else:
+            verdict, reason = "FALLBACK", f"modern request: redirect off-host to {clip(loc, 160)} (not followed)"
+    rec["modern_attempt"] = {"requested": version, "http_status": r.status if isinstance(r, Resp) else None,
+                             "verdict": verdict, "reason": reason}
+    f = _find(r, 1)
+    if verdict == "FALLBACK" and f is not None and isinstance(f.get("result"), dict):
+        rec["modern_attempt"]["result_keys"] = sorted(str(k) for k in f["result"])[:12]  # names only, no values
+    return verdict, reason, payload, target, r
+
+
+def _probe(rec, sess, target, row, gate, cfg, grader, sleep, modern_grader=grade_discover):
     base = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
-    params = {"protocolVersion": PROTO_REQUESTED, "capabilities": {},
-              "clientInfo": {"name": "csoai-census-probe", "version": "0.1"}}
+    legacy_version = PROTO_LEGACY
     declared = set(row.get("transports") or [])
     only_sse = declared == {"sse"}
     post_reason = None
     if not only_sse:
         rec["mcp_request_sent"] = True
+        verdict, reason, payload, target, r = _modern(rec, sess, target, gate, sleep, modern_grader, base, PROTO_MODERN)
+        if verdict == "UNSUPPORTED":
+            rec["server_supported_versions"] = [clip(v, 40) for v in payload[:20]]
+            era, v = pick_version(payload)
+            if era == "modern" and v != PROTO_MODERN:  # only reachable once MODERN_VERSIONS has more than one entry
+                verdict, reason, payload, target, r = _modern(rec, sess, target, gate, sleep, modern_grader, base, v)
+            elif era == "legacy":
+                legacy_version = v
+                verdict, reason = "FALLBACK", f"modern server lists legacy {v} as supported"
+            else:
+                verdict, reason = "MCP_ERROR", f"no mutually supported protocol version: {reason}"
+        if isinstance(r, Resp):
+            rec["http_status"] = r.status
+        if verdict == "MODERN":
+            rec["state"], rec["reason"] = "RESPONDED", reason
+            rec["era"] = "modern"
+            rec["protocol_version_negotiated"] = rec["protocol_version"] = rec["protocol_version_requested"]
+            sv = payload.get("supportedVersions") or []
+            rec["server_supported_versions"] = [clip(v, 40) for v in sv if isinstance(v, str)][:20]
+            _after_discover(rec, sess, target, payload, r, base, cfg)
+            return
+        if verdict != "FALLBACK":
+            rec["state"], rec["reason"] = verdict, reason
+            if verdict == "MCP_ERROR":
+                rec["era"] = "modern"
+            return
+        rec["protocol_versions_offered"].append(legacy_version)
+        rec["protocol_version_requested"] = legacy_version
+    params = {"protocolVersion": legacy_version, "capabilities": {}, "clientInfo": dict(CLIENT_INFO)}
+    if not only_sse:
         try:
             r = send_once_with_retry(sess, rec, "POST", target, base, rpc_body("initialize", 1, params),
                                      want_id=1, sleep=sleep)
@@ -463,6 +638,8 @@ def _probe(rec, sess, target, row, gate, cfg, grader, sleep):
                 state, reason = "NOT_MCP", f"HTTP {rec.get('http_status')} redirect off-host to {clip(loc, 160)} (not followed)"
         if state != "TRY_SSE_GET":
             rec["state"], rec["reason"] = state, reason
+            if state == "MCP_ERROR":
+                rec["era"] = "legacy"
             if state == "RESPONDED":
                 _after_initialize(rec, sess, target, init, r, base, cfg)
             return
@@ -486,7 +663,9 @@ def _probe(rec, sess, target, row, gate, cfg, grader, sleep):
 def _after_initialize(rec, sess, target, init, r, base, cfg):
     si = init.get("serverInfo") if isinstance(init.get("serverInfo"), dict) else {}
     rec["transport"] = "streamable-http" + ("(sse-response)" if r.sse else "")
+    rec["era"] = "legacy"
     rec["protocol_version"] = clip(init.get("protocolVersion"), 40) if isinstance(init.get("protocolVersion"), str) else None
+    rec["protocol_version_negotiated"] = rec["protocol_version"]
     rec["server_info"] = {"name": clip(si.get("name")), "version": clip(si.get("version"), 60)}
     caps = init.get("capabilities") if isinstance(init.get("capabilities"), dict) else {}
     rec["capabilities"] = sorted(str(k) for k in caps)[:30]
@@ -502,12 +681,45 @@ def _after_initialize(rec, sess, target, init, r, base, cfg):
         rec["initialized_notification_status"] = n.status
     except PhaseError as e:
         rec["initialized_notification_status"] = f"{e.phase}:{type(e.exc).__name__}"
+    _tools_list(rec, sess, target, init, lambda: h, lambda cursor: {"cursor": cursor} if cursor else {})
+    if sid:
+        try:
+            d = sess.request("DELETE", target, {"Mcp-Session-Id": sid,
+                                                **({"MCP-Protocol-Version": rec["protocol_version"]}
+                                                   if rec["protocol_version"] else {})})
+            rec["session_delete_status"] = d.status
+        except PhaseError as e:
+            rec["session_delete_status"] = f"{e.phase}:{type(e.exc).__name__}"
+
+
+def _after_discover(rec, sess, target, disc, r, base, cfg):
+    """Modern: no initialize, no session, no DELETE. tools/list carries _meta + the modern headers."""
+    meta = disc.get("_meta") if isinstance(disc.get("_meta"), dict) else {}
+    si = meta.get("io.modelcontextprotocol/serverInfo")
+    si = si if isinstance(si, dict) else {}
+    rec["transport"] = "streamable-http" + ("(sse-response)" if r.sse else "")
+    rec["server_info"] = {"name": clip(si.get("name")), "version": clip(si.get("version"), 60)}
+    caps = disc.get("capabilities") if isinstance(disc.get("capabilities"), dict) else {}
+    rec["capabilities"] = sorted(str(k) for k in caps)[:30]
+    rec["discover_result_type"] = clip(disc.get("resultType"), 40) if isinstance(disc.get("resultType"), str) else None
+    rec["session_issued"] = bool(r.headers.get("mcp-session-id"))  # a modern server should not mint one
+    v = rec["protocol_version_negotiated"]
+
+    def params(cursor):
+        p = {"_meta": modern_meta(v)}
+        if cursor:
+            p["cursor"] = cursor
+        return p
+    _tools_list(rec, sess, target, disc, lambda: modern_headers(base, v, "tools/list"), params)
+
+
+def _tools_list(rec, sess, target, init, headers, params):
     tools, cursor, pages, status = [], None, 0, None
     rid = 2
     while pages < MAX_TOOL_PAGES:
-        p = {"cursor": cursor} if cursor else {}
+        p = params(cursor)
         try:
-            t = sess.request("POST", target, h, rpc_body("tools/list", rid, p), want_id=rid)
+            t = sess.request("POST", target, headers(), rpc_body("tools/list", rid, p), want_id=rid)
         except PhaseError as e:
             status = grade_exception(e)[0].lower() + ": " + str(e)[:120]
             break
@@ -548,14 +760,6 @@ def _after_initialize(rec, sess, target, init, r, base, cfg):
         rec["tool_names_sha256"] = hashlib.sha256("\n".join(names).encode()).hexdigest()
         rec["tool_names"] = names[:MAX_TOOL_NAMES_KEPT]
         rec["p1_binding_fields"] = p1_fields(init, tools)[:20]
-    if sid:
-        try:
-            d = sess.request("DELETE", target, {"Mcp-Session-Id": sid,
-                                                **({"MCP-Protocol-Version": rec["protocol_version"]}
-                                                   if rec["protocol_version"] else {})})
-            rec["session_delete_status"] = d.status
-        except PhaseError as e:
-            rec["session_delete_status"] = f"{e.phase}:{type(e.exc).__name__}"
 
 
 # ---------------------------------------------------------------- robots
@@ -581,8 +785,9 @@ def robots_verdict(gate, host, scheme, port, cfg):
 
 # ---------------------------------------------------------------- run
 class Runner:
-    def __init__(self, rows, out, cfg, gate=None, grader=grade_initialize, sleep=time.sleep):
+    def __init__(self, rows, out, cfg, gate=None, grader=grade_initialize, sleep=time.sleep, modern_grader=grade_discover):
         self.rows, self.out, self.cfg, self.grader, self.sleep = rows, out, cfg, grader, sleep
+        self.modern_grader = modern_grader
         self.gate = gate or HostGate(cfg["min_interval"])
         self.pending = list(rows)  # already in rank order
         self.lock = threading.Condition()
@@ -669,7 +874,7 @@ class Runner:
                    "started": utcnow(), "finished": utcnow(), "requests": 0, "retries": 0}
             self._write(rec)
             return
-        rec = probe_endpoint(row, self.gate, self.cfg, self.grader, self.sleep)
+        rec = probe_endpoint(row, self.gate, self.cfg, self.grader, self.sleep, self.modern_grader)
         rec["robots"] = robots_note
         self._write(rec)
 
@@ -679,7 +884,9 @@ class Runner:
                                                          "tools_complete", "tools_list_status", "http_status",
                                                          "transport", "requests", "reason",
                                                          "p1_binding_fields", "server_info", "host",
-                                                         "tool_names_sha256", "mcp_request_sent")})
+                                                         "tool_names_sha256", "mcp_request_sent", "era",
+                                                         "protocol_version_requested", "protocol_version_negotiated",
+                                                         "protocol_versions_offered", "server_supported_versions")})
             self.rf.write(json.dumps(rec, sort_keys=True, ensure_ascii=False) + "\n")
             n = len(self.results)
             if n % 50 == 0:
@@ -752,10 +959,17 @@ def summarise(runner, started, finished, plan_path, n_planned, plan_meta=None):
         "mcp_request_not_sent": sum(1 for r in res if not r.get("mcp_request_sent")),
         "responded": {
             "n": len(resp),
-            "protocol_version_requested": PROTO_REQUESTED,
+            "protocol_versions_offered_in_order": [PROTO_MODERN, PROTO_LEGACY],
+            "era": dict(collections.Counter(str(r.get("era")) for r in resp).most_common()),
+            "protocol_version_requested": dict(collections.Counter(str(r.get("protocol_version_requested")) for r in resp).most_common()),
+            "protocol_version_negotiated": dict(collections.Counter(str(r.get("protocol_version_negotiated")) for r in resp).most_common()),
+            "requested_to_negotiated": dict(collections.Counter(
+                f"{r.get('era')}: {r.get('protocol_version_requested')} -> {r.get('protocol_version_negotiated')}" for r in resp).most_common()),
             "protocol_version": dict(collections.Counter(str(r.get("protocol_version")) for r in resp).most_common()),
-            "protocol_version_note": ("a server answers with the requested version when it supports it, "
-                                      "else its own; the distribution is conditional on the request"),
+            "protocol_version_note": ("modern: the version a server/discover request carried and the server accepted; "
+                                      "legacy: what initialize answered to the version requested. Both are conditional "
+                                      "on what was requested; neither is a census of the newest version a server supports "
+                                      "(server_supported_versions, when a modern server lists them, is)."),
             "transport": dict(collections.Counter(str(r.get("transport")) for r in resp)),
             "tools_list_status": dict(collections.Counter(str(r.get("tools_list_status")) for r in resp)),
             "tool_count_over_complete_lists": tool_stats,
@@ -776,12 +990,14 @@ def summarise(runner, started, finished, plan_path, n_planned, plan_meta=None):
                    "read_timeout_s": runner.cfg["read_timeout"], "budget_s": runner.cfg["budget_s"],
                    "retries": "at most one: 429/503 after Retry-After (cap 60 s) or a reset connection",
                    "legacy_sse_session_opened": False},
-        "sent_to_endpoints": ["GET /robots.txt (once per host)", "POST initialize",
-                              "POST notifications/initialized", "POST tools/list (<= 5 pages)",
+        "sent_to_endpoints": ["GET /robots.txt (once per host)",
+                              f"POST server/discover (modern, MCP-Protocol-Version {PROTO_MODERN})",
+                              "POST initialize (legacy fallback only)",
+                              "POST notifications/initialized (legacy only)", "POST tools/list (<= 5 pages)",
                               "DELETE (only when a session id was issued)",
                               "GET with Accept: text/event-stream (legacy SSE; endpoint event only)"],
         "never_sent": ["tools/call", "resources/read", "prompts/get", "any credential", "any payment"],
-        "what_a_row_is": "what one endpoint answered to initialize + tools/list at one moment, from one place",
+        "what_a_row_is": "what one endpoint answered to server/discover or initialize, then tools/list, at one moment, from one place",
         "what_it_never_proves": ("that a server is safe, correct, good, or maintained; that its tools do what "
                                  "their names say; anything about endpoints not attempted"),
         "population_note": ("counts are over the attempted endpoints of the top-20% plan (reach-signalled "

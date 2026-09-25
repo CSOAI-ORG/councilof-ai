@@ -20,6 +20,20 @@ ots    submits sha256(record.json) to three OpenTimestamps calendars and writes 
        record.ots.json. A fresh stamp is a PENDING CALENDAR COMMITMENT, not a Bitcoin attestation.
 readme renders the Hugging Face dataset card from record.json, so no figure in it is hand-typed.
 
+Correction 0.1.1 (superseding; record.json 0.1 is kept byte for byte):
+    build-mcp-remote-census-record.py evidence --out DIR          fetch the MCP 2026-07-28 primary sources
+    build-mcp-remote-census-record.py correct  --out DIR --probe DIR --prober-commit SHA [--smoke DIR]
+    build-mcp-remote-census-record.py sign     --out DIR --record record.v0.1.1.json
+    build-mcp-remote-census-record.py ots      --out DIR --record record.v0.1.1.json
+    build-mcp-remote-census-record.py publish-correction --out DIR [--hf-token FILE]
+evidence  fetches each primary source, records URL, final URL, HTTP status, fetched_at, byte count and
+          sha256 of the bytes, and checks every quoted phrase is present in them (<= 15 words each).
+correct   derives record.v0.1.1.json from record.json (whose sha256 must be the published 0.1):
+          measurements untouched; the protocolVersion interpretation corrected; a `supersedes` and a
+          `correction` block added.
+publish-correction uploads record.v0.1.1.json (+ .signed.json, .json.ots, .ots.json) and a README with a
+          Corrections section in ONE commit, and proves the 0.1 files are byte-identical before and after.
+
 Doctrine: a PARTIAL read is never a population total; UNREACHABLE and TIMEOUT are published states,
 not omissions; nothing here says a server is safe, good, or endorsed.
 """
@@ -35,6 +49,38 @@ PUBLIC_ROW_KEYS = ["rank", "ranked_by", "endpoint", "host", "state", "reason", "
                    "transport", "protocol_version", "tools_list_status", "tools_complete", "n_tools",
                    "tool_names_sha256", "started", "finished"]
 DNS_MARKERS = ("Name or service not known", "No address associated with hostname")
+
+# ---- correction 0.1.1 (2026-09-25). The 0.1 bytes (sha256 V0_1_SHA) were built at 5821e4c7b with the
+# texts in V0_1_TEXT; build() now emits the corrected texts, correct() derives 0.1.1 from the 0.1 bytes.
+V0_1_SHA = "c4880fdba78709034466045f6c2ac1eda7c466c96502c75cca68ea34795dce84"
+V0_1_TEXT = {
+    "protocol_version.note": ("a server answers with the requested version when it supports it, otherwise with one of its own; "
+                              "this distribution is conditional on the request and is not a census of what servers support"),
+    "anomalies[A1].what_we_do_not_say": "anything about the operator's intent, or whether the version string is correct",
+}
+PV_NOTE_0_1_1 = ("We requested 2025-11-25, a legacy (initialize-handshake) MCP revision, and sent no request in the current "
+                 "revision, 2026-07-28, which has no initialize handshake. Under the 2025-11-25 lifecycle a server that "
+                 "supports the requested version MUST answer with it, otherwise with another version it supports. This "
+                 "distribution is therefore what servers negotiated against an older requested version: it is not the newest "
+                 "version each server supports, and it cannot show which servers also speak 2026-07-28.")
+A1_NOT_SAY_0_1_1 = ("anything about the operator's intent. '2026-07-28' is a real MCP revision (published 2026-07-28, "
+                    "the latest at our check); these endpoints named it inside a legacy initialize exchange, a handshake that "
+                    "revision retired. We do not say which revision's behaviour they implement.")
+EVIDENCE_REL = "evidence/mcp-2026-07-28-primary-sources.json"
+MCP_SOURCES = [  # (url, [phrases that must be present in the fetched bytes, whitespace/markup-normalised])
+    ("https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+     ["pushing the release button on the next version of the MCP specification, 2026-07-28",
+      "officially retired the initialize / initialized exchange"]),
+    ("https://modelcontextprotocol.io/specification/2026-07-28",
+     ["Version 2026-07-28 (latest)"]),
+    ("https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning.md",
+     ["There is no negotiation handshake.",
+      "establish a session with an initialize handshake (2025-11-25 and earlier)"]),
+    ("https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http.md",
+     ["Every POST request to the MCP endpoint MUST include an MCP-Protocol-Version header."]),
+    ("https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle.md",
+     ["Otherwise, the server MUST respond with another protocol version it supports."]),
+]
 
 
 def sha(b):
@@ -360,8 +406,7 @@ def build(a):
         "protocol_version": {
             "requested": ps["responded"]["protocol_version_requested"],
             "answered": dict(pv.most_common()),
-            "note": ("a server answers with the requested version when it supports it, otherwise with one of its own; "
-                     "this distribution is conditional on the request and is not a census of what servers support"),
+            "note": PV_NOTE_0_1_1,
         },
 
         "anomalies": [
@@ -374,7 +419,7 @@ def build(a):
                              f"{next(iter(collections.Counter(r.get('protocol_version') for r in gv)))!r} to a request for "
                              f"{ps['responded']['protocol_version_requested']!r}. They are {len(gv)} of the {len(resp)} RESPONDED endpoints and "
                              "the single largest identical tool-name set. Counts per endpoint therefore over-weight one operator."),
-             "what_we_do_not_say": "anything about the operator's intent, or whether the version string is correct"},
+             "what_we_do_not_say": A1_NOT_SAY_0_1_1},
             {"id": "A2", "host": "a2awire.com",
              "measured": {"responded_endpoints": len(a2), "tool_name_sets": [[s, n, a2_ntools[s]] for s, n in a2_sets.most_common()]},
              "what_we_say": (f"{sum(n for _, n in a2_sets.most_common(2))} of {len(a2)} a2awire.com endpoints fall into two tool-name sets "
@@ -432,20 +477,30 @@ def build(a):
     print(f"record.json sha256={fsha(out / 'record.json')} checks={all(checks.values())}")
 
 
+def _names(record):
+    stem = record[:-len(".json")]
+    return {"signed": stem + ".signed.json", "ots": record + ".ots", "ots_state": stem + ".ots.json",
+            "path": RECORD_PATH.rsplit("/", 1)[0] + "/" + record}
+
+
 def sign(a):
     from cryptography.hazmat.primitives.asymmetric import ed25519
-    out = pathlib.Path(a.out)
-    raw = (out / "record.json").read_bytes(); rec = json.loads(raw)
+    out = pathlib.Path(a.out); nm = _names(a.record)
+    raw = (out / a.record).read_bytes(); rec = json.loads(raw)
     tok = pathlib.Path(os.path.expanduser(a.token)).read_text().strip()
     payload = {
         "schema": "csoai.signed-artifact/0.1",
-        "artifact": {"path": RECORD_PATH, "sha256": sha(raw), "schema": rec["schema"], "as_of": rec["as_of"]},
+        "artifact": {"path": nm["path"], "sha256": sha(raw), "schema": rec["schema"], "as_of": rec["as_of"]},
         "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
         "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured.",
         "read_state": rec["probe"]["read_state"], "n_planned": rec["probe"]["n_planned"], "n_attempted": rec["probe"]["n_attempted"],
         "states": rec["probe"]["states"], "frame_combined_population_total": rec["frame"]["union"]["combined_population_total"],
         "published_files": {k: v["sha256"] for k, v in rec["published_files"].items()},
     }
+    if rec.get("supersedes"):
+        payload["record_version"] = rec["record_version"]
+        payload["supersedes_sha256"] = rec["supersedes"]["sha256"]
+        payload["correction_scope"] = rec["correction"]["scope"]
     canon = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
     assert len(canon) <= 3072, f"payload {len(canon)} bytes > 3072"
     req = urllib.request.Request("https://councilof.ai/api/board-sign", data=json.dumps({"payload": payload}).encode(),
@@ -475,8 +530,8 @@ def sign(a):
                          "signer_auth": r.get("signer_auth"), "signed_at": r.get("signed_at")},
            "local_verification": {"did_document": "https://csoai.org/.well-known/did.json", "result": "VERIFIES", "altered_preimage_controls": controls},
            "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"}
-    (out / "record.signed.json").write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
-    print(f"SIGNED record.json sha256={sha(raw)} signed_at={r.get('signed_at')}")
+    (out / nm["signed"]).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+    print(f"SIGNED {a.record} sha256={sha(raw)} payload_sha256={r['payload_sha256']} signed_at={r.get('signed_at')} controls={controls}")
 
 
 def ots(a):
@@ -486,7 +541,7 @@ def ots(a):
     from opentimestamps.core.serialize import BytesSerializationContext, BytesDeserializationContext
     cals = ["https://alice.btc.calendar.opentimestamps.org", "https://bob.btc.calendar.opentimestamps.org",
             "https://finney.calendar.eternitywall.com"]
-    out = pathlib.Path(a.out); raw = (out / "record.json").read_bytes(); d = hashlib.sha256(raw).digest()
+    out = pathlib.Path(a.out); nm = _names(a.record); raw = (out / a.record).read_bytes(); d = hashlib.sha256(raw).digest()
     ts = Timestamp(d); got = []; failed = {}
     for u in cals:
         try:
@@ -496,10 +551,10 @@ def ots(a):
     if not got:
         sys.exit("NOT_STAMPED: no calendar accepted the digest; no .ots written")
     ctx = BytesSerializationContext(); DetachedTimestampFile(OpSHA256(), ts).serialize(ctx); proof = ctx.getbytes()
-    (out / "record.json.ots").write_bytes(proof)
-    back = DetachedTimestampFile.deserialize(BytesDeserializationContext((out / "record.json.ots").read_bytes()))
+    (out / nm["ots"]).write_bytes(proof)
+    back = DetachedTimestampFile.deserialize(BytesDeserializationContext((out / nm["ots"]).read_bytes()))
     atts = [type(x[1]).__name__ for x in back.timestamp.all_attestations()]
-    side = {"schema": "csoai.ots-state/0.1", "file": "record.json", "sha256": sha(raw), "ots_file": "record.json.ots",
+    side = {"schema": "csoai.ots-state/0.1", "file": a.record, "sha256": sha(raw), "ots_file": nm["ots"],
             "ots_sha256": sha(proof), "stamped_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "calendars_accepted": got, "calendars_failed": failed, "proof_parses": True,
             "proof_binds_to_file_digest": back.file_digest == d, "attestations": atts,
@@ -509,7 +564,7 @@ def ots(a):
                               "and `ots verify` checks it against the chain."),
             "signing_is_separate": "record.signed.json says WHO attests to these bytes; this proof, once upgraded, says WHEN they existed."}
     assert all(a_ == "PendingAttestation" for a_ in atts), atts
-    (out / "record.ots.json").write_text(json.dumps(side, indent=1) + "\n")
+    (out / nm["ots_state"]).write_text(json.dumps(side, indent=1) + "\n")
     print(f"OTS {len(got)} calendars, {len(atts)} pending attestations, binds={side['proof_binds_to_file_digest']}")
 
 
@@ -684,9 +739,282 @@ Data: CC-BY-4.0. Cite as: Council of AI (CSOAI), *Remote MCP endpoint census, me
     print(f"README.md {len(md)} chars; staged record files")
 
 
+
+# ---------------------------------------------------------------- correction 0.1.1
+def _norm(b, is_html):
+    import html as _html, re as _re
+    t = b.decode("utf-8", "replace")
+    if is_html:
+        t = _re.sub(r"<script.*?</script>|<style.*?</style>", " ", t, flags=_re.S)
+        t = _html.unescape(_re.sub(r"<[^>]+>", " ", t))
+    t = t.replace("**", "").replace("`", "")
+    t = _re.sub(r"\s+", " ", t)
+    return _re.sub(r" ([,.)])", r"\1", t)
+
+
+def evidence(a):
+    out = pathlib.Path(a.out); rows = []
+    for url, phrases in MCP_SOURCES:
+        req = urllib.request.Request(url, headers={"user-agent": "CSOAI-census/0.1 (+https://councilof.ai)"})
+        fetched = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        with urllib.request.urlopen(req, timeout=30) as r:
+            body, status, final = r.read(), r.status, r.geturl()
+        text = _norm(body, not url.endswith(".md"))
+        quotes = []
+        for ph in phrases:
+            assert len(ph.split()) <= 15, ph
+            quotes.append({"quote": ph, "words": len(ph.split()), "present_in_fetched_bytes": ph in text})
+        rows.append({"url": url, "final_url": final, "http_status": status, "fetched_at": fetched,
+                     "bytes": len(body), "sha256": sha(body), "quotes": quotes})
+        print(f"{status} {url} {len(body)}B sha256={sha(body)} quotes_ok={all(q['present_in_fetched_bytes'] for q in quotes)}")
+    doc = {"schema": "csoai.primary-source-check/0.1",
+           "question": "Is '2026-07-28' a real, published MCP protocol version, and what does it change about version negotiation?",
+           "method": ("each URL fetched once with urllib; sha256 is over the exact bytes received; each quote is checked against "
+                      "those bytes after stripping HTML tags (HTML pages), markdown emphasis/backticks, and collapsing whitespace. "
+                      "Bytes are not republished here (third-party content); re-fetch and compare, noting pages can change."),
+           "sources": rows,
+           "verdict": ("CONFIRMED" if all(q["present_in_fetched_bytes"] for r_ in rows for q in r_["quotes"])
+                       else "NOT CONFIRMED: a quote was absent")}
+    (out / EVIDENCE_REL).parent.mkdir(parents=True, exist_ok=True)
+    (out / EVIDENCE_REL).write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
+    print("verdict:", doc["verdict"], "file sha256:", fsha(out / EVIDENCE_REL))
+    if doc["verdict"] != "CONFIRMED":
+        sys.exit(2)
+
+
+def correct(a):
+    import copy
+    out = pathlib.Path(a.out)
+    raw = (out / "record.json").read_bytes()
+    assert sha(raw) == V0_1_SHA, f"record.json is not the published 0.1 ({sha(raw)})"
+    old = json.loads(raw)
+    ev = json.loads((out / EVIDENCE_REL).read_text())
+    assert ev["verdict"] == "CONFIRMED", ev["verdict"]
+    a1 = [x for x in old["anomalies"] if x["id"] == "A1"][0]
+    # the text being superseded must be the text that was published
+    assert old["protocol_version"]["note"] == V0_1_TEXT["protocol_version.note"]
+    assert a1["what_we_do_not_say"] == V0_1_TEXT["anomalies[A1].what_we_do_not_say"]
+    pv = old["protocol_version"]
+    ans = pv["answered"]
+    probe_rows = {}
+    if a.probe:
+        with gzip.open(pathlib.Path(a.probe) / "results.jsonl.gz", "rt") as fh:
+            for line in fh:
+                r_ = json.loads(line)
+                probe_rows[r_["endpoint"]] = r_
+    two28 = sorted({r_["host"] for r_ in probe_rows.values()
+                    if r_.get("state") == "RESPONDED" and r_.get("protocol_version") == "2026-07-28"})
+    two28_non_getvda = [h for h in two28 if not h.endswith("getvda.ai")]
+    assert probe_rows, "--probe DIR (the 0.1 probe rows) is required"
+    assert sum(1 for r_ in probe_rows.values()
+               if r_.get("state") == "RESPONDED" and r_.get("protocol_version") == "2026-07-28") == ans["2026-07-28"]
+
+    new = copy.deepcopy(old)
+    new["schema"] = "csoai.mcp-remote-census/0.1.1"
+    new["record_version"] = "0.1.1"
+    new["built_utc"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    new["supersedes"] = {
+        "record_version": "0.1", "file": "record.json", "sha256": V0_1_SHA,
+        "signed": {"file": "record.signed.json", "sha256": fsha(out / "record.signed.json")},
+        "ots": {"file": "record.json.ots", "sha256": fsha(out / "record.json.ots")},
+        "kept": "byte for byte, beside this record, in the dataset and in the repo; superseded, not deleted, not edited",
+    }
+    new["protocol_version"] = {
+        "requested": pv["requested"],
+        "requested_era": "legacy: the initialize-handshake revisions (2025-11-25 and earlier)",
+        "not_requested": ["2026-07-28"],
+        "answered": ans,
+        "note": PV_NOTE_0_1_1,
+    }
+    new["anomalies"] = [dict(x, what_we_do_not_say=A1_NOT_SAY_0_1_1) if x["id"] == "A1" else x for x in old["anomalies"]]
+    smoke = None
+    if a.smoke:
+        with gzip.open(pathlib.Path(a.smoke) / "results.jsonl.gz", "rt") as fh:
+            srows = [json.loads(line) for line in fh]
+        smoke = {"what_it_is": ("a SMOKE TEST of the corrected prober on 5 endpoints that RESPONDED on 2026-09-25, 1 worker, "
+                                ">= 1 s per host. Not a census, not a sample, not a measurement of the population; "
+                                "the rows below are the whole of it."),
+                 "results_sha256": fsha(pathlib.Path(a.smoke) / "results.jsonl.gz"),
+                 "window": [min(r_["started"] for r_ in srows), max(r_["finished"] for r_ in srows)],
+                 "rows": [{"endpoint": r_["endpoint"], "state": r_["state"], "era": r_.get("era"),
+                           "offered": r_.get("protocol_versions_offered"), "requested": r_.get("protocol_version_requested"),
+                           "negotiated": r_.get("protocol_version_negotiated"),
+                           "server_supported_versions": r_.get("server_supported_versions"),
+                           "answered_to_0.1_initialize_2025-11-25": (probe_rows.get(r_["endpoint"]) or {}).get("protocol_version")}
+                          for r_ in srows]}
+    n_g = len(two28) - len(two28_non_getvda)
+    new["correction"] = {
+        "record_version": "0.1.1",
+        "corrected_utc": new["built_utc"],
+        "scope": ("interpretation of protocolVersion only; no measurement re-run; every count, state, row and published "
+                  "file identical to 0.1"),
+        "what_was_wrong": [
+            {"where": "anomalies[A1].what_we_do_not_say",
+             "published_0_1_text": V0_1_TEXT["anomalies[A1].what_we_do_not_say"],
+             "defect": ("It left open whether '2026-07-28' is a real MCP protocol version. It is the current published MCP "
+                        "specification revision, released 2026-07-28, 59 days before this probe. We had not checked; one "
+                        "fetch settles it.")},
+            {"where": "protocol_version.note (README: 'protocolVersion answered')",
+             "published_0_1_text": V0_1_TEXT["protocol_version.note"],
+             "defect": ("It stated the legacy negotiation rule without saying that the version we requested, 2025-11-25, is "
+                        "itself a legacy revision and that we sent nothing in the current one. The distribution could be read "
+                        "as describing what current servers support; it describes what they negotiated against an older request.")},
+        ],
+        "what_is_right": [
+            ("2026-07-28 is a published MCP specification revision; the specification site labelled it '(latest)' when "
+             "fetched (evidence below)."),
+            ("It removes the initialize/initialized handshake and sessions: each request carries its protocol version in _meta "
+             "and, on HTTP, the MCP-Protocol-Version header; servers MUST implement server/discover; an unsupported version is "
+             "answered with UnsupportedProtocolVersionError (-32022) listing the supported ones. Revisions 2025-11-25 and "
+             "earlier are 'legacy'."),
+            ("Our 0.1 prober requested 2025-11-25 through a legacy initialize only. The protocolVersion distribution ("
+             + ", ".join(f"{k}: {v:,}" for k, v in ans.items()) +
+             ") is therefore servers' negotiation against an older requested version, not their maximum supported version. "
+             "Under the 2025-11-25 lifecycle a server that supports the requested version MUST answer with it, so the "
+             f"{ans.get('2025-11-25', 0):,} endpoints that answered 2025-11-25 include any that also support 2026-07-28; "
+             "this probe could not see which."),
+            (f"The {ans.get('2026-07-28', 0)} endpoints that answered '2026-07-28' ({n_g} getvda.ai hosts"
+             + (f", plus {', '.join(two28_non_getvda)}" if two28_non_getvda else "") +
+             ") named it inside a legacy initialize exchange, a handshake that revision retired. Under the 2025-11-25 "
+             "lifecycle a server answers a version other than the one requested only when it does not support the requested "
+             "one. We record what they answered and do not say which revision's behaviour they implement."),
+        ],
+        "brief_wording_not_found": ("The lane brief paraphrased the 0.1 record as calling 2026-07-28 'a version we did not "
+                                    "ask for and have not checked is real'. Those words are not in the 0.1 record or README; "
+                                    "the published texts that carried the defect are quoted verbatim above."),
+        "evidence": {"file": EVIDENCE_REL, "sha256": fsha(out / EVIDENCE_REL), "verdict": ev["verdict"],
+                     "sources": [{"url": r_["url"], "fetched_at": r_["fetched_at"], "sha256": r_["sha256"],
+                                  "quotes": [q["quote"] for q in r_["quotes"]]} for r_ in ev["sources"]]},
+        "prober_follow_up": {
+            "file": "scripts/census/mcp-remote-probe.py", "schema": "csoai.census-probe/0.2", "commit": a.prober_commit,
+            "what": ("offers 2026-07-28 first (server/discover with _meta and modern headers), follows -32022 to a listed "
+                     "version it speaks, never falls back past a recognised modern error, otherwise falls back to a legacy "
+                     "initialize requesting 2025-11-25; each row records protocol_versions_offered, "
+                     "protocol_version_requested, protocol_version_negotiated and era separately."),
+            "not_run_as_a_census": True,
+            "smoke": smoke,
+        },
+    }
+    new["producer"] = dict(old["producer"], correction_builder={
+        "file": "scripts/census/build-mcp-remote-census-record.py (evidence, correct)",
+        "sha256_at_build": fsha(pathlib.Path(__file__))})
+    new["verify"] = dict(
+        old["verify"],
+        signature=old["verify"]["signature"].replace("record.signed.json", "record.v0.1.1.signed.json")
+                                            .replace("sha256(record.json)", "sha256(record.v0.1.1.json)"),
+        timestamp=("record.v0.1.1.json.ots is an OpenTimestamps proof over sha256(record.v0.1.1.json); its state at "
+                   "publication is in record.v0.1.1.ots.json. A pending calendar commitment is not a Bitcoin attestation "
+                   "until `ots upgrade` and `ots verify` say so."),
+        supersedes="sha256(record.json) must equal supersedes.sha256; record.json, its signature and its proof are unchanged")
+    (out / "record.v0.1.1.json").write_text(json.dumps(new, indent=1, ensure_ascii=False) + "\n")
+    changed = sorted(k for k in set(old) | set(new) if old.get(k) != new.get(k))
+    print("changed top-level keys:", changed)
+    assert set(changed) <= {"schema", "record_version", "built_utc", "supersedes", "protocol_version", "anomalies",
+                            "correction", "producer", "verify"}, changed
+    assert new["protocol_version"]["answered"] == old["protocol_version"]["answered"]
+    assert [x["measured"] for x in new["anomalies"]] == [x["measured"] for x in old["anomalies"]]
+    print(f"record.v0.1.1.json sha256={fsha(out / 'record.v0.1.1.json')}")
+
+
+def _corrections_md(out):
+    new = json.loads((out / "record.v0.1.1.json").read_text()); c = new["correction"]
+    sig = json.loads((out / "record.v0.1.1.signed.json").read_text())
+    side = json.loads((out / "record.v0.1.1.ots.json").read_text())
+    ev = "\n".join(f"| {s_['url']} | {s_['fetched_at']} | `{s_['sha256']}` | "
+                   + " / ".join(f"\"{q}\"" for q in s_["quotes"]) + " |" for s_ in c["evidence"]["sources"])
+    wrong = "\n".join(f"- `{w['where']}` said: \"{w['published_0_1_text']}\". {w['defect']}" for w in c["what_was_wrong"])
+    right = "\n".join(f"- {x}" for x in c["what_is_right"])
+    sm = c["prober_follow_up"]["smoke"]
+    smd = ""
+    if sm:
+        smd = ("\n\nSmoke test of the corrected prober (5 endpoints, not a census; these rows are all of it):\n\n"
+               "| endpoint | era | requested | negotiated | server lists | answered to the 0.1 initialize |\n"
+               "|---|---|---|---|---|---|\n"
+               + "\n".join(f"| {r_['endpoint']} | {r_['era']} | {r_['requested']} | {r_['negotiated']} | "
+                           f"{', '.join(r_['server_supported_versions'] or []) or '-'} | "
+                           f"{r_['answered_to_0.1_initialize_2025-11-25']} |" for r_ in sm["rows"]))
+    return f"""## Corrections
+
+### 2026-09-25: record 0.1.1 supersedes 0.1 (how to read protocolVersion)
+
+`record.v0.1.1.json` (sha256 `{fsha(out / 'record.v0.1.1.json')}`) supersedes `record.json` (0.1, sha256
+`{new['supersedes']['sha256']}`). The 0.1 record, its signature and its timestamp proof are kept here unchanged.
+**Scope:** {c['scope']}. Text further down this card that repeats the 0.1 wording is superseded by this section.
+
+**What was wrong**
+
+{wrong}
+
+**What is right**
+
+{right}
+
+**Primary sources** (fetched, hashed, quotes checked against the fetched bytes; `{c['evidence']['file']}` in the repo,
+sha256 `{c['evidence']['sha256']}`):
+
+| URL | fetched (UTC) | sha256 of bytes | quoted |
+|---|---|---|---|
+{ev}
+
+**Prober.** `{c['prober_follow_up']['file']}` ({c['prober_follow_up']['schema']}, commit `{c['prober_follow_up']['commit']}`)
+{c['prober_follow_up']['what']} It has not been re-run as a census.{smd}
+
+**Verify 0.1.1.** `record.v0.1.1.signed.json`: Ed25519 by `{sig['signature']['did']}`, signed {sig['signature']['signed_at']},
+payload sha256 `{sig['signature']['payload_sha256']}`; verify exactly as for 0.1 below, with the 0.1.1 file names.
+`record.v0.1.1.json.ots`: {len(side['attestations'])} pending calendar attestations at publication, **{side['state']}**,
+not a Bitcoin attestation.
+
+"""
+
+
+def publish_correction(a):
+    from huggingface_hub import HfApi, CommitOperationAdd, hf_hub_download
+    out = pathlib.Path(a.out)
+    api = HfApi(token=pathlib.Path(os.path.expanduser(a.hf_token)).read_text().strip())
+    old_files = ["record.json", "record.signed.json", "record.json.ots", "record.ots.json"]
+    new_files = ["record.v0.1.1.json", "record.v0.1.1.signed.json", "record.v0.1.1.json.ots", "record.v0.1.1.ots.json"]
+    before = api.dataset_info(HF_REPO).sha
+
+    def remote(rev, names):
+        return {n: fsha(pathlib.Path(hf_hub_download(HF_REPO, n, repo_type="dataset", revision=rev, token=api.token)))
+                for n in names}
+    rb = remote(before, old_files)
+    local = {n: fsha(out / n) for n in old_files}
+    assert rb == local, f"HF 0.1 files differ from the lane copies: {rb} vs {local}"
+    md = pathlib.Path(hf_hub_download(HF_REPO, "README.md", repo_type="dataset", revision=before, token=api.token)).read_text()
+    sec = _corrections_md(out)
+    if "\n## Corrections\n" in md:
+        head, rest = md.split("\n## Corrections\n", 1)
+        nxt = rest.find("\n## ")
+        md2 = head + "\n" + sec.rstrip("\n") + "\n" + (rest[nxt:] if nxt >= 0 else "")
+    else:
+        i = md.find("\n## ")
+        md2 = md[:i + 1] + sec + md[i + 1:]
+    ops = [CommitOperationAdd(path_in_repo=n, path_or_fileobj=str(out / n)) for n in new_files]
+    ops.append(CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=md2.encode()))
+    ci = api.create_commit(HF_REPO, repo_type="dataset", operations=ops,
+                           commit_message=("Correction: record 0.1.1 supersedes 0.1 (2026-07-28 is a real MCP revision; "
+                                           "we requested 2025-11-25)"),
+                           commit_description="0.1 files kept unchanged. Scope: protocolVersion interpretation only; no measurement changed.",
+                           parent_commit=before)
+    after = ci.oid
+    ra = remote(after, old_files)
+    assert ra == rb, f"0.1 files changed on HF: {rb} -> {ra}"
+    rn = remote(after, new_files)
+    assert rn == {n: fsha(out / n) for n in new_files}, rn
+    receipt = {"schema": "csoai.hf-publication/0.1", "repo": f"datasets/{HF_REPO}", "parent": before, "commit": after,
+               "commit_url": ci.commit_url, "added": rn, "readme_sha256": sha(md2.encode()),
+               "old_files_before": rb, "old_files_after": ra, "old_files_unchanged": ra == rb}
+    (out / "record.v0.1.1.hf-publication.json").write_text(json.dumps(receipt, indent=1) + "\n")
+    print(json.dumps({k: receipt[k] for k in ("parent", "commit", "old_files_unchanged")}))
+
+
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["build", "sign", "ots", "readme"])
+    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["build", "sign", "ots", "readme", "evidence", "correct", "publish-correction"])
     ap.add_argument("--frame"); ap.add_argument("--probe"); ap.add_argument("--out", required=True); ap.add_argument("--stage"); ap.add_argument("--other-read")
     ap.add_argument("--token", default="~/.secrets/board-sign-pod-token")
+    ap.add_argument("--record", default="record.json")
+    ap.add_argument("--prober-commit"); ap.add_argument("--smoke"); ap.add_argument("--hf-token", default="~/.secrets/hf_token")
     a = ap.parse_args()
-    {"build": build, "sign": sign, "ots": ots, "readme": readme}[a.cmd](a)
+    {"build": build, "sign": sign, "ots": ots, "readme": readme, "evidence": evidence, "correct": correct,
+     "publish-correction": publish_correction}[a.cmd](a)
