@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>csoai/a2a-card-census — signed evidence record | Council of AI</title>
+<meta name="description" content="Signed evidence record from csoai/a2a-card-census: the record&#39;s own numbers verbatim, its stated limits, sha256, signature and timestamp state, and how to verify it yourself. Evidence, not a grade.">
+<link rel="canonical" href="https://councilof.ai/evidence/a2a-card-census/2026-09-25-b290b53d0591/">
+<meta name="generator" content="scripts/pubbus (publication bus)">
+<style>
+:root{color-scheme:dark;--bg:#020617;--card:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--accent:#6ee7b7;--warn:#fcd34d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:2.5rem 1rem 4rem}a{color:var(--accent)}
+h1{font-size:1.9rem;line-height:1.2;margin:.4rem 0 1rem}h2{font-size:1.15rem;margin:2.2rem 0 .6rem}
+.eyebrow{font:600 .72rem/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:.8rem;padding:1rem 1.1rem;margin:.8rem 0}
+.state-CURRENT{border-color:#065f46}.state-SUPERSEDED{border-color:#92400e;color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem}
+pre{background:#000;border:1px solid var(--line);border-radius:.6rem;padding:.8rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+td code{word-break:break-all}.muted{color:var(--muted)}ul{padding-left:1.2rem}li{margin:.25rem 0}
+footer{margin-top:3rem;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Signed evidence record · csoai/a2a-card-census</p>
+<h1>csoai/a2a-card-census</h1>
+<!--pubbus:state--><div class="card state-CURRENT" data-state="CURRENT"><strong>CURRENT.</strong> This is the newest signed record in this series. Every version stays published: <a href="/evidence/a2a-card-census/">all versions</a>.</div><!--/pubbus:state-->
+<p>A dated measurement of every a2aregistry listing in the 2026-09-25 census frame (443 listings): whether its A2A agent card was served, and whether the card&#39;s signatures verify under a key the card itself points to, from one place.</p>
+<h2>The signed numbers, verbatim</h2>
+<p class="muted">Every field of the signed payload, copied as signed. Nothing on this page is computed, rounded or totalled.</p>
+<table>
+<tr><th><code>read_state</code></th><td>EXHAUSTED</td></tr>
+<tr><th><code>n_planned</code></th><td>443</td></tr>
+<tr><th><code>states.CARD_SERVED</code></th><td>422</td></tr>
+<tr><th><code>states.ROBOTS_DISALLOWED</code></th><td>9</td></tr>
+<tr><th><code>states.NOT_FOUND</code></th><td>5</td></tr>
+<tr><th><code>states.UNREACHABLE</code></th><td>5</td></tr>
+<tr><th><code>states.AUTH_REQUIRED</code></th><td>2</td></tr>
+<tr><th><code>summary_cross_checks_hold</code></th><td>true</td></tr>
+</table>
+<h2>Limits the record states about itself</h2>
+<ul><li><code>signed payload: not_a_grade</code> — The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record&#39;s own instruments measured.</li>
+<li><code>limits.min_interval_s_per_host</code> — 1.0</li>
+<li><code>limits.connections_per_host</code> — 1</li>
+<li><code>limits.workers</code> — 16</li>
+<li><code>limits.connect_timeout_s</code> — 10.0</li>
+<li><code>limits.read_timeout_s</code> — 15.0</li>
+<li><code>limits.max_redirects_same_host</code> — 3</li>
+<li><code>not_evidence_of</code> — that any agent works, is safe, is who it says, or does what its skills say</li>
+<li><code>not_evidence_of</code> — that a VERIFIED signature proves identity: it proves only that the key the card points to signed these bytes (embedded_jwk: integrity only)</li>
+<li><code>not_evidence_of</code> — that a FAILED or UNCHECKABLE card is malicious; it may be a canonicalisation or key-publication mistake</li>
+<li><code>not_evidence_of</code> — endorsement, ranking, grading, or approval of any agent or operator</li>
+<li><code>not_evidence_of</code> — a population total of A2A agents: the frame is one registry&#39;s listings on 2026-09-25</li>
+<li><code>not_evidence_of</code> — reachability at any other moment or from any other network location</li>
+<li><code>read_state EXHAUSTED means</code> — every listing of the frame reached exactly one state</li></ul>
+<h2>Identity</h2>
+<table>
+<tr><th>record</th><td><a href="https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json"><code>record.json</code></a></td></tr>
+<tr><th>record sha256</th><td><code>b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c</code> (recomputed from the bytes; equals the signed <code>artifact.sha256</code>)</td></tr>
+<tr><th>record schema</th><td><code>csoai.a2a-card-census/0.1</code></td></tr>
+<tr><th>as_of</th><td><code>2026-09-25T07:25:59Z</code></td></tr>
+<tr><th>signed document</th><td><a href="https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.signed.json"><code>record.signed.json</code></a> · sha256 <code>b8caf1f8f4a5fd4f10312c5e9269242f506daffe2849c076d19845895648e1fd</code></td></tr>
+<tr><th>signature</th><td><strong>VERIFIED</strong> under <code>did:web:csoai.org#board-attestation-1</code>; payload sha256 <code>c90d82f8b727b07f63f15fc667d42775417e245bdda1aa91bcd82cfac9efe228</code>; signed_at <code>2026-09-25T08:22:33.567Z</code>; tamper control rejected</td></tr>
+<tr><th>pinned at</th><td>Hugging Face dataset <a href="https://huggingface.co/datasets/csoai/a2a-card-census">csoai/a2a-card-census</a>, revision <code>8bf5d491b80db27f0a338986eb7fa7f78e321974</code></td></tr>
+</table>
+<h2>Files the signature pins</h2><table><tr><td><code>data/cards.jsonl.gz</code></td><td><code>9d5eaf5bb0866aa16521f1b95064091ce9914d4f957ca75ef273063e4ee4f160</code></td></tr>
+<tr><td><code>run/summary.json</code></td><td><code>f32890d749cde7c15dafd61ce848661b5a0aeac440b0289a32ff7796c3651c34</code></td></tr>
+<tr><td><code>run/superseded-run1-summary.json</code></td><td><code>ac4a25a88a9a5b9280b26cbee90aa8b9642ce3d4a15caa80d63d6513bbec990d</code></td></tr>
+<tr><td><code>run/superseded-run1-SUPERSEDED.txt</code></td><td><code>a773870ff1cdf49a5206da354a0cf3f742c42e40cff8c77e3aa35e42d48eb2f4</code></td></tr></table>
+<h2>Timestamp (OpenTimestamps)</h2>
+<p><strong>BITCOIN_ATTESTATION_IN_PROOF</strong>. The proof bytes carry a Bitcoin block-header attestation tag. This bus did not check the block header; `ots verify` against your own node does.</p>
+<ul>
+<li>proof: <a href="https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json.ots"><code>record.json.ots</code></a> — <code>PENDING_CALENDAR_COMMITMENT</code></li>
+<li>upgraded proof: <a href="https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/ots-upgraded/2026-09-25/record.json.ots"><code>ots-upgraded/2026-09-25/record.json.ots</code></a> — <code>BITCOIN_ATTESTATION_IN_PROOF</code></li>
+<li>upgrade receipt: <a href="https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/ots-upgraded/2026-09-25/OTS-UPGRADE.json"><code>OTS-UPGRADE.json</code></a></li>
+<li>receipt: block height 968527, header check <code>MATCHES_HEADER</code> (source https://blockstream.info/api)</li>
+</ul>
+<h2>Verify it yourself</h2>
+<p>Free, no account, no key. The first command asks the site's verifier door; the second checks that the record bytes are the ones the signature pins; the third checks the timestamp with the OpenTimestamps client.</p>
+<pre>curl -sL 'https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.signed.json' -o signed.json
+curl -s -X POST https://councilof.ai/api/verify -H 'content-type: application/json' --data-binary @signed.json
+#   expect "state": "VALID" (Ed25519 over the canonical payload, pinned board key)
+
+curl -sL 'https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json' | sha256sum
+#   must print b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c
+
+curl -sL 'https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json' -o record.json
+curl -sL 'https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/ots-upgraded/2026-09-25/record.json.ots' -o record.json.ots
+ots verify -f record.json record.json.ots</pre>
+<p>The record's own verification instructions, verbatim:</p><ul><li><code>signature</code> — record.signed.json: canonicalise its payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.json); verify signature.sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json</li>
+<li><code>timestamp</code> — record.json.ots is an OpenTimestamps proof over sha256(record.json). When published it was a PENDING calendar commitment; `ots upgrade` then `ots verify record.json.ots` against a Bitcoin node decides whether it has become a Bitcoin attestation</li>
+<li><code>files</code> — sha256 of every published file is in published_files and is pinned by the signature through record.json</li></ul>
+<footer>
+<p>Evidence linked from the GSPC board, never counted into it: board totals are <a href="/api/gspc">GET /api/gspc</a>. Measurement, not certification. Naming a party that appears in a record is not an endorsement of it or by it. Machine list of every record page: <a href="/evidence/published-records.json">/evidence/published-records.json</a>. Service status: <a href="/status">/status</a>. Corrections: <a href="/api/corrections">/api/corrections</a>.</p>
+</footer>
+</main>
+</body>
+</html>

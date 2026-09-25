@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>csoai/cross-ledger-supply — cross-ledger-usdc — signed evidence record | Council of AI</title>
+<meta name="description" content="Signed evidence record from csoai/cross-ledger-supply: the record&#39;s own numbers verbatim, its stated limits, sha256, signature and timestamp state, and how to verify it yourself. Evidence, not a grade.">
+<link rel="canonical" href="https://councilof.ai/evidence/cross-ledger-usdc/2026-09-25-1a1009dc98a6/">
+<meta name="generator" content="scripts/pubbus (publication bus)">
+<style>
+:root{color-scheme:dark;--bg:#020617;--card:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--accent:#6ee7b7;--warn:#fcd34d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:2.5rem 1rem 4rem}a{color:var(--accent)}
+h1{font-size:1.9rem;line-height:1.2;margin:.4rem 0 1rem}h2{font-size:1.15rem;margin:2.2rem 0 .6rem}
+.eyebrow{font:600 .72rem/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:.8rem;padding:1rem 1.1rem;margin:.8rem 0}
+.state-CURRENT{border-color:#065f46}.state-SUPERSEDED{border-color:#92400e;color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem}
+pre{background:#000;border:1px solid var(--line);border-radius:.6rem;padding:.8rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+td code{word-break:break-all}.muted{color:var(--muted)}ul{padding-left:1.2rem}li{margin:.25rem 0}
+footer{margin-top:3rem;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Signed evidence record · csoai/cross-ledger-supply</p>
+<h1>csoai/cross-ledger-supply — cross-ledger-usdc</h1>
+<!--pubbus:state--><div class="card state-CURRENT" data-state="CURRENT"><strong>CURRENT.</strong> This is the newest signed record in this series. Every version stays published: <a href="/evidence/cross-ledger-usdc/">all versions</a>.</div><!--/pubbus:state-->
+
+<h2>The signed numbers, verbatim</h2>
+<p class="muted">Every field of the signed payload, copied as signed. Nothing on this page is computed, rounded or totalled.</p>
+<table>
+<tr><th><code>asset</code></th><td>USDC</td></tr>
+<tr><th><code>issuer_list_state</code></th><td>READ</td></tr>
+<tr><th><code>reconciliation_state</code></th><td>UNRECONCILED (pilot record predates the field)</td></tr>
+<tr><th><code>reads</code></th><td>[[&quot;USDC&quot;, &quot;ethereum&quot;, &quot;50430781860.131977&quot;, &quot;STATE_PROOF_VERIFIED&quot;], [&quot;USDC&quot;, &quot;solana&quot;, &quot;8217034486.977972&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;stellar&quot;, &quot;351156763.2854447&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;hedera&quot;, &quot;450010110.000000&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;sui&quot;, &quot;308316102.717780&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;noble&quot;, &quot;103762748.544811&quot;, &quot;STATE_PROOF_VERIFIED&quot;], [&quot;USDC&quot;, &quot;xrpl&quot;, &quot;4617919.108900781&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;arbitrum&quot;, &quot;2936979871.811699&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;avalanche&quot;, &quot;400293471.158739&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;base&quot;, &quot;4294533060.719965&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;celo&quot;, &quot;15228623.488166&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;hyperevm&quot;, &quot;6833999685.532186&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;linea&quot;, &quot;24249450.507182&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;optimism&quot;, &quot;166249049.371377&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;polygon&quot;, &quot;605542291.149054&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;sonic&quot;, &quot;126238586.178445&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;unichain&quot;, &quot;23588472.591813&quot;, &quot;OPERATOR_API&quot;], [&quot;USDC&quot;, &quot;zksync&quot;, &quot;10636491.412155&quot;, &quot;OPERATOR_API&quot;]]</td></tr>
+<tr><th><code>as_of_note</code></th><td>record bytes unchanged since the pilot run (started 2026-09-25T04:18:40Z); its internal &#39;unsigned&#39; status line predates this signature and describes the run, not this file</td></tr>
+</table>
+<h2>Limits the record states about itself</h2>
+<ul><li><code>signed payload: not_a_grade</code> — The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record&#39;s own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability or compliance.</li>
+<li><code>not_evidence_of</code> — reserves</li>
+<li><code>not_evidence_of</code> — backing</li>
+<li><code>not_evidence_of</code> — redeemability</li>
+<li><code>not_evidence_of</code> — issuer solvency</li>
+<li><code>not_evidence_of</code> — the value of anything</li>
+<li><code>not_evidence_of</code> — circulating supply (issued supply only; no holder is excluded)</li>
+<li><code>not_evidence_of</code> — that a ledger&#39;s USDC is interchangeable with another&#39;s — only what each ledger&#39;s state says</li>
+<li><code>honesty</code> — Not a reserve attestation, not a proof of backing. A number labelled OPERATOR_API is one operator&#39;s API answer and is not a proof; two operators agreeing is still not a proof. STATE_PROOF_VERIFIED means a Merkle proof was checked here against a header&#39;s state commitment — the header itself was not checked against consensus. We measure and sign; we never tokenize, mint, custody or sell an instrument. No investment advice or price view.</li></ul>
+<h2>Identity</h2>
+<table>
+<tr><th>record</th><td><a href="https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json"><code>cross-ledger-usdc-2026-09-25.json</code></a></td></tr>
+<tr><th>record sha256</th><td><code>1a1009dc98a6a459d00e9f34a1581c295a0f803d832111b04531513ad642b63a</code> (recomputed from the bytes; equals the signed <code>artifact.sha256</code>)</td></tr>
+<tr><th>record schema</th><td><code>csoai.cross-ledger-supply/0.1</code></td></tr>
+<tr><th>as_of</th><td><code>2026-09-25T04:18:40Z</code></td></tr>
+<tr><th>signed document</th><td><a href="https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.signed.json"><code>cross-ledger-usdc-2026-09-25.signed.json</code></a> · sha256 <code>eee68d307c254a438d4c3cc2c369b19ba6581321df9e761939213961fef41937</code></td></tr>
+<tr><th>signature</th><td><strong>VERIFIED</strong> under <code>did:web:csoai.org#board-attestation-1</code>; payload sha256 <code>2fdef0860a5404bed1a7025ad5cca60334414a5df5c0c64d878cab2be3e87236</code>; signed_at <code>2026-09-25T11:22:18.153Z</code>; tamper control rejected</td></tr>
+<tr><th>pinned at</th><td>Hugging Face dataset <a href="https://huggingface.co/datasets/csoai/cross-ledger-supply">csoai/cross-ledger-supply</a>, revision <code>8e2e5514db8b2c8c440519ce94d9dfcacec5461a</code></td></tr>
+</table>
+<h2>Files the signature pins</h2><table><tr><td><code>/interop/cross-ledger-usdc-2026-09-25/ethereum-proof.json</code></td><td><code>3e846f5b081b986b0189931709cf0a450a34a8a65649cb0b01d7a14a2c948f13</code></td></tr>
+<tr><td><code>/interop/cross-ledger-usdc-2026-09-25/noble-proof.json</code></td><td><code>846de4519eaced48e745ac378b046d6f92b2a07c006aee0a1e6a3fb0f4a9fef4</code></td></tr></table>
+<h2>Timestamp (OpenTimestamps)</h2>
+<p><strong>PENDING_CALENDAR_COMMITMENT</strong>. Calendars accepted the digest and promised future Bitcoin inclusion. This is a submitted request, not a Bitcoin attestation.</p>
+<ul>
+<li>proof: <a href="https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json.ots"><code>cross-ledger-usdc-2026-09-25.json.ots</code></a> — <code>PENDING_CALENDAR_COMMITMENT</code></li>
+
+
+
+</ul>
+<h2>Verify it yourself</h2>
+<p>Free, no account, no key. The first command asks the site's verifier door; the second checks that the record bytes are the ones the signature pins; the third checks the timestamp with the OpenTimestamps client.</p>
+<pre>curl -sL 'https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.signed.json' -o signed.json
+curl -s -X POST https://councilof.ai/api/verify -H 'content-type: application/json' --data-binary @signed.json
+#   expect "state": "VALID" (Ed25519 over the canonical payload, pinned board key)
+
+curl -sL 'https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json' | sha256sum
+#   must print 1a1009dc98a6a459d00e9f34a1581c295a0f803d832111b04531513ad642b63a
+
+curl -sL 'https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json' -o cross-ledger-usdc-2026-09-25.json
+curl -sL 'https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json.ots' -o cross-ledger-usdc-2026-09-25.json.ots
+ots verify -f cross-ledger-usdc-2026-09-25.json cross-ledger-usdc-2026-09-25.json.ots</pre>
+
+<footer>
+<p>Evidence linked from the GSPC board, never counted into it: board totals are <a href="/api/gspc">GET /api/gspc</a>. Measurement, not certification. Naming a party that appears in a record is not an endorsement of it or by it. Machine list of every record page: <a href="/evidence/published-records.json">/evidence/published-records.json</a>. Service status: <a href="/status">/status</a>. Corrections: <a href="/api/corrections">/api/corrections</a>.</p>
+</footer>
+</main>
+</body>
+</html>

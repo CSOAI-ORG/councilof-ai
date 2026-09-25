@@ -1,0 +1,565 @@
+{
+ "schema": "csoai.pubbus-manifest/0.1",
+ "what_this_is": "Every signed evidence record the publication bus (scripts/pubbus) has verified and published as a page, with each version's state. Written by the bus; never hand-edited.",
+ "not_board": "Evidence linked from the GSPC board, never counted into it. Board totals: GET https://councilof.ai/api/gspc.",
+ "verification": "Each record's csoai.signed-run/0.1 signature was verified against https://csoai.org/.well-known/did.json with a tamper control, and the record's sha256 was recomputed and matched before its page was written. Timestamp states are read from the proof bytes.",
+ "records": [
+  {
+   "slug": "a2a-card-census",
+   "dataset": "a2a-card-census",
+   "title": "csoai/a2a-card-census",
+   "page_index": "/evidence/a2a-card-census/",
+   "versions": [
+    {
+     "version": "2026-09-25-b290b53d0591",
+     "page": "/evidence/a2a-card-census/2026-09-25-b290b53d0591/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T07:25:59Z",
+     "read_state": "EXHAUSTED",
+     "record_sha256": "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c",
+     "signed_sha256": "b8caf1f8f4a5fd4f10312c5e9269242f506daffe2849c076d19845895648e1fd",
+     "supersedes_sha256": null,
+     "revision": "8bf5d491b80db27f0a338986eb7fa7f78e321974",
+     "artifact_path": "record.json",
+     "signed_path": "record.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "c90d82f8b727b07f63f15fc667d42775417e245bdda1aa91bcd82cfac9efe228",
+      "signed_at": "2026-09-25T08:22:33.567Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "proof_url": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/ots-upgraded/2026-09-25/record.json.ots",
+      "upgraded_proof_state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "receipt_url": "https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "receipt_bitcoin": [
+       {
+        "height": 968527,
+        "result": "MATCHES_HEADER",
+        "header_source": "https://blockstream.info/api"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-benji",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-benji",
+   "page_index": "/evidence/cross-ledger-benji/",
+   "versions": [
+    {
+     "version": "2026-09-25-51ec46fbe5ab",
+     "page": "/evidence/cross-ledger-benji/2026-09-25-51ec46fbe5ab/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:12:21Z",
+     "read_state": null,
+     "record_sha256": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+     "signed_sha256": "a82bfb795e58c87b1f3697ac6f2956d0ae257909a5c91d7ca1bac5665963f72c",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-benji-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-benji-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-benji-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-benji-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "b7563a47a5f3e635cf40e2aa6e6ffbe06c3aaccebf35814a4b3ce624bed56215",
+      "signed_at": "2026-09-25T11:22:15.085Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-benji-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-bny-digital-cash",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-bny-digital-cash",
+   "page_index": "/evidence/cross-ledger-bny-digital-cash/",
+   "versions": [
+    {
+     "version": "2026-09-25-ec9bf90130e4",
+     "page": "/evidence/cross-ledger-bny-digital-cash/2026-09-25-ec9bf90130e4/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:19:07Z",
+     "read_state": null,
+     "record_sha256": "ec9bf90130e449a01c4814a697dac351a02abc832cd2c426db3255ef1bbf03c9",
+     "signed_sha256": "dd76f430ce67c771657c403e1b7b80d7d75781af1d1cfa094e5e61a75fe286c7",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-bny-digital-cash-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-bny-digital-cash-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-bny-digital-cash-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-bny-digital-cash-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "e2c1832f29ea1352fa2c98e26fcd199106075dd3217c5044323722f488c9b464",
+      "signed_at": "2026-09-25T11:22:16.030Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-bny-digital-cash-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-buidl",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-buidl",
+   "page_index": "/evidence/cross-ledger-buidl/",
+   "versions": [
+    {
+     "version": "2026-09-25-cf280c0b6c99",
+     "page": "/evidence/cross-ledger-buidl/2026-09-25-cf280c0b6c99/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:18:54Z",
+     "read_state": null,
+     "record_sha256": "cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56",
+     "signed_sha256": "c65332b9c392b0800f829a72e56816c96899070b132f31968ee0b4b733cb14dc",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-buidl-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-buidl-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-buidl-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-buidl-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "f5954652c6586c3fc09a3a0e40fb5af7b6544b42c8773ea6af7149db64f1bb57",
+      "signed_at": "2026-09-25T11:22:16.580Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-buidl-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-citi-token-services",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-citi-token-services",
+   "page_index": "/evidence/cross-ledger-citi-token-services/",
+   "versions": [
+    {
+     "version": "2026-09-25-796c03215483",
+     "page": "/evidence/cross-ledger-citi-token-services/2026-09-25-796c03215483/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:18:58Z",
+     "read_state": null,
+     "record_sha256": "796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab",
+     "signed_sha256": "4cce291fc2d8cbe65199eebc4067141debf65918f7ae78880225ca7e8b6d67a7",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-citi-token-services-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-citi-token-services-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-citi-token-services-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-citi-token-services-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "7d2ff0540df989ade4cc2bc05465c06c3b0ff592b62dfe329b3c7aec1f1bc92d",
+      "signed_at": "2026-09-25T11:22:17.186Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-citi-token-services-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-hsbc-tokenised-deposit-service",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-hsbc-tokenised-deposit-service",
+   "page_index": "/evidence/cross-ledger-hsbc-tokenised-deposit-service/",
+   "versions": [
+    {
+     "version": "2026-09-25-48dd4f9722bd",
+     "page": "/evidence/cross-ledger-hsbc-tokenised-deposit-service/2026-09-25-48dd4f9722bd/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:19:05Z",
+     "read_state": null,
+     "record_sha256": "48dd4f9722bd1d27836fa65cfc4081b45c41eee51fea7d686b3483fd7ac364e3",
+     "signed_sha256": "c95967c53dbac251cdf0aaa06a3eef238c430d6c9a61d978d1b3b4014a2e1e7b",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "0eefd5cdfd0c1e26e91a7ed4b52ea38aacb4d7d470ed61bb3c11524ee3881d2e",
+      "signed_at": "2026-09-25T11:22:17.529Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-jpmd",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-jpmd",
+   "page_index": "/evidence/cross-ledger-jpmd/",
+   "versions": [
+    {
+     "version": "2026-09-25-ce0e151f6dd0",
+     "page": "/evidence/cross-ledger-jpmd/2026-09-25-ce0e151f6dd0/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:18:07Z",
+     "read_state": null,
+     "record_sha256": "ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b",
+     "signed_sha256": "ea14b09b8b1c51508576c8ed0862f9f37b6b9652ffc9bcaf736c1235f8c9a07f",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-jpmd-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-jpmd-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-jpmd-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-jpmd-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "827b040f485e7f293b3a6c772f0c2e628a35b4b4a27b22aad704b863aa260aaa",
+      "signed_at": "2026-09-25T11:22:17.940Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-jpmd-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "cross-ledger-usdc",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — cross-ledger-usdc",
+   "page_index": "/evidence/cross-ledger-usdc/",
+   "versions": [
+    {
+     "version": "2026-09-25-1a1009dc98a6",
+     "page": "/evidence/cross-ledger-usdc/2026-09-25-1a1009dc98a6/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T04:18:40Z",
+     "read_state": null,
+     "record_sha256": "1a1009dc98a6a459d00e9f34a1581c295a0f803d832111b04531513ad642b63a",
+     "signed_sha256": "eee68d307c254a438d4c3cc2c369b19ba6581321df9e761939213961fef41937",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/cross-ledger-usdc-2026-09-25.json",
+     "signed_path": "interop/cross-ledger-usdc-2026-09-25.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "2fdef0860a5404bed1a7025ad5cca60334414a5df5c0c64d878cab2be3e87236",
+      "signed_at": "2026-09-25T11:22:18.153Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "hf-mcp-spaces-census",
+   "dataset": "hf-mcp-spaces-census",
+   "title": "csoai/hf-mcp-spaces-census",
+   "page_index": "/evidence/hf-mcp-spaces-census/",
+   "versions": [
+    {
+     "version": "2026-09-25-53022d26ca32",
+     "page": "/evidence/hf-mcp-spaces-census/2026-09-25-53022d26ca32/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T07:59:36Z",
+     "read_state": "EXHAUSTED",
+     "record_sha256": "53022d26ca321b291ca5578b3b318ef645ecf1e4343b13320ebc91642abb906e",
+     "signed_sha256": "80321ff86a6b08b68115b1b19bd57b4199f971b1aec73aa6c55d2bc5a1464f56",
+     "supersedes_sha256": null,
+     "revision": "aa0da633215385c8c3ac968a69a63eb76a151733",
+     "artifact_path": "record.json",
+     "signed_path": "record.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/resolve/aa0da633215385c8c3ac968a69a63eb76a151733/record.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/resolve/aa0da633215385c8c3ac968a69a63eb76a151733/record.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "75059af0cdb139738f2124aa07e17924be3ddc53ed2792f1a20baa72d8d9a8bb",
+      "signed_at": "2026-09-25T08:22:30.245Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "proof_url": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/resolve/aa0da633215385c8c3ac968a69a63eb76a151733/record.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/resolve/aa0da633215385c8c3ac968a69a63eb76a151733/ots-upgraded/2026-09-25/record.json.ots",
+      "upgraded_proof_state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "receipt_url": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/resolve/aa0da633215385c8c3ac968a69a63eb76a151733/ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "receipt_bitcoin": [
+       {
+        "height": 968537,
+        "result": "MATCHES_HEADER",
+        "header_source": "https://blockstream.info/api"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "slug": "institutional-evidence-links",
+   "dataset": "cross-ledger-supply",
+   "title": "csoai/cross-ledger-supply — institutional-evidence-links",
+   "page_index": "/evidence/institutional-evidence-links/",
+   "versions": [
+    {
+     "version": "2026-09-25-93bf6eae5289",
+     "page": "/evidence/institutional-evidence-links/2026-09-25-93bf6eae5289/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T11:24:01Z",
+     "read_state": null,
+     "record_sha256": "93bf6eae5289f0d000363ef512a91d84ae583d4f6ee43fe57678f724bf45fbf3",
+     "signed_sha256": "4382ebe4e5a14cf9a424b4be939327f486afc88c8c4c01cdfa77d5c1d1f6e0ac",
+     "supersedes_sha256": null,
+     "revision": "8e2e5514db8b2c8c440519ce94d9dfcacec5461a",
+     "artifact_path": "interop/institutional-evidence-links.json",
+     "signed_path": "interop/institutional-evidence-links.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/institutional-evidence-links.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/institutional-evidence-links.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "07fb1bf217920c648915d2dfa991ec616f465d0105ae9d271ac32fe05fec0d5b",
+      "signed_at": "2026-09-25T11:24:08.630Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/institutional-evidence-links.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "mcp-contract-parity",
+   "dataset": "mcp-contract-parity",
+   "title": "csoai/mcp-contract-parity",
+   "page_index": "/evidence/mcp-contract-parity/",
+   "versions": [
+    {
+     "version": "2026-09-25-45e3fd63fc98",
+     "page": "/evidence/mcp-contract-parity/2026-09-25-45e3fd63fc98/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T12:24:52Z",
+     "read_state": "EXHAUSTED",
+     "record_sha256": "45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323",
+     "signed_sha256": "58458051bb7b1db6a5d32f22ee08ad345434c8e57df74e4d62deab713904d5fa",
+     "supersedes_sha256": null,
+     "revision": "0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf",
+     "artifact_path": "record.json",
+     "signed_path": "record.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "59dacc84e9f70c656c90567b37fe0201e01fe9c33b5567e5a705c374b43952f0",
+      "signed_at": "2026-09-25T12:25:41.808Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_url": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": null,
+      "upgraded_proof_state": null,
+      "receipt_url": null,
+      "receipt_bitcoin": []
+     }
+    }
+   ]
+  },
+  {
+   "slug": "mcp-remote-census",
+   "dataset": "mcp-remote-census",
+   "title": "csoai/mcp-remote-census",
+   "page_index": "/evidence/mcp-remote-census/",
+   "versions": [
+    {
+     "version": "2026-09-25-c4880fdba787",
+     "page": "/evidence/mcp-remote-census/2026-09-25-c4880fdba787/",
+     "state": "SUPERSEDED",
+     "superseded_by": "2026-09-25-fd5c8a7a65f2",
+     "superseded_reason": "The newer record declares that it supersedes this one (supersedes_sha256): a correction.",
+     "as_of": "2026-09-25T06:54:10Z",
+     "read_state": "PARTIAL",
+     "record_sha256": "c4880fdba78709034466045f6c2ac1eda7c466c96502c75cca68ea34795dce84",
+     "signed_sha256": "99e0e2f0648c1eb4999d4383466605c61c2fb3a1d3c6aa66c903f3bf6fb9dc8e",
+     "supersedes_sha256": null,
+     "revision": "05ff73132ac88399f8d873c39d11bb7533635e39",
+     "artifact_path": "record.json",
+     "signed_path": "record.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "1ca429b8617bca1bea198861c8a505622b6c751f7853b83454d3668789f78842",
+      "signed_at": "2026-09-25T07:07:20.977Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "proof_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/record.json.ots",
+      "upgraded_proof_state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "receipt_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "receipt_bitcoin": [
+       {
+        "height": 968537,
+        "result": "MATCHES_HEADER",
+        "header_source": "https://blockstream.info/api"
+       }
+      ]
+     }
+    },
+    {
+     "version": "2026-09-25-fd5c8a7a65f2",
+     "page": "/evidence/mcp-remote-census/2026-09-25-fd5c8a7a65f2/",
+     "state": "CURRENT",
+     "superseded_by": null,
+     "superseded_reason": null,
+     "as_of": "2026-09-25T06:54:10Z",
+     "read_state": "PARTIAL",
+     "record_sha256": "fd5c8a7a65f23f7080f2859e386afe474f8a2d1d8316e5be60be4304dff7118a",
+     "signed_sha256": "9481ebd94a8442d101d7e0c52de939ad9fb442f9807a9d22b29a4a8b547df27d",
+     "supersedes_sha256": "c4880fdba78709034466045f6c2ac1eda7c466c96502c75cca68ea34795dce84",
+     "revision": "05ff73132ac88399f8d873c39d11bb7533635e39",
+     "artifact_path": "record.v0.1.1.json",
+     "signed_path": "record.v0.1.1.signed.json",
+     "record_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json",
+     "signed_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.signed.json",
+     "signature": {
+      "state": "VERIFIED",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "payload_sha256": "e72452958a012bc2e9d5fed50505ef090fde0b1a65fd4b7d9eb22ef904aa5d54",
+      "signed_at": "2026-09-25T08:05:36.586Z",
+      "rule": "Ed25519 over canonical(payload): JSON, keys sorted recursively, no whitespace, UTF-8 literal"
+     },
+     "ots": {
+      "state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "proof_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json.ots",
+      "proof_state": "PENDING_CALENDAR_COMMITMENT",
+      "upgraded_proof_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/record.v0.1.1.json.ots",
+      "upgraded_proof_state": "BITCOIN_ATTESTATION_IN_PROOF",
+      "receipt_url": "https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/OTS-UPGRADE.json",
+      "receipt_bitcoin": [
+       {
+        "height": 968537,
+        "result": "MATCHES_HEADER",
+        "header_source": "https://blockstream.info/api"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "refused": [
+  {
+   "dataset": "agent-interop-census",
+   "revision": "c466fb8d4ad605b9238a2046cacaba7a96e3bea2",
+   "state": "REFUSED_UNSIGNED",
+   "reason": "no *.signed.json in the dataset at this revision; nothing to verify, so nothing is published"
+  }
+ ]
+}
