@@ -1,0 +1,11 @@
+{
+  "version": 0,
+  "name": "proofof-twin-spike-default-deny",
+  "workdir": "/twin/scratch",
+  "process": {"run_as_user": "sandbox", "capabilities": [], "no_new_privs": true},
+  "filesystem": {
+    "read_only": ["/usr", "/lib", "/lib64", "/bin", "/etc", "/dev/urandom", "/twin/task"],
+    "read_write": ["/twin/scratch", "/dev/null"]
+  },
+  "network": {"allow": false, "rules": []}
+}
