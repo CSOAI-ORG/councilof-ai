@@ -79,17 +79,62 @@ export function canonicalBytes(value) {
  * the artifact also records extracted_chars — so a third party can tell an extractor difference
  * from a content change.
  */
+/**
+ * Character references (spec 6.3 step 2 takes the text of the nodes, i.e. what a reader sees).
+ * ONE pass, so each reference is decoded exactly once: `&amp;#x27;` is the text "&#x27;", as a
+ * browser shows it, not an apostrophe. Numeric references follow the rules a browser applies:
+ * 128-159 as windows-1252, and NUL, surrogates and anything above U+10FFFF as U+FFFD. Named
+ * references are NAMED_REFERENCES below; a name outside it is left exactly as written, and that
+ * table is part of the published rule. References without a closing `;` are not decoded.
+ *
+ * Until 2026-09-25 this decoded no hexadecimal reference, only five names, `&amp;...` twice,
+ * and threw on a decimal reference above U+10FFFF. Digests taken before then were taken under
+ * that rule (docs/measurement/HIRING-PLATFORMS-2026-09-24.md, capture note 2).
+ */
+const NAMED_REFERENCES = {
+  amp: "&", AMP: "&", lt: "<", LT: "<", gt: ">", GT: ">", quot: '"', QUOT: '"', apos: "'",
+  nbsp: "\u00A0", shy: "\u00AD", ensp: "\u2002", emsp: "\u2003", thinsp: "\u2009",
+  zwnj: "\u200C", zwj: "\u200D", lrm: "\u200E", rlm: "\u200F",
+  ndash: "\u2013", mdash: "\u2014", lsquo: "\u2018", rsquo: "\u2019", sbquo: "\u201A",
+  ldquo: "\u201C", rdquo: "\u201D", bdquo: "\u201E", hellip: "\u2026", bull: "\u2022",
+  middot: "\u00B7", prime: "\u2032", Prime: "\u2033", laquo: "\u00AB", raquo: "\u00BB",
+  lsaquo: "\u2039", rsaquo: "\u203A", copy: "\u00A9", COPY: "\u00A9", reg: "\u00AE",
+  REG: "\u00AE", trade: "\u2122", TRADE: "\u2122", deg: "\u00B0", plusmn: "\u00B1",
+  times: "\u00D7", divide: "\u00F7", micro: "\u00B5", para: "\u00B6", sect: "\u00A7",
+  cent: "\u00A2", pound: "\u00A3", yen: "\u00A5", euro: "\u20AC", frac12: "\u00BD",
+  frac14: "\u00BC", frac34: "\u00BE", sup2: "\u00B2", sup3: "\u00B3", larr: "\u2190",
+  rarr: "\u2192", uarr: "\u2191", darr: "\u2193", harr: "\u2194",
+};
+
+/** The windows-1252 code points a browser substitutes for numeric references 128-159. */
+const WINDOWS_1252 = {
+  0x80: 0x20ac, 0x82: 0x201a, 0x83: 0x0192, 0x84: 0x201e, 0x85: 0x2026, 0x86: 0x2020,
+  0x87: 0x2021, 0x88: 0x02c6, 0x89: 0x2030, 0x8a: 0x0160, 0x8b: 0x2039, 0x8c: 0x0152,
+  0x8e: 0x017d, 0x91: 0x2018, 0x92: 0x2019, 0x93: 0x201c, 0x94: 0x201d, 0x95: 0x2022,
+  0x96: 0x2013, 0x97: 0x2014, 0x98: 0x02dc, 0x99: 0x2122, 0x9a: 0x0161, 0x9b: 0x203a,
+  0x9c: 0x0153, 0x9e: 0x017e, 0x9f: 0x0178,
+};
+
+const CHARACTER_REFERENCE = /&(?:#([0-9]+)|#[xX]([0-9a-fA-F]+)|([A-Za-z][A-Za-z0-9]*));/g;
+
+function decodeNumeric(cp) {
+  if (Object.hasOwn(WINDOWS_1252, cp)) return String.fromCodePoint(WINDOWS_1252[cp]);
+  if (cp === 0 || cp > 0x10ffff || (cp >= 0xd800 && cp <= 0xdfff)) return "\uFFFD";
+  return String.fromCodePoint(cp);
+}
+
+function decodeReference(whole, decimal, hex, name) {
+  if (decimal !== undefined) return decodeNumeric(Number(decimal));
+  if (hex !== undefined) return decodeNumeric(parseInt(hex, 16));
+  return Object.hasOwn(NAMED_REFERENCES, name) ? NAMED_REFERENCES[name] : whole;
+}
+
 export function extractVisibleText(html) {
   return html
     .replace(/<!--[\s\S]*?-->/g, " ")
     .replace(/<(script|style|template|noscript)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, " ")
     .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(CHARACTER_REFERENCE, decodeReference)
     .replace(/\s+/g, " ")
     .normalize("NFC")
     .trim();
