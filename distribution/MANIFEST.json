@@ -1,0 +1,430 @@
+{
+  "schema": "csoai.distribution-manifest/1",
+  "generator": "scripts/harness-x/render.mjs",
+  "source": "council-os/distribution.json",
+  "doctrine": {
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/"
+  },
+  "remote_version": "1.4.2",
+  "tools": {
+    "free": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust",
+      "mcp_trust"
+    ],
+    "paid": [
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
+    ]
+  },
+  "targets": [
+    {
+      "id": "mcp-registry-github",
+      "output": [
+        "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json"
+      ]
+    },
+    {
+      "id": "mcp-registry-domain",
+      "output": [
+        "distribution/mcp-registry/ai.councilof-gspc/server.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/mcp-registry/ai.councilof-gspc/server.json"
+      ]
+    },
+    {
+      "id": "claude-plugin",
+      "output": [
+        "distribution/plugin/.claude-plugin/plugin.json",
+        "distribution/plugin/.claude-plugin/marketplace.json",
+        "distribution/plugin/.mcp.json",
+        "distribution/plugin/skills/gspc/SKILL.md",
+        "distribution/plugin/README.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/skills/gspc/SKILL.md",
+        "distribution/plugin/README.md"
+      ]
+    },
+    {
+      "id": "cursor-plugin",
+      "output": [
+        "distribution/plugin/.cursor-plugin/plugin.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/.cursor-plugin/plugin.json"
+      ]
+    },
+    {
+      "id": "grok-plugin",
+      "output": [
+        "distribution/plugin/.grok-plugin/marketplace.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/.grok-plugin/marketplace.json"
+      ]
+    },
+    {
+      "id": "claude-connector",
+      "output": [
+        "distribution/claude/connector.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/claude/connector.json"
+      ]
+    },
+    {
+      "id": "gemini-extension",
+      "output": [
+        "distribution/gemini/gemini-extension.json",
+        "distribution/gemini/GEMINI.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/gemini/GEMINI.md"
+      ]
+    },
+    {
+      "id": "openai-app",
+      "output": [
+        "distribution/openai/app.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/openai/app.json"
+      ]
+    },
+    {
+      "id": "pypi-langchain-csoai",
+      "output": [
+        "distribution/python/langchain-csoai/pyproject.toml",
+        "distribution/python/langchain-csoai/README.md",
+        "distribution/python/langchain-csoai/LICENSE",
+        "distribution/python/langchain-csoai/langchain_csoai/__init__.py",
+        "distribution/python/langchain-csoai/langchain_csoai/_board.py",
+        "distribution/python/langchain-csoai/langchain_csoai/tools.py"
+      ],
+      "doctrine_carriers": [
+        "distribution/python/langchain-csoai/langchain_csoai/_board.py",
+        "distribution/python/langchain-csoai/README.md"
+      ]
+    },
+    {
+      "id": "pypi-llama-index-tools-csoai",
+      "output": [
+        "distribution/python/llama-index-tools-csoai/pyproject.toml",
+        "distribution/python/llama-index-tools-csoai/README.md",
+        "distribution/python/llama-index-tools-csoai/LICENSE",
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/__init__.py",
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/_board.py",
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/base.py"
+      ],
+      "doctrine_carriers": [
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/_board.py",
+        "distribution/python/llama-index-tools-csoai/README.md"
+      ]
+    },
+    {
+      "id": "pypi-crewai-csoai",
+      "output": [
+        "distribution/python/crewai-csoai/pyproject.toml",
+        "distribution/python/crewai-csoai/README.md",
+        "distribution/python/crewai-csoai/LICENSE",
+        "distribution/python/crewai-csoai/crewai_csoai/__init__.py",
+        "distribution/python/crewai-csoai/crewai_csoai/_board.py",
+        "distribution/python/crewai-csoai/crewai_csoai/tools.py"
+      ],
+      "doctrine_carriers": [
+        "distribution/python/crewai-csoai/crewai_csoai/_board.py",
+        "distribution/python/crewai-csoai/README.md"
+      ]
+    },
+    {
+      "id": "npm-ai-sdk-gspc",
+      "output": [
+        "distribution/npm/ai-sdk-gspc/package.json",
+        "distribution/npm/ai-sdk-gspc/README.md",
+        "distribution/npm/ai-sdk-gspc/LICENSE",
+        "distribution/npm/ai-sdk-gspc/gspc-client.js",
+        "distribution/npm/ai-sdk-gspc/index.js",
+        "distribution/npm/ai-sdk-gspc/index.d.ts"
+      ],
+      "doctrine_carriers": [
+        "distribution/npm/ai-sdk-gspc/gspc-client.js",
+        "distribution/npm/ai-sdk-gspc/package.json"
+      ]
+    },
+    {
+      "id": "npm-mastra-gspc",
+      "output": [
+        "distribution/npm/mastra-gspc/package.json",
+        "distribution/npm/mastra-gspc/README.md",
+        "distribution/npm/mastra-gspc/LICENSE",
+        "distribution/npm/mastra-gspc/gspc-client.js",
+        "distribution/npm/mastra-gspc/index.js",
+        "distribution/npm/mastra-gspc/index.d.ts"
+      ],
+      "doctrine_carriers": [
+        "distribution/npm/mastra-gspc/gspc-client.js",
+        "distribution/npm/mastra-gspc/package.json"
+      ]
+    },
+    {
+      "id": "docker-mcp-catalog",
+      "output": [
+        "distribution/docker/servers/csoai-gspc/server.yaml",
+        "distribution/docker/servers/csoai-gspc/tools.json",
+        "distribution/docker/servers/csoai-gspc/readme.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/docker/servers/csoai-gspc/server.yaml",
+        "distribution/docker/servers/csoai-gspc/readme.md"
+      ]
+    },
+    {
+      "id": "hf-space",
+      "output": [
+        "distribution/hf-space/csoai-gspc-mcp/README.md",
+        "distribution/hf-space/csoai-gspc-mcp/app.py",
+        "distribution/hf-space/csoai-gspc-mcp/requirements.txt"
+      ],
+      "doctrine_carriers": [
+        "distribution/hf-space/csoai-gspc-mcp/app.py",
+        "distribution/hf-space/csoai-gspc-mcp/README.md"
+      ]
+    },
+    {
+      "id": "well-known-server-card",
+      "output": [
+        "public/.well-known/mcp/server-card.json",
+        "public/.well-known/mcp.json"
+      ],
+      "doctrine_carriers": [
+        "public/.well-known/mcp/server-card.json",
+        "public/.well-known/mcp.json"
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "distribution/SUBMIT.md",
+      "sha256": "8ef63b932c48f90eee20ae20838c177384b14ba30f481ee04214991e0cc98167"
+    },
+    {
+      "path": "distribution/claude/connector.json",
+      "sha256": "d50c61307440e956a55eb278552030d8bc83d63fee6476a444e5ec0700d91e6f"
+    },
+    {
+      "path": "distribution/docker/servers/csoai-gspc/readme.md",
+      "sha256": "325e09a9c965a7d3eea2076f19f6d4b38d659b156a7b9a3423a09492ee59af38"
+    },
+    {
+      "path": "distribution/docker/servers/csoai-gspc/server.yaml",
+      "sha256": "dfb2eba6a4d1aca2585a816ce6afc0cf4536364ac966cc99e14876f53b8a3451"
+    },
+    {
+      "path": "distribution/docker/servers/csoai-gspc/tools.json",
+      "sha256": "a9c4a8f50aff03abbbac33af5539aebc1787d86682e6000f6c89dc5b61e5efc1"
+    },
+    {
+      "path": "distribution/gemini/GEMINI.md",
+      "sha256": "d1ee5b925335ba2cff6ec904dcf3b63775503a4d9b10a0f87286fe84d23d486b"
+    },
+    {
+      "path": "distribution/gemini/gemini-extension.json",
+      "sha256": "5fbb9f6ea50e98f29aef61ae1efd9b36bec678be5cf50a9a051ef6f1b3214d60"
+    },
+    {
+      "path": "distribution/hf-space/csoai-gspc-mcp/README.md",
+      "sha256": "53a9a94e41bf7f00f4d42ff39c6c720267911e7d94fbbdea82c9a07a3ea9a855"
+    },
+    {
+      "path": "distribution/hf-space/csoai-gspc-mcp/app.py",
+      "sha256": "8d6a9eb1d311169e188bb8ca54d18afa5e50465c4b170f7866c97fadc7838664"
+    },
+    {
+      "path": "distribution/hf-space/csoai-gspc-mcp/requirements.txt",
+      "sha256": "de5ce4198328747b6abe17e316f9958cbe585e29a1f2ad31de095fb673abcf47"
+    },
+    {
+      "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
+      "sha256": "a89c32d0a2faf968462699387709e36b43c9aee23f9c65d639798c19c31f23e6"
+    },
+    {
+      "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
+      "sha256": "164f5b1d7b487d19ccc21f72d02e60316054bc87557db1b3b38c7ecb55882e3a"
+    },
+    {
+      "path": "distribution/npm/ai-sdk-gspc/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "distribution/npm/ai-sdk-gspc/README.md",
+      "sha256": "aac2d493894d6ee4d906b8d48624b8e884d55633db31e5aab60361163cb75623"
+    },
+    {
+      "path": "distribution/npm/ai-sdk-gspc/gspc-client.js",
+      "sha256": "28f0597bfb79952a6b14528bf19703acb561d19924e9f79a65f7dfcbe4f4a321"
+    },
+    {
+      "path": "distribution/npm/ai-sdk-gspc/index.d.ts",
+      "sha256": "c47c416847c1d09ce757b303ba6e86753f39885aa434704ea9d183df25d01588"
+    },
+    {
+      "path": "distribution/npm/ai-sdk-gspc/index.js",
+      "sha256": "a4ca88289cd4abb08fd4fd9933ad7f8c965e3a19e6b78884ca7b120ba3576421"
+    },
+    {
+      "path": "distribution/npm/ai-sdk-gspc/package.json",
+      "sha256": "e76321a8d5bd09585190bc790fe8087481bd020e6202b5c55c91dff7215833ee"
+    },
+    {
+      "path": "distribution/npm/mastra-gspc/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "distribution/npm/mastra-gspc/README.md",
+      "sha256": "9e60d4e3c8aa9ac46a06b4f1e1121370be9cf1d05f551d3e729e4271877736a0"
+    },
+    {
+      "path": "distribution/npm/mastra-gspc/gspc-client.js",
+      "sha256": "28f0597bfb79952a6b14528bf19703acb561d19924e9f79a65f7dfcbe4f4a321"
+    },
+    {
+      "path": "distribution/npm/mastra-gspc/index.d.ts",
+      "sha256": "0baa3098712d5194730bccc45139ba80404fa83a7c46cc5bf7c346545a39359e"
+    },
+    {
+      "path": "distribution/npm/mastra-gspc/index.js",
+      "sha256": "0868088f0b67e5cee5721c310706216e258728cd3784ff40b2b87636666ca29c"
+    },
+    {
+      "path": "distribution/npm/mastra-gspc/package.json",
+      "sha256": "c7b4479d4c35018b24acfd2a3d4cf34e665ff37dbc323731f5261a1fafb8951a"
+    },
+    {
+      "path": "distribution/openai/app.json",
+      "sha256": "e08a5edf48dce3fcf202ebca29abfbb5e49086e1f32f6f1ee5f9bbfd4c5362b2"
+    },
+    {
+      "path": "distribution/plugin/.claude-plugin/marketplace.json",
+      "sha256": "1620b49343fd1911c0e08ed35bcf8930ed57113d1968a5dc066ba76a61b66b10"
+    },
+    {
+      "path": "distribution/plugin/.claude-plugin/plugin.json",
+      "sha256": "52bd32eff5c048814ade008ac172157d79940471830b83ec1e629cffd28f6421"
+    },
+    {
+      "path": "distribution/plugin/.cursor-plugin/plugin.json",
+      "sha256": "4d4fc95b2646d3d22a4a387c06372305e1fafa6c482b709c7bd2cb19175d2094"
+    },
+    {
+      "path": "distribution/plugin/.grok-plugin/marketplace.json",
+      "sha256": "1c4741c036101b5fb00f7628bcb55697ed258f6d0f6536bea4939c76d2c02545"
+    },
+    {
+      "path": "distribution/plugin/.mcp.json",
+      "sha256": "272b9831a98fb393d9076cd9c68f617af6abbb273b32ef0cdccce95a46efae5d"
+    },
+    {
+      "path": "distribution/plugin/README.md",
+      "sha256": "79c542dde1631530252bd304adbad825522bb4b455f2340f27abb9e19f9455f8"
+    },
+    {
+      "path": "distribution/plugin/skills/gspc/SKILL.md",
+      "sha256": "0b36b3e237e8eef4c9d3a9e8a1c358ee8beb26e1fa47aa32bc2531d6d8a86957"
+    },
+    {
+      "path": "distribution/python/crewai-csoai/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "distribution/python/crewai-csoai/README.md",
+      "sha256": "a669cf655126504af6c9f2fb319552be2e4f6ff91c03133ece4dd72e291f7988"
+    },
+    {
+      "path": "distribution/python/crewai-csoai/crewai_csoai/__init__.py",
+      "sha256": "65af0c9a8d627dd3182a0ecb6673975cee2826a6ebf39d6c393da08456b00fb0"
+    },
+    {
+      "path": "distribution/python/crewai-csoai/crewai_csoai/_board.py",
+      "sha256": "9b762d7b819dd7cb3886fd546ab369b8ef6d807d48e55dfd75847a0033064f67"
+    },
+    {
+      "path": "distribution/python/crewai-csoai/crewai_csoai/tools.py",
+      "sha256": "cd5d47eb64b267babd65b933417629e686d30b6de6bd8a44624f2d68e2abc5fe"
+    },
+    {
+      "path": "distribution/python/crewai-csoai/pyproject.toml",
+      "sha256": "c455921c1de08d57875044a9c49c32de900ba0b324746c8d40b51d274ec954aa"
+    },
+    {
+      "path": "distribution/python/langchain-csoai/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "distribution/python/langchain-csoai/README.md",
+      "sha256": "222413c914be35b37431a8a9809762e03fcaf7ca2f005f8471b358226284c45a"
+    },
+    {
+      "path": "distribution/python/langchain-csoai/langchain_csoai/__init__.py",
+      "sha256": "66286f98a24048f2cd708b6f481c79c175f55b18fc49a7c3e14929ea634f1c89"
+    },
+    {
+      "path": "distribution/python/langchain-csoai/langchain_csoai/_board.py",
+      "sha256": "9b762d7b819dd7cb3886fd546ab369b8ef6d807d48e55dfd75847a0033064f67"
+    },
+    {
+      "path": "distribution/python/langchain-csoai/langchain_csoai/tools.py",
+      "sha256": "6ac15a176ebef2c10ffceea65c75acca38554f5bd1761296912b6dae66cc5fe5"
+    },
+    {
+      "path": "distribution/python/langchain-csoai/pyproject.toml",
+      "sha256": "ba6dbbf92369713ce03756ba2b43de6588610961b9a749125dc69de85a48820b"
+    },
+    {
+      "path": "distribution/python/llama-index-tools-csoai/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "distribution/python/llama-index-tools-csoai/README.md",
+      "sha256": "348a379b9be944320a29b39961869693d41fa3dddc1f2f7ab31a434ee721b543"
+    },
+    {
+      "path": "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/__init__.py",
+      "sha256": "83d0166c9a5d6268ad5aa42e3e9a054d44b9cb80fac5efc5908e0172fd3e6fed"
+    },
+    {
+      "path": "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/_board.py",
+      "sha256": "9b762d7b819dd7cb3886fd546ab369b8ef6d807d48e55dfd75847a0033064f67"
+    },
+    {
+      "path": "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/base.py",
+      "sha256": "303feb2b99aeaca11cc6e0c62c419995f7a446e5a124e51aa9d8d96c7593e416"
+    },
+    {
+      "path": "distribution/python/llama-index-tools-csoai/pyproject.toml",
+      "sha256": "2a5e8cfb58c0dffaea5bc2728939b3aaef8445ada33fc2eb03d872342fd2bc91"
+    },
+    {
+      "path": "public/.well-known/mcp.json",
+      "sha256": "c8ee2d271efb3d6580532896dfc93aa2d10956e99ec3e1cb5a408114667a1e78"
+    },
+    {
+      "path": "public/.well-known/mcp/server-card.json",
+      "sha256": "db16fce8d290fb07b467ff3216376d29db9aaf0a3c13ebbb70da4f7751c8adcd"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "form": "Claude connectors directory — remote MCP server",
+  "status": "PREPARED — NOT SUBMITTED",
+  "name": "Council of AI GSPC",
+  "server_url": "https://councilof.ai/mcp",
+  "transport": "streamable-http",
+  "authentication": "none",
+  "description": "13 tools (9 free, 4 x402-metered) over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "company": {
+    "name": "CSOAI Ltd",
+    "company_number": "16939677",
+    "jurisdiction": "GB",
+    "website": "https://councilof.ai"
+  },
+  "contact_email": "nicholas@csoai.org",
+  "privacy_policy_url": "https://councilof.ai/privacy/",
+  "terms_url": "https://councilof.ai/terms/",
+  "support_url": "https://councilof.ai/contact/",
+  "icon_url": "https://councilof.ai/csoai-icon.svg",
+  "server_version": "1.4.2",
+  "tools": [
+    {
+      "name": "board_totals",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "get_axis",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "verify_card",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "list_cards",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "get_root",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "get_card",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "verify_inclusion",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "x402_trust",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "mcp_trust",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "commission_card",
+      "payment": "x402",
+      "read_only": false
+    },
+    {
+      "name": "art50_marking_evidence",
+      "payment": "x402",
+      "read_only": false
+    },
+    {
+      "name": "rwa_evidence",
+      "payment": "x402",
+      "read_only": false
+    },
+    {
+      "name": "receipts_batch",
+      "payment": "x402",
+      "read_only": false
+    }
+  ],
+  "tool_count": 13,
+  "example_prompts": [
+    "What does the GSPC board say right now? Quote public_count exactly.",
+    "Verify this Council of AI measurement card: <paste card JSON>.",
+    "Show me the GSPC axis row for provenance."
+  ],
+  "doctrine": {
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/"
+  }
+}

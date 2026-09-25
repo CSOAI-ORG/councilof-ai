@@ -1,0 +1,28 @@
+{
+  "name": "gspc",
+  "version": "1.4.2",
+  "description": "Council of AI GSPC over MCP: 13 tools (9 free, 4 x402-metered). Read the live board, verify signed measurement cards (VALID / INVALID / UNCHECKABLE). Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "author": {
+    "name": "CSOAI Ltd",
+    "email": "nicholas@csoai.org",
+    "url": "https://councilof.ai"
+  },
+  "homepage": "https://councilof.ai",
+  "license": "Apache-2.0",
+  "keywords": [
+    "gspc",
+    "csoai",
+    "layer0",
+    "measurement",
+    "mcp",
+    "ed25519",
+    "provenance"
+  ],
+  "mcpServers": "./.mcp.json",
+  "skills": "./skills/",
+  "x-csoai-doctrine": {
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/"
+  }
+}

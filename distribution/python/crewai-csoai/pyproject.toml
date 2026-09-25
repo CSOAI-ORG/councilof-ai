@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crewai-csoai"
+version = "0.1.0"
+description = "CrewAI tool for the Council of AI GSPC measurement board (wraps csoai-gspc)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [{ name = "CSOAI Ltd", email = "nicholas@csoai.org" }]
+keywords = ["csoai", "gspc", "layer0", "measurement", "crewai"]
+classifiers = [
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["csoai-gspc>=0.2.20260912", "crewai>=0.100"]
+
+[project.urls]
+Homepage = "https://councilof.ai"
+Board = "https://councilof.ai/api/gspc"
+Doctrine = "https://councilof.ai/doctrine/"
+
+[tool.setuptools]
+packages = ["crewai_csoai"]
+
+# doctrine-sha256 = "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a"  (docs/DOCTRINE.md)

@@ -1,0 +1,54 @@
+[
+  {
+    "name": "board_totals",
+    "description": "Live GSPC board totals from https://councilof.ai/api/gspc."
+  },
+  {
+    "name": "get_axis",
+    "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates."
+  },
+  {
+    "name": "verify_card",
+    "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1."
+  },
+  {
+    "name": "list_cards",
+    "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself."
+  },
+  {
+    "name": "get_root",
+    "description": "GET the permissionless public-root at https://councilof.ai/root.json."
+  },
+  {
+    "name": "get_card",
+    "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json."
+  },
+  {
+    "name": "verify_inclusion",
+    "description": "Check a sha256 against the live public-root merkle via GET /api/proof?sha=."
+  },
+  {
+    "name": "x402_trust",
+    "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire."
+  },
+  {
+    "name": "mcp_trust",
+    "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable."
+  },
+  {
+    "name": "commission_card",
+    "description": "Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation."
+  },
+  {
+    "name": "art50_marking_evidence",
+    "description": "Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling."
+  },
+  {
+    "name": "rwa_evidence",
+    "description": "Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd."
+  },
+  {
+    "name": "receipts_batch",
+    "description": "A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256."
+  }
+]
