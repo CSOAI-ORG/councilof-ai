@@ -1,0 +1,397 @@
+{
+ "schema": "csoai.hf-mcp-spaces-census/0.1",
+ "record_id": "hf-mcp-spaces-census-2026-09-25",
+ "as_of": "2026-09-25T07:59:36Z",
+ "built_utc": "2026-09-25T08:22:22Z",
+ "publisher": "Council of AI (CSOAI), councilof.ai",
+ "licence": {
+  "data": "CC-BY-4.0"
+ },
+ "family": {
+  "sibling_of": "csoai.mcp-remote-census/0.1",
+  "sibling_dataset": "https://huggingface.co/datasets/csoai/mcp-remote-census",
+  "why_separate": "mcp-remote-probe.py refuses every *.hf.space host because a request wakes a sleeping Space; this census reads the Space's stage from the Hub API first and contacts only Spaces that are RUNNING at that moment"
+ },
+ "what_this_is": "A dated measurement of every Hugging Face Space in the 2026-09-25 census frame tagged mcp-server (10,822 Spaces): its runtime stage from the Hub API, and - only for Spaces that were RUNNING Gradio apps at that moment - what the Space's MCP endpoint answered to initialize and tools/list, from one place.",
+ "read_state_vocabulary": {
+  "EXHAUSTED": "the upstream signalled its end and every planned row reached exactly one state",
+  "PARTIAL": "some rows were not read; counts are over what was read and are never a population total"
+ },
+ "units": {
+  "Space": "one Hugging Face Space id (owner/name) in the census frame, tagged mcp-server",
+  "stage": "runtime.stage from https://huggingface.co/api (never from the Space itself)",
+  "contacted Space": "a Space that received at least one HTTP request from the prober (robots.txt at least)",
+  "tool count": "len(tools) over tools/list pages for ONE Space, only when the listing completed",
+  "tool_names_sha256": "sha256 of the sorted tool names joined by \\n, UTF-8",
+  "requests_to_space": "HTTP requests sent to the Space's own host (*.hf.space); Hub API reads are not counted here"
+ },
+ "producer": {
+  "repo": "councilof-ai (lane census-universes-20260925)",
+  "commit": "e992ecd41ca1684f31464a2d8dba00d721414067",
+  "files": {
+   "scripts/census/hf-spaces-mcp-probe.py": {
+    "sha256_at_head": "8750e781b91371a214bfed0de17317d7d8088c4af6364ea0376fc2ab15b10444"
+   },
+   "scripts/census/mcp-remote-probe.py": {
+    "sha256_at_head": "ba02431e8ac3407ae9362b1412e74ce7baa01032a59e3a9d02f37e46b473c0ac"
+   },
+   "scripts/census/read_state.py": {
+    "sha256_at_head": "70ebf780e3fbb889d5b244ef7051a091f5e262d0658d87583ba90974e42a8a0f"
+   }
+  },
+  "this_builder": "scripts/census/build-universes-census-records.py"
+ },
+ "inputs": {
+  "summary.json": "3fc79168dc18bac63c2c5ce276289c0177e14c70ada6cf98ad8886acbac9e672",
+  "summary.run1.json": "19204b1e8c1f41a0ee070f169c7d0be144ac13932d8a793c919e41239920b6f1",
+  "results.jsonl.gz": "f6dd28589aabc22c78ce2a0d07d80262c5e004b8e3740d23cf061a520ca1bcc8",
+  "results.run1.jsonl.gz": "125e67de0f471d4682c20ff2931e52bd8db1af89b7773bc74f21fdfc1eb13465",
+  "not_attempted.jsonl.gz": "bdb3464d3df24e02e9fd04a71d338a42648e8625d7fe218236a0db8c8e196da5",
+  "raw/listing/pages.json": "9f4b2018d7acfa29ed9b90ddd611ea5eec06c5a323b5aea64b630434820788f2"
+ },
+ "summary_cross_checks": {
+  "result rows == summary.n_planned": true,
+  "result rows == summary.n_reached": true,
+  "not_attempted rows == summary.n_not_attempted": true,
+  "distinct Space ids == result rows": true,
+  "top20 rows == summary.n_planned_top20": true,
+  "state counts == summary.states": true,
+  "state counts by tier == summary.states_by_tier": true,
+  "contacted rows == summary.n_contacted": true,
+  "contacted rows whose stage at request was not RUNNING == 0 == summary invariant": true,
+  "rows not contacted carry no requests": true,
+  "sum(requests_to_space) == summary.requests.to_spaces_total": true,
+  "max(requests_to_space) == summary max_to_one_space and <= 4": true,
+  "MCP states over contacted rows == summary (non-zero entries)": true,
+  "responded rows == summary.responded.n": true,
+  "protocolVersion answered == summary": true,
+  "tools_list_status == summary": true,
+  "tool-count stats (probe's quantile method) == summary": true,
+  "distinct tool-name sets == summary": true,
+  "largest identical tool-name set == summary": true,
+  "hardware of contacted == summary": true,
+  "listing page bytes match pages.json sha256": true,
+  "listing page_set_sha256 recomputed == summary": true,
+  "listing pages == summary": true,
+  "listing unique ids == summary.rows_read": true,
+  "frame ids in listing == summary": true,
+  "listing ids not in frame == summary": true,
+  "stage of frame Spaces per listing == summary": true,
+  "run1 -> final: only the re-read rows changed": true,
+  "re-read rows == summary.corrections.spaces_reread": true,
+  "re-read transitions == summary.corrections.transitions": true,
+  "run1 summary state counts == run1 rows": true
+ },
+ "read": {
+  "read_state": "EXHAUSTED",
+  "read_state_top20": "EXHAUSTED",
+  "read_state_rule": "EXHAUSTED only if every planned Space reached a state; a RUNNING Space the budget did not reach is not in any state and makes the read PARTIAL",
+  "window": [
+   "2026-09-25T07:16:50Z",
+   "2026-09-25T07:59:36Z"
+  ],
+  "user_agent": "CSOAI-census/0.1 (+https://councilof.ai/census)",
+  "frame_spaces": 10822,
+  "n_planned": 10822,
+  "n_reached": 10822,
+  "n_not_attempted": 0,
+  "top20": {
+   "n": 2164,
+   "ranking": "likes at frame time, descending; ties by id"
+  },
+  "stage_listing_walk": {
+   "read_state": "EXHAUSTED",
+   "reason": "no rel=next Link after page 11: upstream end",
+   "pages": 11,
+   "pages_valid": 11,
+   "rows_read": 10825,
+   "url": "https://huggingface.co/api/spaces?filter=mcp-server&limit=1000&expand[]=runtime&expand[]=sdk&expand[]=subdomain&expand[]=likes&expand[]=private",
+   "page_set_sha256": "6d0d1340f38bed297c05ed8b9b1b0a72f7831e3bca689191fc3875a27b412587",
+   "frame_ids_in_listing_now": 10817,
+   "frame_ids_not_in_listing_now": 5,
+   "listing_ids_not_in_frame": 8,
+   "stage_of_frame_spaces_per_listing": {
+    "RUNTIME_ERROR": 3059,
+    "SLEEPING": 3002,
+    "RUNNING": 2699,
+    "PAUSED": 1251,
+    "BUILD_ERROR": 759,
+    "CONFIG_ERROR": 46,
+    "BUILDING": 1
+   }
+  }
+ },
+ "states": {
+  "RUNTIME_ERROR": 3059,
+  "SLEEPING": 3008,
+  "RESPONDED": 2232,
+  "PAUSED": 1251,
+  "BUILD_ERROR": 759,
+  "SSE_ENDPOINT_ONLY": 401,
+  "CONFIG_ERROR": 46,
+  "RUNNING_NOT_GRADIO": 35,
+  "NOT_MCP": 19,
+  "STAGE_UNREADABLE": 5,
+  "ROBOTS_DISALLOWED": 4,
+  "TIMEOUT": 1,
+  "AUTH_REQUIRED": 1,
+  "BUILDING": 1
+ },
+ "states_by_tier": {
+  "top20": {
+   "RESPONDED": 837,
+   "RUNTIME_ERROR": 428,
+   "SLEEPING": 396,
+   "PAUSED": 256,
+   "SSE_ENDPOINT_ONLY": 153,
+   "BUILD_ERROR": 62,
+   "RUNNING_NOT_GRADIO": 13,
+   "CONFIG_ERROR": 8,
+   "NOT_MCP": 7,
+   "ROBOTS_DISALLOWED": 2,
+   "TIMEOUT": 1,
+   "STAGE_UNREADABLE": 1
+  },
+  "beyond": {
+   "RUNTIME_ERROR": 2631,
+   "SLEEPING": 2612,
+   "RESPONDED": 1395,
+   "PAUSED": 995,
+   "BUILD_ERROR": 697,
+   "SSE_ENDPOINT_ONLY": 248,
+   "CONFIG_ERROR": 38,
+   "RUNNING_NOT_GRADIO": 22,
+   "NOT_MCP": 12,
+   "STAGE_UNREADABLE": 4,
+   "ROBOTS_DISALLOWED": 2,
+   "AUTH_REQUIRED": 1,
+   "BUILDING": 1
+  }
+ },
+ "state_meanings": {
+  "SLEEPING / PAUSED / RUNTIME_ERROR / BUILD_ERROR / CONFIG_ERROR / BUILDING": "the Hub API's runtime.stage, verbatim; the Space was NOT contacted",
+  "STAGE_UNREADABLE": "the Hub API gave no stage; NOT contacted",
+  "RUNNING_NOT_GRADIO": "RUNNING, sdk not gradio: no documented MCP path; NOT contacted",
+  "ROBOTS_DISALLOWED": "RUNNING Gradio Space whose robots.txt (or a 5xx robots.txt, treated as disallow-all per RFC 9309) forbids the MCP path; only robots.txt was requested",
+  "RESPONDED": "answered initialize with an MCP result at <host>/gradio_api/mcp/",
+  "SSE_ENDPOINT_ONLY": "legacy SSE transport: served an endpoint event; no session was opened",
+  "NOT_MCP": "answered, but not with MCP",
+  "AUTH_REQUIRED": "refused without a credential; no credential was ever sent",
+  "TIMEOUT": "no answer within 10 s connect / 20 s read"
+ },
+ "not_contacted": {
+  "rule": "A Space is contacted only if its most recent Hub API stage read (at most 60 s old) said RUNNING and its sdk is gradio. Sleeping, paused and error Spaces are never requested.",
+  "n": 8164,
+  "by_state": {
+   "RUNTIME_ERROR": {
+    "spaces": 3059,
+    "why_not_contacted": "stage is an error; a request could trigger a restart"
+   },
+   "SLEEPING": {
+    "spaces": 3008,
+    "why_not_contacted": "a request would wake the Space and spend its owner's compute"
+   },
+   "PAUSED": {
+    "spaces": 1251,
+    "why_not_contacted": "paused by its owner; a request could restart it or is refused"
+   },
+   "BUILD_ERROR": {
+    "spaces": 759,
+    "why_not_contacted": "stage is an error; no app is served"
+   },
+   "CONFIG_ERROR": {
+    "spaces": 46,
+    "why_not_contacted": "stage is an error; no app is served"
+   },
+   "RUNNING_NOT_GRADIO": {
+    "spaces": 35,
+    "why_not_contacted": "RUNNING, but the sdk is not gradio, so there is no documented MCP path to request"
+   },
+   "STAGE_UNREADABLE": {
+    "spaces": 5,
+    "why_not_contacted": "the Hub API gave no stage (HTTP 401 anonymously: private or removed since the frame); without a stage we do not contact"
+   },
+   "BUILDING": {
+    "spaces": 1,
+    "why_not_contacted": "not yet serving; a request could interfere with start-up"
+   }
+  },
+  "listing_to_per_id_stage_changes": {
+   "transitions": {
+    "RUNNING -> SLEEPING": 6
+   },
+   "meaning": "6 Spaces the listing walk showed RUNNING were SLEEPING at the per-id read moments before contact; they were not contacted. This is why SLEEPING is higher in the rows than in the listing walk."
+  }
+ },
+ "contacted": {
+  "n": 2658,
+  "states": {
+   "RESPONDED": 2232,
+   "SSE_ENDPOINT_ONLY": 401,
+   "NOT_MCP": 19,
+   "ROBOTS_DISALLOWED": 4,
+   "TIMEOUT": 1,
+   "AUTH_REQUIRED": 1
+  },
+  "never_woke_invariant": {
+   "contacted_spaces_whose_last_stage_read_was_not_RUNNING": 0,
+   "must_be": 0,
+   "stage_read_to_first_request_s": {
+    "median": 0.0,
+    "max": 0.98
+   }
+  },
+  "hardware_current": {
+   "zero-a10g": 1942,
+   "cpu-basic": 708,
+   "cpu-upgrade": 8
+  },
+  "sent": [
+   "GET /robots.txt",
+   "POST /gradio_api/mcp/ initialize",
+   "POST notifications/initialized",
+   "POST tools/list (<= 5 pages)",
+   "DELETE (only if a session id was issued)",
+   "GET /gradio_api/mcp/ or /gradio_api/mcp/sse with Accept: text/event-stream (endpoint event only)"
+  ],
+  "never_sent": [
+   "any request to a Space whose last stage read was not RUNNING",
+   "tools/call",
+   "resources/read",
+   "prompts/get",
+   "any credential",
+   "any payment",
+   "any Gradio /call or /run"
+  ],
+  "limits": {
+   "hub_api_min_interval_s": 0.714,
+   "space_min_interval_s": 1.0,
+   "spaces_in_flight_max": 8,
+   "connections_per_host": 1,
+   "connect_timeout_s": 10.0,
+   "read_timeout_s": 20.0,
+   "budget_s": 3300.0,
+   "max_stage_age_s": 60.0
+  }
+ },
+ "owner_cost_note": {
+  "statement": "A request to a RUNNING Space does not start it, but it counts as activity and can postpone the Space's sleep timer, so contact can keep a Space awake (and, on paid hardware, billing) longer than it otherwise would have been. Each contacted Space received at most 4 requests to its own host.",
+  "requests_to_space_distribution": {
+   "1": 5,
+   "2": 2,
+   "4": 2651
+  },
+  "requests_to_spaces_total": 10613,
+  "hub_api_requests_total": 2732,
+  "note_from_the_run": "a request to a RUNNING Space does not start it, but it counts as activity and can postpone its sleep timer; each contacted Space received requests_to_space requests"
+ },
+ "measured_tool_surface": {
+  "over": "RESPONDED Spaces whose tools/list completed (all pages read, status ok)",
+  "responded": 2232,
+  "tools_list_status": {
+   "ok": 2231,
+   "error": 1
+  },
+  "tools_per_responding_space": {
+   "n": 2231,
+   "median": 2,
+   "p25": 1,
+   "p75": 3,
+   "max": 164,
+   "min": 0,
+   "zero_tools": 3
+  },
+  "percentile_method": "median = statistics.median; p25/p75 = sorted[min(n-1, int(q*(n-1)+0.5))] (the probe's method)",
+  "sum_of_tool_counts_is_not_a_population_figure": true,
+  "distinct_tool_name_sets": 1616,
+  "largest_identical_tool_name_set": {
+   "spaces": 91,
+   "n_tools": 1,
+   "tool_names_sha256": "6dca3766e1a4f4e1cc8e47fc9260fb0fd474c7f531ee2b27cdaa85ba49a86878"
+  },
+  "transport": {
+   "streamable-http(sse-response)": 2232
+  },
+  "serverInfo_name": {
+   "Gradio": 1168,
+   "another server-chosen name (not published)": 1064
+  },
+  "declared_binding_field_P1": {
+   "spaces": 1,
+   "meaning": "initialize capabilities or tools/list schemas carry a field NAME from the effect-binding probe's P1 list; a declared name, not a measured binding"
+  }
+ },
+ "protocol_version": {
+  "requested": "2025-11-25",
+  "answered": {
+   "2025-11-25": 1752,
+   "2025-06-18": 480
+  },
+  "current_specification": {
+   "revision": "2026-07-28",
+   "checked": "2026-09-25",
+   "source": "https://modelcontextprotocol.io/specification/latest (resolved to /specification/2026-07-28 on 2026-09-25)"
+  },
+  "statement": "The current MCP specification revision is 2026-07-28 (checked 2026-09-25). Our prober requested 2025-11-25, an earlier revision. A server answers with the requested version when it supports it, otherwise with one of its own; so this distribution is conditional on our request and says nothing about which Spaces support 2026-07-28."
+ },
+ "anomalies": [
+  {
+   "id": "H1",
+   "what_we_say": "6 Spaces were RUNNING in the listing walk and SLEEPING in the per-id Hub API read made immediately before contact. The per-id read won: none was contacted."
+  },
+  {
+   "id": "H2",
+   "what_we_say": "The largest identical tool-name set (1 tool, sha256 6dca3766e1a4f4e1...) is served by 91 Spaces; 1,616 distinct sets over 2,231 complete listings. Duplicated Spaces weight per-Space counts."
+  },
+  {
+   "id": "H3",
+   "what_we_say": "serverInfo.version values (e.g. 1.10.1, 1.30.0, 1.29.0, 1.28.1) are not Gradio release numbers; we record them and do not interpret them."
+  },
+  {
+   "id": "H4",
+   "what_we_say": "Frame vs today's listing: 5 frame Spaces were no longer listed and 8 listed Spaces were not in the frame; 5 Spaces returned HTTP 401 to an anonymous Hub API read (private or removed) and were not contacted."
+  },
+  {
+   "id": "H6",
+   "what_we_say": "1 contacted Space(s) answered the MCP request with a redirect to another host (*.webhook.site); redirects off the Space's host are never followed, so no request went there. Its subdomain and path are not published (they may be a capture token)."
+  },
+  {
+   "id": "H5",
+   "what_we_say": "Correction inside the run: the 6 STAGE_UNREADABLE rows re-read with the committed Hub client (bounded-field per-id reads, same-host redirects followed); run 1 had read TabArena/leaderboard unbounded (>1 MB, truncated). 5 remain unreadable: /api/spaces/<id> HTTP 401 anonymously (private or removed since the frame); none was contacted. Transitions: STAGE_UNREADABLE -> RESPONDED 1, STAGE_UNREADABLE -> STAGE_UNREADABLE 5. Run 1 kept (its summary is published; its rows are not)."
+  }
+ ],
+ "not_evidence_of": [
+  "that any Space, tool or operator is safe, secure, correct, maintained, or fit for any purpose",
+  "that a tool does what its name says; tools were listed, never called",
+  "endorsement, ranking, grading, or approval of any Space or owner",
+  "anything about a Space that was not contacted beyond its Hub API stage at that moment",
+  "which MCP protocol revisions a Space supports (see protocol_version)",
+  "a population total of MCP servers on Hugging Face: the frame is the Spaces tagged mcp-server on 2026-09-25, and a tag is self-declared",
+  "reachability or stage at any other moment"
+ ],
+ "published_files": {
+  "data/spaces.jsonl.gz": {
+   "sha256": "7b9bb0d630444a41f5757499f14e096e0fb37431c69aed6ebbc2aa0ba415088c",
+   "bytes": 342786,
+   "rows": 10822
+  },
+  "run/summary.json": {
+   "sha256": "3fc79168dc18bac63c2c5ce276289c0177e14c70ada6cf98ad8886acbac9e672",
+   "bytes": 6898
+  },
+  "run/summary.run1.json": {
+   "sha256": "19204b1e8c1f41a0ee070f169c7d0be144ac13932d8a793c919e41239920b6f1",
+   "bytes": 5812
+  },
+  "run/listing-pages.json": {
+   "sha256": "9f4b2018d7acfa29ed9b90ddd611ea5eec06c5a323b5aea64b630434820788f2",
+   "bytes": 4976
+  }
+ },
+ "hf_dataset": "https://huggingface.co/datasets/csoai/hf-mcp-spaces-census",
+ "verify": {
+  "signature": "record.signed.json: canonicalise its payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.json); verify signature.sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json",
+  "timestamp": "record.json.ots is an OpenTimestamps proof over sha256(record.json). When published it was a PENDING calendar commitment; `ots upgrade` then `ots verify record.json.ots` against a Bitcoin node decides whether it has become a Bitcoin attestation",
+  "files": "sha256 of every published file is in published_files and is pinned by the signature through record.json"
+ }
+}

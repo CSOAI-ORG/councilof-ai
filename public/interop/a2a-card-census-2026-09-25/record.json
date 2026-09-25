@@ -1,0 +1,312 @@
+{
+ "schema": "csoai.a2a-card-census/0.1",
+ "record_id": "a2a-card-census-2026-09-25",
+ "as_of": "2026-09-25T07:25:59Z",
+ "built_utc": "2026-09-25T08:22:24Z",
+ "publisher": "Council of AI (CSOAI), councilof.ai",
+ "licence": {
+  "data": "CC-BY-4.0"
+ },
+ "family": {
+  "sibling_of": "csoai.mcp-remote-census/0.1",
+  "sibling_dataset": "https://huggingface.co/datasets/csoai/mcp-remote-census"
+ },
+ "what_this_is": "A dated measurement of every a2aregistry listing in the 2026-09-25 census frame (443 listings): whether its A2A agent card was served, and whether the card's signatures verify under a key the card itself points to, from one place.",
+ "read_state_vocabulary": {
+  "EXHAUSTED": "every listing of the frame reached exactly one state",
+  "PARTIAL": "some listings were not read; counts are never a population total"
+ },
+ "units": {
+  "listing": "one a2aregistry entry in the census frame (registry uuid)",
+  "card": "one JSON agent card served at a candidate URL (listing wellKnownURI, then <origin>/.well-known/agent-card.json, then agent.json)",
+  "signed card": "a served card whose `signatures` array has at least one entry",
+  "percentages": "denominator is cards served (CARD_SERVED), not listings"
+ },
+ "producer": {
+  "repo": "councilof-ai (lane census-universes-20260925)",
+  "commit": "e992ecd41ca1684f31464a2d8dba00d721414067",
+  "files": {
+   "scripts/census/a2a-card-probe.py": {
+    "sha256_at_head": "a38da0c9320ed0c17dffc92891c19398bdc1bcb41cb23f36bb75fa798ac13b51"
+   },
+   "scripts/census/mcp-remote-probe.py": {
+    "sha256_at_head": "ba02431e8ac3407ae9362b1412e74ce7baa01032a59e3a9d02f37e46b473c0ac"
+   }
+  },
+  "this_builder": "scripts/census/build-universes-census-records.py"
+ },
+ "inputs": {
+  "summary.json": "f32890d749cde7c15dafd61ce848661b5a0aeac440b0289a32ff7796c3651c34",
+  "results.jsonl.gz": "8b7044920b237dc8a661fdc8c67dd88aa239e92520ecd1ddb5fea2745730522d",
+  "cards.jsonl.gz": "8e20340fd46354d13dee99b026854ed367ce2a6f1be4e3fa9b7ca53a9a591b4b",
+  "superseded run 1 / summary.json": "ac4a25a88a9a5b9280b26cbee90aa8b9642ce3d4a15caa80d63d6513bbec990d",
+  "superseded run 1 / results.jsonl.gz": "210aee0dc77de855d787613be5a54a84e10490a2e19cdb30725a1925c650937b",
+  "superseded run 1 / SUPERSEDED.txt": "a773870ff1cdf49a5206da354a0cf3f742c42e40cff8c77e3aa35e42d48eb2f4",
+  "hub api read of the one hf.space Space": "be4f51f06d1c5fb1a69eecce041b27120910ec4b2e7bb14eb7bdbff8907b96bc"
+ },
+ "summary_cross_checks": {
+  "result rows == summary.n_planned == summary.n_attempted == frame a2aregistry entries": true,
+  "distinct listing ids == result rows": true,
+  "state counts == summary.states (non-zero entries)": true,
+  "CARD_SERVED rows == summary.cards_served.n": true,
+  "card_source == summary": true,
+  "card bodies file rows == CARD_SERVED rows (same ids)": true,
+  "every card body's sha256 == its row's card_sha256": true,
+  "distinct card sha256 == summary": true,
+  "sig_state counts == summary": true,
+  "signed (n_signatures > 0) == served - NO_SIGNATURES": true,
+  "pct_signed recomputed == summary": true,
+  "pct_verifying recomputed == summary": true,
+  "cards with a signatures key == summary": true,
+  "verified by key source == summary": true,
+  "uncheckable reasons == summary": true,
+  "FAILED that verify under a non-spec serialisation == 0 == summary": true,
+  "registry healthy but no card served == summary": true,
+  "protocolVersion differs from listing == summary": true,
+  "run 2 rows sent no request to any *.hf.space host": true,
+  "run 1 (superseded) state counts == its summary (non-zero)": true,
+  "run 1 (superseded) *.hf.space requests == exactly one, a robots.txt GET": true
+ },
+ "read": {
+  "read_state": "EXHAUSTED",
+  "read_state_rule": "EXHAUSTED only if every listing of the frame reached exactly one state",
+  "window": [
+   "2026-09-25T07:24:34Z",
+   "2026-09-25T07:25:59Z"
+  ],
+  "user_agent": "CSOAI-census/0.1 (+https://councilof.ai/census)",
+  "n_planned": 443,
+  "n_attempted": 443
+ },
+ "states": {
+  "CARD_SERVED": 422,
+  "ROBOTS_DISALLOWED": 9,
+  "NOT_FOUND": 5,
+  "UNREACHABLE": 5,
+  "AUTH_REQUIRED": 2
+ },
+ "states_zero": [
+  "CARD_INVALID",
+  "HF_SPACE_NOT_CONTACTED",
+  "INVALID_URL",
+  "NON_PUBLIC_ADDRESS",
+  "TIMEOUT"
+ ],
+ "state_meanings": {
+  "CARD_SERVED": "a JSON object that parses as an agent card",
+  "AUTH_REQUIRED": "401/403 and no candidate served a card",
+  "NOT_FOUND": "every candidate answered 404/410 (or another 4xx)",
+  "UNREACHABLE": "DNS, refused, TLS, reset, 5xx, or an off-host redirect only",
+  "ROBOTS_DISALLOWED": "robots.txt forbids the card paths for CSOAI-census; only robots.txt was requested",
+  "NON_PUBLIC_ADDRESS": "a candidate host resolves to a non-global address; not contacted",
+  "HF_SPACE_NOT_CONTACTED": "every candidate is a *.hf.space host; not contacted"
+ },
+ "not_contacted": {
+  "rule": "no request to a host that resolves to a non-global address (checked for every candidate host) and none to *.hf.space (a request could wake a sleeping Space); robots.txt honoured",
+  "robots_disallowed_card_not_requested": 9,
+  "hf_space_listings": [
+   {
+    "id": "2dc86485-7909-47da-91e1-7f1ef894b922",
+    "state": "UNREACHABLE",
+    "requests": [],
+    "reason": "listing.wellKnownURI: *.hf.space: the Space's sleep state was not checked and a request could wake it; not contacted (hf-spaces-mcp-probe.py reads the stage first); origin/.well-known/agent-card.json: dns: [Errno -3] Temporary failure in name resolution"
+   }
+  ],
+  "hf_space_note": "The one listing whose card URL is on *.hf.space is recorded UNREACHABLE, not HF_SPACE_NOT_CONTACTED, because its other candidate (an unqualified internal hostname from the listing's url) failed DNS. It received no request in this run; the DNS query for the internal name went to our resolver only."
+ },
+ "cards_served": {
+  "n": 422,
+  "card_source": {
+   "listing.wellKnownURI": 414,
+   "origin/.well-known/agent-card.json": 7,
+   "origin/.well-known/agent.json": 1
+  },
+  "protocolVersion_declared": {
+   "0.3.0": 234,
+   "None": 115,
+   "1.0": 44,
+   "0.3": 16,
+   "1.0.0": 8,
+   "1.0.1": 1,
+   "9.3.12": 1,
+   "1.2": 1,
+   "0.2.5": 1,
+   "0.2.6": 1
+  },
+  "protocolVersion_note": "what the card declares; no protocol negotiation took place and no A2A call was made",
+  "protocolVersion_differs_from_listing": 3,
+  "no_transport_declared": 86,
+  "declares_security_requirement": 52,
+  "security_scheme_types": {
+   "http": 39,
+   "apiKey": 33,
+   "None": 14,
+   "oauth2": 6,
+   "x402": 3,
+   "openIdConnect": 2,
+   "none": 2,
+   "httpMessageSignature": 1,
+   "Payment": 1
+  },
+  "distinct_card_sha256": 420
+ },
+ "signatures": {
+  "denominator": "cards served",
+  "cards_served": 422,
+  "signed": 33,
+  "pct_signed": 7.82,
+  "verified": 18,
+  "pct_verified": 4.27,
+  "failed": 3,
+  "uncheckable": 12,
+  "no_signatures": 389,
+  "verified_by_key_source": {
+   "jku": 17,
+   "embedded_jwk": 1
+  },
+  "key_source_by_result": {
+   "jku / VERIFIED": 17,
+   "none / UNCHECKABLE": 9,
+   "jku / FAILED": 3,
+   "embedded_jwk / VERIFIED": 1,
+   "did_web / UNCHECKABLE": 1,
+   "jku / UNCHECKABLE": 1,
+   "None / UNCHECKABLE": 1
+  },
+  "uncheckable_reasons": {
+   "no jku, no embedded jwk, no did:web kid: the card points to no key": 9,
+   "key document has no key matching kid": 2,
+   "signature object lacks protected/signature strings": 1
+  },
+  "failed_that_verify_under_a_non_spec_serialisation": 0,
+  "state_meanings": {
+   "VERIFIED": "at least one signature verifies under a key the card points to, and none fails. embedded_jwk = the card vouches for its own key: integrity, not identity",
+   "FAILED": "a key was found and a signature did not verify under it over JCS(card without signatures)",
+   "UNCHECKABLE": "signatures present, but no key the card points to could be obtained; never counted as VERIFIED",
+   "NO_SIGNATURES": "no `signatures` array, or an empty one"
+  },
+  "canonicalisation": "JCS (RFC 8785) of the card with `signatures` removed; detached JWS (RFC 7515)",
+  "failed_note": "FAILED = no verification over JCS(card without signatures) under the key the card points to; alt_serialisations_verifying is a diagnostic of 4 non-spec serialisations, never a pass",
+  "key_documents_requested": 22
+ },
+ "requests": {
+  "cards_and_robots": 922,
+  "key_documents": 22,
+  "hosts_contacted": 452,
+  "max_to_one_host": 5
+ },
+ "limits": {
+  "min_interval_s_per_host": 1.0,
+  "connections_per_host": 1,
+  "workers": 16,
+  "connect_timeout_s": 10.0,
+  "read_timeout_s": 15.0,
+  "max_redirects_same_host": 3
+ },
+ "sent": [
+  "GET /robots.txt",
+  "GET <agent card URL> (<= 3 candidates)",
+  "GET <jku JWKS or did:web did.json> (only when a signature points to it)"
+ ],
+ "never_sent": [
+  "message/send",
+  "message/stream",
+  "tasks/*",
+  "any JSON-RPC call",
+  "any credential",
+  "any payment",
+  "any request to a non-global address"
+ ],
+ "protocol_note": {
+  "a2a": "protocolVersion figures are declarations in served cards, not negotiated versions",
+  "mcp": "No MCP request is made by this census. For the sibling MCP censuses: the current MCP specification revision is 2026-07-28 (checked 2026-09-25), and our MCP probers request 2025-11-25."
+ },
+ "anomalies": [
+  {
+   "id": "B1",
+   "kind": "DISCLOSED BREACH OF OUR OWN RULE (superseded run kept)",
+   "what_we_say": "Run 1 of this census (2026-09-25T07:18:59Z to 2026-09-25T07:19:54Z) applied the non-public-address check to the first candidate host only and did not exclude *.hf.space. It sent ONE request, GET /robots.txt, to vishalmysore-a2amcpdemo.hf.space without first reading the Space's stage from the Hub API - the stage check our rule requires. It also asked our resolver for the unqualified internal hostname in that listing; DNS failed and no connection was made. Run 1 is superseded by run 2 (this record) and kept for audit; its rows are not published as data.",
+   "run1_row": {
+    "id": "2dc86485-7909-47da-91e1-7f1ef894b922",
+    "state": "ROBOTS_DISALLOWED",
+    "requests": [
+     "GET robots.txt vishalmysore-a2amcpdemo.hf.space -> disallow",
+     "GET robots.txt r-vishalmysore-a2amcpdemo-ttl1rsko-f17d0-bmqtb -> unreachable"
+    ],
+    "candidate_hosts": [
+     "r-vishalmysore-a2amcpdemo-ttl1rsko-f17d0-bmqtb",
+     "vishalmysore-a2amcpdemo.hf.space"
+    ]
+   },
+   "run2_row": {
+    "id": "2dc86485-7909-47da-91e1-7f1ef894b922",
+    "state": "UNREACHABLE",
+    "requests": []
+   },
+   "space_stage_per_hub_api": {
+    "space": "VishalMysore/a2amcpdemo",
+    "stage": "RUNTIME_ERROR",
+    "read_at": "2026-09-25T08:20:51Z",
+    "http_status": 200,
+    "read_by": "huggingface.co/api/spaces/<id> (the Hub API, not the Space)",
+    "also_per_lane_note": "SUPERSEDED.txt (run 1) records the Hub API reporting RUNTIME_ERROR after run 1",
+    "meaning": "Both Hub API reads made after the request (the lane's, after run 1; this builder's, above) report RUNTIME_ERROR. The stage at the moment of the request was NOT read - that is the breach - so we cannot prove it; an errored Space is not started by a request the way a sleeping one is woken."
+   },
+   "run1_vs_run2_state_changes": {
+    "ROBOTS_DISALLOWED -> CARD_SERVED": 1,
+    "UNREACHABLE -> CARD_SERVED": 1,
+    "ROBOTS_DISALLOWED -> UNREACHABLE": 1
+   },
+   "fix": "a2a-card-probe.py now address-checks every candidate host and never contacts *.hf.space (tests in test_a2a_card_probe.py)"
+  },
+  {
+   "id": "B2",
+   "what_we_say": "2 served cards carry a `signatures` key with zero entries; they count as NO_SIGNATURES. So 35 cards have the key and 33 are signed."
+  },
+  {
+   "id": "B3",
+   "what_we_say": "7 listings the registry marks healthy served no card to us."
+  },
+  {
+   "id": "B4",
+   "what_we_say": "2 served cards are byte-identical to another listing's card (420 distinct of 422)."
+  },
+  {
+   "id": "B5",
+   "what_we_say": "3 cards declare a protocolVersion different from their registry listing; declared values include strings that are not A2A release numbers (see cards_served.protocolVersion_declared)."
+  }
+ ],
+ "not_evidence_of": [
+  "that any agent works, is safe, is who it says, or does what its skills say",
+  "that a VERIFIED signature proves identity: it proves only that the key the card points to signed these bytes (embedded_jwk: integrity only)",
+  "that a FAILED or UNCHECKABLE card is malicious; it may be a canonicalisation or key-publication mistake",
+  "endorsement, ranking, grading, or approval of any agent or operator",
+  "a population total of A2A agents: the frame is one registry's listings on 2026-09-25",
+  "reachability at any other moment or from any other network location"
+ ],
+ "published_files": {
+  "data/cards.jsonl.gz": {
+   "sha256": "9d5eaf5bb0866aa16521f1b95064091ce9914d4f957ca75ef273063e4ee4f160",
+   "bytes": 40856,
+   "rows": 443
+  },
+  "run/summary.json": {
+   "sha256": "f32890d749cde7c15dafd61ce848661b5a0aeac440b0289a32ff7796c3651c34",
+   "bytes": 5268
+  },
+  "run/superseded-run1-summary.json": {
+   "sha256": "ac4a25a88a9a5b9280b26cbee90aa8b9642ce3d4a15caa80d63d6513bbec990d",
+   "bytes": 4973
+  },
+  "run/superseded-run1-SUPERSEDED.txt": {
+   "sha256": "a773870ff1cdf49a5206da354a0cf3f742c42e40cff8c77e3aa35e42d48eb2f4",
+   "bytes": 466
+  }
+ },
+ "hf_dataset": "https://huggingface.co/datasets/csoai/a2a-card-census",
+ "verify": {
+  "signature": "record.signed.json: canonicalise its payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.json); verify signature.sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json",
+  "timestamp": "record.json.ots is an OpenTimestamps proof over sha256(record.json). When published it was a PENDING calendar commitment; `ots upgrade` then `ots verify record.json.ots` against a Bitcoin node decides whether it has become a Bitcoin attestation",
+  "files": "sha256 of every published file is in published_files and is pinned by the signature through record.json"
+ }
+}
