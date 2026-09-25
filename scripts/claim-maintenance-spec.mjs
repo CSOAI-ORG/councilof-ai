@@ -147,13 +147,16 @@ function mdToHtml(md) {
   return { html: out.join("\n"), toc };
 }
 
-const DESCRIPTION =
+/** Per version, so a later version's page names itself. For v0.1 this is byte-for-byte the
+ * sentence v0.1 was published with, so regenerating v0.1 changes nothing (spec 12). */
+const descriptionFor = (version) =>
   "Claim maintenance: the continuous, independent observation of the public claims an organisation " +
   "makes about itself — captured verbatim, hashed, timestamped, re-read on a schedule, and measured " +
-  "only where public evidence can settle it. Specification v0.1 by Council of AI. CC0.";
+  `only where public evidence can settle it. Specification ${version} by Council of AI. CC0.`;
 
 function page({ version, bodyHtml, toc, mdName, mdDigest, date, deposit }) {
   const canonical = `${BASE}/spec/claim-maintenance/${version}/`;
+  const DESCRIPTION = descriptionFor(version);
   const ld = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
@@ -285,6 +288,13 @@ for (const version of versions()) {
   // digest would then check out against neither copy.
   const depositPath = join(dir, "deposit.json");
   const deposit = existsSync(depositPath) ? JSON.parse(readFileSync(depositPath, "utf8")) : null;
+  // A same-site reference copy is named in spec.json only when its manifest says where it is
+  // served. v0.1's manifest carries no url, so v0.1's spec.json is unchanged by this.
+  const refManifestPath = join(dir, "reference", "manifest.json");
+  const refManifest = existsSync(refManifestPath) ? JSON.parse(readFileSync(refManifestPath, "utf8")) : null;
+  const refCopy = refManifest?.url
+    ? { url: refManifest.url, sha256: refManifest.files?.["claim-capture.mjs"]?.sha256 ?? null, manifest: `${BASE}/spec/claim-maintenance/${version}/reference/manifest.json` }
+    : null;
   if (deposit && deposit.document_sha256 !== mdDigest)
     throw new Error(
       `[spec] ${version}: deposit.json records document_sha256 ${deposit.document_sha256} but the ` +
@@ -317,6 +327,7 @@ for (const version of versions()) {
         states: ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"],
         register_url: `${BASE}/api/claims/register`,
         reference_implementation: "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs",
+        ...(refCopy ? { reference_implementation_same_site: refCopy } : {}),
         licence: "CC0-1.0",
         licence_url: "https://creativecommons.org/publicdomain/zero/1.0/",
         reference_implementation_licence: "MIT",

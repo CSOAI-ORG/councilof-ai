@@ -20,7 +20,14 @@ import {
   verifyArtifact,
   captureFromUrl,
   sha256hex,
+  SCHEMAS,
+  EXTRACTOR_RULE_1,
+  EXTRACTOR_RULE_2,
+  CURRENT_EXTRACTOR,
+  extractVisibleTextRule1,
+  extractorFor,
 } from "./claim-capture.mjs";
+import * as v01Reference from "../public/spec/claim-maintenance/v0.1/reference/claim-capture.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SPEC_MD = readFileSync(
@@ -368,5 +375,72 @@ describe("the specification says what this code does", () => {
     ]) {
       expect(SPEC_MD.toLowerCase()).toContain(s);
     }
+  });
+});
+
+// Spec v0.2 6.3: a visible-text digest names the extractor that made it, and an artifact that names
+// none was made by rule 1, the extractor frozen in the v0.1 reference. The watcher recomputes a
+// recorded digest by ITS extractor, so rule 1 has to stay exactly what v0.1 published.
+describe("extractor identity (spec v0.2 6.3, 15)", () => {
+  const PAGES = [
+    "<p>it&#x27;s &rsquo; &mdash; &euro; &rarr; &raquo; &copy;</p>",
+    "<p>it&amp;#39;s AT&amp;amp;T &amp;quot;q&amp;quot; &#146; &nbsp;x</p>",
+    "<html><head><style>p{}</style><script>var a=1</script></head><body><!-- c --><p>a  b\n c</p></body></html>",
+    "<p>plain text, no references at all</p>",
+  ];
+
+  it("rule 1 is the v0.1 reference's extractor, character for character", () => {
+    const frozen = v01Reference.extractVisibleText.toString().replace(/^function extractVisibleText\(/, "function (");
+    const carried = extractVisibleTextRule1.toString().replace(/^function extractVisibleTextRule1\(/, "function (");
+    expect(carried).toBe(frozen);
+    for (const html of PAGES) expect(extractVisibleTextRule1(html)).toBe(v01Reference.extractVisibleText(html));
+  });
+
+  it("maps an absent extractor to rule 1 and refuses to guess an unknown one", () => {
+    expect(extractorFor(undefined)).toBe(extractVisibleTextRule1);
+    expect(extractorFor(null)).toBe(extractVisibleTextRule1);
+    expect(extractorFor(EXTRACTOR_RULE_1)).toBe(extractVisibleTextRule1);
+    expect(extractorFor(EXTRACTOR_RULE_2)).toBe(extractVisibleText);
+    expect(CURRENT_EXTRACTOR).toBe(EXTRACTOR_RULE_2);
+    expect(() => extractorFor("csoai-visible-text/9")).toThrow(/unknown visible-text extractor/);
+  });
+
+  it("the two rules agree on a page with no affected reference and differ on one with", () => {
+    expect(extractVisibleTextRule1(PAGES[3])).toBe(extractVisibleText(PAGES[3]));
+    expect(extractVisibleTextRule1(PAGES[0])).not.toBe(extractVisibleText(PAGES[0]));
+  });
+
+  it("a new visible-text artifact is v0.2 and names rule 2; a raw-bytes one names no extractor", () => {
+    const a = captured();
+    expect(a.schema).toBe("csoai.claim-maintenance.artifact/0.2");
+    expect(a.source_content_hash.extractor).toBe(EXTRACTOR_RULE_2);
+    expect(verifyArtifact(a).ok).toBe(true);
+    const raw = buildArtifact({ ...captured(), claim_verbatim: "x", covers: "raw-bytes", content_hash: "b".repeat(64),
+      measurement_plan: "plan", next_read_utc: "2026-09-29T00:00:00Z" });
+    expect(raw.source_content_hash.extractor).toBeUndefined();
+  });
+
+  it("still verifies a v0.1 artifact, and refuses a v0.1 artifact that carries a v0.2 field", () => {
+    const { artifact_sha256, ...a } = captured();
+    const { extractor, ...hash } = a.source_content_hash;
+    const v01 = { ...a, schema: SCHEMAS[0], source_content_hash: hash };
+    v01.artifact_sha256 = artifactDigest(v01);
+    expect(verifyArtifact(v01).ok).toBe(true);
+    const smuggled = { ...v01, source_content_hash: { ...hash, extractor: EXTRACTOR_RULE_2 } };
+    smuggled.artifact_sha256 = artifactDigest(smuggled);
+    const r = verifyArtifact(smuggled);
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(" ")).toMatch(/v0\.2 field/);
+  });
+
+  it("refuses an unknown extractor, and an extractor on a digest that is not visible-text", () => {
+    const bad = captured();
+    bad.source_content_hash = { ...bad.source_content_hash, extractor: "csoai-visible-text/9" };
+    bad.artifact_sha256 = artifactDigest(bad);
+    expect(verifyArtifact(bad).errors.join(" ")).toMatch(/extractor must be one of/);
+    const raw = captured();
+    raw.source_content_hash = { ...raw.source_content_hash, covers: "raw-bytes" };
+    raw.artifact_sha256 = artifactDigest(raw);
+    expect(verifyArtifact(raw).errors.join(" ")).toMatch(/applies only when covers is visible-text/);
   });
 });

@@ -1,0 +1,471 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+  "title": "Claim Maintenance artifact, v0.2",
+  "description": "One maintained public claim. States are exactly CLAIM_CAPTURED, CLAIM_MEASURED, UNMEASURED, UNCHECKABLE. Nothing in this schema expresses a verdict about a subject, and no mark, score or rank may be derived from any field. Specification: https://councilof.ai/spec/claim-maintenance/v0.2/ (CC0 1.0).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "claim_id",
+    "subject",
+    "claim_verbatim",
+    "source_url",
+    "access_date",
+    "source_content_hash",
+    "claim_hash",
+    "state",
+    "does_not_prove",
+    "observed_changes",
+    "next_read_utc"
+  ],
+  "properties": {
+    "schema": {
+      "const": "csoai.claim-maintenance.artifact/0.2"
+    },
+    "claim_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable within its registry. Never reused for a different claim."
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "identifier",
+        "identifier_kind"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identifier": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A stable public identifier. A trading name alone does not identify a subject (spec 5.7)."
+        },
+        "identifier_kind": {
+          "enum": [
+            "url",
+            "domain",
+            "company-register",
+            "lei",
+            "did",
+            "contract-address",
+            "other"
+          ]
+        },
+        "identifier_note": {
+          "type": "string"
+        }
+      }
+    },
+    "claim_verbatim": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The subject's own rendered words. Paraphrase is not capture (spec 5.5)."
+    },
+    "excerpt": {
+      "type": "boolean",
+      "description": "True when claim_verbatim is a contiguous excerpt of a longer captured region. Never an edited-together composite."
+    },
+    "claim_type": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "access_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC instant of the read that produced source_content_hash."
+    },
+    "source_content_hash": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alg",
+        "value",
+        "covers"
+      ],
+      "properties": {
+        "alg": {
+          "const": "sha256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "covers": {
+          "enum": [
+            "visible-text",
+            "raw-bytes",
+            "response-json-canonical"
+          ]
+        },
+        "extracted_chars": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Length of the extracted text. Lets a third party tell an extractor difference from a content change (spec 6.3)."
+        },
+        "extractor": {
+          "enum": [
+            "csoai-visible-text/1",
+            "csoai-visible-text/2"
+          ],
+          "description": "The extractor that produced a visible-text digest (spec v0.2 5.6.1). Absent means csoai-visible-text/1, the extractor of the v0.1 reference. Only meaningful when covers is visible-text."
+        }
+      },
+      "if": {
+        "required": [
+          "extractor"
+        ]
+      },
+      "then": {
+        "properties": {
+          "covers": {
+            "const": "visible-text"
+          }
+        }
+      }
+    },
+    "claim_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over UTF-8 of claim_verbatim alone (spec 6.2)."
+    },
+    "state": {
+      "enum": [
+        "CLAIM_CAPTURED",
+        "CLAIM_MEASURED",
+        "UNMEASURED",
+        "UNCHECKABLE"
+      ]
+    },
+    "measurement_plan": {
+      "type": "string",
+      "description": "Prose about intent. A plan is not a measurement and must never be presented as one (spec 4.6)."
+    },
+    "uncheckable_reason": {
+      "type": "string",
+      "description": "Why no public evidence can settle the claim. A statement about the evidence, never about the subject (spec 4.4)."
+    },
+    "window": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "to": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "denominator": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "n"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "excluded": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Every exclusion, named. An unstated exclusion makes the method irreproducible."
+        }
+      }
+    },
+    "method": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "description",
+        "evidence"
+      ],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Enough detail that a third party re-running it obtains the same value (spec 4.5)."
+        },
+        "implementation_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "access_date",
+              "content_hash"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "access_date": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "content_hash": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "n"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Carried as a string. Floating-point numbers are not reproducible across runtimes (spec 6.1)."
+        },
+        "unit": {
+          "type": "string"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unmeasured_of_population": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Population members the read did not reach. A partial read totalled as a population is a conformance failure (spec 4.6)."
+        }
+      }
+    },
+    "does_not_prove": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "What a reader might wrongly conclude. An empty does_not_prove is a malformed artifact (spec 5.4)."
+    },
+    "observed_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "observed_utc",
+          "previous_hash",
+          "current_hash",
+          "note"
+        ],
+        "properties": {
+          "observed_utc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "previous_access_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "previous_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "current_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "note": {
+            "type": "string",
+            "description": "Neutral. Words of motive or concealment are prohibited (spec 4.9). An observed change is never a finding."
+          },
+          "claim_present": {
+            "type": "boolean",
+            "description": "Whether claim_verbatim was still present at this read."
+          },
+          "extractor": {
+            "enum": [
+              "csoai-visible-text/1",
+              "csoai-visible-text/2"
+            ],
+            "description": "The extractor that produced BOTH digests of this change. Digests from two different extractors are never an observed change (spec v0.2 6.3.1)."
+          }
+        }
+      }
+    },
+    "superseded_measurements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "withdrawn_utc",
+          "reason",
+          "artifact_sha256"
+        ],
+        "properties": {
+          "withdrawn_utc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Commercial, membership, investor, employment or standards-body relationship between maintainer and subject. Disclosed at artifact level (spec 10.3)."
+    },
+    "next_read_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "first_captured_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "artifact_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over the canonical bytes of this object without artifact_sha256 and sig (spec 6.4)."
+    },
+    "sig": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alg",
+        "key_id",
+        "encoding",
+        "value"
+      ],
+      "properties": {
+        "alg": {
+          "const": "Ed25519"
+        },
+        "key_id": {
+          "type": "string",
+          "description": "A DID URL, e.g. did:web:example.org#key-1"
+        },
+        "encoding": {
+          "enum": [
+            "hex",
+            "base64url"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "CLAIM_MEASURED"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "window",
+          "method",
+          "result"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "UNCHECKABLE"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "uncheckable_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "CLAIM_CAPTURED",
+              "UNMEASURED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "required": [
+          "measurement_plan"
+        ]
+      }
+    }
+  ]
+}

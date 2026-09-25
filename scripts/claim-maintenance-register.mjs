@@ -30,7 +30,8 @@ const OUT = join(ROOT, "public/spec/claim-maintenance/register.json");
 const CHECK = process.argv.includes("--check");
 const BASE = "https://councilof.ai";
 const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"];
-const ARTIFACT_SCHEMA = "csoai.claim-maintenance.artifact/0.1";
+/** Every published artifact schema. A v0.1 artifact stays conforming to v0.1 forever (spec 12). */
+const ARTIFACT_SCHEMAS = new Set(["csoai.claim-maintenance.artifact/0.1", "csoai.claim-maintenance.artifact/0.2"]);
 
 const canonical = (value) => {
   const walk = (v) => {
@@ -59,7 +60,7 @@ const iso = (v) => {
  * Both registry shapes are read, because the estate holds one of each and this register must
  * count what exists rather than what it would prefer to find:
  *   · `subjects: { key: { source, claims: [...] } }` — the pre-specification registry shape.
- *   · `claims: [ artifact, … ]` — artifacts conforming to csoai.claim-maintenance.artifact/0.1.
+ *   · `claims: [ artifact, … ]` — artifacts conforming to csoai.claim-maintenance.artifact/0.1 or /0.2.
  */
 function readRegistry(file) {
   const raw = readFileSync(join(CLAIMS_DIR, file), "utf8");
@@ -85,7 +86,7 @@ function readRegistry(file) {
       const st = c?.state;
       if (STATES.includes(st)) states[st] += 1;
       else unknown += 1;
-      if (c?.schema === ARTIFACT_SCHEMA) conforming += 1;
+      if (ARTIFACT_SCHEMAS.has(c?.schema)) conforming += 1;
       const a = iso(c?.access_date);
       if (a) reads.push(a);
       const f = iso(c?.first_captured_utc);
@@ -298,7 +299,7 @@ const register = {
   schema: "csoai.claim-maintenance.register/0.1",
   title: "Claim maintenance register — the subjects Council of AI maintains public claims on",
   as_of: asOf,
-  specification: `${BASE}/spec/claim-maintenance/v0.1/`,
+  specification: `${BASE}/spec/claim-maintenance/v0.2/`,
   specification_licence: "CC0-1.0",
   maintainer: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   generated_by: "scripts/claim-maintenance-register.mjs — generated from the registry files on disk, never hand-listed (spec 7.5)",
