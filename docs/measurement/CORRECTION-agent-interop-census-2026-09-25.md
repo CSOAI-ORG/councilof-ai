@@ -1,6 +1,6 @@
 # Correction: `csoai/agent-interop-census` claims a complete MCP registry read from 2 pages
 
-**Status: OPEN. The dataset must be republished. This note does not republish it.**
+**Status: CORRECTED 2026-09-25** in HF commit `fdb15f00ecda`: README banner, `CORRECTION.md`, and `totals.json` with `mcp_registry_enumeration_complete: false` plus a `correction` block. Original bytes remain at revision `cc1dcf041b9a1f61807e434759bd700be3007b2d`.
 Until it is republished, do not quote any `mcp_registry_*` figure from it as a total.
 
 ## The published claim
