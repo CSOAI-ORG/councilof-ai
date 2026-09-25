@@ -29,7 +29,7 @@
 // currently be completed — rotating this value requires a deploy, and would invalidate any
 // holder of the current private key, so it is not changed here.
 
-const PUBKEY = "AVkgKTDwpzB8d2/De+7w3RHVkgIyc/jh+GIGjBBCSZA=";
+const PUBKEY = "SPsNsIkKmIZD0HJejPzQSwp4mHdNyN2ODpvYpMEWKGI=";
 
 export const onRequestGet: PagesFunction = async () => {
   const body = `v=MCPv1; k=ed25519; p=${PUBKEY}\n`;
