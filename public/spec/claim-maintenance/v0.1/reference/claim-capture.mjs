@@ -30,8 +30,7 @@
  * honestly. A sound digest over a wrong number is a sound digest.
  */
 import { createHash } from "node:crypto";
-import { readFileSync, realpathSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { readFileSync, writeFileSync } from "node:fs";
 
 export const STATES = ["CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"];
 export const SCHEMA = "csoai.claim-maintenance.artifact/0.1";
@@ -357,11 +356,7 @@ export async function captureFromUrl(opts) {
 }
 
 // ── CLI ────────────────────────────────────────────────────────────────────────────────────
-// Node resolves symlinked module paths (including macOS /tmp -> /private/tmp), while argv[1]
-// can retain the spelling the caller used. Compare filesystem identities, not URL strings.
-const isMain = Boolean(
-  process.argv[1] && realpathSync(fileURLToPath(import.meta.url)) === realpathSync(process.argv[1]),
-);
+const isMain = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
 if (isMain) {
   const arg = (k, d) => {
     const i = process.argv.indexOf(`--${k}`);

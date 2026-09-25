@@ -277,7 +277,7 @@ def main() -> int:
                     "claim": r.get("claim_id"), "kind": "source_digest_differs_from_the_recorded_read",
                     "detail": {"subject": r.get("subject"), "url": r.get("url"),
                                "previous_hash": r.get("recorded_hash"), "current_hash": r.get("current_hash"),
-                               "covers": r.get("covers")},
+                               "covers": r.get("covers"), "extractor": r.get("extractor")},
                     "note": ("the bytes at this URL differ from the bytes recorded at the previous read. "
                              "That is the entire content of this statement. There are many ordinary "
                              "reasons a page changes and this loop holds no view about which applies")})
@@ -311,10 +311,12 @@ def main() -> int:
         "states": {k: v.get("state") for k, v in sorted(results.items())},
         "artifacts": {f"{k}.json": c.sha256_hex((rundir / f"{k}.json").read_bytes()) for k in sorted(results)},
         "registry_reread": registry_reads,
-        "reread_extractor": ("scripts/claims/reread.mjs, which imports extractVisibleText from the "
-                             "reference implementation named by the specification. One extractor for "
-                             "the capture and the re-read, so a digest difference is a difference in "
-                             "the source and never a difference between two readers"),
+        "reread_extractor": ("scripts/claims/reread.mjs, which recomputes each recorded digest with the "
+                             "extractor that produced it (the one its artifact names, or "
+                             "csoai-visible-text/1 when it names none), imported from the reference "
+                             "implementation named by the specification. Like with like, so a digest "
+                             "difference is a difference in the source and never a difference between "
+                             "two readers (spec v0.2 6.3.1)"),
         "observed_changes_requiring_review": changes,
         "observed_changes_count": len(changes),
         "discipline": ("an observed change is a prompt for a human to look. This loop makes no allegation, "

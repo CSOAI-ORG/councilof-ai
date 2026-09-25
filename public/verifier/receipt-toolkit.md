@@ -55,6 +55,6 @@ To integrate safely, save the caller expectation and the reported transaction/lo
 
 - card-v0 payloads: https://councilof.ai/verifier/card-v0-verify.mjs
 - GSPC measurement cards: https://councilof.ai/verifier/gspc-verify.mjs
-- Claim Maintenance artifacts: https://councilof.ai/spec/claim-maintenance/v0.1/reference/claim-capture.mjs
+- Claim Maintenance artifacts: https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs
 
 Source checksum: sha256:e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab. The build checks that this public copy is byte-identical to scripts/verify_receipt.py; no production signing key is accessed.

@@ -20,7 +20,14 @@ import {
   verifyArtifact,
   captureFromUrl,
   sha256hex,
+  SCHEMAS,
+  EXTRACTOR_RULE_1,
+  EXTRACTOR_RULE_2,
+  CURRENT_EXTRACTOR,
+  extractVisibleTextRule1,
+  extractorFor,
 } from "./claim-capture.mjs";
+import * as v01Reference from "../public/spec/claim-maintenance/v0.1/reference/claim-capture.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SPEC_MD = readFileSync(
@@ -60,6 +67,48 @@ describe("canonicalisation and hashing (spec 6)", () => {
     const text = extractVisibleText(html);
     expect(text).toBe("Example Corp market leader powering the majority");
     expect(text).not.toMatch(/var x|color:red|hidden/);
+  });
+
+  // Spec 6.3 step 2 takes the text of the remaining NODES: every character reference is decoded
+  // exactly once, as a browser renders it. Reported 2026-09-24 by the hiring-platforms capture
+  // (docs/measurement/HIRING-PLATFORMS-2026-09-24.md, capture note 2): `&#x27;` came through as
+  // those six characters, so claims containing an apostrophe could not be captured verbatim.
+  it("decodes hexadecimal character references, as a browser renders them", () => {
+    expect(extractVisibleText("<p>it&#x27;s</p>")).toBe("it's");
+    expect(extractVisibleText("<p>it&#X27;s</p>")).toBe("it's");
+    expect(extractVisibleText("<p>&#x201C;quoted&#x201d;</p>")).toBe("\u201Cquoted\u201D");
+  });
+
+  it("decodes the named references pages commonly emit", () => {
+    expect(extractVisibleText("<p>it&rsquo;s &ldquo;x&rdquo; &mdash; y&hellip;</p>")).toBe(
+      "it\u2019s \u201Cx\u201D \u2014 y\u2026",
+    );
+    expect(extractVisibleText("<p>it&apos;s &copy; 2026</p>")).toBe("it's \u00A9 2026");
+  });
+
+  it("decodes a double-encoded reference ONCE: the reader sees the inner reference as text", () => {
+    expect(extractVisibleText("<p>it&amp;#x27;s</p>")).toBe("it&#x27;s");
+    expect(extractVisibleText("<p>it&amp;#39;s</p>")).toBe("it&#39;s");
+    expect(extractVisibleText("<p>&amp;quot;hi&amp;quot;</p>")).toBe("&quot;hi&quot;");
+    expect(extractVisibleText("<p>a &amp;lt;b&amp;gt;</p>")).toBe("a &lt;b&gt;");
+    expect(extractVisibleText("<p>AT&amp;amp;T</p>")).toBe("AT&amp;T");
+  });
+
+  it("keeps single-encoded decimal and the five basic named references as before", () => {
+    expect(extractVisibleText("<p>it&#39;s AT&amp;T &lt;b&gt; &quot;q&quot;&nbsp;end</p>")).toBe(
+      'it\'s AT&T <b> "q" end',
+    );
+  });
+
+  it("applies the browser's numeric rules: windows-1252 for 128-159, U+FFFD for the invalid, never a throw", () => {
+    expect(extractVisibleText("<p>it&#146;s &#150; ok</p>")).toBe("it\u2019s \u2013 ok");
+    expect(extractVisibleText("<p>a&#0;b&#xD800;c&#x110000;d</p>")).toBe("a\uFFFDb\uFFFDc\uFFFDd");
+    expect(() => extractVisibleText("<p>&#99999999;</p>")).not.toThrow();
+    expect(extractVisibleText("<p>&#99999999;</p>")).toBe("\uFFFD");
+  });
+
+  it("leaves a name outside its published table exactly as written", () => {
+    expect(extractVisibleText("<p>&notarealentity; stays</p>")).toBe("&notarealentity; stays");
   });
 
   it("claim_hash covers the claim text alone, so the same sentence on two surfaces hashes alike", () => {
@@ -326,5 +375,72 @@ describe("the specification says what this code does", () => {
     ]) {
       expect(SPEC_MD.toLowerCase()).toContain(s);
     }
+  });
+});
+
+// Spec v0.2 6.3: a visible-text digest names the extractor that made it, and an artifact that names
+// none was made by rule 1, the extractor frozen in the v0.1 reference. The watcher recomputes a
+// recorded digest by ITS extractor, so rule 1 has to stay exactly what v0.1 published.
+describe("extractor identity (spec v0.2 6.3, 15)", () => {
+  const PAGES = [
+    "<p>it&#x27;s &rsquo; &mdash; &euro; &rarr; &raquo; &copy;</p>",
+    "<p>it&amp;#39;s AT&amp;amp;T &amp;quot;q&amp;quot; &#146; &nbsp;x</p>",
+    "<html><head><style>p{}</style><script>var a=1</script></head><body><!-- c --><p>a  b\n c</p></body></html>",
+    "<p>plain text, no references at all</p>",
+  ];
+
+  it("rule 1 is the v0.1 reference's extractor, character for character", () => {
+    const frozen = v01Reference.extractVisibleText.toString().replace(/^function extractVisibleText\(/, "function (");
+    const carried = extractVisibleTextRule1.toString().replace(/^function extractVisibleTextRule1\(/, "function (");
+    expect(carried).toBe(frozen);
+    for (const html of PAGES) expect(extractVisibleTextRule1(html)).toBe(v01Reference.extractVisibleText(html));
+  });
+
+  it("maps an absent extractor to rule 1 and refuses to guess an unknown one", () => {
+    expect(extractorFor(undefined)).toBe(extractVisibleTextRule1);
+    expect(extractorFor(null)).toBe(extractVisibleTextRule1);
+    expect(extractorFor(EXTRACTOR_RULE_1)).toBe(extractVisibleTextRule1);
+    expect(extractorFor(EXTRACTOR_RULE_2)).toBe(extractVisibleText);
+    expect(CURRENT_EXTRACTOR).toBe(EXTRACTOR_RULE_2);
+    expect(() => extractorFor("csoai-visible-text/9")).toThrow(/unknown visible-text extractor/);
+  });
+
+  it("the two rules agree on a page with no affected reference and differ on one with", () => {
+    expect(extractVisibleTextRule1(PAGES[3])).toBe(extractVisibleText(PAGES[3]));
+    expect(extractVisibleTextRule1(PAGES[0])).not.toBe(extractVisibleText(PAGES[0]));
+  });
+
+  it("a new visible-text artifact is v0.2 and names rule 2; a raw-bytes one names no extractor", () => {
+    const a = captured();
+    expect(a.schema).toBe("csoai.claim-maintenance.artifact/0.2");
+    expect(a.source_content_hash.extractor).toBe(EXTRACTOR_RULE_2);
+    expect(verifyArtifact(a).ok).toBe(true);
+    const raw = buildArtifact({ ...captured(), claim_verbatim: "x", covers: "raw-bytes", content_hash: "b".repeat(64),
+      measurement_plan: "plan", next_read_utc: "2026-09-29T00:00:00Z" });
+    expect(raw.source_content_hash.extractor).toBeUndefined();
+  });
+
+  it("still verifies a v0.1 artifact, and refuses a v0.1 artifact that carries a v0.2 field", () => {
+    const { artifact_sha256, ...a } = captured();
+    const { extractor, ...hash } = a.source_content_hash;
+    const v01 = { ...a, schema: SCHEMAS[0], source_content_hash: hash };
+    v01.artifact_sha256 = artifactDigest(v01);
+    expect(verifyArtifact(v01).ok).toBe(true);
+    const smuggled = { ...v01, source_content_hash: { ...hash, extractor: EXTRACTOR_RULE_2 } };
+    smuggled.artifact_sha256 = artifactDigest(smuggled);
+    const r = verifyArtifact(smuggled);
+    expect(r.ok).toBe(false);
+    expect(r.errors.join(" ")).toMatch(/v0\.2 field/);
+  });
+
+  it("refuses an unknown extractor, and an extractor on a digest that is not visible-text", () => {
+    const bad = captured();
+    bad.source_content_hash = { ...bad.source_content_hash, extractor: "csoai-visible-text/9" };
+    bad.artifact_sha256 = artifactDigest(bad);
+    expect(verifyArtifact(bad).errors.join(" ")).toMatch(/extractor must be one of/);
+    const raw = captured();
+    raw.source_content_hash = { ...raw.source_content_hash, covers: "raw-bytes" };
+    raw.artifact_sha256 = artifactDigest(raw);
+    expect(verifyArtifact(raw).errors.join(" ")).toMatch(/applies only when covers is visible-text/);
   });
 });

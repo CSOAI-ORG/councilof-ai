@@ -61,7 +61,7 @@ describe("/claim-maintenance — the page states the category and links every ar
       "/api/claims/register",
       "/spec/claim-maintenance/register.json",
       "/api/corrections",
-      "/spec/claim-maintenance/v0.1/reference/claim-capture.mjs",
+      "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
     ]) {
       expect(page, `page does not link ${href}`).toContain(href);
     }
@@ -145,13 +145,28 @@ describe("the published specification is citable and self-describing", () => {
   });
 });
 
-// Same-site source distribution is an exact copy, not a rewritten implementation.
+// Same-site source distribution is an exact copy, not a rewritten implementation. The CURRENT
+// reference (the version index's latest) is held to the maintained source; every published
+// reference, v0.1 included, is held to its own manifest, and v0.1 to the literal digest its DOI
+// pins, so no edit to a manifest can turn this green (spec 12: superseded, never edited).
 it("downloads the existing reference without GitHub and pins its bytes", async () => {
   const { createHash } = await import("node:crypto");
+  const sha = (b: Buffer) => createHash("sha256").update(b).digest("hex");
+  const specDir = resolve(ROOT, "public/spec/claim-maintenance");
+  const latest = JSON.parse(readFileSync(resolve(specDir, "index.json"), "utf8")).latest;
+  expect(latest).toBe("0.2");
   const original = readFileSync(resolve(ROOT, "scripts/claim-capture.mjs"));
-  const served = readFileSync(resolve(ROOT, "public/spec/claim-maintenance/v0.1/reference/claim-capture.mjs"));
-  const manifest = JSON.parse(readFileSync(resolve(ROOT, "public/spec/claim-maintenance/v0.1/reference/manifest.json"), "utf8"));
+  const served = readFileSync(resolve(specDir, `v${latest}/reference/claim-capture.mjs`));
   expect(served.equals(original)).toBe(true);
-  expect(manifest.files["claim-capture.mjs"].sha256).toBe(createHash("sha256").update(served).digest("hex"));
+  for (const v of ["v0.1", `v${latest}`]) {
+    const bytes = readFileSync(resolve(specDir, `${v}/reference/claim-capture.mjs`));
+    const manifest = JSON.parse(readFileSync(resolve(specDir, `${v}/reference/manifest.json`), "utf8"));
+    expect(manifest.files["claim-capture.mjs"].sha256).toBe(sha(bytes));
+    expect(manifest.files["claim-capture.mjs"].bytes).toBe(bytes.length);
+  }
+  expect(sha(readFileSync(resolve(specDir, "v0.1/reference/claim-capture.mjs")))).toBe(
+    "a634515bec5e8999d73bf55d2e2c8641351fe0070d40596afa4877f2f3e86f60",
+  );
+  expect(page).toContain(`/spec/claim-maintenance/v${latest}/reference/claim-capture.mjs`);
   expect(page).not.toContain("git clone https://github.com/");
 });
