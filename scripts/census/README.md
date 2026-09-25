@@ -109,5 +109,39 @@ endpoint was attempted; its counts are over the attempted endpoints, never frame
 totals. P1 of the effect-binding server probe (binding field names in tools/list schemas) is
 reused read-only; its P2-P4 call tools and are not.
 
+## HF Spaces (`hf-spaces-mcp-probe.py`) — runtime stage first; only RUNNING Spaces are contacted
+
+```bash
+python3 scripts/census/hf-spaces-mcp-probe.py --frame /evac-bulk/census-frame-YYYY-MM-DD \
+    --out /evac-bulk/census-hf-spaces-YYYY-MM-DD --budget-s 3300 --workers 8
+python3 -m unittest scripts/census/test_hf_spaces_mcp_probe.py   # fake Hub + fake Spaces on 127.0.0.1
+```
+
+`mcp-remote-probe.py` refuses `*.hf.space` because a request wakes a sleeping Space. This one reads
+`runtime.stage` from the Hub API first (one `filter=mcp-server&expand[]=runtime` walk, then
+`/api/spaces/<id>` again immediately before any contact) and sends the `mcp-remote-probe.py`
+exchange only to a Space whose last read said `RUNNING` and whose sdk is `gradio`, at
+`<host>/gradio_api/mcp/` (legacy fallback `/gradio_api/mcp/sse`), host from the API's
+`host`/`subdomain` field. Every other stage (`SLEEPING`, `PAUSED`, `BUILD_ERROR`, ...) is the row's
+state and the Space gets no request. The suite's control (a run without the stage check) must wake
+the sleeping fixture; otherwise the never-wake assertions would be vacuous. Hub API paced at
+<= 1.4 req/s and its `ratelimit` header obeyed.
+
+## A2A cards (`a2a-card-probe.py`) — GET the card, check its signatures, send nothing else
+
+```bash
+python3 scripts/census/a2a-card-probe.py --frame /evac-bulk/census-frame-YYYY-MM-DD \
+    --out /evac-bulk/census-a2a-YYYY-MM-DD
+python3 -m unittest scripts/census/test_a2a_card_probe.py   # fixtures + per-run generated keys
+```
+
+For each a2aregistry listing: GET the listing's `wellKnownURI`, then `/.well-known/agent-card.json`
+and the legacy `/.well-known/agent.json` at the origin, stopping at the first card. Hosts that
+resolve to non-global addresses (loopback, RFC 1918, CGNAT/tailnet, link-local) are never contacted
+(`NON_PUBLIC_ADDRESS`). Signatures: detached JWS over JCS(card without `signatures`); `VERIFIED` only
+under a key the card itself points to (`jku`, embedded `jwk` = integrity only, or a `did:web` kid);
+no pointer, an unreachable key, or a symmetric alg is `UNCHECKABLE`, never `VERIFIED`. No task,
+message or JSON-RPC call is ever sent to an agent.
+
 `read_state.py` is the shared fail-closed predicate; `build-agent-interop-census.py` uses it
 (see `docs/measurement/CORRECTION-agent-interop-census-2026-09-25.md`).
