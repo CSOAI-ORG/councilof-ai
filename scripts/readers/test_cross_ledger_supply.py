@@ -291,5 +291,21 @@ class FailuresAndSums(unittest.TestCase):
         self.assertNotIn("cert" + "if", json.dumps(doc).lower())  # vocabulary guard
 
 
+class ProofPath(unittest.TestCase):
+    def test_url_prefix_names_the_served_location_not_the_machine_path(self):
+        p = Path("/workspace/lanes/out/cross-ledger/usdc-2026-09-26/ethereum-proof.json")
+        self.assertEqual(x.proof_path(p, "/interop/cross-ledger-usdc-2026-09-26/"),
+                         "/interop/cross-ledger-usdc-2026-09-26/ethereum-proof.json")
+
+    def test_without_prefix_behaviour_is_unchanged(self):
+        inside = x.REPO / "public" / "interop" / "cross-ledger-usdc-2026-09-25" / "noble-proof.json"
+        self.assertEqual(x.proof_path(inside), "/interop/cross-ledger-usdc-2026-09-25/noble-proof.json")
+        outside = Path("/tmp/elsewhere/noble-proof.json")
+        self.assertEqual(x.proof_path(outside), "/tmp/elsewhere/noble-proof.json")
+
+    def test_cli_rejects_a_prefix_that_is_not_a_site_path(self):
+        self.assertEqual(x.main(["--out", "/dev/null", "--proof-url-prefix", "https://evil/x"]), 2)
+
+
 if __name__ == "__main__":
     unittest.main()

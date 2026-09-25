@@ -33,6 +33,10 @@ Never raises out of a reader: a failure becomes an UNCHECKABLE row carrying its 
 Usage (from the repo root):
   python3 scripts/readers/cross_ledger_supply.py --out public/interop/cross-ledger-usdc-2026-09-25.json \
       [--proof-dir public/interop/cross-ledger-usdc-2026-09-25]
+  From a checkout that does not hold the published tree (the pod loop scripts/pod-loops/cross-ledger.sh
+  writes to /workspace/lanes/out and publishes a copy), name the URL the proofs will be served at, so
+  the artifact never records a machine-local path:
+      --out OUT/usdc-D.json --proof-dir OUT/usdc-D --proof-url-prefix /interop/cross-ledger-usdc-D
 """
 from __future__ import annotations
 
@@ -1011,7 +1015,18 @@ def camt053_shape(rows: list[dict], date: str) -> dict:
     }
 
 
-def build(c: Client, proof_dir: Path | None = None) -> dict:
+def proof_path(p: Path, proof_url_prefix: str | None = None) -> str:
+    """Where the artifact says a proof file lives. With a URL prefix: prefix + "/" + file name (the
+    served location). Without one: the path under this repo's public/ as a site path, else the local
+    path as written (the pre-existing behaviour, unchanged)."""
+    if proof_url_prefix:
+        return proof_url_prefix.rstrip("/") + "/" + p.name
+    if str(p).startswith(str(REPO / "public")):
+        return "/" + str(p.relative_to(REPO / "public"))
+    return str(p)
+
+
+def build(c: Client, proof_dir: Path | None = None, proof_url_prefix: str | None = None) -> dict:
     started = now_iso()
     issuer = read_issuer_list(c)
     rows: list[dict] = []
@@ -1061,7 +1076,7 @@ def build(c: Client, proof_dir: Path | None = None) -> dict:
             b = (json.dumps(blob, indent=1, sort_keys=True) + "\n").encode()
             p = proof_dir / f"{k}-proof.json"
             p.write_bytes(b)
-            proof_files[k] = {"path": "/" + str(p.relative_to(REPO / "public")) if str(p).startswith(str(REPO / "public")) else str(p),
+            proof_files[k] = {"path": proof_path(p, proof_url_prefix),
                               "sha256": sha256_hex(b)}
         for r in rows:
             if r["ledger"] in proof_files and r.get("proof"):
@@ -1134,7 +1149,11 @@ def main(argv: list[str]) -> int:
     pdir = Path(argv[argv.index("--proof-dir") + 1]) if "--proof-dir" in argv else None
     if pdir is not None and not pdir.is_absolute():
         pdir = (Path.cwd() / pdir).resolve()
-    doc = build(Client(), pdir)
+    prefix = argv[argv.index("--proof-url-prefix") + 1] if "--proof-url-prefix" in argv else None
+    if prefix is not None and not re.fullmatch(r"/[A-Za-z0-9._/-]+", prefix):
+        print(f"--proof-url-prefix must be a site path like /interop/name, got {prefix!r}", file=sys.stderr)
+        return 2
+    doc = build(Client(), pdir, prefix)
     out.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
     print(f"issuer list: {doc['issuer_list_evidence'].get('state')} rows={doc['issuer_list_evidence'].get('mainnet_rows_parsed')} "
           f"md_sha256={str(doc['issuer_list_evidence'].get('md_sha256'))[:16]}")

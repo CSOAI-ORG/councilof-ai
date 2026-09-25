@@ -1,4 +1,6 @@
 #!/bin/bash
+# Container restarts wipe /root; the pod->Oracle mirror key lives on /workspace (added 2026-09-25).
+[ -f /workspace/secrets/ssh/config ] && { mkdir -p /root/.ssh; grep -qs "Include /workspace/secrets/ssh/config" /root/.ssh/config || { printf "Include /workspace/secrets/ssh/config\n" | cat - /root/.ssh/config 2>/dev/null > /root/.ssh/config.new || true; mv /root/.ssh/config.new /root/.ssh/config; chmod 600 /root/.ssh/config; }; }
 # Desktop Commander device keepalive (added 2026-09-17)
 [ -x /workspace/tools/dc/keepalive.sh ] && pgrep -f dc/keepalive.sh >/dev/null || setsid nohup /workspace/tools/dc/keepalive.sh >/dev/null 2>&1 < /dev/null &
 # One supervisor for the existing scheduler. No worker or model process starts here.

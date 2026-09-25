@@ -3,6 +3,9 @@
 # says rc=0 and that is not yet in master is merged (--no-ff) into master in the merge clone, pushed to
 # the bare repo, and one deploy is queued (deploy-when-idle guards against overlapping deploys).
 # Receipt: one line per merge in $LOGS/mill-hourly-land.log. Branches with rc!=0 are left for a human.
+# ledger/auto-<date> branches (cross-ledger.sh) land only with an OK receipt for that branch AND a net diff that
+# ADDS files under public/interop/cross-ledger-usdc-<same date>{.json,/<name>.json} and nothing else; any other
+# path, any modification or deletion, or a date that does not match the branch is a HOLD left for a human.
 set -u
 . "$(dirname "$0")/lib.sh"
 exec 6>"$STATE/mill-hourly-land.lock"; flock -n 6 || exit 0
@@ -34,7 +37,28 @@ for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/ar
     git merge --abort 2>/dev/null; log mill-hourly-land "$b CONFLICT left for a human"
   fi
 done
-[ "$merged" -gt 0 ] || log mill-hourly-land "nothing to land (no unmerged mill/auto-* or arena/auto-* with a receipt)"
+# ledger/auto-<date> branches (cross-ledger.sh): the receipt says OK for that branch, AND the branch may only ADD
+# the dated cross-ledger artifact and its proof files. The path check is on the net diff from the merge base,
+# which is exactly what a merge would bring in; a name-only allowlist would let anything else ride along.
+for ref in $(git for-each-ref --format='%(refname:short)' refs/remotes/origin/ledger/auto-* | sort); do
+  b=${ref#origin/}; d=${b#ledger/auto-}
+  git merge-base --is-ancestor "$ref" origin/master && continue
+  [[ $d =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || { log mill-hourly-land "$b HOLD branch name is not ledger/auto-YYYY-MM-DD"; continue; }
+  grep -qE " OK .*branch=$b " "$LOGS/cross-ledger.log" 2>/dev/null || { log mill-hourly-land "$b HOLD no OK receipt"; continue; }
+  base=$(git merge-base origin/master "$ref") || { log mill-hourly-land "$b HOLD no merge base with master"; continue; }
+  changes=$(git diff --no-renames --name-status "$base" "$ref")
+  [ -n "$changes" ] || { log mill-hourly-land "$b HOLD empty diff"; continue; }
+  outside=$(printf '%s\n' "$changes" | grep -vE "^A"$'\t'"public/interop/cross-ledger-usdc-$d(\.json|/[A-Za-z0-9._-]+\.json)$")
+  if [ -n "$outside" ]; then
+    log mill-hourly-land "$b HOLD path outside the cross-ledger allowlist: $(printf '%s' "$outside" | tr '\t\n' ': ' | cut -c1-200)"; continue
+  fi
+  if git merge --no-ff --no-edit "$ref" -m "ledger: cross-ledger USDC read $d (unsigned PILOT, path-restricted to public/interop/cross-ledger-usdc-$d*) — auto-landed by mill-hourly-land" >/dev/null 2>&1; then
+    merged=$((merged+1)); log mill-hourly-land "$b MERGED $(git rev-parse --short HEAD)"
+  else
+    git merge --abort 2>/dev/null; log mill-hourly-land "$b CONFLICT left for a human"
+  fi
+done
+[ "$merged" -gt 0 ] || log mill-hourly-land "nothing to land (no unmerged mill/auto-*, arena/auto-* or ledger/auto-* with a receipt)"
 if [ "$merged" -gt 0 ]; then
   # Signed mill cards remain quarantine evidence until a reviewed admission
   # authority exists. Refuse the entire push/deploy if this merge would expose
