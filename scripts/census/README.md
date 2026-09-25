@@ -145,3 +145,26 @@ message or JSON-RPC call is ever sent to an agent.
 
 `read_state.py` is the shared fail-closed predicate; `build-agent-interop-census.py` uses it
 (see `docs/measurement/CORRECTION-agent-interop-census-2026-09-25.md`).
+
+## Rights gate (`rights_gate.py`): what we may do with each row, before any adapter or runner
+
+```bash
+python3 scripts/census/rights_gate.py --frame /evac-bulk/census-frame-YYYY-MM-DD \
+    --out /evac-bulk/rights-gate-YYYY-MM-DD          # --github-sample <=50, --oci-sample 40
+python3 -m unittest scripts/census/test_rights_gate.py   # fixtures only
+```
+
+This is the stage between Discovery and Adapter/Runner. Each frame row gets one decision for
+each purpose. `MEASURE_PUBLIC` (probing a publicly advertised endpoint's discovery surface) does
+not depend on the licence. `REUSE_CODE`, `VENDOR` and `TRAIN` follow the most restrictive
+licence category found in the evidence. Every decision is `ALLOWED`, `RESTRICTED(reason)` or
+`UNKNOWN(reason)`, and **UNKNOWN never counts as ALLOWED**. Non-commercial licences are
+RESTRICTED for reuse, vendoring and training. Licence evidence comes from the package
+registries' declared licences (npm `license`, PyPI `license_expression`/`license`/classifiers,
+the NuGet nuspec, crates.io) and from HF Space cards. OCI `org.opencontainers.image.licenses`
+labels are read for a capped sample. GitHub's keyless licence API (60 requests an hour) is used
+only for a seeded sample of at most 50 repositories. That sample also measures how often a
+repository's licence file disagrees with its package metadata. Catalogue terms are recorded
+beside the decisions; they govern the listing text, not the listed code. The runner keeps its
+own exclusions (the probe never requests `*.hf.space`). The gate is a declared-licence policy,
+not legal advice.
