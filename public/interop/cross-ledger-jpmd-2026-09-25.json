@@ -1,0 +1,741 @@
+{
+  "schema": "csoai.cross-ledger-supply/0.2",
+  "family": "csoai.cross-ledger-supply (0.1 = USDC pilot; 0.2 adds products, issuer_reported, reconciliation)",
+  "status": "measured read; signature and timestamp are sidecar files",
+  "writes_board": false,
+  "kind": "deterministic-facts (per-read evidence labelled; see evidence_kind_legend)",
+  "asset_key": "jpmd",
+  "asset": "JPMD",
+  "issuer": "JPMorgan Chase (Kinexys)",
+  "question": "Does the deposit token at the address JPMorgan's own Kinexys page links resolve on Base as JPMD, and what issued supply does Base's state show?",
+  "as_of": "2026-09-25T11:18:07Z",
+  "started_at": "2026-09-25T11:18:07Z",
+  "finished_at": "2026-09-25T11:18:52Z",
+  "reader": "scripts/readers/cross_ledger_funds.py",
+  "registry": "scripts/readers/cross_ledger_assets.json",
+  "registry_sha256": "36a8b3afee928b71418e04c4066a2940fdb30d80415fb1939636e01ceecd23dd",
+  "issuer_list_evidence": {
+    "page": "https://www.jpmorgan.com/kinexys/digital-payments/jpm-coin",
+    "url": "https://www.jpmorgan.com/kinexys/digital-payments/jpm-coin",
+    "fetched_at": "2026-09-25T11:18:07Z",
+    "http_status": 200,
+    "final_url": "https://www.jpmorgan.com/kinexys/jpm-coin",
+    "sha256": "31eeddc63adfdd9a91a6ca35b65c74f2b51b33c08a3dd954a48dd28dd8e47c16",
+    "bytes": 72930,
+    "parser": "html_regex",
+    "method": "regex over the raw HTML bytes (named groups label, identifier); the pattern is in the registry",
+    "ticker_confirmation": {
+      "url": "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients",
+      "fetched_at": "2026-09-25T11:18:08Z",
+      "http_status": 200,
+      "final_url": "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients",
+      "sha256": "3a38e384941cff2da6f3f1e64bd2bc40aef6475d4acfac4f1eb7315b5831c9f2",
+      "bytes": 181196,
+      "must_contain": "JPM Coin (JPMD)",
+      "found": true
+    },
+    "state": "READ",
+    "deployments_parsed": 1
+  },
+  "issuer_list_rows": [
+    {
+      "product": "JPMD",
+      "label": "Base",
+      "identifier": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+      "matched_markup_sha256": "14795f4310ffd10470eee4cf0693c78077734abc7f2852b38d94d144aae0f37b",
+      "modules": {},
+      "in_page_bytes": true
+    }
+  ],
+  "evidence_kind_legend": {
+    "STATE_PROOF_VERIFIED": "A Merkle proof returned by the node was verified by this reader against the stateRoot of a block header whose hash this reader recomputed from the header fields (EIP-1186), and the proven value equals the plain eth_call answer. The header itself is not checked against consensus (no light client); on an L2 it is the L2's header and nothing here checks it against L1 settlement. A second operator's copy of the same block is compared and recorded.",
+    "STATE_PROOF_RECORDED": "A proof was returned and its bytes kept, but it was not fully verified here — either it failed, or it verified against a stateRoot whose block hash could not be recomputed from the returned header fields (chain-specific header format), so the stateRoot is not bound to the block hash here. The reason is in the row.",
+    "OPERATOR_API": "One operator's API answer. Not a proof. Where a second independent operator exists it is read too and two_operators_agree is recorded — agreement between operators is still not a proof.",
+    "UNCHECKABLE": "The read failed; the HTTP status or error is recorded. Never a zero, never 'absent'.",
+    "REJECTED": "The endpoint answered but the on-ledger identity (symbol / asset code / metadata symbol) is not the product ticker the issuer page names for that deployment; no supply is recorded against the product."
+  },
+  "two_operators_agree_legend": {
+    "true": "an independent second operator returned the same supply (at the same pinned height where the ledger allows pinning)",
+    "false": "an independent second operator returned a different supply at the same pinned height",
+    "NOT_COMPARABLE": "the second read differed but the ledger/API cannot pin a height, so the two reads are at different heights",
+    "NOT_TRIED": "no keyless second operator was found or the second read failed (reason in the row)"
+  },
+  "per_ledger": [
+    {
+      "ledger": "base",
+      "product": "JPMD",
+      "supply_decimal": "1001000.00",
+      "decimals": 2,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 51772880
+    }
+  ],
+  "rows": [
+    {
+      "ledger": "base",
+      "product": "JPMD",
+      "issuer_label": "Base",
+      "deployment_id": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+      "supply_base_units": "100100000",
+      "decimals": 2,
+      "supply_decimal": "1001000.00",
+      "observed_at": "2026-09-25T11:18:09Z",
+      "height": {
+        "kind": "block (latest minus 10 at read time, then pinned)",
+        "number": 51772880,
+        "hash": "0x2ff3e8acbddba0f2eaba4b12055cd73a0e9a7cb2cd4f5dd291556367a211fcb3",
+        "state_root": "0xd4942869058431856a8f1082510baade86a8a94b4647e0ce478f6b026d472f78",
+        "timestamp": 1790335107,
+        "chain_id": 8453,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://base-rpc.publicnode.com",
+      "operator": "PublicNode (Allnodes)",
+      "response_sha256": "0fa659debfea1412576a83312867471c411fc8bcee5461e1d56680b2fd3cf035",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://mainnet.base.org",
+        "operator": "Coinbase (mainnet.base.org)",
+        "independent": true,
+        "block_hash": "0x2ff3e8acbddba0f2eaba4b12055cd73a0e9a7cb2cd4f5dd291556367a211fcb3",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "100100000",
+        "response_sha256": "278dfe107edc9d9b4013b203b2570f4b05ffba6b381320081c377b6eb95c2827",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "JPMD",
+        "name": "JPMD",
+        "decimals": 2
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x52c63247e1f47db19d5ce0460030c497f067ca4cebf71ba98eeadabe20bace02",
+        "slot_name": "erc7201(openzeppelin.storage.ERC20)+2",
+        "proof_endpoint": "https://mainnet.base.org",
+        "proof_operator": "Coinbase (mainnet.base.org)",
+        "failed_before": [
+          {
+            "endpoint": "https://base-rpc.publicnode.com",
+            "operator": "PublicNode (Allnodes)",
+            "error": "RPC error: {'code': -32602, 'message': 'distance to target block exceeds maximum proof window'}"
+          }
+        ],
+        "response_sha256": "1b79db92da8de0884e7f69306c18d3f4c48e2019a7cf8922a5c8208d8ba4820d",
+        "account_proof_nodes": 9,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 100100000,
+        "error": null,
+        "proven_storage_root": "0xfd9111f851352a7e1e771cd5b0fd505d2a3a6564c3cded970a3afab821d28940",
+        "proven_code_hash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+        "eth_call_value": 100100000,
+        "file": {
+          "path": "public/interop/cross-ledger-jpmd-2026-09-25/base-JPMD-proof.json",
+          "sha256": "52bb6a95b9b23b8360390f6058725d8c3354bfd968594660a7eeca989d3e58ed"
+        }
+      },
+      "notes": [
+        "slot erc7201(openzeppelin.storage.ERC20)+2 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header",
+        "L2: the header is the L2's own; nothing here checks it against L1 settlement or a fault/validity proof"
+      ],
+      "slot_search": {
+        "block": 51772861,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "erc7201(openzeppelin.storage.ERC20)+2"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {}
+      }
+    }
+  ],
+  "listed_not_read": [],
+  "sum_by_evidence_kind": {
+    "JPMD": {
+      "STATE_PROOF_VERIFIED": {
+        "n_rows": 1,
+        "ledgers": [
+          "base"
+        ],
+        "sum_decimal": "1001000.00"
+      }
+    }
+  },
+  "sum_rule": "per product and per evidence kind only. No cross-product, cross-kind or cross-issuer total is given.",
+  "issuer_reported": [],
+  "reconciliation_state": "UNRECONCILED_WITH_ISSUING_BANK_LEDGER",
+  "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUING_BANK_LEDGER",
+    "controlling_record": "JPMorgan's deposit ledger (a deposit token is a claim on a bank deposit; there is no transfer agent)",
+    "why": "JPMorgan publishes no outstanding-balance figure for JPMD; the bank's ledger is not public.",
+    "transfer_agent_named_by_issuer_filing": null,
+    "public_transfer_agent_record_found": false,
+    "meaning": "the on-chain supply below has not been reconciled against the controlling record; until it is, no statement of ownership, AUM or NAV follows from it"
+  },
+  "not_evidence_of": [
+    "AUM, NAV, ownership, redeemability, fund compliance",
+    "settlement finality, reserves, backing, or the value of anything",
+    "the fund's or bank's controlling record (transfer-agent register / deposit ledger) — not read, not reconciled",
+    "circulating or investor-held supply (issued supply only; no holder, treasury or module balance is excluded)",
+    "that one ledger's token is interchangeable with another's — only what each ledger's state says",
+    "any relationship between CSOAI and the issuer: target is not client, public evidence is not private connectivity"
+  ],
+  "relationship": "PUBLIC_EVIDENCE_TARGET_NOT_CLIENT — no client, partner or Alliance relationship is stated or implied",
+  "honesty": "An on-chain supply read is not AUM, NAV, ownership, settlement or compliance. OPERATOR_API is one operator's answer; two operators agreeing is still not a proof. STATE_PROOF_VERIFIED means a Merkle proof was checked here against a header's stateRoot — the header was not checked against consensus. We measure and sign; we never tokenize, custody or sell an instrument. No investment advice.",
+  "iso20022_camt053_shape": {
+    "what_this_is": "A field mapping only: each per-ledger read laid out in the shape of an ISO 20022 camt.053 (BankToCustomerStatement) closing-balance row, the shape a reconciliation reads. No conformance is claimed; no message is produced or validated against the XSD.",
+    "field_map": {
+      "Stmt/Acct/Id/Othr/Id": "deployment_id (as the issuer page lists it)",
+      "Stmt/Acct/Svcr": "ledger (an analogy, not a role)",
+      "Stmt/Bal/Tp/CdOrPrtry/Cd": "CLBD (closing booked) — here: issued supply at the recorded height",
+      "Stmt/Bal/Amt": "supply_decimal (token units, not currency; not NAV)",
+      "Stmt/Bal/Amt/@Ccy": "UNMAPPED — a fund share or deposit token has no ISO 4217 code here; none is chosen",
+      "Stmt/Bal/Dt/DtTm": "observed_at",
+      "Stmt/ElctrncSeqNb": "height.number",
+      "Stmt/AddtlStmtInf": "product + evidence_kind",
+      "Stmt/Ntry": "UNMAPPED — no entries are read; balance-only snapshot"
+    },
+    "rows": [
+      {
+        "Acct.Id": "0x7e0aedc93d9f898be835a44bfca3842e52416b82",
+        "Acct.Svcr": "base",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "1001000.00",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:18:09Z",
+        "ElctrncSeqNb": 51772880,
+        "AddtlStmtInf": "JPMD STATE_PROOF_VERIFIED"
+      }
+    ],
+    "statement_date": "2026-09-25"
+  },
+  "request_log": [
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "60a8e1c6a5247eee8b12ffe2450558e6199f6146acc9caed1be20cd1d373d45e",
+      "bytes": 43
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "7ca5c0ecd756424075d1a1589b0294ee45c152cd3ec8f1313d46138ad992b45b",
+      "bytes": 46
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "b6609be88d669967ada01e4c791d9794a39c60b40c8b4d7e449c10076373d425",
+      "bytes": 12546
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6747abf44c551ea376cfe11744097858bfd1ce6b577a60b15066428e440c382e",
+      "bytes": 231
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6747abf44c551ea376cfe11744097858bfd1ce6b577a60b15066428e440c382e",
+      "bytes": 231
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "a6d16b40a1a4acdf924699c602482bfac50af3dd206ddab831c76b1a8c0216a6",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "0fa659debfea1412576a83312867471c411fc8bcee5461e1d56680b2fd3cf035",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "0fa659debfea1412576a83312867471c411fc8bcee5461e1d56680b2fd3cf035",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "52a1b0ccdbb588a1b48bf53f6e39af0fe62e20a091f06c32ae8e101a4e3e6789",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "52a1b0ccdbb588a1b48bf53f6e39af0fe62e20a091f06c32ae8e101a4e3e6789",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "7e259e4e5f5fe68abcca9ac609a8d66d0defba37105dad1c670038250e5c9ddb",
+      "bytes": 46
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "cb88d7302645e463eb0bca8113c0664296a622f338a796b60e7675fb13715afb",
+      "bytes": 13374
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "0fa659debfea1412576a83312867471c411fc8bcee5461e1d56680b2fd3cf035",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "0fa659debfea1412576a83312867471c411fc8bcee5461e1d56680b2fd3cf035",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "988564fbb26ba717b2c3a60dbbc05c6583781a36b5a747e8a5226b5b242ae659",
+      "bytes": 114
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "1b79db92da8de0884e7f69306c18d3f4c48e2019a7cf8922a5c8208d8ba4820d",
+      "bytes": 9425
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "cb88d7302645e463eb0bca8113c0664296a622f338a796b60e7675fb13715afb",
+      "bytes": 13374
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "278dfe107edc9d9b4013b203b2570f4b05ffba6b381320081c377b6eb95c2827",
+      "bytes": 103
+    }
+  ]
+}

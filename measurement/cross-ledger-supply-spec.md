@@ -132,3 +132,36 @@ validated against the schema.
   gRPC API serves anything checkpoint-anchored for the supply object; Hedera: HIP-1200 block proofs
   when served.
 - Signing: a signed batch through the board signer once the pilot shape is ruled; until then unsigned.
+
+## 0.2 — funds and deposit tokens (2026-09-25, lane cross-ledger-funds)
+
+Reader `scripts/readers/cross_ledger_funds.py` (reuses this pilot's verifiers and adapters) runs from
+the data file `scripts/readers/cross_ledger_assets.json`: asset -> {issuer list, per-ledger adapter}.
+Tests: `scripts/readers/test_cross_ledger_funds.py` (real proof bytes and real page bytes as fixtures).
+Signing/timestamping: `scripts/readers/sign_cross_ledger.py` (the census record's method: POST
+/api/board-sign with the pod caller token, Ed25519 verified against did:web:csoai.org#board-attestation-1,
+two altered-preimage controls that must fail; OpenTimestamps -> PENDING_CALENDAR_COMMITMENT).
+
+Changes from 0.1:
+- **Issuer-list states**: `READ`, `ISSUER_LIST_UNAVAILABLE` (no issuer-published list; nothing read;
+  explorers are not issuer lists), `PERMISSIONED_NOT_READABLE` (the issuer's own sentence says the
+  ledger is private/permissioned), `UNCHECKABLE`.
+- **Products**: one issuer page can list several instruments (Franklin: BENJI, iBENJI, gBENJI,
+  sgBENJI, grBENJI). Rows carry `product`; sums are per product and per evidence kind only.
+- **Every EVM deployment** gets the Ethereum treatment: slot search over a declared candidate set
+  (0..64 + the OpenZeppelin ERC-7201 ERC20 namespace +0..4) at a discovery block; a fresh reading block
+  is then pinned so the proof falls inside the operators' proof windows; `eth_getProof` from the first
+  operator that serves it, verified against the reading block's stateRoot. `STATE_PROOF_VERIFIED`
+  also requires the block hash to be recomputed from the header fields; a proof that verifies against
+  an unbound stateRoot, or does not verify, is `STATE_PROOF_RECORDED` with the reason.
+  (Avalanche C-Chain on 2026-09-25: proofs from two operators did not match the header stateRoot.)
+- **Identity**: the on-ledger symbol / Stellar asset code / Token-2022 or Aptos metadata symbol must
+  equal the product ticker in the issuer page; else `REJECTED`.
+- **issuer_reported** (kept apart, never summed): e.g. the BENJI fund's N-MFP3 from SEC EDGAR (net
+  assets, shares outstanding, report date, transfer agent named in the filing); `comparison: NOT_COMPARED`.
+- **reconciliation_state**: `UNRECONCILED_WITH_TRANSFER_AGENT` (funds) /
+  `UNRECONCILED_WITH_ISSUING_BANK_LEDGER` (deposit tokens) until a controlling record is public.
+- `not_evidence_of` names AUM, NAV, ownership, redeemability, fund compliance.
+- `public/interop/institutional-evidence-links.json` joins the estate binding layer's institution keys
+  to these records (or UNMEASURED with the reason), without editing that layer.
+- Published: HF dataset `csoai/cross-ledger-supply` (CC-BY-4.0); site path `/interop/X` = dataset path `interop/X`.

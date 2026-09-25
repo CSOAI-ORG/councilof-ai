@@ -1,0 +1,109 @@
+{
+  "schema": "csoai.cross-ledger-asset-registry/0.1",
+  "what_this_is": "Asset -> {issuer list, per-ledger adapter} as data. The reader (scripts/readers/cross_ledger_funds.py) reads ONLY what this file names. Every deployment identifier is parsed out of the issuer page bytes at run time; no identifier is typed here. Endpoints are public keyless operators; 'operator' is who runs them. Adding an asset or a ledger is a data change.",
+  "rules": [
+    "The deployment list comes only from the issuer's own public page. If no issuer-published list exists, issuer_list.state is ISSUER_LIST_UNAVAILABLE and nothing is read - explorers and aggregators are not issuer lists.",
+    "A token on a ledger the issuer itself describes as private/permissioned is PERMISSIONED_NOT_READABLE with the issuer's own sentence and source; it is not UNMEASURED-by-omission.",
+    "Products that share an issuer page but are different instruments (e.g. BENJI vs iBENJI) are kept apart; sums are per product and per evidence kind only."
+  ],
+  "ledgers": {
+    "ethereum":  {"adapter": "evm", "chain_id": 1, "pin": "finalized",
+                  "rpc": [["https://ethereum-rpc.publicnode.com", "PublicNode (Allnodes)"], ["https://rpc.mevblocker.io", "MEV Blocker"], ["https://eth.drpc.org", "dRPC"], ["https://eth-mainnet.public.blastapi.io", "Blast API"]]},
+    "polygon":   {"adapter": "evm", "chain_id": 137, "pin": "latest-minus", "pin_lag": 6,
+                  "rpc": [["https://polygon-bor-rpc.publicnode.com", "PublicNode (Allnodes)"], ["https://polygon-rpc.com", "Polygon Labs (polygon-rpc.com)"], ["https://1rpc.io/matic", "1RPC (Automata)"], ["https://polygon.drpc.org", "dRPC"]]},
+    "arbitrum":  {"adapter": "evm", "chain_id": 42161, "pin": "latest-minus", "pin_lag": 20, "l2": true,
+                  "rpc": [["https://arb1.arbitrum.io/rpc", "Offchain Labs (arb1)"], ["https://arbitrum-one-rpc.publicnode.com", "PublicNode (Allnodes)"], ["https://arbitrum.drpc.org", "dRPC"]]},
+    "avalanche": {"adapter": "evm", "chain_id": 43114, "pin": "latest-minus", "pin_lag": 6,
+                  "observed": "2026-09-25 probe: Ava Labs' public RPC does not offer eth_getProof; PublicNode and dRPC return proofs whose root node is not the block header's stateRoot, and PublicNode's headers carry settledHeight/settled* fields (possibly asynchronous execution, where a header commits to an earlier settled state - not established here). Header hash is not recomputed by this reader for this header format.",
+                  "rpc": [["https://api.avax.network/ext/bc/C/rpc", "Ava Labs (api.avax.network)"], ["https://avalanche-c-chain-rpc.publicnode.com", "PublicNode (Allnodes)"], ["https://avalanche.drpc.org", "dRPC"]]},
+    "base":      {"adapter": "evm", "chain_id": 8453, "pin": "latest-minus", "pin_lag": 10, "l2": true,
+                  "rpc": [["https://base-rpc.publicnode.com", "PublicNode (Allnodes)"], ["https://mainnet.base.org", "Coinbase (mainnet.base.org)"], ["https://base.drpc.org", "dRPC"]]},
+    "bsc":       {"adapter": "evm", "chain_id": 56, "pin": "latest-minus", "pin_lag": 6,
+                  "rpc": [["https://bsc-rpc.publicnode.com", "PublicNode (Allnodes)"], ["https://bsc-mainnet.public.blastapi.io", "Blast API"], ["https://bsc-dataseed.bnbchain.org", "BNB Chain (bsc-dataseed)"], ["https://bsc.drpc.org", "dRPC"]]},
+    "stellar":   {"adapter": "stellar_issuer",
+                  "rpc": [["https://horizon.stellar.org", "Stellar Development Foundation (Horizon)"], ["https://horizon.stellar.lobstr.co", "LOBSTR (Horizon)"]]},
+    "solana":    {"adapter": "solana_mint",
+                  "rpc": [["https://api.mainnet-beta.solana.com", "Solana Foundation (api.mainnet-beta)"], ["https://solana.leorpc.com/?api_key=FREE", "LeoRPC (published free key 'FREE')"]]},
+    "aptos":     {"adapter": "aptos_fa",
+                  "rpc": [["https://api.mainnet.aptoslabs.com/v1", "Aptos Labs (fullnode REST)"], ["https://aptos-rest.publicnode.com/v1", "PublicNode (Allnodes) (fullnode REST)"]]}
+  },
+  "evm_slot_candidates": {
+    "linear": [0, 64],
+    "erc7201_namespaces": {"openzeppelin.storage.ERC20": [0, 1, 2, 3, 4]},
+    "rule": "every candidate is read with eth_getStorageAt at the pinned block and compared with eth_call totalSupply(); a proof is attempted only when exactly one candidate matches. The candidate set is the search space, not an assumption about the layout."
+  },
+  "assets": {
+    "benji": {
+      "asset": "BENJI",
+      "issuer": "Franklin Templeton",
+      "question": "Is BENJI the same thing on every ledger Franklin Templeton's own contracts page says it lives on, and how much does each ledger's state say is issued?",
+      "issuer_list": {
+        "url": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+        "parser": "labelled_role_blocks",
+        "header_regex": "^(?P<product>[A-Za-z]*BENJI) \\((?P<label>[^)]+)\\)$",
+        "token_role": "Fund Token"
+      },
+      "label_to_ledger": {"Ethereum": "ethereum", "Polygon": "polygon", "Arbitrum": "arbitrum", "Avalanche": "avalanche", "Base": "base", "BNB Smart Chain": "bsc", "Stellar": "stellar", "Solana": "solana", "Aptos": "aptos"},
+      "primary_product": "BENJI",
+      "issuer_reported": [
+        {"kind": "sec_edgar_nmfp3", "cik": "1786958", "series_id": "S000067043", "applies_to_product": "BENJI",
+         "why": "The fund's own monthly SEC Form N-MFP3 (Franklin Templeton Trust). It is the issuer's statement - the claim, not evidence of what any ledger holds."}
+      ],
+      "reconciliation": {"state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+                         "controlling_record": "the fund's share register kept by its transfer agent (named in the N-MFP3 read below)",
+                         "why": "No transfer-agent register is public. The issuer describes the on-chain token as a representation of fund shares; which record controls, and whether the two agree on any date, is not measured here."},
+      "prior_pack": "public/interop/benji-onchain-supply-2026-09/index.json"
+    },
+    "buidl": {
+      "asset": "BUIDL",
+      "issuer": "BlackRock (transfer agent / tokenization platform: Securitize)",
+      "question": "Where does the issuer itself publish BUIDL's deployment addresses?",
+      "issuer_list": {
+        "parser": "none_found",
+        "tried": [
+          {"url": "https://securitize.io/blackrock/BUIDL", "expect": "an address list in the served HTML or its main JS bundle"},
+          {"url": "https://www.blackrock.com/cash/en-us/products/buidl", "expect": "a BlackRock product page"},
+          {"url": "https://investorsupport.securitize.io/hc/en-us/articles/360050816994-Adding-a-token-to-the-MetaMask-wallet-view", "expect": "Securitize help article on adding a token"}
+        ],
+        "state_if_nothing": "ISSUER_LIST_UNAVAILABLE",
+        "note": "Block explorers and data aggregators do show addresses labelled BUIDL. They are not the issuer's list and are not read."
+      },
+      "reconciliation": {"state": "UNRECONCILED_WITH_TRANSFER_AGENT", "controlling_record": "Securitize (transfer agent) register", "why": "no issuer-published deployment list, so nothing on-chain was read"}
+    },
+    "jpmd": {
+      "asset": "JPMD",
+      "issuer": "JPMorgan Chase (Kinexys)",
+      "question": "Does the deposit token at the address JPMorgan's own Kinexys page links resolve on Base as JPMD, and what issued supply does Base's state show?",
+      "issuer_list": {
+        "url": "https://www.jpmorgan.com/kinexys/digital-payments/jpm-coin",
+        "parser": "html_regex",
+        "regex": "JPM Coin is issued on (?P<label>Base)[^<]*<a[^>]*href=\"https://basescan\\.org/token/(?P<identifier>0x[0-9a-fA-F]{40})\"",
+        "product": "JPMD",
+        "ticker_confirmation": {"url": "https://www.jpmorgan.com/payments/newsroom/jpm-coin-usd-deposit-token-institutional-clients", "must_contain": "JPM Coin (JPMD)"}
+      },
+      "label_to_ledger": {"Base": "base"},
+      "primary_product": "JPMD",
+      "reconciliation": {"state": "UNRECONCILED_WITH_ISSUING_BANK_LEDGER",
+                         "controlling_record": "JPMorgan's deposit ledger (a deposit token is a claim on a bank deposit; there is no transfer agent)",
+                         "why": "JPMorgan publishes no outstanding-balance figure for JPMD; the bank's ledger is not public."}
+    },
+    "citi-token-services": {
+      "asset": "Citi Token Services (tokenized deposits)", "issuer": "Citi",
+      "issuer_list": {"parser": "permissioned_statement", "url": "https://www.citigroup.com/global/news/press-release/2024/citi-token-services-marks-new-milestone",
+                      "must_contain": "private and permissioned blockchain that is solely owned and managed by Citi"},
+      "reconciliation": {"state": "NOT_APPLICABLE_NOT_READ", "why": "no public-ledger deployment to read"}
+    },
+    "hsbc-tokenised-deposit-service": {
+      "asset": "HSBC Tokenised Deposit Service", "issuer": "HSBC",
+      "issuer_list": {"parser": "permissioned_statement", "url": "https://www.business.hsbc.com/en-gb/products/tokenised-deposit-service",
+                      "must_contain": "private blockchain and are managed by the bank"},
+      "reconciliation": {"state": "NOT_APPLICABLE_NOT_READ", "why": "no public-ledger deployment to read"}
+    },
+    "bny-digital-cash": {
+      "asset": "BNY digital cash / tokenized deposits", "issuer": "BNY",
+      "issuer_list": {"parser": "permissioned_statement", "url": "https://www.bny.com/corporate/global/en/about-us/newsroom/company-news/bny-extends-digital-cash-capabilities-for-institutional-clients.html",
+                      "must_contain": "private, permissioned blockchain"},
+      "reconciliation": {"state": "NOT_APPLICABLE_NOT_READ", "why": "no public-ledger deployment to read"}
+    }
+  }
+}

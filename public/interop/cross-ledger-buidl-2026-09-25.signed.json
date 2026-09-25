@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/cross-ledger-buidl-2026-09-25.json",
+      "sha256": "cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "as_of": "2026-09-25T11:18:54Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability or compliance.",
+    "asset": "BUIDL",
+    "issuer_list_state": "ISSUER_LIST_UNAVAILABLE",
+    "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+    "reads": [],
+    "proof_files": {}
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "74a3436d2531c14fbec9e44066870d636503fa1035e25d660cbed52600ea51f1245c79c1ad785cd14c2fb3a6e5e8e7187f57d43b6d2c9757525a4e0c5db43308",
+    "payload_sha256": "f5954652c6586c3fc09a3a0e40fb5af7b6544b42c8773ea6af7149db64f1bb57",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-25T11:22:16.580Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "record sha256 altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload (keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record file; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}
