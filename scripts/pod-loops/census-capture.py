@@ -607,19 +607,66 @@ def board_sign(artifact_path: Path, rel_path: str, fields: dict, log):
         return None, f"UNSIGNED ({type(e).__name__}: {str(e)[:140]})"
 
 
+OTS_MAGIC = b"\x00OpenTimestamps\x00\x00Proof\x00\xbf\x89\xe2\xe8\x84\xe8\x92\x94"
+
+
+def ots_file_digest(path: Path):
+    """The file digest a detached .ots proof commits to (hex), read from its header; None if the bytes
+    are not a version-1 SHA256 detached proof. Dependency-free so the check cannot silently skip."""
+    b = Path(path).read_bytes()
+    o = len(OTS_MAGIC)
+    if not b.startswith(OTS_MAGIC) or len(b) < o + 2 + 32 or b[o] != 0x01 or b[o + 1] != 0x08:
+        return None
+    return b[o + 2:o + 34].hex()
+
+
 def ots_stamp(root_hex: str, prefix: Path, log):
     """Write <prefix>.root.txt holding the hex root and submit it to the OpenTimestamps calendars.
 
     WORDING. A successful submission means the calendars accepted a commitment. It does NOT mean
     the root is Bitcoin-anchored. `ots upgrade` must later fetch the attestation path and `ots
     verify` must confirm it against a block before any sentence containing the word "anchored" is
-    allowed. Until then: SUBMITTED_PENDING / NOT_YET_VERIFIED."""
+    allowed. Until then: SUBMITTED_PENDING / NOT_YET_VERIFIED.
+
+    BINDING (fix, 2026-09-25). A re-run for the same date rewrites root.txt. `ots stamp` refuses to
+    overwrite an existing <root.txt>.ots ([Errno 17] File exists) and the old code accepted any
+    non-empty .ots on disk, so on 2026-09-22 eight records shipped a proof of the PREVIOUS run's
+    root beside a new root while stating SUBMITTED_PENDING and "covers the bytes of root.txt".
+    Now: a proof on disk is reused only if its header digest equals sha256(root.txt); otherwise it
+    is moved aside (never stamped over, never shipped), and a new proof is accepted only if `ots
+    stamp` exited 0 AND the new proof's digest equals sha256(root.txt)."""
     rf = prefix.with_suffix(".root.txt")
     rf.write_text(root_hex + "\n")
+    want = hashlib.sha256(rf.read_bytes()).hexdigest()
+    ots = Path(str(rf) + ".ots")
+    moved_aside = None
+    if ots.exists():
+        have = ots_file_digest(ots)
+        if have == want:
+            log(f"  ots: reusing {ots.name}: it already commits to sha256(root.txt)={want[:16]} (root unchanged)")
+            return {"status": "SUBMITTED_PENDING", "bitcoin_confirmation": "NOT_YET_VERIFIED",
+                    "meaning": "an earlier run of this date submitted these exact root.txt bytes; that proof "
+                               "is reused. It is NOT a Bitcoin anchor until `ots upgrade` and `ots verify` succeed.",
+                    "proof_file": ots.name, "proof_bytes": ots.stat().st_size, "proof_is_complete": False,
+                    "covers": f"the bytes of {rf.name} (sha256 {want}), checked from the proof header",
+                    "binds_to_sha256": want, "reused_from_earlier_run": True,
+                    "calendars_submitted_to": [],
+                    "upgrade_command": f"ots upgrade {ots.name} && ots verify {ots.name}"}, rf, ots
+        moved_aside = ots.with_name(f"{ots.name}.superseded-{(have or 'unreadable')[:16]}")
+        ots.replace(moved_aside)
+        log(f"  ots: {ots.name} committed to {(have or 'unreadable')[:16]}, not {want[:16]}; moved aside to {moved_aside.name}")
     try:
         p = subprocess.run(["ots", "stamp", str(rf)], capture_output=True, text=True, timeout=180)
         cals = CALENDAR_RE.findall((p.stderr or "") + (p.stdout or ""))
-        ots = Path(str(rf) + ".ots")
+        got = ots_file_digest(ots) if ots.exists() else None
+        if p.returncode != 0 or got != want:
+            if ots.exists():                 # never leave a non-binding proof where the uploader looks
+                ots.replace(ots.with_name(f"{ots.name}.nonbinding-{(got or 'unreadable')[:16]}"))
+            return {"status": "NOT_SUBMITTED", "bitcoin_confirmation": "NOT_YET_VERIFIED",
+                    "reason": f"ots stamp rc={p.returncode}; proof digest {got} vs sha256(root.txt) {want}; "
+                              f"{(p.stderr or '')[-160:]}",
+                    "calendars_submitted_to": cals,
+                    "superseded_local_proof": moved_aside.name if moved_aside else None}, rf, None
         if ots.exists() and ots.stat().st_size > 0:
             return {"status": "SUBMITTED_PENDING",
                     "bitcoin_confirmation": "NOT_YET_VERIFIED",
@@ -633,7 +680,10 @@ def ots_stamp(root_hex: str, prefix: Path, log):
                     "proof_note": "a .ots file is not a proof because of its extension. This one "
                                   "is an incomplete, upgradeable pending proof; verify it, do not "
                                   "trust its name.",
-                    "covers": f"the bytes of {rf.name}, which contain exactly the RFC 9162 root hex",
+                    "covers": f"the bytes of {rf.name}, which contain exactly the RFC 9162 root hex "
+                              f"(sha256 {want}, checked from the proof header)",
+                    "binds_to_sha256": want,
+                    "superseded_local_proof": moved_aside.name if moved_aside else None,
                     "calendars_submitted_to": cals,
                     "upgrade_command": f"ots upgrade {ots.name} && ots verify {ots.name}",
                     "stderr_tail": (p.stderr or "")[-300:]}, rf, ots
