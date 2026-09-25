@@ -105,10 +105,69 @@ class Fixture(BaseHTTPRequestHandler):
         self._rec("DELETE")
         return self._send(200, b"")
 
+    def _modern(self, req, p, supported):
+        """A 2026-07-28 server per basic/versioning + streamable-http: header validation, -32022,
+        server/discover, tools/list with _meta. Returns True if it answered."""
+        m, rid = req.get("method"), req.get("id")
+        meta = ((req.get("params") or {}).get("_meta") or {})
+        want = meta.get("io.modelcontextprotocol/protocolVersion")
+        hv, hm = self.headers.get("MCP-Protocol-Version"), self.headers.get("Mcp-Method")
+        sse = p.startswith("/modernsse")
+
+        def send(obj, code=200):
+            if sse and code == 200:
+                return self._send(200, f"event: message\ndata: {json.dumps(obj)}\n\n".encode(), "text/event-stream")
+            return self._send(code, obj)
+        if want is None:
+            if p.startswith("/dualera") or p.startswith("/pinnedlegacy"):
+                return False  # no modern _meta: a dual-era server serves it as legacy
+            return self._send(400, {"jsonrpc": "2.0", "id": rid, "error": {  # legacy client -> modern-only server
+                "code": -32020, "message": "missing MCP-Protocol-Version / _meta"}})
+        if p.startswith("/hdrmismatch") or hv != want or hm != m:
+            return self._send(400, {"jsonrpc": "2.0", "id": rid, "error": {"code": -32020, "message": "Header mismatch"}})
+        if want not in supported:
+            return self._send(400, {"jsonrpc": "2.0", "id": rid, "error": {
+                "code": -32022, "message": "Unsupported protocol version",
+                "data": {"supported": supported, "requested": want}}})
+        if m == "server/discover":
+            return send({"jsonrpc": "2.0", "id": rid, "result": {
+                "resultType": "complete", "supportedVersions": supported, "capabilities": {"tools": {}},
+                "_meta": {"io.modelcontextprotocol/serverInfo": {"name": "fixture" + p.replace("/", "-"), "version": "2.0"}},
+                "ttlMs": 1000, "cacheScope": "public"}})
+        if m == "tools/list":
+            cur = (req.get("params") or {}).get("cursor")
+            if cur is None:
+                return send({"jsonrpc": "2.0", "id": rid, "result": {"resultType": "complete", "tools": TOOLS_P1, "nextCursor": "p2"}})
+            return send({"jsonrpc": "2.0", "id": rid, "result": {"resultType": "complete", "tools": TOOLS_P2}})
+        if m == "tools/call":
+            with self.stats["lock"]:
+                self.stats["tools_call"] = self.stats.get("tools_call", 0) + 1
+        return self._send(404, {"jsonrpc": "2.0", "id": rid, "error": {"code": -32601, "message": "Method not found"}})
+
     def do_POST(self):
         self._rec("POST")
         req = self._body()
         m, rid, p = req.get("method"), req.get("id"), self.path
+        with self.stats["lock"]:
+            self.stats.setdefault("methods", []).append((p, m, ((req.get("params") or {}).get("protocolVersion")
+                                                               or ((req.get("params") or {}).get("_meta") or {}).get(
+                                                                   "io.modelcontextprotocol/protocolVersion"))))
+        modern = {"/modern": ["2026-07-28"], "/dualera": ["2026-07-28", "2025-11-25"],
+                  "/futureonly": ["2099-01-01"], "/pinnedlegacy": ["2025-06-18"], "/hdrmismatch": ["2026-07-28"]}
+        for prefix, sup in modern.items():
+            if p.startswith(prefix):
+                if self._modern(req, p, sup) is not False:
+                    return
+                break
+        if p.startswith("/claimsmodern") and m == "initialize":  # legacy handshake naming the modern version
+            return self._send(200, {"jsonrpc": "2.0", "id": rid, "result": {
+                "protocolVersion": "2026-07-28", "capabilities": {"tools": {}},
+                "serverInfo": {"name": "fixture-claimsmodern", "version": "1.0"}}})
+        if p.startswith("/pinnedlegacy") and m == "initialize":
+            ask = (req.get("params") or {}).get("protocolVersion")
+            return self._send(200, {"jsonrpc": "2.0", "id": rid, "result": {
+                "protocolVersion": ask if ask == "2025-06-18" else "2025-06-18", "capabilities": {"tools": {}},
+                "serverInfo": {"name": "fixture-pinnedlegacy", "version": "1.0"}}})
         init = {"jsonrpc": "2.0", "id": rid, "result": {
             "protocolVersion": "2025-06-18", "capabilities": {"tools": {}},
             "serverInfo": {"name": "fixture" + p.replace("/", "-"), "version": "1.0"}}}
@@ -203,9 +262,10 @@ def closed_port():
 
 CFG = {"min_interval": 0.02, "workers": 4, "connect_timeout": 1.0, "read_timeout": 0.6, "budget_s": 60}
 
-# path -> expected state (the suite the broken grader must fail)
+# path -> expected state, or "STATE/era" where the era is part of what is graded
+# (the suite the broken graders must fail)
 EXPECT = {
-    "/json/mcp": "RESPONDED", "/ssejson/mcp": "RESPONDED", "/binds/mcp": "RESPONDED",
+    "/json/mcp": "RESPONDED/legacy", "/ssejson/mcp": "RESPONDED", "/binds/mcp": "RESPONDED",
     "/nobind/mcp": "RESPONDED", "/rl-once/mcp": "RESPONDED", "/endless/mcp": "RESPONDED",
     "/notools/mcp": "RESPONDED", "/bigsse/mcp": "RESPONDED",
     "/auth401/mcp": "AUTH_REQUIRED", "/forbid403/mcp": "AUTH_REQUIRED", "/rpcauth/mcp": "AUTH_REQUIRED",
@@ -213,17 +273,23 @@ EXPECT = {
     "/html/mcp": "NOT_MCP", "/jsonnotmcp/mcp": "NOT_MCP", "/notfound/mcp": "NOT_MCP",
     "/moved/mcp": "NOT_MCP", "/emptystream/mcp": "NOT_MCP",
     "/err500/mcp": "UNREACHABLE", "/slow/mcp": "TIMEOUT",
+    # MCP 2026-07-28 (modern) fixtures
+    "/modern/mcp": "RESPONDED/modern", "/modernsse/mcp": "RESPONDED/modern", "/dualera/mcp": "RESPONDED/modern",
+    "/pinnedlegacy/mcp": "RESPONDED/legacy", "/claimsmodern/mcp": "RESPONDED/legacy",
+    "/futureonly/mcp": "MCP_ERROR", "/hdrmismatch/mcp": "MCP_ERROR",
 }
 
 
-def run_suite(grader, srv, expect=EXPECT):
+def run_suite(grader, srv, expect=EXPECT, modern_grader=None):
     """-> {path: (expected, got)} for each fixture, one probe per path, sequential."""
     gate = P.HostGate(CFG["min_interval"])
     out = {}
     for path, want in expect.items():
         row = {"rank": 1, "endpoint": srv.base + path, "ranked_by": "test", "transports": ["streamable-http"]}
-        rec = P.probe_endpoint(row, gate, CFG, grader, sleep=lambda s: None)
-        out[path] = (want, rec["state"], rec)
+        rec = P.probe_endpoint(row, gate, CFG, grader, sleep=lambda s: None,
+                               modern_grader=modern_grader or P.grade_discover)
+        got = rec["state"] + (f"/{rec.get('era')}" if "/" in want else "")
+        out[path] = (want, got, rec)
     return out
 
 
@@ -283,6 +349,72 @@ class States(unittest.TestCase):
 
     def test_timeout_reason_names_phase(self):
         self.assertEqual(self.res["/slow/mcp"][2]["reason"], "read timeout")
+
+    def test_legacy_rows_record_offered_requested_negotiated(self):
+        r = self.res["/json/mcp"][2]
+        self.assertEqual((r["era"], r["protocol_versions_offered"], r["protocol_version_requested"],
+                          r["protocol_version_negotiated"]),
+                         ("legacy", ["2026-07-28", "2025-11-25"], "2025-11-25", "2025-06-18"))
+        self.assertEqual(r["modern_attempt"]["verdict"], "FALLBACK")
+
+    def test_modern_only_server_needs_no_handshake(self):
+        r = self.res["/modern/mcp"][2]
+        self.assertEqual((r["era"], r["protocol_version_requested"], r["protocol_version_negotiated"],
+                          r["protocol_version"]), ("modern", "2026-07-28", "2026-07-28", "2026-07-28"))
+        self.assertEqual(r["server_supported_versions"], ["2026-07-28"])
+        self.assertEqual(r["server_info"]["name"], "fixture-modern-mcp")
+        self.assertEqual((r["n_tools"], r["tools_complete"], r["tools_pages"]), (4, True, 2))
+        self.assertEqual(r["protocol_versions_offered"], ["2026-07-28"])
+        self.assertNotIn("session_delete_status", r)
+        self.assertNotIn("initialized_notification_status", r)
+        sent = [m for path, m, _v in self.srv.stats["methods"] if path == "/modern/mcp"]
+        self.assertEqual(sent, ["server/discover", "tools/list", "tools/list"])  # no initialize, ever
+
+    def test_modern_headers_and_meta_on_every_request(self):
+        for _t, m, path, h in self.srv.stats["reqs"]:
+            if m == "POST" and path == "/modern/mcp":
+                self.assertEqual(h.get("MCP-Protocol-Version"), "2026-07-28")
+                self.assertIn(h.get("Mcp-Method"), ("server/discover", "tools/list"))
+        vs = {v for path, _m, v in self.srv.stats["methods"] if path == "/modern/mcp"}
+        self.assertEqual(vs, {"2026-07-28"})
+
+    def test_modern_sse_bodies(self):
+        r = self.res["/modernsse/mcp"][2]
+        self.assertEqual((r["era"], r["transport"], r["n_tools"]), ("modern", "streamable-http(sse-response)", 4))
+
+    def test_dual_era_server_stays_modern(self):
+        r = self.res["/dualera/mcp"][2]
+        self.assertEqual((r["era"], r["protocol_version_negotiated"]), ("modern", "2026-07-28"))
+        self.assertEqual(r["server_supported_versions"], ["2026-07-28", "2025-11-25"])
+        self.assertNotIn("initialize", [m for path, m, _v in self.srv.stats["methods"] if path == "/dualera/mcp"])
+
+    def test_unsupported_version_retries_with_a_listed_legacy_version(self):
+        r = self.res["/pinnedlegacy/mcp"][2]
+        self.assertEqual((r["era"], r["protocol_versions_offered"], r["protocol_version_requested"],
+                          r["protocol_version_negotiated"]),
+                         ("legacy", ["2026-07-28", "2025-06-18"], "2025-06-18", "2025-06-18"))
+        self.assertEqual(r["server_supported_versions"], ["2025-06-18"])
+        self.assertEqual(r["modern_attempt"]["verdict"], "UNSUPPORTED")
+        asked = [v for path, m, v in self.srv.stats["methods"] if path == "/pinnedlegacy/mcp" and m == "initialize"]
+        self.assertEqual(asked, ["2025-06-18"])  # the listed version, not our default
+
+    def test_no_mutual_version_is_an_error_not_a_fallback(self):
+        r = self.res["/futureonly/mcp"][2]
+        self.assertIn("no mutually supported protocol version", r["reason"])
+        self.assertEqual((r["era"], r["server_supported_versions"], r["protocol_version_negotiated"]),
+                         ("modern", ["2099-01-01"], None))
+        self.assertNotIn("initialize", [m for path, m, _v in self.srv.stats["methods"] if path == "/futureonly/mcp"])
+
+    def test_recognised_modern_error_never_falls_back(self):
+        r = self.res["/hdrmismatch/mcp"][2]
+        self.assertIn("-32020", r["reason"])
+        self.assertEqual([m for path, m, _v in self.srv.stats["methods"] if path == "/hdrmismatch/mcp"],
+                         ["server/discover"])
+
+    def test_legacy_handshake_answering_the_modern_version_is_recorded_as_such(self):
+        r = self.res["/claimsmodern/mcp"][2]
+        self.assertEqual((r["era"], r["protocol_version_requested"], r["protocol_version_negotiated"]),
+                         ("legacy", "2025-11-25", "2026-07-28"))
 
     def test_no_tool_was_ever_called(self):
         self.assertEqual(self.srv.stats.get("tools_call", 0), 0)
@@ -361,6 +493,24 @@ class Limiter(unittest.TestCase):
         finally:
             srv.close()
 
+    def test_summary_counts_requested_and_negotiated_from_runner_rows(self):
+        srv = Server()
+        try:
+            rows = [{"rank": 1, "endpoint": srv.base + "/modern/a", "ranked_by": "t", "transports": []},
+                    {"rank": 2, "endpoint": srv.base + "/json/b", "ranked_by": "t", "transports": []},
+                    {"rank": 3, "endpoint": srv.base + "/claimsmodern/c", "ranked_by": "t", "transports": []}]
+            with tempfile.TemporaryDirectory() as d:
+                run = P.Runner(rows, d, dict(CFG, workers=1))
+                started, finished = run.run()
+                s = P.summarise(run, started, finished, None, len(rows))
+            self.assertEqual(s["responded"]["requested_to_negotiated"],
+                             {"modern: 2026-07-28 -> 2026-07-28": 1, "legacy: 2025-11-25 -> 2025-06-18": 1,
+                              "legacy: 2025-11-25 -> 2026-07-28": 1})
+            self.assertEqual(sorted(s["responded"]["era"].items()), [("legacy", 2), ("modern", 1)])
+            self.assertEqual(s["schema"], "csoai.census-probe/0.2")
+        finally:
+            srv.close()
+
     def test_budget_spent_is_partial_never_exhausted(self):
         rows = [{"rank": 1, "endpoint": "http://127.0.0.1:9/mcp", "ranked_by": "t", "transports": []}]
         with tempfile.TemporaryDirectory() as d:
@@ -398,7 +548,7 @@ class Control(unittest.TestCase):
     def test_broken_grader_fails_the_suite(self):
         srv = Server()
         try:
-            res = run_suite(P.broken_grade_initialize, srv)
+            res = run_suite(P.broken_grade_initialize, srv, modern_grader=P.broken_grade_discover)
         finally:
             srv.close()
         wrong = [p for p, (w, g, _r) in res.items() if w != g]
@@ -409,7 +559,7 @@ def self_test():
     srv = Server()
     try:
         real = run_suite(P.grade_initialize, srv)
-        broken = run_suite(P.broken_grade_initialize, srv)
+        broken = run_suite(P.broken_grade_initialize, srv, modern_grader=P.broken_grade_discover)
     finally:
         srv.close()
     real_bad = sorted(p for p, (w, g, _r) in real.items() if w != g)
