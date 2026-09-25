@@ -62,6 +62,48 @@ describe("canonicalisation and hashing (spec 6)", () => {
     expect(text).not.toMatch(/var x|color:red|hidden/);
   });
 
+  // Spec 6.3 step 2 takes the text of the remaining NODES: every character reference is decoded
+  // exactly once, as a browser renders it. Reported 2026-09-24 by the hiring-platforms capture
+  // (docs/measurement/HIRING-PLATFORMS-2026-09-24.md, capture note 2): `&#x27;` came through as
+  // those six characters, so claims containing an apostrophe could not be captured verbatim.
+  it("decodes hexadecimal character references, as a browser renders them", () => {
+    expect(extractVisibleText("<p>it&#x27;s</p>")).toBe("it's");
+    expect(extractVisibleText("<p>it&#X27;s</p>")).toBe("it's");
+    expect(extractVisibleText("<p>&#x201C;quoted&#x201d;</p>")).toBe("\u201Cquoted\u201D");
+  });
+
+  it("decodes the named references pages commonly emit", () => {
+    expect(extractVisibleText("<p>it&rsquo;s &ldquo;x&rdquo; &mdash; y&hellip;</p>")).toBe(
+      "it\u2019s \u201Cx\u201D \u2014 y\u2026",
+    );
+    expect(extractVisibleText("<p>it&apos;s &copy; 2026</p>")).toBe("it's \u00A9 2026");
+  });
+
+  it("decodes a double-encoded reference ONCE: the reader sees the inner reference as text", () => {
+    expect(extractVisibleText("<p>it&amp;#x27;s</p>")).toBe("it&#x27;s");
+    expect(extractVisibleText("<p>it&amp;#39;s</p>")).toBe("it&#39;s");
+    expect(extractVisibleText("<p>&amp;quot;hi&amp;quot;</p>")).toBe("&quot;hi&quot;");
+    expect(extractVisibleText("<p>a &amp;lt;b&amp;gt;</p>")).toBe("a &lt;b&gt;");
+    expect(extractVisibleText("<p>AT&amp;amp;T</p>")).toBe("AT&amp;T");
+  });
+
+  it("keeps single-encoded decimal and the five basic named references as before", () => {
+    expect(extractVisibleText("<p>it&#39;s AT&amp;T &lt;b&gt; &quot;q&quot;&nbsp;end</p>")).toBe(
+      'it\'s AT&T <b> "q" end',
+    );
+  });
+
+  it("applies the browser's numeric rules: windows-1252 for 128-159, U+FFFD for the invalid, never a throw", () => {
+    expect(extractVisibleText("<p>it&#146;s &#150; ok</p>")).toBe("it\u2019s \u2013 ok");
+    expect(extractVisibleText("<p>a&#0;b&#xD800;c&#x110000;d</p>")).toBe("a\uFFFDb\uFFFDc\uFFFDd");
+    expect(() => extractVisibleText("<p>&#99999999;</p>")).not.toThrow();
+    expect(extractVisibleText("<p>&#99999999;</p>")).toBe("\uFFFD");
+  });
+
+  it("leaves a name outside its published table exactly as written", () => {
+    expect(extractVisibleText("<p>&notarealentity; stays</p>")).toBe("&notarealentity; stays");
+  });
+
   it("claim_hash covers the claim text alone, so the same sentence on two surfaces hashes alike", () => {
     const a = claimHash("market leader powering the majority of the sector");
     expect(a).toBe(sha256hex(Buffer.from("market leader powering the majority of the sector", "utf8")));
