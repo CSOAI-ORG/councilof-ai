@@ -2,7 +2,7 @@
 /**
  * capture-growth.mjs — capture a declared set of subjects and emit ONE conforming registry.
  *
- * Specification: https://councilof.ai/spec/claim-maintenance/v0.1/  (CC0 1.0). This file: MIT.
+ * Specification: https://councilof.ai/spec/claim-maintenance/v0.2/  (CC0 1.0). This file: MIT.
  *
  * Every digest this writes is computed by the SAME code the specification names as its reference
  * implementation (scripts/claim-capture.mjs), imported here rather than reimplemented. A second
@@ -29,12 +29,13 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   extractVisibleText, sha256hex, buildArtifact, verifyArtifact, artifactDigest, canonicalBytes,
+  SCHEMA, CURRENT_EXTRACTOR,
 } from '../claim-capture.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const arg = (k, d) => { const i = process.argv.indexOf('--' + k); return i > 0 ? process.argv[i + 1] : d; };
-const SPEC = 'https://councilof.ai/spec/claim-maintenance/v0.1/';
-const UA = 'CSOAI-claim-maintenance/0.1 (+' + SPEC + ')';
+const SPEC = 'https://councilof.ai/spec/claim-maintenance/v0.2/';
+const UA = 'CSOAI-claim-maintenance/0.2 (+' + SPEC + ')';
 
 /** RFC 9162 section 2.1.1. Domain-separated, split at the largest power of two below n, and no
  * duplication of an odd final node. The estate's older public root is a DIFFERENT shape and the
@@ -299,6 +300,9 @@ async function main() {
         appendFileSync(join(seriesDir, cl.series + '.jsonl'),
           JSON.stringify({ claim_id: cl.id, observed_at: artifact.access_date, url: cl.url,
             page_sha256: contentHash, claim_present_at_source: present,
+            // Which extractor made page_sha256 (spec v0.2 6.3.1). Lines written before 2026-09-25
+            // carry none and were made by csoai-visible-text/1; they are never rewritten.
+            ...(declaredCovers === 'visible-text' ? { extractor: CURRENT_EXTRACTOR } : { covers: declaredCovers }),
             claim_verbatim: cl.verbatim }) + '\n');
       }
       if (!present) {
@@ -332,7 +336,7 @@ async function main() {
     maintainer: 'CSOAI Ltd — claim maintenance (measurement, never certification)',
     conforms_to: SPEC,
     conforms_to_licence: 'CC0-1.0',
-    artifact_schema: 'csoai.claim-maintenance.artifact/0.1',
+    artifact_schema: SCHEMA,
     selection_rule: defs.selection_rule,
     totals: { subjects: new Set(artifacts.map((a) => a.subject.identifier)).size,
               claims: artifacts.length, by_state: byState },

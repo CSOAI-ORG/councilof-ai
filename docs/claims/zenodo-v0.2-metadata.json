@@ -1,0 +1,118 @@
+{
+  "_status": "PREPARED, NOT SUBMITTED. Nothing in this file has been sent to Zenodo. Creating the new version is an owner action (Zenodo account). Prepared 2026-09-25 under docs/claims/extractor-supersession-2026-09-25.md.",
+  "_how": [
+    "On https://zenodo.org/records/22901908 choose 'New version' (this keeps the concept DOI 10.5281/zenodo.22901781 and mints a new version DOI).",
+    "Remove the v0.1 files from the draft and upload the files listed under 'files' with the names given in upload_as; check each sha256 after upload.",
+    "Paste 'metadata' below (Zenodo legacy deposit API shape; the same fields exist in the web form).",
+    "After publishing, write public/spec/claim-maintenance/v0.2/deposit.json with the new DOI, record_url, concept DOI, deposited_utc and document_sha256 (it must equal the document's sha256 below, or scripts/claim-maintenance-spec.mjs refuses), then run node scripts/claim-maintenance-spec.mjs so v0.2's page and spec.json carry the DOI."
+  ],
+  "concept_doi": "10.5281/zenodo.22901781",
+  "new_version_of": {
+    "doi": "10.5281/zenodo.22901908",
+    "record_url": "https://zenodo.org/records/22901908"
+  },
+  "metadata": {
+    "upload_type": "publication",
+    "publication_type": "technicalnote",
+    "title": "Claim Maintenance: a specification for the continuous, independent observation of public claims (version 0.2)",
+    "publication_date": "2026-09-25",
+    "version": "0.2",
+    "language": "eng",
+    "access_right": "open",
+    "license": "cc-zero",
+    "creators": [
+      {
+        "name": "Templeman, Nicholas",
+        "affiliation": "Council of AI (CSOAI Ltd), United Kingdom",
+        "orcid": "0009-0001-3869-1068"
+      }
+    ],
+    "description": "<p>Version 0.2 of the Claim Maintenance specification. It supersedes version 0.1 (10.5281/zenodo.22901908), which keeps its bytes.</p><p><strong>What changed.</strong> The version 0.1 reference extractor departed from section 6.3 step 2 in four ways. It did not decode hexadecimal character references, it decoded only five named references, it decoded <code>&amp;amp;...</code> twice, and it threw on a decimal reference above U+10FFFF. The text of section 6.3 is unchanged. Version 0.2 adds <code>source_content_hash.extractor</code> (section 5.6.1) so that a visible-text digest names the extractor that produced it. It adds section 6.3.1, under which digests are compared only like with like and a change of extractor is re-baselined, never recorded as an observed change. The reference implementation uses <code>csoai-visible-text/2</code> and keeps <code>csoai-visible-text/1</code> unchanged, so every version 0.1 digest still recomputes. Section 16 lists the changes.</p><p>Claim maintenance is not fact-checking, not auditing, not reputation scoring and not adversarial journalism, and it issues no mark. It asserts no falsity about anyone.</p>",
+    "keywords": [
+      "claim maintenance",
+      "public claims",
+      "measurement",
+      "transparency",
+      "provenance",
+      "Merkle tree",
+      "RFC 9162",
+      "OpenTimestamps",
+      "Ed25519",
+      "decentralized identifiers",
+      "specification",
+      "CC0",
+      "accountability",
+      "observability",
+      "AI governance"
+    ],
+    "notes": "Measurement only. This specification issues no mark and defines no body that grants one. UNMEASURED and UNCHECKABLE are first-class states and are published as prominently as measured ones. The reference implementation is MIT; the document is CC0.",
+    "related_identifiers": [
+      {
+        "identifier": "10.5281/zenodo.22901908",
+        "relation": "isNewVersionOf",
+        "scheme": "doi"
+      },
+      {
+        "identifier": "https://councilof.ai/spec/claim-maintenance/v0.2/",
+        "relation": "isIdenticalTo",
+        "resource_type": "publication-technicalnote",
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+        "relation": "isSupplementedBy",
+        "resource_type": "software",
+        "scheme": "url"
+      },
+      {
+        "identifier": "https://github.com/CSOAI-ORG/councilof-ai",
+        "relation": "isSupplementedBy",
+        "resource_type": "software",
+        "scheme": "url"
+      }
+    ]
+  },
+  "files": [
+    {
+      "upload_as": "claim-maintenance-v0.2.md",
+      "source_path": "public/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md",
+      "bytes": 41091,
+      "sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e"
+    },
+    {
+      "upload_as": "claim-artifact-v0.2.schema.json",
+      "source_path": "public/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+      "bytes": 11909,
+      "sha256": "09ca8458b14fc3e4b46b14bc6e2214a85bd29f9062bc37565d28c668abef5bf1"
+    },
+    {
+      "upload_as": "claim-maintenance-v0.2-metadata.json",
+      "source_path": "public/spec/claim-maintenance/v0.2/spec.json",
+      "bytes": 1679,
+      "sha256": "46afe17bd69ebaf054e437a36ef471d556d066f18826acff0a914b44d70c47a1"
+    },
+    {
+      "upload_as": "reference-implementation-claim-capture.mjs",
+      "source_path": "public/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+      "bytes": 26742,
+      "sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d"
+    },
+    {
+      "upload_as": "reference-implementation-claim-capture.test.mjs",
+      "source_path": "scripts/claim-capture.test.mjs",
+      "bytes": 19720,
+      "sha256": "abdce46aa54f913297a509397b6b76f7e1d173bb9952e2cc533f548b14fcdd04"
+    },
+    {
+      "upload_as": "claim-maintenance-register-2026-09-25.json",
+      "source_path": "public/spec/claim-maintenance/register.json",
+      "bytes": 39780,
+      "sha256": "4efe28906406d389a1c632255059a5254532261cb0399f279203bd9a81dc0d0e"
+    }
+  ],
+  "files_note": "sha256 values are of the bytes on branch claims/extractor-decode-once-20260925 when this file was written. The register snapshot carries an as_of and changes on every regeneration; re-hash it at upload time and record what was uploaded. The document of record's sha256 is what deposit.json must carry.",
+  "does_not_prove": [
+    "that the specification is endorsed by Zenodo, CERN or anyone else; a repository deposit is storage and an identifier, not a review",
+    "that the specification is correct; a DOI makes a document citable and permanent, not right"
+  ]
+}
