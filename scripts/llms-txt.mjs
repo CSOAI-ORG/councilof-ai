@@ -20,6 +20,7 @@
  *   {{SEPARATED_LEADS}} {{TIES}} {{UNTESTED_SEPARATIONS}} {{COMPARISON_AXES}}  GET /api/gspc -> totals.*
  *   {{DISTRIBUTION_SECTION}}                                          public/interop/distribution-latest.json
  *   {{OTS_SECTION}}                                                   public/interop/ots/manifest.json
+ *   {{EVIDENCE_RECORDS_SECTION}}                                      public/evidence/published-records.json (scripts/pubbus)
  *   {{DATED_MILL_ROOT_LINE}}                                          public/interop/card-root-latest.json -> immutable root bytes
  *
  * The separation fields were the exception that mattered most. Both files said "N axes measured"
@@ -287,6 +288,42 @@ keeps advancing these, so read the manifest for a fresher count rather than quot
 `;
 }
 
+// Signed evidence records — derived from the publication bus manifest, on disk.
+//
+// scripts/pubbus/pubbus.mjs writes public/evidence/published-records.json when it publishes a
+// page for a signed record (after verifying the signature). This section names each record's
+// CURRENT page, its own as_of and read state, and where its bytes and signature live. It prints
+// no count of records: the manifest is the list, and a count typed here would be one more number
+// nothing retires. These records are evidence linked from the board, never board axes.
+function evidenceRecordsSection() {
+  const f = "public/evidence/published-records.json";
+  if (!fs.existsSync(p(f))) {
+    return "No signed evidence record page is published yet (public/evidence/published-records.json is absent).\n";
+  }
+  const m = readJSON(f);
+  if (m.schema !== "csoai.pubbus-manifest/0.1" || !Array.isArray(m.records)) {
+    throw new Error("published-records.json is not csoai.pubbus-manifest/0.1 — refusing to describe it");
+  }
+  const lines = [];
+  for (const r of m.records) {
+    const cur = (r.versions || []).find((v) => v.state === "CURRENT");
+    if (!cur) continue;
+    lines.push(
+      `- ${r.title}: ${SITE}${cur.page} (as_of ${cur.as_of}; read_state ${cur.read_state ?? "not stated by the record"}; ` +
+      `signature ${cur.signature.state} under ${cur.signature.did}; timestamp ${cur.ots.state}). ` +
+      `Record bytes: ${cur.record_url} (sha256 ${cur.record_sha256}).`,
+    );
+  }
+  return `Derived at generation from ${SITE}/evidence/published-records.json (same bytes on disk at
+public/evidence/published-records.json, schema ${m.schema}). Each page shows the record's own numbers
+verbatim with its stated limits, and a verify-it-yourself block (POST ${SITE}/api/verify with the
+signed document; free). Census and probe records are EVIDENCE: they are never counted into the GSPC
+board, whose totals stay GET ${SITE}/api/gspc. A superseded version stays published and says so.
+
+${lines.join("\n")}
+`;
+}
+
 // A direct immutable link for machine readers, derived from the same pointer the
 // browser card panel checks. Keep the pointer as the moving entry point.
 function datedMillRootLine() {
@@ -354,6 +391,7 @@ function render(tmpl, t, snapshotJson, corpora, axisDoors, axisDeep) {
     SEPARATED_LEADS: t.separated_leads, TIES: t.ties,
     UNTESTED_SEPARATIONS: t.untested_separations, COMPARISON_AXES: t.comparison_axes,
     DISTRIBUTION_SECTION: distributionSection(), OTS_SECTION: otsSection(),
+    EVIDENCE_RECORDS_SECTION: evidenceRecordsSection(),
     DATED_MILL_ROOT_LINE: datedMillRootLine(),
     ...(() => {
       const m = mcpCounts();

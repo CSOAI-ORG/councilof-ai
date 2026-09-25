@@ -4,9 +4,10 @@
  *
  * This is the stranger's script. It deliberately uses NOTHING but the Node standard
  * library: no estate package, no network call, no shared secret, no knowledge that
- * the signature was produced by a 3-party MPC custody rather than an ordinary key.
- * A threshold Ed25519 signature is a stock RFC 8032 Ed25519 signature, so a stock
- * verifier is the right verifier.
+ * the signature was produced by the MPC signing protocol rather than an ordinary key.
+ * An MPC-produced Ed25519 signature is a stock RFC 8032 Ed25519 signature, so a stock
+ * verifier is the right verifier. (Custody note, C-2026-0925-01: the 2026-09-02 freeze key's
+ * three shares sit on one host, one failure domain; the split was never performed.)
  *
  *   node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json
  *   node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-25.signed.json --did did.json

@@ -1,0 +1,28 @@
+{
+  "schema": "csoai.custody-ceremonies/0.1",
+  "what_this_is": "The record of key-custody ceremonies that have actually been PERFORMED. scripts/custody-wording-guard.mjs reads it: split-custody wording ('3-party', 'three-party', '2-of-3', '3-of-3') may appear on a served or producing surface without correction context only for a key listed here with state PERFORMED and shares held in at least two distinct custody domains.",
+  "rule": "Add an entry only after the ceremony has happened, with its dated record. A planned ceremony is not a performed one and never goes in `performed`.",
+  "performed": [],
+  "planned": [
+    {
+      "key": "the board signing key (ROOT ceremony, owner's physical Layer 0 root ceremony)",
+      "shape": "2-of-3 split across three separate holders/media",
+      "state": "PLANNED_NOT_PERFORMED",
+      "runbook": "docs/operations/root-ceremony/README.md",
+      "ruling": "Owner 2026-09-25: 'both' - correct the custody wording now (C-2026-0925-01); perform the real 2-of-3 split at the physical root ceremony."
+    }
+  ],
+  "known_custody_today": [
+    {
+      "key": "did:web:csoai.org#board-attestation-1",
+      "custody": "single Ed25519 key, held as the Cloudflare Pages secret BOARD_SIGN_KEY_PKCS8_B64, used only inside POST /api/board-sign",
+      "separated": false
+    },
+    {
+      "key": "did:web:csoai.org#gspc-board-22axis-2026",
+      "custody": "MPC signing protocol; all three additive shares in one directory on one host (one failure domain); split never performed",
+      "separated": false
+    }
+  ],
+  "correction": "C-2026-0925-01"
+}

@@ -318,6 +318,16 @@ jobs:
           # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
           python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
 
+      # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
+      # producing surface without correction context or a PERFORMED ceremony record in
+      # council-os/custody-ceremonies.json. The publication bus tests run here too (no network).
+      - name: Custody wording guard + publication bus
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/custody-wording-guard.mjs
+          node --test scripts/custody-wording-guard.node-test.mjs scripts/pubbus/pubbus.node-test.mjs
+          python3 scripts/pubbus/test_publish_fleet_status.py
+
       # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
       # run by any gate. These test council-os compose locks, chrome extension verify vectors,
       # incident register, HF job steps drift, x402 census cards, CLI check, and no-auto-stubs.

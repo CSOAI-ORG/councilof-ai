@@ -1,11 +1,11 @@
 import { Helmet } from "react-helmet-async";
 
 const KEYS: Array<{ kid: string; alg: string; signs: string }> = [
-  { kid: "did:web:csoai.org#board-attestation-1", alg: "Ed25519", signs: "Public-root envelope (/root.json)" },
+  { kid: "did:web:csoai.org#board-attestation-1", alg: "Ed25519 (single key)", signs: "Public-root envelope (/root.json) and the dated board freeze of 2026-09-25 (/signed/gspc-board.2026-09-25.signed.json)" },
   { kid: "did:web:csoai.org#card-attestation-1", alg: "Ed25519", signs: "Measurement cards (card-v0 sig_ed25519; shape-A chain cards, Aug 2026)" },
   { kid: "did:web:csoai.org#site-release-1", alg: "Ed25519", signs: "Site release attestation" },
   { kid: "did:web:csoai.org#estate-chain-1", alg: "Ed25519", signs: "Estate chain links" },
-  { kid: "did:web:csoai.org#gspc-board-22axis-2026", alg: "Ed25519 (3-party)", signs: "Historical 22-axis board configuration attestation; not the current board count" },
+  { kid: "did:web:csoai.org#gspc-board-22axis-2026", alg: "Ed25519 (MPC signing protocol; all three shares on one host, one failure domain)", signs: "Historical 22-axis board configuration attestation; not the current board count. Custody corrected by C-2026-0925-01: the share split was never performed" },
 ];
 
 const GUARDS: Array<{ name: string; what: string }> = [
@@ -99,6 +99,16 @@ export default function CustodyDisclosure() {
           claim that a ceremony has been independently audited. No HSM claim either. If those
           ever change, this section changes — with a dated entry in the corrections ledger, not
           a quiet edit.
+        </p>
+        <p className="mt-3 leading-7 text-slate-300" data-testid="custody-split-state">
+          No key here is held in separated custody today. The historical 22-axis freeze key was
+          produced by a multi-party signing protocol, but all three of its shares sit in one
+          directory on one host, so it is one failure domain; the split was never performed
+          (correction C-2026-0925-01). The current board freeze is signed by one key,{" "}
+          <code className="font-mono text-emerald-200">#board-attestation-1</code>. A real
+          two-of-three split is planned for the owner&apos;s physical root ceremony and has not
+          happened; until a ceremony record is published, no page may describe any board key as
+          split or threshold-held.
         </p>
 
         <ul className="mt-8 list-disc space-y-2 pl-5 text-sm text-slate-300">

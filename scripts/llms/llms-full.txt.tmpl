@@ -99,10 +99,17 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
   "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   "corrections": [
     {
+      "id": "C-2026-0925-01",
+      "date": "2026-09-25",
+      "what_was_wrong": "Served text called the 2026-09-02 board freeze key #gspc-board-22axis-2026 '3-party MPC' custody and a sign pane said 'KEY is 2-of-3'. All three shares of that key sit in one directory on one host: one failure domain. The split was never performed, and no estate key is held in separated custody.",
+      "fix": "Corrected at each producer (ledger, this template, did.json note, freeze pointer, custody page, sign pane); the older entries below keep their text with a bracketed custody note. Current board freeze: single key did:web:csoai.org#board-attestation-1 (Cloudflare Pages secret). A real 2-of-3 split is planned for the owner's physical root ceremony and has not happened. scripts/custody-wording-guard.mjs fails the build if split-custody wording returns without a ceremony record.",
+      "status": "CORRECTED — read the full entry at https://councilof.ai/api/corrections"
+    },
+    {
       "id": "C-2026-0902-09",
       "date": "2026-09-02",
       "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
-      "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+      "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive) [custody corrected by C-2026-0925-01: all three shares sit on one host, one failure domain; the split was never performed]. Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
       "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
       "status": "CORRECTED IN THAT SNAPSHOT \u2014 re-check the current axis arrays and signature state"
     },
@@ -111,7 +118,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
       "date": "2026-09-02",
       "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measured \u00b7 0 empty [as of that date; superseded by the live board]. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
       "how_caught": "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
-      "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled 
+      "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) [custody corrected by C-2026-0925-01: the three shares are on one host, one failure domain] and is labelled 
 ```
 
 ## 5. THE SWIFT CENSUS (26 banks)
@@ -280,6 +287,9 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 {{OTS_SECTION}}
+## 10b. SIGNED EVIDENCE RECORDS — census and probe pages (evidence linked from the board, never counted into it)
+
+{{EVIDENCE_RECORDS_SECTION}}
 ## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
 
 A regulated category adjacent to ours now exists in US state law.
