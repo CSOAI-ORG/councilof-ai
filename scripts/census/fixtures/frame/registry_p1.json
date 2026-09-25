@@ -1,0 +1,54 @@
+{
+ "servers": [
+  {
+   "server": {
+    "name": "io.example/alpha",
+    "version": "1.0.0",
+    "remotes": [
+     {
+      "type": "streamable-http",
+      "url": "https://MCP.Example.com:443/mcp/"
+     }
+    ],
+    "packages": [
+     {
+      "registryType": "npm",
+      "identifier": "alpha-mcp"
+     }
+    ]
+   },
+   "_meta": {
+    "io.modelcontextprotocol.registry/official": {
+     "status": "active",
+     "isLatest": true
+    }
+   }
+  },
+  {
+   "server": {
+    "name": "io.example/beta",
+    "version": "2.0.0",
+    "remotes": [
+     {
+      "type": "sse",
+      "url": "https://beta.example.org/v2/{project_slug}/sse?key={api_key}"
+     },
+     {
+      "type": "streamable-http",
+      "url": "https://{tenant}.beta.example.org/mcp"
+     }
+    ]
+   },
+   "_meta": {
+    "io.modelcontextprotocol.registry/official": {
+     "status": "active",
+     "isLatest": true
+    }
+   }
+  }
+ ],
+ "metadata": {
+  "nextCursor": "cur-1",
+  "count": 2
+ }
+}
