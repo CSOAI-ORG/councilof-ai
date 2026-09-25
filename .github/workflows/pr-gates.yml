@@ -257,8 +257,9 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/verify-estate.mjs --limit 15 --did-drift public/.well-known/did.json
 
-      # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026 with a 3-party
-      # MPC key, and the artefact NAMES its own verifier in its `verify` field:
+      # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026, an MPC key whose
+      # three shares all sit on one host (see its status file), and the artefact NAMES its own
+      # verifier in its `verify` field:
       #   node scripts/gspc-board-verify.mjs <this file>
       # The script existed, worked, returned VERIFIED — and no workflow ran it. A verifier nobody
       # runs is the same shape as the EMILIA vector pin and the published bundle, both found ungated
@@ -268,7 +269,11 @@ jobs:
       # "signature does NOT verify", exit 1.
       - name: Signed GSPC board must verify under its own published recipe
         if: steps.scope.outputs.gated == 'true'
-        run: node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json
+        run: |
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json --did public/.well-known/did.json
+          # The superseding dated freeze (2026-09-25, single key #board-attestation-1). Key anchored
+          # to the committed DID document, so a swapped key in the file fails here.
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-25.signed.json --did public/.well-known/did.json
 
       # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
       # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the

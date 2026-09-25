@@ -1,0 +1,30 @@
+{
+  "schema": "csoai.signed-artifact-status/1",
+  "artifact": "/signed/gspc-board.2026-09-25.signed.json",
+  "state": "CURRENT",
+  "current": true,
+  "frozen_at": "2026-09-25T11:08:00Z",
+  "current_authority": "/api/gspc",
+  "current_meaning": "At frozen_at the counts in this file equalled the live derivation from the committed axis arrays (source_commit). CURRENT is withdrawn automatically on /api/state and /api/counters the moment the live arrays change: they compare this file's totals with the live counts on every request and report signed_snapshot_agrees false on any drift. It is not a statement that every sentence inside is true.",
+  "relying_party_action": "Quote GET /api/gspc; quote this file only while /api/state board.live_derivation_crosscheck.signed_snapshot_agrees is true.",
+  "supersedes": "/signed/gspc-board.signed.json",
+  "integrity": {
+    "state": "VERIFIED",
+    "sha256_file_bytes": "6fd7aae06499bbd677e10177b5897869223072f37f3ae75dedd0e9d51f0c91ad",
+    "snapshot_content_id": "ea7b74992bcb8b83c2dbc75675558df0231228140b29e8ad8b0a321b508f9d78",
+    "payload_sha256": "0156c9f2bb8b35d5427a6a5b38fa598a2d30bc525a30b9b3d65a0293c591f66a",
+    "signer": "did:web:csoai.org#board-attestation-1",
+    "verification_command": "node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-25.signed.json --did did.json",
+    "ots": "/signed/gspc-board.2026-09-25.signed.json.ots — stamped 2026-09-25 at four calendars; PENDING until scripts/ots-upgrade.py returns a Bitcoin attestation. A pending stamp is a request, not evidence."
+  },
+  "custody": {
+    "key": "did:web:csoai.org#board-attestation-1",
+    "where": "Cloudflare Pages secret BOARD_SIGN_KEY_PKCS8_B64, project councilof-ai; used only inside POST /api/board-sign",
+    "shape": "single Ed25519 key — not MPC, not threshold",
+    "caller_authentication": "bearer pod token (Pages secret BOARD_SIGN_POD_TOKEN; copy at ~/.secrets/board-sign-pod-token on oracle-micro-2 and on the pod), or GitHub OIDC from an allow-listed workflow",
+    "what_that_means": "Anyone holding the pod token, or able to change the Pages secrets, can obtain a signature from this key. The signature proves the file came through the board signer; it does not prove who asked."
+  },
+  "producer": "node scripts/gspc-board-snapshot.mjs <snap>; node scripts/gspc-board-attest.mjs <snap> <out> --commit <sha> --supersedes <previous>",
+  "known_claim_defects": [],
+  "known_claim_defects_note": "None identified at freeze. The two defects recorded against the 2026-09-02 MPC freeze are corrected in the live board this file snapshots. measured_on.living_stamp in this file is the unkeyed fallback (the snapshot runs with an empty env, as its producer intends); the served /api/gspc re-signs that block at the edge, so that one block differs from a live fetch by design."
+}

@@ -3,9 +3,11 @@
  * gspc-board-sign.mjs — sign the swept board snapshot through the MPC signing custody.
  *
  * KEY CUSTODY / ANVIL BOUNDARY
- * This signs with a key created new inside the 3-party MPC custody by a distributed
- * key generation that never assembled a private scalar. It is NOT the estate signing
- * key. Nothing here reads, copies, moves or derives from the estate key.
+ * This signs with a key created new inside the MPC custody on oracle-micro-2 by a
+ * cb-mpc distributed key generation (designed never to assemble a private scalar — the
+ * helper's design claim, not an audited property). All three shares
+ * live on that one host (single failure domain) — see the custody string below.
+ * It is NOT the estate signing key. Nothing here reads, copies, moves or derives from the estate key.
  *
  * WHAT IS SIGNED
  * The canonical form of the snapshot: recursively key-sorted JSON with no
@@ -76,12 +78,20 @@ body.custody_attestation = {
     "integrity of this board snapshot as produced by GET /api/gspc on the stated date. " +
     "NOT a re-measurement, and NOT a claim about any axis's status beyond what the payload states.",
   signer: `did:web:csoai.org#${KEY_ID}`,
-  custody: "3-party MPC (Coinbase cb-mpc, Ed25519 additive), owner's own Oracle tenancy",
+  // CORRECTED 2026-09-25 (docs/corrections/2026-09-25-board-snapshot-refreeze.md). The 2026-09-02
+  // freeze this script produced said "3-party MPC … owner's own Oracle tenancy", which read as
+  // three independent custodians. Measured on the host: all three additive shares sit in ONE
+  // directory on ONE machine (oracle-micro-2) and are used by ONE service process — one failure
+  // domain. The text below says that. Change it only after the shares are actually split.
+  custody:
+    "3 additive Ed25519 shares (Coinbase cb-mpc, n-of-n), all held on one host (oracle-micro-2) " +
+    "and used by one custody process: a single failure domain, not independent custodians",
   custody_note:
-    "The signing key does not exist as a whole number anywhere: it exists only as 3 shares, " +
-    "and producing this signature required all 3 to run the protocol together. Withholding one " +
-    "share makes signing fail. This key was generated new inside the custody and is NOT the " +
-    "estate signing key.",
+    "The shares are combined by the cb-mpc protocol, which is designed so no whole private " +
+    "scalar is written to disk (a design claim, not an audited property), but every share is " +
+    "on the same machine, readable by the same account. Anyone with " +
+    "that account can sign. The multi-party property is a protocol property, not a custody " +
+    "separation. This key was generated new inside the custody and is NOT the estate signing key.",
   parties: r.parties,
   alg: "Ed25519",
   keyid: r.keyid,
