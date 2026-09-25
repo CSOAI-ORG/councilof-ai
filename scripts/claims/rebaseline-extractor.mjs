@@ -91,7 +91,55 @@ async function read(url) {
   }
 }
 
+/**
+ * signature_state and timestamp_state, written by this producer and by nothing else, so the words
+ * in a registry and the words this script emits cannot drift apart. `sidecar` false: what a fresh
+ * revision says before anyone signs it. `sidecar` true: what it says once it is signed by sidecar
+ * and submitted for a timestamp. `--restate-signed` rewrites ONLY these two fields (and so the
+ * registry_digest) of a revision that has never been signed or published, immediately before it
+ * is signed; it never touches signed or published bytes (spec 9.4, 12).
+ */
+export function stateTexts(registryId, sidecar) {
+  if (!sidecar) {
+    return {
+      signature_state: 'UNSIGNED. This revision has not been signed. It has no .signed.json sidecar, and nothing in it may '
+        + 'be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, '
+        + 'when one exists, will prove only that these bytes were committed to at that time; it grades nothing and '
+        + 'certifies nobody (spec 9.5).',
+      timestamp_state: 'NOT SUBMITTED. No OpenTimestamps receipt has been requested for this file. The three words of spec '
+        + '8.1 are reserved, and none of them applies to this file yet.',
+    };
+  }
+  return {
+    signature_state: 'SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are '
+      + 'superseded and never edited (spec 9.4). See /claims/' + registryId + '.signed.json, which pins this file by '
+      + 'sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these '
+      + 'bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named '
+      + 'here (spec 9.5).',
+    timestamp_state: 'SUBMITTED, and therefore PENDING. An OpenTimestamps receipt is written beside this file at /claims/'
+      + registryId + '.json.ots. At the time of writing it carries a calendar commitment and no attestation path, its '
+      + 'upgrade has not been run, and nothing has been verified. The specification reserves a third word for a receipt '
+      + 'that has been upgraded AND whose path has been checked, and that word is not used of this receipt (spec 8.1-8.3). '
+      + 'A file extension is not a proof.',
+  };
+}
+
+/** --restate-signed <file>: see stateTexts. Refuses a file that already names a sidecar. */
+function restateSigned(path) {
+  const reg = JSON.parse(readFileSync(path, 'utf8'));
+  const id = basename(path).replace(/\.json$/, '');
+  if (reg.registry_id !== id) throw new Error(`${path}: registry_id ${reg.registry_id} does not match the file name`);
+  if (!String(reg.signature_state || '').startsWith('UNSIGNED')) throw new Error(`${path}: not an unsigned revision; signed bytes are never edited`);
+  const check = sha256hex(canonicalBytes({ ...reg, registry_digest: undefined }));
+  if (check !== reg.registry_digest) throw new Error(`${path}: registry_digest does not reproduce before restating`);
+  Object.assign(reg, stateTexts(id, true));
+  reg.registry_digest = sha256hex(canonicalBytes({ ...reg, registry_digest: undefined }));
+  writeFileSync(path, JSON.stringify(reg, null, 1) + '\n');
+  console.log(`restated ${path} as signed by sidecar; registry_digest=${reg.registry_digest}`);
+}
+
 async function main() {
+  if (arg('restate-signed')) { restateSigned(arg('restate-signed')); return; }
   const inPath = arg('registry');
   const outPath = arg('out');
   if (!inPath || !outPath) {
@@ -303,12 +351,7 @@ async function main() {
       verify_any_artifact: 'node scripts/claim-capture.mjs --verify <file containing the artifact>  (the v0.2 reference; '
         + 'it verifies v0.1 and v0.2 artifacts)',
     },
-    signature_state: 'UNSIGNED. This revision has not been signed. It has no .signed.json sidecar, and nothing in it may '
-      + 'be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, '
-      + 'when one exists, will prove only that these bytes were committed to at that time; it grades nothing and '
-      + 'certifies nobody (spec 9.5).',
-    timestamp_state: 'NOT SUBMITTED. No OpenTimestamps receipt has been requested for this file. The three words of spec '
-      + '8.1 are reserved, and none of them applies to this file yet.',
+    ...stateTexts(registryId, false),
     does_not_prove: [
       ...(prior.does_not_prove || []),
       'that a page changed because its digest was re-baselined. A re-baselined digest is a change of extractor, recorded '

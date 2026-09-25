@@ -113,6 +113,25 @@ dropped, the v0.1 manifest gate stays red.
   `claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json`, and it has no receipt yet. It goes
   green once the rev2 files are OTS-stamped on the pod (plan step 7). The gate was not edited.
 
+## Signing record, 2026-09-25 (plan step 7, done)
+
+Both rev2 files were first restated as signed by sidecar with
+`node scripts/claims/rebaseline-extractor.mjs --restate-signed <file>`, which rewrites only
+`signature_state` and `timestamp_state` (and so `registry_digest`) of a revision that has never
+been signed or published, and refuses any other file. They were then signed through
+`POST /api/board-sign` with the pod caller token by `scripts/claims/sign-claimreg.py` (the census
+builder's method), verified against `did:web:csoai.org#board-attestation-1`, with two
+altered-preimage controls rejected, and OTS-submitted to three calendars:
+
+| file | sha256 | signed_at | .ots |
+|---|---|---|---|
+| `claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json` | `eff510e1f9af41d4…` | 2026-09-25T11:08:21Z | 3 PendingAttestation |
+| `claimreg-hiring-platforms-2026-09-24-rev2.json` | `1884c028868794c0…` | 2026-09-25T11:08:26Z | 3 PendingAttestation |
+
+Each `.signed.json` sidecar is also OTS-submitted. Every receipt is a pending calendar commitment,
+not a Bitcoin attestation. `register.json` was regenerated (`sidecar_pin_verified: true` for
+both). `functions/api/pop/_population.test.ts` is now 22/22.
+
 ## Left for the owner or the pod
 
 - **Owner: the Zenodo new version.** The metadata is prepared, not submitted, in

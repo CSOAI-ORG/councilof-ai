@@ -6718,8 +6718,8 @@
   "requirements": "Node 18+ and the Python standard library. No key, no account, no paid API.",
   "rebaseline": "node scripts/claims/rebaseline-extractor.mjs --registry public/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json --out public/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json"
  },
- "signature_state": "UNSIGNED. This revision has not been signed. It has no .signed.json sidecar, and nothing in it may be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, when one exists, will prove only that these bytes were committed to at that time; it grades nothing and certifies nobody (spec 9.5).",
- "timestamp_state": "NOT SUBMITTED. No OpenTimestamps receipt has been requested for this file. The three words of spec 8.1 are reserved, and none of them applies to this file yet.",
+ "signature_state": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
+ "timestamp_state": "SUBMITTED, and therefore PENDING. An OpenTimestamps receipt is written beside this file at /claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots. At the time of writing it carries a calendar commitment and no attestation path, its upgrade has not been run, and nothing has been verified. The specification reserves a third word for a receipt that has been upgraded AND whose path has been checked, and that word is not used of this receipt (spec 8.1-8.3). A file extension is not a proof.",
  "does_not_prove": [
   "that any claim here is false. This registry makes no such statement about anyone.",
   "that a claim in UNMEASURED or UNCHECKABLE has been checked; it has not, and the state says so.",
@@ -6727,5 +6727,5 @@
   "that the subjects here are the organisations most worth observing. This is what is maintained, not a survey and not a ranking.",
   "that a page changed because its digest was re-baselined. A re-baselined digest is a change of extractor, recorded as such under extractor_rebaseline and never as an observed change (spec v0.2 6.3.1)."
  ],
- "registry_digest": "64b7d8180333bc423d583e5ca16e8e7b9cdf32e40924b48a0872257eb2e82582"
+ "registry_digest": "20da0382b4dee5eb2b896f9173282ed57e715274a645eb2e7941268f71e948ae"
 }
