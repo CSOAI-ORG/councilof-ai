@@ -8,6 +8,8 @@ import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from 
 import { USDC_BASE } from "../api/_skus";
 import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATION_DESCRIPTION, POPULATION_DESCRIPTIONS } from "../api/_x402_descriptions";
 import { POPULATION_IDS } from "../api/_population";
+import { RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "../api/_x402_descriptions";
+import { RAS_OUTPUT_SCHEMAS } from "../api/_ras_schemas";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
@@ -21,14 +23,14 @@ export const onRequestGet: PagesFunction<{
   // Gateway included — parses resources[].accepts[]; without it the door is invisible to
   // every v1 client. All fields here are derived, never typed amounts: the amount itself
   // still lives only in the 402 challenge (the ruling).
-  const req = (url: string, description: string) => ({
+  const req = (url: string, description: string, outputSchema: Record<string, unknown> = { type: "object" }) => ({
     scheme: "exact" as const,
     network: "base" as const, // v1 consumers read the chain NAME (spec §5.1.2); the CAIP2 stays in the v2 layer
     payTo: resolvePayTo(env),
     resource: url,
     description,
     mimeType: "application/json",
-    outputSchema: { type: "object" as const },
+    outputSchema,
     maxTimeoutSeconds: 300,
     extra: { name: "USDC", version: "2" },
   });
@@ -170,6 +172,34 @@ export const onRequestGet: PagesFunction<{
           accepts: [req(`${origin}/api/pop/${id}`, description)],
         };
       }),
+      // SELF-SERVE RAS DOORS (functions/api/ras/*) — fresh computation against a buyer-named
+      // target, one Ed25519 receipt each. `url` is a concrete, probeable example (the manifest
+      // door test and the 402index loop call it verbatim); the 402's resource.url is path-scoped
+      // so a buyer's target never becomes a catalogue row. A result that is bad news about the
+      // target is delivered as found; a read OUR side could not run is never settled.
+      { method: "GET", url: `${origin}/api/ras/mcp-probe?url=https://councilof.ai/mcp`, paid_for: "issuance",
+        description: RAS_MCP_PROBE_DESCRIPTION,
+        outputSchema: RAS_OUTPUT_SCHEMAS.mcp_probe,
+        accepts: [req(`${origin}/api/ras/mcp-probe?url=https://councilof.ai/mcp`, RAS_MCP_PROBE_DESCRIPTION, RAS_OUTPUT_SCHEMAS.mcp_probe)] },
+      { method: "GET", url: `${origin}/api/ras/x402-check?url=https://councilof.ai/api/free-door`, paid_for: "issuance",
+        description: RAS_X402_CHECK_DESCRIPTION,
+        outputSchema: RAS_OUTPUT_SCHEMAS.x402_check,
+        accepts: [req(`${origin}/api/ras/x402-check?url=https://councilof.ai/api/free-door`, RAS_X402_CHECK_DESCRIPTION, RAS_OUTPUT_SCHEMAS.x402_check)] },
+      { method: "GET", url: `${origin}/api/ras/supply?asset=USDC&ledger=ethereum`, paid_for: "issuance",
+        description: RAS_SUPPLY_DESCRIPTION,
+        outputSchema: RAS_OUTPUT_SCHEMAS.supply,
+        accepts: [req(`${origin}/api/ras/supply?asset=USDC&ledger=ethereum`, RAS_SUPPLY_DESCRIPTION, RAS_OUTPUT_SCHEMAS.supply)] },
+    ],
+    // FREE DOORS — named here so an agent reading this manifest finds the free companions of the
+    // RAS doors without paying: verifying any receipt, and the daily conformance index. They are
+    // not in resources[] because they never answer 402; they carry no accepts[] and no amount.
+    free_doors: [
+      { method: "GET", url: `${origin}/api/verify?record_url=https://councilof.ai/signed/card_index.json`, free: true,
+        description: "Verify a published CSOAI record — re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned board keys. Free forever; POST a RAS receipt to verify it.",
+        outputSchema: RAS_OUTPUT_SCHEMAS.verify },
+      { method: "GET", url: `${origin}/api/x402/index`, free: true,
+        description: "Daily x402 conformance index — serves the latest SIGNED daily run when one exists; until then says INDEX_PENDING and points at the latest unsigned census run, never an invented list. Free.",
+        outputSchema: RAS_OUTPUT_SCHEMAS.x402_index },
     ],
     mcp: {
       url: `${origin}/mcp`,
