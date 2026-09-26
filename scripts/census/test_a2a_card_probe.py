@@ -277,6 +277,45 @@ class SpecDefaultRemoval(unittest.TestCase):
             A.strip_defaults = saved
         self.assertEqual(A.check_signatures(c, stub_fetch)["sig_state"], "VERIFIED")
 
+    def test_declared_version(self):
+        self.assertEqual(A.declared_protocol(card()), (["0.3.0"], "0.x"))
+        self.assertEqual(A.declared_protocol(card_with_defaults()), (["1.0"], "1.x"))
+        self.assertEqual(A.declared_protocol({"name": "x"}), ([], None))
+        self.assertEqual(A.declared_protocol({"protocolVersion": "banana"})[1], None)
+        self.assertEqual(A.declared_protocol({"supportedInterfaces": [{"protocolVersion": "0.3"}, {"protocolVersion": "1.0"}]})[1], "1.x")
+
+    def test_0_3_card_judged_under_its_declared_version(self):
+        """A card declaring 0.3 signed over its served bytes, default values included: VERIFIED under 0.3
+        (no canonicalisation step there), with the 1.x verdict recorded beside it, never substituted."""
+        c = dict(card_with_defaults(), protocolVersion="0.3.0")
+        signed = sign(c, self.H, es256)
+        r = A.check_signatures(signed, stub_fetch)
+        self.assertEqual((r["sig_state"], r["rule"], r["declared_major"]), ("VERIFIED", A.RULE_0X, "0.x"))
+        self.assertEqual(r["sig_state_under_1x_rules"], "FAILED")
+        self.assertEqual(r["note"], "protocol 0.3 defines no canonicalisation step; verdict under the declared version; "
+                                    "under 1.x rules this card would FAIL")
+        # the same bytes declaring 1.0 are FAILED (8.4.3 applies), and carry no 0.x note
+        r1 = A.check_signatures(sign(card_with_defaults(), self.H, es256), stub_fetch)
+        self.assertEqual((r1["sig_state"], r1["rule"]), ("FAILED", A.RULE_1X))
+        self.assertNotIn("note", r1)
+
+    def test_0_3_card_signed_with_defaults_removed_fails_under_0_3(self):
+        c = sign_spec(dict(card_with_defaults(), protocolVersion="0.3"), self.H, es256)
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual((r["sig_state"], r["sig_state_under_1x_rules"]), ("FAILED", "VERIFIED"))
+        self.assertIn("jcs_8_4_3_defaults_removed/b64", r["signatures"][0]["alt_serialisations_verifying"])
+        self.assertTrue(r["note"].endswith("would VERIFY"))
+
+    def test_0_3_card_without_defaults_has_no_note(self):
+        r = A.check_signatures(SIGNED_JKU, stub_fetch)
+        self.assertEqual((r["sig_state"], r["rule"]), ("VERIFIED", A.RULE_0X))
+        self.assertNotIn("sig_state_under_1x_rules", r)
+
+    def test_undeclared_card_gets_current_spec(self):
+        c = card_with_defaults()
+        c.pop("supportedInterfaces")
+        self.assertEqual(A.check_signatures(sign_spec(c, self.H, es256), stub_fetch)["rule"], A.RULE_1X)
+
     def test_proto_pin_fails_closed(self):
         saved, cache = A.A2A_PROTO_SHA256, dict(A._SCHEMA_CACHE)
         try:
