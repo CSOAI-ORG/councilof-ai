@@ -1,0 +1,982 @@
+{
+ "schema": "csoai.cross-ledger-xl-registry/0.1",
+ "what_this_is": "Extension of scripts/readers/cross_ledger_assets.json for the daily top-20% loop (scripts/readers/cross_ledger_xl.py). Ledgers and assets here are MERGED over that file (same keys win here). Every deployment identifier is parsed from the issuer's own page bytes at run time; none is typed here. 'value_match' says how an asset is found in the keyless value sources, which are used for SELECTION ONLY.",
+ "selection": {
+  "rule": "Frame = every candidate in the value sources with a positive value (DefiLlama stablecoins: circulating x price; CoinGecko tokenised-fund categories: market_cap). Candidates are deduplicated by upper-case symbol, DefiLlama first. Ranked by value, descending; the top ceil(20% x N) are selected. Owner-named instruments are added if outside the quintile and labelled owner_named. Value is a selection rule for what to read first, never a measured fact and never a ranking of issuers.",
+  "quintile": 0.2,
+  "owner_named": [
+   "BENJI",
+   "BUIDL",
+   "OUSG",
+   "USDY",
+   "USTB",
+   "JPMD",
+   "RLUSD"
+  ],
+  "sources": [
+   {
+    "id": "defillama-stablecoins",
+    "url": "https://stablecoins.llama.fi/stablecoins?includePrices=true",
+    "kind": "defillama_stablecoins"
+   },
+   {
+    "id": "coingecko-tokenized-treasuries",
+    "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=tokenized-treasuries&per_page=250",
+    "kind": "coingecko_markets"
+   },
+   {
+    "id": "coingecko-tokenized-mmfs",
+    "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=tokenized-money-market-fund-mmfs&per_page=250",
+    "kind": "coingecko_markets"
+   }
+  ]
+ },
+ "supply_delta_threshold": 0.01,
+ "ledgers": {
+  "stellar": {
+   "adapter": "stellar_auto",
+   "rpc": [
+    [
+     "https://horizon.stellar.org",
+     "Stellar Development Foundation (Horizon)"
+    ],
+    [
+     "https://horizon.stellar.lobstr.co",
+     "LOBSTR (Horizon)"
+    ]
+   ]
+  },
+  "aptos": {
+   "adapter": "aptos_auto",
+   "rpc": [
+    [
+     "https://api.mainnet.aptoslabs.com/v1",
+     "Aptos Labs (fullnode REST)"
+    ],
+    [
+     "https://aptos-rest.publicnode.com/v1",
+     "PublicNode (Allnodes) (fullnode REST)"
+    ]
+   ]
+  },
+  "optimism": {
+   "adapter": "evm",
+   "chain_id": 10,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://mainnet.optimism.io",
+     "Optimism Foundation (mainnet.optimism.io)"
+    ],
+    [
+     "https://optimism-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "unichain": {
+   "adapter": "evm",
+   "chain_id": 130,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://mainnet.unichain.org",
+     "Uniswap Labs (mainnet.unichain.org)"
+    ],
+    [
+     "https://unichain-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "mantle": {
+   "adapter": "evm",
+   "chain_id": 5000,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://rpc.mantle.xyz",
+     "Mantle (rpc.mantle.xyz)"
+    ],
+    [
+     "https://mantle-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "celo": {
+   "adapter": "evm",
+   "chain_id": 42220,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://forno.celo.org",
+     "cLabs (forno)"
+    ],
+    [
+     "https://celo-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "kaia": {
+   "adapter": "evm",
+   "chain_id": 8217,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://public-en.node.kaia.io",
+     "Kaia Foundation (public-en)"
+    ]
+   ]
+  },
+  "kava": {
+   "adapter": "evm",
+   "chain_id": 2222,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://evm.kava.io",
+     "Kava Labs (evm.kava.io)"
+    ],
+    [
+     "https://kava-evm-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "sei": {
+   "adapter": "evm",
+   "chain_id": 1329,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://sei-evm-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ],
+    [
+     "https://evm-rpc.sei-apis.com",
+     "Sei Foundation (evm-rpc.sei-apis.com)"
+    ]
+   ]
+  },
+  "plume": {
+   "adapter": "evm",
+   "chain_id": 98866,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.plume.org",
+     "Plume (rpc.plume.org)"
+    ]
+   ]
+  },
+  "ink": {
+   "adapter": "evm",
+   "chain_id": 57073,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://rpc-gel.inkonchain.com",
+     "Ink / Gelato (rpc-gel)"
+    ],
+    [
+     "https://ink-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "xlayer": {
+   "adapter": "evm",
+   "chain_id": 196,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://rpc.xlayer.tech",
+     "OKX (rpc.xlayer.tech)"
+    ],
+    [
+     "https://xlayerrpc.okx.com",
+     "OKX (xlayerrpc.okx.com)"
+    ]
+   ]
+  },
+  "monad": {
+   "adapter": "evm",
+   "chain_id": 143,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.monad.xyz",
+     "Monad Foundation (rpc.monad.xyz)"
+    ]
+   ]
+  },
+  "hyperevm": {
+   "adapter": "evm",
+   "chain_id": 999,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.hyperliquid.xyz/evm",
+     "Hyperliquid (rpc.hyperliquid.xyz)"
+    ],
+    [
+     "https://hyperliquid-json-rpc.stakely.io",
+     "Stakely"
+    ]
+   ]
+  },
+  "linea": {
+   "adapter": "evm",
+   "chain_id": 59144,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://rpc.linea.build",
+     "Consensys (rpc.linea.build)"
+    ],
+    [
+     "https://linea-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "sonic": {
+   "adapter": "evm",
+   "chain_id": 146,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.soniclabs.com",
+     "Sonic Labs (rpc.soniclabs.com)"
+    ],
+    [
+     "https://sonic-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "zksync": {
+   "adapter": "evm",
+   "chain_id": 324,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://mainnet.era.zksync.io",
+     "Matter Labs (mainnet.era.zksync.io)"
+    ]
+   ]
+  },
+  "worldchain": {
+   "adapter": "evm",
+   "chain_id": 480,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://worldchain-mainnet.g.alchemy.com/public",
+     "Alchemy (public endpoint)"
+    ],
+    [
+     "https://480.rpc.thirdweb.com",
+     "thirdweb"
+    ]
+   ]
+  },
+  "xrplevm": {
+   "adapter": "evm",
+   "chain_id": 1440000,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.xrplevm.org",
+     "XRPL EVM (rpc.xrplevm.org)"
+    ]
+   ]
+  },
+  "plasma": {
+   "adapter": "evm",
+   "chain_id": 9745,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.plasma.to",
+     "Plasma (rpc.plasma.to)"
+    ]
+   ]
+  },
+  "cronos": {
+   "adapter": "evm",
+   "chain_id": 25,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://evm.cronos.org",
+     "Cronos Labs (evm.cronos.org)"
+    ],
+    [
+     "https://cronos-evm-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "robinhood": {
+   "adapter": "evm",
+   "chain_id": 4663,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://rpc.mainnet.chain.robinhood.com",
+     "Robinhood (rpc.mainnet.chain.robinhood.com)"
+    ]
+   ]
+  },
+  "tempo": {
+   "adapter": "evm",
+   "chain_id": 4217,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.tempo.xyz",
+     "Tempo (rpc.tempo.xyz)"
+    ],
+    [
+     "https://rpc.presto.tempo.xyz",
+     "Tempo (rpc.presto.tempo.xyz, same operator)"
+    ]
+   ]
+  },
+  "abcore": {
+   "adapter": "evm",
+   "chain_id": 36888,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "rpc": [
+    [
+     "https://rpc.core.ab.org",
+     "AB Core (rpc.core.ab.org)"
+    ],
+    [
+     "https://rpc1.core.ab.org",
+     "AB Core (rpc1, same operator)"
+    ]
+   ]
+  },
+  "morph": {
+   "adapter": "evm",
+   "chain_id": 2818,
+   "pin": "latest-minus",
+   "pin_lag": 10,
+   "l2": true,
+   "rpc": [
+    [
+     "https://rpc.morphl2.io",
+     "Morph (rpc.morphl2.io)"
+    ],
+    [
+     "https://rpc-quicknode.morphl2.io",
+     "Morph via QuickNode"
+    ]
+   ]
+  },
+  "noble": {
+   "adapter": "noble"
+  },
+  "hedera": {
+   "adapter": "hedera"
+  },
+  "sui": {
+   "adapter": "sui"
+  },
+  "xrpl": {
+   "adapter": "xrpl",
+   "rpc": [
+    [
+     "https://s1.ripple.com:51234/",
+     "Ripple (s1)"
+    ],
+    [
+     "https://xrplcluster.com/",
+     "XRPL Labs (xrplcluster)"
+    ]
+   ]
+  },
+  "tron": {
+   "adapter": "tron",
+   "rpc": [
+    [
+     "https://api.trongrid.io",
+     "TronGrid (TRON DAO)"
+    ],
+    [
+     "https://tron-rpc.publicnode.com",
+     "PublicNode (Allnodes)"
+    ]
+   ]
+  },
+  "near": {
+   "adapter": "near",
+   "rpc": [
+    [
+     "https://rpc.mainnet.near.org",
+     "NEAR (rpc.mainnet.near.org)"
+    ],
+    [
+     "https://free.rpc.fastnear.com",
+     "FastNEAR (free)"
+    ]
+   ]
+  },
+  "ton": {
+   "adapter": "ton",
+   "rpc": [
+    [
+     "https://toncenter.com/api/v3",
+     "TON Center (toncenter.com)"
+    ],
+    [
+     "https://tonapi.io/v2",
+     "Ton Console (tonapi.io)"
+    ]
+   ]
+  }
+ },
+ "no_adapter_reasons": {
+  "canton": "PERMISSIONED_NOT_READABLE: a Canton participant's Ledger API is not a public permissionless read path (2026-09-25 probe: IP-allowlisted); nothing is read and nothing is inferred",
+  "default": "NO_ADAPTER: no keyless public reader for this ledger is wired in this loop; not read - not zero, not absent"
+ },
+ "assets": {
+  "usdt": {
+   "asset": "USDT",
+   "issuer": "Tether",
+   "primary_product": "USDT",
+   "value_match": {
+    "symbol": "USDT",
+    "name_regex": "^Tether$"
+   },
+   "issuer_list": {
+    "url": "https://tether.to/en/supported-protocols/",
+    "parser": "tether_sections",
+    "start_after": "ERC20 Token via Ethereum, Avalanche, Cosmos, Celo and Kaia Blockchain",
+    "deprecated_marker": "Deprecated Asset Protocols:",
+    "product_markers": {
+     "USD₮": "USDT",
+     "EUR₮": "EURT",
+     "CNH₮": "CNHT",
+     "MXN₮": "MXNT",
+     "XAU₮": "XAUT"
+    },
+    "role_prefer": {
+     "aptos": "Object Asset ID"
+    },
+    "sections": {
+     "Ethereum Network": "Ethereum",
+     "Avalanche Blockchain": "Avalanche",
+     "BNB Smart Chain": "BNB Smart Chain",
+     "Cosmos Blockchain (via Kava)": "Kava",
+     "Celo Blockchain": "Celo",
+     "Kaia Blockchain": "Kaia",
+     "TRC20 Token via Tron Blockchain": "Tron",
+     "Liquid Asset via Liquid Blockchain": "Liquid",
+     "Solana Token via Solana Blockchain": "Solana",
+     "Polkadot AssetHub (formerly Statemint)": "Polkadot AssetHub",
+     "Tezos Token via Tezos Blockchain": "Tezos",
+     "Near Token via Near Blockchain": "NEAR",
+     "Ton Jetton via Ton Blockchain": "TON",
+     "Fungible Asset via Aptos Blockchain": "Aptos"
+    },
+    "deprecated_sections": {
+     "Algorand Asset via Algorand Blockchain": "Algorand",
+     "EOSIO.TOKEN via Vaulta Blockchain (previously EOS)": "Vaulta (EOS)",
+     "Kusama AssetHub (formerly Statemine)": "Kusama AssetHub",
+     "Omni Protocol via Bitcoin Blockchain": "Omni (Bitcoin)",
+     "SLP Token via BitcoinCash Blockchain": "SLP (Bitcoin Cash)",
+     "ERC20 Token via Ethereum Blockchain": "Ethereum",
+     "TRC20 Token via Tron Blockchain": "Tron"
+    }
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "Avalanche": "avalanche",
+    "BNB Smart Chain": "bsc",
+    "Kava": "kava",
+    "Celo": "celo",
+    "Kaia": "kaia",
+    "Tron": "tron",
+    "Solana": "solana",
+    "NEAR": "near",
+    "TON": "ton",
+    "Aptos": "aptos"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Tether's own issuance records (not public at deployment level)",
+    "why": "issued supply per ledger is read; nothing here reconciles it with the issuer's books or reserves"
+   }
+  },
+  "usdc": {
+   "asset": "USDC",
+   "issuer": "Circle",
+   "primary_product": "USDC",
+   "value_match": {
+    "symbol": "USDC",
+    "name_regex": "^USD Coin$"
+   },
+   "issuer_list": {
+    "url": "https://developers.circle.com/stablecoins/usdc-contract-addresses.md",
+    "parser": "md_table",
+    "section": "Mainnet",
+    "label_col": 0,
+    "id_col": 1,
+    "product": "USDC"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "Arbitrum": "arbitrum",
+    "Avalanche C-Chain": "avalanche",
+    "Base": "base",
+    "Celo": "celo",
+    "HyperEVM": "hyperevm",
+    "Linea": "linea",
+    "OP Mainnet": "optimism",
+    "Polygon PoS": "polygon",
+    "Sonic": "sonic",
+    "Unichain": "unichain",
+    "ZKsync Era": "zksync",
+    "World Chain": "worldchain",
+    "Sei": "sei",
+    "Ink": "ink",
+    "Plume": "plume",
+    "Monad": "monad",
+    "Solana": "solana",
+    "Stellar": "stellar",
+    "Hedera": "hedera",
+    "Sui": "sui",
+    "Noble": "noble",
+    "XRPL": "xrpl",
+    "Aptos": "aptos",
+    "Plasma": "plasma",
+    "Canton": "canton",
+    "Cronos": "cronos",
+    "Morph": "morph",
+    "X Layer": "xlayer",
+    "NEAR": "near"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Circle's issuance records",
+    "why": "issued supply per ledger is read; not reconciled with Circle's reserve reports"
+   }
+  },
+  "eurc": {
+   "asset": "EURC",
+   "issuer": "Circle",
+   "primary_product": "EURC",
+   "value_match": {
+    "symbol": "EURC",
+    "name_regex": "^EURC$"
+   },
+   "issuer_list": {
+    "url": "https://developers.circle.com/stablecoins/eurc-contract-addresses.md",
+    "parser": "md_table",
+    "section": "Mainnet",
+    "label_col": 0,
+    "id_col": 1,
+    "product": "EURC"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "Avalanche C-Chain": "avalanche",
+    "Base": "base",
+    "Cronos": "cronos",
+    "Plasma": "plasma",
+    "Solana": "solana",
+    "Stellar": "stellar",
+    "World Chain": "worldchain",
+    "Arc": null
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Circle's issuance records",
+    "why": "not reconciled"
+   }
+  },
+  "usyc": {
+   "asset": "USYC",
+   "issuer": "Circle (Hashnote)",
+   "primary_product": "USYC",
+   "value_match": {
+    "symbol": "USYC",
+    "name_regex": "USYC"
+   },
+   "issuer_list": {
+    "url": "https://developers.circle.com/tokenized/usyc/smart-contracts.md",
+    "parser": "md_table",
+    "section": "Mainnet",
+    "label_col": 0,
+    "id_col": 2,
+    "filter_col": 1,
+    "filter_value": "USYC",
+    "product": "USYC"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "BSC": "bsc",
+    "Solana": "solana",
+    "Arc": null
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+    "controlling_record": "the fund's share register",
+    "why": "no public register"
+   }
+  },
+  "usd1": {
+   "asset": "USD1",
+   "issuer": "World Liberty Financial",
+   "primary_product": "USD1",
+   "value_match": {
+    "symbol": "USD1",
+    "name_regex": "World Liberty"
+   },
+   "issuer_list": {
+    "url": "https://docs.worldlibertyfinancial.com/usd1-token/contract-addresses",
+    "parser": "line_window",
+    "start_after": "Official contract addresses",
+    "stop_at": "Token details",
+    "label_offset": -2,
+    "product": "USD1",
+    "id_regex": "^(0x[0-9a-fA-F]{64}|0x[0-9a-fA-F]{40}|T[1-9A-HJ-NP-Za-km-z]{33}|[1-9A-HJ-NP-Za-km-z]{32,44})$"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "Binance Smart Chain": "bsc",
+    "Plume": "plume",
+    "AB Core": "abcore",
+    "Monad": "monad",
+    "Mantle": "mantle",
+    "Morph": "morph",
+    "XLayer": "xlayer",
+    "Solana": "solana",
+    "TRON": "tron",
+    "Aptos": "aptos"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "the issuer's records",
+    "why": "not reconciled"
+   }
+  },
+  "usdg": {
+   "asset": "USDG",
+   "issuer": "Paxos",
+   "primary_product": "USDG",
+   "value_match": {
+    "symbol": "USDG",
+    "name_regex": "Global Dollar"
+   },
+   "issuer_list": {
+    "url": "https://docs.paxos.com/guides/stablecoin/usdg/mainnet",
+    "parser": "html_table",
+    "header_regex": "^Token Address$",
+    "label_col": 0,
+    "id_col": 1,
+    "product": "USDG"
+   },
+   "label_to_ledger": {
+    "Ethereum Mainnet": "ethereum",
+    "Arbitrum Mainnet": "arbitrum",
+    "Ink Mainnet": "ink",
+    "Mantle Mainnet": "mantle",
+    "Robinhood Mainnet": "robinhood",
+    "Solana Mainnet Beta": "solana",
+    "Xlayer Mainnet": "xlayer",
+    "X Layer Mainnet": "xlayer"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Paxos's issuance records",
+    "why": "not reconciled"
+   }
+  },
+  "pyusd": {
+   "asset": "PYUSD",
+   "issuer": "Paxos (for PayPal)",
+   "primary_product": "PYUSD",
+   "value_match": {
+    "symbol": "PYUSD",
+    "name_regex": "PayPal"
+   },
+   "issuer_list": {
+    "url": "https://docs.paxos.com/guides/stablecoin/pyusd/mainnet",
+    "parser": "html_table",
+    "header_regex": "^Token Address$",
+    "label_col": 0,
+    "id_col": 1,
+    "product": "PYUSD"
+   },
+   "label_to_ledger": {
+    "Ethereum Mainnet": "ethereum",
+    "Arbitrum Mainnet": "arbitrum",
+    "Polygon PoS Mainnet": "polygon",
+    "Solana Mainnet Beta": "solana",
+    "X Layer Mainnet": "xlayer",
+    "Xlayer Mainnet": "xlayer"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Paxos's issuance records",
+    "why": "not reconciled"
+   }
+  },
+  "usde": {
+   "asset": "USDe",
+   "issuer": "Ethena",
+   "primary_product": "USDe",
+   "value_match": {
+    "symbol": "USDE",
+    "name_regex": "Ethena USDe"
+   },
+   "issuer_list": {
+    "url": "https://docs.ethena.fi/technical-design/key-addresses",
+    "parser": "text_regex",
+    "product": "USDe",
+    "regex": "(?<![A-Za-z])(?P<label>USDe) Token Contract: https://etherscan\\.io/address/(?P<identifier>0x[0-9a-fA-F]{40})",
+    "label_fixed": "Ethereum",
+    "unmapped_regex": "Chain ENA USDe sUSDe (?P<label>Most L2s \\(Other Than As Indicated Below\\)) 0x[0-9a-fA-F]{40} (?P<identifier>0x[0-9a-fA-F]{40})"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Ethena's records",
+    "why": "synthetic dollar; issued supply only"
+   }
+  },
+  "ousg": {
+   "asset": "OUSG",
+   "issuer": "Ondo Finance",
+   "primary_product": "OUSG",
+   "value_match": {
+    "symbol": "OUSG",
+    "name_regex": "Ondo"
+   },
+   "issuer_list": {
+    "url": "https://docs.ondo.finance/addresses",
+    "parser": "html_sections_table",
+    "product": "OUSG"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "Polygon": "polygon",
+    "Solana": "solana",
+    "XRP Ledger": "xrpl"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+    "controlling_record": "the fund's register",
+    "why": "no public register"
+   }
+  },
+  "usdy": {
+   "asset": "USDY",
+   "issuer": "Ondo Finance",
+   "primary_product": "USDY",
+   "value_match": {
+    "symbol": "USDY",
+    "name_regex": "Ondo"
+   },
+   "issuer_list": {
+    "url": "https://docs.ondo.finance/addresses",
+    "parser": "html_sections_table",
+    "product": "USDY"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum",
+    "BNB Chain": "bsc",
+    "Mantle": "mantle",
+    "Solana": "solana",
+    "Sui": "sui",
+    "Aptos": "aptos",
+    "Noble": "noble",
+    "Arbitrum": "arbitrum",
+    "Stellar": "stellar",
+    "Plume": "plume",
+    "Sei": "sei",
+    "Tempo": "tempo"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "Ondo USDY LLC records",
+    "why": "not reconciled"
+   }
+  },
+  "rlusd": {
+   "asset": "RLUSD",
+   "issuer": "Ripple (Standard Custody & Trust)",
+   "primary_product": "RLUSD",
+   "value_match": {
+    "symbol": "RLUSD",
+    "name_regex": "Ripple"
+   },
+   "issuer_list": {
+    "url": "https://docs.ripple.com/products/stablecoin/overview/token-addresses",
+    "parser": "text_regex",
+    "product": "RLUSD",
+    "regex": "For (?P<label>[A-Za-z ,]+?) : (?:Issuer|Proxy) address: (?P<identifier>r[1-9A-HJ-NP-Za-km-z]{24,34}|0x[0-9a-fA-F]{40})",
+    "split_labels": true
+   },
+   "label_to_ledger": {
+    "XRPL": "xrpl",
+    "Ethereum": "ethereum",
+    "Base": "base",
+    "INK": "ink",
+    "Optimism": "optimism",
+    "Unichain": "unichain",
+    "the XRPL EVM Sidechain": "xrplevm"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "the issuer's records (NYDFS-chartered trust company)",
+    "why": "not reconciled"
+   }
+  },
+  "ustb": {
+   "asset": "USTB",
+   "issuer": "Superstate",
+   "primary_product": "USTB",
+   "value_match": {
+    "symbol": "USTB",
+    "name_regex": "."
+   },
+   "issuer_list": {
+    "url": "https://docs.superstate.com/investors/smart-contracts",
+    "parser": "text_regex",
+    "product": "USTB",
+    "regex": "USTB Token Proxy - https://(?P<label>etherscan\\.io|phoenix-explorer\\.plumenetwork\\.xyz|sepolia\\.etherscan\\.io|testnet-explorer\\.plumenetwork\\.xyz)/address/(?P<identifier>0x[0-9a-fA-F]{40})",
+    "drop_labels": [
+     "sepolia.etherscan.io",
+     "testnet-explorer.plumenetwork.xyz"
+    ]
+   },
+   "label_to_ledger": {
+    "etherscan.io": "ethereum",
+    "phoenix-explorer.plumenetwork.xyz": "plume"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+    "controlling_record": "the fund's register",
+    "why": "no public register"
+   }
+  },
+  "usds": {
+   "asset": "USDS",
+   "issuer": "Sky",
+   "primary_product": "USDS",
+   "value_match": {
+    "symbol": "USDS",
+    "name_regex": "Sky"
+   },
+   "issuer_list": {
+    "url": "https://chainlog.sky.money/api/mainnet/active.json",
+    "parser": "sky_chainlog",
+    "key": "USDS",
+    "label": "Ethereum",
+    "product": "USDS"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum"
+   },
+   "reconciliation": {
+    "state": "NOT_APPLICABLE_ONCHAIN_ISSUER",
+    "why": "protocol-issued; the ledger is the issuer record"
+   }
+  },
+  "dai": {
+   "asset": "DAI",
+   "issuer": "Sky (MakerDAO)",
+   "primary_product": "DAI",
+   "value_match": {
+    "symbol": "DAI",
+    "name_regex": "^Dai$"
+   },
+   "issuer_list": {
+    "url": "https://chainlog.sky.money/api/mainnet/active.json",
+    "parser": "sky_chainlog",
+    "key": "MCD_DAI",
+    "label": "Ethereum",
+    "product": "DAI"
+   },
+   "label_to_ledger": {
+    "Ethereum": "ethereum"
+   },
+   "reconciliation": {
+    "state": "NOT_APPLICABLE_ONCHAIN_ISSUER",
+    "why": "protocol-issued; the ledger is the issuer record"
+   }
+  },
+  "benji": {
+   "value_match": {
+    "symbol": "BENJI",
+    "name_regex": "Franklin"
+   },
+   "read_all_products": true
+  },
+  "buidl": {
+   "value_match": {
+    "symbol": "BUIDL",
+    "name_regex": "BlackRock"
+   }
+  },
+  "jpmd": {
+   "value_match": {
+    "symbol": "JPMD",
+    "name_regex": "JPM"
+   }
+  },
+  "swift-ledger": {
+   "asset": "Swift shared ledger (tokenised deposits)",
+   "issuer": "Swift (infrastructure) and participating banks",
+   "issuer_list": {
+    "parser": "public_read_path_check",
+    "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "read_path_regex": "(https?://[^\\s\"'<>]*(?:explorer|scan|rpc)[^\\s\"'<>]*)"
+   },
+   "reconciliation": {
+    "state": "NOT_APPLICABLE_NOT_READ",
+    "why": "no public read path"
+   }
+  }
+ }
+}
