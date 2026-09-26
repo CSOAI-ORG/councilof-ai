@@ -281,6 +281,7 @@ export const onRequestGet: PagesFunction<RasEnv> = async ({ request, env }) => {
   });
   return rasDoor({
     request, env, schema: SCHEMA, surface: "ras.supply", resourceUrl,
+    freePreviewPath: "/evidence/cross-ledger-usdc/",
     description: RAS_SUPPLY_DESCRIPTION,
     serviceName: "CSOAI Supply Read",
     tags: ["stablecoin", "supply", "eip-1186", "evidence", "x402"],

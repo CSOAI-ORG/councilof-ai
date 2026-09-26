@@ -234,6 +234,7 @@ export const onRequestGet: PagesFunction<RasEnv> = async ({ request, env }) => {
   });
   return rasDoor({
     request, env, schema: SCHEMA, surface: "ras.mcp-probe", resourceUrl,
+    freePreviewPath: "/evidence/mcp-remote-census/",
     description: RAS_MCP_PROBE_DESCRIPTION,
     serviceName: "CSOAI MCP Probe",
     tags: ["mcp", "probe", "discovery", "receipt", "x402"],

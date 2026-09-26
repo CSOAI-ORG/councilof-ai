@@ -195,14 +195,15 @@ export const onRequestGet: PagesFunction<{
         honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
-      // Self-serve RAS doors — fresh computation, no free preview of a computation that has not
-      // run; the 402 names input refusals (SSRF guard) before any payment, and a refused or
+      // Self-serve RAS doors — fresh computation. A computation that has not run cannot be previewed, so
+      // free_preview names the last published signed run of the same instrument (_ras_door.ts); the 402 names input refusals (SSRF guard) before any payment, and a refused or
       // un-runnable read is never settled. Receipts verify free at /api/verify.
       {
         id: "ras_mcp_probe",
         name: "MCP discovery probe (per endpoint)",
         resource: u("/api/ras/mcp-probe?url=<https-mcp-endpoint>"),
         deliverable: RAS_MCP_PROBE_DESCRIPTION,
+        free_preview: u("/evidence/mcp-remote-census/"),
         verify_free: u("/api/verify"),
         never: ["a tool call", "a grade", "a rank", "a safety judgement", "a certificate", "a board cell"],
       },
@@ -211,6 +212,7 @@ export const onRequestGet: PagesFunction<{
         name: "x402 challenge conformance check (per resource)",
         resource: u("/api/ras/x402-check?url=<https-x402-resource>"),
         deliverable: RAS_X402_CHECK_DESCRIPTION,
+        free_preview: u("/api/x402/index"),
         verify_free: u("/api/verify"),
         daily_index_free: u("/api/x402/index"),
         never: ["a payment to the target", "a judgement of the seller", "a grade", "a certificate"],
@@ -220,6 +222,7 @@ export const onRequestGet: PagesFunction<{
         name: "Token supply read with state proof (per deployment)",
         resource: u("/api/ras/supply?asset=<USDC>&ledger=<evm-ledger-on-issuer-list>"),
         deliverable: RAS_SUPPLY_DESCRIPTION,
+        free_preview: u("/evidence/cross-ledger-usdc/"),
         verify_free: u("/api/verify"),
         never: ["a reserve attestation", "a proof of backing", "a rate", "a grade", "a certificate"],
       },

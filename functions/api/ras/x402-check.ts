@@ -145,6 +145,7 @@ export const onRequestGet: PagesFunction<RasEnv> = async ({ request, env }) => {
   });
   return rasDoor({
     request, env, schema: SCHEMA, surface: "ras.x402-check", resourceUrl,
+    freePreviewPath: "/api/x402/index",
     description: RAS_X402_CHECK_DESCRIPTION,
     serviceName: "CSOAI x402 Check",
     tags: ["x402", "conformance", "bazaar", "receipt", "probe"],

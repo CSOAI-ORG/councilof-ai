@@ -70,6 +70,10 @@ export type RasDoorSpec = {
   accepts: X402Accept[];
   bazaar: { info: Record<string, unknown>; schema: Record<string, unknown> };
   deliverable: string;
+  /** Path of the free look-first for this door (the contract's free_preview). A fresh computation
+   *  cannot be previewed before it runs, so this names the LAST PUBLISHED, SIGNED run of the same
+   *  instrument over its published population — what a result looks like, read free. */
+  freePreviewPath: string;
   never: string[];
   /** Syntactic input check, no network. null = acceptable. */
   inputError: () => { status: number; error: string; reason: string; detail?: Record<string, unknown> } | null;
@@ -107,6 +111,8 @@ export async function rasDoor(spec: RasDoorSpec): Promise<Response> {
         per: "one fresh computation",
         lid: CSOAI_LID,
         deliverable: spec.deliverable,
+        free_preview: `${origin}${spec.freePreviewPath}`,
+        free_preview_is: "the last published, signed run of this instrument over its public population, free; not a preview of your target, which has not been computed",
         never: spec.never,
         payment_changes_result: false,
         board_effect: "none — nothing paid is written to the GSPC board, the public root or any card index",
