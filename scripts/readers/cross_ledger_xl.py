@@ -16,8 +16,11 @@ ranks issuers. Asset supply is a measured fact; "top 20% by value" is only the r
                 REJECTED. No header is validator-signature-checked (no light client); every row says so.
   3. parity     the issuer's list vs what the ledgers show: listed address with no contract; identity
                 mismatch; an unlisted contract at a listed address carrying the product's symbol; supply
-                on a deployment the issuer calls deprecated. CONSISTENT / INCONSISTENT / UNCHECKABLE.
-                Findings are DRAFT private notices: nothing is sent.
+                on a deployment the issuer calls deprecated. CONSISTENT / INCONSISTENT / UNCHECKABLE /
+                NOT_A_SUPPLY_CLAIM. A 'Deprecated' heading states no supply figure, so a non-zero totalSupply()
+                under it is NOT_A_SUPPLY_CLAIM, never INCONSISTENT (correction C-2026-0926-06); only a figure the
+                issuer states and the ledger contradicts is INCONSISTENT. Findings are DRAFT private notices:
+                nothing is sent.
   4. totals     per product: COMPLETE only when every listed deployment was read with a supply; a PARTIAL
                 product is never totalled.
   5. changes    vs the previous day BY NAME, as multisets (ordering is not change); supply deltas above a
@@ -26,6 +29,14 @@ ranks issuers. Asset supply is a measured fact; "top 20% by value" is only the r
 Usage (from the checkout root):
   python3 scripts/readers/cross_ledger_xl.py run --out /evac-bulk/xl-daily/2026-09-26 [--date D]
          [--prev-root /evac-bulk/xl-daily] [--assets usdt,usdc] [--no-sign] [--no-publish]
+  python3 scripts/readers/cross_ledger_xl.py rederive --from /evac-bulk/xl-daily/D --out /evac-bulk/xl-daily/D/v2
+         --version v2 --correction C-YYYY-MMDD-NN [--no-sign] [--no-publish]
+         (a correction: re-runs the network-free stages -- parity and wording -- over a published day's reads
+          into a NEW version directory; the published day is never touched)
+
+The value read is the ledger's own supply figure: totalSupply() on EVM and Tron, the ledger's equivalent
+elsewhere. It counts every token minted and not burned, including tokens the issuer itself holds, so it is
+never called 'issued', circulating or outstanding supply here.
 """
 from __future__ import annotations
 
@@ -70,6 +81,15 @@ SIGN_URL = "https://councilof.ai/api/board-sign"
 TOKEN = "~/.secrets/board-sign-pod-token"
 READ_KINDS = ("STATE_PROOF_VERIFIED", "STATE_PROOF_RECORDED", "OPERATOR_API")
 CONSENSUS_NOTE = "NOT_VALIDATOR_SIGNATURE_CHECKED"
+WHAT_THIS_IS = ("One day's cross-ledger read of the top 20% of tokenised assets by value: each ledger's own supply figure "
+                "(totalSupply() on EVM and Tron, the ledger's equivalent elsewhere) for every deployment each issuer's own page "
+                "lists, each read labelled on the evidence ladder, with issuer-claim parity. totalSupply() counts every token "
+                "minted and not burned, including tokens the issuer itself holds; it is not issued, circulating or outstanding supply.")
+# Parity states. NOT_A_SUPPLY_CLAIM: what the issuer's page says about the deployment is not a supply figure (a
+# 'Deprecated' heading). There is nothing to compare the ledger's totalSupply() with, so the item is neither
+# CONSISTENT nor INCONSISTENT and does not decide the asset's parity state. Added by correction C-2026-0926-06;
+# until then a non-zero totalSupply() under 'Deprecated' was graded INCONSISTENT.
+PARITY_STATES = ("CONSISTENT", "INCONSISTENT", "UNCHECKABLE", "NOT_A_SUPPLY_CLAIM")
 SYMBOL_ALIASES = {"USDT": ["USDt", "USD₮", "USD₮0"], "EURT": ["EURt", "EUR₮"], "CNHT": ["CNHt", "CNH₮"], "MXNT": ["MXNt", "MXN₮"], "XAUT": ["XAUt", "XAU₮"]}
 
 
@@ -949,21 +969,40 @@ def parity_for(rec: dict) -> dict:
     for d in rec.get("deprecated_rows", []):
         sup = d.get("supply_decimal")
         if d.get("evidence_kind") in READ_KINDS and sup is not None:
+            it = {"product": d["product"], "ledger": d["ledger"], "deployment_id": d["deployment_id"]}
+            # A contradiction needs two statements that differ. 'Deprecated' states no supply figure, so it can only
+            # be NOT_A_SUPPLY_CLAIM. Only a figure the issuer's page itself states (issuer_stated_supply:
+            # {decimal, quote, source}) is compared. No parser extracts such a figure today, so every deprecated row
+            # read in production is NOT_A_SUPPLY_CLAIM.
+            claim = d.get("issuer_stated_supply")
+            if claim and claim.get("decimal") is not None:
+                same = Decimal(str(claim["decimal"])) == Decimal(sup)
+                items.append({**it, "kind": "ISSUER_STATED_SUPPLY_MATCHES_LEDGER" if same else "ISSUER_STATED_SUPPLY_DIFFERS_FROM_LEDGER",
+                              "state": "CONSISTENT" if same else "INCONSISTENT", "supply_decimal": sup,
+                              "supply_decimal_is": "totalSupply() at the read height", "issuer_stated_supply": claim,
+                              "evidence_kind": d["evidence_kind"],
+                              "meaning": "the issuer's page states a supply figure for this deployment; the ledger's totalSupply() "
+                                         + ("equals it" if same else "differs from it")})
+                continue
             nz = Decimal(sup) != 0
-            items.append({"product": d["product"], "ledger": d["ledger"], "deployment_id": d["deployment_id"],
-                          "kind": "SUPPLY_ON_DEPRECATED_DEPLOYMENT" if nz else "DEPRECATED_DEPLOYMENT_ZERO_SUPPLY",
-                          "state": "INCONSISTENT" if nz else "CONSISTENT", "supply_decimal": sup, "evidence_kind": d["evidence_kind"],
-                          "meaning": ("the issuer's page lists this deployment under 'Deprecated'; the ledger still shows issued "
-                                      "supply. 'Deprecated' is the issuer's word; its legal or redemption meaning is not assessed.")
-                          if nz else "listed as deprecated; ledger shows zero issued supply"})
+            said = str(d.get("issuer_says") or "deprecated")
+            items.append({**it, "kind": "SUPPLY_ON_DEPRECATED_DEPLOYMENT" if nz else "DEPRECATED_DEPLOYMENT_ZERO_SUPPLY",
+                          "state": "NOT_A_SUPPLY_CLAIM", "supply_decimal": sup, "supply_decimal_is": "totalSupply() at the read height",
+                          "evidence_kind": d["evidence_kind"],
+                          "meaning": (f"the issuer's page lists this deployment under '{said.capitalize()}', which states no supply "
+                                      f"figure, so there is nothing to compare; the ledger's totalSupply() is {'non-zero' if nz else 'zero'}. "
+                                      "totalSupply() counts every token minted and not burned, including tokens the issuer itself "
+                                      "holds, so it is not issued or outstanding supply. The label's legal or redemption meaning "
+                                      "is not assessed.")})
         else:
             items.append({"product": d.get("product"), "ledger": d.get("ledger"), "deployment_id": d.get("deployment_id"),
                           "kind": "DEPRECATED_NOT_READ", "state": "UNCHECKABLE", "reason": d.get("reason") or d.get("error")})
     items += (rec.get("unlisted_probe") or {}).get("findings", [])
     states = collections.Counter(i["state"] for i in items)
+    compared = sum(n for s, n in states.items() if s != "NOT_A_SUPPLY_CLAIM")   # NOT_A_SUPPLY_CLAIM decides nothing
     if states.get("INCONSISTENT"):
         st = "INCONSISTENT"
-    elif ils != "READ" or states.get("UNCHECKABLE") or not items:
+    elif ils != "READ" or states.get("UNCHECKABLE") or not compared:
         st = "UNCHECKABLE"
     else:
         st = "CONSISTENT"
@@ -1177,7 +1216,7 @@ def changes(prev: dict | None, cur: dict, threshold: float) -> dict:
                                "was_evidence_kind": a["evidence_kind"], "now_evidence_kind": b["evidence_kind"]})
     pp = {k: v["parity_state"] for k, v in prev.get("assets", {}).items()}
     cp = {k: v["parity_state"] for k, v in cur.get("assets", {}).items()}
-    return {"state": "COMPARED", "previous": {"date": prev.get("date"), "sha256": prev.get("_sha256")},
+    return {"state": "COMPARED", "previous": {"date": prev.get("date"), "sha256": prev.get("_sha256"), "version": prev.get("version") or "v1"},
             "method": "multisets of names (Counter); ordering is not change. Membership and supply deltas are reported separately.",
             "membership": {"deployments_added": sorted((cc - pc).elements()), "deployments_removed": sorted((pc - cc).elements()),
                            "selection_entered": sorted((cs - ps).elements()), "selection_left": sorted((ps - cs).elements())},
@@ -1192,7 +1231,10 @@ def load_prev(root: Path, date: str) -> dict | None:
         return None
     ds = sorted(p.name for p in root.iterdir() if re.fullmatch(r"\d{4}-\d{2}-\d{2}", p.name) and p.name < date)
     for d in reversed(ds):
-        f = root / d / f"xl-daily-{d}.json"
+        # the newest version of that day: a correction (DAY/vN/) supersedes the day's record, which stays published
+        vs = sorted((p for p in (root / d).glob(f"v*/xl-daily-{d}.json") if p.parent.name[1:].isdigit()),
+                    key=lambda p: int(p.parent.name[1:]))
+        f = vs[-1] if vs else root / d / f"xl-daily-{d}.json"
         if f.exists():
             raw = f.read_bytes()
             j = json.loads(raw)
@@ -1297,7 +1339,8 @@ KEY_TO_ASSETS = {"franklin-templeton-benji": ["benji"], "jpmorgan": ["jpmd"], "b
 BINDING_FILE = Path(os.path.expanduser("~/lanes/ras-hive-os-20260924/ras_hive_os/institutional_bindings.py"))
 
 
-def evidence_links(daily: dict, date: str) -> dict:
+def evidence_links(daily: dict, date: str, prefix: str | None = None) -> dict:
+    prefix = prefix or f"{HF_PREFIX}/{date}"
     hf = f"https://huggingface.co/datasets/{HF_REPO}/resolve/main"
     inst = {}
     for key in BINDING_KEYS:
@@ -1307,7 +1350,7 @@ def evidence_links(daily: dict, date: str) -> dict:
             if not a:
                 continue
             e["records"].append({"path": a["record"]["path"], "sha256": a["record"]["sha256"], "hf_url": f"{hf}/{a['record']['path']}",
-                                 "daily_record": f"{HF_PREFIX}/{date}/xl-daily-{date}.json"})
+                                 "daily_record": f"{prefix}/xl-daily-{date}.json"})
             for k, v in a["evidence_kinds"].items():
                 e["evidence_kinds"][k] = e["evidence_kinds"].get(k, 0) + v
             e["products"] += a["products"]
@@ -1318,8 +1361,10 @@ def evidence_links(daily: dict, date: str) -> dict:
                 e["reason_detail"] = a["issuer_list_reason"]
         if any(k in READ_KINDS for k in e["evidence_kinds"]):
             e["state"] = "MEASURED_RECORDS_AVAILABLE"
-            e["what_is_measured"] = ("issued token supply per public ledger at recorded heights, each read labelled by evidence "
-                                     "kind; NOT AUM, NAV, ownership, redeemability or compliance; unreconciled with the controlling record")
+            e["what_is_measured"] = ("totalSupply() (or the ledger's equivalent supply figure) per public ledger at recorded heights, "
+                                     "each read labelled by evidence kind; it includes any tokens the issuer itself holds and is NOT "
+                                     "issued or circulating supply, AUM, NAV, ownership, redeemability or compliance; unreconciled "
+                                     "with the controlling record")
         else:
             e["state"] = "UNMEASURED"
             e["reason"] = {"ISSUER_LIST_UNAVAILABLE": "ISSUER_LIST_UNAVAILABLE: no issuer-published deployment list found; explorer/aggregator addresses are not read",
@@ -1338,7 +1383,7 @@ def evidence_links(daily: dict, date: str) -> dict:
             "binding_layer_source": {"path": "ras_hive_os/institutional_bindings.py (lane ras-hive-os-20260924; read only)",
                                      "sha256_when_read": bsha, "keys": BINDING_KEYS},
             "institutions": inst, "other_issuers_measured": other,
-            "daily_record": {"path": f"{HF_PREFIX}/{date}/xl-daily-{date}.json"},
+            "daily_record": {"path": f"{prefix}/xl-daily-{date}.json"},
             "laws": ["target is not client", "public evidence is not private connectivity",
                      "on-chain observation is not legal ownership, AUM, settlement finality or compliance",
                      "UNMEASURED is a published state, not an omission", "verification of published CSOAI evidence remains free"],
@@ -1351,7 +1396,7 @@ def disk_state() -> dict:
         st = os.statvfs(p)
         return int(st.f_bavail * st.f_frsize / 1024 / 1024)
     return {"root_free_m": free("/"), "bulk_free_m": free("/evac-bulk") if os.path.exists("/evac-bulk") else None,
-            "floor": {"root_m": 1536, "bulk_m": 2048}}
+            "floor": {"root_m": 512, "bulk_m": 2048}}
 
 
 def git_head() -> str | None:
@@ -1394,7 +1439,76 @@ def run(argv: list[str]) -> int:
     with ThreadPoolExecutor(max_workers=6) as ex:
         for k, r in ex.map(one, keys):
             recs[k] = r
-    assets, deployments, findings, unchk = {}, [], [], []
+    prefix = f"{HF_PREFIX}/{date}"
+    assets, deployments, findings, notclaims, unchk = aggregate(recs, keys, reg, out, prefix)
+    daily = {
+        "schema": SCHEMA_DAILY, "date": date, "as_of": started, "started_at": started, "finished_at": now_iso(),
+        "producer": producer_block(reg, mode),
+        "what_this_is": WHAT_THIS_IS,
+        "measurement_only": ("CSOAI never issues, wraps, trades or custodies anything and never ranks issuers. Values are a "
+                             "selection rule, not a measurement. Nothing here is investment advice or a trading signal."),
+        "selection": {**selection, "sources": src},
+        "assets": assets,
+        "deployments": deployments,
+        "parity": parity_block(assets, findings, notclaims),
+        "unmeasured_selected": [{"symbol": s["symbol"], "name": s["name"], "rank": s["rank"], "state": s["state"]}
+                                for s in selection["selected"] if s["state"] != "WIRED"],
+        "uncheckable": unchk,
+        "evidence_kind_legend": funds.EVIDENCE_KINDS,
+        "consensus_check": {CONSENSUS_NOTE: "applies to every row: no header was checked against validator signatures (no light client)"},
+        "totals_rule": "per product: COMPLETE only if every listed deployment was read with a supply; PARTIAL products carry no total",
+        "files": {},
+    }
+    prev = load_prev(prev_root, date)
+    daily["changes"] = changes(prev, daily, reg["supply_delta_threshold"])
+    for p in sorted(out.rglob("*.json.gz")):
+        daily["files"][f"{prefix}/{p.relative_to(out)}"] = sha(p.read_bytes())
+    dpath = out / f"xl-daily-{date}.json"
+    dpath.write_text(json.dumps(daily, separators=(",", ":"), ensure_ascii=False) + "\n")
+    el = evidence_links(daily, date, prefix)
+    epath = out / f"institutional-evidence-links-{date}.json"
+    epath.write_text(json.dumps(el, indent=1, ensure_ascii=False) + "\n")
+    kinds_all = collections.Counter(d["evidence_kind"] for d in deployments)
+    summary = {"date": date, "record": str(dpath), "sha256": sha(dpath.read_bytes()), "selected": len(selection["selected"]),
+               "frame_n": selection["frame_n"], "k": selection["k"], "wired": len(keys), "deployments": len(deployments),
+               "evidence_kinds": dict(kinds_all), "parity": dict(collections.Counter(a["parity_state"] for a in assets.values())),
+               "findings_inconsistent": len(findings), "not_a_supply_claim": len(notclaims)}
+    if "--no-sign" not in argv:
+        payload_extra = {"frame_n": selection["frame_n"], "k": selection["k"], "n_selected": len(selection["selected"]),
+                         "n_assets_read": len(keys), "n_deployments": len(deployments), "evidence_kinds": dict(kinds_all),
+                         "parity_states": summary["parity"], "n_parity_findings_inconsistent": len(findings),
+                         "n_files_pinned_inside": len(daily["files"]), "changes_state": daily["changes"]["state"]}
+        rc = seal(out, dpath, epath, el, prefix, started, payload_extra, summary, argv,
+                  f"xl-daily {date}: {len(deployments)} deployment reads, signed + OTS-stamped (pending)")
+        if rc:
+            return rc
+    cur = out.parent / "institutional-evidence-links.json"
+    cur.write_bytes(epath.read_bytes())
+    print(json.dumps(summary, indent=1, default=str))
+    return 0
+
+
+def producer_block(reg: dict, mode: str) -> dict:
+    return {"script": "scripts/readers/cross_ledger_xl.py", "git_head": git_head(), "branch": "lane/xl-loop-20260926",
+            "module_sha256": sha(Path(__file__).read_bytes()), "registry_sha256": reg["_sha256"], "user_agent": UA,
+            "politeness": f"<= 1 HTTP request start per host per {MIN_INTERVAL_S}s; an EVM storage-slot sweep is sent as one JSON-RPC batch request",
+            "run_mode": mode, "disk": disk_state()}
+
+
+def parity_block(assets: dict, findings: list, notclaims: list) -> dict:
+    return {"asset_states": {k: v["parity_state"] for k, v in assets.items()},
+            "states": list(PARITY_STATES),
+            "findings_inconsistent": findings,
+            "not_a_supply_claim": notclaims,
+            "not_a_supply_claim_meaning": ("what the issuer's page says about these deployments is not a supply figure (e.g. a "
+                                           "'Deprecated' heading), so the ledger's totalSupply() is recorded and not compared"),
+            "notices": "DRAFT_NOT_SENT: findings are candidate private notices to issuers — paced, owner-approved; nothing sent"}
+
+
+def aggregate(recs: dict, keys: list, reg: dict, out: Path, prefix: str) -> tuple:
+    """Per-asset records -> (assets summary, deployments, INCONSISTENT findings, NOT_A_SUPPLY_CLAIM items, uncheckable).
+    Writes each asset record to out/assets/KEY.json.gz; `prefix` is the dataset path of `out`."""
+    assets, deployments, findings, notclaims, unchk = {}, [], [], [], []
     for k in keys:
         r = recs[k]
         if "error" in r:
@@ -1409,7 +1523,7 @@ def run(argv: list[str]) -> int:
         (out / rel).write_bytes(b)
         kinds = collections.Counter(x["evidence_kind"] for x in r["rows"])
         ile = r["issuer_list_evidence"]
-        assets[k] = {"asset": r["asset"], "issuer": r["issuer"], "record": {"path": f"{HF_PREFIX}/{date}/{rel}", "sha256": sha(b)},
+        assets[k] = {"asset": r["asset"], "issuer": r["issuer"], "record": {"path": f"{prefix}/{rel}", "sha256": sha(b)},
                      "issuer_list_state": ile.get("state"), "issuer_list_source": ile.get("page") or [t.get("url") for t in ile.get("tried", [])],
                      "issuer_list_sha256": ile.get("sha256"), "issuer_list_fetched_at": ile.get("fetched_at"),
                      "issuer_list_reason": ile.get("reason") or ile.get("issuer_sentence_context"),
@@ -1427,95 +1541,181 @@ def run(argv: list[str]) -> int:
                                 "second_operator_same_block": (x.get("second_read") or {}).get("same_block_hash"),
                                 "consensus_check": CONSENSUS_NOTE})
         findings += [{"asset": k, **i} for i in r["parity"]["items"] if i["state"] == "INCONSISTENT"]
+        notclaims += [{"asset": k, **i} for i in r["parity"]["items"] if i["state"] == "NOT_A_SUPPLY_CLAIM"]
         if ile.get("state") != "READ":
             unchk.append({"asset": k, "why": f"issuer list {ile.get('state')}: {assets[k]['issuer_list_reason'] or ''}".strip()})
         unchk += [{"asset": k, "deployment": f"{i.get('ledger') or i.get('label')}:{i.get('deployment_id')}", "why": i.get("reason") or i["kind"]}
                   for i in r["parity"]["items"] if i["state"] == "UNCHECKABLE" and i["kind"] in ("LISTED_NOT_READ", "ISSUER_LABEL_IS_NOT_A_LEDGER", "READ_FAILED")]
-    daily = {
-        "schema": SCHEMA_DAILY, "date": date, "as_of": started, "started_at": started, "finished_at": now_iso(),
-        "producer": {"script": "scripts/readers/cross_ledger_xl.py", "git_head": git_head(), "branch": "lane/xl-loop-20260926",
-                     "module_sha256": sha(Path(__file__).read_bytes()), "registry_sha256": reg["_sha256"], "user_agent": UA,
-                     "politeness": f"<= 1 HTTP request start per host per {MIN_INTERVAL_S}s; an EVM storage-slot sweep is sent as one JSON-RPC batch request", "run_mode": mode, "disk": disk_state()},
-        "what_this_is": ("One day's cross-ledger read of the top 20% of tokenised assets by value: issued supply on every ledger "
-                         "each issuer's own page lists, each read labelled on the evidence ladder, with issuer-claim parity."),
-        "measurement_only": ("CSOAI never issues, wraps, trades or custodies anything and never ranks issuers. Values are a "
-                             "selection rule, not a measurement. Nothing here is investment advice or a trading signal."),
-        "selection": {**selection, "sources": src},
-        "assets": assets,
-        "deployments": deployments,
-        "parity": {"asset_states": {k: v["parity_state"] for k, v in assets.items()},
-                   "findings_inconsistent": findings,
-                   "notices": "DRAFT_NOT_SENT: findings are candidate private notices to issuers — paced, owner-approved; nothing sent"},
-        "unmeasured_selected": [{"symbol": s["symbol"], "name": s["name"], "rank": s["rank"], "state": s["state"]}
-                                for s in selection["selected"] if s["state"] != "WIRED"],
-        "uncheckable": unchk,
-        "evidence_kind_legend": funds.EVIDENCE_KINDS,
-        "consensus_check": {CONSENSUS_NOTE: "applies to every row: no header was checked against validator signatures (no light client)"},
-        "totals_rule": "per product: COMPLETE only if every listed deployment was read with a supply; PARTIAL products carry no total",
-        "files": {},
-    }
-    prev = load_prev(prev_root, date)
-    daily["changes"] = changes(prev, daily, reg["supply_delta_threshold"])
-    for p in sorted(out.rglob("*.json.gz")):
-        daily["files"][f"{HF_PREFIX}/{date}/{p.relative_to(out)}"] = sha(p.read_bytes())
+    return assets, deployments, findings, notclaims, unchk
+
+
+def seal(out: Path, dpath: Path, epath: Path, el: dict, prefix: str, as_of: str, payload_extra: dict, summary: dict,
+         argv: list[str], message: str) -> int:
+    """sign (board key, 3 tamper controls) -> independent verify -> OTS (pending) -> refuse-overwrite HF publish.
+    `prefix` is the dataset path the two files are published under (xl-daily/DAY, or xl-daily/DAY/vN)."""
+    date = el["date"]
+    s1 = sign_record(dpath, f"hf://datasets/{HF_REPO}/{prefix}/{dpath.name}", SCHEMA_DAILY, as_of, payload_extra)
+    s2 = sign_record(epath, f"hf://datasets/{HF_REPO}/{prefix}/{epath.name}", el["schema"], el["as_of"],
+                     {"institutions": {k: v["state"] for k, v in el["institutions"].items()},
+                      "daily_record_sha256": summary["sha256"]})
+    pk = did_key()
+    v1, v2 = verify_signed(dpath, pk), verify_signed(epath, pk)
+    summary.update({"signed": s1, "links_signed": s2, "verify": v1, "links_verify": v2})
+    if not (v1["all_hold"] and v2["all_hold"]):
+        print(json.dumps(summary, indent=1))
+        print("VERIFY_FAILED: nothing stamped or published")
+        return 4
+    sys.path.insert(0, os.path.expanduser("~/lanes/flywheel"))
+    import fwlib  # noqa: E402  flywheel helpers: OTS stamp + refuse-overwrite HF publish
+    ots = {}
+    for p in (dpath, epath):
+        time.sleep(1.1)
+        try:
+            side = fwlib.ots_stamp(p, p.with_name(p.name + ".ots"), p.with_name(p.name[:-5] + ".ots.json"))
+            ots[p.name] = {"state": side["state"], "calendars": len(side["calendars_accepted"])}
+        except SystemExit as e:
+            ots[p.name] = {"state": "NOT_STAMPED", "error": str(e)}
+    summary["ots"] = ots
+    if "--no-publish" not in argv:
+        files = {f"{prefix}/{p.relative_to(out)}": str(p) for p in sorted(out.rglob("*")) if p.is_file() and not p.name.startswith(("publish-", "run.log"))}
+        try:
+            pub = fwlib.hf_publish_new_files(HF_REPO, files, message)
+            summary["publish"] = {"state": "PUBLISHED", **{k: pub[k] for k in ("commit", "parent", "preexisting_files_unchanged")},
+                                  "n_added": len(pub["added"])}
+        except SystemExit as e:
+            summary["publish"] = {"state": "PUBLISH_REFUSED_OR_FAILED", "error": str(e)[:300]}
+        except Exception as e:
+            msg = str(e)
+            summary["publish"] = {"state": "BLOCKED_OWNER_HF_TOKEN" if "401" in msg or "403" in msg else "PUBLISH_FAILED",
+                                  "error": f"{type(e).__name__}: {msg[:200]}", "staged_locally": str(out)}
+        (out / f"publish-{date}.json").write_text(json.dumps(summary["publish"], indent=1) + "\n")
+    else:
+        summary["publish"] = {"state": "NOT_PUBLISHED_NO_PUBLISH_FLAG", "staged_locally": str(out)}
+    return 0
+
+
+# ----------------------------------------------------------------------------- rederive (a correction; nothing re-read)
+REDERIVED_STAGES = ["parity: parity_for() re-run over the recorded reads",
+                    "wording: not_evidence_of from the reader module; reconciliation from the registry"]
+
+
+def rederive_asset(rec: dict, reg: dict, key: str, info: dict) -> dict:
+    """The network-free stages of one asset record, re-run with the current code. Every read (rows, deprecated_rows,
+    listed_not_read, issuer list evidence and unmapped labels, unlisted_probe, product_totals, proofs, request_log)
+    is carried unchanged."""
+    new = json.loads(json.dumps(rec))
+    new["not_evidence_of"] = funds.NOT_EVIDENCE_OF
+    spec = reg["assets"].get(key) or {}
+    if "reconciliation" in spec:
+        new["reconciliation"] = spec["reconciliation"]
+        new["reconciliation_state"] = (spec["reconciliation"] or {}).get("state")
+    new["parity"] = parity_for(new)
+    new["rederivation"] = info
+    return new
+
+
+def rederive(argv: list[str]) -> int:
+    """cross_ledger_xl.py rederive --from DAYDIR --out DAYDIR/vN --version vN --correction C-... [--no-sign] [--no-publish]
+
+    A correction to a published day. Re-runs only the stages that read nothing (parity, wording) with the current
+    code over the reads the published record already holds, and writes a NEW version directory. The published day
+    is never touched (superseded bytes stay published). Refuses if the reads it would carry do not match the pins in
+    the published record, or if the re-derived deployment list differs from the published one."""
+    def arg(k, d=None):
+        return argv[argv.index(k) + 1] if k in argv else d
+    src, out, ver, corr = arg("--from"), arg("--out"), arg("--version"), arg("--correction")
+    if not (src and out and ver and corr and re.fullmatch(r"v([2-9]|[1-9]\d+)", ver) and re.fullmatch(r"C-\d{4}-\d{4}-\d{2}", corr)):
+        print(rederive.__doc__)
+        return 2
+    src, out = Path(src), Path(out)
+    olds = sorted(src.glob("xl-daily-????-??-??.json"))
+    if len(olds) != 1:
+        print(f"REFUSED: expected one xl-daily-DATE.json in {src}, found {len(olds)}")
+        return 3
+    old_raw = olds[0].read_bytes()
+    J = json.loads(old_raw)
+    date = J["date"]
     dpath = out / f"xl-daily-{date}.json"
+    if dpath.exists():
+        print(f"REFUSED: {dpath} exists; a record is never overwritten")
+        return 3
+    old_prefix = f"{HF_PREFIX}/{date}" + (f"/{J['version']}" if J.get("version") else "")
+    prefix = f"{HF_PREFIX}/{date}/{ver}"
+    reg = load_registry()
+    info = {"version": ver, "correction": corr, "rederived_at": now_iso(),
+            "supersedes": {"path": f"{old_prefix}/{olds[0].name}", "sha256": sha(old_raw)},
+            "stages_recomputed": REDERIVED_STAGES,
+            "reads": "carried unchanged from the superseded record: no ledger, issuer page or value source was re-read"}
+    keys = list(J["assets"])
+    recs: dict[str, dict] = {}
+    for k in keys:
+        a = J["assets"][k]
+        p = (a.get("record") or {}).get("path")
+        if not p:
+            recs[k] = {"error": a.get("error") or "BUILD_FAILED"}
+            continue
+        if not p.startswith(old_prefix + "/"):
+            print(f"REFUSED: {k} record path {p} is not under {old_prefix}")
+            return 3
+        b = (src / p[len(old_prefix) + 1:]).read_bytes()
+        if sha(b) != a["record"]["sha256"]:
+            print(f"REFUSED: {k} record bytes do not match the published pin")
+            return 3
+        recs[k] = rederive_asset(json.loads(gzip.decompress(b)), reg, k, info)
+    out.mkdir(parents=True, exist_ok=True)
+    assets, deployments, findings, notclaims, unchk = aggregate(recs, keys, reg, out, prefix)
+    if deployments != J["deployments"]:
+        print("REFUSED: the re-derived deployment list differs from the published one; a rederive changes no read")
+        return 5
+    daily = json.loads(old_raw)
+    daily.update({"what_this_is": WHAT_THIS_IS, "assets": assets, "deployments": deployments,
+                  "parity": parity_block(assets, findings, notclaims), "uncheckable": unchk, "files": {}})
+    daily["producer"] = {**producer_block(reg, f"rederive {ver} for {corr} (no read; parity + wording re-run over the {date} reads)"),
+                         "reads_producer": J["producer"]}
+    daily["version"] = ver
+    daily["rederivation"] = info
+    for p in sorted((out / "assets").glob("*.json.gz")):
+        daily["files"][f"{prefix}/assets/{p.name}"] = sha(p.read_bytes())
+    for k, v in J["files"].items():   # proofs and anything else not re-derived: same bytes, already-published paths
+        if not k.startswith(f"{old_prefix}/assets/"):
+            daily["files"][k] = v
     dpath.write_text(json.dumps(daily, separators=(",", ":"), ensure_ascii=False) + "\n")
-    el = evidence_links(daily, date)
+    el = evidence_links(daily, date, prefix)
+    el["version"], el["rederivation"] = ver, info
     epath = out / f"institutional-evidence-links-{date}.json"
     epath.write_text(json.dumps(el, indent=1, ensure_ascii=False) + "\n")
     kinds_all = collections.Counter(d["evidence_kind"] for d in deployments)
-    summary = {"date": date, "record": str(dpath), "sha256": sha(dpath.read_bytes()), "selected": len(selection["selected"]),
-               "frame_n": selection["frame_n"], "k": selection["k"], "wired": len(keys), "deployments": len(deployments),
-               "evidence_kinds": dict(kinds_all), "parity": dict(collections.Counter(a["parity_state"] for a in assets.values())),
-               "findings_inconsistent": len(findings)}
+    summary = {"date": date, "version": ver, "record": str(dpath), "sha256": sha(dpath.read_bytes()),
+               "supersedes": info["supersedes"], "deployments": len(deployments),
+               "parity": dict(collections.Counter(a["parity_state"] for a in assets.values())),
+               "findings_inconsistent": len(findings), "not_a_supply_claim": len(notclaims)}
     if "--no-sign" not in argv:
-        payload_extra = {"frame_n": selection["frame_n"], "k": selection["k"], "n_selected": len(selection["selected"]),
+        sel = J["selection"]
+        payload_extra = {"frame_n": sel["frame_n"], "k": sel["k"], "n_selected": len(sel["selected"]),
                          "n_assets_read": len(keys), "n_deployments": len(deployments), "evidence_kinds": dict(kinds_all),
                          "parity_states": summary["parity"], "n_parity_findings_inconsistent": len(findings),
-                         "n_files_pinned_inside": len(daily["files"]), "changes_state": daily["changes"]["state"]}
-        s1 = sign_record(dpath, f"hf://datasets/{HF_REPO}/{HF_PREFIX}/{date}/{dpath.name}", SCHEMA_DAILY, started, payload_extra)
-        s2 = sign_record(epath, f"hf://datasets/{HF_REPO}/{HF_PREFIX}/{date}/{epath.name}", el["schema"], el["as_of"],
-                         {"institutions": {k: v["state"] for k, v in el["institutions"].items()},
-                          "daily_record_sha256": summary["sha256"]})
-        pk = did_key()
-        v1, v2 = verify_signed(dpath, pk), verify_signed(epath, pk)
-        summary.update({"signed": s1, "verify": v1, "links_verify": v2})
-        if not (v1["all_hold"] and v2["all_hold"]):
-            print(json.dumps(summary, indent=1))
-            print("VERIFY_FAILED: nothing stamped or published")
-            return 4
-        sys.path.insert(0, os.path.expanduser("~/lanes/flywheel"))
-        import fwlib  # noqa: E402  flywheel helpers: OTS stamp + refuse-overwrite HF publish
-        ots = {}
-        for p in (dpath, epath):
-            time.sleep(1.1)
-            try:
-                side = fwlib.ots_stamp(p, p.with_name(p.name + ".ots"), p.with_name(p.name[:-5] + ".ots.json"))
-                ots[p.name] = {"state": side["state"], "calendars": len(side["calendars_accepted"])}
-            except SystemExit as e:
-                ots[p.name] = {"state": "NOT_STAMPED", "error": str(e)}
-        summary["ots"] = ots
-        if "--no-publish" not in argv:
-            files = {f"{HF_PREFIX}/{date}/{p.relative_to(out)}": str(p) for p in sorted(out.rglob("*")) if p.is_file() and not p.name.startswith(("publish-", "run.log"))}
-            try:
-                pub = fwlib.hf_publish_new_files(HF_REPO, files, f"xl-daily {date}: {len(deployments)} deployment reads, signed + OTS-stamped (pending)")
-                summary["publish"] = {"state": "PUBLISHED", **{k: pub[k] for k in ("commit", "parent", "preexisting_files_unchanged")},
-                                      "n_added": len(pub["added"])}
-            except SystemExit as e:
-                summary["publish"] = {"state": "PUBLISH_REFUSED_OR_FAILED", "error": str(e)[:300]}
-            except Exception as e:
-                msg = str(e)
-                summary["publish"] = {"state": "BLOCKED_OWNER_HF_TOKEN" if "401" in msg or "403" in msg else "PUBLISH_FAILED",
-                                      "error": f"{type(e).__name__}: {msg[:200]}", "staged_locally": str(out)}
-            (out / f"publish-{date}.json").write_text(json.dumps(summary["publish"], indent=1) + "\n")
-    cur = out.parent / "institutional-evidence-links.json"
-    cur.write_bytes(epath.read_bytes())
+                         "n_parity_not_a_supply_claim": len(notclaims),
+                         "n_files_pinned_inside": len(daily["files"]), "changes_state": daily["changes"]["state"],
+                         "version": ver, "correction": corr, "supersedes_sha256": info["supersedes"]["sha256"]}
+        rc = seal(out, dpath, epath, el, prefix, J["as_of"], payload_extra, summary, argv,
+                  f"xl-daily {date} {ver}: correction {corr} (parity + wording re-derived; no read changed)")
+        if rc:
+            return rc
+    root = src.parent if not J.get("version") else src.parent.parent
+    cur = root / "institutional-evidence-links.json"
+    old_links = src / f"institutional-evidence-links-{date}.json"
+    if "--no-sign" not in argv and cur.exists() and old_links.exists() and cur.read_bytes() == old_links.read_bytes():
+        cur.write_bytes(epath.read_bytes())   # the current pointer still named the superseded day: point it at the correction
+        summary["current_links_pointer"] = "UPDATED"
+    else:
+        summary["current_links_pointer"] = "UNCHANGED (unsigned run, or it names a newer day, or it is absent)"
     print(json.dumps(summary, indent=1, default=str))
     return 0
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "run":
         sys.exit(run(sys.argv[2:]))
+    if len(sys.argv) > 1 and sys.argv[1] == "rederive":
+        sys.exit(rederive(sys.argv[2:]))
     print(__doc__)
     sys.exit(2)

@@ -541,7 +541,7 @@
    "reconciliation": {
     "state": "UNRECONCILED_WITH_ISSUER_RECORD",
     "controlling_record": "Tether's own issuance records (not public at deployment level)",
-    "why": "issued supply per ledger is read; nothing here reconciles it with the issuer's books or reserves"
+    "why": "totalSupply() per ledger is read (Tether's 'total authorized', which can include tokens the issuer holds as not issued); nothing here reconciles it with the issuer's books or reserves"
    }
   },
   "usdc": {
@@ -595,7 +595,7 @@
    "reconciliation": {
     "state": "UNRECONCILED_WITH_ISSUER_RECORD",
     "controlling_record": "Circle's issuance records",
-    "why": "issued supply per ledger is read; not reconciled with Circle's reserve reports"
+    "why": "totalSupply() per ledger is read; not reconciled with Circle's reserve reports"
    }
   },
   "eurc": {
@@ -781,7 +781,7 @@
    "reconciliation": {
     "state": "UNRECONCILED_WITH_ISSUER_RECORD",
     "controlling_record": "Ethena's records",
-    "why": "synthetic dollar; issued supply only"
+    "why": "synthetic dollar; totalSupply() only"
    }
   },
   "ousg": {

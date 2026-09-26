@@ -78,7 +78,7 @@ NOT_EVIDENCE_OF = [
     "AUM, NAV, ownership, redeemability, fund compliance",
     "settlement finality, reserves, backing, or the value of anything",
     "the fund's or bank's controlling record (transfer-agent register / deposit ledger) — not read, not reconciled",
-    "circulating or investor-held supply (issued supply only; no holder, treasury or module balance is excluded)",
+    "circulating, outstanding or issued supply in an issuer's sense (the value is totalSupply() or the ledger's equivalent; no holder, treasury, issuer-held or module balance is excluded)",
     "that one ledger's token is interchangeable with another's — only what each ledger's state says",
     "any relationship between CSOAI and the issuer: target is not client, public evidence is not private connectivity",
 ]
