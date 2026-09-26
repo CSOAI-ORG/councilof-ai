@@ -7,7 +7,12 @@ import hashlib, json, os, pathlib, sys
 P = pathlib.Path(os.path.expanduser("~/fleet/sv/jobs.yaml"))
 raw = P.read_bytes()
 h0 = hashlib.sha256(raw).hexdigest()
-doc = json.loads(raw)
+def load(t: str):
+    """The supervisor's reading: JSON after dropping lines whose first non-blank character is '#'."""
+    return json.loads("\n".join("" if l.lstrip().startswith("#") else l for l in t.split("\n")))
+
+
+doc = load(raw.decode())
 jobs = doc["jobs"] if isinstance(doc, dict) and "jobs" in doc else doc
 idx = [i for i, j in enumerate(jobs) if j.get("id") == "xl-daily"]
 new = {
@@ -50,9 +55,9 @@ if idx:
     out_text = text[:start] + body + text[end:]
 else:
     sys.exit("REFUSED: no xl-daily entry to refresh (adding one is not this script's job)")
-chk = json.loads(out_text)
+chk = load(out_text)
 cj = chk["jobs"] if isinstance(chk, dict) and "jobs" in chk else chk
-orig = json.loads(raw); oj = orig["jobs"] if isinstance(orig, dict) and "jobs" in orig else orig
+orig = load(raw.decode()); oj = orig["jobs"] if isinstance(orig, dict) and "jobs" in orig else orig
 if [j for j in cj if j.get("id") != "xl-daily"] != [j for j in oj if j.get("id") != "xl-daily"]:
     sys.exit("REFUSED: splice would change another entry")
 if hashlib.sha256(P.read_bytes()).hexdigest() != h0:
