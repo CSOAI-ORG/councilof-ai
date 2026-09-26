@@ -397,7 +397,7 @@ export default function About() {
                   <h3 className="text-2xl font-bold mb-4">👁️ Watchdog: a public intake</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     There is a public intake for behaviour that looks wrong, at{" "}
-                    <Link href="/public-watchdog" className="text-emerald-700 underline">/public-watchdog</Link>.
+                    <Link href="/dashboard/?tab=watchdog" className="text-emerald-700 underline">the Watchdog pane of Council OS</Link>.
                     What it is: somewhere to report, that anyone can use. What it is not: a published
                     incident register — we do not yet operate one, and a triaged public register of
                     reports is <strong>not yet available</strong>. We also hold nobody accountable:

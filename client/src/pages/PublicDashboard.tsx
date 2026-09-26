@@ -60,8 +60,8 @@ export default function PublicDashboard() {
               </div>
             </Link>
             <div className="flex items-center gap-4">
-              <Link href="/watchdog">
-                <a href="/watchdog" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
+              <Link href="/dashboard/?tab=watchdog">
+                <a href="/dashboard/?tab=watchdog" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
                   <AlertTriangle className="w-4 h-4 mr-2" />
                   Report Incident
                 </a>

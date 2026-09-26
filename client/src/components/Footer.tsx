@@ -364,6 +364,9 @@ export function Footer() {
           <p className="text-muted-foreground text-xs">
             © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · contact@csoai.org
           </p>
+          <p className="text-muted-foreground text-xs">
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href="mailto:contact@csoai.org" className="underline">contact@csoai.org</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
+          </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
           </p>
