@@ -55,7 +55,8 @@ OWN_NOTICES = "maintainer-notices-20260926"
 SITE_PAGES = ["/", "/about", "/contact", "/transparency", "/claim-maintenance/", "/corrections",
               "/census", "/services/", "/faq", "/traction/"]
 NAMED_DATASETS = ["mcp-contract-parity", "mcp-remote-census", "a2a-card-census", "hf-mcp-spaces-census",
-                  "cross-ledger-supply", "evidence-index", "agent-interop-census", "fleet-status", "gspc-board"]
+                  "cross-ledger-supply", "evidence-index", "agent-interop-census", "fleet-status", "gspc-board",
+                  "erc8004-agent-census"]
 PYPI = ["csoai-gspc", "langchain-csoai", "llama-index-tools-csoai", "crewai-csoai"]
 NPM = ["csoai-gspc-mcp"]
 AGENT_PATHS = ["/.well-known/agent-card.json", "/.well-known/agent.json", "/.well-known/x402.json",
@@ -1419,7 +1420,7 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
     c += accountability_checks(md, text, owner, links)
     c += doctrine_checks(text, f"/hf/{ds_id}", owner)
     return {"id": f"hf:{ds_id}", "kind": "hf_dataset", "url": f"{HF}/datasets/{ds_id}", "checks": c,
-            "priority": ds_id.split("/")[-1] in NAMED_DATASETS}
+            "commit": info.get("sha"), "priority": ds_id.split("/")[-1] in NAMED_DATASETS}
 
 
 def discover_datasets(ctx):
