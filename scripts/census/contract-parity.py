@@ -63,6 +63,25 @@ Dimensions -> exactly one state each: CONSISTENT | INCONSISTENT | SINGLE_SURFACE
   D4 TOOLS  a bare declared count above the live count, when the live list holds a dispatcher tool (run_tool, ...), is
             not compared: UNCHECKABLE (DECLARED_COUNT_SCOPE_UNSTATED) if it is the only figure.
 
+0.1.2 correction (26 Sep 2026; record.v0.1.2.json supersedes record.v0.1.1.json, which stays published)
+  D3-SYM AUTH  0.1.1 made "registry header optional vs card required" UNCHECKABLE (DECLARED_SCOPES_DIFFER) but kept the
+            mirror case -- registry header isRequired true vs card authentication.required false -- INCONSISTENT. Both pairs
+            join a claim about sending one transport header to connect with an unscoped card flag; neither states the
+            scope of the other. The rule is now symmetric: a registry-header claim and a card / publisher-provided claim are
+            paired only through the observed discovery boundary. The "not required" side (either kind) is contradicted when
+            discovery itself was refused without credentials (INCONSISTENT); otherwise UNCHECKABLE (DECLARED_SCOPES_DIFFER).
+            Two claims of the same kind (card vs card, header vs header) are still compared directly.
+  D1-AUTH-SUBSET TOOLS  with no public-scoped list, but auth declared required on any surface of this service, a declared
+            tool list that holds every tool the credential-free live tools/list returned AND more (or a bare count above the
+            live count) is UNCHECKABLE (SUBSET_UNDER_AUTH): the unauthenticated listing may be the public subset. Still
+            INCONSISTENT when the live list holds a tool the declaration lacks, when a count is below live, or when no auth
+            is declared.
+  D6-SURFACE-UNREAD (all)  a surface that could speak to a dimension (mcp.json / server-card; x402 also for PAYMENT) that was
+            tried and did not answer (ERROR other than a 2xx, TIMEOUT, RATE_LIMITED, UNREACHABLE, NOT_FETCHED after the
+            origin failed) is not silence: a dimension that would otherwise be SINGLE_SURFACE is UNCHECKABLE (SURFACE_UNREAD).
+            The run's read_state is EXHAUSTED only if every planned endpoint was attempted AND every tried surface answered;
+            0.1 / 0.1.1 published EXHAUSTED although 41 hosts were stopped by HTTP 429.
+
 Subcommands
   plan     build the endpoint plan from the frame + probe outputs
   collect  GET the surfaces, host by host (robots.txt honoured, 1 request/s/host, one connection/host)
@@ -70,6 +89,8 @@ Subcommands
   build | sign | ots | readme   the signed csoai.mcp-contract-parity/0.1 record
   correct  derive record.v0.1.1.json from the published 0.1 record + a compare re-run over the SAME stored inputs
   publish-correction   upload the 0.1.1 files + a README Corrections section in one commit; 0.1 files byte-identical
+  correct-0.1.2 / publish-0.1.2   the same for record.v0.1.2.json (supersedes 0.1.1); README re-rendered with the
+           current figures on top, earlier text kept below it; 0.1 and 0.1.1 files byte-identical
   --self-test   offline suite + must-fail controls (see test_contract_parity.py)
 """
 from __future__ import annotations
@@ -108,7 +129,7 @@ P = _load("mcp_remote_probe", "mcp-remote-probe.py")   # HostGate, Session, robo
 F = _load("census_frame", "frame.py")                  # canonical_endpoint
 
 SCHEMA = "csoai.mcp-contract-parity/0.1"
-VERSION = "0.1.1"
+VERSION = "0.1.2"
 UA = P.UA
 ROBOTS_TOKEN = P.ROBOTS_TOKEN
 WELL_KNOWN = (("mcp.json", "/.well-known/mcp.json"),
@@ -157,6 +178,10 @@ OWN_ENDPOINT = "https://councilof.ai/mcp"
 WATCH_IDS = ("com.crosscheckapi/crosscheck", "io.github.DanceNitra/inspeximus", "ai.limitguard.api/trust-intelligence",
              "io.github.CryptoAPIs-io/mcp-x402-pay", "ai.korala/mcp")
 MAX_QUOTE = 160
+# 0.1.2 (D6): fetch states of a surface that was tried and did not answer
+UNREAD_STATES = ("ERROR", "TIMEOUT", "RATE_LIMITED", "NOT_FETCHED", "UNREACHABLE")
+DIM_SURFACES = {"VERSION": MCP_SURFACES, "TOOLS": MCP_SURFACES, "AUTH": MCP_SURFACES, "PROTOCOL": MCP_SURFACES,
+                "PAYMENT": MCP_SURFACES + ("x402",)}
 MAX_DIFF_NAMES = 5
 
 
@@ -519,6 +544,32 @@ def compare_version(ctx):
     return verdict("INCONSISTENT", conflict=[a, b], claims=A, other_versions=others)
 
 
+def _auth_decl(ctx):
+    """Every declared auth claim about this endpoint, tagged b (the boolean) and hdr (registry remote header or not)."""
+    decl = []
+    for e in ctx["registry"]:
+        # several auth headers on one remote are alternatives or complements: the remote requires auth if any is required
+        hs = sorted(e["auth"], key=lambda x: not x[1])[:1]
+        decl += [claim(f"registry {e['id']}", p, v) | {"b": v, "hdr": True} for p, v in hs]
+        decl += [claim(f"registry {e['id']} publisher-provided", p, v) | {"b": v, "hdr": False} for p, v in e["facts"]["auth"]]
+    for d in _docs(ctx, *MCP_SURFACES):
+        decl += [claim(f"{d['surface']} {d['url']}", p, v) | {"b": v, "hdr": False} for p, v in d["facts"]["auth"]]
+    return decl
+
+
+def is_unread(entry):
+    """0.1.2 (D6): a surface we tried to read that did not answer. A 2xx without a JSON body is an answer (silence);
+    a health URL documented off this origin was never tried (policy, not failure)."""
+    st = entry.get("state")
+    if st not in UNREAD_STATES:
+        return False
+    if st == "ERROR" and 200 <= (entry.get("http_status") or 0) < 300:
+        return False
+    if st == "NOT_FETCHED" and str(entry.get("reason") or "").startswith("documented off this origin"):
+        return False
+    return True
+
+
 def _live_tools(live):
     ok = live.get("state") == "RESPONDED" and live.get("tools_list_status") == "ok" and live.get("tools_complete") is True
     return ok, set(live.get("tool_names") or [])
@@ -570,7 +621,8 @@ def compare_tools(ctx):
                        live=live_q, **extra)
     names_complete = len(live.get("tool_names") or []) == live.get("n_tools")
     dispatcher = sorted(n for n in live_names if DISPATCH_RE.search(str(n)))
-    not_compared, compared = [], []
+    not_compared, compared, under_auth = [], [], []
+    req_auth = [c for c in _auth_decl(ctx) if c["b"] is True]
     for x in decl:
         kind, s, p, v = x
         if scoped:
@@ -590,6 +642,11 @@ def compare_tools(ctx):
             compared.append(x)
             continue
         if kind == "list" and names_sha(v) != live.get("tool_names_sha256"):
+            # 0.1.2 (D1-AUTH-SUBSET): auth declared required; the declared list holds every live tool and more. The
+            # credential-free listing may be the public subset; not a contradiction, not compared.
+            if req_auth and names_complete and live_names < set(v):
+                under_auth.append(x)
+                continue
             ex = {}
             if names_complete:
                 ex = {"only_declared": sorted(set(v) - live_names)[:MAX_DIFF_NAMES],
@@ -599,13 +656,25 @@ def compare_tools(ctx):
             if dispatcher and names_complete and v > (live.get("n_tools") or 0):
                 not_compared.append(x)
                 continue
+            if req_auth and v > (live.get("n_tools") or 0):  # 0.1.2 (D1-AUTH-SUBSET), a count above live under declared auth
+                under_auth.append(x)
+                continue
             return verdict("INCONSISTENT", conflict=[q(*x), live_q])
         compared.append(x)
     if not_compared:
         extra["not_compared"] = [q(*x) for x in not_compared][:4]
         if dispatcher:
             extra["live_dispatcher_tools"] = dispatcher[:MAX_DIFF_NAMES]
+    if under_auth:
+        extra["not_compared_under_auth"] = [q(*x) for x in under_auth][:4]
+        extra["declared_required"] = [{k: v for k, v in c.items() if k not in ("b", "hdr")} for c in req_auth][:2]
     if not compared:
+        if under_auth:
+            return verdict("UNCHECKABLE", "SUBSET_UNDER_AUTH",
+                           "auth is declared required on a surface of this service; the declared tools hold every tool the "
+                           "credential-free tools/list returned, and more; an unauthenticated listing may show only the tools "
+                           "usable without credentials, so the difference is not a contradiction; not compared",
+                           live=live_q, **extra)
         if dispatcher:
             return verdict("UNCHECKABLE", "DECLARED_COUNT_SCOPE_UNSTATED",
                            "the only declared tool figure is a bare count above the live count, and the live list holds a tool "
@@ -618,6 +687,9 @@ def compare_tools(ctx):
                   "surface and hold every live tool (listing policy for gated tools is not stated, so not compared exactly)")
     elif not_compared:
         detail = "a bare count above the live count was not compared (live dispatcher tool); the other declarations agree"
+    elif under_auth:
+        detail = ("a declaration listing more tools than the credential-free listing, under declared auth, was not compared; "
+                  "the other declarations agree")
     return verdict("CONSISTENT", detail=detail, declared=[q(*x) for x in compared][:6], live=live_q, **extra)
 
 
@@ -637,26 +709,21 @@ def observed_auth(live):
 
 
 def compare_auth(ctx):
-    """0.1.1. A registry remote header's isRequired=false (the registry serialises false by omitting the key; the schema
-    default is false) says the client MAY connect without sending that header -- a statement about connecting. A card's
-    authentication.required=true / auth_required=true does not say whether it applies to discovery or to tools/call.
-    0.1 paired the two as a contradiction; they are claims of different scope, so that pair is UNCHECKABLE
-    (DECLARED_SCOPES_DIFFER) unless discovery itself was refused, which contradicts the optional header (INCONSISTENT)."""
-    decl = []
-    for e in ctx["registry"]:
-        # several auth headers on one remote are alternatives or complements: the remote requires auth if any is required
-        hs = sorted(e["auth"], key=lambda x: not x[1])[:1]
-        decl += [claim(f"registry {e['id']}", p, v) | {"b": v, "hdr": True} for p, v in hs]
-        decl += [claim(f"registry {e['id']} publisher-provided", p, v) | {"b": v, "hdr": False} for p, v in e["facts"]["auth"]]
-    for d in _docs(ctx, *MCP_SURFACES):
-        decl += [claim(f"{d['surface']} {d['url']}", p, v) | {"b": v, "hdr": False} for p, v in d["facts"]["auth"]]
+    """0.1.2 (D3-SYM). A registry remote header's isRequired (the registry serialises false by omitting the key; the schema
+    default is false) says whether the client must SEND that header to connect. A card's authentication.required /
+    auth_required (or a publisher-provided flag) does not say whether it applies to discovery or to tools/call. The two
+    kinds are claims of different scope IN BOTH DIRECTIONS: "header optional" vs "card: required" (0.1.1) and "header
+    required" vs "card: not required" (html2img) are each consistent with "discovery open, tools/call needs auth". So a
+    cross-kind pair is adjudicated only through what was observed: the side that says NOT required is contradicted when
+    discovery itself was refused without credentials (INCONSISTENT); otherwise UNCHECKABLE (DECLARED_SCOPES_DIFFER).
+    Claims of the same kind on different surfaces (card vs card, header vs header) are the same scope: INCONSISTENT."""
+    decl = _auth_decl(ctx)
     obs, why = observed_auth(ctx["live"])
     oq = claim("observed discovery boundary", "initialize/tools-list", why)
     T = [c for c in decl if c["b"] is True]
     Fs = [c for c in decl if c["b"] is False]
     strip = lambda cs: [{k: v for k, v in c.items() if k not in ("b", "hdr")} for c in cs]
-    # an optional registry header and an unscoped card requirement are not the same claim
-    same_scope = lambda t, f: not (f["hdr"] and not t["hdr"])
+    same_scope = lambda t, f: t["hdr"] == f["hdr"]
     if T and Fs:
         pair = next(((t, f) for t in T for f in Fs if t["surface"] != f["surface"] and same_scope(t, f)), None)
         if pair:
@@ -664,14 +731,21 @@ def compare_auth(ctx):
                            declared=strip(decl)[:6], observed=oq)
         cross = next(((t, f) for t in T for f in Fs if t["surface"] != f["surface"]), None)
         if cross:
+            t, f = cross
             if obs == "gated":
-                return verdict("INCONSISTENT", conflict=strip([cross[1]]) + [oq],
-                               detail="the registry marks the auth header optional; discovery was refused without credentials",
+                return verdict("INCONSISTENT", conflict=strip([f]) + [oq],
+                               detail=("the registry marks the auth header optional" if f["hdr"] else
+                                       "a surface declares authentication not required") +
+                                      "; discovery was refused without credentials",
                                declared=strip(decl)[:6])
-            return verdict("UNCHECKABLE", "DECLARED_SCOPES_DIFFER",
-                           "the registry marks the auth header optional to send (isRequired false; the registry omits false and "
-                           "the schema default is false); a card declares authentication required without stating whether for "
-                           "discovery or for tools/call; " + why + "; not adjudicated",
+            if f["hdr"]:
+                d = ("the registry marks the auth header optional to send (isRequired false; the registry omits false and the "
+                     "schema default is false); a card declares authentication required without stating whether for discovery "
+                     "or for tools/call")
+            else:
+                d = ("the registry marks the auth header required to send; a card declares authentication not required without "
+                     "stating whether for discovery or for tools/call (consistent with discovery open, tools/call gated)")
+            return verdict("UNCHECKABLE", "DECLARED_SCOPES_DIFFER", d + "; " + why + "; not adjudicated",
                            declared=strip(decl)[:6], observed=oq)
         return verdict("UNCHECKABLE", "ONE_SURFACE_DECLARES_BOTH",
                        "one surface says required in one place and not required in another (scopes differ); not adjudicated",
@@ -773,11 +847,24 @@ COMPARATORS = {"VERSION": compare_version, "TOOLS": compare_tools, "AUTH": compa
                "PAYMENT": compare_payment, "PROTOCOL": compare_protocol}
 
 
+def unread_for(ctx, dim):
+    return [u for u in ctx.get("unread") or [] if u["surface"] in DIM_SURFACES[dim]]
+
+
 def compare_all(ctx):
     out = {}
     for dim in DIMENSIONS:
         v = COMPARATORS[dim](ctx)
         assert v["state"] in STATES, v
+        if v["state"] == "SINGLE_SURFACE":
+            # 0.1.2 (D6): silence from a surface we could not read is not a statement
+            un = [u for u in unread_for(ctx, dim) if u["state"] in UNREAD_STATES]
+            if un:
+                v = verdict("UNCHECKABLE", "SURFACE_UNREAD",
+                            "a surface that could speak to this dimension was tried and did not answer (" +
+                            "; ".join(f"{u['surface']} {u['state']}" + (f" {clip(u['reason'], 50)}" if u.get("reason") else "")
+                                      for u in un[:3]) + "); without it: " + (v.get("detail") or "one surface speaks"),
+                            unread=[{k: u[k] for k in ("surface", "url", "state") if k in u} for u in un][:4])
         out[dim] = v
     return out
 
@@ -857,6 +944,8 @@ def plan(a):
             if l.get("source") == "mcp-registry":
                 regids[o].add(l.get("id"))
     rows = []
+    excl = P.load_exclusions(getattr(a, "exclusions", None))
+    excluded_rows = []
     for ep in watch_eps - set(probes):
         probes[ep] = {"endpoint": ep, "host": urllib.parse.urlsplit(ep).hostname, "state": "NOT_PROBED",
                       "probe_source": None, "server_version": None}
@@ -873,6 +962,10 @@ def plan(a):
             why = "watch_list"
         else:
             continue
+        ex = P.excluded(ep, excl)
+        if ex:  # an operator's objection: not planned, not read, recorded by name
+            excluded_rows.append({"endpoint": ep, "exclusion": ex})
+            continue
         o = origin_of(ep)
         shared = len(stems.get(o, ())) > 1 or len(regids.get(o, ())) > 1
         rows.append({"endpoint": ep, "host": urllib.parse.urlsplit(ep).hostname, "origin": o, "inclusion": why,
@@ -888,6 +981,7 @@ def plan(a):
     meta = {"schema": SCHEMA + "/plan", "as_of": utcnow(), "n_planned": len(rows),
             "by_inclusion": dict(collections.Counter(r["inclusion"] for r in rows)),
             "hosts": len({r["host"] for r in rows}), "shared_origin_rows": sum(r["shared_origin"] for r in rows),
+            "excluded_by_request": sorted(excluded_rows, key=lambda x: x["endpoint"]),
             "watch_list": {"ids": list(WATCH_IDS), "registry_rows": watch_rows,
                            "endpoints_in_plan": sorted(r["endpoint"] for r in rows if r["in_watch_list"]),
                            "note": "named in an external watch list; included in the population and measured like every row"},
@@ -993,10 +1087,13 @@ def fetch_json(sess, url, cfg, hops=0):
     return rec, None
 
 
-def host_tasks(rows):
-    """hostname -> {origin -> [(surface, url)]}, in plan order."""
+def host_tasks(rows, exclusions=None):
+    """hostname -> {origin -> [(surface, url)]}, in plan order. URLs on an excluded endpoint/host are never queued."""
     tasks = collections.OrderedDict()
+    excl = P.load_exclusions() if exclusions is None else exclusions
     for r in rows:
+        if P.excluded(r["origin"] + "/", excl) or P.excluded(r["endpoint"], excl):
+            continue
         t = tasks.setdefault(r["host"], collections.OrderedDict())
         lst = t.setdefault(r["origin"], [])
         for s, path in WELL_KNOWN:
@@ -1007,7 +1104,7 @@ def host_tasks(rows):
         for e in r["registry"]:
             for s, u in e["declared_urls"]:
                 h = urllib.parse.urlsplit(u).hostname
-                if not h or h.endswith(".hf.space"):
+                if not h or h.endswith(".hf.space") or P.excluded(u, excl):
                     continue
                 t = tasks.setdefault(h, collections.OrderedDict())
                 lst = t.setdefault(origin_of(u), [])
@@ -1177,7 +1274,7 @@ def surface_ctx(row, store, fetched_hosts):
                 same[0][2] = True
             else:
                 cands.append([s, u, True])
-    health_cands = []
+    health_cands, unread = [], []
     for s, u, declared in cands:
         rec, doc = store.get(u)
         key = s if not declared else f"{s} (registry-declared)"
@@ -1223,6 +1320,8 @@ def surface_ctx(row, store, fetched_hosts):
                     if hu not in health_cands:
                         health_cands.append(hu)
         surf.setdefault(key, []).append(entry)
+        if s in DIM_SURFACES["PAYMENT"] and is_unread(entry):
+            unread.append({"surface": s, "url": u, "state": st, **({"reason": entry["reason"]} if entry.get("reason") else {})})
     for e in row["registry"]:
         for s, u in e["declared_urls"]:
             if s == "health" and u not in health_cands:
@@ -1238,7 +1337,7 @@ def surface_ctx(row, store, fetched_hosts):
         surf.setdefault("health", []).append(entry)
     reg = [{"id": e["id"], "version": e["version"], "auth": e["auth"], "payment": e["payment"],
             "facts": extract(e["pp"], "registry-pp")} for e in row["registry"]]
-    ctx = {"endpoint": ep, "live": row["live"], "registry": reg, "docs": docs}
+    ctx = {"endpoint": ep, "live": row["live"], "registry": reg, "docs": docs, "unread": unread}
     return ctx, surf, attempted
 
 
@@ -1311,6 +1410,8 @@ def compare(a):
     reg_vs_live = collections.Counter()
     conflict_pairs = {d: collections.Counter() for d in DIMENSIONS}
     buf = []
+    gaps = collections.Counter()
+    gap_rows, gap_429_rows = 0, 0
     for row in jl(os.path.join(a.plan_dir, "plan.jsonl.gz")):
         usable = True
         if row["endpoint"] in straddle:
@@ -1349,6 +1450,11 @@ def compare(a):
         for key, entries in surf.items():
             for e in entries:
                 surf_counts[key][e["state"] + ("" if e.get("attributed") is not False else "(unattributed)")] += 1
+        un = [e for es in surf.values() for e in es if is_unread(e)]
+        for e in un:
+            gaps[e["state"] + (" (after HTTP 429 stop)" if "429" in str(e.get("reason") or "") and e["state"] == "NOT_FETCHED" else "")] += 1
+        gap_rows += bool(un)
+        gap_429_rows += any("429" in str(e.get("reason") or "") for e in un)
         vv = r["dimensions"]["VERSION"]
         if vv.get("other_versions"):
             vals = {normv(c["value"]) for c in vv.get("claims") or []}
@@ -1367,8 +1473,12 @@ def compare(a):
             f.write(json.dumps(r, sort_keys=True, ensure_ascii=False) + "\n")
     planned = n
     summary = {"schema": SCHEMA + "/summary", "as_of": utcnow(), "n_planned": planned, "n_attempted": attempted,
-               "read_state": "EXHAUSTED" if attempted == planned else "PARTIAL",
-               "read_state_rule": "EXHAUSTED only if every planned endpoint's surfaces were attempted; anything else is PARTIAL",
+               "read_state": "EXHAUSTED" if attempted == planned and not gap_rows else "PARTIAL",
+               "read_state_rule": ("EXHAUSTED only if every planned endpoint's surfaces were attempted AND every surface read "
+                                   "that was tried answered (no RATE_LIMITED, TIMEOUT, UNREACHABLE, non-2xx ERROR, or NOT_FETCHED "
+                                   "after the origin failed); anything else is PARTIAL (0.1.2; 0.1 and 0.1.1 counted attempts only)"),
+               "read_gaps": {"endpoints_with_an_unread_surface": gap_rows, "endpoints_with_a_429_stop": gap_429_rows,
+                             "surface_reads_unread_by_state": dict(gaps.most_common())},
                "dimension_states": {d: {s: counts[d].get(s, 0) for s in STATES} for d in DIMENSIONS},
                "uncheckable_reasons": {d: dict(reasons[d].most_common()) for d in DIMENSIONS},
                "inconsistent_pairs_top": {d: conflict_pairs[d].most_common(8) for d in DIMENSIONS},
@@ -1993,10 +2103,739 @@ def publish_correction(a):
     print(json.dumps(res, indent=1))
 
 
+# ================================================================ correction 0.1.2 (2026-09-26)
+V0_1_1_SHA = "9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8"
+V0_1_1_ROWS_SHA = "eeeb2a0d9ae471ce6a980165e9022551116a00f3c0b3c8c010e9bba7e95de075"
+V0_1_1_COMMIT = "4037f6bb2b7162b1679301846287b95934a85ad6"
+VERSION_WATCH = ("https://mcp.zensched.com/mcp", "https://agentberg.ai/mcp", "https://app.html2img.com/mcp")
+DEFECTS_012 = {
+    "D3-SYM": {"dimension": "AUTH",
+               "rule_0_1_1": ("registry header isRequired false vs card authentication.required true was UNCHECKABLE "
+                              "(DECLARED_SCOPES_DIFFER); the mirror pair, registry header isRequired true vs card "
+                              "authentication.required false, stayed INCONSISTENT"),
+               "why_wrong": ("both pairs join a claim about sending one transport header to connect with a card flag of "
+                             "unstated scope. 'Header required, card: not required' with discovery answering without "
+                             "credentials is exactly 'discovery open, tools/call needs auth' -- the same reading 0.1.1 "
+                             "accepted for the other direction. A rule that excuses one direction and not the other is not a rule."),
+               "rule_0_1_2": ("symmetric: a registry-header claim and a card / publisher-provided claim are adjudicated only "
+                              "through the observed discovery boundary. The side saying NOT required (either kind) is "
+                              "INCONSISTENT with a refused discovery; otherwise UNCHECKABLE (DECLARED_SCOPES_DIFFER). "
+                              "Claims of the same kind on two surfaces are still compared directly.")},
+    "D1-AUTH-SUBSET": {"dimension": "TOOLS",
+                       "rule_0_1_1": ("a declared tool list was compared as a superset of the live credential-free tools/list "
+                                      "only when a surface also named a public (no-credential) list; otherwise exactly"),
+                       "why_wrong": ("when auth is declared required, the credential-free listing may be the public subset "
+                                     "whether or not the service also publishes a public_tools field (zensched: card n=74, "
+                                     "live n=11, every live tool in the card)"),
+                       "rule_0_1_2": ("with auth declared required on any surface, a list holding every live tool and more (or "
+                                      "a bare count above live) is UNCHECKABLE (SUBSET_UNDER_AUTH); still INCONSISTENT when the "
+                                      "live list holds a tool the declaration lacks, when a count is below live, or when no "
+                                      "auth is declared")},
+    "D6-SURFACE-UNREAD": {"dimension": "all",
+                          "rule_0_1_1": ("a surface that was tried and did not answer (ERROR, TIMEOUT, RATE_LIMITED, UNREACHABLE, "
+                                         "NOT_FETCHED after the origin failed) was treated as silent, so the dimension could be "
+                                         "SINGLE_SURFACE; the run was labelled EXHAUSTED because every endpoint was attempted"),
+                          "why_wrong": ("an unread surface may state exactly the claim that would make a second voice. 251 rows "
+                                        "had such a surface (41 of them behind an HTTP 429 stop, 104 surface reads never sent "
+                                        "after the stop); 244 carried SINGLE_SURFACE. A rate-limited read is not an exhausted one."),
+                          "rule_0_1_2": ("a dimension that would be SINGLE_SURFACE while a surface able to speak to it (mcp.json, "
+                                         "server-card; x402 for PAYMENT) was unread is UNCHECKABLE (SURFACE_UNREAD); read_state "
+                                         "is EXHAUSTED only if every tried surface answered, else PARTIAL")},
+}
+
+
+def _causes012(old_v, new_v):
+    c = []
+    if new_v.get("reason") == "DECLARED_SCOPES_DIFFER" and old_v.get("reason") != "DECLARED_SCOPES_DIFFER":
+        c.append("D3-SYM")
+    if new_v.get("reason") == "SUBSET_UNDER_AUTH" or new_v.get("not_compared_under_auth"):
+        c.append("D1-AUTH-SUBSET")
+    if new_v.get("reason") == "SURFACE_UNREAD":
+        c.append("D6-SURFACE-UNREAD")
+    return c
+
+
+def _repro(dir_, want):
+    rows = list(jl(os.path.join(dir_, "rows.jsonl.gz")))
+    got = sha(gz_bytes(rows))
+    assert got == want, (dir_, got, want)
+    return {"rows": len(rows), "sha256": got, "matches_published": True}
+
+
+def correct012(a):
+    """record.v0.1.2.json from the published 0.1.1 record + a 0.1.2 compare over the SAME stored inputs. Refuses unless
+    the 0.1 and 0.1.1 producers, re-run over those inputs, reproduce their published rows byte for byte."""
+    import subprocess
+    out = pathlib.Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
+    old_raw = pathlib.Path(a.old_record).read_bytes()
+    assert sha(old_raw) == V0_1_1_SHA, "the record being superseded must be the published 0.1.1 bytes"
+    old = json.loads(old_raw)
+    old_rows_l = list(jl(a.old_rows))
+    assert sha(gz_bytes(old_rows_l)) == V0_1_1_ROWS_SHA == old["published_files"]["rows.v0.1.1.jsonl.gz"]["sha256"]
+    old_rows = {r["endpoint"]: r for r in old_rows_l}
+    repro = {"0.1 (commit d9e0f80)": _repro(a.repro_v01, V0_1_ROWS_SHA),
+             "0.1.1 (commit 4037f6b)": _repro(a.repro_v011, V0_1_1_ROWS_SHA)}
+    blob = subprocess.run(["git", "-C", HERE, "rev-parse", f"{a.fix_commit}:scripts/census/contract-parity.py"],
+                          capture_output=True, text=True, check=True).stdout.strip()
+    here = subprocess.run(["git", "-C", HERE, "hash-object", os.path.abspath(__file__)], capture_output=True, text=True, check=True).stdout.strip()
+    assert blob == here, "the fix commit does not carry this contract-parity.py"
+    fix_full = subprocess.run(["git", "-C", HERE, "rev-parse", a.fix_commit], capture_output=True, text=True, check=True).stdout.strip()
+    summ = json.loads((pathlib.Path(a.compare_dir) / "summary.json").read_text())
+    rows = list(jl(os.path.join(a.compare_dir, "rows.jsonl.gz")))
+    att = [r for r in rows if r["attempted"]]
+    dim = {d: {s_: sum(1 for r in att if r["dimensions"][d]["state"] == s_) for s_ in STATES} for d in DIMENSIONS}
+    assert dim == summ["dimension_states"], ("summary disagrees with rows", dim, summ["dimension_states"])
+    assert len(att) == summ["n_attempted"] == old["run"]["n_attempted"] and len(rows) == summ["n_planned"] == old["run"]["n_planned"]
+    assert {r["endpoint"] for r in rows} == set(old_rows), "same population"
+    any_inc = sum(1 for r in att if any(r["dimensions"][d]["state"] == "INCONSISTENT" for d in DIMENSIONS))
+    assert any_inc == summ["endpoints_with_any_inconsistent"]
+    unc = {d: collections.Counter(r["dimensions"][d]["reason"] for r in att if r["dimensions"][d]["state"] == "UNCHECKABLE") for d in DIMENSIONS}
+    assert all(dict(unc[d]) == summ["uncheckable_reasons"][d] for d in DIMENSIONS)
+    changes = []
+    for r in rows:
+        o = old_rows[r["endpoint"]]
+        for d in DIMENSIONS:
+            ov, nv = o["dimensions"][d], r["dimensions"][d]
+            if ov["state"] != nv["state"] or ov.get("reason") != nv.get("reason"):
+                cs = _causes012(ov, nv)
+                assert cs, ("a change with no 0.1.2 cause", r["endpoint"], d, ov, nv)
+                changes.append({"endpoint": r["endpoint"], "registry_ids": r["registry_ids"], "dimension": d,
+                                "from": ov["state"] + (f" ({ov['reason']})" if ov.get("reason") else ""),
+                                "to": nv["state"] + (f" ({nv['reason']})" if nv.get("reason") else ""), "cause": cs})
+    changed_rows = sorted({c["endpoint"] for c in changes})
+    vcheck = {}
+    for ep in VERSION_WATCH:
+        ov, nv = old_rows[ep]["dimensions"]["VERSION"], next(r for r in rows if r["endpoint"] == ep)["dimensions"]["VERSION"]
+        assert ov == nv, ("VERSION finding changed", ep)
+        vcheck[ep] = {"VERSION": nv["state"], "conflict": [f"{c['surface']} {c['path']} = {c['value']}" for c in nv.get("conflict") or []],
+                      "unchanged_from_0_1_1": True}
+    rb = gz_bytes(rows)
+    (out / "rows.v0.1.2.jsonl.gz").write_bytes(rb)
+    ev = pathlib.Path(a.evidence).read_bytes()
+    (out / "correction.v0.1.2.evidence.json").write_bytes(ev)
+    new = json.loads(old_raw)
+    new["schema"] = "csoai.mcp-contract-parity/0.1.2"
+    new["record_version"] = "0.1.2"
+    new["instrument"] = f"scripts/census/contract-parity.py {VERSION} (commit {fix_full})"
+    new["reclassified_utc"] = utcnow()
+    new["dimension_states"] = dim
+    for k in ("uncheckable_reasons", "inconsistent_pairs_top", "endpoints_with_any_inconsistent", "inconsistent_dimensions_per_endpoint",
+              "surface_fetch_states"):
+        new[k] = summ[k]
+    new["run"] = dict(old["run"], read_state=summ["read_state"], read_state_rule=summ["read_state_rule"], read_gaps=summ["read_gaps"],
+                      read_state_as_published_before_0_1_2="EXHAUSTED (0.1, 0.1.1: counted attempts only; relabelled in 0.1.2)")
+    new["version_namespaces"] = dict(old["version_namespaces"], counts=summ["version_other_namespaces"],
+                                     registry_version_vs_live_serverinfo=summ["registry_version_vs_live_serverinfo"])
+    new["watch_list"] = dict(old["watch_list"], results=summ["watch_list"])
+    own = [r for r in rows if r["endpoint"] == OWN_ENDPOINT]
+    new["own_result_first"] = dict(old["own_result_first"], row=own[0] if own else None)
+    new["published_files"] = {"rows.v0.1.2.jsonl.gz": {"sha256": sha(rb), "rows": len(rows)},
+                              "hold.jsonl.gz": old["published_files"]["hold.jsonl.gz"],
+                              "correction.v0.1.2.evidence.json": {"sha256": sha(ev)}}
+    if a.viewer_file:
+        vb = pathlib.Path(a.viewer_file).read_bytes()
+        (out / "rows.v0.1.2.viewer.parquet").write_bytes(vb)
+        new["published_files"]["rows.v0.1.2.viewer.parquet"] = {
+            "sha256": sha(vb), "rows": len(rows), "derived_from": "rows.v0.1.2.jsonl.gz",
+            "what": ("a typed copy for the dataset viewer: one column per scalar, version and date strings typed as strings, "
+                     "the full row in row_json (contract-parity.py viewer)")}
+    new["supersedes"] = {"record": "record.v0.1.1.json", "sha256": V0_1_1_SHA, "schema": old["schema"], "rows": "rows.v0.1.1.jsonl.gz",
+                         "rows_sha256": V0_1_1_ROWS_SHA, "built_at_commit": V0_1_1_COMMIT,
+                         "chain": [{"record": "record.v0.1.1.json", "sha256": V0_1_1_SHA},
+                                   {"record": "record.json", "sha256": V0_1_SHA}],
+                         "kept": ("every 0.1 and 0.1.1 file (records, signatures, proofs, rows) stays published byte for byte beside "
+                                  "this record: superseded, not deleted, not edited")}
+    new["corrections_history"] = {"0.1.1": old["correction"]}
+    new["correction"] = {
+        "record_version": "0.1.2",
+        "scope": "reclassification only: same plan, same stored surface fetches, same hold re-probe; no new network read",
+        "trigger": ("a maintainer-persona audit on 26 Sep 2026 (before any notice was sent) found three rules that misread: an "
+                    "asymmetric AUTH scope rule (html2img), a tool list compared exactly under declared auth without a public list "
+                    "(zensched), and unread surfaces counted as silence (251 rows) with a rate-limited run labelled EXHAUSTED. Each "
+                    "was reproduced from the stored 25 Sep bytes: correction.v0.1.2.evidence.json."),
+        "what_was_wrong": DEFECTS_012,
+        "fix": {"commit": fix_full, "file": "scripts/census/contract-parity.py", "instrument_version": VERSION,
+                "tests": ("scripts/census/test_contract_parity.py class Correction012: one fixture per rule with counter-cases that "
+                          "must stay INCONSISTENT; four must-fail controls each restore one 0.1.1 rule and fail the suite; the "
+                          "Correction012 fixtures also fail when run against the 0.1.1 producer")},
+        "inputs_identical": {"fetch.sqlite": a.inputs_sha["fetch.sqlite"], "plan.jsonl.gz": a.inputs_sha["plan.jsonl.gz"],
+                             "hold.jsonl.gz": a.inputs_sha["hold.jsonl.gz"]},
+        "reproduction_check": repro,
+        "reproduction_note": ("the 0.1 and 0.1.1 producers re-run over the same inputs reproduce their published rows byte for "
+                              "byte, so every difference below is the 0.1.2 producer change and nothing else"),
+        "rows_changed": {"n_rows": len(changed_rows), "n_dimension_changes": len(changes),
+                         "by_cause": dict(collections.Counter(c for x in changes for c in x["cause"])), "rows": changes},
+        "counts_before_after": {d: {"0.1.1": old["dimension_states"][d], "0.1.2": dim[d]} for d in DIMENSIONS},
+        "endpoints_with_any_inconsistent": {"0.1": old["correction"]["endpoints_with_any_inconsistent"]["0.1"],
+                                            "0.1.1": old["endpoints_with_any_inconsistent"], "0.1.2": summ["endpoints_with_any_inconsistent"]},
+        "version_findings_unaffected": vcheck,
+        "not_changed": "VERSION and PROTOCOL comparators; the plan; the population; every row not listed in rows_changed keeps its 0.1.1 states",
+        "original_stays_published": True,
+    }
+    new["verify"] = dict(old["verify"],
+                         signature=old["verify"]["signature"].replace("record.v0.1.1.signed.json", "record.v0.1.2.signed.json")
+                         .replace("sha256(record.v0.1.1.json)", "sha256(record.v0.1.2.json)"),
+                         timestamp=("record.v0.1.2.json.ots: OpenTimestamps over sha256(record.v0.1.2.json); its state at publication "
+                                    "is in record.v0.1.2.ots.json (a pending calendar commitment is not a Bitcoin attestation)"),
+                         supersedes="sha256(record.v0.1.1.json) must equal supersedes.sha256; the 0.1 and 0.1.1 files are unchanged")
+    changed = [k for k in set(new) | set(old) if new.get(k) != old.get(k)]
+    assert set(changed) <= {"schema", "record_version", "instrument", "reclassified_utc", "dimension_states", "uncheckable_reasons",
+                            "inconsistent_pairs_top", "endpoints_with_any_inconsistent", "inconsistent_dimensions_per_endpoint",
+                            "surface_fetch_states", "version_namespaces", "watch_list", "own_result_first", "published_files",
+                            "supersedes", "correction", "corrections_history", "verify", "run"}, changed
+    raw = (json.dumps(new, indent=1, sort_keys=True, ensure_ascii=False) + "\n").encode()
+    (out / "record.v0.1.2.json").write_bytes(raw)
+    print(json.dumps({"changed_keys": sorted(changed), "rows_changed": len(changed_rows), "dimension_changes": len(changes),
+                      "by_cause": new["correction"]["rows_changed"]["by_cause"], "dimension_states": dim,
+                      "any_inconsistent": new["correction"]["endpoints_with_any_inconsistent"], "read_state": summ["read_state"]}, indent=1))
+    print(f"record.v0.1.2.json {len(raw)} bytes sha256={sha(raw)}")
+
+
+# ---------------------------------------------------------------- 0.1.2: signing helper, first-party probe, publication
+PROBE_PUBLIC_KEYS = ["rank", "ranked_by", "endpoint", "host", "state", "reason", "http_status", "transport", "protocol_version",
+                     "tools_list_status", "tools_complete", "n_tools", "tool_names_sha256", "started", "finished"]
+FIRSTPARTY = "census-firstparty-2026-09-25"
+UA_VERIFY = "CSOAI-verify/0.1 (+https://huggingface.co/csoai)"
+
+
+def _board_sign(payload, token_path, alts):
+    """POST payload to board-sign; verify locally under #board-attestation-1; every altered preimage must be rejected."""
+    from cryptography.hazmat.primitives.asymmetric import ed25519
+    tok = pathlib.Path(os.path.expanduser(token_path)).read_text().strip()
+    canon_b = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    assert len(canon_b) <= 3072, f"payload {len(canon_b)} bytes > 3072"
+    req = urllib.request.Request("https://councilof.ai/api/board-sign", data=json.dumps({"payload": payload}).encode(),
+                                 headers={"content-type": "application/json", "authorization": "Bearer " + tok,
+                                          "user-agent": "Mozilla/5.0 csoai-pod-signer"})
+    r = json.load(urllib.request.urlopen(req, timeout=40))
+    assert r["payload_sha256"] == sha(canon_b), "preimage mismatch"
+    did = json.load(urllib.request.urlopen(urllib.request.Request("https://csoai.org/.well-known/did.json",
+                                                                  headers={"user-agent": UA_VERIFY}), timeout=20))
+    x = [m for m in did["verificationMethod"] if m["id"].endswith("#board-attestation-1")][0]["publicKeyJwk"]["x"]
+    pk = ed25519.Ed25519PublicKey.from_public_bytes(base64.urlsafe_b64decode(x + "=="))
+    pk.verify(bytes.fromhex(r["sig_ed25519"]), canon_b)
+    controls = {}
+    for name, f in alts:
+        altered = f(canon_b)
+        assert altered != canon_b, name
+        try:
+            pk.verify(bytes.fromhex(r["sig_ed25519"]), altered)
+            controls[name] = "VERIFIED (CONTROL FAILED)"
+        except Exception:
+            controls[name] = "rejected (control holds)"
+    if any("FAILED" in v for v in controls.values()):
+        sys.exit(f"CONTROL FAILED: {controls}")
+    return {"schema": "csoai.signed-run/0.1", "payload": payload,
+            "signature": {"did": r["did"], "alg": "Ed25519", "sig_ed25519": r["sig_ed25519"], "payload_sha256": r["payload_sha256"],
+                          "canonical": "JSON.stringify of key-sorted object, UTF-8", "signer_auth": r.get("signer_auth"),
+                          "signed_at": r.get("signed_at")},
+            "local_verification": {"did_document": "https://csoai.org/.well-known/did.json", "result": "VERIFIES",
+                                   "altered_preimage_controls": controls}}
+
+
+def probe_record(a):
+    """probe/: the first-party census probe (census-firstparty-2026-09-25) that most parity rows cite as their live answer,
+    projected to the same public fields as csoai/mcp-remote-census (no tool names, descriptions or serverInfo), each row
+    admitted only if the rights gate allows MEASURE_PUBLIC for a registry listing that advertises it and no exclusion
+    names it. Writes the files + probe/record.firstparty-2026-09-25.json, then signs it and stamps it."""
+    src, out = pathlib.Path(a.probe_src), pathlib.Path(a.out)
+    pd = out / "probe"
+    pd.mkdir(parents=True, exist_ok=True)
+    plan = {r["endpoint"]: r for r in jl(src / "plan-firstparty.jsonl.gz")}
+    gate = {}
+    for d in jl(a.rights_decisions):
+        if d.get("source") == "mcp-registry":
+            gate[d["id"]] = (d.get("gates") or {}).get("MEASURE_PUBLIC", {}).get("state")
+    excl = P.load_exclusions(getattr(a, "exclusions", None))
+    res = sorted(jl(src / "results.jsonl.gz"), key=lambda r: r["rank"])
+    na = sorted(jl(src / "not_attempted.jsonl.gz"), key=lambda r: r["rank"])
+    pub, withheld = [], collections.Counter()
+
+    def admit(ep):
+        if P.excluded(ep, excl):
+            return "excluded at the operator's request"
+        pubs = (plan.get(ep) or {}).get("publishers") or []
+        states = [gate.get(p.get("registry_name")) for p in pubs]
+        if not states:
+            return "no registry listing in the plan"
+        if "RESTRICTED" in states:
+            return "rights gate RESTRICTED for a listing"
+        if "ALLOWED" not in states:
+            return "rights gate has no MEASURE_PUBLIC decision"
+        return None
+    for r in res:
+        why = admit(r["endpoint"])
+        if why:
+            withheld[why] += 1
+            continue
+        pub.append({k: r.get(k) for k in PROBE_PUBLIC_KEYS})
+    pub_na = []
+    for r in na:
+        why = admit(r["endpoint"])
+        if why:
+            withheld["not attempted; " + why] += 1
+            continue
+        pub_na.append({"rank": r["rank"], "ranked_by": r["ranked_by"], "endpoint": r["endpoint"], "state": "NOT_ATTEMPTED",
+                       "reason": r["not_attempted"]})
+    files = {}
+    for name, blob in ((f"probe/{FIRSTPARTY}.results.public.jsonl.gz", gz_bytes(pub)),
+                       (f"probe/{FIRSTPARTY}.not_attempted.jsonl.gz", gz_bytes(pub_na)),
+                       (f"probe/{FIRSTPARTY}.summary.json", (src / "summary.json").read_bytes()),
+                       (f"probe/{FIRSTPARTY}.plan.json", (src / "plan-firstparty.json").read_bytes())):
+        (out / name).write_bytes(blob)
+        files[name] = {"sha256": sha(blob), "bytes": len(blob)}
+    files[f"probe/{FIRSTPARTY}.results.public.jsonl.gz"]["rows"] = len(pub)
+    files[f"probe/{FIRSTPARTY}.not_attempted.jsonl.gz"]["rows"] = len(pub_na)
+    # every parity row that cites this probe must match the published probe row on the fields it uses
+    byep = {r["endpoint"]: r for r in pub}
+    cite, match, diff = 0, 0, []
+    for r in jl(a.parity_rows):
+        lv = r["live"]
+        if lv.get("probe_source") != FIRSTPARTY:
+            continue
+        cite += 1
+        p = byep.get(r["endpoint"])
+        keys = ("state", "http_status", "protocol_version", "n_tools", "tools_complete", "tools_list_status", "tool_names_sha256", "finished")
+        if p and all(p.get(k) == lv.get(k) for k in keys):
+            match += 1
+        else:
+            diff.append(r["endpoint"])
+    assert not diff, ("parity rows citing the probe do not match its public rows", diff[:5])
+    summ = json.loads((src / "summary.json").read_text())
+    rec = {"schema": "csoai.census-probe-publication/0.1", "as_of": summ["finished"], "published_utc": utcnow(),
+           "what": ("the first-party read of the 25 Sep 2026 remote MCP census probe (plan: endpoints whose host's registrable "
+                    "domain matches the publishing registry entry's namespace or GitHub owner). csoai/mcp-contract-parity rows "
+                    f"with live.probe_source = {FIRSTPARTY} take their live answer from these rows."),
+           "probe": {"schema": summ.get("schema"), "started": summ["started"], "finished": summ["finished"],
+                     "user_agent": summ.get("user_agent"), "n_planned": summ["n_planned"], "n_attempted": summ["n_attempted"],
+                     "read_state": summ["read_state"], "states": summ.get("states"), "plan_rule": (summ.get("plan") or {}).get("rule"),
+                     "never_sent": summ.get("never_sent")},
+           "public_fields": PROBE_PUBLIC_KEYS,
+           "not_published": "tool names, tool descriptions, serverInfo, capabilities, raw exchanges, response bodies",
+           "rights_gate": {"decisions": os.path.basename(a.rights_decisions), "decisions_sha256": fsha(a.rights_decisions),
+                           "purpose": "MEASURE_PUBLIC", "rule": ("a row is published only if a registry listing that advertises the "
+                                                                 "endpoint has MEASURE_PUBLIC ALLOWED and none RESTRICTED, and no "
+                                                                 "exclusion names it"),
+                           "rows_published": len(pub), "not_attempted_published": len(pub_na), "withheld": dict(withheld)},
+           "exclusions": {"file": "scripts/census/probe-exclusions.json", "entries": len(excl)},
+           "cited_by_parity": {"record": "record.v0.1.2.json", "rows_citing": cite, "rows_matching_on_live_fields": match},
+           "published_files": files,
+           "verify": {"signature": ("probe/record.firstparty-2026-09-25.signed.json: canonicalise payload (JSON, keys sorted, no "
+                                    "whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal "
+                                    "sha256(probe/record.firstparty-2026-09-25.json); verify sig_ed25519 with #board-attestation-1 in "
+                                    "https://csoai.org/.well-known/did.json"),
+                      "timestamp": "probe/record.firstparty-2026-09-25.json.ots: OpenTimestamps; pending calendar commitment at publication"}}
+    raw = (json.dumps(rec, indent=1, sort_keys=True, ensure_ascii=False) + "\n").encode()
+    rn = f"probe/record.firstparty-2026-09-25.json"
+    (out / rn).write_bytes(raw)
+    payload = {"schema": "csoai.signed-artifact/0.1",
+               "artifact": {"path": "/interop/mcp-contract-parity-2026-09-25/" + rn, "sha256": sha(raw), "schema": rec["schema"],
+                            "as_of": rec["as_of"]},
+               "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+               "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim inside beyond what the probe measured.",
+               "read_state": rec["probe"]["read_state"], "n_planned": rec["probe"]["n_planned"], "n_attempted": rec["probe"]["n_attempted"],
+               "rows_published": len(pub), "published_files": {k: v["sha256"] for k, v in files.items()}}
+    rsha = sha(raw)
+    doc = _board_sign(payload, a.token, [("trailing byte appended", lambda b: b + b" "),
+                                          ("record sha256 altered", lambda b: b.replace(rsha.encode(), b"0" * 64)),
+                                          ("row count altered", lambda b: b.replace(f'"rows_published":{len(pub)}'.encode(),
+                                                                                    f'"rows_published":{len(pub) + 1}'.encode()))])
+    (out / "probe/record.firstparty-2026-09-25.signed.json").write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+    print(json.dumps({"rows_published": len(pub), "not_attempted": len(pub_na), "withheld": dict(withheld), "parity_citing": cite,
+                      "matching": match, "record_sha256": rsha, "controls": doc["local_verification"]["altered_preimage_controls"]}, indent=1))
+
+
+CONTACT_MD = """## Contact, objections and re-checks
+
+- **Contact:** nicholas@csoai.org (Council of AI / CSOAI). Please name this dataset and the endpoint, card or row you mean.
+- **Ask for a re-check.** Reply with the endpoint (or card URL). We re-measure it with the same read-only instrument and run a
+  tamper control beside it (a deliberately altered copy must fail the same check, or the re-check does not count). A dated
+  re-check record is published only with your knowledge. Published rows are never edited in place: a correction is a new,
+  signed file that supersedes the old one, and both stay visible.
+- **Object, or opt out of future probing.** Name the endpoint or host. It is added to the exclusion list
+  (`scripts/census/probe-exclusions.json` in the census code, dated, public), which the next run honours before sending any
+  request (no robots.txt fetch, no discovery call) and records the skip by name. {enforcement}
+- **Objections are recorded.** Every objection, opt-out and re-check request is logged with its date and what was done;
+  nothing is removed silently.
+
+<!-- OWNER: add acknowledgement time commitment if desired -->
+"""
+ENFORCED_MCP = ("The list is enforced in code by the MCP probe (`mcp-remote-probe.py`) and by `contract-parity.py`, with a "
+                "test and a must-fail control.")
+
+
+def verify_md(record, signed, ots, pending_note):
+    return f"""## How to verify
+
+**Signature.** In `{signed}`: serialise `payload` as JSON with keys sorted, no whitespace, UTF-8; its sha256 must equal
+`signature.payload_sha256`; `payload.artifact.sha256` must equal sha256 of `{record}`; verify `signature.sig_ed25519` (hex)
+with the Ed25519 key `#board-attestation-1` in https://csoai.org/.well-known/did.json. Change one byte of the payload and it
+must fail. csoai.org answers 403 to Python's default User-Agent, so the snippet sends a named one.
+
+```python
+import json, hashlib, base64, urllib.request
+from cryptography.hazmat.primitives.asymmetric import ed25519
+UA = {{"User-Agent": "csoai-dataset-verify/1.0 (+https://huggingface.co/csoai)"}}
+s = json.load(open("{signed}"))
+c = json.dumps(s["payload"], sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+assert hashlib.sha256(c).hexdigest() == s["signature"]["payload_sha256"]
+assert hashlib.sha256(open("{record}", "rb").read()).hexdigest() == s["payload"]["artifact"]["sha256"]
+did = json.load(urllib.request.urlopen(urllib.request.Request("https://csoai.org/.well-known/did.json", headers=UA)))
+x = [m for m in did["verificationMethod"] if m["id"].endswith("#board-attestation-1")][0]["publicKeyJwk"]["x"]
+ed25519.Ed25519PublicKey.from_public_bytes(base64.urlsafe_b64decode(x + "==")).verify(bytes.fromhex(s["signature"]["sig_ed25519"]), c)
+print("signature verifies")
+```
+
+**Timestamp.** A full `ots verify` needs a Bitcoin node. Without one (`pip install opentimestamps-client`):
+
+```sh
+ots --no-bitcoin verify -f {record} {ots}
+# -> "To verify manually, check that Bitcoin block H has merkleroot M" (one line per attestation)
+```
+
+then check each block's merkle root against a public block explorer (two independent ones is better):
+
+```sh
+H=<height>; B=$(curl -s -A "csoai-dataset-verify/1.0" https://mempool.space/api/block-height/$H)
+curl -s -A "csoai-dataset-verify/1.0" https://mempool.space/api/block/$B | python3 -c 'import sys,json;print(json.load(sys.stdin)["merkle_root"])'
+# repeat with https://blockstream.info/api/... ; the value must equal M
+```
+
+{pending_note}
+"""
+
+
+def _front(configs_yaml, extra=""):
+    return ("---\nlicense: cc-by-4.0\npretty_name: MCP contract parity (25 Sep 2026; current record 0.1.2)\n"
+            "tags: [mcp, model-context-protocol, measurement, interoperability, x402, a2a]\n" + configs_yaml + extra + "---\n")
+
+
+def readme012(out, old_readme, file_shas, configs_yaml, ots_state, probe_rec):
+    rec = json.loads((out / "record.v0.1.2.json").read_text())
+    signed = json.loads((out / "record.v0.1.2.signed.json").read_text())
+    side = json.loads((out / "record.v0.1.2.ots.json").read_text())
+    rsha = fsha(out / "record.v0.1.2.json")
+    c, run = rec["correction"], rec["run"]
+    dim_tbl = "\n".join(f"| {d} | " + " | ".join(str(rec["dimension_states"][d][s_]) for s_ in STATES) + " |" for d in DIMENSIONS)
+    unc = "\n".join(f"- **{d}**: " + ", ".join(f"`{k}` {v}" for k, v in rec["uncheckable_reasons"][d].items()) for d in DIMENSIONS
+                    if rec["uncheckable_reasons"][d])
+    own = rec["own_result_first"]["row"]
+    own_tbl = "\n".join(f"| {d} | {own['dimensions'][d]['state']} | {clip(own['dimensions'][d].get('reason') or own['dimensions'][d].get('detail') or '', 200)} |"
+                        for d in DIMENSIONS) if own else "| - | not in plan | |"
+    ba = "\n".join(f"| {d} | " + " | ".join(f"{c['counts_before_after'][d]['0.1.1'][s_]} → {c['counts_before_after'][d]['0.1.2'][s_]}"
+                                             for s_ in STATES) + " |" for d in DIMENSIONS)
+    rws = "\n".join(f"| `{x['endpoint']}` | {', '.join(x['registry_ids'][:2])} | {x['dimension']} | {x['from']} | {x['to']} | {', '.join(x['cause'])} |"
+                    for x in c["rows_changed"]["rows"])
+    dfs = "\n".join(f"- **{k}** ({v['dimension']}). 0.1.1: {v['rule_0_1_1']}. Why wrong: {v['why_wrong']} 0.1.2: {v['rule_0_1_2']}."
+                    for k, v in c["what_was_wrong"].items())
+    vf = "\n".join(f"- `{ep}`: VERSION {v['VERSION']} ({'; '.join(v['conflict'])}) — unchanged from 0.1.1" for ep, v in c["version_findings_unaffected"].items())
+    gaps = run["read_gaps"]
+    role = lambda f: ("current" if "v0.1.2" in f or f.startswith("probe/") or f in ("ots-bitcoin-check-2026-09-26.json",) else
+                      "0.1.1 (superseded)" if "v0.1.1" in f else "HOLD watcher" if f == "hold.jsonl.gz" else
+                      "README" if f == "README.md" else "0.1 (superseded)")
+    ftbl = "\n".join(f"| `{f}` | {role(f)} | `{h}` |" for f, h in sorted(file_shas.items()))
+    ai = c["endpoints_with_any_inconsistent"]
+    # the 0.1 card (everything before its Corrections) and the 0.1.1 Corrections section, kept verbatim
+    body = old_readme.split("\n---\n", 1)[1] if old_readme.startswith("---\n") else old_readme
+    head011, corr011 = body.split("\n## Corrections\n", 1)
+    corr011 = corr011.strip("\n")
+    hold = rec.get("hold") or {}
+    hold_tbl = "\n".join(f"| {k} | {v} |" for k, v in hold.get("counts", {}).items())
+    pr = probe_rec
+    md = _front(configs_yaml) + f"""
+> **Current record: 0.1.2** (26 Sep 2026) — `record.v0.1.2.json`, sha256 `{rsha}`, signed {signed['signature'].get('signed_at')}.
+> It supersedes `record.v0.1.1.json` (0.1.1, sha256 `{V0_1_1_SHA}`), which superseded `record.json` (0.1, sha256
+> `{V0_1_SHA}`). Both stay published byte for byte. **Every figure above the Corrections section is 0.1.2**; the
+> dataset viewer loads the 0.1.2 rows. Earlier card text is kept verbatim at the end, collapsed.
+
+# MCP contract parity — measured read, 25 September 2026 (record 0.1.2)
+
+**Question.** Does one remote MCP service tell a relying agent **one** current contract? A relying agent learns a
+service's contract from several public surfaces — the MCP Registry entry, `/.well-known/mcp.json`, the server card,
+the A2A agent card, the x402 manifest, and what the endpoint itself answers at discovery. When they disagree, the
+agent cannot infer which one is current. This dataset records, per endpoint and per dimension, whether they agree.
+
+Measurement, not certification. Nothing here grades a vendor. An `INCONSISTENT` row says two public statements
+disagree and quotes both; it does not say which is right.
+
+## Our own endpoint first (0.1.2)
+
+| dimension | state | detail |
+|---|---|---|
+{own_tbl}
+
+## Read state: **{run['read_state']}**
+
+{run['n_attempted']} of {run['n_planned']} planned endpoints attempted, but not every surface answered:
+{gaps['endpoints_with_an_unread_surface']} endpoints had at least one surface read that did not answer
+({gaps['endpoints_with_a_429_stop']} of them behind an HTTP 429 stop), by state: {', '.join(f'{k} {v}' for k, v in gaps['surface_reads_unread_by_state'].items())}.
+Rule: {run['read_state_rule']}. Records 0.1 and 0.1.1 said EXHAUSTED; that label counted attempts only.
+Population: {', '.join(f'{k} {v}' for k, v in run['population'].items())}. {run['population_note']}
+
+## Per-dimension states, 0.1.2 (attempted endpoints)
+
+| dimension | CONSISTENT | INCONSISTENT | SINGLE_SURFACE | UNCHECKABLE |
+|---|---|---|---|---|
+{dim_tbl}
+
+Endpoints with at least one INCONSISTENT dimension: **{ai['0.1.2']}** (0.1.1: {ai['0.1.1']}; 0.1: {ai['0.1']}).
+
+UNCHECKABLE, by reason:
+{unc}
+
+## Method (0.1.2)
+
+Surfaces, fetched GET-only from each endpoint's origin (robots.txt honoured for the product token `CSOAI-census`,
+at most one connection and one request per second per host, User-Agent `CSOAI-census/0.1 (+https://councilof.ai/census)`):
+`/.well-known/mcp.json`, `/.well-known/mcp/server-card.json` (and any server-card URL the registry entry declares),
+`/.well-known/agent-card.json`, `/.well-known/x402.json`, and a `/health` or `/version` URL **only** when the registry
+entry or a fetched surface names it. Registry entries come from the census frame's full read of the official MCP Registry;
+live answers come from the same day's read-only census probe (the first-party part is published under `probe/`, below).
+No tool was called, no credential or payment sent.
+
+- **Attribution.** An origin-level document is credited to an endpoint only if the origin serves one server in the census
+  frame and the document does not describe another endpoint mount there, or the document names the endpoint.
+- **VERSION** — registry `server.version`, live `serverInfo.version` and card `serverInfo.version` only (the registry schema
+  defines them as the same thing); every other version string is recorded, not adjudicated.
+- **TOOLS** — declared tool lists / counts vs the live credential-free `tools/list`. Compared as supersets when a surface names
+  a public tool list, or when auth is declared required (`SUBSET_UNDER_AUTH` if the declaration holds every live tool and more);
+  a bare count above live with a live dispatcher tool is not compared.
+- **AUTH** — a registry remote header's `isRequired` and a card's `authentication.required` are claims of different scope, in
+  both directions; they are adjudicated only through the observed discovery boundary (`DECLARED_SCOPES_DIFFER` otherwise).
+- **PAYMENT** — presence parity only. **PROTOCOL** — declared MCP protocol versions vs the negotiated one.
+- **Unread surfaces** — a dimension that only one surface speaks to, while another surface that could speak was tried and did
+  not answer, is `UNCHECKABLE (SURFACE_UNREAD)`, not `SINGLE_SURFACE`.
+
+## HOLD watcher
+
+Every server whose registry `server.version` changed between reads is listed in `hold.jsonl.gz`, re-probed where possible:
+
+| | n |
+|---|---|
+{hold_tbl}
+
+## What this does NOT show
+
+""" + "\n".join(f"- {x}" for x in rec["what_it_does_not_show"]) + f"""
+
+## Files (sha256)
+
+| file | status | sha256 |
+|---|---|---|
+{ftbl}
+
+Rows carry quoted values for conflicts only; tool names appear only as sha256 digests, counts, and at most 5 differing
+names where a declared list and the live list disagree.
+
+## First-party probe (`probe/`)
+
+{pr['cited_by_parity']['rows_citing']} of the {run['n_planned']} parity rows take their live answer from the first-party
+census probe (`live.probe_source` = `{FIRSTPARTY}`). It is published here so that evidence is visible:
+`probe/{FIRSTPARTY}.results.public.jsonl.gz` ({pr['rights_gate']['rows_published']} attempted endpoints) and
+`probe/{FIRSTPARTY}.not_attempted.jsonl.gz` ({pr['rights_gate']['not_attempted_published']}), with the probe's own summary
+and plan metadata. Same public fields as `csoai/mcp-remote-census`: {', '.join(f'`{k}`' for k in pr['public_fields'])}.
+Not published: {pr['not_published']}. Rights gate (`MEASURE_PUBLIC`): {pr['rights_gate']['rule']}; withheld:
+{pr['rights_gate']['withheld'] or 'none'}. All {pr['cited_by_parity']['rows_matching_on_live_fields']} citing parity rows match their
+probe row on every live field they use. Signed record: `probe/record.firstparty-2026-09-25.json` (+ `.signed.json`, `.json.ots`).
+
+""" + verify_md("record.v0.1.2.json", "record.v0.1.2.signed.json", "record.v0.1.2.json.ots",
+                f"At publication `record.v0.1.2.json.ots` held {len(side['attestations'])} pending calendar attestations: "
+                "a pending calendar commitment, not a Bitcoin attestation.") + f"""
+## Timestamp status
+
+A pending `.ots` is never rewritten: an upgraded proof is published as a NEW file `<name>.bitcoin.ots` beside it.
+BITCOIN_ATTESTED means each BitcoinBlockHeaderAttestation's commitment equals the merkle root of the block header at that
+height as served by two independent public sources (blockstream.info, mempool.space), and each raw header double-SHA256s to
+the block hash it is served under. No local Bitcoin node was used.
+
+{ots_state}
+
+""" + CONTACT_MD.format(enforcement=ENFORCED_MCP) + f"""
+## Citation
+
+```bibtex
+@misc{{csoai_mcp_contract_parity_2026,
+  author       = {{{{Council of AI (CSOAI)}}}},
+  title        = {{MCP contract parity: measured read of 2026-09-25, record 0.1.2}},
+  year         = {{2026}},
+  publisher    = {{Hugging Face}},
+  howpublished = {{\\url{{https://huggingface.co/datasets/{HF_REPO}}}}},
+  note         = {{record.v0.1.2.json sha256 {rsha}}}
+}}
+```
+
+## Licence
+
+CC-BY-4.0. Cite as: Council of AI (CSOAI), *MCP contract parity, measured read 2026-09-25, record 0.1.2*, csoai/mcp-contract-parity.
+
+## Sibling censuses
+
+- [csoai/mcp-remote-census](https://huggingface.co/datasets/csoai/mcp-remote-census) — the read-only remote MCP probe (top-20% plan).
+
+## Corrections
+
+### 0.1.2 — 26 September 2026 (supersedes `record.v0.1.1.json`; the 0.1 and 0.1.1 files stay published unchanged)
+
+**Scope:** {c['scope']}. **Why.** {c['trigger']}
+
+**What was wrong, and the fix** (producer `scripts/census/contract-parity.py` {c['fix']['instrument_version']}, commit `{c['fix']['commit']}`):
+{dfs}
+
+**Check.** {c['reproduction_note']}. Tests: {c['fix']['tests']}.
+
+**VERSION findings re-checked:**
+{vf}
+
+**Counts, 0.1.1 → 0.1.2** (attempted endpoints; recomputed from the rows):
+
+| dimension | CONSISTENT | INCONSISTENT | SINGLE_SURFACE | UNCHECKABLE |
+|---|---|---|---|---|
+{ba}
+
+Endpoints with at least one INCONSISTENT dimension: {ai['0.1.1']} → {ai['0.1.2']}.
+
+<details><summary><b>Every changed dimension state, by endpoint: {c['rows_changed']['n_rows']} endpoints, {c['rows_changed']['n_dimension_changes']} states</b> (by cause: {', '.join(f'{k} {v}' for k, v in c['rows_changed']['by_cause'].items())})</summary>
+
+| endpoint | registry id | dimension | 0.1.1 | 0.1.2 | cause |
+|---|---|---|---|---|---|
+{rws}
+
+</details>
+
+{corr011}
+
+<details><summary><b>Earlier card text (0.1, 25 Sep 2026), kept verbatim — its figures are superseded</b></summary>
+
+{head011.strip()}
+
+</details>
+"""
+    return md
+
+
+def publish012(a):
+    """One commit to csoai/mcp-contract-parity: the 0.1.2 files, the probe/ files, the upgraded proofs, and the re-rendered
+    README (+ configs). Refuses to overwrite anything; every file already there is byte-identical before and after."""
+    from huggingface_hub import HfApi, hf_hub_download, CommitOperationAdd
+    out = pathlib.Path(a.out)
+    tok = pathlib.Path(os.path.expanduser(a.hf_token)).read_text().strip()
+    api = HfApi(token=tok)
+    new = {f: str(out / f) for f in ["record.v0.1.2.json", "record.v0.1.2.signed.json", "record.v0.1.2.json.ots",
+                                      "record.v0.1.2.ots.json", "rows.v0.1.2.jsonl.gz", "correction.v0.1.2.evidence.json"]}
+    for f in json.loads((out / "record.v0.1.2.json").read_text())["published_files"]:
+        if f != "hold.jsonl.gz":
+            new.setdefault(f, str(out / f))
+    for x in a.extra:
+        k, v = x.split("=", 1)
+        new[k] = v
+    info = api.dataset_info(HF_REPO)
+    have = {x.rfilename for x in info.siblings}
+    clash = set(new) & have
+    assert not clash, ("REFUSED: would overwrite", sorted(clash))
+    keep = sorted(have - {".gitattributes", "README.md"})
+
+    def hashes(rev):
+        return {f: sha(pathlib.Path(hf_hub_download(HF_REPO, f, repo_type="dataset", token=tok, revision=rev, force_download=True)).read_bytes())
+                for f in keep}
+    before = hashes(info.sha)
+    assert before["record.json"] == V0_1_SHA and before["record.v0.1.1.json"] == V0_1_1_SHA
+    assert before["rows.jsonl.gz"] == V0_1_ROWS_SHA and before["rows.v0.1.1.jsonl.gz"] == V0_1_1_ROWS_SHA
+    readme_old = pathlib.Path(hf_hub_download(HF_REPO, "README.md", repo_type="dataset", token=tok, revision=info.sha, force_download=True)).read_text()
+    shas = dict(before)
+    shas.update({f: fsha(p) for f, p in new.items()})
+    probe_rec = json.loads(pathlib.Path(new["probe/record.firstparty-2026-09-25.json"]).read_text())
+    md = readme012(out, readme_old, shas, pathlib.Path(a.card_yaml).read_text(), pathlib.Path(a.ots_state).read_text().strip(), probe_rec)
+    (out / "README.v0.1.2.md").write_text(md)
+    if a.dry_run:
+        print(json.dumps({"dry_run": True, "parent": info.sha, "add": sorted(new), "readme_chars": len(md)}, indent=1))
+        return
+    ops = [CommitOperationAdd(path_in_repo=f, path_or_fileobj=p) for f, p in sorted(new.items())]
+    ops.append(CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=str(out / "README.v0.1.2.md")))
+    ci = api.create_commit(HF_REPO, operations=ops, repo_type="dataset", parent_commit=info.sha,
+                           commit_message=("correction 0.1.2: record.v0.1.2 supersedes 0.1.1 (kept byte for byte); first-party probe "
+                                           "under probe/; v0.1.1 Bitcoin-attested proof; README: current figures on top, configs, contact"))
+    oid = ci.oid
+    after = hashes(oid)
+    assert after == before, "a 0.1 / 0.1.1 file changed"
+    for f, p in new.items():
+        got = sha(pathlib.Path(hf_hub_download(HF_REPO, f, repo_type="dataset", token=tok, revision=oid, force_download=True)).read_bytes())
+        assert got == fsha(p), f
+    rm = pathlib.Path(hf_hub_download(HF_REPO, "README.md", repo_type="dataset", token=tok, revision=oid, force_download=True)).read_text()
+    assert rm == md
+    res = {"hf_commit": oid, "parent": info.sha, "added": {f: fsha(p) for f, p in new.items()},
+           "unchanged_byte_identical": before, "readme": "re-rendered: 0.1.2 on top; 0.1.1 Corrections and the 0.1 card kept verbatim below"}
+    (out / "publish-0.1.2.json").write_text(json.dumps(res, indent=1) + "\n")
+    print(json.dumps({"hf_commit": oid, "parent": info.sha, "added": len(new)}, indent=1))
+
+
+# ---------------------------------------------------------------- 0.1.2: a typed viewer copy of the current rows
+VIEWER_LIVE = (("state", "string"), ("http_status", "int64"), ("protocol_version", "string"),
+               ("protocol_version_requested", "string"), ("n_tools", "int64"), ("tools_complete", "bool"),
+               ("tools_list_status", "string"), ("tool_names_sha256", "string"), ("server_version", "string"),
+               ("probe_source", "string"), ("finished", "string"))
+
+
+def viewer_columns():
+    cols = [("endpoint", "string"), ("host", "string"), ("inclusion", "string"), ("in_watch_list", "bool"), ("own_estate", "bool"),
+            ("shared_origin", "bool"), ("attempted", "bool"), ("registry_ids", "string")]
+    cols += [(f"live_{k}", t) for k, t in VIEWER_LIVE]
+    for d in DIMENSIONS:
+        cols += [(f"{d}_state", "string"), (f"{d}_reason", "string"), (f"{d}_detail", "string")]
+    cols += [("row_json", "string")]
+    return cols
+
+
+def viewer_rows(rows):
+    out = []
+    for r in rows:
+        v = {"endpoint": r["endpoint"], "host": r["host"], "inclusion": r["inclusion"], "in_watch_list": r["in_watch_list"],
+             "own_estate": r["own_estate"], "shared_origin": r["shared_origin"], "attempted": r["attempted"],
+             "registry_ids": " ".join(r["registry_ids"])}
+        for k, t in VIEWER_LIVE:
+            x = r["live"].get(k)
+            v[f"live_{k}"] = None if x is None else (str(x) if t == "string" else x)
+        for d in DIMENSIONS:
+            dv = r["dimensions"][d]
+            v[f"{d}_state"], v[f"{d}_reason"] = dv["state"], dv.get("reason")
+            v[f"{d}_detail"] = dv.get("detail") or (" vs ".join(f"{c['surface']} {c['path']} = {c['value']}" for c in dv["conflict"])
+                                                    if dv.get("conflict") else None)
+        v["row_json"] = json.dumps(r, sort_keys=True, ensure_ascii=False)
+        out.append(v)
+    return out
+
+
+def viewer(a):
+    """rows.v0.1.2.viewer.parquet: the same rows as rows.v0.1.2.jsonl.gz, one column per scalar, every version / date string
+    typed as a string (a JSON reader infers "2025-11-25" as a timestamp), and the full row kept losslessly in row_json.
+    Also writes the README `configs:` + `dataset_info:` YAML that points the viewer at it."""
+    import pyarrow as pa, pyarrow.parquet as pq
+    rows = list(jl(a.rows))
+    cols = viewer_columns()
+    types = {"string": pa.string(), "int64": pa.int64(), "bool": pa.bool_()}
+    schema = pa.schema([(n, types[t]) for n, t in cols])
+    vr = viewer_rows(rows)
+    t = pa.Table.from_pylist(vr, schema=schema)
+    assert [json.loads(x) for x in t.column("row_json").to_pylist()] == rows, "row_json must reproduce the rows exactly"
+    buf = io.BytesIO()
+    pq.write_table(t, buf, compression="zstd", row_group_size=2000)
+    b = buf.getvalue()
+    pathlib.Path(a.out, "rows.v0.1.2.viewer.parquet").write_bytes(b)
+    back = pq.read_table(io.BytesIO(b))
+    assert back.schema.equals(schema) and back.num_rows == len(rows)
+    yml = ("configs:\n- config_name: rows-v0.1.2\n  default: true\n  data_files: rows.v0.1.2.viewer.parquet\n"
+           "dataset_info:\n- config_name: rows-v0.1.2\n  features:\n" +
+           "".join(f"  - name: {n}\n    dtype: {t_}\n" for n, t_ in cols) +
+           f"  splits:\n  - name: train\n    num_examples: {len(rows)}\n")
+    pathlib.Path(a.out, "card.v0.1.2.yaml").write_text(yml)
+    print(json.dumps({"rows": len(rows), "columns": len(cols), "sha256": sha(b), "bytes": len(b)}))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("cmd", nargs="?", choices=["plan", "collect", "compare", "build", "sign", "ots", "readme", "correct",
-                                               "publish-correction"])
+                                               "publish-correction", "correct-0.1.2", "probe-record",
+                                               "publish-0.1.2", "viewer"])
     ap.add_argument("--record", default="record.json")
     ap.add_argument("--old-record")
     ap.add_argument("--old-rows")
@@ -2004,6 +2843,17 @@ def main(argv=None):
     ap.add_argument("--evidence")
     ap.add_argument("--inputs-sha", type=lambda p: {pathlib.Path(l.split()[1]).name: l.split()[0] for l in open(p) if l.strip()})
     ap.add_argument("--hf-token", default="~/.secrets/hf_token")
+    ap.add_argument("--repro-v01")
+    ap.add_argument("--probe-src")
+    ap.add_argument("--card-yaml")
+    ap.add_argument("--rows")
+    ap.add_argument("--viewer-file")
+    ap.add_argument("--ots-state")
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--rights-decisions")
+    ap.add_argument("--parity-rows")
+    ap.add_argument("--extra", action="append", default=[], help="published_path=local_path added to the 0.1.2 commit")
+    ap.add_argument("--repro-v011")
     ap.add_argument("--probe", action="append", default=[])
     ap.add_argument("--registry-raw")
     ap.add_argument("--frame")
@@ -2020,6 +2870,7 @@ def main(argv=None):
     ap.add_argument("--connect-timeout", type=float, default=8.0)
     ap.add_argument("--read-timeout", type=float, default=12.0)
     ap.add_argument("--token", default="~/.secrets/board-sign-pod-token")
+    ap.add_argument("--exclusions", help="probe-exclusions.json (default: the committed file beside mcp-remote-probe.py)")
     ap.add_argument("--self-test", action="store_true")
     a = ap.parse_args(argv)
     if a.self_test:
@@ -2029,7 +2880,8 @@ def main(argv=None):
         a.out = a.out or a.plan_dir
         os.makedirs(a.out, exist_ok=True)
     {"plan": plan, "collect": collect, "compare": compare, "build": build, "sign": sign, "ots": ots,
-     "readme": readme, "correct": correct, "publish-correction": publish_correction}[a.cmd](a)
+     "readme": readme, "correct": correct, "publish-correction": publish_correction,
+     "correct-0.1.2": correct012, "probe-record": probe_record, "publish-0.1.2": publish012, "viewer": viewer}[a.cmd](a)
     return 0
 
 

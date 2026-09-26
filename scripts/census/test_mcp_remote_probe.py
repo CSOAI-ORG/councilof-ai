@@ -544,6 +544,20 @@ class Merge(unittest.TestCase):
             srv.close()
 
 
+class Exclusions(unittest.TestCase):
+    def test_excluded_endpoint_is_skipped_before_any_request(self):
+        d = tempfile.mkdtemp()
+        f = os.path.join(d, "x.json")
+        with open(f, "w") as fh:
+            json.dump({"schema": "csoai.probe-exclusions/0.1",
+                       "entries": [{"id": "obj-1", "match": "host", "value": "a.example"}]}, fh)
+        ex = P.load_exclusions(f)
+        r = P.Runner([{"rank": 1, "endpoint": "https://mcp.a.example/mcp"}], d, {"min_interval": 0.0, "budget_s": 5}, exclusions=ex)
+        self.assertIsNone(r._next())
+        self.assertEqual(r.skipped[0]["not_attempted"], "excluded at the operator's request (probe-exclusions.json: obj-1)")
+        self.assertEqual(sum(r.gate.requests.values()) if r.gate.requests else 0, 0)
+
+
 class Control(unittest.TestCase):
     def test_broken_grader_fails_the_suite(self):
         srv = Server()
