@@ -1,0 +1,467 @@
+{
+ "rechecked": [
+  {
+   "card_sha256": "ea17f8fd511f6514b3e8c2ecb7221d4e5ff3fffca88189ed1adecb101b4893c2",
+   "declared": [
+    "1.0"
+   ],
+   "id": "fbbc1e43-6975-46d2-a066-7e8ad90357b3",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": [
+      "jcs_defaults_not_removed/b64",
+      "jcs_sdk_clean_empty/b64",
+      "json_sorted_compact_ascii/b64",
+      "json_sorted_compact_utf8/b64"
+     ],
+     "key_source": "jku",
+     "key_url": "https://api.getemboss.ai/.well-known/a2a-jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "bd672bd1ba778a2be06e30bf73ea875f2c038ffc396e264bfcc80709bde6d75b",
+   "declared": [
+    "1.0"
+   ],
+   "id": "ee821d2a-b667-40b7-9dda-b1170aaefa7f",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "FAILED",
+   "sig_state_0_1_1": "VERIFIED",
+   "sig_state_0_1_rule_same_keys": "FAILED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "ES256",
+     "alt_serialisations_verifying": null,
+     "key_source": "jku",
+     "key_url": "https://philongevity.com/.well-known/jwks.json",
+     "reason": null,
+     "result": "VERIFIED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "25295c6be7b51caae562951eadfe2becfa29bfec391af91f40083a875c2e67d8",
+   "declared": [
+    "0.3.0",
+    "1.0"
+   ],
+   "id": "11c608a1-dbaf-47fb-af4e-57a7949b1d2e",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "ES256",
+     "alt_serialisations_verifying": null,
+     "key_source": "none",
+     "key_url": null,
+     "reason": "no jku, no embedded jwk, no did:web kid: the card points to no key",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  },
+  {
+   "card_sha256": "59b84e4dfabaf51c6b7832f7f15abc37de6b614667ded57afefd0de510cdac66",
+   "declared": [
+    "0.3"
+   ],
+   "id": "42c185d8-46c2-48f5-acd7-1982f1a2c5ed",
+   "note": null,
+   "rule": "a2a-0.x-served-bytes",
+   "sig_state_0_1": "FAILED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "FAILED",
+   "sig_state_under_1x_rules": "FAILED",
+   "signatures": [
+    {
+     "alg": "ES256",
+     "alt_serialisations_verifying": [],
+     "key_source": "jku",
+     "key_url": "https://ai.jakegaylor.com/.well-known/jwks.json",
+     "reason": "signature does not verify over JCS(card without signatures) under the pointed-to key (declared 0.x: no default removal)",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "f9342d67c0472a8c2b1d6f57c7130ad7574c8863759b63152310d1b3112c95fc",
+   "declared": [
+    "1.0"
+   ],
+   "id": "1b69cc37-1f6c-4482-86e5-7d5c33b0cf67",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "none",
+     "key_url": null,
+     "reason": "no jku, no embedded jwk, no did:web kid: the card points to no key",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  },
+  {
+   "card_sha256": "bb3393cfe0ebb5c0b101bd6201a982d4bc6ff2ac46ec353886ab574581693d2b",
+   "declared": [
+    "1.0"
+   ],
+   "id": "6f97c159-43ed-49de-92b6-1d5aa5ae8ce7",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "ES256",
+     "alt_serialisations_verifying": [
+      "jcs_defaults_not_removed/b64",
+      "json_sorted_compact_utf8/b64"
+     ],
+     "key_source": "jku",
+     "key_url": "https://smklog.com/.well-known/jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "2660cabba48adbc47ba574e16278ed61e5564c0d3f07831247960782f14bba08",
+   "declared": [
+    "0.3.0"
+   ],
+   "id": "87426082-ec97-488d-beea-1bd717216445",
+   "note": "protocol 0.3 defines no canonicalisation step; verdict under the declared version; under 1.x rules this card would FAIL",
+   "rule": "a2a-0.x-served-bytes",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "VERIFIED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": "FAILED",
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "embedded_jwk",
+     "key_url": null,
+     "reason": null,
+     "result": "VERIFIED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "ef526437a958c3dcccc1b2cdbf2a6984cde09b6fdcd2d9f31817e18c5e97b15f",
+   "declared": [
+    "1.0"
+   ],
+   "id": "41d157e0-cdec-4431-a6e1-07e070f35b08",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": [
+      "jcs_defaults_not_removed/b64",
+      "json_insertion_order_compact/b64",
+      "json_sorted_compact_utf8/b64"
+     ],
+     "key_source": "jku",
+     "key_url": "https://api.cogdepot.com/.well-known/jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "19a0ec6e164a5eebef8ae1fccae06a1ee902432009b27c1cfaa9912c8f5b66a0",
+   "declared": [
+    "0.3.0"
+   ],
+   "id": "611cf108-f427-4dc3-8bf3-2433529cbf9b",
+   "note": null,
+   "rule": "a2a-0.x-served-bytes",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": "UNCHECKABLE",
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "did_web",
+     "key_url": "https://agent-guild-5d5r.onrender.com/.well-known/did.json",
+     "reason": "key document has no key matching kid",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  },
+  {
+   "card_sha256": "c0bfc9fd836ff265d22e93b8ed968ecf6408d551bd5da22e20fd309e9bb38c0a",
+   "declared": [
+    "1.0"
+   ],
+   "id": "68673be8-e667-425f-9dcd-36ef150942e4",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "none",
+     "key_url": null,
+     "reason": "no jku, no embedded jwk, no did:web kid: the card points to no key",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  },
+  {
+   "card_sha256": "f762a16163653379b1a8e89d470548ba88277b22b3cb41f506b157fad9725e8f",
+   "declared": [
+    "1.0"
+   ],
+   "id": "125be81b-7326-41cd-85a2-7e0c2aa031b8",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "ES256",
+     "alt_serialisations_verifying": [
+      "jcs_defaults_not_removed/b64",
+      "json_sorted_compact_utf8/b64"
+     ],
+     "key_source": "jku",
+     "key_url": "https://agent.co-legal.be/.well-known/jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "57b3831218d0f6fa7d6a5efd4093d82651ddfb7082cd76065ede33818a4c0597",
+   "declared": [
+    "1.0"
+   ],
+   "id": "1dee7654-2f36-42e6-8c7a-aeee8ee32828",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "jku",
+     "key_url": "https://brick.blue/.well-known/brick-blue-keys.json",
+     "reason": "key document has no key matching kid",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  },
+  {
+   "card_sha256": "ddd58a373aa4f96addcb7bd0a0366786acfbae346d723a48ca076812a87c1320",
+   "declared": [
+    "0.3",
+    "1.0"
+   ],
+   "id": "f95bd2bf-a239-419a-8f75-c8e5d3844d28",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "FAILED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "FAILED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "ES256",
+     "alt_serialisations_verifying": [],
+     "key_source": "jku",
+     "key_url": "https://gfpick-agent-api.vercel.app/.well-known/jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "0e0543cf26eb6bd92b71e6df30de6bb655db449233b7f4d3dce97f217269a038",
+   "declared": [
+    "0.3"
+   ],
+   "id": "c59ee47c-4565-4fa9-bf98-807b0501c58a",
+   "note": "protocol 0.3 defines no canonicalisation step; verdict under the declared version; under 1.x rules this card would FAIL",
+   "rule": "a2a-0.x-served-bytes",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "VERIFIED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": "FAILED",
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "jku",
+     "key_url": "https://mcp.hakuto-0209.com/.well-known/jwks.json",
+     "reason": null,
+     "result": "VERIFIED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "58ad1071e866402c54c84abe3ade8c14fb50f8ae5d8b4636e1e98062c795301e",
+   "declared": [
+    "1.0"
+   ],
+   "id": "77c18a1a-bc34-4314-9cd3-8192f9f288a2",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": [
+      "jcs_defaults_not_removed/b64",
+      "json_insertion_order_compact/b64",
+      "json_sorted_compact_utf8/b64"
+     ],
+     "key_source": "jku",
+     "key_url": "https://emem.dev/.well-known/jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "5b827de0fe1f36dea51412ee858ddccb6b1f4e6705ff8c378dca930e4ba72245",
+   "declared": [
+    "1.0"
+   ],
+   "id": "caef7fa6-4e15-414d-8884-dd36c51bc8fb",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "none",
+     "key_url": null,
+     "reason": "no jku, no embedded jwk, no did:web kid: the card points to no key",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  },
+  {
+   "card_sha256": "4bef96abe16e83b197d8e7d6e77a067801c8c5dba164096144555c620a0dbe77",
+   "declared": [
+    "1.0"
+   ],
+   "id": "ee3508f9-9a8d-4221-8668-fef137ff9fff",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "FAILED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": [
+      "jcs_defaults_not_removed/b64",
+      "jcs_sdk_clean_empty/b64",
+      "json_sorted_compact_utf8/b64"
+     ],
+     "key_source": "jku",
+     "key_url": "https://planets.agentexchange.work/.well-known/jwks.json",
+     "reason": "signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures excluded, JCS) under the pointed-to key",
+     "result": "FAILED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "da3cca612f547d2c6baef2b205cb55b3d8523963b8e51899462cd0d7780ba857",
+   "declared": [
+    "0.3.0"
+   ],
+   "id": "f9da91fd-c17c-4dd2-8349-f5fd53108d5c",
+   "note": "protocol 0.3 defines no canonicalisation step; verdict under the declared version; under 1.x rules this card would FAIL",
+   "rule": "a2a-0.x-served-bytes",
+   "sig_state_0_1": "VERIFIED",
+   "sig_state_0_1_1": "VERIFIED",
+   "sig_state_0_1_rule_same_keys": "VERIFIED",
+   "sig_state_under_1x_rules": "FAILED",
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "jku",
+     "key_url": "https://api.algovoi.co.uk/.well-known/jwks.json",
+     "reason": null,
+     "result": "VERIFIED"
+    }
+   ]
+  },
+  {
+   "card_sha256": "db1fa63974d936208f83d9d9312404fefd8bcad35101f1dd27e793e5337ef951",
+   "declared": [
+    "1.0"
+   ],
+   "id": "f3ae598f-fd73-40de-8522-326af9a6138d",
+   "note": null,
+   "rule": "a2a-1.x-8.4.3",
+   "sig_state_0_1": "UNCHECKABLE",
+   "sig_state_0_1_1": "UNCHECKABLE",
+   "sig_state_0_1_rule_same_keys": "UNCHECKABLE",
+   "sig_state_under_1x_rules": null,
+   "signatures": [
+    {
+     "alg": "EdDSA",
+     "alt_serialisations_verifying": null,
+     "key_source": "none",
+     "key_url": null,
+     "reason": "no jku, no embedded jwk, no did:web kid: the card points to no key",
+     "result": "UNCHECKABLE"
+    }
+   ]
+  }
+ ],
+ "schema": "csoai.a2a-card-census-correction-evidence/0.1.1"
+}
