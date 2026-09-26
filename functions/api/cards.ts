@@ -10,6 +10,11 @@
  * slot count. Do not type a fake MEASURED count. Cite live GET /api/gspc totals.
  */
 
+// Whole-store verification facts, derived by scripts/derive-chain-facts.mjs from every card body
+// with the published verifier — the same file /api/state → card_chain reads. Only its as_of is
+// printed here; the count is read at /api/state, so this note never carries a second copy of it.
+import chainFacts from "../../public/signed/chain-facts.json";
+
 interface CardIndexEntry {
   card: string;
   axis: string;
@@ -85,6 +90,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     .slice()
     .sort((a, b) => (b.ts || "").localeCompare(a.ts || ""));
   const count = cards.length;
+  const chainAsOf = (chainFacts as any)?.as_of ?? "unknown";
   const signed = cards.filter((c) => c.signed).length;
 
   // A present signature is not a checkable one. board_living.json's stamp was marked
@@ -159,9 +165,15 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "not reproduce under any published rule and its signer is not in did.json). This index's measurement pack is " +
       "14 behavioural + see GET /api/gspc for the living board. This index carries " +
       `${count} signed measurement cards — DERIVED from card_index.json on every request, never typed. ` +
-      "Separately, board_living.json records that the 150-card subset it checked verifies 150/150 against " +
-      "did:web:csoai.org#card-attestation-1. That check has not been re-run across the whole index, so no " +
-      "verdict is stated here for the cards outside that subset: unchecked is not failed. " +
-      "See /signed/HOW-TO-VERIFY.md.",
+      "WHICH CORPUS: these are the signed card index (/signed/card_index.json, corpus 3 of the three in " +
+      "council-os/CARD-CORPORA.md). They are not the public-root Merkle leaves (/root.json → card_count) " +
+      "and not the card wrappers on disk (/cards-bundle.json → card_count); the corpora share no " +
+      "identifiers and are never added. WHAT WAS CHECKED: the whole published card store was verified " +
+      "under did:web:csoai.org#card-attestation-1 — read the count at /api/state → " +
+      "card_chain.bodies_verified_valid (kind measured: each id recomputed from its canonical body and its " +
+      `Ed25519 signature checked by /signed/verify-card.mjs; as_of ${chainAsOf}). The 150/150 ` +
+      "recorded in board_living.json was an earlier check of a 150-card subset of this same chain, not a " +
+      "second corpus and not a ratio over it. A card added after that as_of carries no verdict until the " +
+      "check is re-run: unchecked is not failed. See /signed/HOW-TO-VERIFY.md.",
   });
 };

@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   Shield,
   AlertTriangle,
@@ -66,11 +65,6 @@ export default function PublicDashboard() {
                   <AlertTriangle className="w-4 h-4 mr-2" />
                   Report Incident
                 </a>
-              </Link>
-              <Link href="/login">
-                <Button className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500">
-                  Sign In
-                </Button>
               </Link>
             </div>
           </div>
@@ -163,9 +157,11 @@ export default function PublicDashboard() {
         <div className="container mx-auto">
           <Card className="bg-zinc-900/50 border-zinc-800">
             <CardHeader>
-              <CardTitle className="text-white">Compliance Frameworks</CardTitle>
+              <CardTitle className="text-white">Reference frameworks</CardTitle>
               <CardDescription className="text-zinc-400">
-                Monitor compliance across major AI safety frameworks
+                We measure; we do not certify, and we publish no compliance score. No per-article,
+                per-requirement or per-clause percentage has been measured for any framework below,
+                so none is shown (UNMEASURED).
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -183,24 +179,21 @@ export default function PublicDashboard() {
                         <Globe className="h-5 w-5 text-blue-400" />
                         <span className="font-medium text-white">EU AI Act</span>
                       </div>
-                      <p className="text-sm text-zinc-400">113 articles, 88% compliance</p>
-                      <Progress value={88} className="mt-2 h-2" />
+                      <p className="text-sm text-zinc-400">Crosswalked in /crosswalk/east-west-v1.json. No compliance score measured (UNMEASURED).</p>
                     </div>
                     <div className="p-4 bg-zinc-800/50 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <Building2 className="h-5 w-5 text-green-400" />
                         <span className="font-medium text-white">NIST AI RMF</span>
                       </div>
-                      <p className="text-sm text-zinc-400">72 requirements, 92% compliance</p>
-                      <Progress value={92} className="mt-2 h-2" />
+                      <p className="text-sm text-zinc-400">Reference framework, no crosswalk measured (UNMEASURED).</p>
                     </div>
                     <div className="p-4 bg-zinc-800/50 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <FileText className="h-5 w-5 text-purple-400" />
                         <span className="font-medium text-white">ISO 42001</span>
                       </div>
-                      <p className="text-sm text-zinc-400">10 clauses, 85% compliance</p>
-                      <Progress value={85} className="mt-2 h-2" />
+                      <p className="text-sm text-zinc-400">Reference framework, no crosswalk measured (UNMEASURED).</p>
                     </div>
                   </div>
                 </TabsContent>

@@ -77,7 +77,8 @@ export interface RegulatoryReportData {
     name: string;
     type: string;
     riskLevel: string;
-    complianceScore: number;
+    /** null = UNMEASURED. Never default a number here. */
+    complianceScore: number | null;
     status: string;
   }>;
   frameworkSummary: ComplianceScore[];
@@ -87,8 +88,8 @@ export interface RegulatoryReportData {
     resolved: number;
   };
   pdcaCycles: {
-    active: number;
-    completed: number;
+    active: number | null;
+    completed: number | null;
   };
   byzantineCouncilSessions: number;
   recommendations: string[];
@@ -621,7 +622,7 @@ export async function generateRegulatoryReportPDF(data: RegulatoryReportData): P
   const summaryMetrics = [
     { label: 'AI Systems', value: data.systemsCount.toString(), color: [14, 165, 233] },
     { label: 'Council Sessions', value: data.byzantineCouncilSessions.toString(), color: [99, 102, 241] },
-    { label: 'Active PDCA Cycles', value: data.pdcaCycles.active.toString(), color: [34, 197, 94] },
+    { label: 'Active PDCA Cycles', value: data.pdcaCycles.active == null ? 'UNMEASURED' : data.pdcaCycles.active.toString(), color: [34, 197, 94] },
     { label: 'Critical Incidents', value: data.incidentsSummary.critical.toString(), color: [239, 68, 68] },
   ];
 
@@ -782,7 +783,7 @@ export async function generateRegulatoryReportPDF(data: RegulatoryReportData): P
 
       // Compliance score
       doc.setTextColor(15, 23, 42);
-      doc.text(`${system.complianceScore}%`, 155, rowY + 4);
+      doc.text(system.complianceScore == null ? 'UNMEASURED' : `${system.complianceScore}%`, 155, rowY + 4);
 
       // Status
       doc.text(system.status, pageWidth - 25, rowY + 4, { align: 'right' });

@@ -462,12 +462,12 @@
       "description": "Sign in to your CSOAI workspace: your Council assistant, saved measurements and evidence tools in one place. Public boards and verification need no account."
     },
     "/dashboard": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Dashboard — board, cards and evidence | Council of AI",
+      "description": "The Council of AI dashboard: the GSPC board, signed cards, attestations and the corrections ledger. Empty values stay unmeasured; numbers are read from source."
     },
     "/os": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Council OS workspace | Council of AI",
+      "description": "Council OS, the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; every number is read from source."
     },
     "/enterprise": {
       "title": "Enterprise | CSOAI",
@@ -948,6 +948,14 @@
     "/texas-ai-act": {
       "title": "Texas Responsible AI Governance Act (TRAIGA) | CSOAI",
       "description": "Texas TRAIGA explained: what the statute requires, who it binds, the effective dates and enforcement and what CSOAI measures against it, with sources."
+    },
+    "/corrections": {
+      "title": "Corrections ledger | Council of AI",
+      "description": "Every published thing Council of AI (CSOAI Ltd) got wrong: what was wrong, how it was caught and the fix, dated. Read live from GET /api/corrections."
+    },
+    "/census": {
+      "title": "The CSOAI-census crawler | Council of AI",
+      "description": "What the CSOAI-census crawler does (public GETs and MCP discovery, never a tool call), the datasets it feeds, and how to ask for a re-check or opt out."
     }
   },
   "components": {
@@ -1392,8 +1400,8 @@
       "description": "The semantic layer for AI governance: how systems, provisions, measurements and evidence are named and related, so tools and readers use the same words."
     },
     "OsRoute": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Council OS workspace | Council of AI",
+      "description": "Council OS, the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; every number is read from source."
     },
     "WhyCSOAI": {
       "title": "Why Council of AI | Council of AI",
@@ -1584,8 +1592,8 @@
       "description": "The live GSPC board. Every measured cell has n and a confidence interval where honest; UNMEASURED is reported, never hidden. Counts come from the endpoint."
     },
     "Dashboard": {
-      "title": "Council OS | Council of AI",
-      "description": "Council OS: the workspace over the GSPC board, signed cards, regulation map and evidence tools. Empty values stay unmeasured; numbers are read from source."
+      "title": "Dashboard — board, cards and evidence | Council of AI",
+      "description": "The Council of AI dashboard: the GSPC board, signed cards, attestations and the corrections ledger. Empty values stay unmeasured; numbers are read from source."
     },
     "Blog": {
       "title": "Blog | CSOAI",

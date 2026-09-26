@@ -238,9 +238,7 @@ export function Header() {
               </>
             ) : (
               <>
-                {!loginlessVerify && (
-                  <Button asChild variant="ghost" size="sm" className="text-muted-foreground font-medium"><Link href="/login">Sign In</Link></Button>
-                )}
+                {/* 2026-09-26: "Sign In" left the main nav (newcomer audit). /login still exists. */}
                 <Button asChild size="sm" className="rounded-xl bg-emerald-700 font-semibold text-white shadow-sm hover:bg-emerald-800"><Link href="/assess">Request attestation</Link></Button>
               </>
             )}
@@ -312,9 +310,6 @@ export function Header() {
                   </>
                 ) : (
                   <>
-                    {!loginlessVerify && (
-                      <Button asChild variant="outline" className="w-full"><a href="/login" onClick={() => setMobileMenuOpen(false)}>Sign In</a></Button>
-                    )}
                     <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a></Button>
                   </>
                 )}

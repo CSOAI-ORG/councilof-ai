@@ -321,7 +321,7 @@ function Independence() {
         // was landing a front-door reader on a page carrying the "reference / archive" banner.
         href="/dashboard?task=pricing-overview&tab=measured"
         label="How the free rail works"
-        secondary={{ href: "/about", label: "Who we are" }}
+        secondary={{ href: "/about/", label: "Who we are" }}
       />
     </HeavyBand>
   );
@@ -588,7 +588,7 @@ function LivingLaw() {
           </ul>
         </>
       )}
-      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/contact?arm=run", label: "Enquire about a scoped run" }} />
+      <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/contact/?arm=run", label: "Enquire about a scoped run" }} />
     </HeavyBand>
   );
 }

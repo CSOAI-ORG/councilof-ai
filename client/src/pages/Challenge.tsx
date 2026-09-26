@@ -20,7 +20,7 @@ const STEPS = [
   {
     step: "4",
     title: "Redress path (JC-D4)",
-    body: "At least one level of internal review above the original decision. External judicial review is never closed off. East-West measurements are challengeable the same way domestic ones are — power must be checked, including ours.",
+    body: "Today the owner of CSOAI Ltd reviews every challenge; there is no independent arbiter yet. Outcomes go in the public corrections ledger. External judicial review is never closed off. East-West measurements are challengeable the same way domestic ones are.",
   },
 ];
 
@@ -82,7 +82,12 @@ export default function Challenge() {
         </ol>
 
         <div className="mt-10 rounded-xl border border-emerald-200 bg-[#05140d] p-5 text-sm text-emerald-50">
-          <p className="font-semibold text-emerald-200">Submit a challenge (signed receipt)</p>
+          <p className="font-semibold text-emerald-200">Get a receipt for a challenge</p>
+          <p className="mt-1 text-xs text-emerald-100/80" data-testid="challenge-not-recorded">
+            This form issues a receipt only. Challenges sent here are not yet recorded, so nobody will
+            see one unless you also email it to{" "}
+            <a className="underline" href="mailto:nicholas@csoai.org?subject=Measurement%20challenge">nicholas@csoai.org</a>.
+          </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {["card", "crosswalk", "board", "findings"].map((t) => (
               <button
@@ -120,12 +125,13 @@ export default function Challenge() {
             disabled={submitting || !target || !reason}
             className="mt-3 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] disabled:opacity-50"
           >
-            {submitting ? "Submitting…" : "Submit challenge"}
+            {submitting ? "Requesting…" : "Get a receipt"}
           </button>
           {err && <p className="mt-2 text-rose-300">{err}</p>}
           {receipt && (
             <p className="mt-2 font-mono text-xs text-emerald-300">
-              receipted · content_id: {receipt.content_id} · stored: {String(receipt.stored)}
+              receipt · content_id: {receipt.content_id} ·{" "}
+              {receipt.stored ? "recorded" : "not yet recorded: email nicholas@csoai.org with this content_id"}
             </p>
           )}
         </div>

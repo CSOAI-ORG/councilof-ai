@@ -2,9 +2,9 @@
 title: "Where Council of AI takes part, and what each listing does not mean"
 slug: where-council-of-ai-takes-part-and-what-it-does-not-mean
 date: 2026-09-22
-updated: 2026-09-22
+updated: 2026-09-26
 canonical: https://councilof.ai/memberships
-source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-09-22, signed: false)
+source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-09-26, signed: false)
 generated_by: scripts/memberships-post.mjs — do not hand-edit; edit the manifest and re-run
 description: "Every standards body, registry, scholarly identifier and regulator filing Council of AI takes part in, each with its evidence link, its date, what it proves and what it does not. Participation is not endorsement; a listing is not adoption."
 ---
@@ -29,13 +29,9 @@ Yes, at the Contributor Member tier: CSOAI LTD is on the public roster at https:
 
 Council of AI holds a DIF Contributor Member agreement completed on 2026-08-18, and DIF's membership team confirmed the listing name with us on 2026-09-21. The only evidence is private correspondence, because DIF publishes no member roster we could find, so this row is marked private evidence. It is membership, not adoption of anything we publish by any DIF working group.
 
-## Is Council of AI a member of the Linux Foundation?
-
-Yes, at the Silver tier: CSOAI LTD completed the Linux Foundation membership agreement on 2026-09-21 and holds membership record M-018884, valid to 2027-09-30. The evidence is currently private (the signed agreement and the onboarding record) because the public members page had not been updated on 2026-09-22. Silver membership is a paid participation tier, not an endorsement by the Foundation or by any of its projects.
-
 ## Is Council of AI a member of the Open Secure AI Alliance?
 
-Yes, as a General Member: the Alliance's onboarding mail of 2026-09-21 records CSOAI LTD as a member after an application received on 2026-09-18. The evidence is private correspondence because the Alliance's site did not list members on 2026-09-22. Membership is not adoption: the note we contributed to the Alliance's SAFE discussion asks questions of the group and requests nothing be adopted.
+Yes. The Alliance's participation agreement was completed by all parties via DocuSign on 2026-09-21, and the Alliance's onboarding mail that day welcomed CSOAI LTD as a member. The evidence is private correspondence, because the Alliance publishes no member list. The note CSOAI published to the Alliance's SAFE discussion is our own; we have no record of SAFE adopting or acknowledging it. Membership is not an endorsement.
 
 ## Has Council of AI joined the EU AI Pact?
 
@@ -100,7 +96,7 @@ Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named o
   - Date basis: Earliest archived post by Nicholas Templeman that this check retrieved (2026-09-05 04:32 +0100, 'Control-delivery evidence as an input to audit semantics').
   - What it proves: A message from Nicholas Templeman is in the public IETF mail archive for the audit list.
   - What it does not prove: Open-list participation only. The audit effort is a proposed charter, not a working group we belong to; no adoption, no consensus, no standing.
-- **C2PA — Coalition for Content Provenance and Authenticity** — a member of this body, since 2026-08-06; state VERIFIED.
+- **C2PA — Coalition for Content Provenance and Authenticity** — a contributor to this body, since 2026-08-06; state VERIFIED.
   - Evidence: <https://c2pa.org/membership/>
   - Date basis: Membership contract completed 2026-08-06; welcome 2026-08-17; logo supplied for the roster 2026-09-18 (INBOX 8835, 8885). The public roster now carries the entry.
   - What it proves: CSOAI LTD appears on the public C2PA membership page under Contributor Members.
@@ -110,16 +106,11 @@ Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named o
   - Date basis: Contributor agreement completed in the name of CSOAI LTD on 2026-08-18; DIF's membership team asked on 2026-09-21 which name to display for our Contributor Member listing (INBOX 8945) and we replied the same day (Sent 487).
   - What it proves: DIF's operations team treats CSOAI LTD as a Contributor Member and is preparing a website listing.
   - What it does not prove: DIF publishes no member roster we could find (identity.foundation/members answered 404 on 2026-09-22), so no public page confirms this yet. No DIF working group has adopted any Council of AI specification.
-- **The Linux Foundation** — a member of this body, since 2026-09-21; state VERIFIED.
-  - Evidence: private evidence (account page): INBOX 8987 (Docusign completed, 2026-09-21) and INBOX 8988 (2026-09-21); LF onboarding record M-018884 (login required)
-  - Date basis: Linux Foundation membership agreement completed via Docusign on 2026-09-21 (INBOX 8987); the LF onboarding record M-018884 states Silver Membership with an expiry of 2027-09-30.
-  - What it proves: CSOAI LTD signed the Linux Foundation membership agreement and holds a Silver membership record with the Foundation.
-  - What it does not prove: The public Linux Foundation members page did not list us on 2026-09-22, so a stranger cannot yet confirm this from a public URL. Silver is a paid participation tier; it is not a Linux Foundation endorsement of our method, and no LF project has adopted our work.
 - **Open Secure AI Alliance (a Linux Foundation project)** — a member of this body, since 2026-09-21; state VERIFIED.
-  - Evidence: private evidence (private email): INBOX 8988 (The Linux Foundation, 2026-09-21) and INBOX 8859 (2026-09-18)
-  - Date basis: Application received 2026-09-18 (INBOX 8859); the Alliance's onboarding mail of 2026-09-21 opens 'Thank you for becoming a member' (INBOX 8988), the same day the participation agreement was completed.
-  - What it proves: The Open Secure AI Alliance records CSOAI LTD as a General Member and has begun onboarding.
-  - What it does not prove: secureaialliance.org did not list us on 2026-09-22. The discussion note we sent to the Alliance's SAFE thread on 2026-09-21 is a contribution, not adoption; membership is not an endorsement of Council of AI tooling.
+  - Evidence: private evidence (private email): INBOX 8987 (DocuSign 'All parties have completed', 2026-09-21, attaching the Open Secure AI Alliance Participation Agreement and Funding Charter), INBOX 8988 (the Alliance, 2026-09-21: 'Thank you for becoming a member') and INBOX 8859 (application received, 2026-09-18)
+  - Date basis: Application received 2026-09-18 (INBOX 8859). The Participation Agreement and Funding Charter travelled in the DocuSign envelope the Linux Foundation sent on 2026-09-21 (INBOX 8955), reported completed by all parties at 22:56 UTC (INBOX 8987). At 23:17 UTC the Alliance's onboarding mail opened 'Thank you for becoming a member of the Open Secure AI Alliance!' (INBOX 8988).
+  - What it proves: CSOAI LTD is a member of the Open Secure AI Alliance: the participation agreement was completed by all parties on 2026-09-21 and the Alliance welcomed CSOAI LTD as a member the same day.
+  - What it does not prove: No record we checked names a membership class, so we name none. The evidence is private, and secureaialliance.org publishes no member list. The note CSOAI published to the Alliance's SAFE discussion is our own; we have no record of SAFE adopting or acknowledging it. Membership is not an endorsement of Council of AI tooling.
 - **BSI — comments on draft BS ISO/IEC 4213 (project 2024-01986), committee ART/1** — a contributor to this body, since 2026-09-15; state VERIFIED.
   - Evidence: private evidence (private email): INBOX 8363 (AdminStart@bsigroup.com, 2026-09-15) and INBOX 7116 (2026-08-22)
   - Date basis: Fourteen comments on the draft were sent to the BSI project mailbox on 2026-09-15; BSI Standards Assist replied the same day that the comments "have now been shared with the committee manager of ART/1" (INBOX 8363). A BSI Standards Development account was created on 2026-08-22 (INBOX 7116).
@@ -272,6 +263,8 @@ Bodies a reader might expect to find above, and are not there. Three reasons app
 - **Glama** — _unverified_ — Glama mail confirms an account from 2026-04-16 and several approved MCP-server listings. We cannot show it publicly: Glama's index requires an API key, and its terms require visible attribution and a link wherever its records are displayed, which is a condition on republishing rather than an evidence URL a stranger can open. Listed here rather than as a row until a stable public URL exists.
 - **NVIDIA Inception** — _no record_ — No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed.
 - **Agentry** — _no record_ — The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page.
+- **The Linux Foundation** — _unverified_ — Not listed. The only records are private: a DocuSign completion notice and a member-portal record that needs a login. The Foundation's public members page did not name us on 2026-09-22, nor in the page fetched on 2026-09-26, so a stranger cannot check the claim. Until a public page names CSOAI LTD, no Linux Foundation membership is claimed on this site. Taking part in the Open Secure AI Alliance, a Linux Foundation project, is a separate row above.
+  - Source: <https://www.linuxfoundation.org/about/members>
 
 ## How this is kept honest
 

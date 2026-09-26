@@ -73,7 +73,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Is verification free, and is a grade ever for sale?",
-    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Where measurement is paid it is pay-as-you-go x402, quoted at the 402 itself — not live yet.",
+    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Where measurement is paid it is pay-as-you-go x402, quoted at the 402 itself. The x402 doors that are live are the ones listed in the machine-readable manifest at /.well-known/x402.json; /services reads that manifest on every load, so this answer names no count.",
     url: "/enterprise",
   },
   {

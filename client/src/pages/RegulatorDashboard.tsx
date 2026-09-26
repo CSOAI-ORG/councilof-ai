@@ -97,7 +97,7 @@ export default function RegulatorDashboard() {
       name: system.name,
       type: (system as any).systemType || 'AI System',
       riskLevel: system.riskLevel || 'unknown',
-      complianceScore: 75, // Default score if not available
+      complianceScore: null, // 2026-09-26: was an invented default of 75; no score is measured
       status: system.status || 'active',
     }));
 
@@ -117,8 +117,8 @@ export default function RegulatorDashboard() {
         resolved: dashboard?.recentCriticalReports?.filter((r) => r.status === 'resolved').length || 0,
       },
       pdcaCycles: {
-        active: 5,
-        completed: 12,
+        active: null, // 2026-09-26: were invented (5 / 12); no cycle count is recorded
+        completed: null,
       },
       byzantineCouncilSessions: dashboard?.totalAssessments || 0,
       recommendations: [

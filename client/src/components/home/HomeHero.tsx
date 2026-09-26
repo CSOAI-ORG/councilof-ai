@@ -189,6 +189,11 @@ export default function HomeHero({
           the evidence for free, without an account. Unmeasured stays visible.
         </p>
 
+        <p className="mt-4 max-w-2xl text-[13px] leading-relaxed text-emerald-100/75" data-testid="home-accountable-entity">
+          Operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman.{" "}
+          <Link href="/about/" className="underline underline-offset-2">Who we are</Link>
+        </p>
+
         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <a
             href="#board"

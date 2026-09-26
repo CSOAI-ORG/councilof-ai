@@ -56,21 +56,9 @@ const CATEGORY_COLORS: Record<IncidentCategory, { fill: string; stroke: string }
   other: { fill: '#f3f4f6', stroke: '#6b7280' }, // gray
 };
 
-// Default mock data
-const DEFAULT_DATA: IncidentDataPoint[] = [
-  { month: 'Jan', safety: 3, bias: 5, privacy: 2, security: 1, transparency: 4, other: 2, total: 17, resolved: 14, resolutionRate: 82 },
-  { month: 'Feb', safety: 2, bias: 7, privacy: 3, security: 2, transparency: 3, other: 1, total: 18, resolved: 15, resolutionRate: 83 },
-  { month: 'Mar', safety: 4, bias: 6, privacy: 4, security: 1, transparency: 5, other: 3, total: 23, resolved: 20, resolutionRate: 87 },
-  { month: 'Apr', safety: 5, bias: 8, privacy: 3, security: 3, transparency: 4, other: 2, total: 25, resolved: 22, resolutionRate: 88 },
-  { month: 'May', safety: 3, bias: 9, privacy: 5, security: 2, transparency: 6, other: 4, total: 29, resolved: 26, resolutionRate: 90 },
-  { month: 'Jun', safety: 6, bias: 7, privacy: 4, security: 4, transparency: 5, other: 3, total: 29, resolved: 27, resolutionRate: 93 },
-  { month: 'Jul', safety: 4, bias: 10, privacy: 6, security: 3, transparency: 7, other: 2, total: 32, resolved: 30, resolutionRate: 94 },
-  { month: 'Aug', safety: 5, bias: 8, privacy: 5, security: 2, transparency: 6, other: 4, total: 30, resolved: 29, resolutionRate: 97 },
-  { month: 'Sep', safety: 3, bias: 6, privacy: 4, security: 1, transparency: 4, other: 2, total: 20, resolved: 19, resolutionRate: 95 },
-  { month: 'Oct', safety: 4, bias: 7, privacy: 3, security: 2, transparency: 5, other: 3, total: 24, resolved: 23, resolutionRate: 96 },
-  { month: 'Nov', safety: 2, bias: 5, privacy: 4, security: 1, transparency: 3, other: 2, total: 17, resolved: 17, resolutionRate: 100 },
-  { month: 'Dec', safety: 3, bias: 4, privacy: 2, security: 2, transparency: 4, other: 1, total: 16, resolved: 15, resolutionRate: 94 },
-];
+// 2026-09-26: the mock default series (invented monthly scores) was removed. A chart with
+// no data renders empty; callers pass measured data or do not render the chart.
+const DEFAULT_DATA: IncidentDataPoint[] = [];
 
 export interface IncidentTrendChartProps {
   /** Incident data over time */

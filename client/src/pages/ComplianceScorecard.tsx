@@ -17,7 +17,6 @@ import {
   Download,
   Share2,
   Award,
-  TrendingUp,
   Calendar,
   Building2,
   Cpu
@@ -55,6 +54,9 @@ export default function ComplianceScorecard() {
   
   // Calculate overall compliance score
   const completedAssessments = assessments?.filter(a => a.assessment.status === 'completed') || [];
+  // A self-assessment average is the user's own answers, never a CSOAI measurement. With no
+  // completed self-assessment there is no number: the page says UNMEASURED, not 0.
+  const hasScore = completedAssessments.length > 0;
   const overallScore = completedAssessments.length > 0
     ? Math.round(completedAssessments.reduce((sum, a) => sum + (Number(a.assessment.overallScore) || 0), 0) / completedAssessments.length)
     : 0;
@@ -122,7 +124,7 @@ export default function ComplianceScorecard() {
     const recommendations: string[] = [];
     frameworkScores.forEach(fw => {
       if (fw.status === 'non-compliant') {
-        recommendations.push(`Prioritize improving ${fw.framework} compliance - current score is ${fw.score}%`);
+        recommendations.push(`Review ${fw.framework} first - your self-assessment average is ${fw.score}/100`);
       } else if (fw.status === 'partial') {
         recommendations.push(`Continue improvement efforts for ${fw.framework} to achieve full compliance`);
       }
@@ -137,7 +139,7 @@ export default function ComplianceScorecard() {
     }
 
     return {
-      organizationName: 'CSOAI Enterprise',
+      organizationName: 'Self-assessment (not a CSOAI measurement)',
       systemName: system.name,
       systemId: system.id?.toString() || systemId || 'N/A',
       systemType: system.systemType || 'AI System',
@@ -146,14 +148,9 @@ export default function ComplianceScorecard() {
       frameworks: frameworkScores,
       recommendations,
       assessmentDate: new Date().toLocaleDateString(),
-      validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-      byzantineCouncilStatus: {
-        verified: completedAssessments.length > 0,
-        consensusLevel: overallScore >= 80 ? 95 : overallScore >= 60 ? 75 : 50,
-        votingAgents: 33,
-        sessionId: `BC-${Date.now().toString(36).toUpperCase()}`,
-      },
-      assessor: 'CSOAI Compliance Engine',
+      // 2026-09-26: no validity period, no invented council consensus (95/75/50%) and no
+      // "compliance engine" assessor. This is the user's own questionnaire.
+      assessor: 'Your own self-assessment answers',
     };
   }, [system, frameworks, completedAssessments, overallScore, systemId]);
 
@@ -172,7 +169,7 @@ export default function ComplianceScorecard() {
                 <Share2 className="h-4 w-4 mr-2" />
                 Share
               </Button>
-              {pdfExportData && (
+              {pdfExportData && hasScore && (
                 <PDFExportButton
                   exportType="assessment"
                   data={pdfExportData}
@@ -223,23 +220,24 @@ export default function ComplianceScorecard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-white/60 text-sm mb-1">Overall Compliance Score</p>
-                  <div className="flex items-baseline gap-3">
-                    <span className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>
-                      {overallScore}
-                    </span>
-                    <span className="text-2xl text-white/40">/100</span>
-                  </div>
-                  <Badge className={`mt-3 ${scoreBadge.color}`}>
-                    {scoreBadge.label}
-                  </Badge>
-                </div>
-                <div className="text-right">
-                  <div className="flex items-center gap-2 text-green-400 mb-2">
-                    <TrendingUp className="h-5 w-5" />
-                    <span className="text-lg font-semibold">+5%</span>
-                  </div>
-                  <p className="text-white/50 text-sm">vs last assessment</p>
+                  <p className="text-white/60 text-sm mb-1">
+                    Self-assessment average (your answers, not a CSOAI measurement)
+                  </p>
+                  {hasScore ? (
+                    <>
+                      <div className="flex items-baseline gap-3">
+                        <span className={`text-5xl font-bold ${getScoreColor(overallScore)}`}>
+                          {overallScore}
+                        </span>
+                        <span className="text-2xl text-white/40">/100</span>
+                      </div>
+                      <Badge className={`mt-3 ${scoreBadge.color}`}>
+                        {scoreBadge.label}
+                      </Badge>
+                    </>
+                  ) : (
+                    <span className="text-3xl font-bold text-white/70">UNMEASURED</span>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -261,9 +259,9 @@ export default function ComplianceScorecard() {
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Shield className="h-5 w-5 text-cyan-400" />
-              Framework Compliance
+              Self-assessment by framework
             </CardTitle>
-            <CardDescription>Compliance scores across regulatory frameworks</CardDescription>
+            <CardDescription>Averages of your own completed self-assessments. Not a measurement and not a compliance determination.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">

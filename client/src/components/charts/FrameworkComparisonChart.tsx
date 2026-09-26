@@ -40,13 +40,9 @@ export interface FrameworkData {
   status?: 'compliant' | 'in_progress' | 'not_started';
 }
 
-// Default mock data
-const DEFAULT_DATA: FrameworkData[] = [
-  { name: 'EU AI Act', shortName: 'EU AI', score: 72, maxScore: 100, requirements: 113, compliant: 81, status: 'in_progress' },
-  { name: 'NIST AI RMF', shortName: 'NIST', score: 85, maxScore: 100, requirements: 72, compliant: 61, status: 'compliant' },
-  { name: 'ISO 42001', shortName: 'ISO', score: 68, maxScore: 100, requirements: 89, compliant: 60, status: 'in_progress' },
-  { name: 'TC260', shortName: 'TC260', score: 64, maxScore: 100, requirements: 56, compliant: 36, status: 'in_progress' },
-];
+// 2026-09-26: the mock default series (invented monthly scores) was removed. A chart with
+// no data renders empty; callers pass measured data or do not render the chart.
+const DEFAULT_DATA: FrameworkData[] = [];
 
 // Color palette
 const COLORS = {

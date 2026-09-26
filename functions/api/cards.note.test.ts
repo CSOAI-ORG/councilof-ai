@@ -81,4 +81,18 @@ describe("/api/cards note", () => {
     // and it must say what is NOT claimed about the unchecked remainder
     expect(n).toMatch(/unchecked is not failed|no verdict|not been re-?run/i);
   });
+
+  // 2026-09-26 regulator-persona audit: the note said the 150 subset was the only check, while
+  // /api/state reported the whole chain verified. Name the corpus and the check actually run.
+  it("names its corpus and the whole-store check, dated from chain-facts.json", async () => {
+    installFetch(335);
+    const n = await note();
+    const { default: facts } = await import("../../public/signed/chain-facts.json");
+
+    expect(n).toMatch(/signed card index/i);
+    expect(n).toMatch(/corpus 3/i);
+    expect(n).toContain("card_chain.bodies_verified_valid");
+    expect(n).toContain(`as_of ${facts.as_of}`);
+    expect(n).not.toMatch(/has not been re-?run across the whole index/i);
+  });
 });

@@ -190,6 +190,10 @@ const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 // /memberships — where we take part, every row from public/interop/memberships.json with its evidence.
 const Memberships = lazy(() => import("./pages/Memberships"));
+// /corrections — the corrections ledger (GET /api/corrections) as its own page. Was a 308 to a dashboard tab.
+const Corrections = lazy(() => import("./pages/Corrections"));
+// /census — what the CSOAI-census crawler does; its user agent links here.
+const Census = lazy(() => import("./pages/Census"));
 // /reach — the WHOLE funnel, including the four stages that carry no number and the
 // reason each one carries none. The home page and the footer show the two stages a stranger can
 // use; this is the one click behind them, and it is where the commercial stages live.
@@ -645,6 +649,8 @@ function App() {
                   <Route path="/library/:sector" component={Library} />
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/memberships" component={Memberships} />
+                  <Route path="/corrections" component={Corrections} />
+                  <Route path="/census" component={Census} />
                   <Route path="/reach" component={Reach} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />

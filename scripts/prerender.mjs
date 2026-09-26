@@ -90,6 +90,9 @@ const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
 // stop; skipping the snapshot leaves the SPA shell, which hydrates on the
 // live host. Added 2026-09-09 after #1847 blocked every master deploy.
 const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
+  // /corrections reads GET /api/corrections, a Function absent on the prerender host. The shell
+  // carries its own title + description from client/src/data/seo-head.json.
+  "/corrections",
   // /pay reads /.well-known/x402.json, every door's 402, /api/x402-listing, /api/x402-listing-402index
   // and /api/door-settles — all Functions.
   "/pay",
@@ -197,6 +200,7 @@ function discover() {
     "/dashboard", "/login", "/start", "/about", "/insurers",
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/embed", "/white-label",
+    "/corrections", "/census",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

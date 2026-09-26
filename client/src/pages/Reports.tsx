@@ -11,8 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
-import { PDFExportButton, RegulatoryExportButton } from "@/components/PDFExportButton";
-import { RegulatoryReportData } from "@/lib/pdfExport";
 
 // No fabricated report list — reports render here once generated for real.
 
@@ -28,52 +26,11 @@ const getTypeBadge = (type: string) => {
   return colors[type] || "bg-gray-500/10 text-gray-500 border-gray-500/30";
 };
 
-// Example data for the SAMPLE regulatory report PDF — clearly labelled as a
-// sample in the UI. Never presented as the visitor's own report.
-const getSampleRegulatoryReportData = (): RegulatoryReportData => ({
-  reportTitle: "Quarterly Compliance Status Report",
-  reportPeriod: {
-    start: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
-  },
-  organizationName: "CSOAI Enterprise",
-  systemsCount: 5,
-  systems: [
-    { name: "Customer Service AI", type: "Chatbot", riskLevel: "Limited", complianceScore: 85, status: "Compliant" },
-    { name: "Hiring Algorithm v2", type: "Decision System", riskLevel: "High", complianceScore: 72, status: "Partial" },
-    { name: "Content Moderation ML", type: "Classification", riskLevel: "Limited", complianceScore: 91, status: "Compliant" },
-    { name: "Fraud Detection System", type: "Anomaly Detection", riskLevel: "High", complianceScore: 78, status: "Partial" },
-    { name: "Recommendation Engine", type: "ML Pipeline", riskLevel: "Minimal", complianceScore: 95, status: "Compliant" },
-  ],
-  frameworkSummary: [
-    { framework: "EU AI Act", score: 82, status: "partial" },
-    { framework: "NIST AI RMF", score: 88, status: "compliant" },
-    { framework: "TC260", score: 75, status: "partial" },
-    { framework: "ISO 42001", score: 90, status: "compliant" },
-  ],
-  incidentsSummary: {
-    total: 12,
-    critical: 2,
-    resolved: 10,
-  },
-  pdcaCycles: {
-    active: 3,
-    completed: 7,
-  },
-  byzantineCouncilSessions: 24,
-  recommendations: [
-    "Continue monitoring high-risk systems for EU AI Act compliance deadlines",
-    "Schedule additional training for teams managing the Hiring Algorithm",
-    "Implement automated compliance checking for new AI system deployments",
-    "Review and update incident response procedures based on recent findings",
-    "Consider third-party audit for TC260 framework requirements",
-  ],
-  generatedAt: new Date().toISOString(),
-});
+// 2026-09-26: the "Example data" sample PDF was removed. It printed invented per-system
+// compliance scores (85/72/91/78/95) and framework percentages under a CSOAI header. No
+// measurement produced them, and CSOAI does not score compliance.
 
 export default function Reports() {
-  const sampleReportData = getSampleRegulatoryReportData();
-
   return (
     <DashboardLayout>
       <div className="p-6 space-y-6">
@@ -85,13 +42,6 @@ export default function Reports() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground mr-1">Example data:</span>
-            <RegulatoryExportButton
-              reportData={sampleReportData}
-              filename="sample-regulatory-report.pdf"
-              variant="outline"
-              className="gap-2"
-            />
             <Button
               disabled
               className="gap-2"

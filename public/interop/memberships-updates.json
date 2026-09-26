@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships-updates/0.1",
-  "as_of": "2026-09-22",
+  "as_of": "2026-09-26",
   "signed": false,
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
@@ -23,6 +23,24 @@
     }
   ],
   "entries": [
+    {
+      "date": "2026-09-26",
+      "kind": "corrected",
+      "row": null,
+      "headline": "Linux Foundation row withdrawn from the table; now under Named, and not listed",
+      "detail": "The row rested on private evidence only, and the Foundation's public members page did not name us. A membership label a stranger cannot check does not belong on a public page, so the row was moved to the not-listed section with that reason. The 2026-09-21 entry below is kept as the record of what was first published.",
+      "evidence": "https://www.linuxfoundation.org/about/members",
+      "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-26",
+      "kind": "corrected",
+      "row": "c2pa",
+      "headline": "C2PA standing corrected from member to contributor",
+      "detail": "The public roster lists CSOAI LTD under the heading Contributor Members, the entry tier. The row said member; it now says contributor, which is the word the roster itself uses and the word the site footer already used.",
+      "evidence": "https://c2pa.org/membership/",
+      "evidence_kind": "public_url"
+    },
     {
       "date": "2026-09-22",
       "kind": "recorded",
@@ -143,7 +161,7 @@
     {
       "date": "2026-09-21",
       "kind": "added",
-      "row": "linux-foundation",
+      "row": null,
       "headline": "Linux Foundation membership agreement completed by all parties",
       "detail": "DocuSign reported the envelope completed by all parties on 2026-09-21. The member portal record M-018884 (login required) gives the tier as Silver. The public members page did not name us on 2026-09-22, so the row is marked private evidence. Membership is a paid participation tier, not an endorsement of anything we publish.",
       "evidence": "INBOX 8955 (the Linux Foundation, 2026-09-21: one DocuSign envelope carrying the membership agreement for both the Open Secure AI Alliance and the Linux Foundation memberships) and INBOX 8987 (DocuSign, 2026-09-21 22:56 UTC: 'All parties have completed')",

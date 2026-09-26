@@ -159,6 +159,17 @@ export default function About() {
           <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
             We measure AI systems, sign the result, and publish what we could not measure
           </h1>
+          <p className="text-lg text-gray-300 leading-relaxed mb-8" data-testid="about-accountable-entity">
+            Council of AI is operated by <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
+            <a
+              href="https://find-and-update.company-information.service.gov.uk/company/16939677"
+              className="text-emerald-300 underline"
+              rel="noopener noreferrer"
+            >
+              16939677
+            </a>
+            , founded by Nicholas Templeman. The company is accountable for everything published on this site.
+          </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
             In 2024, as artificial intelligence began transforming every industry, a critical question emerged:
             <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate.
@@ -367,7 +378,9 @@ export default function About() {
                   </p>
                   <p className="text-sm text-gray-500">
                     <strong>Why it matters:</strong> When a company's own AI reviews their AI, there's a conflict of interest.
-                    Our multi-vendor approach ensures unbiased safety assessments.
+                    Spreading review across vendors is meant to reduce that conflict. It has not yet been shown to: the
+                    latest measurement above found the legs fully correlated, so we claim no independence and no
+                    unbiased review until a measurement shows otherwise.
                   </p>
                 </Card>
               </div>

@@ -1,5 +1,6 @@
 // functions/api/challenge.ts - POST/GET measured-subject redress door (JC-D4).
-// Receipts challenges without implying a registry when KV is unbound (stored:false).
+// Receipts challenges without implying a registry: nothing is persisted (stored:false), and the
+// response says so in words, with the mailbox that does record a challenge.
 // Do not import node:crypto - Pages Functions cannot publish that module.
 
 interface ChallengeEnv {
@@ -7,6 +8,10 @@ interface ChallengeEnv {
 }
 
 const NAMED = ["card", "crosswalk", "board", "findings"];
+
+// Said in every response while stored is false. Exported so the test holds the words.
+export const NOT_RECORDED =
+  "Not yet recorded: this endpoint issues a receipt and stores nothing. To have a challenge recorded and reviewed, email nicholas@csoai.org with the content_id.";
 
 function canonical(obj: Record<string, unknown>): string {
   return JSON.stringify(obj, Object.keys(obj).sort());
@@ -64,7 +69,8 @@ export const onRequestPost: PagesFunction<ChallengeEnv> = async ({ request, env 
       challenger,
       content_id: cid,
       stored: false,
-      detail: "Challenge receipted. Resolution rows feed the Value Ledger when bound.",
+      recorded: false,
+      detail: NOT_RECORDED,
       verify_note: "recompute HMAC over canonical receipt to verify issuance",
     },
     { status: 202, headers: { "cache-control": "no-store" } },
@@ -75,9 +81,10 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const id = new URL(request.url).searchParams.get("id");
   return Response.json({
     schema: "csoai.challenge-door/0.1",
-    note: "POST /api/challenge - card/crosswalk/board/findings. Receipted; stored:false until KV binds.",
+    note: `POST /api/challenge - card/crosswalk/board/findings. ${NOT_RECORDED}`,
     example: { targetType: "card", target: "signed measurement content_id", reason: "why contended" },
     id_echo: id,
     stored: false,
+    recorded: false,
   }, { headers: { "cache-control": "no-store" } });
 };
