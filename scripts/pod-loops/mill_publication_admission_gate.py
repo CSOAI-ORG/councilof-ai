@@ -16,6 +16,7 @@ from pathlib import Path
 
 SIGNED_PREFIX = "public/interop/mill-cards-signed/signed-"
 RECEIPTS = Path("public/interop/mill-evidence")
+DID_DOC = Path("public/.well-known/did.json")
 
 
 def changed_signed_cards(repo: Path, base: str, head: str) -> list[tuple[str, Path]]:
@@ -42,6 +43,12 @@ def check(repo: Path, base: str, head: str) -> list[str]:
             receipts.append(json.loads(path.read_text(encoding="utf-8")))
         except (OSError, ValueError) as error:
             return [f"unreadable intake receipt {path.name}: {error}"]
+    admissions: list[dict] = []
+    for path in sorted((repo / RECEIPTS).glob("runpod-admission-*.json")):
+        try:
+            admissions.append(json.loads(path.read_text(encoding="utf-8")))
+        except (OSError, ValueError) as error:
+            return [f"unreadable admission record {path.name}: {error}"]
     errors: list[str] = []
     for status, path in changes:
         if status != "A":
@@ -72,10 +79,37 @@ def check(repo: Path, base: str, head: str) -> list[str]:
                 or receipt.get("model_manifest_digest") != evidence.get("model_manifest_digest")):
             errors.append(f"{path}: intake receipt does not bind card evidence")
             continue
-        if receipt.get("state") != "ADMITTED" or (receipt.get("authority") or {}).get("admitted") is not True:
+        if receipt.get("state") == "ADMITTED" and (receipt.get("authority") or {}).get("admitted") is True:
+            continue
+        # Intake receipts are immutable VERIFIED_QUARANTINE bytes; admission is a separate
+        # record written by scripts/admit_mill_cards.py. It is revalidated here from the
+        # bytes it binds, never taken on trust.
+        records = [r for r in admissions if (r.get("card") or {}).get("id") == card_id]
+        if len(records) != 1:
             errors.append(f"{path}: intake authority is {receipt.get('state')}/admitted="
-                          f"{(receipt.get('authority') or {}).get('admitted')}; HOLD publication")
+                          f"{(receipt.get('authority') or {}).get('admitted')} and {len(records)} admission "
+                          f"records bind this card; HOLD publication")
+            continue
+        try:
+            problems = _admit().validate_admission_record(records[0], card, receipt, _did_doc(repo))
+        except Exception as error:  # noqa: BLE001 — any failure to revalidate is a HOLD
+            problems = [f"admission record cannot be revalidated: {type(error).__name__}: {error}"]
+        for problem in problems:
+            errors.append(f"{path}: {problem}; HOLD publication")
     return errors
+
+
+def _admit():
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import admit_mill_cards  # noqa: PLC0415
+    return admit_mill_cards
+
+
+def _did_doc(repo: Path) -> dict | None:
+    try:
+        return json.loads((repo / DID_DOC).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None  # validate_admission_record then fails SIGNATURE_INVALID
 
 
 def main() -> int:
