@@ -49,7 +49,7 @@ export const LEDGER = {
       reached_the_public: true,
       evidence: [
         "functions/api/corrections.served-text.test.ts",
-        "scripts/brand-gate-rules.mjs"
+        "scripts/brand-gate.mjs"
       ],
     },
     {

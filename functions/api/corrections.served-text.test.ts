@@ -4,7 +4,7 @@
  *
  * WHY. /corrections is rendered in the browser from this Function, so scripts/brand-gate.mjs (which
  * scans prerendered HTML and static JSON) never saw its text. On 2026-09-26 a literal internal
- * hostname shipped that way. This test reads the same RULES the gate uses (scripts/brand-gate-rules.mjs)
+ * hostname shipped that way. This test reads the same RULES the gate uses (out of scripts/brand-gate.mjs)
  * and applies the IDENTIFIER class to every string in the served body, at any depth.
  *
  * SCOPE, STATED. The quotation class (pricing_leak, gpai_code_signature, measured_index_sticker, ...)
@@ -13,9 +13,20 @@
  * the ledger's own REDACTION RULE says describe them, never reproduce them.
  */
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { onRequestGet } from "./corrections";
-// @ts-expect-error — plain ESM module shared with the build-time gate
-import { RULES } from "../../scripts/brand-gate-rules.mjs";
+
+// RULES are read out of scripts/brand-gate.mjs itself (the same slice-and-evaluate the outward gate uses),
+// so there is one list and no copy of it.
+function loadRules(): unknown[] {
+  const src = readFileSync(new URL("../../scripts/brand-gate.mjs", import.meta.url), "utf8");
+  const a = src.indexOf("const RULES = [");
+  const b = src.indexOf("\n];", a);
+  if (a < 0 || b < 0) throw new Error("scripts/brand-gate.mjs: RULES not found; the guard fails closed");
+  // eslint-disable-next-line no-new-func
+  return new Function(`return ${src.slice(a + "const RULES = ".length, b + 2)}`)() as unknown[];
+}
+const RULES = loadRules();
 
 const IDENTIFIER_RULES = ["internal_codenames", "internal_strategy_codename", "infra_leak"];
 
