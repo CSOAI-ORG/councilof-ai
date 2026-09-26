@@ -343,6 +343,21 @@ def evaluate_health(job, now, probes=None):
         age = (now - lm).total_seconds()
         return res(OK if age <= max_age else STALE, age, "last commit %s" % iso(lm))
 
+    if kind == "dated_file":
+        # a dated output that must exist by a daily deadline: path has <date>; the date due is (the last deadline
+        # passed) minus lag_days. E.g. capsule chain: yesterday's measurement index by 09:00Z. Absent = MISSING (BAD).
+        lag = int(h.get("lag_days", 1))
+        hh, mm = (int(x) for x in str(h.get("deadline_utc", "09:00")).split(":"))
+        cut = now.replace(hour=hh, minute=mm, second=0, microsecond=0)
+        ref = now if now >= cut else now - datetime.timedelta(days=1)
+        due = (ref - datetime.timedelta(days=lag)).strftime("%Y-%m-%d")
+        dp = expand(str(h.get("path", "")).replace("<date>", due))
+        if dp and os.path.exists(dp):
+            return res(OK, now.timestamp() - os.path.getmtime(dp),
+                       "%s present (due by %sT%02d:%02dZ)" % (os.path.basename(dp), ref.strftime("%Y-%m-%d"), hh, mm))
+        return res(MISSING, None, "ALERT no %s: the %s output was due by %sT%02d:%02dZ (%s)"
+                   % (dp, due, ref.strftime("%Y-%m-%d"), hh, mm, h.get("why", "a missed day")))
+
     path = expand(h.get("path"))
     if not path or not os.path.exists(path):
         return res(MISSING, None, "%s absent" % path)
