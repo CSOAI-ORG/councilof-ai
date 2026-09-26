@@ -74,6 +74,41 @@ def stable_observation(name: str, parsed: dict[str, Any] | None, meta: dict[str,
     out["excluded_volatile_fields"] = ["signature_check.checked_at"]
     return out
 
+def reachability_status(url: str, user_agent: str | None = None) -> int:
+    headers={}
+    if user_agent:
+        headers["User-Agent"]=user_agent
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=20) as response:
+            return int(response.status)
+    except urllib.error.HTTPError as exc:
+        return int(exc.code)
+    except Exception:
+        return 0
+
+
+def machine_access_rows(paths: list[str]) -> list[dict[str, Any]]:
+    ok={200,402}
+    rows=[]
+    for path in paths:
+        url="https://councilof.ai"+path
+        plain=reachability_status(url)
+        browser=reachability_status(url,"Mozilla/5.0")
+        if plain in ok:
+            state="DEFAULT_PYTHON_REACHABLE"
+        elif browser in ok:
+            state="DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+        else:
+            state="NOT_DIRECTLY_REACHABLE"
+        rows.append({
+            "path":path,
+            "plain_python_status":plain,
+            "browser_ua_status":browser,
+            "state":state,
+        })
+    return rows
+
+
 def source_commit() -> str:
     return subprocess.check_output(
         ["git", "-C", str(ROOT), "log", "-1", "--format=%H", "--", "council-os/capabilities.json"],
@@ -178,6 +213,12 @@ def validate_committed(
     dist=docs.get("layer0-distribution.json") or {}
     if len(dist.get("staged_surfaces") or [])!=4:
         errors.append("distribution: expected four staged index surfaces")
+    machine=(dist.get("machine_access_baseline") or {})
+    machine_rows=machine.get("rows") or []
+    if len(machine_rows)!=5:
+        errors.append("distribution: expected five machine-access baseline rows")
+    if sum((machine.get("counts") or {}).values())!=len(machine_rows):
+        errors.append("distribution: machine-access counts do not cover rows")
     return errors
 
 
@@ -206,6 +247,10 @@ def selftest() -> list[str]:
             "layer0-distribution.json":{
                 "schema":"fixture","laws":laws,
                 "staged_surfaces":[{"path":f"/{i}.json"} for i in range(4)],
+                "machine_access_baseline":{
+                    "counts":{"DEFAULT_PYTHON_REACHABLE":5},
+                    "rows":[{"path":f"/live-{i}","plain_python_status":200,"browser_ua_status":200,"state":"DEFAULT_PYTHON_REACHABLE"} for i in range(5)],
+                },
             },
             "progress-index.json":{"schema":"fixture","laws":laws},
         }
@@ -365,6 +410,8 @@ def main() -> int:
         "/layer0-distribution.json",
         "/progress-index.json",
     ]
+    machine_access = machine_access_rows(live_existing)
+    machine_access_counts = dict(sorted(Counter(row["state"] for row in machine_access).items()))
     distribution = {
         "schema": "csoai.layer0-distribution/0.2",
         "kind": "public-release-state",
@@ -384,6 +431,12 @@ def main() -> int:
             }
             for path in staged_new
         ],
+        "machine_access_baseline": {
+            "method": "One default Python urllib request and one browser-User-Agent request per existing live reference surface from the release-builder network.",
+            "claim_boundary": "Reachability observation only; not a security finding and not a claim about vendor intent.",
+            "counts": machine_access_counts,
+            "rows": machine_access,
+        },
         "release_gate": {
             "required_independent_witnesses": 2,
             "pass_condition": (
@@ -434,6 +487,8 @@ def main() -> int:
             "currently_live_reference_surfaces": len(live_existing),
             "staged_new_indexes": len(staged_new),
             "release_state": "STAGED_NOT_DEPLOYED",
+            "machine_access_counts": machine_access_counts,
+            "machine_access_claim_boundary": "Reachability observation only; not a security finding or measurement result.",
         },
         "source_observations": observations,
         "laws": common_laws + [

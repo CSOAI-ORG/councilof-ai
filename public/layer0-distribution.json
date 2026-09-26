@@ -1,6 +1,6 @@
 {
   "canonical_origin": "https://councilof.ai",
-  "content_id": "1dee002f6e69df8c385e92048c0aa13579546516198712ef9e7d39141271c88c",
+  "content_id": "5d967d778a9ed18e61c078d1a525d4bc733cd4227ed5fd134207cd3decfd9634",
   "existing_live_surfaces": [
     {
       "path": "/.well-known/x402.json",
@@ -30,6 +30,45 @@
     "payment does not create a GSPC measurement",
     "generated is not deployed; deployed is not independently read back"
   ],
+  "machine_access_baseline": {
+    "claim_boundary": "Reachability observation only; not a security finding and not a claim about vendor intent.",
+    "counts": {
+      "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE": 5
+    },
+    "method": "One default Python urllib request and one browser-User-Agent request per existing live reference surface from the release-builder network.",
+    "rows": [
+      {
+        "browser_ua_status": 200,
+        "path": "/.well-known/x402.json",
+        "plain_python_status": 403,
+        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+      },
+      {
+        "browser_ua_status": 200,
+        "path": "/.well-known/agent-card.json",
+        "plain_python_status": 403,
+        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+      },
+      {
+        "browser_ua_status": 200,
+        "path": "/api/revenue",
+        "plain_python_status": 403,
+        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+      },
+      {
+        "browser_ua_status": 200,
+        "path": "/quickstart.json",
+        "plain_python_status": 403,
+        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+      },
+      {
+        "browser_ua_status": 200,
+        "path": "/verifier/verify_receipt.py",
+        "plain_python_status": 403,
+        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+      }
+    ]
+  },
   "release_gate": {
     "pass_condition": "all nine surfaces return 200 from both witnesses; matching body hashes; no previously-live surface regresses",
     "required_independent_witnesses": 2
