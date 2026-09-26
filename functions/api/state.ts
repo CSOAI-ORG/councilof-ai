@@ -67,6 +67,8 @@ import claimsRegister from "../../public/claims-register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
 import councilMcpDoor from "../../evidence/council-mcp-door.json";
+import MCP_FREE_TOOLS from "../mcp/gspc-tools.json";
+import MCP_PAID_TOOLS from "../mcp/paid-tools.json";
 import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 import estateSummary from "../../public/interop/master-consolidation-summary.json";
@@ -440,17 +442,32 @@ export const onRequestGet: PagesFunction = async () => {
 
     // ── COUNCIL HTTP MCP DOOR (not the 2026-08-27 fleet probe) ──────────────
     council_http_mcp: {
-      authority: "evidence/council-mcp-door.json",
+      // DERIVED FROM THE REGISTRY THE HANDLER SERVES (2026-09-26). This read "7" from a dated
+      // probe (evidence/council-mcp-door.json, 2026-09-01) for three weeks after the door grew to
+      // nine free + four paid tools, while its note said "Seven tools". functions/mcp/[[path]].ts
+      // answers tools/list with exactly these two files, so their length IS the served count.
+      authority: "functions/mcp/gspc-tools.json + functions/mcp/paid-tools.json (what functions/mcp/[[path]].ts serves on tools/list)",
       url: (councilMcpDoor as { url: string }).url,
       tools_count: fact(
-        (councilMcpDoor as { tools_count: number }).tools_count,
-        "probed",
-        "evidence/council-mcp-door.json → tools_count",
-        (councilMcpDoor as { as_of: string }).as_of,
-        "as_of",
-        "POST /mcp tools/list. Seven tools. Distinct from mcp_fleet.tools_probed (8 from two other servers on 2026-08-27). Do not add those numbers.",
+        MCP_FREE_TOOLS.tools.length + MCP_PAID_TOOLS.tools.length,
+        "catalogued",
+        "functions/mcp/gspc-tools.json + functions/mcp/paid-tools.json → tools.length",
+        null,
+        null,
+        `The tool registry the /mcp handler serves: ${MCP_FREE_TOOLS.tools.length} free + ${MCP_PAID_TOOLS.tools.length} paid (x402). ` +
+          "Distinct from mcp_fleet.tools_probed (two other servers, 2026-08-27). Do not add those numbers.",
       ),
-      tools: (councilMcpDoor as { tools: string[] }).tools,
+      tools: [...MCP_FREE_TOOLS.tools, ...MCP_PAID_TOOLS.tools].map((t) => t.name),
+      free_tools: MCP_FREE_TOOLS.tools.map((t) => t.name),
+      paid_tools: MCP_PAID_TOOLS.tools.map((t) => t.name),
+      // The dated probe is kept, labelled as what it is: a past observation, not the current count.
+      last_probe: {
+        source: "evidence/council-mcp-door.json",
+        kind: "probed",
+        tools_count: (councilMcpDoor as { tools_count: number }).tools_count,
+        as_of: (councilMcpDoor as { as_of: string }).as_of,
+        note: "historical probe; superseded by the registry-derived tools_count above",
+      },
     },
 
     // ── THE MCP FLEET ────────────────────────────────────────────────────────

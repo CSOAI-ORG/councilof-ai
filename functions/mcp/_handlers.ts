@@ -61,6 +61,7 @@ async function verifyCardThreeState(
       ok: ch.ok,
       code: ch.code,
       detail: ch.detail,
+      ...(ch.advisory ? { advisory: true } : {}),
     })),
     rule: `${origin}/signed/HOW-TO-VERIFY.md`,
     // The anchor the Trust anchor check actually matched — never a typed key id. A card signed under
@@ -279,6 +280,7 @@ export async function verifyToolResult(
       ok: c.ok,
       code: c.code,
       detail: c.detail,
+      ...(c.advisory ? { advisory: true } : {}),
     })),
     trust_anchor:
       "pinned in the verifier's source (functions/_lib/cardVerify.ts PINNED_ANCHORS) — no key resolution at check time",

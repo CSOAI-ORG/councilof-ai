@@ -85,3 +85,44 @@ describe("the packaged MCP server advertises exactly what the door serves", () =
     expect(bad, "a manifest we own advertises a tool the door refuses by name").toEqual([]);
   });
 });
+
+/**
+ * 2026-09-26 developer-persona findings: this README said "22 axes measured · … 8 fact runs" and
+ * "tools/list returns all twelve" while the door served thirteen, and its stdio section named no
+ * 2025-11-25 protocol. Counts in a README go stale between releases; the live board and tools/list
+ * are the authorities. These pin that nothing countable is typed here again.
+ */
+describe("the npm README describes the server without typed counts", () => {
+  const readme = readFileSync(resolve(__dirname, "README.md"), "utf8");
+  const pkg = J(resolve(__dirname, "package.json"));
+  const runtime = readFileSync(resolve(__dirname, "index.mjs"), "utf8");
+  const COUNTED = /\b\d+\s+(axes|axis|fact runs|model fleets|leader scores|tools|free tools|metered tools)\b|\b(all|the)\s+(eight|nine|ten|eleven|twelve|thirteen|fourteen)\b|\b(eight|nine|ten|eleven|twelve|thirteen|fourteen|four)\s+(free|metered|x402-metered|tools)\b/i;
+
+  it("README types no board total and no tool count", () => {
+    expect(readme.match(COUNTED)?.[0] ?? null).toBeNull();
+  });
+
+  // package.json's description DOES carry a count, on purpose: tool-fleet.lock.test.ts derives it from
+  // the lock and fails when it drifts. The README had no such guard, which is why it went stale.
+
+  it("control: the sentence that shipped would be caught", () => {
+    expect("22 axes measured · 14 model fleets · 8 fact runs").toMatch(COUNTED);
+    expect("`tools/list` returns all twelve").toMatch(COUNTED);
+  });
+
+  it("README's accepted protocol list is exactly the server's SUPPORTED_PROTOCOLS, 2025-11-25 included", () => {
+    const m = runtime.match(/const SUPPORTED_PROTOCOLS = \[([^\]]+)\]/);
+    expect(m).toBeTruthy();
+    const supported = [...m![1].matchAll(/"([\d-]+)"/g)].map((x) => x[1]);
+    expect(supported).toContain("2025-11-25");
+    const line = readme.match(/Protocol versions accepted:([^;.]+)/);
+    expect(line).toBeTruthy();
+    const listed = [...line![1].matchAll(/(\d{4}-\d{2}-\d{2})/g)].map((x) => x[1]);
+    expect(listed).toEqual(supported);
+  });
+
+  it("ships the ONE axis alias table", () => {
+    expect(pkg.files).toContain("axis-aliases.json");
+    expect(readFileSync(resolve(__dirname, "pack.mjs"), "utf8")).toContain("functions/mcp/axis-aliases.json");
+  });
+});

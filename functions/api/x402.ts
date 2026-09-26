@@ -263,7 +263,7 @@ export const onRequestGet: PagesFunction<{
       // it free. Stating a package's tool list here also guarantees drift, because that list
       // changes on someone else's release schedule and this catalog would keep asserting the
       // old one. So the catalog now states the MECHANISM, which cannot go stale.
-      how: "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free.",
+      how: "tools/call without x_payment → the route's 402 challenge per the x402 MCP transport (isError:true; structuredContent carries x402Version, accepts[], resource); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free.",
     },
     invariants: {
       measurement_not_certification: "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",

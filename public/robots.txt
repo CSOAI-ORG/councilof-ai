@@ -48,6 +48,21 @@ Disallow: /api/
 # rest of /api/ excluded while allowing crawlers to read the board and its
 # documented query-string filters.
 Allow: /api/gspc
+# AGENT-FACING ENDPOINTS — ALLOWED (26 September 2026). `Disallow: /api/` above also
+# blocked the endpoints this estate publishes FOR agents: the x402 catalogue, the A2A
+# interface, the MCP catalogue, the self-description (/api/state), the OpenAPI document,
+# the signed card store and the public root. A well-behaved agent that honours robots.txt
+# was told to stay away from exactly the doors it was invited to. Under RFC 9309 the
+# longest matching rule wins, so each Allow below overrides the shorter Disallow for its
+# own path; the rest of /api/ stays excluded. The Content-Signal above is unchanged:
+# ai-train=no still applies to everything these paths serve.
+Allow: /api/x402
+Allow: /api/a2a
+Allow: /api/mcp
+Allow: /api/state
+Allow: /api/openapi.json
+Allow: /api/cards
+Allow: /api/root
 Disallow: /*?*utm_
 Allow: /
 

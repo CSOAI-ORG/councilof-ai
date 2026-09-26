@@ -15,17 +15,17 @@ false failure on roughly a third of the published set. In Python the rule reprod
 """
 from .board import (
     BOARD_URL, ROOT_URL, DID_URL, PINNED_KEY_ID,
-    fetch_board, totals, axes, get_axis, check_totals, fetch_root, pinned_key,
+    fetch_board, totals, axes, get_axis, canonical_axis, AXIS_ALIASES, check_totals, fetch_root, pinned_key,
 )
 from .card import (
     Verdict, VALID, INVALID, UNCHECKABLE,
     preimage, card_id, verify_card, fetch_card, verify_card_id,
 )
 
-__version__ = "0.2.20260912"
+__version__ = "0.2.20260926"
 __all__ = [
     "BOARD_URL", "ROOT_URL", "DID_URL", "PINNED_KEY_ID",
-    "fetch_board", "totals", "axes", "get_axis", "check_totals", "fetch_root", "pinned_key",
+    "fetch_board", "totals", "axes", "get_axis", "canonical_axis", "AXIS_ALIASES", "check_totals", "fetch_root", "pinned_key",
     "Verdict", "VALID", "INVALID", "UNCHECKABLE",
     "preimage", "card_id", "verify_card", "fetch_card", "verify_card_id",
     "__version__",

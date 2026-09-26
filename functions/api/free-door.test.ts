@@ -254,8 +254,9 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     };
     expect(plain.csoai?.not_paid_reason).toBeUndefined();
     expect(Object.keys(plain.csoai ?? {}).sort())
-      .toEqual(["deliverable", "free_preview", "offer_receipt"]);
-    expect(plain.csoai?.free_preview).toBe("https://councilof.ai/api/free-door");
+      .toEqual(["deliverable", "free_equivalents", "free_preview", "offer_receipt", "why_402"]);
+    // The free pointer names a route that answers 200 — it used to point back at this 402.
+    expect(plain.csoai?.free_preview).toBe("https://councilof.ai/api/gspc");
     expect(plain.csoai?.deliverable).toBeTruthy();
   });
 

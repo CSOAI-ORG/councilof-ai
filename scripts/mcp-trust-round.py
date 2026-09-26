@@ -355,6 +355,17 @@ def derive_counts(rows: list[dict], enum: dict) -> dict:
 # Round
 # ---------------------------------------------------------------------------
 
+def is_partial(enumeration: dict) -> bool:
+    """A round is PARTIAL whenever its enumeration did not complete — a cap included.
+
+    Until 2026-09-26 this read `not complete and len(hosts) < cap`, so a round that stopped
+    because it hit the cap (500 of 1,854 registry rows with a remote, stop_reason "cap reached")
+    published partial:false beside complete:false. A cap-limited read is a slice of the
+    population, and a slice must say so: deltas between slices never show population change.
+    """
+    return not bool(enumeration.get("complete"))
+
+
 def run(cap: int, out_dir: str, rows_out: str | None) -> int:
     t0 = time.time()
     enum = enumerate_hosts(cap)
@@ -371,7 +382,7 @@ def run(cap: int, out_dir: str, rows_out: str | None) -> int:
 
     counts = derive_counts(rows, enum["enumeration"])
     as_of = now_iso()
-    partial = not enum["enumeration"]["complete"] and len(hosts) < cap
+    partial = is_partial(enum["enumeration"])
     snapshot = {
         "kind": KIND,
         "population": "mcp-internet-facing",

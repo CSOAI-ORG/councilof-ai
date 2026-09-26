@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { A2A_ERROR, A2A_PROTOCOL_VERSION, SKILL_IDS, onRequestGet, onRequestPost } from "./a2a";
+import { A2A_ERROR, A2A_PROTOCOL_VERSION, GREETING_EXAMPLES, SKILL_IDS, isCapabilityGreeting, onRequestGet, onRequestPost } from "./a2a";
 
 const LID =
   "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
@@ -109,6 +109,35 @@ describe("POST /api/a2a — SendMessage", () => {
     expect(unversioned.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
     expect(unversioned.json.result).toBeUndefined();
     expect(sourceFetch).not.toHaveBeenCalled();
+  });
+
+  // 2026-09-26: a bare "hello" got INVALID_SKILL_SELECTOR while that error's own text said a
+  // greeting was accepted. Greetings now answer with the capability list; the error names them.
+  it.each(["hello", "Hello!", "hi", "Hey there", "help", "hi, what can you do?", "What are your skills?"])(
+    "a greeting (%s) is answered with the capability list, not INVALID_SKILL_SELECTOR",
+    async (text) => {
+      const sourceFetch = vi.fn();
+      vi.stubGlobal("fetch", sourceFetch);
+      const { json } = await rpc({
+        jsonrpc: "2.0", id: 1, method: "SendMessage", params: {
+          message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text }] },
+        },
+      });
+      expect(json.error).toBeUndefined();
+      expect(json.result.message.parts[1].data).toMatchObject({ kind: "CAPABILITY_HELP", skills: [...SKILL_IDS] });
+      expect(sourceFetch).not.toHaveBeenCalled();
+    },
+  );
+
+  it("every greeting the error text names is one the parser accepts, and a sentence that merely contains one is not", async () => {
+    for (const g of GREETING_EXAMPLES.split(", ")) expect(isCapabilityGreeting(g), g).toBe(true);
+    for (const t of ["measure all models", "hi please grade gpt-4o", "helpful", "which model is best"]) expect(isCapabilityGreeting(t), t).toBe(false);
+    const { json } = await rpc({
+      jsonrpc: "2.0", id: 1, method: "SendMessage", params: {
+        message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "measure all models" }] },
+      },
+    });
+    expect(json.error.message).toContain(GREETING_EXAMPLES);
   });
 
   it("does not turn unrelated free text into a measurement or task", async () => {

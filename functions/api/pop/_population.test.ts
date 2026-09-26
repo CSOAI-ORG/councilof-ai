@@ -320,8 +320,9 @@ describe("the 402 challenge", () => {
       expect(typeof csoai.deliverable).toBe("string");
       expect((csoai.preview as { n: unknown }).n).toBe(pv.n);
       expect(JSON.stringify(b)).not.toMatch(/\$\s?\d/);
-      // x402scan drops a door whose PAYMENT-REQUIRED header exceeds 16 KiB.
-      expect(r.headers.get("payment-required")!.length, `${id} header`).toBeLessThan(16 * 1024);
+      // x402scan drops a door whose PAYMENT-REQUIRED header exceeds 16 KiB; common proxies drop one
+      // over 4–8 KiB. The rail's budget is 4 KiB (PAYMENT_REQUIRED_HEADER_BUDGET).
+      expect(r.headers.get("payment-required")!.length, `${id} header`).toBeLessThan(4 * 1024);
     }
     expect(SKU).toEqual({ skuId: "issuance", tier: "reserve" });
   });

@@ -71,9 +71,13 @@ describe("evidence-bundle — the human door", () => {
   });
 
   it("the 402 challenge names the door too, for an agent that cannot pay USDC", async () => {
-    const { res } = await call("obligation=article-50&subject=openai&bundle=1");
+    const { res, body } = await call("obligation=article-50&subject=openai&bundle=1");
     expect(res.status).toBe(402);
-    const ch = JSON.parse(atob(res.headers.get("payment-required")!));
+    // The csoai sidecar (where the invoice alternative lives) is in the 402 BODY. Since 2026-09-26 the
+    // PAYMENT-REQUIRED header carries only the minimal v2 challenge (payment-required-header.test.ts),
+    // so an agent reading the challenge finds the door in the body it already parses.
+    expect(res.headers.get("payment-required")).toBeTruthy();
+    const ch = body as { csoai?: unknown };
     expect(JSON.stringify(ch.csoai ?? ch)).toContain("invoice=gbp");
   });
 });

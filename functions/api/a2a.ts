@@ -275,6 +275,25 @@ const exactKeys = (input: Json, required: string[], optional: string[] = []): bo
     && Object.keys(input).every((key) => allowed.has(key));
 };
 
+/**
+ * A greeting or capability question — the whole message, not a substring, so a sentence that
+ * merely contains "hi" never selects anything. Punctuation and case are ignored.
+ */
+const GREETING_WORDS = ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening", "help"];
+const CAPABILITY_QUESTIONS = ["what can you do", "what do you do", "what are your skills", "what are your capabilities", "capabilities", "skills", "list skills"];
+export const GREETING_EXAMPLES = "hello, hi, hey, help, what can you do?";
+export function isCapabilityGreeting(text: string): boolean {
+  const t = text.toLowerCase().replace(/[^a-z ]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!t) return false;
+  const tail = (rest: string) => rest === "" || rest === "there" || CAPABILITY_QUESTIONS.includes(rest);
+  if (CAPABILITY_QUESTIONS.includes(t)) return true;
+  for (const g of GREETING_WORDS) {
+    if (t === g) return true;
+    if (t.startsWith(`${g} `) && tail(t.slice(g.length + 1))) return true;
+  }
+  return false;
+}
+
 function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
   if (parts.length !== 1) {
@@ -290,12 +309,12 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | s
   if (semanticKeys[0] === "text") {
     const text = str(part.text)?.trim().replace(/\s+/g, " ").toLowerCase();
     if (text === "board") return { skill: "gspc-board", input: {} };
-    // A2A directory task probes send this generic greeting. Answer with the
+    // A2A directory task probes and first-contact agents send a greeting. Answer with the
     // declared capability contract, never with a measurement or a guessed skill.
-    if (text === "hello, what can you do?" || text === "what can you do?" || text === "help") {
-      return { kind: "CAPABILITY_HELP" };
-    }
-    return "structured Part.data {skill,input} is required (text accepts only board or a capability-help greeting)";
+    // Until 2026-09-26 only three exact strings qualified, so a bare "hello" got
+    // INVALID_SKILL_SELECTOR while the error text itself said greetings were accepted.
+    if (text !== undefined && isCapabilityGreeting(text)) return { kind: "CAPABILITY_HELP" };
+    return `structured Part.data {skill,input} is required; text accepts only "board" or a greeting (${GREETING_EXAMPLES}), which returns the capability list`;
   }
   if (semanticKeys[0] !== "data") {
     return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;

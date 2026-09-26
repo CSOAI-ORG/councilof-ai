@@ -1,39 +1,81 @@
 /**
  * GET /.well-known/x402.json — the x402 discovery manifest, served live so `mode` is derived
  * from env (never typed). Replaces the static file that pointed agents at a mock pack host;
- * the metered resources live on THIS origin. No amounts here — they live in each 402 challenge.
+ * the metered resources live on THIS origin.
+ *
+ * ACCEPTS ARE THE LIVE CHALLENGE'S, NOT A COPY OF THEM (2026-09-26). Each resources[].accepts[]
+ * entry is built by the same two functions every door calls — x402Accepts() for the terms and
+ * challengeAccept() for the projection a buyer reads — from the SKU tier that door charges
+ * (OFFERS below). Until then this file hand-rolled `network: "base"`, no amount, no asset and
+ * `extra.name: "USDC"` while the 402 said eip155:8453, an atomic amount and "USD Coin"; the
+ * EIP-712 domain name is what a wallet signs under, so the listing produced unverifiable
+ * signatures. functions/.well-known/x402-listing-parity.test.ts calls every door's own handler
+ * and fails when any payment field here differs from its 402.
+ *
+ * `accepts_v1` is the SAME entry projected through toV1Requirements() — the function the settle
+ * path uses when a facilitator speaks v1 — for consumers that still read the chain slug.
  */
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
 import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
+import { challengeAccept, toV1Requirements, x402Accepts, type X402Env } from "../api/_x402";
 import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATION_DESCRIPTION, POPULATION_DESCRIPTIONS } from "../api/_x402_descriptions";
 import { POPULATION_IDS } from "../api/_population";
 import { RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "../api/_x402_descriptions";
 import { RAS_OUTPUT_SCHEMAS } from "../api/_ras_schemas";
+import { SKU as POPULATION_SKU } from "../api/_population_door";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
-export const onRequestGet: PagesFunction<{
-  X402_PAY_TO?: string;
-  X402_FACILITATOR_URL?: string;
-  BOARD_SIGN_KEY_PKCS8_B64?: string;
-}> = async ({ request, env }) => {
-  const origin = new URL(request.url).origin;
-  // v1-shaped PaymentRequirements (x402 spec v1 §5.1.2): a v1 consumer — Circle's own
-  // Gateway included — parses resources[].accepts[]; without it the door is invisible to
-  // every v1 client. All fields here are derived, never typed amounts: the amount itself
-  // still lives only in the 402 challenge (the ruling).
-  const req = (url: string, description: string, outputSchema: Record<string, unknown> = { type: "object" }) => ({
-    scheme: "exact" as const,
-    network: "base" as const, // v1 consumers read the chain NAME (spec §5.1.2); the CAIP2 stays in the v2 layer
-    payTo: resolvePayTo(env),
-    resource: url,
+/** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
+// pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
+// becomes a catalogue row (x402-ras-doors 64e556117). The listing builds its terms the same way.
+export type ListingOffer = { skuId: string; tier: string; productId?: string; amountAtomic?: "0"; pathScoped?: true };
+export const OFFERS: Record<string, ListingOffer> = {
+  "/api/free-door": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
+  "/api/request-attestation": { skuId: "request_attestation", tier: "per_request" },
+  "/api/evidence-bundle": { skuId: "evidence_bundle", tier: "bundle" },
+  "/api/eunomia-data": { skuId: "issuance", tier: "reserve" },
+  "/api/proof": { skuId: "issuance", tier: "reserve" },
+  "/api/rwa/evidence": { skuId: "request_attestation", tier: "per_request" },
+  "/api/wrapper": { skuId: "request_attestation", tier: "per_request" },
+  "/api/wrapper/changes": { skuId: "request_attestation", tier: "per_request" },
+  "/api/art50/marking-evidence": { skuId: "art50_marking_evidence", tier: "pack" },
+  "/api/feeds/provider-diff": { skuId: "provider_diff_feed", tier: "history_batch" },
+  "/api/receipts/batch": { skuId: "receipts_batch", tier: "per_batch" },
+  // SELF-SERVE RAS DOORS (functions/api/ras/*): the same SKU each handler passes to x402Accepts.
+  "/api/ras/mcp-probe": { skuId: "ras_fresh_read", tier: "per_read", productId: "csoai.product.ras.mcp_probe", pathScoped: true },
+  "/api/ras/x402-check": { skuId: "ras_fresh_read", tier: "per_read", productId: "csoai.product.ras.x402_check", pathScoped: true },
+  "/api/ras/supply": { skuId: "ras_fresh_read", tier: "per_read", productId: "csoai.product.ras.supply", pathScoped: true },
+};
+export const offerFor = (url: string): ListingOffer | null => {
+  const path = new URL(url).pathname;
+  const pop = path.match(/^\/api\/pop\/([^/]+)$/);
+  if (pop) return { ...POPULATION_SKU, productId: `csoai.product.population.${pop[1]}` };
+  return OFFERS[path] ?? null;
+};
+
+/** accepts[] for one listed resource, built exactly as its door builds its 402. */
+export function listingAccepts(env: X402Env, listedUrl: string, description: string, outputSchema: Record<string, unknown> = { type: "object" }) {
+  const offer = offerFor(listedUrl);
+  if (!offer) throw new Error(`x402.json: no offer declared for ${listedUrl}`);
+  const url = offer.pathScoped ? listedUrl.split("?")[0] : listedUrl;
+  const terms = x402Accepts(offer.amountAtomic === "0" ? { ...env, X402_AMOUNT: "0" } : env, url, {
+    skuId: offer.skuId,
+    tier: offer.tier,
     description,
-    mimeType: "application/json",
-    outputSchema,
-    maxTimeoutSeconds: 300,
-    extra: { name: "USDC", version: "2" },
+    ...(offer.productId ? { productId: offer.productId } : {}),
   });
+  return {
+    // RAS doors (x402-ras-doors) declare a per-door outputSchema on accepts[] as well; other doors keep the bare projection.
+    accepts: terms.map((a) => (outputSchema.type === "object" && Object.keys(outputSchema).length === 1 ? challengeAccept(a, url, description) : { ...challengeAccept(a, url, description), outputSchema })),
+    accepts_v1: terms.map((a) => ({ ...toV1Requirements(a), outputSchema })),
+  };
+}
+
+export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => {
+  const origin = new URL(request.url).origin;
+  const req = (url: string, description: string, outputSchema?: Record<string, unknown>) => listingAccepts(env, url, description, outputSchema);
 
   const rail = railMode(env);
   const boardSigningKeyConfigured = Boolean((env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim());
@@ -84,7 +126,7 @@ export const onRequestGet: PagesFunction<{
       },
     },
     resources: [
-      // The ONLY resource of ours the x402 Bazaar actually indexes, and it was missing from the
+      // The resource the x402 Bazaar indexed first (2026-09-05), and it was missing from the
       // document agents read after they find the domain. Discovery pointed one way and the
       // catalogue the other: an agent arriving from the Bazaar landed on /api/free-door, and an
       // agent reading this file was never told that door exists.
@@ -102,14 +144,14 @@ export const onRequestGet: PagesFunction<{
         amount: "0",
         description:
           "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
-        accepts: [req(`${origin}/api/free-door`, "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.")],
-        note: "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
-        indexed_in: "x402 Bazaar (PayAI)",
+        ...req(`${origin}/api/free-door`, "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying."),
+        note: "Payable and priced at zero — it settles, and charges nothing. It answers 402 rather than 200 on purpose: the x402 Bazaar catalogues only a resource that settles, so a 200 route cannot be indexed. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one. To read the same content without any x402 handshake, GET a free_equivalents URL — those answer 200.",
+        free_equivalents: [`${origin}/api/gspc`, `${origin}/root.json`],
       },
       { method: "GET", url: `${origin}/api/request-attestation?subject=model-or-subject-id`, paid_for: "issuance",
         description:
           REQUEST_ATTESTATION_DESCRIPTION,
-        accepts: [req(`${origin}/api/request-attestation?subject=model-or-subject-id`, REQUEST_ATTESTATION_DESCRIPTION)]  },
+        ...req(`${origin}/api/request-attestation?subject=model-or-subject-id`, REQUEST_ATTESTATION_DESCRIPTION)  },
       // `<id>` meant a MODEL id two lines above and an OBLIGATION id here, so a buyer reading
       // this file tries the obvious thing and gets 404 unknown_obligation. Probed 2026-09-05:
       // obligation=gpt-4o -> 404, obligation=dora|eu-cra|article-50|article-53 -> 402. The
@@ -118,26 +160,26 @@ export const onRequestGet: PagesFunction<{
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, paid_for: "assembly",
         description:
           "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
-        accepts: [req(`${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.")]  },
+        ...req(`${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.")  },
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly",
         description:
           "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
-        accepts: [req(`${origin}/api/eunomia-data?feed=1`, "Signed derivative data feed — validated measurement series, authenticated and ready to build on.")]  },
+        ...req(`${origin}/api/eunomia-data?feed=1`, "Signed derivative data feed — validated measurement series, authenticated and ready to build on.")  },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly",
         description: PROOF_BUNDLE_DESCRIPTION,
-        accepts: [req(`${origin}/api/proof?bundle=1`, PROOF_BUNDLE_DESCRIPTION)]  },
+        ...req(`${origin}/api/proof?bundle=1`, PROOF_BUNDLE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/rwa/evidence?asset=RLUSD`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1`,
         description:
           "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
-        accepts: [req(`${origin}/api/rwa/evidence?asset=RLUSD`, "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.")]  },
+        ...req(`${origin}/api/rwa/evidence?asset=RLUSD`, "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.")  },
       { method: "GET", url: `${origin}/api/wrapper?id=usdc.e:arbitrum`, paid_for: "issuance", free_preview: `${origin}/api/wrapper?id=<wrapped-symbol:chain>&preview=1`,
         description:
           "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
-        accepts: [req(`${origin}/api/wrapper?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.")]  },
+        ...req(`${origin}/api/wrapper?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.")  },
       { method: "GET", url: `${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, paid_for: "assembly", free_preview: `${origin}/api/wrapper/changes?id=usdc.e:arbitrum&preview=1`,
         description:
           "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
-        accepts: [req(`${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.")]  },
+        ...req(`${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.")  },
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
@@ -147,14 +189,14 @@ export const onRequestGet: PagesFunction<{
       { method: "GET", url: `${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1`,
         description:
           "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
-        accepts: [req(`${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.")]  },
+        ...req(`${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.")  },
       { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly",
         description:
           "Provider change record — measurable differences between two measurement rounds for a named model provider.",
-        accepts: [req(`${origin}/api/feeds/provider-diff?history=1`, "Provider change record — measurable differences between two measurement rounds for a named model provider.")]  },
+        ...req(`${origin}/api/feeds/provider-diff?history=1`, "Provider change record — measurable differences between two measurement rounds for a named model provider.")  },
       { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
         description: RECEIPTS_BATCH_DESCRIPTION,
-        accepts: [req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)]  },
+        ...req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)  },
       // POPULATION DOORS — derived from the registry (functions/api/_population.ts), never retyped
       // here: a population added there is advertised here the moment it exists. Each url is
       // PATH-SCOPED (no query) because PayAI lists only query-less URLs today; the pod's settle
@@ -169,7 +211,7 @@ export const onRequestGet: PagesFunction<{
           population: id,
           free_preview: `${origin}/api/pop/${id}?preview=1`,
           description,
-          accepts: [req(`${origin}/api/pop/${id}`, description)],
+          ...req(`${origin}/api/pop/${id}`, description),
         };
       }),
       // SELF-SERVE RAS DOORS (functions/api/ras/*) — fresh computation against a buyer-named
@@ -180,15 +222,15 @@ export const onRequestGet: PagesFunction<{
       { method: "GET", url: `${origin}/api/ras/mcp-probe?url=https://councilof.ai/mcp`, paid_for: "issuance",
         description: RAS_MCP_PROBE_DESCRIPTION,
         outputSchema: RAS_OUTPUT_SCHEMAS.mcp_probe,
-        accepts: [req(`${origin}/api/ras/mcp-probe?url=https://councilof.ai/mcp`, RAS_MCP_PROBE_DESCRIPTION, RAS_OUTPUT_SCHEMAS.mcp_probe)] },
+        ...req(`${origin}/api/ras/mcp-probe?url=https://councilof.ai/mcp`, RAS_MCP_PROBE_DESCRIPTION, RAS_OUTPUT_SCHEMAS.mcp_probe) },
       { method: "GET", url: `${origin}/api/ras/x402-check?url=https://councilof.ai/api/free-door`, paid_for: "issuance",
         description: RAS_X402_CHECK_DESCRIPTION,
         outputSchema: RAS_OUTPUT_SCHEMAS.x402_check,
-        accepts: [req(`${origin}/api/ras/x402-check?url=https://councilof.ai/api/free-door`, RAS_X402_CHECK_DESCRIPTION, RAS_OUTPUT_SCHEMAS.x402_check)] },
+        ...req(`${origin}/api/ras/x402-check?url=https://councilof.ai/api/free-door`, RAS_X402_CHECK_DESCRIPTION, RAS_OUTPUT_SCHEMAS.x402_check) },
       { method: "GET", url: `${origin}/api/ras/supply?asset=USDC&ledger=ethereum`, paid_for: "issuance",
         description: RAS_SUPPLY_DESCRIPTION,
         outputSchema: RAS_OUTPUT_SCHEMAS.supply,
-        accepts: [req(`${origin}/api/ras/supply?asset=USDC&ledger=ethereum`, RAS_SUPPLY_DESCRIPTION, RAS_OUTPUT_SCHEMAS.supply)] },
+        ...req(`${origin}/api/ras/supply?asset=USDC&ledger=ethereum`, RAS_SUPPLY_DESCRIPTION, RAS_OUTPUT_SCHEMAS.supply) },
     ],
     // FREE DOORS — named here so an agent reading this manifest finds the free companions of the
     // RAS doors without paying: verifying any receipt, and the daily conformance index. They are
@@ -208,7 +250,7 @@ export const onRequestGet: PagesFunction<{
       // quarantined and dropped from the catalogue, and nothing failed. The catalogue is the truth.
       paid_tools: PAID_TOOLS.tools.map((t) => t.name),
       free_tools: FREE_TOOLS.tools.map((t) => t.name),
-      how: "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment",
+      how: "tools/call without x_payment returns the route's 402 challenge per the x402 MCP transport: isError:true, the PaymentRequired object in structuredContent and as JSON in content[0].text; pay, then call again with x_payment",
     },
     // Named, not hidden: an agent that cached an older manifest learns why the route now 503s
     // instead of retrying a resource that cannot be sold.
@@ -217,6 +259,14 @@ export const onRequestGet: PagesFunction<{
         reason: "paid witness issuance is disabled until a release gate verifies leaf → signed root → sidecar → Rekor → OpenTimestamps",
         free_status: `${origin}/api/witness/status?sha256=<64-hex>` },
     ],
+    // INDEX MEMBERSHIP IS MEASURED, NOT DECLARED (2026-09-26). This manifest used to carry
+    // `indexed_in: "x402 Bazaar (PayAI)"` on one resource of 21 — hand-typed, and silent on the
+    // other twenty whether or not a third-party index listed them. An index writes its record once
+    // and never refreshes it (see functions/api/free-door.ts), so membership is only knowable by
+    // reading the index; nothing in this repository can keep a typed claim true. The field is
+    // removed, not populated; the self-parity instrument (csoai.self-parity/0.1) reads each index.
+    index_membership:
+      "not asserted by this manifest — whether a third-party index lists a resource is measured by reading that index, never typed here",
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
     board: `${origin}/api/gspc`,

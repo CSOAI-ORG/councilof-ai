@@ -310,7 +310,7 @@ describe("/mcp tools/list — nine free + four paid, catalogue free, nothing lab
 });
 
 describe("/mcp tools/call — paid tools", () => {
-  it("unpaid: returns the route's 402 challenge as structuredContent (not an error), forwarding exactly the route path", async () => {
+  it("unpaid: returns the route's 402 challenge per the x402 MCP transport (isError:true, PaymentRequired at the top level), forwarding exactly the route path", async () => {
     const seen = stubOrigin({
       deployed: ["/api/request-attestation", "/api/receipts/batch"],
     });
@@ -320,8 +320,15 @@ describe("/mcp tools/call — paid tools", () => {
         arguments: { subject: "qwen3", axis: "gov" },
       }),
     );
-    expect(r.result.isError).toBe(false);
-    const sc = r.result.structuredContent;
+    // x402 transports-v2/mcp.md: "servers MUST return a tool result with isError: true containing
+    // the PaymentRequired data" — structuredContent holds x402Version + accepts, and content[0].text
+    // is the same object as JSON. Until 2026-09-26 this was isError:false with the challenge nested.
+    expect(r.result.isError).toBe(true);
+    const sc = r.result.structuredContent as unknown as Record<string, unknown> & Envelope["result"]["structuredContent"];
+    expect(sc.x402Version).toBe(2);
+    expect((sc.accepts as Array<Record<string, unknown>>)[0]).toMatchObject({ scheme: "exact", network: "eip155:8453", payTo: "0xpay" });
+    expect(JSON.parse(r.result.content[0].text)).toEqual(sc);
+    expect(r.result.content[1].text).toMatch(/^PAYMENT_REQUIRED/);
     expect(sc.status).toBe("PAYMENT_REQUIRED");
     expect(sc.payment_required.accepts[0]).toMatchObject({
       scheme: "exact",
@@ -334,7 +341,6 @@ describe("/mcp tools/call — paid tools", () => {
     expect(sc.delivery_state).toBe("NOT_DELIVERED");
     expect(sc.settlement_state).toBe("NOT_REQUESTED");
     expect(sc.not_a_certification).toBe(true);
-    expect(r.result.content[0].text).toMatch(/^PAYMENT_REQUIRED/);
     expect(seen).toHaveLength(1);
     const u = new URL(seen[0].url);
     expect(u.origin + u.pathname).toBe(`${ORIGIN}/api/request-attestation`);
@@ -361,10 +367,32 @@ describe("/mcp tools/call — paid tools", () => {
     expect(sc.delivery_state).toBe("NOT_DELIVERED");
     expect(sc.settlement_state).toBe("UNCONFIRMED");
     expect(sc.nothing_charged).toBeUndefined();
-    expect(r.result.content[0].text).toMatch(
+    expect(r.result.isError).toBe(true);
+    expect(r.result.content[1].text).toMatch(
       /inspect the wallet, chain and facilitator before .*retrying/i,
     );
     expect(JSON.stringify(r)).not.toContain(token);
+  });
+
+  // PAYMENT SEMANTICS UNCHANGED by the 2026-09-26 isError switch: payment is read ONLY from the
+  // x_payment argument. A client that puts a payload in _meta["x402/payment"] (the x402 MCP
+  // transport's field, not read here yet) gets the challenge again, and nothing is forwarded.
+  it("a payload sent only in _meta['x402/payment'] is not forwarded: same challenge, nothing charged", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await call(
+      rpc("tools/call", {
+        name: "commission_card",
+        arguments: { subject: "qwen3" },
+        _meta: { "x402/payment": { x402Version: 2, payload: { signature: "0xabc" } } },
+      }),
+    );
+    expect(r.result.isError).toBe(true);
+    const sc = r.result.structuredContent;
+    expect(sc.status).toBe("PAYMENT_REQUIRED");
+    expect(sc.payment_presented).toBe(false);
+    expect(sc.nothing_charged).toBe(true);
+    expect(seen).toHaveLength(1);
+    expect(seen[0].headers.get("x-payment")).toBeNull();
   });
 
   it("paid: keeps delivery distinct while reporting a present, unverified route receipt", async () => {
