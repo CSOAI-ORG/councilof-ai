@@ -120,6 +120,16 @@
   Content-Type: application/octet-stream
   Content-Disposition: attachment
 
+# Measurement capsules: the data folder and the embeddable card are read from other sites (the
+# /embed/measurement-capsules.js card fetches latest.json and the index cross-origin). Pages already
+# answers ACAO * on static assets; these rules make it explicit so it cannot silently change. One rule
+# per path family, never a splat plus an exact path (the /interop/*.py duplicate-value lesson).
+/measurement-capsules/*
+  Access-Control-Allow-Origin: *
+
+/embed/*
+  Access-Control-Allow-Origin: *
+
 # SCITT key-discovery document (key publication only — NOT a transparency service)
 /.well-known/scitt-keys
   Content-Type: application/json

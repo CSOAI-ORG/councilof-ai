@@ -1328,6 +1328,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Hub"
  },
  {
+  "path": "/measurement-capsules",
+  "comp": "MeasurementCapsules",
+  "title": "Measurement Capsules"
+ },
+ {
   "path": "/membership-agreement",
   "comp": "MembershipAgreement",
   "title": "Membership Agreement"
