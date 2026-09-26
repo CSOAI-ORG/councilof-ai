@@ -1,0 +1,46 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/cross-ledger-jpmd-2026-09-25.json",
+      "sha256": "ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "as_of": "2026-09-25T11:18:07Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability or compliance.",
+    "asset": "JPMD",
+    "issuer_list_state": "READ",
+    "reconciliation_state": "UNRECONCILED_WITH_ISSUING_BANK_LEDGER",
+    "reads": [
+      [
+        "JPMD",
+        "base",
+        "1001000.00",
+        "STATE_PROOF_VERIFIED"
+      ]
+    ],
+    "proof_files": {
+      "public/interop/cross-ledger-jpmd-2026-09-25/base-JPMD-proof.json": "52bb6a95b9b23b8360390f6058725d8c3354bfd968594660a7eeca989d3e58ed"
+    }
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "adeaea4000fb73ca8fab1a3b0535d0b106c0c9a3f93b59fc56e2db4a4374a20d861936ed0640be788568dc84fc4512b009190a6f76fde7c0434913e443442c0a",
+    "payload_sha256": "827b040f485e7f293b3a6c772f0c2e628a35b4b4a27b22aad704b863aa260aaa",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-25T11:22:17.940Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "record sha256 altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload (keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record file; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

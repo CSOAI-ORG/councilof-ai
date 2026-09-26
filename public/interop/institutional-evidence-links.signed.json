@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/institutional-evidence-links.json",
+      "sha256": "93bf6eae5289f0d000363ef512a91d84ae583d4f6ee43fe57678f724bf45fbf3",
+      "schema": "csoai.institutional-evidence-links/0.1",
+      "as_of": "2026-09-25T11:24:01Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability or compliance.",
+    "institutions": {
+      "swift": "UNMEASURED",
+      "wells-fargo": "UNMEASURED",
+      "franklin-templeton-benji": "MEASURED_RECORDS_AVAILABLE",
+      "jpmorgan": "MEASURED_RECORDS_AVAILABLE",
+      "citi": "UNMEASURED",
+      "hsbc": "UNMEASURED",
+      "bny": "UNMEASURED",
+      "blackrock-buidl": "UNMEASURED"
+    },
+    "records": {
+      "/interop/cross-ledger-benji-2026-09-25.json": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+      "/interop/cross-ledger-jpmd-2026-09-25.json": "ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b",
+      "/interop/cross-ledger-citi-token-services-2026-09-25.json": "796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab",
+      "/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json": "48dd4f9722bd1d27836fa65cfc4081b45c41eee51fea7d686b3483fd7ac364e3",
+      "/interop/cross-ledger-bny-digital-cash-2026-09-25.json": "ec9bf90130e449a01c4814a697dac351a02abc832cd2c426db3255ef1bbf03c9",
+      "/interop/cross-ledger-buidl-2026-09-25.json": "cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56"
+    }
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "fe0ed4c172c4b71cde3df0405180402c610bebcd0aa8bb4cdc46408e16705a7985081260ce191ac709a285f52c8490ae8d0c6b7b35e7f580cbdc1d0a19ca0c08",
+    "payload_sha256": "07fb1bf217920c648915d2dfa991ec616f465d0105ae9d271ac32fe05fec0d5b",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-25T11:24:08.630Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "record sha256 altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload (keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record file; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

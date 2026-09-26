@@ -1,0 +1,124 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/cross-ledger-benji-2026-09-25.json",
+      "sha256": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "as_of": "2026-09-25T11:12:21Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability or compliance.",
+    "asset": "BENJI",
+    "issuer_list_state": "READ",
+    "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+    "reads": [
+      [
+        "BENJI",
+        "stellar",
+        "430691880.4855482",
+        "OPERATOR_API"
+      ],
+      [
+        "BENJI",
+        "polygon",
+        "32206461.812513615916650543",
+        "STATE_PROOF_VERIFIED"
+      ],
+      [
+        "BENJI",
+        "arbitrum",
+        "47950819.162464907015564307",
+        "STATE_PROOF_VERIFIED"
+      ],
+      [
+        "BENJI",
+        "avalanche",
+        "34309356.142162081852426527",
+        "STATE_PROOF_RECORDED"
+      ],
+      [
+        "BENJI",
+        "aptos",
+        "14713483.381624994",
+        "OPERATOR_API"
+      ],
+      [
+        "BENJI",
+        "ethereum",
+        "48209314.242417926951548284",
+        "STATE_PROOF_VERIFIED"
+      ],
+      [
+        "BENJI",
+        "base",
+        "59725674.950165151280437460",
+        "STATE_PROOF_VERIFIED"
+      ],
+      [
+        "BENJI",
+        "solana",
+        "209512.057557357",
+        "OPERATOR_API"
+      ],
+      [
+        "gBENJI",
+        "stellar",
+        "56720355.5672037",
+        "OPERATOR_API"
+      ],
+      [
+        "iBENJI",
+        "ethereum",
+        "195922530.492655972484309178",
+        "STATE_PROOF_VERIFIED"
+      ],
+      [
+        "iBENJI",
+        "bsc",
+        "1524087437.202981538514940268",
+        "STATE_PROOF_VERIFIED"
+      ],
+      [
+        "sgBENJI",
+        "stellar",
+        "24352527.5694453",
+        "OPERATOR_API"
+      ],
+      [
+        "grBENJI",
+        "stellar",
+        "516072.2845994",
+        "OPERATOR_API"
+      ]
+    ],
+    "proof_files": {
+      "public/interop/cross-ledger-benji-2026-09-25/polygon-BENJI-proof.json": "71571ea223f761754b5b116f0e6f8c0a6ccf8f2debe15fc9abd65bc35c0c7ebc",
+      "public/interop/cross-ledger-benji-2026-09-25/arbitrum-BENJI-proof.json": "2b6b65cdba0b70b68fa1f802bd685cbe82f93e14e6348c3e37c1d0e488121350",
+      "public/interop/cross-ledger-benji-2026-09-25/avalanche-BENJI-proof.json": "0a73b1161417b20110e8c71236dd6385048f945fccec8efbc2aca9a0b0d8e793",
+      "public/interop/cross-ledger-benji-2026-09-25/ethereum-BENJI-proof.json": "ba9d2c452aa218d28850d014ccc0cb5ec0b5b78841a4598f49a8e50bca006ec5",
+      "public/interop/cross-ledger-benji-2026-09-25/base-BENJI-proof.json": "2308b862ef75fdd65686324c49f3ec3fd8b6f282d32b7e2d15b8ceb1576ec2c4",
+      "public/interop/cross-ledger-benji-2026-09-25/ethereum-iBENJI-proof.json": "f2a6224513cc8fc22ed8ee3329400bbcb77b79aa5183ac63859bff071d8e77e3",
+      "public/interop/cross-ledger-benji-2026-09-25/bsc-iBENJI-proof.json": "851f369d03b433c1f2d48947f80db52d3de470d07b4ce8af95cdd810b99967e1"
+    }
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "30bd6cc975173f09dfcbd4b73166b669407375d015170bb2a76df83a1354daca8763ee361dd9be56b060dd9e21b09370a5fe2dea2ce8143f00e3d9a4176a3c00",
+    "payload_sha256": "b7563a47a5f3e635cf40e2aa6e6ffbe06c3aaccebf35814a4b3ce624bed56215",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-25T11:22:15.085Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "record sha256 altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload (keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record file; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}
