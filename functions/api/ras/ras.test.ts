@@ -194,8 +194,13 @@ describe("payment required — the exact scheme fields, and no computation befor
       expect(Number(a.amount)).toBeGreaterThan(0); // a paid door never advertises 0 (buyer's-eye rule)
       expect(a.maxTimeoutSeconds).toBe(300);
       expect(pr.resource.url).toBe(`${ORIGIN}/api/ras/${name}`); // a buyer's target never becomes a catalogue row
-      expect(pr.extensions.bazaar.info.input).toMatchObject({ type: "http", method: "GET" });
     }
+    // Header-minimal PAYMENT-REQUIRED (x402 v2; coordinator ruling 3, 2026-09-26): the header carries the
+    // payment subset only, so it stays under the 4-8 KiB single-header limit of common proxies;
+    // PaymentRequired.extensions (bazaar) live on the 402 BODY, where the bazaar spec places them.
+    expect(h.extensions).toBeUndefined();
+    expect(header!.length).toBeLessThan(4096);
+    expect(b.extensions.bazaar.info.input).toMatchObject({ type: "http", method: "GET" });
     // the bazaar blob satisfies its own schema: every info.input key is declared
     const inputProps = Object.keys(b.extensions.bazaar.schema.properties.input.properties);
     for (const k of Object.keys(b.extensions.bazaar.info.input)) expect(inputProps).toContain(k);
