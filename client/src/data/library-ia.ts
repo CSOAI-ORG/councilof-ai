@@ -157,6 +157,8 @@ export const PRIMARY_PATHS = new Set<string>([
   // /state — State of the Agent Internet: the stable address and its dated editions (2026-09-26).
   "/state",
   "/state/2026-09",
+  // /measurements/x402-activity — wash-adjusted x402 activity, signed daily record (2026-09-26).
+  "/measurements/x402-activity",
   // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
   "/verify-server",
   // /measurement-capsules — the human page over the capsule index: kinds, chain, anchors, how to verify (2026-09-26).

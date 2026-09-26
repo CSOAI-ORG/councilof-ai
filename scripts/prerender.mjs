@@ -207,6 +207,8 @@ function discover() {
     "/corrections", "/census",
     // State of the Agent Internet: the stable address + dated editions (2026-09-26).
     "/state", "/state/2026-09",
+    // Wash-adjusted x402 activity (2026-09-26): figures render from the signed record.
+    "/measurements/x402-activity",
     // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
     "/verify-server",
     // /measurement-capsules — the human page for the capsule index (2026-09-26); the folder holds only data.

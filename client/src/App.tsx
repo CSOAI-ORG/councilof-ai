@@ -198,6 +198,8 @@ const Census = lazy(() => import("./pages/Census"));
 // Every figure on a dated edition is read from its board-signed numbers.json (scripts/state-report/).
 const StateIndex = lazy(() => import("./pages/StateIndex"));
 const StateReport202609 = lazy(() => import("./pages/StateReport202609"));
+// /measurements/x402-activity — wash-adjusted x402 activity; every figure from the signed daily record.
+const X402Activity = lazy(() => import("./pages/X402Activity"));
 const VerifyServer = lazy(() => import("./pages/VerifyServer"));
 const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
 // /reach — the WHOLE funnel, including the four stages that carry no number and the
@@ -659,6 +661,7 @@ function App() {
                   <Route path="/census" component={Census} />
                   <Route path="/state" component={StateIndex} />
                   <Route path="/state/2026-09" component={StateReport202609} />
+                  <Route path="/measurements/x402-activity" component={X402Activity} />
                   <Route path="/verify-server" component={VerifyServer} />
                   <Route path="/measurement-capsules" component={MeasurementCapsules} />
                   <Route path="/reach" component={Reach} />

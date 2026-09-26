@@ -1333,6 +1333,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Measurement Capsules"
  },
  {
+  "path": "/measurements/x402-activity",
+  "comp": "X402Activity",
+  "title": "X402 Activity"
+ },
+ {
   "path": "/membership-agreement",
   "comp": "MembershipAgreement",
   "title": "Membership Agreement"
