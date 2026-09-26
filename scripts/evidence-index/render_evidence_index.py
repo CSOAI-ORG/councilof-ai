@@ -7,6 +7,22 @@ index.ots.json and, when present, verify.log (the output of `python3 verify.py`)
 import argparse, collections, hashlib, json, pathlib
 
 
+
+MEASUREMENT_CHAIN_POINTER = "<!-- measurement-index-chain:begin -->\n## Measurement-index chain\n\n`measurement-index/<date>/` holds CSOAI's daily measurement index as a hash chain: every day's index commits to the previous day's (SHA-256 and root) and declares any missed day. Each index is signed (`did:web:csoai.org#board-attestation-1`) and OpenTimestamps-stamped, and the chain starts at a signed genesis record (26 Sep 2026). How to verify it: [measurement-index/README.md](measurement-index/README.md).\n<!-- measurement-index-chain:end -->"
+
+
+def measurement_chain_pointer():
+    """The dataset also holds measurement-index/ (the hash-chained daily measurement index, published create-only by the
+    capsule lane, owner-gated). Its README pointer is emitted only when measurement-index/README.md is really on the
+    dataset, so a rebuild neither drops the section nor claims a folder that is not there. Network failure: omitted."""
+    try:
+        from huggingface_hub import HfApi
+        if HfApi().file_exists("csoai/evidence-index", "measurement-index/README.md", repo_type="dataset"):
+            return [MEASUREMENT_CHAIN_POINTER]
+    except Exception:
+        pass
+    return []
+
 def short(h, n=12):
     return (h or "")[:n]
 
@@ -140,6 +156,7 @@ def render(out):
     R += ["- " + x for x in e["not_enumerated"]]
     R += package_rule_lines(e)
     R.append("\nEvery item carries its own `does_not_show` list, its licence, its published date, and the exact check behind its signature and timestamp state.\n")
+    R += measurement_chain_pointer()
     R.append("## Licence\n")
     R.append("Index data CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). verify.py and the build scripts Apache-2.0. Each indexed item keeps its own licence, stated per item; this index relicenses nothing.\n")
     (out / "README.md").write_text("\n".join(R) + "\n")
