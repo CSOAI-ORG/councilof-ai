@@ -100,6 +100,10 @@ describe(".well-known/x402.json accepts[] = the live 402 accepts[], for every re
   // pins that WE never drop the query: the challenge names the listed URL's query in resource.url
   // and accepts[0].resource, so an index that strips it does so on its own side. (The facilitator
   // envelope keeps it too — _x402.test.ts "FULL resource url, query included".)
+  // EXCEPT path-scoped doors (OFFERS[...].pathScoped — the RAS doors). Coordinator ruling 2026-09-26:
+  // path-scoping wins, because it is the privacy rule — a buyer's target never becomes a catalogue
+  // row. Those doors are held to the opposite property in the next test. Listing == challenge for
+  // every payment field still applies to them (the test above).
   it("every door's challenge keeps the listed query string in resource.url and accepts[0].resource", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
       new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
@@ -109,6 +113,7 @@ describe(".well-known/x402.json accepts[] = the live 402 accepts[], for every re
       for (const r of (await listing()).resources) {
         const url = new URL(r.url);
         if (!url.search) continue;
+        if (offerFor(url.toString())?.pathScoped) continue; // privacy rule: see the next test
         const mod = (await import(/* @vite-ignore */ moduleFor(url.pathname))) as { onRequestGet: (c: unknown) => Promise<Response> };
         const resp = await mod.onRequestGet({ request: new Request(url.toString()), env: ENV, params: {} });
         const body = (await resp.json()) as { resource?: { url?: string }; accepts?: { resource?: string }[] };
@@ -121,6 +126,42 @@ describe(".well-known/x402.json accepts[] = the live 402 accepts[], for every re
     } finally {
       fetchSpy.mockRestore();
     }
+    expect(failures, `\n  ${failures.join("\n  ")}\n`).toEqual([]);
+  });
+
+  it("a path-scoped door's listing and challenge carry no target: the buyer's query never becomes a catalogue row", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
+      new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
+    );
+    const failures: string[] = [];
+    let scoped = 0;
+    try {
+      const body = (await listing()) as unknown as { resources: { url: string; accepts?: { resource?: string }[]; accepts_v1?: { resource?: string }[] }[] };
+      for (const r of body.resources) {
+        const url = new URL(r.url);
+        if (!offerFor(url.toString())?.pathScoped) continue;
+        scoped++;
+        // 1. the listing's payment terms name the PATH only
+        for (const [where, list] of [["accepts", r.accepts], ["accepts_v1", r.accepts_v1]] as const) {
+          for (const a of list ?? []) {
+            const res = a.resource ? new URL(a.resource) : null;
+            if (!res || res.search || res.pathname !== url.pathname) failures.push(`${url.pathname}: listing ${where}[].resource carries a target (${a.resource})`);
+          }
+        }
+        // 2. a buyer-named target never appears in the challenge a stranger (or an index) can read
+        const buyer = new URL(url.toString());
+        for (const k of [...buyer.searchParams.keys()]) buyer.searchParams.set(k, k === "url" ? "https://buyer-private.example/secret-path" : "BUYER_PRIVATE_VALUE");
+        const mod = (await import(/* @vite-ignore */ moduleFor(url.pathname))) as { onRequestGet: (c: unknown) => Promise<Response> };
+        const resp = await mod.onRequestGet({ request: new Request(buyer.toString()), env: ENV, params: {} });
+        const ch = (await resp.json()) as { resource?: { url?: string }; accepts?: { resource?: string }[] };
+        for (const [where, got] of [["resource.url", ch.resource?.url], ["accepts[0].resource", ch.accepts?.[0]?.resource]] as const) {
+          if (!got || /buyer-private|BUYER_PRIVATE_VALUE/.test(got) || new URL(got).search) failures.push(`${url.pathname}: challenge ${where} carries the buyer's target (${got})`);
+        }
+      }
+    } finally {
+      fetchSpy.mockRestore();
+    }
+    expect(scoped, "no path-scoped door found: this test would pass vacuously").toBeGreaterThanOrEqual(3);
     expect(failures, `\n  ${failures.join("\n  ")}\n`).toEqual([]);
   });
 
