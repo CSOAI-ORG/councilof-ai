@@ -1648,6 +1648,11 @@ def notice_output_matches(row, rc, out):
         a, b = str((f.get("a") or {}).get("value")), str((f.get("b") or {}).get("value"))
         ok = a in out and b in out
         return ok, f"output {'shows' if ok else 'does not show'} both {a!r} and {b!r}: {clip(out, 120)}"
+    if dim == "ISSUER_CLAIM_UNLISTED_DEPLOYMENT":
+        b = f.get("b") or {}
+        want = [f"symbol {b.get('symbol')}", f"totalSupply {b.get('value')}"]
+        ok = rc == 0 and all(w in out for w in want)
+        return ok, f"exit {rc}; output {'shows' if ok else 'does not show'} {want}: {clip(out, 120)}"
     if dim == "AUTH":
         ok = '"isRequired":true' in out.replace(" ", "") and '"required":false' in out.replace(" ", "")
         return ok, f"output: {clip(out, 140)}"
@@ -1680,10 +1685,39 @@ def registry_latest(http, name):
         return None, r
 
 
+def issuer_unlisted_reproduce(http, row):
+    """ISSUER_CLAIM_UNLISTED_DEPLOYMENT: the issuer's page (a) still lists the address and still does not name the
+    ledger, and (b) the ledger still answers symbol() == product at that address. Reproduces only if both hold."""
+    f = row.get("finding") or {}
+    a, b = f.get("a") or {}, f.get("b") or {}
+    page = row.get("endpoint")
+    r = http.get(page, cache=False, max_bytes=4_000_000)
+    if r.status != 200:
+        return None, f"issuer page {r.status or r.error} (dead surface)"
+    txt = r.text
+    addr, label = (b.get("address") or "").lower(), b.get("ledger_label") or ""
+    listed_elsewhere = addr and addr in txt.lower()
+    ledger_named = bool(label) and re.search(r"\b" + re.escape(label) + r"\b", html.unescape(re.sub(r"<[^>]+>", " ", txt))) is not None
+    rr, j = http.mcp(b.get("rpc"), "eth_call", [{"to": b.get("address"), "data": "0x95d89b41"}, "latest"])
+    res = (j or {}).get("result") if isinstance(j, dict) else None
+    if not res or len(res) < 130:
+        return None, f"ledger eth_call symbol() {rr.status or rr.error} (dead surface)"
+    try:
+        n = int(res[66:130], 16)
+        sym = bytes.fromhex(res[130:130 + 2 * n]).decode("utf-8", "replace")
+    except Exception as e:
+        return None, f"symbol() not decodable: {e}"
+    ok = bool(listed_elsewhere) and not ledger_named and sym == b.get("symbol")
+    return ok, (f"page sha256 {sha(r.body)[:12]}…: address listed {bool(listed_elsewhere)}, '{label}' named {ledger_named}; "
+                f"{label} symbol() at {addr[:10]}… = {sym!r}")
+
+
 def notice_reproduce(http, row):
     dim, f = row.get("dimension"), row.get("finding") or {}
     if dim == "A2A_SIGNATURE":
         return a2a_reproduce(http, row)
+    if dim == "ISSUER_CLAIM_UNLISTED_DEPLOYMENT":
+        return issuer_unlisted_reproduce(http, row)
     reg_name = ((f.get("a") or {}).get("surface") or "").replace("registry ", "").strip()
     j, rr = registry_latest(http, reg_name)
     if j is None:
