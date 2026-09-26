@@ -34,11 +34,31 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0926-01",
+      date: "2026-09-26",
+      first_observed_at: "2026-09-26T08:52:00Z",
+      detected_at: "2026-09-26",
+      supersedes_text: { id: "C-2026-0925-01", field: "what_was_wrong", original_sha256: "14aa9778984fdc4b1b9b972060440a6cc98a9bd948b3fef916428973ddfb3748" },
+      what_was_wrong:
+        "Entry C-2026-0925-01, as signed on 2026-09-25 (ledger content_id 218e3585f039eb6ccb1251a569d6e1e5ed7417e6e2dc24f5d3115050614acd14, 67 entries), named an internal host by its literal hostname in what_was_wrong. That breaks this ledger's own redaction rule: a machine surface describes an internal identifier and never reproduces it. The /corrections page renders this field verbatim, so the hostname was visible public copy.",
+      how_caught:
+        "Staging persona test of the 2026-09-26 integration build (Playwright over the rendered page, all three viewports), scanning visible text for internal identifiers. The build-time brand gate could not see it: /corrections is rendered in the browser from GET /api/corrections, and the gate scanned only prerendered HTML.",
+      what_changed:
+        "The hostname in C-2026-0925-01 what_was_wrong is replaced by a description (the estate's always-on host); nothing else in that entry changed, and it now names this entry in text_superseded_by. The original field is not reprinted, per the redaction rule; its sha256 is recorded above, and the whole ledger as signed on 2026-09-25 remains in version control (functions/api/corrections.ts at commit 522a1dc7c) where it verifies against that signature. functions/api/corrections.served-text.test.ts now scans every string GET /api/corrections serves for the brand gate's internal-identifier rules, so client-rendered ledger text cannot bypass the gate again. Dated quotations of old prices and retracted labels inside correction records are left as written: they document what was wrong, not current offers. The ledger signature reads STALE until re-issued over these bytes with scripts/sign-corrections-ledger.mjs.",
+      status: "CORRECTED — hostname abstracted; signature re-issue pending",
+      reached_the_public: true,
+      evidence: [
+        "functions/api/corrections.served-text.test.ts",
+        "scripts/brand-gate-rules.mjs"
+      ],
+    },
+    {
       id: "C-2026-0925-01",
       date: "2026-09-25",
+      text_superseded_by: "C-2026-0926-01",
       first_observed_at: "2026-09-25T12:11:43Z",
       what_was_wrong:
-        "Served text described the board signing key's custody as separated when it is not. /api/corrections (C-2026-0902-09 and C-2026-0902-08), llms-full.txt, /.well-known/did.json (_gspcBoardKeyNote), /interop/gspc-board-freeze-pointer.json (freeze.custody) and the custody disclosure page called the 2026-09-02 freeze key #gspc-board-22axis-2026 '3-party MPC' custody, and the Council OS sign pane said 'KEY is 2-of-3'. Read on oracle-micro-2 on 2026-09-25: all three additive shares of that key are files in ONE directory on ONE host, used by one process. That is one failure domain. The 2-of-3 split was never performed, and no key the estate uses is held in separated custody.",
+        "Served text described the board signing key's custody as separated when it is not. /api/corrections (C-2026-0902-09 and C-2026-0902-08), llms-full.txt, /.well-known/did.json (_gspcBoardKeyNote), /interop/gspc-board-freeze-pointer.json (freeze.custody) and the custody disclosure page called the 2026-09-02 freeze key #gspc-board-22axis-2026 '3-party MPC' custody, and the Council OS sign pane said 'KEY is 2-of-3'. Read on the estate's always-on host on 2026-09-25: all three additive shares of that key are files in ONE directory on ONE host, used by one process. That is one failure domain. The 2-of-3 split was never performed, and no key the estate uses is held in separated custody.",
       why_it_was_wrong:
         "'Multi-party' describes the signing protocol, not where the shares live. The ceremony runbook already said 'current 3-of-3 = three shares on ONE machine = single failure domain', but the served wording was written from the protocol's name and never re-read against the host.",
       what_changed:
