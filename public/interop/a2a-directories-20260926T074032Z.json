@@ -108,11 +108,5 @@
     "ots": "/interop/a2a-directories-20260905T185400Z.json.ots",
     "why": "our_agent.skills recounted from the card (8 -> 10: measurement-capsules and server-evidence joined). The directory rows and totals are NOT re-probed: they remain as of 20260905T185400Z. Timestamped bytes are superseded, never edited."
   },
-  "ots_state": "STAMPED 2026-09-26: the OpenTimestamps proof over these exact bytes is /interop/a2a-directories.json.ots (public calendars; calendar-pending until upgraded, and a pending proof is not a Bitcoin attestation). Earlier bytes keep their own proofs at the dated paths named in supersedes and label_restamp.",
-  "label_restamp": {
-    "path": "/interop/a2a-directories-20260926T074032Z.json",
-    "sha256": "3070120b21008274492729e374018fd209402791132bbeca861072c7b8dab96e",
-    "ots": "/interop/a2a-directories-20260926T074032Z.json.ots",
-    "why": "The bytes stamped at 07:40Z on 2026-09-26 still said ots_state NOT_STAMPED. Only ots_state changed here (and this pointer was added); every other field is identical. Those bytes keep their proof at this dated path; `supersedes` still names the recount's predecessor."
-  }
+  "ots_state": "NOT_STAMPED: this superseding file carries no OpenTimestamps proof yet; stamping is a calendar submission reserved for the owner (ots stamp public/interop/a2a-directories.json). The superseded bytes keep their proof at the dated path."
 }
