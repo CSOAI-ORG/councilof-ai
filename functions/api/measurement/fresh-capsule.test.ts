@@ -42,19 +42,31 @@ function fakeServer(opts: { card?: Any | null; tools: string[]; version?: string
 }
 
 describe("listing = challenge", () => {
-  it("the x402.json entry carries exactly the door's 402 accepts (v2 verbatim, v1 by the settle path's projection)", async () => {
+  it("the x402.json entry carries exactly the door's 402 accepts (accepts = v2 verbatim, accepts_v1 = the settle path's projection)", async () => {
     const { res, body } = await call();
     expect(res.status).toBe(402);
     const header = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(res.headers.get("PAYMENT-REQUIRED")!), (ch) => ch.charCodeAt(0))));
-    expect(header.accepts).toEqual(body.accepts);
+    // Header-minimal PAYMENT-REQUIRED (ruling 3): the header accepts[] is the payment SUBSET of the body's,
+    // field for field; commercial attribution and extensions stay on the body.
+    expect(header.accepts).toHaveLength(body.accepts.length);
+    for (const [k, v] of Object.entries(header.accepts[0])) {
+      if (v && typeof v === "object") expect(body.accepts[0][k], `header accepts[0].${k}`).toMatchObject(v); // header may drop informational sub-fields (decimals, symbol)
+      else expect(v, `header accepts[0].${k}`).toBe(body.accepts[0][k]);
+    }
+    for (const k of ["scheme", "network", "amount", "asset", "payTo", "maxTimeoutSeconds"]) expect(header.accepts[0]).toHaveProperty(k);
+    expect(header.accepts[0]).not.toHaveProperty("csoai_pricing");
+    expect(header).not.toHaveProperty("extensions");
 
     const listing = (await (await x402Json({ request: new Request(`${ORIGIN}/.well-known/x402.json`), env: {} } as never)).json()) as Any;
     const entry = (listing.resources as Any[]).find((r) => new URL(r.url).pathname === PATH)!;
     expect(entry, "the door is listed").toBeTruthy();
     expect(entry.url).toBe(body.resource.url);
-    expect(entry.accepts_v2).toEqual(body.accepts);
+    // The listing convention of devsurface-fix 2e95e20c5 (coordinator ruling 5, 2026-09-26): accepts[] is the
+    // v2 challenge's accepts[] verbatim, accepts_v1[] is the same entry through toV1Requirements().
+    expect(entry.accepts).toEqual(body.accepts);
+    expect(entry).not.toHaveProperty("accepts_v2");
     const c = body.accepts[0];
-    const v1 = entry.accepts[0];
+    const v1 = entry.accepts_v1[0];
     expect(v1).toMatchObject({
       scheme: c.scheme,
       network: toLegacyNetwork(c.network),
@@ -68,7 +80,7 @@ describe("listing = challenge", () => {
     });
     expect(entry.description).toBe(c.description);
     expect(c.csoai_pricing.sku_id).toBe("request_attestation"); // the per-request pattern, no new price
-    expect(c.csoai_pricing.tier).toBe("per_request");
+    expect(c.csoai_pricing).not.toHaveProperty("tier"); // owner ruling: no tier key on the wire
   });
 });
 
