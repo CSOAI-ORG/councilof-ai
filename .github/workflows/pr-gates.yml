@@ -257,8 +257,9 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/verify-estate.mjs --limit 15 --did-drift public/.well-known/did.json
 
-      # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026 with a 3-party
-      # MPC key, and the artefact NAMES its own verifier in its `verify` field:
+      # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026, an MPC key whose
+      # three shares all sit on one host (see its status file), and the artefact NAMES its own
+      # verifier in its `verify` field:
       #   node scripts/gspc-board-verify.mjs <this file>
       # The script existed, worked, returned VERIFIED — and no workflow ran it. A verifier nobody
       # runs is the same shape as the EMILIA vector pin and the published bundle, both found ungated
@@ -268,7 +269,11 @@ jobs:
       # "signature does NOT verify", exit 1.
       - name: Signed GSPC board must verify under its own published recipe
         if: steps.scope.outputs.gated == 'true'
-        run: node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json
+        run: |
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json --did public/.well-known/did.json
+          # The superseding dated freeze (2026-09-25, single key #board-attestation-1). Key anchored
+          # to the committed DID document, so a swapped key in the file fails here.
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-25.signed.json --did public/.well-known/did.json
 
       # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
       # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the
@@ -312,6 +317,16 @@ jobs:
           python3 -m pytest -q scripts/readers/test_layer0_liveness_reader.py
           # #2391: connector envelope validator (failing controls) + Kaggle adapter replay.
           python3 -m pytest -q scripts/adapters/test_connector_envelope.py scripts/adapters/test_kaggle_envelopes.py
+
+      # C-2026-0925-01: split-custody wording ("3-party", "2-of-3") may not return to a served or
+      # producing surface without correction context or a PERFORMED ceremony record in
+      # council-os/custody-ceremonies.json. The publication bus tests run here too (no network).
+      - name: Custody wording guard + publication bus
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/custody-wording-guard.mjs
+          node --test scripts/custody-wording-guard.node-test.mjs scripts/pubbus/pubbus.node-test.mjs
+          python3 scripts/pubbus/test_publish_fleet_status.py
 
       # TUI-1 (2026-09-14): 14 test files outside client/src, functions, scripts were never
       # run by any gate. These test council-os compose locks, chrome extension verify vectors,

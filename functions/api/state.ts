@@ -61,8 +61,6 @@
  * the fleet), commit, deploy. This endpoint has no state of its own.
  */
 
-import boardSigned from "../../public/signed/gspc-board.signed.json";
-import boardStatus from "../../public/signed/gspc-board.status.json";
 import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
@@ -78,6 +76,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { crosscheckBoardSnapshot } from "./_board_snapshot";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -104,7 +103,6 @@ const fact = (
 ): Fact => ({ value, kind, source, as_of, as_of_field, ...(note ? { note } : {}) });
 
 // ── sources, named once ──────────────────────────────────────────────────────
-const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
 const SRC_CLAIMS = "public/claims-register.json";
@@ -115,15 +113,6 @@ const SRC_PUBLIC_ROOT = "public/root.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
-
-// ── board: as_of comes from the payload's own measurement stamp ──────────────
-// This artifact carries no ISO timestamp. Its honest date-of-record is the
-// measurement stamp it was signed over, so that string is quoted verbatim rather
-// than parsed into something that looks more precise than it is.
-const boardTotals = (boardSigned as any).totals ?? {};
-const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
-const boardCustody = (boardSigned as any).custody_attestation ?? {};
-const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 
 // ── live derivation, so snapshot drift is visible rather than silent ─────────
 // /api/gspc computes its totals from these arrays at request time. The signed
@@ -160,18 +149,25 @@ const liveByFamily = {
   },
 };
 const liveMeasuredOn: string = MEASURED_ON.date;
-const boardCountsAgree =
-  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
-// Matching counts are necessary but not sufficient. The preserved MPC freeze has
-// a known signed-run overclaim and ambiguous historical leader notes, so it fails
-// closed until an owner MPC ceremony replaces it and its status becomes CURRENT.
-const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
+// The NEWEST signed freeze (by frozen_at in its status document) is compared, never a
+// hard-coded file: functions/api/_board_snapshot.ts. Matching counts are necessary but
+// not sufficient — the freeze's status document must also say CURRENT, evaluated there.
+// A superseded freeze stays in `history`; its bytes still verify.
+const boardCrosscheck = crosscheckBoardSnapshot({
+  axis_slots: liveAxisSlots,
+  measured_axes: liveMeasuredAxes,
+  unmeasured_axes: liveUnmeasuredAxes,
+});
+const boardCountsAgree = boardCrosscheck.counts_agree;
+const boardAgrees = boardCrosscheck.agrees;
+const boardClaimState = boardCrosscheck.claim_state;
 const SNAPSHOT_DISAGREEMENT =
   "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the " +
-  "committed axis arrays. The preserved signed snapshot at public/signed/gspc-board.signed.json " +
-  "is not current while signed_snapshot_agrees is false: either its counts drift or its status " +
-  "records a known claim defect. Read /signed/gspc-board.status.json. Re-signing that file is an " +
-  "owner MPC ceremony, not a laptop sign and not the Pages 3KB card-sign path.";
+  "committed axis arrays. The newest signed freeze (signed_snapshot.source, status in " +
+  "gspc-board.<date>.status.json) is not current while signed_snapshot_agrees is false: either " +
+  "its counts drift or its status withdraws reliance. A new freeze is produced by " +
+  "scripts/gspc-board-snapshot.mjs then scripts/gspc-board-attest.mjs (#board-attestation-1, " +
+  "single key) as a NEW dated file; signed bytes are superseded, never edited.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
 const cards: Array<{ signed?: boolean; card?: string }> = (cardIndex as any).cards ?? [];
@@ -400,8 +396,8 @@ export const onRequestGet: PagesFunction = async () => {
       live_derivation_crosscheck: {
         note:
           "Live counts above are derived from the committed axis arrays — the same source GET " +
-          "/api/gspc uses. The signed file is an MPC freeze of that computation. Drift is " +
-          "published rather than silently inherited.",
+          "/api/gspc uses. The signed snapshot is a dated freeze of that computation, compared " +
+          "here against the NEWEST freeze. Drift is published rather than silently inherited.",
         source: SRC_AXES,
         live_axis_slots: liveAxisSlots,
         live_measured_axes: liveMeasuredAxes,
@@ -409,29 +405,33 @@ export const onRequestGet: PagesFunction = async () => {
         signed_snapshot_counts_agree: boardCountsAgree,
         signed_snapshot_agrees: boardAgrees,
         signed_snapshot: {
-          source: SRC_BOARD,
-          axis_slots: boardTotals.axes ?? null,
-          measured_axes: boardTotals.measured_axes ?? null,
-          unmeasured_axes: boardTotals.unmeasured_axes ?? null,
-          public_count: boardTotals.public_count ?? null,
-          as_of: boardMeasuredOn,
+          source: boardCrosscheck.source,
+          selected_by: boardCrosscheck.selected_by,
+          frozen_at: boardCrosscheck.frozen_at,
+          axis_slots: boardCrosscheck.axis_slots,
+          measured_axes: boardCrosscheck.measured_axes,
+          unmeasured_axes: boardCrosscheck.unmeasured_axes,
+          public_count: boardCrosscheck.public_count,
+          as_of: boardCrosscheck.as_of,
           claim_state: boardClaimState,
-          status_source: "public/signed/gspc-board.status.json",
-          status: boardAgrees
-            ? "current signed freeze agrees with live axis arrays"
-            : "superseded or drifted freeze — do not file",
+          status_source: boardCrosscheck.status_source,
+          status: boardCrosscheck.status,
         },
+        history: boardCrosscheck.history,
         on_disagreement: SNAPSHOT_DISAGREEMENT,
       },
       signature: {
+        source: boardCrosscheck.source,
         artifact_state: boardClaimState,
-        signer: boardCustody.signer ?? null,
-        alg: boardCustody.alg ?? null,
-        keyid: boardCustody.keyid ?? null,
-        content_id: boardCustody.content_id ?? null,
-        custody: boardCustody.custody ?? null,
-        verify: boardCustody.verify ?? null,
-        sig_input: boardCustody.sig_input ?? null,
+        shape: boardCrosscheck.signature.shape,
+        signer: boardCrosscheck.signature.signer,
+        alg: boardCrosscheck.signature.alg,
+        public_key_hex: boardCrosscheck.signature.public_key_hex,
+        content_id: boardCrosscheck.signature.content_id,
+        payload_sha256: boardCrosscheck.signature.payload_sha256,
+        custody: boardCrosscheck.signature.custody,
+        signed_at: boardCrosscheck.signature.signed_at,
+        verify: boardCrosscheck.signature.verify,
       },
       caveat:
         "Measurement, not certification. A score describes a measured run on a frozen split on a " +

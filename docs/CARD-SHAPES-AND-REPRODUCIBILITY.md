@@ -44,7 +44,7 @@ Counts are from a walk of `public/**` classifying every JSON that carries a sign
   **The signature covers the `content_id` hex string, not the body.** Binding to the body is a two-link chain: `body → sha256 → content_id → signature`. A verifier that checks only the signature and skips the `content_id` recomputation would accept an arbitrary substituted body. This is exercised as a tamper control (`B-altered-body-cid-recomputed`) and correctly rejected.
 
 - **C — 1 artifact**: `public/signed/gspc-board.signed.json`.
-  Signed by a **different key** (`d573a721…`) under 3-party MPC custody, and the payload says so explicitly: *"This key was generated new inside the custody and is NOT the estate signing key."* Signature is over the canonical payload bytes directly — unlike B.
+  Signed by a **different key** (`d573a721…`) through the MPC signing protocol — all three shares on one host, one failure domain; the split was never performed (correction C-2026-0925-01) — and the payload says so explicitly: *"This key was generated new inside the custody and is NOT the estate signing key."* Signature is over the canonical payload bytes directly — unlike B.
 
 - **D — 0 artifacts.** `scripts/emit_dsse.py` exists and emits `<name>.dsse.json`. A search for `*.dsse.json` across the machine returned **nothing**. The estate's DSSE path has never produced a published artifact.
 

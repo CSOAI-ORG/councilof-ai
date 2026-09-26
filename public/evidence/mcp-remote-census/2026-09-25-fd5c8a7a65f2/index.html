@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>csoai/mcp-remote-census — signed evidence record | Council of AI</title>
+<meta name="description" content="Signed evidence record from csoai/mcp-remote-census: the record&#39;s own numbers verbatim, its stated limits, sha256, signature and timestamp state, and how to verify it yourself. Evidence, not a grade.">
+<link rel="canonical" href="https://councilof.ai/evidence/mcp-remote-census/2026-09-25-fd5c8a7a65f2/">
+<meta name="generator" content="scripts/pubbus (publication bus)">
+<style>
+:root{color-scheme:dark;--bg:#020617;--card:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--accent:#6ee7b7;--warn:#fcd34d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:2.5rem 1rem 4rem}a{color:var(--accent)}
+h1{font-size:1.9rem;line-height:1.2;margin:.4rem 0 1rem}h2{font-size:1.15rem;margin:2.2rem 0 .6rem}
+.eyebrow{font:600 .72rem/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:.8rem;padding:1rem 1.1rem;margin:.8rem 0}
+.state-CURRENT{border-color:#065f46}.state-SUPERSEDED{border-color:#92400e;color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem}
+pre{background:#000;border:1px solid var(--line);border-radius:.6rem;padding:.8rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+td code{word-break:break-all}.muted{color:var(--muted)}ul{padding-left:1.2rem}li{margin:.25rem 0}
+footer{margin-top:3rem;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Signed evidence record · csoai/mcp-remote-census</p>
+<h1>csoai/mcp-remote-census</h1>
+<!--pubbus:state--><div class="card state-CURRENT" data-state="CURRENT"><strong>CURRENT.</strong> This is the newest signed record in this series. Every version stays published: <a href="/evidence/mcp-remote-census/">all versions</a>.</div><!--/pubbus:state-->
+<p>A dated measurement of what remote MCP endpoints, listed in public catalogues, answered to initialize and tools/list on 2026-09-25, from one place. It is a measurement of the endpoints we attempted - the top 20% of an ordered plan - and not of every endpoint in any catalogue.</p>
+<h2>The signed numbers, verbatim</h2>
+<p class="muted">Every field of the signed payload, copied as signed. Nothing on this page is computed, rounded or totalled.</p>
+<table>
+<tr><th><code>read_state</code></th><td>PARTIAL</td></tr>
+<tr><th><code>n_planned</code></th><td>4376</td></tr>
+<tr><th><code>n_attempted</code></th><td>4144</td></tr>
+<tr><th><code>states.RESPONDED</code></th><td>2008</td></tr>
+<tr><th><code>states.AUTH_REQUIRED</code></th><td>1428</td></tr>
+<tr><th><code>states.NOT_MCP</code></th><td>346</td></tr>
+<tr><th><code>states.UNREACHABLE</code></th><td>255</td></tr>
+<tr><th><code>states.TIMEOUT</code></th><td>62</td></tr>
+<tr><th><code>states.SSE_ENDPOINT_ONLY</code></th><td>37</td></tr>
+<tr><th><code>states.MCP_ERROR</code></th><td>8</td></tr>
+<tr><th><code>frame_combined_population_total</code></th><td>null</td></tr>
+<tr><th><code>record_version</code></th><td>0.1.1</td></tr>
+<tr><th><code>supersedes_sha256</code></th><td>c4880fdba78709034466045f6c2ac1eda7c466c96502c75cca68ea34795dce84</td></tr>
+<tr><th><code>correction_scope</code></th><td>interpretation of protocolVersion only; no measurement re-run; every count, state, row and published file identical to 0.1</td></tr>
+</table>
+<h2>Limits the record states about itself</h2>
+<ul><li><code>signed payload: not_a_grade</code> — The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record&#39;s own instruments measured.</li>
+<li><code>frame.what_it_never_proves</code> — that the endpoint is live, speaks its protocol, is safe, or is good.</li>
+<li><code>probe.limits.min_interval_s_per_host</code> — 1.0</li>
+<li><code>probe.limits.connections_per_host</code> — 1</li>
+<li><code>probe.limits.workers</code> — 32</li>
+<li><code>probe.limits.connect_timeout_s</code> — 10.0</li>
+<li><code>probe.limits.read_timeout_s</code> — 15.0</li>
+<li><code>probe.limits.budget_s</code> — 3600.0</li>
+<li><code>probe.limits.retries</code> — at most one: 429/503 after Retry-After (cap 60 s) or a reset connection</li>
+<li><code>probe.limits.legacy_sse_session_opened</code> — false</li>
+<li><code>probe.population_note</code> — counts are over the attempted endpoints of the top-20% plan (reach-signalled first, then MCP registry listing order). They are not frame totals and not population totals.</li>
+<li><code>measured_tool_surface.sum_of_tool_counts_is_not_a_population_figure</code> — true</li>
+<li><code>not_evidence_of</code> — that any server is safe, secure, correct, maintained, or fit for any purpose</li>
+<li><code>not_evidence_of</code> — the quality of any server or its tools, or that a tool does what its name says</li>
+<li><code>not_evidence_of</code> — endorsement, ranking, grading, or approval of any server or operator</li>
+<li><code>not_evidence_of</code> — anything about the ~80% of the frame outside the top-20% plan, or the 232 planned endpoints not attempted</li>
+<li><code>not_evidence_of</code> — a population total of MCP servers or endpoints: the frame is PARTIAL (Smithery) and the probe is PARTIAL</li>
+<li><code>not_evidence_of</code> — reachability at any other moment or from any other network location</li>
+<li><code>not_evidence_of</code> — what AUTH_REQUIRED servers expose behind their credential</li>
+<li><code>read_state PARTIAL means</code> — some rows or endpoints were not read; counts are over what was read and are never a population total</li></ul>
+<h2>Identity</h2>
+<table>
+<tr><th>record</th><td><a href="https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json"><code>record.v0.1.1.json</code></a></td></tr>
+<tr><th>record sha256</th><td><code>fd5c8a7a65f23f7080f2859e386afe474f8a2d1d8316e5be60be4304dff7118a</code> (recomputed from the bytes; equals the signed <code>artifact.sha256</code>)</td></tr>
+<tr><th>record schema</th><td><code>csoai.mcp-remote-census/0.1.1</code></td></tr>
+<tr><th>as_of</th><td><code>2026-09-25T06:54:10Z</code></td></tr>
+<tr><th>signed document</th><td><a href="https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.signed.json"><code>record.v0.1.1.signed.json</code></a> · sha256 <code>9481ebd94a8442d101d7e0c52de939ad9fb442f9807a9d22b29a4a8b547df27d</code></td></tr>
+<tr><th>signature</th><td><strong>VERIFIED</strong> under <code>did:web:csoai.org#board-attestation-1</code>; payload sha256 <code>e72452958a012bc2e9d5fed50505ef090fde0b1a65fd4b7d9eb22ef904aa5d54</code>; signed_at <code>2026-09-25T08:05:36.586Z</code>; tamper control rejected</td></tr>
+<tr><th>pinned at</th><td>Hugging Face dataset <a href="https://huggingface.co/datasets/csoai/mcp-remote-census">csoai/mcp-remote-census</a>, revision <code>05ff73132ac88399f8d873c39d11bb7533635e39</code></td></tr>
+</table>
+<h2>Files the signature pins</h2><table><tr><td><code>probe/results.public.jsonl.gz</code></td><td><code>f29c89c910f1677ab570de701494415806a9796770323e5c50a79fc2664b2bb3</code></td></tr>
+<tr><td><code>probe/not_attempted.jsonl.gz</code></td><td><code>663cc83fa46fbe103f69a540c6ab1ddcc43374328e0b5e735c1f7b68b14a6be1</code></td></tr>
+<tr><td><code>frame/summary.json</code></td><td><code>ce4bb52a70a6077c3f2ab004e04da616578bcad362bf712e86f63c9da48428e2</code></td></tr>
+<tr><td><code>frame/plan-top20.json</code></td><td><code>493c81c10a2b91c0707e2df3e6e6c07f614898d881282ae18766b703c8d53565</code></td></tr>
+<tr><td><code>probe/summary.json</code></td><td><code>991ef00bf40c6c56960ff08110fdf3ebceb366f5d1f8b15aadf3f85cb8ef9ae1</code></td></tr></table>
+<h2>Timestamp (OpenTimestamps)</h2>
+<p><strong>BITCOIN_ATTESTATION_IN_PROOF</strong>. The proof bytes carry a Bitcoin block-header attestation tag. This bus did not check the block header; `ots verify` against your own node does.</p>
+<ul>
+<li>proof: <a href="https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json.ots"><code>record.v0.1.1.json.ots</code></a> — <code>PENDING_CALENDAR_COMMITMENT</code></li>
+<li>upgraded proof: <a href="https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/record.v0.1.1.json.ots"><code>ots-upgraded/2026-09-25/record.v0.1.1.json.ots</code></a> — <code>BITCOIN_ATTESTATION_IN_PROOF</code></li>
+<li>upgrade receipt: <a href="https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/OTS-UPGRADE.json"><code>OTS-UPGRADE.json</code></a></li>
+<li>receipt: block height 968537, header check <code>MATCHES_HEADER</code> (source https://blockstream.info/api)</li>
+</ul>
+<h2>Verify it yourself</h2>
+<p>Free, no account, no key. The first command asks the site's verifier door; the second checks that the record bytes are the ones the signature pins; the third checks the timestamp with the OpenTimestamps client.</p>
+<pre>curl -sL 'https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.signed.json' -o signed.json
+curl -s -X POST https://councilof.ai/api/verify -H 'content-type: application/json' --data-binary @signed.json
+#   expect "state": "VALID" (Ed25519 over the canonical payload, pinned board key)
+
+curl -sL 'https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json' | sha256sum
+#   must print fd5c8a7a65f23f7080f2859e386afe474f8a2d1d8316e5be60be4304dff7118a
+
+curl -sL 'https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json' -o record.v0.1.1.json
+curl -sL 'https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/ots-upgraded/2026-09-25/record.v0.1.1.json.ots' -o record.v0.1.1.json.ots
+ots verify -f record.v0.1.1.json record.v0.1.1.json.ots</pre>
+<p>The record's own verification instructions, verbatim:</p><ul><li><code>signature</code> — record.v0.1.1.signed.json: canonicalise its payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.v0.1.1.json); verify signature.sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json</li>
+<li><code>timestamp</code> — record.v0.1.1.json.ots is an OpenTimestamps proof over sha256(record.v0.1.1.json); its state at publication is in record.v0.1.1.ots.json. A pending calendar commitment is not a Bitcoin attestation until `ots upgrade` and `ots verify` say so.</li>
+<li><code>files</code> — sha256 of every published file is in published_files and is pinned by the signature through record.json</li>
+<li><code>supersedes</code> — sha256(record.json) must equal supersedes.sha256; record.json, its signature and its proof are unchanged</li></ul>
+<footer>
+<p>Evidence linked from the GSPC board, never counted into it: board totals are <a href="/api/gspc">GET /api/gspc</a>. Measurement, not certification. Naming a party that appears in a record is not an endorsement of it or by it. Machine list of every record page: <a href="/evidence/published-records.json">/evidence/published-records.json</a>. Service status: <a href="/status">/status</a>. Corrections: <a href="/api/corrections">/api/corrections</a>.</p>
+</footer>
+</main>
+</body>
+</html>

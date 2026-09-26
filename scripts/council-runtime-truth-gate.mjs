@@ -1397,8 +1397,9 @@ for (const axis of currentBoard.axes.filter((entry) => entry.family === "financi
 }
 
 // Never rewrite a valid historical signature to make its claims look current.
-// The immutable bytes remain independently verifiable, while a separate
-// unsigned status document withdraws reliance until the owner MPC re-signs.
+// The immutable bytes remain independently verifiable; a separate unsigned status
+// document records that the 2026-09-02 MPC freeze is SUPERSEDED_BY a newer dated freeze
+// (2026-09-25, #board-attestation-1, single key). Both must still verify.
 const signedBoardPath = "public/signed/gspc-board.signed.json";
 const signedBoardBytes = readFileSync(signedBoardPath);
 const signedBoard = JSON.parse(signedBoardBytes.toString("utf8"));
@@ -1412,7 +1413,7 @@ assert.match(
   /^VERIFIED/m,
 );
 assert.equal(signedBoardStatus.current, false);
-assert.equal(signedBoardStatus.state, "SUPERSEDED_KNOWN_CLAIM_DEFECT");
+assert.equal(signedBoardStatus.state, "SUPERSEDED_BY");
 assert.equal(signedBoardStatus.current_authority, "/api/gspc");
 assert.equal(
   signedBoardStatus.integrity.sha256_file_bytes,
@@ -1427,7 +1428,29 @@ const defectCodes = new Set(
 );
 assert.equal(defectCodes.has("FINANCIAL_RUN_SIGNATURE_OVERCLAIM"), true);
 assert.equal(defectCodes.has("HISTORICAL_LEADER_NOTE_PRESENTED_AS_CURRENT"), true);
+assert.equal(defectCodes.has("CUSTODY_SEPARATION_OVERCLAIM"), true);
 assert.match(signedBoard.totals.sweep_note, /each has a signed run/);
+// The superseding freeze: it exists, verifies, pins its body, and states its custody as a
+// single key — never as MPC.
+const supersedingPath = "public" + signedBoardStatus.superseded_by;
+const supersedingBytes = readFileSync(supersedingPath);
+const superseding = JSON.parse(supersedingBytes.toString("utf8"));
+const supersedingStatus = JSON.parse(
+  readFileSync("public" + signedBoardStatus.superseded_by_status, "utf8"),
+);
+assert.match(
+  execFileSync("node", ["scripts/gspc-board-verify.mjs", supersedingPath], { encoding: "utf8" }),
+  /^VERIFIED/m,
+);
+assert.equal(superseding.board_attestation.payload.signer, "did:web:csoai.org#board-attestation-1");
+assert.match(superseding.board_attestation.payload.custody, /Single Ed25519 key/);
+assert.doesNotMatch(superseding.board_attestation.payload.custody, /3-party/);
+assert.equal(superseding.board_attestation.payload.supersedes.file, "/signed/gspc-board.signed.json");
+assert.equal(
+  supersedingStatus.integrity.sha256_file_bytes,
+  createHash("sha256").update(supersedingBytes).digest("hex"),
+);
+assert.doesNotMatch(superseding.totals.sweep_note, /each has a signed run/);
 const historicalAxisSnapshot = JSON.parse(
   readFileSync("public/six-axes/gspc-axes.json", "utf8"),
 );
@@ -1435,12 +1458,17 @@ assert.equal(historicalAxisSnapshot.superseded, true);
 assert.match(historicalAxisSnapshot.authority, /current unsigned live-board response/);
 assert.match(historicalAxisSnapshot.authority, /gspc-board\.status\.json/);
 assert.doesNotMatch(historicalAxisSnapshot.authority, /live signed board/);
+// Both endpoints compare against the NEWEST freeze through one helper, and that helper
+// fails closed unless the freeze's status says CURRENT as well as its counts matching.
+const snapshotHelper = readFileSync("functions/api/_board_snapshot.ts", "utf8");
+assert.match(snapshotHelper, /countsAgree && claimState === "CURRENT"/);
+assert.match(snapshotHelper, /gspc-board\.status\.json/);
 for (const stateEndpoint of ["functions/api/state.ts", "functions/api/counters.ts"]) {
   const source = readFileSync(stateEndpoint, "utf8");
-  assert.match(source, /boardClaimState === "CURRENT"/);
-  assert.match(source, /gspc-board\.status\.json/);
+  assert.match(source, /crosscheckBoardSnapshot\(/);
+  assert.doesNotMatch(source, /import boardSigned from/);
 }
 
 console.log(
-  "council-runtime-truth-gate: PASS — one Council OS shell, current GSPC claims cohere with evidence, the known-defect MPC snapshot fails closed, BFT is not live, PQC is planned only, and n_eff=1",
+  "council-runtime-truth-gate: PASS — one Council OS shell, current GSPC claims cohere with evidence, the 2026-09-02 MPC freeze is superseded by a verifying dated freeze, BFT is not live, PQC is planned only, and n_eff=1",
 );

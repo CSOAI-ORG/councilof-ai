@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>csoai/mcp-contract-parity — signed evidence record | Council of AI</title>
+<meta name="description" content="Signed evidence record from csoai/mcp-contract-parity: the record&#39;s own numbers verbatim, its stated limits, sha256, signature and timestamp state, and how to verify it yourself. Evidence, not a grade.">
+<link rel="canonical" href="https://councilof.ai/evidence/mcp-contract-parity/2026-09-25-45e3fd63fc98/">
+<meta name="generator" content="scripts/pubbus (publication bus)">
+<style>
+:root{color-scheme:dark;--bg:#020617;--card:#0f172a;--line:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--accent:#6ee7b7;--warn:#fcd34d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:2.5rem 1rem 4rem}a{color:var(--accent)}
+h1{font-size:1.9rem;line-height:1.2;margin:.4rem 0 1rem}h2{font-size:1.15rem;margin:2.2rem 0 .6rem}
+.eyebrow{font:600 .72rem/1 ui-monospace,monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:.8rem;padding:1rem 1.1rem;margin:.8rem 0}
+.state-CURRENT{border-color:#065f46}.state-SUPERSEDED{border-color:#92400e;color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}td,th{border-bottom:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600}code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.84rem}
+pre{background:#000;border:1px solid var(--line);border-radius:.6rem;padding:.8rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+td code{word-break:break-all}.muted{color:var(--muted)}ul{padding-left:1.2rem}li{margin:.25rem 0}
+footer{margin-top:3rem;font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+<p class="eyebrow">Signed evidence record · csoai/mcp-contract-parity</p>
+<h1>csoai/mcp-contract-parity</h1>
+<!--pubbus:state--><div class="card state-CURRENT" data-state="CURRENT"><strong>CURRENT.</strong> This is the newest signed record in this series. Every version stays published: <a href="/evidence/mcp-contract-parity/">all versions</a>.</div><!--/pubbus:state-->
+
+<h2>The signed numbers, verbatim</h2>
+<p class="muted">Every field of the signed payload, copied as signed. Nothing on this page is computed, rounded or totalled.</p>
+<table>
+<tr><th><code>read_state</code></th><td>EXHAUSTED</td></tr>
+<tr><th><code>n_planned</code></th><td>5828</td></tr>
+<tr><th><code>n_attempted</code></th><td>5828</td></tr>
+<tr><th><code>dimension_states.AUTH</code></th><td>{&quot;CONSISTENT&quot;: 931, &quot;INCONSISTENT&quot;: 23, &quot;SINGLE_SURFACE&quot;: 4465, &quot;UNCHECKABLE&quot;: 409}</td></tr>
+<tr><th><code>dimension_states.PAYMENT</code></th><td>{&quot;CONSISTENT&quot;: 112, &quot;INCONSISTENT&quot;: 4, &quot;SINGLE_SURFACE&quot;: 572, &quot;UNCHECKABLE&quot;: 5140}</td></tr>
+<tr><th><code>dimension_states.PROTOCOL</code></th><td>{&quot;CONSISTENT&quot;: 459, &quot;INCONSISTENT&quot;: 33, &quot;SINGLE_SURFACE&quot;: 5064, &quot;UNCHECKABLE&quot;: 272}</td></tr>
+<tr><th><code>dimension_states.TOOLS</code></th><td>{&quot;CONSISTENT&quot;: 905, &quot;INCONSISTENT&quot;: 233, &quot;SINGLE_SURFACE&quot;: 4532, &quot;UNCHECKABLE&quot;: 158}</td></tr>
+<tr><th><code>dimension_states.VERSION</code></th><td>{&quot;CONSISTENT&quot;: 3163, &quot;INCONSISTENT&quot;: 2644, &quot;SINGLE_SURFACE&quot;: 21, &quot;UNCHECKABLE&quot;: 0}</td></tr>
+<tr><th><code>own_result.VERSION</code></th><td>CONSISTENT</td></tr>
+<tr><th><code>own_result.TOOLS</code></th><td>CONSISTENT</td></tr>
+<tr><th><code>own_result.AUTH</code></th><td>CONSISTENT</td></tr>
+<tr><th><code>own_result.PAYMENT</code></th><td>CONSISTENT</td></tr>
+<tr><th><code>own_result.PROTOCOL</code></th><td>SINGLE_SURFACE</td></tr>
+</table>
+<h2>Limits the record states about itself</h2>
+<ul><li><code>signed payload: not_a_grade</code> — The signature proves these bytes were signed by the board key; it does not prove any claim inside beyond what the record&#39;s own instrument measured.</li>
+<li><code>run.population_note</code> — endpoints the 25 Sep 2026 census probe saw RESPOND (top-20% and first-party plans), plus AUTH_REQUIRED endpoints whose registry entry advertises x402 or an A2A card, plus the endpoints of registry entries named in an external watch list. Counts are over attempted endpoints of this plan: not frame totals, not population totals, never summed with other censuses.</li>
+<li><code>timing.caveat</code> — live answers and surface documents were read up to ~5.5 h apart. Where the registry version changed in between (HOLD window W2), the row uses the hold re-probe read inside the surface window. A service that changed without a registry version change in that interval can still show a live-vs-document INCONSISTENT; registry changes after the W2 read (11:25:23Z) are not observed.</li>
+<li><code>what_it_does_not_show</code> — runtime auth enforcement beyond the discovery boundary (initialize + tools/list); tools/call is never sent</li>
+<li><code>what_it_does_not_show</code> — backend behaviour, tool correctness, safety, or quality of any service or vendor</li>
+<li><code>what_it_does_not_show</code> — which surface is right: an INCONSISTENT row says two public statements disagree, not which one is true</li>
+<li><code>what_it_does_not_show</code> — anything from documentation prose, except a registry description&#39;s literal mention of x402 (payment presence only)</li>
+<li><code>what_it_does_not_show</code> — anything about endpoints not in the plan or not attempted</li>
+<li><code>what_it_does_not_show</code> — simultaneity: live answers and documents were read hours apart (see timing); a deploy in between can show as INCONSISTENT</li></ul>
+<h2>Identity</h2>
+<table>
+<tr><th>record</th><td><a href="https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json"><code>record.json</code></a></td></tr>
+<tr><th>record sha256</th><td><code>45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323</code> (recomputed from the bytes; equals the signed <code>artifact.sha256</code>)</td></tr>
+<tr><th>record schema</th><td><code>csoai.mcp-contract-parity/0.1</code></td></tr>
+<tr><th>as_of</th><td><code>2026-09-25T12:24:52Z</code></td></tr>
+<tr><th>signed document</th><td><a href="https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.signed.json"><code>record.signed.json</code></a> · sha256 <code>58458051bb7b1db6a5d32f22ee08ad345434c8e57df74e4d62deab713904d5fa</code></td></tr>
+<tr><th>signature</th><td><strong>VERIFIED</strong> under <code>did:web:csoai.org#board-attestation-1</code>; payload sha256 <code>59dacc84e9f70c656c90567b37fe0201e01fe9c33b5567e5a705c374b43952f0</code>; signed_at <code>2026-09-25T12:25:41.808Z</code>; tamper control rejected</td></tr>
+<tr><th>pinned at</th><td>Hugging Face dataset <a href="https://huggingface.co/datasets/csoai/mcp-contract-parity">csoai/mcp-contract-parity</a>, revision <code>0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf</code></td></tr>
+</table>
+<h2>Files the signature pins</h2><table><tr><td><code>hold.jsonl.gz</code></td><td><code>ec0a40f009eb571f766ccb71fa8b54cf1b6569d67ac2c68cb246a82f1b62f105</code></td></tr>
+<tr><td><code>rows.jsonl.gz</code></td><td><code>92b0fae322d9711b3ea1700401caacc27b9f59a7dee872f3c14404018691edca</code></td></tr></table>
+<h2>Timestamp (OpenTimestamps)</h2>
+<p><strong>PENDING_CALENDAR_COMMITMENT</strong>. Calendars accepted the digest and promised future Bitcoin inclusion. This is a submitted request, not a Bitcoin attestation.</p>
+<ul>
+<li>proof: <a href="https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json.ots"><code>record.json.ots</code></a> — <code>PENDING_CALENDAR_COMMITMENT</code></li>
+
+
+
+</ul>
+<h2>Verify it yourself</h2>
+<p>Free, no account, no key. The first command asks the site's verifier door; the second checks that the record bytes are the ones the signature pins; the third checks the timestamp with the OpenTimestamps client.</p>
+<pre>curl -sL 'https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.signed.json' -o signed.json
+curl -s -X POST https://councilof.ai/api/verify -H 'content-type: application/json' --data-binary @signed.json
+#   expect "state": "VALID" (Ed25519 over the canonical payload, pinned board key)
+
+curl -sL 'https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json' | sha256sum
+#   must print 45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323
+
+curl -sL 'https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json' -o record.json
+curl -sL 'https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json.ots' -o record.json.ots
+ots verify -f record.json record.json.ots</pre>
+<p>The record's own verification instructions, verbatim:</p><ul><li><code>signature</code> — record.signed.json: canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.json); verify sig_ed25519 with #board-attestation-1 in https://csoai.org/.well-known/did.json</li>
+<li><code>timestamp</code> — record.json.ots: OpenTimestamps over sha256(record.json); PENDING calendar commitment at publication</li></ul>
+<footer>
+<p>Evidence linked from the GSPC board, never counted into it: board totals are <a href="/api/gspc">GET /api/gspc</a>. Measurement, not certification. Naming a party that appears in a record is not an endorsement of it or by it. Machine list of every record page: <a href="/evidence/published-records.json">/evidence/published-records.json</a>. Service status: <a href="/status">/status</a>. Corrections: <a href="/api/corrections">/api/corrections</a>.</p>
+</footer>
+</main>
+</body>
+</html>

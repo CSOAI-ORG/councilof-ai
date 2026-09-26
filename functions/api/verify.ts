@@ -28,6 +28,7 @@
  * Verification is free, forever. It certifies nothing.
  */
 import { verifyCard, cardState, PINNED_ANCHORS, type Anchor } from "../_lib/cardVerify";
+import { isSignedRun, verifySignedRunDoc } from "../_lib/signedRunVerify";
 
 const CORS = {
   "access-control-allow-origin": "*",
@@ -87,6 +88,7 @@ export const onRequestGet: PagesFunction = async ({ request }) =>
     schema: "csoai.verify/0.1",
     endpoint: "/api/verify",
     how: "POST the card as JSON (the body itself, or {\"card\": …}), or POST {\"card\": \"https://councilof.ai/signed/cards/<sha>.json\"}",
+    also_reads: "csoai.signed-run/0.1 signed evidence records (POST the signed document itself). The door checks the signature over the canonical payload; compare sha256 of the record you hold with artifact.sha256 in the answer.",
     states: {
       VALID: "the body reproduces its own id and the signature verifies under a pinned key",
       INVALID: "a positive finding — the card fails the published rule, with the reason named",
@@ -115,6 +117,31 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
       not_a_certification: true,
       note: "UNCHECKABLE is not INVALID: nothing was judged, because nothing readable was posted.",
     }, 400);
+  }
+
+  // Signed evidence records (the census and probe pages' "verify it yourself" block) are their own
+  // family with the signer's own rule and a pinned key; see functions/_lib/signedRunVerify.ts.
+  if (isSignedRun(card)) {
+    const r = await verifySignedRunDoc(card);
+    return json({
+      schema: "csoai.verify/0.1",
+      state: r.state,
+      family: r.family,
+      reason: r.state === "VALID" ? null : r.reasons.join(", "),
+      reasons: r.reasons,
+      checks: r.checks,
+      did: r.did,
+      payload_sha256: r.payload_sha256,
+      artifact: r.artifact,
+      trust_anchor: "pinned in functions/_lib/cardVerify.ts (PINNED_ANCHORS) — no key resolution decides this verdict",
+      free: true,
+      not_a_certification: true,
+      note: r.state === "VALID"
+        ? "The signature verifies over the canonical payload under a pinned key. It proves who signed these bytes, not that any claim inside is true. Compare sha256 of the record with artifact.sha256."
+        : r.state === "UNCHECKABLE"
+          ? "The check could not be completed for the stated reason. UNCHECKABLE is not INVALID: nothing was judged."
+          : "This signed record fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE.",
+    });
   }
 
   const v = await verifyCard(card, await liveAnchors(origin));

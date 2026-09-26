@@ -626,10 +626,17 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
   "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   "corrections": [
     {
+      "id": "C-2026-0925-01",
+      "date": "2026-09-25",
+      "what_was_wrong": "Served text called the 2026-09-02 board freeze key #gspc-board-22axis-2026 '3-party MPC' custody and a sign pane said 'KEY is 2-of-3'. All three shares of that key sit in one directory on one host: one failure domain. The split was never performed, and no estate key is held in separated custody.",
+      "fix": "Corrected at each producer (ledger, this template, did.json note, freeze pointer, custody page, sign pane); the older entries below keep their text with a bracketed custody note. Current board freeze: single key did:web:csoai.org#board-attestation-1 (Cloudflare Pages secret). A real 2-of-3 split is planned for the owner's physical root ceremony and has not happened. scripts/custody-wording-guard.mjs fails the build if split-custody wording returns without a ceremony record.",
+      "status": "CORRECTED — read the full entry at https://councilof.ai/api/corrections"
+    },
+    {
       "id": "C-2026-0902-09",
       "date": "2026-09-02",
       "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
-      "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+      "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive) [custody corrected by C-2026-0925-01: all three shares sit on one host, one failure domain; the split was never performed]. Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
       "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
       "status": "CORRECTED IN THAT SNAPSHOT \u2014 re-check the current axis arrays and signature state"
     },
@@ -638,7 +645,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
       "date": "2026-09-02",
       "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measured \u00b7 0 empty [as of that date; superseded by the live board]. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
       "how_caught": "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
-      "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled 
+      "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) [custody corrected by C-2026-0925-01: the three shares are on one host, one failure domain] and is labelled 
 ```
 
 ## 5. THE SWIFT CENSUS (26 banks)
@@ -824,19 +831,40 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-23T05:26:34Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-24T17:47:40Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 603. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 631. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 602.
-- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 628.
+- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 47 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 60 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.
+
+## 10b. SIGNED EVIDENCE RECORDS — census and probe pages (evidence linked from the board, never counted into it)
+
+Derived at generation from https://councilof.ai/evidence/published-records.json (same bytes on disk at
+public/evidence/published-records.json, schema csoai.pubbus-manifest/0.1). Each page shows the record's own numbers
+verbatim with its stated limits, and a verify-it-yourself block (POST https://councilof.ai/api/verify with the
+signed document; free). Census and probe records are EVIDENCE: they are never counted into the GSPC
+board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version stays published and says so.
+
+- csoai/a2a-card-census: https://councilof.ai/evidence/a2a-card-census/2026-09-25-b290b53d0591/ (as_of 2026-09-25T07:25:59Z; read_state EXHAUSTED; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp BITCOIN_ATTESTATION_IN_PROOF). Record bytes: https://huggingface.co/datasets/csoai/a2a-card-census/resolve/8bf5d491b80db27f0a338986eb7fa7f78e321974/record.json (sha256 b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c).
+- csoai/cross-ledger-supply — cross-ledger-benji: https://councilof.ai/evidence/cross-ledger-benji/2026-09-25-51ec46fbe5ab/ (as_of 2026-09-25T11:12:21Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-benji-2026-09-25.json (sha256 51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77).
+- csoai/cross-ledger-supply — cross-ledger-bny-digital-cash: https://councilof.ai/evidence/cross-ledger-bny-digital-cash/2026-09-25-ec9bf90130e4/ (as_of 2026-09-25T11:19:07Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-bny-digital-cash-2026-09-25.json (sha256 ec9bf90130e449a01c4814a697dac351a02abc832cd2c426db3255ef1bbf03c9).
+- csoai/cross-ledger-supply — cross-ledger-buidl: https://councilof.ai/evidence/cross-ledger-buidl/2026-09-25-cf280c0b6c99/ (as_of 2026-09-25T11:18:54Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-buidl-2026-09-25.json (sha256 cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56).
+- csoai/cross-ledger-supply — cross-ledger-citi-token-services: https://councilof.ai/evidence/cross-ledger-citi-token-services/2026-09-25-796c03215483/ (as_of 2026-09-25T11:18:58Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-citi-token-services-2026-09-25.json (sha256 796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab).
+- csoai/cross-ledger-supply — cross-ledger-hsbc-tokenised-deposit-service: https://councilof.ai/evidence/cross-ledger-hsbc-tokenised-deposit-service/2026-09-25-48dd4f9722bd/ (as_of 2026-09-25T11:19:05Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json (sha256 48dd4f9722bd1d27836fa65cfc4081b45c41eee51fea7d686b3483fd7ac364e3).
+- csoai/cross-ledger-supply — cross-ledger-jpmd: https://councilof.ai/evidence/cross-ledger-jpmd/2026-09-25-ce0e151f6dd0/ (as_of 2026-09-25T11:18:07Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-jpmd-2026-09-25.json (sha256 ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b).
+- csoai/cross-ledger-supply — cross-ledger-usdc: https://councilof.ai/evidence/cross-ledger-usdc/2026-09-25-1a1009dc98a6/ (as_of 2026-09-25T04:18:40Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/cross-ledger-usdc-2026-09-25.json (sha256 1a1009dc98a6a459d00e9f34a1581c295a0f803d832111b04531513ad642b63a).
+- csoai/hf-mcp-spaces-census: https://councilof.ai/evidence/hf-mcp-spaces-census/2026-09-25-53022d26ca32/ (as_of 2026-09-25T07:59:36Z; read_state EXHAUSTED; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp BITCOIN_ATTESTATION_IN_PROOF). Record bytes: https://huggingface.co/datasets/csoai/hf-mcp-spaces-census/resolve/aa0da633215385c8c3ac968a69a63eb76a151733/record.json (sha256 53022d26ca321b291ca5578b3b318ef645ecf1e4343b13320ebc91642abb906e).
+- csoai/cross-ledger-supply — institutional-evidence-links: https://councilof.ai/evidence/institutional-evidence-links/2026-09-25-93bf6eae5289/ (as_of 2026-09-25T11:24:01Z; read_state not stated by the record; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/8e2e5514db8b2c8c440519ce94d9dfcacec5461a/interop/institutional-evidence-links.json (sha256 93bf6eae5289f0d000363ef512a91d84ae583d4f6ee43fe57678f724bf45fbf3).
+- csoai/mcp-contract-parity: https://councilof.ai/evidence/mcp-contract-parity/2026-09-25-45e3fd63fc98/ (as_of 2026-09-25T12:24:52Z; read_state EXHAUSTED; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp PENDING_CALENDAR_COMMITMENT). Record bytes: https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/0a4dc496d588398b8a5f1b8fc619a91cc3be0bbf/record.json (sha256 45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323).
+- csoai/mcp-remote-census: https://councilof.ai/evidence/mcp-remote-census/2026-09-25-fd5c8a7a65f2/ (as_of 2026-09-25T06:54:10Z; read_state PARTIAL; signature VERIFIED under did:web:csoai.org#board-attestation-1; timestamp BITCOIN_ATTESTATION_IN_PROOF). Record bytes: https://huggingface.co/datasets/csoai/mcp-remote-census/resolve/05ff73132ac88399f8d873c39d11bb7533635e39/record.v0.1.1.json (sha256 fd5c8a7a65f23f7080f2859e386afe474f8a2d1d8316e5be60be4304dff7118a).
 
 ## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
 

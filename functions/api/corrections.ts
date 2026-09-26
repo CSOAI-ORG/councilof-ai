@@ -34,6 +34,27 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0925-01",
+      date: "2026-09-25",
+      first_observed_at: "2026-09-25T12:11:43Z",
+      what_was_wrong:
+        "Served text described the board signing key's custody as separated when it is not. /api/corrections (C-2026-0902-09 and C-2026-0902-08), llms-full.txt, /.well-known/did.json (_gspcBoardKeyNote), /interop/gspc-board-freeze-pointer.json (freeze.custody) and the custody disclosure page called the 2026-09-02 freeze key #gspc-board-22axis-2026 '3-party MPC' custody, and the Council OS sign pane said 'KEY is 2-of-3'. Read on oracle-micro-2 on 2026-09-25: all three additive shares of that key are files in ONE directory on ONE host, used by one process. That is one failure domain. The 2-of-3 split was never performed, and no key the estate uses is held in separated custody.",
+      why_it_was_wrong:
+        "'Multi-party' describes the signing protocol, not where the shares live. The ceremony runbook already said 'current 3-of-3 = three shares on ONE machine = single failure domain', but the served wording was written from the protocol's name and never re-read against the host.",
+      what_changed:
+        "Corrected at each producer, not in generated output: functions/api/corrections.ts (this entry, plus a bracketed custody note appended to the two older entries, whose text is otherwise unchanged), scripts/llms/llms-full.txt.tmpl (then regenerated), public/.well-known/did.json (_gspcBoardKeyNote), public/interop/gspc-board-freeze-pointer.json (freeze.custody, with the signed-bytes wording kept under custody_as_claimed_in_signed_bytes), client/src/pages/CustodyDisclosure.tsx and client/src/components/os/OsSignGate.tsx. The truth, stated once: the 2026-09-02 freeze key had all three shares on one host (split never performed); the current board freeze (public/signed/gspc-board.2026-09-25.signed.json) is signed by one key, did:web:csoai.org#board-attestation-1, held as a Cloudflare Pages secret; a real 2-of-3 split is planned for the owner's physical root ceremony and has not happened. The signed bytes of the 2026-09-02 freeze are not edited; /signed/gspc-board.status.json already records CUSTODY_SEPARATION_OVERCLAIM against them. scripts/custody-wording-guard.mjs now fails the build if '3-party', 'three-party', '2-of-3' or '3-of-3' custody wording appears on a served or producing surface without correction context, unless council-os/custody-ceremonies.json records a performed split.",
+      status: "CORRECTED — custody stated as single key (current) and one failure domain (2026-09-02 freeze); the 2-of-3 split remains PLANNED, not performed",
+      reached_the_public: true,
+      evidence: [
+        "https://councilof.ai/signed/gspc-board.status.json",
+        "https://councilof.ai/signed/gspc-board.2026-09-25.signed.json",
+        "docs/corrections/2026-09-25-custody-wording.md",
+        "docs/corrections/2026-09-25-board-snapshot-refreeze.md",
+        "council-os/custody-ceremonies.json"
+      ],
+      note: "Owner ruling 2026-09-25 ('both'): correct the wording now, and perform the real 2-of-3 split (planned, not yet performed) at the physical Layer 0 root ceremony. When that ceremony is performed and recorded, a new dated entry supersedes this one; this entry is not edited.",
+    },
+    {
       id: "C-2026-0924-03",
       date: "2026-09-24",
       first_observed_at: "2026-09-24T17:09:33Z",
@@ -500,7 +521,7 @@ export const LEDGER = {
       what_was_wrong:
         "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis · 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
       how_caught:
-        "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+        "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive) [custody corrected by C-2026-0925-01: all three shares sit on one host, one failure domain; the split was never performed]. Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
       fix:
         "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots · 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used — it is a 3KB card-sign and cannot carry this snapshot.",
       status: "CORRECTED — signed freeze is 22/22 and agrees with the live axis arrays",
@@ -513,7 +534,7 @@ export const LEDGER = {
       how_caught:
         "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
       fix:
-        "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled do-not-file. Re-signing that 38KB file is an owner MPC ceremony — the Pages /api/board-sign path is a 3KB card-sign and cannot carry the snapshot.",
+        "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) [custody corrected by C-2026-0925-01: the three shares are on one host, one failure domain] and is labelled do-not-file. Re-signing that 38KB file is an owner MPC ceremony — the Pages /api/board-sign path is a 3KB card-sign and cannot carry the snapshot.",
       status: "CORRECTED — live 22/22 is the quotable count; snapshot 15/7 is historical pending owner MPC re-sign",
     },
     {
@@ -880,20 +901,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "f90c8e82013a5125194269b29988cce4f8e6ae8dc01631db21b5c8e043029b9c",
+    id: "218e3585f039eb6ccb1251a569d6e1e5ed7417e6e2dc24f5d3115050614acd14",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "12ab5df7b966fa36bad6232555b678012fd9bdb9ea54a14d805dabf635c36133eadaf1b1f3ea6e19de148bd10882830c3f7b5fe2d7eb7d08eec11af3d80fc90c",
+    signature: "5f79760202998284608519481776234ea6de5707d051af39ee8734eafb4e5f8df23f85c1603e65c76e62964bce0c42b8ae9d3bc91bd4b61c066262edf61ef905",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "f90c8e82013a5125194269b29988cce4f8e6ae8dc01631db21b5c8e043029b9c",
+          "content_id": "218e3585f039eb6ccb1251a569d6e1e5ed7417e6e2dc24f5d3115050614acd14",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 65,
-          "latest_entry_id": "C-2026-0924-02",
-          "ledger_canonical_bytes": 99014,
+          "entries": 67,
+          "latest_entry_id": "C-2026-0925-01",
+          "ledger_canonical_bytes": 104318,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-24T11:21:19Z"
+          "signed_at": "2026-09-25T12:58:38Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
