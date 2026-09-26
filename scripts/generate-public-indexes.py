@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import subprocess
+import tempfile
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -109,9 +110,12 @@ def public_capability(cap: dict[str, Any]) -> dict[str, Any]:
         if key in cap
     }
 
-def validate_committed() -> list[str]:
+def validate_committed(
+    public_dir: Path = PUBLIC,
+    capability_source: Path = CAPABILITY_SOURCE,
+) -> list[str]:
     errors=[]
-    source_bytes=CAPABILITY_SOURCE.read_bytes()
+    source_bytes=capability_source.read_bytes()
     source=json.loads(source_bytes)
     expected_counts=capability_summary(source.get("capabilities") or [])
     names=[
@@ -122,7 +126,7 @@ def validate_committed() -> list[str]:
     ]
     docs={}
     for name in names:
-        path=PUBLIC/name
+        path=public_dir/name
         if not path.exists():
             errors.append(f"missing {name}")
             continue
@@ -158,10 +162,68 @@ def validate_committed() -> list[str]:
     return errors
 
 
+def selftest() -> list[str]:
+    failures=[]
+    with tempfile.TemporaryDirectory() as td:
+        root=Path(td)
+        public=root/"public"; public.mkdir()
+        source=root/"capabilities.json"
+        source_doc={"schema":"fixture","capabilities":[
+            {"id":"fixture","kind":"http","lifecycle":"LIVE","audience":"both","payment":"free","surfaces":["openapi"]}
+        ]}
+        source.write_text(json.dumps(source_doc,sort_keys=True)+"\n")
+        laws=["generated is not deployed; deployed is not independently read back"]
+        docs={
+            "layer0-drive-through.json":{
+                "schema":"fixture","counts":capability_summary(source_doc["capabilities"]),
+                "canonical_source_sha256":sha256_bytes(source.read_bytes()),"laws":laws,
+            },
+            "eat-flywheel.json":{"schema":"fixture","laws":laws,"source_observations":{}},
+            "layer0-distribution.json":{
+                "schema":"fixture","laws":laws,
+                "staged_surfaces":[{"path":f"/{i}.json"} for i in range(4)],
+            },
+            "progress-index.json":{"schema":"fixture","laws":laws},
+        }
+        for name,doc in docs.items():
+            doc["content_id"]=content_id(doc)
+            (public/name).write_text(json.dumps(doc,sort_keys=True)+"\n")
+        if validate_committed(public,source):
+            failures.append("valid fixture failed")
+
+        target=public/"progress-index.json"
+        broken=json.loads(target.read_text())
+        broken["content_id"]="0"*64
+        target.write_text(json.dumps(broken,sort_keys=True)+"\n")
+        errors=validate_committed(public,source)
+        if not any("content_id mismatch" in e for e in errors):
+            failures.append("corrupt content_id did not fail")
+
+        good=docs["progress-index.json"]
+        target.write_text(json.dumps(good,sort_keys=True)+"\n")
+        drive_path=public/"layer0-drive-through.json"
+        broken_drive=json.loads(drive_path.read_text())
+        broken_drive["counts"]["total"]=999
+        broken_drive["content_id"]=content_id({k:v for k,v in broken_drive.items() if k!="content_id"})
+        drive_path.write_text(json.dumps(broken_drive,sort_keys=True)+"\n")
+        errors=validate_committed(public,source)
+        if not any("capability counts drift" in e for e in errors):
+            failures.append("capability-count drift did not fail")
+    return failures
+
+
 def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--check",action="store_true")
+    ap.add_argument("--selftest",action="store_true")
     args=ap.parse_args()
+    if args.selftest:
+        failures=selftest()
+        if failures:
+            print(json.dumps({"state":"FAIL","failures":failures},indent=2))
+            return 2
+        print(json.dumps({"state":"PASS","selftest":"public index guard goes red on corruption/drift"},indent=2))
+        return 0
     if args.check:
         errors=validate_committed()
         if errors:
