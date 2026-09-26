@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { readLearningScenario, type LearningScenarioView } from "@/lib/learningScenarioReader";
 import {
   BookOpenCheck,
   Check,
@@ -27,40 +28,7 @@ import { dashboardViewHref } from "@/lib/dashboardView";
 
 type ReviewDecision = "READY_FOR_REVIEW" | "RETURN_FOR_REVISION" | "DISCARD";
 
-type ScenarioPointer = {
-  regulator_name?: string;
-  obligation?: string;
-  tier?: string;
-};
-
-type LearningScenario = {
-  axis?: string;
-  board_measurement?: {
-    status?: string;
-    kind?: string;
-    source?: string;
-  };
-  evidence?: {
-    published_state?: string;
-    published_measurements?: unknown[];
-    independently_admitted?: boolean;
-    candidate_state?: string;
-    candidate_findings?: unknown[];
-  };
-  regulation_context?: {
-    state?: string;
-    source?: string;
-    pointers?: ScenarioPointer[];
-    note?: string;
-  };
-};
-
-type ScenarioReply = {
-  schema?: string;
-  state?: string;
-  errors?: string[];
-  scenarios?: LearningScenario[];
-};
+type LearningScenario = LearningScenarioView;
 
 export function learningScenarioUrl(axis: string, hostname?: string): string {
   const path = `/api/learning-scenarios?axis=${encodeURIComponent(axis)}`;
@@ -121,7 +89,9 @@ export default function DashboardLearningPane() {
   >({});
   const [scenario, setScenario] = useState<LearningScenario | null>(null);
   const [scenarioState, setScenarioState] = useState("READING");
-  const [scenarioNote, setScenarioNote] = useState("Reading current sources…");
+  const [scenarioNote, setScenarioNote] = useState("Reading source context…");
+  const [sourceReload, setSourceReload] = useState(0);
+  const [retrievedAt, setRetrievedAt] = useState<string | null>(null);
 
   const selected =
     GSPC_LEARNING_PATHS.find((path) => path.axis.id === axisId) ??
@@ -151,53 +121,29 @@ export default function DashboardLearningPane() {
   useEffect(() => {
     if (!selected) return;
     const controller = new AbortController();
+    let active = true;
     setScenario(null);
     setScenarioState("READING");
-    setScenarioNote("Reading current sources…");
-    fetch(
-      learningScenarioUrl(
-        selected.axis.id,
-        typeof window === "undefined" ? undefined : window.location.hostname,
-      ),
-      {
-        headers: { accept: "application/json" },
-        signal: controller.signal,
-      },
-    )
-      .then(async (response) => {
-        const contentType = (
-          response.headers.get("content-type") || ""
-        ).toLowerCase();
-        if (!contentType.includes("application/json")) {
-          throw new Error(
-            "The scenario endpoint returned a document, not its JSON contract.",
-          );
-        }
-        const body = (await response.json()) as ScenarioReply;
-        if (!response.ok || body.schema !== "csoai.learning-scenarios/0.1") {
-          throw new Error(
-            body.errors?.join(" · ") ||
-              `Scenario endpoint HTTP ${response.status}`,
-          );
-        }
-        const row = body.scenarios?.[0] ?? null;
-        if (!row || row.axis !== selected.axis.id) {
-          throw new Error("No exact scenario was returned for this axis.");
-        }
-        setScenario(row);
-        setScenarioState(body.state || "READY");
-        setScenarioNote(
-          "Live board, locally verified published cards and regulation sources joined by exact identity. Publication is not independent admission.",
-        );
-      })
-      .catch((error: unknown) => {
-        if (controller.signal.aborted) return;
-        setScenario(null);
-        setScenarioState("UNCHECKABLE");
-        setScenarioNote(error instanceof Error ? error.message : String(error));
-      });
-    return () => controller.abort();
-  }, [selected]);
+    setScenarioNote("Reading source context…");
+    setRetrievedAt(null);
+    readLearningScenario(
+      learningScenarioUrl(selected.axis.id,
+        typeof window === "undefined" ? undefined : window.location.hostname),
+      selected.axis.id, CANONICAL_AXIS_COUNT, {signal: controller.signal},
+    ).then((row) => {
+      if (!active) return;
+      setScenario(row);
+      setScenarioState("READY");
+      setRetrievedAt(new Date().toISOString());
+      setScenarioNote("Source-reported board, card and regulatory context for this axis. This browser read does not independently verify evidence, establish legal applicability, or refresh the underlying measurement.");
+    }).catch((error: unknown) => {
+      if (!active) return;
+      setScenario(null);
+      setScenarioState("UNCHECKABLE");
+      setScenarioNote(error instanceof Error ? error.message : "Scenario source could not be read.");
+    });
+    return () => { active = false; controller.abort(); };
+  }, [selected, sourceReload]);
 
   function completeStage() {
     if (!selected || !progress?.activeStageId) return;
@@ -438,9 +384,20 @@ export default function DashboardLearningPane() {
                   {scenarioState}
                 </span>
               </div>
-              <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
+              <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground"
+                role={scenarioState === "UNCHECKABLE" ? "alert" : "status"}>
                 {scenarioNote}
               </p>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <button type="button" onClick={() => setSourceReload((n) => n + 1)}
+                  disabled={scenarioState === "READING"}
+                  className="min-h-11 rounded-lg border border-border px-3 py-2 text-xs font-semibold disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-emerald-700">
+                  Retry source
+                </button>
+                <p className="text-xs text-muted-foreground" data-testid="learning-retrieved-at">
+                  {retrievedAt ? `Retrieved in this session: ${retrievedAt}. Source dates are unchanged.` : "No successful source read in this attempt."}
+                </p>
+              </div>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                 <div className="rounded-lg border border-border bg-background p-2.5">
                   <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
@@ -477,7 +434,7 @@ export default function DashboardLearningPane() {
                     Related framework sources
                   </h4>
                   <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
-                    These links explain the framework relevant to this lesson. A link is not a
+                    These references provide source context for this practice path. A reference is not a
                     determination that an obligation applies.
                   </p>
                   <ul className="mt-2 space-y-2">
@@ -514,7 +471,7 @@ export default function DashboardLearningPane() {
             </section>
 
             <section className="mt-6" aria-labelledby="learning-path-title">
-              <div className="flex items-end justify-between gap-3">
+              <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
                   <h3
                     id="learning-path-title"
@@ -532,7 +489,7 @@ export default function DashboardLearningPane() {
                     regulatory credential.
                   </p>
                 </div>
-                <span className="font-mono text-[10px] text-muted-foreground">
+                <span className="whitespace-nowrap font-mono text-[10px] text-muted-foreground">
                   PRACTICE_ONLY · UNMEASURED
                 </span>
               </div>

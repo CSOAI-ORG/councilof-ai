@@ -4,10 +4,11 @@
  * This module does not fetch the living board, persist progress, submit evidence,
  * run a model, train a model, or write a GSPC cell. It only gives the dashboard a
  * deterministic five-stage learning sequence for every axis already named by the
- * committed board snapshot. Live measurement state remains the API's concern.
+ * committed board snapshot plus existing axis extensions. Live measurement state remains the API's concern.
  */
 
 import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.signed.json";
+import { AXES_C } from "../../../functions/api/_gspc_axes_c";
 
 export const GSPC_LEARNING_PATH_SCHEMA =
   "csoai.gspc-learning-path/0.1" as const;
@@ -88,7 +89,7 @@ type CanonicalAxisRow = {
 };
 
 export const LEARNING_AXIS_SOURCE = Object.freeze({
-  kind: "COMMITTED_BOARD_SNAPSHOT",
+  kind: "COMMITTED_BOARD_SNAPSHOT_AND_AXIS_EXTENSIONS",
   live: false,
   identityFieldsOnly: true,
   signatureVerifiedHere: false,
@@ -129,7 +130,12 @@ function readCanonicalAxisRows(value: unknown): readonly CanonicalAxisRow[] {
   return Object.freeze(canonical.map((row) => Object.freeze(row)));
 }
 
-const CANONICAL_AXIS_ROWS = readCanonicalAxisRows(BOARD_SNAPSHOT);
+// The signed freeze intentionally preserves the older 22-axis record (ADR-002).
+// Add the existing typed extension for curriculum identity only. The normal reader
+// still rejects duplicate IDs; no status, score, count or signature is rewritten.
+const CANONICAL_AXIS_ROWS = readCanonicalAxisRows({
+  axes: [...BOARD_SNAPSHOT.axes, ...AXES_C],
+});
 
 export const CANONICAL_AXIS_COUNT = CANONICAL_AXIS_ROWS.length;
 

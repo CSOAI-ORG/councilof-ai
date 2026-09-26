@@ -1,14 +1,17 @@
 import { describe, expect, it } from "vitest";
 import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.signed.json";
+import { AXES_C } from "../../../functions/api/_gspc_axes_c";
 import {
   CANONICAL_AXIS_COUNT,
   GSPC_LEARNING_PATHS,
   LEARNING_STAGE_IDS,
+  LEARNING_AXIS_SOURCE,
   deriveLearningProgress,
   getGspcLearningPath,
 } from "./gspc-learning-paths";
 
-const CANON = BOARD_SNAPSHOT.axes;
+// Current curriculum identities include the existing extension; the signed freeze is not rewritten.
+const CANON = [...BOARD_SNAPSHOT.axes, ...AXES_C];
 
 describe("GSPC canonical learning paths", () => {
   it("derives one path per existing canonical axis without a parallel list", () => {
@@ -31,6 +34,26 @@ describe("GSPC canonical learning paths", () => {
       });
       expect(path.axis).not.toHaveProperty("accuracy");
       expect(path.axis).not.toHaveProperty("status");
+    });
+  });
+
+  it("includes extension identities without transferring measurement state", () => {
+    for (const axis of AXES_C) {
+      const path = getGspcLearningPath(axis.axis);
+      expect(path?.axis.id).toBe(axis.axis);
+      expect(path?.axis).not.toHaveProperty("status");
+      expect(path?.axis).not.toHaveProperty("accuracy");
+      expect(path?.axis).not.toHaveProperty("n");
+      expect(path?.stages.every((s) => s.evidenceEffect === "NONE")).toBe(true);
+    }
+  });
+
+  it("describes both static identity sources without claiming verification", () => {
+    expect(LEARNING_AXIS_SOURCE).toMatchObject({
+      kind: "COMMITTED_BOARD_SNAPSHOT_AND_AXIS_EXTENSIONS",
+      live: false,
+      identityFieldsOnly: true,
+      signatureVerifiedHere: false,
     });
   });
 
