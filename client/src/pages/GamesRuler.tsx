@@ -121,7 +121,7 @@ export default function GamesRuler() {
   const answeredCount = round.filter((item) => answers[item.id]).length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+    <section className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">Games · slot 2 · local practice</p>
         <h1 className="mt-3 flex items-center gap-3 text-4xl font-black tracking-tight text-gray-900">
@@ -335,7 +335,7 @@ export default function GamesRuler() {
 
         <AdmissionPreview />
       </div>
-    </main>
+    </section>
   );
 }
 
