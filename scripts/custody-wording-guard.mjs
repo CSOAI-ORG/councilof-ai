@@ -59,6 +59,10 @@ export const SKIP_DIRS = new Map([
   ["public/proofs", "per-card proof mirrors, not deployed (deploy-exclusions.json)"],
   ["scripts/ceremony", "the root-ceremony tooling itself: it implements the planned 2-of-3 split"],
   ["scripts/badger/_queue", "queued generator output, not served"],
+  // A historical did.json the media compiler tests against (lane media-compiler bd5307576): it pins the
+  // 2026-09-02 key note verbatim so the compiler can be shown to refuse stale bytes. Test input, never
+  // served; the served did.json is public/.well-known/did.json, which this guard still scans.
+  ["scripts/media/fixtures", "media-compiler test fixtures (historical did.json), not served"],
   ["node_modules", "dependencies"],
 ]);
 const SKIP_DIR_NAMES = new Set(["node_modules", "mirrors", ".git"]);
