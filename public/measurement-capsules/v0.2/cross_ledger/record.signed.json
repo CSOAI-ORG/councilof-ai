@@ -1,0 +1,42 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
+  "artifact": {
+   "path": "measurement-capsules/v0.2/cross_ledger/record.json",
+   "sha256": "4e528f527533b517cc5c1b0427d07b25201a3f8e6714e76461f0c67f6525e753",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "as_of": "2026-09-26T06:19:34Z"
+  },
+  "merkle_root": "170c5d45a2d19b2d9aa33ab25e5714b85a618e197479ee97f5d0ae55c9d0f9eb",
+  "n_capsules": 56,
+  "states": {
+   "ISSUER_LIST_UNAVAILABLE": 1,
+   "LISTED_NOT_READ": 20,
+   "OPERATOR_API": 22,
+   "PERMISSIONED_NOT_READABLE": 3,
+   "STATE_PROOF_RECORDED": 1,
+   "STATE_PROOF_VERIFIED": 9
+  },
+  "capsules_sha256": "9ff0a84873b2836db7063c374acb6aa602c7d38c629e64d4c5c8c8e02d5507a4",
+  "adapter": "cross_ledger",
+  "kind": "measurement.cross_ledger_supply"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "08f2db644cbb344e4f632fb85226097951da1222ca87050b8f7447f76489d1a141c89d9d946dccefaed3f86347b3315fbd62c66b402dcaeab20214b7d0a38c04",
+  "payload_sha256": "07bc80b50215f6ce0f0992547631135988c41267c9e1e925862264e940b0492e",
+  "signed_at": "2026-09-26T06:23:46.628Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "merkle root altered": "rejected (control holds)"
+  }
+ }
+}

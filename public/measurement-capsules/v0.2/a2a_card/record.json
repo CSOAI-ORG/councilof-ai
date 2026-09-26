@@ -1,0 +1,62 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-26T06:19:20Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "a2a_card",
+ "kind": "measurement.a2a_card_signature",
+ "n_capsules": 33,
+ "states": {
+  "FAILED": 8,
+  "UNCHECKABLE": 12,
+  "VERIFIED": 13
+ },
+ "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "33/33",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661",
+  "bytes": 7916,
+  "uncompressed_sha256": "94d04466138c13f2cd585057d4c8d32c51660ab1e5ae574b3d61931b11070be6",
+  "uncompressed_bytes": 79076,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "A2A agent-card signatures: one capsule per signed card in the 2026-09-25 a2aregistry census (v0.1.1), declared key reference vs the verification result under the card's declared protocol version.",
+ "what_this_is_not": "Not identity, endorsement, ranking or approval of any agent. A VERIFIED card proves only that the key it points to signed its bytes.",
+ "source": {
+  "record": "/evac-bulk/cp-fix-20260926/a2a-corr/out/record.v0.1.1.json",
+  "record_version": "0.1.1",
+  "record_sha256": "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91",
+  "record_signature": "VERIFIES",
+  "record_signature_payload_sha256": "fa6e4386a9b9d9e97521e1d7bb7c66ef69ee6cc2ff62988882eca6f574260900",
+  "rows_file": "/evac-bulk/cp-fix-20260926/a2a-corr/out/data/cards.v0.1.1.jsonl.gz",
+  "rows_sha256": "93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2791c",
+  "card_bodies_file": "/evac-bulk/census-a2a-2026-09-25/cards.jsonl.gz",
+  "card_bodies_sha256": "8e20340fd46354d13dee99b026854ed367ce2a6f1be4e3fa9b7ca53a9a591b4b",
+  "hf_dataset": "https://huggingface.co/datasets/csoai/a2a-card-census",
+  "hf_commit_of_v0_1_1": "4b6789fa20cfa256e62c8db59d03e62f026c4cc9"
+ },
+ "listing_states": {
+  "CARD_SERVED": 422,
+  "ROBOTS_DISALLOWED": 9,
+  "AUTH_REQUIRED": 2,
+  "NOT_FOUND": 5,
+  "UNREACHABLE": 5
+ },
+ "served_unsigned_not_capsuled": 389,
+ "capsules_by_rule_state": {
+  "a2a-0.x-served-bytes:FAILED": 1,
+  "a2a-0.x-served-bytes:UNCHECKABLE": 2,
+  "a2a-0.x-served-bytes:VERIFIED": 5,
+  "a2a-1.x-8.4.3:FAILED": 7,
+  "a2a-1.x-8.4.3:UNCHECKABLE": 10,
+  "a2a-1.x-8.4.3:VERIFIED": 8
+ },
+ "observed_at_rule": "the census record's as_of (verification re-run over the same key documents in the v0.1.1 correction)",
+ "private_until": "owner approves publication"
+}

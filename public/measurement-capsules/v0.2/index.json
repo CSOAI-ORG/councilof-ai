@@ -1,0 +1,326 @@
+{
+ "schema": "csoai.measurement-capsule-index/0.2",
+ "as_of": "2026-09-26T07:27:19Z",
+ "what_this_is": "One index over every signed measurement-capsule batch: each batch's own Merkle root, record sha256, signature and OTS state, and one root over all of them.",
+ "what_this_is_not": "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "batches": [
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-a2a_card",
+   "adapter": "a2a_card",
+   "kind": "measurement.a2a_card_signature",
+   "n_capsules": 33,
+   "states": {
+    "FAILED": 8,
+    "UNCHECKABLE": 12,
+    "VERIFIED": 13
+   },
+   "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+   "record_sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6",
+   "capsules_sha256": "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:23:31.420Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/cp-fix-20260926/a2a-corr/out/record.v0.1.1.json",
+    "record_version": "0.1.1",
+    "record_sha256": "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "fa6e4386a9b9d9e97521e1d7bb7c66ef69ee6cc2ff62988882eca6f574260900",
+    "rows_file": "/evac-bulk/cp-fix-20260926/a2a-corr/out/data/cards.v0.1.1.jsonl.gz",
+    "rows_sha256": "93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2791c",
+    "card_bodies_file": "/evac-bulk/census-a2a-2026-09-25/cards.jsonl.gz",
+    "card_bodies_sha256": "8e20340fd46354d13dee99b026854ed367ce2a6f1be4e3fa9b7ca53a9a591b4b",
+    "hf_dataset": "https://huggingface.co/datasets/csoai/a2a-card-census",
+    "hf_commit_of_v0_1_1": "4b6789fa20cfa256e62c8db59d03e62f026c4cc9"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-contract_parity",
+   "adapter": "contract_parity",
+   "kind": "measurement.contract_parity",
+   "n_capsules": 9155,
+   "states": {
+    "CONSISTENT": 5570,
+    "INCONSISTENT": 2917,
+    "UNCHECKABLE": 668
+   },
+   "merkle_root": "875c4f814ae57b05abb2d8ed34e0fa7f706bb852044709b68d7a2880659a9bad",
+   "record_sha256": "11de628c1dba89abe2abad1db6f20c223dcdb9bddcabedb1d492f4b5fd753c10",
+   "capsules_sha256": "adb527da4927e47caa528747bcc89b517d59a43c5a23246ae8824b4979f1d5fa",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:20:53.653Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/cp-fix-20260926/record/record.v0.1.1.json",
+    "record_version": "0.1.1",
+    "record_schema": "csoai.mcp-contract-parity/0.1.1",
+    "record_sha256": "9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "e3d461877868bba24b343708a39c63dc57e4500881628a3252cb86719ce8dfaa",
+    "rows_file": "/evac-bulk/cp-fix-20260926/record/rows.v0.1.1.jsonl.gz",
+    "rows_sha256": "eeeb2a0d9ae471ce6a980165e9022551116a00f3c0b3c8c010e9bba7e95de075",
+    "rows_pinned_by_record": true,
+    "hf_dataset": "https://huggingface.co/datasets/csoai/mcp-contract-parity",
+    "v0_1_2": "not present as a signed record at build time; v0.1.1 used"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-cross_ledger",
+   "adapter": "cross_ledger",
+   "kind": "measurement.cross_ledger_supply",
+   "n_capsules": 56,
+   "states": {
+    "ISSUER_LIST_UNAVAILABLE": 1,
+    "LISTED_NOT_READ": 20,
+    "OPERATOR_API": 22,
+    "PERMISSIONED_NOT_READABLE": 3,
+    "STATE_PROOF_RECORDED": 1,
+    "STATE_PROOF_VERIFIED": 9
+   },
+   "merkle_root": "170c5d45a2d19b2d9aa33ab25e5714b85a618e197479ee97f5d0ae55c9d0f9eb",
+   "record_sha256": "4e528f527533b517cc5c1b0427d07b25201a3f8e6714e76461f0c67f6525e753",
+   "capsules_sha256": "9ff0a84873b2836db7063c374acb6aa602c7d38c629e64d4c5c8c8e02d5507a4",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:23:46.628Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "records": [
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-benji-2026-09-25.json",
+      "asset": "BENJI",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "b7563a47a5f3e635cf40e2aa6e6ffbe06c3aaccebf35814a4b3ce624bed56215",
+      "issuer_list_state": "READ"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-bny-digital-cash-2026-09-25.json",
+      "asset": "BNY digital cash / tokenized deposits",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "ec9bf90130e449a01c4814a697dac351a02abc832cd2c426db3255ef1bbf03c9",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "e2c1832f29ea1352fa2c98e26fcd199106075dd3217c5044323722f488c9b464",
+      "issuer_list_state": "PERMISSIONED_NOT_READABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-buidl-2026-09-25.json",
+      "asset": "BUIDL",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "f5954652c6586c3fc09a3a0e40fb5af7b6544b42c8773ea6af7149db64f1bb57",
+      "issuer_list_state": "ISSUER_LIST_UNAVAILABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-citi-token-services-2026-09-25.json",
+      "asset": "Citi Token Services (tokenized deposits)",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "7d2ff0540df989ade4cc2bc05465c06c3b0ff592b62dfe329b3c7aec1f1bc92d",
+      "issuer_list_state": "PERMISSIONED_NOT_READABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json",
+      "asset": "HSBC Tokenised Deposit Service",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "48dd4f9722bd1d27836fa65cfc4081b45c41eee51fea7d686b3483fd7ac364e3",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "0eefd5cdfd0c1e26e91a7ed4b52ea38aacb4d7d470ed61bb3c11524ee3881d2e",
+      "issuer_list_state": "PERMISSIONED_NOT_READABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-jpmd-2026-09-25.json",
+      "asset": "JPMD",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "827b040f485e7f293b3a6c772f0c2e628a35b4b4a27b22aad704b863aa260aaa",
+      "issuer_list_state": "READ"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-usdc-2026-09-25.json",
+      "asset": "USDC",
+      "schema": "csoai.cross-ledger-supply/0.1",
+      "sha256": "1a1009dc98a6a459d00e9f34a1581c295a0f803d832111b04531513ad642b63a",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "2fdef0860a5404bed1a7025ad5cca60334414a5df5c0c64d878cab2be3e87236",
+      "issuer_list_state": "READ"
+     }
+    ],
+    "skipped_files": []
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-mill_cross_runtime",
+   "adapter": "mill_cross_runtime",
+   "kind": "measurement.cross_runtime_reproduction",
+   "n_capsules": 14,
+   "states": {
+    "NOT_REPRODUCED": 7,
+    "REPRODUCED_AGGREGATE_ONLY": 2,
+    "REPRODUCED_ITEMWISE": 5
+   },
+   "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+   "record_sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+   "capsules_sha256": "a8dc6d18a2835c8bead883b17c5a71257da40faf63381bce2f0f98e6ab366c8d",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:20:12.622Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "declarations_dir": "/evac-bulk/mill-kaggle-nemo-2026-09-26/decl",
+    "declarations": 14,
+    "declarations_sha256": {
+     "runtime-declaration-affect.json": "ff07c6fd37df1ab0dbe6dda926be8265b96711b8c66fccf7aa28999547eee199",
+     "runtime-declaration-art5-safeguard.json": "adad38a4a6ca59542ed9ab73d62123ce9ea5c911fdc6e38f6e92a9dae9106c76",
+     "runtime-declaration-care.json": "bc0e67cf15bbf7bfd16d9f6b822a5e6399fc386be1b5aec81eef8f5af8c11f9c",
+     "runtime-declaration-conformance.json": "39e1f5f825da1f0ac9033b8b3542d6bf471d876d28eedf5c116888134d6eeaf2",
+     "runtime-declaration-continuity.json": "6aa7a57890d8870cf496ecd01518127aa6c9c4dcf6592da9c9cad24319a75fb2",
+     "runtime-declaration-cross-reality.json": "30b04d0f63d49a1acfc253c950838c986505e5e0aee09c392a422a908bddb4eb",
+     "runtime-declaration-detector-interop.json": "3de85cad100ce89381e0d4f04092d47a73603e2d3aa36a80293fc9fe50ece829",
+     "runtime-declaration-governance.json": "a3f9b0a897714679277d41f313221c370796ddfbb06048cd348ee17032fda4f6",
+     "runtime-declaration-jail.json": "b884fffdc8713beb0be28ff9bee1e867b84f51150c58883b11d84ede3e451f0b",
+     "runtime-declaration-machinery-conformity.json": "03b9f444afc405bb2b7445ab2096a6b9f093c16def017a2f6ea201bef86dd183",
+     "runtime-declaration-openness.json": "7fe30789eca5fb6937fab12c34328b6bee85466f3e86f71e3b5660613c82b3be",
+     "runtime-declaration-provenance.json": "12cd2e663a36c07867c0202dd4274729d331a9b15660cd8561fd504e80985b2c",
+     "runtime-declaration-safety.json": "d18580a942dbe3933139613b8db181b4fece83313231edbde9808645ea167b91",
+     "runtime-declaration-swarm.json": "c868b3070cb9d8325be18bd27407ca1a621b8a6c74bafd65202917fb403050d7"
+    }
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-public_signals",
+   "adapter": "public_signals",
+   "kind": "measurement.public_signal",
+   "n_capsules": 118,
+   "states": {
+    "MEASURED": 103,
+    "PARTIAL": 3,
+    "UNCHECKABLE": 12
+   },
+   "merkle_root": "ef67f71508192f08f1aedb00276592ee81e85661e7c3421bec036d4e7b9adb42",
+   "record_sha256": "abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690",
+   "capsules_sha256": "5d8a0c632c0158116f2973c4256afc6bb03fc18957dab72eed75ce9e284ce770",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T07:18:51.933Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/public-signals/2026-09-26/record.json",
+    "record_sha256": "7c23af1cea95c58d99a2eff2928c5637f38057d238d1b44e49fb8832460f81b0",
+    "date": "2026-09-26",
+    "schema": "csoai.public-signals/0.1",
+    "n_signals": 118,
+    "previous_record_sha256": null,
+    "changes_sha256": "80a84ccd2cccb95db1811dae9e7505b5ebe75e992809c94920b75914b95512c3"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-self_parity",
+   "adapter": "self_parity",
+   "kind": "measurement.self_parity",
+   "n_capsules": 138,
+   "states": {
+    "CONSISTENT": 37,
+    "INCONSISTENT": 8,
+    "NOT_DECLARED": 1,
+    "NOT_LISTED": 55,
+    "UNCHECKABLE": 37
+   },
+   "merkle_root": "53d5c6b23a13c464546d31ab18abcf1fae3990961019fc2443748d62922acf3a",
+   "record_sha256": "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337",
+   "capsules_sha256": "dc703838bd4c5e9db443f23e54d972343d5c9fdcaf258397472194c5e8267c64",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:24:02.740Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/self-parity/2026-09-26/record.json",
+    "record_sha256": "a2f205ca43d096ec0e9f621d8e0dcda2bd2d8040b39ff277ef7ae50fa9de4dfe",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "d6eb7d1951cb8eab89317098f5c1d9a780ae49479c609072ed615eb4f9efe58d",
+    "date": "2026-09-26",
+    "schema": "csoai.self-parity/0.1"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-tool_drift",
+   "adapter": "tool_drift",
+   "kind": "measurement.tool_drift",
+   "n_capsules": 3240,
+   "states": {
+    "UNCHANGED_AT_NAME_GRANULARITY": 1485,
+    "UNCHECKABLE": 1755
+   },
+   "merkle_root": "fd0f514e03dd825698a3eab57d33431b09e62e442f85c7592db50f2371e9d2df",
+   "record_sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+   "capsules_sha256": "febe9aed6140c3cc12a0c256fb0ffa9e76bc66a19342f086af03ee60c7baa7aa",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:53:20.454Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "t1_files_sha256": {
+     "/evac-bulk/census-probe-2026-09-25/results.jsonl.gz": "038a2598981e8f0e48fc03261a5a6ef44770bd0cfbc4b8aa1d6917737df67dad"
+    },
+    "t2_files_sha256": {
+     "/evac-bulk/census-firstparty-2026-09-25/results.jsonl.gz": "ab1678d2db39999d5b390e0ac6a87f18bd242af86bb4554cdfffb1594d08c6db"
+    },
+    "n_t1_endpoints": 4144,
+    "n_t2_endpoints": 10187,
+    "n_join": 3240,
+    "n_t1_only": 904,
+    "n_t2_only": 6947,
+    "t1_responded_absent_at_t2": 499,
+    "absent_at_t2_rule": "not capsuled and never counted as REMOVED: absence from an observation is UNCHECKABLE"
+   }
+  }
+ ],
+ "n_capsules_total": 12754,
+ "index_root": "18cc04fbe63c6aeaa55178c58536130d338f4521bcbd3828ab931bc0c6612afd",
+ "index_root_rule": "the batch rule (merkle) over the sorted capsule_id leaves of ALL batches together",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "batch_schema": "csoai.measurement-capsule-batch/0.2",
+ "root_over_batch_merkle_roots": "818d6c5697d4fd2f58a05ed1659bd2dbf0a46be7bd824401aee5bca4fb7aed5d",
+ "pending_source": [
+  {
+   "adapter": "tool_drift_daily_source",
+   "why": "no daily tool-drift run under /evac-bulk/tool-drift/runs (tool-drift cron not installed or not yet run); the 2026-09-26 batch is carried"
+  },
+  {
+   "adapter": "cross_ledger_daily_loop",
+   "why": "signed daily-loop record(s) exist (1; latest xl-daily-2026-09-26.json) with schema csoai.cross-ledger-xl-daily/0.1, which the cross_ledger adapter does not read (it reads csoai.cross-ledger-supply/*): not capsuled"
+  },
+  {
+   "adapter": "public_signals_source_signature",
+   "why": "the source record /evac-bulk/public-signals/2026-09-26/record.json carries no board signature (ABSENT; it is OTS-stamped); the public_signals batch built from it is board-signed like every batch"
+  },
+  {
+   "adapter": "contract_parity_v0.1.2",
+   "why": "no signed record.v0.1.2 under /evac-bulk/cp-fix-20260926/record; v0.1.1 carried"
+  }
+ ],
+ "verify": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
+ "private_until": "owner approves publication"
+}
