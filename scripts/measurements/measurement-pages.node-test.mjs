@@ -91,6 +91,47 @@ const CASES = [
       test("x402-activity: no hand-typed figures in the page", () => noHandTypedFigures("client/src/pages/X402Activity.tsx"));
     },
   },
+  {
+    // OWNER-APPROVE: the page is built noindex and delisted from the sitemap until the owner approves publication.
+    name: "disclosure-lag/2026-09-medicare-agent",
+    run() {
+      const base = "public/measurements/disclosure-lag/2026-09-medicare-agent/record";
+      test("disclosure-lag: the page reads the published record bytes", () => {
+        assert.ok(read(`${base}.json`).equals(read("client/src/data/measurements/disclosure-lag/2026-09-medicare-agent.json")));
+      });
+      test("disclosure-lag: record is board-signed and timestamped", () => {
+        checkSigned(`${base}.json`, `${base}.signed.json`, `${base}.json.ots`, "measurements/disclosure-lag/2026-09-medicare-agent/record.json");
+      });
+      test("disclosure-lag: every interval is recomputed from the dates, every quote cites a listed source", () => {
+        const c = JSON.parse(read(`${base}.json`)).capsules[0];
+        const ev = Object.fromEntries(c.observed.events.map((e) => [e.event, e]));
+        const days = (a, b) => Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 86400000);
+        for (const iv of c.observed.intervals) {
+          const a = ev[iv.from]?.date, b = ev[iv.to]?.date;
+          if (iv.days !== null) assert.equal(iv.days, days(a, b), iv.id);
+          if (iv.state === "MEASURED") assert.ok(ev[iv.from].label === "PRIMARY" && ev[iv.to].label === "PRIMARY", `${iv.id} MEASURED needs PRIMARY ends`);
+          if (iv.days_range) {
+            const lo = b.length === 7 ? `${b}-31` : b, hi = b.length === 7 ? `${b}-01` : b;
+            const [x, y] = a.length === 7 ? [days(`${a}-31`, b), days(`${a}-01`, b)] : [days(a, hi), days(a, lo)];
+            assert.deepEqual(iv.days_range, [x, y], iv.id);
+          }
+        }
+        const ids = new Set(c.sources.map((s) => s.id));
+        for (const e of c.observed.events) for (const [id] of e.quotes) assert.ok(ids.has(id), `${e.event} cites unlisted ${id}`);
+        assert.equal(c.publication.startsWith("PRIVATE: OWNER-APPROVE"), true);
+      });
+      test("disclosure-lag: page stays noindex and out of the sitemap until approved", () => {
+        const page = read("client/src/pages/DisclosureLagMedicareAgent.tsx").toString();
+        const approved = /export const OWNER_APPROVED = true;/.test(page);
+        const sitemap = read("public/sitemap.xml").toString();
+        if (!approved) {
+          assert.ok(/noindex/.test(page), "noindex while unapproved");
+          assert.ok(!sitemap.includes("/measurements/disclosure-lag/"), "absent from the sitemap while unapproved");
+        }
+      });
+      test("disclosure-lag: no hand-typed figures in the page", () => noHandTypedFigures("client/src/pages/DisclosureLagMedicareAgent.tsx"));
+    },
+  },
 ];
 
 for (const c of CASES) c.run();

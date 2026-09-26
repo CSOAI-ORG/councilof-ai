@@ -209,6 +209,8 @@ function discover() {
     "/state", "/state/2026-09",
     // Wash-adjusted x402 activity (2026-09-26): figures render from the signed record.
     "/measurements/x402-activity",
+    // OWNER-APPROVE page: prerendered with robots noindex; delisted from the sitemap.
+    "/measurements/disclosure-lag/2026-09-medicare-agent",
     // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
     "/verify-server",
     // /measurement-capsules — the human page for the capsule index (2026-09-26); the folder holds only data.

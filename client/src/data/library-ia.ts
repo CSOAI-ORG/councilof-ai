@@ -168,6 +168,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/state/2026-09",
   // /measurements/x402-activity — wash-adjusted x402 activity, signed daily record (2026-09-26).
   "/measurements/x402-activity",
+  // OWNER-APPROVE (noindex, delisted from the sitemap until approved): disclosure-lag measurement.
+  "/measurements/disclosure-lag/2026-09-medicare-agent",
   // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
   "/verify-server",
   // /measurement-capsules — the human page over the capsule index: kinds, chain, anchors, how to verify (2026-09-26).

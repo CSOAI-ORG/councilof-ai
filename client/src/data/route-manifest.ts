@@ -1358,6 +1358,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Measurement Capsules"
  },
  {
+  "path": "/measurements/disclosure-lag/2026-09-medicare-agent",
+  "comp": "DisclosureLagMedicareAgent",
+  "title": "Disclosure Lag Medicare Agent"
+ },
+ {
   "path": "/measurements/x402-activity",
   "comp": "X402Activity",
   "title": "X402 Activity"
