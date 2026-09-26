@@ -1,0 +1,27 @@
+{
+ "schema": "csoai.ots-state/0.1",
+ "file": "index.json",
+ "sha256": "951a813866ffc745f6a1f0bb9210865099f1aa5c232cb520d4439360b9e9d2e9",
+ "ots_file": "index.json.ots",
+ "ots_sha256": "31a7471de3e5591629b3cdd7d9b7af4b5097c91ba6755a09edc71684b1f914d0",
+ "stamped_utc": "2026-09-25T14:13:42Z",
+ "calendars_accepted": [
+  "https://alice.btc.calendar.opentimestamps.org",
+  "https://bob.btc.calendar.opentimestamps.org",
+  "https://finney.calendar.eternitywall.com"
+ ],
+ "calendars_failed": {},
+ "inspect": {
+  "file_digest": "951a813866ffc745f6a1f0bb9210865099f1aa5c232cb520d4439360b9e9d2e9",
+  "pending_calendars": [
+   "https://bob.btc.calendar.opentimestamps.org",
+   "https://alice.btc.calendar.opentimestamps.org",
+   "https://finney.calendar.eternitywall.com"
+  ],
+  "bitcoin": [],
+  "binds_to_target": true,
+  "state": "pending"
+ },
+ "state": "PENDING_CALENDAR_COMMITMENT",
+ "state_meaning": "Calendars accepted this digest and promised future Bitcoin inclusion. This is NOT a Bitcoin attestation until `ots upgrade` returns a BitcoinBlockHeaderAttestation and `ots verify` checks it against the chain."
+}
