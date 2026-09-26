@@ -156,6 +156,25 @@ def validate_committed(
         errors.append("drive-through: canonical source hash drift")
     if drive.get("counts")!=expected_counts:
         errors.append("drive-through: canonical capability counts drift")
+    source_caps=source.get("capabilities") or []
+    expected_live_ids=sorted(str(x.get("id")) for x in source_caps if x.get("lifecycle")=="LIVE")
+    expected_live=len(expected_live_ids)
+    expected_unavailable={
+        state: sorted(str(x.get("id")) for x in source_caps if x.get("lifecycle")==state)
+        for state in sorted({str(x.get("lifecycle")) for x in source_caps if x.get("lifecycle")!="LIVE"})
+    }
+    if drive.get("available_now_count")!=expected_live:
+        errors.append("drive-through: available_now_count must equal lifecycle LIVE count")
+    if (drive.get("available_now_ids") or [])!=expected_live_ids:
+        errors.append("drive-through: available_now_ids drift from canonical LIVE set")
+    if (drive.get("unavailable_by_lifecycle") or {})!=expected_unavailable:
+        errors.append("drive-through: unavailable lifecycle partitions drift from canonical source")
+    indexed_ids=sorted(str(x.get("id")) for x in (drive.get("capabilities") or []))
+    source_ids=sorted(str(x.get("id")) for x in source_caps)
+    if indexed_ids!=source_ids:
+        errors.append("drive-through: capability id set drift from canonical source")
+    if (drive.get("available_now_count",0)+drive.get("unavailable_now_count",0))!=expected_counts.get("total"):
+        errors.append("drive-through: available/unavailable partition does not cover canonical total")
     dist=docs.get("layer0-distribution.json") or {}
     if len(dist.get("staged_surfaces") or [])!=4:
         errors.append("distribution: expected four staged index surfaces")
@@ -169,14 +188,19 @@ def selftest() -> list[str]:
         public=root/"public"; public.mkdir()
         source=root/"capabilities.json"
         source_doc={"schema":"fixture","capabilities":[
-            {"id":"fixture","kind":"http","lifecycle":"LIVE","audience":"both","payment":"free","surfaces":["openapi"]}
+            {"id":"fixture","kind":"http","lifecycle":"LIVE","audience":"both","payment":"free","surfaces":["openapi"]},
+            {"id":"retired-fixture","kind":"http","lifecycle":"RETIRED","audience":"both","payment":"free","surfaces":["openapi"]},
         ]}
         source.write_text(json.dumps(source_doc,sort_keys=True)+"\n")
         laws=["generated is not deployed; deployed is not independently read back"]
         docs={
             "layer0-drive-through.json":{
                 "schema":"fixture","counts":capability_summary(source_doc["capabilities"]),
-                "canonical_source_sha256":sha256_bytes(source.read_bytes()),"laws":laws,
+                "canonical_source_sha256":sha256_bytes(source.read_bytes()),
+                "available_now_count":1,"unavailable_now_count":1,
+                "available_now_ids":["fixture"],
+                "unavailable_by_lifecycle":{"RETIRED":["retired-fixture"]},
+                "capabilities":source_doc["capabilities"],"laws":laws,
             },
             "eat-flywheel.json":{"schema":"fixture","laws":laws,"source_observations":{}},
             "layer0-distribution.json":{
@@ -209,6 +233,17 @@ def selftest() -> list[str]:
         errors=validate_committed(public,source)
         if not any("capability counts drift" in e for e in errors):
             failures.append("capability-count drift did not fail")
+
+        good_drive=dict(docs["layer0-drive-through.json"])
+        good_drive["content_id"]=content_id({k:v for k,v in good_drive.items() if k!="content_id"})
+        drive_path.write_text(json.dumps(good_drive,sort_keys=True)+"\n")
+        broken_ids=json.loads(drive_path.read_text())
+        broken_ids["available_now_ids"]=["retired-fixture"]
+        broken_ids["content_id"]=content_id({k:v for k,v in broken_ids.items() if k!="content_id"})
+        drive_path.write_text(json.dumps(broken_ids,sort_keys=True)+"\n")
+        errors=validate_committed(public,source)
+        if not any("available_now_ids drift" in e for e in errors):
+            failures.append("LIVE id-set drift did not fail")
     return failures
 
 
@@ -259,19 +294,33 @@ def main() -> int:
         "generated is not deployed; deployed is not independently read back",
     ]
 
+    live_capabilities=[c for c in capabilities if c.get("lifecycle")=="LIVE"]
+    unavailable_capabilities=[c for c in capabilities if c.get("lifecycle")!="LIVE"]
+    unavailable_by_lifecycle={
+        state: sorted(str(c.get("id")) for c in capabilities if c.get("lifecycle")==state)
+        for state in sorted({str(c.get("lifecycle")) for c in unavailable_capabilities})
+    }
     drive = {
-        "schema": "csoai.layer0-drive-through/0.2",
+        "schema": "csoai.layer0-drive-through/0.3",
         "kind": "public-operational-index",
         "canonical_source": "council-os/capabilities.json",
         "canonical_source_sha256": sha256_bytes(capability_bytes),
         "source_commit": head,
         "counts": counts,
+        "available_now_count": len(live_capabilities),
+        "unavailable_now_count": len(unavailable_capabilities),
+        "available_now_ids": sorted(str(c.get("id")) for c in live_capabilities),
+        "unavailable_by_lifecycle": unavailable_by_lifecycle,
         "capabilities": [public_capability(c) for c in capabilities],
         "routing_note": (
-            "This file exposes declared public capability/lifecycle/payment/surface metadata. "
+            "Only lifecycle=LIVE entries are projected in available_now. "
+            "Other declarations remain visible for correction/history but are not represented as callable now. "
             "Runtime measurement state remains owned by the relevant measurement evidence."
         ),
-        "laws": common_laws,
+        "laws": common_laws + [
+            "declared is not callable; only lifecycle=LIVE is included in available_now",
+            "quarantined, retired, closed and not-implemented entries remain visible but unavailable",
+        ],
     }
     drive["content_id"] = content_id(drive)
 

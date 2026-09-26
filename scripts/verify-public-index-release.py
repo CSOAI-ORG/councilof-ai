@@ -87,6 +87,11 @@ def main()->int:
     ap=argparse.ArgumentParser()
     ap.add_argument("--origin",default=ORIGIN)
     ap.add_argument("--selftest",action="store_true")
+    ap.add_argument(
+        "--indexes-only",
+        action="store_true",
+        help="verify only the four release-candidate index bytes; for local/static preflight only",
+    )
     args=ap.parse_args()
 
     if args.selftest:
@@ -107,15 +112,16 @@ def main()->int:
         index_rows.append(row)
 
     baseline_rows=[]
-    for path in BASELINE_SURFACES:
-        status,remote,content_type=fetch(origin+path)
-        baseline_rows.append({
-            "path":path,
-            "status":status,
-            "bytes":len(remote),
-            "sha256":sha256(remote),
-            "content_type":content_type,
-        })
+    if not args.indexes_only:
+        for path in BASELINE_SURFACES:
+            status,remote,content_type=fetch(origin+path)
+            baseline_rows.append({
+                "path":path,
+                "status":status,
+                "bytes":len(remote),
+                "sha256":sha256(remote),
+                "content_type":content_type,
+            })
 
     errors=validate_rows(index_rows,baseline_rows)
     out={
@@ -125,7 +131,12 @@ def main()->int:
         "indexes":index_rows,
         "baseline_surfaces":baseline_rows,
         "errors":errors,
-        "law":"deployment is not accepted until the four new index bytes match the committed release and the five pre-existing live surfaces remain reachable",
+        "mode":"INDEXES_ONLY_PREFLIGHT" if args.indexes_only else "FULL_RELEASE_READBACK",
+        "law":(
+            "indexes-only is a preflight and cannot accept production deployment"
+            if args.indexes_only else
+            "deployment is not accepted until the four new index bytes match the committed release and the five pre-existing live surfaces remain reachable"
+        ),
     }
     print(json.dumps(out,indent=2,sort_keys=True))
     return 0 if not errors else 1
