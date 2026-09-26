@@ -23,6 +23,7 @@ PATHS = ["/", "/estate/", "/verify", "/gspc-verify", "/board", "/press",
          "/api/gspc", "/api/state", "/api/corrections", "/api/cards", "/api/root",
          "/api/revenue", "/api/x402", "/api/free-door", "/api/learning-scenarios",
          "/.well-known/agent-card.json", "/.well-known/x402.json", "/.well-known/did.json",
+         "/layer0-drive-through.json", "/eat-flywheel.json", "/layer0-distribution.json", "/progress-index.json",
          "/sitemap.xml", "/robots.txt", "/llms.txt"]
 # 402 is a correct answer from a payable door, not a failure.
 OK = {200, 402}

@@ -1,0 +1,133 @@
+{
+  "commercial": {
+    "distinct_nonself_payers": 1,
+    "distinct_nonself_payers_30d": 1,
+    "nonself_settlements": 1,
+    "repeat_payer_gate": "HOLD",
+    "settled_usdc": 0.02,
+    "settled_usdc_atomic": 20000
+  },
+  "content_id": "50e4a72d6394eafe7f99bc7700f3ea7d4162d14a6f2e0cd42dd71133ca0e5e5f",
+  "distribution": {
+    "currently_live_reference_surfaces": 5,
+    "release_state": "STAGED_NOT_DEPLOYED",
+    "staged_new_indexes": 4
+  },
+  "evidence": {
+    "corrections": 66,
+    "gspc_axes": 23,
+    "gspc_measured_axes": 23,
+    "gspc_unmeasured_axes": 0,
+    "signed_snapshot_agrees": false
+  },
+  "kind": "multi-dimensional-public-progress",
+  "laws": [
+    "listing or discovery is not measurement, certification, endorsement, or compliance",
+    "public capability declaration does not prove runtime behavior",
+    "payment does not create a GSPC measurement",
+    "generated is not deployed; deployed is not independently read back",
+    "progress is a vector, not a single score",
+    "historical signed snapshot disagreement is preserved rather than hidden"
+  ],
+  "schema": "csoai.public-progress-index/0.2",
+  "source_commit": "ef13fc873a0bf29998404fc4243b86af171ddb3c",
+  "source_observations": {
+    "a2a": {
+      "bytes": 13018,
+      "content_type": "application/a2a+json",
+      "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/agent-card.json"
+    },
+    "corrections": {
+      "bytes": 109485,
+      "content_type": "application/json",
+      "sha256": "21d22f5df28aae2d5263fb21b0b3a5e05018c83f8396ebecd7c012580be9c842",
+      "status": 200,
+      "url": "https://councilof.ai/api/corrections"
+    },
+    "gspc": {
+      "bytes": 72650,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "be45a7ed47dc7f43a0ab83b75d3ce60909f918ecf386af7c11a78c0d5a708cca",
+      "status": 200,
+      "url": "https://councilof.ai/api/gspc"
+    },
+    "quickstart": {
+      "bytes": 4664,
+      "content_type": "application/json",
+      "sha256": "a2f8b49a0ac0daf0eaa7058da544249c5bdd068b31a7e5ae1e43272d09220864",
+      "status": 200,
+      "url": "https://councilof.ai/quickstart.json"
+    },
+    "receipt_verifier": {
+      "bytes": 29799,
+      "content_type": "application/octet-stream",
+      "sha256": "e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab",
+      "status": 200,
+      "url": "https://councilof.ai/verifier/verify_receipt.py"
+    },
+    "revenue": {
+      "bytes": 4908,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "07c2fbb99ef57558ea5076a16322b21a583b1115b9bc10f70df8adc8f53eb7b5",
+      "status": 200,
+      "url": "https://councilof.ai/api/revenue"
+    },
+    "state": {
+      "bytes": 41214,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "af1f451fadeb87985b6d156f4745b3440b48b901ad5d3ba2f9a6225e1bff2d60",
+      "status": 200,
+      "url": "https://councilof.ai/api/state"
+    },
+    "x402": {
+      "bytes": 27501,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "358cf6bcf418faf8b19e85f47c3c4128e7567a5ef1160e4b141272d06d1f84a9",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/x402.json"
+    }
+  },
+  "technical": {
+    "a2a_skills": 8,
+    "capabilities": {
+      "audience": {
+        "agent": 189,
+        "both": 25
+      },
+      "kind": {
+        "a2a_skill": 8,
+        "http": 178,
+        "mcp_tool": 13,
+        "population_door": 10,
+        "well_known": 5
+      },
+      "lifecycle": {
+        "DOOR_CLOSED": 1,
+        "LIVE": 179,
+        "METHOD_NOT_ALLOWED": 1,
+        "NOT_IMPLEMENTED": 13,
+        "QUARANTINED_PRE_RELEASE": 15,
+        "RETIRED": 5
+      },
+      "payment": {
+        "free": 189,
+        "free_preview_then_x402": 15,
+        "not_sold": 1,
+        "x402": 9
+      },
+      "surfaces": {
+        "a2a": 8,
+        "llms": 67,
+        "mcp": 13,
+        "nav": 22,
+        "openapi": 176
+      },
+      "total": 214
+    },
+    "mcp_free_tools": 9,
+    "mcp_paid_tools": 4,
+    "x402_resources": 21
+  }
+}

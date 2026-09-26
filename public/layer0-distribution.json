@@ -1,0 +1,115 @@
+{
+  "canonical_origin": "https://councilof.ai",
+  "content_id": "ec3208692ace7ddb51548004dd5b1f7bc75b2e199217f4f4599b155ffbfc9a10",
+  "existing_live_surfaces": [
+    {
+      "path": "/.well-known/x402.json",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/.well-known/agent-card.json",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/api/revenue",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/quickstart.json",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/verifier/verify_receipt.py",
+      "state": "LIVE_READ_BACK_200"
+    }
+  ],
+  "kind": "public-release-state",
+  "laws": [
+    "listing or discovery is not measurement, certification, endorsement, or compliance",
+    "public capability declaration does not prove runtime behavior",
+    "payment does not create a GSPC measurement",
+    "generated is not deployed; deployed is not independently read back"
+  ],
+  "release_gate": {
+    "pass_condition": "all nine surfaces return 200 from both witnesses; matching body hashes; no previously-live surface regresses",
+    "required_independent_witnesses": 2
+  },
+  "schema": "csoai.layer0-distribution/0.2",
+  "source_commit": "ef13fc873a0bf29998404fc4243b86af171ddb3c",
+  "source_observations": {
+    "a2a": {
+      "bytes": 13018,
+      "content_type": "application/a2a+json",
+      "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/agent-card.json"
+    },
+    "corrections": {
+      "bytes": 109485,
+      "content_type": "application/json",
+      "sha256": "21d22f5df28aae2d5263fb21b0b3a5e05018c83f8396ebecd7c012580be9c842",
+      "status": 200,
+      "url": "https://councilof.ai/api/corrections"
+    },
+    "gspc": {
+      "bytes": 72650,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "be45a7ed47dc7f43a0ab83b75d3ce60909f918ecf386af7c11a78c0d5a708cca",
+      "status": 200,
+      "url": "https://councilof.ai/api/gspc"
+    },
+    "quickstart": {
+      "bytes": 4664,
+      "content_type": "application/json",
+      "sha256": "a2f8b49a0ac0daf0eaa7058da544249c5bdd068b31a7e5ae1e43272d09220864",
+      "status": 200,
+      "url": "https://councilof.ai/quickstart.json"
+    },
+    "receipt_verifier": {
+      "bytes": 29799,
+      "content_type": "application/octet-stream",
+      "sha256": "e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab",
+      "status": 200,
+      "url": "https://councilof.ai/verifier/verify_receipt.py"
+    },
+    "revenue": {
+      "bytes": 4908,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "07c2fbb99ef57558ea5076a16322b21a583b1115b9bc10f70df8adc8f53eb7b5",
+      "status": 200,
+      "url": "https://councilof.ai/api/revenue"
+    },
+    "state": {
+      "bytes": 41214,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "af1f451fadeb87985b6d156f4745b3440b48b901ad5d3ba2f9a6225e1bff2d60",
+      "status": 200,
+      "url": "https://councilof.ai/api/state"
+    },
+    "x402": {
+      "bytes": 27501,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "358cf6bcf418faf8b19e85f47c3c4128e7567a5ef1160e4b141272d06d1f84a9",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/x402.json"
+    }
+  },
+  "staged_surfaces": [
+    {
+      "path": "/layer0-drive-through.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/eat-flywheel.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/layer0-distribution.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/progress-index.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    }
+  ]
+}
