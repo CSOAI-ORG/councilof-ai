@@ -2461,8 +2461,7 @@ CONTACT_MD = """## Contact, objections and re-checks
 
 <!-- OWNER: add acknowledgement time commitment if desired -->
 """
-ENFORCED_MCP = ("The list is enforced in code by the MCP probe (`mcp-remote-probe.py`) and by `contract-parity.py`, with a "
-                "test and a must-fail control.")
+ENFORCED_MCP = '`scripts/census/mcp-remote-probe.py` and `scripts/census/contract-parity.py` read the list and skip a named endpoint or host before any request, with a test and a must-fail control (lane branch lane/contract-parity-fix-20260926, commit e087664, not yet merged); until that code runs on every probe host, entries are also honoured by hand.'
 
 
 def verify_md(record, signed, ots, pending_note):
@@ -2825,8 +2824,7 @@ def viewer(a):
     assert back.schema.equals(schema) and back.num_rows == len(rows)
     yml = ("configs:\n- config_name: rows-v0.1.2\n  default: true\n  data_files: rows.v0.1.2.viewer.parquet\n"
            "dataset_info:\n- config_name: rows-v0.1.2\n  features:\n" +
-           "".join(f"  - name: {n}\n    dtype: {t_}\n" for n, t_ in cols) +
-           f"  splits:\n  - name: train\n    num_examples: {len(rows)}\n")
+           "".join(f"  - name: {n}\n    dtype: {t_}\n" for n, t_ in cols))
     pathlib.Path(a.out, "card.v0.1.2.yaml").write_text(yml)
     print(json.dumps({"rows": len(rows), "columns": len(cols), "sha256": sha(b), "bytes": len(b)}))
 

@@ -11,7 +11,7 @@ check (`ots --no-bitcoin verify` + block-explorer merkle root); a "Contact, obje
 
   dataset-card-hygiene.py --out DIR [--only NAME] [--publish] [--hf-token FILE]
 """
-import argparse, json, os, pathlib, sys
+import argparse, json, os, pathlib, re, sys
 
 UA = "csoai-dataset-verify/1.0 (+https://huggingface.co/csoai)"
 CONTACT = """## Contact, objections and re-checks
@@ -58,10 +58,14 @@ BIB = """## Citation
 ```
 
 """
+A2A_V01 = "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c"
+A2A_V011 = "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91"
+CP_V01 = "45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323"
+CP_V012 = "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed"
 NAMED = 'urllib.request.Request("https://csoai.org/.well-known/did.json", headers={{"User-Agent": "{ua}"}})'.format(ua=UA)
 DS = {
     "mcp-remote-census": {"what": "endpoint", "reads": "probing", "title": "Remote MCP endpoint census: measured read of 2026-09-25",
-                          "enforcement": "The list is enforced in code by the probe that made this dataset (`scripts/census/mcp-remote-probe.py`), with a test and a must-fail control.",
+                          "enforcement": '`scripts/census/mcp-remote-probe.py` and `scripts/census/contract-parity.py` read the list and skip a named endpoint or host before any request, with a test and a must-fail control (lane branch lane/contract-parity-fix-20260926, commit e087664, not yet merged); until that code runs on every probe host, entries are also honoured by hand.',
                           "ts": ("record.v0.1.1.json", "record.v0.1.1.json.bitcoin.ots")},
     "a2a-card-census": {"what": "agent card URL or host", "reads": "probing", "title": "A2A agent card census: measured read of 2026-09-25",
                         "reader": "scripts/census/a2a-card-probe.py", "ts": ("record.json", "record.json.bitcoin.ots")},
@@ -107,20 +111,44 @@ def edit(name, md):
             'ed25519.Ed25519PublicKey.from_public_bytes(base64.urlsafe_b64decode(x + "==")).verify(bytes.fromhex(s["signature"]["sig_ed25519"]), c)\n'
             "```\n\nIn words, the signature: in `index.signed.json`")
         n["ua"] += 1
-    assert n["ua"] >= 1, (name, "no verification snippet found to give a named User-Agent")
-    # 2. offline timestamp check, after the Timestamp paragraph
-    key = "The timestamp:" if name == "evidence-index" else "**Timestamp.**"
-    i = md.index(key)
-    j = md.index("\n\n", i)
-    f, p = d["ts"]
-    md = md[:j] + "\n" + OFFLINE.format(file=f, proof=p, ua=UA).rstrip("\n") + md[j:]
-    # 3. contact + 4. citation, before the Licence section
+    if not n["ua"]:  # already named (another lane's edit): check it, do not rewrite it
+        assert "urlopen(\"https://csoai.org" not in md and "Mozilla/5.0" not in md and re.search(r"User-Agent\"?: ?\"[^\"]+", md), \
+            (name, "no verification snippet with a named User-Agent")
+    # 2. offline timestamp check, after the Timestamp paragraph (unless already there)
+    if "--no-bitcoin" not in md:
+        key = "The timestamp:" if name == "evidence-index" else "**Timestamp.**"
+        i = md.index(key)
+        j = md.index("\n\n", i)
+        f, p = d["ts"]
+        md = md[:j] + "\n" + OFFLINE.format(file=f, proof=p, ua=UA).rstrip("\n") + md[j:]
+    # 3. contact, before the Licence section; if another edit already wrote one, add only what it lacks
     enf = d.get("enforcement") or BY_HAND.format(reader=d["reader"])
-    block = CONTACT.format(what=d["what"], reads=d["reads"], enforcement=enf) + BIB.format(
-        key="csoai_" + name.replace("-", "_") + "_2026", title=d["title"], name=name)
-    rep("\n## Licence\n", "\n" + block + "## Licence\n")
-    # 5. a2a viewer
+    full = CONTACT.format(what=d["what"], reads=d["reads"], enforcement=enf)
+    head = "## Contact, objections and re-checks\n"
+    if head not in md:
+        rep("\n## Licence\n", "\n" + full + "## Licence\n")
+    elif "<!-- OWNER:" not in md:
+        i = md.index(head)
+        j = md.index("\n## ", i + len(head))
+        bullets = [b for b in full.split("\n- ")[1:] if b.startswith(("**Object, or opt out", "**Objections are recorded"))]
+        add = "".join("- " + b.split("\n\n")[0].rstrip() + "\n" for b in bullets)
+        md = md[:j].rstrip("\n") + "\n" + add + "\n<!-- OWNER: add acknowledgement time commitment if desired -->\n" + md[j:]
+    # 4. citation (Croissant citeAs), unless one exists
+    if "```bibtex" not in md:
+        rep("\n## Licence\n", "\n" + BIB.format(key="csoai_" + name.replace("-", "_") + "_2026", title=d["title"], name=name) + "## Licence\n")
+    # 5. sibling rows that still name a superseded record
+    if name == "mcp-remote-census":
+        rep("| EXHAUSTED | `" + A2A_V01 + "` |",
+            "| EXHAUSTED | current `record.v0.1.1.json` `" + A2A_V011 + "` (0.1 `record.json` `" + A2A_V01[:8] + "…` superseded) |")
+        rep("| EXHAUSTED (5828 of 5828) | `" + CP_V01 + "` |",
+            "| PARTIAL (5828 of 5828 attempted; some surface reads rate-limited or unanswered; record 0.1.2 relabels the "
+            "EXHAUSTED of 0.1 / 0.1.1) | current `record.v0.1.2.json` `" + CP_V012 + "` (0.1 `" + CP_V01[:8] + "…` and 0.1.1 superseded) |")
+    # 6. a2a: current record on top, viewer on the 0.1.1 rows
     if name == "a2a-card-census":
+        i = md.index("\n---\n", 4) + 5
+        md = md[:i] + ("\n> **Current record: 0.1.1** — `record.v0.1.1.json`, sha256 `" + A2A_V011 + "`, supersedes `record.json` "
+                       "(0.1, sha256 `" + A2A_V01 + "`), which stays published unchanged. Figures in sections 1–3 are 0.1 unless the "
+                       "Corrections section below restates them; the dataset viewer loads the 0.1.1 rows (`data/cards.v0.1.1.jsonl.gz`).\n") + md[i:]
         rep("configs:\n- config_name: cards-2026-09-25\n  data_files: data/cards.jsonl.gz\n",
             "configs:\n- config_name: cards-2026-09-25\n  data_files: data/cards.v0.1.1.jsonl.gz\n  default: true\n"
             "- config_name: cards-v0.1-superseded\n  data_files: data/cards.jsonl.gz\n")
