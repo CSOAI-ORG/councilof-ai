@@ -8,6 +8,68 @@ https://huggingface.co/datasets/csoai/mcp-contract-parity (CC-BY-4.0). Figures b
 (registry entry, `/.well-known/mcp.json`, server card, agent card, x402 manifest, live discovery answers)?
 Measured, not certified; an INCONSISTENT row quotes two public statements that disagree, never which is right.
 
+## Correction 0.1.1 (2026-09-26) — this section supersedes the 0.1 figures below where they differ
+
+Record `csoai.mcp-contract-parity/0.1.1` (`record.v0.1.1.json`, sha256 `9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8`) supersedes 0.1 (`record.json`, sha256 `45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323`), which stays published byte for byte. Signed: `record.v0.1.1.signed.json` (sha256 `87e624558cd5b45df9357c6893e2f5dccdff1ea95b859375f03ae98465564e71`, did:web:csoai.org#board-attestation-1). OTS: `record.v0.1.1.json.ots` (sha256 `8b8190b7fa2cb07a777a6d77f631d6b2ad47bbc27f1e0279bfa16bf0cd747a51`). HF dataset commit `0f4c4bae9e5f243bb37b4dc58075882a87737eb3`.
+
+**What was wrong.**
+
+- **D1** (TOOLS): 0.1 every declared tool list was compared exactly with the live tools/list. Why wrong: the live tools/list is read WITHOUT credentials. A service that names the tools usable without credentials (public_tools, anonymousTools, ...) declares that its unscoped list is its full, partly authenticated surface; an unauthenticated listing may show the public subset or everything. The full list is not a claim about what unauthenticated discovery lists.. 0.1.1: with a public-scoped list present, unscoped lists / counts are compared as supersets (every live tool must be in them); the public list is recorded, not compared (it scopes use, not listing).
+- **D2a** (attribution (all)): 0.1 an origin's documents were credited to an endpoint whenever the census frame knew one server on that origin. Why wrong: the document itself can say it describes another endpoint mount on the same origin; the origin then serves more than one MCP endpoint and the instrument's own shared-origin rule applies. 0.1.1: an MCP document naming another endpoint mount on this origin (and not this endpoint) is not credited; another host (www/apex, a custom domain) or another transport/version path of the same mount is not read as a second endpoint.
+- **D2b** (attribution (all)): 0.1 facts were read from every nested block of a credited document. Why wrong: a nested block with its own url and its own tools/transport describes another endpoint (a docs MCP, an apps MCP, a hosted demo). 0.1.1: such a block is removed before facts are read: always when its endpoint is on this origin; on another host only when the document also describes an endpoint of its own outside the block.
+- **D3** (AUTH): 0.1 a registry remote header with isRequired false and a card's authentication.required true were paired as a contradiction. Why wrong: isRequired false (the registry omits false; the schema default is false) says the client may CONNECT without the header; the card's 'required' does not say whether it applies to discovery or to tools/call. Two claims of different scope; tools/call is never sent, so which scope the card means is not observed.. 0.1.1: UNCHECKABLE (DECLARED_SCOPES_DIFFER); still INCONSISTENT when discovery itself was refused without credentials.
+- **D4** (TOOLS): 0.1 a bare declared tool count was compared with the live tool count. Why wrong: when the live list holds a dispatcher (run_tool, call_tool, ...), a count above the live count may count tools reached through it; the count does not say which it counts. 0.1.1: not compared; UNCHECKABLE (DECLARED_COUNT_SCOPE_UNSTATED) when it is the only declared figure; a count BELOW the live count is still INCONSISTENT.
+
+**Fix.** Producer `scripts/census/contract-parity.py` commit `4037f6bb2b7162b1679301846287b95934a85ad6` (instrument 0.1.1); tests: scripts/census/test_contract_parity.py class Correction011: one fixture per reported case, shapes copied from the stored bytes; five must-fail controls, each restoring one 0.1 rule, fail the suite.
+
+**Reproduction.** the 0.1 producer (commit d9e0f80) re-run over the same inputs reproduces all 5828 published 0.1 rows byte-identically, so every difference below is the producer change and nothing else.
+
+**Effect.** Endpoints with any INCONSISTENT dimension: 2778 → 2768. 22 rows, 26 dimension changes. Not changed: VERSION and PAYMENT rules; the plan; the population; every row not listed in rows_changed keeps its 0.1 states.
+
+| dimension | state | 0.1 | 0.1.1 |
+|---|---|---|---|
+| AUTH | CONSISTENT | 931 | 928 |
+| AUTH | INCONSISTENT | 23 | 10 |
+| AUTH | SINGLE_SURFACE | 4465 | 4468 |
+| AUTH | UNCHECKABLE | 409 | 422 |
+| PROTOCOL | SINGLE_SURFACE | 5064 | 5065 |
+| PROTOCOL | UNCHECKABLE | 272 | 271 |
+| TOOLS | CONSISTENT | 905 | 908 |
+| TOOLS | INCONSISTENT | 233 | 226 |
+| TOOLS | SINGLE_SURFACE | 4532 | 4535 |
+| TOOLS | UNCHECKABLE | 158 | 159 |
+
+Dimension changes, by endpoint name:
+
+| endpoint | dimension | 0.1 → 0.1.1 | cause |
+|---|---|---|---|
+| https://app.augenix.ai/api/mcp/public | TOOLS | INCONSISTENT → SINGLE_SURFACE | D2a |
+| https://www.decisionlog.ai/api/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://mcp.myotp.app/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://toolforte.com/api/mcp | TOOLS | INCONSISTENT → UNCHECKABLE (DECLARED_COUNT_SCOPE_UNSTATED) | D4 |
+| https://scholar-sidekick.com/api/mcp | TOOLS | INCONSISTENT → CONSISTENT | D2b |
+| https://scholar-sidekick.com/api/mcp | AUTH | CONSISTENT → SINGLE_SURFACE | D2b |
+| https://mcp.klarix.ai/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://ai-visibility.rowb.app/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://auth-posture.rowb.app/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://stampcard.rowb.app/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://veilpoint.ca/mcp | TOOLS | INCONSISTENT → CONSISTENT | D2b |
+| https://dchub.cloud/mcp/registry | TOOLS | INCONSISTENT → CONSISTENT | D2b |
+| https://carsmultiverse.com/wp-json/cmvmcp/v1/mcp | TOOLS | CONSISTENT → SINGLE_SURFACE | D2a |
+| https://carsmultiverse.com/wp-json/cmvmcp/v1/mcp | AUTH | CONSISTENT → SINGLE_SURFACE | D2a |
+| https://carsmultiverse.com/wp-json/cmvmcp/v1/mcp | PROTOCOL | UNCHECKABLE (DECLARED_VERSION_NOT_REQUESTED) → SINGLE_SURFACE | D2a |
+| https://hotels.flightpowers.com/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://flights.flightpowers.com/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://www.immersivecommons.com/api/mcp | TOOLS | INCONSISTENT → CONSISTENT | D2b,D1 |
+| https://itsnum.com/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://mcp.unifically.com/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://mcp.usecarscout.com/mcp | TOOLS | INCONSISTENT → CONSISTENT | D1 |
+| https://standoutmcp.io/api/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://mcp.btcdecoded.org/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+| https://agent-arcade-ai.cursoraikk.chatgpt.site/api/v3/mcp | TOOLS | CONSISTENT → SINGLE_SURFACE | D2a |
+| https://agent-arcade-ai.cursoraikk.chatgpt.site/api/v3/mcp | AUTH | CONSISTENT → SINGLE_SURFACE | D2a |
+| https://api2.transloadit.com/mcp | AUTH | INCONSISTENT → UNCHECKABLE (DECLARED_SCOPES_DIFFER) | D3 |
+
 ## Own endpoint first (https://councilof.ai/mcp)
 
 - AUTH: **CONSISTENT**
