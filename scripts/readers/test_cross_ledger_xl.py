@@ -289,6 +289,26 @@ class Politeness(unittest.TestCase):
         self.assertGreaterEqual(t2 - t0, 0.29)
 
 
+class OperatorBudget(unittest.TestCase):
+    def test_same_operator_different_chains_share_a_budget(self):
+        self.assertEqual(x.HostLimiter.key("https://eth.drpc.org"), x.HostLimiter.key("https://base.drpc.org/"))
+        self.assertNotEqual(x.HostLimiter.key("https://eth.drpc.org"), x.HostLimiter.key("https://rpc.mevblocker.io"))
+
+    def test_failed_operator_hands_over_to_next(self):
+        calls = {"n": 0}
+        honest = FakeEvmNode()
+
+        def t(url, body, headers):
+            if "publicnode" in url:
+                calls["n"] += 1
+                return 429, b'{"error":"rate limit"}'
+            return honest(url, body, headers)
+        c = base.Client(transport=t, spacing=0)
+        lc = dict(REG["ledgers"]["base"], rpc=[["https://base-rpc.publicnode.com", "PublicNode"], ["https://mainnet.base.org", "Coinbase"]])
+        row, _ = x.read_evm_x(c, lc, SLOTS, "base", "JPMD", "Base", honest.b["address"])
+        self.assertNotEqual(row["evidence_kind"], "UNCHECKABLE")
+
+
 class TamperControls(unittest.TestCase):
     def test_three_controls_reject(self):
         from cryptography.hazmat.primitives.asymmetric import ed25519

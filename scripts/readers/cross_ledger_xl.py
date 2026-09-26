@@ -96,8 +96,16 @@ class HostLimiter:
         self.lock = threading.Lock()
         self.next: dict[str, float] = {}
 
-    def wait(self, url: str) -> str:
+    @staticmethod
+    def key(url: str) -> str:
+        """Operator key: the registered domain (last two labels), so eth.drpc.org and base.drpc.org share one
+        budget — operators rate-limit per account/IP across their chains, and politeness should too."""
         host = (urllib.parse.urlsplit(url).hostname or "").lower()
+        parts = host.split(".")
+        return ".".join(parts[-2:]) if len(parts) >= 2 and not host.replace(".", "").isdigit() else host
+
+    def wait(self, url: str) -> str:
+        host = self.key(url)
         while True:
             with self.lock:
                 now = time.monotonic()
@@ -584,6 +592,15 @@ def read_evm_x(c: base.Client, lcfg: dict, slots: list, ledger: str, product: st
     rot = int(sha((ledger + ident.lower()).encode())[:8], 16) % len(ops)
     l2 = dict(lcfg, rpc=ops[rot:] + ops[:rot])          # spread deployments across operators
     row, blob = funds.read_evm(c, l2, slots, ledger, product, label, ident)
+    tried = []
+    for k in range(1, len(ops)):                       # operator refused (rate limit, no archive state): next operator leads
+        if row["evidence_kind"] != "UNCHECKABLE":
+            break
+        tried.append({"operator": l2["rpc"][0][1], "error": (row.get("error") or {}).get("message", "")[:160]})
+        l2 = dict(lcfg, rpc=ops[(rot + k) % len(ops):] + ops[:(rot + k) % len(ops)])
+        row, blob = funds.read_evm(c, l2, slots, ledger, product, label, ident)
+    if tried:
+        row["earlier_operators_failed"] = tried
     sym = (row.get("identity") or {}).get("symbol")
     if row["evidence_kind"] == "REJECTED" and sym in SYMBOL_ALIASES.get(product, []):
         row, blob = funds.read_evm(c, l2, slots, ledger, sym, label, ident)
