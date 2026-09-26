@@ -304,10 +304,9 @@ const EXISTING = [
   "/claimguard.html        /honesty/                308",
   "/coming                 /honesty/                308",
   "/coming/                /honesty/                308",
-  // 2026-09-15: /corrections/ was a guessable 404 and the footer opened raw JSON. The readable
-  // corrections ledger is the dashboard attestations tab (it renders GET /api/corrections).
-  "/corrections            /dashboard?tab=attestations  308",
-  "/corrections/           /dashboard?tab=attestations  308",
+  // 2026-09-15: /corrections/ was a guessable 404 and the footer opened raw JSON; it then 308'd to
+  // the dashboard attestations tab. 2026-09-26: /corrections is a routed page of its own
+  // (client/src/pages/Corrections.tsx), so no rule here — the bare→slash canonicaliser is derived.
   "/stack                  /stack/index.json        308",
   "/stack/                 /stack/index.json        308",
   // 2026-09-22 owner decision — two trees leave the Pages upload and are served from the HF mirror

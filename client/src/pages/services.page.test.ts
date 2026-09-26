@@ -69,7 +69,7 @@ describe("/services reads the rail, never a typed list", () => {
 
 describe("the header offers Services between Board and Verify", () => {
   it("is a primary link", () => {
-    expect(nav).toContain('{ name: "Services", href: "/services" }');
+    expect(nav).toContain('{ name: "Services", href: "/services/" }');
   });
 
   it("sits between Verify and Board", () => {

@@ -31,9 +31,9 @@ export function Footer() {
         { name: 'Request attestation', href: '/assess' },
         { name: 'Board', href: '/dashboard?tab=board' },
         { name: 'Tools — plugin snippet', href: '/tools' },
-        { name: 'Ask about a measured run', href: '/contact?arm=run' },
-        { name: 'Ledger', href: '/contact?arm=ledger' },
-        { name: 'Data', href: '/contact?arm=data' },
+        { name: 'Ask about a measured run', href: '/contact/?arm=run' },
+        { name: 'Ledger', href: '/contact/?arm=ledger' },
+        { name: 'Data', href: '/contact/?arm=data' },
         { name: 'Library', href: '/library' },
       ],
     },
@@ -61,8 +61,8 @@ export function Footer() {
         { name: 'Current evidence mirror', href: 'https://huggingface.co/datasets/csoai/councilof-ai-mirror', external: true },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Honesty gate', href: '/honesty' },
-        // The readable ledger (DashboardAttestationsPane renders /api/corrections), not raw JSON.
-        { name: 'Corrections', href: '/dashboard?tab=attestations' },
+        // The readable ledger page (renders /api/corrections), not raw JSON.
+        { name: 'Corrections', href: '/corrections/' },
         { name: 'How far this reaches', href: '/reach' },
         { name: 'llms.txt', href: '/llms.txt', external: true },
         { name: 'API docs', href: '/api-docs' },
@@ -71,11 +71,11 @@ export function Footer() {
     {
       title: 'Company',
       links: [
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Partners', href: '/partners' },
+        { name: 'About', href: '/about/' },
+        { name: 'Contact', href: '/contact/' },
+        { name: 'Where we take part', href: '/memberships/' },
         { name: 'Blog', href: '/blog' },
-        { name: 'FAQ', href: '/faq' },
+        { name: 'FAQ', href: '/faq/' },
         { name: 'Careers', href: '/careers' },
       ],
     },
@@ -187,7 +187,12 @@ export function Footer() {
         </div>
 
         {/*
-          FRAMEWORKS WE MEASURE AGAINST — text, with the relationship named, never a logo row.
+          REFERENCE FRAMEWORKS — text, with the relationship named, never a logo row.
+          2026-09-26: "framework we measure against" became "reference framework (no crosswalk
+          measured)" for NIST AI RMF, ISO/IEC 42001 and DORA. No signed crosswalk exists for any of
+          the three (see /about), so "measure against" said more than we have. The Linux Foundation
+          pill left "Bodies we take part in": its only evidence is private (see
+          public/interop/memberships.json → excluded).
 
           WHAT WAS HERE UNTIL 2026-09-23, and why it went. Nine <img> badges drawn in-house at
           /images/badges/frameworks/*.svg: an EU AI Act badge rendering the European emblem's
@@ -216,7 +221,7 @@ export function Footer() {
         */}
         <div className="border-t border-border pt-6 mb-6">
           <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
-            Frameworks we measure against
+            Reference frameworks
           </p>
           <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
             {[
@@ -227,17 +232,17 @@ export function Footer() {
               },
               {
                 name: 'NIST AI RMF',
-                detail: 'framework we measure against',
+                detail: 'reference framework (no crosswalk measured)',
                 href: 'https://www.nist.gov/itl/ai-risk-management-framework',
               },
               {
                 name: 'ISO/IEC 42001',
-                detail: 'framework we measure against',
+                detail: 'reference framework (no crosswalk measured)',
                 href: 'https://www.iso.org/standard/81230.html',
               },
               {
                 name: 'DORA',
-                detail: 'framework we measure against',
+                detail: 'reference framework (no crosswalk measured)',
                 href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
               },
             ].map((f) => (
@@ -264,7 +269,6 @@ export function Footer() {
               { name: 'Open Invention Network', detail: 'member', href: 'https://openinventionnetwork.com/' },
               { name: 'LOT Network', detail: 'member', href: 'https://lotnet.com/' },
               { name: 'Decentralized Identity Foundation', detail: 'did:web trust root', href: 'https://identity.foundation/' },
-              { name: 'Linux Foundation', detail: 'hosts DIF and C2PA', href: 'https://www.linuxfoundation.org/' },
             ].map((f) => (
               <li key={f.name}>
                 <a
@@ -283,7 +287,7 @@ export function Footer() {
           <p className="text-muted-foreground text-xs text-center mt-4 font-medium">
             Naming a framework is not a claim to comply with it, and taking part in a body is not
             that body endorsing us. We are not certified to SOC 2 or ISO 42001, and we hold no
-            certification under any scheme. Measurement credential, never certification.{' '}
+            certification under any scheme. We publish measurements, never certifications.{' '}
             <Link href="/memberships" className="text-primary hover:underline">
               Every participation record, with its evidence
             </Link>

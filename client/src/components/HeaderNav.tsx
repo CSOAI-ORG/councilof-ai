@@ -10,7 +10,7 @@ export const PRIMARY_LINKS: { name: string; href: string }[] = [
   { name: "Verify", href: "/gspc-verify" },
   // Services sits between Board and Verify: it is the list of doors the rail
   // publishes, read live from /.well-known/x402.json — not a brochure.
-  { name: "Services", href: "/services" },
+  { name: "Services", href: "/services/" },
   { name: "Board", href: "/board/" },
   { name: "Council OS", href: "/dashboard" },
   { name: "Tools", href: "/tools" },
@@ -134,17 +134,17 @@ export const navigation: NavGroup[] = [
   },
   {
     name: 'Company',
-    href: '/about',
+    href: '/about/',
     icon: BookMarked,
     description: 'Council of AI — CSOAI Ltd',
     submenu: [
-      { section: 'Who we are', name: 'About', href: '/about', description: 'An independent measurement instrument — and what that deliberately excludes' },
+      { section: 'Who we are', name: 'About', href: '/about/', description: 'An independent measurement instrument — and what that deliberately excludes' },
       { name: 'Trust Center', href: '/trust-center', description: 'Security posture — and the certifications we have NOT been awarded' },
-      { name: 'Contact', href: '/contact', description: 'CSOAI Ltd, UK company 16939677' },
+      { name: 'Contact', href: '/contact/', description: 'CSOAI Ltd, UK company 16939677' },
       { name: 'Legal and disclaimers', href: '/disclaimers', description: 'What a measurement card is not' },
       { section: 'Read', name: 'The Library — full archive', href: '/library', description: 'Everything we have published, dated and organized by sector' },
       { name: 'Blog', href: '/blog', description: 'Findings, corrections and notes' },
-      { name: 'Questions people ask', href: '/faq', description: 'The plain-English answers, including the refusals' },
+      { name: 'Questions people ask', href: '/faq/', description: 'The plain-English answers, including the refusals' },
       { section: 'Academy', name: 'Council Academy', href: '/academy', description: 'Learn the statute and the method. Completion attests training, never conformity' },
       { name: 'Verify a training record', href: '/verify-certificate', description: 'Check a signed completion record. Verification is free forever' },
       { name: 'Accreditation — what we are not', href: '/accreditation', description: 'There is no accreditation chain behind us, and we say so' },

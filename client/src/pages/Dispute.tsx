@@ -25,7 +25,9 @@ const PATH = [
   {
     step: "4",
     title: "No dead ends",
-    body: "At least one level of internal review above the original decision, decided by an arbiter who did not make it. External judicial review is never closed off. Power must be checked — including ours.",
+    // OWNER_REVIEW (2026-09-26): no independent or separate arbiter exists today. Do not reintroduce
+    // arbiter wording until one is appointed and named on this page.
+    body: "Today the owner of CSOAI Ltd reviews every dispute; there is no independent arbiter yet, and we do not claim one. Every outcome, including a rejection, is entered in the public corrections ledger. External judicial review is never closed off.",
   },
 ];
 
@@ -39,9 +41,9 @@ const STANDING = [
 const GUARANTEES = [
   "Notice — a clear explanation of the decision, the reasoning, and the evidence",
   "A hearing — written arguments, evidence, and a response to opposing arguments",
-  "A neutral arbiter — no conflict of interest, expertise in the relevant axis",
   "A reasoned decision — findings of fact, application of the instrument, clear outcome",
-  "Further appeal — at least one internal level, and the external courts are never closed",
+  "A public record — the outcome is entered in the corrections ledger at /corrections",
+  "The courts — external judicial review is never closed off",
 ];
 
 const LEDGER_LD = {
@@ -117,8 +119,8 @@ export default function Dispute() {
           record stays — history is append-only — and the correction is a new signed record
           on the same surface, linked to the one it supersedes. The corrections ledger is
           public at{" "}
-          <Link href="/refutation-ledger" className="text-emerald-700 underline">
-            /refutation-ledger
+          <Link href="/corrections/" className="text-emerald-700 underline">
+            /corrections
           </Link>
           : it opens with our own errors, and it grows when a dispute shows we were wrong.
         </p>
@@ -126,7 +128,7 @@ export default function Dispute() {
         <h2 className="mt-10 text-xl font-bold">How to raise one</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           Disputes run through the same intake as everything else on this estate — via{" "}
-          <Link href="/contact" className="text-emerald-700 underline">
+          <Link href="/contact/" className="text-emerald-700 underline">
             /contact
           </Link>
           , citing the card hash or board cell you contest. There is no fee, no account, and

@@ -149,6 +149,11 @@ export const PRIMARY_PATHS = new Set<string>([
   // /memberships — where we take part, from public/interop/memberships.json. Linked from the
   // home strip and the footer; unregistered it would ship under the "archived" banner.
   "/memberships",
+  // /corrections — the corrections ledger page (2026-09-26). Linked from the footer; unregistered
+  // it would ship the "archived" banner on the page that says where we were wrong.
+  "/corrections",
+  // /census — the crawler's own page; its user agent string links here.
+  "/census",
   // /reach — the full seven-stage funnel. Linked from the home page and from the footer
   // of every route, so unregistered it would ship the "archived" banner under a link the site
   // is actively promoting, on the page whose whole point is that the number is current.

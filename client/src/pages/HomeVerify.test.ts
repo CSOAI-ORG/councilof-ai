@@ -107,7 +107,7 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain("name: 'Request attestation', href: '/dashboard?tab=measured'");
     const footer = readFileSync(resolve(here, "../components/Footer.tsx"), "utf8");
     expect(footer).toContain("{ name: 'Request attestation', href: '/assess' }");
-    expect(footer).toContain("{ name: 'Ask about a measured run', href: '/contact?arm=run' }");
+    expect(footer).toContain("{ name: 'Ask about a measured run', href: '/contact/?arm=run' }");
     expect(footer).not.toContain("{ name: 'Run / re-attest', href: '/assess' }");
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');

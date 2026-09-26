@@ -14,7 +14,8 @@ describe("/how-we-work measured-run route", () => {
     expect(how).toContain("<LivingStages />");
     expect(how).toContain("<HomeNavigator />");
     expect(contact).toContain('run: "Run / re-attest enquiry"');
-    expect(contact).toContain("window.location.href = `mailto:contact@csoai.org");
+    // 2026-09-26: one mailbox, rendered plain (PlainEmail) so edge obfuscation cannot hide it.
+    expect(contact).toContain("window.location.href = `mailto:${CONTACT_MAILBOX}");
 
     const tiles = renderToStaticMarkup(<ToolStack />);
     const runTile = tiles.match(/<article id="tool-measured"[\s\S]*?<\/article>/)?.[0] ?? "";
@@ -24,14 +25,14 @@ describe("/how-we-work measured-run route", () => {
     expect(runTile).not.toContain('href="/assess"');
 
     const navigator = renderToStaticMarkup(<Router ssrPath="/how-we-work"><HomeNavigator /></Router>);
-    expect(navigator).toContain('href="/contact?arm=run"');
+    expect(navigator).toContain('href="/contact/?arm=run"');
     expect(navigator).toContain("Ask about measuring your system");
     expect(navigator).not.toContain('href="/assess"');
 
     // LivingStages imports a published witness JSON outside this sparse worktree.
     // Assert its actual CTA source rather than stubbing that evidence file.
     const stages = readFileSync(resolve(__dirname, "../components/home/LivingStages.tsx"), "utf8");
-    expect(stages).toContain('href: "/contact?arm=run", label: "Enquire about a scoped run"');
+    expect(stages).toContain('href: "/contact/?arm=run", label: "Enquire about a scoped run"');
     expect(stages).not.toContain('href: "/assess", label: "Request a scoped measurement"');
   });
 });

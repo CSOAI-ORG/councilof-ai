@@ -3,7 +3,7 @@ import { useRoute, Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Github, ExternalLink, Terminal, Plug, Cloud, ShieldCheck, ArrowRight } from "lucide-react";
+import { ArrowLeft, Github, ExternalLink, Terminal, Plug, ShieldCheck, ArrowRight } from "lucide-react";
 import registry from "@/data/mcpRegistry.json";
 
 type Server = {
@@ -94,16 +94,16 @@ export default function MCPDetail() {
         <div className="space-y-3 mb-8">
           <InstallRow icon={<Terminal className="h-4 w-4 text-emerald-600" />} label="PyPI (local / stdio)" cmd={`pip install ${pip}`} />
           <InstallRow icon={<Plug className="h-4 w-4 text-emerald-600" />} label="Smithery" cmd={`npx -y @smithery/cli@latest install ${server.slug} --client claude`} />
-          <InstallRow icon={<Cloud className="h-4 w-4 text-emerald-600" />} label="Hosted gateway (bearer token)" cmd={`POST https://api.meok.ai/v1/${server.slug}/<tool>`} />
+          {/* 2026-09-26: the hosted-gateway row (another business's domain) was removed; CSOAI does not sell it. */}
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
           <a href={server.url} target="_blank" rel="noopener noreferrer">
             <Button variant="outline"><Github className="h-4 w-4 mr-2" /> View source <ExternalLink className="h-3 w-3 ml-1.5" /></Button>
           </a>
-          <a href="/contact">
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Book a free diagnostic <ArrowRight className="h-4 w-4 ml-2" /></Button>
-          </a>
+          <Link href="/gspc-verify/">
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Verify a signed record <ArrowRight className="h-4 w-4 ml-2" /></Button>
+          </Link>
         </div>
 
         {server.frameworks.length > 0 && (

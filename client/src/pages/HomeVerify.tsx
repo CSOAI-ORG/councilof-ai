@@ -241,13 +241,31 @@ export default function HomeVerify() {
                   "Frozen tests published before the run, graded by a rule rather than by another AI, with unparsed answers counted as incorrect.",
               },
               {
-                href: "/api/corrections",
+                href: "/corrections/",
                 title: "What we got wrong",
                 body:
                   "The public ledger: what was wrong, how it was caught, what changed, and the date. Signed records are superseded, never edited.",
               },
               {
-                href: "/memberships",
+                href: "/claim-maintenance/",
+                title: "How a claim is kept current",
+                body:
+                  "The claim-maintenance specification we publish and follow: how a published claim is re-read, retired or corrected, with its DOI.",
+              },
+              {
+                href: "/traction/",
+                title: "Where this stands",
+                body:
+                  "Operating evidence, stated plainly: what runs today and what is still early. Downloads and founder-funded tests are never shown as customers.",
+              },
+              {
+                href: "/open-source/",
+                title: "Open source",
+                body:
+                  "What we publish as open source and under which licence, so the instruments can be run without us.",
+              },
+              {
+                href: "/memberships/",
                 title: "Where we take part",
                 body:
                   "Every participation record with its evidence, and a plain statement of what each one does not prove. We hold no certification under any scheme.",

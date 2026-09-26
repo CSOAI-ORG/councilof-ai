@@ -77,7 +77,7 @@ export function evidenceHref(row: MembershipRow): string {
 
 /**
  * badgeRows — the compact home row: one pill per body the owner asked to see on the first screen
- * (Linux Foundation, OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each, plus one
+ * (OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each, plus one
  * pill per remaining group so the hero shows the whole footprint rather than only the standards
  * bodies. Derived from the manifest by predicate, so a body that leaves the manifest leaves the
  * row, and every count is computed from the rows — none is typed.
@@ -104,7 +104,6 @@ export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string
     return [{ label, kind, href: `/memberships#${id}`, count: rows.length }];
   };
   return [
-    ...one(/^The Linux Foundation/, "Linux Foundation"),
     ...one(/^Open Secure AI Alliance/, "Open Secure AI Alliance"),
     ...one(/^C2PA/, "C2PA"),
     ...one(/^Decentralized Identity Foundation/, "DIF"),

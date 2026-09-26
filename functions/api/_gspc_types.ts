@@ -176,9 +176,11 @@ export const MEASURED_ON = {
       "and board_living.json's own note says its axes were re-snapshotted from the live board six " +
       "days after the signature date — so the signed bytes are not the published bytes. Nothing " +
       "here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party " +
-      "is the same thing. The two attestations on this site that DO verify are the 150 measurement " +
-      "cards under #card-attestation-1 and site_attestation on this payload under " +
-      "#board-attestation-1; check those instead.",
+      "is the same thing. The two attestations on this site that DO verify are the signed card index " +
+      "(/signed/card_index.json, corpus 3 in council-os/CARD-CORPORA.md; whole-store check at " +
+      "/api/state → card_chain.bodies_verified_valid) under #card-attestation-1, and site_attestation on " +
+      "this payload under #board-attestation-1; check those instead. The older 150-card figure was a " +
+      "checked subset of that same chain, not a separate corpus.",
     supersedes_note:
       "site_attestation on this payload signs this whole body, including this block. That " +
       "attestation covers the INTEGRITY of these bytes as served — it does not substantiate the " +
