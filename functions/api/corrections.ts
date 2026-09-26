@@ -32,12 +32,122 @@ export const LEDGER = {
   policy: "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  timing_fields: {
+    added: "2026-09-26",
+    detected_at: "When the error was first detected: ISO-8601 UTC datetime, or an ISO date where the only first-hand record is a day, or UNRECORDED. Backfilled only from first-hand evidence (the entry's own first_observed_at, a dated record or commit that states the finding, a deploy log, a dataset commit). Never inferred from prose, never estimated.",
+    detected_window: "Optional. {not_before, not_after, basis}: first-hand bounds on detection where the exact time is not recorded, e.g. the publication of the record the error was in, and the fix commit.",
+    detected_by: "internal audit | internal monitor | persona test | external report | self-report | UNRECORDED. The category of the entry's own how_caught or note text; UNRECORDED where the entry does not say.",
+    published_at: "When the correction was first public: the dataset commit that published the corrected record, or the deploy that first served the corrected surface. A git commit alone is not publication. UNRECORDED where neither is recorded.",
+    timing_evidence: "Where each non-UNRECORDED timing value comes from.",
+    time_to_correct: "Not stored. Computed per entry on every request into the unsigned correction_latency block: published_at - detected_at when both are datetimes (exact); an upper bound when detection is known only to a day or a window; UNMEASURED otherwise.",
+  },
   corrections: [
     {
+      "id": "C-2026-0926-05",
+      "date": "2026-09-26",
+      "detected_at": "2026-09-26",
+      "detected_window": {
+        "not_before": "2026-09-26T07:05:33Z",
+        "not_after": "2026-09-26T07:33:41Z",
+        "basis": "not before record 0.2 was published; not after record 0.2.1 correction.corrected_utc"
+      },
+      "detected_by": "UNRECORDED",
+      "published_at": "2026-09-26T07:34:07Z",
+      "timing_evidence": [
+        "https://huggingface.co/datasets/csoai/mcp-remote-census/commit/399d4f4bf373 (record 0.2 published 2026-09-26T07:05:33Z)",
+        "https://huggingface.co/datasets/csoai/mcp-remote-census/commit/3702f085a463 (record 0.2.1 published 2026-09-26T07:34:07Z)",
+        "record.v0.2.1.json correction.corrected_utc = 2026-09-26T07:33:41Z"
+      ],
+      "what_was_wrong": "The remote MCP endpoint census record 0.2 (csoai/mcp-remote-census, 2026-09-26) published read_state EXHAUSTED while the 2026-09-26 probe contacted 10,039 of the 10,983 endpoints planned for it; 1,070 of 22,196 population endpoints were NOT_ATTEMPTED in all. 0.2 had redefined read_state to mean 'every endpoint has one row', but the same field meant 'every endpoint attempted' in 0.1 and 0.1.1 and in the probe's own summary (PARTIAL), and the signed 0.2 payload carries the bare word without the redefinition. Read beside 0.1.1 it said the read had become complete; it had not.",
+      "how_caught": "Not recorded. Record 0.2.1 states the defect and when it was corrected, not who found it; detection is bounded only by the two published times in detected_window.",
+      "what_changed": "Record 0.2.1 supersedes 0.2, which stays published byte for byte with its signature and proof. read_state is PARTIAL: 21,126 of 22,196 endpoints have an observed state and 1,070 are NOT_ATTEMPTED with their reasons. The fact 0.2 called EXHAUSTED is published under its own name, population_accounting.every_endpoint_exactly_one_row = true. Scope is the label only: no measurement was re-run and every count, state and row is identical to 0.2. The catalogue frame reads remain EXHAUSTED.",
+      "status": "CORRECTED - superseded by record 0.2.1; 0.2 kept byte for byte",
+      "reached_the_public": true,
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/3702f085a463/record.v0.2.1.json",
+        "https://huggingface.co/datasets/csoai/mcp-remote-census/blob/3702f085a463/record.v0.2.1.signed.json"
+      ]
+    },
+    {
+      "id": "C-2026-0926-04",
+      "date": "2026-09-26",
+      "detected_at": "UNRECORDED",
+      "detected_window": {
+        "not_before": "2026-09-25T08:23:16Z",
+        "not_after": "2026-09-26T03:41:39Z",
+        "basis": "not before record 0.1 was published; not after the first fix commit 96959268d"
+      },
+      "detected_by": "UNRECORDED",
+      "published_at": "2026-09-26T04:07:19Z",
+      "timing_evidence": [
+        "https://huggingface.co/datasets/csoai/a2a-card-census/commit/c6331de14886 (record 0.1 published 2026-09-25T08:23:16Z)",
+        "councilof-ai commit 96959268d (first fix commit, committed 2026-09-26T03:41:39Z)",
+        "https://huggingface.co/datasets/csoai/a2a-card-census/commit/4b6789fa20cf (record 0.1.1 published 2026-09-26T04:07:19Z)"
+      ],
+      "what_was_wrong": "The A2A Agent Card census record 0.1 (csoai/a2a-card-census, 2026-09-25) verified every signed card over JCS(card as served, minus signatures). A2A spec 8.4.3 step 3 says to remove properties with default values before verifying, and 0.1 did not, so cards declaring A2A 1.x were judged against the wrong payload. Of 33 signed cards, 0.1 published 18 VERIFIED and 3 FAILED; judged against the version each card declares, 13 verify and 8 fail (6 VERIFIED -> FAILED, 1 FAILED -> VERIFIED).",
+      "how_caught": "Not recorded. Record 0.1.1 states the defect and the fix commits, not who found it or when; detection is bounded by detected_window.",
+      "what_changed": "Record 0.1.1 supersedes 0.1, which stays published byte for byte. Each card is judged against the A2A version it declares: 1.x cards under 8.4.3 with default removal, 0.x cards over the served bytes, with a note on the three 0.x cards whose verdict would differ under 1.x rules. Producer scripts/census/a2a-card-probe.py (commits 96959268d and 33d0dfa64); tests in scripts/census/test_a2a_card_probe.py class SpecDefaultRemoval, including the spec's own 8.4.1 example and a must-fail control without step 3.",
+      "status": "CORRECTED - superseded by record 0.1.1; 0.1 kept byte for byte",
+      "reached_the_public": true,
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/a2a-card-census/blob/4b6789fa20cf/record.v0.1.1.json",
+        "public/interop/a2a-card-census-2026-09-25/correction.v0.1.1.evidence.json"
+      ]
+    },
+    {
+      "id": "C-2026-0926-03",
+      "date": "2026-09-26",
+      "detected_at": "2026-09-26",
+      "detected_by": "persona test",
+      "published_at": "2026-09-26T07:34:57Z",
+      "timing_evidence": [
+        "record.v0.1.2.json correction.trigger: 'a maintainer-persona audit on 26 Sep 2026 (before any notice was sent)' - day precision",
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity/commit/0bfa689638c7 (record 0.1.2 published 2026-09-26T07:34:57Z)"
+      ],
+      "what_was_wrong": "MCP contract parity record 0.1.1 (itself a correction, C-2026-0926-02) still applied three rules that misread services: an asymmetric AUTH scope rule; a declared tool list compared exactly with the credential-free live list when auth is declared required but no public list is named; and surfaces that never answered (251 rows, 41 of them behind an HTTP 429 stop) counted as a service's silence, under a collection run labelled EXHAUSTED.",
+      "how_caught": "A maintainer-persona audit on 2026-09-26, before any notice was sent to a listed service, re-read candidate rows as their maintainer would and found the three rules; each was reproduced from the stored 2026-09-25 bytes (correction.v0.1.2.evidence.json).",
+      "what_changed": "Record 0.1.2 supersedes 0.1.1; 0.1 and 0.1.1 stay published byte for byte. 176 rows and 430 dimension verdicts changed (7 SUBSET_UNDER_AUTH, 5 symmetric AUTH scope, 418 SURFACE_UNREAD); endpoints with any INCONSISTENT dimension 2,768 -> 2,764. The 0.1 and 0.1.1 producers re-run over the same inputs reproduce their published rows byte for byte, so every difference is the producer change. The record names fix commit e087664dd (instrument 0.1.2, tests class Correction012 with four must-fail controls); that commit is not on the councilof-ai master this entry was written against, whose producer is still 0.1.1.",
+      "status": "CORRECTED - superseded by record 0.1.2; earlier records kept byte for byte; 0.1.2 producer not yet on master",
+      "reached_the_public": true,
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/0bfa689638c7/record.v0.1.2.json",
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/0bfa689638c7/correction.v0.1.2.evidence.json"
+      ]
+    },
+    {
+      "id": "C-2026-0926-02",
+      "date": "2026-09-26",
+      "detected_at": "2026-09-26",
+      "detected_window": {
+        "not_after": "2026-09-26T02:18:23Z",
+        "basis": "not after the fix commit 4037f6bb2"
+      },
+      "detected_by": "internal audit",
+      "published_at": "2026-09-26T02:22:06Z",
+      "timing_evidence": [
+        "record.v0.1.1.json correction.trigger: 'the 26 Sep 2026 notice lane re-checked candidates live before any contact' - day precision",
+        "councilof-ai commit 4037f6bb2 (fix, committed 2026-09-26T02:18:23Z)",
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity/commit/0f4c4bae9e5f (record 0.1.1 published 2026-09-26T02:22:06Z)"
+      ],
+      "what_was_wrong": "MCP contract parity record 0.1 (csoai/mcp-contract-parity, read 2026-09-25) applied four rules that misread services. D1: a declared tool list was compared exactly with the live credential-free list even where the service named a public subset. D2a/D2b: an origin's document was credited to an endpoint it did not describe, and facts were read from nested blocks describing other endpoints. D3: a registry header isRequired false and a card's authentication.required true were paired as a contradiction though they state different scopes. D4: a bare declared tool count was compared with a live list holding a dispatcher. 22 rows (26 dimension verdicts) changed; endpoints with any INCONSISTENT dimension 2,778 -> 2,768.",
+      "how_caught": "The notice lane re-checked candidate rows live on 2026-09-26 before any contact and found that three services' 0.1 rows misread them and two others held reasonable different meanings; all five were INCONSISTENT in 0.1. Reproduced from the stored 2026-09-25 bytes, each document's sha256 unchanged on the re-read (correction.v0.1.1.evidence.json).",
+      "what_changed": "Record 0.1.1 supersedes 0.1, which stays published byte for byte. Producer scripts/census/contract-parity.py commit 4037f6bb2 (instrument 0.1.1); tests in scripts/census/test_contract_parity.py class Correction011, one fixture per reported case and five must-fail controls. The 0.1 producer re-run over the same inputs reproduces all 5,828 published rows byte-identically. docs/measurement/MCP-CONTRACT-PARITY-2026-09-25.md carries a Correction 0.1.1 section. Superseded in turn by C-2026-0926-03.",
+      "status": "CORRECTED - superseded by record 0.1.1 (and then 0.1.2, C-2026-0926-03); 0.1 kept byte for byte",
+      "reached_the_public": true,
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/0f4c4bae9e5f/record.v0.1.1.json",
+        "https://huggingface.co/datasets/csoai/mcp-contract-parity/blob/0f4c4bae9e5f/correction.v0.1.1.evidence.json",
+        "docs/measurement/MCP-CONTRACT-PARITY-2026-09-25.md"
+      ]
+    },
+    {
       id: "C-2026-0926-01",
+      detected_at: "2026-09-26T08:52:00Z",
+      detected_by: "persona test",
+      published_at: "2026-09-26T10:08:40Z",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written (2026-09-26T08:52:00Z)", "published: the deploy of master 6c2967f80, which carries this entry (commit 4c923f777), completed 2026-09-26T10:08:40Z as Pages deployment 1dfbd065"],
       date: "2026-09-26",
       first_observed_at: "2026-09-26T08:52:00Z",
-      detected_at: "2026-09-26",
       supersedes_text: { id: "C-2026-0925-01", field: "what_was_wrong", original_sha256: "14aa9778984fdc4b1b9b972060440a6cc98a9bd948b3fef916428973ddfb3748" },
       what_was_wrong:
         "Entry C-2026-0925-01, as signed on 2026-09-25 (ledger content_id 218e3585f039eb6ccb1251a569d6e1e5ed7417e6e2dc24f5d3115050614acd14, 67 entries), named an internal host by its literal hostname in what_was_wrong. That breaks this ledger's own redaction rule: a machine surface describes an internal identifier and never reproduces it. The /corrections page renders this field verbatim, so the hostname was visible public copy.",
@@ -54,6 +164,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0925-01",
+      detected_at: "2026-09-25T12:11:43Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-25",
       text_superseded_by: "C-2026-0926-01",
       first_observed_at: "2026-09-25T12:11:43Z",
@@ -76,6 +190,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0924-03",
+      detected_at: "2026-09-24T17:09:33Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-24",
       first_observed_at: "2026-09-24T17:09:33Z",
       what_was_wrong: "The 14 signed cards from the 16:10 UTC hourly local-model run were served from /interop/mill-cards-signed/ even though their exact intake receipts remained VERIFIED_QUARANTINE with authority.admitted=false. Thirteen wrappers said quotable=true; the safety wrapper was already UNMEASURED/quotable=false. A valid byte signature and a public URL did not establish canonical admission.",
@@ -100,6 +218,10 @@ export const LEDGER = {
       ],
       "first_observed_at": "2026-09-22T14:25:27Z",
       "id": "C-2026-0924-02",
+      "detected_at": "2026-09-22T14:25:27Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": ["first_observed_at field of this entry, recorded when the entry was written"],
       "status": "CORRECTED BY A DATED SUPERSESSION NOTE; THE ORIGINAL NOTE IS NOT EDITED",
       "note": "Promoted from draft D-2026-09-22T14-05 by the owner. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint 025f75a98669c0d4; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
       "reached_the_public": true,
@@ -116,6 +238,10 @@ export const LEDGER = {
       ],
       "first_observed_at": "2026-09-22T14:25:27Z",
       "id": "C-2026-0924-01",
+      "detected_at": "2026-09-22T14:25:27Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": ["first_observed_at field of this entry, recorded when the entry was written"],
       "status": "CORRECTED BY A DATED SUPERSESSION NOTE; THE ORIGINAL NOTE IS NOT EDITED",
       "note": "Promoted from draft D-2026-09-22T14-04 by the owner. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint d1520d8783752683; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
       "reached_the_public": true,
@@ -130,6 +256,10 @@ export const LEDGER = {
       ],
       "first_observed_at": "2026-09-23T03:55:06Z",
       "id": "C-2026-0923-02",
+      "detected_at": "2026-09-23T03:55:06Z",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": ["first_observed_at field of this entry, recorded when the entry was written"],
       "note": "Promoted from draft D-2026-09-23T03-02 by the owner. HAND-DRAFTED by the arena-separation lane (feat/arena-separation-2026-09-23), not by drift-draft.py's detector, and placed in the same approve-queue so promote-draft.sh D-2026-09-23T03-02 is the only step. kind summary_omits_measured_negative; fingerprint 236d1c31f796639e. No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark.",
       "reached_the_public": true,
       "what_changed": "Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). functions/api/gspc.ts now derives the separation aggregate ONCE, beside the counts it already derived, so a reader meets the negative at the same moment as the measured count. totals.separation_public_count reads \"0 of 14 model-comparison axis separated a leader, 2 TIE, 12 UNTESTED\", with a note saying to read it WITH public_count and never instead of it. totals.count_grammar, the line the payload already points readers to, now carries the same sentence and the rule behind it: a measurement is not a separated leader, a point-estimate lead is not a measured advantage, and UNTESTED is not a tie. totals.lid, the one line the estate asks readers to quote verbatim and the line the home page renders verbatim, now states \"0 separated leaders\". separated_leads, ties and untested_separations read the same three constants instead of re-deriving them, so the headline, the grammar, the tallies and limitations[0] cannot drift apart - the defect this file already records at C-2026-0922 (G-3, two derivations of one quantity) is not reintroduced. functions/api/gspc.lid-truth.test.ts was extended to parse the new lid number against totals.separated_leads and to assert that the three separation states account for every model-comparison axis with none folded into another.",
@@ -144,6 +274,10 @@ export const LEDGER = {
       ],
       "first_observed_at": "2026-09-23T03:55:06Z",
       "id": "C-2026-0923-01",
+      "detected_at": "2026-09-23T03:55:06Z",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": ["first_observed_at field of this entry, recorded when the entry was written"],
       "note": "Promoted from draft D-2026-09-23T03-01 by the owner. HAND-DRAFTED by the arena-separation lane (feat/arena-separation-2026-09-23), not by drift-draft.py's detector, and placed in the same approve-queue so promote-draft.sh D-2026-09-23T03-01 is the only step. kind measured_surfaces_disagree; fingerprint 7d98363c444e75d8. No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark.",
       "reached_the_public": true,
       "what_changed": "Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). Establishing which surface was right came first, and the answer is that neither was wrong about its own bytes: the board grades a frozen 37-item SwarmBench v2b bank for per-item accuracy, the signal ranks recorded pairwise arena rounds by win-rate, and on this axis the two fleets share no model at all - the board's leader qwen2.5:7b is not among the three models ranked in the arena. Two determinations were wearing one word. Regenerating the signals under the 0.3 all-other-ranked-models rule that landed earlier the same day does NOT resolve it: nemotron-3-nano:30b's Wilson lower bound 0.796 clears both other ranked models' upper bounds (0.513, 0.435), so the arena verdict stays SEPARATED. The disagreement was never a rule-version artefact. The remedy is that one surface stops claiming the axis's separation. scripts/emit_signals.py (schema csoai.axis-signal/0.4) now joins every signal to its board row on the board's own dataset slug, with no typed crosswalk, and defers status and register to the board's separation verdict; it refuses to sign a signal whose board row it cannot find. The arena determination is not discarded: it stays in full in the elo_ fields, scoped by separation_of, by separation_authority (carrying the board's verdict, leader, bench and n) and by evidence_relation SEPARATE_EVIDENCE, which states in the signed bytes that the two are never added, reconciled or substituted. All 14 per-axis signals were regenerated through the producer and re-signed under did:web:csoai.org#board-attestation-1; no signed artifact was edited in place. swarm's published status moves MEASURED to UNTESTED and the superseded bytes are recorded in the new file's supersedes block. Separately, the signal now publishes register_board_drift on swarm rather than carrying the stale count silently: the axis register still describes the retired 40-item PROTOCOL bank while the board serves 37. That row is published as PUBLISHED_NOT_RECONCILED and deliberately not retyped, because reconciling it also requires majority_baseline re-derived on the current bank, which has not been done and is not invented. Four planted controls in scripts/arena/test_arena_controls.py hold the shape, including one that plants arena evidence that separates on an axis the board has not tested and asserts the chain cannot publish it as MEASURED.",
@@ -152,6 +286,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0922-02",
+      detected_at: "2026-09-22T12:48Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-22",
       first_observed_at: "2026-09-22T12:48Z",
       what_was_wrong:
@@ -206,6 +344,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0922-01",
+      detected_at: "2026-09-18",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["note of this entry: 'Caught 2026-09-18'; first_observed_at reads 2026-09-18T00:00Z, a date written as midnight, so detected_at keeps day precision"],
       date: "2026-09-18",
       first_observed_at: "2026-09-18T00:00Z",
       what_was_wrong:
@@ -239,6 +381,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0920-01",
+      detected_at: "2026-09-20T01:52Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-20",
       first_observed_at: "2026-09-20T01:52Z",
       what_was_wrong:
@@ -273,6 +419,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0917-01",
+      detected_at: "2026-09-17T04:30Z",
+      detected_by: "internal monitor",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-17",
       first_observed_at: "2026-09-17T04:30Z",
       what_was_wrong:
@@ -305,6 +455,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0917-02",
+      detected_at: "2026-09-17T04:50Z",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written; this is the estate's own first observation - the external correspondent's report preceded it at a time the entry does not record"],
       date: "2026-09-17",
       first_observed_at: "2026-09-17T04:50Z",
       what_was_wrong:
@@ -341,6 +495,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0916-03",
+      detected_at: "2026-09-16T12:38Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-16",
       first_observed_at: "2026-09-16T12:38Z",
       what_was_wrong:
@@ -353,6 +511,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0916-02",
+      detected_at: "2026-09-16T10:42Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-16",
       first_observed_at: "2026-09-16T10:42Z",
       what_was_wrong:
@@ -365,6 +527,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0916-01",
+      detected_at: "2026-09-16T09:47Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-16",
       first_observed_at: "2026-09-16T09:47Z",
       what_was_wrong:
@@ -377,6 +543,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0915-01",
+      detected_at: "2026-09-15T07:30Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-15",
       first_observed_at: "2026-09-15T07:30Z",
       what_was_wrong:
@@ -389,6 +559,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0914-03",
+      detected_at: "2026-09-14T10:54Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-14",
       first_observed_at: "2026-09-14T10:54Z",
       what_was_wrong:
@@ -401,6 +575,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0914-02",
+      detected_at: "2026-09-14T10:37Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-14",
       first_observed_at: "2026-09-14T10:37Z",
       what_was_wrong:
@@ -413,6 +591,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0914-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-14",
       // Latency fields carry only what is evidenced: introduction = the merge of #2321,
       // the first PR that landed these cards. The observation time was not logged and
@@ -428,6 +609,10 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0913-01",
+      detected_at: "2026-09-12T16:35Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: ["first_observed_at field of this entry, recorded when the entry was written"],
       date: "2026-09-13",
       // First entry carrying the latency fields proposed by scripts/corrections_latency.py.
       // Values below are evidenced, never estimated: introduction = the PR merge that
@@ -446,6 +631,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0912-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-12",
       what_was_wrong:
         "The live SwarmBench v2b row claimed a statistically separated qwen2.5:7b leader by comparing a stated 0.384 lower bound with a 0.372 upper bound for mistral:7b. The signed candidate cards show qwen3:4b at 0.4070 and qwen2.5:1.5b at 0.4000, both ahead of mistral:7b at 0.1481, so mistral was not the runner-up. The same sentence then said the top three remained statistically tied, contradicting its own separated-leader label. A standing limitation also described the active row as the retired 3-prompt PROTOCOL bank rather than the 37-item wave-2b bank.",
@@ -457,6 +645,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0905-02",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-09-05",
       what_was_wrong:
         "26 SWIFT rail cards were published under public/interop/swift-signed-2026-09/ as signed-swift-<bank>.json with a populated sig_ed25519 field and signed_at timestamp. The field held base64(sha256(card)), not a signature; sig_algo said SHA256-placeholder and the index said the same. A relying party reading the field name, the file name or the directory name was told these were Ed25519-signed. They were not. Nothing verifies.",
@@ -468,6 +659,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0905-03",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-05",
       what_was_wrong:
         "Three public endpoints turned a source they could not read into a number, and two of them published a figure that was wrong while they did it. (1) /api/hub-cards fans out to four Hub index files and totalled whatever came back. Two of the four were answering nothing to the Worker, and both held ONLY UNMEASURED rows, so the endpoint served 682 cells / 647 MEASURED / 35 UNMEASURED when the published population was 717 / 647 / 70. It understated the unmeasured count by exactly half, and the error therefore ran in the flattering direction — the one direction a measurement body may never round. The endpoint did disclose the partial read, but it did so in an honesty field while counts kept publishing quotable integers beside it; a disclosure next to a wrong number does not repair the number, and downstream quotes the number. (2) /api/dashboard/stats derived fleet.online from `.online ?? .nodes?.length ?? 0`. /api/oracle-fleet emits neither field — it answers 200 with a single host's health — so the dashboard published online: 0, meaning no nodes online, against a fleet that was up and answering with 26.9 days of uptime. That is a claim the fleet endpoint never made, invented from two absent keys. The same file coalesced every other aggregate with `?? 0`, so an unreadable /api/gspc would have published measured_axes: 0 while the board carries 22, under a header that claimed honest empty states — but zero is a measurement, not an empty state. (3) /api/hf-spaces returned an empty list on any non-OK response and counted the survivors, so one upstream throttle would publish models: 0, indistinguishable from the org having no models. That one was latent: it agreed with the Hub on the day it was found.",
@@ -480,6 +674,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0905-04",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-05",
       what_was_wrong:
         "Six public manifests under /interop advertised 36 endpoint references that do not exist: custom-gpt-bridge.json told Custom GPTs to POST /api/measure, /api/verify and /api/xrpl/evidence; chatgpt-features-finish.json listed 14 'features' (/api/voice, /api/vision, /api/calendar, /api/email, ...) each with an endpoint; deep-research-integration.json described a four-endpoint /api/research pipeline; persona-tests.json, chatgpt-skills.json and anchor.json cited /api/anchor, /api/insurance/attest, /api/xrpl/rlusd, /api/xrpl/usdc and /api/scheduler. Every one answered HTTP 404 to GET and POST on 2026-09-05. All six were written by two generators under scripts/badger/ that assemble manifests from a wish-list and never probe a route.",
@@ -492,6 +689,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0905-05",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-05",
       what_was_wrong:
         "A merged commit and its PR (#1321) stated that a confirmed x402 settlement never reached the revenue ledger: \"a real payment settled and the ledger never saw it\". That is false. The settlement WAS recorded. The reading behind the claim was taken 6 seconds after the settle, and Cloudflare KV list operations are eventually consistent — the record had not propagated yet. Re-read ~20 minutes later, /api/revenue one_number showed settlements 1, all_time 1, records_unreadable 0. No payment was ever lost.",
@@ -503,6 +703,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0906-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-06",
       what_was_wrong:
         "CSOAI-ORG/proofof-ai-mcp shipped detect_deepfake_image with a substring-blacklist path check ('/etc/', '/var/', '..'). A blacklist is not a boundary: any path outside the list, and any symlink into a listed directory, was readable — a Local File Inclusion. A security researcher reported it on 2026-06-12 (issue #8) and the report sat unanswered for 86 days.",
@@ -515,6 +718,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0905-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-05",
       what_was_wrong:
         "The ONE root (public/root.json) is documented as republished hourly. Between 2026-09-02T04:14Z (last successful public-root run) and 2026-09-03T06:20Z (first successful run after GitHub reinstated Actions on the CSOAI-ORG account) it was not republished at all: the hourly runs from 05:14Z to 19:58Z on 2 Sep never started (Actions disabled for the account, Support ticket #4720908), and the eight runs from 2026-09-02T20:58Z to 2026-09-03T06:16Z failed at runner start. Cards signed in that window were not in any root a reader could fetch, and the witness pointer kept reporting the 04:14Z root as current, which it was — but nothing said the cadence had stopped.",
@@ -526,6 +732,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0903-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-03",
       what_was_wrong:
         "The Layer-0 ceremony artifact (/interop/layer0-ceremony-2026-09-03.json, v0.2) listed /api/intoto as one of 15 machine rails, recorded it as returning 404, and explained the 404 as 'the handler exists in master but is inside an undeployed window'. There is no handler. functions/api/intoto.ts exports only helpers (subjectDigest, toInTotoStatement, toDsse) and is imported by functions/api/detect.ts and functions/api/detector-interop.ts, both of which serve 200. No deploy would ever have turned it into a route. A ceremony whose purpose is to attest our own machine surface had invented a door and then explained away its absence.",
@@ -537,6 +746,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-09",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis · 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
@@ -548,6 +760,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-08",
+      detected_at: "UNRECORDED",
+      detected_by: "UNRECORDED",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots · 15 measured · 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis · 22 measured · 0 empty. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
@@ -559,6 +774,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-10",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "The published verification rule (/signed/HOW-TO-VERIFY.md and HOW-TO-VERIFY-ROOT.md) did not state that a verifying signature says nothing about whether the signing key is still valid. A reader verifying with yesterday's trust anchor would get the same VALID verdict after a revocation this morning, and nothing in the text said so.",
@@ -569,6 +787,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-07",
+      detected_at: "UNRECORDED",
+      detected_by: "internal monitor",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "On 2026-08-28 a commit edited the text of a signed card in place (public/signals/cross-border-card.signed.json, field measured_axes: the 18 Aug count was replaced with a pointer to the live count) without re-signing. The content_id no longer derived and the Ed25519 signature no longer verified — a silent edit of a signed artefact, which this ledger's own policy forbids.",
@@ -580,6 +801,9 @@ export const LEDGER = {
     // ── 2026-09-02: six contradictions named in the owner's "what governs" ruling ──
     {
       id: "C-2026-0902-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "The Switchboard research brief recorded OUSG's XRPL domain check as unverified (directory only) while GET /api/xrpl showed it bidirectional with a signature.",
@@ -590,6 +814,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-02",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "A secondary planning state file attributed USDB to Bitstamp. USDB is issued by Braza Bank (issuer address rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc).",
@@ -600,6 +827,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-03",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "The OpenAI incident post-mortem was cited as 37 pages by one source and 38 by an internal state file.",
@@ -610,6 +840,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-04",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "GPAI Code of Practice signatory counts differed: 26 per the Commission's 1 Aug 2025 list versus '28 frozen' in secondary sources.",
@@ -620,6 +853,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-05",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "One playbook stated 2 Feb 2027 as the Article 50 detector-interoperability date as fact; a market-map brief records it as unsettled.",
@@ -630,6 +866,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0902-06",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-09-02",
       what_was_wrong:
         "councilof.ai states a £5M professional-indemnity policy while the Series A pack's infrastructure-gaps sheet says insurance is unknown. One of them is wrong in a data room.",
@@ -646,6 +885,9 @@ export const LEDGER = {
     // to publish the ones someone else found, or the ledger is a highlight reel.
     {
       id: "C-2026-0826-12",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "The board attestation's sig_input was ambiguous, and the ambiguity was live rather than theoretical. It read \"canonical JSON (recursively sorted keys, no whitespace) of this payload with the site_attestation field removed\" — six words that do not pin a preimage. The natural first reading in a Python-flavoured estate is json.dumps(sort_keys=True, separators=(',',':')), whose default is ensure_ascii=True, and that FAILS: the signer emits non-ASCII literally, i.e. ensure_ascii=False. The signed payload carries 81 non-ASCII code points (middle dot, multiplication sign, en dash, em dash, right arrow, greater-than-or-equal), and the two readings differ by about 256 bytes. Two implementers reading the same sentence get two different preimages and one of them reports a bad signature on a good artefact. The sentence also never said whether the signature is over the raw bytes or over a digest of them.",
@@ -657,6 +899,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-11",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "The public MCP `measure` tool returned ok:true for every subject, including subjects that do not exist. Passing a nonsense model name produced {\"ok\":true,\"claim\":\"measurement\",\"subject\":\"<the nonsense name>\"} with a note explaining that nothing had actually been measured. No measurement ran, no axes came back, no credential was issued, and the tool's own description promised \"a signed measurement credential\". A measurement tool that succeeds on a nonexistent subject cannot distinguish MEASURED from DID NOTHING — which is exactly what our own /api/mcp honesty_contract forbids: unknown is null or unmeasured, never a plausible-looking value. We applied that doctrine to the registry and not to the tool.",
@@ -668,6 +913,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-10",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "The jail axis published a dataset_url that is not a URL, directly beneath a note asserting that every such URL is fetchable. The axis's `dataset` field — an identifier field, resolved to a link by string concatenation against https://huggingface.co/datasets/ — held a prose sentence: \"published: csoai/gspc-jail-goldbank (frozen 71-cell gold bank, HF 2026-08-25)\". The resulting dataset_url contained a colon, spaces and parentheses and was rejected by curl as malformed. Twelve other banked axes resolved fine, and the bank itself was always fine and always public. The bank_note above it read \"Every axis WITH a frozen bank carries dataset_url — the bank resolved to a fetchable URL\": a blanket assertion with nothing deriving it, false for as long as it stood.",
@@ -679,6 +927,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-09",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "We published recall: null for council-inhouse-ft on the jail axis where the measured value is 0.0. That model has tp=0 and fn=38, so recall = tp/(tp+fn) = 0/38 = 0.0 — defined, measured, and the single most damaging number on the axis: our own fine-tune detected zero of 38 escapes. null reads as NOT MEASURED. Publishing it in place of a real zero is this estate's own defect class inverted: instead of inventing a number where none exists, we erased a number that did. It sat on a row whose note says \"published, not hidden\". precision on the same row is legitimately null (0/0 is undefined, nothing was predicted positive), so two fields carrying the identical value meant opposite things with nothing distinguishing them.",
@@ -690,6 +941,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-08b",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "The living_stamp was presented as a valid attestation and cannot be checked by anyone. It shipped signed: true and a sig_input recipe, rendering exactly like the two attestations on this site that do verify. It does not verify. Three faults compound: TWO different signatures are published for one stamp, with the same signer and the same `updated` — one in /signed/board_living.json, a different one in /api/gspc measured_on.living_stamp, and at most one can be over the bytes the other is over; the signer is in NONE of the four verification methods in our own did.json, so even a reproducing preimage would prove only self-consistency, the unfalsifiable shape our own HOW-TO-VERIFY tells strangers to refuse; and board_living.json states in its own note that its axes were re-snapshotted from the live board at package time, six days after the signature date, so the signed bytes are not the published bytes.",
@@ -701,6 +955,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-07b",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "The claims register described bytes that do not exist. CR-002 gave as its evidence \"Cards declare timestamp_authority: 'none'\". Zero of the 150 published cards contain that field; the string \"timestamp\" appears in no card, not in card_index.json and not in the cross-border card. The substance was honest — there genuinely is no timestamp authority behind any card — but the register asserted a positive declaration as its evidence for an absence, and the claims register is the one page whose entire purpose is claim-to-evidence fidelity. A correction that misdescribes the thing it corrects is worse than the original gap.",
@@ -712,6 +969,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-06b",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "/claims-register announced \"20 claims\" and rendered 19, immediately beneath its own sentence \"This page renders that exact file — there is no second copy to drift.\" The header printed claims.length while the sections were built from a hardcoded four-status order — live, devnet, planned, retired — and claims-register.json declares five. The fifth is `unmeasured`, and the one claim carrying it (CR-020) had no case in the renderer, so it was silently filtered out of the page and out of the legend. On a site whose banner is \"UNMEASURED shown honestly\", the register dropped the only unmeasured row. The wrong count was the visible defect; the dropped row was the worse one.",
@@ -723,6 +983,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-08",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "For twelve days the verify page told strangers to pin a signing key that does not exist. The page's authorship note named a published key by an eight-character fingerprint beginning f4b4278d. That fingerprint matches none of the four keys in our DID document, not the card-attestation key the 150 board cards are actually signed with, not the board key, not the living-stamp key. It appears in exactly one place in the entire estate — that sentence — and in no signed artifact, no key file and no commit that produced key material. It was introduced on 2026-08-14 in a bulk copy reconciliation, alongside an OpenTimestamps anchoring claim that was itself later walked back. We cannot establish what it was, so we are not going to invent a story for it: it was a fabricated fingerprint, and a fingerprint is the one string on a page telling people which key to trust that has to be right. The real card-attestation key, beginning d4cb0eaa, appeared nowhere on that page.",
@@ -734,6 +997,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-07",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "Our own published verifiers rejected our own genuine cards, and our tamper detector rendered its failure in green. Three separate defects on the one surface whose entire purpose is that a stranger does not have to take our word for anything. First, the single-record verifier on the verify page hashed the whole card envelope minus the signature instead of the body sub-object the signature actually covers, so it could never verify any card, ever — and it reported that preimage bug as no published key verifies this signature, which is a statement about key publication and was false, sending readers to hunt for a key that was published all along. Second, the same form fed its verdict to a public opt-in tally, so every honest visitor who verified a real card and clicked the button filed a false failure into a public counter. Third, the MCP verify tool answered unrecognized card family to every card family we publish, including the cross-border card that verifies fine under our own recipe, because it looked for a content_id field on cards that carry id. Fourth, the client-side chain verifier's headline label was a constant string reading chain intact regardless of outcome; only the tick flipped to a cross, so a successfully detected tamper announced that the chain was intact, in the success colour, on the page that promises a broken row is reported as BROKEN, visibly.",
@@ -745,6 +1011,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-06",
+      detected_at: "UNRECORDED",
+      detected_by: "internal monitor",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "We repeated a human-versus-machine benchmark contrast without checking whether both sides were scored under the same rule. The metrology deck cites the ARC Prize project's ARC-AGI-3 result — a human panel solving essentially all environments while frontier systems average well under one percent. The attribution was correct and careful: labelled reported-not-measured, never placed on the board. The number is not the defect. The defect is that we published a comparison between a human figure and a machine figure without asking the question our own first rating-the-raters result exists to ask, which is whether the two figures were produced under the same scoring rule. Having now recomputed ARC's published participant rows for ARC-AGI-2, we know that on that benchmark the human figure is computed under unlimited submissions while machines are scored at two trials, and that the rule-matched human figure is about eleven points lower. We had no basis to assume ARC-AGI-3 was free of the same gap, and no basis to assume it had it.",
@@ -756,6 +1025,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-05",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "Two published index artifacts claimed a measurement they did not have. /interop/ai-economy-index.v0.1.json and /interop/human-labour-index.v0.1.json each carry a status label of MEASURED-INDEX-v0.1, while each also states in its own body that half its input components are bank gaps and that no index value is computed. The axis register had already been reverted to UNMEASURED for both; the artifacts were not, so a live surface kept asserting the retracted status. Existing reference components are not a measured index.",
@@ -767,6 +1039,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-04",
+      detected_at: "UNRECORDED",
+      detected_by: "self-report",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong:
         "The public board contradicted the estate's own ruling for two days. An owner ruling of 2026-08-24 set the canonical axis count at 22 (14 behavioural + 8 financial/domain), but GET /api/gspc kept reporting '14 measured of 14 quotable' because the 8 financial axes existed only in the ruling and in a side register — never in the signed board payload the count is derived from. Downstream, the estate's own claims register recorded '22' as an internal figure that was 'not corroborated by any live surface', and a source comment instructed authors to 'not invent 22 axes'. The estate simultaneously ruled the number, forbade the number, and published a different one.",
@@ -778,6 +1053,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-03",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong: "Our own published MCP fleet was silently paywalled and self-scoring. A monetization layer injected into 318 of 363 vendored servers capped the ENTIRE fleet at 10 anonymous tool calls per day from one shared counter; past that, every tool returned a purchase link instead of a result. The injected code was spliced mid-function in 49 files, leaving original function bodies unreachable (256 undefined names). Five scorecard checks awarded points for carrying a purchase link — the system scored itself higher for being paywalled. The paywall also masked quality: a first probe found 1 stub because refusals and stubs were indistinguishable.",
       how_caught: "Building a remote MCP server for other AI platforms; the first real tools/call returned a purchase upsell instead of a result. Verified twice independently by direct grep and by probing all 338 servers with real MCP sessions.",
@@ -786,6 +1064,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-02",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong: "Five sector pages asserted, in present tense, that our measurement 'is recognised under mutual recognition agreements with' CISA, NCSC, ANSSI, BSI, BEREC, ENISA, national transport authorities and others — named public bodies, implying an endorsement we do not hold. It shipped in the deployed bundle. Separately, /layer0 served a retracted fault-tolerance claim as a live capability, contradicting our own DR-0007 retraction (measured effective independence 1.21 of 3).",
       how_caught: "Claims-substantiation audit of the prerendered output, prompted by the FTC's own recommended exercise: inventory every public claim and map it to evidence.",
@@ -794,6 +1075,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0826-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal monitor",
+      published_at: "UNRECORDED",
       date: "2026-08-26",
       what_was_wrong: "Our own prerender verification could not observe failure. prerender-report.json records a failed route in a field named 'err', but every check in the repository read 'errored' — a field that has never existed. A run in which the browser died on 515 of 581 routes reported '0 errored' and looked clean.",
       how_caught: "A downstream gate disagreed: brand-gate scanned 71 pages when it should have scanned 603. The upstream report was lying and the layered gate caught it.",
@@ -802,6 +1086,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-01",
+      detected_at: "UNRECORDED",
+      detected_by: "external report",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "Three public surfaces stated three different item counts at once (llms.txt 819, agent card 890, live API 966). The banks grew under the hardcoded numbers.",
       how_caught: "External live-surface audit; confirmed by direct curl.",
@@ -810,6 +1097,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-02",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "The public board API payload carried internal specialist identifiers \u2014 an internal specialist-id prefix \u2014 a banned-vocabulary string inside a machine contract, not just a human page. (The prefix itself is redacted here: naming it would re-leak the string this entry records as removed.)",
       how_caught: "K3 lane curl sweep of machine surfaces.",
@@ -818,6 +1108,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-03",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "The single-record verifier initially checked only one content_id envelope; the carder signs a second (signature-included) generation, so valid carder cards could have read as MISMATCH.",
       how_caught: "Testing the verifier against a real carder card before shipping.",
@@ -826,6 +1119,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-04",
+      detected_at: "UNRECORDED",
+      detected_by: "internal monitor",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "Two open-source repos (carder, codabench-gspc) shipped with no LICENSE file, and the board API payload stated no licence \u2014 while the estate claims openness.",
       how_caught: "The carder's own valve-2 benchmark fact-card, run on the estate's own artifacts.",
@@ -834,6 +1130,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-05",
+      detected_at: "UNRECORDED",
+      detected_by: "internal monitor",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "The did:web trust root at csoai.org intermittently served an orphan key document because two repositories deployed the same Cloudflare Pages project with no owner of record.",
       how_caught: "The did-liveness daemon, then the machine-contract guard's DID split-brain check comparing the authoritative root against the mirror.",
@@ -842,6 +1141,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-06",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "An hourly API guard asserted endpoints (/api/tools, /api/mcp) that never existed in the repository's functions tree \u2014 a ghost from an older deployment \u2014 so it failed forever.",
       how_caught: "Reading the failing run rather than trusting the guard's own claim.",
@@ -850,6 +1152,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-07",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "A banned brand token shipped live on /library as a CamelCase concatenation of the token with 'Training', because a word-boundary regex anchored on the bare token missed the concatenation. Two priced strings ($0.005/card, a per-hour range) also shipped, against the no-pricing rule. (The token itself is redacted here for the same reason as C-2026-0819-02.)",
       how_caught: "A full front-end QA sweep.",
@@ -858,6 +1163,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-08",
+      detected_at: "UNRECORDED",
+      detected_by: "UNRECORDED",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "Estate pages described EU AI Act high-risk obligations as in force from 2 August 2026. The Digital Omnibus (Reg (EU) 2026/1744) deferred them to 2 December 2027 (Annex III) and 2 August 2028 (Annex I). Serving the dead date would be our own credibility wound.",
       how_caught: "A commissioned regulation-calendar verification against primary law.",
@@ -866,6 +1174,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-09",
+      detected_at: "UNRECORDED",
+      detected_by: "persona test",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "Two internally-named datasets remained publicly visible on Kaggle under a banned naming class.",
       how_caught: "End-user test sweep with anonymous probes.",
@@ -874,6 +1185,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-10",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "The estate's own date-correction fix (C-08) initially ALSO mis-stated the GPAI date \u2014 a follow-on error that moved GPAI duties from 2 Aug 2025 to 2026 while correcting the high-risk date. A correction that introduces a new error is the worst kind.",
       how_caught: "Self-audit of the fix against the EU official page (digital-strategy.ec.europa.eu) \u2014 the estate caught its own owner mid-correction.",
@@ -882,6 +1196,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-11",
+      detected_at: "UNRECORDED",
+      detected_by: "persona test",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "mcp.json advertised three server URLs on csoai.org/api/* \u2014 every one returned 404 because the API is served from councilof.ai, and one route (corpus-watch) pointed at a non-existent path.",
       how_caught: "End-user MCP handshake test \u2014 a real JSON-RPC initialize probe against the advertised endpoints.",
@@ -890,6 +1207,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-12",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "A measurement wave was queued with sample=24, below the harness's 30-usable-item threshold \u2014 all 8 jobs returned UNMEASURED (honestly, but wasted a full wave).",
       how_caught: "Reading the signed board's status_note ('no model reached 30 usable items') rather than assuming the bank size was the constraint.",
@@ -898,6 +1218,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0819-13",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-19",
       what_was_wrong: "Two measure-chain daemons ran simultaneously after a restart race, double-logging jobs; the restart script's pkill pattern matched its own command line and killed its own launch.",
       how_caught: "Duplicate 'daemon start' markers in the log; the self-kill was traced to the unanchored pkill pattern.",
@@ -905,6 +1228,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0820-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-20",
       what_was_wrong: "Multiple live public surfaces (index.html JSON-LD, GSPCVerify, Insurers, AgentRegistry, Methodology, Agents, ProvBench, measure.html, and the provbench pack) stated measurement cards are 'anchored with OpenTimestamps' / RFC-3161 / 'Bitcoin block 954857, independently verifiable' as a present capability. The only anchor implemented is Ed25519 + SHA-256 hash-chain; verify.ts checks no timestamp proof and no .ots/Rekor artifact exists.",
       how_caught: "Internal honesty audit of anchoring claims vs implementation.",
@@ -913,6 +1239,9 @@ export const LEDGER = {
     },
     {
       id: "C-2026-0822-01",
+      detected_at: "UNRECORDED",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
       date: "2026-08-22",
       what_was_wrong: "The homepage industry grid still said '15-slot instrument' while the scoreboard, API and canon say '14-slot board, 13 measured of 14' (16 GSPC axes, 13 quotable + jail floor per the GSPC ruling). A crawler reading the grid would see 15 slots — the exact internal-count inconsistency the count-gating canon exists to prevent.",
       how_caught: "Text audit of live surfaces against canon (machine-contract style sweep of the homepage and fleet-sweep pages).",
@@ -1152,27 +1481,132 @@ const STATE_NOTE: Record<SignatureState, string> = {
     "nor refuted here. UNCHECKABLE is a first-class state and is never printed as VALID.",
 };
 
-export const onRequestGet: PagesFunction = async () => {
-  // TUI-4 (2026-09-13): correction latency, honestly bounded. Entries MAY now carry an
-  // optional `detected_at` ISO date; latency = date − detected_at. Legacy entries predate
-  // the field and count as UNMEASURED — never inferred from entry prose. Computed at
-  // request time in the UNSIGNED wrapper (alongside signature_state), so the signed
-  // object and its canonical id are untouched.
-  const entries = LEDGER.corrections as Array<{ date?: unknown; detected_at?: unknown }>;
-  const pairs = entries
-    .filter((c) => typeof c.date === "string" && typeof (c as { detected_at?: unknown }).detected_at === "string")
-    .map((c) =>
-      (Date.parse(c.date as string) - Date.parse((c as { detected_at?: string }).detected_at as string)) / 86400000,
-    )
-    .filter((n) => Number.isFinite(n) && n >= 0)
-    .sort((a, b) => a - b);
-  const correctionLatency = {
-    computable: pairs.length,
-    unmeasured: entries.length - pairs.length,
-    ...(pairs.length ? { median_days: pairs[Math.floor(pairs.length / 2)] } : {}),
-    field: "detected_at (optional per entry, added 2026-09-13)",
-    note: "Measured only where both dates are explicit fields; never inferred from prose.",
+// ---------------------------------------------------------------------------------------------
+// Time to correct (2026-09-26). Every entry carries detected_at, detected_by and published_at —
+// a value from first-hand evidence or the explicit word UNRECORDED (see LEDGER.timing_fields).
+// time_to_correct is DERIVED here, per request, into the unsigned correction_latency block: it is
+// never stored in an entry, so it can never disagree with the two timestamps it is made from.
+// ---------------------------------------------------------------------------------------------
+
+export const UNRECORDED = "UNRECORDED";
+export const DETECTED_BY = [
+  "internal audit",
+  "internal monitor",
+  "persona test",
+  "external report",
+  "self-report",
+  UNRECORDED,
+] as const;
+
+// Seconds are optional because several legacy first_observed_at values were written as HH:MMZ.
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?Z$/;
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+export type TimingEntry = {
+  id?: unknown;
+  detected_at?: unknown;
+  detected_window?: unknown;
+  detected_by?: unknown;
+  published_at?: unknown;
+  timing_evidence?: unknown;
+};
+
+type Window = { not_before?: string; not_after?: string; basis?: string };
+
+/** Every reason this entry's timing fields do not meet the ledger's rule. Empty = conforms. */
+export function timingProblems(e: TimingEntry): string[] {
+  const p: string[] = [];
+  const id = String(e.id ?? "(no id)");
+  const d = e.detected_at;
+  if (d === undefined) p.push(`${id}: detected_at is missing (write UNRECORDED when there is no first-hand record)`);
+  else if (typeof d !== "string" || !(d === UNRECORDED || ISO_DATETIME.test(d) || ISO_DATE.test(d)))
+    p.push(`${id}: detected_at ${JSON.stringify(d)} is not an ISO datetime, an ISO date or UNRECORDED`);
+  if (e.detected_by === undefined) p.push(`${id}: detected_by is missing`);
+  else if (!(DETECTED_BY as readonly unknown[]).includes(e.detected_by))
+    p.push(`${id}: detected_by ${JSON.stringify(e.detected_by)} is not one of ${DETECTED_BY.join(" | ")}`);
+  const pub = e.published_at;
+  if (pub === undefined) p.push(`${id}: published_at is missing`);
+  else if (typeof pub !== "string" || !(pub === UNRECORDED || ISO_DATETIME.test(pub)))
+    p.push(`${id}: published_at ${JSON.stringify(pub)} is not an ISO datetime or UNRECORDED`);
+  const w = e.detected_window as Window | undefined;
+  if (w !== undefined) {
+    for (const k of ["not_before", "not_after"] as const)
+      if (w[k] !== undefined && !(typeof w[k] === "string" && ISO_DATETIME.test(w[k] as string)))
+        p.push(`${id}: detected_window.${k} is not an ISO datetime`);
+    if (!w.basis) p.push(`${id}: detected_window has no basis`);
+    if (w.not_before && w.not_after && Date.parse(w.not_before) > Date.parse(w.not_after))
+      p.push(`${id}: detected_window.not_before is after not_after`);
+  }
+  const recorded = [d, pub].some((v) => typeof v === "string" && v !== UNRECORDED) || w !== undefined;
+  if (recorded && !(Array.isArray(e.timing_evidence) && e.timing_evidence.length > 0))
+    p.push(`${id}: a recorded timing value needs timing_evidence naming where it comes from`);
+  const t = timeToCorrect(e);
+  if (t.kind !== "UNMEASURED" && t.seconds < 0) p.push(`${id}: published_at precedes detection`);
+  return p;
+}
+
+export type TimeToCorrect =
+  | { kind: "EXACT"; seconds: number }
+  | { kind: "UPPER_BOUND"; seconds: number; lower_bound_seconds?: number; why: string }
+  | { kind: "UNMEASURED"; why: string };
+
+/**
+ * published_at − detected_at. EXACT only when both are datetimes. When detection is known only to
+ * a day or a first-hand window, the earliest possible detection gives an UPPER bound (and the
+ * latest, if recorded, a lower bound). Anything else is UNMEASURED — never estimated.
+ */
+export function timeToCorrect(e: TimingEntry): TimeToCorrect {
+  const pub = e.published_at;
+  if (typeof pub !== "string" || !ISO_DATETIME.test(pub))
+    return { kind: "UNMEASURED", why: "published_at is UNRECORDED" };
+  const P = Date.parse(pub);
+  const d = e.detected_at;
+  if (typeof d === "string" && ISO_DATETIME.test(d)) return { kind: "EXACT", seconds: (P - Date.parse(d)) / 1000 };
+  const w = (e.detected_window ?? {}) as Window;
+  const earliest = [
+    typeof d === "string" && ISO_DATE.test(d) ? Date.parse(d + "T00:00:00Z") : NaN,
+    w.not_before ? Date.parse(w.not_before) : NaN,
+  ].filter(Number.isFinite);
+  const latest = [
+    typeof d === "string" && ISO_DATE.test(d) ? Date.parse(d + "T00:00:00Z") + 86400000 : NaN,
+    w.not_after ? Date.parse(w.not_after) : NaN,
+  ].filter(Number.isFinite);
+  if (!earliest.length) return { kind: "UNMEASURED", why: "no first-hand earliest time for detection" };
+  const lo = latest.length ? Math.min(...latest) : NaN;
+  return {
+    kind: "UPPER_BOUND",
+    seconds: (P - Math.max(...earliest)) / 1000,
+    ...(Number.isFinite(lo) && lo <= P ? { lower_bound_seconds: (P - lo) / 1000 } : {}),
+    why:
+      "detection known only to " +
+      [typeof d === "string" && ISO_DATE.test(d) ? "a day" : "", e.detected_window ? "a first-hand window" : ""]
+        .filter(Boolean)
+        .join(" and ") +
+      "; the earliest possible detection gives the bound",
   };
+}
+
+export function correctionLatency(entries: TimingEntry[]) {
+  const per = entries.map((e) => ({ id: e.id, ...timeToCorrect(e) }));
+  const exact = per.filter((x) => x.kind === "EXACT").map((x) => (x as { seconds: number }).seconds).sort((a, b) => a - b);
+  const count = (k: string) => per.filter((x) => x.kind === k).length;
+  return {
+    field: "time_to_correct = published_at - detected_at (entry fields defined in timing_fields, added 2026-09-26)",
+    exact: count("EXACT"),
+    upper_bound: count("UPPER_BOUND"),
+    unmeasured: count("UNMEASURED"),
+    detected_at_unrecorded: entries.filter((e) => e.detected_at === UNRECORDED).length,
+    ...(exact.length ? { median_seconds_exact: exact[Math.floor(exact.length / 2)] } : {}),
+    per_entry: per.filter((x) => x.kind !== "UNMEASURED"),
+    note:
+      "Computed on this request from the two timestamps in each entry; nothing here is stored or signed. " +
+      "Only EXACT values are summarised; an UPPER_BOUND is reported per entry and never averaged with them. " +
+      "Entries not listed are UNMEASURED because a timestamp is UNRECORDED.",
+  };
+}
+
+export const onRequestGet: PagesFunction = async () => {
+  const correctionLatencyBlock = correctionLatency(LEDGER.corrections as TimingEntry[]);
 
   const check = await checkSignature(LEDGER as unknown as Record<string, unknown>);
 
@@ -1184,7 +1618,7 @@ export const onRequestGet: PagesFunction = async () => {
     signature_state: check.state,
     signature_check: check,
     note: STATE_NOTE[check.state],
-    correction_latency: correctionLatency,
+    correction_latency: correctionLatencyBlock,
   };
   if (check.state !== "VALID") out.fix_requires = "re-issue over the current bytes: scripts/sign-corrections-ledger.mjs";
 

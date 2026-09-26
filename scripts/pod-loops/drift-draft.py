@@ -607,6 +607,13 @@ def render_draft(d, snap, prev, hour, seq, clone=None):
         "id": did,
         "date": snap["taken_at"][:10],
         "first_observed_at": snap["taken_at"],
+        # Timing fields (functions/api/corrections.ts timing_fields): detection is this snapshot, by this
+        # loop; publication is not known at draft time and is never guessed - it stays UNRECORDED until a
+        # deploy or dataset commit records it.
+        "detected_at": snap["taken_at"],
+        "detected_by": "internal monitor",
+        "published_at": "UNRECORDED",
+        "timing_evidence": [f"first_observed_at: taken_at of drift-draft snapshot {hour}"],
         "what_was_wrong": what_wrong,
         "why_it_was_wrong": WHY.get(d["kind"], "Recorded disagreement between two byte-sources; cause not established by this loop."),
         "what_changed": ("PROPOSED, nothing has changed yet: supersede the stale surface with one that derives the value from the measured surface "
@@ -773,6 +780,14 @@ def promote(did, clone, out):
     nums = [int(m) for m in re.findall(rf'"?id"?:\s*"C-{today}-(\d{{2}})"', t)]
     real = f"C-{today}-{(max(nums) + 1) if nums else 1:02d}"
     entry = {**entry, "id": real}
+    # Drafts written before 2026-09-26 (and hand-drafted ones) may lack the timing fields. Fill them only
+    # from the draft's own first_observed_at; anything else is UNRECORDED, never guessed.
+    fo = entry.get("first_observed_at")
+    entry.setdefault("detected_at", fo or "UNRECORDED")
+    entry.setdefault("detected_by", "UNRECORDED")
+    entry.setdefault("published_at", "UNRECORDED")
+    if fo and "timing_evidence" not in entry:
+        entry["timing_evidence"] = ["first_observed_at field of the promoted draft"]
     entry["note"] = (entry["note"].replace("DRAFT - owner approval required. ", f"Promoted from draft {did} by the owner. ")
                      .replace("No ledger id is assigned until promote-draft.sh runs.", f"Ledger id {real} assigned on promotion."))
     remedy_was_proposed = entry["what_changed"].startswith("PROPOSED, nothing has changed yet: ")
