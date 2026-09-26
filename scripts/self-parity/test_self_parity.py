@@ -240,5 +240,77 @@ class Plumbing(unittest.TestCase):
         self.assertTrue(sp.is_own("https://api.councilof.ai/x")); self.assertFalse(sp.is_own("https://notcouncilof.ai"))
 
 
+class ConditionalGet(unittest.TestCase):
+    """A 304 must re-read the SAME bytes (same sha256) at the new check time, be logged as 304 with
+    UNCHANGED_SINCE and the prior evidence, and never vouch for stored bytes that are gone or altered."""
+
+    def _http(self, root, answers, seen):
+        import email.message, io, tempfile, urllib.error
+
+        class R(io.BytesIO):
+            def __init__(self, st, body, hd):
+                super().__init__(body); self.status = st; self.headers = email.message.Message()
+                for k, v in hd.items():
+                    self.headers[k] = v
+            def geturl(self): return "https://x.example/list"
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+
+        class Opener:
+            def open(self, req, timeout=None):
+                seen.append({k.lower(): v for k, v in req.header_items()})
+                st, body, hd = answers.pop(0)
+                if st == 304:
+                    m = email.message.Message(); m["etag"] = hd.get("etag", "")
+                    raise urllib.error.HTTPError(req.full_url, 304, "Not Modified", m, io.BytesIO(b""))
+                return R(st, body, hd)
+        return sp.Http(min_interval=0, sleep=lambda d: None, opener=Opener(), cache=sp.CondCache(root, "2026-09-26"))
+
+    def test_304_replays_the_same_bytes_and_logs_unchanged_since(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            body = b'{"items":[1,2,3]}'
+            seen = []
+            h1 = self._http(t, [(200, body, {"ETag": '"v1"'})], seen)
+            r1 = h1.get("https://x.example/list", note="n"); h1.cache.save()
+            self.assertEqual(r1.json(), {"items": [1, 2, 3]})
+            self.assertNotIn("if-none-match", seen[0])
+            h2 = self._http(t, [(304, b"", {"etag": '"v1"'})], seen)
+            r2 = h2.get("https://x.example/list", note="n"); h2.cache.save()
+            self.assertEqual(seen[1].get("if-none-match"), '"v1"')
+            self.assertTrue(r2.ok)
+            self.assertEqual((r2["body"], r2["sha256"]), (body, r1["sha256"]))
+            e = h2.log[-1]
+            self.assertEqual((e["status"], e["n_bytes"], e["wire_status"], e["wire_bytes"]), (200, len(body), 304, 0))
+            self.assertEqual(e["observation"], f"UNCHANGED_SINCE {r1['fetched_at']}")
+            self.assertEqual(e["prior_evidence"]["sha256"], r1["sha256"])
+            self.assertEqual(e["prior_evidence"]["record_date"], "2026-09-26")
+
+    def test_altered_stored_bytes_force_a_full_fetch(self):
+        import tempfile, gzip as gz
+        with tempfile.TemporaryDirectory() as t:
+            seen = []
+            h1 = self._http(t, [(200, b"A", {"ETag": '"v1"'})], seen)
+            r1 = h1.get("https://x.example/list"); h1.cache.save()
+            p = pathlib.Path(t) / "bodies" / f"{r1['sha256']}.gz"
+            p.write_bytes(gz.compress(b"B"))
+            h2 = self._http(t, [(304, b"", {}), (200, b"A", {"ETag": '"v1"'})], seen)
+            r2 = h2.get("https://x.example/list")
+            self.assertEqual(r2["body"], b"A")
+            self.assertEqual(h2.log[-1]["status"], 200)
+            self.assertNotIn("observation", h2.log[-1]); self.assertNotIn("wire_status", h2.log[-1])
+            self.assertNotIn("if-none-match", seen[-1])
+
+    def test_no_validators_no_cache(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            seen = []
+            h1 = self._http(t, [(200, b"A", {})], seen)
+            h1.get("https://x.example/list"); h1.cache.save()
+            h2 = self._http(t, [(200, b"A", {})], seen)
+            h2.get("https://x.example/list")
+            self.assertNotIn("if-none-match", seen[-1]); self.assertNotIn("if-modified-since", seen[-1])
+
+
 if __name__ == "__main__":
     unittest.main()
