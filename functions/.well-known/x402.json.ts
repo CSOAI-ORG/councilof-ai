@@ -10,6 +10,8 @@ import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATI
 import { POPULATION_IDS } from "../api/_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
+import { toV1Requirements } from "../api/_x402";
+import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
 
 export const onRequestGet: PagesFunction<{
   X402_PAY_TO?: string;
@@ -153,6 +155,27 @@ export const onRequestGet: PagesFunction<{
       { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
         description: RECEIPTS_BATCH_DESCRIPTION,
         accepts: [req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)]  },
+      // FRESH CAPSULE — the ONE listing on this page built by the door's own 402 builder
+      // (freshCapsulePaymentRequired), so listing = challenge by construction: `accepts` is the v1
+      // projection (toV1Requirements, the settle path's) of the SAME X402Accept the door charges, and
+      // `accepts_v2` is byte-for-byte the challenge's accepts[]. functions/api/measurement/fresh-capsule.test.ts
+      // compares both with a live 402. MERGE NOTE (lane devsurface-fix-20260926): when its OFFERS map
+      // lands, add "${FRESH_CAPSULE_PATH}": { skuId: "request_attestation", tier: "per_request" } there and
+      // build this entry with its req(); the description must stay the door's DESCRIPTION.
+      (() => {
+        const { resourceUrl, accepts, paymentRequired } = freshCapsulePaymentRequired(env, origin);
+        const description = accepts[0].description as string;
+        return {
+          method: "GET",
+          url: resourceUrl,
+          paid_for: "issuance",
+          free_preview: `${resourceUrl}?endpoint=https://councilof.ai/mcp&dimension=TOOLS&preview=1`,
+          description,
+          accepts: accepts.map((a) => ({ ...toV1Requirements(a), outputSchema: { type: "object" as const } })),
+          accepts_v2: paymentRequired.accepts,
+          free_verification: `${origin}/mcp (verify_capsule, server_evidence are free)`,
+        };
+      })(),
       // POPULATION DOORS — derived from the registry (functions/api/_population.ts), never retyped
       // here: a population added there is advertised here the moment it exists. Each url is
       // PATH-SCOPED (no query) because PayAI lists only query-less URLs today; the pod's settle

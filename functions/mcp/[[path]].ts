@@ -12,6 +12,12 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { toolSpan, withTraceHeader } from "./_otel";
+import {
+  MEASUREMENT_TOOL_DEFS,
+  MEASUREMENT_TOOL_NAMES,
+  measurementToolResult,
+  measurementToolsEnabled,
+} from "./_measurement";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.2";
@@ -47,10 +53,13 @@ const HOSTS = [
 ];
 const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
 const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
+// Measurement-capsule readers join tools/list ONLY behind env MEASUREMENT_CAPSULE_TOOLS=on
+// (functions/mcp/measurement-tools.json says why and what flips it). Gate off = the locked fleet.
+const GATED_DEFINITIONS = [...DEFINITIONS, ...MEASUREMENT_TOOL_DEFS] as Tool[];
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
 const validator = new CfWorkerJsonSchemaValidator();
 type JsonSchema = Parameters<typeof fromJsonSchema>[0];
-const TOOLS = DEFINITIONS.map((definition) => ({
+const compile = (defs: Tool[]) => defs.map((definition) => ({
   definition,
   inputSchema: fromJsonSchema<Record<string, unknown>>(
     definition.inputSchema as JsonSchema,
@@ -64,7 +73,9 @@ const TOOLS = DEFINITIONS.map((definition) => ({
     : undefined,
 }));
 
-const mcp = createMcpHandler(
+function buildMcp(definitions: Tool[]) {
+  const TOOLS = compile(definitions);
+  return createMcpHandler(
   ({ requestInfo }) => {
     if (!requestInfo) throw new Error("HTTP request context required");
     const origin = new URL(requestInfo.url).origin;
@@ -87,7 +98,9 @@ const mcp = createMcpHandler(
         (args) =>
           PAID_TOOL_NAMES.has(definition.name)
             ? paidToolResult(definition.name, args, origin)
-            : sharedToolResult(definition.name, args, origin),
+            : MEASUREMENT_TOOL_NAMES.has(definition.name)
+              ? measurementToolResult(definition.name, args, origin)
+              : sharedToolResult(definition.name, args, origin),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -103,12 +116,15 @@ const mcp = createMcpHandler(
       (args) => verifyToolResult(args, origin),
     );
     server.server.setRequestHandler("tools/list", () => ({
-      tools: DEFINITIONS,
+      tools: definitions,
     }));
     return server;
   },
   { legacy: "stateless", maxSubscriptions: 0 },
-);
+  );
+}
+const mcp = buildMcp(DEFINITIONS);
+const mcpWithMeasurement = buildMcp(GATED_DEFINITIONS);
 
 function jsonError(
   status: number,
@@ -333,7 +349,11 @@ export const onRequest = async ({ request, env }: { request: Request; env?: unkn
       signal: request.signal,
     });
     return withTraceHeader(
-      withHeaders(await mcp.fetch(boundedRequest)),
+      withHeaders(
+        await (measurementToolsEnabled(env) ? mcpWithMeasurement : mcp).fetch(
+          boundedRequest,
+        ),
+      ),
       traceId,
     );
   } catch {

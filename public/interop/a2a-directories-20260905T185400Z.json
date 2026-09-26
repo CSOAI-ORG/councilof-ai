@@ -11,10 +11,9 @@
     "a2a_version": "1.0",
     "interface": "https://councilof.ai/api/a2a",
     "protocol_binding": "JSONRPC",
-    "skills": 10,
+    "skills": 8,
     "note": "Card shape is A2A v1.0.1: the AgentCard carries NO top-level url or protocolVersion — both are REQUIRED fields of AgentInterface instead, and ours carries all three (url, protocolBinding, protocolVersion). Verified against specification/a2a.proto at tag v1.0.1, not against a remembered field list.",
-    "skills_source": "len(public/.well-known/agent-card.json -> skills). Recount it, never retype it.",
-    "skills_recounted_at": "2026-09-26"
+    "skills_source": "len(public/.well-known/agent-card.json -> skills). Recount it, never retype it."
   },
   "directories": [
     {
@@ -101,12 +100,5 @@
     "sibling": "https://councilof.ai/interop/mcp-directories.json",
     "our_card": "https://councilof.ai/.well-known/agent-card.json",
     "spec": "https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto"
-  },
-  "supersedes": {
-    "path": "/interop/a2a-directories-20260905T185400Z.json",
-    "sha256": "882427dd8ccebb8d5c7fcb8cdd1372f44f1bb7f4b63c6f3e96f77dfc173308a7",
-    "ots": "/interop/a2a-directories-20260905T185400Z.json.ots",
-    "why": "our_agent.skills recounted from the card (8 -> 10: measurement-capsules and server-evidence joined). The directory rows and totals are NOT re-probed: they remain as of 20260905T185400Z. Timestamped bytes are superseded, never edited."
-  },
-  "ots_state": "NOT_STAMPED: this superseding file carries no OpenTimestamps proof yet; stamping is a calendar submission reserved for the owner (ots stamp public/interop/a2a-directories.json). The superseded bytes keep their proof at the dated path."
+  }
 }

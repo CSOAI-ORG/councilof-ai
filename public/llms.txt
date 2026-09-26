@@ -150,6 +150,10 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.
   - https://councilof.ai/api/feeds/provider-diff?history=1
     Provider change record — measurable differences between two measurement rounds for a named model provider.
+  - https://councilof.ai/api/measurement/fresh-capsule · free preview: https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS&preview=1
+    Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only — the endpoint's own discovery documents vs its initialize + tools/list answer. CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id; read before settle. Free preview; verification stays free. Measurement, not endorsement.
+  - https://councilof.ai/api/measurement/fresh-capsule
+    POST alias of GET /api/measurement/fresh-capsule for gateways that POST {}; the query string selects the claim and the body is ignored.
   - https://councilof.ai/api/pop/a2a · free preview: https://councilof.ai/api/pop/a2a?preview=1
     A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.
   - https://councilof.ai/api/pop/claim-watch · free preview: https://councilof.ai/api/pop/claim-watch?preview=1
@@ -235,7 +239,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 13 tools: nine free readers plus four x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
-- Dated immutable mill-card root (as of 2026-09-24T03:22:27Z, 1423 leaves): https://councilof.ai/interop/card-root-2026-09-24-2eb8f4992a13.json (SHA-256 55d4e973e653b1e252817b4b8bac8a90e9c09b8e3d5a3cffd7b50e9979acbe69). Its .ots sidecar (SHA-256 580be118e005f0543f9ff745015c70f9142ee6915e4a9678498871f51e50a19b) carries BitcoinBlockHeaderAttestation paths for block heights 968347 and 968348. An unsigned audit recomputed those paths against raw headers from https://blockstream.info/api and https://mempool.space/api: https://councilof.ai/interop/card-root-2026-09-24-2eb8f4992a13.header-audit.json. The dated root JSON has no Ed25519 signature envelope; any leaf-card signatures are separate. This is public-header corroboration, not local Bitcoin full-node chain validation or verification of individual card measurements.
+- Dated immutable mill-card root (as of 2026-09-24T16:23:03Z, 1423 leaves): https://councilof.ai/interop/card-root-2026-09-24-d9195149ce5e.json (SHA-256 0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e). Read its .ots sidecar: calendar-only receipts remain pending, while BitcoinBlockHeaderAttestation paths require independent block-header and chain checks. No local Bitcoin full-node validation is claimed.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 13-tool contract as the HTTP door.
 - MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp (Query the official registry for the currently published server version.)
 - Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] mirrors all 13 tools served by POST https://councilof.ai/mcp: exactly the nine free tools plus four x402-metered evidence tools. Prefer the live POST /mcp tools/list over any stale duplicate listing (csoai/gspc).
@@ -298,16 +302,16 @@ Re-read it live; do not quote these figures without the state and coverage besid
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-23T05:26:34Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-24T17:47:40Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 603. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 631. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 602.
-- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 628.
+- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 47 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 60 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.
