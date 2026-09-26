@@ -54,14 +54,16 @@ tags: [tokenization, stablecoins, tokenized-funds, deposit-tokens, measurement, 
 # Cross-ledger supply — {date}
 
 **Question.** For a token its issuer says lives on several ledgers: does each deployment the issuer
-itself lists resolve as that token, and what issued supply does each ledger's own state show?
+itself lists resolve as that token, and what supply (`totalSupply()` or the ledger's equivalent) does each
+ledger's own state show?
 Published by the Council of AI (CSOAI), an independent measurement layer. We measure; we never
 certify. No institution named here is a client, partner or member of anything of ours.
 
 ## What it is NOT
 
 An on-chain supply read is **not** AUM, NAV, ownership, redeemability, fund compliance, settlement
-finality, reserves or backing. It is issued token supply at a recorded height on one ledger. It must
+finality, reserves or backing. It is the ledger's `totalSupply()` (or equivalent) at a recorded height on one
+ledger, which includes any tokens the issuer itself holds; it is not issued or circulating supply. It must
 be reconciled against the controlling record (a fund's transfer-agent register, a bank's deposit
 ledger); **no such reconciliation exists here**, and every record says so
 (`reconciliation_state`, e.g. `UNRECONCILED_WITH_TRANSFER_AGENT`). An issuer's own figure is kept in a

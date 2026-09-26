@@ -322,5 +322,103 @@ class TamperControls(unittest.TestCase):
         k.public_key().verify(bytes.fromhex(sig), c)   # positive twin: the genuine one verifies
 
 
+def asset_rec(rows=None, deprecated=None, ils="READ"):
+    return {"issuer_list_evidence": {"state": ils}, "rows": rows or [], "listed_not_read": [], "issuer_list_unmapped": [],
+            "deprecated_rows": deprecated or [], "unlisted_probe": None}
+
+
+def live_row(ledger="ethereum", ident="0xdac17f958d2ee523a2206206994597c13d831ec7", **kw):
+    return {"product": "USDT", "ledger": ledger, "deployment_id": ident, "evidence_kind": "STATE_PROOF_VERIFIED",
+            "supply_decimal": "1", "code_present": True, **kw}
+
+
+def deprecated_row(product="EURT", ledger="ethereum", ident="0xC581b735A1688071A1746c968e0798D642EDE491",
+                   supply="50000050.000000", **kw):
+    return {"product": product, "ledger": ledger, "deployment_id": ident, "evidence_kind": "OPERATOR_API",
+            "supply_decimal": supply, "issuer_says": "deprecated", **kw}
+
+
+class DeprecatedLabelIsNotASupplyClaim(unittest.TestCase):
+    """Correction C-2026-0926-06. 'Deprecated' states no supply figure, so a totalSupply() under it is recorded as
+    NOT_A_SUPPLY_CLAIM and never makes a finding. The controls prove a real contradiction still does."""
+
+    def test_nonzero_totalsupply_under_deprecated_is_not_a_supply_claim(self):
+        p = x.parity_for(asset_rec([live_row()], [deprecated_row(), deprecated_row("CNHT", "tron", "TCfCGjekyqmdYt1yxfUM5v5SDtaY6tuWik", "20000000.000000")]))
+        dep = [i for i in p["items"] if i["kind"] == "SUPPLY_ON_DEPRECATED_DEPLOYMENT"]
+        self.assertEqual(len(dep), 2)
+        self.assertEqual({i["state"] for i in dep}, {"NOT_A_SUPPLY_CLAIM"})
+        self.assertEqual(p["state"], "CONSISTENT")            # decided by the one compared item only
+        self.assertNotIn("INCONSISTENT", p["item_states"])
+        self.assertIsNone(p["notice_state"])
+
+    def test_zero_totalsupply_under_deprecated_is_not_a_supply_claim(self):
+        p = x.parity_for(asset_rec([live_row()], [deprecated_row(supply="0")]))
+        dep = [i for i in p["items"] if i["kind"] == "DEPRECATED_DEPLOYMENT_ZERO_SUPPLY"]
+        self.assertEqual([i["state"] for i in dep], ["NOT_A_SUPPLY_CLAIM"])
+
+    def test_not_a_supply_claim_alone_decides_nothing(self):
+        p = x.parity_for(asset_rec([], [deprecated_row()]))
+        self.assertEqual(p["state"], "UNCHECKABLE")           # nothing was compared, so nothing is CONSISTENT either
+
+    def test_wording_is_totalsupply_not_issued(self):
+        p = x.parity_for(asset_rec([live_row()], [deprecated_row()]))
+        dep = [i for i in p["items"] if i["kind"] == "SUPPLY_ON_DEPRECATED_DEPLOYMENT"][0]
+        self.assertEqual(dep["supply_decimal_is"], "totalSupply() at the read height")
+        self.assertIn("totalSupply()", dep["meaning"])
+        self.assertNotIn("issued supply", dep["meaning"])
+        self.assertNotIn("issued supply", x.WHAT_THIS_IS)
+        self.assertIn("totalSupply()", x.WHAT_THIS_IS)
+        self.assertFalse([s for s in x.funds.NOT_EVIDENCE_OF if "issued supply only" in s])
+        for a in REG["assets"].values():
+            self.assertNotIn("issued supply", json.dumps(a.get("reconciliation") or {}))
+
+    # ---- controls: a real contradiction still yields INCONSISTENT
+    def test_control_issuer_stated_figure_contradicted_is_inconsistent(self):
+        claim = {"decimal": "0", "quote": "all tokens on this deployment have been redeemed and burned", "source": "https://issuer.example/p"}
+        p = x.parity_for(asset_rec([live_row()], [deprecated_row(issuer_stated_supply=claim)]))
+        it = [i for i in p["items"] if i["kind"] == "ISSUER_STATED_SUPPLY_DIFFERS_FROM_LEDGER"]
+        self.assertEqual([i["state"] for i in it], ["INCONSISTENT"])
+        self.assertEqual(p["state"], "INCONSISTENT")
+        self.assertIsNotNone(p["notice_state"])
+
+    def test_control_issuer_stated_figure_matching_is_consistent(self):   # positive twin of the control
+        claim = {"decimal": "50000050", "quote": "q", "source": "https://issuer.example/p"}
+        p = x.parity_for(asset_rec([live_row()], [deprecated_row(issuer_stated_supply=claim)]))
+        self.assertEqual([i["state"] for i in p["items"] if i["kind"].startswith("ISSUER_STATED")], ["CONSISTENT"])
+        self.assertEqual(p["state"], "CONSISTENT")
+
+    def test_control_listed_address_without_contract_still_inconsistent_beside_a_deprecated_row(self):
+        p = x.parity_for(asset_rec([live_row(code_present=False)], [deprecated_row()]))
+        self.assertEqual(p["state"], "INCONSISTENT")
+        self.assertEqual([i["kind"] for i in p["items"] if i["state"] == "INCONSISTENT"], ["LISTED_ADDRESS_HAS_NO_CONTRACT"])
+        self.assertEqual([i["state"] for i in p["items"] if i["kind"] == "SUPPLY_ON_DEPRECATED_DEPLOYMENT"], ["NOT_A_SUPPLY_CLAIM"])
+
+
+class RederiveChangesNoRead(unittest.TestCase):
+    def test_rederive_asset_recomputes_parity_and_carries_reads(self):
+        old = asset_rec([live_row()], [deprecated_row()])
+        old.update({"asset_key": "usdt", "request_log": [{"url": "u"}], "product_totals": {"USDT": {"total_state": "COMPLETE"}},
+                    "not_evidence_of": ["circulating or investor-held supply (issued supply only; no holder, treasury or module balance is excluded)"],
+                    "parity": {"state": "INCONSISTENT"}})
+        new = x.rederive_asset(old, REG, "usdt", {"version": "v2"})
+        for k in ("rows", "deprecated_rows", "listed_not_read", "request_log", "product_totals", "issuer_list_evidence"):
+            self.assertEqual(new[k], old[k], k)
+        self.assertEqual(new["parity"]["state"], "CONSISTENT")
+        self.assertEqual(new["not_evidence_of"], x.funds.NOT_EVIDENCE_OF)
+        self.assertEqual(new["rederivation"], {"version": "v2"})
+        self.assertEqual(old["parity"], {"state": "INCONSISTENT"})   # the input is not mutated
+
+    def test_load_prev_prefers_the_newest_version_of_a_day(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as t:
+            root = Path(t)
+            (root / "2026-09-26" / "v2").mkdir(parents=True)
+            (root / "2026-09-26" / "xl-daily-2026-09-26.json").write_text('{"date":"2026-09-26"}')
+            (root / "2026-09-26" / "v2" / "xl-daily-2026-09-26.json").write_text('{"date":"2026-09-26","version":"v2"}')
+            self.assertEqual(x.load_prev(root, "2026-09-27")["version"], "v2")
+            (root / "2026-09-26" / "v2" / "xl-daily-2026-09-26.json").unlink()
+            self.assertIsNone(x.load_prev(root, "2026-09-27").get("version"))   # twin: without a correction, the day's record
+
+
 if __name__ == "__main__":
     unittest.main()
