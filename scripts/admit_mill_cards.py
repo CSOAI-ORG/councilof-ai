@@ -18,8 +18,11 @@ Owner rule (approved 2026-09-26). A card is ADMITTED only when ALL of these hold
   2 REPRODUCED  An INDEPENDENT second runtime reproduced the same result on the same
                 instrument_sha256, model manifest digest and bank sha256. Independent means
                 a different run AND a different declared runtime/host id. Same result means
-                identical intake counts and accuracy. The reproduction must pass the same
-                intake checks.
+                identical intake counts and accuracy AND (owner ruling 2026-09-26, "yes
+                item-level") the same grade on EVERY item: totals that agree because flips
+                cancel are not a reproduction. Raw-output, label or done_reason differences
+                that leave every grade unchanged do not block, and are recorded. The
+                reproduction must pass the same intake checks.
   3 SIGNED      It was signed by scripts/sign_mill_cards.py. Ed25519 verifies VALID under the
                 DID the card names (allowed: #board-attestation-1), and the signed body is
                 exactly sign_mill_cards' transform of the intake-bound unsigned card.
@@ -27,7 +30,18 @@ Owner rule (approved 2026-09-26). A card is ADMITTED only when ALL of these hold
 Anything short of that is NOT_ADMITTED, with machine-readable reason codes. Every failing
 condition is reported, not only the first:
   INTAKE_FAILED, UNSIGNED, SIGNATURE_INVALID, NO_INDEPENDENT_REPRODUCTION,
-  DIGEST_MISMATCH, RESULT_MISMATCH.
+  DIGEST_MISMATCH, RESULT_MISMATCH, ITEM_MISMATCH (details list the differing item_ids),
+  NO_ITEM_LEVEL_EVIDENCE (per-item results absent, unbound or self-inconsistent).
+
+Per-item evidence comes from the same side file: a declaration that binds BOTH runs (its own
+run by intake_bundle_sha256, the primary in baseline_runtime.runs[] by bundle_sha256) and
+carries per_item_results (the reproduction's items, hashed as per_item_results_sha256) plus
+parity.per_item_cross_hardware.differing_items (both sides of every item that differs in any
+field). The primary's per-item grades are the reproduction's, overridden by the declared
+primary side of each differing item, and must sum to the primary's intake count; the
+reproduction's must sum to its own. The reproduction's items.jsonl must sit beside its intake
+receipt, hash to the bound items digest and agree with per_item_results. The primary side is
+declaration-derived: only its sum is checked against the primary receipt.
 
 Runtime provenance comes from a side file. The card body and run.json key sets are pinned by
 the intake verifier (adding a runtime field is REJECT UNEXPECTED_FIELDS), so runtime/host
@@ -65,7 +79,8 @@ from verify_runpod_gspc_intake import VERIFICATION_SCHEMA, canonical_json_bytes 
 
 ADMISSION_SCHEMA = "csoai.mill-admission/0.1"
 DECLARATION_SCHEMA = "csoai.mill-runtime-declaration/0.1"
-RULE = "intake + independent reproduction (same instrument/model/bank, same counts) + sign_mill_cards signature; owner-approved 2026-09-26"
+RULE = ("intake + independent reproduction (same instrument/model/bank, same counts, same grade on every item) "
+        "+ sign_mill_cards signature; owner-approved 2026-09-26, item-level ruling 2026-09-26")
 DID_DOC = ROOT / "public" / ".well-known" / "did.json"
 SIGNED_DIR = ROOT / "public" / "interop" / "mill-cards-signed"
 ALLOWED_DIDS = frozenset({"did:web:csoai.org#board-attestation-1"})
@@ -79,8 +94,13 @@ SIGNATURE_INVALID = "SIGNATURE_INVALID"
 NO_INDEPENDENT_REPRODUCTION = "NO_INDEPENDENT_REPRODUCTION"
 DIGEST_MISMATCH = "DIGEST_MISMATCH"
 RESULT_MISMATCH = "RESULT_MISMATCH"
+ITEM_MISMATCH = "ITEM_MISMATCH"
+NO_ITEM_LEVEL_EVIDENCE = "NO_ITEM_LEVEL_EVIDENCE"
 REASON_ORDER = (INTAKE_FAILED, UNSIGNED, SIGNATURE_INVALID, NO_INDEPENDENT_REPRODUCTION,
-                DIGEST_MISMATCH, RESULT_MISMATCH)
+                DIGEST_MISMATCH, RESULT_MISMATCH, ITEM_MISMATCH, NO_ITEM_LEVEL_EVIDENCE)
+# postprocess.py's slim item row, and the per-side fields of a differing item
+ITEM_FIELDS = ("sequence", "item_id", "prompt_sha256", "raw_output_sha256", "parsed_label", "grade", "done_reason")
+SIDE_FIELDS = ("raw_output_sha256", "parsed_label", "grade", "done_reason")
 
 
 def sha256_hex(raw: bytes) -> str:
@@ -153,6 +173,7 @@ class RuntimeIndex:
     """(run_id, intake bundle_sha256) -> declared runtime ids, from every declaration seen."""
     rows: dict[tuple[str, str], set[str]] = field(default_factory=dict)
     sources: dict[tuple[str, str], set[str]] = field(default_factory=dict)
+    decls: list[tuple[dict, str]] = field(default_factory=list)
 
     def add(self, run_id: object, bundle: object, rid: str | None, source: str) -> None:
         if not isinstance(run_id, str) or not isinstance(bundle, str) or not re.fullmatch(r"[0-9a-f]{64}", bundle):
@@ -180,6 +201,7 @@ class RuntimeIndex:
 def index_declaration(index: RuntimeIndex, decl: dict, source: str) -> None:
     if not isinstance(decl, dict) or decl.get("schema") != DECLARATION_SCHEMA:
         return
+    index.decls.append((decl, source))
     index.add(decl.get("run_id"), decl.get("intake_bundle_sha256"), runtime_id(decl.get("runtime")), source)
     base = decl.get("baseline_runtime")
     if isinstance(base, dict):
@@ -197,6 +219,7 @@ class Repro:
     receipt_raw: bytes
     card: dict
     where: str
+    items_raw: bytes | None = None
 
 
 def _read_json(path: Path) -> tuple[object, bytes]:
@@ -232,7 +255,9 @@ def load_repro_dirs(dirs: list[Path], index: RuntimeIndex) -> tuple[list[Repro],
         for receipt, raw, f in receipts:
             cid = str((receipt.get("source_hashes") or {}).get("card_id") or "")
             if cid in cards:
-                repros.append(Repro(receipt, raw, cards[cid], str(f)))
+                items = f.parent / "items.jsonl"
+                items_raw = items.read_bytes() if items.is_file() and not items.is_symlink() else None
+                repros.append(Repro(receipt, raw, cards[cid], str(f), items_raw))
             else:
                 notes.append(f"receipt {f} has no unsigned card beside it; not usable as a reproduction")
     # one receipt may be reachable through several dirs; keep one per bundle
@@ -354,6 +379,122 @@ def independence_reasons(card: dict, receipt: dict, repro: Repro, index: Runtime
     return out
 
 
+def per_item_sha256(per_item: list) -> str:
+    """postprocess.py's per_item_results_sha256."""
+    return sha256_hex(json.dumps(per_item, sort_keys=True, separators=(",", ":")).encode())
+
+
+def compare_items(ev: dict, primary_receipt: dict, repro_receipt: dict, repro_items_raw: bytes | None = None,
+                  require_items: bool = True) -> tuple[list[tuple[str, str]], dict | None]:
+    """Pure per-item comparison. ev = {per_item_results, per_item_results_sha256, per_item_cross_hardware}.
+
+    Returns (reasons, parity). NO_ITEM_LEVEL_EVIDENCE when the evidence is absent, unbound or
+    contradicts either intake receipt; ITEM_MISMATCH listing every item whose grade differs.
+    At admission the reproduction's intake-bound items.jsonl is REQUIRED, so per_item_results
+    are checked against bytes the intake receipt pins. validate_admission_record passes
+    require_items=False: offline it can recheck consistency with both receipts, but a
+    consistent re-grade of per_item_results is caught only here, where items.jsonl is present.
+    """
+    def missing(why: str) -> tuple[list[tuple[str, str]], None]:
+        return [(NO_ITEM_LEVEL_EVIDENCE, why)], None
+
+    per = ev.get("per_item_results") if isinstance(ev, dict) else None
+    block = ev.get("per_item_cross_hardware") if isinstance(ev, dict) else None
+    if not isinstance(per, list) or not per:
+        return missing("reproduction per-item results absent")
+    if not isinstance(block, dict) or not isinstance(block.get("differing_items"), list):
+        return missing("primary per-item results absent (no parity.per_item_cross_hardware.differing_items)")
+    if per_item_sha256(per) != ev.get("per_item_results_sha256"):
+        return missing("per_item_results do not hash to per_item_results_sha256")
+    rside: dict[str, dict] = {}
+    for row in per:
+        if not isinstance(row, dict) or not isinstance(row.get("item_id"), str) \
+                or not isinstance(row.get("grade"), bool) or row["item_id"] in rside:
+            return missing("reproduction per-item results malformed or duplicate item_id")
+        rside[row["item_id"]] = {f: row.get(f) for f in SIDE_FIELDS}
+    if repro_items_raw is None and require_items:
+        return missing("reproduction items.jsonl absent beside its intake receipt; per-item grades unbound")
+    if repro_items_raw is not None:
+        try:
+            rows = [json.loads(line) for line in repro_items_raw.decode("utf-8").splitlines() if line.strip()]
+        except ValueError:
+            return missing("reproduction items.jsonl unreadable")
+        if sha256_hex(repro_items_raw) != ((repro_receipt.get("source_hashes") or {}).get("items_sha256")):
+            return missing("items.jsonl beside the reproduction receipt is not the intake-bound items")
+        if [{k: r.get(k) for k in ITEM_FIELDS} for r in rows] != per:
+            return missing("per_item_results differ from the reproduction's intake-bound items.jsonl")
+    pside: dict[str, dict | None] = dict(rside)
+    for d in block["differing_items"]:
+        iid = d.get("item_id") if isinstance(d, dict) else None
+        if iid not in rside:
+            return missing(f"differing item {iid!r} is not a reproduction item")
+        sides = {k: v for k, v in d.items() if k not in ("item_id", "sequence")}
+        rkeys = [k for k, v in sides.items() if isinstance(v, dict) and {f: v.get(f) for f in SIDE_FIELDS} == rside[iid]]
+        if len(sides) != 2 or len(rkeys) != 1:
+            return missing(f"differing item {iid} does not carry exactly one reproduction side and one primary side")
+        pv = sides[next(k for k in sides if k != rkeys[0])]
+        if pv is not None and (not isinstance(pv, dict) or not isinstance(pv.get("grade"), bool)):
+            return missing(f"primary side of differing item {iid} has no boolean grade")
+        pside[iid] = None if pv is None else {f: pv.get(f) for f in SIDE_FIELDS}
+    n = len(per)
+    pc, rc = primary_receipt.get("counts") or {}, repro_receipt.get("counts") or {}
+    if block.get("n_items") != n or pc.get("attempted") != n or rc.get("attempted") != n:
+        return missing(f"{n} per-item results vs n_items {block.get('n_items')}, attempted "
+                       f"{pc.get('attempted')}/{rc.get('attempted')}")
+    if sum(v["grade"] for v in rside.values()) != rc.get("correct"):
+        return missing("reproduction per-item grades do not sum to its intake count")
+    if sum(bool(v and v["grade"]) for v in pside.values()) != pc.get("correct"):
+        return missing("declared primary per-item grades do not sum to the primary intake count")
+    grade_diff = sorted(i for i in rside if pside[i] is None or pside[i]["grade"] != rside[i]["grade"])
+    if block.get("grade_equal") is not None and block.get("grade_equal") != n - len(grade_diff):
+        return missing("declared grade_equal disagrees with its own differing_items")
+    other = [{"item_id": i, "fields": [f for f in SIDE_FIELDS if f != "grade" and pside[i][f] != rside[i][f]]}
+             for i in sorted(rside) if i not in grade_diff and pside[i] != rside[i]]
+    parity = {"n_items": n, "grade_equal": n - len(grade_diff), "grade_differs": grade_diff,
+              "non_grade_differs": other,
+              "primary_items_from": "declared differing_items over the reproduction's per_item_results"}
+    if grade_diff:
+        return [(ITEM_MISMATCH, f"grade differs on {len(grade_diff)} of {n} items: {', '.join(grade_diff)}")], parity
+    return [], parity
+
+
+def item_evidence(decl: dict) -> dict:
+    return {"per_item_results": decl.get("per_item_results"),
+            "per_item_results_sha256": decl.get("per_item_results_sha256"),
+            "per_item_cross_hardware": (decl.get("parity") or {}).get("per_item_cross_hardware")
+            if isinstance(decl.get("parity"), dict) else None}
+
+
+def item_parity(card: dict, receipt: dict, repro: Repro, index: RuntimeIndex
+                ) -> tuple[list[tuple[str, str]], dict | None, dict | None]:
+    """(reasons, parity, evidence) from every declaration that binds BOTH runs. Fail closed."""
+    run = str((card["body"].get("compute_evidence") or {}).get("run_id") or "")
+    bundle = str(receipt.get("bundle_sha256") or "")
+    rrun, rbundle = repro.receipt.get("run_id"), repro.receipt.get("bundle_sha256")
+    decls = []
+    for decl, src in index.decls:
+        runs = (decl.get("baseline_runtime") or {}).get("runs") if isinstance(decl.get("baseline_runtime"), dict) else None
+        if decl.get("run_id") == rrun and decl.get("intake_bundle_sha256") == rbundle and any(
+                isinstance(r, dict) and r.get("run_id") == run and r.get("bundle_sha256") == bundle for r in runs or []):
+            decls.append((decl, src))
+    if not decls:
+        return [(NO_ITEM_LEVEL_EVIDENCE, f"no runtime declaration binds both run {run} and reproduction {rrun} "
+                 "with per-item results")], None, None
+    outcomes = []
+    for decl, src in decls:
+        ev = item_evidence(decl)
+        reasons, parity = compare_items(ev, receipt, repro.receipt, repro.items_raw)
+        outcomes.append((reasons, parity, {**ev, "declared_by": src}))
+    if len({json.dumps(o[1], sort_keys=True) for o in outcomes}) != 1:
+        return [(NO_ITEM_LEVEL_EVIDENCE, "declarations binding these runs disagree item by item")], None, None
+    return outcomes[0]
+
+
+def item_reasons(card: dict, receipt: dict, repro: Repro, index: RuntimeIndex) -> list[tuple[str, str]]:
+    """Per-item grade equality between the two runtimes (ITEM_MISMATCH / NO_ITEM_LEVEL_EVIDENCE)."""
+    return item_parity(card, receipt, repro, index)[0]
+
+
 def reproduction_reasons(card: dict, receipt: dict, repro: Repro, index: RuntimeIndex,
                          bank_allowlist: Path) -> list[tuple[str, str]]:
     """Condition 2 against one candidate reproduction. Empty list = independent and equal."""
@@ -363,6 +504,7 @@ def reproduction_reasons(card: dict, receipt: dict, repro: Repro, index: Runtime
         out.append((NO_INDEPENDENT_REPRODUCTION, f"reproduction {repro.receipt.get('run_id')} fails intake: {bad[0]}"))
     out += digest_reasons(card, repro)
     out += result_reasons(receipt, repro)
+    out += item_reasons(card, receipt, repro, index)
     out += independence_reasons(card, receipt, repro, index)
     return out
 
@@ -408,6 +550,10 @@ def decide(card_path: Path, evidence_dir: Path, repros: list[Repro], index: Runt
         else:
             per = [(r, reproduction_reasons(card, receipt, r, index, bank_allowlist)) for r in cands]
             ok = [r for r, why in per if not why]
+            shown = ok[0] if ok else cands[0]
+            parity = item_parity(card, receipt, shown, index)[1]
+            if parity is not None:
+                out["item_parity"] = {"reproduction_run_id": shown.receipt.get("run_id"), **parity}
             if ok:
                 chosen = ok[0]
             else:
@@ -430,6 +576,7 @@ def admission_record(card: dict, card_file: str, receipt: dict, raw: bytes, rnam
     bundle, rbundle = receipt["bundle_sha256"], repro.receipt["bundle_sha256"]
     pid, _ = index.resolve(ce["run_id"], bundle)
     rid, _ = index.resolve(repro.receipt["run_id"], rbundle)
+    _, parity, evidence = item_parity(card, receipt, repro, index)
     return {
         "schema": ADMISSION_SCHEMA,
         "state": "ADMITTED",
@@ -446,6 +593,8 @@ def admission_record(card: dict, card_file: str, receipt: dict, raw: bytes, rnam
             "card_body": repro.card["body"],
         },
         "matched": {**{f: ce[f] for f in DIGEST_FIELDS}, "counts": receipt["counts"], "accuracy": receipt["accuracy"]},
+        "item_parity": parity,
+        "item_evidence": evidence,
         "admitted_at": now_iso(),
     }
 
@@ -493,6 +642,11 @@ def validate_admission_record(record: dict, card: dict, receipt: dict, did_doc: 
     if (rrec.get("counts"), rrec.get("accuracy")) != (receipt.get("counts"), receipt.get("accuracy")) \
             or (matched.get("counts"), matched.get("accuracy")) != (receipt.get("counts"), receipt.get("accuracy")):
         errs.append("reproduction result differs from the card's intake result")
+    reasons, parity = compare_items(record.get("item_evidence") or {}, receipt, rrec, require_items=False)
+    if reasons or parity is None or parity != record.get("item_parity"):
+        errs.append("item-level evidence does not show the same grade on every item: "
+                    + "; ".join(f"{c}: {d}" for c, d in reasons) if reasons else
+                    "item-level evidence does not reproduce the recorded item parity")
     return errs
 
 

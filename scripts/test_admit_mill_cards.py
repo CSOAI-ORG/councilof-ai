@@ -5,8 +5,10 @@ scripts/sign_mill_cards.py with a throwaway Ed25519 key (lib.estate_sign
 .generate_throwaway_key). No production key, token or card is used.
 
 Negative controls (each must be NOT_ADMITTED with its reason code):
-  same host twice, digest differs, result differs, unsigned, intake fails
-(plus: forged signature, no reproduction, same run, undeclared runtime).
+  same host twice, digest differs, result differs, unsigned, intake fails,
+  two items flip with equal totals (ITEM_MISMATCH), per-item evidence absent
+(plus: forged signature, no reproduction, same run, undeclared runtime, tampered
+or self-inconsistent per-item evidence). Pass case: raw outputs differ, grades equal.
 Each control is paired with a MUTANT test that disables exactly the check the
 control relies on and asserts the same fixture then comes out ADMITTED — the
 proof that the control fails because of that check and nothing else.
@@ -82,6 +84,23 @@ def receipt_for(card: dict, allowlist_sha: str, counts=None) -> dict:
             "state": "VERIFIED_QUARANTINE", "subject": body["model"], "verified_at": "2026-09-26T00:00:00Z"}
 
 
+def make_items(n=71, correct=41) -> list[dict]:
+    """postprocess.py slim rows: items 1..correct right, the last one a parse error."""
+    rows = []
+    for s in range(1, n + 1):
+        iid = f"item-{s:06d}-{s:012x}"
+        grade = s <= correct
+        rows.append({"sequence": s, "item_id": iid, "prompt_sha256": sha(iid.encode()),
+                     "raw_output_sha256": sha(f"out-{s}".encode()),
+                     "parsed_label": None if s == n else ("REFUSE" if grade else "PROCEED"),
+                     "grade": grade, "done_reason": "stop"})
+    return rows
+
+
+def flip(rows: list[dict], seq: int, **fields) -> None:
+    rows[seq - 1].update(fields)
+
+
 def rebundle(receipt: dict) -> dict:
     """Recompute bundle_sha256 after a deliberate edit (so only the intended check trips)."""
     receipt["bundle_sha256"] = sha(canonical_json_bytes({k: receipt[k] for k in
@@ -110,6 +129,10 @@ class World:
         self.primary_runtime = {"substrate": "RunPod RTX 3090 pod fpowppss5ngtkw"}
         self.repro_runtime = {"substrate": "Kaggle kernel csoai-mill-kaggle-slice T4x2"}
         self.sign = True
+        self.primary_items = make_items()
+        self.repro_items = make_items()
+        self.item_level = True
+        self.write_items = True
 
     # ---- materialise
     def signed_card(self) -> Path:
@@ -135,12 +158,31 @@ class World:
         card = self.signed_card()
         r = self.primary_receipt
         (self.evidence / f"runpod-verification-{r['bundle_sha256'][:12]}.json").write_text(json.dumps(r))
+        if self.item_level:
+            # the reproduction's intake-bound items.jsonl, and a card/receipt that bind it
+            items_raw = "".join(json.dumps(r) + "\n" for r in self.repro_items).encode()
+            if self.write_items:
+                (self.repro / "items.jsonl").write_bytes(items_raw)
+            self.repro_card["body"]["compute_evidence"]["items_sha256"] = sha(items_raw)
+            self.repro_card["id"] = sha(canonical_body_bytes(self.repro_card["body"]))
+            self.repro_receipt["source_hashes"].update(items_sha256=sha(items_raw), card_id=self.repro_card["id"])
+            self.repro_receipt = rebundle(self.repro_receipt)
         (self.repro / "verification.json").write_text(json.dumps(self.repro_receipt))
         (self.repro / "unsigned-qwen2.5-7b-jail.json").write_text(json.dumps(self.repro_card))
         decl = {"schema": admit.DECLARATION_SCHEMA, "run_id": self.repro_receipt["run_id"],
                 "intake_bundle_sha256": self.repro_receipt["bundle_sha256"], "runtime": self.repro_runtime,
                 "baseline_runtime": {**self.primary_runtime, "runs": [
                     {"run_id": r["run_id"], "bundle_sha256": r["bundle_sha256"]}]}}
+        if self.item_level:
+            diffs = [{"item_id": b["item_id"], "sequence": b["sequence"],
+                      "rtx3090": {k: a[k] for k in admit.SIDE_FIELDS}, "t4": {k: b[k] for k in admit.SIDE_FIELDS}}
+                     for a, b in zip(self.primary_items, self.repro_items)
+                     if any(a[k] != b[k] for k in admit.SIDE_FIELDS)]
+            decl["per_item_results"] = self.repro_items
+            decl["per_item_results_sha256"] = admit.per_item_sha256(self.repro_items)
+            decl["parity"] = {"per_item_cross_hardware": {
+                "n_items": len(self.repro_items), "differing_items": diffs,
+                "grade_equal": sum(a["grade"] == b["grade"] for a, b in zip(self.primary_items, self.repro_items))}}
         (self.repro / "runtime-declaration.json").write_text(json.dumps(decl))
         (self.root / "did.json").write_text(json.dumps(self.did_doc))
         return card
@@ -180,6 +222,34 @@ class Positive(Base):
         self.assertEqual(rec["state"], "ADMITTED")
         self.assertIs(rec["authority"]["admitted"], True)
         self.assertNotEqual(rec["primary_runtime"]["runtime_id"], rec["reproduction"]["runtime_id"])
+
+    def test_raw_differs_grade_equal_is_admitted_and_recorded(self):
+        # the safety case: outputs differ (and one done_reason), every grade is the same
+        flip(self.w.repro_items, 5, raw_output_sha256="cc" * 32)
+        flip(self.w.repro_items, 50, raw_output_sha256="dd" * 32, done_reason="length")
+        flip(self.w.repro_items, 71, raw_output_sha256="ee" * 32)
+        d = self.w.decide()
+        self.assertEqual(d["state"], "ADMITTED", d)
+        rec = d["record"]["item_parity"]
+        self.assertEqual(rec["grade_differs"], [])
+        self.assertEqual([x["item_id"] for x in rec["non_grade_differs"]],
+                         [self.w.repro_items[i]["item_id"] for i in (4, 49, 70)])
+        self.assertEqual(rec["non_grade_differs"][1]["fields"], ["raw_output_sha256", "done_reason"])
+        card = json.loads((self.w.signed / d["card_file"]).read_text())
+        self.assertEqual([], admit.validate_admission_record(d["record"], card, self.w.primary_receipt, self.w.did_doc))
+
+    def test_forged_item_parity_in_record_is_refused(self):
+        d = self.w.decide()
+        card = json.loads((self.w.signed / d["card_file"]).read_text())
+        rec = copy.deepcopy(d["record"])                        # hide a declared flip
+        rec["item_evidence"]["per_item_cross_hardware"]["differing_items"] = [{
+            "item_id": self.w.repro_items[14]["item_id"],
+            "rtx3090": {**{k: self.w.repro_items[14][k] for k in admit.SIDE_FIELDS}, "grade": False},
+            "t4": {k: self.w.repro_items[14][k] for k in admit.SIDE_FIELDS}}]
+        self.assertTrue(admit.validate_admission_record(rec, card, self.w.primary_receipt, self.w.did_doc))
+        rec = copy.deepcopy(d["record"])                        # edit the recorded parity
+        rec["item_parity"]["non_grade_differs"] = [{"item_id": "x", "fields": ["raw_output_sha256"]}]
+        self.assertTrue(admit.validate_admission_record(rec, card, self.w.primary_receipt, self.w.did_doc))
 
     def test_record_revalidates_offline(self):
         d = self.w.decide()
@@ -246,6 +316,17 @@ def model_digest_differs(w: World):
 def result_differs(w: World):
     w.repro_card = unsigned_card(RUN_B, "22" * 32, accuracy=0.5714)
     w.repro_receipt = receipt_for(w.repro_card, w.allow_sha, counts={**COUNTS, "correct": 40})
+    flip(w.repro_items, 41, grade=False, parsed_label="PROCEED", raw_output_sha256="ff" * 32)
+
+
+def items_flip_totals_equal(w: World):
+    """The cross-reality/swarm case: two grades flip in opposite directions, totals agree."""
+    flip(w.repro_items, 15, grade=False, parsed_label="PROCEED", raw_output_sha256="aa" * 32)
+    flip(w.repro_items, 60, grade=True, parsed_label="REFUSE", raw_output_sha256="bb" * 32)
+
+
+def no_item_level_evidence(w: World):
+    w.item_level = False
 
 
 def unsigned(w: World):
@@ -266,6 +347,8 @@ CONTROLS = {
     "result_differs": (result_differs, "RESULT_MISMATCH", "result_reasons"),
     "unsigned": (unsigned, "UNSIGNED", "signature_reasons"),
     "intake_fails": (intake_fails, "INTAKE_FAILED", "intake_reasons"),
+    "items_flip_totals_equal": (items_flip_totals_equal, "ITEM_MISMATCH", "item_reasons"),
+    "no_item_level_evidence": (no_item_level_evidence, "NO_ITEM_LEVEL_EVIDENCE", "item_reasons"),
 }
 
 
@@ -291,6 +374,64 @@ class NegativeControls(Base):
 
     def test_unsigned(self):
         self.assertNotAdmitted(self.run_control("unsigned"), "UNSIGNED")
+
+    def test_items_flip_with_equal_totals(self):
+        d = self.run_control("items_flip_totals_equal")
+        self.assertNotAdmitted(d, "ITEM_MISMATCH")
+        self.assertNotIn("RESULT_MISMATCH", d["reasons"])  # totals really are equal
+        detail = next(x["detail"] for x in d["details"] if x["code"] == "ITEM_MISMATCH")
+        self.assertIn(self.w.repro_items[14]["item_id"], detail)
+        self.assertIn(self.w.repro_items[59]["item_id"], detail)
+        self.assertEqual(d["item_parity"]["grade_differs"],
+                         [self.w.repro_items[14]["item_id"], self.w.repro_items[59]["item_id"]])
+
+    def test_no_item_level_evidence(self):
+        self.assertNotAdmitted(self.run_control("no_item_level_evidence"), "NO_ITEM_LEVEL_EVIDENCE")
+
+    def test_primary_side_missing(self):
+        self.w.write()
+        decl_p = self.w.repro / "runtime-declaration.json"
+        decl = json.loads(decl_p.read_text())
+        del decl["parity"]
+        decl_p.write_text(json.dumps(decl))
+        self.assertNotAdmitted(self.redecide(), "NO_ITEM_LEVEL_EVIDENCE")
+
+    def test_tampered_per_item_results(self):
+        self.w.write()
+        decl_p = self.w.repro / "runtime-declaration.json"
+        decl = json.loads(decl_p.read_text())
+        decl["per_item_results"][3]["grade"] = not decl["per_item_results"][3]["grade"]
+        decl_p.write_text(json.dumps(decl))
+        self.assertNotAdmitted(self.redecide(), "NO_ITEM_LEVEL_EVIDENCE")
+
+    def test_declared_primary_items_contradict_primary_receipt(self):
+        # a flip declared on one side only: the primary's items no longer sum to its receipt
+        self.w.primary_items[1]["grade"] = False
+        self.w.primary_items[1]["parsed_label"] = "PROCEED"
+        self.assertNotAdmitted(self.w.decide(), "NO_ITEM_LEVEL_EVIDENCE")
+
+    def test_consistent_regrade_of_declared_items_is_caught_by_items_jsonl(self):
+        # swarm-shaped forgery: flip two declared grades so every sum still agrees, rehash
+        self.w.write()
+        decl_p = self.w.repro / "runtime-declaration.json"
+        decl = json.loads(decl_p.read_text())
+        per = decl["per_item_results"]
+        per[14]["grade"], per[59]["grade"] = False, True
+        decl["per_item_results_sha256"] = admit.per_item_sha256(per)
+        decl_p.write_text(json.dumps(decl))
+        d = self.redecide()
+        self.assertNotAdmitted(d, "NO_ITEM_LEVEL_EVIDENCE")
+        self.assertTrue(any("items.jsonl" in x["detail"] for x in d["details"]))
+
+    def test_repro_items_jsonl_absent_fails_closed(self):
+        self.w.write_items = False
+        self.assertNotAdmitted(self.w.decide(), "NO_ITEM_LEVEL_EVIDENCE")
+
+    def redecide(self) -> dict:
+        index = admit.RuntimeIndex()
+        repros, _ = admit.load_repro_dirs([self.w.repro], index)
+        card = next(self.w.signed.glob("signed-*.json"))
+        return admit.decide(card, self.w.evidence, repros, index, self.w.did_doc, self.w.allowlist)
 
     def test_intake_fails(self):
         d = self.run_control("intake_fails")
@@ -379,10 +520,12 @@ class Mutants(Base):
     were missing or vacuous (always passing), the control would silently admit.
     """
 
-    def mutant_admits(self, name: str):
+    def mutant_admits(self, name: str, also: tuple[str, ...] = ()):
         edit, code, check = CONTROLS[name]
         edit(self.w)
-        with mock.patch.object(admit, check, lambda *a, **k: []):
+        with contextlib.ExitStack() as stack:
+            for c in (check, *also):
+                stack.enter_context(mock.patch.object(admit, c, lambda *a, **k: []))
             d = self.w.decide()
         self.assertEqual(d["state"], "ADMITTED",
                          f"{name}: with {check} disabled the fixture should admit; got {d['reasons']}")
@@ -397,7 +540,21 @@ class Mutants(Base):
         self.mutant_admits("model_digest_differs")
 
     def test_mutant_result_differs(self):
-        self.mutant_admits("result_differs")
+        # a totals difference always implies an item difference, so the item check is
+        # disabled too; with ONLY result_reasons off the card is still held by ITEM_MISMATCH
+        self.mutant_admits("result_differs", also=("item_reasons",))
+        (self.w.root / "b").mkdir()
+        w = World(self.w.root / "b", self.key_b64, self.pub)
+        result_differs(w)
+        with mock.patch.object(admit, "result_reasons", lambda *a, **k: []):
+            self.assertEqual(w.decide()["reasons"], ["ITEM_MISMATCH"])
+
+    def test_old_totals_only_rule_admits_the_item_flip(self):
+        """The ruling's point: under the previous totals-only rule this card was ADMITTED."""
+        self.mutant_admits("items_flip_totals_equal")
+
+    def test_old_totals_only_rule_admits_without_item_evidence(self):
+        self.mutant_admits("no_item_level_evidence")
 
     def test_mutant_unsigned(self):
         self.mutant_admits("unsigned")
