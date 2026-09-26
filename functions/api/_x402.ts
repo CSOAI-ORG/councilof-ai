@@ -175,7 +175,8 @@ export type X402Accept = {
   csoaiPricing?: {
     product_id: string;
     sku_id: string;
-    tier: string;
+    // No `tier` key on the wire (owner ruling: no subscription tiers, no public tier pricing;
+    // functions/api/_owner_ruling_wire.test.ts). The tier stays an INTERNAL input to the amount.
     pricing_basis: "STANDARD" | "PROMO_EXISTING_DATA";
     campaign_id: string | null;
     normal_amount_atomic: string;
@@ -266,7 +267,6 @@ export function x402Accepts(
       csoaiPricing: {
         product_id: opts.productId || `csoai.product.${opts.skuId}`,
         sku_id: opts.skuId,
-        tier: opts.tier,
         pricing_basis: promoActive ? "PROMO_EXISTING_DATA" : "STANDARD",
         campaign_id: promoActive ? X402_LAUNCH_CAMPAIGN.id : null,
         normal_amount_atomic: normalAtomic,
