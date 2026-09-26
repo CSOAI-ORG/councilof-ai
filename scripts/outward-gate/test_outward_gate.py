@@ -137,6 +137,15 @@ class TestIntegrity(unittest.TestCase):
         self.assertEqual(Status.of(g.ots_state_check(d, btc, "BITCOIN_ATTESTED at block 1", "x"), "integrity.ots_state_truthful"), [g.PASS])
         self.assertEqual(Status.of(g.ots_state_check(d, {}, "pending", "x"), "integrity.ots_present"), [g.FAIL])
 
+    def test_ots_statement_is_scoped_to_its_artifact(self):
+        md = ("- `record.json` (sha256 x): **BITCOIN_ATTESTED at block 5**. Upgraded proof: `record.json.bitcoin.ots`\n"
+              "`record.v0.1.1.json.ots`: 3 pending calendar attestations, not a Bitcoin attestation.\n")
+        st = g.stated_about(md, "record.v0.1.1.json")
+        d = g.sha(b"v011")
+        self.assertEqual(Status.of(g.ots_state_check(d, {"record.v0.1.1.json.ots": ots_bytes(d)}, st, "x"), "integrity.ots_state_truthful"), [g.PASS])
+        # must-fail control: the whole README (which claims Bitcoin for record.json) would have failed it
+        self.assertEqual(Status.of(g.ots_state_check(d, {"record.v0.1.1.json.ots": ots_bytes(d)}, "BITCOIN_ATTESTED at block 5", "x"), "integrity.ots_state_truthful"), [g.FAIL])
+
 
 class TestVenturi(unittest.TestCase):
     def build(self, tmp, sk, decision=False):

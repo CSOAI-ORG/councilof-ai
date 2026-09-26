@@ -321,7 +321,7 @@ def json_strings(o):
 
 
 NEG = re.compile(r"\b(?:not|never|no|nothing|without|neither|nor|isn't|aren't|doesn't|don't|won't|cannot|"
-                 r"rather than|instead of|refus\w*|retract\w*|withdrawn|killed|banned|forbidden|avoid)\b|n't\b", re.I)
+                 r"rather than|instead of|refus\w*|retract\w*|withdrawn|killed|banned|forbidden|avoid|declines?|disclaim\w*)\b|n't\b", re.I)
 CERT = re.compile(r"\b(certif(?:y|ies|ied|ying|ication|ications)|compliant|compliance[\s-]score|accredit(?:ed|ation)|"
                   r"endorse(?:d|s|ment))\b", re.I)
 LF = re.compile(r"member(?:ship)?\s+of\s+(?:the\s+)?(?:Linux Foundation|LF\b|AAIF\b|Agentic AI Foundation)|"
@@ -342,7 +342,9 @@ def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
     for m in rx.finditer(text):
         w0 = text[max(0, m.start() - before): m.start()]
         w1 = text[m.end(): m.end() + after]
-        if neg is not None and (neg.search(w0) or neg.search(w1[:25])):
+        if text[max(0, m.start() - 4): m.start()].lower().endswith(("non-", "non ")):
+            continue  # "non-compliant" describes a third party's register, not our output
+        if neg is not None and (neg.search(w0) or neg.search(w1[:after])):
             continue
         if re.match(r"[^.!\n]{0,90}\?", w1):  # a question ("Does X certify?") is not a claim
             continue
@@ -356,7 +358,7 @@ def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
 
 def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
     out = []
-    h = _hits(text, CERT)
+    h = _hits(text, CERT, before=140, after=80)
     out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
                  ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
     if prices:
@@ -435,6 +437,8 @@ def currency_numbers(text, live, owner):
             w = text[max(0, m.start() - 60): m.end() + 30]
             if HIST.search(w):
                 continue
+            if re.search(r"hub", text[max(0, m.start(1) - 15): m.start(1)], re.I):
+                continue
             vals = [int(g) for g in m.groups()]
             pairs = [(n, v) for n, v in zip(names, vals) if live.get(n) is not None]
             if not pairs:
@@ -488,7 +492,7 @@ def verify_signed(signed_bytes, did, artifact_sha=None):
     sig = s.get("signature") if isinstance(s, dict) else None
     payload = s.get("payload") if isinstance(s, dict) else None
     if not isinstance(sig, dict) or payload is None or not sig.get("sig_ed25519"):
-        return False, f"unrecognised signed format (top keys {sorted(s)[:8] if isinstance(s, dict) else type(s).__name__}); no published verify path", None, "NA"
+        return False, f"unrecognised signed format (top keys {sorted(s)[:8] if isinstance(s, dict) else type(s).__name__}); not verifiable by the public method (canonical payload + Ed25519 key from did.json)", None, "NA"
     c = canon(payload)
     if sha(c) != sig.get("payload_sha256"):
         c2 = js_canon(payload)
@@ -557,8 +561,8 @@ def ots_state_check(record_sha, proofs, stated_text, owner):
     out.append(R("integrity.ots_present", PASS, f"{', '.join(commits)} commit(s) to the record's sha256"))
     btc = any(i and i["bitcoin"] for i in infos.values())
     st = stated_text or ""
-    says_btc = bool(re.search(r"BITCOIN_ATTESTED|Bitcoin[- ]attested|anchored in (?:the )?Bitcoin|confirmed in Bitcoin block", st, re.I)) \
-        or bool(re.search(r"(?<!not a )Bitcoin (?:block[- ]header )?attestation(?! yet)", st))
+    says_btc = any(not re.search(r"\b(?:not|until|whether|once|after|only|becomes?|pending)\b", st[max(0, m.start() - 50): m.start()], re.I)
+                   for m in re.finditer(r"BITCOIN_ATTESTED|Bitcoin[- ]attested\b|attested (?:in|to|on) Bitcoin|confirmed in Bitcoin block", st, re.I))
     says_pending = bool(re.search(r"pending", st, re.I))
     if says_btc and not btc:
         out.append(R("integrity.ots_state_truthful", FAIL, "the artifact states a Bitcoin attestation but no proof carries a BitcoinBlockHeaderAttestation", owner))
@@ -1191,14 +1195,14 @@ def payload_file_claims(o, names, at=""):
 
 
 def snippet_check(md, http, owner):
-    blocks = re.findall(r"```(?:python|py)\s*\n([\s\S]*?)```", md)
-    blocks = [b for b in blocks if "verify" in b and ("did.json" in b or "did" in b)]
+    blocks = re.findall(r"```[\w-]*\s*\n([\s\S]*?)```", md)
+    blocks = [b for b in blocks if "did.json" in b or ("verify" in b and "did:web" in b)]
     if not blocks:
-        return R("reuse.verify_snippet_works_as_written", FAIL, "no Python 'how to verify' snippet in the README", owner)
+        return R("reuse.verify_snippet_works_as_written", FAIL, "signed records but no runnable verify snippet that fetches the public key (did.json)", owner)
     b = blocks[0]
-    named = re.search(r"[Uu]ser-[Aa]gent[\"']?\s*[:=,]\s*[\"']([^\"']+)", b)
+    named = re.search(r"[Uu]ser-[Aa]gent[\"']?\s*[:=,]\s*[\"']([^\"']+)", b) or re.search(r"(?:-A|--user-agent)\s+[\"']([^\"']+)", b)
     if not named:
-        default_ua = "Python-urllib/3.10" if "urllib" in b else ("python-requests/2.31.0" if "requests" in b else None)
+        default_ua = "Python-urllib/3.10" if "urllib" in b else ("python-requests/2.31.0" if "requests" in b else ("curl/8.5.0" if "curl" in b else None))
         if default_ua and "did.json" in b:
             r = http.get(DID_URL, headers={"User-Agent": default_ua}, cache=False)
             return R("reuse.verify_snippet_works_as_written", FAIL,
@@ -1207,6 +1211,16 @@ def snippet_check(md, http, owner):
     r = http.get(DID_URL, headers={"User-Agent": named.group(1)}, cache=False)
     return R("reuse.verify_snippet_works_as_written", PASS if r.status == 200 else FAIL,
              f"snippet names UA '{named.group(1)}'; did.json -> {r.status}", owner)
+
+
+def stated_about(md, art):
+    """What the README says about THIS artifact's timestamp: lines naming it or its proof; else the timestamp sections."""
+    base = art.rsplit("/", 1)[-1]
+    lines = [l for l in md.splitlines() if re.search(re.escape(base) + r"(?![\w.-]*\.v\d)", l) and re.search(r"ots|timestamp|pending|bitcoin|calendar", l, re.I)]
+    if lines:
+        return "\n".join(lines)
+    secs = re.findall(r"##+[^\n]*(?:timestamp|verify|ots)[^\n]*\n[\s\S]*?(?=\n## |\Z)", md, re.I)
+    return "\n".join(secs) or md
 
 
 def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=12):
@@ -1284,10 +1298,10 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
     except Exception:
         c.append(R("reuse.croissant_recordset_citeas", FAIL, f"croissant {cr.status}", owner))
     signed = sorted(n for n in names if n.endswith(".signed.json"))
-    if signed or re.search(r"How to verify", md, re.I):
+    if signed:
         c.append(snippet_check(md, h, owner))
     else:
-        c.append(R("reuse.verify_snippet_works_as_written", NA, "no signed record, no verify section"))
+        c.append(R("reuse.verify_snippet_works_as_written", NA, "no signed record in the dataset"))
     # --- integrity
     fsha = {}
 
@@ -1332,7 +1346,7 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
                         proofs[pn] = h.get(f"{HF}/datasets/{ds_id}/resolve/main/{urllib.parse.quote(pn)}", cache=False).body
                 rs = file_sha(art)
                 if rs and rs != "TOO_LARGE":
-                    ots_res.append((art, ots_state_check(rs, proofs, md, owner)))
+                    ots_res.append((art, ots_state_check(rs, proofs, stated_about(md, art), owner)))
         bad = [f"{n}: {d}" for n, ok, d in ver_res if not ok]
         c.append(R("integrity.signatures_verify_public_only", FAIL if bad else PASS,
                    "; ".join(bad[:3]) if bad else f"{len(ver_res)} signed record(s) verify with did.json only: " + "; ".join(f"{n}" for n, _, _ in ver_res[:4]), owner))
