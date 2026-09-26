@@ -155,6 +155,15 @@ export const onRequestGet: PagesFunction<{
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a paywall on the free ledger or /root.json"],
       },
       {
+        id: "fresh_capsule",
+        name: "Fresh measurement capsule (one MCP endpoint, one claim)",
+        resource: u("/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=<TOOLS|VERSION|PROTOCOL>"),
+        free_preview: u("/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=TOOLS&preview=1"),
+        free_preview_note: "the same measurement, unsigned and without source digests; verification (MCP verify_capsule, server_evidence) stays free",
+        deliverable: "One csoai.measurement-capsule/0.2: the endpoint's own discovery documents vs its live initialize + tools/list answer for one dimension, CONSISTENT / INCONSISTENT / UNCHECKABLE, sha256 of every read, board signature pinning the capsule id. Read before settle.",
+        never: ["a rating", "a guarantee", "a verdict", "a rank", "an endorsement", "a certificate", "a call beyond the discovery boundary"],
+      },
+      {
         id: "art50_marking_evidence",
         name: "Article 50 machine-readable marking evidence",
         resource: u("/api/art50/marking-evidence?url=<https-output-url>"),

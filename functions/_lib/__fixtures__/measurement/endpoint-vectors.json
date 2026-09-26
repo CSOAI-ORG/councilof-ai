@@ -1,0 +1,20 @@
+{
+  "note": "normaliseEndpoint (functions/_lib/measurementCapsule.ts) and normalise_endpoint (scripts/measurement_capsule_layout.py) must both map input -> expected. null = not keyable.",
+  "vectors": [
+    ["https://Example.COM/MCP/", "https://example.com/MCP"],
+    ["https://example.com", "https://example.com/"],
+    ["https://example.com/", "https://example.com/"],
+    ["https://example.com:443/mcp", "https://example.com/mcp"],
+    ["http://example.com:80/a", "http://example.com/a"],
+    ["https://example.com:8443/a//", "https://example.com:8443/a"],
+    ["https://example.com/sse?x=1&y=2", "https://example.com/sse?x=1&y=2"],
+    ["https://example.com/mcp#frag", "https://example.com/mcp"],
+    ["https://example.com/?", "https://example.com/"],
+    ["  https://example.com/mcp  ", "https://example.com/mcp"],
+    ["https://brick.blue/.well-known/agent-card.json", "https://brick.blue/.well-known/agent-card.json"],
+    ["ftp://example.com/x", null],
+    ["https://user:pw@example.com/x", null],
+    ["not a url", null],
+    ["", null]
+  ]
+}

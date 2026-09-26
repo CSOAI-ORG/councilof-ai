@@ -26,6 +26,7 @@ import { RAS_OUTPUT_SCHEMAS } from "../api/_ras_schemas";
 import { SKU as POPULATION_SKU } from "../api/_population_door";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
+import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
 
 /** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
 // pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
@@ -47,6 +48,8 @@ export const OFFERS: Record<string, ListingOffer> = {
   "/api/ras/mcp-probe": { skuId: "ras_fresh_read", tier: "per_read", productId: "csoai.product.ras.mcp_probe", pathScoped: true },
   "/api/ras/x402-check": { skuId: "ras_fresh_read", tier: "per_read", productId: "csoai.product.ras.x402_check", pathScoped: true },
   "/api/ras/supply": { skuId: "ras_fresh_read", tier: "per_read", productId: "csoai.product.ras.supply", pathScoped: true },
+  // FRESH CAPSULE (venturi-arms): the SKU functions/api/measurement/fresh-capsule.ts charges (its exported SKU).
+  [FRESH_CAPSULE_PATH]: { skuId: "request_attestation", tier: "per_request" },
 };
 export const offerFor = (url: string): ListingOffer | null => {
   const path = new URL(url).pathname;
@@ -197,6 +200,22 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
         description: RECEIPTS_BATCH_DESCRIPTION,
         ...req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)  },
+      // FRESH CAPSULE (lane venturi-arms-20260926). Built per that lane's MERGE NOTE: its SKU is in OFFERS
+      // and the entry goes through req() like every other door, so listing = challenge by construction;
+      // the description is the door's own DESCRIPTION (read from the door's 402 builder).
+      (() => {
+        const { resourceUrl, accepts } = freshCapsulePaymentRequired(env, origin);
+        const description = accepts[0].description as string;
+        return {
+          method: "GET",
+          url: resourceUrl,
+          paid_for: "issuance",
+          free_preview: `${resourceUrl}?endpoint=https://councilof.ai/mcp&dimension=TOOLS&preview=1`,
+          description,
+          ...req(resourceUrl, description),
+          free_verification: `${origin}/mcp (verify_capsule, server_evidence are free)`,
+        };
+      })(),
       // POPULATION DOORS — derived from the registry (functions/api/_population.ts), never retyped
       // here: a population added there is advertised here the moment it exists. Each url is
       // PATH-SCOPED (no query) because PayAI lists only query-less URLs today; the pod's settle

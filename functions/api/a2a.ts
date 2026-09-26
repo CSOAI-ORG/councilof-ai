@@ -34,6 +34,8 @@
  *   and nothing ranked. Numbers are derived at request time, never typed here.
  */
 
+import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
+
 type Json = Record<string, unknown>;
 
 export const A2A_PROTOCOL_VERSION = "1.0";
@@ -102,6 +104,8 @@ export const SKILL_IDS = [
   "eu-ai-act-screen",
   "x402-discovery",
   "estate-index",
+  "measurement-capsules",
+  "server-evidence",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -362,6 +366,23 @@ function validateSkillInput(selection: SkillSelection): string | null {
     }
     return null;
   }
+  // The measurement-capsule readers: the same module (functions/_lib/measurementCapsule.ts) as the
+  // MCP tools measurement_index / verify_capsule / server_evidence, so the doors cannot disagree.
+  if (skill === "measurement-capsules") {
+    if (exactKeys(input, ["op"]) && input.op === "index") return null;
+    if (exactKeys(input, ["op", "capsule_json"]) && input.op === "verify") {
+      const c = input.capsule_json;
+      if (typeof c === "string" ? c.length > 0 && c.length <= 262_144 : !!record(c)) return null;
+      return "measurement-capsules capsule_json must be the capsule's JSON text (<= 256 KiB) or an object";
+    }
+    return 'measurement-capsules input is {"op":"index"} or {"op":"verify","capsule_json":<capsule JSON text or object>}';
+  }
+  if (skill === "server-evidence") {
+    if (!exactKeys(input, ["endpoint_url"])) return "server-evidence input requires exactly endpoint_url";
+    const u = str(input.endpoint_url);
+    if (!u || u.length > 2_048) return "server-evidence endpoint_url must be a non-empty string of at most 2048 characters";
+    return null;
+  }
   return "unsupported skill";
 }
 
@@ -491,6 +512,22 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
   data: unknown;
 }> {
   const { skill, input } = selection;
+  if (skill === "measurement-capsules" || skill === "server-evidence") {
+    const payload =
+      skill === "server-evidence"
+        ? await serverEvidence(origin, input.endpoint_url)
+        : input.op === "verify"
+          ? await verifyCapsule(origin, input.capsule_json)
+          : await measurementIndex(origin);
+    return {
+      text: [
+        `${skill}: ${String(payload.state)} — re-derived by this router from the static measurement-capsule files on ${origin}/measurement-capsules/ (ids, Merkle inclusion and the index signature are recomputed, not relayed).`,
+        `Doctrine: ${DOCTRINE}. States only; no verdict, score or ranking.`,
+        REGISTER,
+      ].join("\n"),
+      data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
+    };
+  }
   if (skill === "gspc-board") {
     const board = await deriveBoard(origin);
     return { text: boardText(board), data: { ...board, skill } };

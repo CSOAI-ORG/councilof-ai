@@ -150,6 +150,10 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.
   - https://councilof.ai/api/feeds/provider-diff?history=1
     Provider change record — measurable differences between two measurement rounds for a named model provider.
+  - https://councilof.ai/api/measurement/fresh-capsule · free preview: https://councilof.ai/api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS&preview=1
+    Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only — the endpoint's own discovery documents vs its initialize + tools/list answer. CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id; read before settle. Free preview; verification stays free. Measurement, not endorsement.
+  - https://councilof.ai/api/measurement/fresh-capsule
+    POST alias of GET /api/measurement/fresh-capsule for gateways that POST {}; the query string selects the claim and the body is ignored.
   - https://councilof.ai/api/pop/a2a · free preview: https://councilof.ai/api/pop/a2a?preview=1
     A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.
   - https://councilof.ai/api/pop/claim-watch · free preview: https://councilof.ai/api/pop/claim-watch?preview=1
