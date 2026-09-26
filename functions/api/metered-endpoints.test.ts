@@ -220,6 +220,10 @@ describe("catalog + discovery", () => {
       "art50_marking_evidence",
       "provider_diff_feed",
       "receipts_batch",
+      // self-serve RAS doors (functions/api/ras/*)
+      "ras_mcp_probe",
+      "ras_x402_check",
+      "ras_supply",
       // population doors, in registry order (functions/api/_population.ts)
       "pop_stablecoins",
       "pop_swift",

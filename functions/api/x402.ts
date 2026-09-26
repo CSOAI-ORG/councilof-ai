@@ -31,7 +31,7 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
 import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
-import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, POPULATION_DESCRIPTIONS } from "./_x402_descriptions";
+import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, POPULATION_DESCRIPTIONS, RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "./_x402_descriptions";
 import { POPULATIONS } from "./_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 
@@ -186,6 +186,34 @@ export const onRequestGet: PagesFunction<{
         honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
+      // Self-serve RAS doors — fresh computation, no free preview of a computation that has not
+      // run; the 402 names input refusals (SSRF guard) before any payment, and a refused or
+      // un-runnable read is never settled. Receipts verify free at /api/verify.
+      {
+        id: "ras_mcp_probe",
+        name: "MCP discovery probe (per endpoint)",
+        resource: u("/api/ras/mcp-probe?url=<https-mcp-endpoint>"),
+        deliverable: RAS_MCP_PROBE_DESCRIPTION,
+        verify_free: u("/api/verify"),
+        never: ["a tool call", "a grade", "a rank", "a safety judgement", "a certificate", "a board cell"],
+      },
+      {
+        id: "ras_x402_check",
+        name: "x402 challenge conformance check (per resource)",
+        resource: u("/api/ras/x402-check?url=<https-x402-resource>"),
+        deliverable: RAS_X402_CHECK_DESCRIPTION,
+        verify_free: u("/api/verify"),
+        daily_index_free: u("/api/x402/index"),
+        never: ["a payment to the target", "a judgement of the seller", "a grade", "a certificate"],
+      },
+      {
+        id: "ras_supply",
+        name: "Token supply read with state proof (per deployment)",
+        resource: u("/api/ras/supply?asset=<USDC>&ledger=<evm-ledger-on-issuer-list>"),
+        deliverable: RAS_SUPPLY_DESCRIPTION,
+        verify_free: u("/api/verify"),
+        never: ["a reserve attestation", "a proof of backing", "a rate", "a grade", "a certificate"],
+      },
       // Population doors — one entry per registry row (functions/api/_population.ts), derived so
       // the catalogue and the manifest cannot disagree about which populations are metered.
       ...POPULATIONS.map((p) => ({
@@ -215,6 +243,8 @@ export const onRequestGet: PagesFunction<{
       u("/receipts/root-history.json"),
       u("/api/commissions"),
       u("/methodology"),
+      u("/api/verify?record_url=<https-councilof-record-url>"),
+      u("/api/x402/index"),
     ],
     mcp: {
       url: u("/mcp"),

@@ -147,6 +147,29 @@ export const SKUS: Record<string, Sku> = {
       "Board stays free. Verify stays free. The only paid rail is pay-as-you-go x402 at the door — no processor is named or wired.",
   },
 
+  // SKU — self-serve RAS fresh read (functions/api/ras/*: mcp-probe, x402-check, supply). One
+  // live computation against a buyer-named target (an MCP discovery, one 402-challenge check, one
+  // totalSupply read with its proof) and an Ed25519 receipt over the result. Deliberately NOT in
+  // PROMO_EXISTING_DATA: this is fresh computation, not a re-serve of data already on file.
+  // Payment never changes the result and never writes to the board; a result that is bad news
+  // about the target is delivered as found. Verification of the receipt is free (/api/verify).
+  ras_fresh_read: {
+    id: "ras_fresh_read",
+    name: "Self-serve RAS fresh read (issuance)",
+    artifact:
+      "one card-v0 receipt (surface ras.mcp-probe | ras.x402-check | ras.supply) over one live " +
+      "computation, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+    unit: "1 read = 1 named target × 1 point in time",
+    sells: "issuance",
+    prices: {
+      per_read: band(0.02, [0.01, 0.1], "X402_PRICE_RAS_FRESH_READ_USD"),
+    },
+    rail: "x402",
+    notes:
+      "ESTIMATE anchored on the request_attestation atom; owner sets the real number via env. " +
+      "A read our side could not run (DNS unreadable, RPC down, signer error) is never settled.",
+  },
+
   // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: is a
   // machine-readable mark DETECTABLE in these bytes (C2PA manifest recomputed in the Function;
   // watermarks UNCHECKABLE where no public detector exists), beside the verbatim Art 50(2)
