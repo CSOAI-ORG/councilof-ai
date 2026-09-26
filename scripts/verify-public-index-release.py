@@ -27,6 +27,11 @@ BASELINE_SURFACES=[
     "/quickstart.json",
     "/verifier/verify_receipt.py",
 ]
+STATIC_BASELINES={
+    "/.well-known/agent-card.json": PUBLIC/".well-known/agent-card.json",
+    "/quickstart.json": PUBLIC/"quickstart.json",
+    "/verifier/verify_receipt.py": PUBLIC/"verifier/verify_receipt.py",
+}
 
 def sha256(data: bytes)->str:
     return hashlib.sha256(data).hexdigest()
@@ -62,6 +67,8 @@ def validate_rows(index_rows: list[dict[str,Any]], baseline_rows: list[dict[str,
     for row in baseline_rows:
         if row.get("status")!=200:
             errors.append(f'{row.get("path")}: existing live surface regressed to {row.get("status")}')
+        if row.get("exact_required") and row.get("exact_match") is not True:
+            errors.append(f'{row.get("path")}: deployed static baseline bytes do not match committed candidate')
     return errors
 
 def selftest()->list[str]:
@@ -81,6 +88,9 @@ def selftest()->list[str]:
     errs=validate_rows([good],[{"path":"/baseline","status":503}])
     if not any("regressed" in e for e in errs):
         failures.append("baseline regression did not fail")
+    errs=validate_rows([good],[{"path":"/static","status":200,"exact_required":True,"exact_match":False}])
+    if not any("static baseline bytes" in e for e in errs):
+        failures.append("static baseline byte drift did not fail")
     return failures
 
 def main()->int:
@@ -92,14 +102,21 @@ def main()->int:
         action="store_true",
         help="verify only the four release-candidate index bytes; for local/static preflight only",
     )
+    ap.add_argument(
+        "--static-preflight",
+        action="store_true",
+        help="verify the four indexes plus committed static baseline files; skips dynamic /api surfaces",
+    )
     args=ap.parse_args()
+    if args.indexes_only and args.static_preflight:
+        ap.error("--indexes-only and --static-preflight are mutually exclusive")
 
     if args.selftest:
         failures=selftest()
         if failures:
             print(json.dumps({"state":"FAIL","failures":failures},indent=2))
             return 2
-        print(json.dumps({"state":"PASS","selftest":"public release readback goes red on 404, byte drift, and baseline regression"},indent=2))
+        print(json.dumps({"state":"PASS","selftest":"public release readback goes red on index drift, static baseline byte drift, and baseline regression"},indent=2))
         return 0
 
     origin=args.origin.rstrip("/")
@@ -113,15 +130,23 @@ def main()->int:
 
     baseline_rows=[]
     if not args.indexes_only:
-        for path in BASELINE_SURFACES:
+        baseline_paths=list(STATIC_BASELINES) if args.static_preflight else BASELINE_SURFACES
+        for path in baseline_paths:
             status,remote,content_type=fetch(origin+path)
-            baseline_rows.append({
+            row={
                 "path":path,
                 "status":status,
                 "bytes":len(remote),
                 "sha256":sha256(remote),
                 "content_type":content_type,
-            })
+                "exact_required":path in STATIC_BASELINES,
+            }
+            local_path=STATIC_BASELINES.get(path)
+            if local_path is not None:
+                local=local_path.read_bytes()
+                row["local_sha256"]=sha256(local)
+                row["exact_match"]=status==200 and remote==local
+            baseline_rows.append(row)
 
     errors=validate_rows(index_rows,baseline_rows)
     out={
@@ -131,11 +156,17 @@ def main()->int:
         "indexes":index_rows,
         "baseline_surfaces":baseline_rows,
         "errors":errors,
-        "mode":"INDEXES_ONLY_PREFLIGHT" if args.indexes_only else "FULL_RELEASE_READBACK",
+        "mode":(
+            "INDEXES_ONLY_PREFLIGHT" if args.indexes_only else
+            "STATIC_CANDIDATE_PREFLIGHT" if args.static_preflight else
+            "FULL_RELEASE_READBACK"
+        ),
         "law":(
             "indexes-only is a preflight and cannot accept production deployment"
             if args.indexes_only else
-            "deployment is not accepted until the four new index bytes match the committed release and the five pre-existing live surfaces remain reachable"
+            "static preflight proves candidate static bytes only and cannot accept production deployment"
+            if args.static_preflight else
+            "deployment is not accepted until the four new index bytes match the committed release, static baseline contracts match committed bytes, and dynamic baseline surfaces remain reachable"
         ),
     }
     print(json.dumps(out,indent=2,sort_keys=True))
