@@ -5385,6 +5385,33 @@
       "source": "functions/api/x402-listing-402index.ts"
     },
     {
+      "id": "api-x402-quotes",
+      "kind": "http",
+      "path": "/api/x402-quotes",
+      "method": "GET",
+      "name": "X402 quotes",
+      "description": "GET /api/x402-quotes — every door the x402 manifest declares, asked once without payment, with the HTTP status and body each door answered, read live.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.x402-quotes/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/x402-quotes",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/x402-quotes.ts"
+    },
+    {
       "id": "api-x402-trust-seller",
       "kind": "http",
       "path": "/api/x402-trust-seller",

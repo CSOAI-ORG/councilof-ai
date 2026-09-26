@@ -196,6 +196,94 @@ function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+/**
+ * True when a GET is a browser page load: `text/html` is accepted and preferred over JSON.
+ *
+ * WHY. /mcp/ is a sitemap URL (App.tsx declares a /mcp route) and the address people are told
+ * to paste into a client, so people open it in a browser. It used to answer every GET with the
+ * discovery JSON: no title, no lang, no heading (ux-gauntlet 2026-09-26). Agents DO read that JSON
+ * (llms.txt tells them to quote paid_tools.names from it), so it stays exactly where it is for any
+ * request that does not ask for HTML (curl's default, fetch's default, SDK clients). Only a
+ * browser navigation, which sends Accept: text/html first, gets the same document as a page.
+ */
+export function prefersHtml(accept: string | null): boolean {
+  const a = (accept ?? "").toLowerCase();
+  const html = a.indexOf("text/html");
+  if (html < 0) return false;
+  const json = a.indexOf("application/json");
+  return json < 0 || html < json;
+}
+
+const escHtml = (value: unknown) =>
+  String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+
+/** The discovery document as a page. Renders the SAME object the JSON answer carries. */
+export function discoveryHtml(document: {
+  protocol: string;
+  doctrine: string;
+  server_info: { name: string; version: string };
+  install: Record<string, string>;
+  paid_tools: { names: string[]; how: string; catalog: string };
+  board: string;
+  signed_cards: string;
+  how_to_verify: string;
+}): string {
+  const free = (GSPC_TOOLS.tools as Array<{ name: string; title?: string }>)
+    .map((t) => `<li><code>${escHtml(t.name)}</code>${t.title ? ` — ${escHtml(t.title)}` : ""}</li>`)
+    .join("");
+  const paid = document.paid_tools.names.map((n) => `<li><code>${escHtml(n)}</code></li>`).join("");
+  const install = Object.entries(document.install)
+    .map(([k, v]) => `<dt>${escHtml(k.replace(/_/g, " "))}</dt><dd><code>${escHtml(v)}</code></dd>`)
+    .join("");
+  const desc = `The Council of AI MCP server: ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} x402 tools over Streamable HTTP. Measurement, not certification.`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MCP server endpoint — Council of AI</title>
+<meta name="description" content="${escHtml(desc)}">
+<link rel="canonical" href="https://councilof.ai/mcp/">
+<link rel="alternate" type="application/json" href="https://councilof.ai/mcp">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://councilof.ai/mcp/">
+<meta property="og:title" content="MCP server endpoint — Council of AI">
+<meta property="og:description" content="${escHtml(desc)}">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<style>
+:root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e5e5e5;--pre:#f6f6f6;--a:#047857}
+@media(prefers-color-scheme:dark){:root{--fg:#e9e9e9;--bg:#0f1115;--mut:#a2a2a2;--line:#262a31;--pre:#171a20;--a:#6ee7b7}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .4rem}h2{margin:2.2rem 0 .6rem;font-size:1.2rem;border-bottom:1px solid var(--line);padding-bottom:.35rem}
+a{color:var(--a);text-decoration:underline;text-underline-offset:2px}
+.lede{color:var(--mut)}p,li,dd{overflow-wrap:anywhere}
+dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.35rem 1rem}dt{color:var(--mut)}dd{margin:0;min-width:0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:var(--pre);border-radius:4px;padding:0 .2em}
+footer{margin-top:3rem;color:var(--mut);font-size:.9rem;border-top:1px solid var(--line);padding-top:1rem}
+</style></head><body><main>
+<h1>MCP server endpoint</h1>
+<p class="lede">This address is a Model Context Protocol server (<code>${escHtml(document.server_info.name)}</code> ${escHtml(document.server_info.version)}, Streamable HTTP). Add <code>https://councilof.ai/mcp</code> to an MCP client; this page is what a browser sees.</p>
+<p>${escHtml(document.doctrine)}</p>
+<h2>Connect</h2>
+<dl>${install}</dl>
+<h2>Free tools (${FREE_TOOL_COUNT})</h2>
+<ul>${free}</ul>
+<h2>x402 tools (${PAID_TOOL_COUNT})</h2>
+<p>${escHtml(document.paid_tools.how)} Terms come from each live challenge; the catalog is at <a href="${escHtml(document.paid_tools.catalog)}">${escHtml(document.paid_tools.catalog)}</a>.</p>
+<ul>${paid}</ul>
+<h2>Check it yourself</h2>
+<ul>
+<li>Board: <a href="${escHtml(document.board)}">${escHtml(document.board)}</a></li>
+<li>Signed cards: <a href="${escHtml(document.signed_cards)}">${escHtml(document.signed_cards)}</a></li>
+<li>How to verify: <a href="${escHtml(document.how_to_verify)}">${escHtml(document.how_to_verify)}</a></li>
+<li>Directory of MCP servers we measure: <a href="/mcps/">/mcps/</a></li>
+</ul>
+<footer><p>${escHtml(document.protocol)}</p><p>Machine-readable: any GET to this address that does not ask for <code>text/html</code> (for example <code>curl -s https://councilof.ai/mcp</code>) returns this page's content as JSON.</p></footer>
+</main></body></html>`;
+}
+
 export const onRequest = async ({ request, env }: { request: Request; env?: unknown }) => {
   const url = new URL(request.url);
   const hosts = [...HOSTS];
@@ -259,13 +347,15 @@ export const onRequest = async ({ request, env }: { request: Request; env?: unkn
       registry_evidence:
         "evidence/mcp-registry.json in the repo; registry publication is separate from this runtime.",
     };
+    const html = prefersHtml(request.headers.get("accept"));
     return new Response(
-      request.method === "HEAD" ? null : JSON.stringify(document),
+      request.method === "HEAD" ? null : html ? discoveryHtml(document) : JSON.stringify(document),
       {
         headers: {
           ...CORS,
-          "content-type": "application/json",
+          "content-type": html ? "text/html; charset=utf-8" : "application/json",
           "cache-control": "public, max-age=300",
+          vary: "Accept",
         },
       },
     );

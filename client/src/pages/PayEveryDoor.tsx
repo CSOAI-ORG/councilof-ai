@@ -15,6 +15,7 @@ import {
   FOUR02_LISTING_PATH,
   LISTING_PATH,
   MANIFEST_PATH,
+  QUOTES_PATH,
   THE_LINE,
   daysSince,
   delistRisk,
@@ -25,6 +26,7 @@ import {
   listingFor,
   payDoor,
   quoteDoor,
+  relayedFetch,
   remainingDoors,
   selectDoor,
   settleFor,
@@ -37,6 +39,7 @@ import {
   type Listing,
   type ListingReading,
   type QuoteOutcome,
+  type RelayedQuote,
   type SettleReading,
 } from "@/lib/payEveryDoor";
 
@@ -478,9 +481,22 @@ export default function PayEveryDoor() {
         if (cancelled) return;
         setDoors(list);
         setQuotes(Object.fromEntries(list.map((d) => [d.url, "reading" as const])));
+        // Each door's own 402, relayed in one 200 so the browser does not log 25 intended 402s as
+        // errors. Any door the relay could not read is asked directly, as it always was.
+        let relayed: Record<string, RelayedQuote> = {};
+        try {
+          const rq = await fetch(QUOTES_PATH, { headers: { accept: "application/json" } });
+          if (rq.ok) {
+            const j = (await rq.json()) as { quotes?: RelayedQuote[] };
+            relayed = Object.fromEntries((j.quotes ?? []).map((row) => [row.url, row]));
+          }
+        } catch {
+          /* relay unavailable: every door is asked directly below */
+        }
+        if (cancelled) return;
         await Promise.all(
           list.map(async (d) => {
-            const q = await quoteDoor(d);
+            const q = await quoteDoor(d, relayedFetch(relayed[d.url]) ?? fetch);
             if (!cancelled) setQuotes((prev) => ({ ...prev, [d.url]: q }));
           }),
         );

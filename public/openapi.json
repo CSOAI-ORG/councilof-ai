@@ -13148,6 +13148,22 @@
         "summary": "GET /api/x402-listing-402index \u2014 what the 402 Index (402index.io) holds for OUR doors, read live."
       }
     },
+    "/api/x402-quotes": {
+      "get": {
+        "description": "GET /api/x402-quotes \u2014 every door the x402 manifest declares, asked once without payment, with the HTTP status and body each door answered, read live.",
+        "operationId": "get__api_x402-quotes",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/x402-quotes \u2014 every door the x402 manifest declares, asked once without payment, with the HTTP status and body each door answered, read live."
+      }
+    },
     "/api/x402-trust-seller": {
       "get": {
         "description": "GET /api/x402-trust-seller?host=<catalog-host>",
@@ -13286,7 +13302,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 108,
+    "public_operations": 109,
     "quarantined": [
       {
         "buyable": false,

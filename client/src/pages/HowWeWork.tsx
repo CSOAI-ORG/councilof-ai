@@ -64,25 +64,28 @@ export default function HowWeWork() {
     <div data-testid="how-we-work">
       <section className="surface-ink section-y border-b border-border">
         <div className="section-shell">
-          <p className="t-kicker text-emerald-700 dark:text-emerald-300">The long version</p>
-          <h1 className="t-page mt-4 max-w-4xl text-foreground">
+          {/* surface-ink is dark in BOTH schemes, so this band takes the ink tokens, not the
+              theme tokens (text-foreground / emerald-700 resolved to dark-on-dark in light mode).
+              t-band, as on /reach: t-page is not a defined type step, so the h1 rendered at body size. */}
+          <p className="t-kicker ink-kicker">The long version</p>
+          <h1 className="t-band mt-4 max-w-4xl text-[color:var(--ink-foreground)]">
             How this works, at the length it actually takes.
           </h1>
-          <p className="t-lede measure mt-6 text-muted-foreground">
+          <p className="t-lede measure mt-6 ink-muted">
             The front door gives you six checkable facts and the board. This page is everything
             underneath them: how a measurement is made and who pays for it, every machine address
             and data door we serve, the nine products, what we have got wrong, and the questions we
             cannot answer yet. Every figure is read live as this page loads — nothing here is typed
             into the page.
           </p>
-          <p className="mt-6 text-[13.5px] leading-relaxed text-muted-foreground">
-            <Link href="/" className="font-bold text-emerald-700 underline underline-offset-4 dark:text-emerald-300">
+          <p className="mt-6 text-[13.5px] leading-relaxed ink-muted">
+            <Link href="/" className="font-bold ink-kicker underline underline-offset-4">
               Back to the board
             </Link>
             {" · "}
             <Link
               href="/library"
-              className="font-bold text-emerald-700 underline underline-offset-4 dark:text-emerald-300"
+              className="font-bold ink-kicker underline underline-offset-4"
             >
               The library holds every page this estate has published
             </Link>

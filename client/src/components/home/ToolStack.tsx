@@ -304,7 +304,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           {figure && (
             <p className="mt-auto rounded-xl border border-emerald-500/30 bg-emerald-500/[0.08] px-3 py-2 text-[13px] font-semibold leading-snug text-emerald-900 dark:text-emerald-200">
               {figure.value}
-              <span className="mt-0.5 block text-[11px] font-medium text-emerald-800/75 dark:text-emerald-300/80">
+              <span className="mt-0.5 block text-[11px] font-medium text-emerald-800 dark:text-emerald-300/80">
                 {figure.source}
               </span>
             </p>

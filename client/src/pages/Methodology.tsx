@@ -87,9 +87,15 @@ export default function Methodology() {
             behavioural axis today; two describe checks whose rails are not yet built, and the
             table says which is which rather than presenting all five as live.
           </p>
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d]">
+          <div
+            className="mt-4 overflow-x-auto rounded-2xl border border-emerald-500/20 bg-[#05140d] focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+            tabIndex={0}
+            role="region"
+            aria-label="The five deterministic predicates (scrolls sideways)"
+          >
             {/* min-w so the overflow-x-auto wrapper scrolls on a phone instead
-                of crushing "PREDICATE" to one character per line. */}
+                of crushing "PREDICATE" to one character per line. tabIndex + a named
+                region so a keyboard user can reach and scroll it too. */}
             <table className="w-full min-w-[40rem] text-[13px]">
               <thead>
                 <tr className="border-b border-emerald-500/20 text-left font-mono text-[11px] uppercase tracking-wider text-emerald-100/60">
@@ -104,13 +110,14 @@ export default function Methodology() {
                   <tr key={p.name} className="border-b border-emerald-500/10 last:border-0">
                     {/* Identifiers and file:line pointers must never break
                         mid-token ("actor/transcript.py:L" / "42" reads as two
-                        different pointers); the prose column keeps wrapping. */}
+                        different pointers); the prose columns keep wrapping, but at a readable
+                        min width: without one a phone crushed them to a letter per line. */}
                     <td className="whitespace-nowrap px-4 py-3">
                       <code className="font-mono text-emerald-300">{p.name}</code>
                     </td>
-                    <td className="px-4 py-3 text-emerald-100/80">{p.checks}</td>
+                    <td className="min-w-[14rem] px-4 py-3 text-emerald-100/80">{p.checks}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-emerald-100/60">{p.verdict}</td>
-                    <td className="px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
+                    <td className="min-w-[14rem] px-4 py-3 text-[12px] leading-relaxed text-emerald-100/60">
                       {p.status}
                     </td>
                   </tr>
@@ -280,7 +287,7 @@ export default function Methodology() {
               Not exhaustive — the great majority of the provision × axis grid has no field
               measurement in any known benchmark, ours included. The grid, its derivation and the
               current unmeasured fraction are at{" "}
-              <Link href="/gspc-gap-map" className="text-emerald-300 hover:underline">the gap map</Link>,
+              <Link href="/gspc-gap-map" className="text-emerald-300 underline underline-offset-2">the gap map</Link>,
               which computes both numbers rather than restating them here.
             </li>
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
