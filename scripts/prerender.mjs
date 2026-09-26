@@ -93,6 +93,10 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   // /corrections reads GET /api/corrections, a Function absent on the prerender host. The shell
   // carries its own title + description from client/src/data/seo-head.json.
   "/corrections",
+  // staging/integration-20260926: the trailing-slash twin is discovered from links and was snapshotted
+  // AFTER the shell was written, baking the live ledger text back into corrections/index.html
+  // (brand-gate red: pricing_leak / gpai_code_signature / measured_index_sticker quoted in entries).
+  "/corrections/",
   // /pay reads /.well-known/x402.json, every door's 402, /api/x402-listing, /api/x402-listing-402index
   // and /api/door-settles — all Functions.
   "/pay",
