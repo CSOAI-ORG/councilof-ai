@@ -15,6 +15,9 @@ on:
       - "scripts/agent-card-extensions.mjs"
       - "scripts/adapters/agent_card_jws.py"
       - "scripts/test_agent_card.py"
+      - "scripts/test_agent_card_jws.py"
+      - "scripts/verify_agent_card_jws.py"
+      - "public/.well-known/did.json"
       - "package.json"
       - "package-lock.json"
   push:
@@ -32,6 +35,9 @@ on:
       - "scripts/agent-card-extensions.mjs"
       - "scripts/adapters/agent_card_jws.py"
       - "scripts/test_agent_card.py"
+      - "scripts/test_agent_card_jws.py"
+      - "scripts/verify_agent_card_jws.py"
+      - "public/.well-known/did.json"
       - "package.json"
       - "package-lock.json"
 
@@ -55,6 +61,13 @@ jobs:
           node-version: "24"
           cache: npm
 
+      # setup-python so the JWS step can pip-install `cryptography` without PEP 668 refusing the
+      # runner's system interpreter.
+      - name: Use Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install locked dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
 
@@ -63,6 +76,15 @@ jobs:
           node scripts/agent-card-extensions.mjs
           git diff --exit-code -- public/.well-known/agent-card.json public/.well-known/agent.json
           python3 scripts/test_agent_card.py
+
+      # A2A §8.4: the signer and an independent verifier must agree on the canonical payload, a
+      # signed card must verify against did.json under #card-attestation-1, and a one-byte edit
+      # must fail. Runs whether or not the card is signed yet (unsigned is asserted, not assumed).
+      - name: Agent card JWS — independent verify, tamper control, key scope
+        run: |
+          python3 -m pip install --quiet --disable-pip-version-check "cryptography>=42"
+          python3 scripts/test_agent_card_jws.py
+          python3 scripts/verify_agent_card_jws.py --require-kid 'did:web:csoai.org#card-attestation-1' --tamper-control || test $? -eq 2
 
       - name: Run offline A2A contract tests
         run: >-
