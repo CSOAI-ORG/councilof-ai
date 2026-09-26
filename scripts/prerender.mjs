@@ -205,6 +205,8 @@ function discover() {
     "/privacy-policy", "/firewall-charter", "/gspc-verify", "/gspc-arena",
     "/embed", "/white-label",
     "/corrections", "/census",
+    // State of the Agent Internet: the stable address + dated editions (2026-09-26).
+    "/state", "/state/2026-09",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

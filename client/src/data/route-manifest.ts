@@ -1953,6 +1953,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Onboard OS"
  },
  {
+  "path": "/state",
+  "comp": "StateIndex",
+  "title": "State Index"
+ },
+ {
+  "path": "/state/2026-09",
+  "comp": "StateReport202609",
+  "title": "State Report202609"
+ },
+ {
   "path": "/status",
   "comp": "YieldStatus",
   "title": "Yield Status"
