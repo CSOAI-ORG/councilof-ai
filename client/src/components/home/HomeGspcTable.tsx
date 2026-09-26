@@ -270,12 +270,15 @@ export default function HomeGspcTable({
               const active = want !== "" && a.axis.toLowerCase() === want;
               return (
                 <li key={a.axis} id={`axis-${a.axis.toLowerCase()}`} className={`rounded-xl border p-3 ${active ? "border-emerald-400 bg-emerald-50" : "border-slate-200 bg-white"}`}>
-                  <button type="button" onClick={() => choose(a.axis)} className="w-full text-left" aria-expanded={active}>
-                    <div className="flex items-start justify-between gap-2">
-                      <AxisName a={a} />
-                      <span className="font-mono text-xs text-slate-700">n {nText(a)}</span>
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-1.5">
+                  {/* The axis name carries its own link, so it sits OUTSIDE the toggle: a link
+                      inside a <button> is nested-interactive (axe, WCAG 4.1.2). */}
+                  <div className="flex items-start justify-between gap-2">
+                    <AxisName a={a} />
+                    <span className="font-mono text-xs text-slate-700">n {nText(a)}</span>
+                  </div>
+                  <button type="button" onClick={() => choose(a.axis)} className="mt-2 w-full text-left" aria-expanded={active}>
+                    <span className="sr-only">{boardAxisLabel(a.axis)}: </span>
+                    <div className="flex flex-wrap gap-1.5">
                       <StatusWord status={statusText(a)} />
                       <SeparationWord a={a} />
                       <span className={`${chipBase} border-slate-200 bg-slate-50 text-slate-700`}>{familyText(a)}</span>

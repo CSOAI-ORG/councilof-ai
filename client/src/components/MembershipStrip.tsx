@@ -258,7 +258,7 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
       </div>
       {groups.map((g) => (
         <div key={g.id} className="mt-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">{g.label}</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-600">{g.label}</h3>
           <ul className="mt-2 flex list-none flex-wrap gap-2 p-0">
             {g.rows.map((r) => (
               <li key={r.id}>
@@ -270,7 +270,7 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
       ))}
       <p className="mt-4 text-xs text-slate-600" data-testid="membership-strip-honesty">
         {HONESTY_LINE}{" "}
-        <span className="text-slate-500">Manifest as of <time dateTime={MEMBERSHIPS.as_of}>{MEMBERSHIPS.as_of}</time>, unsigned; re-checked by scripts/memberships-check.mjs.</span>
+        <span className="text-slate-600">Manifest as of <time dateTime={MEMBERSHIPS.as_of}>{MEMBERSHIPS.as_of}</time>, unsigned; re-checked by scripts/memberships-check.mjs.</span>
       </p>
     </section>
   );

@@ -103,12 +103,14 @@ export function heroStamp(data: GspcPayload | null): string | null {
 
 function Stat({ stat }: { stat: HeroStat }) {
   return (
+    // Inside the hero <dl>: a <div> group may hold only <dt>/<dd>, and the term comes first in
+    // source order. The figure is shown first, so it carries order-first rather than moving.
     <div className="flex flex-col gap-1.5 border-t border-emerald-400/25 pt-4" data-hero-stat={stat.label}>
-      <span className="font-mono text-xl font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
+      <dt className="text-[13px] font-bold leading-tight text-emerald-100/90">{stat.label}</dt>
+      <dd className="order-first font-mono text-xl font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
         {stat.value ?? "—"}
-      </span>
-      <span className="text-[13px] font-bold leading-tight text-emerald-100/90">{stat.label}</span>
-      <span className="text-[12px] leading-snug text-emerald-200/60">{stat.note}</span>
+      </dd>
+      <dd className="text-[12px] leading-snug text-emerald-200/60">{stat.note}</dd>
     </div>
   );
 }

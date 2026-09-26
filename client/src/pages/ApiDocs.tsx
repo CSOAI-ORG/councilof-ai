@@ -288,7 +288,7 @@ console.log({
                           <Copy className="w-4 h-4" />
                         )}
                       </Button>
-                      <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                      <pre tabIndex={0} className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                         <code>{code}</code>
                       </pre>
                     </div>
@@ -321,7 +321,7 @@ console.log({
                     <Copy className="w-4 h-4" />
                   )}
                 </Button>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                <pre tabIndex={0} className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                   <code>{responseExample}</code>
                 </pre>
               </div>

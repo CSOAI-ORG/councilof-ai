@@ -234,7 +234,7 @@ export default function ToolCommons() {
                   <button onClick={() => copy(m.server_endpoint, m.name)} className="shrink-0 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-[11px] font-bold text-[#03110b] hover:bg-emerald-400">{copied === m.name ? "Copied" : "Copy"}</button>
                 </div>
               )}
-              {m.last_probed && <div className="mt-2 text-[10px] text-emerald-300/50">last probed {m.last_probed}</div>}
+              {m.last_probed && <div className="mt-2 text-[10px] text-emerald-300/70">last probed {m.last_probed}</div>}
             </div>
           ))}
         </div>

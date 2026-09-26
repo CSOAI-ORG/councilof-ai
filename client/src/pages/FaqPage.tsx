@@ -202,7 +202,7 @@ export default function FaqPage() {
             </a>
             , the API wins.
           </p>
-          <p className="mt-2 text-xs text-muted-foreground/70 text-center">
+          <p className="mt-2 text-xs text-muted-foreground text-center">
             Last reviewed: {LAST_REVIEWED}
           </p>
         </footer>

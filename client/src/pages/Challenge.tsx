@@ -147,7 +147,7 @@ export default function Challenge() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/east-west/" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">East-West flagship →</Link>
+          <Link href="/east-west/" className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-800">East-West flagship →</Link>
           <Link href="/gspc-verify/" className="rounded-xl border border-emerald-600 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Verify before you challenge →</Link>
         </div>
       </div>

@@ -101,7 +101,7 @@ const day = (iso: string | null | undefined) => (iso ? String(iso).slice(0, 10) 
 
 function Code({ children }: { children: string }) {
   return (
-    <pre className="mt-4 overflow-x-auto rounded-lg border border-slate-800 bg-slate-950 px-4 py-3 text-xs leading-6 text-slate-100">
+    <pre tabIndex={0} className="mt-4 overflow-x-auto rounded-lg border border-slate-800 bg-slate-950 px-4 py-3 text-xs leading-6 text-slate-100">
       <code>{children}</code>
     </pre>
   );
@@ -175,7 +175,7 @@ export default function ClaimMaintenance() {
               ["Unmeasured", reg?.totals?.by_state?.UNMEASURED],
             ].map(([label, value]) => (
               <div key={String(label)} className="rounded-xl border border-slate-700 bg-white/[0.035] px-3.5 py-3">
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">{label}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{label}</p>
                 <p className="mt-1 text-2xl font-black tabular-nums text-white">{value == null ? "—" : String(value)}</p>
               </div>
             ))}
@@ -238,7 +238,7 @@ export default function ClaimMaintenance() {
         )}
 
         {subjects.length > 0 && (
-          <div className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
+          <div role="region" aria-label="Subjects under claim maintenance" tabIndex={0} className="mt-6 overflow-x-auto rounded-lg border border-slate-200">
             <table className="w-full text-left text-sm">
               <thead className="bg-slate-100 text-xs uppercase tracking-wide text-slate-600">
                 <tr>

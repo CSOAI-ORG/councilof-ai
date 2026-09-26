@@ -162,7 +162,7 @@ export default function Services() {
                         {c.freePreview ? (
                           <ServicePreview template={c.freePreview} />
                         ) : (
-                          <p className="mt-3 text-[12px] text-slate-500">
+                          <p className="mt-3 text-[12px] text-slate-400">
                             No free preview is published for this door.
                           </p>
                         )}

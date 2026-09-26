@@ -124,7 +124,7 @@ export default function ToolsPage() {
           <div className="border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection config</p>
             <p className="mt-2 break-all font-mono text-xs text-emerald-100/65">{MCP_URL}</p>
-            <pre className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
+            <pre tabIndex={0} className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
               <code>{MCP_SNIPPET}</code>
             </pre>
             <p className="mt-4 text-xs leading-5 text-emerald-100/55">
@@ -163,7 +163,7 @@ export default function ToolsPage() {
           It is navigation, not evidence about the model whose README contains it. Only a VALID,
           subject-bound signed cell may render that model’s score.
         </p>
-        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div role="region" aria-label="GSPC badge states" tabIndex={0} className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
           <table className="w-full min-w-[34rem] text-sm">
             <caption className="sr-only">
               The three permitted GSPC badge states and when each is allowed on a model or agent card.
@@ -205,7 +205,7 @@ export default function ToolsPage() {
           DISCOVERED means listed, not graded. Add this to your own README if you want a clearly
           labelled link to the global board; nobody is PR-bombed with it and it never grades the model.
         </p>
-        <pre className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
+        <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
           <code>{MODEL_CARD_BLOCK}</code>
         </pre>
         <button

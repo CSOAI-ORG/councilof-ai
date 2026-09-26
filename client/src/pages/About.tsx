@@ -72,7 +72,7 @@ function LiveBoardCount() {
   }, []);
   return (
     <>
-      <div className="text-2xl font-bold text-emerald-600 mb-2 leading-snug">{label}</div>
+      <div className="text-2xl font-bold text-emerald-700 mb-2 leading-snug">{label}</div>
       <p className="text-gray-600 font-semibold">
         Living GSPC board — counts from GET /api/gspc. The larger number counts slots; the smaller
         counts measurements. A published slot exists so a gap is visible, and is not evidence that
@@ -187,7 +187,7 @@ export default function About() {
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-red-50 text-red-600 border-red-200">The Problem</Badge>
+            <Badge className="mb-4 bg-red-50 text-red-700 border-red-200">The Problem</Badge>
             <h2 className="text-4xl font-bold mb-6">Making AI behaviour checkable</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               AI displacement forecasts vary enormously and we have measured none of them, so we
@@ -248,13 +248,13 @@ export default function About() {
       <div className="bg-slate-50 py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Our Mission</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">Our Mission</Badge>
             <h2 className="text-4xl font-bold mb-6">Protecting Humanity While Creating Careers</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               We are not a certification body and never will be — we measure, sign and publish
               evidence, and the competent authorities decide. What we are building is the
               infrastructure for a role we think the law is about to require:
-              <span className="font-semibold text-emerald-600"> the AI Safety Analyst</span>. That
+              <span className="font-semibold text-emerald-700"> the AI Safety Analyst</span>. That
               this becomes a large profession is our bet, not a measurement — we have no forecast to
               cite and we are not going to invent one.
             </p>
@@ -356,7 +356,7 @@ export default function About() {
       <div className="bg-slate-50 py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">What Makes Us Different</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">What Makes Us Different</Badge>
             <h2 className="text-4xl font-bold mb-6">We're Not Just Talking. We're Building.</h2>
           </div>
 
@@ -369,14 +369,14 @@ export default function About() {
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
-                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed; latest test fully correlated</span></h3>
+                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-700">— designed; latest test fully correlated</span></h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     The intended architecture spreads review across providers so no single vendor decides alone.
                     The council-seat figure is a design, not a live system. The{" "}
                     <a href="/interop/council-independence.json" className="text-emerald-700 underline">latest point experiment measured rho=1 and n_eff=1 across three nominal legs</a>,
                     so it does not establish independent or unbiased review.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> When a company's own AI reviews their AI, there's a conflict of interest.
                     Spreading review across vendors is meant to reduce that conflict. It has not yet been shown to: the
                     latest measurement above found the legs fully correlated, so we claim no independence and no
@@ -403,7 +403,7 @@ export default function About() {
                     reports is <strong>not yet available</strong>. We also hold nobody accountable:
                     we measure, and only a regulator can approve, ban, fine or clear anything.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> an intake with no register behind it is worth
                     less than one with, and pretending otherwise is the kind of claim this page
                     exists to retire.
@@ -429,7 +429,7 @@ export default function About() {
                     <strong>not yet available</strong>: re-measurement is arranged run by run today,
                     so do not read this as a monitoring subscription.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> a PDF from six months ago describes a model that
                     no longer exists. A dated, signed card at least tells you which model it describes.
                   </p>
@@ -452,7 +452,7 @@ export default function About() {
                     one rating organisation on one criterion and that is the whole of our comparative
                     evidence. The training exists and is free; the career outcome is unmeasured.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> a training pipeline that promises income it has
                     not measured is selling something. Free training with an unmeasured outcome,
                     stated as such, is the honest version of the same offer.
@@ -468,7 +468,7 @@ export default function About() {
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Metrics</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">Metrics</Badge>
             <h2 className="text-4xl font-bold mb-6">By the Numbers</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               Every figure below is read from a live endpoint at page load, with the artifact and
@@ -536,12 +536,12 @@ export default function About() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/academy">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                 Start Training Today
               </Button>
             </Link>
             <Link href="/academy">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
                 Open the academy
               </Button>
             </Link>
@@ -623,7 +623,7 @@ export default function About() {
               <Building2 className="h-8 w-8 text-blue-600 mx-auto mb-3" />
               <h4 className="font-bold mb-2">UK Registered</h4>
               <p className="text-sm text-gray-600">Companies House No: 16939677</p>
-              <p className="text-xs text-gray-500 mt-1">Registered in England & Wales</p>
+              <p className="text-xs text-gray-600 mt-1">Registered in England & Wales</p>
             </Card>
             <Card className="p-6 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200 hover:shadow-lg transition-shadow">
               <Globe className="h-8 w-8 text-purple-600 mx-auto mb-3" />
@@ -742,12 +742,12 @@ export default function About() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/academy">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                   Start Free Training
                 </Button>
               </Link>
               <Link href="/dashboard?task=enterprise-start&tab=measured">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
                   Enterprise lobby
                 </Button>
               </Link>

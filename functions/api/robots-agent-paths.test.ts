@@ -41,3 +41,66 @@ describe("robots.txt lets well-behaved agents reach the agent-facing endpoints",
     expect(ROBOTS).toMatch(/^User-agent: \*\nContent-Signal: [^\n]*\bai-train=no\b/m);
   });
 });
+
+/**
+ * Under RFC 9309 a crawler with a group of its own reads ONLY that group; it never falls back
+ * to `*`. The `ai-train=no` reservation used to sit in the `*` group alone, so GPTBot, ClaudeBot,
+ * CCBot and every other named crawler never saw it. Every group must carry the same signal,
+ * and adding it must not change what any crawler may fetch.
+ */
+type Group = { agents: string[]; lines: string[] };
+function groups(txt: string): Group[] {
+  const out: Group[] = [];
+  let cur: Group | null = null;
+  let inAgents = false;
+  for (const raw of txt.split("\n")) {
+    const line = raw.replace(/#.*$/, "").trim();
+    if (!line) continue;
+    const m = /^user-agent:\s*(\S+)$/i.exec(line);
+    if (m) {
+      if (!cur || !inAgents) out.push((cur = { agents: [], lines: [] }));
+      cur.agents.push(m[1]);
+      inAgents = true;
+      continue;
+    }
+    inAgents = false;
+    if (cur && !/^sitemap:/i.test(line)) cur.lines.push(line);
+  }
+  return out;
+}
+
+describe("robots.txt states the content signal in every group", () => {
+  const all = groups(ROBOTS);
+  const star = all.find((g) => g.agents.includes("*"));
+  const signal = star?.lines.find((l) => /^content-signal:/i.test(l));
+
+  it("the * group carries search=yes, ai-input=yes, ai-train=no", () => {
+    expect(signal).toBeDefined();
+    expect(signal).toMatch(/\bsearch=yes\b/);
+    expect(signal).toMatch(/\bai-input=yes\b/);
+    expect(signal).toMatch(/\bai-train=no\b/);
+  });
+
+  it("there are named groups to check (the parser read the file)", () => {
+    expect(all.filter((g) => !g.agents.includes("*")).length).toBeGreaterThanOrEqual(10);
+  });
+
+  it.each(groups(ROBOTS).map((g) => [g.agents.join(","), g] as const))("group %s carries the same Content-Signal line", (_name, g) => {
+    expect(g.lines.filter((l) => /^content-signal:/i.test(l))).toEqual([signal]);
+  });
+
+  it("the signal changes no access decision: answer engines allowed, bulk corpora refused", () => {
+    for (const ua of ["GPTBot", "ClaudeBot", "OAI-SearchBot", "PerplexityBot", "Google-Extended"]) {
+      expect(robotsAllows(ROBOTS, ua, "/about")).toMatchObject({ allowed: true });
+    }
+    for (const ua of ["CCBot", "Bytespider", "Amazonbot"]) {
+      expect(robotsAllows(ROBOTS, ua, "/about")).toMatchObject({ allowed: false });
+    }
+    const without = ROBOTS.replace(/^Content-Signal: [^\n]*\n/gm, "");
+    for (const ua of ["GPTBot", "CCBot", UA]) {
+      for (const path of ["/", "/about", "/api/x402", "/api/receipts"]) {
+        expect(robotsAllows(ROBOTS, ua, path).allowed).toBe(robotsAllows(without, ua, path).allowed);
+      }
+    }
+  });
+});

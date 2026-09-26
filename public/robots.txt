@@ -66,6 +66,13 @@ Allow: /api/root
 Disallow: /*?*utm_
 Allow: /
 
+# The same Content-Signal line is repeated in EVERY named group below (26 September 2026).
+# Under RFC 9309 a crawler that finds a group naming it reads ONLY that group and never
+# falls back to `*`. So GPTBot, ClaudeBot, CCBot and the rest, each with a group of its own,
+# never saw the `ai-train=no` reservation stated in the `*` group. The Allow and Disallow
+# lines of every group are unchanged; only the signal is added. The test in
+# functions/api/robots-agent-paths.test.ts fails if any group is missing it.
+
 # ---------------------------------------------------------------------------
 # Answer engines and AI search crawlers — ALLOWED.
 #
@@ -79,36 +86,47 @@ Allow: /
 # ---------------------------------------------------------------------------
 
 User-agent: ClaudeBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Claude-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Claude-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: GPTBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: OAI-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: ChatGPT-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: PerplexityBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Perplexity-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Google-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Applebot-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: meta-externalagent
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 # ---------------------------------------------------------------------------
@@ -120,21 +138,27 @@ Allow: /
 # ---------------------------------------------------------------------------
 
 User-agent: CCBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Bytespider
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Amazonbot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Diffbot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: omgili
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 User-agent: Timpibot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /
 
 # ---------------------------------------------------------------------------

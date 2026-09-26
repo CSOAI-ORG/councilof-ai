@@ -192,11 +192,11 @@ export default function Contact() {
                     data-testid="contact-message-input"
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-green-600 hover:bg-green-700" data-testid="contact-submit-button">
+                <Button type="submit" size="lg" className="w-full bg-primary hover:bg-brand-institutional" data-testid="contact-submit-button">
                   <Send className="h-4 w-4 mr-2" />
                   Send Message
                 </Button>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-600">
                   This form opens your email client with the message prefilled, addressed to
                   the mailbox — there is no silent backend, and nothing you type here is
                   stored by this site.
@@ -233,7 +233,7 @@ export default function Contact() {
                     walk those first.
                   </p>
                   {/* A link, not a button inside a link: one control per action. */}
-                  <Button asChild size="lg" className="w-full bg-green-600 hover:bg-green-700">
+                  <Button asChild size="lg" className="w-full bg-primary hover:bg-brand-institutional">
                     <a
                       href={`mailto:${CONTACT_MAILBOX}?subject=Demo%20request%20%E2%80%94%20CSOAI%20master%20walkthrough`}
                       data-testid="book-demo-button"

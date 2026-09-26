@@ -4,7 +4,6 @@
  */
 
 import { useState } from "react";
-import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,18 +29,12 @@ import { Link } from "wouter";
 export default function PublicDashboard() {
   const [selectedFramework, setSelectedFramework] = useState<string>("all");
 
-  // Fetch public statistics
-  const { data: recentReports } = trpc.watchdog.list.useQuery();
-
-  // Calculate watchdog stats from reports
-  const watchdogStats = {
-    total: recentReports?.length || 0,
-    verified: recentReports?.filter(r => r.status === "resolved").length || 0,
-  };
-
-  // Calculate aggregate stats
-  const totalIncidents = watchdogStats?.total || 0;
-  const resolvedIncidents = watchdogStats?.verified || 0;
+  // This page used to call trpc.watchdog.list, a procedure no deployed endpoint serves: every
+  // visit fired GET /api/trpc/watchdog.list and got a 404, and the `|| 0` fallback then printed
+  // "0 incidents / 0 resolved" as if a count had been read. No public incident list is
+  // published, so the honest value is unread, not zero. The call is gone; the tiles say so.
+  const totalIncidents: number | null = null;
+  const resolvedIncidents: number | null = null;
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950">
       {/* Header */}
@@ -101,7 +94,8 @@ export default function PublicDashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-zinc-400">Incidents Reported</p>
-                    <p className="text-3xl font-bold text-white">{totalIncidents}</p>
+                    <p className="text-3xl font-bold text-white">{totalIncidents ?? "—"}</p>
+                    {totalIncidents === null ? <p className="text-xs text-zinc-400">No public incident list is published</p> : null}
                   </div>
                 </div>
               </CardContent>
@@ -115,7 +109,8 @@ export default function PublicDashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-zinc-400">Resolved</p>
-                    <p className="text-3xl font-bold text-white">{resolvedIncidents}</p>
+                    <p className="text-3xl font-bold text-white">{resolvedIncidents ?? "—"}</p>
+                    {resolvedIncidents === null ? <p className="text-xs text-zinc-400">No public incident list is published</p> : null}
                   </div>
                 </div>
               </CardContent>
@@ -166,7 +161,7 @@ export default function PublicDashboard() {
             </CardHeader>
             <CardContent>
               <Tabs value={selectedFramework} onValueChange={setSelectedFramework}>
-                <TabsList className="bg-zinc-800">
+                <TabsList className="bg-zinc-800 text-zinc-300">
                   <TabsTrigger value="all">All</TabsTrigger>
                   <TabsTrigger value="euai">EU AI Act</TabsTrigger>
                   <TabsTrigger value="nist">NIST AI RMF</TabsTrigger>
@@ -219,7 +214,7 @@ export default function PublicDashboard() {
               </Button>
             </Link>
             <Link href="/about">
-              <Button size="lg" variant="outline" className="border-zinc-700 text-zinc-300">
+              <Button size="lg" variant="outline" className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
                 Learn More
               </Button>
             </Link>

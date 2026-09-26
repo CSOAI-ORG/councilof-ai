@@ -288,7 +288,7 @@ export function Footer() {
             Naming a framework is not a claim to comply with it, and taking part in a body is not
             that body endorsing us. We are not certified to SOC 2 or ISO 42001, and we hold no
             certification under any scheme. We publish measurements, never certifications.{' '}
-            <Link href="/memberships" className="text-primary hover:underline">
+            <Link href="/memberships" className="text-primary underline underline-offset-2 hover:decoration-2">
               Every participation record, with its evidence
             </Link>
             .
@@ -300,7 +300,7 @@ export function Footer() {
 
         <p data-paid-step="x402" className="text-muted-foreground text-xs text-center mt-4 mb-2">
           {PAID_STEP_LINE}{" "}
-          <a href={PAID_STEP_HREF} className="text-primary hover:underline">
+          <a href={PAID_STEP_HREF} className="text-primary underline underline-offset-2 hover:decoration-2">
             GET {PAID_STEP_HREF}
           </a>
         </p>
@@ -320,7 +320,7 @@ export function Footer() {
               the argument. */}
           Every stage of how far this work travels is measured separately and never added
           together.{" "}
-          <Link href="/reach" className="text-primary hover:underline">
+          <Link href="/reach" className="text-primary underline underline-offset-2 hover:decoration-2">
             All seven stages, including the ones we cannot measure yet
           </Link>
         </p>
