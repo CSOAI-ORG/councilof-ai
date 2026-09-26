@@ -60,6 +60,28 @@
         "\\bgh[pousr]_[A-Za-z0-9]{36}\\b",
         "\\bsk-ant-[A-Za-z0-9_-]{20,}"
       ]
+    },
+    "measurement_instruments": {
+      "why": "private canaries, held-out slices, epoch keys and the banks with never-published items (docs/operations/INSTRUMENT-GUARD-POLICY.md). Only their sha256 commitments are public (public/interop/instrument-guard/bank-commitments-*.json); canary tokens are also caught by content in scripts/canary-leak-gate.mjs",
+      "globs": [
+        "**/instrument-guard-private/**",
+        "**/instrument-guard/E*/**",
+        "**/epochs/E*/epoch.json",
+        "**/epochs/E*/heldout/**",
+        "**/*.canaries.jsonl",
+        "**/canaries/gspc-*.jsonl",
+        "**/gspc-bank.jsonl",
+        "**/gspc-bond.jsonl",
+        "**/gspc-cross-border.jsonl",
+        "**/gspc-equity.jsonl",
+        "**/gspc-index.jsonl",
+        "**/gspc-insurance.jsonl",
+        "**/gspc-operational.jsonl",
+        "**/gspc-relative.jsonl",
+        "**/gspc-slot15.jsonl",
+        "**/gspc-jail-v2.jsonl",
+        "**/gspc-jail-v2-fam58.jsonl"
+      ]
     }
   },
   "public_by_decision": {
