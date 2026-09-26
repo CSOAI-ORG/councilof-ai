@@ -58,7 +58,7 @@ KID = "did:web:csoai.org#card-attestation-1"
 ALLOWED_KIDS = {"did:web:csoai.org#card-attestation-1", "did:web:csoai.org#site-release-1"}
 REFUSED_KIDS = {
     "did:web:csoai.org#board-attestation-1": "signs the public board snapshot, not the agent card",
-    "did:web:csoai.org#gspc-board-22axis-2026": "the 3-party MPC board-freeze key",
+    "did:web:csoai.org#gspc-board-22axis-2026": "the 2026-09-02 board-freeze key (all three additive shares on one host; the split was never performed, C-2026-0925-01)",
     "did:web:csoai.org#estate-chain-1": "signs pod measurement chains",
 }
 
