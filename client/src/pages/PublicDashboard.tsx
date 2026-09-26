@@ -54,7 +54,7 @@ export default function PublicDashboard() {
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-white">CSOAI</h1>
+                  <p className="text-xl font-bold text-white">CSOAI</p>
                   <p className="text-xs text-zinc-400">Public Transparency Dashboard</p>
                 </div>
               </div>

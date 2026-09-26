@@ -279,6 +279,7 @@ console.log({
                         variant="ghost"
                         size="sm"
                         className="absolute top-2 right-2 gap-2"
+                        aria-label={copiedCode === id ? `Copied the ${id} example` : `Copy the ${id} example`}
                         onClick={() => copyToClipboard(code, id)}
                       >
                         {copiedCode === id ? (
@@ -311,6 +312,7 @@ console.log({
                   variant="ghost"
                   size="sm"
                   className="absolute top-2 right-2 gap-2"
+                  aria-label={copiedCode === "response" ? "Copied the response example" : "Copy the response example"}
                   onClick={() => copyToClipboard(responseExample, "response")}
                 >
                   {copiedCode === "response" ? (
