@@ -1,6 +1,6 @@
 {
   "canonical_origin": "https://councilof.ai",
-  "content_id": "5d967d778a9ed18e61c078d1a525d4bc733cd4227ed5fd134207cd3decfd9634",
+  "content_id": "7141f0d31bc7eb8ab8430d3e5ae9ae9fd814707f66a515097280f7993e208a2f",
   "existing_live_surfaces": [
     {
       "path": "/.well-known/x402.json",
@@ -33,39 +33,49 @@
   "machine_access_baseline": {
     "claim_boundary": "Reachability observation only; not a security finding and not a claim about vendor intent.",
     "counts": {
-      "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE": 5
+      "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE": 5
     },
-    "method": "One default Python urllib request and one browser-User-Agent request per existing live reference surface from the release-builder network.",
+    "method": "One default Python urllib request plus curl, explicit agent and browser User-Agent requests per existing live reference surface from the release-builder network.",
     "rows": [
       {
+        "agent_ua_status": 200,
         "browser_ua_status": 200,
+        "curl_ua_status": 200,
         "path": "/.well-known/x402.json",
         "plain_python_status": 403,
-        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
       },
       {
+        "agent_ua_status": 200,
         "browser_ua_status": 200,
+        "curl_ua_status": 200,
         "path": "/.well-known/agent-card.json",
         "plain_python_status": 403,
-        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
       },
       {
+        "agent_ua_status": 200,
         "browser_ua_status": 200,
+        "curl_ua_status": 200,
         "path": "/api/revenue",
         "plain_python_status": 403,
-        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
       },
       {
+        "agent_ua_status": 200,
         "browser_ua_status": 200,
+        "curl_ua_status": 200,
         "path": "/quickstart.json",
         "plain_python_status": 403,
-        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
       },
       {
+        "agent_ua_status": 200,
         "browser_ua_status": 200,
+        "curl_ua_status": 200,
         "path": "/verifier/verify_receipt.py",
         "plain_python_status": 403,
-        "state": "DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
       }
     ]
   },

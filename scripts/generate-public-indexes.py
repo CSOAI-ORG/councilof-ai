@@ -93,9 +93,13 @@ def machine_access_rows(paths: list[str]) -> list[dict[str, Any]]:
     for path in paths:
         url="https://councilof.ai"+path
         plain=reachability_status(url)
+        curl=reachability_status(url,"curl/8.7.1")
+        agent=reachability_status(url,"CSOAI-Agent/0.1")
         browser=reachability_status(url,"Mozilla/5.0")
         if plain in ok:
             state="DEFAULT_PYTHON_REACHABLE"
+        elif curl in ok and agent in ok:
+            state="PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
         elif browser in ok:
             state="DEFAULT_PYTHON_BLOCKED_BROWSER_UA_REACHABLE"
         else:
@@ -103,6 +107,8 @@ def machine_access_rows(paths: list[str]) -> list[dict[str, Any]]:
         rows.append({
             "path":path,
             "plain_python_status":plain,
+            "curl_ua_status":curl,
+            "agent_ua_status":agent,
             "browser_ua_status":browser,
             "state":state,
         })
@@ -249,7 +255,7 @@ def selftest() -> list[str]:
                 "staged_surfaces":[{"path":f"/{i}.json"} for i in range(4)],
                 "machine_access_baseline":{
                     "counts":{"DEFAULT_PYTHON_REACHABLE":5},
-                    "rows":[{"path":f"/live-{i}","plain_python_status":200,"browser_ua_status":200,"state":"DEFAULT_PYTHON_REACHABLE"} for i in range(5)],
+                    "rows":[{"path":f"/live-{i}","plain_python_status":200,"curl_ua_status":200,"agent_ua_status":200,"browser_ua_status":200,"state":"DEFAULT_PYTHON_REACHABLE"} for i in range(5)],
                 },
             },
             "progress-index.json":{"schema":"fixture","laws":laws},
@@ -432,7 +438,7 @@ def main() -> int:
             for path in staged_new
         ],
         "machine_access_baseline": {
-            "method": "One default Python urllib request and one browser-User-Agent request per existing live reference surface from the release-builder network.",
+            "method": "One default Python urllib request plus curl, explicit agent and browser User-Agent requests per existing live reference surface from the release-builder network.",
             "claim_boundary": "Reachability observation only; not a security finding and not a claim about vendor intent.",
             "counts": machine_access_counts,
             "rows": machine_access,
