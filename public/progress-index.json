@@ -7,7 +7,7 @@
     "settled_usdc": 0.02,
     "settled_usdc_atomic": 20000
   },
-  "content_id": "bd5aa1762f17fe70522f9729bd553e776423f1b513e8001632dc40bd10f9b13d",
+  "content_id": "5c9a990411a99e1a7977e86f766d20d454089341e79010df15fff696ea52b23b",
   "distribution": {
     "currently_live_reference_surfaces": 5,
     "release_state": "STAGED_NOT_DEPLOYED",
@@ -42,7 +42,11 @@
     "corrections": {
       "bytes": 109485,
       "content_type": "application/json",
-      "sha256": "1c6c1189d5cba02460186a38b1b74ffbba07cc31126b75ce107a71afe721a543",
+      "excluded_volatile_fields": [
+        "signature_check.checked_at"
+      ],
+      "semantic_hash_scope": "JSON body excluding signature_check.checked_at only",
+      "semantic_sha256": "280d39428efe816d5bb13ccbcbff0fc47585d1db1f0ec28f7d18fa24fb88c0ce",
       "status": 200,
       "url": "https://councilof.ai/api/corrections"
     },

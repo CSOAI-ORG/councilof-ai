@@ -1,6 +1,6 @@
 {
   "canonical_origin": "https://councilof.ai",
-  "content_id": "d41242c871d202dac14bbd91fedb68458c797f92f5e2385b4ec29d07812ef558",
+  "content_id": "1dee002f6e69df8c385e92048c0aa13579546516198712ef9e7d39141271c88c",
   "existing_live_surfaces": [
     {
       "path": "/.well-known/x402.json",
@@ -47,7 +47,11 @@
     "corrections": {
       "bytes": 109485,
       "content_type": "application/json",
-      "sha256": "1c6c1189d5cba02460186a38b1b74ffbba07cc31126b75ce107a71afe721a543",
+      "excluded_volatile_fields": [
+        "signature_check.checked_at"
+      ],
+      "semantic_hash_scope": "JSON body excluding signature_check.checked_at only",
+      "semantic_sha256": "280d39428efe816d5bb13ccbcbff0fc47585d1db1f0ec28f7d18fa24fb88c0ce",
       "status": 200,
       "url": "https://councilof.ai/api/corrections"
     },
