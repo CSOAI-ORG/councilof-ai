@@ -283,6 +283,116 @@ class Attribution(unittest.TestCase):
         self.assertEqual([d["url"] for d in c["docs"]], ["https://cards.example/one.json"])
 
 
+class Correction011(unittest.TestCase):
+    """Record 0.1.1. One fixture per row the 26 Sep notice-lane re-check showed 0.1 misread; shapes copied from the
+    stored 25 Sep bytes (sha256 in each docstring, unchanged on the 26 Sep re-read)."""
+    PUB = ["ic_donate", "ic_news_get", "ic_signal_search"]
+
+    def test_immersivecommons_public_list_is_the_unauthenticated_contract(self):
+        """mcp.json ec4372a0...: tools (249, full surface) + public_tools (22) == live unauthenticated tools/list (22), and
+        a nested docs_mcp block {url: /api/mcp-docs, tools: [2]} describing the documentation endpoint; server-card
+        f518e0f9...: tools (249). 0.1 compared the 249 (and the docs block's 2) exactly: INCONSISTENT."""
+        lv = live(tool_names=self.PUB, n_tools=3, tool_names_sha256=C.names_sha(self.PUB))
+        full = self.PUB + ["floor10_submit_highlight", "ic_admin_approve_highlight"]
+        body = {"url": EP, "tools": full, "public_tools": self.PUB,
+                "docs_mcp": {"url": "https://svc.example/api/mcp-docs", "transport": "streamable-http", "tools": ["search_docs", "get_doc"]}}
+        st = Attribution.Store({"https://svc.example/.well-known/mcp.json": body,
+                                "https://svc.example/.well-known/mcp/server-card.json": {"serverUrl": EP, "tools": [{"name": n} for n in full]}})
+        row = {"endpoint": EP, "origin": "https://svc.example", "host": "svc.example", "shared_origin": False,
+               "registry": [], "live": lv, "inclusion": "responded", "in_watch_list": False}
+        c, surf, _ = C.surface_ctx(row, st, {"svc.example": {}})
+        self.assertIn("docs_mcp", surf["mcp.json"][0]["attribution"])
+        v = C.compare_tools(c)
+        self.assertEqual(v["state"], "CONSISTENT")
+        self.assertEqual(len(v["declared"]), 2)
+        # the listing may also show EVERY tool (gated ones listed, refused at call time): still consistent
+        lv_all = live(tool_names=full, n_tools=5, tool_names_sha256=C.names_sha(full))
+        self.assertEqual(C.compare_tools(dict(c, live=lv_all))["state"], "CONSISTENT")
+        # but the full list must contain every live tool
+        bad = doc("mcp.json", {"tools": ["floor10_submit_highlight"], "public_tools": self.PUB})
+        v2 = C.compare_tools(ctx(lv, docs=[bad]))
+        self.assertEqual((v2["state"], v2["only_live"]), ("INCONSISTENT", sorted(self.PUB)))
+        # a nested block on another host: removed when the document describes its own endpoint (a hosted demo) ...
+        pr, paths = C.prune_other_endpoints({"url": EP, "tools": ["a"], "hosted_demo": {"mcp_endpoint": "https://demo.other/sse",
+                                                                                      "transport": "sse", "tools_count": 7}}, EP)
+        self.assertNotIn("hosted_demo", pr)
+        # ... kept when it is the document's only description (it may be this server under another host name)
+        pr, paths = C.prune_other_endpoints({"name": "x", "mcp_server": {"endpoint": "https://custom.other/mcp", "tools": ["a"]}}, EP)
+        self.assertIn("mcp_server", pr)
+        # a public list alone is recorded, not compared
+        self.assertEqual(C.compare_tools(ctx(lv_all, docs=[doc("mcp.json", {"publicTools": self.PUB})]))["state"], "SINGLE_SURFACE")
+        # without a public-scoped list the 0.1 rule is unchanged: a full list != live is a contradiction
+        self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"tools": full})]))["state"], "INCONSISTENT")
+
+    def test_augenix_document_naming_another_endpoint_is_not_credited(self):
+        """app.augenix.ai/.well-known/mcp.json 5b61c70b...: mcp_endpoint https://app.augenix.ai/api/mcp, server
+        augenix-admin, 12 admin tools; the probed (and registry) endpoint is /api/mcp/public. 0.1 credited it because
+        the origin serves one server in the frame, and compared its 12 tools with the public endpoint's 3."""
+        ep = "https://svc.example/api/mcp/public"
+        body = {"mcp_endpoint": "https://svc.example/api/mcp", "server": {"name": "svc-admin", "version": "1.4.0-admin"},
+                "authentication": {"type": "oauth2", "scopes": ["admin"]}, "tools": ["list_tasks", "add_task"]}
+        st = Attribution.Store({"https://svc.example/.well-known/mcp.json": body})
+        row = {"endpoint": ep, "origin": "https://svc.example", "host": "svc.example", "shared_origin": False,
+               "registry": [], "live": live(), "inclusion": "responded", "in_watch_list": False}
+        c, surf, _ = C.surface_ctx(row, st, {"svc.example": {}})
+        self.assertEqual(c["docs"], [])
+        self.assertFalse(surf["mcp.json"][0]["attributed"])
+        self.assertIn("describes another MCP endpoint on this origin", surf["mcp.json"][0]["attribution"])
+        self.assertEqual(C.compare_tools(c)["state"], "SINGLE_SURFACE")
+        # the same document IS credited to the endpoint it names, and to another transport path of that server
+        for named in ("https://svc.example/api/mcp", "https://svc.example/api/sse", "https://svc.example/mcp/v1"):
+            c2, _, _ = C.surface_ctx(dict(row, endpoint=named), st, {"svc.example": {}})
+            self.assertEqual([d["surface"] for d in c2["docs"]], ["mcp.json"], named)
+        # a document naming the endpoint on ANOTHER host (www/apex, custom domain) is not a second endpoint of this origin
+        st3 = Attribution.Store({"https://svc.example/.well-known/mcp.json": dict(body, mcp_endpoint="https://www.svc.example/x/mcp")})
+        c3, _, _ = C.surface_ctx(row, st3, {"svc.example": {}})
+        self.assertEqual([d["surface"] for d in c3["docs"]], ["mcp.json"])
+        # nor is a document that also names this endpoint, nor an x402 manifest's resource "endpoint"s
+        st4 = Attribution.Store({"https://svc.example/.well-known/mcp.json": dict(body, links={"public": ep}),
+                                 "https://svc.example/.well-known/x402.json": {"resources": [{"endpoint": "https://svc.example/api/pay"}]}})
+        c4, _, _ = C.surface_ctx(row, st4, {"svc.example": {}})
+        self.assertEqual(sorted(d["surface"] for d in c4["docs"]), ["mcp.json", "x402"])
+
+    def test_klarix_optional_header_vs_card_requirement_is_not_a_contradiction(self):
+        """registry ai.klarix/intelligence: Authorization header, isRequired absent (= false), description "Optional.
+        Listing tools works without a key; running one needs a paid key"; mcp.json and server-card d948d4b9...:
+        authentication.required true; discovery answered without credentials. 0.1: INCONSISTENT."""
+        r = reg(auth=[("remotes[].headers[Authorization].isRequired", False)])
+        cards = [doc("mcp.json", {"authentication": {"required": True, "schemes": ["bearer"]}}),
+                 doc("server-card", {"authentication": {"required": True, "schemes": ["bearer"]}})]
+        v = C.compare_auth(ctx(registry=[r], docs=cards))
+        self.assertEqual((v["state"], v["reason"]), ("UNCHECKABLE", "DECLARED_SCOPES_DIFFER"))
+        # an optional header while discovery itself is refused IS a contradiction (same scope: connecting)
+        g = C.compare_auth(ctx(live(state="AUTH_REQUIRED", http_status=401, tools_list_status=None), registry=[r], docs=cards))
+        self.assertEqual(g["state"], "INCONSISTENT")
+        self.assertEqual(g["conflict"][1]["surface"], "observed discovery boundary")
+
+    def test_transloadit_token_from_a_tool_vs_card_requirement(self):
+        """registry io.github.transloadit/mcp-server: Authorization header "obtained via the authenticate tool",
+        isRequired absent; server-card a0b7fa81...: authentication.required true; discovery open. 0.1: INCONSISTENT."""
+        v = C.compare_auth(ctx(registry=[reg(auth=[("remotes[].headers[Authorization].isRequired", False)])],
+                               docs=[doc("server-card", {"authentication": {"required": True, "schemes": ["bearer"]}})]))
+        self.assertEqual((v["state"], v["reason"]), ("UNCHECKABLE", "DECLARED_SCOPES_DIFFER"))
+        # a card that says auth is NOT required still contradicts a registry header that IS required (unchanged)
+        v = C.compare_auth(ctx(registry=[reg(auth=[("remotes[].headers[Authorization].isRequired", True)])],
+                               docs=[doc("server-card", {"authentication": {"required": False}})]))
+        self.assertEqual(v["state"], "INCONSISTENT")
+
+    def test_toolforte_count_with_a_dispatcher_is_not_compared(self):
+        """toolforte.com/.well-known/mcp.json 7fc40fc2...: toolCount 180, resources [toolforte://tools]; live tools/list
+        14 names incl. search_tools, describe_tool, run_tool. 0.1: INCONSISTENT (n=180 vs n=14)."""
+        names = ["calculate_vat", "describe_tool", "run_tool", "search_tools", "validate_iban"]
+        lv = live(tool_names=names, n_tools=5, tool_names_sha256=C.names_sha(names))
+        v = C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"toolCount": 180, "resources": ["svc://tools"]})]))
+        self.assertEqual((v["state"], v["reason"]), ("UNCHECKABLE", "DECLARED_COUNT_SCOPE_UNSTATED"))
+        self.assertEqual(v["live_dispatcher_tools"], ["run_tool"])
+        # a count BELOW the live count is still a contradiction, dispatcher or not
+        self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"toolCount": 3})]))["state"], "INCONSISTENT")
+        # a name list is still compared exactly
+        self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"toolCount": 180, "tools": names})]))["state"], "CONSISTENT")
+        self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"tools": names[:2]})]))["state"], "INCONSISTENT")
+
+
 # ------------------------------------------------------------------ network fixture (127.0.0.1)
 class Fixture(BaseHTTPRequestHandler):
     log = []
@@ -400,6 +510,7 @@ def self_test():
         return 1
     ok = True
     orig_v, orig_m, orig_a = C.COMPARATORS["VERSION"], C.mentions, C.compare_auth
+    orig_pk, orig_de, orig_dr, orig_pr = C.PUBLIC_TOOL_KEYS, C.declared_endpoints, C.DISPATCH_RE, C.prune_other_endpoints
 
     def broken_version(ctx_):  # adjudicates every version string, whatever it versions
         vals = [c for c in orig_v(ctx_).get("claims") or []] + (orig_v(ctx_).get("other_versions") or [])
@@ -411,10 +522,20 @@ def self_test():
         v = orig_a(ctx_)
         return C.verdict("INCONSISTENT", conflict=[{"surface": "x", "path": "y", "value": "z"}]) if v.get("reason") == "DECLARED_REQUIRED_SCOPE_UNSTATED" else v
 
+    def auth_0_1(ctx_):  # the 0.1 rule: an optional registry header vs a card requirement is a contradiction
+        v = orig_a(ctx_)
+        return C.verdict("INCONSISTENT", conflict=[{"surface": "x", "path": "y", "value": "z"}]) if v.get("reason") == "DECLARED_SCOPES_DIFFER" else v
+
     controls = [("version across undeclared namespaces", lambda: (C.COMPARATORS.__setitem__("VERSION", broken_version),
                                                                   setattr(C, "compare_version", broken_version))),
                 ("gateway card credited to every tenant", lambda: setattr(C, "mentions", lambda d, e: True)),
-                ("declared-required + open discovery called a contradiction", lambda: setattr(C, "compare_auth", broken_auth))]
+                ("declared-required + open discovery called a contradiction", lambda: setattr(C, "compare_auth", broken_auth)),
+                # 0.1.1: each 0.1 misread, restored, must fail the suite
+                ("0.1 full tool list compared exactly despite a public-scoped list", lambda: setattr(C, "PUBLIC_TOOL_KEYS", set())),
+                ("0.1 origin document credited though it names another endpoint", lambda: setattr(C, "declared_endpoints", lambda d, b: set())),
+                ("0.1 nested block describing another endpoint read as this one", lambda: setattr(C, "prune_other_endpoints", lambda d, e: (d, []))),
+                ("0.1 optional registry header vs card requirement called a contradiction", lambda: setattr(C, "compare_auth", auth_0_1)),
+                ("0.1 bare count compared despite a live dispatcher tool", lambda: setattr(C, "DISPATCH_RE", __import__("re").compile(r"(?!x)x")))]
     for name, patch in controls:
         patch()
         try:
@@ -424,6 +545,7 @@ def self_test():
             C.compare_version = orig_v
             C.mentions = orig_m
             C.compare_auth = orig_a
+            C.PUBLIC_TOOL_KEYS, C.declared_endpoints, C.DISPATCH_RE, C.prune_other_endpoints = orig_pk, orig_de, orig_dr, orig_pr
         held = bad2 > 0
         ok &= held
         print(f"control [{name}]: {bad2} failed -> {'holds (suite rejects it)' if held else 'CONTROL FAILED (suite passes a broken rule)'}")
