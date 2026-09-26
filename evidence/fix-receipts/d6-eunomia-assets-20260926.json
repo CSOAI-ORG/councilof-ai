@@ -1,0 +1,71 @@
+{
+  "after_sha256": {
+    "functions/api/_eunomia_delivery.ts": "4d7733ac8936dfdfbe5da67b9a57f7d8fc15ebf3d002b2275915f231fbc6b870",
+    "functions/api/eunomia-data.assets.test.ts": "3b7feb81e01d35e664b2eb860314b6a3ab739793b8f764c71983307327f76bdd",
+    "functions/api/eunomia-data.delivery.test.ts": "bc35937fbd94f2544641bc457bdcafb7ef653ef244014d6b197f13ac3add6b10",
+    "functions/api/eunomia-data.ts": "4da30ac3df05835658938553a09c8ca18dea55ac423fa791717afea7594fc24b",
+    "functions/api/metered-endpoints.test.ts": "cceff44a79bdf1653c3752408816a6cd06e9f89eb7dfa29bab44a1c5fd94a271",
+    "package.json": "1e186a9d8f6a1bcd528e43c04d9f7af2cfded7b2f1141c3e4615d6459e9632b8"
+  },
+  "axis": "effect-binding",
+  "before": {
+    "content_id": "ce8c3256a",
+    "evidence_refs": [
+      "functions/api/eunomia-data.ts",
+      "functions/api/_eunomia_delivery.ts"
+    ],
+    "observed_at": null,
+    "state": "BOUNDED_DELIVERY_WORKING_WITH_PUBLIC_ZONE_SELF_FETCH"
+  },
+  "before_sha256": {
+    "functions/api/_eunomia_delivery.ts": "2c3d91823fde67b9b07d67a1a3d3c8b5c05e5edcb1a36b50db75dba109680aaa",
+    "functions/api/eunomia-data.assets.test.ts": null,
+    "functions/api/eunomia-data.delivery.test.ts": "b25b8e1bb5a29bf09ef63d2768186af8b7b41f4ba8234df679e7f1b459f7d081",
+    "functions/api/eunomia-data.ts": "9066ae4002bd57983c7c2d0612ed96d396b886b018014710bd7e1b90a87c9df1",
+    "functions/api/metered-endpoints.test.ts": "75f65f89f8291e53dbaf78e4c4ce14dbfbb7542666f83d4472567197e7801589",
+    "package.json": "3a97fba3707f373de1eb6c07feaeb611a3e5fa6db848c8db8f35265acfa95c5c"
+  },
+  "claim_boundary": "Verified fix applies to feed assembly/runtime dependency and exact-delivery test contract only. D6 commercial progression remains HOLD until a real paid request is delivered and independently read back with exact query/resource/bytes binding.",
+  "claim_id": "D6_QUERY_SPECIFIC_DELIVERY_PROVEN",
+  "content_id": "3f6078e92719e26aab799aa81fc0cceb19cdd86d22b5637716bed2566ee7a9b3",
+  "correction_ref": null,
+  "finding_id": "d6-public-zone-self-fetch-dependency",
+  "fix_attempt": {
+    "artifact_refs": [
+      "functions/api/eunomia-data.ts",
+      "functions/api/_eunomia_delivery.ts",
+      "functions/api/eunomia-data.delivery.test.ts",
+      "functions/api/eunomia-data.assets.test.ts",
+      "functions/api/metered-endpoints.test.ts",
+      "package.json"
+    ],
+    "authority_ref": null,
+    "description": "Route static feed source reads through Pages ASSETS when available and invoke /api/fines in-process; preserve exact-byte hashing, read-before-settle, exact-query request records, and fail-closed delivery semantics.",
+    "execution_receipt_ref": null,
+    "performed_at": "2026-09-26T04:59:56.650287+00:00"
+  },
+  "fix_receipt_id": "fix:d6-eunomia-assets:20260926",
+  "gspc_admission": {
+    "card_refs": [],
+    "self_admission_allowed": false,
+    "state": "NOT_REQUESTED"
+  },
+  "hive": "interop-effects",
+  "schema": "csoai.fix-receipt/0.1",
+  "subject_id": "capability:http-eunomia-data",
+  "verification": {
+    "after_content_id": null,
+    "after_evidence_refs": [
+      "43 delivery+ASSETS Vitest tests PASS",
+      "29 verifier-kit Node tests PASS",
+      "3 cross-surface acceptance tests PASS",
+      "12 metered-endpoint Vitest tests PASS",
+      "public-index guard PASS",
+      "capability/OpenAPI guard PASS"
+    ],
+    "instrument_id": "d6-integration-matrix/20260926",
+    "notes": "This verifies the bounded integration behavior in the current release tree. It does not claim a new external paid purchase or live deployment.",
+    "observed_at": "2026-09-26T04:59:56.657325+00:00",
+    "status": "VERIFIED_FIX"
+  }
+}
