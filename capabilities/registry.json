@@ -2476,6 +2476,84 @@
       "payment": "free"
     },
     {
+      "id": "api-ras-mcp-probe",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras mcp probe",
+      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
+      "endpoint": "/api/ras/mcp-probe",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-mcp-probe-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras mcp probe (POST)",
+      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
+      "endpoint": "/api/ras/mcp-probe",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-x402-check",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras x402 check",
+      "description": "GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
+      "endpoint": "/api/ras/x402-check",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-x402-check-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras x402 check (POST)",
+      "description": "GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
+      "endpoint": "/api/ras/x402-check",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-supply",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras supply",
+      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
+      "endpoint": "/api/ras/supply",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-supply-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras supply (POST)",
+      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
+      "endpoint": "/api/ras/supply",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
       "id": "art50_marking_evidence",
       "protocols": [
         "mcp"

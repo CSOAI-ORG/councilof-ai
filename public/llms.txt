@@ -176,6 +176,18 @@ Amounts live only inside an HTTP 402 `accepts[]` challenge. Do not invent a pric
     XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.
   - https://councilof.ai/api/proof?bundle=1
     Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.
+  - https://councilof.ai/api/ras/mcp-probe?url=https://councilof.ai/mcp
+    GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.
+  - https://councilof.ai/api/ras/mcp-probe
+    GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.
+  - https://councilof.ai/api/ras/supply?asset=USDC&ledger=ethereum
+    GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.
+  - https://councilof.ai/api/ras/supply
+    GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.
+  - https://councilof.ai/api/ras/x402-check?url=https://councilof.ai/api/free-door
+    GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.
+  - https://councilof.ai/api/ras/x402-check
+    GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.
   - https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z · free preview: https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1
     Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.
   - https://councilof.ai/api/request-attestation?subject=model-or-subject-id

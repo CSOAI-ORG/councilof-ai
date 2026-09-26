@@ -5466,6 +5466,171 @@
       "source": "functions/api/yield.ts"
     },
     {
+      "id": "api-ras-mcp-probe",
+      "kind": "http",
+      "path": "/api/ras/mcp-probe",
+      "method": "GET",
+      "name": "Ras mcp probe",
+      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.ras.mcp-probe/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/ras/mcp-probe?url=https://councilof.ai/mcp",
+        "expect_status": [
+          402
+        ],
+        "safe": true
+      },
+      "source": "functions/api/ras/mcp-probe.ts",
+      "paid_for": "issuance"
+    },
+    {
+      "id": "api-ras-mcp-probe-post",
+      "kind": "http",
+      "path": "/api/ras/mcp-probe",
+      "method": "POST",
+      "name": "Ras mcp probe (POST)",
+      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.ras.mcp-probe/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "POST",
+        "request": "/api/ras/mcp-probe",
+        "expect_status": [
+          402
+        ],
+        "safe": false,
+        "unsafe_reason": "POST alias; the daily loop reads only"
+      },
+      "source": "functions/api/ras/mcp-probe.ts",
+      "paid_for": "issuance"
+    },
+    {
+      "id": "api-ras-x402-check",
+      "kind": "http",
+      "path": "/api/ras/x402-check",
+      "method": "GET",
+      "name": "Ras x402 check",
+      "description": "GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.ras.x402-check/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/ras/x402-check?url=https://councilof.ai/api/free-door",
+        "expect_status": [
+          402
+        ],
+        "safe": true
+      },
+      "source": "functions/api/ras/x402-check.ts",
+      "paid_for": "issuance"
+    },
+    {
+      "id": "api-ras-x402-check-post",
+      "kind": "http",
+      "path": "/api/ras/x402-check",
+      "method": "POST",
+      "name": "Ras x402 check (POST)",
+      "description": "GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.ras.x402-check/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "POST",
+        "request": "/api/ras/x402-check",
+        "expect_status": [
+          402
+        ],
+        "safe": false,
+        "unsafe_reason": "POST alias; the daily loop reads only"
+      },
+      "source": "functions/api/ras/x402-check.ts",
+      "paid_for": "issuance"
+    },
+    {
+      "id": "api-ras-supply",
+      "kind": "http",
+      "path": "/api/ras/supply",
+      "method": "GET",
+      "name": "Ras supply",
+      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.eip1186-proof/0.1",
+        "csoai.product.ras.supply",
+        "csoai.ras.supply-read/0.1",
+        "csoai.ras.supply/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/ras/supply?asset=USDC&ledger=ethereum",
+        "expect_status": [
+          402
+        ],
+        "safe": true
+      },
+      "source": "functions/api/ras/supply.ts",
+      "paid_for": "issuance"
+    },
+    {
+      "id": "api-ras-supply-post",
+      "kind": "http",
+      "path": "/api/ras/supply",
+      "method": "POST",
+      "name": "Ras supply (POST)",
+      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.eip1186-proof/0.1",
+        "csoai.product.ras.supply",
+        "csoai.ras.supply-read/0.1",
+        "csoai.ras.supply/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "POST",
+        "request": "/api/ras/supply",
+        "expect_status": [
+          402
+        ],
+        "safe": false,
+        "unsafe_reason": "POST alias; the daily loop reads only"
+      },
+      "source": "functions/api/ras/supply.ts",
+      "paid_for": "issuance"
+    },
+    {
       "id": "art50_marking_evidence",
       "kind": "mcp_tool",
       "name": "art50_marking_evidence",
