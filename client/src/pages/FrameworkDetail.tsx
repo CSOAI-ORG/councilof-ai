@@ -51,9 +51,9 @@ export default function FrameworkDetail() {
         <div className="bg-rose-600 text-white text-sm">
           <div className="container max-w-5xl py-2.5 flex flex-wrap items-center justify-center gap-x-3 text-center">
             <span className="font-semibold">⏱ {fw.name} is binding — effective {fw.effective}.</span>
-            <a href="/contact" className="underline font-medium">
-              Book a free diagnostic →
-            </a>
+            <Link href="/crosswalks/" className="underline font-medium">
+              See the crosswalk →
+            </Link>
           </div>
         </div>
       )}
@@ -123,13 +123,14 @@ export default function FrameworkDetail() {
 
         {/* CTA */}
         <Card className="p-8 bg-gradient-to-br from-slate-900 to-emerald-900 text-white text-center">
-          <h2 className="text-3xl font-bold mb-3">Get {fw.name}-ready</h2>
+          <h2 className="text-3xl font-bold mb-3">Read the measurements, then ask</h2>
           <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-            Book a free 15-minute diagnostic and we'll map your AI systems to {fw.name} — then put the MCP fleet to work generating audit-ready evidence.
+            The crosswalk maps {fw.name} to what the public board measures. It is a reference mapping,
+            not a compliance determination. Verification is free; a scoped measurement run is arranged by enquiry.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="/contact">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">Book a free diagnostic <ArrowRight className="h-4 w-4 ml-2" /></Button>
+            <a href="/contact/?arm=run">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">Ask about a measured run <ArrowRight className="h-4 w-4 ml-2" /></Button>
             </a>
             {fw.pdfName && (
               <a href={`mailto:nicholas@csoai.org?subject=Request%20${encodeURIComponent(fw.name)}%20crosswalk%20PDF`}>

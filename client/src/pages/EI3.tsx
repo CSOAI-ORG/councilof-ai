@@ -11,14 +11,16 @@ const FORMULA_DIMENSIONS = [
   { name: "emotional_stability", weight: "1.0×", description: "Variance of valence across consecutive turns. Inverted so 1.0 = stable, 0 = wildly oscillating." },
 ];
 
+// 2026-09-26: the per-vendor scores (78 for us, 62 / 54 / 42 / 38 / 22 / 18 for named vendors)
+// had no published ASSTI run behind them. Every score is UNMEASURED until a run is published.
 const ASSTI_VENDORS = [
-  { name: "Council of AI reference stack", score: 78, transparent: true, formula: true, audit: true, public: true, badge: "bg-emerald-600" },
-  { name: "Anthropic Claude (constitutional AI doc)", score: 62, transparent: true, formula: false, audit: false, public: true },
-  { name: "OpenAI (Model Spec)", score: 54, transparent: true, formula: false, audit: false, public: true },
-  { name: "Google Gemini (Responsible AI)", score: 42, transparent: false, formula: false, audit: false, public: true },
-  { name: "Meta Llama (Responsible Use Guide)", score: 38, transparent: false, formula: false, audit: false, public: true },
-  { name: "Mistral", score: 22, transparent: false, formula: false, audit: false, public: false },
-  { name: "DeepSeek", score: 18, transparent: false, formula: false, audit: false, public: false },
+  { name: "Council of AI reference stack", transparent: true, formula: true, audit: true, public: true, badge: "bg-emerald-600" },
+  { name: "Anthropic Claude (constitutional AI doc)", transparent: true, formula: false, audit: false, public: true },
+  { name: "OpenAI (Model Spec)", transparent: true, formula: false, audit: false, public: true },
+  { name: "Google Gemini (Responsible AI)", transparent: false, formula: false, audit: false, public: true },
+  { name: "Meta Llama (Responsible Use Guide)", transparent: false, formula: false, audit: false, public: true },
+  { name: "Mistral", transparent: false, formula: false, audit: false, public: false },
+  { name: "DeepSeek", transparent: false, formula: false, audit: false, public: false },
 ];
 
 const ARTIFACTS = [
@@ -119,9 +121,9 @@ export default function EI3() {
         <section>
           <div className="flex items-center gap-2 mb-4">
             <Activity className="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">ASSTI v1.0 — 14-vendor scorecard</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">ASSTI v1.0 — vendor list (scores UNMEASURED)</h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">AI Self-State Transparency Index. Higher = more honest about its own internal state.</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">AI Self-State Transparency Index. No ASSTI run has been published, so no vendor, including us, has a score here.</p>
           <Card className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
@@ -138,9 +140,7 @@ export default function EI3() {
                   <tr key={v.name} className="border-b border-gray-100 dark:border-gray-800 last:border-0">
                     <td className="p-3 font-medium text-gray-900 dark:text-white">{v.name}</td>
                     <td className="text-center p-3">
-                      <Badge className={v.badge || (v.score >= 50 ? "bg-emerald-600" : v.score >= 30 ? "bg-amber-600" : "bg-rose-600")}>
-                        {v.score}/100
-                      </Badge>
+                      <span className="text-xs font-semibold text-gray-500">UNMEASURED</span>
                     </td>
                     <td className="text-center p-3">{v.transparent ? "✓" : "—"}</td>
                     <td className="text-center p-3">{v.formula ? "✓" : "—"}</td>

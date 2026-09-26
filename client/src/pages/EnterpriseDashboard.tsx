@@ -34,9 +34,9 @@ export default function EnterpriseDashboard() {
 
   // Calculate compliance metrics
   const totalSystems = aiSystems?.length || 0;
-  const compliantSystems = aiSystems?.filter((s) => s.riskLevel === 'minimal' || s.riskLevel === 'limited').length || 0;
+  // Self-declared risk tier, not compliance: a minimal/limited tier is not a measurement.
+  const lowerTierSystems = aiSystems?.filter((s) => s.riskLevel === 'minimal' || s.riskLevel === 'limited').length || 0;
   const highRiskSystems = aiSystems?.filter((s) => s.riskLevel === 'high' || (s.riskLevel as string) === 'unacceptable').length || 0;
-  const complianceRate = totalSystems > 0 ? Math.round((compliantSystems / totalSystems) * 100) : 0;
 
   // PDCA cycle metrics — real query only; null until measured (never invented).
   const activeCycles = (pdcaStats as any)?.active ?? null;
@@ -47,20 +47,17 @@ export default function EnterpriseDashboard() {
     if (!aiSystems) return null;
 
     // Build framework summary
-    const frameworkSummary: ComplianceScore[] = [
-      { framework: 'EU AI Act', score: (stats as any)?.euAiActScore || 82, status: 'partial' as const },
-      { framework: 'NIST AI RMF', score: (stats as any)?.nistScore || 88, status: 'compliant' as const },
-      { framework: 'TC260', score: (stats as any)?.tc260Score || 75, status: 'partial' as const },
-      { framework: 'ISO 42001', score: 90, status: 'compliant' as const },
-    ];
+    // 2026-09-26: the fallbacks (82 / 88 / 75 / 90, two of them "compliant") were invented.
+    // No framework score is measured for this account, so the report lists none.
+    const frameworkSummary: ComplianceScore[] = [];
 
     // Build systems list
     const systemsList = aiSystems.slice(0, 20).map((system) => ({
       name: system.name,
       type: system.systemType || 'AI System',
       riskLevel: system.riskLevel || 'minimal',
-      complianceScore: system.riskLevel === 'minimal' ? 90 : system.riskLevel === 'limited' ? 75 : 60,
-      status: system.riskLevel === 'minimal' || system.riskLevel === 'limited' ? 'Compliant' : 'Under Review',
+      complianceScore: null,
+      status: 'Unmeasured',
     }));
 
     return {
@@ -147,7 +144,7 @@ export default function EnterpriseDashboard() {
             <CardContent>
               <div className="text-3xl font-bold text-gray-900">{totalSystems}</div>
               <p className="text-sm text-gray-600 mt-1">
-                {compliantSystems} compliant, {highRiskSystems} high-risk
+                {lowerTierSystems} minimal/limited tier, {highRiskSystems} high-risk (self-declared)
               </p>
             </CardContent>
           </Card>
@@ -156,13 +153,13 @@ export default function EnterpriseDashboard() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4" />
-                Compliance Rate
+                Measured status
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-green-600">{complianceRate}%</div>
+              <div className="text-3xl font-bold text-gray-700">UNMEASURED</div>
               <p className="text-sm text-gray-600 mt-1">
-                {complianceRate >= 80 ? 'Excellent' : complianceRate >= 60 ? 'Good' : 'Needs Improvement'}
+                No measured run is recorded for these systems. A risk tier is not a compliance rate.
               </p>
             </CardContent>
           </Card>
@@ -186,13 +183,13 @@ export default function EnterpriseDashboard() {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
                 <TrendingUp className="h-4 w-4" />
-                Overall Score
+                Self-assessment average
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-emerald-600">{stats?.overallScore || 85}</div>
+              <div className="text-3xl font-bold text-emerald-600">{stats?.overallScore ?? "UNMEASURED"}</div>
               <p className="text-sm text-gray-600 mt-1">
-                +5% from last month
+                Your own answers, not a CSOAI measurement
               </p>
             </CardContent>
           </Card>
@@ -282,38 +279,10 @@ export default function EnterpriseDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between py-2 border-b">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <div>
-                    <p className="font-medium">Compliance assessment completed</p>
-                    <p className="text-sm text-gray-600">Customer Service AI - EU AI Act</p>
-                  </div>
-                </div>
-                <Badge variant="outline">2 hours ago</Badge>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b">
-                <div className="flex items-center gap-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-500" />
-                  <div>
-                    <p className="font-medium">Risk level updated</p>
-                    <p className="text-sm text-gray-600">ML Pipeline System - High Risk</p>
-                  </div>
-                </div>
-                <Badge variant="outline">5 hours ago</Badge>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-3">
-                  <Target className="h-5 w-5 text-blue-500" />
-                  <div>
-                    <p className="font-medium">PDCA cycle initiated</p>
-                    <p className="text-sm text-gray-600">Quarterly Safety Review</p>
-                  </div>
-                </div>
-                <Badge variant="outline">1 day ago</Badge>
-              </div>
-            </div>
+            {/* 2026-09-26: three invented activity rows (a completed assessment, a risk-level
+                change, a PDCA start, each with a made-up age) were removed. Nothing here reads
+                an activity log, so the honest state is empty. */}
+            <p className="text-sm text-gray-600">No activity is recorded for this account yet.</p>
           </CardContent>
         </Card>
       </div>
