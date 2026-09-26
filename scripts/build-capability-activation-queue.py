@@ -14,10 +14,27 @@ STATUS_RE=re.compile(r"(?:status\s*[:=]\s*|,\s*)([2345][0-9]{2})(?:\b|\s*[,}])")
 def cid(v):
     return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(",",":")).encode()).hexdigest()
 
-def handler_for(cap_id:str):
+def handler_for(cap:dict):
+    # Canonical source is strongest: nested routes and dotted filenames cannot be
+    # reconstructed safely from capability ids alone.
+    source=str(cap.get("source") or "").strip()
+    if source:
+        candidate=ROOT/source
+        if candidate.is_file():
+            return candidate
+
+    route=str(cap.get("path") or cap.get("endpoint") or "").split("?",1)[0]
+    if route.startswith("/api/"):
+        rel=route.removeprefix("/api/").strip("/")
+        for candidate in [ROOT/"functions/api"/(rel+".ts"),ROOT/"functions/api"/rel/"index.ts"]:
+            if candidate.is_file():
+                return candidate
+
+    cap_id=str(cap.get("id") or "")
     base=cap_id.removeprefix("api-").removesuffix("-post")
-    for p in [ROOT/"functions/api"/(base+".ts"),ROOT/"functions/api"/base/"index.ts"]:
-        if p.exists(): return p
+    for candidate in [ROOT/"functions/api"/(base+".ts"),ROOT/"functions/api"/base/"index.ts"]:
+        if candidate.is_file():
+            return candidate
     return None
 
 def expected_export(method:str):
@@ -52,7 +69,7 @@ def main():
     rows=[]
     for c in doc.get("capabilities") or []:
         if c.get("lifecycle")=="LIVE": continue
-        handler=handler_for(str(c.get("id") or ""))
+        handler=handler_for(c)
         text=handler.read_text(errors="replace") if handler else ""
         exports=sorted(set(EXPORT_RE.findall(text)))
         statuses=sorted({int(x) for x in STATUS_RE.findall(text)})

@@ -6,6 +6,7 @@ import * as memory from './memory';
 import * as operator from './operator';
 import * as sandbox from './sandbox';
 import * as witness from './witness';
+import * as sovTownState from './sov-town/state.jsonl';
 import * as corpusWatch from './corpus-watch';
 import * as dashboard from './dashboard';
 import * as decide from './decide';
@@ -33,6 +34,7 @@ const cases:{name:string;method:'GET'|'POST';handler:Handler}[]=[
  ['sandbox','POST',sandbox.onRequestPost as Handler],
  ['witness','GET',witness.onRequestGet as Handler],
  ['witness','POST',witness.onRequestPost as Handler],
+ ['sov-town/state.jsonl','GET',sovTownState.onRequestGet as Handler],
  ['corpus-watch','GET',corpusWatch.onRequestGet as Handler],
  ['corpus-watch','POST',corpusWatch.onRequestPost as Handler],
  ['dashboard','GET',dashboard.onRequestGet as Handler],
