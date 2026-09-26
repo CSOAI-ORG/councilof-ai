@@ -1213,6 +1213,22 @@ def snippet_check(md, http, owner):
              f"snippet names UA '{named.group(1)}'; did.json -> {r.status}", owner)
 
 
+CITATION = re.compile(r"@(?:misc|dataset|article|inproceedings|software|techreport)\s*\{|^#+\s*(?:citation|how to cite|cite as|citing)\b|"
+                      r"\bcite as\b\s*:|^cff-version:", re.I | re.M)
+
+
+def croissant_citation_check(crj, md, owner, status=200):
+    """Croissant recordSet (HF generates one when the viewer can type the rows) AND a citation in the README.
+    HF's generated Croissant never carries citeAs (not even for gsm8k), so citeAs itself is not required:
+    a rule that cannot pass on a correct artifact measures nothing."""
+    rs = (crj or {}).get("recordSet") or []
+    cite = CITATION.search(md or "")
+    ok = bool(rs) and bool(cite)
+    return R("reuse.croissant_recordset_and_citation", PASS if ok else FAIL,
+             f"Croissant {'recordSet ' + str(len(rs)) if crj is not None else 'HTTP ' + str(status)}; README citation "
+             + (f"'{clip(cite.group(0), 30)}'" if cite else "absent (no BibTeX / 'How to cite' / 'Cite as:')"), owner)
+
+
 def stated_about(md, art):
     """What the README says about THIS artifact's timestamp: lines naming it or its proof; else the timestamp sections."""
     base = art.rsplit("/", 1)[-1]
@@ -1292,11 +1308,9 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
     cr = h.get(f"{HF}/api/datasets/{ds_id}/croissant", cache=False)
     try:
         crj = cr.json()
-        rs, cite = crj.get("recordSet") or [], crj.get("citeAs")
-        c.append(R("reuse.croissant_recordset_citeas", PASS if (rs and cite) else FAIL,
-                   f"recordSet {len(rs)}, citeAs {'present' if cite else 'absent'}", owner))
     except Exception:
-        c.append(R("reuse.croissant_recordset_citeas", FAIL, f"croissant {cr.status}", owner))
+        crj = None
+    c.append(croissant_citation_check(crj, md, owner, cr.status))
     signed = sorted(n for n in names if n.endswith(".signed.json"))
     if signed:
         c.append(snippet_check(md, h, owner))
@@ -1755,6 +1769,45 @@ def notice_reproduce(http, row):
     return None, f"no re-check implemented for dimension {dim}"
 
 
+def v012_state(http, sibs, endpoint, dim):
+    """The row's state for `dim` in the published v0.1.2 rows, or None when v0.1.2 is not published / the row is absent."""
+    fn = next((n for n in sorted(sibs or []) if re.fullmatch(r"rows\.v0\.1\.2[\w.-]*\.jsonl(\.gz)?", n)), None)
+    if not fn or not endpoint:
+        return None
+    body = http.get(f"{HF}/datasets/csoai/mcp-contract-parity/resolve/main/{fn}", max_bytes=200_000_000).body
+    try:
+        body = gzip.decompress(body) if fn.endswith(".gz") else body
+    except Exception:
+        return None
+    for line in body.splitlines():
+        if endpoint.encode() not in line:
+            continue
+        try:
+            r = json.loads(line)
+        except Exception:
+            continue
+        found = []
+
+        def rec(x):
+            if isinstance(x, dict):
+                if x.get("dimension") == dim and isinstance(x.get("state"), str):
+                    found.append(x["state"])
+                v = x.get(dim)
+                if isinstance(v, str):
+                    found.append(v)
+                elif isinstance(v, dict) and isinstance(v.get("state"), str):
+                    found.append(v["state"])
+                for y in x.values():
+                    rec(y)
+            elif isinstance(x, list):
+                for y in x:
+                    rec(y)
+        rec(r)
+        if found:
+            return found[0]
+    return None
+
+
 def notice_artifacts(ctx, qdir, run_commands=True):
     h, arts = ctx.http, []
     qp = os.path.join(qdir, "queue.jsonl")
@@ -1779,13 +1832,24 @@ def notice_artifacts(ctx, qdir, run_commands=True):
         dim = row.get("dimension")
         classes = []
         if dim == "AUTH":
-            classes.append("symmetric auth scope (D3 AUTH rule asymmetric in the published record)")
+            classes.append("symmetric auth scope")
         if dim == "TOOLS" and re.search(r"auth", json.dumps(row.get("finding")), re.I):
-            classes.append("subset-under-auth (D1 tool list under declared auth)")
+            classes.append("subset-under-auth")
         if rep is None or "dead surface" in det:
             classes.append("dead surface is not silence")
-        c.append(R("notice.unaffected_by_pending_corrections", FAIL if classes else PASS,
-                   "row falls in pending v0.1.2 correction class(es): " + "; ".join(classes) if classes else f"{dim}: outside the three pending v0.1.2 classes", OWN_CP))
+        if classes and rep is not None and "dead surface" not in det:
+            # passable: once v0.1.2 is published, the row counts only if v0.1.2 still holds it INCONSISTENT
+            if cp_sibs is None:
+                try:
+                    cp_sibs = {x["rfilename"] for x in h.get(f"{HF}/api/datasets/csoai/mcp-contract-parity").json().get("siblings", [])}
+                except Exception:
+                    cp_sibs = set()
+            st = v012_state(h, cp_sibs, row.get("endpoint"), dim)
+            c.append(R("notice.unaffected_by_pending_corrections", PASS if st == "INCONSISTENT" else FAIL,
+                       f"row is in correction class {classes}; " + (f"v0.1.2 re-validates it: {st}" if st else "v0.1.2 not published, so the row is not re-validated"), OWN_CP))
+        else:
+            c.append(R("notice.unaffected_by_pending_corrections", FAIL if classes else PASS,
+                       "row falls in correction class(es) " + "; ".join(classes) if classes else f"{dim}: outside the three pending v0.1.2 classes", OWN_CP))
         dt = row.get("draft_text") or ""
         if "csoai/mcp-contract-parity" in dt:
             if cp_sibs is None:
@@ -1954,6 +2018,18 @@ def run(args):
     return doc
 
 
+def merge(args):
+    """Replace artifacts in a base scorecard with those of a newer partial run (same ids), re-score, rewrite."""
+    base = read_json(args.base)
+    new = read_json(args.new)
+    by = {a["id"]: a for a in new["artifacts"]}
+    arts = [by.pop(a["id"], a) for a in base["artifacts"]] + list(by.values())
+    meta = dict(base.get("meta", {}))
+    meta["merged_from"] = {"base": base.get("generated_at"), "new": new.get("generated_at"), "replaced": len(new["artifacts"])}
+    doc = write_outputs(arts, args.out, meta)
+    sys.stderr.write(f"merged -> {args.out}: {doc['summary']}\n")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -1969,9 +2045,15 @@ def main(argv=None):
     r.add_argument("--venturi-dir", default="/evac-bulk")
     r.add_argument("--notices-dir", default="/evac-bulk/notices-2026-09-26")
     r.add_argument("--no-commands", action="store_true", help="do not run notice draft commands")
+    m = sub.add_parser("merge")
+    m.add_argument("--base", required=True)
+    m.add_argument("--new", required=True)
+    m.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "run":
         run(a)
+    elif a.cmd == "merge":
+        merge(a)
 
 
 if __name__ == "__main__":

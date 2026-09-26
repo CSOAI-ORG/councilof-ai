@@ -293,6 +293,46 @@ class TestNotices(unittest.TestCase):
         self.assertIsNone(g.NOTICE_BANNED.search("the signature does not verify under that key"))
 
 
+class FakeHttp:
+    def __init__(self, status):
+        self.status = status
+
+    def get(self, url, headers=None, **k):
+        return g.Resp(url, self.status, {}, b"{}")
+
+
+class TestReachablePass(unittest.TestCase):
+    """Every check must have a reachable PASS on a correct artifact."""
+
+    def test_croissant_and_citation(self):
+        md = "# D\n\n## Citation\n\n```bibtex\n@misc{csoai2026, title={D}}\n```\n"
+        self.assertEqual(g.croissant_citation_check({"recordSet": [{"@type": "cr:RecordSet"}]}, md, "x")["status"], g.PASS)
+        # HF's Croissant has no citeAs: that must not matter
+        self.assertEqual(g.croissant_citation_check({"recordSet": [{}], "citeAs": None}, "Cite as: CSOAI Ltd, D (2026).", "x")["status"], g.PASS)
+        self.assertEqual(g.croissant_citation_check({"recordSet": []}, md, "x")["status"], g.FAIL)
+        self.assertEqual(g.croissant_citation_check({"recordSet": [{}]}, "# D\nno citation", "x")["status"], g.FAIL)
+
+    def test_verify_snippet(self):
+        good = "```python\nimport urllib.request\nreq = urllib.request.Request('https://csoai.org/.well-known/did.json', headers={'User-Agent': 'my-verifier/1.0'})\n```"
+        self.assertEqual(g.snippet_check(good, FakeHttp(200), "x")["status"], g.PASS)
+        bad = "```python\nimport urllib.request\ndid = urllib.request.urlopen('https://csoai.org/.well-known/did.json')\n```"
+        self.assertEqual(g.snippet_check(bad, FakeHttp(403), "x")["status"], g.FAIL)
+
+    def test_correction_class_row_revalidated_by_v012(self):
+        rows = gzip.compress(b'{"endpoint": "https://a.example/mcp", "dims": {"AUTH": {"state": "INCONSISTENT"}}}\n')
+
+        class H:
+            def get(self, url, **k):
+                return g.Resp(url, 200, {}, rows)
+        self.assertEqual(g.v012_state(H(), {"rows.v0.1.2.jsonl.gz"}, "https://a.example/mcp", "AUTH"), "INCONSISTENT")
+        self.assertIsNone(g.v012_state(H(), {"rows.v0.1.1.jsonl.gz"}, "https://a.example/mcp", "AUTH"))  # not yet published
+
+    def test_notice_channel_and_output(self):
+        self.assertTrue(g.ROLE.match("support") and g.ROLE.match("hello"))
+        row = {"dimension": "A2A_SIGNATURE"}
+        self.assertTrue(g.notice_output_matches(row, 1, "cryptography.exceptions.InvalidSignature")[0])
+
+
 class TestSupersession(unittest.TestCase):
     def test_superseded_detection(self):
         sup = g.superseded_files(["record.json", "record.v0.1.1.json", "rows.jsonl.gz", "rows.v0.1.1.jsonl.gz", "README.md"])
