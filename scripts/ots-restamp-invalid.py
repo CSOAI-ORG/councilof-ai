@@ -11,6 +11,15 @@ started.
 
   python3 scripts/ots-restamp-invalid.py --dry-run
   python3 scripts/ots-restamp-invalid.py
+
+A NEW PROOF CHANGES public/interop/ots/manifest.json. The manifest is derived from every .ots
+under public/interop (scripts/ots_manifest_rebuild.py), and deploy-prod refuses a release whose
+manifest differs from the proof bytes (scripts/pod-loops/root_ots_manifest_gate.py). On
+2026-09-26 two directory re-stamps went out with a stale manifest and held the deploy. So every
+stamp here goes through stamp_and_rebuild(): the proof and the manifest change in the same run,
+and therefore in the same commit. Then regenerate llms.txt (node scripts/llms-txt.mjs), whose
+OTS section is read from the manifest; scripts/ots-manifest-fresh.test.ts fails otherwise.
+Other scripts that stamp one file should call stamp_and_rebuild(), never stamp() alone.
 """
 import hashlib, io, json, sys, pathlib
 
@@ -55,6 +64,25 @@ def stamp(src: pathlib.Path, out: pathlib.Path):
     return got, digest.hex()
 
 
+def rebuild_manifest() -> None:
+    """Rewrite public/interop/ots/manifest.json from the proof bytes (the repo's own producer)."""
+    import importlib.util
+    here = pathlib.Path(__file__).resolve().parent
+    spec = importlib.util.spec_from_file_location("ots_manifest_rebuild", here / "ots_manifest_rebuild.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    if mod.main(["--apply"]) != 0:
+        raise SystemExit("ots_manifest_rebuild --apply failed; the manifest is stale — do not commit the proof alone")
+
+
+def stamp_and_rebuild(src: pathlib.Path, out: pathlib.Path):
+    """stamp() and then rebuild the OTS manifest, so a proof never ships without its manifest row."""
+    got, digest = stamp(src, out)
+    if got:
+        rebuild_manifest()
+    return got, digest
+
+
 def main() -> int:
     dry = "--dry-run" in sys.argv
     root = pathlib.Path(sys.argv[sys.argv.index("--root") + 1]) if "--root" in sys.argv else pathlib.Path("public")
@@ -76,6 +104,8 @@ def main() -> int:
             p.unlink()          # the old name carried a claim the bytes could not keep
         repaired.append({"ots": str(out), "source": str(src), "sha256": dg, "calendars": len(cals),
                          "state": "PENDING_BITCOIN_CONFIRMATION"})
+    if repaired and not dry:
+        rebuild_manifest()   # same run, same commit: see the module docstring
     print(json.dumps({"repaired": len(repaired), "skipped_no_source": skipped,
                       "failed": failed, "detail": repaired}, indent=2))
     return 1 if failed else 0
