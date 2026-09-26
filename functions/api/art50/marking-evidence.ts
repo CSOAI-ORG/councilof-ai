@@ -258,6 +258,19 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: KIND, error: "bad_request", reason: "invoice=gbp needs commissioned_by=<organisation> (2–80 chars of letters, digits, space . , & ' ( ) _ / -)" }, 400);
   }
 
+  // THE CHALLENGE NAMES THE RESOURCE THE BUYER ASKED FOR, QUERY INCLUDED (2026-09-26). A GET is
+  // priced per named output (`url=`), and this door used to advertise the bare path in
+  // resource.url and accepts[].resource while every other door kept its query — so the facilitator
+  // and any index heard of a different resource from the one paid for. A POST (bytes/manifest in
+  // the body) has no query to keep. functions/.well-known/x402-listing-parity.test.ts pins it.
+  const namedOutput = request.method === "GET" ? url.searchParams.get("url") : null;
+  const challengeUrl = (() => {
+    if (!namedOutput) return resourceUrl;
+    const u = new URL(resourceUrl);
+    u.searchParams.set("url", namedOutput);
+    return u.toString();
+  })();
+
   const input = await readInput(request, url);
   if (input.error) return json({ schema: KIND, error: "uncheckable", reason: input.error, url: input.url, http: input.http }, input.error.includes("cap") ? 413 : 400);
   if (!input.source) {
@@ -283,7 +296,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     }
     const description =
       "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
-    const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
+    const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.
@@ -299,11 +312,11 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       },
       outputExample: { schema: KIND, measurement: { checked: [] } },
     });
-    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+    const payment = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
     if (!payment.ok) {
       return paymentRequiredResponseSigned(
         buildPaymentRequiredV2({
-          resourceUrl,
+          resourceUrl: challengeUrl,
           description,
           serviceName: "CSOAI Art50 Marking",
           tags: ["art50", "marking", "c2pa", "x402"],
@@ -356,7 +369,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     const reference = await invoiceReference(org, m.subject.sha256, fetched_at);
     payment = { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP" };
   } else {
-    const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "pack", description });
+    const accepts = x402Accepts(env, challengeUrl, { skuId: SKU, tier: "pack", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.
@@ -378,10 +391,10 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         unmeasured: ["root_inclusion", "watermark.synthid"],
       },
     });
-    const paid = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+    const paid = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
     if (!paid.ok) {
       const paymentRequired = buildPaymentRequiredV2({
-        resourceUrl,
+        resourceUrl: challengeUrl,
         description,
         serviceName: "CSOAI Article 50 marking evidence",
         tags: ["article-50", "c2pa", "marking", "measurement", "x402"],

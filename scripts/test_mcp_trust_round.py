@@ -23,6 +23,27 @@ assert _SPEC.loader is not None
 _SPEC.loader.exec_module(mtr)
 
 
+class PartialFlag(unittest.TestCase):
+    """A cap-limited read is PARTIAL (2026-09-26: the 14 Sep snapshot said partial:false beside
+    complete:false, stop_reason "cap reached", 500 of 1,854)."""
+
+    def test_cap_reached_is_partial(self):
+        self.assertTrue(mtr.is_partial({"complete": False, "stop_reason": "cap reached", "cap": 500, "unique_hosts": 500}))
+
+    def test_failed_fetch_is_partial(self):
+        self.assertTrue(mtr.is_partial({"complete": False, "stop_reason": "registry fetch failed after retries"}))
+
+    def test_clean_end_is_not_partial(self):
+        self.assertFalse(mtr.is_partial({"complete": True, "stop_reason": "cursor exhausted — clean end of registry"}))
+
+    def test_control_the_old_rule_would_have_said_complete(self):
+        # must-fail control: the rule this replaced reported the cap-limited round as not partial.
+        old_rule = lambda e, n_hosts, cap: (not e["complete"]) and n_hosts < cap
+        e = {"complete": False, "stop_reason": "cap reached"}
+        self.assertFalse(old_rule(e, 500, 500))
+        self.assertTrue(mtr.is_partial(e))
+
+
 class Classify(unittest.TestCase):
     def test_unreachable_is_never_fail(self):
         for err in ("TimeoutError", "URLError", "ConnectionResetError"):

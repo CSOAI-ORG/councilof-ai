@@ -911,28 +911,47 @@ export type PaymentRequiredV2Opts = {
   csoai?: Record<string, unknown>;
 };
 
-/** Build an x402 v2 PaymentRequired object (body + PAYMENT-REQUIRED header payload). */
+/**
+ * challengeAccept — THE ONE projection of an X402Accept into the accepts[] entry a buyer reads.
+ *
+ * Every 402 body builds its accepts[] through this function (buildPaymentRequiredV2), and so does
+ * /.well-known/x402.json. Until 2026-09-26 the listing hand-rolled its own entry — `network: "base"`,
+ * no amount, no asset, `extra.name: "USDC"` — while the live challenge said `eip155:8453`, an
+ * atomic amount and `extra.name: "USD Coin"`. extra.name is the EIP-712 domain name the payer
+ * signs under, so a wallet that trusted the listing would have produced a signature the token
+ * contract rejects. One function, called from both places, is what stops that recurring;
+ * functions/.well-known/x402-listing-parity.test.ts proves it door by door.
+ */
+export function challengeAccept(
+  a: X402Accept,
+  resourceUrl: string,
+  description: string,
+): Record<string, unknown> {
+  const amount = a.amount || a.maxAmountRequired;
+  return {
+    scheme: a.scheme,
+    network: toCaip2Network(a.network),
+    amount,
+    maxAmountRequired: a.maxAmountRequired || amount,
+    asset: a.asset,
+    payTo: a.payTo,
+    maxTimeoutSeconds: a.maxTimeoutSeconds,
+    extra: a.extra,
+    ...(a.csoaiPricing ? { csoai_pricing: a.csoaiPricing } : {}),
+    // v1 clients read these on the accept entry; v2 also has top-level resource.url.
+    resource: a.resource || resourceUrl,
+    description: a.description || description.slice(0, 500),
+    mimeType: a.mimeType || "application/json",
+  };
+}
+
+/** Build an x402 v2 PaymentRequired object (the 402 BODY; the header carries a minimal subset). */
 export function buildPaymentRequiredV2(
   opts: PaymentRequiredV2Opts,
 ): Record<string, unknown> {
-  const accepts = opts.accepts.map((a) => {
-    const amount = a.amount || a.maxAmountRequired;
-    return {
-      scheme: a.scheme,
-      network: toCaip2Network(a.network),
-      amount,
-      maxAmountRequired: a.maxAmountRequired || amount,
-      asset: a.asset,
-      payTo: a.payTo,
-      maxTimeoutSeconds: a.maxTimeoutSeconds,
-      extra: a.extra,
-      ...(a.csoaiPricing ? { csoai_pricing: a.csoaiPricing } : {}),
-      // v1 clients read these on the accept entry; v2 also has top-level resource.url.
-      resource: a.resource || opts.resourceUrl,
-      description: a.description || opts.description.slice(0, 500),
-      mimeType: a.mimeType || "application/json",
-    };
-  });
+  const accepts = opts.accepts.map((a) =>
+    challengeAccept(a, opts.resourceUrl, opts.description),
+  );
   return {
     x402Version: 2,
     error: "Payment required",
@@ -960,28 +979,88 @@ export function buildPaymentRequiredV2(
 export const PAYMENT_REQUIRED_HEADER_LIMIT = 16 * 1024;
 
 /**
+ * The budget this rail holds itself to, well under the 16 KiB x402scan ceiling. Common reverse
+ * proxies cap a single response header at 4–8 KiB (nginx proxy_buffer_size defaults to 4k/8k), so
+ * a header near 9 KB — what /api/pop/mcp-registry emitted until 2026-09-26 — is dropped or turned
+ * into a 502 by infrastructure between us and the buyer. Tested per door in
+ * functions/api/payment-required-header.test.ts.
+ */
+export const PAYMENT_REQUIRED_HEADER_BUDGET = 4 * 1024;
+
+/** The v2 PaymentRequirements fields (x402-specification-v2 §5.1.2) — nothing else goes in the header. */
+const V2_REQUIREMENT_FIELDS = [
+  "scheme",
+  "network",
+  "amount",
+  "asset",
+  "payTo",
+  "maxTimeoutSeconds",
+  "extra",
+] as const;
+
+/**
+ * minimalPaymentRequired — the subset of a 402 body that travels in the PAYMENT-REQUIRED header.
+ *
+ * What the spec requires there (x402-specification-v2 §5.1.2, transports-v2/http.md): a
+ * PaymentRequired whose REQUIRED fields are x402Version, resource and accepts; `error` and
+ * `extensions` are optional. What this keeps:
+ *   x402Version, error, resource {url, description, mimeType}, and accepts[] cut to the v2
+ *   PaymentRequirements fields (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra).
+ * What it leaves in the BODY only:
+ *   extensions (bazaar info+schema, offer-receipt offers) — specs/extensions/bazaar.md places
+ *   `PaymentRequired.extensions` on the "402 response body" wire, and the offer JWS strings are
+ *   ~600 B each; the v1 duplicates on each accept (maxAmountRequired, resource, description,
+ *   mimeType) and csoai_pricing; and the whole `csoai` sidecar.
+ * Until 2026-09-26 the header carried all of it: 8.6–8.9 KB per door.
+ *
+ * Nothing is lost to a payer: every field a wallet needs to sign EIP-3009 is in accepts[], and
+ * the Bazaar echo to the facilitator is built server-side from the door's own `bazaar` object
+ * (verifyX402Payment opts.bazaar), never from a header the client returns.
+ */
+export function minimalPaymentRequired(
+  paymentRequired: Record<string, unknown>,
+): Record<string, unknown> {
+  const resource = (paymentRequired.resource ?? {}) as Record<string, unknown>;
+  const accepts = Array.isArray(paymentRequired.accepts)
+    ? (paymentRequired.accepts as Record<string, unknown>[])
+    : [];
+  const pick = (a: Record<string, unknown>) => {
+    const out: Record<string, unknown> = {};
+    for (const k of V2_REQUIREMENT_FIELDS) {
+      if (k === "amount") out.amount = a.amount ?? a.maxAmountRequired;
+      else if (k === "extra" && a.extra && typeof a.extra === "object") {
+        // The EIP-712 domain (name, version) is what the payer signs under; decimals/symbol are
+        // informational and stay in the body.
+        const e = a.extra as Record<string, unknown>;
+        out.extra = { name: e.name, version: e.version };
+      } else if (a[k] !== undefined) out[k] = a[k];
+    }
+    return out;
+  };
+  return {
+    x402Version: paymentRequired.x402Version,
+    ...(paymentRequired.error !== undefined ? { error: paymentRequired.error } : {}),
+    resource: {
+      url: resource.url,
+      ...(resource.description !== undefined ? { description: resource.description } : {}),
+      mimeType: resource.mimeType ?? "application/json",
+    },
+    accepts: accepts.map(pick),
+  };
+}
+
+/**
  * Encode PaymentRequired for the v2 `PAYMENT-REQUIRED` response header.
  *
- * The BODY carries everything, including the `csoai` estate sidecar. The HEADER carries
- * the challenge a machine needs to pay: x402Version, error, resource, accepts and
- * extensions. `csoai.preview` is a courtesy for whoever reads the body — on
- * /api/evidence-bundle its `preview.cards` alone is 10,610 B, which pushed that door's
- * header to 17,244 B, over x402scan's 16 KiB limit, while every other door sits at
- * 3-7 KB. Duplicating a preview into a header nobody reads it from cost that door its
- * listing, so the sidecar's bulk is dropped from the header only.
+ * The BODY carries everything. The HEADER carries minimalPaymentRequired() — the challenge a
+ * machine needs to pay, and nothing a proxy has to buffer for no reader. A non-object input
+ * (never produced by this module) is encoded as given.
  */
 export function encodePaymentRequiredHeader(paymentRequired: unknown): string {
-  let forHeader = paymentRequired;
-  if (paymentRequired && typeof paymentRequired === "object") {
-    const src = paymentRequired as Record<string, unknown>;
-    if (src.csoai && typeof src.csoai === "object") {
-      const { preview: _preview, ...csoaiRest } = src.csoai as Record<
-        string,
-        unknown
-      >;
-      forHeader = { ...src, csoai: csoaiRest };
-    }
-  }
+  const forHeader =
+    paymentRequired && typeof paymentRequired === "object" && !Array.isArray(paymentRequired)
+      ? minimalPaymentRequired(paymentRequired as Record<string, unknown>)
+      : paymentRequired;
   const json = JSON.stringify(forHeader);
   const bytes = new TextEncoder().encode(json);
   let binary = "";
@@ -1010,10 +1089,11 @@ export function paymentRequiredResponse(
 /**
  * paymentRequiredResponseSigned — THE call every metered door makes instead of
  * `paymentRequiredResponse`. It signs one offer per accepts[] entry (offer-receipt extension §4)
- * and then builds the same 402, so the offers appear in BOTH the JSON body and the base64
- * PAYMENT-REQUIRED header. That symmetry is not decoration: CDP Bazaar validate reads the header
- * and most clients read the body, and an offer present in only one of them is an offer half the
- * ecosystem cannot see.
+ * and then builds the same 402. The signed offers ride in the JSON body's
+ * extensions["offer-receipt"]; the PAYMENT-REQUIRED header carries only the minimal v2 challenge
+ * (minimalPaymentRequired). They used to be duplicated into the header too, which is how the
+ * header reached 8.6–8.9 KB — past the 4–8 KiB single-header limit of common proxies. The bazaar
+ * spec locates PaymentRequired.extensions on the 402 response body, which is where they stay.
  *
  * It is the only asynchronous thing about emitting a 402, and it never fails the response: when
  * the key is absent or no accepts entry can be committed to, the 402 goes out exactly as before

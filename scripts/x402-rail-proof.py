@@ -54,7 +54,11 @@ if not ch or not (ch.get("accepts") or []):
     print("  the route is free, quarantined, or needs required query params — nothing to prove here")
     raise SystemExit(2)
 acc = ch["accepts"][0]
-print("challenge:", acc["scheme"], acc["network"], "amount", acc["maxAmountRequired"],
+# The PAYMENT-REQUIRED header is the minimal x402 v2 challenge (functions/api/_x402.ts
+# minimalPaymentRequired): v2 names the atomic amount `amount`. `maxAmountRequired` is the v1 name,
+# still present in the 402 body; read either so the proof works against both.
+AMOUNT = str(acc.get("amount") or acc.get("maxAmountRequired"))
+print("challenge:", acc["scheme"], acc["network"], "amount", AMOUNT,
       "| extra", acc.get("extra"))
 
 # Ephemeral, unfunded. The private key never leaves this process and is never printed.
@@ -65,7 +69,7 @@ now = int(time.time())
 authorization = {
     "from": acct.address,
     "to": acc["payTo"],
-    "value": str(acc["maxAmountRequired"]),
+    "value": AMOUNT,
     "validAfter": "0",
     "validBefore": str(now + 600),
     "nonce": "0x" + secrets.token_bytes(32).hex(),

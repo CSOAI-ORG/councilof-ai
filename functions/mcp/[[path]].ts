@@ -80,9 +80,13 @@ const mcp = createMcpHandler(
       server.registerTool(
         definition.name,
         {
+          ...(definition.title ? { title: definition.title } : {}),
           description: definition.description,
           inputSchema,
           ...(outputSchema ? { outputSchema } : {}),
+          // readOnlyHint for the free readers; the paid tools spend the caller's funds when called
+          // with x_payment, so they are neither read-only nor idempotent (paid-tools.json).
+          ...(definition.annotations ? { annotations: definition.annotations } : {}),
         },
         (args) =>
           PAID_TOOL_NAMES.has(definition.name)

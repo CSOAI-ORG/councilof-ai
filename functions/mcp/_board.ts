@@ -3,6 +3,8 @@
  * Definitions stay in ./gspc-tools.json (byte-for-byte with npm csoai-gspc-mcp).
  * Do not edit mcp/gspc-server — four-tool npm package stays honest.
  */
+import { axisSpellings, canonicalAxis, sameAxis } from "./_axis";
+
 export const UPSTREAM = "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp";
 
 /** Card URLs may be fetched only from the estate's own published origins. */
@@ -78,8 +80,10 @@ export async function boardTotalsTool(origin: string) {
 }
 
 export async function getAxisTool(origin: string, args: Record<string, unknown>) {
-  const wanted = String(args.axis ?? "").trim().toLowerCase();
-  if (!wanted) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  const asked = String(args.axis ?? "").trim();
+  if (!asked) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  // Canonical ids and their aliases (gov, gspc-governance, …), case-insensitive — ./axis-aliases.json.
+  const wanted = canonicalAxis(asked);
   let d: Record<string, unknown>;
   try {
     d = (await fetchOriginJson(origin, "/api/gspc")) as Record<string, unknown>;
@@ -87,11 +91,11 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
     return unreachablePayload(origin, "/api/gspc", e);
   }
   const rows = (d.axes ?? []) as Record<string, unknown>[];
-  const row = rows.find((r) => String(r.axis ?? "").toLowerCase() === wanted);
+  const row = rows.find((r) => sameAxis(r.axis, wanted));
   if (!row) {
     return {
       state: "NOT_ON_BOARD",
-      axis: wanted,
+      axis: asked,
       note: "This name is not a row on the live board. That is a fact about the board, not a verdict about the subject.",
       board_carries: rows.map((r) => r.axis),
       as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
@@ -101,6 +105,7 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
   return {
     state: "LIVE",
     axis: row.axis,
+    ...(asked.toLowerCase() !== String(row.axis).toLowerCase() ? { resolved_from: asked } : {}),
     family: row.family ?? null,
     status: row.status ?? null,
     measured,
@@ -148,10 +153,22 @@ export async function listCardsTool(origin: string, args: Record<string, unknown
       packaged_at: idx.packaged_at ?? null,
       pubkey: idx.pubkey ?? null,
     };
-    const wanted = args.axis ? String(args.axis).toLowerCase() : null;
+    // The index spells axes its own way ("gov", "gspc-governance"); the board says "governance".
+    // Both, and any case, resolve through ONE alias table, so a board name finds its index rows.
+    const wanted = args.axis ? canonicalAxis(args.axis) : null;
     const limit = Number.isInteger(args.limit) ? (args.limit as number) : 10;
+    if (wanted) {
+      const matched = [...new Set(rows.map((r) => String(r.axis ?? "")).filter((a) => sameAxis(a, wanted)))].sort();
+      out.axis_query = {
+        asked: String(args.axis),
+        canonical: wanted,
+        spellings: axisSpellings(wanted),
+        index_names_matched: matched,
+        note: "rows whose index axis name resolves to the same axis under functions/mcp/axis-aliases.json; each row keeps the index's own spelling",
+      };
+    }
     out.rows = rows
-      .filter((r) => !wanted || String(r.axis ?? "").toLowerCase() === wanted)
+      .filter((r) => !wanted || sameAxis(r.axis, wanted))
       .slice()
       .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
       .slice(0, limit)
@@ -193,6 +210,22 @@ export async function getRootTool(origin: string) {
   }
 }
 
+/** partial = the snapshot says so OR its enumeration did not complete (a cap is not completion). */
+export function partialOf(d: Record<string, unknown>): { partial: boolean; partial_reason: string | null } {
+  const e = (d.enumeration ?? {}) as Record<string, unknown>;
+  if (d.partial === true) return { partial: true, partial_reason: String(e.stop_reason ?? "the snapshot marks itself partial") };
+  if (e.complete === false) {
+    const seen = e.rows_with_remote ?? e.registry_rows_seen;
+    return {
+      partial: true,
+      partial_reason: `enumeration incomplete: ${String(e.stop_reason ?? "stopped early")}${
+        e.unique_hosts != null && seen != null ? ` (${e.unique_hosts} hosts probed of ${seen} registry rows with a remote)` : ""
+      }`,
+    };
+  }
+  return { partial: false, partial_reason: null };
+}
+
 export async function mcpTrustTool(origin: string) {
   try {
     const d = (await fetchOriginJson(origin, "/interop/mcp-trust/latest.json")) as Record<string, unknown>;
@@ -201,9 +234,13 @@ export async function mcpTrustTool(origin: string) {
       source: `${origin}/interop/mcp-trust/latest.json`,
       kind: d.kind ?? null,
       as_of: d.as_of ?? null,
-      partial: d.partial ?? false,
+      // A CAP-LIMITED READ IS PARTIAL. The snapshot of 2026-09-14 says partial:false while its own
+      // enumeration says complete:false, stop_reason "cap reached" (500 of 1,854 hosts): the
+      // producer counted a cap as a deliberate slice. Read it from the enumeration, not the flag.
+      ...partialOf(d),
       enumeration: d.enumeration ?? null,
       counts: d.counts ?? null,
+      headline: d.headline ?? null,
       diff: d.diff ?? null,
       not_a_certification: true,
     };

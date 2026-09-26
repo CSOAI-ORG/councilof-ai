@@ -199,20 +199,29 @@ describe("door descriptions are buyer-first (2026-09-06)", () => {
   });
 });
 
-describe("resources are v1-shaped (accepts[] with outputSchema)", () => {
-  it("every resource declares the v1 PaymentRequirements", async () => {
+describe("resources carry the live v2 accepts[] and a v1 projection of the same entry", () => {
+  it("accepts[] is the challenge's v2 shape; accepts_v1 is the v1 PaymentRequirements of that entry", async () => {
     const body = await get();
-    const resources = body.resources as {
+    const resources = body.resources as unknown as {
       url: string;
-      accepts?: { scheme: string; network: string; payTo: string; description: string; outputSchema?: object }[];
+      accepts?: { scheme: string; network: string; payTo: string; amount: string; asset: string; extra: { name: string; version: string } }[];
+      accepts_v1?: { scheme: string; network: string; payTo: string; maxAmountRequired: string; description: string; outputSchema?: object; extra: { name: string; version: string } }[];
     }[];
     for (const r of resources) {
-      expect(r.accepts, `${r.url} must declare accepts[] for v1 consumers`).toBeTruthy();
+      expect(r.accepts, `${r.url} must declare accepts[]`).toBeTruthy();
       const a = r.accepts![0];
       expect(a.scheme).toBe("exact");
-      expect(a.network).toMatch(/base/i);
+      expect(a.network, r.url).toBe("eip155:8453");
+      expect(a.amount, r.url).toMatch(/^\d+$/);
+      expect(a.asset, r.url).toMatch(/^0x[0-9a-fA-F]{40}$/);
       expect(a.payTo).toMatch(/^0x/i);
-      expect(a.outputSchema).toBeTruthy();
+      // The EIP-712 domain a wallet signs under — "USDC" here made every signature unverifiable.
+      expect(a.extra, r.url).toMatchObject({ name: "USD Coin", version: "2" });
+      const v1 = r.accepts_v1![0];
+      expect(v1.network, r.url).toBe("base");
+      expect(v1.maxAmountRequired, r.url).toBe(a.amount);
+      expect(v1.extra.name, r.url).toBe(a.extra.name);
+      expect(v1.outputSchema).toBeTruthy();
     }
   });
 });

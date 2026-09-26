@@ -6,6 +6,7 @@
  * The canonical files stay canonical:
  *   functions/mcp/gspc-tools.json   — the ONE free-tool definition source (HTTP + stdio)
  *   functions/mcp/paid-tools.json   — the ONE paid-tool definition source (HTTP + stdio)
+ *   functions/mcp/axis-aliases.json — the ONE axis alias table (HTTP + stdio + Python client)
  *   public/signed/verify-card.mjs   — the ONE published card verifier
  *
  * In a repo checkout index.mjs reads the canonical paths directly; the copies
@@ -21,6 +22,7 @@ const sha = (p) => createHash("sha256").update(readFileSync(p)).digest("hex");
 const PAIRS = [
   ["../../functions/mcp/gspc-tools.json", "./gspc-tools.json"],
   ["../../functions/mcp/paid-tools.json", "./paid-tools.json"],
+  ["../../functions/mcp/axis-aliases.json", "./axis-aliases.json"],
   ["../../public/signed/verify-card.mjs", "./verify-card.mjs"],
 ];
 

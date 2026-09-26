@@ -193,8 +193,19 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // exactly what settling buys. On 2026-09-06 five of nine doors carried neither, and this one
   // carried no csoai block at all — so a buyer reading the challenge could not tell what it was
   // for. This door is the free one: its deliverable says so plainly rather than implying a purchase.
+  // WHY 402 AND NOT 200 FOR A FREE RESOURCE (asked by a developer-persona test, 2026-09-26).
+  // A free resource would normally answer 200. This one answers a zero-amount 402 because the x402
+  // Bazaar catalogues a resource only off a confirmed settle, and a 200 route has nothing to settle
+  // (the /api/gspc seed indexed nothing — see the header of this file). So the 402 is the discovery
+  // mechanism, not a gate: the SAME content is served with 200 and no handshake at
+  // `free_equivalents`. `free_preview` used to point back at this door, i.e. at another 402 —
+  // a pointer to "the free version" that was itself a challenge. It now names a 200 route.
   const csoaiBase = {
-    free_preview: `${url.origin}/api/free-door`,
+    free_preview: `${url.origin}/api/gspc`,
+    free_equivalents: [`${url.origin}/api/gspc`, `${url.origin}/root.json`],
+    why_402:
+      "A zero-amount 402 so the x402 Bazaar can index this rail (it catalogues only resources that " +
+      "settle). Nothing is charged. The same content answers 200 with no handshake at free_equivalents.",
     deliverable:
       "the Bazaar door itself: this resource is free and settles for zero. It exists so an index " +
       "can discover the rail; it sells nothing and a settlement here buys nothing.",

@@ -34,10 +34,37 @@ def totals(board: dict | None = None) -> dict:
     return (board or fetch_board())["totals"]
 
 
+def _load_aliases() -> dict:
+    """THE ONE axis alias table, shipped byte-identical to functions/mcp/axis-aliases.json."""
+    try:
+        from importlib.resources import files  # Python >= 3.9
+        return json.loads(files(__package__).joinpath("axis_aliases.json").read_text(encoding="utf-8"))["axes"]
+    except Exception:  # a broken install must not break reading the board; names then match exactly
+        return {}
+
+
+AXIS_ALIASES: dict = _load_aliases()
+_CANON = {}
+for _canonical, _aliases in AXIS_ALIASES.items():
+    _CANON[_canonical.lower()] = _canonical
+    for _a in _aliases:
+        _CANON[_a.lower()] = _canonical
+
+
+def canonical_axis(name: str) -> str:
+    """The board's own id for an axis name or alias, case-insensitive ("GOV" -> "governance").
+
+    An unknown name comes back trimmed and lowercased, and simply matches nothing on the board.
+    """
+    k = str(name or "").strip().lower()
+    return _CANON.get(k, k)
+
+
 def get_axis(name: str, board: dict | None = None) -> dict | None:
-    """One slot by name, or None. Returning None is the honest answer for an absent slot."""
+    """One slot by name or alias (case-insensitive), or None. None is the honest answer for an absent slot."""
+    want = canonical_axis(name)
     for a in axes(board):
-        if a.get("axis") == name:
+        if canonical_axis(a.get("axis", "")) == want:
             return a
     return None
 

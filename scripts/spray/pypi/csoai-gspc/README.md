@@ -57,13 +57,16 @@ from csoai_gspc import fetch_board, check_totals, get_axis, fetch_card, verify_c
 board = fetch_board()
 assert check_totals(board)["agree"]
 
-gov = get_axis("governance", board)
+gov = get_axis("governance", board)                # aliases resolve too: "gov", "GSPC-Governance"
 print(gov["bench"], gov["n"], gov["status"])     # bench, n and status exactly as the board carries them
 
 key = pinned_key()                                # from https://councilof.ai/.well-known/did.json
-v = verify_card(fetch_card("acf6bf03…65133a4"), key)
+v = verify_card(fetch_card("acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4"), key)
 print(v.state, v.reason)
 ```
+
+`fetch_card` takes the card's full id — 64 hex characters — and raises `ValueError` for anything else
+(an abbreviated `acf6bf03…65133a4` included) before touching the network.
 
 ## Pin the key. This step is not optional
 

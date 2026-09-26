@@ -486,10 +486,11 @@ def compose(fix: Path = FIX) -> dict:
             "parameters": parameters,
             "responses": {
                 "402": {
-                    "description": "Payment required — the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. "
+                    "description": "Payment required — the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset "
+                                   "(x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. "
                                    f"Pay accepts[0] (scheme {rail['scheme']}, network {rail['network']}, {rail['asset']['symbol']} {rail['asset']['contract']}, payTo {rail['pay_to']}; "
                                    "amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
-                    "headers": {"PAYMENT-REQUIRED": {"description": "base64(JSON) of this challenge body", "schema": {"type": "string"}}},
+                    "headers": {"PAYMENT-REQUIRED": {"description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) — under 4 KiB", "schema": {"type": "string"}}},
                     "content": {"application/json": {"schema": {"$ref": "#/components/schemas/X402PaymentRequired"}, "example": example}},
                 },
                 "200": {
@@ -512,8 +513,8 @@ def compose(fix: Path = FIX) -> dict:
             op["responses"]["503"] = {"description": "Required source unavailable or invalid; no payment settled."}
             op["x-csoai"]["free_manifest"] = BASE + "/api/eunomia-data?manifest=1"
             op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
-        if r.get("indexed_in"):
-            op["x-csoai"]["indexed_in"] = r["indexed_in"]
+        # `indexed_in` is deliberately NOT carried (2026-09-26): /.well-known/x402.json no longer
+        # types third-party index membership, which only a read of the index can establish.
         # One door, every verb its handler actually exports. The 402 contract is identical on
         # each; only operationId differs, because operationIds must be unique.
         item = {}
