@@ -256,6 +256,113 @@ class TestHealth(Base):
         self.assertEqual(fl.evaluate_health(j, T0, {"hf_last_modified": boom})["state"], "UNMEASURED")
 
 
+
+class TestTimestampsAndNewStates(Base):
+    def test_parse_ts_compact_flywheel_form(self):
+        # the flywheel stamps runs 20260926T010502Z; before 2026-09-26 this parsed to None and marked
+        # four healthy flywheel jobs FAILED ("field last_success missing/unparseable")
+        self.assertEqual(fl.parse_ts("20260926T010502Z"), datetime.datetime(2026, 9, 26, 1, 5, 2, tzinfo=fl.UTC))
+        self.assertEqual(fl.parse_ts("20260926T0105Z"), datetime.datetime(2026, 9, 26, 1, 5, 0, tzinfo=fl.UTC))
+        self.assertEqual(fl.parse_ts("2026-09-26T01:05:02Z"), fl.parse_ts("20260926T010502Z"))
+        self.assertEqual(fl.parse_ts("2026-09-26T02:05:02+01:00"), fl.parse_ts("20260926T010502Z"))
+        for bad in ("20261326T010502Z", "20260926T010502", "2026092T010502Z", "", None, "EXIT_0"):
+            self.assertIsNone(fl.parse_ts(bad), bad)
+
+    def fw(self, jobs, results=()):
+        st = os.path.join(self.d, "fw.json")
+        wj(st, {"jobs": jobs})
+        os.makedirs(os.path.join(self.d, "logs"), exist_ok=True)
+        for name, r in results:
+            wj(os.path.join(self.d, "logs", name), r)
+        return st
+
+    def test_status_json_job_compact_stamp_is_ok_not_failed(self):
+        st = self.fw({"x402-daily": {"last_run": "20250925T110537Z", "rc": 0, "result": "PUBLISHED",
+                                     "last_success": "20260925T110537Z"}})
+        j = self.job(health={"type": "status_json_job", "path": st, "key": "x402-daily", "field": "last_success",
+                             "max_age_s": 97200, "fail_unless": {"rc": ["0"]}})
+        self.assertEqual(fl.evaluate_health(j, T0)["state"], "OK")
+        self.assertEqual(fl.evaluate_health(j, T0 + datetime.timedelta(hours=30))["state"], "STALE")
+        # never succeeded (dry runs only) -> MISSING, and PENDING_FIRST_RUN before not_before
+        st2 = self.fw({"census-weekly": {"last_run": "20260925T133826Z", "rc": 0, "result": "DRY_RUN_STOPPED_BEFORE_PUBLISH"}})
+        j2 = self.job(health={"type": "status_json_job", "path": st2, "key": "census-weekly", "field": "last_success", "max_age_s": 60},
+                      not_before=fl.iso(T0 + mins(60)))
+        self.assertEqual(fl.evaluate_health(j2, T0)["state"], "PENDING_FIRST_RUN")
+        self.assertEqual(fl.evaluate_health(j2, T0 + mins(61))["state"], "MISSING")
+        # last run failed although an older success exists -> FAILED
+        st3 = self.fw({"ots-upgrade": {"last_run": "20260925T113000Z", "rc": 1, "result": "FAILED_DISK_FLOOR",
+                                       "last_success": "20260925T100000Z"}})
+        j3 = self.job(health={"type": "status_json_job", "path": st3, "key": "ots-upgrade", "field": "last_success",
+                              "max_age_s": 97200, "fail_unless": {"rc": ["0"]}})
+        self.assertEqual(fl.evaluate_health(j3, T0)["state"], "FAILED")
+
+    def test_noop_from_result_history(self):
+        runs = [("u-20260925T0%d0000Z.result.json" % i, {"rc": 0, "changes": {"added": 0, "removed": 0, "changed": 0}})
+                for i in range(1, 4)]
+        st = self.fw({"u": {"rc": 0, "last_success": "20260925T113000Z"}}, runs)
+        h = {"type": "status_json_job", "path": st, "key": "u", "field": "last_success", "max_age_s": 97200,
+             "noop": {"runs": 3, "zero": ["changes.added", "changes.removed", "changes.changed"],
+                      "history_glob": os.path.join(self.d, "logs", "{key}-*.result.json")}}
+        r = fl.evaluate_health(self.job(health=h), T0)
+        self.assertEqual(r["state"], "NOOP")
+        self.assertNotIn(r["state"], fl.BAD)
+        wj(os.path.join(self.d, "logs", "u-20260925T040000Z.result.json"), {"rc": 0, "changes": {"added": 2}})
+        self.assertEqual(fl.evaluate_health(self.job(health=h), T0)["state"], "OK")
+        # "same": identical root three runs running (needs N+1 results)
+        for i, root in enumerate(["a", "b", "b", "b"]):
+            wj(os.path.join(self.d, "logs", "h-20260925T0%d0000Z.result.json" % i), {"rc": 0, "candidate_root_sha256": root})
+        st2 = self.fw({"h": {"rc": 0, "last_success": "20260925T113000Z"}})
+        h2 = dict(h, path=st2, key="h", noop={"runs": 3, "same": ["candidate_root_sha256"],
+                                              "history_glob": os.path.join(self.d, "logs", "{key}-*.result.json")})
+        self.assertEqual(fl.evaluate_health(self.job(health=h2), T0)["state"], "OK")  # a->b was a change
+        wj(os.path.join(self.d, "logs", "h-20260925T090000Z.result.json"), {"rc": 0, "candidate_root_sha256": "b"})
+        self.assertEqual(fl.evaluate_health(self.job(health=h2), T0)["state"], "NOOP")
+
+    def test_noop_from_log_lines(self):
+        p = os.path.join(self.d, "h.log")
+        wt(p, "".join("2026-09-25T1%d:57:00Z master=x appended=0 state=MEASURED\n" % i for i in range(3)))
+        h = {"type": "log_last_line", "path": p, "max_age_s": 7200, "noop": {"runs": 3, "patterns": [r"\bappended=0\b"]}}
+        self.assertEqual(fl.evaluate_health(self.job(health=h), T0)["state"], "NOOP")
+        with open(p, "a") as fh:
+            fh.write("2026-09-25T11:57:00Z master=y appended=4 state=MEASURED\n")
+        self.assertEqual(fl.evaluate_health(self.job(health=h), T0)["state"], "OK")
+
+    def pod(self, entry, exported=T0):
+        return {"pod_jobs": {"exported_at": fl.iso(exported), "jobs": {"k": entry}}}
+
+    def test_pod_job_reads_the_pod_export(self):
+        j = self.job(host="pod:x", supervise="observe", health={"type": "pod_job", "key": "k", "max_age_s": 5400,
+                                                                "noop": {"runs": 3, "patterns": ["no new drift"], "result_re": "RECEIPT"}})
+        line = lambda t, s: "%s %s" % (fl.iso(t), s)
+        ok = {"last_ts": fl.iso(T0 - mins(5)), "tail": [line(T0 - mins(6), "START"), line(T0 - mins(5), "RECEIPT drift x1 rc=0")]}
+        self.assertEqual(fl.evaluate_health(j, T0, self.pod(ok))["state"], "OK")
+        bad = dict(ok, tail=ok["tail"] + [line(T0 - mins(5), "HALT worker jobs dir unresolved rc=2")])
+        self.assertEqual(fl.evaluate_health(j, T0, self.pod(bad))["state"], "FAILED")
+        self.assertEqual(fl.evaluate_health(j, T0 + mins(120), self.pod(ok, T0 + mins(119)))["state"], "STALE")
+        # export itself stale -> UNMEASURED (never guessed dormant or healthy)
+        self.assertEqual(fl.evaluate_health(j, T0 + mins(45), self.pod(ok))["state"], "UNMEASURED")
+        self.assertEqual(fl.evaluate_health(j, T0, {"pod_jobs": None})["state"], "UNMEASURED")
+        self.assertEqual(fl.evaluate_health(j, T0, {"pod_jobs": {"exported_at": fl.iso(T0), "jobs": {}}})["state"], "MISSING")
+        paused = dict(ok, paused_since=fl.iso(T0 - mins(90)), paused_reason="PAUSED_NO_GPU")
+        r = fl.evaluate_health(j, T0, self.pod(paused))
+        self.assertEqual(r["state"], "PAUSED")
+        self.assertNotIn("PAUSED", fl.BAD)
+        self.assertEqual(fl.evaluate_health(j, T0, self.pod(dict(ok, disabled="OOM rc=137")))["state"], "DISABLED")
+        silent = dict(ok, last_ts=fl.iso(T0 - mins(60 * 30)), stamp_mtime=fl.iso(T0 - mins(30)), stamp="2026-09-25")
+        self.assertEqual(fl.evaluate_health(j, T0, self.pod(silent))["state"], "NOOP")
+        self.assertEqual(fl.evaluate_health(j, T0, self.pod(dict(silent, stamp_mtime=fl.iso(T0 - mins(60 * 30)))))["state"], "STALE")
+        quiet = {"last_ts": fl.iso(T0 - mins(5)), "tail": [line(T0 - mins(i), "RECEIPT no new drift (open=6) rc=0") for i in (125, 65, 5)]}
+        self.assertEqual(fl.evaluate_health(j, T0, self.pod(quiet))["state"], "NOOP")
+
+    def test_disabled_health_type(self):
+        j = self.job(supervise="observe", cron_match="run_govbench.sh", health={"type": "disabled", "why": "script gone"})
+        self.assertEqual(fl.evaluate_health(j, T0, {"crontab": "# 0 */4 * * * ~/run_govbench.sh"})["state"], "DISABLED")
+
+    def test_noop_and_paused_never_act(self):
+        for st in ("NOOP", "PAUSED", "DISABLED"):
+            verb, _ = fl.decide(self.job(), {"state": st}, {}, self.policy, T0, "oracle")
+            self.assertEqual(verb, "none", st)
+
 class TestLog(Base):
     def test_tamper_detected(self):
         p = os.path.join(self.d, "a.jsonl")

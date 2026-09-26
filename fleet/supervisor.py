@@ -254,7 +254,8 @@ def supervise(cfg, state, now, this_host, alog, dispatcher, probes, dry_run=Fals
     lvl, fwhy = fl.funding_level(pol, now)
     return {"updated": fl.iso(now), "host": this_host, "dry_run": dry_run, "observe_only": observe_only,
             "n_jobs": len(jobs_out), "counts": counts, "funding": {"level": lvl, "why": fwhy},
-            "bad": sorted(k for k, v in jobs_out.items() if v["state"] in fl.BAD), "jobs": jobs_out}
+            "bad": sorted(k for k, v in jobs_out.items() if v["state"] in fl.BAD),
+            "noop": sorted(k for k, v in jobs_out.items() if v["state"] == fl.NOOP), "jobs": jobs_out}
 
 
 def spawn_retry(job):
@@ -340,8 +341,31 @@ def primary(cfg, args):
         except Exception as e:
             log("heartbeat publish failed: %s: %s" % (type(e).__name__, str(e)[:200]))
             alog.append({"at": fl.iso(now), "host": this, "action": "heartbeat_failed", "why": type(e).__name__})
-    log("pass done: %s bad=%s" % (st["counts"], st["bad"]))
+    publish_public(args)
+    log("pass done: %s bad=%s noop=%s" % (st["counts"], st["bad"], st["noop"]))
     return 0
+
+
+def publish_public(args):
+    """The normal path for the PUBLIC csoai/fleet-status summary: after every primary pass, run the
+    whitelist publisher (publish_fleet_status.py; it publishes only on change or hourly). Never fatal
+    to the pass; a 401 from the Hub is logged verbatim-by-class so the owner can re-mint the token."""
+    if getattr(args, "no_hub", False) or getattr(args, "no_public", False):
+        return
+    pub = os.path.join(HERE, "publish_fleet_status.py")
+    if not os.path.exists(pub):
+        log("public status: publisher absent at %s; not published" % pub)
+        return
+    try:
+        p = subprocess.run([sys.executable, pub, "--status", os.path.join(FLEET_DIR, "fleet_status.json")],
+                           capture_output=True, text=True, timeout=180)
+        out = (p.stdout + p.stderr).strip().splitlines()
+        tail = out[-1][:200] if out else ""
+        if "401" in (p.stdout + p.stderr):
+            tail = "HF 401 Unauthorized: the Oracle HF token must be re-minted by the owner; " + tail
+        log("public status rc=%d %s" % (p.returncode, tail))
+    except Exception as e:
+        log("public status publish failed: %s" % type(e).__name__)
 
 
 def twin(cfg, args):
@@ -469,6 +493,7 @@ def main(argv=None):
     ap.add_argument("--config", default=os.path.join(HERE, "jobs.yaml"))
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--no-hub", action="store_true")
+    ap.add_argument("--no-public", action="store_true", help="skip the public csoai/fleet-status publish after the pass")
     ap.add_argument("--publish-code", action="store_true")
     ap.add_argument("--install-twin", action="store_true")
     ap.add_argument("--verify-log", action="store_true")

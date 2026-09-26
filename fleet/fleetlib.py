@@ -27,10 +27,20 @@ def iso(dt):
     return dt.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+_COMPACT_TS = re.compile(r"^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})?Z$")
+
+
 def parse_ts(s):
-    """ISO-8601 (with Z or offset, optional fraction) -> aware datetime, else None."""
+    """ISO-8601 (with Z or offset, optional fraction) -> aware datetime, else None.
+    Also the compact basic form the flywheel stamps runs with: 20260926T010502Z (and ...T0105Z)."""
     if not isinstance(s, str) or not s:
         return None
+    m = _COMPACT_TS.match(s.strip())
+    if m:
+        try:
+            return datetime.datetime(*(int(x) for x in m.groups(default="0")), tzinfo=UTC)
+        except ValueError:
+            return None
     t = s.strip().replace("Z", "+00:00")
     m = re.match(r"^(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})(\.\d+)?([+-]\d{2}:\d{2})?$", t)
     if not m:
@@ -142,7 +152,14 @@ class ActionLog:
 # ----------------------------------------------------------------------------- health
 OK, STALE, FAILED, MISSING, UNMEASURED, PENDING, NOT_INSTALLED = (
     "OK", "STALE", "FAILED", "MISSING", "UNMEASURED", "PENDING_FIRST_RUN", "NOT_INSTALLED")
+# NOOP: the job runs and exits clean, but its last N runs did nothing (0 items / UNCHANGED) - a
+#       silent no-op is not OK. PAUSED: the job itself declared it cannot run (e.g. no GPU) and logged
+#       that once. DISABLED: switched off on purpose (commented cron line / scheduler stanza).
+# None of the three is BAD: a same-host retry cannot fix any of them.
+NOOP, PAUSED, DISABLED = "NOOP", "PAUSED", "DISABLED"
 BAD = (STALE, FAILED, MISSING, NOT_INSTALLED)
+STATES = (OK, NOOP, PAUSED, DISABLED, PENDING, UNMEASURED, STALE, FAILED, MISSING, NOT_INSTALLED)
+DEFAULT_FAIL_RE = r"\b(?:FAIL(?:ED)?|HALT|ALERT|ERROR|Traceback)\b|\brc=[1-9]\d*\b|\bexit=[1-9]\d*\b"
 
 
 def _last_line(path):
@@ -156,6 +173,130 @@ def _last_line(path):
             if line.strip():
                 last = line
     return last.decode("utf-8", "replace") if last is not None else None
+
+
+def _tail_lines(path, n=40, nbytes=32768):
+    with open(path, "rb") as fh:
+        try:
+            fh.seek(-nbytes, os.SEEK_END)
+        except OSError:
+            fh.seek(0)
+        data = fh.read().splitlines()
+    return [l.decode("utf-8", "replace") for l in data if l.strip()][-n:]
+
+
+def _dig(d, dotted):
+    for k in dotted.split("."):
+        if not isinstance(d, dict):
+            return None
+        d = d.get(k)
+    return d
+
+
+def result_lines(lines, noop_cfg=None):
+    """The lines that report a run's outcome: START/progress lines are not outcomes."""
+    rr = (noop_cfg or {}).get("result_re")
+    if rr:
+        return [l for l in lines if re.search(rr, l)]
+    return [l for l in lines if not re.search(r"\bSTART\b", l)]
+
+
+def noop_from_lines(lines, cfg):
+    """cfg {"patterns": [regex], "runs": N, "result_re": regex?}. NOOP when each of the last N result
+    lines matches a no-op pattern. Returns a detail string or None."""
+    if not cfg or not lines:
+        return None
+    res = result_lines(lines, cfg)
+    n = int(cfg.get("runs", 3))
+    if len(res) < n:
+        return None
+    pats = [re.compile(p) for p in cfg.get("patterns", [])]
+    last = res[-n:]
+    if pats and all(any(p.search(l) for p in pats) for l in last):
+        return "NOOP: last %d runs exited clean having done nothing; last: %s" % (n, last[-1][:140])
+    return None
+
+
+def noop_from_results(results, cfg):
+    """results: run-result dicts oldest->newest (clean runs only). cfg {"runs": N, "zero": [dotted],
+    "same": [dotted]}: a run is a no-op when every `zero` field is 0/empty and every `same` field equals
+    the previous run's. NOOP when the last N runs are all no-ops."""
+    if not cfg:
+        return None
+    n = int(cfg.get("runs", 3))
+    zero, same = cfg.get("zero") or [], cfg.get("same") or []
+    need = n + (1 if same else 0)
+    if len(results) < need:
+        return None
+    window = results[-need:]
+    flags = []
+    for i in range(len(window) - n, len(window)):
+        r = window[i]
+        ok = all(_dig(r, z) in (0, None, "", [], {}) for z in zero)
+        if same:
+            ok = ok and all(_dig(r, s) is not None and _dig(r, s) == _dig(window[i - 1], s) for s in same)
+        flags.append(ok)
+    if all(flags):
+        what = ", ".join(["%s=0" % z for z in zero] + ["%s unchanged" % s for s in same])
+        return "NOOP: last %d clean runs did nothing (%s)" % (n, what)
+    return None
+
+
+def _load_results(glob_pat, key):
+    import glob
+    out = []
+    for p in sorted(glob.glob(expand(glob_pat.replace("{key}", key)))):
+        try:
+            with open(p) as fh:
+                r = json.load(fh)
+        except Exception:
+            continue
+        if isinstance(r, dict) and int(r.get("rc", 0) or 0) == 0 and not r.get("dry_run"):
+            out.append(r)
+    return out
+
+
+def _pod_job(job, h, now, probes, res):
+    if "pod_jobs" in probes:
+        doc = probes["pod_jobs"]
+    else:
+        p = expand(h.get("path", "~/fleet/pod_jobs.json"))
+        try:
+            with open(p) as fh:
+                doc = json.load(fh)
+        except Exception:
+            doc = None
+    if not isinstance(doc, dict):
+        return res(UNMEASURED, None, "no readable pod export: pod scheduler not observed from here")
+    exp = parse_ts(doc.get("exported_at"))
+    if exp is None or (now - exp).total_seconds() > h.get("export_max_age_s", 1800):
+        return res(UNMEASURED, None, "pod export stale (exported_at %s): pod scheduler not observed" % doc.get("exported_at"))
+    e = (doc.get("jobs") or {}).get(h["key"])
+    if not isinstance(e, dict):
+        return res(MISSING, None, "pod export has no entry %r" % h["key"])
+    if e.get("disabled"):
+        return res(DISABLED, None, "disabled on pod: %s" % str(e["disabled"])[:160])
+    ps = parse_ts(e.get("paused_since"))
+    if ps is not None:
+        return res(PAUSED, (now - ps).total_seconds(), "%s since %s" % (e.get("paused_reason") or "PAUSED", e["paused_since"]))
+    lines = [l for l in (e.get("tail") or []) if isinstance(l, str) and l.strip()]
+    ts = parse_ts(e.get("last_ts"))
+    if not lines or ts is None:
+        return res(MISSING, None, "no log lines on the pod for %s" % h["key"])
+    age = (now - ts).total_seconds()
+    outcome = (result_lines(lines) or lines)[-1]  # the last non-START line: any HALT/FAIL counts
+    if age > h.get("max_age_s", 5400):
+        sm = parse_ts(e.get("stamp_mtime"))
+        if sm is not None and (now - sm).total_seconds() <= h.get("max_age_s", 5400):
+            # launched this period (scheduler stamp) yet wrote no log line: a silent no-op, not a dead job
+            return res(NOOP, age, "NOOP: launched %s (stamp %s) but logged nothing since %s" % (e["stamp_mtime"], e.get("stamp"), e.get("last_ts")))
+        return res(STALE, age, outcome[:160])
+    if re.search(h.get("fail_re", DEFAULT_FAIL_RE), outcome):
+        return res(FAILED, age, outcome[:160])
+    nd = noop_from_lines(lines, h.get("noop"))
+    if nd:
+        return res(NOOP, age, nd)
+    return res(OK, age, outcome[:160])
 
 
 def evaluate_health(job, now, probes=None):
@@ -173,6 +314,9 @@ def evaluate_health(job, now, probes=None):
             state = PENDING
         return {"state": state, "age_s": None if age is None else int(age), "detail": detail}
 
+    if kind == "disabled":
+        return {"state": DISABLED, "age_s": None, "detail": h.get("why", "disabled")}
+
     # installation check first: a job whose cron line is gone is not "stale", it is not installed
     cm = job.get("cron_match")
     if cm and "crontab" in probes and probes["crontab"] is not None:
@@ -183,6 +327,8 @@ def evaluate_health(job, now, probes=None):
         return res(UNMEASURED, None, h.get("why", "no health signal defined"))
     if kind == "remote":
         return res(UNMEASURED, None, "signal lives on %s; not readable from this host" % job["host"])
+    if kind == "pod_job":
+        return _pod_job(job, h, now, probes, res)
 
     if kind == "hf_repo_fresh":
         fn = probes.get("hf_last_modified")
@@ -209,6 +355,10 @@ def evaluate_health(job, now, probes=None):
             ll = _last_line(path) or ""
             if any(b in ll for b in bad):
                 return res(FAILED, age, "last line: %s" % ll[:160])
+        if st == OK and h.get("noop"):
+            nd = noop_from_lines(_tail_lines(path), h["noop"])
+            if nd:
+                return res(NOOP, age, nd)
         return res(st, age, "mtime")
 
     if kind in ("json_field_age", "status_json_job"):
@@ -221,14 +371,28 @@ def evaluate_health(job, now, probes=None):
             d = (d.get("jobs") or d).get(h["key"]) if isinstance(d, dict) else None
             if not isinstance(d, dict):
                 return res(MISSING, None, "no entry %r" % h["key"])
-        ts = parse_ts(d.get(h["field"]))
+        raw = d.get(h["field"])
+        if raw is None:
+            # never succeeded yet: absent, not broken (not_before turns this into PENDING_FIRST_RUN)
+            return res(MISSING, None, "field %s absent (no successful run recorded; last result %s)" % (h["field"], d.get("result")))
+        ts = parse_ts(raw)
         if ts is None:
-            return res(FAILED, None, "field %s missing/unparseable" % h["field"])
+            return res(FAILED, None, "field %s unparseable: %r" % (h["field"], str(raw)[:40]))
         age = (now - ts).total_seconds()
         for fld, badvals in (h.get("fail_if") or {}).items():
             if str(d.get(fld)) in [str(b) for b in badvals]:
                 return res(FAILED, age, "%s=%s" % (fld, d.get(fld)))
-        return res(OK if age <= max_age else STALE, age, "%s=%s" % (h["field"], d.get(h["field"])))
+        for fld, goodvals in (h.get("fail_unless") or {}).items():
+            if str(d.get(fld)) not in [str(g) for g in goodvals]:
+                return res(FAILED, age, "%s=%s (last run; last success %s)" % (fld, d.get(fld), raw))
+        if age > max_age:
+            return res(STALE, age, "%s=%s" % (h["field"], raw))
+        nc = h.get("noop")
+        if nc and nc.get("history_glob"):
+            nd = noop_from_results(_load_results(nc["history_glob"], h.get("key", job["id"])), nc)
+            if nd:
+                return res(NOOP, age, nd)
+        return res(OK, age, "%s=%s result=%s" % (h["field"], raw, d.get("result")))
 
     if kind == "log_last_line":
         ll = _last_line(path)
@@ -243,6 +407,10 @@ def evaluate_health(job, now, probes=None):
         mc = h.get("must_contain")
         if mc and mc not in ll:
             return res(FAILED, age, ll[:160])
+        if h.get("noop"):
+            nd = noop_from_lines(_tail_lines(path), h["noop"])
+            if nd:
+                return res(NOOP, age, nd)
         return res(OK, age, ll[:160])
 
     return res(UNMEASURED, None, "unknown health type %s" % kind)

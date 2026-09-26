@@ -6,7 +6,8 @@
 #            observe = health read and recorded, never acted on (another lane's job, or known broken)
 #            dormant = host is down/parked; signal not readable from Oracle (UNMEASURED, never guessed)
 #            self    = the supervisors themselves (each watched by the other)
-# health.type: json_field_age | file_mtime | log_last_line | hf_repo_fresh | status_json_job | remote | none
+# health.type: json_field_age | file_mtime | log_last_line | hf_repo_fresh | status_json_job | pod_job | disabled | remote | none
+# health.noop: {runs N, patterns|zero|same} -> NOOP (exit 0 but nothing done for N runs in a row); states OK NOOP PAUSED DISABLED are not BAD
 # failover target types: hf_job | runpod_backup | kaggle | runpod_pod | proofof_twin (gates in fleetlib.target_allowed)
 {
  "version": 1,
@@ -119,7 +120,7 @@
     }
    ],
    "failover_cooldown_s": 86400,
-   "note": "takeover is verify-only: the source bare repo ~/mirrors/councilof-ai.git lives on Oracle",
+   "note": "takeover is verify-only: the source bare repo ~/mirrors/councilof-ai.git lives on Oracle; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26 logs FAILED_DISK_FLOOR to ~/lanes/logs/hf-bundle.log",
    "class": "production"
   },
   {
@@ -310,7 +311,12 @@
     "path": "~/fleet/flywheel_status.json",
     "key": "census-weekly",
     "field": "last_success",
-    "max_age_s": 691200
+    "max_age_s": 691200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    }
    },
    "supervise": "observe",
    "cron_match": "flywheel/run.sh census-weekly",
@@ -320,20 +326,34 @@
     "~/lanes/logs/flywheel.log"
    ],
    "owner_lane": "flywheel",
-   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only",
-   "class": "measurement"
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only; no non-dry run yet (first scheduled run Sun 27 Sep 02:00Z), so last_success is absent -> PENDING_FIRST_RUN until then",
+   "class": "measurement",
+   "not_before": "2026-09-27T08:00:00Z"
   },
   {
    "id": "flywheel-x402-daily",
    "host": "oracle-micro-2",
-   "schedule": "5 3 * * *",
+   "schedule": "5 1 * * *",
    "command": "$HOME/lanes/flywheel/run.sh x402-daily",
    "health": {
     "type": "status_json_job",
     "path": "~/fleet/flywheel_status.json",
     "key": "x402-daily",
     "field": "last_success",
-    "max_age_s": 97200
+    "max_age_s": 97200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "added",
+      "dropped"
+     ]
+    }
    },
    "supervise": "observe",
    "cron_match": "flywheel/run.sh x402-daily",
@@ -349,14 +369,26 @@
   {
    "id": "flywheel-ots-upgrade",
    "host": "oracle-micro-2",
-   "schedule": "40 5 * * *",
+   "schedule": "40 12 * * *",
    "command": "$HOME/lanes/flywheel/run.sh ots-upgrade",
    "health": {
     "type": "status_json_job",
     "path": "~/fleet/flywheel_status.json",
     "key": "ots-upgrade",
     "field": "last_success",
-    "max_age_s": 97200
+    "max_age_s": 97200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "states_this_run.UPGRADED_TO_BITCOIN"
+     ]
+    }
    },
    "supervise": "observe",
    "cron_match": "flywheel/run.sh ots-upgrade",
@@ -379,7 +411,19 @@
     "path": "~/fleet/flywheel_status.json",
     "key": "retention",
     "field": "last_success",
-    "max_age_s": 97200
+    "max_age_s": 97200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 7,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "removed_dirs_or_files"
+     ]
+    }
    },
    "supervise": "observe",
    "cron_match": "flywheel/run.sh retention",
@@ -393,23 +437,90 @@
    "class": "measurement"
   },
   {
+   "id": "flywheel-harvest-e2e",
+   "host": "oracle-micro-2",
+   "schedule": "20 */6 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh harvest-e2e",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "harvest-e2e",
+    "field": "last_success",
+    "max_age_s": 25200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "same": [
+      "candidate_root_sha256"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh harvest-e2e",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only; watch added 2026-09-26",
+   "class": "measurement"
+  },
+  {
+   "id": "flywheel-universe-refresh",
+   "host": "oracle-micro-2",
+   "schedule": "5 */6 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh universe-refresh",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "universe-refresh",
+    "field": "last_success",
+    "max_age_s": 25200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "changes.added",
+      "changes.removed",
+      "changes.changed"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh universe-refresh",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only; watch added 2026-09-26",
+   "class": "measurement"
+  },
+  {
    "id": "govbench",
    "host": "oracle-micro-2",
    "schedule": "0 */4 * * *",
    "command": "~/run_govbench.sh",
    "health": {
-    "type": "file_mtime",
-    "path": "~/govbench.log",
-    "max_age_s": 15300,
-    "bad_if_last_line_contains": [
-     "No such file",
-     "Error"
-    ]
+    "type": "disabled",
+    "why": "cron line commented out 2026-09-26: GOVBENCH_AUTO_TESTER.py (cd ~/mac-sync/clawd/csoai-static-deploy2) exists on no Oracle/pod/Mac path and in no git history"
    },
    "supervise": "observe",
    "cron_match": "run_govbench.sh",
    "failover": [],
-   "note": "GOVBENCH_AUTO_TESTER.py missing since at least 25 Sep",
+   "note": "DISABLED 2026-09-26; re-enable only after the tester is restored to a real path",
    "class": "legacy"
   },
   {
@@ -423,13 +534,14 @@
     "max_age_s": 3300,
     "bad_if_last_line_contains": [
      "Error",
-     "Traceback"
+     "Traceback",
+     "FAILED"
     ]
    },
    "supervise": "observe",
    "cron_match": "airbench_full.py",
    "failover": [],
-   "note": "harvester JSONDecodeError on 25 Sep",
+   "note": "harvester fails closed since 2026-09-26 (FAILED_UPSTREAM_NOT_JSON / FAILED_DISK_FLOOR lines); 25 Sep JSONDecodeError was an unguarded json.loads",
    "class": "legacy"
   },
   {
@@ -487,12 +599,15 @@
    "health": {
     "type": "file_mtime",
     "path": "~/greenfield-sov/logs/eater.log",
-    "max_age_s": 4200
+    "max_age_s": 4200,
+    "bad_if_last_line_contains": [
+     "FAILED_DISK_FLOOR"
+    ]
    },
    "supervise": "observe",
    "cron_match": "sovereign_eater.py",
    "failover": [],
-   "note": "legacy cron, observed only",
+   "note": "legacy cron, observed only; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26",
    "class": "legacy"
   },
   {
@@ -519,12 +634,15 @@
    "health": {
     "type": "file_mtime",
     "path": "~/honey_consolidator.log",
-    "max_age_s": 4500
+    "max_age_s": 4500,
+    "bad_if_last_line_contains": [
+     "FAILED_DISK_FLOOR"
+    ]
    },
    "supervise": "observe",
    "cron_match": "honey_consolidator_remote.sh",
    "failover": [],
-   "note": "legacy cron, observed only",
+   "note": "legacy cron, observed only; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26",
    "class": "legacy"
   },
   {
@@ -535,12 +653,15 @@
    "health": {
     "type": "file_mtime",
     "path": "/evac-bulk/honey-verify.log",
-    "max_age_s": 2400
+    "max_age_s": 2400,
+    "bad_if_last_line_contains": [
+     "FAILED_DISK_FLOOR"
+    ]
    },
    "supervise": "observe",
    "cron_match": "honey_verify.py",
    "failover": [],
-   "note": "legacy cron, observed only",
+   "note": "legacy cron, observed only; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26",
    "class": "legacy"
   },
   {
@@ -563,7 +684,7 @@
    "id": "oracle-daily-index",
    "host": "oracle-micro-2",
    "schedule": "30 23 * * *",
-   "command": "bash /tmp/oracle_daily_index.sh",
+   "command": "bash $HOME/lanes/bin/oracle_daily_index.sh",
    "health": {
     "type": "file_mtime",
     "path": "~/oracle-daily-index.log",
@@ -572,7 +693,7 @@
    "supervise": "observe",
    "cron_match": "oracle_daily_index.sh",
    "failover": [],
-   "note": "script lives in /tmp: lost on reboot",
+   "note": "moved out of /tmp to ~/lanes/bin on 2026-09-26 (the /tmp original is kept)",
    "class": "legacy"
   },
   {
@@ -597,13 +718,16 @@
    "schedule": "every 10 min",
    "command": "scheduler.sh -> /workspace/lanes/loops/watchdog",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/watchdog.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "watchdog",
+    "max_age_s": 1800,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -612,13 +736,16 @@
    "schedule": "every 10 min",
    "command": "scheduler.sh -> /workspace/lanes/loops/commission-dispatch",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/commission-dispatch.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "commission-dispatch",
+    "max_age_s": 1800,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -627,13 +754,16 @@
    "schedule": "hourly :05 (pulls Oracle's)",
    "command": "scheduler.sh -> /workspace/lanes/loops/root-check-pod",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/root-check-pod.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "root-check-pod",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -642,13 +772,16 @@
    "schedule": "every 6 h",
    "command": "scheduler.sh -> /workspace/lanes/loops/runpod-upload-heartbeat",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/runpod-upload-heartbeat.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "runpod-upload-heartbeat",
+    "max_age_s": 25200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -657,13 +790,23 @@
    "schedule": "hourly :40",
    "command": "scheduler.sh -> /workspace/lanes/loops/drift-draft",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/drift-draft.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "drift-draft",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "no new drift"
+     ],
+     "result_re": "RECEIPT"
+    }
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -672,13 +815,23 @@
    "schedule": "hourly :45",
    "command": "scheduler.sh -> /workspace/lanes/loops/trust-chain",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/trust-chain.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "trust-chain",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "\\| 0 proof\\(s\\) upgraded"
+     ],
+     "result_re": "RESULT"
+    }
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -687,13 +840,16 @@
    "schedule": "03:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/bazaar-conformance",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/bazaar-conformance.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "bazaar-conformance",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "DISABLED 2026-09-26: OOM-killed (rc=137) in transfer mode and duplicates Oracle's flywheel x402-daily (same csoai/x402-bazaar-conformance dataset)",
    "class": "production"
   },
   {
@@ -702,13 +858,16 @@
    "schedule": "03:30Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/settlement-dry",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/settlement-dry.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "settlement-dry",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -717,13 +876,16 @@
    "schedule": "04:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/revenue-snapshot",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/revenue-snapshot.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "revenue-snapshot",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -732,13 +894,16 @@
    "schedule": "05:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/hubcard-refresh",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/hubcard-refresh.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "hubcard-refresh",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -747,13 +912,16 @@
    "schedule": "05:30Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/hf-flush",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/hf-flush.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "hf-flush",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -762,13 +930,16 @@
    "schedule": "hourly :20",
    "command": "scheduler.sh -> /workspace/lanes/loops/gspc-spray-hf",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/gspc-spray-hf.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "gspc-spray-hf",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -777,13 +948,16 @@
    "schedule": "06:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/corrections-watch",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/corrections-watch.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "corrections-watch",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -792,13 +966,22 @@
    "schedule": "06:30Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/indexnow-ping",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/indexnow-ping.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "indexnow-ping",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "to submit 0\\b"
+     ]
+    }
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -807,13 +990,16 @@
    "schedule": "07:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/census-capture",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/census-capture.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "census-capture",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -822,13 +1008,16 @@
    "schedule": "07:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/distribution-measure",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/distribution-measure.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "distribution-measure",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -837,13 +1026,22 @@
    "schedule": "07:30Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/swh-archive",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/swh-archive.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "swh-archive",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "submitted=0\\b"
+     ]
+    }
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -852,13 +1050,16 @@
    "schedule": "08:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/capability-probe",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/capability-probe.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "capability-probe",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -867,13 +1068,17 @@
    "schedule": "08:30Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/swh-visit-readback",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/swh-visit-readback.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "swh-visit-readback",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "fail_re": "\\bSKIP reader absent\\b|\\brc=[1-9]\\d*\\b|\\bFAIL"
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -882,13 +1087,16 @@
    "schedule": "Mon 09:20Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/claim-watch-measure",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/claim-watch-measure.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "claim-watch-measure",
+    "max_age_s": 691200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -897,13 +1105,22 @@
    "schedule": "02:20Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/register-402index",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/register-402index.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "register-402index",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "missing 0\\b"
+     ]
+    }
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -912,13 +1129,16 @@
    "schedule": "02:40Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/settle-all-doors",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/settle-all-doors.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "settle-all-doors",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -927,10 +1147,13 @@
    "schedule": "hourly :10",
    "command": "scheduler.sh -> /workspace/lanes/loops/mill-hourly",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/mill-hourly.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "mill-hourly",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": true,
    "failover": [
     {
@@ -952,7 +1175,7 @@
      "pod_id": "fpowppss5ngtkw"
     }
    ],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there; GPU failover needs a Kaggle kernel artifact (none yet) and HF GPU budget (0/day)",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old; GPU job: logs PAUSED_NO_GPU once while ollama is down (transfer mode) -> PAUSED",
    "class": "production"
   },
   {
@@ -961,13 +1184,16 @@
    "schedule": "hourly :50",
    "command": "scheduler.sh -> /workspace/lanes/loops/mill-hourly-land",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/mill-hourly-land.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "mill-hourly-land",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -976,13 +1202,22 @@
    "schedule": "hourly :57",
    "command": "scheduler.sh -> /workspace/lanes/loops/harness-outcomes",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/harness-outcomes.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "harness-outcomes",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "\\bappended=0\\b"
+     ]
+    }
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -991,10 +1226,13 @@
    "schedule": "hourly :35",
    "command": "scheduler.sh -> /workspace/lanes/loops/arena-hourly",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/arena-hourly.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "arena-hourly",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": true,
    "failover": [
     {
@@ -1016,7 +1254,7 @@
      "pod_id": "fpowppss5ngtkw"
     }
    ],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there; GPU failover needs a Kaggle kernel artifact (none yet) and HF GPU budget (0/day)",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old; GPU job: logs PAUSED_NO_GPU once while ollama is down (transfer mode) -> PAUSED",
    "class": "production"
   },
   {
@@ -1025,13 +1263,16 @@
    "schedule": "hourly :15",
    "command": "scheduler.sh -> /workspace/lanes/loops/durability-mirror",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/durability-mirror.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "durability-mirror",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
@@ -1040,13 +1281,16 @@
    "schedule": "Sun 09:00Z",
    "command": "scheduler.sh -> /workspace/lanes/loops/durability-hf-publish",
    "health": {
-    "type": "remote",
-    "path": "/workspace/lanes/logs/durability-hf-publish.log"
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "durability-hf-publish",
+    "max_age_s": 691200,
+    "export_max_age_s": 1800
    },
-   "supervise": "dormant",
+   "supervise": "observe",
    "gpu": false,
    "failover": [],
-   "note": "scripts/pod-loops/scheduler.sh; pod in CPU transfer mode 25 Sep (GPU re-let), scheduler not run there",
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
    "class": "production"
   },
   {
