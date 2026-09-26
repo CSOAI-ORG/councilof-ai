@@ -349,7 +349,19 @@ function datedMillRootLine() {
   const proofDigest = createHash("sha256").update(proof).digest("hex");
   const auditUrl = rootUrl.replace(/\.json$/, ".header-audit.json");
   const auditPath = p(`public${auditUrl}`);
-  let proofState = "Read its .ots sidecar: calendar-only receipts remain pending, while BitcoinBlockHeaderAttestation paths require independent block-header and chain checks. No local Bitcoin full-node validation is claimed.";
+  // No public-header audit for this root: state what the PROOF BYTES carry, read from the OTS manifest row
+  // whose sha256_of_proof equals these bytes (ots_manifest_rebuild.py parses every proof). Never a frozen
+  // "calendar-only" sentence: that froze a Bitcoin-attested proof as pending (llms-txt-derived.test.ts).
+  const otsRow = (readJSON("public/interop/ots/manifest.json").proofs || [])
+    .find((row) => row.path === proofUrl && row.sha256_of_proof === proofDigest);
+  let proofState;
+  if (otsRow && otsRow.state === "BITCOIN") {
+    proofState = `Its .ots sidecar (SHA-256 ${proofDigest}) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into ${SITE}/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.`;
+  } else if (otsRow && otsRow.state === "PENDING") {
+    proofState = `Its .ots sidecar (SHA-256 ${proofDigest}) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.`;
+  } else {
+    throw new Error(`mill-card root proof ${proofUrl} (sha256 ${proofDigest}) has no matching row in public/interop/ots/manifest.json; rebuild the manifest`);
+  }
   if (fs.existsSync(auditPath)) {
     const audit = readJSON(`public${auditUrl}`);
     const rows = Array.isArray(audit.public_header_evidence) ? audit.public_header_evidence : [];
