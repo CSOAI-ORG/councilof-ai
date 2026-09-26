@@ -34,7 +34,7 @@ import urllib.request
 SCHEMA = "csoai.fleet-status-public/0.1"
 REPO = "csoai/fleet-status"
 PATH_IN_REPO = "fleet_status.public.json"
-STATES = {"OK", "STALE", "FAILED", "MISSING", "NOT_INSTALLED", "PENDING_FIRST_RUN", "UNMEASURED"}
+STATES = {"OK", "STALE", "FAILED", "MISSING", "NOT_INSTALLED", "PENDING_FIRST_RUN", "UNMEASURED", "NOOP", "PAUSED", "DISABLED"}
 FUNDING = {"GREEN": "GREEN", "AMBER": "AMBER", "RED": "RED", "STOP": "RED", "HALT": "RED"}
 JOB_ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
 # Internal system names are never public (scripts/brand-gate.mjs internal_codenames, plus the
