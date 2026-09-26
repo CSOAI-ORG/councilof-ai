@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import subprocess
+import urllib.error
 import urllib.request
 from collections import Counter
 from pathlib import Path
@@ -340,3 +341,345 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def content_id(value: Any) -> str:
+    raw = json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(raw).hexdigest()
+
+
+def fetch(url: str) -> tuple[bytes, dict[str, Any] | None]:
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "CSOAI-public-index-builder/0.1", "Accept": "*/*"},
+    )
+    with urllib.request.urlopen(req, timeout=30) as response:
+        body = response.read()
+        if response.status != 200:
+            raise RuntimeError(f"{url} returned {response.status}")
+        parsed = None
+        ctype = str(response.headers.get("Content-Type") or "")
+        if "json" in ctype or body[:1] in {b"{", b"["}:
+            try:
+                parsed = json.loads(body)
+            except Exception:
+                parsed = None
+        return body, parsed
+
+
+def git_head() -> str:
+    return subprocess.check_output(
+        ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True
+    ).strip()
+
+
+def observation(url: str, body: bytes) -> dict[str, Any]:
+    return {
+        "url": url,
+        "http_status": 200,
+        "bytes": len(body),
+        "sha256": sha256_bytes(body),
+    }
+
+
+def count_capabilities(registry: dict[str, Any]) -> dict[str, Any]:
+    caps = list(registry.get("capabilities") or [])
+    lifecycle = Counter(str(x.get("lifecycle") or "UNKNOWN") for x in caps)
+    kind = Counter(str(x.get("kind") or "UNKNOWN") for x in caps)
+    payment = Counter(str(x.get("payment") or "UNKNOWN") for x in caps)
+    surface = Counter()
+    for cap in caps:
+        for name in cap.get("surfaces") or []:
+            surface[str(name)] += 1
+    safe_probe = Counter(
+        "SAFE" if bool((x.get("probe") or {}).get("safe")) else "UNSAFE_OR_UNCHECKABLE"
+        for x in caps
+    )
+    return {
+        "total": len(caps),
+        "lifecycle": dict(sorted(lifecycle.items())),
+        "kind": dict(sorted(kind.items())),
+        "payment": dict(sorted(payment.items())),
+        "surfaces": dict(sorted(surface.items())),
+        "probe_safety": dict(sorted(safe_probe.items())),
+    }
+
+
+def local_file_ref(path: Path) -> dict[str, Any]:
+    body = path.read_bytes()
+    return {
+        "path": str(path.relative_to(ROOT)),
+        "bytes": len(body),
+        "sha256": sha256_bytes(body),
+    }
+
+
+def target_status(url: str) -> dict[str, Any]:
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "CSOAI-public-index-builder/0.1", "Accept": "*/*"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as response:
+            body = response.read()
+            return {
+                "url": url,
+                "status": response.status,
+                "bytes": len(body),
+                "sha256": sha256_bytes(body),
+            }
+    except urllib.error.HTTPError as error:
+        body = error.read()
+        return {
+            "url": url,
+            "status": error.code,
+            "bytes": len(body),
+            "sha256": sha256_bytes(body),
+        }
+
+
+def write_artifact(name: str, value: dict[str, Any]) -> dict[str, Any]:
+    value = dict(value)
+    value["content_id"] = content_id(value)
+    path = PUBLIC / name
+    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n")
+    return {
+        "path": f"/{name}",
+        "sha256": sha256_bytes(path.read_bytes()),
+        "bytes": path.stat().st_size,
+        "content_id": value["content_id"],
+    }
+
+
+def main() -> int:
+    registry = json.loads(CAPABILITY_SOURCE.read_text())
+    catalog_path = PUBLIC / "catalog.json"
+    catalog = json.loads(catalog_path.read_text())
+    head = git_head()
+    cap_counts = count_capabilities(registry)
+
+    raw: dict[str, bytes] = {}
+    docs: dict[str, Any] = {}
+    observations: dict[str, Any] = {}
+    for key, url in SOURCES.items():
+        body, parsed = fetch(url)
+        raw[key] = body
+        docs[key] = parsed
+        observations[key] = observation(url, body)
+
+    required_json = ("gspc", "state", "corrections", "x402", "a2a", "revenue", "quickstart")
+    missing = [key for key in required_json if not isinstance(docs.get(key), dict)]
+    if missing:
+        raise RuntimeError(f"required JSON source(s) could not be parsed: {missing}")
+
+    gspc = docs["gspc"]
+    state = docs["state"]
+    corrections = docs["corrections"]
+    x402 = docs["x402"]
+    a2a = docs["a2a"]
+    revenue = docs["revenue"]
+
+    board_totals = dict(gspc.get("totals") or {})
+    state_board = dict(state.get("board") or {})
+    state_axes = ((state_board.get("axis_slots") or {}).get("value"))
+    state_measured = ((state_board.get("measured_axes") or {}).get("value"))
+    if board_totals.get("axes") != state_axes or board_totals.get("measured_axes") != state_measured:
+        raise RuntimeError(
+            "live /api/gspc and /api/state disagree on board totals; fail closed"
+        )
+
+    correction_count = len(corrections.get("corrections") or [])
+    x402_resources = list(x402.get("resources") or [])
+    free_tools = list((x402.get("mcp") or {}).get("free_tools") or [])
+    paid_tools = list((x402.get("mcp") or {}).get("paid_tools") or [])
+    a2a_skills = list(a2a.get("skills") or [])
+    one_number = dict(revenue.get("one_number") or {})
+    settled = dict(revenue.get("settled_usdc") or {})
+
+    common = {
+        "build_git_head": head,
+        "capability_source": local_file_ref(CAPABILITY_SOURCE),
+        "capability_counts": cap_counts,
+        "public_source_observations": observations,
+        "claim_boundary": (
+            "Operational/discovery projection only. It is not certification, endorsement, "
+            "compliance, a trust score, or authority to act."
+        ),
+    }
+
+
+    product_rows = list(catalog.get("products") or [])
+    product_status = Counter(str(x.get("status") or "UNKNOWN") for x in product_rows)
+
+    drive = {
+        "schema": "csoai.layer0-drive-through/0.2",
+        **common,
+        "release_state": "GENERATED_IN_RELEASE_CANDIDATE",
+        "capability_contract": {
+            "canonical_source": "council-os/capabilities.json",
+            "total": cap_counts["total"],
+            "live": cap_counts["lifecycle"].get("LIVE", 0),
+            "quarantined_pre_release": cap_counts["lifecycle"].get("QUARANTINED_PRE_RELEASE", 0),
+            "not_implemented": cap_counts["lifecycle"].get("NOT_IMPLEMENTED", 0),
+            "retired": cap_counts["lifecycle"].get("RETIRED", 0),
+            "door_closed": cap_counts["lifecycle"].get("DOOR_CLOSED", 0),
+            "method_not_allowed": cap_counts["lifecycle"].get("METHOD_NOT_ALLOWED", 0),
+        },
+        "public_product_catalog": {
+            "source": local_file_ref(catalog_path),
+            "products": len(product_rows),
+            "status": dict(sorted(product_status.items())),
+        },
+        "live_agent_rails": {
+            "a2a_card_version": a2a.get("version"),
+            "a2a_skills": len(a2a_skills),
+            "x402_mode": x402.get("mode"),
+            "x402_resources": len(x402_resources),
+            "mcp_free_tools": len(free_tools),
+            "mcp_paid_tools": len(paid_tools),
+        },
+        "workflow": [
+            {"stage": "DISCOVER", "law": "identity/listing is not measurement"},
+            {"stage": "QUALIFY_SOURCE", "law": "authority and rights are explicit"},
+            {"stage": "VERIFY_EXISTING", "law": "public verification remains separate from paid fresh work"},
+            {"stage": "BOUND_FRESH_WORK", "law": "quote only a named missing/fresh computation"},
+            {"stage": "RUN", "law": "instrument, subject, version and evidence are frozen"},
+            {"stage": "ADMIT_OR_HOLD", "law": "GSPC meaning/admission is independent of payment"},
+            {"stage": "DELIVER", "law": "delivery must bind the exact requested resource and bytes"},
+            {"stage": "MAINTAIN", "law": "upstream change invalidates only verified dependents"},
+        ],
+        "laws": [
+            "The canonical capability declaration is council-os/capabilities.json; derived registries are not independent sources of truth.",
+            "LIVE is a declared/probed lifecycle state, not certification or endorsement.",
+            "Payment never changes a measurement verdict.",
+            "A listing, directory presence or agent card is discovery, not evidence of backend behaviour.",
+            "Generated is not deployed; deployed is not independently read back.",
+        ],
+    }
+
+    flywheel = {
+        "schema": "csoai.eat-flywheel/0.2",
+        **common,
+        "release_state": "GENERATED_IN_RELEASE_CANDIDATE",
+        "public_measurement_board": {
+            "axes": board_totals.get("axes"),
+            "measured_axes": board_totals.get("measured_axes"),
+            "unmeasured_axes": board_totals.get("unmeasured_axes"),
+            "public_count": board_totals.get("public_count"),
+            "comparison_axes": board_totals.get("comparison_axes"),
+            "fact_runs": board_totals.get("fact_runs"),
+            "separated_leads": board_totals.get("separated_leads"),
+            "ties": board_totals.get("ties"),
+            "untested_separations": board_totals.get("untested_separations"),
+            "signed_snapshot_counts_agree": (
+                ((state_board.get("live_derivation_crosscheck") or {}).get("signed_snapshot_counts_agree"))
+            ),
+        },
+        "correction_memory": {
+            "public_corrections": correction_count,
+            "source": SOURCES["corrections"],
+        },
+        "agent_economy": {
+            "a2a_skills": len(a2a_skills),
+            "x402_mode": x402.get("mode"),
+            "x402_resources": len(x402_resources),
+            "mcp_tools_exposed_by_x402": len(free_tools) + len(paid_tools),
+        },
+        "commercial_signal": {
+            "distinct_nonself_payers_all_time": one_number.get("all_time"),
+            "distinct_nonself_payers_30d": one_number.get("last_30d"),
+            "nonself_settlements": one_number.get("settlements"),
+            "settled_usdc_atomic": one_number.get("settled_usdc_atomic"),
+            "unit": settled.get("unit"),
+            "door_breakdown": one_number.get("distinct_payers_by_door"),
+            "gates": one_number.get("gates"),
+        },
+        "reaction_model": {
+            "branches": [
+                "DIRECT_CONTINUATION",
+                "COUNTER_REACTION",
+                "SECOND_ORDER_SPILLOVER",
+                "REGIME_BREAK",
+            ],
+            "law": "Reaction branches are scenarios until later observations support or refute them; scenarios are never measurement evidence.",
+        },
+        "continuous_cycle": [
+            "OBSERVE",
+            "DIFF",
+            "QUALIFY_CHANGE",
+            "TRAVERSE_VERIFIED_DEPENDENCIES",
+            "RUN_BOUNDED_REVERIFICATION",
+            "ADMIT_HOLD_CORRECT",
+            "PROJECT_PUBLIC_SAFE_STATE",
+            "READ_BACK",
+            "MEASURE_CONSUMPTION_AND_COMMERCIAL_SIGNAL",
+            "CALIBRATE",
+        ],
+    }
+
+    repeat_evidenced = (
+        isinstance(one_number.get("settlements"), int)
+        and isinstance(one_number.get("all_time"), int)
+        and one_number.get("settlements") > one_number.get("all_time")
+        and one_number.get("all_time") > 0
+    )
+    nonself_paid = bool(
+        (one_number.get("all_time") or 0) > 0
+        and (one_number.get("settled_usdc_atomic") or 0) > 0
+    )
+
+    progress = {
+        "schema": "csoai.public-progress-index/0.2",
+        **common,
+        "release_state": "GENERATED_IN_RELEASE_CANDIDATE",
+        "progress_is_a_vector_not_a_score": True,
+        "capabilities": cap_counts,
+        "measurement": {
+            "axes": board_totals.get("axes"),
+            "measured_axes": board_totals.get("measured_axes"),
+            "unmeasured_axes": board_totals.get("unmeasured_axes"),
+            "public_count": board_totals.get("public_count"),
+            "comparison_axes": board_totals.get("comparison_axes"),
+            "fact_runs": board_totals.get("fact_runs"),
+            "signed_snapshot_counts_agree": (
+                ((state_board.get("live_derivation_crosscheck") or {}).get("signed_snapshot_counts_agree"))
+            ),
+        },
+        "corrections": {
+            "count": correction_count,
+            "policy": corrections.get("policy"),
+        },
+        "agent_rails": {
+            "a2a_card_version": a2a.get("version"),
+            "a2a_skills": len(a2a_skills),
+            "x402_mode": x402.get("mode"),
+            "x402_resources": len(x402_resources),
+            "mcp_free_tools": len(free_tools),
+            "mcp_paid_tools": len(paid_tools),
+        },
+        "commercial": {
+            "signal": "NONSELF_PAID" if nonself_paid else "NO_NONSELF_PAID_SIGNAL",
+            "distinct_nonself_payers_all_time": one_number.get("all_time"),
+            "distinct_nonself_payers_30d": one_number.get("last_30d"),
+            "nonself_settlements": one_number.get("settlements"),
+            "settled_usdc_atomic": one_number.get("settled_usdc_atomic"),
+            "unit": settled.get("unit"),
+            "repeat_purchase_evidenced_by_aggregate": repeat_evidenced,
+            "query_specific_delivery_proof": "NOT_ASSERTED_BY_THIS_PUBLIC_INDEX",
+            "maintained_paid_renewal": "NOT_ASSERTED_BY_THIS_PUBLIC_INDEX",
+        },
+        "laws": [
+            "No single composite traction/trust score is emitted.",
+            "A measured board axis means a run exists; it does not imply a statistically separated leader.",
+            "A non-self payment is a commercial signal, not product-market fit.",
+            "Repeat purchase, exact delivery proof and maintained renewal require their own evidence.",
+        ],
+    }
+
+    drive_ref = write_artifact("layer0-drive-through.json", drive)
+    fly_ref = write_artifact("eat-flywheel.json", flywheel)
+    progress_ref = write_artifact("progress-index.json", progress)
