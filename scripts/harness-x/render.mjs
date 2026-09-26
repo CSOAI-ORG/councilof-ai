@@ -863,7 +863,7 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
     "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). " +
     "Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. " +
     "Measurement only: not certification, not accreditation, no conformity assessment. " +
-    `MCP registry ${dist.registry_names.github} server ${REMOTE_VERSION}. POST /mcp lists ${fleetProse}; witness_hash is quarantined on HTTP. mill-tool \`measure\` dropped.`;
+    `MCP registry ${dist.registry_names.canonical} server ${REMOTE_VERSION} (${dist.registry_names.deprecated_alias} is its deprecated alias). POST /mcp lists ${fleetProse}; witness_hash is quarantined on HTTP. mill-tool \`measure\` dropped.`;
   card.endpoints.mcp.stdio = stdio;
   card.endpoints.mcp.note =
     `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(tools.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. ` +
@@ -880,7 +880,8 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
   const rel = "public/.well-known/mcp.json";
   const m = readJson(rel);
   m.servers[0].stdio = stdio;
-  m.servers[0].registry.name = dist.registry_names.github;
+  m.servers[0].registry.name = dist.registry_names.canonical;
+  m.servers[0].registry.deprecated_alias = dist.registry_names.deprecated_alias;
   m.servers[0].registry.version = REMOTE_VERSION;
   m.measured.total_tools = tools.length;
   m.measured.free_tools = free.length;
@@ -901,14 +902,14 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
 // ── 11. SUBMIT.md ───────────────────────────────────────────────────────────────────────────
 const STEPS = {
   "mcp-registry-github": [
-    "Nothing to do while the live registry isLatest equals this file's version (check.mjs compares both).",
-    "When the version moves: `mcp-publisher login github` (device flow, as a CSOAI-ORG member), then `mcp-publisher publish distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json`.",
-    "npm `csoai-gspc-mcp` must already carry `mcpName: io.github.CSOAI-ORG/gspc` at the declared version (it does at 0.2.2).",
+    "DEPRECATED ALIAS. The canonical name is the domain one (mcp-registry-domain). Owner step: deprecate this name in the registry (`mcp-publisher login github` as a CSOAI-ORG member, then set its status to deprecated). Publish no new versions under it.",
+    "This file stays rendered so the deprecation has the descriptor it names; check.mjs still compares its version with the registry's isLatest.",
+    "npm `csoai-gspc-mcp` 0.2.2 carries `mcpName: io.github.CSOAI-ORG/gspc` (the deprecated alias); the package source now carries `mcpName: ai.councilof/gspc`, so the next npm release binds the package to the canonical name.",
   ],
   "mcp-registry-domain": [
     "`mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>` — the key whose public half is served at /.well-known/mcp-registry-auth.",
     "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.",
-    "Owner decision first: a second registry name for the same door is a duplicate listing; keep both, or later deprecate one.",
+    "CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.",
   ],
   "claude-plugin": [
     "Create a public repo on CouncilofAI-CSOAI (not CSOAI-ORG); copy distribution/plugin/ to its root.",

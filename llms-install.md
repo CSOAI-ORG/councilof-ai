@@ -60,7 +60,7 @@ that independent check.
 
 This list describes the reviewed source contract at this commit. Confirm that the
 deployed remote returns the same 12 names before treating it as the live contract.
-Listing the catalog and using all eight read/verification tools is free. In
+Listing the catalog and using every free read/verification tool is free. In
 particular, `verify_card` checks a Council-issued signed measurement card without a
 payment. Its three possible verdict classes are `VALID`, `INVALID`, and
 `UNCHECKABLE`; signature validity is not certification of the subject.
@@ -77,7 +77,10 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "get_card",
     "verify_inclusion",
     "x402_trust",
-    "mcp_trust"
+    "mcp_trust",
+    "measurement_index",
+    "verify_capsule",
+    "server_evidence"
   ],
   "x402_metered": [
     "commission_card",

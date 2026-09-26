@@ -12,9 +12,10 @@
       "dead_worker": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker.",
       "auth_required": false,
       "registry": {
-        "name": "io.github.CSOAI-ORG/gspc",
+        "name": "ai.councilof/gspc",
         "version": "1.4.2",
-        "url": "https://registry.modelcontextprotocol.io"
+        "url": "https://registry.modelcontextprotocol.io",
+        "deprecated_alias": "io.github.CSOAI-ORG/gspc"
       }
     }
   ],
@@ -22,8 +23,8 @@
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 13,
-    "free_tools": 9,
+    "total_tools": 16,
+    "free_tools": 12,
     "metered_tools": 4,
     "server_count": 1,
     "tools": [
@@ -36,12 +37,15 @@
       "verify_inclusion",
       "x402_trust",
       "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "note": "POST /mcp tools/list: nine free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.2 points here. A listing does not prove paid settlement or delivery."
+    "note": "POST /mcp tools/list: twelve free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.2 points here. A listing does not prove paid settlement or delivery."
   },
   "planted": {
     "tools": [
@@ -54,13 +58,16 @@
       "verify_inclusion",
       "x402_trust",
       "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: nine free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No jail run from MCP. mill-tool `measure` dropped."
+    "note": "The product door: twelve free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No jail run from MCP. mill-tool `measure` dropped."
   },
   "provider": {
     "name": "CSOAI Ltd",

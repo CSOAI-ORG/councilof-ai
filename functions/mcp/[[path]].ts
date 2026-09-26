@@ -12,12 +12,7 @@ import GSPC_TOOLS from "./gspc-tools.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { toolSpan, withTraceHeader } from "./_otel";
-import {
-  MEASUREMENT_TOOL_DEFS,
-  MEASUREMENT_TOOL_NAMES,
-  measurementToolResult,
-  measurementToolsEnabled,
-} from "./_measurement";
+import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.2";
@@ -52,10 +47,10 @@ const HOSTS = [
   "[::1]",
 ];
 const BROWSER_ORIGINS = [...HOSTS, "chatgpt.com", "claude.ai"];
+// The measurement-capsule readers (measurement_index, verify_capsule, server_evidence) are ordinary
+// free tools in gspc-tools.json since 2026-09-26, when /measurement-capsules/ was published; the
+// MEASUREMENT_CAPSULE_TOOLS env gate that held them back is gone. One list, one fleet (the lock).
 const DEFINITIONS = [...GSPC_TOOLS.tools, ...PAID_TOOL_DEFS] as Tool[];
-// Measurement-capsule readers join tools/list ONLY behind env MEASUREMENT_CAPSULE_TOOLS=on
-// (functions/mcp/measurement-tools.json says why and what flips it). Gate off = the locked fleet.
-const GATED_DEFINITIONS = [...DEFINITIONS, ...MEASUREMENT_TOOL_DEFS] as Tool[];
 // The SDK's no-eval adapter retains the canonical JSON Schema. No parallel catalog.
 const validator = new CfWorkerJsonSchemaValidator();
 type JsonSchema = Parameters<typeof fromJsonSchema>[0];
@@ -128,7 +123,6 @@ function buildMcp(definitions: Tool[]) {
   );
 }
 const mcp = buildMcp(DEFINITIONS);
-const mcpWithMeasurement = buildMcp(GATED_DEFINITIONS);
 
 function jsonError(
   status: number,
@@ -354,7 +348,7 @@ export const onRequest = async ({ request, env }: { request: Request; env?: unkn
     });
     return withTraceHeader(
       withHeaders(
-        await (measurementToolsEnabled(env) ? mcpWithMeasurement : mcp).fetch(
+        await mcp.fetch(
           boundedRequest,
         ),
       ),

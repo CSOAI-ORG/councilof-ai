@@ -207,6 +207,8 @@ function discover() {
     "/corrections", "/census",
     // State of the Agent Internet: the stable address + dated editions (2026-09-26).
     "/state", "/state/2026-09",
+    // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
+    "/verify-server",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

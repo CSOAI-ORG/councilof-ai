@@ -5,7 +5,7 @@
   "server_url": "https://councilof.ai/mcp",
   "transport": "streamable-http",
   "authentication": "none",
-  "description": "13 tools (9 free, 4 x402-metered) over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "description": "16 tools (12 free, 4 x402-metered) over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
   "company": {
     "name": "CSOAI Ltd",
     "company_number": "16939677",
@@ -65,6 +65,21 @@
       "read_only": true
     },
     {
+      "name": "measurement_index",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "verify_capsule",
+      "payment": "free",
+      "read_only": true
+    },
+    {
+      "name": "server_evidence",
+      "payment": "free",
+      "read_only": true
+    },
+    {
       "name": "commission_card",
       "payment": "x402",
       "read_only": false
@@ -85,7 +100,7 @@
       "read_only": false
     }
   ],
-  "tool_count": 13,
+  "tool_count": 16,
   "example_prompts": [
     "What does the GSPC board say right now? Quote public_count exactly.",
     "Verify this Council of AI measurement card: <paste card JSON>.",

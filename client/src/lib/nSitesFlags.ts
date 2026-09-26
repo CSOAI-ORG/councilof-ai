@@ -169,7 +169,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "registry",
     href: "https://councilof.ai/.well-known/mcp.json",
     plant: "Layer-0 discovery. Agents fetch this, they do not scrape HTML.",
-    note: "Official registry id io.github.CSOAI-ORG/gspc v1.0.3.",
+    note: "Official registry id ai.councilof/gspc (deprecated alias io.github.CSOAI-ORG/gspc).",
     snippet: "https://councilof.ai/.well-known/mcp.json",
   },
   {
@@ -179,8 +179,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "registry",
     href: "https://registry.modelcontextprotocol.io",
     plant: "The one public MCP index we already occupy.",
-    note: "io.github.CSOAI-ORG/gspc. Do not invent a second first-party server.",
-    snippet: "io.github.CSOAI-ORG/gspc",
+    note: "ai.councilof/gspc; io.github.CSOAI-ORG/gspc is its deprecated alias, not a second first-party server.",
+    snippet: "ai.councilof/gspc",
   },
   {
     id: "plugin-gspc",

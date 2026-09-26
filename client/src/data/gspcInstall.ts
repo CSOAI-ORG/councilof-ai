@@ -375,7 +375,7 @@ export interface RegistryRow {
 // merged upstream PR evidence. A live row must link to its public evidence, never back
 // to a submission form: that distinction prevents duplicate outward submissions.
 export const REGISTRIES: RegistryRow[] = [
-  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "io.github.CSOAI-ORG/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp. Downstream aggregators ingest from here." },
+  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "ai.councilof/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp; io.github.CSOAI-ORG/gspc is its deprecated alias. Downstream aggregators ingest from here." },
   { name: "A2A agent directories", status: "listed", permissionless: true, where: "https://a2aregistry.org", note: "Council of AI — Measurement Agent is registered and the public record reports healthy and conformant." },
   { name: "Smithery", status: "listed", permissionless: true, where: "https://smithery.ai/servers/csoai/gspc-mcp", note: "The current csoai/gspc-mcp entry is live. A stale csoai/gspc duplicate should be corrected or retired; do not submit another entry." },
   { name: "mcp.so", status: "listed", permissionless: true, where: "https://mcp.so/servers/csoai-gspc-measurement", note: "The public flagship page is live, Verified and Featured. Listing presence does not prove tool health or use." },

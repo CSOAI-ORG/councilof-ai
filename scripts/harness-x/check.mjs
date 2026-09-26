@@ -170,7 +170,9 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
   const dom = readJson("distribution/mcp-registry/ai.councilof-gspc/server.json");
   rec("mcp-registry-domain", "remote-only (no npm package bound to another namespace)", !dom.packages, dom.packages ? "has packages" : "remote-only");
   const npmName = readJson("mcp/gspc-server/package.json").mcpName;
-  rec("mcp-registry-github", "npm package mcpName == registry name", npmName === dist.registry_names.github, npmName);
+  // Owner ruling 2026-09-26: the canonical name is the domain one; io.github.CSOAI-ORG/gspc is its deprecated alias.
+  rec("mcp-registry-domain", "npm package source mcpName == the canonical registry name", npmName === dist.registry_names.canonical && dist.registry_names.canonical === dist.registry_names.domain, npmName);
+  rec("mcp-registry-github", "the GitHub-namespace name is declared the deprecated alias", dist.registry_names.deprecated_alias === dist.registry_names.github, dist.registry_names.deprecated_alias);
 }
 
 // ── 3. plugins (structural: the three manifests agree) ──────────────────────────────────────
@@ -325,8 +327,14 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
   rec("well-known-server-card", "stdio pin == npm package version", sc.endpoints.mcp.stdio.endsWith("@" + npmV) && mj.servers[0].stdio.endsWith("@" + npmV), sc.endpoints.mcp.stdio);
   rec("well-known-server-card", "mcp.json registry version == live; tools == locked",
     mj.servers[0].registry.version === WANT_VERSION && sameList(mj.measured.tools, EXPECT_TOOLS) && mj.measured.total_tools === EXPECT_TOOLS.length, mj.servers[0].registry.version);
-  const staleWords = /\beight free\b|\btwelve\b|No 23rd axis/i;
-  rec("well-known-server-card", "no stale fleet prose (eight free / twelve / No 23rd axis)", !staleWords.test(scText) && !staleWords.test(JSON.stringify(mj)), "clean");
+  // Stale fleet prose = any count word that is not the locked one ("eight free", "twelve tools" were
+  // the old fleets). Derived from the lock, so a fleet change cannot turn the current count "stale".
+  const W = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+    "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
+  const nFree = caps.filter((c) => c.payment === "free").length;
+  const others = (n) => W.filter((_, i) => i !== n).join("|");
+  const staleWords = new RegExp(`\\b(?:${others(nFree)}) free\\b|\\b(?:${others(EXPECT_TOOLS.length)}) (?:MCP )?tools\\b|No 23rd axis`, "i");
+  rec("well-known-server-card", "no stale fleet prose (a count word other than the locked fleet's / No 23rd axis)", !staleWords.test(scText) && !staleWords.test(JSON.stringify(mj)), "clean");
 }
 
 // ── 11. brand-gate, certif, price — over EVERY output ───────────────────────────────────────

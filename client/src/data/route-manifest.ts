@@ -2093,6 +2093,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Verify Leaderboard"
  },
  {
+  "path": "/verify-server",
+  "comp": "VerifyServer",
+  "title": "Verify Server"
+ },
+ {
   "path": "/voice",
   "comp": "CouncilMinds",
   "title": "Council Minds"

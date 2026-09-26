@@ -196,7 +196,7 @@ export async function onRequest(context) {
     {
       error: "not_found",
       path: p ? `/api/${p}` : "/api",
-      hint: "See the MCP registry entry io.github.CSOAI-ORG/gspc for live endpoints, or /api/mcp for the server catalogue.",
+      hint: "See the MCP registry entry ai.councilof/gspc (deprecated alias io.github.CSOAI-ORG/gspc) for live endpoints, or /api/mcp for the server catalogue.",
     },
     404,
   );

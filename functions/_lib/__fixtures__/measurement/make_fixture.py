@@ -4,6 +4,7 @@ venturi_capsule.py: canon, capsule_id, merkle_root [v0.2 RFC 6962], merkle_root_
 Synthetic capsules only — no census data. The TypeScript readers must reproduce every id and root.
 
     python3 make_fixture.py /path/to/capsule-lane > capsule-vectors.json
+    python3 make_fixture.py LANE SCRIPTS layout-bundle.json layout-bundle-split.json > capsule-vectors.json
 """
 import json, sys
 sys.path.insert(0, sys.argv[1])
@@ -57,7 +58,27 @@ def bundle(lane_scripts, dest):
                                               "a2a_lines": [v.canon(c).decode() for c in a2a], "files": files}, ensure_ascii=False) + "\n")
 
 
+def bundle_split(lane_scripts, dest):
+    """Two batches of ONE adapter and kind in one index — the 2026-09-26 shape (mill_cross_runtime n=14
+    and its batch2 n=140). The layout must give each its own directory and the reader must find a
+    capsule in whichever batch holds it."""
+    import argparse, pathlib, subprocess, tempfile
+    tmp = pathlib.Path(tempfile.mkdtemp())
+    v.write_batch(tmp / "b-1", "contract_parity", "measurement.contract_parity", v02[:6], {"what_this_is": "fixture"})
+    v.write_batch(tmp / "b-2", "contract_parity", "measurement.contract_parity", v02[6:], {"what_this_is": "fixture"})
+    v.index(argparse.Namespace(file=str(tmp / "index.json"), batches=[str(tmp / "b-1"), str(tmp / "b-2")], pending=None))
+    subprocess.run([sys.executable, lane_scripts + "/measurement_capsule_layout.py", "--index", str(tmp / "index.json"),
+                    "--out", str(tmp / "site"), "--no-capsules"], check=True, capture_output=True)
+    files = {"/measurement-capsules/" + str(p.relative_to(tmp / "site")): p.read_text()
+             for p in sorted((tmp / "site").rglob("*")) if p.is_file()}
+    pathlib.Path(dest).write_text(json.dumps({"note": "synthetic v0.2 layout (make_fixture.py bundle_split): ONE adapter in TWO batches (v02 lines 0-5 and 6-10). Served-path -> bytes.",
+                                              "roots": [v.merkle_root(sorted(c["capsule_id"] for c in v02[:6])), v.merkle_root(sorted(c["capsule_id"] for c in v02[6:]))],
+                                              "files": files}, ensure_ascii=False) + "\n")
+
+
 if len(sys.argv) > 3:
     import contextlib
     with contextlib.redirect_stdout(sys.stderr):  # the reference index() prints a summary
         bundle(sys.argv[2], sys.argv[3])
+        if len(sys.argv) > 4:
+            bundle_split(sys.argv[2], sys.argv[4])

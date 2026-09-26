@@ -32,9 +32,9 @@
       "tool_counts": {
         "note": "The mandate is 'the listing resolves and the tool count is true'. Declared counts are read from Smithery's detail endpoint; served tools are DERIVED from the two canonical files the door reads (functions/mcp/gspc-tools.json + paid-tools.json), never typed. Neither hosted deployment could be called directly: gspc--csoai.run.tools answers 401 at / and 404 at /mcp, so Smithery's runtime needs a key we do not hold. The comparison is therefore declared-vs-source, not declared-vs-tools/list.",
         "served_by_the_door": {
-          "free": 9,
+          "free": 12,
           "paid": 4,
-          "total": 13,
+          "total": 16,
           "names": [
             "board_totals",
             "get_axis",
@@ -45,6 +45,9 @@
             "verify_inclusion",
             "x402_trust",
             "mcp_trust",
+            "measurement_index",
+            "verify_capsule",
+            "server_evidence",
             "commission_card",
             "art50_marking_evidence",
             "rwa_evidence",
@@ -109,7 +112,7 @@
       "tool_counts": {
         "verdict": "UNCHECKABLE",
         "declared": 11,
-        "served_by_the_door": 13,
+        "served_by_the_door": 16,
         "names": [
           "art50_marking_evidence",
           "board_totals",
@@ -243,5 +246,12 @@
     "mcp_door": "https://councilof.ai/mcp",
     "live_board": "https://councilof.ai/api/gspc"
   },
-  "surface_note": "Each row names the surface its state came from. `ours` is never valid evidence about a third party — it reports our own filesystem, and six of these seven rows once did. `rendered` is NECESSARY where a directory has no API and NOT SUFFICIENT where one exists: a rendered search echoes the query, which produced a false LISTED (glama's link count) and a false NOT_LISTED (smithery) on the same day. `api` and `sitemap` are authoritative; a sitemap is a directory's own index of what it lists and answered two rows no API could."
+  "surface_note": "Each row names the surface its state came from. `ours` is never valid evidence about a third party — it reports our own filesystem, and six of these seven rows once did. `rendered` is NECESSARY where a directory has no API and NOT SUFFICIENT where one exists: a rendered search echoes the query, which produced a false LISTED (glama's link count) and a false NOT_LISTED (smithery) on the same day. `api` and `sitemap` are authoritative; a sitemap is a directory's own index of what it lists and answered two rows no API could.",
+  "supersedes": {
+    "path": "/interop/mcp-directories-20260914T110800Z.json",
+    "sha256": "e8ea03d9c40385aa3bfc46034f97bc8452eb11d336a3738ca187b6be8c79f0e7",
+    "ots": "/interop/mcp-directories-20260914T110800Z.json.ots",
+    "why": "served_by_the_door recounted from the door's definition files (13 -> 16: measurement_index, verify_capsule and server_evidence joined the free readers on 2026-09-26). The directory rows are NOT re-probed: they remain as of 20260914T110800Z. Timestamped bytes are superseded, never edited."
+  },
+  "ots_state": "NOT_STAMPED: this superseding file carries no OpenTimestamps proof yet; stamping is a calendar submission reserved for the owner (ots stamp public/interop/mcp-directories.json). The superseded bytes keep their proof at the dated path."
 }

@@ -13,12 +13,16 @@ Reads nothing but the index and the batch directories it names; writes (never in
   DIR/v<ver>/index.signed.json            the index's signed sidecar, unchanged
   DIR/v<ver>/index.json.ots               its OpenTimestamps proof, unchanged (when present)
   DIR/v<ver>/anchors.json                 anchor states (--anchors), copied; absent = none claimed
-  DIR/v<ver>/<adapter>/record.json        + record.signed.json + record.json.ots, unchanged
-  DIR/v<ver>/<adapter>/capsules.jsonl.gz  the capsules, unchanged (--no-capsules omits)
-  DIR/v<ver>/<adapter>/leaves.json        the sorted capsule ids; must recompute to the batch root
+  DIR/v<ver>/<batch>/record.json          + record.signed.json + record.json.ots, unchanged
+  DIR/v<ver>/<batch>/capsules.jsonl.gz    the capsules, unchanged (--no-capsules omits)
+  DIR/v<ver>/<batch>/leaves.json          the sorted capsule ids; must recompute to the batch root
+                                          <batch> = batch_slug(): the adapter name when one batch
+                                          carries it, else <adapter>-<first 12 hex of its merkle_root>
   DIR/v<ver>/endpoints/<xx>.json          256 shards keyed by sha256(normalised endpoint)[:2]:
                                           every capsule whose subject names an http(s) endpoint,
-                                          with its batch root and inclusion pointers; plus an
+                                          with its batch root, inclusion pointers and its exact
+                                          canonical line (capsule_json, so a reader can recompute
+                                          capsule_id from the bytes without the batch file); plus an
                                           origins map (origin key -> endpoints measured there)
 
 The functions/_lib/measurementCapsule.ts readers (MCP measurement_index / verify_capsule /
@@ -88,10 +92,21 @@ def origin_of(n):
     return f"{u.scheme}://{u.netloc}"
 
 
+def batch_slug(batches, b):
+    """Directory name of one batch under v<ver>/. An index may carry two batches of one adapter
+    (2026-09-26: mill_cross_runtime n=14 and mill_cross_runtime-batch2 n=140). Writing both to
+    <adapter>/ let the second overwrite the first's leaves, so no capsule of the first could ever be
+    shown included. Mirrored byte-for-byte by batchSlug() in functions/_lib/measurementCapsule.ts."""
+    adapter = str(b["adapter"])
+    if sum(1 for x in batches if str(x.get("adapter")) == adapter) == 1:
+        return adapter
+    return f"{adapter}-{str(b['merkle_root'])[:12]}"
+
+
 def endpoints_of(capsule):
     out = []
     for m in URL_RE.findall(str(capsule.get("subject_id") or "")):
-        n = normalise_endpoint(m.rstrip(".,;)"))
+        n = normalise_endpoint(m.rstrip(".,;)]}"))
         if n and n not in out:
             out.append(n)
     return out
@@ -105,10 +120,10 @@ def iter_capsules(batch_dir, rec):
     with opener(p, "rb") as f:
         for line in f:
             if line.strip():
-                yield json.loads(line)
+                yield json.loads(line), line.decode("utf-8").rstrip("\r\n")
 
 
-def entry_for(c, ver, adapter, root, rule, vroot):
+def entry_for(c, line, ver, adapter, slug, root, rule, vroot):
     claim = c.get("claim") or {}
     return {
         "capsule_id": c["capsule_id"], "adapter": adapter, "kind": c.get("kind"), "schema": c.get("schema"),
@@ -116,10 +131,11 @@ def entry_for(c, ver, adapter, root, rule, vroot):
         "claim": {k: claim[k] for k in ("dimension", "statement", "index", "offering", "axis") if k in claim},
         "measurement_state": c.get("measurement_state"), "observed_at": c.get("observed_at"),
         "correction_pointer": c.get("correction_pointer"), "limitations": c.get("limitations") or [],
-        "batch": {"adapter": adapter, "merkle_root": root, "rule": rule, "version": ver},
+        "batch": {"adapter": adapter, "slug": slug, "merkle_root": root, "rule": rule, "version": ver},
         "inclusion": {"verify_with": "MCP verify_capsule(capsule_json) or A2A skill measurement-capsules {op: verify}",
-                      "leaves": f"{vroot}/{adapter}/leaves.json", "capsules": f"{vroot}/{adapter}/capsules.jsonl.gz",
-                      "record": f"{vroot}/{adapter}/record.json"},
+                      "leaves": f"{vroot}/{slug}/leaves.json", "capsules": f"{vroot}/{slug}/capsules.jsonl.gz",
+                      "record": f"{vroot}/{slug}/record.json"},
+        "capsule_json": line,
     }
 
 
@@ -129,6 +145,8 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--anchors", default=None)
     ap.add_argument("--no-capsules", action="store_true")
+    ap.add_argument("--source-root", default=None,
+                    help="re-root the absolute batch dirs the index names (a copy of /evac-bulk streamed elsewhere)")
     a = ap.parse_args()
     ip = pathlib.Path(a.index)
     raw = ip.read_bytes()
@@ -150,16 +168,20 @@ def main():
     if a.anchors:
         shutil.copyfile(a.anchors, vdir / "anchors.json")
     shards = collections.defaultdict(lambda: {"endpoints": {}, "origins": {}})
-    all_ids, report, unkeyed = [], [], collections.Counter()
+    all_ids, report, unkeyed, slugs = [], [], collections.Counter(), set()
     for b in idx["batches"]:
-        bdir, adapter = pathlib.Path(b["dir"]), b["adapter"]
+        adapter, slug = b["adapter"], batch_slug(idx["batches"], b)
+        if slug in slugs:
+            sys.exit(f"BATCH_DIR_COLLISION {slug}")
+        slugs.add(slug)
+        bdir = pathlib.Path(a.source_root, b["dir"].lstrip("/")) if a.source_root else pathlib.Path(b["dir"])
         rraw = (bdir / "record.json").read_bytes()
         if sha(rraw) != b["record_sha256"]:
             sys.exit(f"RECORD_CHANGED_SINCE_INDEX {adapter}")
         rec = json.loads(rraw)
         if RECORD_SCHEMAS.get(rec.get("schema")) != ver:
             sys.exit(f"RECORD_VERSION_MISMATCH {adapter}: {rec.get('schema')} under a v{ver} index")
-        odir = vdir / adapter
+        odir = vdir / slug
         odir.mkdir(parents=True, exist_ok=True)
         for n in ("record.json", "record.signed.json", "record.json.ots"):
             if (bdir / n).exists():
@@ -167,14 +189,14 @@ def main():
         if not a.no_capsules:
             shutil.copyfile(bdir / rec["capsules_file"]["path"], odir / pathlib.Path(rec["capsules_file"]["path"]).name)
         ids, keyed = [], 0
-        for c in iter_capsules(bdir, rec):
+        for c, line in iter_capsules(bdir, rec):
             ids.append(c["capsule_id"])
             eps = endpoints_of(c)
             if not eps:
-                unkeyed[adapter] += 1
+                unkeyed[slug] += 1
                 continue
             keyed += 1
-            e = entry_for(c, ver, adapter, rec["merkle_root"], rec.get("merkle"), vroot)
+            e = entry_for(c, line, ver, adapter, slug, rec["merkle_root"], rec.get("merkle"), vroot)
             for ep in eps:
                 k = sha(ep.encode())
                 slot = shards[k[:SHARD_HEX]]["endpoints"].setdefault(k, {"endpoint": ep, "capsules": [], "by_adapter": {}})
@@ -189,12 +211,12 @@ def main():
         ids.sort()
         root = merkle_root(ver, ids)
         if root != rec["merkle_root"] or root != b["merkle_root"]:
-            sys.exit(f"LEAVES_DO_NOT_RECOMPUTE {adapter}: {root}")
+            sys.exit(f"LEAVES_DO_NOT_RECOMPUTE {slug}: {root}")
         (odir / "leaves.json").write_text(json.dumps({
-            "schema": f"csoai.measurement-capsule-leaves/{ver}", "adapter": adapter, "kind": rec.get("kind", b.get("kind")),
+            "schema": f"csoai.measurement-capsule-leaves/{ver}", "adapter": adapter, "batch": slug, "kind": rec.get("kind", b.get("kind")),
             "merkle_root": root, "rule": rec.get("merkle"), "n": len(ids), "leaves": ids}, separators=(",", ":")) + "\n")
         all_ids += ids
-        report.append({"adapter": adapter, "n": len(ids), "endpoint_keyed": keyed, "not_endpoint_keyed": unkeyed[adapter]})
+        report.append({"adapter": adapter, "batch": slug, "n": len(ids), "endpoint_keyed": keyed, "not_endpoint_keyed": unkeyed[slug]})
     if merkle_root(ver, all_ids) != idx["index_root"]:
         sys.exit("INDEX_ROOT_DOES_NOT_RECOMPUTE")
     edir = vdir / "endpoints"

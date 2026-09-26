@@ -105,6 +105,9 @@ claude mcp add gspc -- npx -y csoai-gspc-mcp
 
 From a checkout of the repo the server is `mcp/gspc-server/index.mjs` (no extra install).
 
+MCP Registry name: `ai.councilof/gspc` (canonical, domain-verified). `io.github.CSOAI-ORG/gspc` is its
+deprecated alias for the same door.
+
 ### Claude Desktop
 
 Add to `claude_desktop_config.json` (macOS:

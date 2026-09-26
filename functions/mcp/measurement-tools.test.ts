@@ -1,13 +1,15 @@
 /**
- * The measurement-capsule MCP tools behind their env gate. Gate off: the K-1 fleet is exactly the
- * lock (tool-fleet.lock.test.ts proves the rest). Gate on: three free read-only tools with
- * readOnlyHint and an outputSchema, answering from the served layout through the real /mcp handler
- * (the SDK validates structuredContent against each outputSchema on the way out).
+ * The measurement-capsule MCP tools, in the fleet. Since 2026-09-26 they are ordinary free tools in
+ * gspc-tools.json (the MEASUREMENT_CAPSULE_TOOLS env gate is gone): listed with readOnlyHint and an
+ * outputSchema, answering from the served layout through the real /mcp handler (the SDK validates
+ * structuredContent against each outputSchema on the way out). tool-fleet.lock.test.ts proves every
+ * other surface agrees with the fleet.
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequest } from "./[[path]]";
 import LOCK from "./tool-fleet.lock.json";
-import MEASUREMENT from "./measurement-tools.json";
+import FREE from "./gspc-tools.json";
+import { MEASUREMENT_TOOL_NAMES } from "./_measurement";
 import BUNDLE from "../_lib/__fixtures__/measurement/layout-bundle.json";
 import VECTORS from "../_lib/__fixtures__/measurement/capsule-vectors.json";
 
@@ -24,7 +26,7 @@ function serve(files: Record<string, string>) {
 }
 
 type Msg = { result?: { tools?: Array<Record<string, unknown>>; structuredContent?: Record<string, unknown>; isError?: boolean; content?: Array<{ text: string }> }; error?: { message: string } };
-async function rpc(method: string, params: Record<string, unknown>, env: Record<string, unknown>): Promise<Msg> {
+async function rpc(method: string, params: Record<string, unknown>, env: Record<string, unknown> = {}): Promise<Msg> {
   const res = await onRequest({
     request: new Request("https://councilof.ai/mcp", { method: "POST", headers: HEADERS, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) }),
     env,
@@ -34,39 +36,43 @@ async function rpc(method: string, params: Record<string, unknown>, env: Record<
   const frames = text.replace(/\r\n/g, "\n").split(/\n\n/).map((e) => e.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("\n")).filter(Boolean);
   return JSON.parse(frames[frames.length - 1]) as Msg;
 }
-const ON = { MEASUREMENT_CAPSULE_TOOLS: "on" };
-const NAMES = MEASUREMENT.tools.map((t) => t.name);
+const NAMES = ["measurement_index", "verify_capsule", "server_evidence"];
 
-describe("gate off (the default): the locked fleet, nothing more", () => {
-  it("tools/list is exactly the lock and the measurement tools are not callable", async () => {
-    const listed = await rpc("tools/list", {}, {});
-    expect((listed.result?.tools ?? []).map((t) => t.name).sort()).toEqual([...LOCK.free, ...LOCK.paid].sort());
-    const called = await rpc("tools/call", { name: "measurement_index", arguments: {} }, {});
-    expect(called.result?.structuredContent).toBeUndefined();
+describe("in the fleet: three free read-only tools, no env gate", () => {
+  it("are free tools in gspc-tools.json and in the lock, in that order, after mcp_trust", () => {
+    const free = FREE.tools.map((t) => t.name);
+    expect(free.slice(-3)).toEqual(NAMES);
+    expect(LOCK.free.slice(-3)).toEqual(NAMES);
+    expect([...MEASUREMENT_TOOL_NAMES]).toEqual(NAMES);
   });
+
+  it("tools/list serves them with no env set — and an old gate value changes nothing", async () => {
+    for (const env of [{}, { MEASUREMENT_CAPSULE_TOOLS: "off" }]) {
+      const listed = await rpc("tools/list", {}, env);
+      expect((listed.result?.tools ?? []).map((t) => t.name).sort()).toEqual([...LOCK.free, ...LOCK.paid].sort());
+    }
+  });
+
   it("public tool names never carry the internal architecture name", () => {
-    expect(JSON.stringify(MEASUREMENT)).not.toMatch(/venturi/i);
-    expect(NAMES).toEqual(["measurement_index", "verify_capsule", "server_evidence"]);
+    expect(JSON.stringify(FREE.tools.filter((t) => NAMES.includes(t.name)))).not.toMatch(/venturi/i);
   });
-});
 
-describe("gate on: three free read-only tools", () => {
-  it("are listed with readOnlyHint, no destructive hint, and an outputSchema requiring state + doctrine", async () => {
-    const listed = await rpc("tools/list", {}, ON);
+  it("are listed with readOnlyHint, no destructive hint, and an outputSchema requiring state with doctrine a const", async () => {
+    const listed = await rpc("tools/list", {});
     const tools = listed.result?.tools ?? [];
-    expect(tools.map((t) => t.name).sort()).toEqual([...LOCK.free, ...LOCK.paid, ...NAMES].sort());
     for (const name of NAMES) {
-      const t = tools.find((x) => x.name === name)! as { annotations: Record<string, unknown>; outputSchema: { required: string[] }; description: string };
+      const t = tools.find((x) => x.name === name)! as { annotations: Record<string, unknown>; outputSchema: { required: string[]; properties: Record<string, { const?: string }> }; description: string };
       expect(t.annotations.readOnlyHint).toBe(true);
       expect(t.annotations.destructiveHint).toBe(false);
-      expect(t.outputSchema.required).toEqual(expect.arrayContaining(["state", "doctrine"]));
+      expect(t.outputSchema.required).toEqual(["state"]);
+      expect(t.outputSchema.properties.doctrine.const).toBe("measurement, not endorsement");
       expect(t.description).toMatch(/measurement, not endorsement/);
     }
   });
 
   it("measurement_index answers PUBLISHED from the served layout", async () => {
     serve(FILES);
-    const r = await rpc("tools/call", { name: "measurement_index", arguments: {} }, ON);
+    const r = await rpc("tools/call", { name: "measurement_index", arguments: {} });
     expect(r.result?.isError).toBe(false);
     expect(r.result?.structuredContent?.state).toBe("PUBLISHED");
   });
@@ -74,15 +80,15 @@ describe("gate on: three free read-only tools", () => {
   it("verify_capsule answers INCLUDED for a published capsule's JSON text", async () => {
     serve(FILES);
     const line = (VECTORS as { v02: { lines: string[] } }).v02.lines[0];
-    const r = await rpc("tools/call", { name: "verify_capsule", arguments: { capsule_json: line } }, ON);
+    const r = await rpc("tools/call", { name: "verify_capsule", arguments: { capsule_json: line } });
     expect(r.result?.structuredContent?.state).toBe("INCLUDED");
   });
 
   it("server_evidence: MEASURED for a known endpoint; NOT_MEASURED (empty, not an error) for an unknown one", async () => {
     serve(FILES);
-    const known = await rpc("tools/call", { name: "server_evidence", arguments: { endpoint_url: "https://svc1.example/mcp" } }, ON);
+    const known = await rpc("tools/call", { name: "server_evidence", arguments: { endpoint_url: "https://svc1.example/mcp" } });
     expect(known.result?.structuredContent?.state).toBe("MEASURED");
-    const unknown = await rpc("tools/call", { name: "server_evidence", arguments: { endpoint_url: "https://nobody.example/mcp" } }, ON);
+    const unknown = await rpc("tools/call", { name: "server_evidence", arguments: { endpoint_url: "https://nobody.example/mcp" } });
     expect(unknown.result?.isError).toBe(false);
     expect(unknown.result?.structuredContent?.state).toBe("NOT_MEASURED");
     expect(unknown.result?.structuredContent?.capsules).toEqual([]);
@@ -90,7 +96,7 @@ describe("gate on: three free read-only tools", () => {
 
   it("nothing published: NOT_PUBLISHED, not an error", async () => {
     serve({});
-    const r = await rpc("tools/call", { name: "measurement_index", arguments: {} }, ON);
+    const r = await rpc("tools/call", { name: "measurement_index", arguments: {} });
     expect(r.result?.isError).toBe(false);
     expect(r.result?.structuredContent?.state).toBe("NOT_PUBLISHED");
   });

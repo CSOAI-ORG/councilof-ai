@@ -67,7 +67,7 @@ directory will not find it. **What it unlocks.** Discovery by MCP client users.
 **Ready text:** *Council of AI — GSPC.* Remote MCP server (HTTP) exposing the live AI-measurement
 board: seven free read-only tools (board totals, per-axis reads, card verification, inclusion
 proofs) plus metered evidence tools over x402. Verification is free and needs no account.
-`POST https://councilof.ai/mcp` · registry id `io.github.CSOAI-ORG/gspc`.
+`POST https://councilof.ai/mcp` · registry id `ai.councilof/gspc` (deprecated alias `io.github.CSOAI-ORG/gspc`).
 
 ---
 

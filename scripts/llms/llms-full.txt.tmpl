@@ -263,8 +263,9 @@ It is a dated simulation archive; its source date and upstream signature-verific
 
 Read the footprint live: GET https://councilof.ai/api/footprint -> `registry_listings.value`
 (distinct server names) and `registry_listings.versions` (distinct name@version rows), with that
-payload's own `as_of`, `source_url` and paging state. Every entry sits under ONE namespace,
-io.github.CSOAI-ORG. No count is frozen here: we publish into that registry, so it moves.
+payload's own `as_of`, `source_url` and paging state. The footprint counts ONE namespace,
+io.github.CSOAI-ORG. The flagship's canonical registry name is ai.councilof/gspc (domain namespace,
+outside that count); io.github.CSOAI-ORG/gspc is its deprecated alias. No count is frozen here: we publish into that registry, so it moves.
 
 What the footprint is: listings we published ourselves. A listing says a server is REGISTERED. It
 does not say anyone runs it, and it does not say that we, the registry, or anyone else reviewed what

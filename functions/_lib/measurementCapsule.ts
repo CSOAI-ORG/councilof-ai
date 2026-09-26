@@ -29,7 +29,7 @@ export const versionRoot = (v: RuleVersion) => `${DATA_ROOT}/v${v}`;
 export const indexPath = (v: RuleVersion) => `${versionRoot(v)}/index.json`;
 export const indexSignedPath = (v: RuleVersion) => `${versionRoot(v)}/index.signed.json`;
 export const anchorsPath = (v: RuleVersion) => `${versionRoot(v)}/anchors.json`;
-export const batchPath = (v: RuleVersion, adapter: string) => `${versionRoot(v)}/${adapter}`;
+export const batchPath = (v: RuleVersion, slug: string) => `${versionRoot(v)}/${slug}`;
 export const shardPath = (v: RuleVersion, shard: string) => `${versionRoot(v)}/endpoints/${shard}.json`;
 export const SHARD_HEX = 2; // 256 shards, keyed by the first two hex of sha256(normalised endpoint)
 
@@ -373,6 +373,16 @@ async function loadIndex(origin: string, v: RuleVersion): Promise<{ index?: Load
   return { index: { version: v, url: f.url, doc, signature, batches } };
 }
 
+/** Directory of one batch under v<ver>/: its adapter name when exactly one batch of the index carries
+ *  that adapter, else `<adapter>-<first 12 hex of its merkle_root>`. The 2026-09-26 index carries two
+ *  mill_cross_runtime batches; one shared directory let the second overwrite the first's leaves.
+ *  Mirrored byte-for-byte by batch_slug() in scripts/measurement_capsule_layout.py. */
+export function batchSlug(batches: Json[], b: Json): string {
+  const adapter = String(b.adapter);
+  const same = batches.filter((x) => String(x.adapter) === adapter).length;
+  return same === 1 ? adapter : `${adapter}-${String(b.merkle_root).slice(0, 12)}`;
+}
+
 const pick = (o: Json, keys: string[]) => Object.fromEntries(keys.filter((k) => k in o).map((k) => [k, o[k]]));
 
 /* ------------------------------------------------------------ measurement_index */
@@ -398,8 +408,9 @@ export async function measurementIndex(origin: string): Promise<Json> {
     n_batches: index.batches.length,
     batches: index.batches.map((b) => ({
       ...pick(b, ["adapter", "kind", "n_capsules", "states", "merkle_root", "record_sha256", "capsules_sha256", "signature_state", "signed_at", "ots_state"]),
-      record_url: `${origin}${batchPath(latest.version, String(b.adapter))}/record.json`,
-      leaves_url: `${origin}${batchPath(latest.version, String(b.adapter))}/leaves.json`,
+      slug: batchSlug(index.batches, b),
+      record_url: `${origin}${batchPath(latest.version, batchSlug(index.batches, b))}/record.json`,
+      leaves_url: `${origin}${batchPath(latest.version, batchSlug(index.batches, b))}/leaves.json`,
     })),
     signature: index.signature,
     anchors:
@@ -449,22 +460,41 @@ export async function verifyCapsule(origin: string, input: unknown): Promise<Jso
     return { ...base, state: "NOT_PUBLISHED", reason: `no v${v} index is published on this origin (published: ${latest.versions.join(", ")})` };
   const { index, miss: m2 } = await loadIndex(origin, v);
   if (!index) return { ...base, ...notAvailable(m2!, `the v${v} index could not be read`) };
-  const batch = index.batches.find((b) => b.kind === kind);
-  if (!batch) return { ...base, state: "NOT_INCLUDED", reason: `no published v${v} batch carries kind ${String(kind)}`, index_signature: index.signature };
-  const adapter = String(batch.adapter);
-  const lf = await fetchStatic(origin, `${batchPath(v, adapter)}/leaves.json`);
-  if (lf.state !== "OK") return { ...base, ...notAvailable(lf, `leaves of batch ${adapter} could not be read`), index_signature: index.signature };
-  const leaves = rec(lf.json)?.leaves;
-  if (!Array.isArray(leaves) || !leaves.every((x) => typeof x === "string" && HEX64.test(x)))
-    return { ...base, state: "UNCHECKABLE", reason: "leaves.json does not carry a list of 64-hex capsule ids", index_signature: index.signature };
+  // One kind may span several batches (two mill_cross_runtime batches on 2026-09-26): try each, in
+  // index order, and answer for the one whose published leaves hold this id.
+  const candidates = index.batches.filter((b) => b.kind === kind);
+  if (!candidates.length) return { ...base, state: "NOT_INCLUDED", reason: `no published v${v} batch carries kind ${String(kind)}`, index_signature: index.signature };
   const target = recomputed;
-  const m = await merkle(v, leaves as string[], target);
-  const batchRoot = String(batch.merkle_root);
-  const batchInfo = { adapter, merkle_root: batchRoot, rule: MERKLE_RULE[v], leaves_url: lf.url, n_leaves: leaves.length };
-  if (m.root !== batchRoot)
-    return { ...base, state: "UNCHECKABLE", reason: "the published leaves do not recompute to the batch root the index names", batch: { ...batchInfo, leaves_root: m.root }, index_signature: index.signature };
-  if (m.index < 0)
-    return { ...base, state: "NOT_INCLUDED", reason: `capsule id is not a leaf of batch ${adapter}`, batch: batchInfo, index_signature: index.signature };
+  let found: { batch: Json; slug: string; leaves: string[]; url: string; m: { root: string; index: number; path: ProofStep[] } } | null = null;
+  let lastInfo: Json | null = null;
+  for (const batch of candidates) {
+    const slug = batchSlug(index.batches, batch);
+    const lf = await fetchStatic(origin, `${batchPath(v, slug)}/leaves.json`);
+    if (lf.state !== "OK") return { ...base, ...notAvailable(lf, `leaves of batch ${slug} could not be read`), index_signature: index.signature };
+    const leaves = rec(lf.json)?.leaves;
+    if (!Array.isArray(leaves) || !leaves.every((x) => typeof x === "string" && HEX64.test(x)))
+      return { ...base, state: "UNCHECKABLE", reason: `leaves.json of batch ${slug} does not carry a list of 64-hex capsule ids`, index_signature: index.signature };
+    const m = await merkle(v, leaves as string[], target);
+    const info = { adapter: String(batch.adapter), slug, merkle_root: String(batch.merkle_root), rule: MERKLE_RULE[v], leaves_url: lf.url, n_leaves: leaves.length };
+    if (m.root !== String(batch.merkle_root))
+      return { ...base, state: "UNCHECKABLE", reason: `the published leaves of batch ${slug} do not recompute to the batch root the index names`, batch: { ...info, leaves_root: m.root }, index_signature: index.signature };
+    lastInfo = info;
+    if (m.index >= 0) {
+      found = { batch, slug, leaves: leaves as string[], url: lf.url, m };
+      break;
+    }
+  }
+  if (!found)
+    return {
+      ...base,
+      state: "NOT_INCLUDED",
+      reason: `capsule id is not a leaf of any published v${v} batch of kind ${String(kind)} (${candidates.length} checked)`,
+      batch: lastInfo,
+      index_signature: index.signature,
+    };
+  const { m, leaves } = found;
+  const batchRoot = String(found.batch.merkle_root);
+  const batchInfo = { adapter: String(found.batch.adapter), slug: found.slug, merkle_root: batchRoot, rule: MERKLE_RULE[v], leaves_url: found.url, n_leaves: leaves.length };
   const again = await rootFromProof(v, target, m.path);
   return {
     ...base,

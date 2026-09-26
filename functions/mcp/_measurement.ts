@@ -1,20 +1,18 @@
 /**
- * MCP handlers for the measurement-capsule readers (definitions: ./measurement-tools.json).
- * Served by /mcp only when env MEASUREMENT_CAPSULE_TOOLS === "on" — see the manifest's note for
- * why the gate exists and what flips it. Logic lives in functions/_lib/measurementCapsule.ts,
- * shared with the A2A skills, so the two doors can never disagree.
+ * MCP handlers for the measurement-capsule readers. Their definitions live in ./gspc-tools.json with
+ * every other free tool (moved there 2026-09-26 when /measurement-capsules/ was published; until then
+ * they sat in a separate manifest behind env MEASUREMENT_CAPSULE_TOOLS). Logic lives in
+ * functions/_lib/measurementCapsule.ts, shared with the A2A skills and the /verify-server page, so the
+ * doors can never disagree.
  */
-import MEASUREMENT_TOOLS from "./measurement-tools.json";
+import GSPC_TOOLS from "./gspc-tools.json";
 import { measurementIndex, verifyCapsule, serverEvidence } from "../_lib/measurementCapsule";
 import type { McpToolResult } from "./_handlers";
 
-export const MEASUREMENT_TOOL_DEFS = MEASUREMENT_TOOLS.tools;
-export const MEASUREMENT_TOOL_NAMES = new Set(MEASUREMENT_TOOL_DEFS.map((t) => t.name));
-export const MEASUREMENT_ENV_GATE = MEASUREMENT_TOOLS.env_gate;
-
-export function measurementToolsEnabled(env: unknown): boolean {
-  return (env as Record<string, unknown> | undefined)?.[MEASUREMENT_ENV_GATE] === "on";
-}
+/** The readers this module answers, by name. Each must be a definition in gspc-tools.json. */
+export const MEASUREMENT_TOOL_NAMES = new Set(["measurement_index", "verify_capsule", "server_evidence"]);
+for (const name of MEASUREMENT_TOOL_NAMES)
+  if (!GSPC_TOOLS.tools.some((t) => t.name === name)) throw new Error(`gspc-tools.json has no definition for ${name}`);
 
 function summary(name: string, p: Record<string, unknown>): string {
   const st = String(p.state);

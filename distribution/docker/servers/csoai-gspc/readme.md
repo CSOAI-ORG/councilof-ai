@@ -4,7 +4,7 @@ Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or 
 
 ## Tools
 
-Nine free tools:
+Twelve free tools:
 
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
 - `get_axis` — One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
@@ -15,6 +15,9 @@ Nine free tools:
 - `verify_inclusion` — Check a sha256 against the live public-root merkle via GET /api/proof?sha=.
 - `x402_trust` — GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire.
 - `mcp_trust` — GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable.
+- `measurement_index` — Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested.
+- `verify_capsule` — Verify one measurement capsule.
+- `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 
 Four optional x402-metered evidence tools (payment is the explicit `x_payment` argument; an unpaid call
 returns the challenge, which is not settlement, delivery or revenue):
@@ -24,7 +27,7 @@ returns the challenge, which is not settlement, delivery or revenue):
 - `rwa_evidence` — Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd.
 - `receipts_batch` — A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256.
 
-`tools/list` must return exactly these thirteen names.
+`tools/list` must return exactly these sixteen names.
 
 ## Evidence boundary
 

@@ -20,7 +20,7 @@ it("the real MCP mount accepts the capability drift probe as modern JSON", async
   const mcp = await response.json();
   expect(mcp.result.resultType).toBe("complete");
   const result = observed({ mcp });
-  expect(result.mcp.size).toBe(13);
+  expect(result.mcp.size).toBe(16);
   expect(result.mcp.has("commission_card")).toBe(true);
   expect(result.mcp.has("witness_hash")).toBe(false);
   expect(network).not.toHaveBeenCalled();

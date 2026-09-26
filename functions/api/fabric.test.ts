@@ -372,7 +372,7 @@ describe("GET /api/fabric", () => {
       expect(externalFetch).not.toHaveBeenCalled();
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "RUNTIME_OBSERVED",
-        summary: expect.stringContaining("13 tool declarations"),
+        summary: expect.stringContaining("16 tool declarations"),
         writes_board: false,
       });
     } finally {

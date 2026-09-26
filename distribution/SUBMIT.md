@@ -6,7 +6,7 @@ published, submitted or registered. Every step is an owner action.
 Targets: 16. Owner approval needed: 16.
 Affected by the flagged CSOAI-ORG GitHub account (blocked, re-routed to CouncilofAI-CSOAI, or losing GitHub-based provenance): 11 (`mcp-registry-github`, `claude-plugin`, `cursor-plugin`, `grok-plugin`, `gemini-extension`, `pypi-langchain-csoai`, `pypi-llama-index-tools-csoai`, `pypi-crewai-csoai`, `npm-ai-sdk-gspc`, `npm-mastra-gspc`, `docker-mcp-catalog`).
 Remote server version: 1.4.2 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
-Fleet: 13 tools (9 free, 4 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
+Fleet: 16 tools (12 free, 4 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
 
 Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs`.
 
@@ -35,9 +35,9 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 - Version source: `mcp/gspc-server/server.json#/version`
 - Flagged-org impact: Login and repository URL depend on the flagged CSOAI-ORG account. 1.4.2 is already the live isLatest entry, so there is nothing to publish until the version moves.
 
-1. Nothing to do while the live registry isLatest equals this file's version (check.mjs compares both).
-2. When the version moves: `mcp-publisher login github` (device flow, as a CSOAI-ORG member), then `mcp-publisher publish distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json`.
-3. npm `csoai-gspc-mcp` must already carry `mcpName: io.github.CSOAI-ORG/gspc` at the declared version (it does at 0.2.2).
+1. DEPRECATED ALIAS. The canonical name is the domain one (mcp-registry-domain). Owner step: deprecate this name in the registry (`mcp-publisher login github` as a CSOAI-ORG member, then set its status to deprecated). Publish no new versions under it.
+2. This file stays rendered so the deprecation has the descriptor it names; check.mjs still compares its version with the registry's isLatest.
+3. npm `csoai-gspc-mcp` 0.2.2 carries `mcpName: io.github.CSOAI-ORG/gspc` (the deprecated alias); the package source now carries `mcpName: ai.councilof/gspc`, so the next npm release binds the package to the canonical name.
 
 ## `mcp-registry-domain`
 
@@ -47,7 +47,7 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 
 1. `mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>` — the key whose public half is served at /.well-known/mcp-registry-auth.
 2. `mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.
-3. Owner decision first: a second registry name for the same door is a duplicate listing; keep both, or later deprecate one.
+3. CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.
 
 ## `claude-plugin`
 
@@ -183,4 +183,4 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 4. **Second registry name** (`ai.councilof/gspc`) — keep both names or one.
 5. **A2A agent card signature.** `/.well-known/agent-card.json` has no `signatures` block. `scripts/adapters/agent_card_jws.py`
    emits the signing input; signing needs the card-attestation-1 key holder (K3 lane). Not done here.
-6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all 13 tools, or wait.
+6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all 16 tools, or wait.

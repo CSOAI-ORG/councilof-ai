@@ -157,6 +157,8 @@ export const PRIMARY_PATHS = new Set<string>([
   // /state — State of the Agent Internet: the stable address and its dated editions (2026-09-26).
   "/state",
   "/state/2026-09",
+  // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
+  "/verify-server",
   // /reach — the full seven-stage funnel. Linked from the home page and from the footer
   // of every route, so unregistered it would ship the "archived" banner under a link the site
   // is actively promoting, on the page whose whole point is that the number is current.

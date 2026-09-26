@@ -11,6 +11,7 @@ import { gunzipSync } from "node:zlib";
 import VECTORS from "./__fixtures__/measurement/capsule-vectors.json";
 import ENDPOINTS from "./__fixtures__/measurement/endpoint-vectors.json";
 import BUNDLE from "./__fixtures__/measurement/layout-bundle.json";
+import SPLIT from "./__fixtures__/measurement/layout-bundle-split.json";
 import {
   DOCTRINE,
   merkle,
@@ -23,6 +24,7 @@ import {
   serverEvidence,
   verifySidecar,
   sha256HexOf,
+  batchSlug,
   type RuleVersion,
 } from "./measurementCapsule";
 
@@ -200,6 +202,49 @@ describe("readers over the served layout", () => {
   });
 });
 
+describe("one adapter in two batches (the 2026-09-26 mill_cross_runtime shape)", () => {
+  const v02 = (VECTORS as { v02: { lines: string[] } }).v02;
+  const SPLIT_FILES = (SPLIT as { files: Record<string, string> }).files;
+  const roots = (SPLIT as { roots: string[] }).roots;
+
+  it("batchSlug: the adapter alone when unique, adapter + 12 hex of the root when shared", () => {
+    const one = [{ adapter: "a", merkle_root: "ab".repeat(32) }, { adapter: "b", merkle_root: "cd".repeat(32) }];
+    expect(batchSlug(one, one[0])).toBe("a");
+    const two = [{ adapter: "m", merkle_root: "5ae00c1f4c2ed290" + "0".repeat(48) }, { adapter: "m", merkle_root: "78226433e9e433b3" + "0".repeat(48) }];
+    expect(two.map((b) => batchSlug(two, b))).toEqual(["m-5ae00c1f4c2e", "m-78226433e9e4"]);
+  });
+
+  it("the layout gives each batch its own directory, and measurement_index points at each", async () => {
+    serve(SPLIT_FILES);
+    const r = await measurementIndex(ORIGIN);
+    const bs = r.batches as Array<Record<string, unknown>>;
+    expect(bs.map((b) => b.merkle_root)).toEqual(roots);
+    expect(new Set(bs.map((b) => b.leaves_url)).size).toBe(2);
+    for (const b of bs) expect(String(b.leaves_url)).toContain(`/contract_parity-${String(b.merkle_root).slice(0, 12)}/leaves.json`);
+  });
+
+  it("verify_capsule finds every capsule in whichever batch holds it — none is NOT_INCLUDED", async () => {
+    serve(SPLIT_FILES);
+    for (const [i, line] of v02.lines.entries()) {
+      const r = await verifyCapsule(ORIGIN, line);
+      expect(r.state, `line ${i}`).toBe("INCLUDED");
+      expect((r.batch as Record<string, unknown>).merkle_root).toBe(roots[i < 6 ? 0 : 1]);
+      expect((r.inclusion as Record<string, unknown>).recomputed_root).toBe(roots[i < 6 ? 0 : 1]);
+    }
+  });
+
+  it("server_evidence entries carry their own batch's leaves pointer and the exact capsule line", async () => {
+    serve(SPLIT_FILES);
+    const r = await serverEvidence(ORIGIN, "https://svc1.example/mcp");
+    const caps = r.capsules as Array<{ capsule_id: string; capsule_json: string; batch: { merkle_root: string }; inclusion: { leaves: string } }>;
+    expect(caps.length).toBeGreaterThan(0);
+    for (const c of caps) {
+      expect(c.inclusion.leaves).toContain(c.batch.merkle_root.slice(0, 12));
+      expect(await recomputeCapsuleId(parseLexical(c.capsule_json))).toBe(c.capsule_id);
+    }
+  });
+});
+
 // Optional: the real (private) layout. MEASUREMENT_LAYOUT_DIR=/path/to/layout runs every published
 // capsule through verify_capsule's id recomputation and every batch root through the TS Merkle.
 const LAYOUT = process.env.MEASUREMENT_LAYOUT_DIR;
@@ -209,11 +254,12 @@ describe.skipIf(!LAYOUT)("MEASUREMENT_LAYOUT_DIR: the real layout recomputes in 
     for (const ver of latest.versions as RuleVersion[]) {
       const idx = JSON.parse(readFileSync(join(LAYOUT!, `v${ver}`, "index.json"), "utf8"));
       for (const b of idx.batches) {
-        const lv = JSON.parse(readFileSync(join(LAYOUT!, `v${ver}`, b.adapter, "leaves.json"), "utf8"));
+        const dir = join(LAYOUT!, `v${ver}`, batchSlug(idx.batches, b));
+        const lv = JSON.parse(readFileSync(join(dir, "leaves.json"), "utf8"));
         expect((await merkle(ver, lv.leaves)).root).toBe(b.merkle_root);
-        // every capsule id, recomputed from the batch's own capsule lines (index "dir" names the batch)
-        const rec = JSON.parse(readFileSync(join(b.dir, "record.json"), "utf8"));
-        const raw = readFileSync(join(b.dir, rec.capsules_file.path));
+        // every capsule id, recomputed from the capsule lines the layout PUBLISHES for this batch
+        const rec = JSON.parse(readFileSync(join(dir, "record.json"), "utf8"));
+        const raw = readFileSync(join(dir, rec.capsules_file.path.split("/").pop()));
         const lines = (rec.capsules_file.path.endsWith(".gz") ? gunzipSync(raw) : raw).toString("utf8").split("\n").filter(Boolean);
         let bad = 0;
         for (const line of lines) if ((await recomputeCapsuleId(parseLexical(line))) !== JSON.parse(line).capsule_id) bad++;
@@ -221,5 +267,21 @@ describe.skipIf(!LAYOUT)("MEASUREMENT_LAYOUT_DIR: the real layout recomputes in 
         expect(lines.length).toBe(b.n_capsules);
       }
     }
+  }, 1_800_000);
+
+  it("every shard entry's capsule_json is the exact line: it recomputes to the entry's capsule_id", async () => {
+    const latest = JSON.parse(readFileSync(join(LAYOUT!, "latest.json"), "utf8"));
+    let n = 0;
+    let bad = 0;
+    for (let s = 0; s < 256; s++) {
+      const shard = JSON.parse(readFileSync(join(LAYOUT!, `v${latest.version}`, "endpoints", `${s.toString(16).padStart(2, "0")}.json`), "utf8"));
+      for (const ent of Object.values(shard.endpoints) as Array<{ capsules: Array<{ capsule_id: string; capsule_json: string }> }>)
+        for (const c of ent.capsules) {
+          n++;
+          if ((await recomputeCapsuleId(parseLexical(c.capsule_json))) !== c.capsule_id) bad++;
+        }
+    }
+    expect(n).toBeGreaterThan(0);
+    expect(bad, `${bad} of ${n} shard lines do not recompute`).toBe(0);
   }, 1_800_000);
 });

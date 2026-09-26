@@ -471,6 +471,56 @@ async function x402Trust() {
   }
 }
 
+/* ------------------------------------------------- measurement-capsule readers */
+
+/**
+ * measurement_index, verify_capsule and server_evidence are answered by the door's own /mcp
+ * (functions/_lib/measurementCapsule.ts): this package forwards the call and returns the door's
+ * structuredContent unchanged, so the two implementations cannot disagree about a capsule. The door
+ * re-derives everything it returns (capsule ids, Merkle inclusion, the index signature against the
+ * pinned key). If the door cannot be reached the answer is UNREACHABLE — never a guess, never
+ * NOT_MEASURED (which is a statement about the index, not about the connection).
+ */
+const MEASUREMENT_DOCTRINE = "measurement, not endorsement";
+
+async function doorTool(name, args) {
+  const url = `${ORIGIN}/mcp`;
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json, text/event-stream",
+        "MCP-Protocol-Version": "2025-03-26",
+      },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!r.ok) throw new Error(`POST ${url} returned HTTP ${r.status}`);
+    const text = await r.text();
+    const ct = r.headers.get("content-type") || "";
+    let msg;
+    if (ct.includes("text/event-stream")) {
+      const frames = text
+        .replace(/\r\n/g, "\n")
+        .split(/\n\n/)
+        .map((e) => e.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("\n"))
+        .filter(Boolean);
+      msg = JSON.parse(frames[frames.length - 1]);
+    } else msg = JSON.parse(text);
+    const sc = msg?.result?.structuredContent;
+    if (!sc || typeof sc !== "object") throw new Error(msg?.error?.message || "the door returned no structuredContent");
+    return { ...sc, answered_by: url };
+  } catch (e) {
+    return {
+      state: "UNREACHABLE",
+      doctrine: MEASUREMENT_DOCTRINE,
+      reason: `the door that answers ${name} could not be reached: ${e instanceof Error ? e.message : String(e)}`,
+      source: url,
+    };
+  }
+}
+
 /* ---------------------------------------------------------------- paid tools */
 
 const PAID_DOCTRINE =
@@ -710,6 +760,9 @@ const HANDLERS = {
   verify_inclusion: verifyInclusion,
   x402_trust: x402Trust,
   mcp_trust: mcpTrust,
+  measurement_index: (a) => doorTool("measurement_index", a),
+  verify_capsule: (a) => doorTool("verify_capsule", a),
+  server_evidence: (a) => doorTool("server_evidence", a),
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -759,6 +812,10 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "mcp_trust":
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
+    case "measurement_index":
+    case "verify_capsule":
+    case "server_evidence":
+      return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} (${MEASUREMENT_DOCTRINE}).`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
