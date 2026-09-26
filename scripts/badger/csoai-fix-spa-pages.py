@@ -61,7 +61,7 @@ def fix_spa_page(path: Path, title: str) -> tuple[bool, str]:
     </a>
     <nav class="nav">
       <a href="/api/gspc">Board</a>
-      <a href="/.well-known/">Discover</a>
+      <a href="/llms.txt">Discover</a>
       <a href="/gspc-verify">Verify</a>
       <a href="/pay">Pay</a>
       <a href="/pay" class="nav-cta">Use the board</a>
@@ -85,7 +85,7 @@ def fix_spa_page(path: Path, title: str) -> tuple[bool, str]:
       <a href="/api/gspc">Live board</a>
       <a href="/gspc-verify">Verifier</a>
       <a href="/pay">Pay with MetaMask</a>
-      <a href="/.well-known/">Discovery</a>
+      <a href="/llms.txt">Discovery</a>
     </div>
     <div class="footer-col">
       <h4>Company</h4>
