@@ -556,6 +556,11 @@ const MACHINE_PATHS = [
   ["/.well-known/scitt.json", "daily", "0.6"],
   ["/api/arena/scoreboard", "daily", "0.6"],
   ["/api/regulator-findings", "daily", "0.6"],
+  // Machine-readable records previously served only by an out-of-band release (27 Sep); now in public/.
+  ["/progress-index.json", "daily", "0.5"],
+  ["/eat-flywheel.json", "daily", "0.5"],
+  ["/layer0-distribution.json", "daily", "0.5"],
+  ["/layer0-drive-through.json", "daily", "0.5"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
