@@ -43,6 +43,33 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0926-06",
+      "date": "2026-09-26",
+      "detected_at": "2026-09-26",
+      "detected_window": {
+        "not_before": "2026-09-26T06:45:47Z",
+        "not_after": "2026-09-26T15:40:23Z",
+        "basis": "not before the daily record was published (dataset commit d58a0a7b); not after the first fix commit d6b88557a"
+      },
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "https://huggingface.co/datasets/csoai/cross-ledger-supply/commit/d58a0a7bc40c (record published 2026-09-26T06:45:47Z)",
+        "councilof-ai commit d6b88557a (first fix commit, committed 2026-09-26T15:40:23Z)",
+        "published_at is UNRECORDED: the corrected record (v2) is signed and staged for csoai/cross-ledger-supply but is not yet published there"
+      ],
+      "what_was_wrong": "The cross-ledger daily record for 2026-09-26 (csoai/cross-ledger-supply, xl-daily/2026-09-26/xl-daily-2026-09-26.json, sha256 b02851fc...) graded three Tether deployments INCONSISTENT with the issuer's own list: EURT on Ethereum, CNHT on Ethereum and CNHt on Tron, whose totalSupply() read 50,000,050, 25,000,000 and 20,000,000. The only issuer statement was that tether.to/en/supported-protocols/ lists them under a 'Deprecated Asset Protocols:' heading. That heading states no supply figure, so there were never two statements that differ. The record also called totalSupply() 'issued supply'. In Tether's own terms totalSupply() is 'total authorized', which includes tokens the issuer holds as not issued.",
+      "how_caught": "A pre-send review of the draft issuer notices built from this record re-checked each INCONSISTENT row live before queueing it. The review re-read the issuer page, the three ledgers and the token holders. It found that 'Deprecated' states no supply figure. It also found that most of each total sits at an issuer-held address: 0x5754...b949 holds 91.7% of the EURT and 78.0% of the Ethereum CNHT, and that address's MXNT balance equals Tether's own published not-issued figure. The candidate notice was dropped and nothing was sent.",
+      "what_changed": "Fixed at the producer, scripts/readers/cross_ledger_xl.py (commit d6b88557a). A deployment read under a deprecated heading is now NOT_A_SUPPLY_CLAIM: the item is recorded and compared with nothing. Only a supply figure the issuer's page itself states can make INCONSISTENT. Tests: DeprecatedLabelIsNotASupplyClaim (7) and RederiveChangesNoRead (2) in scripts/readers/test_cross_ledger_xl.py. Three of them are controls, and they show that a contradicted stated figure and a listed address with no contract still yield INCONSISTENT. The record, its institutional-links file, the reader's not_evidence_of line, three registry strings and the dataset card now say totalSupply() (or the ledger's equivalent) where they said issued supply. The producer re-derived 2026-09-26 as version v2 (xl-daily/2026-09-26/v2/, record sha256 6acf5f9e...) from the same reads. No ledger, issuer page or value source was re-read, and all 113 deployment rows, heights and evidence kinds are unchanged. The three Tether rows change from INCONSISTENT to NOT_A_SUPPLY_CLAIM. USDT's parity state changes from INCONSISTENT to UNCHECKABLE, because some of its listed deployments are not read. Inconsistent findings drop from 4 to 1; the USD1 row on Tempo stands. Each asset record otherwise differs only in wording and a rederivation block, and each remaining difference is a new path, a file pin or a producer or version field. The v1 record stays published byte for byte with its signature and proof. v2 is signed and OTS-stamped (pending) and staged for the dataset, but not yet published there. This says nothing about Tether's reserves, solvency or redemptions.",
+      "status": "CORRECTED AT PRODUCER - v2 signed and staged; dataset publication pending owner approval; v1 kept byte for byte",
+      "reached_the_public": true,
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/cross-ledger-supply/blob/d58a0a7bc40c/xl-daily/2026-09-26/xl-daily-2026-09-26.json",
+        "scripts/readers/cross_ledger_xl.py (parity_for, rederive; commit d6b88557a)",
+        "scripts/readers/test_cross_ledger_xl.py (DeprecatedLabelIsNotASupplyClaim, RederiveChangesNoRead)"
+      ]
+    },
+    {
       "id": "C-2026-0926-05",
       "date": "2026-09-26",
       "detected_at": "2026-09-26",
@@ -1250,33 +1277,25 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "b5020a15de0bcb5d83d3fdddfced60c4f546460c827c0a82dc9eeeb474f20672",
-    signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
-    did: "did:web:csoai.org#board-attestation-1",
-    signature: "a142266f550457ce85ab0ec49ed0853e35a8501ce4ba2d5c45f98ac8a3611a246b443d277236692a6474db2e0a0e40721a9f5c9a1c3fda09ea098826847e4e07",
-    attestation: {
-          "artifact": "csoai.corrections/0.1",
-          "content_id": "b5020a15de0bcb5d83d3fdddfced60c4f546460c827c0a82dc9eeeb474f20672",
-          "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 72,
-          "latest_entry_id": "C-2026-0926-05",
-          "ledger_canonical_bytes": 125231,
-          "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
-          "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-26T13:32:28Z"
-    },
-    sig_input:
-      "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
-      "The attestation names the digest of the ledger body and the rule that produces it.",
-    key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
-    note:
-      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
-      "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
-      "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
-      "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +
-      "cannot green the flag any more - id is inside the signed attestation, and the handler verifies the " +
-      "Ed25519 bytes at request time, not just a digest match.",
+  "id": "a8515b1106086d1f5cb1dc6531e643e5b5cfee4c40d50b0cc0d49fb44852ae06",
+  "signer": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "signature": "f966cba44c07e985136c6dae85be9c2758710b4b33a6fc2210af3880dc3918b2f84443fafc3ca47a15b015f2909d6a6f6a03221dfcdc9861dc9fc597d8de2d0d",
+  "attestation": {
+    "artifact": "csoai.corrections/0.1",
+    "content_id": "a8515b1106086d1f5cb1dc6531e643e5b5cfee4c40d50b0cc0d49fb44852ae06",
+    "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
+    "entries": 73,
+    "latest_entry_id": "C-2026-0926-06",
+    "ledger_canonical_bytes": 129328,
+    "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
+    "schema": "csoai.corrections-attestation/0.1",
+    "signed_at": "2026-09-26T15:46:06Z"
   },
+  "sig_input": "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. The attestation names the digest of the ledger body and the rule that produces it.",
+  "key_source": "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
+  "note": "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a 15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone cannot green the flag any more - id is inside the signed attestation, and the handler verifies the Ed25519 bytes at request time, not just a digest match."
+},
 };
 
 // Serve-time signature check. Two independent things are established on every request, from the
