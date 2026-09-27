@@ -472,6 +472,33 @@ def parse_text_regex(text: str, il: dict) -> tuple[list[dict], list[dict]]:
     return out, unmapped
 
 
+def parse_html_link_labelled(body: bytes, il: dict) -> list[dict]:
+    """Issuer pages whose deployment identifiers live only in explorer-link hrefs (not in the visible text).
+    `regex` (DOTALL, over the raw HTML) pairs a label with the identifier in its link; `label_regex` enumerates
+    every label the page lists. A listed label with no identifier parsed near it is returned with identifier None
+    and a parse_reason, so it lands in listed_not_read (UNCHECKABLE) instead of silently vanishing. Exact
+    duplicates (the same label+identifier rendered twice, e.g. desktop and mobile markup) are counted once, and a
+    heading the registry declares a `label_variants` alias of a parsed label (the same card, another breakpoint) is not
+    reported again."""
+    text = body.decode("utf-8", "replace")
+    rows, seen = [], set()
+    for m in re.finditer(il["regex"], text, re.S):
+        lab, ident = m.group("label").strip(), m.group("identifier")
+        if (lab, ident) in seen:
+            continue
+        seen.add((lab, ident))
+        rows.append({"product": il["product"], "label": lab, "identifier": ident,
+                     "matched_markup_sha256": sha(m.group(0).encode()), "modules": {}})
+    have = {r["label"] for r in rows}
+    variants = il.get("label_variants") or {}   # one card rendered with a different heading per screen-size variant
+    for lab in dict.fromkeys(m.group("label").strip() for m in re.finditer(il["label_regex"], text, re.S)):
+        if lab not in have and variants.get(lab) not in have:
+            rows.append({"product": il["product"], "label": lab, "identifier": None, "modules": {},
+                         "parse_reason": ("LISTED_NO_IDENTIFIER_PARSED: the issuer page lists this label, but no explorer link "
+                                          "or identifier was found next to it in the served HTML; nothing is read and nothing is inferred")})
+    return rows
+
+
 def parse_tether_sections(lines: list[str], il: dict) -> tuple[list[dict], list[dict]]:
     """Tether's supported-protocols page: '<section label>' then '<X₮> contract address:' then a URL or
     identifier. Sections after the deprecated marker are returned separately as the issuer's own
@@ -577,6 +604,8 @@ def read_issuer_list_xl(spec: dict) -> dict:
         rows, unmapped = parse_text_regex(" ".join(_lines(body)), il)
     elif p == "tether_sections":
         rows, dep = parse_tether_sections(_lines(body), il)
+    elif p == "html_link_labelled":
+        rows = parse_html_link_labelled(body, il)
     elif p == "sky_chainlog":
         j = json.loads(body)
         rows = [{"product": il["product"], "label": il["label"], "identifier": j[il["key"]], "modules": {}}] if il["key"] in j else []
@@ -1096,7 +1125,7 @@ def build_asset(key: str, reg: dict, out_dir: Path, date: str) -> dict:
         led = ledger_for(d["label"])
         if not d.get("identifier") or led is None:
             lk = (l2l.get(d["label"]) or "").lower()
-            reason = reg["no_adapter_reasons"].get(lk) or reg["no_adapter_reasons"]["default"]
+            reason = d.get("parse_reason") or reg["no_adapter_reasons"].get(lk) or reg["no_adapter_reasons"]["default"]
             listed_not_read.append({**d, "ledger": l2l.get(d["label"]), "reason": reason})
             continue
         listed[led].add(d["identifier"])
