@@ -346,6 +346,9 @@ function discover() {
       // /games/ruler — THE RULER. React-only; snapshot it so a cold load reads the page and its
       // standing "nothing is sent" notice rather than the SPA shell.
       "/games/ruler",
+      // /gspc-console — the GSPC console left public/gspc-console.html for the site shell
+      // (27 Sep 2026). Snapshot it so a cold load reads the tables, not the SPA shell.
+      "/gspc-console",
   ];
   for (const p of MUST) found.add(p);
 

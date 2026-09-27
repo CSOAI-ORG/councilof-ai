@@ -71,7 +71,7 @@ export default function ToolsPage() {
     <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16" data-testid="tools-mcp">
       <div className="overflow-hidden rounded-[2rem] border border-emerald-400/15 bg-[#06150f] text-white shadow-[0_28px_80px_rgba(3,17,11,0.18)]">
         <div className="grid gap-0 lg:grid-cols-[1.12fr_0.88fr]">
-          <div className="p-6 sm:p-8 lg:p-10">
+          <div className="min-w-0 p-6 sm:p-8 lg:p-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200">
               <PlugZap className="h-3.5 w-3.5" />
               Agent tools · MCP endpoint
@@ -84,19 +84,26 @@ export default function ToolsPage() {
               and verify signed records without turning a directory listing into a trust claim.
             </p>
             <div className="mt-6 flex flex-wrap gap-2 text-sm">
+              {/* Both counts are read from the manifests the /mcp door serves
+                  (functions/mcp/gspc-tools.json + paid-tools.json), never typed. They are
+                  two parts of one total, so the pills say so instead of standing side by
+                  side as if they measured different things. */}
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
-                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                {FREE_TOOL_NAMES.length} free readers
+                <Terminal className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                {ALL_TOOL_NAMES.length} tools in all
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
-                <ShieldCheck className="h-4 w-4 text-emerald-300" />
-                client-side verification
+                <CheckCircle2 className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                {FREE_TOOL_NAMES.length} free to read
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
-                <Terminal className="h-4 w-4 text-emerald-300" />
-                {ALL_TOOL_NAMES.length} listed tools
+                <ShieldCheck className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                {PAID_TOOL_NAMES.length} metered (x402)
               </span>
             </div>
+            <p className="mt-3 text-xs leading-5 text-emerald-100/75">
+              Verification runs in your browser and is always free.
+            </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <button
                 type="button"
@@ -122,7 +129,7 @@ export default function ToolsPage() {
               </a>
             </div>
           </div>
-          <div className="border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
+          <div className="min-w-0 border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection config</p>
             <p className="mt-2 break-all font-mono text-xs text-emerald-100/65">{MCP_URL}</p>
             <pre tabIndex={0} className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">

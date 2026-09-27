@@ -47,6 +47,7 @@ import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
+const GspcConsole = lazy(() => import("./pages/GspcConsole"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
 const NistVsEuAct = lazy(() => import("./pages/NistVsEuAct"));
@@ -733,6 +734,7 @@ function App() {
                   <Route path="/claims-register" component={ClaimsRegister} />
                   <Route path="/distribution-integrity" component={DistributionIntegrity} />
                   <Route path="/gspc-verify" component={GSPCVerify} />
+                  <Route path="/gspc-console" component={GspcConsole} />
                   <Route path="/lookup">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/embed" component={EmbedPage} />
                   <Route path="/white-label" component={EmbedPage} />

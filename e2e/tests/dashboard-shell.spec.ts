@@ -110,7 +110,7 @@ test.beforeEach(async ({ context }) => {
   await context.route(/hf\.space/, (r) => r.abort());
 });
 
-test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= links", async ({
+test("sidebar exposes seven plainly named sections as direct /dashboard?tab= links", async ({
   page,
 }) => {
   await openTab(page, "board");
@@ -127,21 +127,22 @@ test("sidebar exposes the eleven primary user jobs as direct /dashboard?tab= lin
     .evaluateAll((as) => as.map((a) => a.getAttribute("href")));
   expect(hrefs).toEqual([
     "/dashboard?tab=home",
-    "/dashboard?tab=measured",
-    "/dashboard?tab=verify",
     "/dashboard?tab=board",
-    "/dashboard?tab=swift",
-    "/dashboard?tab=evidence",
+    "/dashboard?tab=verify",
+    "/dashboard?tab=space",
     "/dashboard?tab=tools",
-    "/dashboard?tab=learn",
-    "/dashboard?tab=watchdog",
     "/dashboard?tab=standards",
-    "/dashboard?tab=fabric",
+    "/dashboard?tab=measured",
   ]);
   for (const h of hrefs) expect(h).toMatch(/^\/dashboard\?tab=[a-z0-9-]+$/);
-  await expect(
-    page.getByRole("link", { name: "All tools", exact: true }),
-  ).toHaveAttribute("href", "/dashboard?tab=explore");
+  // Verify, Evidence pack and Evidence index are one section with three pages.
+  await openTab(page, "evidence");
+  const sub = page.getByRole("navigation", { name: "Verify & evidence pages" });
+  await expect(sub.getByRole("link", { name: "Evidence index", exact: true })).toHaveAttribute(
+    "href",
+    "/dashboard?tab=evidence-index",
+  );
+  await expect(page.getByRole("navigation", { name: "Council workspace modes" })).toHaveCount(0);
   // No door on the shell hops through the legacy /os redirect.
   const legacy = await page.locator('a[href^="/os?"]').count();
   expect(legacy, "no /os?lobby= hops inside the shell").toBe(0);
@@ -205,7 +206,7 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
       // remains available below it in the Account overview disclosure.
       await expect(
         page.getByRole("heading", {
-          name: "What should the Council help you do?",
+          name: "Ask the Council",
           exact: true,
         }),
         "home: conversation first",
@@ -298,7 +299,7 @@ test("a cold /gspc-scoreboard door converges on the canonical Dashboard", async 
   await expectColdDoor(page, "/gspc-scoreboard", "board");
 });
 
-test("one workspace keeps the composer and workspace rail access while a tool pane is open", async ({
+test("one workspace keeps the composer and account access while a tool pane is open", async ({
   page,
   isMobile,
 }) => {
@@ -312,38 +313,22 @@ test("one workspace keeps the composer and workspace rail access while a tool pa
   await expect(
     page.getByLabel("Ask the Council, or name a pane to open"),
   ).toHaveCount(1);
-  if (isMobile) {
-    const railButton = page.getByRole("button", {
-      name: "Open workspaces, tasks and chat history",
-    });
-    await expect(railButton).toBeVisible();
-    await railButton.click();
-    await expect(
-      page.locator(
-        'aside[aria-label="Workspace, tasks and chat history"]:visible',
-      ),
-    ).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(
-      page.locator(
-        'aside[aria-label="Workspace, tasks and chat history"]:visible',
-      ),
-    ).toHaveCount(0);
-  } else {
-    await expect(
-      page.locator('aside[aria-label="Workspace, tasks and chat history"]'),
-    ).toHaveCount(1);
-  }
+  // With no conversation there is nothing for the side rail to hold, so it is not drawn.
+  await expect(
+    page.locator('aside[aria-label="Workspace, tasks and chat history"]'),
+  ).toHaveCount(0);
   await expect(
     page.getByLabel("Open Council OS"),
     "no legacy overlay launcher over the shell",
   ).toHaveCount(0);
+  if (isMobile)
+    await page.getByRole("button", { name: "Open workspace navigation" }).click();
   await expect(
     page.getByLabel("Open account and workspace menu").first(),
   ).toBeVisible();
 });
 
-test("the mobile consent notice preserves the public Workspace door", async ({
+test("the mobile consent notice has no floating launcher over it", async ({
   page,
   isMobile,
 }) => {
@@ -352,13 +337,11 @@ test("the mobile consent notice preserves the public Workspace door", async ({
   await expect(
     page.getByRole("region", { name: "Cookie consent" }),
   ).toBeVisible();
-  const launcher = page.getByRole("link", {
-    name: "Open the Council of AI workspace",
-  });
-  await expect(launcher).toBeVisible();
-  await launcher.click();
-  await page.waitForURL(/\/dashboard\/?\?tab=home/, { timeout: 15_000 });
-  await expect(page.locator('[data-testid="dashboard-shell"]')).toBeVisible();
+  // 27 Sep 2026: the floating "Open workspace" pill is gone; Council OS is in the one header.
+  await expect(
+    page.getByRole("link", { name: "Open the Council of AI workspace" }),
+  ).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible();
 });
 
 test("a top-level embed hint normalizes to the canonical workspace", async ({

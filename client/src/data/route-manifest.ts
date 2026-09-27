@@ -973,6 +973,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Space"
  },
  {
+  "path": "/gspc-console",
+  "comp": "GspcConsole",
+  "title": "Gspc Console"
+ },
+ {
   "path": "/gspc-gap-map",
   "comp": "GSPCGapMap",
   "title": "GSPCGap Map"

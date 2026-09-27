@@ -1,9 +1,10 @@
 /**
  * The GSPC console, inside Council OS.
  *
- * This pane deliberately renders the SAME artefact that councilof.ai serves at
- * /gspc-console.html and that the csoai/gspc-board HF Space serves — one file,
- * three mount points. Before this, the website board, the Council OS board and
+ * This pane deliberately renders the SAME page that councilof.ai serves at
+ * /gspc-console (27 Sep 2026: a React page in the site shell; `embed=1` drops the
+ * chrome here). The csoai/gspc-board HF Space keeps its own copy of the retired
+ * static file. Before this, the website board, the Council OS board and
  * the HF board were three different renderers over three different snapshots,
  * so they disagreed with each other and with /api/gspc.
  *
@@ -15,8 +16,8 @@ export default function DashboardConsolePane() {
   return (
     <div className="flex h-full min-h-[70vh] flex-col">
       <iframe
-        src="/gspc-console.html"
-        title="GSPC console — every published measured model-axis cell in the current index"
+        src="/gspc-console/?embed=1"
+        title="GSPC console — every published score in the current findings index"
         className="h-full min-h-[70vh] w-full flex-1 rounded-lg border border-emerald-900/20"
         loading="lazy"
       />

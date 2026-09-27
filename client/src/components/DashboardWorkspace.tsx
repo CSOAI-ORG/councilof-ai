@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowRight,
   BookOpenCheck,
-  PanelRightOpen,
-  PlugZap,
+  Gauge,
+  History,
   ShieldCheck,
   Swords,
-  Wrench,
 } from "lucide-react";
+import { createPortal } from "react-dom";
 import { Link, useLocation, useSearch } from "wouter";
 import DashboardRightRail from "@/components/DashboardRightRail";
 import CandidateEvidenceTray from "@/components/CandidateEvidenceTray";
@@ -17,7 +17,7 @@ import LobbyComposer, {
 import LobbyThread from "@/components/lobby/LobbyThread";
 import { LOBBY_TABS, type LobbyTab } from "@/components/lobby/tabs";
 import { useLobbyChat } from "@/components/lobby/useLobbyChat";
-import { recordActivity } from "@/components/lobby/workspace";
+import { recordActivity, useActivity } from "@/components/lobby/workspace";
 import { dashboardViewHref } from "@/lib/dashboardView";
 import { listTools } from "@/lib/sovTools";
 import {
@@ -47,6 +47,37 @@ function shortDescription(description: string): string {
     ? `${sentence.slice(0, 147).trimEnd()}…`
     : sentence;
 }
+
+/** DashboardLayout's section bar exposes this slot for workspace-level actions. */
+export const SECTION_ACTIONS_ID = "coai-section-actions";
+
+/** Four plain starting points. Each opens a real pane; none sends anything. */
+const STARTERS = [
+  {
+    href: "/dashboard?tab=board",
+    icon: Gauge,
+    title: "See the scores",
+    body: "How each measured AI model did on every published test.",
+  },
+  {
+    href: "/dashboard?tab=verify",
+    icon: ShieldCheck,
+    title: "Check a signed record",
+    body: "Recompute its fingerprint and signature in your own browser. Free.",
+  },
+  {
+    href: "/dashboard?tab=space",
+    icon: Swords,
+    title: "Replay a model arena",
+    body: "Recorded rounds between models, graded by fixed rules.",
+  },
+  {
+    href: "/dashboard?tab=learn",
+    icon: BookOpenCheck,
+    title: "Learn how the tests work",
+    body: "Walk through a test step by step, then try it yourself.",
+  },
+] as const;
 
 export default function DashboardWorkspace({
   activePane,
@@ -163,42 +194,64 @@ export default function DashboardWorkspace({
     [setLocation],
   );
 
-  const visibleTools = tools.slice(0, 6);
   const hasConversation = Boolean(chat.active?.turns.length);
+  const activity = useActivity();
+  // The side rail only exists when it has something to hold: a conversation that
+  // continues beside a tool pane. An empty "Open a pane or start a task" column cost
+  // ~320px on every visit and said nothing.
+  const railHasContent = Boolean(activePane) && chat.turnCount > 0;
+  const [actionsSlot, setActionsSlot] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    setActionsSlot(document.getElementById(SECTION_ACTIONS_ID));
+  }, []);
+  const historyAvailable =
+    chat.threads.length > 0 || activity.length > 0 || chat.turnCount > 0;
 
   return (
     <div
       className="relative flex h-full min-h-0 bg-[var(--surface-canvas,#fafaf7)]"
       data-testid="dashboard-workspace"
     >
-      <Dialog>
-        <DialogTrigger asChild>
-          <button
-            type="button"
-            className="absolute right-3 top-3 z-20 inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-semibold text-foreground shadow-sm hover:bg-accent xl:hidden"
-            aria-label="Open workspaces, tasks and chat history"
-          >
-            <PanelRightOpen className="h-4 w-4" aria-hidden="true" /> Workspace
-          </button>
-        </DialogTrigger>
-        <DialogContent className="!bottom-0 !left-auto !right-0 !top-0 h-dvh w-[min(22rem,92vw)] max-w-none !translate-x-0 !translate-y-0 gap-0 rounded-none p-0">
-          <DialogTitle className="sr-only">
-            Workspace, tasks and chat history
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Review the current workspace, task activity and local chat threads.
-          </DialogDescription>
-          <DashboardRightRail chat={chat} className="w-full border-l-0" />
-        </DialogContent>
-      </Dialog>
       <section
         className="flex min-w-0 flex-1 flex-col"
         aria-label="Council workspace canvas"
       >
+        {historyAvailable
+          ? (() => {
+              const trigger = (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      type="button"
+                      className={
+                        "inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-border bg-white px-3 text-xs font-semibold text-slate-800 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700" +
+                        (railHasContent ? " xl:hidden" : "") +
+                        (actionsSlot ? "" : " absolute right-3 top-3 z-20")
+                      }
+                      aria-label="Open workspaces, tasks and chat history"
+                    >
+                      <History className="h-4 w-4" aria-hidden="true" /> History
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="!bottom-0 !left-auto !right-0 !top-0 h-dvh w-[min(22rem,92vw)] max-w-none !translate-x-0 !translate-y-0 gap-0 rounded-none p-0">
+                    <DialogTitle className="sr-only">
+                      Workspace, tasks and chat history
+                    </DialogTitle>
+                    <DialogDescription className="sr-only">
+                      Review the current workspace, task activity and local chat threads.
+                    </DialogDescription>
+                    <DashboardRightRail chat={chat} className="w-full border-l-0" />
+                  </DialogContent>
+                </Dialog>
+              );
+              // In the full shell the button sits in the section bar, never over pane content.
+              return actionsSlot ? createPortal(trigger, actionsSlot) : trigger;
+            })()
+          : null}
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           {activePane ? (
             <div
-              className="min-h-0 flex-1 overflow-y-auto bg-background pt-14 xl:pt-0"
+              className="min-h-0 flex-1 overflow-y-auto bg-background"
               data-testid="dashboard-tool-canvas"
             >
               {activePane}
@@ -206,218 +259,58 @@ export default function DashboardWorkspace({
           ) : hasConversation ? (
             <LobbyThread chat={chat} endRef={threadEndRef} />
           ) : (
-            <div className="min-h-0 flex-1 overflow-y-auto px-5 py-8 sm:px-8 lg:px-12">
-              <div className="mx-auto w-full min-w-0 max-w-4xl">
-                <div className="mx-auto max-w-3xl text-center">
-                  <nav
-                    aria-label="Council workspace modes"
-                    className="scrollbar-none mx-auto mt-12 flex w-full max-w-full items-center justify-start gap-1 overflow-x-auto rounded-full border border-border bg-card p-1 shadow-sm sm:w-fit sm:justify-center xl:mt-0"
-                  >
-                    <span
-                      className="shrink-0 rounded-full bg-emerald-900 px-2.5 py-1.5 text-[11px] font-semibold text-white sm:px-3 sm:text-xs"
-                      aria-current="page"
-                    >
-                      Council chat
-                    </span>
-                    <Link
-                      href="/dashboard?tab=space"
-                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
-                    >
-                      Model arena
-                    </Link>
-                    <Link
-                      href="/dashboard?tab=learn"
-                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
-                    >
-                      Learn
-                    </Link>
-                    <Link
-                      href="/dashboard?tab=play"
-                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
-                    >
-                      Games
-                    </Link>
-                    <Link
-                      href="/dashboard?tab=tools"
-                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
-                    >
-                      Tools
-                    </Link>
-                  </nav>
-
-                  <p className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-800">
-                    Council of AI governed workspace
-                  </p>
-                  <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                    What should the Council help you do?
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 sm:px-8 sm:py-12 lg:px-12">
+              <div className="mx-auto w-full min-w-0 max-w-3xl">
+                <div className="text-center">
+                  <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
+                    Ask the Council
                   </h1>
-                  <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                    Ask once, then keep the conversation, selected tools and
-                    evidence together. The composer below is the control point;
-                    starter actions only prefill or open a real surface.
+                  <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-700">
+                    Ask about an AI model&apos;s scores, or paste a signed record to
+                    check it. Answers come only from published measurements &mdash;
+                    if there is no evidence, the Council says so.
                   </p>
-
-                  <div className="mt-5 hidden flex-wrap items-center justify-center gap-2 text-[11px] font-medium text-muted-foreground sm:flex">
-                    <span className="rounded-full border border-border bg-card px-3 py-1.5">
-                      {toolPhase === "ready" ? `${tools.length} MCP tools declared` : toolPhase === "failed" ? "MCP catalogue unavailable" : "Reading MCP catalogue…"}
-                    </span>
-                    <span className="rounded-full border border-border bg-card px-3 py-1.5">
-                      Verification runs in your browser
-                    </span>
-                    <span className="rounded-full border border-border bg-card px-3 py-1.5">
-                      Actions stop for approval
-                    </span>
-                  </div>
-
-                  <div className="mt-5 grid gap-3 text-left sm:grid-cols-2">
-                    <Link
-                      href="/dashboard?tab=space"
-                      className="card-quiet card-quiet-hover group p-4"
-                    >
-                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <Swords
-                          className="h-4 w-4 text-emerald-800"
-                          aria-hidden="true"
-                        />
-                        Inspect a model arena
-                      </span>
-                      <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
-                        Recorded rounds and deterministic grading; never a
-                        pretend live battle.
-                      </span>
-                    </Link>
-                    <Link
-                      href="/dashboard?tab=learn"
-                      className="card-quiet card-quiet-hover group p-4"
-                    >
-                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <BookOpenCheck
-                          className="h-4 w-4 text-emerald-800"
-                          aria-hidden="true"
-                        />
-                        Train on a GSPC axis
-                      </span>
-                      <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
-                        Learn, play, explain, propose a fix, then stop for human
-                        review.
-                      </span>
-                    </Link>
-                    <Link
-                      href="/dashboard?tab=verify"
-                      className="card-quiet card-quiet-hover group p-4"
-                    >
-                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <ShieldCheck
-                          className="h-4 w-4 text-emerald-800"
-                          aria-hidden="true"
-                        />
-                        Verify evidence
-                      </span>
-                      <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
-                        Recompute a card hash and signature in the browser.
-                      </span>
-                    </Link>
-                    <Link
-                      href={`/dashboard?tab=home&ask=${encodeURIComponent(
-                        "Help me diagnose a failed AI governance check. Explain the evidence, propose a reversible fix and verification test, then wait for my approval before any action.",
-                      )}`}
-                      className="card-quiet card-quiet-hover group p-4"
-                    >
-                      <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
-                        <Wrench
-                          className="h-4 w-4 text-emerald-800"
-                          aria-hidden="true"
-                        />
-                        Diagnose and draft a fix
-                      </span>
-                      <span className="mt-1.5 block text-xs leading-relaxed text-muted-foreground">
-                        Prefills the Council—not sent, executed or approved
-                        automatically.
-                      </span>
-                    </Link>
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-                    <Link
-                      href="/dashboard?tab=explore"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:underline"
-                    >
-                      Browse every tool and page{" "}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-                    <Link
-                      href="/dashboard?tab=fabric"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:underline"
-                    >
-                      Inspect live connections{" "}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </Link>
-                  </div>
                 </div>
 
-                <section aria-labelledby="available-tools" className="mt-8">
-                  <div className="flex items-center justify-between gap-3">
-                    <h2
-                      id="available-tools"
-                      className="flex items-center gap-2 text-sm font-semibold"
-                    >
-                      <PlugZap className="h-4 w-4 text-emerald-700" /> MCP tool
-                      catalogue
-                    </h2>
-                    <span className="flex items-center gap-3 text-xs text-muted-foreground">
-                      {toolPhase === "loading"
-                        ? "reading tools/list…"
-                        : toolPhase === "failed"
-                          ? "catalogue unreachable"
-                          : `${tools.length} declared by tools/list`}
-                      {toolPhase === "ready" && tools.length ? (
-                        <Link
-                          href="/dashboard?tab=tools"
-                          className="font-semibold text-emerald-800 hover:underline"
-                        >
-                          Open all
-                        </Link>
-                      ) : null}
-                    </span>
-                  </div>
-                  {toolPhase === "failed" ? (
-                    <p
-                      role="alert"
-                      className="mt-3 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900"
-                    >
-                      The MCP endpoint did not answer, so no capability is
-                      claimed here. The direct dashboard panes remain available
-                      from the left rail.
-                    </p>
-                  ) : (
-                    <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2 2xl:grid-cols-3">
-                      {visibleTools.map((tool) => (
-                        <button
-                          key={tool.name}
-                          type="button"
-                          onClick={() => selectTool(tool)}
-                          className="min-w-0 rounded-xl border border-border bg-card p-4 text-left transition hover:border-emerald-600/50 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
-                        >
-                          <code className="text-xs font-semibold text-emerald-800">
-                            {tool.name}
-                          </code>
-                          <span className="mt-2 block break-words text-xs leading-relaxed text-muted-foreground [overflow-wrap:anywhere]">
-                            {tool.description}
+                <ul className="mt-8 grid gap-3 text-left sm:grid-cols-2">
+                  {STARTERS.map(({ href, icon: Icon, title, body }) => (
+                    <li key={title}>
+                      <Link
+                        href={href}
+                        className="group flex h-full items-start gap-3 rounded-2xl border border-emerald-950/10 bg-white p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] transition hover:border-emerald-700/40 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+                      >
+                        <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800">
+                          <Icon className="h-4 w-4" aria-hidden="true" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-950">
+                            {title}
+                            <ArrowRight className="h-3.5 w-3.5 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700 motion-reduce:transition-none" aria-hidden="true" />
                           </span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {toolPhase === "ready" ? (
-                    <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
-                      Catalogue discovery is live. A tool becomes
-                      runtime-observed only after its own tools/call completes.
-                    </p>
-                  ) : null}
-                </section>
+                          <span className="mt-1 block text-sm leading-relaxed text-slate-600">
+                            {body}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
 
-                <details className="mt-8 rounded-xl border border-border bg-background">
-                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+                <p className="mt-6 text-center text-sm text-slate-600">
+                  Connect your own AI tool instead?{" "}
+                  <Link
+                    href="/dashboard?tab=tools"
+                    title="Tools declared by tools/list. A tool is runtime-observed only after its own tools/call completes."
+                    className="font-semibold text-emerald-800 underline underline-offset-2 hover:text-emerald-900"
+                  >
+                    {toolPhase === "ready"
+                      ? `See the ${tools.length} MCP tools`
+                      : "See the MCP tools"}
+                  </Link>
+                </p>
+
+                <details className="mt-10 rounded-xl border border-border bg-white">
+                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-slate-800">
                     Account overview and recent measurements
                   </summary>
                   <div className="border-t border-border">{children}</div>
@@ -444,9 +337,11 @@ export default function DashboardWorkspace({
           seedNonce={search.length}
         />
       </section>
-      <div className="hidden min-h-0 xl:block">
-        <DashboardRightRail chat={chat} />
-      </div>
+      {railHasContent ? (
+        <div className="hidden min-h-0 xl:block">
+          <DashboardRightRail chat={chat} />
+        </div>
+      ) : null}
     </div>
   );
 }

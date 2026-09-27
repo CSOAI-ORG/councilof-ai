@@ -101,12 +101,10 @@ export function Footer() {
   return (
     <footer
       className="surface-raised border-t border-border"
-      // The workspace launcher (CouncilLobby) is fixed bottom-right: h-12, lifted
-      // 1.25rem + --cookie-banner-h. Measured at 390x664 on 2026-09-14 it sat over
-      // the company line at full scroll on 5 of 6 pages, so that line could never
-      // be read on a phone. Reserve the launcher's own footprint below the last
-      // line, plus the banner's published height, so everything scrolls clear.
-      style={{ paddingBottom: "calc(4.25rem + var(--cookie-banner-h, 0px))" }}
+      // Reserve the cookie banner's published height below the last line so the
+      // company line scrolls clear of it on a phone. (The fixed workspace launcher
+      // this also used to clear was removed on 27 Sep 2026.)
+      style={{ paddingBottom: "calc(1rem + var(--cookie-banner-h, 0px))" }}
     >
       <div className="section-shell py-12 sm:py-14">
         {/* Brand + socials */}

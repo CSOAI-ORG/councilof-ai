@@ -20,16 +20,16 @@ function rem(expr: string): number {
   return Number(m[1]);
 }
 
-describe("footer clears the fixed workspace launcher", () => {
-  it("reserves at least the launcher's height plus its bottom offset", () => {
-    const heightRem = Number(launcher.match(/className="fixed [^"]*\bh-(\d+)\b/)?.[1]) / 4;
-    const bottom = launcher.match(/bottom:\s*"([^"]+)"/)?.[1] ?? "";
-    expect(heightRem).toBeGreaterThan(0);
-    expect(rem(footerPaddingBottom())).toBeGreaterThanOrEqual(heightRem + rem(bottom));
+describe("footer clears the cookie banner, and no launcher any more", () => {
+  it("reserves only a small gap now that no fixed launcher exists", () => {
+    // 27 Sep 2026 (ux-unify): CouncilLobby renders no fixed pill, so the 4.25rem
+    // launcher footprint is no longer reserved under the footer's last line.
+    expect(launcher).not.toMatch(/className="fixed /);
+    expect(rem(footerPaddingBottom())).toBeLessThanOrEqual(1.5);
+    expect(rem(footerPaddingBottom())).toBeGreaterThan(0);
   });
 
   it("adds the cookie banner's published height, with the same variable and fallback", () => {
     expect(footerPaddingBottom()).toMatch(/var\(--cookie-banner-h,\s*0px\)/);
-    expect(launcher.match(/var\((--[a-z-]+),/)?.[1]).toBe("--cookie-banner-h");
   });
 });
