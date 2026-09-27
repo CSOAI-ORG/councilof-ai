@@ -205,6 +205,8 @@ const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
 const CrossHardwareReproducibility = lazy(() => import("./pages/CrossHardwareReproducibility"));
 // /independence: who runs CSOAI, funding (not yet published), own-model counts, keys, how to challenge.
 const Independence = lazy(() => import("./pages/Independence"));
+// /crosswalks/owasp-asi: OWASP ASI01-ASI10 and MCP Top 10 against the checks we run (DIRECT / PARTIAL / NOT MEASURED).
+const CrosswalkOwaspAsi = lazy(() => import("./pages/CrosswalkOwaspAsi"));
 // /reach — the WHOLE funnel, including the four stages that carry no number and the
 // reason each one carries none. The home page and the footer show the two stages a stranger can
 // use; this is the one click behind them, and it is where the commercial stages live.
@@ -669,6 +671,7 @@ function App() {
                   <Route path="/measurement-capsules" component={MeasurementCapsules} />
                   <Route path="/research/cross-hardware-reproducibility" component={CrossHardwareReproducibility} />
                   <Route path="/independence" component={Independence} />
+                  <Route path="/crosswalks/owasp-asi" component={CrosswalkOwaspAsi} />
                   <Route path="/reach" component={Reach} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />

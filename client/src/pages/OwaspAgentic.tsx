@@ -129,6 +129,14 @@ export default function OwaspAgentic() {
           </a>
           .
         </p>
+        <p className="mt-3 text-[15px] text-gray-700">
+          This page maps our own controls. For which of our checks observe evidence about each ASI item in other
+          systems, with strength and live data, see{" "}
+          <a className="text-emerald-700 underline" href="/crosswalks/owasp-asi/">
+            the OWASP ASI crosswalk
+          </a>
+          .
+        </p>
 
         <section className="mt-8 rounded-xl border border-amber-500/30 bg-amber-50 p-5">
           <h2 className="text-base font-extrabold text-gray-900">What this page is not</h2>

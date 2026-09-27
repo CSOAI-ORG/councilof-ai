@@ -523,6 +523,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Crosswalks"
  },
  {
+  "path": "/crosswalks/owasp-asi",
+  "comp": "CrosswalkOwaspAsi",
+  "title": "Crosswalk Owasp Asi"
+ },
+ {
   "path": "/crown-jewels",
   "comp": "Redirect",
   "title": "Crown Jewels"

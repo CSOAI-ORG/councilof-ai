@@ -324,6 +324,9 @@ export default function Methodology() {
           <Link href="/independence/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Independence and conflicts of interest →
           </Link>
+          <Link href="/crosswalks/owasp-asi/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            OWASP Agentic Top 10: what we measure →
+          </Link>
         </div>
       </div>
     </div>
