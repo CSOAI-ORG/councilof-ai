@@ -248,6 +248,15 @@ export default function MeasurementCapsules() {
                     <li key={kind} className="rounded-lg border border-slate-300 bg-white p-4">
                       <h3 className="text-base font-bold text-slate-900">{label?.title ?? kind}</h3>
                       {label ? <p className="mt-1 text-sm text-slate-700">{label.what}</p> : null}
+                      {kind === "measurement.cross_runtime_reproduction" ? (
+                        <p className="mt-1 text-sm text-slate-700">
+                          These capsules are the evidence behind the preprint{" "}
+                          <Link href="/research/cross-hardware-reproducibility/" className="underline underline-offset-4">
+                            Same model, same prompts, different answers
+                          </Link>
+                          .
+                        </p>
+                      ) : null}
                       <p className="mt-2 text-sm text-slate-800">
                         <strong>{fmt(k.n)}</strong> capsule{k.n === 1 ? "" : "s"}
                         {k.batches > 1 ? ` in ${k.batches} batches` : ""} · <code className="break-all text-xs">{kind}</code>

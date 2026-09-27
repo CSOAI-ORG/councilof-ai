@@ -1763,6 +1763,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Research Transparency"
  },
  {
+  "path": "/research/cross-hardware-reproducibility",
+  "comp": "CrossHardwareReproducibility",
+  "title": "Cross Hardware Reproducibility"
+ },
+ {
   "path": "/resources",
   "comp": "Resources",
   "title": "Resources"

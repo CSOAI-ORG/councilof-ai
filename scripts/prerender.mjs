@@ -213,6 +213,8 @@ function discover() {
     "/verify-server",
     // /measurement-capsules — the human page for the capsule index (2026-09-26); the folder holds only data.
     "/measurement-capsules",
+    // /research/cross-hardware-reproducibility — the preprint + dataset page (2026-09-27); figures read from the dataset.
+    "/research/cross-hardware-reproducibility",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.
