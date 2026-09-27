@@ -629,7 +629,7 @@ const browserGone = e =>
   /Target (?:page, context or browser|closed)|browser has been closed|Browser closed|has been closed/i
     .test(e?.message || "");
 const routeNavigationRace = e =>
-  /Execution context was destroyed|Cannot find context with specified id|frame was detached/i
+  /Execution context was destroyed|Cannot find context with specified id|frame was detached|Navigation to .+ is interrupted(?: by another navigation)?/i
     .test(e?.message || "");
 
 async function relaunchBrowser(seenGen) {
