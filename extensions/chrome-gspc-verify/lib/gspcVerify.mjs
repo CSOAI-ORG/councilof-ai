@@ -39,6 +39,8 @@ const UNCHECKABLE_CODES = new Set([
   "preimage_uncomputable",
   "ed25519_unsupported",
   "key_malformed",
+  "key_ambiguous",
+  "key_not_pinned",
   "signature_malformed",
 ]);
 
@@ -114,7 +116,7 @@ export function prepare(input) {
         },
       };
     }
-    rec = { ...rec, pubkey: anchor.hex };
+    // The shared verifier resolves the DID itself. Do not inject a second authority field.
     pinnedBy = anchor.id;
     notes.push(`The card carries no pubkey; it names ${anchor.id}. That key was taken from the anchor set PINNED in this verifier's source, not fetched.`);
     if (anchor.id !== CARD_ATTESTATION_KID) {
@@ -138,16 +140,15 @@ export function collapse(verdict, { pinnedBy = null } = {}) {
   if (verdict.family === "unknown") {
     return { state: STATES.UNCHECKABLE, reason: find("unrecognised_family")?.detail ?? "Not a shape this verifier recognises. Nothing was checked." };
   }
-  if (pinnedBy && pinnedBy !== CARD_ATTESTATION_KID) codes.delete("wrong_anchor_for_family");
+  // Anchor-family failures are never discarded by the presentation adapter.
 
   const unsigned = find("unsigned");
   if (unsigned) {
     return { state: STATES.UNCHECKABLE, reason: "The record carries no signature. The hash was recomputed, but there is nothing to verify it against." };
   }
-  for (const c of codes) {
-    if (UNCHECKABLE_CODES.has(c)) {
-      return { state: STATES.UNCHECKABLE, reason: find(c)?.detail ?? c };
-    }
+  if (codes.size > 0 && [...codes].every(c => UNCHECKABLE_CODES.has(c))) {
+    const c = [...codes][0];
+    return { state: STATES.UNCHECKABLE, reason: find(c)?.detail ?? c };
   }
   if (codes.size === 0) {
     const sig = find("signature_valid");

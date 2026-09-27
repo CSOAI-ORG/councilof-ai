@@ -144,3 +144,29 @@ describe("captions", () => {
     expect(v.pinnedBy).toBeNull();
   });
 });
+
+describe('the adapter cannot invent or suppress signing authority', () => {
+  const original = () => readJson(path.join(MILL, 'signed-affect-0377d52b937b.json'));
+  it('retains the exact DID-only input without adding an inline key', () => {
+    const card = original(); const before = JSON.stringify(card);
+    const prepared = prepare(card);
+    expect(JSON.stringify(card)).toBe(before);
+    expect(prepared.rec).toEqual(card);
+    expect(prepared.rec.pubkey).toBeUndefined();
+    expect(prepared.rec.did).toBe('did:web:csoai.org#board-attestation-1');
+  });
+  it('reports a genuinely ambiguous key declaration as UNCHECKABLE', async () => {
+    const card = {...original(), pubkey: anchorForDid('did:web:csoai.org#board-attestation-1').hex};
+    const result = await verifyOffline(card);
+    expect(result.state).toBe(STATES.UNCHECKABLE);
+    expect(result.reason).toMatch(/both an inline public key and a DID/);
+  });
+  it('does not hide a completed failed check behind a browser support gap', () => {
+    const result = collapse({family:'gspc.measurement-card',valid:false,
+      reasons:['preimage_mismatch','ed25519_unsupported'],checks:[
+        {code:'preimage_mismatch',ok:false,detail:'wrong bytes'},
+        {code:'ed25519_unsupported',ok:null,detail:'unsupported'}]});
+    expect(result.state).toBe(STATES.INVALID);
+    expect(result.reason).toBe('wrong bytes');
+  });
+});

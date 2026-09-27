@@ -11,6 +11,22 @@ var PINNED_ANCHORS = [
   { id: "did:web:csoai.org#board-attestation-1", hex: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170" },
   { id: CARD_ATTESTATION_KID, hex: CARD_ATTESTATION_HEX }
 ];
+function jsCanonical(v) {
+  const rec = (x) => {
+    if (Array.isArray(x)) return x.map(rec);
+    if (x && typeof x === "object") {
+      const o = x;
+      const out = {};
+      for (const k of Object.keys(o).sort()) out[k] = rec(o[k]);
+      return out;
+    }
+    return x;
+  };
+  return JSON.stringify(rec(v));
+}
+function pinnedKeyForDid(did) {
+  return PINNED_ANCHORS.find((anchor) => anchor.id === did) ?? null;
+}
 var GSPC_FLOAT_FIELDS = (k) => k === "accuracy" || k.endsWith("_ci_low") || k.endsWith("_ci_high");
 var NO_FLOAT_FIELDS = () => false;
 function pyString(s) {
@@ -48,6 +64,18 @@ function pyCanonical(v, isFloatField = NO_FLOAT_FIELDS) {
       const rendered = typeof val === "number" ? pyNumber(val, isFloatField(k)) : pyCanonical(val, isFloatField);
       return pyString(k) + ":" + rendered;
     }).join(",") + "}";
+  }
+  throw new Error("value is not JSON");
+}
+function millCanonical(v) {
+  if (v === null) return "null";
+  if (typeof v === "boolean") return v ? "true" : "false";
+  if (typeof v === "number") return pyNumber(v, false);
+  if (typeof v === "string") return JSON.stringify(v);
+  if (Array.isArray(v)) return "[" + v.map((x) => millCanonical(x)).join(",") + "]";
+  if (typeof v === "object") {
+    const o = v;
+    return "{" + Object.keys(o).sort(byCodePoint).map((k) => JSON.stringify(k) + ":" + millCanonical(o[k])).join(",") + "}";
   }
   throw new Error("value is not JSON");
 }
@@ -114,6 +142,17 @@ async function ed25519Verify(pubkey, sig, msg) {
     return false;
   }
 }
+var UNCHECKABLE_REASONS = /* @__PURE__ */ new Set([
+  "unrecognised_family",
+  "key_ambiguous",
+  "key_not_pinned",
+  "preimage_uncomputable",
+  "ed25519_unsupported"
+]);
+function cardState(valid, reasons) {
+  if (valid) return "VALID";
+  return reasons.length > 0 && reasons.every((r) => UNCHECKABLE_REASONS.has(r)) ? "UNCHECKABLE" : "INVALID";
+}
 function anchorsFromDid(did) {
   const methods = did?.verificationMethod ?? [];
   const out = [];
@@ -131,7 +170,7 @@ function isObj(v) {
 }
 function detectFamily(rec) {
   if (!isObj(rec)) return "unknown";
-  if (isObj(rec.body) && typeof rec.id === "string" && typeof rec.signature === "string" && typeof rec.pubkey === "string") {
+  if (isObj(rec.body) && typeof rec.id === "string" && typeof rec.signature === "string" && (typeof rec.pubkey === "string" || typeof rec.did === "string")) {
     return "gspc.measurement-card";
   }
   if (typeof rec.content_id === "string" && isObj(rec.signature)) return "csoai.content-id-card";
@@ -163,7 +202,7 @@ async function verifyCard(rec, anchors) {
       code: "unrecognised_family",
       detail: "UNRECOGNISED \u2014 not a shape CSOAI publishes, so nothing was checked. This is not a claim that the document is forged. Expected either a gspc.measurement-card (top-level id + body + pubkey + signature) or a content_id card (top-level content_id + signature)."
     });
-    return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["unrecognised_family"], checks, id: null };
+    return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["unrecognised_family"], checks, id: null };
   }
   const r = rec;
   checks.push({
@@ -177,15 +216,46 @@ async function verifyCard(rec, anchors) {
   let sigOver;
   let sigRaw;
   let keyRaw;
+  let namedKeyId = null;
   let idLabel;
+  let signedWhat = "the content_id";
   try {
     if (family === "gspc.measurement-card") {
       idLabel = "Card id";
       declaredId = r.id;
-      preimage = utf8(pyCanonical(r.body, GSPC_FLOAT_FIELDS));
+      const rule = typeof r.preimage_rule === "string" ? r.preimage_rule : "";
+      preimage = utf8(
+        rule === "sha256(canonical body)" ? millCanonical(r.body) : pyCanonical(r.body, GSPC_FLOAT_FIELDS)
+      );
       sigOver = preimage;
       sigRaw = r.signature;
-      keyRaw = r.pubkey;
+      const hasPubkey = typeof r.pubkey === "string";
+      const hasDid = typeof r.did === "string";
+      if (hasPubkey && hasDid) {
+        checks.push({
+          label: "Signing key",
+          ok: null,
+          code: "key_ambiguous",
+          detail: "UNCHECKABLE \u2014 the card names both an inline public key and a DID key reference; the verifier will not guess which authority controls the signature."
+        });
+        return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["key_ambiguous"], checks, id: declaredId };
+      }
+      if (hasDid) {
+        namedKeyId = r.did;
+        const pin = pinnedKeyForDid(namedKeyId);
+        if (!pin) {
+          checks.push({
+            label: "Signing key",
+            ok: null,
+            code: "key_not_pinned",
+            detail: `UNCHECKABLE \u2014 ${namedKeyId} is not in this verifier's offline pin set.`
+          });
+          return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["key_not_pinned"], checks, id: declaredId };
+        }
+        keyRaw = pin.hex;
+      } else {
+        keyRaw = typeof r.pubkey === "string" ? r.pubkey : null;
+      }
     } else {
       idLabel = "content_id";
       declaredId = r.content_id;
@@ -194,7 +264,37 @@ async function verifyCard(rec, anchors) {
       preimage = utf8(pyCanonical(body, NO_FLOAT_FIELDS));
       sigOver = utf8(declaredId);
       const s = r.signature;
-      if (isObj(s)) {
+      if (isObj(s) && typeof s.did === "string" && typeof s.sig_ed25519 === "string") {
+        namedKeyId = s.did;
+        const pin = pinnedKeyForDid(namedKeyId);
+        if (!pin) {
+          checks.push({
+            label: "Signing key",
+            ok: null,
+            code: "key_not_pinned",
+            detail: `UNCHECKABLE \u2014 ${namedKeyId} is not in this verifier's offline pin set.`
+          });
+          return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["key_not_pinned"], checks, id: declaredId };
+        }
+        keyRaw = pin.hex;
+        sigRaw = s.sig_ed25519;
+        if (isObj(s.envelope)) {
+          if (s.envelope.content_id !== declaredId) {
+            fail("envelope_mismatch");
+            checks.push({
+              label: "Envelope",
+              ok: false,
+              code: "envelope_mismatch",
+              detail: "The signed envelope names a different content_id than the card declares \u2014 the signature covers other bytes."
+            });
+          }
+          sigOver = utf8(jsCanonical(s.envelope));
+          signedWhat = "the canonical envelope bytes, which commit to the content_id";
+        } else {
+          sigOver = preimage;
+          signedWhat = "the canonical body bytes";
+        }
+      } else if (isObj(s)) {
         sigRaw = typeof s.sig === "string" ? s.sig : typeof s.signature === "string" ? s.signature : null;
         keyRaw = typeof s.pubkey === "string" ? s.pubkey : null;
       } else {
@@ -209,12 +309,12 @@ async function verifyCard(rec, anchors) {
       code: "preimage_uncomputable",
       detail: `The signed bytes could not be reconstructed: ${e.message}.`
     });
-    return { family, family_label: FAMILY_LABEL[family], valid: false, reasons: ["preimage_uncomputable"], checks, id: null };
+    return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["preimage_uncomputable"], checks, id: null };
   }
   let computed = await sha256hex(preimage);
   let idOk = computed === declaredId;
   let integralAsInt = false;
-  if (!idOk && family === "gspc.measurement-card") {
+  if (!idOk && family === "gspc.measurement-card" && r.preimage_rule !== "sha256(canonical body)") {
     const alt = utf8(pyCanonical(r.body, NO_FLOAT_FIELDS));
     const altHex = await sha256hex(alt);
     if (altHex === declaredId) {
@@ -261,13 +361,13 @@ async function verifyCard(rec, anchors) {
         code: "anchor_match",
         detail: `${keyHex.slice(0, 8)}\u2026 is published as ${pinnedHit.id} \u2014 matched against the anchor set pinned in this verifier's source, so no key was looked up at check time.`
       });
-      if (family === "gspc.measurement-card" && keyHex !== CARD_ATTESTATION_HEX) {
+      if (family === "gspc.measurement-card" && !namedKeyId && keyHex !== CARD_ATTESTATION_HEX) {
         fail("wrong_anchor_for_family");
         checks.push({
           label: "Expected anchor",
           ok: false,
           code: "wrong_anchor_for_family",
-          detail: `A gspc.measurement-card must be signed by ${CARD_ATTESTATION_KID}; this one is not.`
+          detail: `A legacy inline-key gspc.measurement-card must be signed by ${CARD_ATTESTATION_KID}; this one is not.`
         });
       }
     } else {
@@ -284,7 +384,8 @@ async function verifyCard(rec, anchors) {
       const agrees = !!liveHit === !!pinnedHit;
       checks.push({
         label: "Live anchor cross-check",
-        ok: null,
+        ok: agrees,
+        advisory: true,
         code: agrees ? "live_anchor_agrees" : "live_anchor_disagrees",
         detail: agrees ? "The live did.json agrees with the pinned anchor set for this key. Cross-check only \u2014 the pinned set decided." : `The live did.json ${liveHit ? "lists" : "does not list"} this key while the pinned set ${pinnedHit ? "also does" : "does not"} \u2014 the published document has drifted from this verifier's pin. The pinned set decided the verdict above; treat the drift as a reason to re-fetch this verifier, not to re-fetch the key.`
       });
@@ -292,8 +393,9 @@ async function verifyCard(rec, anchors) {
       checks.push({
         label: "Live anchor cross-check",
         ok: null,
+        advisory: true,
         code: "live_anchor_unavailable",
-        detail: "did.json was not consulted or could not be fetched. The verdict is unaffected: the trust anchor is pinned in this verifier's source, and the live document is only ever a cross-check."
+        detail: "UNCHECKED \u2014 did.json was not consulted or could not be fetched. The verdict is unaffected: the trust anchor is pinned in this verifier's source, and the live document is only ever a cross-check."
       });
     }
   }
@@ -317,7 +419,7 @@ async function verifyCard(rec, anchors) {
           label: "Signature",
           ok: sigOk,
           code: sigOk ? "signature_valid" : "signature_invalid",
-          detail: sigOk ? `VALID against ${anchorId ?? `an unpublished key ${keyHex?.slice(0, 8)}\u2026`} \u2014 Ed25519 verifies over ${family === "gspc.measurement-card" ? "the canonical body bytes" : "the content_id"}.` : `INVALID \u2014 the signature does not verify over ${family === "gspc.measurement-card" ? "the canonical body bytes" : "the content_id"} under the key the card carries. The bytes and the signature disagree; this is not a statement about key publication.`
+          detail: sigOk ? `VALID against ${anchorId ?? `an unpublished key ${keyHex?.slice(0, 8)}\u2026`} \u2014 Ed25519 verifies over ${family === "gspc.measurement-card" ? "the canonical body bytes" : signedWhat}.` : `INVALID \u2014 the signature does not verify over ${family === "gspc.measurement-card" ? "the canonical body bytes" : signedWhat} under the key the card carries. The bytes and the signature disagree; this is not a statement about key publication.`
         });
       } catch (e) {
         if (e instanceof Ed25519Unsupported) {
@@ -334,7 +436,7 @@ async function verifyCard(rec, anchors) {
       }
     }
   }
-  const valid = reasons.length === 0 && checks.every((c) => c.ok !== false);
+  const valid = reasons.length === 0 && checks.every((c) => c.ok !== false || c.advisory === true);
   const framing = rec?.body?.public_framing;
   if (typeof framing === "string") {
     checks.push({
@@ -344,7 +446,7 @@ async function verifyCard(rec, anchors) {
       detail: `The card carries public_framing "${framing}". A card is signed over its own bytes and cannot be re-signed, so this string is frozen \u2014 read the live count from GET /api/gspc, never from inside a card.`
     });
   }
-  return { family, family_label: FAMILY_LABEL[family], valid, reasons, checks, id: declaredId };
+  return { family, family_label: FAMILY_LABEL[family], valid, state: cardState(valid, reasons), reasons, checks, id: declaredId, anchor_id: anchorId };
 }
 export {
   CARD_ATTESTATION_HEX,
@@ -353,12 +455,16 @@ export {
   GSPC_FLOAT_FIELDS,
   NO_FLOAT_FIELDS,
   PINNED_ANCHORS,
+  UNCHECKABLE_REASONS,
   anchorsFromDid,
   b64ToBytes,
   bytesToB64,
   bytesToHex,
+  cardState,
   detectFamily,
   hexToBytes,
+  jsCanonical,
+  millCanonical,
   pyCanonical,
   sha256hex,
   verifyCard
