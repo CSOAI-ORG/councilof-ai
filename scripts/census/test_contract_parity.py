@@ -123,8 +123,9 @@ class Tools(unittest.TestCase):
 
 class Auth(unittest.TestCase):
     def test_declared_surfaces_disagree(self):
-        v = C.compare_auth(ctx(registry=[reg(auth=[("remotes[].headers[Authorization].isRequired", True)])],
-                               docs=[doc("server-card", {"authentication": {"required": False}})]))
+        # 0.1.2: two claims of the SAME kind (card vs card) are one scope and are compared directly
+        v = C.compare_auth(ctx(docs=[doc("mcp.json", {"authentication": {"required": True}}),
+                                     doc("server-card", {"authentication": {"required": False}})]))
         self.assertEqual(v["state"], "INCONSISTENT")
         self.assertEqual(sorted(c["value"] for c in v["conflict"]), ["false", "true"])
 
@@ -373,10 +374,7 @@ class Correction011(unittest.TestCase):
         v = C.compare_auth(ctx(registry=[reg(auth=[("remotes[].headers[Authorization].isRequired", False)])],
                                docs=[doc("server-card", {"authentication": {"required": True, "schemes": ["bearer"]}})]))
         self.assertEqual((v["state"], v["reason"]), ("UNCHECKABLE", "DECLARED_SCOPES_DIFFER"))
-        # a card that says auth is NOT required still contradicts a registry header that IS required (unchanged)
-        v = C.compare_auth(ctx(registry=[reg(auth=[("remotes[].headers[Authorization].isRequired", True)])],
-                               docs=[doc("server-card", {"authentication": {"required": False}})]))
-        self.assertEqual(v["state"], "INCONSISTENT")
+        # 0.1.2 (D3-SYM): the mirror pair (header required, card not required) is also of different scope; see Correction012
 
     def test_toolforte_count_with_a_dispatcher_is_not_compared(self):
         """toolforte.com/.well-known/mcp.json 7fc40fc2...: toolCount 180, resources [toolforte://tools]; live tools/list
@@ -391,6 +389,170 @@ class Correction011(unittest.TestCase):
         # a name list is still compared exactly
         self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"toolCount": 180, "tools": names})]))["state"], "CONSISTENT")
         self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("mcp.json", {"tools": names[:2]})]))["state"], "INCONSISTENT")
+
+
+class Correction012(unittest.TestCase):
+    """Record 0.1.2. Three rules a maintainer-persona audit (26 Sep 2026) found wrong in 0.1.1; shapes copied from the
+    stored 25 Sep bytes (fetch.sqlite sha256 b3fded9a..., unchanged)."""
+    HDR_T = ("remotes[].headers[Authorization].isRequired", True)
+
+    def test_html2img_header_required_vs_card_not_required_is_symmetric_d3(self):
+        """registry com.html2img/html-to-image: Authorization isRequired true; server-card 502d3b54...:
+        authentication.required false; initialize + tools/list answered without credentials. 0.1.1: INCONSISTENT."""
+        r = reg(auth=[self.HDR_T])
+        card = [doc("server-card", {"authentication": {"required": False}})]
+        v = C.compare_auth(ctx(registry=[r], docs=card))
+        self.assertEqual((v["state"], v["reason"]), ("UNCHECKABLE", "DECLARED_SCOPES_DIFFER"))
+        self.assertIn("header required", v["detail"])
+        # the "not required" side IS contradicted when discovery itself was refused without credentials
+        g = C.compare_auth(ctx(live(state="AUTH_REQUIRED", http_status=401, tools_list_status=None), registry=[r], docs=card))
+        self.assertEqual(g["state"], "INCONSISTENT")
+        self.assertEqual([c["surface"] for c in g["conflict"]][1], "observed discovery boundary")
+        self.assertEqual(g["conflict"][0]["value"], "false")
+        # same kind, different surfaces: still compared directly
+        cc = C.compare_auth(ctx(registry=[r], docs=card + [doc("mcp.json", {"auth_required": True})]))
+        self.assertEqual(cc["state"], "INCONSISTENT")
+
+    def test_zensched_card_lists_more_tools_than_open_listing_under_declared_auth(self):
+        """server-card 31a94f74...: tools n=74, authentication.required true; registry com.zensched/zensched Authorization
+        isRequired true; live credential-free tools/list n=11, every one of them in the card. 0.1.1: INCONSISTENT."""
+        pub = ["availability_get", "booking_create", "service_list"]
+        full = pub + ["account_close", "account_export", "account_get"]
+        lv = live(tool_names=pub, n_tools=3, tool_names_sha256=C.names_sha(pub))
+        card = {"tools": [{"name": n} for n in full], "authentication": {"required": True}}
+        v = C.compare_tools(ctx(lv, registry=[reg(auth=[self.HDR_T])], docs=[doc("server-card", card)]))
+        self.assertEqual((v["state"], v["reason"]), ("UNCHECKABLE", "SUBSET_UNDER_AUTH"))
+        self.assertTrue(v["declared_required"])
+        # the declared-required claim may come from the card alone
+        v = C.compare_tools(ctx(lv, docs=[doc("server-card", card)]))
+        self.assertEqual(v["reason"], "SUBSET_UNDER_AUTH")
+        # a count above live under declared auth: same reading
+        v = C.compare_tools(ctx(lv, docs=[doc("server-card", {"toolCount": 74, "authentication": {"required": True}})]))
+        self.assertEqual(v["reason"], "SUBSET_UNDER_AUTH")
+        # counter-cases that stay INCONSISTENT: no auth declared ...
+        noauth = {"tools": [{"name": n} for n in full]}
+        self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("server-card", noauth)]))["state"], "INCONSISTENT")
+        # ... auth explicitly NOT required ...
+        self.assertEqual(C.compare_tools(ctx(lv, docs=[doc("server-card", dict(noauth, authentication={"required": False}))]))["state"],
+                         "INCONSISTENT")
+        # ... the live list holds a tool the card lacks ...
+        lv2 = live(tool_names=pub + ["zz_new"], n_tools=4, tool_names_sha256=C.names_sha(pub + ["zz_new"]))
+        v = C.compare_tools(ctx(lv2, docs=[doc("server-card", card)]))
+        self.assertEqual((v["state"], v["only_live"]), ("INCONSISTENT", ["zz_new"]))
+        # ... a count below live
+        v = C.compare_tools(ctx(lv, docs=[doc("server-card", {"toolCount": 2, "authentication": {"required": True}})]))
+        self.assertEqual(v["state"], "INCONSISTENT")
+        # an equal list under auth stays CONSISTENT
+        v = C.compare_tools(ctx(lv, docs=[doc("server-card", {"tools": pub, "authentication": {"required": True}})]))
+        self.assertEqual(v["state"], "CONSISTENT")
+
+    class RecStore:
+        def __init__(self, recs):
+            self.recs = recs
+
+        def get(self, url):
+            r = self.recs.get(url)
+            if r is None:
+                return {"url": url, "state": "ABSENT", "http_status": 404}, None
+            return r
+
+    def _row(self):
+        return {"endpoint": EP, "origin": "https://svc.example", "host": "svc.example", "shared_origin": False,
+                "registry": [{"id": "ex.svc/one", "version": "1.0.0", "auth": [], "payment": [], "pp": {}, "declared_urls": []}],
+                "live": live(), "inclusion": "responded", "in_watch_list": False}
+
+    def test_dead_surface_is_not_silence(self):
+        """25 Sep: 251 rows had a surface that was ERROR / TIMEOUT / RATE_LIMITED / UNREACHABLE / NOT_FETCHED (104 reads
+        'origin failed earlier: HTTP 429: stopped for this run'); 244 of them carried SINGLE_SURFACE. 0.1.1: SINGLE_SURFACE."""
+        W = "https://svc.example/.well-known/"
+        st = self.RecStore({W + "mcp.json": ({"url": W + "mcp.json", "state": "RATE_LIMITED", "reason": "HTTP 429", "http_status": 429}, None),
+                            W + "mcp/server-card.json": ({"url": W + "mcp/server-card.json", "state": "NOT_FETCHED",
+                                                          "reason": "origin failed earlier: HTTP 429: stopped for this run"}, None)})
+        c, surf, _ = C.surface_ctx(self._row(), st, {"svc.example": {}})
+        dims = C.compare_all(c)
+        for d in ("TOOLS", "AUTH", "PROTOCOL"):
+            self.assertEqual((dims[d]["state"], dims[d].get("reason")), ("UNCHECKABLE", "SURFACE_UNREAD"), d)
+        # a verdict that is already UNCHECKABLE keeps its reason (only SINGLE_SURFACE claims silence)
+        self.assertEqual(dims["PAYMENT"]["reason"], "NO_PAYMENT_SURFACE")
+        self.assertEqual({u["state"] for u in dims["TOOLS"]["unread"]}, {"RATE_LIMITED", "NOT_FETCHED"})
+        # an INCONSISTENT or CONSISTENT verdict is not touched (two surfaces did speak); VERSION here is CONSISTENT
+        self.assertEqual(dims["VERSION"]["state"], "CONSISTENT")
+        # every other dead state counts; a 2xx without JSON (HTTP 204) is an answer, i.e. silence
+        for stt, hs in (("ERROR", 500), ("TIMEOUT", None), ("UNREACHABLE", None)):
+            st2 = self.RecStore({W + "mcp.json": ({"url": W + "mcp.json", "state": stt, "http_status": hs}, None)})
+            c2, _, _ = C.surface_ctx(self._row(), st2, {"svc.example": {}})
+            self.assertEqual(C.compare_all(c2)["TOOLS"]["reason"], "SURFACE_UNREAD", stt)
+        st3 = self.RecStore({W + "mcp.json": ({"url": W + "mcp.json", "state": "ERROR", "http_status": 204, "reason": "HTTP 204"}, None)})
+        c3, _, _ = C.surface_ctx(self._row(), st3, {"svc.example": {}})
+        self.assertEqual(C.compare_all(c3)["TOOLS"]["state"], "SINGLE_SURFACE")
+        # an agent-card that did not answer speaks to no MCP dimension: unchanged
+        st4 = self.RecStore({W + "agent-card.json": ({"url": W + "agent-card.json", "state": "TIMEOUT"}, None)})
+        c4, _, _ = C.surface_ctx(self._row(), st4, {"svc.example": {}})
+        self.assertEqual(C.compare_all(c4)["TOOLS"]["state"], "SINGLE_SURFACE")
+        # an x402 manifest that did not answer makes PAYMENT (only) unread
+        st5 = self.RecStore({W + "x402.json": ({"url": W + "x402.json", "state": "TIMEOUT"}, None),
+                             W + "mcp.json": ({"url": W + "mcp.json", "state": "PRESENT", "sha256": "x"}, {"x402": {"enabled": True}})})
+        c5, _, _ = C.surface_ctx(self._row(), st5, {"svc.example": {}})
+        d5 = C.compare_all(c5)
+        self.assertEqual((d5["PAYMENT"]["state"], d5["PAYMENT"]["reason"]), ("UNCHECKABLE", "SURFACE_UNREAD"))
+        self.assertEqual(d5["TOOLS"]["state"], "SINGLE_SURFACE")
+
+    def test_read_state_is_not_exhausted_when_reads_were_rate_limited(self):
+        import gzip, sqlite3, types
+        tmp = Path(tempfile.mkdtemp())
+        rows = [dict(self._row(), endpoint=f"https://h{i}.example/mcp", origin=f"https://h{i}.example", host=f"h{i}.example")
+                for i in range(2)]
+        with gzip.open(tmp / "plan.jsonl.gz", "wt") as f:
+            for r in rows:
+                f.write(json.dumps(r) + "\n")
+        st = C.Store(str(tmp / "fetch.sqlite"))
+        for r in rows:
+            st.host_done(r["host"], {"requests": 5})
+            for sname, path in C.WELL_KNOWN:
+                st.put(r["origin"] + path, r["host"], sname, {"url": r["origin"] + path, "state": "ABSENT", "http_status": 404})
+        st.put("https://h1.example/.well-known/mcp.json", "h1.example", "mcp.json",
+               {"url": "https://h1.example/.well-known/mcp.json", "state": "RATE_LIMITED", "reason": "HTTP 429", "http_status": 429})
+        st.close()
+        a = types.SimpleNamespace(collect_dir=str(tmp), plan_dir=str(tmp), hold=None, out=str(tmp / "cmp"))
+        C.compare(a)
+        summ = json.loads((tmp / "cmp" / "summary.json").read_text())
+        self.assertEqual((summ["n_attempted"], summ["n_planned"]), (2, 2))
+        self.assertEqual(summ["read_state"], "PARTIAL")
+        self.assertEqual(summ["read_gaps"]["endpoints_with_an_unread_surface"], 1)
+        self.assertEqual(summ["read_gaps"]["endpoints_with_a_429_stop"], 1)
+
+
+class Exclusions(unittest.TestCase):
+    """An operator's objection / opt-out: a named endpoint or host is skipped by the next run before any request."""
+    def _file(self, entries):
+        f = Path(tempfile.mkdtemp()) / "probe-exclusions.json"
+        f.write_text(json.dumps({"schema": "csoai.probe-exclusions/0.1", "entries": entries}))
+        return str(f)
+
+    def test_named_endpoint_and_host_are_never_probed(self):
+        ex = C.P.load_exclusions(self._file([{"id": "obj-1", "match": "endpoint", "value": "https://a.example/mcp/"},
+                                             {"id": "obj-2", "match": "host", "value": "B.example"}]))
+        self.assertEqual(C.P.excluded("https://a.example/mcp", ex), "obj-1")
+        self.assertIsNone(C.P.excluded("https://a.example/other", ex))
+        self.assertEqual(C.P.excluded("https://api.b.example/x", ex), "obj-2")
+        self.assertIsNone(C.P.excluded("https://notb.example/x", ex))
+        # the probe's scheduler skips the row and records it by name; the other row is probed
+        rows = [{"rank": 1, "endpoint": "https://a.example/mcp"}, {"rank": 2, "endpoint": "https://c.example/mcp"}]
+        r = C.P.Runner(rows, tempfile.mkdtemp(), {"min_interval": 0.0, "budget_s": 5}, exclusions=ex)
+        nxt = r._next()
+        self.assertEqual(nxt[0]["endpoint"], "https://c.example/mcp")
+        self.assertEqual([x["endpoint"] for x in r.skipped], ["https://a.example/mcp"])
+        self.assertIn("obj-1", r.skipped[0]["not_attempted"])
+        # contract parity never queues a surface of an excluded endpoint or host
+        prow = lambda h: {"endpoint": f"https://{h}/mcp", "origin": f"https://{h}", "host": h,
+                          "registry": [{"declared_urls": [("server-card", "https://cdn.b.example/card.json")]}]}
+        tasks = C.host_tasks([prow("a.example"), prow("c.example")], ex)
+        self.assertEqual(sorted(tasks), ["c.example"])
+        # fail closed: a malformed file stops the run
+        with self.assertRaises(ValueError):
+            C.P.load_exclusions(self._file([{"match": "everything", "value": "x"}]))
+        # the committed file loads
+        self.assertIsInstance(C.P.load_exclusions(), list)
 
 
 # ------------------------------------------------------------------ network fixture (127.0.0.1)
@@ -511,6 +673,8 @@ def self_test():
     ok = True
     orig_v, orig_m, orig_a = C.COMPARATORS["VERSION"], C.mentions, C.compare_auth
     orig_pk, orig_de, orig_dr, orig_pr = C.PUBLIC_TOOL_KEYS, C.declared_endpoints, C.DISPATCH_RE, C.prune_other_endpoints
+    orig_ad, orig_ur, orig_iu = C._auth_decl, C.UNREAD_STATES, C.is_unread
+    orig_ex = C.P.excluded
 
     def broken_version(ctx_):  # adjudicates every version string, whatever it versions
         vals = [c for c in orig_v(ctx_).get("claims") or []] + (orig_v(ctx_).get("other_versions") or [])
@@ -526,6 +690,21 @@ def self_test():
         v = orig_a(ctx_)
         return C.verdict("INCONSISTENT", conflict=[{"surface": "x", "path": "y", "value": "z"}]) if v.get("reason") == "DECLARED_SCOPES_DIFFER" else v
 
+    def auth_0_1_1(ctx_):  # the 0.1.1 rule: header required vs card not required is a contradiction (asymmetric D3)
+        v = orig_a(ctx_)
+        if v.get("reason") == "DECLARED_SCOPES_DIFFER" and "header required" in (v.get("detail") or ""):
+            return C.verdict("INCONSISTENT", conflict=[{"surface": "x", "path": "y", "value": "z"}])
+        return v
+
+    def tools_no_auth_subset(ctx_):  # the 0.1.1 rule: the tools comparator does not see declared auth
+        saved = C._auth_decl
+        C._auth_decl = lambda c: []
+        try:
+            return orig_t(ctx_)
+        finally:
+            C._auth_decl = saved
+    orig_t = C.compare_tools
+
     controls = [("version across undeclared namespaces", lambda: (C.COMPARATORS.__setitem__("VERSION", broken_version),
                                                                   setattr(C, "compare_version", broken_version))),
                 ("gateway card credited to every tenant", lambda: setattr(C, "mentions", lambda d, e: True)),
@@ -535,7 +714,15 @@ def self_test():
                 ("0.1 origin document credited though it names another endpoint", lambda: setattr(C, "declared_endpoints", lambda d, b: set())),
                 ("0.1 nested block describing another endpoint read as this one", lambda: setattr(C, "prune_other_endpoints", lambda d, e: (d, []))),
                 ("0.1 optional registry header vs card requirement called a contradiction", lambda: setattr(C, "compare_auth", auth_0_1)),
-                ("0.1 bare count compared despite a live dispatcher tool", lambda: setattr(C, "DISPATCH_RE", __import__("re").compile(r"(?!x)x")))]
+                ("0.1 bare count compared despite a live dispatcher tool", lambda: setattr(C, "DISPATCH_RE", __import__("re").compile(r"(?!x)x"))),
+                # 0.1.2: each 0.1.1 rule, restored, must fail the suite
+                ("0.1.1 asymmetric D3: header required vs card not required called a contradiction",
+                 lambda: setattr(C, "compare_auth", auth_0_1_1)),
+                ("0.1.1 D1 without a public list: card superset under declared auth called a contradiction",
+                 lambda: setattr(C, "compare_tools", tools_no_auth_subset)),
+                ("0.1.1 dead surface counted as silence (SINGLE_SURFACE)", lambda: setattr(C, "UNREAD_STATES", ())),
+                ("0.1.1 read_state from attempts only (EXHAUSTED despite HTTP 429)", lambda: setattr(C, "is_unread", lambda e: False)),
+                ("exclusion list ignored (an objector probed again)", lambda: setattr(C.P, "excluded", lambda u, e: None))]
     for name, patch in controls:
         patch()
         try:
@@ -546,6 +733,8 @@ def self_test():
             C.mentions = orig_m
             C.compare_auth = orig_a
             C.PUBLIC_TOOL_KEYS, C.declared_endpoints, C.DISPATCH_RE, C.prune_other_endpoints = orig_pk, orig_de, orig_dr, orig_pr
+            C._auth_decl, C.UNREAD_STATES, C.is_unread, C.compare_tools = orig_ad, orig_ur, orig_iu, orig_t
+            C.P.excluded = orig_ex
         held = bad2 > 0
         ok &= held
         print(f"control [{name}]: {bad2} failed -> {'holds (suite rejects it)' if held else 'CONTROL FAILED (suite passes a broken rule)'}")

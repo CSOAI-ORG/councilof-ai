@@ -119,6 +119,43 @@ P1_RE = re.compile(r"(nonce|idempoten|authori[sz]ation[_-]?(ref|id|token)?$|auth
                    r"proof[_-]?of)", re.I)
 
 
+# Objections and opt-outs (26 Sep 2026). An operator who asks us to stop probing names an endpoint or a host; it is
+# added to probe-exclusions.json (committed beside this file, public, dated) and every later run of this probe and of
+# contract-parity.py skips it before any request -- no robots.txt fetch, no discovery -- and records the skip by name.
+# The file is read fail-closed: missing or malformed stops the run rather than probing an objector.
+EXCLUSIONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "probe-exclusions.json")
+
+
+def load_exclusions(path=None):
+    path = path or EXCLUSIONS_PATH
+    with open(path) as fh:
+        doc = json.load(fh)
+    if doc.get("schema") != "csoai.probe-exclusions/0.1" or not isinstance(doc.get("entries"), list):
+        raise ValueError(f"{path}: not a csoai.probe-exclusions/0.1 document")
+    out = []
+    for e in doc["entries"]:
+        m, v = e.get("match"), str(e.get("value") or "").strip()
+        if m not in ("endpoint", "host") or not v:
+            raise ValueError(f"{path}: bad entry {e!r}")
+        out.append({"id": e.get("id") or v, "match": m, "value": v.rstrip("/").lower() if m == "endpoint" else v.lower()})
+    return out
+
+
+def excluded(url, exclusions):
+    """-> the matching entry id, or None. host entries cover the host and its subdomains."""
+    if not exclusions or not url:
+        return None
+    u = urllib.parse.urlsplit(url)
+    host = (u.hostname or "").lower()
+    norm = f"{u.scheme.lower()}://{u.netloc.lower()}{u.path}".rstrip("/").lower()
+    for e in exclusions:
+        if e["match"] == "endpoint" and norm == e["value"]:
+            return e["id"]
+        if e["match"] == "host" and (host == e["value"] or host.endswith("." + e["value"])):
+            return e["id"]
+    return None
+
+
 def utcnow():
     return datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
@@ -785,8 +822,10 @@ def robots_verdict(gate, host, scheme, port, cfg):
 
 # ---------------------------------------------------------------- run
 class Runner:
-    def __init__(self, rows, out, cfg, gate=None, grader=grade_initialize, sleep=time.sleep, modern_grader=grade_discover):
+    def __init__(self, rows, out, cfg, gate=None, grader=grade_initialize, sleep=time.sleep, modern_grader=grade_discover,
+                 exclusions=None):
         self.rows, self.out, self.cfg, self.grader, self.sleep = rows, out, cfg, grader, sleep
+        self.exclusions = load_exclusions() if exclusions is None else exclusions
         self.modern_grader = modern_grader
         self.gate = gate or HostGate(cfg["min_interval"])
         self.pending = list(rows)  # already in rank order
@@ -815,6 +854,11 @@ class Runner:
                     return None
                 for i, row in enumerate(self.pending):
                     host = urllib.parse.urlsplit(row["endpoint"]).hostname or ""
+                    ex = excluded(row["endpoint"], self.exclusions)
+                    if ex:
+                        self.pending.pop(i)
+                        self._skip(row, f"excluded at the operator's request (probe-exclusions.json: {ex})")
+                        break
                     if host in self.gate.stopped:
                         self.pending.pop(i)
                         self._skip(row, f"host stopped: {self.gate.stopped[host]}")
