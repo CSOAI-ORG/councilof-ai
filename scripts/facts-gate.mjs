@@ -216,6 +216,10 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 
     const before = text.slice(Math.max(0, m.index - 40), m.index);
     if (BREAKDOWN_BEFORE.test(before)) continue;
+    // Run-matrix dimensions are counts scoped to that historical run, not the
+    // current board total: "10 models x 14 axes" means a 10x14 experiment.
+    // The x/× immediately before the axis count is the structural boundary.
+    if (/\b\d{1,3}\s+models?\s*[x×]\s*$/i.test(before)) continue;
     // Derived triple 22·22·0 with labels "axes · measured · unmeasured".
     // Prerender concatenates the heading number with the next paragraph, so
     // COUNT_RE sees "0 axes". That 0 is unmeasured_axes, not a board-total claim.
@@ -223,6 +227,18 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     if (/\d{1,3}[·.]\d{1,3}[·.]\s*$/.test(before)) continue;
     if (QUALIFIED_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
     if (isFrozenBankSubset(n,liveCount,text.slice(COUNT_RE.lastIndex))) continue;
+
+    // A dated state ledger may describe the DIMENSIONS OF ONE HISTORICAL BATCH,
+    // e.g. `batch 2 (10 models x 14 axes)`. That is not a claim that the current
+    // board has 14 axes. Keep the exemption to the monthly numbers ledger and the
+    // explicit matrix grammar; a sentence like `the board measures 14 axes` in the
+    // same file still fails below.
+    if (
+      /^state\/\d{4}-\d{2}\/numbers\.json$/.test(file) &&
+      /\bbatch\b[^.;!?]{0,120}\(\s*\d+\s+models?\s*[x×]\s*\d+\s+axes\s*\)/i.test(
+        ctx(text, m.index, COUNT_RE.lastIndex, 180)
+      )
+    ) continue;
 
     // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
     // carry X" against a 22-axis board is still a contradiction and still fails.
@@ -445,6 +461,24 @@ function ruleCapabilityTense(facts, file, text, add) {
       const scope = RAIL_SUBJECT_EXEMPT[rail.id];
       if (scope && scope.files.test(file) && !scope.unless.test(window)) continue;
 
+      // Structured evidence indexes carry field names such as `ots` beside an explicit
+      // machine state. `ots: { state: "none" }` is evidence of ABSENCE, not a claim that
+      // the OTS rail is live. Keep this exemption narrow: only the evidence registry,
+      // only the OTS rail, and only an explicit state=none object. Free prose in the
+      // same file still goes through the normal tense rule.
+      if (
+        rail.id === "ots_atom_anchor" &&
+        file === "evidence/index.json" &&
+        /"ots"\s*:\s*\{[^}]{0,160}"state"\s*:\s*"none"/i.test(window)
+      ) continue;
+
+      // An evidence row that explicitly says no OTS proof exists is an absence
+      // observation, not a present-tense claim that atom anchoring is live. Keep
+      // this narrow to the OTS rail and its published machine-readable grammar.
+      if (rail.id === "ots_atom_anchor" &&
+          (/\bno\s+(?:ots|opentimestamps)\s+proof\b/i.test(window) || /"state"\s*:\s*"none"/i.test(window))) {
+        continue;
+      }
       // Exonerate: the copy already labels the honest status.
       if (/\bunmeasured\b|\bdevnet\b|\bplanned\b|\bnot yet\b|\bwill\b|\bwould\b|\bonce\b|\bonly when\b|\bcoming\b|\brefuses? to mint\b|\bnot attested\b|\bnot located\b/i.test(window)) {
         continue;
@@ -550,6 +584,7 @@ function selftestCases(N, M, U) {
   ["prohibition form still passes", `<p>Cite live totals.public_count — do not invent ${N} axes.</p>`, false],
   [`${N} axes is the observed slot count and matches the live board`, `<p>The board carries ${N} axes across both families.</p>`, false],
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
+  ["run-matrix dimension is not a board-total claim", "<p>Cross-runtime reproduction, batch 2 (10 models x 14 axes)</p>", false],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
   ["honest swept grammar", `<p>${N} axes · ${M} measured — every slot has a run behind it.</p>`, false],
   [`derived triple flattened ${N}·${M}·${U} axes · measured · unmeasured (reproduces 1804 deploy)`, `<p>Living GSPC · derived totals ${N}·${M}·${U} axes · measured · unmeasured — ${N} axis · ${M} measured</p>`, false],
@@ -575,6 +610,7 @@ function selftestCases(N, M, U) {
   ["VIOLATION: atoms asserted OTS-anchored", "<p>Every queued atom is anchored to Bitcoin via OpenTimestamps.</p>", true],
   ["VIOLATION: press releases asserted anchored", "<p>Every press release is signed and anchored on Bitcoin today.</p>", true],
   ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
+  ["honest OTS absence record", '<p>{"ots":{"state":"none","detail":"no OTS proof published alongside this live surface"}}</p>', false],
   ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
   ["honest conditional verification rule", "<p>Treat OTS as Bitcoin-anchored only when the sidecar derives CONFIRMED_BITCOIN from the proof bytes.</p>", false],
   // ── anchor-count concept rule (2026-09-03) ───────────────────────────────────
