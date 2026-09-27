@@ -182,7 +182,7 @@ describe("payment required — the exact scheme fields, and no computation befor
     const header = r.headers.get("PAYMENT-REQUIRED");
     expect(header).toBeTruthy();
     const b = (await r.json()) as any;
-    const h = JSON.parse(atob(header!));
+    const h = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(header!), (c) => c.charCodeAt(0)))); // base64 of UTF-8 bytes
     for (const pr of [b, h]) {
       expect(pr.x402Version).toBe(2);
       const a = pr.accepts[0];
@@ -195,10 +195,10 @@ describe("payment required — the exact scheme fields, and no computation befor
       expect(a.maxTimeoutSeconds).toBe(300);
       expect(pr.resource.url).toBe(`${ORIGIN}/api/ras/${name}`); // a buyer's target never becomes a catalogue row
     }
-    // Header-minimal PAYMENT-REQUIRED (x402 v2; coordinator ruling 3, 2026-09-26): the header carries the
-    // payment subset only, so it stays under the 4-8 KiB single-header limit of common proxies;
-    // PaymentRequired.extensions (bazaar) live on the 402 BODY, where the bazaar spec places them.
-    expect(h.extensions).toBeUndefined();
+    // PAYMENT-REQUIRED (x402 v2; coordinator ruling 3 of 2026-09-26, amended 2026-09-27): the header carries
+    // the payment subset plus the body's extensions.bazaar — a v2 client echoes extensions from the decoded
+    // header (bazaar.md: without it "discovery cataloging will not occur") — and stays under 4 KiB.
+    expect(h.extensions).toEqual({ bazaar: b.extensions.bazaar });
     expect(header!.length).toBeLessThan(4096);
     expect(b.extensions.bazaar.info.input).toMatchObject({ type: "http", method: "GET" });
     // the bazaar blob satisfies its own schema: every info.input key is declared
@@ -590,8 +590,10 @@ describe("verification is free — /api/verify never meters", () => {
 
 // ─────────────────────────────────────────────────────────────── daily index
 describe("/api/x402/index — signed or pending, never invented", () => {
-  it("no signed index configured → INDEX_PENDING, index null, the latest UNSIGNED run pointed at", async () => {
-    stubNet((url) => (url.host === "huggingface.co" ? Response.json({ schema: "csoai.x402-bazaar-conformance/0.2", date: "2026-09-24", as_of: "2026-09-24T03:05:41Z", partial: false, headline: { conformant: 1 } }) : undefined));
+  it("nothing signed published (default alias 404, no env) → INDEX_PENDING, index null, the latest UNSIGNED run pointed at", async () => {
+    stubNet((url) => url.host !== "huggingface.co" ? undefined
+      : url.pathname.endsWith("/signed/index-latest.json") ? new Response("Entry not found", { status: 404 })
+      : Response.json({ schema: "csoai.x402-bazaar-conformance/0.2", date: "2026-09-24", as_of: "2026-09-24T03:05:41Z", partial: false, headline: { conformant: 1 } }));
     const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } });
     expect(r.status).toBe(200);
     const b = (await r.json()) as any;
@@ -609,6 +611,30 @@ describe("/api/x402/index — signed or pending, never invented", () => {
     const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: { X402_INDEX_SIGNED_URL: "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/signed/index-latest.json" }, params: { name: "index" } });
     const b = (await r.json()) as any;
     expect(b.state).toBe("SIGNATURE_INVALID");
+    expect(b.index).toBeNull();
+  });
+
+  it("the real 2026-09-27 leaf at the default alias (no env) → SIGNED under the pinned board key; its payload is the index", async () => {
+    const raw = readFileSync(fileURLToPath(new URL("../x402/__fixtures__/x402_index_2026-09-27.json", import.meta.url)), "utf8");
+    const net = stubNet((url) => (url.host === "huggingface.co" && url.pathname.endsWith("/signed/index-latest.json") ? new Response(raw, { status: 200 }) : undefined));
+    const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } });
+    const b = (await r.json()) as any;
+    expect(b.state).toBe("SIGNED");
+    expect(b.source).toBe("https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main/signed/index-latest.json");
+    expect(b.index.schema).toBe("csoai.x402-index/0.1");
+    expect(b.index.census.partial).toBe(false);
+    expect(b.index.pins["summary-2026-09-27.json"]).toBe("5ed2c6488776af15ddce5ecb16ed000458999732123920b06d28aa5ea1c578e4");
+    expect(b.signature.did).toBe("did:web:csoai.org#board-attestation-1");
+    expect(net.calls).toHaveLength(1);
+  });
+
+  it("must-fail control: the same leaf with one census number changed is not served", async () => {
+    const leaf = JSON.parse(readFileSync(fileURLToPath(new URL("../x402/__fixtures__/x402_index_2026-09-27.json", import.meta.url)), "utf8"));
+    leaf.payload.census.headline.conformant += 1;
+    stubNet((url) => (url.host === "huggingface.co" && url.pathname.endsWith("/signed/index-latest.json") ? Response.json(leaf) : undefined));
+    const r = await call(indexGet, { request: new Request(`${ORIGIN}/api/x402/index`), env: {}, params: { name: "index" } });
+    const b = (await r.json()) as any;
+    expect(b.state).not.toBe("SIGNED");
     expect(b.index).toBeNull();
   });
 

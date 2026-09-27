@@ -1,0 +1,381 @@
+{
+ "schema": "csoai.interop.a2a-tck-jcs/0.1",
+ "date": "2026-09-27",
+ "vectors": {
+  "pr": "https://github.com/a2aproject/a2a-tck/pull/228",
+  "pr_state_when_run": "open, not merged",
+  "head": "astrogilda/a2a-tck@97b007237ee4c3b802ed563829e3937a5529244e",
+  "manifest_sha256": "d38f4121bcae85f875be5de4802fa9ca4e773aec5e3a9ae1c0134825a5779a98",
+  "corpus_digest": "29b3f2c5a9c2e6b07dc7e925b13c81563e2efd407a62ce05df513fca04e9361c",
+  "spec_commit": "19598c4",
+  "runner": "run_python.py from the PR, unmodified"
+ },
+ "tested_code": "councilof-ai master 720124db6bfd (2026-09-27 03:39Z)",
+ "implementations": [
+  {
+   "key": "probe",
+   "label": "Census verifier, 0.x rule path",
+   "role": "Every published A2A agent-card census verdict comes from this code.",
+   "code": "scripts/census/a2a-card-probe.py jcs() + RULE_0X",
+   "agent_card_path": true,
+   "record": "runs/probe.json",
+   "record_sha256": "8cdf9467f3880574468af21e20cf7fe212e3dc929ea9b70b1b68eb03fe16e49c",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 53,
+     "failed": 0,
+     "outcomes": {
+      "pass": 53
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 57,
+     "failed": 0,
+     "outcomes": {
+      "pass": 57
+     }
+    }
+   }
+  },
+  {
+   "key": "probe1x",
+   "label": "Census verifier, 1.x rule path",
+   "role": "The same verifier with A2A 8.4.3 defaults removed before signing.",
+   "code": "scripts/census/a2a-card-probe.py jcs() + RULE_1X",
+   "agent_card_path": true,
+   "record": "runs/probe1x.json",
+   "record_sha256": "bff02226f9346085880cc552b0061314f36fb546a137decd7d1c8f0ccdd42876",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 53,
+     "failed": 0,
+     "outcomes": {
+      "pass": 53
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 57,
+     "failed": 0,
+     "outcomes": {
+      "pass": 57
+     }
+    }
+   }
+  },
+  {
+   "key": "signer",
+   "label": "Our card signer",
+   "role": "Signs CSOAI's own agent card.",
+   "code": "scripts/adapters/agent_card_jws.py",
+   "agent_card_path": true,
+   "record": "runs/signer.json",
+   "record_sha256": "a981d7745eb04deaa4c96ed83e029167359664d62c4c6c7890ae1b9375b9974d",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 40,
+     "failed": 13,
+     "outcomes": {
+      "pass": 40,
+      "refused": 13
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 44,
+     "failed": 13,
+     "outcomes": {
+      "pass": 44,
+      "refused": 13
+     }
+    }
+   }
+  },
+  {
+   "key": "indep",
+   "label": "Independent verifier of our card",
+   "role": "Checks our own card; hand-written on purpose.",
+   "code": "scripts/verify_agent_card_jws.py",
+   "agent_card_path": true,
+   "record": "runs/indep.json",
+   "record_sha256": "6d79017dc3a447423b8e7214d488f693692e7b8458f336ea8614eb3ca1310939",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 42,
+     "failed": 11,
+     "outcomes": {
+      "pass": 42,
+      "refused": 11
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 46,
+     "failed": 11,
+     "outcomes": {
+      "pass": 46,
+      "refused": 11
+     }
+    }
+   }
+  },
+  {
+   "key": "ts",
+   "label": "TypeScript test canonicaliser",
+   "role": "A vitest over our own card.",
+   "code": "functions/api/agent-card-jws.test.ts (sortDeep + JSON.stringify)",
+   "agent_card_path": true,
+   "record": "runs/ts.json",
+   "record_sha256": "2c9eb6f4bee871258d0f3d76fa948e414c39c27869fcb4857cb70b6711976d3b",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 44,
+     "failed": 9,
+     "outcomes": {
+      "pass": 44,
+      "diverged": 1,
+      "accepted": 5,
+      "errored": 3
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 48,
+     "failed": 9,
+     "outcomes": {
+      "pass": 48,
+      "diverged": 1,
+      "accepted": 5,
+      "errored": 3
+     }
+    }
+   }
+  },
+  {
+   "key": "arena",
+   "label": "Arena JCS (for information)",
+   "role": "Not on the agent-card path.",
+   "code": "harness/arena/jcs.py",
+   "agent_card_path": false,
+   "record": "runs/arena.json",
+   "record_sha256": "66af323424049c45a1b3621d2bf1924cf75c14ee90ab6b4c061b04fa91114744",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 51,
+     "failed": 2,
+     "outcomes": {
+      "pass": 51,
+      "diverged": 2
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 55,
+     "failed": 2,
+     "outcomes": {
+      "pass": 55,
+      "diverged": 2
+     }
+    }
+   }
+  },
+  {
+   "key": "sorted_utf8",
+   "label": "Sorted-keys JSON, UTF-8 (for information)",
+   "role": "A different format, not on the agent-card path.",
+   "code": "json.dumps(sort_keys=True)",
+   "agent_card_path": false,
+   "record": "runs/sorted_utf8.json",
+   "record_sha256": "c8c6245ed92412bae87432bb98e70f70784f9866a4e68b97343c80d20cdcc14d",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 46,
+     "failed": 7,
+     "outcomes": {
+      "pass": 46,
+      "diverged": 7
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 46,
+     "failed": 11,
+     "outcomes": {
+      "pass": 46,
+      "diverged": 9,
+      "accepted": 2
+     }
+    }
+   }
+  },
+  {
+   "key": "sorted_ascii",
+   "label": "Sorted-keys JSON, ASCII / GSPC Rule A (for information)",
+   "role": "A different format that defines published card ids; not on the agent-card path.",
+   "code": "json.dumps(sort_keys=True, ensure_ascii=True)",
+   "agent_card_path": false,
+   "record": "runs/sorted_ascii.json",
+   "record_sha256": "154e82c2baa02717c3b75f4e41075d7ec8558c310e26ed64c7f2fbc7237352bf",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 32,
+     "failed": 21,
+     "outcomes": {
+      "pass": 32,
+      "diverged": 16,
+      "accepted": 5
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 32,
+     "failed": 25,
+     "outcomes": {
+      "pass": 32,
+      "diverged": 18,
+      "accepted": 7
+     }
+    }
+   }
+  },
+  {
+   "key": "reference",
+   "label": "Reference: rfc8785 0.1.4",
+   "role": "The oracle check, through the same runner.",
+   "code": "PyPI rfc8785==0.1.4",
+   "agent_card_path": false,
+   "record": "runs/reference.json",
+   "record_sha256": "a9809cfd0d0208bc918de015619eb9ebd0fc57df41ae3c37dea10eb36ebdf4cf",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 53,
+     "failed": 0,
+     "outcomes": {
+      "pass": 53
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 57,
+     "failed": 0,
+     "outcomes": {
+      "pass": 57
+     }
+    }
+   }
+  },
+  {
+   "key": "probe_patched",
+   "label": "Census verifier with rfc8785.dumps, 0.x path",
+   "role": "The fix landed with this page.",
+   "code": "scripts/census/a2a-card-probe.py after the swap",
+   "agent_card_path": true,
+   "record": "runs/probe_patched.json",
+   "record_sha256": "0625160c6d27be0e93227258479f4d947f9f239549f1603a6051887dcedbb2d3",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 53,
+     "failed": 0,
+     "outcomes": {
+      "pass": 53
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 57,
+     "failed": 0,
+     "outcomes": {
+      "pass": 57
+     }
+    }
+   }
+  },
+  {
+   "key": "probe_patched_1x",
+   "label": "Census verifier with rfc8785.dumps, 1.x path",
+   "role": "The fix landed with this page.",
+   "code": "scripts/census/a2a-card-probe.py after the swap",
+   "agent_card_path": true,
+   "record": "runs/probe_patched_1x.json",
+   "record_sha256": "45e02c4f50d45f608b74018835dd1fdb563f61b834a128f9601b7ff507a8ba07",
+   "targets": {
+    "rfc8785": {
+     "vectors": 53,
+     "passed": 53,
+     "failed": 0,
+     "outcomes": {
+      "pass": 53
+     }
+    },
+    "card-signing-input": {
+     "vectors": 57,
+     "passed": 57,
+     "failed": 0,
+     "outcomes": {
+      "pass": 57
+     }
+    }
+   }
+  }
+ ],
+ "per_vector_table": {
+  "record": "runs/table.json",
+  "record_sha256": "d34ec46e678fc357cf3c0166ddac1c2534c658785c698ba2f04591097bad067e"
+ },
+ "fuzz": {
+  "record": "runs/fuzz_beyond_corpus.txt",
+  "record_sha256": "491578e4dced7900bde3c409e704651d93bde2b3fba50c6cc95d7224341dad9a",
+  "cases_per_class": {
+   "float-random-bits": 199925,
+   "float-decade": 259,
+   "int-beyond-2^53": 8,
+   "string-codepoint": 37,
+   "key-order-astral": 1
+  },
+  "census_verifier_divergences_before_fix": {
+   "float-random-bits": 1952,
+   "float-decade": 13,
+   "int-beyond-2^53": 7
+  }
+ },
+ "census": [
+  {
+   "run": "2026-09-25 (v0.1.1)",
+   "cards_read": 422,
+   "bodies_matching_card_sha256": 422,
+   "cards_whose_jcs_differs": 0,
+   "signed_cards": 33,
+   "signed_cards_whose_signing_input_changes": 0,
+   "exposure": {
+    "float_values": 220,
+    "in_defect_ranges": 0,
+    "ints_beyond_2_53": 0
+   }
+  },
+  {
+   "run": "2026-09-27 (latest)",
+   "cards_read": 420,
+   "bodies_matching_card_sha256": 420,
+   "cards_whose_jcs_differs": 0,
+   "signed_cards": 35,
+   "signed_cards_whose_signing_input_changes": 0,
+   "exposure": {
+    "float_values": 220,
+    "in_defect_ranges": 0,
+    "ints_beyond_2_53": 0
+   }
+  }
+ ],
+ "census_note": "Counted from the census raw card bodies on the measuring host; the per-card file names hosts and is not published. A JWS verdict depends only on the protected header, the payload bytes and the key, so an unchanged signing input is an unchanged verdict."
+}

@@ -8,6 +8,7 @@ import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import PlainEmail from "@/components/PlainEmail";
 import SEP from "@/data/state/2026-09-numbers.json";
+import { stateReportDatasetLd } from "@/lib/stateDatasetLd";
 
 const EDITIONS = [
   {
@@ -33,6 +34,8 @@ export default function StateIndex() {
 
   return (
     <div data-testid="state-index" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
+      {/* schema.org Dataset for the latest edition; every field from its numbers.json (lib/stateDatasetLd.ts). */}
+      <script type="application/ld+json">{JSON.stringify(stateReportDatasetLd(SEP))}</script>
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <span>State of the Agent Internet</span>
       </nav>

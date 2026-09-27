@@ -1,0 +1,702 @@
+{
+  "runner": "python/run_python.py",
+  "implementation": {
+    "rfc8785": "csoai_impls:sorted_ascii",
+    "card-signing-input": "csoai_impls:sorted_ascii"
+  },
+  "refusal": [
+    "builtins:ValueError",
+    "builtins:TypeError"
+  ],
+  "corpusDigest": "29b3f2c5a9c2e6b07dc7e925b13c81563e2efd407a62ce05df513fca04e9361c",
+  "specCommit": "19598c4",
+  "targets": {
+    "rfc8785": {
+      "vectors": 53,
+      "passed": 32,
+      "failed": 21,
+      "outcomes": {
+        "pass": 32,
+        "diverged": 16,
+        "refused": 0,
+        "accepted": 5,
+        "errored": 0
+      }
+    },
+    "card-signing-input": {
+      "vectors": 57,
+      "passed": 32,
+      "failed": 25,
+      "outcomes": {
+        "pass": 32,
+        "diverged": 18,
+        "refused": 0,
+        "accepted": 7,
+        "errored": 0
+      }
+    }
+  },
+  "targetsNotRun": {},
+  "results": [
+    {
+      "target": "rfc8785",
+      "id": "A3-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-005",
+      "outcome": "diverged",
+      "detail": "got b'{\"cafe\":1,\"caf\\\\u00e9\":2}' want b'{\"cafe\":1,\"caf\\xc3\\xa9\":2}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-006",
+      "outcome": "diverged",
+      "detail": "got b'{\"b\\\\uff01key\":2,\"b\\\\ud83d\\\\ude00key\":1}' want b'{\"b\\xf0\\x9f\\x98\\x80key\":1,\"b\\xef\\xbc\\x81key\":2}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-007",
+      "outcome": "diverged",
+      "detail": "got b'{\"x\\\\ue000end\":2,\"x\\\\ud800\\\\udc00end\":1}' want b'{\"x\\xf0\\x90\\x80\\x80end\":1,\"x\\xee\\x80\\x80end\":2}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-008",
+      "outcome": "diverged",
+      "detail": "got b'{\"cafe\\\\u0301\":2,\"caf\\\\u00e9\":1}' want b'{\"cafe\\xcc\\x81\":2,\"caf\\xc3\\xa9\":1}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-REJECT-011",
+      "outcome": "accepted",
+      "detail": "produced b'{\"a\":2,\"b\\\\ud800key\":1}' for input with no canonical form"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A3-REJECT-012",
+      "outcome": "accepted",
+      "detail": "produced b'{\"a\":2,\"b\\\\udc00key\":1}' for input with no canonical form"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-001",
+      "outcome": "diverged",
+      "detail": "got b'{\"description\":\"Planifie des itin\\\\u00e9raires.\",\"name\":\"Caf\\\\u00e9 Agent\"}' want b'{\"description\":\"Planifie des itin\\xc3\\xa9raires.\",\"name\":\"Caf\\xc3\\xa9 Agent\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-003",
+      "outcome": "diverged",
+      "detail": "got b'{\"note\":\"hello \\\\ud83d\\\\ude00 world\"}' want b'{\"note\":\"hello \\xf0\\x9f\\x98\\x80 world\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-007",
+      "outcome": "diverged",
+      "detail": "got b'{\"label\":\"\\\\u4e2d\\\\u6587\"}' want b'{\"label\":\"\\xe4\\xb8\\xad\\xe6\\x96\\x87\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-008",
+      "outcome": "diverged",
+      "detail": "got b'{\"del\":\"a\\\\u007fb\"}' want b'{\"del\":\"a\\x7fb\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-009",
+      "outcome": "diverged",
+      "detail": "got b'{\"combining\":\"e\\\\u0301clair\"}' want b'{\"combining\":\"e\\xcc\\x81clair\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-010",
+      "outcome": "diverged",
+      "detail": "got b'{\"rtl\":\"\\\\u0627\\\\u0644\\\\u0633\\\\u0644\\\\u0627\\\\u0645\"}' want b'{\"rtl\":\"\\xd8\\xa7\\xd9\\x84\\xd8\\xb3\\xd9\\x84\\xd8\\xa7\\xd9\\x85\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-011",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-012",
+      "outcome": "diverged",
+      "detail": "got b'{\"emoji_pair\":\"\\\\ud83d\\\\ude00\\\\ud83d\\\\ude01\"}' want b'{\"emoji_pair\":\"\\xf0\\x9f\\x98\\x80\\xf0\\x9f\\x98\\x81\"}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-REJECT-013",
+      "outcome": "accepted",
+      "detail": "produced b'{\"name\":\"broken \\\\udc00 value\"}' for input with no canonical form"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-REJECT-014",
+      "outcome": "accepted",
+      "detail": "produced b'{\"name\":\"before\\\\udc00after\"}' for input with no canonical form"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A4-REJECT-015",
+      "outcome": "accepted",
+      "detail": "produced b'{\"name\":\"\\\\ud800x\"}' for input with no canonical form"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-001",
+      "outcome": "diverged",
+      "detail": "got b'{\"tolerance\":1e-06}' want b'{\"tolerance\":0.000001}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-006",
+      "outcome": "diverged",
+      "detail": "got b'{\"n\":-0.0}' want b'{\"n\":0}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-011",
+      "outcome": "diverged",
+      "detail": "got b'{\"n\":1e-07}' want b'{\"n\":1e-7}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-012",
+      "outcome": "diverged",
+      "detail": "got b'{\"n\":1e+20}' want b'{\"n\":100000000000000000000}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-013",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-014",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-015",
+      "outcome": "diverged",
+      "detail": "got b'{\"exp_upper\":10.0,\"trailing_zero\":1.0}' want b'{\"exp_upper\":10,\"trailing_zero\":1}'"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-REJECT-016",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-REJECT-017",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A5-REJECT-018",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "rfc8785",
+      "id": "A6-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-001",
+      "outcome": "diverged",
+      "detail": "got b'{\"capabilities\":{\"pushNotifications\":false,\"streaming\":true},\"name\":\"Example Agent\",\"signatures\":[{\"protected\":\"eyJhbGciOiJFUzI1NiJ9\",\"signature\":\"abc123\"}]}' want b'{\"capabilities\":{\"pushNotifications\":false,\"streaming\":true},\"name\":\"Example Agent\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-002",
+      "outcome": "diverged",
+      "detail": "got b'{\"capabilities\":{\"pushNotifications\":false,\"streaming\":true},\"name\":\"Example Agent\",\"signatures\":[]}' want b'{\"capabilities\":{\"pushNotifications\":false,\"streaming\":true},\"name\":\"Example Agent\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-REJECT-003",
+      "outcome": "accepted",
+      "detail": "recomputed signing bytes equal bytes that still carry 'signatures'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A2-REJECT-004",
+      "outcome": "accepted",
+      "detail": "recomputed signing bytes equal bytes that still carry 'signatures'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-005",
+      "outcome": "diverged",
+      "detail": "got b'{\"cafe\":1,\"caf\\\\u00e9\":2}' want b'{\"cafe\":1,\"caf\\xc3\\xa9\":2}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-006",
+      "outcome": "diverged",
+      "detail": "got b'{\"b\\\\uff01key\":2,\"b\\\\ud83d\\\\ude00key\":1}' want b'{\"b\\xf0\\x9f\\x98\\x80key\":1,\"b\\xef\\xbc\\x81key\":2}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-007",
+      "outcome": "diverged",
+      "detail": "got b'{\"x\\\\ue000end\":2,\"x\\\\ud800\\\\udc00end\":1}' want b'{\"x\\xf0\\x90\\x80\\x80end\":1,\"x\\xee\\x80\\x80end\":2}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-008",
+      "outcome": "diverged",
+      "detail": "got b'{\"cafe\\\\u0301\":2,\"caf\\\\u00e9\":1}' want b'{\"cafe\\xcc\\x81\":2,\"caf\\xc3\\xa9\":1}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-REJECT-011",
+      "outcome": "accepted",
+      "detail": "produced b'{\"a\":2,\"b\\\\ud800key\":1}' for input with no canonical form"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A3-REJECT-012",
+      "outcome": "accepted",
+      "detail": "produced b'{\"a\":2,\"b\\\\udc00key\":1}' for input with no canonical form"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-001",
+      "outcome": "diverged",
+      "detail": "got b'{\"description\":\"Planifie des itin\\\\u00e9raires.\",\"name\":\"Caf\\\\u00e9 Agent\"}' want b'{\"description\":\"Planifie des itin\\xc3\\xa9raires.\",\"name\":\"Caf\\xc3\\xa9 Agent\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-003",
+      "outcome": "diverged",
+      "detail": "got b'{\"note\":\"hello \\\\ud83d\\\\ude00 world\"}' want b'{\"note\":\"hello \\xf0\\x9f\\x98\\x80 world\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-007",
+      "outcome": "diverged",
+      "detail": "got b'{\"label\":\"\\\\u4e2d\\\\u6587\"}' want b'{\"label\":\"\\xe4\\xb8\\xad\\xe6\\x96\\x87\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-008",
+      "outcome": "diverged",
+      "detail": "got b'{\"del\":\"a\\\\u007fb\"}' want b'{\"del\":\"a\\x7fb\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-009",
+      "outcome": "diverged",
+      "detail": "got b'{\"combining\":\"e\\\\u0301clair\"}' want b'{\"combining\":\"e\\xcc\\x81clair\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-010",
+      "outcome": "diverged",
+      "detail": "got b'{\"rtl\":\"\\\\u0627\\\\u0644\\\\u0633\\\\u0644\\\\u0627\\\\u0645\"}' want b'{\"rtl\":\"\\xd8\\xa7\\xd9\\x84\\xd8\\xb3\\xd9\\x84\\xd8\\xa7\\xd9\\x85\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-011",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-012",
+      "outcome": "diverged",
+      "detail": "got b'{\"emoji_pair\":\"\\\\ud83d\\\\ude00\\\\ud83d\\\\ude01\"}' want b'{\"emoji_pair\":\"\\xf0\\x9f\\x98\\x80\\xf0\\x9f\\x98\\x81\"}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-REJECT-013",
+      "outcome": "accepted",
+      "detail": "produced b'{\"name\":\"broken \\\\udc00 value\"}' for input with no canonical form"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-REJECT-014",
+      "outcome": "accepted",
+      "detail": "produced b'{\"name\":\"before\\\\udc00after\"}' for input with no canonical form"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A4-REJECT-015",
+      "outcome": "accepted",
+      "detail": "produced b'{\"name\":\"\\\\ud800x\"}' for input with no canonical form"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-001",
+      "outcome": "diverged",
+      "detail": "got b'{\"tolerance\":1e-06}' want b'{\"tolerance\":0.000001}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-006",
+      "outcome": "diverged",
+      "detail": "got b'{\"n\":-0.0}' want b'{\"n\":0}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-008",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-009",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-010",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-011",
+      "outcome": "diverged",
+      "detail": "got b'{\"n\":1e-07}' want b'{\"n\":1e-7}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-012",
+      "outcome": "diverged",
+      "detail": "got b'{\"n\":1e+20}' want b'{\"n\":100000000000000000000}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-013",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-014",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-015",
+      "outcome": "diverged",
+      "detail": "got b'{\"exp_upper\":10.0,\"trailing_zero\":1.0}' want b'{\"exp_upper\":10,\"trailing_zero\":1}'"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-REJECT-016",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-REJECT-017",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A5-REJECT-018",
+      "outcome": "pass",
+      "detail": "refused: ValueError"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-001",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-002",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-003",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-004",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-005",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-006",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-007",
+      "outcome": "pass",
+      "detail": "ok"
+    },
+    {
+      "target": "card-signing-input",
+      "id": "A6-008",
+      "outcome": "pass",
+      "detail": "ok"
+    }
+  ]
+}

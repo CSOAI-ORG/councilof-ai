@@ -1158,6 +1158,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Intel"
  },
  {
+  "path": "/interop/a2a-jcs-2026-09-27",
+  "comp": "A2aJcs20260927",
+  "title": "A2a Jcs20260927"
+ },
+ {
   "path": "/iso-42001",
   "comp": "ISO42001Guide",
   "title": "ISO42001 Guide"
@@ -1941,6 +1946,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/sovereign-twin",
   "comp": "Redirect",
   "title": "Sovereign Twin"
+ },
+ {
+  "path": "/spec/signed-receipts",
+  "comp": "SignedReceiptsSpec",
+  "title": "Signed Receipts Spec"
  },
  {
   "path": "/specimens/clarity",

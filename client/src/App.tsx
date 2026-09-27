@@ -203,6 +203,10 @@ const X402Activity = lazy(() => import("./pages/X402Activity"));
 const VerifyServer = lazy(() => import("./pages/VerifyServer"));
 const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
 const CrossHardwareReproducibility = lazy(() => import("./pages/CrossHardwareReproducibility"));
+// /spec/signed-receipts — canonical home of the A2A extension spec signed-receipts/v1 (2026-09-27).
+const SignedReceiptsSpec = lazy(() => import("./pages/SignedReceiptsSpec"));
+// /interop/a2a-jcs-2026-09-27 — our canonicalisers against the A2A TCK RFC 8785 vectors (2026-09-27).
+const A2aJcs20260927 = lazy(() => import("./pages/A2aJcs20260927"));
 // /independence: who runs CSOAI, funding (not yet published), own-model counts, keys, how to challenge.
 const Independence = lazy(() => import("./pages/Independence"));
 // /crosswalks/owasp-asi: OWASP ASI01-ASI10 and MCP Top 10 against the checks we run (DIRECT / PARTIAL / NOT MEASURED).
@@ -670,6 +674,8 @@ function App() {
                   <Route path="/verify-server" component={VerifyServer} />
                   <Route path="/measurement-capsules" component={MeasurementCapsules} />
                   <Route path="/research/cross-hardware-reproducibility" component={CrossHardwareReproducibility} />
+                  <Route path="/spec/signed-receipts" component={SignedReceiptsSpec} />
+                  <Route path="/interop/a2a-jcs-2026-09-27" component={A2aJcs20260927} />
                   <Route path="/independence" component={Independence} />
                   <Route path="/crosswalks/owasp-asi" component={CrosswalkOwaspAsi} />
                   <Route path="/reach" component={Reach} />

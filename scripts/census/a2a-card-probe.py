@@ -85,40 +85,20 @@ MAX_REDIRECTS = 3
 
 
 # ---------------------------------------------------------------- canonical JSON (RFC 8785)
-def _jcs_num(v):
-    if isinstance(v, bool):
-        return "true" if v else "false"
-    if isinstance(v, int):
-        return str(v)
-    if v != v or v in (float("inf"), float("-inf")):
-        raise ValueError("JCS: non-finite number")
-    if v == 0:
-        return "0"
-    if v.is_integer() and abs(v) < 1e21:
-        return str(int(v))
-    r = repr(v)  # shortest round-trip, as ES6 Number.prototype.toString for these ranges
-    if "e" in r:
-        m, e = r.split("e")
-        e = int(e)
-        if -7 < e < 21:
-            return format(v, "f").rstrip("0").rstrip(".") if e < 0 else str(v)
-        return f"{m}e{'+' if e > 0 else '-'}{abs(e)}"
-    return r
+# rfc8785 (PyPI, 0.1.4) is one of the two oracles that produced the a2a-tck a2a-jcs-v01 vectors
+# (a2aproject/a2a-tck#228). The hand-written canonicaliser this replaces passed all 57 of them,
+# but it diverged SILENTLY from RFC 8785 on numbers the corpus does not reach:
+#   * a double in 1e-6 <= |x| < 1e-4 was cut to 6 decimals (1.5e-06 -> "0.000002", not "0.0000015")
+#   * an integral double in 2**53 <= |x| < 1e21 printed its exact binary value
+#     (1.3355731926399844e+19 -> "13355731926399844352", not "13355731926399844000")
+#   * an int beyond +-(2**53 - 1) printed every digit; RFC 8785 (I-JSON) has no form for it
+# rfc8785 raises CanonicalizationError / UnicodeEncodeError (both ValueError) for input with no
+# canonical form; _check() turns that into UNCHECKABLE, never FAILED.
+import rfc8785
 
 
 def jcs(v):
-    if v is None:
-        return "null"
-    if isinstance(v, (bool, int, float)):
-        return _jcs_num(v)
-    if isinstance(v, str):
-        return json.dumps(v, ensure_ascii=False)
-    if isinstance(v, list):
-        return "[" + ",".join(jcs(x) for x in v) + "]"
-    if isinstance(v, dict):
-        ks = sorted(v, key=lambda k: k.encode("utf-16-be"))
-        return "{" + ",".join(json.dumps(k, ensure_ascii=False) + ":" + jcs(v[k]) for k in ks) + "}"
-    raise TypeError(type(v).__name__)
+    return rfc8785.dumps(v).decode("utf-8")
 
 
 # ---------------------------------------------------------------- A2A 8.4.3 step 3 (pure)

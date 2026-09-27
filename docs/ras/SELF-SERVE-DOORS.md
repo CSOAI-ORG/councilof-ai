@@ -37,12 +37,19 @@ The doctrine these doors carry in code, each backed by a test in `functions/api/
 | `GET /api/ras/x402-check?url=` | x402 | Makes one live GET, scored by the daily census rule. The rule is ported from `scripts/census/x402-bazaar-conformance.py` `probe()`: HTTP 402, plus a PAYMENT-REQUIRED header, plus `x402Version` 2 in the BODY, plus `extensions.bazaar` in the BODY. The header's own reading is kept beside the result. Returns the census row verbatim, the state (CONFORMANT / NOT_CONFORMANT / UNREACHABLE) and a signed receipt. | The seller's honesty, product quality or price, or whether the door delivers after payment. Nothing is paid to the target. |
 | `GET /api/ras/supply?asset=USDC&ledger=` | x402 | Makes a fresh `totalSupply()` read. The address is parsed from Circle's page on the request, never typed. On Ethereum it finds the storage slot empirically, fetches `eth_getProof`, checks the account and storage proof against the header's `stateRoot` inside the Worker, recomputes the header hash and runs a second-operator read. If all of that holds, the result is STATE_PROOF_VERIFIED. Other EVM ledgers on the issuer list return OPERATOR_API. A `symbol()` that does not match returns REJECTED. | A reserve attestation, backing, redeemability, solvency, a rate or a grade. The header is not checked against consensus, because there is no light client. |
 | `GET /api/verify?record_url=` | **free** | Re-fetches a councilof.ai / csoai.org record, gives the sha256 of the exact bytes served and verifies the signature under the PINNED keys. `POST` now also verifies card-v0 leaves, which is what RAS receipts, population-door leaves and wrapper cards are. | A certification of anything. It never fetches hosts outside the estate. |
-| `GET /api/x402/index` | **free** | Serves the latest SIGNED daily conformance index once `X402_INDEX_SIGNED_URL` points at a card-v0 leaf that verifies under a pinned board key. Until then it answers `INDEX_PENDING` and points to the latest UNSIGNED census run: its URL, date, as_of and the sha256 of the bytes read. | An invented or re-assembled list. It never re-serves an unsigned run's numbers as the index. |
+| `GET /api/x402/index` | **free** | Serves the latest SIGNED daily conformance index: the card-v0 leaf at `X402_INDEX_SIGNED_URL`, else at the HF alias `signed/index-latest.json`, once it verifies under a pinned board key. Until then it answers `INDEX_PENDING` and points to the latest UNSIGNED census run: its URL, date, as_of and the sha256 of the bytes read. | An invented or re-assembled list. It never re-serves an unsigned run's numbers as the index. |
 
 Measured state on 25 Sep 2026: the daily census on HF `csoai/x402-bazaar-conformance`
 (`summary-latest.json`, 2026-09-24) is **unsigned**. Its own method line says "Nothing signed".
 No flywheel lane on Oracle produces a signed run (`~/lanes/flywheel` does not exist), so
 `/api/x402/index` answers `INDEX_PENDING` today.
+
+**Update 27 Sep 2026.** oracle-micro-2 `~/lanes/flywheel/flywheel_x402_index.py` signs the day's
+published summary (pinned by that day's signed release manifest) through `POST /api/board-sign`
+with the pod caller token and publishes `signed/index-<date>.json` plus the alias
+`signed/index-latest.json` to HF `csoai/x402-bazaar-conformance`. The x402-daily job runs it after
+it publishes. The door reads that alias by default (`DEFAULT_SIGNED_URL`); a 404 there is still
+`INDEX_PENDING`. First signed leaf: 2026-09-27, payload sha256 `6bfa6ac7…c122` (re-issued the same day with the summary's host-naming `producer` string replaced by a neutral line; the full summary stays pinned by sha256).
 
 ### Code map
 

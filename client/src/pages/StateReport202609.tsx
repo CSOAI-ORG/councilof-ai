@@ -18,6 +18,7 @@ import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import PlainEmail from "@/components/PlainEmail";
 import DOC from "@/data/state/2026-09-numbers.json";
+import { stateReportDatasetLd } from "@/lib/stateDatasetLd";
 
 type Num = { value: number | string; what: string; source: string; recompute: string };
 type Src = { what: string; path: string; sha256: string; public_copy: string | null; board_signature?: string; signed_at?: string };
@@ -118,6 +119,8 @@ export default function StateReport202609() {
 
   return (
     <article data-testid="state-report-2026-09" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
+      {/* schema.org Dataset for Google Dataset Search; every field from numbers.json (lib/stateDatasetLd.ts). */}
+      <script type="application/ld+json">{JSON.stringify(stateReportDatasetLd(DOC))}</script>
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <Link href="/state/">State of the Agent Internet</Link> › <span>September 2026</span>
       </nav>

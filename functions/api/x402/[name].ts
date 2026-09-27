@@ -5,19 +5,24 @@
  * catalogue in functions/api/x402.ts. Any other /api/x402/<name> is a 404.)
  *
  * WHAT IT SERVES, AND WHEN:
- *   SIGNED             X402_INDEX_SIGNED_URL is set, the document there is a card-v0 leaf, and its
- *                      signature verifies under a PINNED board key (the same check /api/verify
- *                      runs). The leaf's payload is served as the index, with its digest and key.
- *   SIGNATURE_INVALID  the configured document is a leaf that does not verify — NOT served as the index.
- *   UNCHECKABLE        the configured document could not be read or is not a signed leaf — not served.
- *   INDEX_PENDING      nothing signed is configured. As of 2026-09-25 the daily census runs
+ *   SIGNED             the signed-index document (X402_INDEX_SIGNED_URL if set, else DEFAULT_SIGNED_URL,
+ *                      the HF alias signed/index-latest.json) is a card-v0 leaf whose signature
+ *                      verifies under a PINNED board key (the same check /api/verify runs). The
+ *                      leaf's payload is served as the index, with its digest and key.
+ *   SIGNATURE_INVALID  the document is a leaf that does not verify — NOT served as the index.
+ *   UNCHECKABLE        the document could not be read or is not a signed leaf — not served.
+ *   INDEX_PENDING      nothing signed is published: no X402_INDEX_SIGNED_URL, and the default alias
+ *                      answers 404. As of 2026-09-25 the daily census runs
  *                      (HF csoai/x402-bazaar-conformance, summary-<date>.json, produced by
  *                      scripts/census/x402-bazaar-conformance.py on the pod) are UNSIGNED — their
  *                      own method line says "Nothing signed". So this door says INDEX_PENDING and
  *                      points at the latest unsigned run, labelled as such, with the digest of the
  *                      bytes it read. It never assembles, retypes or invents a list.
- * The owner/producer step that flips this to SIGNED: sign the daily summary as a card-v0 leaf
- * (board key), publish it, set X402_INDEX_SIGNED_URL. See docs/ras/SELF-SERVE-DOORS.md.
+ * The producer step that flips this to SIGNED (live 2026-09-27): oracle-micro-2
+ * ~/lanes/flywheel/flywheel_x402_index.py, run by the x402-daily job after it publishes, signs
+ * the day's published summary (pinned by that day's signed release manifest) through
+ * POST /api/board-sign and publishes signed/index-<date>.json + signed/index-latest.json to the
+ * HF dataset. See docs/ras/SELF-SERVE-DOORS.md.
  */
 import { isCardV0, verifyCardV0 } from "../verify";
 import { sha256Hex } from "../../_lib/cardSign";
@@ -27,6 +32,8 @@ type Env = { X402_INDEX_SIGNED_URL?: string };
 export const SCHEMA = "csoai.x402-index/0.1";
 export const HF_BASE = "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/resolve/main";
 export const LATEST_UNSIGNED = `${HF_BASE}/summary-latest.json`;
+/** Where the daily signer publishes the leaf (a stable alias; the dated copy sits beside it). */
+export const DEFAULT_SIGNED_URL = `${HF_BASE}/signed/index-latest.json`;
 const ALLOWED = /^https:\/\/(councilof\.ai\/|csoai\.org\/|huggingface\.co\/datasets\/csoai\/)/;
 
 const json = (body: unknown, status = 200) =>
@@ -84,20 +91,22 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, params })
     dataset: "https://huggingface.co/datasets/csoai/x402-bazaar-conformance",
     not: "a seller's honesty, product quality, price, or whether a door would deliver after payment. Measurement, not certification.",
   };
-  const signedUrl = (env.X402_INDEX_SIGNED_URL || "").trim();
-  if (!signedUrl) {
-    return json({
-      ...base,
-      state: "INDEX_PENDING",
-      index: null,
-      reason: "no signed daily index is published yet: the daily census runs carry no signature (their own method line: 'Nothing signed'), and this door serves only a signed index",
-      latest_unsigned_run: await latestUnsignedRun(),
-    });
-  }
+  const configured = (env.X402_INDEX_SIGNED_URL || "").trim();
+  const signedUrl = configured || DEFAULT_SIGNED_URL;
   if (!ALLOWED.test(signedUrl)) {
     return json({ ...base, state: "UNCHECKABLE", index: null, reason: "X402_INDEX_SIGNED_URL is not on an estate origin or the csoai HF org; not read", latest_unsigned_run: null });
   }
   const r = await readBytes(signedUrl);
+  if (r.ok === false && !configured && r.reason === "HTTP 404") {
+    return json({
+      ...base,
+      state: "INDEX_PENDING",
+      index: null,
+      reason: "no signed daily index is published yet: the signed-index alias answers 404, and this door serves only a signed index",
+      signed_index_url: signedUrl,
+      latest_unsigned_run: await latestUnsignedRun(),
+    });
+  }
   if (r.ok === false) return json({ ...base, state: "UNCHECKABLE", index: null, reason: `signed index unreadable: ${r.reason}`, source: signedUrl, latest_unsigned_run: await latestUnsignedRun() });
   const text = new TextDecoder().decode(r.bytes);
   let doc: unknown;

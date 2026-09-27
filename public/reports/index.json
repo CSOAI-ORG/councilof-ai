@@ -20,8 +20,7 @@
   "axes": 23,
   "axes_by_kind": {
    "model-comparison": 14,
-   "declared-slot": 1,
-   "deterministic-facts": 8
+   "deterministic-facts": 9
   },
   "axes_with_subject_reports": 9,
   "subjects_in_corpus": 64,
@@ -703,12 +702,12 @@
   },
   {
    "axis": "effect-binding",
-   "kind": "declared-slot",
+   "kind": "deterministic-facts",
    "family": "gspc",
-   "bench": "EffectBench (instrument not built)",
+   "bench": "EffectBench v0.1 (server probe)",
    "task": "does authorization bind to the request the server executes, or only to the tool call the agent declared",
-   "status": "UNMEASURED",
-   "n": 0,
+   "status": "MEASURED",
+   "n": 261,
    "n_unit": "tool-call servers probed",
    "source_axes": [],
    "obligations": "UNMAPPED",
@@ -718,7 +717,7 @@
     "unmeasured": 0
    },
    "subject_reports": "none",
-   "reason": "0 because nothing has been measured: no frozen bank, no probe harness, no run. A declared slot is not a measurement and is never averaged into anything."
+   "reason": "measures issuers, series or sources rather than model subjects; the signed card corpus holds no per-subject cell for this axis"
   },
   {
    "axis": "provenance-controls",
@@ -5335,6 +5334,6 @@
   }
  ],
  "canonical_rule": "canonical_sha256 = sha256(canonical JSON of this object minus generated_at and canonical_sha256; keys sorted, no whitespace)",
- "generated_at": "2026-09-16T09:39:10.766Z",
- "canonical_sha256": "193a0aaab264a3e7425c9968eb9862383eff04d9be73aca1d055e4c9ee9a26f9"
+ "generated_at": "2026-09-27T06:42:53.684Z",
+ "canonical_sha256": "0cd2cbee56bc17c8e7d7b3393e4c3cbe5286c8d71ccb5f28c503cfe182c52373"
 }

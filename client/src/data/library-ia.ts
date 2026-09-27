@@ -165,6 +165,10 @@ export const PRIMARY_PATHS = new Set<string>([
   "/measurement-capsules",
   // /research/cross-hardware-reproducibility — preprint + open dataset on item-level cross-runtime reproducibility (2026-09-27).
   "/research/cross-hardware-reproducibility",
+  // /spec/signed-receipts — canonical home of the signed-receipts/v1 A2A extension spec (2026-09-27).
+  "/spec/signed-receipts",
+  // /interop/a2a-jcs-2026-09-27 — our canonicalisers against the A2A TCK RFC 8785 vectors (2026-09-27).
+  "/interop/a2a-jcs-2026-09-27",
   // /independence: conflicts of interest, own-model counts and who holds the keys (2026-09-27).
   "/independence",
   // /crosswalks/owasp-asi: OWASP Agentic Top 10 + MCP Top 10 mapped to our checks, with strength (2026-09-27).

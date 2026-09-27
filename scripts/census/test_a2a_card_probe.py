@@ -122,6 +122,33 @@ class JCS(unittest.TestCase):
     def test_small_numbers(self):
         self.assertEqual(A.jcs([1e-7, 0.000001, 1e21, 123.0, -0.0]), "[1e-7,0.000001,1e+21,123,0]")
 
+    # The three classes the a2a-tck a2a-jcs-v01 corpus (a2aproject/a2a-tck#228 @ 97b00723) does not
+    # reach, on which the hand-written canonicaliser diverged SILENTLY from RFC 8785 (2026-09-27
+    # differential fuzz, 1,952 of 199,925 random doubles). Each expected value is RFC 8785 / ES6.
+    def test_six_decimal_truncation_class(self):
+        self.assertEqual(A.jcs([1.5e-06]), "[0.0000015]")  # was "0.000002"
+        self.assertEqual(A.jcs([-6.147300447958981e-05]), "[-0.00006147300447958981]")  # was "-0.000061"
+
+    def test_large_integral_double_class(self):
+        self.assertEqual(A.jcs([1.3355731926399844e+19]), "[13355731926399844000]")  # was the exact binary value
+
+    def test_int_beyond_safe_range_has_no_canonical_form(self):
+        # I-JSON has no form for it; a JS/Go signer would round it. Refused, never printed.
+        with self.assertRaises(ValueError):
+            A.jcs([9007199254740993])
+        self.assertEqual(A.jcs([9007199254740991]), "[9007199254740991]")
+
+    def test_refusal_is_uncheckable_not_failed(self):
+        # _check() maps a canonicaliser ValueError to UNCHECKABLE: a card we cannot canonicalise
+        # never becomes a FAILED signature.
+        c = card()
+        c["x_big"] = 9007199254740993
+        c["signatures"] = [{"protected": b64u(json.dumps({"alg": "ES256", "jku": JKU, "kid": "k1"}).encode()),
+                            "signature": b64u(b"\x00" * 64)}]
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual(r["sig_state"], "UNCHECKABLE")
+        self.assertIn("JCS failed", r.get("reason", ""))
+
 
 class Signatures(unittest.TestCase):
     def st(self, c, fetch=stub_fetch):

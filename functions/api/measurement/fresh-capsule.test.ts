@@ -46,8 +46,9 @@ describe("listing = challenge", () => {
     const { res, body } = await call();
     expect(res.status).toBe(402);
     const header = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(res.headers.get("PAYMENT-REQUIRED")!), (ch) => ch.charCodeAt(0))));
-    // Header-minimal PAYMENT-REQUIRED (ruling 3): the header accepts[] is the payment SUBSET of the body's,
-    // field for field; commercial attribution and extensions stay on the body.
+    // PAYMENT-REQUIRED header (ruling 3, amended 2026-09-27): the header accepts[] is the v2 payment
+    // SUBSET of the body's, field for field; commercial attribution stays on the body; the header carries
+    // the body's extensions.bazaar and nothing else under extensions.
     expect(header.accepts).toHaveLength(body.accepts.length);
     for (const [k, v] of Object.entries(header.accepts[0])) {
       if (v && typeof v === "object") expect(body.accepts[0][k], `header accepts[0].${k}`).toMatchObject(v); // header may drop informational sub-fields (decimals, symbol)
@@ -55,7 +56,7 @@ describe("listing = challenge", () => {
     }
     for (const k of ["scheme", "network", "amount", "asset", "payTo", "maxTimeoutSeconds"]) expect(header.accepts[0]).toHaveProperty(k);
     expect(header.accepts[0]).not.toHaveProperty("csoai_pricing");
-    expect(header).not.toHaveProperty("extensions");
+    expect(header.extensions).toEqual({ bazaar: body.extensions.bazaar });
 
     const listing = (await (await x402Json({ request: new Request(`${ORIGIN}/.well-known/x402.json`), env: {} } as never)).json()) as Any;
     const entry = (listing.resources as Any[]).find((r) => new URL(r.url).pathname === PATH)!;

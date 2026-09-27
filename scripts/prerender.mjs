@@ -215,6 +215,10 @@ function discover() {
     "/measurement-capsules",
     // /research/cross-hardware-reproducibility — the preprint + dataset page (2026-09-27); figures read from the dataset.
     "/research/cross-hardware-reproducibility",
+    // /spec/signed-receipts — the signed-receipts/v1 spec (React; its SPEC.md is static beside it) (2026-09-27).
+    "/spec/signed-receipts",
+    // /interop/a2a-jcs-2026-09-27 — A2A TCK JCS vector results; counts read from the runner records (2026-09-27).
+    "/interop/a2a-jcs-2026-09-27",
     // /independence: disclosure page (2026-09-27); its counts must be in the snapshot, not only after JS.
     "/independence",
     // /crosswalks/owasp-asi: the mapping rows must be in the snapshot, not only after JS (2026-09-27).
