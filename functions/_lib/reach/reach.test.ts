@@ -200,6 +200,7 @@ describe("entity pages render from published data", () => {
     const etag = first.headers.get("etag")!;
     expect(etag).toMatch(/^W\/"[0-9a-f]{32}"$/);
     expect(first.headers.get("last-modified")).toBeTruthy();
+    expect(first.headers.get("cache-control")).toContain("no-transform");
     const again = await mcpPage(ctx(`/mcp-servers/${MCP_HOST}/`, { host: MCP_HOST }, { "if-none-match": etag }));
     expect(again.status).toBe(304);
     const bare = await mcpPage(ctx(`/mcp-servers/${MCP_HOST}`, { host: MCP_HOST }));

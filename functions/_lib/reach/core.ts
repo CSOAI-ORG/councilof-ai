@@ -182,7 +182,7 @@ export const DOCTRINE_LINE = (subject: string) =>
   `This page is a measurement of what was declared against what was observed. It says nothing about the security, quality or safety of ${subject}, and it is not a certification, rating, ranking or endorsement.`;
 
 export const OBJECTION_HTML = (subject: string) =>
-  `<p>If a row about ${esc(subject)} is wrong or out of date, or you want it re-checked or excluded, use the objection route at <a href="${CENSUS_URL}">${CENSUS_URL}</a> or write to <a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a>. The operator can add context there; what they send is recorded with the next census run. Corrections are dated in the <a href="/corrections/">corrections ledger</a>.</p>`;
+  `<p>If a row about ${esc(subject)} is wrong or out of date, or you want it re-checked or excluded, use the objection route at <a href="${CENSUS_URL}">${CENSUS_URL}</a> or write to <!--email_off--><a href="mailto:nicholas@csoai.org">nicholas@csoai.org</a><!--/email_off-->. The operator can add context there; what they send is recorded with the next census run. Corrections are dated in the <a href="/corrections/">corrections ledger</a>.</p>`;
 
 const CSS = `:root{color-scheme:light dark;--fg:#111418;--bg:#ffffff;--mut:#4a5058;--line:#d9dde3;--soft:#f4f6f8;--u:#8a4b00;--i:#8f1d1d;--ok:#1f5f3a;--link:#0b4fa8}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fg:#e8eaed;--bg:#0f1115;--mut:#aab0b8;--line:#2c313a;--soft:#171a20;--u:#f0b35a;--i:#f19a9a;--ok:#8fd3a8;--link:#8ab8ff}}
@@ -284,7 +284,9 @@ export interface Rendered {
 export async function respond(req: Request, r: Rendered): Promise<Response> {
   const headers: Record<string, string> = {
     "content-type": r.contentType,
-    "cache-control": r.status === 200 ? `public, max-age=${PAGE_TTL_S}` : "no-store",
+    // no-transform: Cloudflare's email obfuscation otherwise rewrites the HTML (hiding the objection
+    // address from anyone without JavaScript) and drops the ETag with the rewrite.
+    "cache-control": r.status === 200 ? `public, max-age=${PAGE_TTL_S}, no-transform` : "no-store, no-transform",
     "access-control-allow-origin": "*",
     "x-content-type-options": "nosniff",
     ...(r.headers || {}),
