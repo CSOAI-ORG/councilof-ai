@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
-"""Sign a bank-commitments record through POST https://councilof.ai/api/board-sign.
+"""Sign a bank-commitments record (or a bank-exposure labels record) through POST https://councilof.ai/api/board-sign.
 
 Pattern: rp-3090-now:/workspace/lanes/loops/sign-eb-run.py (see memory board-signer-pod-token).
 A compact payload (<= 3 KB) pins the record's sha256; the signer returns an Ed25519 signature under
@@ -12,6 +12,11 @@ did:web:csoai.org#board-attestation-1. Before writing <record>.signed.json this 
       2. altered signature (one bit flipped)            -> must not verify
       3. altered record bytes (one byte appended)       -> sha256 must no longer equal the pinned digest
 Never prints the token.
+
+The payload shape follows the record's schema: councilof.ai/instrument-commitments/1 (bank
+commitments) or councilof.ai/bank-exposure-labels/1 (per-card bank_exposure labels; the payload
+carries the per-axis counts a card page shows, so a page can read signed counts without
+fetching the whole label list).
 
 Usage: python3 sign_commitments.py <record.json> [--token-file ~/.secrets/board-sign-pod-token]
 """
@@ -47,25 +52,62 @@ def main():
 
     rec_b = open(a.record, "rb").read()
     rec = json.loads(rec_b)
+    payload = build_payload(rec, rec_b, a.public_path or "/interop/instrument-guard/" + os.path.basename(a.record))
+    return sign_and_write(payload, rec_b, a.record, a.token_file)
+
+
+LABELS_SCHEMA = "councilof.ai/bank-exposure-labels/1"
+SIGNER = ("did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token; the PKCS8 never "
+          "left Cloudflare)")
+
+
+def build_payload(rec, rec_b, public_path):
+    """The compact (<= 3 KB) payload that pins the record's sha256, by record schema."""
+    artifact = {"path": public_path, "sha256": sha(rec_b), "bytes": len(rec_b)}
+    if rec.get("schema") == LABELS_SCHEMA:
+        return {
+            "schema": "csoai.bank-exposure-labels-signed/0.1",
+            "kind": "label",
+            "as_of": rec["as_of"],
+            "artifact": artifact,
+            "label_field": rec["label_field"],
+            "commitments_records": [{"file": r["file"], "sha256": r["sha256"]} for r in rec["inputs"]["commitments_records"]],
+            "cards_labelled": rec["counts"]["cards_labelled"],
+            "live_cards": rec["counts"]["live_cards"],
+            "by_label": rec["counts"]["by_label"],
+            "by_axis": rec["by_axis"],
+            "signer": SIGNER,
+            "not_a_grade": "A label: which bank each card pins and whether its items were public. It changes no score and no card byte.",
+        }
     private_banks = [b for b in rec["banks"] if b.get("canary_set")]
-    payload = {
+    return {
         "schema": "csoai.instrument-commitments-signed/0.1",
         "kind": "commitment",
         "as_of": rec["as_of"],
-        "artifact": {"path": a.public_path or "/interop/instrument-guard/" + os.path.basename(a.record),
-                     "sha256": sha(rec_b), "bytes": len(rec_b)},
+        "artifact": artifact,
         "rotation_epoch": {k: rec["rotation_epoch"][k] for k in ("epoch_id", "epoch_key_commitment_sha256", "rotate_by", "heldout_fraction")},
         "private_manifest_sha256": rec["private_manifest_sha256"],
         "banks_total": len(rec["banks"]),
         "banks_with_canaries": len(private_banks),
         "canaries_total": sum(b["canary_set"]["k"] for b in private_banks),
         "exposure_counts": rec["exposure_counts"],
-        "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token; the PKCS8 never left Cloudflare)",
+        "signer": SIGNER,
         "not_a_grade": "A commitment: proves these digests existed at signing time. It reveals no bank content and asserts nothing about any model.",
     }
+
+
+def tamper(payload):
+    """Payload with one numeric field changed: its signature must not verify."""
+    alt = copy.deepcopy(payload)
+    key = "canaries_total" if "canaries_total" in alt else "cards_labelled"
+    alt[key] += 1
+    return alt
+
+
+def sign_and_write(payload, rec_b, record_path, token_file):
     c = canon(payload)
     assert len(c) <= 3072, len(c)
-    tok = open(a.token_file).read().strip()
+    tok = open(token_file).read().strip()
     req = urllib.request.Request("https://councilof.ai/api/board-sign", data=json.dumps({"payload": payload}).encode(),
                                  headers={"content-type": "application/json", "authorization": "Bearer " + tok, **UA})
     del tok
@@ -83,10 +125,8 @@ def main():
     print("signature VERIFIES under did:web:csoai.org#board-attestation-1")
 
     controls = {}
-    alt = copy.deepcopy(payload)
-    alt["canaries_total"] += 1
     try:
-        pk.verify(sig, canon(alt))
+        pk.verify(sig, canon(tamper(payload)))
         controls["altered_payload"] = "VERIFIED (CONTROL FAILED)"
     except Exception:
         controls["altered_payload"] = "does not verify"
@@ -112,7 +152,7 @@ def main():
            "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) "
                      "with the #board-attestation-1 key in https://csoai.org/.well-known/did.json; then sha256 the record "
                      "bytes and compare with payload.artifact.sha256"}
-    p = a.record[:-5] + ".signed.json"
+    p = record_path[:-5] + ".signed.json"
     with open(p, "w") as f:
         f.write(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
     print("wrote", p, "signed_at", r.get("signed_at"), "auth", r.get("signer_auth"))

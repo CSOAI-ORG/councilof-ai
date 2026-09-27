@@ -563,5 +563,147 @@ class Mutants(Base):
         self.mutant_admits("intake_fails")
 
 
+# ------------------------------------------------------------------ condition 4: instrument guard
+
+def guard_world(w: World, *, exposure="PRIVATE", canaries=True, probes=(), records=True) -> "admit.Guard":
+    """A commitments record naming the fixture bank, plus public probe records, in temp dirs.
+    Canaries are minted in-process and discarded; only their commitment and digests are written."""
+    gdir, pdir = w.root / "guard", w.root / "probes"
+    gdir.mkdir(exist_ok=True)
+    pdir.mkdir(exist_ok=True)
+    w.canaries = admit.ig.make_canaries("gspc-fixture", 4)
+    other = admit.ig.make_canaries("gspc-other", 2)          # keeps the digest set non-empty
+    bank = {"bank_id": "gspc-fixture", "bank_sha256": BANK, "exposure": exposure}
+    if canaries:
+        bank["canary_set"] = {"k": 4, "commitment_sha256": admit.ig.canary_set_commitment(w.canaries),
+                              "leakscan_digests": admit.ig.leakscan_digests(w.canaries)}
+    rec = {"schema": admit.ig.SCHEMA_COMMIT, "banks": [bank, {
+        "bank_id": "gspc-other", "bank_sha256": "0c" * 32, "exposure": "PRIVATE",
+        "canary_set": {"k": 2, "commitment_sha256": admit.ig.canary_set_commitment(other),
+                       "leakscan_digests": admit.ig.leakscan_digests(other)}}]}
+    if records:
+        (gdir / "bank-commitments-2099-01-01.json").write_text(json.dumps(rec))
+    for i, (state, commitment, model) in enumerate(probes):
+        (pdir / f"contamination-probe-{i}.json").write_text(json.dumps({"schema": admit.ig.SCHEMA_PROBE, "results": [{
+            "schema": admit.ig.SCHEMA_PROBE, "model_id": model, "bank_id": "gspc-fixture",
+            "canary_set_commitment": commitment, "state": state}]}))
+    return admit.load_guard(gdir, [pdir])
+
+
+class InstrumentGuard(Base):
+    """Condition 4. Each control is paired with a mutant that disables instrument_reasons and must admit."""
+
+    def decide_with(self, **kw) -> dict:
+        card = self.w.write()
+        guard = guard_world(self.w, **kw)
+        index = admit.RuntimeIndex()
+        repros, _ = admit.load_repro_dirs([self.w.repro], index)
+        return admit.decide(card, self.w.evidence, repros, index, self.w.did_doc, self.w.allowlist, guard)
+
+    def commit(self):
+        return admit.ig.canary_set_commitment(self.w.canaries)
+
+    # ---- pass cases
+    def test_public_bank_is_admitted_as_not_applicable_never_as_clean(self):
+        d = self.decide_with(exposure="CONTENT_PUBLIC", canaries=False)
+        self.assertEqual(d["state"], "ADMITTED", d)
+        g = d["record"]["instrument_guard"]
+        self.assertEqual(g["bank_exposure"], "PUBLIC_BANK")
+        self.assertTrue(g["contamination_probe"].startswith("NOT_APPLICABLE"))
+        self.assertEqual(g["canary_scan"], "CLEAN")
+
+    def test_private_bank_with_a_bound_not_detected_probe_is_admitted(self):
+        self.w.write()
+        guard = guard_world(self.w)                       # mint canaries first, then bind a probe to them
+        commitment = self.commit()
+        guard = guard_world(self.w, probes=[("NOT_DETECTED", None, SUBJECT)])
+        # guard_world re-mints canaries: rebuild with the probe bound to the fresh commitment
+        (self.w.root / "probes" / "contamination-probe-0.json").write_text(json.dumps({
+            "schema": admit.ig.SCHEMA_PROBE, "model_id": "ollama:qwen2.5:7b", "bank_id": "gspc-fixture",
+            "canary_set_commitment": self.commit(), "state": "NOT_DETECTED"}))
+        guard = admit.load_guard(self.w.root / "guard", [self.w.root / "probes"])
+        self.assertNotEqual(commitment, self.commit())
+        index = admit.RuntimeIndex()
+        repros, _ = admit.load_repro_dirs([self.w.repro], index)
+        card = next(self.w.signed.glob("signed-*.json"))
+        d = admit.decide(card, self.w.evidence, repros, index, self.w.did_doc, self.w.allowlist, guard)
+        self.assertEqual(d["state"], "ADMITTED", d)
+        self.assertEqual(d["record"]["instrument_guard"]["contamination_probe"], "NOT_DETECTED")
+        self.assertEqual(d["record"]["instrument_guard"]["bank_exposure"], "PRIVATE_BANK")
+
+    # ---- negative controls
+    def test_private_bank_without_probe_is_unchecked(self):
+        self.assertNotAdmitted(self.decide_with(), "CONTAMINATION_UNCHECKED")
+
+    def test_probe_bound_to_another_commitment_does_not_count(self):
+        d = self.decide_with(probes=[("NOT_DETECTED", "ab" * 32, "ollama:qwen2.5:7b")])
+        self.assertNotAdmitted(d, "CONTAMINATION_UNCHECKED")
+
+    def test_probe_of_another_model_does_not_count(self):
+        self.w.write()
+        guard_world(self.w)
+        (self.w.root / "probes" / "contamination-probe-0.json").write_text(json.dumps({
+            "schema": admit.ig.SCHEMA_PROBE, "model_id": "ollama:llama3.1:8b", "bank_id": "gspc-fixture",
+            "canary_set_commitment": self.commit(), "state": "NOT_DETECTED"}))
+        guard = admit.load_guard(self.w.root / "guard", [self.w.root / "probes"])
+        reasons, _ = admit.instrument_reasons(json.loads(next(self.w.signed.glob("signed-*.json")).read_text()),
+                                              b"{}", guard)
+        self.assertIn("CONTAMINATION_UNCHECKED", [c for c, _ in reasons])
+
+    def test_suspected_probe_is_refused(self):
+        self.w.write()
+        guard_world(self.w)
+        (self.w.root / "probes" / "contamination-probe-0.json").write_text(json.dumps({
+            "schema": admit.ig.SCHEMA_PROBE, "model_id": "ollama:qwen2.5:7b", "bank_id": "gspc-fixture",
+            "canary_set_commitment": self.commit(), "state": "CONTAMINATION_SUSPECTED"}))
+        guard = admit.load_guard(self.w.root / "guard", [self.w.root / "probes"])
+        index = admit.RuntimeIndex()
+        repros, _ = admit.load_repro_dirs([self.w.repro], index)
+        card = next(self.w.signed.glob("signed-*.json"))
+        d = admit.decide(card, self.w.evidence, repros, index, self.w.did_doc, self.w.allowlist, guard)
+        self.assertNotAdmitted(d, "CONTAMINATION_SUSPECTED")
+
+    def test_no_commitments_record_fails_closed(self):
+        self.assertNotAdmitted(self.decide_with(records=False), "CONTAMINATION_UNCHECKED")
+
+    def test_card_bytes_carrying_a_canary_token_are_refused(self):
+        self.w.write()
+        guard = guard_world(self.w, exposure="CONTENT_PUBLIC", canaries=False)
+        other_digests = guard.digests
+        card = json.loads(next(self.w.signed.glob("signed-*.json")).read_text())
+        # a token whose digest the guard holds: take one from a record we control
+        rows = admit.ig.make_canaries("gspc-leak", 1)
+        guard.digests = other_digests | set(admit.ig.leakscan_digests(rows))
+        raw = json.dumps({**card, "note": f"ref {rows[0]['guid']}"}).encode()
+        reasons, block = admit.instrument_reasons(card, raw, guard)
+        self.assertIn("CANARY_LEAK", [c for c, _ in reasons])
+        self.assertEqual(block["canary_scan"], "LEAK")
+        self.assertNotIn(rows[0]["guid"], json.dumps(reasons))          # the gate never prints the token
+        clean, block = admit.instrument_reasons(card, json.dumps(card).encode(), guard)
+        self.assertEqual((clean, block["canary_scan"]), ([], "CLEAN"))
+
+    def test_revalidation_holds_a_record_when_the_bank_gains_canaries(self):
+        d = self.decide_with(exposure="CONTENT_PUBLIC", canaries=False)
+        self.assertEqual(d["state"], "ADMITTED", d)
+        card = json.loads((self.w.signed / d["card_file"]).read_text())
+        public_guard = admit.load_guard(self.w.root / "guard", [self.w.root / "probes"])
+        self.assertEqual([], admit.validate_admission_record(d["record"], card, self.w.primary_receipt,
+                                                             self.w.did_doc, public_guard))
+        private_guard = guard_world(self.w)
+        errs = admit.validate_admission_record(d["record"], card, self.w.primary_receipt, self.w.did_doc, private_guard)
+        self.assertTrue(any("CONTAMINATION_UNCHECKED" in e for e in errs), errs)
+
+    # ---- mutants: with instrument_reasons disabled every control above would admit
+    def test_mutant_unchecked_admits(self):
+        with mock.patch.object(admit, "instrument_reasons", lambda card, raw, guard: ([], {})):
+            d = self.decide_with()
+        self.assertEqual(d["state"], "ADMITTED", d["reasons"])
+
+    def test_mutant_no_records_admits(self):
+        with mock.patch.object(admit, "instrument_reasons", lambda card, raw, guard: ([], {})):
+            d = self.decide_with(records=False)
+        self.assertEqual(d["state"], "ADMITTED", d["reasons"])
+
+
 if __name__ == "__main__":
     unittest.main()

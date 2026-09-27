@@ -29,6 +29,10 @@ elif [ -x scripts/prerender-run.sh ] || [ -f scripts/prerender-run.sh ]; then
 fi
 node scripts/brand-gate.mjs dist/client >/workspace/ci/brand-gate.log 2>&1 && echo "  brand-gate ok" | tee -a $LOG || { echo "  brand-gate FAILED" | tee -a $LOG; exit 6; }
 node scripts/signed-json-guard.mjs dist/client >/workspace/ci/signed-json-guard.log 2>&1 && echo "  signed-json-guard ok" | tee -a $LOG || { echo "  signed-json-guard FAILED" | tee -a $LOG; exit 7; }
+# Instrument guard (27 Sep 2026): a private canary token in the built site means a held-out slice
+# leaked. The gate holds only leak-scan digests from the signed commitments records and exits 2
+# when there is no record (an unread list is not a clean scan), which blocks here too.
+{ node scripts/canary-leak-gate.mjs --selftest && node scripts/canary-leak-gate.mjs dist/client public; } >/workspace/ci/canary-leak-gate.log 2>&1 && echo "  canary-leak-gate ok: $(tail -1 /workspace/ci/canary-leak-gate.log | cut -c1-120)" | tee -a $LOG || { echo "  canary-leak-gate FAILED (exit held; file + digest only, never the token)" | tee -a $LOG; tail -4 /workspace/ci/canary-leak-gate.log | sed "s/^/    /"; exit 15; }
 # functions/ is deployed by Pages from the project root, never as static assets; prod 404s it. Drop it, then
 # run the repo's own Pages guard so a file-cap breach fails HERE with the count, not at upload after a 6-minute prerender.
 rm -rf dist/client/functions

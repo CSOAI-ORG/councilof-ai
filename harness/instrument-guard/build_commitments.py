@@ -15,6 +15,12 @@ canaries for banks with private items, split into public calibration / held-out 
 Exposure is decided per ITEM against what a stranger can read: every public csoai/gspc-* HF file
 (anonymous fetch cache) and the repository tree at master. Prints no bank content.
 
+Supplement (same epoch, new banks): --epoch-file <private store>/epochs/<E>/epoch.json reuses that
+epoch's key, id, fraction and rotate-by instead of minting a new epoch, and every --supplement-of
+record must carry the same epoch-key commitment. The key is read, never written or printed; the
+supplement's private-out holds only the new banks, canaries and slices. --bank-file ID=PATH adds a
+bank file the directory scan skips (e.g. a superseded bank version live cards still pin).
+
 Usage (Oracle lane):
   python3 build_commitments.py --banks-dir mine/pod-banks --hf-cache mine/hf-cache \
      --inventory mine/inventory.json --mirror ~/mirrors/councilof-ai.git \
@@ -127,6 +133,9 @@ def main():
     ap.add_argument("--fraction", type=float, default=0.30)
     ap.add_argument("--k", type=int, default=8)
     ap.add_argument("--min-heldout", type=int, default=30)
+    ap.add_argument("--epoch-file", help="reuse an existing epoch (private epoch.json) for a supplement record")
+    ap.add_argument("--supplement-of", action="append", default=[], help="earlier record(s) of the same epoch")
+    ap.add_argument("--bank-file", action="append", default=[], help="ID=PATH, a bank file outside --banks-dir")
     a = ap.parse_args()
 
     inv = json.load(open(a.inventory))
@@ -136,16 +145,21 @@ def main():
     # distinct live banks (dedupe identical bytes; skip backups and candidate/control scratch files)
     banks, seen = [], {}
     # canonical names first, so a byte-identical candidate file becomes an alias, not the id
-    for fn in sorted(glob.glob(os.path.join(a.banks_dir, "*.jsonl")), key=lambda f: ("candidates" in f, f)):
-        name = os.path.basename(fn)
-        if SKIP.search(name):
-            continue
+    files = [(os.path.basename(fn)[:-6], fn) for fn in
+             sorted(glob.glob(os.path.join(a.banks_dir, "*.jsonl")), key=lambda f: ("candidates" in f, f))
+             if not SKIP.search(os.path.basename(fn))]
+    for spec in a.bank_file:
+        bid, _, path = spec.partition("=")
+        if not bid or not path:
+            ap.error(f"--bank-file wants ID=PATH, got {spec!r}")
+        files.append((bid, path))
+    for bid, fn in files:
         data = open(fn, "rb").read()
         sha = hashlib.sha256(data).hexdigest()
         if sha in seen:
-            seen[sha]["aliases"].append(name[:-6])
+            seen[sha]["aliases"].append(bid)
             continue
-        b = {"bank_id": name[:-6], "file": fn, "data": data, "sha": sha, "aliases": []}
+        b = {"bank_id": bid, "file": fn, "data": data, "sha": sha, "aliases": []}
         seen[sha] = b
         banks.append(b)
 
@@ -186,9 +200,28 @@ def main():
             if ws is not None and any(w in found for w in ws):
                 b["public_keys"].add(key)
 
-    epoch_key = secrets.token_bytes(32)
-    created = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-    rotate_by = (datetime.date.today() + datetime.timedelta(days=90)).isoformat()
+    now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    supplement = None
+    if a.epoch_file:
+        ep = json.load(open(a.epoch_file))
+        epoch_key = bytes.fromhex(ep["epoch_key_hex"])
+        if len(epoch_key) != 32:
+            sys.exit("epoch key is not 32 bytes")
+        if a.epoch_id != ep["epoch_id"] and "--epoch-id" in sys.argv:
+            sys.exit(f"--epoch-id {a.epoch_id} disagrees with the epoch file ({ep['epoch_id']})")
+        a.epoch_id, a.fraction = ep["epoch_id"], float(ep["fraction"])
+        created, rotate_by = ep["created"], ep["rotate_by"]
+        if not a.supplement_of:
+            sys.exit("--epoch-file needs --supplement-of <earlier record of that epoch>")
+        for prior in a.supplement_of:
+            pe = json.load(open(prior))["rotation_epoch"]
+            if pe["epoch_id"] != a.epoch_id or pe["epoch_key_commitment_sha256"] != ig.sha256_hex(epoch_key):
+                sys.exit(f"{os.path.basename(prior)} is not a record of this epoch key")
+        supplement = {"supplement_of": [os.path.basename(p) for p in a.supplement_of], "supplement_created": now}
+    else:
+        epoch_key = secrets.token_bytes(32)
+        created = now
+        rotate_by = (datetime.date.today() + datetime.timedelta(days=90)).isoformat()
     po = a.private_out
     for d in ("banks", "canaries", f"epochs/{a.epoch_id}/heldout", f"epochs/{a.epoch_id}/public"):
         os.makedirs(os.path.join(po, d), exist_ok=True)
@@ -197,8 +230,10 @@ def main():
     rec_banks = []
     for b in banks:
         n_g = len(b["graded"])
-        n_pub = len(b["public_keys"])
         exact_public = bool(b["exact_public"])
+        # count ROWS, not distinct keys: a bank with a duplicated row has fewer keys than rows, and
+        # n_g - len(keys) then invented an "eligible" item in a byte-exact public bank (27 Sep 2026)
+        n_pub = sum(1 for r in b["graded"] if ig.item_key(r) in b["public_keys"])
         eligible = n_g - n_pub
         if exact_public or (n_g and n_pub == n_g):
             exposure = "PUBLIC" if exact_public else "CONTENT_PUBLIC"
@@ -239,9 +274,10 @@ def main():
                                "leakscan_digests": ig.leakscan_digests(canaries)}
         rec_banks.append(entry)
 
-    with open(os.path.join(po, f"epochs/{a.epoch_id}/epoch.json"), "w") as f:
-        json.dump({"epoch_id": a.epoch_id, "epoch_key_hex": epoch_key.hex(), "fraction": a.fraction,
-                   "created": created, "rotate_by": rotate_by}, f)
+    if supplement is None:  # a supplement never rewrites the epoch key; it already lives in the private store
+        with open(os.path.join(po, f"epochs/{a.epoch_id}/epoch.json"), "w") as f:
+            json.dump({"epoch_id": a.epoch_id, "epoch_key_hex": epoch_key.hex(), "fraction": a.fraction,
+                       "created": created, "rotate_by": rotate_by}, f)
     manifest = {}
     for root, _, files in os.walk(po):
         for fn in files:
@@ -257,9 +293,16 @@ def main():
     counts = {}
     for e in rec_banks:
         counts[e["exposure"]] = counts.get(e["exposure"], 0) + 1
+    rotation_epoch = {"epoch_id": a.epoch_id, "created": created, "rotate_by": rotate_by,
+                      "heldout_fraction": a.fraction, "min_heldout": a.min_heldout,
+                      "epoch_key_commitment_sha256": ig.sha256_hex(epoch_key),
+                      "membership": "HMAC-SHA256(epoch_key, bank_id||0x00||sha256(canonical(row)))[:8]/2^64 < fraction; "
+                                    "only never-public, never-retired items are eligible"}
+    if supplement:
+        rotation_epoch.update(supplement)
     record = {
         "schema": ig.SCHEMA_COMMIT,
-        "as_of": created,
+        "as_of": now,
         "issuer": "CSOAI Ltd (Council of AI)",
         "policy": "docs/operations/INSTRUMENT-GUARD-POLICY.md",
         "private_store": "hf:csoai/private-calibration (private, access-controlled); content not published",
@@ -286,11 +329,7 @@ def main():
             "repo_master": subprocess.run(["git", "--git-dir", a.mirror, "rev-parse", "master"],
                                           capture_output=True, text=True).stdout.strip(),
         },
-        "rotation_epoch": {"epoch_id": a.epoch_id, "created": created, "rotate_by": rotate_by,
-                           "heldout_fraction": a.fraction, "min_heldout": a.min_heldout,
-                           "epoch_key_commitment_sha256": ig.sha256_hex(epoch_key),
-                           "membership": "HMAC-SHA256(epoch_key, bank_id||0x00||sha256(canonical(row)))[:8]/2^64 < fraction; "
-                                         "only never-public, never-retired items are eligible"},
+        "rotation_epoch": rotation_epoch,
         "private_manifest_sha256": ig.sha256_hex(open(os.path.join(po, "MANIFEST.json"), "rb").read()),
         "leakscan": {"digest": "sha256('csoai-canary-leakscan/v1:' + lower(token))",
                      "token_shapes": ["UUIDv4", "XXXX-XXXX-XXXX base32 code phrase"],

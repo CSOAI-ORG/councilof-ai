@@ -10,7 +10,8 @@ is read from the PUBLIC signed record, so a canary set that was swapped or edite
       --model llama3.1:8b --out-public probe.json --out-private <private-store>/probes/llama.json [--bank gspc-x]
 
 Writes a public-safe record (states, indices, output digests) and, separately, the private log with
-raw outputs. Only the public-safe record may leave the private store.
+raw outputs. Only the public-safe record may leave the private store. Write the public record as
+public/interop/mill-evidence/contamination-probe-<bank>-<model>.json: mill admission reads it there.
 """
 import argparse
 import json
@@ -25,7 +26,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--record", required=True)
     ap.add_argument("--canaries-dir", required=True)
-    ap.add_argument("--model", required=True)
+    ap.add_argument("--model", required=True, help="the endpoint's model name")
+    ap.add_argument("--model-id", default=None,
+                    help="the id recorded in the probe (default --model); set it to the card's model, e.g. "
+                         "ollama:qwen2.5:7b, so mill admission (scripts/admit_mill_cards.py condition 4) can bind it")
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--ollama")
     g.add_argument("--openai-base")
@@ -47,11 +51,11 @@ def main():
             continue
         fn = os.path.join(a.canaries_dir, b["bank_id"] + ".jsonl")
         rows = ig.read_jsonl(open(fn, "rb").read()) if os.path.exists(fn) else []
-        r = ig.run_probe(model, rows, expected_commitment=cs["commitment_sha256"], model_id=a.model, bank_id=b["bank_id"])
+        r = ig.run_probe(model, rows, expected_commitment=cs["commitment_sha256"], model_id=a.model_id or a.model, bank_id=b["bank_id"])
         priv.append(r)
         pub.append(ig.public_view(r))
         print(f"{b['bank_id']:36s} {r['state']:24s} {r.get('reason', '')[:90]}")
-    summary = {"schema": ig.SCHEMA_PROBE, "model_id": a.model, "record_as_of": rec["as_of"], "results": pub}
+    summary = {"schema": ig.SCHEMA_PROBE, "model_id": a.model_id or a.model, "record_as_of": rec["as_of"], "results": pub}
     os.makedirs(os.path.dirname(os.path.abspath(a.out_private)), exist_ok=True)
     with open(a.out_private, "w") as f:
         json.dump(priv, f, indent=1)

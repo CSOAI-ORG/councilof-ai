@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.instrument-commitments-signed/0.1",
+    "kind": "commitment",
+    "as_of": "2026-09-27T02:05:18Z",
+    "artifact": {
+      "path": "/interop/instrument-guard/bank-commitments-2026-09-27.json",
+      "sha256": "f97f68ec1220ffa3d1cb933ad9a86d72ed3d51b99f38ce6c1d38e4d58f7239f8",
+      "bytes": 40566
+    },
+    "rotation_epoch": {
+      "epoch_id": "E2026-09-26",
+      "epoch_key_commitment_sha256": "acb31350f6ba04df644da45a80153367b679f1b923ce5e47e3e632990bdc1551",
+      "rotate_by": "2026-12-25",
+      "heldout_fraction": 0.3
+    },
+    "private_manifest_sha256": "36b05104969d7a6b5013bc8a0aa7afa2788576236a2b9a6f053bfd52448ad3d9",
+    "banks_total": 28,
+    "banks_with_canaries": 16,
+    "canaries_total": 128,
+    "exposure_counts": {
+      "PRIVATE": 14,
+      "PARTIAL": 2,
+      "PUBLIC": 12
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token; the PKCS8 never left Cloudflare)",
+    "not_a_grade": "A commitment: proves these digests existed at signing time. It reveals no bank content and asserts nothing about any model."
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "51e6b02dca1c77ccff681953bcc4a78098c5f71bb7c99e57968feb77e1fad48ff2bc4c530e4fdbdf638794fc3ff876b40fecbc6384028cee02c768f4c8fcbb04",
+    "payload_sha256": "4a58dde42d466ebc05a8a05ef5fecb05962b611eb0bd6d8d2e6766546bd8754c",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-27T02:09:33.230Z"
+  },
+  "tamper_controls": {
+    "altered_payload": "does not verify",
+    "altered_signature": "does not verify",
+    "altered_record_bytes": "sha256 no longer matches the pinned digest"
+  },
+  "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json; then sha256 the record bytes and compare with payload.artifact.sha256"
+}

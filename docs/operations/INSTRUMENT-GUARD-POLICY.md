@@ -173,6 +173,73 @@ fails on a copied file even when it carries no canary.
   old and have never left the private store, so every model would read NOT_DETECTED. The probe
   becomes a measurement with time, and immediately after any suspected leak.
 
+## 9a. 27 September 2026: bigger banks, labels, admission wiring (owner approval 27 Sep: "bigger banks labels for cards and follow up wiring all else do it all")
+
+**Bigger banks (supplement to epoch E2026-09-26).** Every one of the 14 banked board axes now has a
+private extension bank `gspc-<axis>-private-v1`, written to the axis's existing construct, label set and
+style, and split with the SAME epoch key (`--epoch-file`; `sha256(epoch_key)` = `acb31350…`, unchanged).
+Record `bank-commitments-2026-09-27.json` (`rotation_epoch.supplement_of: bank-commitments-2026-09-26.json`),
+board-signed via the pod token (3 tamper controls fail as they must), OTS calendar-pending. Private
+store: `hf:csoai/private-calibration` `instrument-guard/E2026-09-26/supplement-2026-09-27/`
+(MANIFEST sha256 `36b05104…`, 76 files, remote bytes re-verified, anonymous fetch 401).
+
+| board axis | bank before (private graded items) | private-v1 graded items | held-out (fraction 0.30) |
+|---|---:|---:|---:|
+| governance | gspc-gov: 0 | 129 | 36 |
+| safety | gspc-agi: 0 | 126 | 35 |
+| provenance | gspc-prv: 0 | 129 | 39 |
+| continuity | gspc-asi: 0 | 128 | 37 |
+| conformance | gspc-mcp: 0 | 125 (117 eligible; 8 forced public by the repo-window rule) | 33 |
+| openness | gspc-oss: 0 | 128 | 42 |
+| machinery-conformity | gspc-mach: 0 | 128 | 36 |
+| care | gspc-care: 0 | 128 | 44 |
+| cross-reality | gspc-xr: 0 | 127 | 38 |
+| detector-interop | gspc-det: 0 | 130 | 37 |
+| art5-safeguard | gspc-art5: 0 | 128 | 44 |
+| swarm | gspc-swarm: 0 | 107 | 37 |
+| affect | gspc-affect: 0 | 129 | 32 |
+| jail | goldbank: 0 | 122 | 44 |
+
+Every axis now holds out at least 30 (smallest: affect, 32). How the items were checked, in order:
+1. 130 authored per axis (1,820), matched to the public bank's label proportions;
+2. `validate_bank_items.py`: schema = the public bank's key set, label inside the public bank's label set,
+   no exact or substring match in the anonymous public corpus (2,505 files), no near-duplicate of any of
+   the 1,101 public bank items (difflib >= 0.80 or token Jaccard >= 0.70; jail compared on code), no internal
+   near-duplicate: 6 dropped (jail 4, mcp 2), 0 near-duplicates of public items;
+3. answer keys by an independent blind annotator per axis (keys encrypted while they worked; items
+   shuffled): every disagreement and every low-confidence item dropped (swarm: the must_inc keywords were
+   reviewed instead; 23 dropped). agi's order-free round was stopped by a model safety filter on the last
+   batches; its keys rest on the earlier, author-ordered blind round (1 disagreement, 4 low-confidence, dropped).
+
+The supplement also commits, so card labels can be looked up and never guessed, the 12 Hub bank revisions
+live cards pin (all PUBLIC, byte-exact on the public dataset at the pinned revision) and two pod bank
+versions cards pin: `gspc-jail-reverted-20260923` (PRIVATE, 10 held out, insufficient) and
+`gspc-swarm-pre-20260906` (PARTIAL). 16 banks carry 8 canaries each (128), private store only.
+
+`build_commitments.py` fix: eligibility now counts rows, not distinct item keys. A byte-public bank with a
+duplicated row (`hf-gspc-care-0683ea46`, 200 rows / 199 keys) had been given one "eligible" item and a
+canary set; it is now HELDOUT_INELIGIBLE like every other public bank.
+
+**Labels.** `bank_exposure` on every signed mill card on a board axis, produced by
+`harness/instrument-guard/build_exposure_labels.py` from the signed commitments records and each card's
+pinned `bank_sha256` (never from names): `PUBLIC_BANK`, `PARTLY_PUBLIC_BANK`, `PRIVATE_BANK`,
+`UNASSESSED` (digest in no record), `UNPINNED` (card pins no digest). It is a side record,
+`bank-exposure-labels.json` + `.signed.json` (board DID, pod token, tamper controls), because the card body
+key set is pinned and a new field would change every card id. No score and no card byte changes. Each
+`/gspc/<axis>` page shows the plain-language line from the signed payload (`BankExposureNote`).
+
+**Admission wiring.** `scripts/admit_mill_cards.py` condition 4 (INSTRUMENT): canary leak-scan of the card
+bytes (CANARY_LEAK), and for a bank with canaries a bound NOT_DETECTED probe of that model
+(`contamination-probe-*.json` in the evidence dir, written by `probe_model.py --model-id <card model>`),
+else CONTAMINATION_UNCHECKED / CONTAMINATION_SUSPECTED. Public banks are NOT_APPLICABLE, recorded, never
+"clean". `validate_admission_record` re-derives it from bytes, so the publication gate applies it too.
+`canary-leak-gate` now runs in `scripts/pod-loops/deploy-prod.sh` (the only road to prod; exit 15) and
+`build-gates.sh`, which the 26 Sep lane left as a pod-side change.
+
+**Timestamps.** `bank-commitments-2026-09-26.json.ots` upgraded 27 Sep: Bitcoin-attested in blocks 968699,
+968707 and 968739 (merkle roots checked against a public block explorer). The two new records are
+calendar-pending.
+
 ## 10. Operating it
 
 ```sh
@@ -186,6 +253,13 @@ ots stamp public/interop/instrument-guard/bank-commitments-<date>.json
 # probe a model (canaries from the private store; commitment from the public record)
 python3 harness/instrument-guard/probe_model.py --record <record> --canaries-dir <store>/canaries \
   --ollama http://127.0.0.1:11434 --model llama3.1:8b --out-public probe.json --out-private <store>/probes/x.json
+# supplement an existing epoch with new banks (reuses its key; never mints one)
+python3 harness/instrument-guard/build_commitments.py ... --epoch-file <store>/epochs/<E>/epoch.json \
+  --supplement-of public/interop/instrument-guard/bank-commitments-<first>.json [--bank-file ID=PATH]
+# validate authored items before they join a bank (counts only)
+python3 harness/instrument-guard/validate_bank_items.py --authored <dir> --public-banks <dir> --hf-cache <dir> --clean-out <dir>
+# card labels, then sign them
+python3 harness/instrument-guard/build_exposure_labels.py && python3 harness/instrument-guard/sign_commitments.py public/interop/instrument-guard/bank-exposure-labels.json
 # tests (26, each paired with a control that must fail) and the gate selftest
 python3 harness/instrument-guard/test_instrument_guard.py && node scripts/canary-leak-gate.mjs --selftest
 ```
