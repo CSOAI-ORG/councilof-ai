@@ -173,6 +173,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/independence",
   // /crosswalks/owasp-asi: OWASP Agentic Top 10 + MCP Top 10 mapped to our checks, with strength (2026-09-27).
   "/crosswalks/owasp-asi",
+  // /mechanism: claim -> provision id -> predicate -> signed capsule -> daily index; coverage counted (2026-09-27).
+  "/mechanism",
   // /reach — the full seven-stage funnel. Linked from the home page and from the footer
   // of every route, so unregistered it would ship the "archived" banner under a link the site
   // is actively promoting, on the page whose whole point is that the number is current.

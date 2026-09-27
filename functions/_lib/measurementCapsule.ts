@@ -38,6 +38,9 @@ export type RuleVersion = "0.1" | "0.2";
 const CAPSULE_SCHEMAS: Record<string, RuleVersion> = {
   "csoai.venturi-capsule/0.1": "0.1",
   "csoai.measurement-capsule/0.2": "0.2",
+  // 0.3 = 0.2 plus the optional provisions binding (a list pinned to the frozen provision manifest).
+  // Same capsule_id, JCS and Merkle rules, published under the v0.2 index, so it reads under "0.2".
+  "csoai.measurement-capsule/0.3": "0.2",
 };
 const INDEX_SCHEMAS: Record<string, RuleVersion> = {
   "csoai.venturi-index/0.1": "0.1",

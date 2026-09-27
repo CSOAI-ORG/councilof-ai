@@ -223,6 +223,8 @@ function discover() {
     "/independence",
     // /crosswalks/owasp-asi: the mapping rows must be in the snapshot, not only after JS (2026-09-27).
     "/crosswalks/owasp-asi",
+    // /mechanism: the coverage tables must be in the snapshot, not only after JS (2026-09-27).
+    "/mechanism",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

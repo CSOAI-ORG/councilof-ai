@@ -1353,6 +1353,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "X402 Activity"
  },
  {
+  "path": "/mechanism",
+  "comp": "Mechanism",
+  "title": "Mechanism"
+ },
+ {
   "path": "/membership-agreement",
   "comp": "MembershipAgreement",
   "title": "Membership Agreement"

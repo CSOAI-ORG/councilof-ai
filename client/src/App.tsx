@@ -211,6 +211,8 @@ const A2aJcs20260927 = lazy(() => import("./pages/A2aJcs20260927"));
 const Independence = lazy(() => import("./pages/Independence"));
 // /crosswalks/owasp-asi: OWASP ASI01-ASI10 and MCP Top 10 against the checks we run (DIRECT / PARTIAL / NOT MEASURED).
 const CrosswalkOwaspAsi = lazy(() => import("./pages/CrosswalkOwaspAsi"));
+// /mechanism: the open measurement mechanism in five steps, with coverage of the frozen provision corpus.
+const Mechanism = lazy(() => import("./pages/Mechanism"));
 // /reach — the WHOLE funnel, including the four stages that carry no number and the
 // reason each one carries none. The home page and the footer show the two stages a stranger can
 // use; this is the one click behind them, and it is where the commercial stages live.
@@ -678,6 +680,7 @@ function App() {
                   <Route path="/interop/a2a-jcs-2026-09-27" component={A2aJcs20260927} />
                   <Route path="/independence" component={Independence} />
                   <Route path="/crosswalks/owasp-asi" component={CrosswalkOwaspAsi} />
+                  <Route path="/mechanism" component={Mechanism} />
                   <Route path="/reach" component={Reach} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />

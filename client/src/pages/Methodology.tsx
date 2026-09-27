@@ -327,6 +327,9 @@ export default function Methodology() {
           <Link href="/crosswalks/owasp-asi/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             OWASP Agentic Top 10: what we measure →
           </Link>
+          <Link href="/mechanism/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            The open measurement mechanism and its coverage →
+          </Link>
         </div>
       </div>
     </div>

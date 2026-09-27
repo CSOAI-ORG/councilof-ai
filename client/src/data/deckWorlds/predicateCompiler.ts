@@ -1,4 +1,8 @@
 import type { Slide } from "@/components/scrollworld";
+import coverage from "../../../../public/mechanism/coverage.json";
+// The corpus block reads its numbers and instrument names from the coverage report (scripts/mechanism/build-coverage.mjs).
+const CORPUS = coverage.corpus;
+const INSTRUMENTS = coverage.instruments.map((i: { name: string }) => i.name);
 
 /**
  * FROM STATUTE TO PREDICATE — owner deck ("Deterministic Legal Metrology"),
@@ -86,11 +90,11 @@ export const PREDICATE_SLIDES: Slide[] = [
     kicker: "The raw material",
     title: "We do not invent rules. We parse frozen ones.",
     body:
-      "The corpus is 417 published statutory provisions — the EU AI Act, GDPR and the Cyber Resilience Act, DORA and NIS2, NIST AI RMF and ISO/IEC 42001 among them. Frozen means the exact text we measured against is recorded with the result, so a disagreement can be traced to a provision rather than to an opinion. The board those predicates feed publishes both a slot count and a measured count, read live from /api/gspc and never typed into this page.",
+      `The corpus is a frozen manifest of ${CORPUS.provisions} published provisions from ${INSTRUMENTS.length} EU instruments: ${INSTRUMENTS.join(", ")}. Each provision is pinned by the SHA-256 of its frozen text, under one root anyone can recompute. The source text bytes behind those hashes were not recovered, so the manifest is a set of pinned hashes, not yet an inspectable legal text; frameworks such as NIST AI RMF and ISO/IEC 42001 are mapped in crosswalks, not held in it. The board those predicates feed publishes both a slot count and a measured count, read live from /api/gspc and never typed into this page.`,
     points: [
-      { tag: "benefit", text: "417 frozen provisions, each cited and dated" },
-      { tag: "benefit", text: "When a provision changes, the mapped predicates expire and we re-measure" },
-      { tag: "usp", text: "The instrument is the law as published, not our summary of it" },
+      { tag: "benefit", text: `${CORPUS.provisions} frozen provision hashes, frozen ${CORPUS.frozen_at.slice(0, 10)}, coverage counted at /mechanism/` },
+      { tag: "pain", text: "No watcher is built yet: a change to a provision is not detected automatically, so nothing expires on its own" },
+      { tag: "usp", text: "Each provision is pinned by the hash of its frozen text, not by our summary of it" },
       { tag: "pain", text: "Where a date or a reading is genuinely disputed, we record the dispute rather than resolving it quietly" },
     ],
   },
