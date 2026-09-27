@@ -249,6 +249,21 @@ class TestHealth(Base):
         j = self.job(health={"type": "json_field_age", "path": self.sig, "field": "at", "max_age_s": 60, "fail_if": {"level": ["RED"]}})
         self.assertEqual(fl.evaluate_health(j, T0)["state"], "FAILED")
 
+    def test_dated_file_due_by_deadline(self):
+        # yesterday's output must exist by 09:00Z; before the deadline the day before yesterday's is the one due
+        tpl = os.path.join(self.d, "idx-<date>.json")
+        j = self.job(health={"type": "dated_file", "path": tpl, "lag_days": 1, "deadline_utc": "09:00"}, supervise="observe")
+        at = lambda h, m: datetime.datetime(2026, 9, 28, h, m, tzinfo=fl.UTC)
+        wt(tpl.replace("<date>", "2026-09-26"), "{}")
+        self.assertEqual(fl.evaluate_health(j, at(8, 59))["state"], "OK")        # 26th due until 09:00 on the 28th
+        r = fl.evaluate_health(j, at(9, 0))                                       # from 09:00 the 27th is due
+        self.assertEqual(r["state"], "MISSING"); self.assertIn("2026-09-27", r["detail"]); self.assertIn("ALERT", r["detail"])
+        self.assertIn(r["state"], fl.BAD)
+        wt(tpl.replace("<date>", "2026-09-27"), "{}")
+        self.assertEqual(fl.evaluate_health(j, at(9, 0))["state"], "OK")
+        j["not_before"] = fl.iso(at(10, 0)); os.remove(tpl.replace("<date>", "2026-09-27"))
+        self.assertEqual(fl.evaluate_health(j, at(9, 30))["state"], "PENDING_FIRST_RUN")
+
     def test_hub_read_failure_is_unmeasured_not_stale(self):
         def boom(*a):
             raise OSError("net")

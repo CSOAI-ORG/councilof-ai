@@ -174,13 +174,15 @@
    },
    "supervise": "active",
    "cron_match": "lanes/xl-daily.sh",
-   "max_runtime_s": 3600,
-   "not_before": "2026-09-26T05:30:00Z",
+   "max_runtime_s": 5400,
+   "not_before": "2026-09-27T06:00:00Z",
    "outputs": [
-    "~/lanes/out/cross-ledger/usdc-<date>.json"
+    "/evac-bulk/xl-daily/<date>/xl-daily-<date>.json",
+    "/evac-bulk/xl-daily/<date>/xl-daily-<date>.signed.json",
+    "/evac-bulk/xl-daily/institutional-evidence-links.json"
    ],
    "failover": [],
-   "note": "interim until the 3090 returns; not portable yet (needs the cross-ledger lane checkout)",
+   "note": "cross-ledger daily loop, top 20% of tokenised assets by value (lane xl-loop-20260926): signed + OTS, changes by name, NEW dated files to HF csoai/cross-ledger-supply. Skips with FAILED_DISK_FLOOR below root 1536M / bulk 2048M. Not portable yet (needs the lane checkout).",
    "class": "measurement"
   },
   {
@@ -1597,6 +1599,140 @@
    "failover": [],
    "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
    "class": "legacy"
+  },
+  {
+   "id": "self-parity",
+   "host": "oracle-micro-2",
+   "schedule": "10 5 * * *",
+   "command": "flock -n /tmp/self-parity.lock bash $HOME/lanes/self-parity-20260926/scripts/self-parity/run.sh",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/self_parity.json",
+    "field": "last_success",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "self-parity/run.sh",
+   "max_runtime_s": 3600,
+   "outputs": [
+    "/evac-bulk/self-parity/<date>/record.json",
+    "~/fleet/self_parity.json",
+    "~/lanes/logs/self-parity.log"
+   ],
+   "failover": [],
+   "owner_lane": "self-parity-20260926",
+   "note": "measures our own listings in external indexes; signs via board-sign with the Oracle pod token + OTS; run.sh does its own disk floor (FAILED_DISK_FLOOR < 2G bulk); publishes nothing; observed only (needs the lane checkout and the token)",
+   "class": "measurement"
+  },
+  {
+   "id": "outward-gate",
+   "host": "oracle-micro-2",
+   "schedule": "40 6 * * *",
+   "command": "flock -n /tmp/outward-gate.lock $HOME/lanes/bin/disk-floor.sh outward-gate $HOME/lanes/logs/outward-gate.log bash $HOME/lanes/outward-gate-20260926/scripts/outward-gate/run.sh",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/outward_gate.json",
+    "field": "last_success",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "outward-gate/run.sh",
+   "max_runtime_s": 10800,
+   "outputs": [
+    "/evac-bulk/outward-gate/<date>/scorecard.json",
+    "/evac-bulk/outward-gate/<date>/SCORECARD.md",
+    "~/fleet/outward_gate.json",
+    "~/lanes/logs/outward-gate.log"
+   ],
+   "failover": [],
+   "owner_lane": "outward-gate-20260926",
+   "note": "outward quality gate: scores every public artifact (HF csoai/*, live councilof.ai surfaces, venturi batches, packages, queued notices) PASS/FAIL/NA per check; nothing goes out below 100%; measures only, public reads at <=1 req/s/host, UA CSOAI-outward-gate/0.1; publishes and sends nothing; disk floor via disk-floor.sh",
+   "class": "measurement"
+  },
+  {
+   "id": "tool-drift",
+   "host": "oracle-micro-2",
+   "schedule": "30 7 * * *",
+   "command": "flock -n /tmp/tool-drift.lock $HOME/lanes/bin/disk-floor.sh tool-drift $HOME/lanes/logs/tool-drift.log nice -n 15 /usr/bin/python3 $HOME/lanes/tool-drift-20260926/tool_drift_probe.py run --cap 500",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/tool_drift.json",
+    "field": "last_success",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "tool-drift-20260926/tool_drift_probe.py",
+   "max_runtime_s": 3600,
+   "outputs": [
+    "/evac-bulk/tool-drift/runs/<date>/summary.json",
+    "/evac-bulk/tool-drift/latest.jsonl.gz",
+    "~/fleet/tool_drift.json",
+    "~/lanes/logs/tool-drift.log"
+   ],
+   "failover": [],
+   "owner_lane": "tool-drift-20260926",
+   "note": "re-probes <= 500/day of the MCP endpoints whose latest observation RESPONDED (round-robin, least recently re-probed first), via the pinned census prober: robots.txt, initialize/server-discover, tools/list only, never tools/call, 1 req/s/host, UA CSOAI-census/0.1; keeps per-tool name + description + inputSchema sha256 so drift is measurable at full granularity; disk floor via lanes/bin/disk-floor.sh (FAILED_DISK_FLOOR); honours an exclusion list if one exists; publishes nothing; observed only",
+   "class": "measurement"
+  },
+  {
+   "id": "capsule-daily",
+   "host": "oracle-micro-2",
+   "schedule": "5 8 * * *",
+   "command": "flock -n /tmp/capsule-daily.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh capsule-daily $HOME/lanes/logs/capsule-daily.log bash $HOME/lanes/bin/capsule-daily.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/capsule-daily.log",
+    "max_age_s": 97200,
+    "must_contain": "rc=0",
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "state=NOOP"
+     ]
+    }
+   },
+   "supervise": "active",
+   "cron_match": "lanes/bin/capsule-daily.sh",
+   "max_runtime_s": 3600,
+   "not_before": "2026-09-27T09:00:00Z",
+   "outputs": [
+    "/evac-bulk/measurement-capsules-v0.2-<date>-<adapter>/",
+    "/evac-bulk/measurement-index-v0.2-<date>.json",
+    "/evac-bulk/measurement-index-v0.2-<date>.signed.json",
+    "/evac-bulk/measurement-index-v0.2-<date>.json.ots",
+    "/evac-bulk/.capsule-daily/done-<date>",
+    "~/lanes/logs/capsule-daily.log"
+   ],
+   "failover": [],
+   "owner_lane": "venturi-capsule-20260926",
+   "note": "measurement-capsule daily loop: builds a signed + OTS batch only for an adapter whose source record is new (self_parity, tool_drift runs, cross_ledger, public_signals only with a verifying source signature; contract_parity/a2a_card when a new signed census record appears), carries unchanged batches by reference, writes the day's signed + OTS index, pushes the day's batches + index to the SovSpace reaction pod (sov-push-from-oracle.sh). Idempotent (lock + done-marker per date; a re-run is safe). rc=0 DONE/NOOP/ALREADY_DONE, rc=1 FAILED/PARTIAL, FAILED_DISK_FLOOR below root 512M / bulk 2048M. Publishes nothing. Not portable (needs the lane checkout, the board-sign token and the pod key).",
+   "class": "measurement"
+  },
+  {
+   "id": "capsule-chain-daily-index",
+   "host": "oracle-micro-2",
+   "schedule": "5 8 * * *",
+   "command": "flock -n /tmp/capsule-daily.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh capsule-daily $HOME/lanes/logs/capsule-daily.log bash $HOME/lanes/bin/capsule-daily.sh",
+   "health": {
+    "type": "dated_file",
+    "path": "/evac-bulk/measurement-index-v0.2-<date>.json",
+    "lag_days": 1,
+    "deadline_utc": "09:00",
+    "why": "a missed day in the hash-chained measurement-index chain: the next index will carry it as gap_days > 0; it cannot be back-filled"
+   },
+   "supervise": "observe",
+   "cron_match": "lanes/bin/capsule-daily.sh",
+   "max_runtime_s": 3600,
+   "not_before": "2026-09-27T09:00:00Z",
+   "outputs": [
+    "/evac-bulk/measurement-index-v0.2-<date>.json",
+    "/evac-bulk/.capsule-daily/chain-verify-<date>.json",
+    "/evac-bulk/measurement-index-chain-head-<date>.json (Sundays)"
+   ],
+   "failover": [],
+   "owner_lane": "venturi-capsule-20260926",
+   "note": "gap alarm for the hash-chained daily measurement index (index schema 0.3): yesterday's /evac-bulk/measurement-index-v0.2-<date>.json must exist by 09:00Z, else MISSING (BAD). Observe only: a re-run cannot back-fill a day once a later day is chained (capsule-daily refuses), so the day stays a declared gap. The chain itself is verified by capsule-daily step 5 (venturi_capsule.py verify-chain).",
+   "class": "measurement"
   }
  ]
 }
