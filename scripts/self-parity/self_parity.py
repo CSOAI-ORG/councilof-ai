@@ -1516,7 +1516,7 @@ def write_status(path, **kw):
 
 def build_record(date, cat, indices, cells, own, prev, http_log):
     rec = {
-        "schema": SCHEMA_RECORD, "date": date, "as_of": utcnow(), "host": os.uname().nodename,
+        "schema": SCHEMA_RECORD, "date": date, "as_of": utcnow(), "host": "nodename-sha256:" + sha(os.uname().nodename.encode())[:16],  # the measuring host by digest: its name carries internal codenames the public brand gate refuses
         "instrument": {"name": "self_parity.py", "version": VERSION, "code_sha256": sha(pathlib.Path(__file__).read_bytes()), "git_head": git_head(),
                        "user_agent": UA, "rate": ">= 1.05 s between requests to one host",
                        "conditional_requests": ("GETs to sources that sent an ETag or Last-Modified are conditional; a 304 is "
