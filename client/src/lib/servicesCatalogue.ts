@@ -68,6 +68,21 @@ export const GROUPS: ServiceGroup[] = [
 /** Path → group. Ordered: the first matching prefix wins. */
 const ROUTES: ReadonlyArray<[string, GroupId]> = [
   ["/api/rwa/", "finance-rwa"],
+  ["/api/wrapper", "finance-rwa"],
+  ["/api/measurement/fresh-capsule", "agent-rails"],
+  ["/api/pop/stablecoins", "finance-rwa"],
+  ["/api/pop/swift", "legacy-systems"],
+  ["/api/pop/xrpl", "finance-rwa"],
+  ["/api/pop/x402-bazaar", "agent-rails"],
+  ["/api/pop/mcp-registry", "agent-rails"],
+  ["/api/pop/a2a", "agent-rails"],
+  ["/api/pop/ots-proofs", "agent-rails"],
+  ["/api/pop/layer0", "agent-rails"],
+  ["/api/pop/corrections", "compliance"],
+  ["/api/pop/claim-watch", "compliance"],
+  ["/api/ras/mcp-probe", "agent-rails"],
+  ["/api/ras/x402-check", "agent-rails"],
+  ["/api/ras/supply", "finance-rwa"],
   ["/api/evidence-bundle", "compliance"],
   ["/api/art50/", "compliance"],
   ["/api/eunomia-data", "compliance"],
@@ -91,7 +106,7 @@ export function pathOf(url: string): string {
 
 export function groupFor(url: string): GroupId | null {
   const path = pathOf(url);
-  for (const [prefix, id] of ROUTES) if (path.startsWith(prefix)) return id;
+  for (const [prefix, id] of ROUTES) if (path === prefix || path.startsWith(prefix.endsWith("/") ? prefix : prefix + "/")) return id;
   return null;
 }
 
@@ -122,12 +137,14 @@ const PAY_LINE = "Pay-as-you-go x402 at the 402.";
 
 export function toCard(r: ManifestResource, group: GroupId): ServiceCard {
   const zero = r.amount === 0 || r.amount === "0";
+  const note = typeof r.note === "string" ? r.note.trim() : "";
+  const purpose = typeof r.paid_for === "string" ? r.paid_for.trim() : "";
   return {
     url: r.url,
     path: pathOf(r.url),
     method: r.method || "GET",
     group,
-    measures: r.note?.trim() || (r.paid_for ? `Paid for ${r.paid_for}.` : "Free forever."),
+    measures: note || (purpose ? `Paid for ${purpose}.` : zero ? "Free forever." : "Service details are not supplied by this manifest. Read the current endpoint response before relying on this listing."),
     freePreview: r.free_preview ?? null,
     freeForever: zero,
     payLine: zero ? "Free forever — it settles and charges nothing." : PAY_LINE,

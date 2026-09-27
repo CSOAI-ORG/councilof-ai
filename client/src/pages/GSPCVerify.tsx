@@ -95,7 +95,6 @@ export default function GSPCVerify() {
   }, []);
 
   useEffect(() => {
-    document.title = "Verify a signed card — client-side | CSOAI";
     setMetaDescription("Verify a Council of AI measurement card client-side: recompute its payload hash and Ed25519 signature in your browser against the published public key.");
   }, []);
 
@@ -200,8 +199,9 @@ export default function GSPCVerify() {
           <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
-            against the published keys. Share a permalink and the recipient&apos;s browser re-runs
-            the same check on the same bytes.
+            against the published keys. For a public record, share its original public JSON URL
+            and ask the recipient to paste those bytes here. This form does not create a share link
+            for pasted input; do not share private records without permission.
           </p>
           <div
             className="mt-4 rounded-2xl border border-emerald-400/35 bg-emerald-500/[0.08] p-4 space-y-3"
@@ -348,8 +348,9 @@ export default function GSPCVerify() {
               not a post-quantum signature on these cards.
             </li>
             <li>
-              It does not contact a server. Verification is local; you bring the records and
-              the WebCrypto implementation in your browser.
+              Signature calculation runs in your browser. The page can read public key and
+              withdrawal documents and any public example you choose. Pasted record content is
+              not uploaded; the optional public tally sends only the selected pass/fail count.
             </li>
             <li>
               It does not assert that a model is &quot;safe&quot;, &quot;compliant&quot;, or

@@ -89,18 +89,46 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // When asChild is true, Radix Slot requires exactly one React element child.
     // We must not wrap in Fragment or add extra children inside Slot.
     if (asChild) {
+      // An ARIA state alone does not disable a link. Guard both Slot and child
+      // handlers because Radix composes the child's handler before its own.
+      const stopActivation = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+      };
+      const stopActivationKey = (event: React.KeyboardEvent) => {
+        if (event.key === "Enter" || event.key === " ") stopActivation(event);
+      };
+      const disabledProps: React.HTMLAttributes<HTMLElement> = isDisabled ? {
+        "aria-disabled": true,
+        tabIndex: -1,
+        onClick: stopActivation,
+        onClickCapture: stopActivation,
+        onAuxClick: stopActivation,
+        onAuxClickCapture: stopActivation,
+        onPointerDownCapture: stopActivation,
+        onKeyDown: stopActivationKey,
+        onKeyDownCapture: stopActivationKey,
+        onKeyUp: stopActivationKey,
+        onKeyUpCapture: stopActivationKey,
+      } : {};
+      const child = isDisabled && React.isValidElement<React.HTMLAttributes<HTMLElement>>(children)
+        ? React.cloneElement(children, {
+            ...disabledProps,
+            ...(children.type === "button" ? { disabled: true } : {}),
+          })
+        : children;
       return (
         <Slot
-          className={cn(buttonVariants({ variant, size, className }))}
+          className={cn(buttonVariants({ variant, size, className }), isDisabled && "opacity-50")}
           ref={ref}
-          disabled={isDisabled}
           aria-disabled={isDisabled || undefined}
           aria-pressed={ariaPressed}
           aria-busy={loading || undefined}
           aria-describedby={ariaDescribedBy}
           {...props}
+          {...disabledProps}
         >
-          {children}
+          {child}
         </Slot>
       )
     }

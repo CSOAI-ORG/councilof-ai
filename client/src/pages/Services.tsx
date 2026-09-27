@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ServicePreview } from "@/components/ServicePreview";
-import { Helmet } from "react-helmet-async";
 import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
 
 /**
@@ -37,7 +36,6 @@ export default function Services() {
   const [load, setLoad] = useState<Load>({ state: "loading" });
 
   useEffect(() => {
-    document.title = "Supported feeds and evidence doors — Council of AI";
     let alive = true;
     void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
       .then((r) => {
@@ -60,13 +58,6 @@ export default function Services() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Helmet>
-        <title>Supported feeds and evidence doors | Council of AI</title>
-        <meta
-          name="description"
-          content="Start with public measurements, the change record and free verification, then read every supported machine feed and evidence door from the live manifest."
-        />
-      </Helmet>
 
       <section className="border-b border-slate-800 px-6 py-14">
         <div className="mx-auto max-w-6xl">
@@ -81,7 +72,7 @@ export default function Services() {
             The catalogue below then reads the supported machine doors from the rail's own manifest.
             Commissioned outputs remain secondary. Verification stays free.
           </p>
-          <nav aria-label="Published evidence path" className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4" data-testid="services-supply-led-entry">
+          <nav aria-label="Published evidence path" className="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-5" data-testid="services-supply-led-entry">
             <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-400 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-emerald-300">1 · Explore measurements</a>
             <a href="/press" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">2 · See what changed</a>
             <a href="/gspc-verify" className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:border-emerald-400">3 · Verify evidence</a>
@@ -102,9 +93,10 @@ export default function Services() {
 
       <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
-          <p className="text-slate-400">Reading the manifest…</p>
+          <p role="status" className="text-slate-400">Reading the manifest…</p>
         ) : load.state === "unread" ? (
           <div
+            role="alert"
             data-testid="services-unread"
             className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-6"
           >
@@ -156,7 +148,7 @@ export default function Services() {
                             </span>
                           ) : null}
                         </div>
-                        <h3 className="mt-2 font-mono text-sm font-bold text-slate-100">{c.path}</h3>
+                        <h3 className="mt-2 break-words [overflow-wrap:anywhere] font-mono text-sm font-bold text-slate-100">{c.path}</h3>
                         <p className="mt-2 flex-1 text-sm leading-6 text-slate-300">{c.measures}</p>
                         <p className="mt-3 text-[12px] text-slate-400">{c.payLine}</p>
                         {c.freePreview ? (
@@ -179,10 +171,10 @@ export default function Services() {
                 className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-5"
               >
                 <h2 className="text-lg font-bold text-amber-200">
-                  Published on the rail, not yet grouped here
+                  Declared services awaiting a category
                 </h2>
                 <p className="mt-1 text-sm text-slate-300">
-                  These doors answer today but this page does not know where to file them. They are
+                  These services are declared in the manifest, but their availability has not been checked here. They are
                   named rather than dropped, because a door nobody can find is the failure this
                   section exists to prevent.
                 </p>

@@ -47,7 +47,6 @@ const PREDICATES = [
 
 export default function Methodology() {
   useEffect(() => {
-    document.title = "Methodology — deterministic predicates, no LLM-as-judge | CSOAI";
     setMetaDescription("Council of AI methodology: deterministic predicates, no LLM-as-judge, row-declared methods and evidence boundaries. Model comparisons and deterministic facts use different sample rules; some aggregates remain uncarded.");
   }, []);
 

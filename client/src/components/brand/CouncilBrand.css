@@ -1,0 +1,17 @@
+/* Exact approved lockup sizing isolated from unrelated page styling. */
+.council-brand { display:inline-flex; flex-direction:column; max-width:100%; flex-shrink:1; vertical-align:middle; gap:.35rem; }
+.council-brand__art { display:block; max-width:100%; width:var(--brand-width,14rem); }
+.council-brand__art picture { display:block; }
+.council-brand__art img { display:block; width:100%; height:auto; }
+.council-brand--sm { --brand-width:11.25rem; }
+.council-brand--md { --brand-width:14rem; }
+.council-brand--lg { --brand-width:18rem; }
+.council-brand--full { --brand-width:26rem; }
+.council-brand__context { display:flex; flex-wrap:wrap; justify-content:center; gap:.25rem .65rem; font-size:.6875rem; font-weight:650; letter-spacing:.09em; text-transform:uppercase; color:var(--muted-foreground); }
+.council-brand__strapline { flex-basis:100%; text-align:center; font-size:.75rem; text-transform:none; letter-spacing:0; font-weight:400; }
+.dark .council-brand__art { background:#fff; border-radius:.5rem; }
+@media(min-width:1440px) { .council-brand--responsive { --brand-width:20rem; } .council-brand--responsive img { aspect-ratio:1038 / 280; } }
+@media(max-width:359px) { .council-brand--responsive { --brand-width:11rem; } }
+
+/* Keep the exact compact artwork inside narrow site navigation. */
+@media(max-width:359px) { .public-header-brand { --brand-width:11rem; } }

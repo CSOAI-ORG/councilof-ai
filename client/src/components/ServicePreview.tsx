@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { previewFields, resolvePreview } from "@/lib/previewTemplate";
 
 export function ServicePreview({ template }: { template: string }) {
   const [values, setValues] = useState<Record<string, string>>({});
+  const inputId = useId();
   const fields = previewFields(template);
   const href = resolvePreview(template, values);
   return (
     <div className="mt-3 space-y-3">
       {fields.map(({ key, hint }) => (
-        <label key={key} className="block text-sm text-slate-300">
-          {key === "asset" ? "Asset symbol or XRPL address" : hint}
+        <label key={key} htmlFor={inputId + "-" + key} className="block text-sm text-slate-300">
+          {key === "asset" ? "Asset symbol or XRPL address" : hint === "wrapped-symbol:chain" ? "Wrapped token and chain (for example, usdc.e:arbitrum)" : hint}
           <input
+            id={inputId + "-" + key}
+            maxLength={512}
+            spellCheck={false}
             value={values[key] ?? ""}
             onChange={(event) => setValues((current) => ({ ...current, [key]: event.target.value }))}
             autoComplete="off"
@@ -23,7 +27,7 @@ export function ServicePreview({ template }: { template: string }) {
           Free preview →
         </a>
       ) : (
-        <p className="text-sm text-slate-400">Enter the required value to open the free preview.</p>
+        <p role="status" className="text-sm text-slate-400">{fields.length ? "Enter the required value to open the free preview." : "This preview link is unavailable. Inspect the published manifest for details."}</p>
       )}
     </div>
   );

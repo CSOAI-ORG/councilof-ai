@@ -33,7 +33,7 @@ describe("PAYMENT-REQUIRED header — minimal and under 4 KiB", () => {
     const fixed = encodePaymentRequiredHeader(SHIPPED);
     expect(fixed.length).toBeLessThan(PAYMENT_REQUIRED_HEADER_BUDGET);
     const h = decode(fixed);
-    expect(Object.keys(h).sort()).toEqual(["accepts", "error", "resource", "x402Version"]);
+    expect(Object.keys(h).sort()).toEqual(["accepts", "error", "extensions", "resource", "x402Version"]);
   });
 
   it("keeps every field the v2 spec requires and every field a payer signs with", () => {
@@ -46,7 +46,8 @@ describe("PAYMENT-REQUIRED header — minimal and under 4 KiB", () => {
     for (const k of ["scheme", "network", "amount", "asset", "payTo", "maxTimeoutSeconds"]) expect(a[k], k).toEqual(live[k]);
     expect(a.extra).toEqual({ name: (live.extra as { name: string }).name, version: (live.extra as { version: string }).version });
     expect(Object.keys(a).sort()).toEqual(["amount", "asset", "extra", "maxTimeoutSeconds", "network", "payTo", "scheme"]);
-    expect(h).not.toHaveProperty("extensions");
+    expect(h).toHaveProperty("extensions.bazaar");
+    expect(h).not.toHaveProperty("extensions.offer-receipt");
     expect(h).not.toHaveProperty("csoai");
   });
 
@@ -75,7 +76,8 @@ describe("PAYMENT-REQUIRED header — minimal and under 4 KiB", () => {
         if (header.length >= PAYMENT_REQUIRED_HEADER_BUDGET) failures.push(`${url.pathname}: header ${header.length} B`);
         const h = decode(header);
         const body = (await resp.json()) as { accepts: Record<string, unknown>[]; extensions?: Record<string, unknown> };
-        if ("extensions" in h || "csoai" in h) failures.push(`${url.pathname}: header carries body-only blocks`);
+        if ("csoai" in h || (h.extensions as Record<string, unknown> | undefined)?.["offer-receipt"]) failures.push(`${url.pathname}: header carries bulky body-only blocks`);
+        if (JSON.stringify((h.extensions as Record<string, unknown> | undefined)?.bazaar) !== JSON.stringify(body.extensions?.bazaar)) failures.push(`${url.pathname}: header/body Bazaar drift`);
         if (!body.extensions?.bazaar) failures.push(`${url.pathname}: body lost extensions.bazaar`);
         const ha = (h.accepts as Record<string, unknown>[])[0];
         for (const k of ["network", "amount", "asset", "payTo"])

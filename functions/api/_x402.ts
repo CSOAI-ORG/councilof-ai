@@ -999,23 +999,11 @@ const V2_REQUIREMENT_FIELDS = [
 ] as const;
 
 /**
- * minimalPaymentRequired — the subset of a 402 body that travels in the PAYMENT-REQUIRED header.
- *
- * What the spec requires there (x402-specification-v2 §5.1.2, transports-v2/http.md): a
- * PaymentRequired whose REQUIRED fields are x402Version, resource and accepts; `error` and
- * `extensions` are optional. What this keeps:
- *   x402Version, error, resource {url, description, mimeType}, and accepts[] cut to the v2
- *   PaymentRequirements fields (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra).
- * What it leaves in the BODY only:
- *   extensions (bazaar info+schema, offer-receipt offers) — specs/extensions/bazaar.md places
- *   `PaymentRequired.extensions` on the "402 response body" wire, and the offer JWS strings are
- *   ~600 B each; the v1 duplicates on each accept (maxAmountRequired, resource, description,
- *   mimeType) and csoai_pricing; and the whole `csoai` sidecar.
- * Until 2026-09-26 the header carried all of it: 8.6–8.9 KB per door.
- *
- * Nothing is lost to a payer: every field a wallet needs to sign EIP-3009 is in accepts[], and
- * the Bazaar echo to the facilitator is built server-side from the door's own `bazaar` object
- * (verifyX402Payment opts.bazaar), never from a header the client returns.
+ * Compact x402 v2 header: preserve the payment fields and the exact Bazaar declaration.
+ * Header-first discovery clients need extensions.bazaar here as well as in the body.
+ * Signed offer-receipt strings and presentation-only sidecars remain body-only.
+ * The per-door regression retains the existing 4 KiB header budget.
+ * This does not alter authorization, signing, settlement or receipt verification.
  */
 export function minimalPaymentRequired(
   paymentRequired: Record<string, unknown>,
@@ -1046,6 +1034,13 @@ export function minimalPaymentRequired(
       mimeType: resource.mimeType ?? "application/json",
     },
     accepts: accepts.map(pick),
+    // Header-first discovery clients must receive the exact same Bazaar declaration.
+    // Keep signed offers and presentation-only fields in the body to bound header size.
+    ...(paymentRequired.extensions && typeof paymentRequired.extensions === "object" &&
+        !Array.isArray(paymentRequired.extensions) &&
+        (paymentRequired.extensions as Record<string, unknown>).bazaar
+      ? { extensions: { bazaar: (paymentRequired.extensions as Record<string, unknown>).bazaar } }
+      : {}),
   };
 }
 
@@ -1087,17 +1082,9 @@ export function paymentRequiredResponse(
 }
 
 /**
- * paymentRequiredResponseSigned — THE call every metered door makes instead of
- * `paymentRequiredResponse`. It signs one offer per accepts[] entry (offer-receipt extension §4)
- * and then builds the same 402. The signed offers ride in the JSON body's
- * extensions["offer-receipt"]; the PAYMENT-REQUIRED header carries only the minimal v2 challenge
- * (minimalPaymentRequired). They used to be duplicated into the header too, which is how the
- * header reached 8.6–8.9 KB — past the 4–8 KiB single-header limit of common proxies. The bazaar
- * spec locates PaymentRequired.extensions on the 402 response body, which is where they stay.
- *
- * It is the only asynchronous thing about emitting a 402, and it never fails the response: when
- * the key is absent or no accepts entry can be committed to, the 402 goes out exactly as before
- * plus a `csoai.offer_receipt` sidecar saying, in words, why it carries no signature.
+ * Attach existing signed offers and build the response. The JSON body retains the offers;
+ * the compact header carries the payment fields plus the exact Bazaar declaration.
+ * Existing absent-key behaviour is unchanged; discovery metadata is not a signature.
  */
 export async function paymentRequiredResponseSigned(
   paymentRequired: Record<string, unknown>,

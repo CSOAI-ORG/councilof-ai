@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { GlobalSearch } from '@/components/GlobalSearch';
 import { PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
+import { CouncilBrand } from '@/components/brand/CouncilBrand';
+import { isPublicNavActive } from '@/components/publicNavState';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
 // SPA hops keep this header mounted: it lives above the router in App.tsx.
@@ -26,17 +28,16 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverOpened = useRef<string | null>(null);
   const hideChrome = useSiteChromeHidden();
 
-  const isActive = (href: string) => {
-    const path = href.split(/[?#]/)[0];
-    if (!path || path === '/') return false;
-    return location === path || location.startsWith(path + '/');
-  };
+  const isActive = (href: string) => isPublicNavActive(location, href);
 
   const handleMouseEnter = (name: string) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    hoverOpened.current = name;
     setActiveDropdown(name);
   };
 
@@ -69,81 +70,99 @@ export function Header() {
   }, [activeDropdown]);
 
   useEffect(() => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setActiveDropdown(null);
     setMobileMenuOpen(false);
+    setOpenMobileGroup(null);
     setSearchOpen(false);
   }, [location]);
 
-  // /gspc-verify stays free + loginless — no Sign In chrome on this route.
-  const loginlessVerify =
-    location === '/gspc-verify' || location.startsWith('/gspc-verify/');
+  useEffect(() => () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      setMobileMenuOpen(false);
+      setOpenMobileGroup(null);
+      mobileMenuButtonRef.current?.focus();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [mobileMenuOpen]);
 
   if (hideChrome) return null;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-emerald-950/10 bg-white/[0.94] shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 shadow-[0_10px_35px_rgba(6,21,15,0.06)] backdrop-blur-xl">
       <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-        <div className="flex h-14 items-center justify-between sm:h-16">
-          <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-            <div className="relative h-9 w-9 sm:h-10 sm:w-10">
-              <svg viewBox="0 0 100 100" className="w-full h-full" role="img" aria-label="Council of AI">
-                <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
-                <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
-                <rect x="26" y="66" width="48" height="6" fill="#04624a"/>
-                <rect x="30" y="61" width="40" height="4" fill="#04624a"/>
-                <rect x="33" y="38" width="6" height="22" fill="#04624a"/>
-                <rect x="44" y="38" width="6" height="22" fill="#04624a"/>
-                <rect x="55" y="38" width="6" height="22" fill="#04624a"/>
-                <rect x="66" y="38" width="6" height="22" fill="#04624a"/>
-                <rect x="28" y="33" width="44" height="5" fill="#04624a"/>
-                <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
-              </svg>
-            </div>
-            <span className="whitespace-nowrap text-lg font-black tracking-tight text-emerald-800 sm:text-xl 2xl:text-2xl">Council of AI</span>
-            <span className="hidden 2xl:inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.14em] text-emerald-800">measurement · not certification</span>
+        <div className="flex h-16 items-center justify-between gap-3">
+          <a href="/" aria-label="Council of AI home" className="inline-flex shrink-0 items-center rounded-lg transition-opacity hover:opacity-90">
+            <CouncilBrand variant="compact" size="md" className="public-header-brand" />
           </a>
 
-          <div className="hidden md:flex items-center" ref={dropdownRef}>
+          <div className="hidden xl:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
-              <div className="flex items-center gap-1 xl:hidden">
+              <div className="flex items-center gap-1 2xl:hidden">
               {PRIMARY_LINKS.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
+                  aria-current={isActive(item.href) ? 'page' : undefined}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                     isActive(item.href)
-                      ? 'text-emerald-700 bg-emerald-50'
-                      : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                      ? 'text-primary bg-accent'
+                      : 'text-muted-foreground hover:text-primary hover:bg-muted'
                   }`}
                 >
                   {item.name}
                 </a>
               ))}
               </div>
-              <div className="hidden xl:flex items-center gap-1 2xl:gap-3">
+              <div className="hidden 2xl:flex items-center gap-1 2xl:gap-3">
               {navigation.map((item) => (
                 <div
                   key={item.name}
                   className="relative"
-                  onMouseEnter={() => handleMouseEnter(item.name)}
-                  onMouseLeave={handleMouseLeave}
+                  onPointerEnter={event => {
+                    if (event.pointerType !== 'mouse') return;
+                    const focused = dropdownRef.current?.querySelector(':focus');
+                    if (focused && !event.currentTarget.contains(focused)) return;
+                    handleMouseEnter(item.name);
+                  }}
+                  onPointerLeave={event => {
+                    if (event.pointerType === 'mouse' && !event.currentTarget.contains(document.activeElement)) handleMouseLeave();
+                  }}
+                  onFocusCapture={() => { if (timeoutRef.current) clearTimeout(timeoutRef.current); }}
+                  onBlur={event => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                      hoverOpened.current = null;
+                      setActiveDropdown(current => current === item.name ? null : current);
+                    }
+                  }}
                 >
                   <button
+                    type="button"
                     data-nav-trigger={item.name}
-                    aria-haspopup="true"
                     aria-expanded={activeDropdown === item.name}
                     aria-controls={`nav-panel-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
                     className={`px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
                       isActive(item.href) || activeDropdown === item.name
-                        ? 'text-emerald-700 bg-emerald-50'
-                        : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                        ? 'text-primary bg-accent'
+                        : 'text-muted-foreground hover:text-primary hover:bg-muted'
                     }`}
-                    onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
-                    onFocus={() => handleMouseEnter(item.name)}
+                    onClick={event => {
+                      const activatedHover = event.detail > 0 && hoverOpened.current === item.name;
+                      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+                      setActiveDropdown(activeDropdown === item.name && !activatedHover ? null : item.name);
+                      hoverOpened.current = null;
+                    }}
                   >
                     {item.name}
                     <ChevronDown
-                      className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                      className={`h-3.5 w-3.5 transition-transform duration-200 motion-reduce:transition-none ${
                         activeDropdown === item.name ? 'rotate-180' : ''
                       }`}
                     />
@@ -158,7 +177,7 @@ export function Header() {
                       <div className="w-72 max-h-[min(72vh,40rem)] overflow-y-auto rounded-xl border border-border bg-popover shadow-xl">
                         <div className="border-b border-border bg-primary/[0.07] px-4 py-3">
                           <div className="flex items-center gap-2">
-                            <item.icon className="h-5 w-5 text-emerald-600" />
+                            <item.icon className="h-5 w-5 text-primary" />
                             <div>
                               <div className="font-semibold text-foreground">{item.name}</div>
                               <div className="text-xs text-muted-foreground">{item.description}</div>
@@ -175,12 +194,13 @@ export function Header() {
                               )}
                               <a
                                 href={subItem.href}
+                                aria-current={isActive(subItem.href) ? 'page' : undefined}
                                 target={subItem.external ? '_blank' : undefined}
                                 rel={subItem.external ? 'noreferrer' : undefined}
-                                className="block px-4 py-2.5 hover:bg-muted focus:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 transition-colors group"
+                                className="block px-4 py-2.5 hover:bg-muted focus:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring transition-colors group"
                                 onClick={() => setActiveDropdown(null)}
                               >
-                                <div className="font-medium text-foreground group-hover:text-emerald-700 text-sm">
+                                <div className="font-medium text-foreground group-hover:text-primary text-sm">
                                   {subItem.name}
                                   {subItem.external && (
                                     <span className="ml-1.5 align-middle text-[9px] font-bold uppercase tracking-wide text-muted-foreground">JSON</span>
@@ -192,7 +212,7 @@ export function Header() {
                           ))}
                         </div>
                         <div className="px-4 py-2 bg-muted border-t border-border">
-                          <a href={item.href} className="text-xs text-emerald-600 hover:text-emerald-700 font-medium" onClick={() => setActiveDropdown(null)}>
+                          <a href={item.href} className="text-xs text-primary hover:text-primary font-medium" onClick={() => setActiveDropdown(null)}>
                             View all {item.name.toLowerCase()} →
                           </a>
                         </div>
@@ -205,9 +225,9 @@ export function Header() {
             </div>
           </div>
 
-          <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
-            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/gspc-verify">Verify</Link></Button>
-            <button onClick={() => setSearchOpen(true)} className="rounded-xl p-2 text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search">
+          <div className="hidden xl:flex flex-nowrap items-center gap-2 2xl:gap-3">
+            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-brand-institutional hover:bg-accent 2xl:inline-flex"><Link href="/gspc-verify">Verify</Link></Button>
+            <button type="button" onClick={() => { setActiveDropdown(null); setMobileMenuOpen(false); setSearchOpen(true); }} className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:bg-accent hover:text-brand-institutional" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
             {user ? (
@@ -215,8 +235,8 @@ export function Header() {
                 <NotificationCenter />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
-                      <User className="h-4 w-4 text-emerald-700" />
+                    <Button variant="ghost" size="icon" aria-label="Account menu" className="text-muted-foreground h-11 w-11 rounded-full bg-accent hover:bg-accent">
+                      <User className="h-4 w-4 text-primary" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
@@ -239,28 +259,28 @@ export function Header() {
             ) : (
               <>
                 {/* 2026-09-26: "Sign In" left the main nav (newcomer audit). /login still exists. */}
-                <Button asChild size="sm" className="rounded-xl bg-emerald-700 font-semibold text-white shadow-sm hover:bg-emerald-800"><Link href="/assess">Request attestation</Link></Button>
+                <Button asChild size="sm" className="rounded-xl bg-primary font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"><Link href="/assess">Request attestation</Link></Button>
               </>
             )}
           </div>
 
-          <div className="md:hidden flex items-center gap-2">
-            <button onClick={() => setSearchOpen(true)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search"><Search className="h-5 w-5" /></button>
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
+          <div className="xl:hidden flex items-center gap-2">
+            <button type="button" onClick={() => { setActiveDropdown(null); setMobileMenuOpen(false); setSearchOpen(true); }} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search"><Search className="h-5 w-5" /></button>
+            <button ref={mobileMenuButtonRef} type="button" aria-expanded={mobileMenuOpen} aria-controls="public-mobile-navigation" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div id="public-mobile-navigation" className="xl:hidden py-4 border-t border-border max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain">
             <div className="space-y-1">
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
-                location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
+                location === '/' ? 'text-primary bg-accent' : 'text-foreground/80'
               }`} onClick={() => setMobileMenuOpen(false)}>Home</a>
               {PRIMARY_LINKS.filter((item) => !navigation.some((g) => g.name === item.name)).map((item) => (
                 <a key={item.href} href={item.href} className={`block px-4 py-3 rounded-lg font-medium ${
-                  isActive(item.href) ? "text-emerald-700 bg-emerald-50" : "text-foreground/80"
+                  isActive(item.href) ? "text-primary bg-accent" : "text-foreground/80"
                 }`} onClick={() => setMobileMenuOpen(false)}>{item.name}</a>
               ))}
               <a href="/library" className="block px-4 py-3 rounded-lg font-medium text-foreground/80" onClick={() => setMobileMenuOpen(false)}>Library</a>
@@ -272,19 +292,19 @@ export function Header() {
                     aria-controls={`mobile-group-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
                     onClick={() => setOpenMobileGroup(openMobileGroup === item.name ? null : item.name)}
                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-left ${
-                      isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
+                      isActive(item.href) ? 'text-primary bg-accent' : 'text-foreground/80'
                     }`}
                   >
-                    <item.icon className="h-5 w-5 text-emerald-600 shrink-0" />
+                    <item.icon className="h-5 w-5 text-primary shrink-0" />
                     <span className="flex-1">{item.name}</span>
-                    <ChevronDown className={`h-4 w-4 transition-transform ${openMobileGroup === item.name ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`h-4 w-4 transition-transform motion-reduce:transition-none ${openMobileGroup === item.name ? 'rotate-180' : ''}`} />
                   </button>
                   <div
                     id={`mobile-group-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
                     hidden={openMobileGroup !== item.name}
                     className="ml-12 space-y-1"
                   >
-                    <a href={item.href} className="block px-4 py-2 text-sm font-medium text-emerald-700" onClick={() => setMobileMenuOpen(false)}>
+                    <a href={item.href} className="block px-4 py-2 text-sm font-medium text-primary" onClick={() => setMobileMenuOpen(false)}>
                       All {item.name.toLowerCase()}
                     </a>
                     {item.submenu.map((subItem) => (
@@ -292,7 +312,7 @@ export function Header() {
                         {subItem.section && (
                           <div className="px-4 pt-3 pb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{subItem.section}</div>
                         )}
-                        <a href={subItem.href} target={subItem.external ? '_blank' : undefined} rel={subItem.external ? 'noreferrer' : undefined} className="block px-4 py-2 text-sm text-muted-foreground hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded" onClick={() => setMobileMenuOpen(false)}>
+                        <a href={subItem.href} target={subItem.external ? '_blank' : undefined} rel={subItem.external ? 'noreferrer' : undefined} className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded" onClick={() => setMobileMenuOpen(false)}>
                           {subItem.name}
                           {subItem.external && <span className="ml-1 text-[10px] uppercase tracking-wide text-muted-foreground">JSON</span>}
                         </a>
@@ -302,7 +322,7 @@ export function Header() {
                 </div>
               ))}
               <div className="pt-4 mt-4 border-t border-border space-y-2 px-4">
-                <a href="/library" className="block" onClick={() => setMobileMenuOpen(false)}><Button variant="outline" className="w-full">Browse the full Library</Button></a>
+                <Button asChild variant="outline" className="w-full"><a href="/library" onClick={() => setMobileMenuOpen(false)}>Browse the full Library</a></Button>
                 {user ? (
                   <>
                     <Button asChild variant="outline" className="w-full justify-start"><a href="/dashboard" onClick={() => setMobileMenuOpen(false)}><BarChart3 className="h-4 w-4 mr-2" />Dashboard</a></Button>
@@ -310,7 +330,7 @@ export function Header() {
                   </>
                 ) : (
                   <>
-                    <Button asChild className="w-full bg-emerald-600 hover:bg-emerald-700"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a></Button>
+                    <Button asChild className="w-full bg-primary text-primary-foreground hover:bg-primary/90"><a href="/assess" onClick={() => setMobileMenuOpen(false)}>Request attestation</a></Button>
                   </>
                 )}
               </div>

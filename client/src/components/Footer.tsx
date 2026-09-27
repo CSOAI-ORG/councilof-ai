@@ -11,6 +11,7 @@ import FooterVerifyStrip from './FooterVerifyStrip';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
+import { CouncilBrand } from '@/components/brand/CouncilBrand';
 
 interface FooterLink {
   name: string;
@@ -108,47 +109,21 @@ export function Footer() {
     >
       <div className="section-shell py-12 sm:py-14">
         {/* Brand + socials */}
-        <div className="mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6">
-          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <svg viewBox="0 0 100 100" className="h-9 w-9" aria-hidden="true">
-              <defs>
-                <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#10b981" />
-                  <stop offset="100%" stopColor="#047857" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M50 5 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z"
-                fill="url(#footerShieldGradient)"
-              />
-              <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                <line x1="25" y1="30" x2="25" y2="70"/>
-                <line x1="25" y1="40" x2="40" y2="40"/>
-                <line x1="25" y1="55" x2="35" y2="55"/>
-                <circle cx="25" cy="30" r="4" fill="#fff"/>
-                <circle cx="40" cy="40" r="4" fill="#fff"/>
-                <circle cx="35" cy="55" r="4" fill="#fff"/>
-                <circle cx="25" cy="70" r="4" fill="#fff"/>
-              </g>
-              <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                <path d="M55 35 Q70 30 72 45 Q82 45 78 58 Q85 65 70 72 Q65 80 55 72"/>
-                <circle cx="62" cy="45" r="5" fill="#fff"/>
-                <circle cx="72" cy="60" r="5" fill="#fff"/>
-              </g>
-            </svg>
-            <span className="text-xl font-bold">CSOAI</span>
+        <div className="mb-10 flex flex-col items-center text-center xl:flex-row xl:items-start xl:text-left gap-6">
+          <Link href="/" aria-label="Council of AI home" className="inline-flex min-w-0 max-w-full shrink-0 items-center rounded-lg transition-opacity hover:opacity-90">
+            <CouncilBrand variant="full" />
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
             Independent measurement body. Signed attestation and transparent measurement — never certification.
           </p>
-          <div className="flex space-x-4 sm:ml-auto">
+          <div className="flex shrink-0 gap-1 xl:ml-auto">
             {socialLinks.map((social) => (
               <a
                 key={social.name}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-primary transition-colors"
                 aria-label={social.name}
               >
                 <social.icon className="h-5 w-5" />
