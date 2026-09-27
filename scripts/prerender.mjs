@@ -213,6 +213,8 @@ function discover() {
     "/state", "/state/2026-09",
     // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
     "/verify-server",
+    // /connect/claude: free-only MCP connector documentation.
+    "/connect/claude",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

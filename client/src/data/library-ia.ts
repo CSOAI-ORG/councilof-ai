@@ -47,6 +47,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // it would ship the ArchivedBanner under a link we actively promote. /connect-ai is
   // the same page under a shorter alias.
   "/connect-gspc", "/connect-ai",
+  // /connect/claude — the connector documentation named in the Claude connector directory listing
+  // (2026-09-27). Unregistered it would ship "archived" on the page a directory reviewer reads.
+  "/connect/claude",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
@@ -139,6 +142,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // These three routes serve the operative Terms v1.1 and are indexed. Calling
   // the current contract a "reference / archive" contradicts its acceptance text.
   "/terms-of-service", "/terms", "/legal/terms",
+  // The operative privacy notice, on all three of its routes. It shipped under the "Reference /
+  // archive" banner until 2026-09-27, which reads as a stale policy to anyone checking it (the Claude
+  // connector directory requires a current privacy policy link).
+  "/privacy-policy", "/privacy", "/legal/privacy",
   "/faq", "/traction",
   // #148 — /dispute is a live Charter Article 18 page, not an archive.
   // Without this entry it shipped under the "Reference / archive" banner.

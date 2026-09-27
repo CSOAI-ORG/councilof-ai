@@ -41,7 +41,28 @@ export function unreachablePayload(origin: string, path: string, e: unknown) {
   };
 }
 
-export async function boardTotalsTool(origin: string) {
+/**
+ * The board's date as one short string. /api/gspc `measured_on` is an object (fleet, endpoint,
+ * grading notes and a signed living stamp — about 11,000 characters) whose `date` field is the
+ * dates line; older payloads carried a plain string. Anything else is null, never invented.
+ */
+export function boardDateOf(measuredOn: unknown): string | null {
+  if (typeof measuredOn === "string") return measuredOn;
+  if (measuredOn && typeof measuredOn === "object" && !Array.isArray(measuredOn)) {
+    const date = (measuredOn as Record<string, unknown>).date;
+    if (typeof date === "string") return date;
+  }
+  return null;
+}
+
+/**
+ * board_totals. The default answer is the SUMMARY: the three labelled counts, the board's own
+ * public_count and separation line, the dates and the source — about 1,500 characters. It used to
+ * return about 15,000 to answer two numbers, nearly all of it the board's measured_on block copied
+ * into as_of (Anthropic Software Directory Policy 5.B: token use roughly commensurate with the
+ * task). `detail: "full"` returns the previous payload unchanged, so no reader loses a field.
+ */
+export async function boardTotalsTool(origin: string, args: Record<string, unknown> = {}) {
   let d: Record<string, unknown>;
   try {
     d = (await fetchOriginJson(origin, "/api/gspc")) as Record<string, unknown>;
@@ -49,29 +70,54 @@ export async function boardTotalsTool(origin: string) {
     return unreachablePayload(origin, "/api/gspc", e);
   }
   const t = (d.totals ?? {}) as Record<string, unknown>;
+  const fetched_at = new Date().toISOString();
+  const counts = [
+    {
+      name: "axis_slots",
+      value: t.axes ?? null,
+      kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
+    },
+    {
+      name: "measured",
+      value: t.measured_axes ?? null,
+      kind: "measurement count — slots with a real run behind them",
+    },
+    {
+      name: "unmeasured",
+      value: t.unmeasured_axes ?? null,
+      kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
+    },
+  ];
+  if (args.detail !== "full") {
+    return {
+      state: "LIVE",
+      reachable: true,
+      kind: "live-board-totals",
+      detail: "summary",
+      source: `${origin}/api/gspc`,
+      as_of: { board_measured_on: boardDateOf(d.measured_on), fetched_at },
+      counts,
+      public_count: t.public_count ?? null,
+      separation: {
+        public_count: t.separation_public_count ?? null,
+        comparison_axes: t.comparison_axes ?? null,
+        separated_leads: t.separated_leads ?? null,
+        ties: t.ties ?? null,
+        untested: t.untested_separations ?? null,
+        note: "A measured axis is not a separated leader: separation is a separate determination, and TIE and UNTESTED are not folded into it.",
+      },
+      more: 'Call again with detail: "full" for count_grammar, by_family and the board\'s full measured_on block.',
+      not_a_certification: true,
+    };
+  }
   return {
     state: "LIVE",
     reachable: true,
     kind: "live-board-totals",
+    detail: "full",
     source: `${origin}/api/gspc`,
-    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
-    counts: [
-      {
-        name: "axis_slots",
-        value: t.axes ?? null,
-        kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
-      },
-      {
-        name: "measured",
-        value: t.measured_axes ?? null,
-        kind: "measurement count — slots with a real run behind them",
-      },
-      {
-        name: "unmeasured",
-        value: t.unmeasured_axes ?? null,
-        kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
-      },
-    ],
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at },
+    counts,
     count_grammar: t.count_grammar ?? null,
     public_count: t.public_count ?? null,
     by_family: t.by_family ?? null,

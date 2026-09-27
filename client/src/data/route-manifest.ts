@@ -428,6 +428,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Connect GSPC"
  },
  {
+  "path": "/connect/claude",
+  "comp": "ConnectClaude",
+  "title": "Connect Claude"
+ },
+ {
   "path": "/consensus",
   "comp": "Redirect",
   "title": "Consensus"

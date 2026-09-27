@@ -205,17 +205,23 @@ Licence: Apache-2.0. ${doctrineFooter()}
 `);
 
 // ── 3. Claude connectors directory ──────────────────────────────────────────────────────────
-const connectorTools = tools.map((t) => ({ name: t.id, payment: t.payment, read_only: t.payment === "free" }));
+// The directory listing points at the FREE door (${ID.door}/free), never at ${ID.door}: Anthropic
+// Software Directory Policy 4.A excludes software that transfers money or crypto unless Anthropic
+// permits it in writing, and the metered tools settle USDC. functions/mcp/[[path]].ts serves the free
+// door from the same definitions, filtered; its tools are exactly the `free` capabilities here.
+const FREE_DOOR = `${ID.door}/free`;
+const connectorTools = free.map((t) => ({ name: t.id, payment: t.payment, read_only: true }));
 emit("distribution/claude/connector.json", j({
   form: "Claude connectors directory — remote MCP server",
   status: "PREPARED — NOT SUBMITTED",
   name: ID.short_name,
-  server_url: ID.door,
+  server_url: FREE_DOOR,
   transport: "streamable-http",
   authentication: "none",
-  description: `${FLEET} over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards. ${STANCE}`,
+  description: `Council of AI's ${word(free.length)} free read-only tools over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards and capsules. No payment tool is served at this address. ${STANCE}`,
   company: { name: ID.publisher, company_number: ID.company_number, jurisdiction: ID.jurisdiction, website: ID.website },
   contact_email: ID.email,
+  documentation_url: `${ID.website}/connect/claude/`,
   privacy_policy_url: ID.privacy,
   terms_url: ID.terms,
   support_url: ID.support,
@@ -224,9 +230,11 @@ emit("distribution/claude/connector.json", j({
   tools: connectorTools,
   tool_count: connectorTools.length,
   example_prompts: [
-    "What does the GSPC board say right now? Quote public_count exactly.",
-    "Verify this Council of AI measurement card: <paste card JSON>.",
-    "Show me the GSPC axis row for provenance.",
+    "What does the Council of AI measurement board show right now? How many axes are measured?",
+    "Show me the Council of AI safety axis: sample size, accuracy and interval.",
+    "Verify this Council of AI signed measurement card: https://councilof.ai/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json",
+    "Has Council of AI published any measurements about the MCP server at https://councilof.ai/mcp? What was checked?",
+    "In Council of AI's latest census of public MCP servers, how many answered a correct handshake?",
   ],
   doctrine: DOCTRINE,
 }));
@@ -868,18 +876,24 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
   card.endpoints.mcp.note =
     `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(tools.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. ` +
     `Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server ${REMOTE_VERSION}. mill-tool \`measure\` dropped.`;
+  card.endpoints.mcp.free = FREE_DOOR;
+  card.endpoints.mcp.free_note =
+    `${FREE_DOOR} serves the ${word(free.length)} free readers only, from the same definitions and handlers as ${ID.door}: ` +
+    "no payment tool and no payment text. It is the address for chat clients and directories that list no payment software.";
   card.capabilities.tools = toolNames;
   card.capabilities.total_tools = tools.length;
   card.capabilities.free_tools = free.length;
   card.capabilities.metered_tools = paid.length;
   card.doctrine = DOCTRINE;
-  card.generated_by = "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, capabilities.*, doctrine)";
+  card.generated_by = "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, endpoints.mcp.free, endpoints.mcp.free_note, capabilities.*, doctrine)";
   emit(rel, j(card));
 }
 {
   const rel = "public/.well-known/mcp.json";
   const m = readJson(rel);
   m.servers[0].stdio = stdio;
+  m.servers[0].free_url = FREE_DOOR;
+  m.servers[0].free_tools = free.map((t) => t.id);
   m.servers[0].registry.name = dist.registry_names.canonical;
   m.servers[0].registry.deprecated_alias = dist.registry_names.deprecated_alias;
   m.servers[0].registry.version = REMOTE_VERSION;
@@ -895,7 +909,7 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
     `The product door: ${fleetProse}. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. ` +
     "No jail run from MCP. mill-tool `measure` dropped.";
   m.doctrine = DOCTRINE;
-  m.generated_by = "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].registry, measured.*, planted.*, doctrine)";
+  m.generated_by = "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].free_url, servers[0].free_tools, servers[0].registry, measured.*, planted.*, doctrine)";
   emit(rel, j(m));
 }
 

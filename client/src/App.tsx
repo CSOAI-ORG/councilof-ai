@@ -313,6 +313,8 @@ const Signals = lazy(() => import("./pages/Signals"));
 const SignedMillBatch20260924 = lazy(() => import("./pages/SignedMillBatch20260924"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
+// /connect/claude: connector documentation for the free MCP door /mcp/free (Claude connector directory, 2026-09-27).
+const ConnectClaude = lazy(() => import("./pages/ConnectClaude"));
 const CouncilHub = lazy(() => import("./pages/CouncilHub"));
 const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
@@ -876,6 +878,7 @@ function App() {
                   <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
                   <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
                   <Route path="/connect" component={ContentReviewNotice} />
+                  <Route path="/connect/claude" component={ConnectClaude} />
                   <Route path="/connect-gspc" component={ConnectGSPC} />
                   <Route path="/connect-ai" component={ConnectGSPC} />
                   <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>

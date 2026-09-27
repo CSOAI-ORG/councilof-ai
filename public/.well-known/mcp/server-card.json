@@ -16,7 +16,9 @@
       "fallback": "https://csoai.org/mcp",
       "current": "https://councilof.ai/mcp",
       "stdio": "npx -y csoai-gspc-mcp@0.2.2",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is sixteen: twelve free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server 1.4.2. mill-tool `measure` dropped."
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is sixteen: twelve free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server 1.4.2. mill-tool `measure` dropped.",
+      "free": "https://councilof.ai/mcp/free",
+      "free_note": "https://councilof.ai/mcp/free serves the twelve free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -71,5 +73,5 @@
     "source": "docs/DOCTRINE.md",
     "human_page": "https://councilof.ai/doctrine/"
   },
-  "generated_by": "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, capabilities.*, doctrine)"
+  "generated_by": "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, endpoints.mcp.free, endpoints.mcp.free_note, capabilities.*, doctrine)"
 }

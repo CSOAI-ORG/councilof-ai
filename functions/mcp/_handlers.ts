@@ -1,8 +1,8 @@
 /**
  * Shared MCP tool handlers for Pages /mcp.
- * Free definitions stay in ./gspc-tools.json. HTTP exposes nine free tools
- * plus four paid tools; witness_hash stays quarantined. npm is an independent
- * release: ask that installed implementation for its current tools/list.
+ * Free definitions stay in ./gspc-tools.json. /mcp serves them plus the paid tools in
+ * ./paid-tools.json; /mcp/free serves them alone. witness_hash stays quarantined. npm is an
+ * independent release: ask that installed implementation for its current tools/list.
  */
 import { verifyCard, anchorsFromDid, cardState, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
@@ -84,8 +84,12 @@ function sharedToolSummary(
   if (payload.state === "UNREACHABLE" || (idx && idx.state === "UNREACHABLE"))
     return "UNREACHABLE — the live source could not be fetched; no cached number is substituted.";
   switch (name) {
-    case "board_totals":
-      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).`;
+    case "board_totals": {
+      const sep = payload.separation as Record<string, unknown> | undefined;
+      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).${
+        sep && typeof sep.public_count === "string" ? ` Separation: ${sep.public_count}.` : ""
+      }`;
+    }
     case "get_axis":
       return payload.state === "NOT_ON_BOARD"
         ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
@@ -125,7 +129,7 @@ export async function sharedToolResult(
 ): Promise<McpToolResult> {
   const payload =
     name === "board_totals"
-      ? await boardTotalsTool(origin)
+      ? await boardTotalsTool(origin, args)
       : name === "get_axis"
         ? await getAxisTool(origin, args)
         : name === "list_cards"
