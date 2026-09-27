@@ -556,6 +556,12 @@ const MACHINE_PATHS = [
   ["/.well-known/scitt.json", "daily", "0.6"],
   ["/api/arena/scoreboard", "daily", "0.6"],
   ["/api/regulator-findings", "daily", "0.6"],
+  // Reach engine (functions/_lib/reach): the derived records feeds and the daily-note hub. Entity
+  // pages are NOT listed here: they live in the Function-generated /sitemaps/<type>-<n>.xml, named by
+  // /sitemaps/index.xml (scripts/reach/entity-sitemap-gate.mjs checks that no entity URL is in both).
+  ["/feeds/records.xml", "daily", "0.6"],
+  ["/feeds/records.json", "daily", "0.5"],
+  ["/notes/daily/", "daily", "0.6"],
   // Machine-readable records previously served only by an out-of-band release (27 Sep); now in public/.
   ["/progress-index.json", "daily", "0.5"],
   ["/eat-flywheel.json", "daily", "0.5"],

@@ -773,7 +773,7 @@ was a number that had stopped being true. Count the rows.
 3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
    TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
    the board and awards nothing. Human view of the same board: https://councilof.ai/dashboard
-4. Chrome MV3 extension source — `https://huggingface.co/datasets/csoai/councilof-ai-source/tree/main/source/extensions/chrome-gspc-verify` (source; no store install claimed)
+4. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
 5. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
@@ -839,14 +839,14 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-26T13:11:58Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-27T06:44:16Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 642. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 643. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
 - Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 639.
-- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
+- Still calendar-pending: 4. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 60 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

@@ -1,0 +1,267 @@
+{
+ "schema": "csoai.a2a-card-census/weekly-0.1",
+ "record_id": "a2a-card-census-weekly-2026-09-27",
+ "revision_date": "2026-09-27",
+ "as_of": "2026-09-27T03:57:14Z",
+ "built_utc": "2026-09-27T03:57:56Z",
+ "publisher": "Council of AI (CSOAI), councilof.ai",
+ "licence": {
+  "data": "CC-BY-4.0"
+ },
+ "what_this_is": "A dated weekly read of the agent cards behind a2aregistry listings: GET the card, check its signatures. No task, message or JSON-RPC call was sent to any agent.",
+ "revision_of": {
+  "dataset": "https://huggingface.co/datasets/csoai/a2a-card-census",
+  "previous_record": "record.json",
+  "previous_record_sha256": "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c",
+  "earlier_files": "every earlier record and data file in this dataset is kept byte for byte; this revision only adds files"
+ },
+ "producer": {
+  "runner": "~/lanes/flywheel/flywheel_census.py on oracle-micro-2 (cron, Sundays 02:00Z)",
+  "runner_sha256": "710c01d3b537bb84b8ae3080a817f1f1fa788f7cf91bfb7c466551f5d797b189",
+  "fwlib_sha256": "26db6e25965fb069670779f0cd000b64f66f20dac7809d48f11bddad4734b752",
+  "pinned_producers": {
+   "frame.py": {
+    "sha256": "15e9cd111d0f100b286227d21ee78d755eaaf2071ec816d5c0ff66d44df6895f",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "reach.py": {
+    "sha256": "bdfc929218c54d5479c68ca8316ca4be29130fc63b47dc0b767c9182c3143111",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "read_state.py": {
+    "sha256": "70ebf780e3fbb889d5b244ef7051a091f5e262d0658d87583ba90974e42a8a0f",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "hf-spaces-mcp-probe.py": {
+    "sha256": "8750e781b91371a214bfed0de17317d7d8088c4af6364ea0376fc2ab15b10444",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "a2a-card-probe.py": {
+    "sha256": "a38da0c9320ed0c17dffc92891c19398bdc1bcb41cb23f36bb75fa798ac13b51",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "build-universes-census-records.py": {
+    "sha256": "cac5907ec35e4b0e1c7ec9df2fd7e231362aa4eb202a635abee76fac59fc8898",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "test_hf_spaces_mcp_probe.py": {
+    "sha256": "b1a87c52593efe6b303a00e09e24fdcebf0959835ad48da2ab96c2fd8d2b9831",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "test_a2a_card_probe.py": {
+    "sha256": "1b82912717b85826b4110851d8f6e01bb4a431bce0c115c9710b7ba12cd5d119",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "test_frame.py": {
+    "sha256": "2c3051049ac34f15dc98174e28ec2a322c4112a404d3e2e7eb9ae7518de0e346",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "test_reach.py": {
+    "sha256": "6ab8020761778b76a68722c34f8ae5d829f0b9363e8e0353ee3f4ee9264306c0",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "x402-bazaar-conformance.py": {
+    "sha256": "7753137c9706682a06275d28d98ba061bbc605af976fb05cbc75ed7291669965",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "test_x402_partial.py": {
+    "sha256": "cc9d687b4ef4695a4d1193c4f2cf3b1567326cbd378af951b6038a274bf6fab7",
+    "source_lane": "census-universes",
+    "source_commit": "29ddb12b5dc5c833a2bdf98d2f3c30afb204f52f"
+   },
+   "mcp-remote-probe.py": {
+    "sha256": "149845b83430ba893956caf715ed573e84602671c59ba0753514cb312fccf75e",
+    "source_lane": "truth-repair",
+    "source_commit": "9d34e9b5d3c11007b36b399d127a87d903a8b82a"
+   },
+   "test_mcp_remote_probe.py": {
+    "sha256": "56c6515b36761299db60085330c3893f3ee62f695276e155ee97a6de69ba0111",
+    "source_lane": "truth-repair",
+    "source_commit": "9d34e9b5d3c11007b36b399d127a87d903a8b82a"
+   },
+   "build-mcp-remote-census-record.py": {
+    "sha256": "456e8f7e621af66ac9a38d9b9e5969d8eb8d47358cb835a6b732d1912d610e7c",
+    "source_lane": "truth-repair",
+    "source_commit": "9d34e9b5d3c11007b36b399d127a87d903a8b82a"
+   },
+   "rights_gate.py": {
+    "sha256": "62e210aac5daf01c35a22289b0bf16fabd9c432a8fd2f23b1060af0dbae50469",
+    "source_lane": "rights-gate",
+    "source_commit": "4e03c9b5ec54ca94a71860080e361c806452826b"
+   },
+   "test_rights_gate.py": {
+    "sha256": "be4b32bd7c8ac8f92125c6498513539b8ab0ec07b9ece1dcf599746824d62acf",
+    "source_lane": "rights-gate",
+    "source_commit": "4e03c9b5ec54ca94a71860080e361c806452826b"
+   },
+   "firstparty.py": {
+    "sha256": "47b0f3fdbdcd2113bb64a5b39e08b4ce5cacb884143010f443af6f3ff0959627",
+    "source_lane": "member-slice",
+    "source_commit": "0036b5069be4e8a462b7b073765983e8b8bfbd1d"
+   },
+   "global-universe.py": {
+    "sha256": "4c212716d7780acf9681764a5646ad636af3d61a07cb320740e4e5cf720529eb",
+    "source_lane": "harvest-e2e-lab",
+    "source_commit": "107b894b03ffb2e5961994edff3020e88955ef99"
+   },
+   "harvest-e2e.py": {
+    "sha256": "cbaaea94938e997a167878775fb96b85aff0e3937d2c4710de4573e8ec1850d0",
+    "source_lane": "harvest-e2e-hardening-20260926",
+    "source_commit": "169f81f910d6fc5996505a0e29540184d80c513b"
+   }
+  }
+ },
+ "frame": {
+  "run": [
+   "2026-09-27T02:02:55Z",
+   "2026-09-27T02:09:43Z"
+  ],
+  "sources": {
+   "mcp-registry": {
+    "read_state": "EXHAUSTED",
+    "rows_read": 36467,
+    "distinct_ids": 36467,
+    "population_total": 36467,
+    "distinct_endpoints": 22357
+   },
+   "hf-spaces": {
+    "read_state": "EXHAUSTED",
+    "rows_read": 10888,
+    "distinct_ids": 10888,
+    "population_total": 10888,
+    "distinct_endpoints": 10888
+   },
+   "a2aregistry": {
+    "read_state": "EXHAUSTED",
+    "rows_read": 446,
+    "distinct_ids": 446,
+    "population_total": 446,
+    "distinct_endpoints": 443
+   },
+   "docker-mcp-registry": {
+    "read_state": "EXHAUSTED",
+    "rows_read": 328,
+    "distinct_ids": 328,
+    "population_total": 328,
+    "distinct_endpoints": 77
+   },
+   "smithery": {
+    "read_state": "PARTIAL",
+    "rows_read": 500,
+    "distinct_ids": 264,
+    "population_total": null,
+    "distinct_endpoints": 0
+   }
+  },
+  "union_population_total": null,
+  "union_population_total_null_because": [
+   "smithery: PARTIAL"
+  ]
+ },
+ "run": {
+  "n_planned": 444,
+  "n_attempted": 444,
+  "n_not_attempted": 0,
+  "read_state": "EXHAUSTED",
+  "window": [
+   "2026-09-27T03:56:04Z",
+   "2026-09-27T03:57:14Z"
+  ],
+  "signatures": {
+   "cards_with_signatures_block": 36,
+   "pct_cards_with_signatures_block": 8.57,
+   "sig_state": {
+    "NO_SIGNATURES": 385,
+    "VERIFIED": 19,
+    "FAILED": 3,
+    "UNCHECKABLE": 13
+   },
+   "pct_signed": 8.33,
+   "pct_verifying": 4.52,
+   "verified_by_key_source": {
+    "jku": 18,
+    "embedded_jwk": 1
+   },
+   "verified_note": "embedded_jwk = the card vouches for its own key: integrity, not identity",
+   "uncheckable_reasons": {
+    "no jku, no embedded jwk, no did:web kid: the card points to no key": 10,
+    "key document has no key matching kid": 2,
+    "signature object lacks protected/signature strings": 1
+   },
+   "failed_that_verify_under_a_non_spec_serialisation": 0,
+   "failed_note": "FAILED = no verification over JCS(card without signatures) under the key the card points to; alt_serialisations_verifying is a diagnostic of 4 non-spec serialisations, never a pass",
+   "denominator": "cards served (CARD_SERVED), not listings",
+   "canonicalisation": "JCS (RFC 8785) of the card with `signatures` removed; detached JWS (RFC 7515)"
+  },
+  "states": {
+   "CARD_SERVED": 420,
+   "ROBOTS_DISALLOWED": 10,
+   "UNREACHABLE": 7,
+   "NOT_FOUND": 6,
+   "AUTH_REQUIRED": 1
+  },
+  "n_rights_gate_excluded": 2,
+  "read_state_scope": "over the frame's listings the rights gate ALLOWED (MEASURE_PUBLIC); listings it did not allow were never contacted and are named in the not_attempted file with the gate's reason"
+ },
+ "summary_cross_checks": {
+  "n_attempted == rows": true,
+  "states == row states": true,
+  "public rows carry exactly the published keys": true,
+  "gate-excluded ids disjoint from probed rows": true,
+  "rights gate: no MEASURE_PUBLIC-restricted row was contacted": true
+ },
+ "changes": {
+  "file": "CHANGES.2026-09-27.json",
+  "added": 7,
+  "dropped": 4,
+  "state_changed": 9,
+  "out_of_plan": 0,
+  "not_compared": 2,
+  "unchanged": 428
+ },
+ "not_evidence_of": [
+  "that any server, Space or agent is safe, secure, correct, maintained, or fit for any purpose",
+  "endorsement, ranking, grading, or approval of any operator",
+  "a population total: counts are over what this run read and attempted",
+  "reachability at any other moment or from any other network location",
+  "anything behind a credential: none was ever sent"
+ ],
+ "verify": {
+  "signature": "record.2026-09-27.signed.json: canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.2026-09-27.json); verify sig_ed25519 with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json",
+  "timestamp": "record.2026-09-27.json.ots: a PENDING OpenTimestamps calendar commitment when published; upgraded proofs appear under ots-upgraded/",
+  "files": "sha256 of every published file is in published_files and is pinned by the signature through this record"
+ },
+ "rights_gate": {
+  "restricted_rows_in_source": 2,
+  "none_contacted": true
+ },
+ "published_files": {
+  "CHANGES.2026-09-27.json": {
+   "sha256": "b834f74ea4b44a304dc183de54d0fc52e0f704050640ab0bc23510254f702a40",
+   "bytes": 4400
+  },
+  "data/cards.2026-09-27.jsonl.gz": {
+   "sha256": "6fc6543e950fb204b05741c23250802958f1c3f705b2f5a589b3c06a121b8f7e",
+   "bytes": 40774
+  },
+  "data/cards.not_attempted.2026-09-27.jsonl.gz": {
+   "sha256": "84e70af750a0cedce425d2485636cd5db34e72e3fa105a1dbb1510bdf3ec2c7e",
+   "bytes": 244
+  },
+  "run/2026-09-27/summary.json": {
+   "sha256": "6c16006d69f8d565fd1e11c8e4cf1f669c90ea6af6f4a2109947804fe7f8f52b",
+   "bytes": 5285
+  }
+ }
+}

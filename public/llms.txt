@@ -112,16 +112,8 @@ Claim maintenance is the continuous, independent observation of the public claim
 - States, and there are exactly four: CLAIM_CAPTURED · CLAIM_MEASURED · UNMEASURED · UNCHECKABLE. UNMEASURED and UNCHECKABLE are first-class and are published as prominently as the others.
 - What it is NOT: not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism. No mark, badge, score, rank or index may be derived from any state. Nothing published asserts falsity about anyone. An observed change is never an allegation. A listing is not an endorsement and not an accusation.
 
-## signed-receipts/v1 (A2A extension specification)
-- Canonical home: https://councilof.ai/spec/signed-receipts/ · specification text of record: https://councilof.ai/spec/signed-receipts/v1/SPEC.md (draft 0.2, Apache-2.0) · reference implementation: https://councilof.ai/spec/signed-receipts/v1/interceptor.py · its tests: https://councilof.ai/spec/signed-receipts/v1/test_interceptor.py
-- Extension URI (what an AgentCard declares): https://councilof.ai/a2a/extensions/signed-receipts/v1
-- Third-party use, exactly as verified and nothing stronger: The independent conformance suite `@fractalai/pqc-agent-receipts-conformance` (npm 0.3.1) includes a profile, `a2a-receipt-ml-dsa-65`, that reuses the CSOAI `signed-receipts/v1` receipt object with an ML-DSA-65 signature.
-- A receipt is evidence of what was claimed and when, by the issuer. It is not a mark, an endorsement or a grade.
-- Related interop result (27 Sep 2026): our agent-card canonicalisers against the A2A TCK RFC 8785 vectors — https://councilof.ai/interop/a2a-jcs-2026-09-27/ (record: https://councilof.ai/interop/a2a-jcs-2026-09-27/summary.json)
-
 ## x402 discovery (agents)
 - Discovery: GET https://councilof.ai/.well-known/x402.json — mode live · Base eip155:8453 · USDC (amounts from challenge only; no invent price)
-- Daily conformance index of both public Bazaars (free): GET https://councilof.ai/api/x402/index — serves the day's census summary only as a board-signed card-v0 leaf that verifies under the pinned key; read `state` live (SIGNED, INDEX_PENDING, SIGNATURE_INVALID or UNCHECKABLE). The CDP and PayAI frames overlap; never add them.
 - Catalog: GET https://councilof.ai/api/x402
 - Paid path in six steps (discover → request → 402 → settle from your own wallet → receive → verify offline): https://councilof.ai/quickstart/ · machine-readable: https://councilof.ai/quickstart.json · offline card-v0 checker: https://councilof.ai/verifier/card-v0-verify.mjs
 - Catalog trust (counts only — fetch, never freeze): GET https://councilof.ai/interop/x402-trust/latest.json — quote live `counts`. A 402 is not delivery; a 404 is a phantom. Do not freeze a pair in this file.
@@ -246,6 +238,18 @@ Each feed below is DERIVED from the artifact rather than appended by hand, so no
 - Newly signed measurement cards, each individually verifiable: https://councilof.ai/feeds/cards.xml
 - The public root (guid is the merkle_root, so a poll that finds the same bytes is not a change): https://councilof.ai/feeds/roots.xml
 - Evidence notes (dated, one citable page per note, each naming the artifacts behind it): https://councilof.ai/notes/ — RSS: https://councilof.ai/feeds/notes.xml
+- Every new dated record — corrections, the daily "what changed" note, evidence notes — in one feed: https://councilof.ai/feeds/records.xml (Atom) — JSON Feed: https://councilof.ai/feeds/records.json
+- Daily notes, generated from the signed daily measurement-capsule index and published only when its signature verifies: https://councilof.ai/notes/daily/
+
+## Measured entities, one page each
+
+Each page shows declared vs observed, the dates, the evidence level and its signed source, and has a machine twin at <page>index.json. None says anything about security, quality or safety, and none is a rating. Operators who opted out, or whose robots.txt refuses CSOAI-census, have no page. Objections and context: https://councilof.ai/census/
+
+- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — https://councilof.ai/mcp-servers/<host>/
+- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — https://councilof.ai/agent-cards/<host>/
+- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — https://councilof.ai/x402/<door-or-host>/
+- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — https://councilof.ai/stablecoins/<asset>/<chain>/
+- Sitemap index of all of them: https://councilof.ai/sitemaps/index.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
@@ -352,14 +356,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-26T13:11:58Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-27T06:44:16Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 642. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 643. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
 - Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 639.
-- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
+- Still calendar-pending: 4. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 60 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
