@@ -92,7 +92,7 @@ const CASES = [
     },
   },
   {
-    // OWNER-APPROVE: the page is built noindex and delisted from the sitemap until the owner approves publication.
+    // Published on the owner's approval (2026-09-27): indexable, in the sitemap, no noindex header.
     name: "disclosure-lag/2026-09-medicare-agent",
     run() {
       const base = "public/measurements/disclosure-lag/2026-09-medicare-agent/record";
@@ -118,16 +118,16 @@ const CASES = [
         }
         const ids = new Set(c.sources.map((s) => s.id));
         for (const e of c.observed.events) for (const [id] of e.quotes) assert.ok(ids.has(id), `${e.event} cites unlisted ${id}`);
+        // signed before approval; the page publishes these bytes unchanged and says so
         assert.equal(c.publication.startsWith("PRIVATE: OWNER-APPROVE"), true);
       });
-      test("disclosure-lag: page stays noindex and out of the sitemap until approved", () => {
+      test("disclosure-lag: published: indexable, in the sitemap, scope and objection route visible", () => {
         const page = read("client/src/pages/DisclosureLagMedicareAgent.tsx").toString();
-        const approved = /export const OWNER_APPROVED = true;/.test(page);
-        const sitemap = read("public/sitemap.xml").toString();
-        if (!approved) {
-          assert.ok(/noindex/.test(page), "noindex while unapproved");
-          assert.ok(!sitemap.includes("/measurements/disclosure-lag/"), "absent from the sitemap while unapproved");
-        }
+        assert.ok(!/noindex/.test(page), "no robots noindex on the page");
+        assert.ok(!read("public/_headers").toString().includes("/measurements/disclosure-lag/"), "no X-Robots-Tag rule");
+        assert.ok(read("public/sitemap.xml").toString().includes("https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/"));
+        assert.ok(/no claim about anyone’s intent, about the causes of\s+the incident, or about the security of any system/.test(page));
+        assert.ok(page.includes('href="/census/"'), "objection route");
       });
       test("disclosure-lag: no hand-typed figures in the page", () => noHandTypedFigures("client/src/pages/DisclosureLagMedicareAgent.tsx"));
     },

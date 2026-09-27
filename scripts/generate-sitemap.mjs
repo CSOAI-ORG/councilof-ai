@@ -416,8 +416,6 @@ const DELISTED = new Map([
       "insurance", "legal", "machinery", "media", "multi-agent-commerce", "open-source", "security", "xr"]
     .map((s) => [`/industries/${s}`, "noindex: withdrawn industry page"]),
   ["/proof-receipt", "noindex"],
-  // OWNER-APPROVE (2026-09-26): built and noindex until the owner approves publication; remove this line to list it.
-  ["/measurements/disclosure-lag/2026-09-medicare-agent", "noindex: owner approval pending"],
   // Game-concept placeholders sharing one template (no playable turn); noindex since 2026-09-24.
   ["/civic", "noindex: game concept placeholder"],
   ["/council-town", "noindex: game concept placeholder"],

@@ -2,11 +2,9 @@
  * /measurements/disclosure-lag/2026-09-medicare-agent — the dated public record of the June 2026 agent access to the
  * Medicare statistics portal, and the whole days between its dated events.
  *
- * OWNER-APPROVE. This page is built but NOT published: it is noindex, it is absent from the sitemap (DELISTED in
- * scripts/generate-sitemap.mjs), and nothing links to it. It shows a visible "draft" notice while OWNER_APPROVED is false.
- * To publish after the owner approves: set OWNER_APPROVED = true (drops the notice and the robots noindex), remove the
- * DELISTED line for this path in scripts/generate-sitemap.mjs, regenerate the sitemap, and link it from wherever the
- * owner chooses. Nothing else changes: the figures come from the signed record.
+ * Published on the owner's approval (27 Sep 2026): indexable, listed in the sitemap by scripts/generate-sitemap.mjs.
+ * It was built on 26 Sep behind a draft gate (robots-excluded, delisted); that gate is removed, and the signed record is unchanged,
+ * so its `publication` field still reads PRIVATE (the page says so under "How to verify").
  *
  * Every date, quote and interval on this page is read from
  * client/src/data/measurements/disclosure-lag/2026-09-medicare-agent.json, byte-identical to the published
@@ -15,12 +13,9 @@
  */
 import { useEffect, type ReactNode } from "react";
 import { Link } from "wouter";
-import { Helmet } from "react-helmet-async";
 import { setMetaDescription } from "@/lib/utils";
 import PlainEmail from "@/components/PlainEmail";
 import REC from "@/data/measurements/disclosure-lag/2026-09-medicare-agent.json";
-
-export const OWNER_APPROVED = false;
 
 type Quote = [string, string];
 type Ev = { event: string; label: string; date: string | null; granularity: string | null; statement: string; quotes: Quote[]; note: string | null };
@@ -78,7 +73,7 @@ const A = ({ href, children }: { href: string; children: ReactNode }) => (
 const Code = ({ children }: { children: ReactNode }) => <code className="break-all rounded bg-slate-100 px-1 text-[0.9em]">{children}</code>;
 const Table = ({ caption, head, rows }: { caption: string; head: string[]; rows: ReactNode[][] }) => (
   <div role="region" aria-label={caption} tabIndex={0} className="mt-4 overflow-x-auto rounded-lg border border-slate-200 focus:outline focus:outline-2 focus:outline-slate-500">
-    <table className="w-full min-w-[520px] text-left text-sm">
+    <table className="w-full min-w-[720px] text-left text-sm">
       <caption className="sr-only">{caption}</caption>
       <thead className="bg-slate-50 text-slate-700">
         <tr>
@@ -131,19 +126,9 @@ export default function DisclosureLagMedicareAgent() {
 
   return (
     <article data-testid="disclosure-lag-medicare" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      {OWNER_APPROVED ? null : (
-        <Helmet>
-          <meta name="robots" content="noindex,nofollow,noarchive" />
-        </Helmet>
-      )}
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <span>Measurements</span> › <span>Disclosure lag</span>
       </nav>
-      {OWNER_APPROVED ? null : (
-        <p data-testid="owner-approve-notice" className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-amber-900">
-          Draft awaiting the owner’s approval. Not linked, not in the sitemap, and marked noindex.
-        </p>
-      )}
       <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
         Disclosure lag: the Medicare statistics portal agent incident
       </h1>
@@ -153,6 +138,12 @@ export default function DisclosureLagMedicareAgent() {
       </p>
       <p className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-slate-800">
         <strong>Measurement, not endorsement or accusation.</strong> {C.claim.doctrine.replace(/^Measurement, not endorsement or accusation\.\s*/, "")}
+      </p>
+      <p data-testid="scope-statement" className="mt-3 rounded-lg border border-slate-200 bg-white p-3 text-slate-800">
+        <strong>What this measures, and what it does not.</strong> Only the intervals between dated events in the public
+        record: whole days from one published date to the next. It makes no claim about anyone’s intent, about the causes of
+        the incident, or about the security of any system. The labels PRIMARY, REPORTED and UNMEASURED on every row say where
+        each date comes from.
       </p>
 
       <H2 id="what">What happened, in the sources’ words</H2>
@@ -186,7 +177,7 @@ export default function DisclosureLagMedicareAgent() {
         head={["Event", "Date", "Label", "Sources", "What the source says"]}
         rows={EVENTS.map((e) => [
           EVENT_LABEL[e.event] ?? e.event,
-          e.date ?? "not stated",
+          <span className="whitespace-nowrap">{e.date ?? "not stated"}</span>,
           <Tag>{e.label}</Tag>,
           e.quotes.length ? <Cite ids={[...new Set(e.quotes.map((q) => q[0]))]} /> : "none",
           <>
@@ -267,6 +258,10 @@ export default function DisclosureLagMedicareAgent() {
           Pages change, so a later read may differ.
         </li>
         <li>Capsule id: <Code>{C.capsule_id}</Code>. {REC.capsule_id_rule}.</li>
+        <li>
+          The record’s <Code>publication</Code> field reads “{C.publication}” because the record was signed before the owner
+          approved publication. We publish the signed bytes unchanged rather than re-sign them.
+        </li>
       </UL>
 
       <H2 id="object">Object, or ask for a correction</H2>
