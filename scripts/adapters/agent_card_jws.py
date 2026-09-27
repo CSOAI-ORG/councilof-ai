@@ -30,8 +30,8 @@ They are listed in the signing-input file so the choice stays deliberate.
 
 Run:
   python3 scripts/adapters/agent_card_jws.py                         # emit the signing input
-  python3 scripts/adapters/agent_card_jws.py --sign --key-file PATH  # sign with #card-attestation-1
-        [--kid did:web:csoai.org#site-release-1]                     # the other allowed card key
+  python3 scripts/adapters/agent_card_jws.py --sign --key-file PATH  # sign with #card-attestation-2
+        [--kid did:web:csoai.org#card-attestation-1]                 # another allowed card key
   CARD_ATTESTATION_KEY_FILE=PATH python3 scripts/adapters/agent_card_jws.py --sign
 The key file may be a PKCS#8 PEM, or a 32-byte Ed25519 seed as raw bytes / hex / base64. It is read,
 never printed, never copied. Independent check afterwards: scripts/verify_agent_card_jws.py.
@@ -52,10 +52,19 @@ ALIAS = ROOT / "public" / ".well-known" / "agent.json"
 DID = ROOT / "public" / ".well-known" / "did.json"
 OUT = ROOT / "public" / "interop" / "agent-card-jws-input.json"
 
-KID = "did:web:csoai.org#card-attestation-1"
-# Keys the DID document scopes to site/agent-card artifacts. #site-release-1 signed the previous
-# csoai.org card (v0.1.0); #card-attestation-1 is the lane's instructed key. Nothing else.
-ALLOWED_KIDS = {"did:web:csoai.org#card-attestation-1", "did:web:csoai.org#site-release-1"}
+KID = "did:web:csoai.org#card-attestation-2"
+# Keys the DID document scopes to site/agent-card artifacts, named by DID fragment — never matched by
+# pattern. #site-release-1 signed the previous csoai.org card (v0.1.0). #card-attestation-1 is the
+# original card key; its private half is not held on Oracle or the pods, so the card could not be
+# signed with it. #card-attestation-2 was added 2026-09-27 (owner-approved rotation, "rotate card
+# key"); its private half is held on one ops host only and the card is signed there.
+# #card-attestation-1 is NOT revoked — the 335 signed cards in public/signed/card_index.json verify
+# under it. Nothing else signs the agent card.
+ALLOWED_KIDS = {
+    "did:web:csoai.org#card-attestation-2",
+    "did:web:csoai.org#card-attestation-1",
+    "did:web:csoai.org#site-release-1",
+}
 REFUSED_KIDS = {
     "did:web:csoai.org#board-attestation-1": "signs the public board snapshot, not the agent card",
     "did:web:csoai.org#gspc-board-22axis-2026": "the 2026-09-02 board-freeze key (all three additive shares on one host; the split was never performed, C-2026-0925-01)",
