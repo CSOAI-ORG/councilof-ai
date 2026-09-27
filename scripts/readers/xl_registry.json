@@ -11,7 +11,9 @@
    "USDY",
    "USTB",
    "JPMD",
-   "RLUSD"
+   "RLUSD",
+   "EURCV",
+   "EURAU"
   ],
   "sources": [
    {
@@ -29,7 +31,11 @@
     "url": "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&category=tokenized-money-market-fund-mmfs&per_page=250",
     "kind": "coingecko_markets"
    }
-  ]
+  ],
+  "owner_named_notes": {
+   "EURCV": "added 2026-09-27: listed UNMEASURED on the CSOAI stablecoins page; a euro EMT named in research note EU-ECOSYSTEM-ALIGNMENT-2026-09-27 (2c-i). No inference that it is used on Pontes.",
+   "EURAU": "added 2026-09-27: listed UNMEASURED on the CSOAI stablecoins page; a euro EMT named in research note EU-ECOSYSTEM-ALIGNMENT-2026-09-27 (2c-i). No inference that it is used on Pontes."
+  }
  },
  "supply_delta_threshold": 0.01,
  "ledgers": {
@@ -473,7 +479,8 @@
  },
  "no_adapter_reasons": {
   "canton": "PERMISSIONED_NOT_READABLE: a Canton participant's Ledger API is not a public permissionless read path (2026-09-25 probe: IP-allowlisted); nothing is read and nothing is inferred",
-  "default": "NO_ADAPTER: no keyless public reader for this ledger is wired in this loop; not read - not zero, not absent"
+  "default": "NO_ADAPTER: no keyless public reader for this ledger is wired in this loop; not read - not zero, not absent",
+  "stellar-soroban": "NO_ADAPTER: the issuer lists a Soroban (SEP-41) contract id; this loop reads Stellar classic assets (CODE-ISSUER) through Horizon only, so the contract is not read - not zero, not absent"
  },
  "assets": {
   "usdt": {
@@ -976,6 +983,71 @@
    "reconciliation": {
     "state": "NOT_APPLICABLE_NOT_READ",
     "why": "no public read path"
+   }
+  },
+  "eurcv": {
+   "asset": "EURCV",
+   "issuer": "Societe Generale-FORGE (SG-Forge)",
+   "primary_product": "EURCV",
+   "value_match": {
+    "symbol": "EURCV",
+    "name_regex": "."
+   },
+   "issuer_list": {
+    "url": "https://www.sgforge.com/product/coinvertible/",
+    "parser": "html_link_labelled",
+    "product": "EURCV",
+    "regex": "<a href=\"https://[^\"]+/(?:token|account|asset)/(?P<identifier>[A-Za-z0-9]+(?:-G[A-Z2-7]{55})?)(?:-\\d)?\" class=\"bg_ov_black\"[^>]*>\\s*<span class=\"title\">EUR CoinVertible<br>(?P<label>[^<\\n]+?)\\s*<svg",
+    "label_regex": "<span class=\"title\">EUR CoinVertible<br>(?P<label>[^<\\n]+?)\\s*<svg"
+   },
+   "label_to_ledger": {
+    "Ethereum smart contract": "ethereum",
+    "XRPL Issuer": "xrpl",
+    "Solana smart contract": "solana",
+    "Stellar smart contract": "stellar"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "SG-Forge issuance records",
+    "why": "not reconciled"
+   }
+  },
+  "eurau": {
+   "asset": "EURAU",
+   "issuer": "AllUnity GmbH",
+   "primary_product": "EURAU",
+   "value_match": {
+    "symbol": "EURAU",
+    "name_regex": "."
+   },
+   "issuer_list": {
+    "url": "https://allunity.com/eurau",
+    "parser": "html_link_labelled",
+    "product": "EURAU",
+    "regex": ">EURAU on (?P<label>[A-Za-z ]+?)</(?:(?!EURAU on ).){0,8000}?href=\"https?://[^\"/]+/(?:[a-z]+/)*(?:address|contract|token)/(?P<identifier>[A-Za-z0-9]+)[?\"#]",
+    "label_regex": ">EURAU on (?P<label>[A-Za-z ]+?)</",
+    "label_variants": {
+     "BNB Smart Chain": "BNB Chain"
+    },
+    "label_variants_why": "allunity.com/eurau renders the BNB card heading as EURAU on BNB Smart Chain in one ssr-variant and EURAU on BNB Chain in another (same card, one bsctrace.com link); checked in the page bytes 2026-09-27"
+   },
+   "label_to_ledger": {
+    "Arbitrum": "arbitrum",
+    "Arc": null,
+    "Base": "base",
+    "BNB Smart Chain": "bsc",
+    "BNB Chain": "bsc",
+    "Ethereum": "ethereum",
+    "Optimism": "optimism",
+    "Polygon": "polygon",
+    "Solana": "solana",
+    "Stellar": "stellar-soroban",
+    "Tempo": "tempo"
+   },
+   "reconciliation": {
+    "state": "UNRECONCILED_WITH_ISSUER_RECORD",
+    "controlling_record": "AllUnity issuance records",
+    "why": "not reconciled"
    }
   }
  }
