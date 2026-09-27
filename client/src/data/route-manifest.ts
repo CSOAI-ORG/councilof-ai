@@ -1113,6 +1113,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Poc Showcase"
  },
  {
+  "path": "/independence",
+  "comp": "Independence",
+  "title": "Independence"
+ },
+ {
   "path": "/industries",
   "comp": "IndustrySolutions",
   "title": "Industry Solutions"

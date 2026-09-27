@@ -72,6 +72,7 @@ export function Footer() {
       title: 'Company',
       links: [
         { name: 'About', href: '/about/' },
+        { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
         { name: 'Where we take part', href: '/memberships/' },
         { name: 'Blog', href: '/blog' },

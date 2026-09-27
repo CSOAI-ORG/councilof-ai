@@ -1,0 +1,121 @@
+{
+ "schema": "csoai.own-model-disclosure/0.1",
+ "what": "How many cards in the signed card index measure a model CSOAI built itself, and the exact rule used to decide.",
+ "corpus": "The signed card index: corpus 3 of the three card corpora (council-os/CARD-CORPORA.md). Not the public-root leaves, not the cards-bundle wrappers. The three share no identifiers; never add them.",
+ "source": "/signed/card_index.json",
+ "source_sha256": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+ "source_created": "2026-08-19T09:24:39.174287+00:00",
+ "n_cards": 335,
+ "cards_read": 335,
+ "header_agrees": true,
+ "field_read": "body.model (the only field used)",
+ "rules": [
+  {
+   "id": "R1",
+   "test": "body.model starts with \"sov\" or \"clan\"",
+   "basis": "Our own fine-tunes are published under these two prefixes. A name rule, not a registry.",
+   "cards": 224,
+   "model_tags": 46
+  },
+  {
+   "id": "R2",
+   "test": "body.model starts with the word \"council\", or contains \"(council specialist)\"",
+   "basis": "The same test the public board applies before it withholds a leader (functions/api/gspc.ts, isOwnCouncilModel).",
+   "cards": 6,
+   "model_tags": 2,
+   "tags": [
+    {
+     "model": "council-oowm:latest",
+     "cards": 3
+    },
+    {
+     "model": "council-safe:latest",
+     "cards": 3
+    }
+   ]
+  }
+ ],
+ "own_model_cards": 230,
+ "unconfirmed": {
+  "cards": 5,
+  "reason": "The names suggest models we derived, but no byte we hold says so. Counted on neither side until the owner confirms.",
+  "tags": [
+   {
+    "model": "eat-unsloth-050b:2026-08-02",
+    "cards": 2
+   },
+   {
+    "model": "qwen2.5-0.5b-mined:latest",
+    "cards": 2
+   },
+   {
+    "model": "muse-glimmer:latest",
+    "cards": 1
+   }
+  ]
+ },
+ "no_rule_matched": {
+  "cards": 100,
+  "note": "No rule above matches these tags. That is a statement about the rules, not a finding about who built the model.",
+  "tags": [
+   {
+    "model": "llama3.2:3b",
+    "cards": 14
+   },
+   {
+    "model": "qwen2.5:1.5b",
+    "cards": 14
+   },
+   {
+    "model": "mistral:7b",
+    "cards": 8
+   },
+   {
+    "model": "qwen2.5:0.5b",
+    "cards": 8
+   },
+   {
+    "model": "qwen2.5:0.5b-instruct",
+    "cards": 8
+   },
+   {
+    "model": "qwen2.5:7b",
+    "cards": 8
+   },
+   {
+    "model": "qwen3:4b",
+    "cards": 8
+   },
+   {
+    "model": "deepseek-r1:8b",
+    "cards": 6
+   },
+   {
+    "model": "falcon3:7b",
+    "cards": 6
+   },
+   {
+    "model": "gemma3:12b",
+    "cards": 6
+   },
+   {
+    "model": "phi4:14b",
+    "cards": 6
+   },
+   {
+    "model": "qwen2.5:3b",
+    "cards": 6
+   },
+   {
+    "model": "qwen3:0.6b",
+    "cards": 2
+   }
+  ]
+ },
+ "problems": [],
+ "what_this_does_not_establish": [
+  "Ownership is decided by name, not by a registry of model digests. The card schema proposal (v0.2) would add a signed own_model flag decided from such a registry; it does not exist yet.",
+  "A card's signature proves who signed its bytes. It says nothing about who built the model it measured."
+ ],
+ "derived_by": "scripts/build-own-model-disclosure.mjs"
+}

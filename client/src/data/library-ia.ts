@@ -165,6 +165,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/measurement-capsules",
   // /research/cross-hardware-reproducibility — preprint + open dataset on item-level cross-runtime reproducibility (2026-09-27).
   "/research/cross-hardware-reproducibility",
+  // /independence: conflicts of interest, own-model counts and who holds the keys (2026-09-27).
+  "/independence",
   // /reach — the full seven-stage funnel. Linked from the home page and from the footer
   // of every route, so unregistered it would ship the "archived" banner under a link the site
   // is actively promoting, on the page whose whole point is that the number is current.

@@ -215,6 +215,8 @@ function discover() {
     "/measurement-capsules",
     // /research/cross-hardware-reproducibility — the preprint + dataset page (2026-09-27); figures read from the dataset.
     "/research/cross-hardware-reproducibility",
+    // /independence: disclosure page (2026-09-27); its counts must be in the snapshot, not only after JS.
+    "/independence",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

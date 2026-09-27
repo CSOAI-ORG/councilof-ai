@@ -82,6 +82,9 @@ const EXISTING = [
   "/merge-me             /how-we-work   308",
   "/merge-me/            /how-we-work   308",
   "/favicon.ico           /csoai-icon.svg      308",
+  // /conflicts was 404; a reader looking for our conflict-of-interest disclosure lands on it (2026-09-27).
+  "/conflicts            /independence/       308",
+  "/conflicts/           /independence/       308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
   // Eat lid 2026-09-01 (still true 2026-09-06): GET /publisher-health.json 200,

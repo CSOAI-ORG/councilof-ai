@@ -292,6 +292,11 @@ export default function Methodology() {
             </li>
             <li>Not LLM-as-judge. Every verdict is a deterministic predicate.</li>
             <li>
+              Not independent of what it measures. We build some of the models we measure, and we publish our own
+              results. How many signed cards measure our own models, and how they are kept off the public board:{" "}
+              <Link href="/independence/" className="text-emerald-300 underline underline-offset-2">independence and conflicts of interest</Link>.
+            </li>
+            <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
               tamper-evidence; authorship is carried by the signed card, which is under a kilobyte and carries nine fields — not the sample size or interval, which live on the board. {ANCHORING_CLAIM}{" "}
               Post-quantum ML-DSA-65 (FIPS-204) is planned and scaffolded only; no PQC signer/runtime is built or published.
@@ -309,6 +314,9 @@ export default function Methodology() {
           </Link>
           <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the refutation ledger →
+          </Link>
+          <Link href="/independence/" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
+            Independence and conflicts of interest →
           </Link>
         </div>
       </div>
