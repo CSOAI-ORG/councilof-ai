@@ -805,6 +805,13 @@ Re-read it live; do not quote these figures without the state and coverage besid
 
 ### 9b. MCP Registry footprint — we measure what we probe; we do not vet the registry
 
+Live momentum figures: GET https://councilof.ai/api/momentum (schema csoai.momentum/0.1) -> `figures[]`,
+  each with its own `value`, `as_of`, `source_url` and `label`, read at request time from the source it
+  names and cached for one hour; plus `listings[]` (third-party indexes that named us on that read; a listing
+  is not an endorsement), `anchors[]`, `recent[]` and `omitted[]` (every source that failed, with its reason:
+  a failed source is left out, never zeroed). Quote a figure with its as_of and source_url, never from this file.
+  How each is measured: https://councilof.ai/methodology/#how-momentum-is-measured
+
 Read the footprint live: GET https://councilof.ai/api/footprint -> `registry_listings.value`
 (distinct server names) and `registry_listings.versions` (distinct name@version rows), with that
 payload's own `as_of`, `source_url` and paging state. The footprint counts ONE namespace,
@@ -832,14 +839,14 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-26T12:33:32Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-26T13:11:58Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 642. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 626.
-- Still calendar-pending: 16. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 639.
+- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 60 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

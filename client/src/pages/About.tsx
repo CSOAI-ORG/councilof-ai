@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 
@@ -181,6 +182,15 @@ export default function About() {
           </p>
           <HeroStatsBar />
         </div>
+      </div>
+
+      {/* Live, sourced figures (GET /api/momentum); each links to its source. */}
+      <div className="container max-w-5xl">
+        <MomentumStrip
+          variant="panel"
+          title="What the work adds up to, counted live"
+          ids={["pypi_all_time", "hf_downloads_30d", "capsules", "census_rows", "signed_cards", "corrections", "board", "hf_datasets"]}
+        />
       </div>
 
       {/* The Problem We're Solving */}

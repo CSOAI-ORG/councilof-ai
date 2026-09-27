@@ -261,6 +261,13 @@ It is a dated simulation archive; its source date and upstream signature-verific
 {{DISTRIBUTION_SECTION}}
 ### 9b. MCP Registry footprint — we measure what we probe; we do not vet the registry
 
+Live momentum figures: GET https://councilof.ai/api/momentum (schema csoai.momentum/0.1) -> `figures[]`,
+  each with its own `value`, `as_of`, `source_url` and `label`, read at request time from the source it
+  names and cached for one hour; plus `listings[]` (third-party indexes that named us on that read; a listing
+  is not an endorsement), `anchors[]`, `recent[]` and `omitted[]` (every source that failed, with its reason:
+  a failed source is left out, never zeroed). Quote a figure with its as_of and source_url, never from this file.
+  How each is measured: https://councilof.ai/methodology/#how-momentum-is-measured
+
 Read the footprint live: GET https://councilof.ai/api/footprint -> `registry_listings.value`
 (distinct server names) and `registry_listings.versions` (distinct name@version rows), with that
 payload's own `as_of`, `source_url` and paging state. The footprint counts ONE namespace,

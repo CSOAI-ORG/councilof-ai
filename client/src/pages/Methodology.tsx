@@ -3,6 +3,8 @@ import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { SpectrumView } from "@/components/gspc/SpectrumView";
 import { setMetaDescription } from "@/lib/utils";
+import MomentumStrip from "@/components/momentum/MomentumStrip";
+import MomentumMethodNote from "@/components/momentum/MomentumMethodNote";
 
 /**
  * /methodology — how the instrument works.
@@ -277,6 +279,10 @@ export default function Methodology() {
             </Link>
           </p>
         </section>
+
+        <MomentumStrip variant="panel" title="The record behind this method, counted live" ids={["board", "corrections", "signed_cards", "zenodo_board_snapshot"]} />
+
+        <MomentumMethodNote />
 
         {/* HONESTY DISCLOSURE */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">

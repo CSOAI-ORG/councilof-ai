@@ -11,7 +11,17 @@
  *   1. HomeHero        - what we do, for whom, and what is measured right now, off the live board.
  *   2. HomeCredibility - the six things a stranger can check about us before trusting a number,
  *                        each with a live figure behind it.
- *   3. HomeDistribution - dated gross package-download events, not adoption or customers.
+ *   2a. MomentumStrip  - live, sourced, dated figures from GET /api/momentum (added 2026-09-27):
+ *                        PyPI and Hugging Face downloads, capsules, census rows, the board, the
+ *                        signed cards, the corrections ledger, tools and doors. Each links to its
+ *                        source; a figure whose source fails is left out, never zeroed.
+ *   2b. Where we take part - the featured memberships (Open Secure AI Alliance, C2PA, DIF) and one
+ *                        chip per other body, from public/interop/memberships.json.
+ *   2c. HomeProof      - anchors a stranger can open, third-party listings verified on the read,
+ *                        and the latest dated public work.
+ *   3. (HomeDistribution moved to /how-we-work on 2026-09-27: its artifact is the pod census that
+ *      stopped refreshing on 24 Sep and printed "out of date" on the front door; the PyPI figure
+ *      now comes from the daily record behind /api/momentum.)
  *   4. The board       - every row, every word, every number off GET /api/gspc at render time,
  *                        with the composer under it.
  *   5. HomeWeakScore   - one of our own low scores, verified in the reader's own browser.
@@ -47,7 +57,8 @@ import HomeComposer from "@/components/home/HomeComposer";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeHero from "@/components/home/HomeHero";
 import HomeCredibility from "@/components/home/HomeCredibility";
-import HomeDistribution from "@/components/home/HomeDistribution";
+import MomentumStrip from "@/components/momentum/MomentumStrip";
+import HomeProof from "@/components/momentum/HomeProof";
 import HomeWeakScore from "@/components/home/HomeWeakScore";
 import { useCorrections, useEstateState, usePopulationDoors } from "@/components/home/useHomeReads";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
@@ -147,12 +158,33 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
+      <MomentumStrip />
+
+      {/* Where we take part - high on the page (owner, 2026-09-27). Featured memberships as cards,
+          every other body as one chip; the full record with what each entry does NOT prove stays in
+          the participation band further down and on /memberships. */}
+      <section
+        id="take-part"
+        aria-labelledby="take-part-h"
+        className="surface-sunken section-y-sm border-t border-border"
+        data-testid="home-take-part"
+      >
+        <div className="section-shell">
+          <p className="t-kicker text-emerald-700 dark:text-emerald-300">Where we take part</p>
+          <h2 id="take-part-h" className="t-section mt-3 max-w-3xl text-foreground">
+            Members of the bodies writing the standards for secure AI, content provenance and digital identity.
+          </h2>
+          <MembershipStrip variant="featured" />
+        </div>
+      </section>
+
+      <HomeProof />
+
       <HomeCredibility
         state={estate}
         corrections={corrections}
         ots={doors["ots-proofs"]?.payload ?? null}
       />
-      <HomeDistribution />
 
       {/* The board: every row, every word, every number off GET /api/gspc at render time. */}
       <section

@@ -3086,6 +3086,33 @@
       "source": "functions/api/measurement/fresh-capsule.ts"
     },
     {
+      "id": "api-momentum",
+      "kind": "http",
+      "path": "/api/momentum",
+      "method": "GET",
+      "name": "Momentum",
+      "description": "GET /api/momentum — live, sourced, dated figures (board, signed cards, corrections, capsules, PyPI and Hugging Face downloads, census rows, MCP tools, x402 doors) and third-party listings verified on the read; a failed source is omitted, never zeroed.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.momentum/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/momentum",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/momentum.ts"
+    },
+    {
       "id": "api-observability",
       "kind": "http",
       "path": "/api/observability",

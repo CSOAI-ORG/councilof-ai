@@ -1,3 +1,4 @@
+import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
 import SignedAgentTravel from "@/components/SignedAgentTravel";
@@ -237,6 +238,11 @@ export default function ToolsPage() {
         </a>
         .
       </p>
+      <MomentumStrip
+        variant="panel"
+        title="The tools, and how far they travel"
+        ids={["mcp_tools", "x402_doors", "pypi_all_time", "hf_downloads_30d"]}
+      />
       <SignedAgentTravel />
       <TwoSpeed />
       <WatchlistPane />

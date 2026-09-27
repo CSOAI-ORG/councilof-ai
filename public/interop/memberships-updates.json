@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships-updates/0.1",
-  "as_of": "2026-09-26",
+  "as_of": "2026-09-27",
   "signed": false,
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
@@ -184,6 +184,15 @@
       "detail": "The Contributor agreement was completed in the name of CSOAI LTD on 2026-08-18. DIF publishes no member roster we could find — identity.foundation/members answered 404 on 2026-09-22 — so no public page confirms this yet and the row says so.",
       "evidence": "INBOX 8945 (DIF Membership, 2026-09-21) and Sent 487 (2026-09-21)",
       "evidence_kind": "private_email"
+    },
+    {
+      "date": "2026-09-27",
+      "kind": "corrected",
+      "row": "c2pa",
+      "headline": "C2PA row: standing recorded as member (Contributor tier), not contributor",
+      "detail": "The row said contributor. The membership contract was completed via the Linux Foundation DocuSign on 2026-08-06, and the public roster lists CSOAI LTD under Contributor Members: Contributor is the tier of a membership, not a separate standing. The row now says member, tier Contributor. No other field changed its meaning.",
+      "evidence": "https://c2pa.org/membership/",
+      "evidence_kind": "public_url"
     }
   ]
 }

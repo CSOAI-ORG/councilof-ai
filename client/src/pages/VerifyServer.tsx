@@ -8,6 +8,7 @@
  * page; an unknown URL is NOT_MEASURED, never "clean". Data: the static tree /measurement-capsules/
  * written by scripts/measurement_capsule_layout.py from the board-signed index.
  */
+import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
@@ -182,6 +183,8 @@ export default function VerifyServer() {
           {!busy && result ? <EvidenceView result={result} onLookup={(u) => void run(u)} /> : null}
         </div>
       </section>
+
+      <MomentumStrip variant="panel" title="What there is to check, counted live" ids={["capsules", "census_rows", "signed_cards"]} />
 
       <section aria-labelledby="how-heading" className="mt-12">
         <h2 id="how-heading" className="text-xl font-bold text-slate-900">How this works</h2>

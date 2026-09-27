@@ -15,7 +15,7 @@ import PlainEmail from "@/components/PlainEmail";
 
 const TITLE = "Cross-hardware reproducibility of LLM evaluation results | Council of AI";
 const DESCRIPTION =
-  "Preprint and open dataset: the same model, prompts and settings re-run on a second GPU runtime, compared item by item. What changed, what totals hide, and how to check every number yourself.";
+  "Preprint and open dataset: the same model, prompts and settings re-run on a second GPU runtime and compared item by item. Check every number yourself.";
 
 const HF = "https://huggingface.co";
 const DS = "csoai/cross-hardware-reproducibility";

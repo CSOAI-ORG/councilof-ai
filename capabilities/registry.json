@@ -1358,6 +1358,19 @@
       "payment": "free_preview_then_x402"
     },
     {
+      "id": "api-momentum",
+      "protocols": [
+        "http"
+      ],
+      "title": "Momentum",
+      "description": "GET /api/momentum — live, sourced, dated figures (board, signed cards, corrections, capsules, PyPI and Hugging Face downloads, census rows, MCP tools, x402 doors) and third-party listings verified on the read; a failed source is omitted, never zeroed.",
+      "endpoint": "/api/momentum",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-observability",
       "protocols": [
         "http"

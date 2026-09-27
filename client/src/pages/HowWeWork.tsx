@@ -29,6 +29,7 @@
  */
 import { useEffect } from "react";
 import { Link } from "wouter";
+import HomeDistribution from "@/components/home/HomeDistribution";
 import HomeEvidenceShowcase from "@/components/home/HomeEvidenceShowcase";
 import HomeFilms from "@/components/home/HomeFilms";
 import HomeMachineSurface from "@/components/home/HomeMachineSurface";
@@ -96,6 +97,8 @@ export default function HowWeWork() {
       <HomeStrengths corrections={corrections} root={root} ots={doors["ots-proofs"]?.payload ?? null} />
       <HomeMachineSurface doors={doors} manifest={manifest} />
       <HomeReach state={estate} />
+      {/* Moved from the front door on 2026-09-27 (align, do not delete): the pod distribution census. */}
+      <HomeDistribution />
       <ToolStack />
       <LivingStages />
       <HomeFilms />
