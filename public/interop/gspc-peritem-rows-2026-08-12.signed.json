@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.signed-artifact/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/gspc-peritem-rows-2026-08-12.json",
+      "sha256": "f64353e049e1936a8a1ce9fa119f64a592137a5f6336013ad58ef3510e0c152d",
+      "bytes": 21394,
+      "schema": "csoai.gspc-peritem-rows/0.1",
+      "as_of": "2026-09-27T04:38:00Z"
+    },
+    "record_id": "gspc-peritem-rows-2026-08-12",
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "what_this_proves": "these bytes were signed by the board key at this time; not a grade, not an endorsement, and no claim about any third party named in the artifact"
+  },
+  "sig_ed25519": "0ec5aa6cb65baa444bf47bf3255f0530e5fb14837fbfc3b4e968f7170d2b1aadec4ab3d2fa974dc7e948e1112858ae56b55d545c6f4e3a58e9512905f4137c0e",
+  "sig_encoding": "hex",
+  "key": "did:web:csoai.org#board-attestation-1",
+  "key_source": "https://csoai.org/.well-known/did.json",
+  "verified_locally": true,
+  "failing_control_rejected": true,
+  "signed_utc": "2026-09-27T04:55:00Z",
+  "verify_with": "canonical JSON (sort_keys, separators=(',',':')) of .payload, Ed25519 over those exact bytes"
+}

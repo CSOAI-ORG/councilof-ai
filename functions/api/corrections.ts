@@ -43,6 +43,30 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0927-03",
+      "date": "2026-09-27",
+      "detected_at": "2026-09-27",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "separation re-run, 2026-09-27: the fixed 2026-08-13 test re-run on the frozen boards-v2-2026-08-12 per-item rows, own models excluded, with a label-shuffle control (day precision)",
+        "Hugging Face dataset csoai/gspc-peritem-rows-2026-08-12 commit 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361 (2026-09-27): the rows' publication",
+        "public/interop/gspc-peritem-rows-2026-08-12.signed.json signed_utc 2026-09-27T04:55:00Z (POST /api/board-sign, pod caller token)",
+        "published_at is UNRECORDED: the deploy that first serves the corrected board was not recorded when this entry was written"
+      ],
+      "what_was_wrong": "Two things on GET /api/gspc. (1) Six model-comparison axes (governance, continuity, provenance, conformance, openness, care) carried separation UNTESTED and no public leader, with the note that the external re-ranking was not carried. The 15,580 per-item rows that decide it existed, frozen since 2026-08-13, but were unpublished: the signed 2026-08-13 freeze manifests record peritem_sha256: null, and the board's own rule treats unpublished rows as grounds for no determination. The determination was available and not made. (2) The safety axis named gemma3:12b (base model) as its leader, and the board source listed safety as carded for that leader, under a public promise that every named leader links to the Ed25519 card behind it. The safety axis carries signed cards, but none is a gemma3:12b card: the axis is carded, its leader is not.",
+      "how_caught": "A separation analysis on 2026-09-27 re-ran the fixed test (exact McNemar on discordant items, leader vs the best base model, p<0.05 to separate) on the frozen rows with our own models removed. Every axis came out TIE. A shuffled-label control came out SEPARATED in 0 to 4.4% of 1,000 shuffles per axis, within the test's 5%. The same analysis looked up the safety leader's own card in /signed/card_index.json and found none.",
+      "what_changed": "The rows are published, owner-approved on 27 Sep 2026 ('publish rows and ties'), byte-identical at https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (CC-BY-4.0, commit 294e4cf9). They were scanned before upload for credentials, canary markers and items outside the public banks (scripts/policy/check_no_protected.py: 0 hits), then re-downloaded anonymously and re-hashed (13 of 13 files match). Their manifest hash, peritem_sha256 0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec (the sha256 of the dataset's SHA256SUMS), is now in /api/gspc (measured_on.peritem_sha256 and peritem_rows) and in /interop/gspc-peritem-rows-2026-08-12.json, signed by did:web:csoai.org#board-attestation-1. The 2026-08-13 freeze manifests are not edited. The board producer scripts/gspc_separation_from_rows.py now computes separation from the published rows with the fixed test. Separation changed from UNTESTED to TIE on governance, continuity, provenance, conformance, openness and care. Each axis states: 'No model separated from the next best on this axis (exact McNemar, p>=0.05, n=...)', with the leader and next best, their k/n and Wilson intervals, and p. Safety stays TIE, now computed from the same rows. The board reads 0 SEPARATED, 8 TIE, 6 UNTESTED, up from 0, 2, 12. The own-model exclusion is kept: our own specialists are removed before ranking. cross-reality, detector-interop, art5-safeguard, machinery-conformity and affect tie on the rows, but these axes have no signed card, so they stay UNTESTED and say so. swarm stays UNTESTED because its published rows are the retired 3-prompt bank. The missing card is disclosed on every leader read from the rows, not only safety's: 'leader shown from per-item rows; no signed per-model card yet'. On governance, provenance and care, the card on record for that model records a different measurement and is named as such. No card is fabricated.",
+      "status": "CORRECTED - rows published and bound by hash; six axes UNTESTED to TIE from the fixed test; per-model cards for the row leaders not yet issued",
+      "reached_the_public": true,
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (commit 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361; SHA256SUMS, MANIFEST.json, separation_test.py, SEPARATION_RESULT.json)",
+        "https://councilof.ai/interop/gspc-peritem-rows-2026-08-12.json and .signed.json",
+        "https://councilof.ai/api/gspc (measured_on.peritem_sha256, peritem_rows, axes[].separation_evidence, axes[].leader_card_state)",
+        "scripts/gspc_separation_from_rows.py; functions/api/gspc.rows-separation.test.ts"
+      ]
+    },
+    {
       "id": "C-2026-0926-06",
       "date": "2026-09-26",
       "detected_at": "2026-09-26",
@@ -1277,20 +1301,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "a8515b1106086d1f5cb1dc6531e643e5b5cfee4c40d50b0cc0d49fb44852ae06",
+    id: "9c8f68ee2b5a17e4a3d1a117663bc466b9d141a2ed873cc1bb251f4288d1c40c",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "f966cba44c07e985136c6dae85be9c2758710b4b33a6fc2210af3880dc3918b2f84443fafc3ca47a15b015f2909d6a6f6a03221dfcdc9861dc9fc597d8de2d0d",
+    signature: "ae565d7cb33db08b3340221cac6c98b46784f8e8fc22c81bf4b3a65f095b783119c9fa231d6cfcd40dc17c1953432931591fb58870d6316bd929e881ed4ac00a",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "a8515b1106086d1f5cb1dc6531e643e5b5cfee4c40d50b0cc0d49fb44852ae06",
+          "content_id": "9c8f68ee2b5a17e4a3d1a117663bc466b9d141a2ed873cc1bb251f4288d1c40c",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 73,
-          "latest_entry_id": "C-2026-0926-06",
-          "ledger_canonical_bytes": 129328,
+          "entries": 74,
+          "latest_entry_id": "C-2026-0927-03",
+          "ledger_canonical_bytes": 133977,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-26T15:46:06Z"
+          "signed_at": "2026-09-27T04:57:21Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +

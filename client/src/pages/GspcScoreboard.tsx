@@ -5,6 +5,7 @@ import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 import { BOARD_COUNT_OBSERVED, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
+import RowsSeparationPanel, { RowsAxisDetermination } from "@/components/board/RowsSeparationPanel";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
 import GspcTerminal from "@/components/board/GspcTerminal";
@@ -499,6 +500,7 @@ export default function GspcScoreboard() {
                 </p>
               );
             })()}
+            <RowsAxisDetermination a={focused as any} />
             <p className="mt-3 flex flex-wrap gap-4 text-sm">
               {/* Only an axis WITH a frozen bank gets the bank link. A financial axis has
                   no HuggingFace bank; minting the URL anyway would publish a
@@ -647,6 +649,8 @@ export default function GspcScoreboard() {
             </span>
           </p>
         )}
+
+        {data && <RowsSeparationPanel data={data} />}
 
         {/* Side rail: the live XRPL reader — names quoted from GET /api/xrpl, never typed. */}
         <div className="mt-10">
