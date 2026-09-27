@@ -42,14 +42,14 @@
 # using it is a decision, never a default.
 #
 # Usage:
-#   bash scripts/deploy-site.sh --via-actions   # SANCTIONED: trigger deploy.yml, then verify the apex
+#   bash scripts/deploy-site.sh --internal-owner # SANCTIONED: internal one-writer build + gates + deploy
 #   bash scripts/deploy-site.sh --preflight     # gates only against existing dist/client, NO deploy
 #   bash scripts/deploy-site.sh --dry           # build + gates, print the deploy commands, do not run them
 #   bash scripts/deploy-site.sh --verify-only   # just re-check what the apex is serving right now
 #   bash scripts/deploy-site.sh --selftest      # prove the apex verifier can FAIL (no deploy)
 #   bash scripts/deploy-site.sh --direct --break-deploy-lock
 #                                               # build + gates + write all 3 aliases + verify apex
-#   bash scripts/deploy-site.sh --skip-build --direct --break-deploy-lock
+#   bash scripts/deploy-site.sh --skip-build --internal-owner # sanctioned after identical gated build
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 
@@ -63,9 +63,13 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 MODE="${1:---help}"
 ACK=""
-for a in "$@"; do [ "$a" = "--break-deploy-lock" ] && ACK=1; done
+OWNER_INTERNAL=""
+for a in "$@"; do
+  [ "$a" = "--break-deploy-lock" ] && ACK=1
+  [ "$a" = "--internal-owner" ] && OWNER_INTERNAL=1
+done
 case "$MODE" in
-  --via-actions|--preflight|--direct|--skip-build|--dry|--verify-only|--selftest) ;;
+  --via-actions|--internal-owner|--preflight|--direct|--skip-build|--dry|--verify-only|--selftest) ;;
   --help|-h) sed -n '1,60p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
   *) echo "FATAL: unknown mode '$MODE'. Run with --help." >&2; exit 2 ;;
 esac
@@ -155,6 +159,8 @@ fi
 # the run, then verifies the apex, so "deployed" means the apex serves it.
 # ─────────────────────────────────────────────────────────────────────────────
 if [ "$MODE" = "--via-actions" ]; then
+  echo "REFUSING: owner ruling 2026-09-27 uses the internal one-writer release path, not GitHub Actions." >&2
+  exit 12
   command -v gh >/dev/null 2>&1 || { echo "FATAL: gh CLI not found — needed to trigger and watch deploy.yml"; exit 2; }
   BEFORE="$(apex_bundles "$APEX" || true)"
   say "Triggering the official deploy workflow (deploy.yml, ref master)"
@@ -196,7 +202,7 @@ if [ "$MODE" = "--verify-only" ]; then
 fi
 
 # ── build ────────────────────────────────────────────────────────────────────
-if [ "$MODE" = "--direct" ] || [ "$MODE" = "--dry" ]; then
+if [ "$MODE" = "--direct" ] || [ "$MODE" = "--internal-owner" ] || [ "$MODE" = "--dry" ]; then
   say "Build + prerender"
   npm run build:client
   node scripts/prerender.mjs --dist "$DIST" --wait 900 --min 350
@@ -285,7 +291,7 @@ if [ "$MODE" = "--dry" ]; then
 fi
 
 # ── deploy: ALL THREE alias names, same tree, no exceptions ──────────────────
-if [ -z "$ACK" ]; then
+if [ -z "$OWNER_INTERNAL" ] && [ -z "$ACK" ]; then
   say "REFUSING to deploy — DEPLOY-LOCK.md"
   cat <<'LOCK'
    DEPLOY-LOCK.md: "Direct `wrangler pages deploy … --project-name=councilof-ai` is
@@ -317,7 +323,11 @@ if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
   printf '%s\n' "$AUTH_STATE" | grep -q 'pages (write)' || { echo "FATAL: Wrangler session lacks Pages write permission" >&2; exit 11; }
   ok "Wrangler OAuth session has Pages write permission"
 fi
-say "DEPLOY-LOCK deliberately overridden (--break-deploy-lock) by $(git config user.name 2>/dev/null || echo unknown) at $(date -u +%FT%TZ)"
+if [ -n "$OWNER_INTERNAL" ]; then
+  say "Owner-authorized internal production writer at $(date -u +%FT%TZ)"
+else
+  say "DEPLOY-LOCK emergency override (--break-deploy-lock) by $(git config user.name 2>/dev/null || echo unknown) at $(date -u +%FT%TZ)"
+fi
 say "Deploying $DIST to $PROJECT on ALL alias names: ${BRANCHES[*]}"
 for b in "${BRANCHES[@]}"; do
   echo ""
@@ -336,4 +346,4 @@ fi
 
 say "Apex confirmed — deep-link + prerender assertion"
 node scripts/assert-prerender-live.mjs --label deploy-site --host "$APEX" --also "$PREVIEW"
-say "DEPLOY CONFIRMED at $APEX"
+say "DEPLOY CONFIRMED at $APEX (internal one-writer path)"

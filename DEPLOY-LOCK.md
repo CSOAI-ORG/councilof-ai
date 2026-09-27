@@ -1,13 +1,17 @@
 # DEPLOY-LOCK — councilof.ai production write convention
 
-**One lane owns production writes. Everyone else opens a PR. No exceptions.**
+**One lane owns production writes. All other lanes hand off immutable bundles. No exceptions.**
 
 ## The rule
-councilof.ai (Cloudflare Pages project `councilof-ai`) is deployed **only** by GitHub Actions on push
-to `master` — the pipeline that runs the brand-gate, the cold prerender, sitemap/redirect generation,
-and ships the result to **both** `--branch=master` and `--branch=main` so the custom domain
-(production alias) cannot stay on a thin Vite shell while a hash preview holds the prerender.
-**Direct `wrangler pages deploy … --project-name=councilof-ai` is prohibited.**
+**Owner ruling 2026-09-27:** GitHub is not the production delivery route. `councilof.ai`
+(Cloudflare Pages project `councilof-ai`) is deployed only by the designated internal production
+writer using `scripts/deploy-site.sh --internal-owner` (or `--skip-build --internal-owner` after an
+identical gated build). The writer must use the same `dist/client` for `master`, `main`, and
+`production`, verify the apex, and perform the delayed clobber check.
+
+Raw `wrangler pages deploy … --project-name=councilof-ai` remains prohibited. The historical
+`.github/workflows/deploy.yml` is retained as a gate reference/emergency artifact; it is not the
+current production authority while this owner ruling is in force.
 
 Custom domain `councilof.ai` and `https://councilof-ai.pages.dev` follow the Pages **PRODUCTION**
 alias — not `master.councilof-ai.pages.dev` and not a hash preview. `main.councilof-ai.pages.dev`
