@@ -53,7 +53,7 @@ type Wire =
   | { state: "live"; doc: ArchiveIndex };
 
 const METHOD_URL =
-  "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md";
+  "https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/PROVABLE-ARCHIVE-METHOD.md";
 
 function short(h?: string | null, n = 10): string {
   return h ? `${h.slice(0, n)}…` : "—";

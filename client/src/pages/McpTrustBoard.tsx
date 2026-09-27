@@ -271,7 +271,7 @@ export default function McpTrustBoard() {
             <a href="/interop/mcp-trust/latest.json" className="text-emerald-300 underline-offset-2 hover:underline">
               Machine artefact (JSON)
             </a>
-            <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/MCP-TRUST-BOARD-SPEC.md"
+            <a href="https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/product/MCP-TRUST-BOARD-SPEC.md"
                className="text-emerald-300 underline-offset-2 hover:underline">
               Methodology spec
             </a>

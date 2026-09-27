@@ -21,7 +21,7 @@ import index from "../../../public/interop/x402-census/index.json";
 
 const SITE = "https://councilof.ai";
 const HF = "https://huggingface.co/datasets/csoai/x402-settlement-census";
-const GH = "https://github.com/CSOAI-ORG/councilof-ai";
+const GH = "https://huggingface.co/datasets/csoai/councilof-ai-source";
 
 const esc = (s: unknown) =>
   String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -181,7 +181,7 @@ ${deltaBlock}
 curl -s ${SITE}/interop/x402-census/rounds/${esc(rounds[0]?.round_id ?? "&lt;round&gt;")}.json | jq .outcome
 
 # recompute every number from the committed rows
-git clone ${GH} &amp;&amp; cd councilof-ai
+git clone ${GH} &amp;&amp; cd councilof-ai-source/source   # source mirror; the GitHub org is temporarily unavailable
 python3 scripts/grants/x402_census_round.py --check
 python3 scripts/grants/x402_census_delta.py --check
 python3 harness/x402-census/build_cards.py --check</code></pre>

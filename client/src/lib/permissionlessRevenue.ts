@@ -37,8 +37,8 @@ export const EARN_WEDGE =
 export const OPEN_SDKS = [
   { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Eight free read tools and four x402-metered evidence tools in Claude, Cursor, Kimi, Grok." },
   { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Verify its live package version and tool list before quoting either; the HTTP authority is POST /mcp tools/list." },
-  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc, server 1.4.0." },
-  { id: "plugin", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },
+  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id ai.councilof/gspc (domain-verified, no GitHub login), server 1.4.2. The older io.github.CSOAI-ORG/gspc entry awaits deprecation." },
+  { id: "plugin", href: "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/main/source/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },
   { id: "embed", href: "https://councilof.ai/embed.js", eats: "Partner pages read the live count. Never says certified." },
   { id: "badge", href: "https://councilof.ai/hf-badge.html", eats: "README board link or subject-bound signed-cell status. The global board is never a model score." },
   { id: "a2a-card", href: "https://councilof.ai/.well-known/agent-card.json", eats: "Discovery. Four skills. Task service still planned." },
