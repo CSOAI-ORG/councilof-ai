@@ -24,10 +24,54 @@ describe('manifest and delivery',()=>{
  it('format-only change changes raw source hash, not data pin',async()=>{const m:any=await (await call('?manifest=1')).json();h.sources.mockImplementation(async(u:string)=>new Response(JSON.stringify(data[new URL(u).pathname],null,4)));const n:any=await (await call('?manifest=1')).json();expect(n.evidence.blocks_sha256).toBe(m.evidence.blocks_sha256);expect(n.sources[0].response_sha256).not.toBe(m.sources[0].response_sha256);});
  it('legacy paid client gets data and added manifest without a pin',async()=>{const r=await call('?feed=1',{'x-payment':'x'});expect(r.status).toBe(200);expect((await r.json() as any).delivery_manifest.schema).toBe('csoai.eunomia-feed-manifest/1.0');});
  it('free preview gains a usable manifest',async()=>{const b:any=await (await call('')).json();expect(b.kind).toBe('preview');expect(b.delivery_manifest).toBeTruthy();expect(h.pay).not.toHaveBeenCalled();});
+ it('unpaid offer does not claim every source is signed',async()=>{
+  const r=await call('?feed=1');
+  const b:any=await r.json();
+  expect(r.status).toBe(402);
+  expect(b.description).toContain('any published signatures');
+  expect(b.description).not.toContain('A signed JSON feed');
+ });
  it('bare feed still gives402',async()=>{const r=await call('?feed=1');expect(r.status).toBe(402);expect((await r.json() as any).csoai.free_manifest).toBe(ORIGIN+'/api/eunomia-data?manifest=1');});
  it('post alias preserves method in request record',async()=>{expect(onRequestPost).toBe(onRequestGet);const b:any=await (await call('?feed=1',{'x-payment':'x'},'POST')).json();expect(b.request_record.method).toBe('POST');});
  it('legacy x402 query remains a paid selector',async()=>{expect((await call('?x402=1',{'x-payment':'x'})).status).toBe(200);});
  it('browser preflight has no source/payment work',async()=>{const r=await (onRequestOptions as any)({});expect(r.status).toBe(204);expect(r.headers.get('access-control-allow-headers')).toContain('x-csoai-expected-feed-sha256');expect(h.sources).not.toHaveBeenCalled();expect(h.pay).not.toHaveBeenCalled();});
+});
+describe('Pages-local source transport',()=>{
+ it('reads static files through ASSETS and fines through the free function',async()=>{
+  h.sources.mockRejectedValue(new Error('public self-fetch disabled'));
+  const assets={fetch:vi.fn(async(r:Request)=>new Response(JSON.stringify(data[new URL(r.url).pathname]),{headers:{'content-type':'application/json'}}))};
+  const r=await (onRequestGet as any)({request:new Request(ORIGIN+'/api/eunomia-data?manifest=1'),env:{ASSETS:assets},params:{}});
+  expect(r.status).toBe(200);
+  const b:any=await r.json();
+  expect(b.coverage.complete_assembly).toBe(true);
+  expect(b.sources.find((x:any)=>x.name==='first_fine_watch').url).toBe(ORIGIN+'/api/fines');
+  expect(assets.fetch).toHaveBeenCalledTimes(3);
+  expect(h.sources).not.toHaveBeenCalled();
+ });
+ it('preserves the fines signature when a signing key is bound',async()=>{
+  const key=await webcrypto.subtle.generateKey({name:'Ed25519'},true,['sign','verify']);
+  const der=await webcrypto.subtle.exportKey('pkcs8',key.privateKey);
+  const assets={fetch:vi.fn(async(r:Request)=>new Response(JSON.stringify(data[new URL(r.url).pathname]),{headers:{'content-type':'application/json'}}))};
+  const r=await (onRequestGet as any)({request:new Request(ORIGIN+'/api/eunomia-data?feed=1', {headers:{'x-payment':'synthetic'}}),env:{ASSETS:assets,BOARD_SIGN_KEY_PKCS8_B64:Buffer.from(der).toString('base64')},params:{}});
+  expect(r.status).toBe(200);
+  const b:any=await r.json();
+  expect(b.blocks.first_fine_watch.signature.alg).toBe('Ed25519');
+  expect(b.blocks.first_fine_watch.signature.sig).toMatch(/^[a-f0-9]{128}$/);
+  expect(b.blocks.first_fine_watch.signature_absent).toBeUndefined();
+  expect(b.delivery_manifest.sources.find((x:any)=>x.name==='first_fine_watch').response_sha256).toMatch(/^[a-f0-9]{64}$/);
+ });
+ it('signing-error object never appears as a signed fines stream',async()=>{
+  data['/api/fines'].signature={error:'signing key present but unusable'};
+  const r=await call('');
+  const b:any=await r.json();
+  expect(b.streams.first_fine_watch.signed).toBe(false);
+  expect(b.streams.first_fine_watch.signature_verification).toBe('NOT_PERFORMED');
+ });
+ it('missing Pages asset fails before an unpaid 402',async()=>{
+  const assets={fetch:vi.fn(async(r:Request)=>new URL(r.url).pathname==='/root.json'?new Response('down',{status:503}):new Response(JSON.stringify(data[new URL(r.url).pathname])))};
+  const r=await (onRequestGet as any)({request:new Request(ORIGIN+'/api/eunomia-data?feed=1'),env:{ASSETS:assets},params:{}});
+  expect(r.status).toBe(503);expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();
+ });
 });
 describe('read-before-settle failure controls',()=>{
  for(const name of Object.values(FEED_SOURCES))it('missing '+name+' blocks paid request',async()=>{h.sources.mockImplementation(async(u:string)=>new URL(u).pathname===name?new Response('down',{status:503}):new Response(JSON.stringify(data[new URL(u).pathname])));expect((await call('?feed=1',{'x-payment':'x'})).status).toBe(503);expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();});
@@ -38,7 +82,8 @@ describe('read-before-settle failure controls',()=>{
  it('HTML is not a source JSON',async()=>{h.sources.mockImplementation(async()=>new Response('<html>ok</html>'));expect((await call('?manifest=1')).status).toBe(503);});
  it('oversized source is bounded',async()=>{h.sources.mockImplementation(async()=>new Response(' '.repeat(SOURCE_CAP+1)));const r=await readFeedSource(ORIGIN+'/root.json','root');expect(r.ok).toBe(false);});
  it('invalid UTF8 is not silently substituted',async()=>{h.sources.mockImplementation(async()=>new Response(new Uint8Array([255,255])));expect((await readFeedSource(ORIGIN+'/root.json','root')).ok).toBe(false);});
- it('source transport requests no redirects',async()=>{await readFeedSource(ORIGIN+'/root.json','root');expect(h.sources.mock.calls[0][1].redirect).toBe('error');expect(h.sources.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal);});
+ it('source transport rejects redirects',async()=>{await readFeedSource(ORIGIN+'/root.json','root');expect(h.sources.mock.calls[0][1].redirect).toBe('manual');expect(h.sources.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal);});
+ it('redirect response is not silently followed into a paid feed',async()=>{h.sources.mockImplementation(async(u:string)=>new URL(u).pathname===FEED_SOURCES.root?Response.redirect(ORIGIN+'/other',302):new Response(JSON.stringify(data[new URL(u).pathname])));const r=await call('?feed=1');expect(r.status).toBe(503);expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();});
  it('source schema tests do not assert signature validity',()=>{expect(sourceShapeIssue('first_fine_watch',{schema:'csoai.enforcement',signature:{error:'no signature'}})).toBeNull();});
 });
 

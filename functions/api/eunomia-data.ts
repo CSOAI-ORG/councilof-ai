@@ -1,6 +1,6 @@
 // functions/api/eunomia-data.ts — Tier 3: the DATA FEED rail (SOVOS Part IX canon, R8).
 //
-// Serves the signed corpus as RAW DATA to commercial buyers (insurers, bond desks, vendors)
+// Serves the public evidence corpus as RAW DATA to commercial buyers (insurers, bond desks, vendors)
 // behind an x402 gate. DATA-only — never scores as a product, never ranked, never a rating.
 // Regulators + the public get every signed stream free (/api/fines, /signals/*.signed.json,
 // /root.json, /api/gspc) — this endpoint sells ASSEMBLY + CADENCE of the feed, not access to
@@ -11,8 +11,8 @@
 //   402    GET /api/eunomia-data?feed=1     → x402 challenge (the amount lives only here).
 //   paid   + settled X-PAYMENT              → one assembled feed document: the signed signals index,
 //                                             the signed First-Fine Watch feed, the root, the card
-//                                             index — each block carrying its own signature/kid as
-//                                             published, so a stranger verifies every block offline.
+//                                             index — source bytes and digests, with signatures only
+//                                             where the source publishes them.
 import {
   verifyX402Payment,
   x402Accepts,
@@ -20,13 +20,13 @@ import {
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
   CSOAI_LID,
-  hasPaymentHeader,
   type X402Env,
 } from "./_x402";
 import { railMode } from "./_x402_config";
+import { buildFinesResponse } from "./fines";
 import { readFeedSource, expectedFeedDigest, missingFeedSources, feedBlocks, makeFeedManifest, requestRecord, feedJson, EXPECTED_FEED_HEADER, type Reads } from "./_eunomia_delivery";
 
-type Env = X402Env & { REVENUE_KV?: KVNamespace };
+type Env = X402Env & { REVENUE_KV?: KVNamespace; ASSETS?: Fetcher; BOARD_SIGN_KEY_PKCS8_B64?: string };
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -34,7 +34,20 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "access-control-allow-origin": "*", ...extraHeaders },
   });
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+const sourceFailure = (source: { ok: boolean; reason?: string }) =>
+  source.reason || "Source read, JSON parsing or transport was uncheckable";
+
+const fineSignaturePresent = (body: Record<string, unknown>): boolean => {
+  const signature = body.signature;
+  if (signature && typeof signature === "object" && !Array.isArray(signature)) {
+    const record = signature as Record<string, unknown>;
+    return record.alg === "Ed25519" && typeof record.sig === "string" && /^[a-f0-9]{128}$/.test(record.sig);
+  }
+  return typeof body.sig_ed25519 === "string" && /^[a-f0-9]{128}$/.test(body.sig_ed25519);
+};
+
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const {request,env} = context;
   const url = new URL(request.url);
   const origin = url.origin;
   // `?x402=1` is the legacy probe flag (public/interop/x402-challenge); keep it as a synonym.
@@ -45,32 +58,42 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const wantFeed = url.searchParams.get("feed") === "1" || url.searchParams.get("x402") === "1";
   const resourceUrl = new URL("/api/eunomia-data?feed=1", origin).toString();
 
-  // The streams — read, never typed. A stream that cannot be read says so; it is never a 0.
+  // Pages Functions may not self-fetch their own route through the public origin.
+  // Read static evidence from the Pages asset binding, and invoke the free fines
+  // function directly with the same environment. The published endpoints remain
+  // independently readable; these are local transport paths, not new evidence.
+  const sourceFetch = async (sourceUrl: string, init?: RequestInit): Promise<Response> => {
+    if (!env.ASSETS) return fetch(sourceUrl, init);
+    if (new URL(sourceUrl).pathname === "/api/fines") {
+      return buildFinesResponse(env);
+    }
+    return env.ASSETS.fetch(new Request(sourceUrl, init));
+  };
   const [signals, fines, root, cardIndex] = await Promise.all([
-    readFeedSource<{ signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`,"signals"),
-    readFeedSource<Record<string, unknown>>(`${origin}/api/fines`,"first_fine_watch"),
-    readFeedSource<{ as_of?: string; card_count?: number; merkle_root?: string }>(`${origin}/root.json`,"root"),
-    readFeedSource<{ cards?: unknown[] }>(`${origin}/signed/card_index.json`,"card_index"),
+    readFeedSource<{ signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`,"signals",sourceFetch),
+    readFeedSource<Record<string, unknown>>(`${origin}/api/fines`,"first_fine_watch",sourceFetch),
+    readFeedSource<{ as_of?: string; card_count?: number; merkle_root?: string }>(`${origin}/root.json`,"root",sourceFetch),
+    readFeedSource<{ cards?: unknown[] }>(`${origin}/signed/card_index.json`,"card_index",sourceFetch),
   ]);
   const streams = {
-    signals: signals.ok ? { rows: (signals.body.signals || []).length, schema: signals.body.schema || null, href: `${origin}/signals/_index.json`, each: `${origin}/signals/<axis>.signed.json` } : { rows: null, unreadable: signals.reason },
-    first_fine_watch: fines.ok ? { signed: !!(fines.body.signature || fines.body.sig_ed25519), kid: (fines.body.kid as string) || (fines.body.did as string) || null, href: `${origin}/api/fines` } : { signed: null, unreadable: fines.reason },
-    root: root.ok ? { as_of: root.body.as_of || null, card_count: root.body.card_count ?? null, merkle_root: root.body.merkle_root || null, href: `${origin}/root.json` } : { as_of: null, unreadable: root.reason },
-    card_index: cardIndex.ok ? { rows: (cardIndex.body.cards || []).length, href: `${origin}/signed/card_index.json` } : { rows: null, unreadable: cardIndex.reason },
+    signals: signals.ok ? { rows: (signals.body.signals || []).length, schema: signals.body.schema || null, href: `${origin}/signals/_index.json`, each: `${origin}/signals/<axis>.signed.json` } : { rows: null, unreadable: sourceFailure(signals) },
+    first_fine_watch: fines.ok ? { signed: fineSignaturePresent(fines.body), signature_verification: "NOT_PERFORMED", kid: (fines.body.kid as string) || (fines.body.did as string) || null, href: `${origin}/api/fines` } : { signed: null, unreadable: sourceFailure(fines) },
+    root: root.ok ? { as_of: root.body.as_of || null, card_count: root.body.card_count ?? null, merkle_root: root.body.merkle_root || null, href: `${origin}/root.json` } : { as_of: null, unreadable: sourceFailure(root) },
+    card_index: cardIndex.ok ? { rows: (cardIndex.body.cards || []).length, href: `${origin}/signed/card_index.json` } : { rows: null, unreadable: sourceFailure(cardIndex) },
   };
   const preview = {
     lane: "commercial-data",
     data_only: true,
     streams,
     free_for: ["regulators", "the public", "anyone verifying"],
-    sold: "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    sold: "assembly + cadence of the feed (one document with source digests and any published signatures) — never the facts, which stay free",
     never: ["scores as a product", "ranking", "rating", "certificate"],
   };
 
   const reads = {signals,first_fine_watch:fines,root,card_index:cardIndex} as Reads;
   const missing = missingFeedSources(reads);
   // A partial source inventory is a preview, never a paid assembled feed.
-  if ((wantManifest || (wantFeed && hasPaymentHeader(request))) && missing.length) {
+  if ((wantManifest || wantFeed) && missing.length) {
     return json({schema:"csoai.eunomia-data/0.2",kind:"feed_unavailable",state:"UNCHECKABLE",missing_sources:missing,settled:false,signing_attempted:false,free_preview:`${origin}/api/eunomia-data`},503);
   }
   const manifest = missing.length ? null : await makeFeedManifest(reads,origin);
@@ -80,7 +103,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, delivery_manifest:manifest, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
-  const description = "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.";
+  const description = "An assembled JSON feed of public enforcement and measurement artefacts with source digests and any published signatures. Data only — no scores, no ranking.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -103,7 +126,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       resourceUrl,
       description,
       serviceName: "CSOAI Data Feed",
-      tags: ["data", "feed", "enforcement", "signed", "x402"],
+      tags: ["data", "feed", "enforcement", "integrity", "x402"],
       accepts,
       bazaar,
       csoai: { schema: "csoai.eunomia-data/0.2", per: "feed-pull", lid: CSOAI_LID, ...preview,
@@ -133,7 +156,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       kind: "feed",
       lane: "commercial-data",
       data_only: true,
-      note: "Each block is the published bytes with its own signature/kid; verify every block offline. Nothing here is a score product.",
+      note: "Each block retains the source response and digest. Verify a signature only where that source publishes one. Nothing here is a score product.",
       blocks: feedBlocks(reads),
       delivery_manifest: manifest,
       request_record: targetRecord,

@@ -34,10 +34,10 @@ export function sourceShapeIssue(name:SourceName,value:unknown):string|null{
  if(name==='first_fine_watch'&&(typeof v.schema!=='string'||!v.schema))return 'Enforcement source lacks a schema identifier';
  return null;
 }
-export async function readFeedSource<T=Record<string,unknown>>(url:string,name:SourceName):Promise<SourceRead<T>>{
+export async function readFeedSource<T=Record<string,unknown>>(url:string,name:SourceName,fetcher:(url:string,init?:RequestInit)=>Promise<Response>=fetch):Promise<SourceRead<T>>{
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);
  try{
-  const r=await fetch(url,{redirect:'error',signal:controller.signal,headers:{accept:'application/json'}});
+  const r=await fetcher(url,{redirect:'manual',signal:controller.signal,headers:{accept:'application/json'}});
   if(!r.ok){await r.body?.cancel();return {ok:false,reason:`HTTP ${r.status}`};}
   if(!r.body)return {ok:false,reason:'Source has no body'};
   const reader=r.body.getReader();const chunks:Uint8Array[]=[];let size=0;

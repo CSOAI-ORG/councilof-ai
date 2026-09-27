@@ -93,9 +93,9 @@ const canonical = (o: unknown): string => {
   return "{" + Object.keys(r).sort().map((k) => JSON.stringify(k) + ":" + canonical(r[k])).join(",") + "}";
 };
 
-export const onRequestGet: PagesFunction = async (context) => {
+export async function buildFinesResponse(env: { BOARD_SIGN_KEY_PKCS8_B64?: string }): Promise<Response> {
   const body: Record<string, unknown> = { ...CORPUS };
-  const b64 = (context.env as { BOARD_SIGN_KEY_PKCS8_B64?: string })?.BOARD_SIGN_KEY_PKCS8_B64;
+  const b64 = env?.BOARD_SIGN_KEY_PKCS8_B64;
   if (b64) {
     try {
       const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
@@ -127,4 +127,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       "access-control-allow-origin": "*",
     },
   });
-};
+}
+
+export const onRequestGet: PagesFunction = async (context) =>
+  buildFinesResponse(context.env as { BOARD_SIGN_KEY_PKCS8_B64?: string });
