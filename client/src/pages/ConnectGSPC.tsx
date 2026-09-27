@@ -228,6 +228,13 @@ export default function ConnectGSPC() {
             no account. Every number is recomputable from its rows, and an <span className="font-mono">axis</span> with
             no run behind it stays published as UNMEASURED.
           </p>
+          <p className="mt-4 max-w-2xl text-sm text-emerald-50">
+            Adding it to Claude? Use the free connector address and the step-by-step guide at{" "}
+            <Link href="/connect/claude" className="font-semibold text-white underline underline-offset-2">
+              Use Council of AI in Claude
+            </Link>
+            .
+          </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={MCP_URL}

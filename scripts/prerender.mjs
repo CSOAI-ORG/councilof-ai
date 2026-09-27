@@ -225,6 +225,9 @@ function discover() {
     "/crosswalks/owasp-asi",
     // /mechanism: the coverage tables must be in the snapshot, not only after JS (2026-09-27).
     "/mechanism",
+    // /connect/claude: connector documentation for /mcp/free (2026-09-27); a directory reviewer and an
+    // answer engine must read the setup, tool list and prompts without running JS.
+    "/connect/claude",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

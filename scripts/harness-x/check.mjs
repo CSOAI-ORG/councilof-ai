@@ -201,11 +201,18 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
 }
 
 // ── 4. form-value targets (Claude connector, OpenAI app) ────────────────────────────────────
-for (const [id, p, urlKey] of [["claude-connector", "distribution/claude/connector.json", "server_url"], ["openai-app", "distribution/openai/app.json", "mcp_server_url"]]) {
+// The Claude connector lists the FREE door (Anthropic Software Directory Policy 4.A: no software that
+// transfers money or crypto), so its expected URL and tools are the free door's; the OpenAI app keeps
+// the full door.
+const EXPECT_FREE = lock ? [...lock.free] : caps.filter((c) => c.payment === "free").map((c) => c.id);
+for (const [id, p, urlKey, wantUrl, wantTools] of [
+  ["claude-connector", "distribution/claude/connector.json", "server_url", `${DOOR}/free`, EXPECT_FREE],
+  ["openai-app", "distribution/openai/app.json", "mcp_server_url", DOOR, EXPECT_TOOLS],
+]) {
   const d = readJson(p);
   const names = d.tools.map((t) => t.name);
-  rec(id, "server url == door, auth none", d[urlKey] === DOOR && /none/.test(d.authentication), d[urlKey]);
-  rec(id, "tools == locked, tool_count == array length", sameList(names, EXPECT_TOOLS) && d.tool_count === names.length, `${names.length}`);
+  rec(id, `server url == ${wantUrl === DOOR ? "door" : "free door"}, auth none`, d[urlKey] === wantUrl && /none/.test(d.authentication), d[urlKey]);
+  rec(id, `tools == locked${wantTools === EXPECT_FREE ? " free" : ""}, tool_count == array length`, sameList(names, wantTools) && d.tool_count === names.length, `${names.length}`);
   rec(id, "server_version == live", d.server_version === WANT_VERSION, d.server_version);
   rec(id, "status says NOT SUBMITTED", /NOT SUBMITTED/.test(d.status), d.status);
 }

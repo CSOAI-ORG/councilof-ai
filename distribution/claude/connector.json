@@ -2,10 +2,10 @@
   "form": "Claude connectors directory — remote MCP server",
   "status": "PREPARED — NOT SUBMITTED",
   "name": "Council of AI GSPC",
-  "server_url": "https://councilof.ai/mcp",
+  "server_url": "https://councilof.ai/mcp/free",
   "transport": "streamable-http",
   "authentication": "none",
-  "description": "16 tools (12 free, 4 x402-metered) over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "description": "Council of AI's twelve free read-only tools over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards and capsules. No payment tool is served at this address. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
   "company": {
     "name": "CSOAI Ltd",
     "company_number": "16939677",
@@ -13,6 +13,7 @@
     "website": "https://councilof.ai"
   },
   "contact_email": "nicholas@csoai.org",
+  "documentation_url": "https://councilof.ai/connect/claude/",
   "privacy_policy_url": "https://councilof.ai/privacy/",
   "terms_url": "https://councilof.ai/terms/",
   "support_url": "https://councilof.ai/contact/",
@@ -78,33 +79,15 @@
       "name": "server_evidence",
       "payment": "free",
       "read_only": true
-    },
-    {
-      "name": "commission_card",
-      "payment": "x402",
-      "read_only": false
-    },
-    {
-      "name": "art50_marking_evidence",
-      "payment": "x402",
-      "read_only": false
-    },
-    {
-      "name": "rwa_evidence",
-      "payment": "x402",
-      "read_only": false
-    },
-    {
-      "name": "receipts_batch",
-      "payment": "x402",
-      "read_only": false
     }
   ],
-  "tool_count": 16,
+  "tool_count": 12,
   "example_prompts": [
-    "What does the GSPC board say right now? Quote public_count exactly.",
-    "Verify this Council of AI measurement card: <paste card JSON>.",
-    "Show me the GSPC axis row for provenance."
+    "What does the Council of AI measurement board show right now? How many axes are measured?",
+    "Show me the Council of AI safety axis: sample size, accuracy and interval.",
+    "Verify this Council of AI signed measurement card: https://councilof.ai/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json",
+    "Has Council of AI published any measurements about the MCP server at https://councilof.ai/mcp? What was checked?",
+    "In Council of AI's latest census of public MCP servers, how many answered a correct handshake?"
   ],
   "doctrine": {
     "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
