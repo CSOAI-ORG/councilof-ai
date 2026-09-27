@@ -27,11 +27,22 @@ Owner rule (approved 2026-09-26). A card is ADMITTED only when ALL of these hold
                 DID the card names (allowed: #board-attestation-1), and the signed body is
                 exactly sign_mill_cards' transform of the intake-bound unsigned card.
 
+  4 INSTRUMENT  (instrument guard, owner-approved follow-up 2026-09-27; docs/operations/
+                INSTRUMENT-GUARD-POLICY.md) The card's bytes carry no private canary token (checked
+                by leak-scan digest against every signed bank-commitments record, never by holding
+                a canary), and if the bank the card pins carries private canaries, a contamination
+                probe of this model on that bank, bound to the bank's published canary-set
+                commitment, reads NOT_DETECTED. A bank with no canaries (every public board bank
+                today) cannot be probed: that is recorded as NOT_APPLICABLE with the bank's
+                exposure, never as clean. No commitments record at all means the leak check cannot
+                run, so admission fails closed.
+
 Anything short of that is NOT_ADMITTED, with machine-readable reason codes. Every failing
 condition is reported, not only the first:
   INTAKE_FAILED, UNSIGNED, SIGNATURE_INVALID, NO_INDEPENDENT_REPRODUCTION,
   DIGEST_MISMATCH, RESULT_MISMATCH, ITEM_MISMATCH (details list the differing item_ids),
-  NO_ITEM_LEVEL_EVIDENCE (per-item results absent, unbound or self-inconsistent).
+  NO_ITEM_LEVEL_EVIDENCE (per-item results absent, unbound or self-inconsistent),
+  CANARY_LEAK, CONTAMINATION_SUSPECTED, CONTAMINATION_UNCHECKED (condition 4).
 
 Per-item evidence comes from the same side file: a declaration that binds BOTH runs (its own
 run by intake_bundle_sha256, the primary in baseline_runtime.runs[] by bundle_sha256) and
@@ -73,9 +84,11 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "harness" / "gspc-top100"))
+sys.path.insert(0, str(ROOT / "harness" / "instrument-guard"))
 from land_mill_cards import BANK_ALLOWLIST, EVIDENCE, reject_reason, runpod_receipt_reason  # noqa: E402
 from verify_card import canonical_body_bytes, verify_signed_card_with_did_doc  # noqa: E402
 from verify_runpod_gspc_intake import VERIFICATION_SCHEMA, canonical_json_bytes  # noqa: E402
+import instrument_guard as ig  # noqa: E402
 
 ADMISSION_SCHEMA = "csoai.mill-admission/0.1"
 DECLARATION_SCHEMA = "csoai.mill-runtime-declaration/0.1"
@@ -87,6 +100,9 @@ ALLOWED_DIDS = frozenset({"did:web:csoai.org#board-attestation-1"})
 # verify_runpod_gspc_intake.py pins the unsigned card's unmeasured list to exactly this value.
 UNSIGNED_UNMEASURED = ["unsigned compute output; admission and verification required"]
 DIGEST_FIELDS = ("instrument_sha256", "model_manifest_digest", "bank_sha256")
+GUARD_DIR = ROOT / "public" / "interop" / "instrument-guard"
+COMMITMENTS_GLOB = "bank-commitments-*.json"
+PROBE_GLOB = "contamination-probe-*.json"
 
 INTAKE_FAILED = "INTAKE_FAILED"
 UNSIGNED = "UNSIGNED"
@@ -96,8 +112,12 @@ DIGEST_MISMATCH = "DIGEST_MISMATCH"
 RESULT_MISMATCH = "RESULT_MISMATCH"
 ITEM_MISMATCH = "ITEM_MISMATCH"
 NO_ITEM_LEVEL_EVIDENCE = "NO_ITEM_LEVEL_EVIDENCE"
+CANARY_LEAK = "CANARY_LEAK"
+CONTAMINATION_SUSPECTED = "CONTAMINATION_SUSPECTED"
+CONTAMINATION_UNCHECKED = "CONTAMINATION_UNCHECKED"
 REASON_ORDER = (INTAKE_FAILED, UNSIGNED, SIGNATURE_INVALID, NO_INDEPENDENT_REPRODUCTION,
-                DIGEST_MISMATCH, RESULT_MISMATCH, ITEM_MISMATCH, NO_ITEM_LEVEL_EVIDENCE)
+                DIGEST_MISMATCH, RESULT_MISMATCH, ITEM_MISMATCH, NO_ITEM_LEVEL_EVIDENCE,
+                CANARY_LEAK, CONTAMINATION_SUSPECTED, CONTAMINATION_UNCHECKED)
 # postprocess.py's slim item row, and the per-side fields of a differing item
 ITEM_FIELDS = ("sequence", "item_id", "prompt_sha256", "raw_output_sha256", "parsed_label", "grade", "done_reason")
 SIDE_FIELDS = ("raw_output_sha256", "parsed_label", "grade", "done_reason")
@@ -509,10 +529,103 @@ def reproduction_reasons(card: dict, receipt: dict, repro: Repro, index: Runtime
     return out
 
 
+# ---------------------------------------------------------------- condition 4: instrument guard
+
+EXPOSURE_LABEL = {"PUBLIC": "PUBLIC_BANK", "CONTENT_PUBLIC": "PUBLIC_BANK", "PARTIAL": "PARTLY_PUBLIC_BANK",
+                  "PRIVATE": "PRIVATE_BANK"}
+
+
+@dataclass
+class Guard:
+    """What the signed bank-commitments records and the public probe records say, read from bytes."""
+    banks: dict[str, dict] = field(default_factory=dict)      # bank_sha256 -> bank entry (+ _record)
+    digests: set[str] = field(default_factory=set)            # every published canary leak-scan digest
+    records: list[str] = field(default_factory=list)
+    probes: list[dict] = field(default_factory=list)           # public_view probe results
+    error: str = ""
+
+
+def load_guard(guard_dir: Path = GUARD_DIR, probe_dirs: list[Path] | None = None) -> Guard:
+    g = Guard()
+    for f in sorted(guard_dir.glob(COMMITMENTS_GLOB)) if guard_dir.is_dir() else []:
+        if f.name.endswith(".signed.json"):
+            continue
+        try:
+            rec, _ = _read_json(f)
+        except (OSError, ValueError) as error:
+            g.error = f"commitments record unreadable {f.name}: {error}"
+            return g
+        g.records.append(f.name)
+        for b in rec.get("banks") or []:
+            if isinstance(b, dict) and isinstance(b.get("bank_sha256"), str):
+                g.banks.setdefault(b["bank_sha256"], {**b, "_record": f.name})
+                cs = b.get("canary_set") or {}
+                g.digests.update(d for d in cs.get("leakscan_digests") or [] if isinstance(d, str))
+    if not g.records:
+        g.error = f"no bank-commitments record in {guard_dir}: the canary check cannot run"
+    for d in probe_dirs or []:
+        for f in sorted(d.glob(PROBE_GLOB)) if d.is_dir() else []:
+            try:
+                obj, _ = _read_json(f)
+            except (OSError, ValueError):
+                continue
+            rows = obj.get("results") if isinstance(obj, dict) and isinstance(obj.get("results"), list) else [obj]
+            for r in rows:
+                if isinstance(r, dict) and r.get("schema") == ig.SCHEMA_PROBE and "_private_log" not in r:
+                    g.probes.append({**r, "_file": f.name})
+    return g
+
+
+def card_bank(card: dict) -> str | None:
+    body = card.get("body") if isinstance(card.get("body"), dict) else {}
+    for key in ("compute_evidence", "evidence"):
+        ev = body.get(key)
+        if isinstance(ev, dict) and isinstance(ev.get("bank_sha256"), str):
+            return ev["bank_sha256"]
+    return None
+
+
+def instrument_reasons(card: dict, card_raw: bytes, guard: Guard) -> tuple[list[tuple[str, str]], dict]:
+    """Condition 4. (reasons, block). The block is what the admission record carries."""
+    bank = card_bank(card)
+    entry = guard.banks.get(bank or "")
+    block = {"bank_sha256": bank, "bank_id": entry.get("bank_id") if entry else None,
+             "bank_exposure": EXPOSURE_LABEL.get(entry.get("exposure"), "UNASSESSED") if entry else "UNASSESSED",
+             "commitments_records": list(guard.records)}
+    if guard.error:
+        block.update(canary_scan="UNCHECKABLE", contamination_probe="UNCHECKABLE")
+        return [(CONTAMINATION_UNCHECKED, guard.error)], block
+    out: list[tuple[str, str]] = []
+    leaks = ig.scan_text_for_leaks(card_raw.decode("utf-8", "replace"), guard.digests)
+    block["canary_scan"] = "LEAK" if leaks else "CLEAN"
+    if leaks:
+        out.append((CANARY_LEAK, f"card bytes carry {len(leaks)} private canary token(s) (digests "
+                                 f"{', '.join(sorted({d[:12] for d in leaks}))}); rotate the bank's epoch"))
+    cs = (entry or {}).get("canary_set") or {}
+    if not cs.get("commitment_sha256"):
+        block["contamination_probe"] = ("NOT_APPLICABLE: the bank carries no private canaries" if entry else
+                                        "NOT_APPLICABLE: the bank is in no commitments record, so it has no canaries")
+        return out, block
+    model = base_model((card.get("body") or {}).get("model"))
+    mine = [p for p in guard.probes if base_model(p.get("model_id")) == model and p.get("bank_id") == entry.get("bank_id")
+            and p.get("canary_set_commitment") == cs["commitment_sha256"]]
+    states = sorted({str(p.get("state")) for p in mine})
+    block["contamination_probe"] = "/".join(states) if states else "ABSENT"
+    block["probe_files"] = sorted({p["_file"] for p in mine})
+    if ig.STATE_SUSPECTED in states:
+        out.append((CONTAMINATION_SUSPECTED, f"a contamination probe of {model} on {entry.get('bank_id')} reads "
+                                             "CONTAMINATION_SUSPECTED (evidence consistent with exposure; not proof)"))
+    elif ig.STATE_NOT_DETECTED not in states:
+        out.append((CONTAMINATION_UNCHECKED, f"{entry.get('bank_id')} carries private canaries and no probe of {model} "
+                                             f"bound to commitment {cs['commitment_sha256'][:12]} reads NOT_DETECTED "
+                                             f"(found: {states or 'none'})"))
+    return out, block
+
+
 # ---------------------------------------------------------------- decision + record
 
 def decide(card_path: Path, evidence_dir: Path, repros: list[Repro], index: RuntimeIndex,
-           did_doc: dict | None, bank_allowlist: Path) -> dict:
+           did_doc: dict | None, bank_allowlist: Path, guard: Guard | None = None) -> dict:
     try:
         card, card_raw = _read_json(card_path)
     except (OSError, ValueError) as error:
@@ -537,6 +650,10 @@ def decide(card_path: Path, evidence_dir: Path, repros: list[Repro], index: Runt
             for why in intake_reasons(unsigned, receipt, raw, rname, bank_allowlist):
                 details.append((INTAKE_FAILED, why))
     details += signature_reasons(card, did_doc)
+    guard = guard if guard is not None else load_guard(GUARD_DIR, [evidence_dir])
+    why4, block = instrument_reasons(card, card_raw, guard)
+    details += why4
+    out["instrument_guard"] = block
 
     chosen: Repro | None = None
     if receipt is None:
@@ -566,6 +683,7 @@ def decide(card_path: Path, evidence_dir: Path, repros: list[Repro], index: Runt
     out["details"] = [{"code": c, "detail": d} for c, d in details]
     if not codes and chosen is not None and receipt is not None:
         out["record"] = admission_record(card, card_path.name, receipt, raw, rname, chosen, index)
+        out["record"]["instrument_guard"] = block
     return out
 
 
@@ -599,7 +717,8 @@ def admission_record(card: dict, card_file: str, receipt: dict, raw: bytes, rnam
     }
 
 
-def validate_admission_record(record: dict, card: dict, receipt: dict, did_doc: dict | None) -> list[str]:
+def validate_admission_record(record: dict, card: dict, receipt: dict, did_doc: dict | None,
+                              guard: Guard | None = None) -> list[str]:
     """Offline re-check of an admission record against the signed card and its intake receipt.
 
     Used by mill_publication_admission_gate.py. Every binding is recomputed from the bytes
@@ -642,6 +761,14 @@ def validate_admission_record(record: dict, card: dict, receipt: dict, did_doc: 
     if (rrec.get("counts"), rrec.get("accuracy")) != (receipt.get("counts"), receipt.get("accuracy")) \
             or (matched.get("counts"), matched.get("accuracy")) != (receipt.get("counts"), receipt.get("accuracy")):
         errs.append("reproduction result differs from the card's intake result")
+    # condition 4 is re-derived from the bytes at hand (commitments records, probe records, the
+    # card), never read off the record, so a record written before the guard existed is held to it too
+    guard = guard if guard is not None else load_guard(GUARD_DIR, [ROOT / "public" / "interop" / "mill-evidence"])
+    card_raw = json.dumps(card, ensure_ascii=False).encode("utf-8")
+    why4, block = instrument_reasons(card, card_raw, guard)
+    errs += [f"{code}: {why}" for code, why in why4]
+    if "instrument_guard" in record and record["instrument_guard"].get("bank_sha256") != block["bank_sha256"]:
+        errs.append("admission record's instrument_guard block does not bind this card's bank")
     reasons, parity = compare_items(record.get("item_evidence") or {}, receipt, rrec, require_items=False)
     if reasons or parity is None or parity != record.get("item_parity"):
         errs.append("item-level evidence does not show the same grade on every item: "
@@ -676,6 +803,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--apply", action="store_true", help="write admission records (default: dry-run, writes nothing)")
     ap.add_argument("--out-dir", type=Path, help="with --apply: where runpod-admission-*.json records go")
     ap.add_argument("--json", action="store_true", help="print the full decisions as JSON")
+    ap.add_argument("--guard-dir", type=Path, default=GUARD_DIR,
+                    help="where the signed bank-commitments records live (condition 4)")
+    ap.add_argument("--probe-dir", type=Path, action="append", default=[],
+                    help="dirs holding public contamination-probe-*.json records (default: the evidence dir)")
     args = ap.parse_args(argv)
     if args.apply and args.out_dir is None:
         ap.error("--apply requires an explicit --out-dir")
@@ -689,7 +820,10 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError) as error:
         did_doc = None
         notes.append(f"DID document unreadable ({error}); every card fails SIGNATURE_INVALID")
-    decisions = [decide(p, args.evidence_dir, repros, index, did_doc, args.bank_allowlist)
+    guard = load_guard(args.guard_dir, args.probe_dir or [args.evidence_dir])
+    if guard.error:
+        notes.append(f"instrument guard: {guard.error}; every card fails {CONTAMINATION_UNCHECKED}")
+    decisions = [decide(p, args.evidence_dir, repros, index, did_doc, args.bank_allowlist, guard)
                  for p in collect_cards(args.cards)]
 
     written = []

@@ -11,6 +11,7 @@ import BoardAttestation from "@/components/board/BoardAttestation";
 import GspcTerminal from "@/components/board/GspcTerminal";
 import AttestationDeepDive from "@/components/board/AttestationDeepDive";
 import XrplReaderRail from "@/components/gspc/XrplReaderRail";
+import BankExposureNote from "@/components/gspc/BankExposureNote";
 import { downloadBoardCsv } from "@/lib/boardCsv";
 import { Activity } from "lucide-react";
 
@@ -520,6 +521,7 @@ export default function GspcScoreboard() {
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
               <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">Full board</Link>
             </p>
+            <BankExposureNote axis={focused.axis} />
           </div>
         )}
 

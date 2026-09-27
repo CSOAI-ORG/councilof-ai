@@ -191,6 +191,16 @@ jobs:
         if: steps.scope.outputs.gated == 'true'
         run: node scripts/signed-json-guard.mjs dist/client
 
+      # A private canary token (harness/instrument-guard) in any public file means a held-out
+      # slice has leaked. The gate holds only digests from the signed commitments record, prints
+      # the file and digest (never the token), and exits 2 when no record exists: an unread list
+      # is not a clean scan. Selftest first.
+      - name: Canary-leak gate — no private canary token in a public surface
+        if: steps.scope.outputs.gated == 'true'
+        run: |
+          node scripts/canary-leak-gate.mjs --selftest
+          node scripts/canary-leak-gate.mjs dist/client public
+
       # A door that serves 200 but is absent from /.well-known/index.json is live and
       # UNDISCOVERABLE through the canonical route — a door a buyer cannot find. Until
       # 2026-09-05 the index was append-only: ad-hoc scripts pushed their own doors onto
