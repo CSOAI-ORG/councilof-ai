@@ -117,6 +117,32 @@ describe("readers over the served layout", () => {
     expect(cp.leaves_url).toBe(`${ORIGIN}/measurement-capsules/v0.2/contract_parity/leaves.json`);
     expect((r.signature as Record<string, unknown>).state).toBe("ABSENT");
     expect((r.anchors as Record<string, unknown>).state).toBe("NOT_PUBLISHED");
+    expect((r.publication as Record<string, unknown>).state).not.toBe("PUBLIC");
+  });
+
+  it("measurement_index: anchors and publication come from the anchors.json published beside the index", async () => {
+    const anchors = {
+      schema: "csoai.measurement-anchors/0.1",
+      opentimestamps: { state: "BITCOIN_ATTESTED", bitcoin_block_heights: [968674] },
+      rekor: [{ subject: "daily index", logIndex: 2968539665, state: "INCLUDED (inclusion proof verifies)" }],
+      xrpl: { state: "PREPARED_NOT_SUBMITTED" },
+      publication: { state: "PUBLIC", approved: "2026-09-26", by: "signed publication record" },
+    };
+    serve({ ...FILES, "/measurement-capsules/v0.2/anchors.json": JSON.stringify(anchors) });
+    const r = await measurementIndex(ORIGIN);
+    const a = r.anchors as Record<string, unknown>;
+    expect(a.state).toBe("PUBLISHED");
+    expect((a.opentimestamps as Record<string, unknown>).bitcoin_block_heights).toEqual([968674]);
+    expect((a.rekor as Array<Record<string, unknown>>)[0].logIndex).toBe(2968539665);
+    expect((r.publication as Record<string, unknown>).state).toBe("PUBLIC");
+  });
+
+  it("measurement_index: without anchors.json, a served OTS proof is PARTIAL (reported, not parsed); none is invented", async () => {
+    serve({ ...FILES, "/measurement-capsules/v0.2/index.json.ots": "\u0000OpenTimestamps\u0000\u0000Proof" });
+    const a = (await measurementIndex(ORIGIN)).anchors as Record<string, unknown>;
+    expect(a.state).toBe("PARTIAL");
+    expect((a.opentimestamps as Record<string, unknown>).state).toBe("PROOF_PUBLISHED_UNPARSED");
+    expect(a.rekor).toBe("NOT_STATED");
   });
 
   it("nothing published: NOT_PUBLISHED everywhere — no invented index", async () => {

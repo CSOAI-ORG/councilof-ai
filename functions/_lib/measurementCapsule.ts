@@ -29,6 +29,7 @@ export const versionRoot = (v: RuleVersion) => `${DATA_ROOT}/v${v}`;
 export const indexPath = (v: RuleVersion) => `${versionRoot(v)}/index.json`;
 export const indexSignedPath = (v: RuleVersion) => `${versionRoot(v)}/index.signed.json`;
 export const anchorsPath = (v: RuleVersion) => `${versionRoot(v)}/anchors.json`;
+export const indexOtsPath = (v: RuleVersion) => `${versionRoot(v)}/index.json.ots`;
 export const batchPath = (v: RuleVersion, slug: string) => `${versionRoot(v)}/${slug}`;
 export const shardPath = (v: RuleVersion, shard: string) => `${versionRoot(v)}/endpoints/${shard}.json`;
 export const SHARD_HEX = 2; // 256 shards, keyed by the first two hex of sha256(normalised endpoint)
@@ -385,6 +386,42 @@ export function batchSlug(batches: Json[], b: Json): string {
 
 const pick = (o: Json, keys: string[]) => Object.fromEntries(keys.filter((k) => k in o).map((k) => [k, o[k]]));
 
+/** Is a binary sidecar (an .ots proof) served at this path? Presence only: the proof is not parsed here. */
+async function sidecarPresent(origin: string, path: string): Promise<boolean> {
+  try {
+    const r = await fetch(`${origin}${path}`, { redirect: "manual", signal: AbortSignal.timeout(15_000) });
+    if (!r.ok) return false;
+    const head = new Uint8Array(await r.arrayBuffer()).slice(0, 32);
+    return head.length > 0 && head[0] !== 0x3c; // not the SPA's HTML shell ("<")
+  } catch {
+    return false;
+  }
+}
+
+/** Anchor states: the anchors.json published beside the index (written from the anchor files by the capsule
+ *  lane, `anchors --date D`); without it, only what is served is reported (an OTS proof file, unparsed). */
+async function anchorsFor(origin: string, v: RuleVersion): Promise<Json> {
+  const a = await fetchStatic(origin, anchorsPath(v));
+  if (a.state === "OK" && rec(a.json)) return { state: "PUBLISHED", source: a.url, ...(rec(a.json) as Json) };
+  const ots = await sidecarPresent(origin, indexOtsPath(v));
+  return {
+    state: a.state === "OK" ? "UNCHECKABLE" : ots ? "PARTIAL" : a.state,
+    opentimestamps: ots ? { state: "PROOF_PUBLISHED_UNPARSED", proof_url: `${origin}${indexOtsPath(v)}` } : { state: "NOT_PUBLISHED" },
+    rekor: "NOT_STATED",
+    note: "anchors.json (OpenTimestamps, Rekor, XRPL states read from the anchor files) is published beside the index when it exists; none is inferred",
+  };
+}
+
+/** Publication state: the index's own `publication`, else the signed publication record named in anchors.json
+ *  (for an index whose signed bytes predate the owner's approval), else what the index says. */
+function publicationOf(d: Json, anchors: Json): Json {
+  const own = rec(d.publication);
+  if (own) return { ...own, by: "the index itself" };
+  const viaAnchors = rec(anchors.publication);
+  if (viaAnchors) return viaAnchors;
+  return d.private_until ? { state: "PRIVATE_UNTIL_OWNER_APPROVES", private_until: d.private_until } : { state: "UNSTATED" };
+}
+
 /* ------------------------------------------------------------ measurement_index */
 
 export async function measurementIndex(origin: string): Promise<Json> {
@@ -393,7 +430,7 @@ export async function measurementIndex(origin: string): Promise<Json> {
   const { index, miss: m2 } = await loadIndex(origin, latest.version);
   if (!index) return notAvailable(m2!, "latest.json names an index that could not be read");
   const d = index.doc;
-  const anchors = await fetchStatic(origin, anchorsPath(latest.version));
+  const anchors = await anchorsFor(origin, latest.version);
   return {
     state: "PUBLISHED",
     doctrine: DOCTRINE,
@@ -413,10 +450,8 @@ export async function measurementIndex(origin: string): Promise<Json> {
       leaves_url: `${origin}${batchPath(latest.version, batchSlug(index.batches, b))}/leaves.json`,
     })),
     signature: index.signature,
-    anchors:
-      anchors.state === "OK" && rec(anchors.json)
-        ? { state: "PUBLISHED", ...(rec(anchors.json) as Json) }
-        : { state: anchors.state === "OK" ? "UNCHECKABLE" : anchors.state, note: "anchor states (OpenTimestamps, Rekor, XRPL) are published beside the index when they exist; none is inferred" },
+    anchors,
+    publication: publicationOf(d, anchors),
     pending_source: d.pending_source ?? [],
     what_this_is_not: "Not a grade, ranking, admission or approval of anything. States only.",
   };

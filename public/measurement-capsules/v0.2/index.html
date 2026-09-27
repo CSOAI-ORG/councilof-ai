@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Measurement capsules v0.2: published files — Council of AI</title>
+<meta name="description" content="The published measurement-capsule files, schema csoai.measurement-capsule/0.2: the signed index, its anchors, the publication records and each batch's record, leaves and capsules. Measurement, not endorsement.">
+<link rel="canonical" href="https://councilof.ai/measurement-capsules/v0.2/">
+<style>
+ :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e3e3e3}
+ @media(prefers-color-scheme:dark){:root{--fg:#e8e8e8;--bg:#111;--mut:#a5a5a5;--line:#2b2b2b}}
+ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ main{max-width:60rem;margin:0 auto;padding:3rem 1rem 5rem}
+ h1{font-size:1.5rem;margin:0 0 .25rem} .sub{color:var(--mut);margin:0 0 2rem} h2{font-size:1.02rem;margin:2.2rem 0 .5rem}
+ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;overflow-wrap:anywhere}
+ table{border-collapse:collapse;width:100%} td,th{text-align:left;vertical-align:top;padding:.4rem .5rem;border-top:1px solid var(--line)}
+ th{color:var(--mut);font-weight:500} .wrap{overflow-x:auto} a{color:inherit}
+</style>
+<main>
+<h1>Measurement capsules v0.2: published files</h1>
+<p class="sub">Every file behind the 26 September 2026 index: 13,184 capsules of schema <code>csoai.measurement-capsule/0.2</code> in 8 batches of 7 kinds. Measurement, not endorsement: a capsule records what was declared, what was observed and the difference, and grants no authority.</p>
+
+<h2>Index</h2>
+<ul>
+ <li><a href="index.json">index.json</a>: the index (schema <code>csoai.measurement-capsule-index/0.2</code>, index root <code>85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d</code>)</li>
+ <li><a href="index.signed.json">index.signed.json</a>: its Ed25519 signature (<code>did:web:csoai.org#board-attestation-1</code>)</li>
+ <li><a href="index.json.ots">index.json.ots</a>: its OpenTimestamps proof, with a Bitcoin attestation at block 968674</li>
+ <li><a href="anchors.json">anchors.json</a>: the anchor states read from the anchor files: the OpenTimestamps proof and the Rekor entries (log indexes 2968539665, 2968539944 and 2968614397)</li>
+ <li><a href="../latest.json">../latest.json</a>: which version is current</li>
+</ul>
+
+<h2>Publication</h2>
+<p>The files dated 26 September 2026 were written with <code>"private_until": "owner approves publication"</code> before the owner approved publication that day. Their signed bytes are not changed. These two signed records supersede that one field: all of it is public.</p>
+<ul>
+ <li><a href="publication/2026-09-26.json">publication/2026-09-26.json</a> (<a href="publication/2026-09-26.signed.json">signed</a>, <a href="publication/2026-09-26.json.ots">OTS</a>): the index's publication record</li>
+ <li><a href="publication/2026-09-26-erratum.json">publication/2026-09-26-erratum.json</a> (<a href="publication/2026-09-26-erratum.signed.json">signed</a>, <a href="publication/2026-09-26-erratum.json.ots">OTS</a>): the erratum for every other file that carries the field (genesis, chain head, batch records)</li>
+</ul>
+
+<h2>Batches</h2>
+<div class="wrap"><table>
+ <tr><th>directory</th><th>kind</th><th>files</th></tr>
+ <tr><td><code>a2a_card/</code></td><td><code>measurement.a2a_card_signature</code></td><td><a href="a2a_card/record.json">record.json</a> · <a href="a2a_card/record.signed.json">record.signed.json</a> · <a href="a2a_card/record.json.ots">record.json.ots</a> · <a href="a2a_card/leaves.json">leaves.json</a> · <a href="a2a_card/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>contract_parity/</code></td><td><code>measurement.contract_parity</code></td><td><a href="contract_parity/record.json">record.json</a> · <a href="contract_parity/record.signed.json">record.signed.json</a> · <a href="contract_parity/record.json.ots">record.json.ots</a> · <a href="contract_parity/leaves.json">leaves.json</a> · <a href="contract_parity/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>cross_ledger/</code></td><td><code>measurement.cross_ledger_supply</code></td><td><a href="cross_ledger/record.json">record.json</a> · <a href="cross_ledger/record.signed.json">record.signed.json</a> · <a href="cross_ledger/record.json.ots">record.json.ots</a> · <a href="cross_ledger/leaves.json">leaves.json</a> · <a href="cross_ledger/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>mill_cross_runtime-5ae00c1f4c2e/</code></td><td><code>measurement.cross_runtime_reproduction</code></td><td><a href="mill_cross_runtime-5ae00c1f4c2e/record.json">record.json</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/record.signed.json">record.signed.json</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/record.json.ots">record.json.ots</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/leaves.json">leaves.json</a> · <a href="mill_cross_runtime-5ae00c1f4c2e/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>mill_cross_runtime-78226433e9e4/</code></td><td><code>measurement.cross_runtime_reproduction</code></td><td><a href="mill_cross_runtime-78226433e9e4/record.json">record.json</a> · <a href="mill_cross_runtime-78226433e9e4/record.signed.json">record.signed.json</a> · <a href="mill_cross_runtime-78226433e9e4/record.json.ots">record.json.ots</a> · <a href="mill_cross_runtime-78226433e9e4/leaves.json">leaves.json</a> · <a href="mill_cross_runtime-78226433e9e4/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>public_signals/</code></td><td><code>measurement.public_signal</code></td><td><a href="public_signals/record.json">record.json</a> · <a href="public_signals/record.signed.json">record.signed.json</a> · <a href="public_signals/record.json.ots">record.json.ots</a> · <a href="public_signals/leaves.json">leaves.json</a> · <a href="public_signals/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>self_parity/</code></td><td><code>measurement.self_parity</code></td><td><a href="self_parity/record.json">record.json</a> · <a href="self_parity/record.signed.json">record.signed.json</a> · <a href="self_parity/record.json.ots">record.json.ots</a> · <a href="self_parity/leaves.json">leaves.json</a> · <a href="self_parity/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+ <tr><td><code>tool_drift/</code></td><td><code>measurement.tool_drift</code></td><td><a href="tool_drift/record.json">record.json</a> · <a href="tool_drift/record.signed.json">record.signed.json</a> · <a href="tool_drift/record.json.ots">record.json.ots</a> · <a href="tool_drift/leaves.json">leaves.json</a> · <a href="tool_drift/capsules.jsonl.gz">capsules.jsonl.gz</a></td></tr>
+</table></div>
+<p><code>endpoints/00.json</code> to <code>endpoints/ff.json</code>: 256 shards of the capsules about each measured endpoint, keyed by the first two hex digits of the SHA-256 of the normalised endpoint URL.</p>
+
+<h2>Verify</h2>
+<ul>
+ <li>In the browser: <a href="/verify-server/">/verify-server/</a> returns every capsule held about one endpoint and re-derives its inclusion.</li>
+ <li>Over MCP: the tools <code>measurement_index</code>, <code>verify_capsule</code> and <code>server_evidence</code> at <code>https://councilof.ai/mcp/</code>.</li>
+ <li>Offline: the builder and verifier source (Apache-2.0) is at <a href="https://huggingface.co/datasets/csoai/evidence-index/tree/main/source">huggingface.co/datasets/csoai/evidence-index/tree/main/source</a>; the daily index chain is in the same dataset under <code>measurement-index/</code>.</li>
+</ul>
+<p class="sub">A valid signature shows only that the key holder signed those bytes. It does not show that any value is correct.</p>
+</main>
+</html>

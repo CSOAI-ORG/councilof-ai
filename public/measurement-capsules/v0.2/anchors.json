@@ -1,0 +1,81 @@
+{
+ "schema": "csoai.measurement-anchors/0.1",
+ "as_of": "2026-09-27T01:51:35Z",
+ "date": "2026-09-26",
+ "what_this_is": "Where the index's bytes are anchored, read from the anchor files themselves. Anchors show WHEN bytes existed; the signature shows who signed them; neither says what the capsules measured.",
+ "index": {
+  "file": "measurement-index-v0.2-2026-09-26.json",
+  "sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+  "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d"
+ },
+ "opentimestamps": {
+  "file": "measurement-index-v0.2-2026-09-26.json.ots",
+  "proof_sha256": "e2843a3682e31fa153250a41525d7e2844496b2ac945934927cd3c6e66b731fd",
+  "state": "BITCOIN_ATTESTED",
+  "bitcoin_block_heights": [
+   968674
+  ],
+  "bitcoin": [
+   {
+    "height": 968674,
+    "block_hash": "00000000000000000001b50d0ff3c2100738520d0e88571a345ccae06bd46c10",
+    "header_check": "MATCHES_HEADER"
+   }
+  ],
+  "meaning": "a Bitcoin attestation dates the index bytes no later than that block; a calendar commitment alone dates nothing"
+ },
+ "rekor": [
+  {
+   "subject": "daily index",
+   "file": "measurement-index-v0.2-2026-09-26.json",
+   "subject_sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "signed_payload_sha256": "9f60d6365a335128425570deca35a91e6e6ce929077a6e4baa56b0a982e13800",
+   "state": "INCLUDED (inclusion proof verifies)",
+   "logIndex": 2968539665,
+   "uuid": "108e9186e8c5677a95033baa53cbb4134660f8eadd6bd78e45d10c33d9f6a0fd67419c35555b0ac9",
+   "integratedTime": 1790430210,
+   "entry_url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2968539665",
+   "search_url": "https://search.sigstore.dev/?logIndex=2968539665"
+  },
+  {
+   "subject": "weekly chain head",
+   "file": "measurement-index-chain-head-2026-09-26.json",
+   "subject_sha256": "b07962ce1d559a9c4c2d9a51fd6d7a6636004c5c7ac7eadca2c7f297a2eaaa46",
+   "signed_payload_sha256": "fb0361357b96b9c352677b166f71f765fa36245d191ff0667b77989f28999ec1",
+   "state": "INCLUDED (inclusion proof verifies)",
+   "logIndex": 2968539944,
+   "uuid": "108e9186e8c5677aa3b9e6c821cf978ca9c5f2c616cc83cd33aa2b40823d624dcf974762740a2840",
+   "integratedTime": 1790430211,
+   "entry_url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2968539944",
+   "search_url": "https://search.sigstore.dev/?logIndex=2968539944"
+  },
+  {
+   "subject": "publication record",
+   "file": "measurement-index-v0.2-2026-09-26.publication.json",
+   "subject_sha256": "effd4713967cff6e03e548f752c87cbb7405a869f15871b00ac92c950201a804",
+   "signed_payload_sha256": "b62e72b9809fb71486eeb68e00ce82856eda23464445253e00e628ee4cb9b445",
+   "state": "INCLUDED (inclusion proof verifies)",
+   "logIndex": 2968614397,
+   "uuid": "108e9186e8c5677ad544b59e4447852b74a7fc48fb8132823a71b47ed79c3359c896891b19d4d82f",
+   "integratedTime": 1790432373,
+   "entry_url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2968614397",
+   "search_url": "https://search.sigstore.dev/?logIndex=2968614397"
+  }
+ ],
+ "xrpl": {
+  "state": "PREPARED_NOT_SUBMITTED",
+  "note": "memo drafts exist; nothing has been submitted to the XRP Ledger"
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "by": "signed publication record measurement-index-v0.2-2026-09-26.publication.json (the index's private_until predates the approval)",
+  "erratum": {
+   "file": "measurement-index-v0.2-2026-09-26.publication-erratum.json",
+   "sha256": "068f1c9b9f029f46a46d0fe6306a83491254f8d69c5dd01605c3214ec02eeec9"
+  }
+ },
+ "copies": {
+  "hf_dataset": "https://huggingface.co/datasets/csoai/evidence-index/tree/main/measurement-index/2026-09-26"
+ }
+}
