@@ -43,6 +43,70 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0927-05",
+      "date": "2026-09-27",
+      "detected_at": "2026-09-27",
+      "detected_window": {
+        "not_before": "2026-09-27T00:00:00Z",
+        "not_after": "2026-09-27T03:35:18Z",
+        "basis": "the csoai.org card review is recorded only to the day; not after the first recorded failing run of scripts/verify_agent_card_jws.py against the csoai.org card (03:35:18Z, rc=1 INVALID)"
+      },
+      "detected_by": "internal audit",
+      "published_at": "2026-09-27T03:52:54Z",
+      "timing_evidence": [
+        "csoai.org card review, 2026-09-27 (day precision)",
+        "2026-09-27T03:35:18Z: scripts/verify_agent_card_jws.py returned rc=1 INVALID ('signature does not verify') for csoai.org /.well-known/agent-card.json and /.well-known/agent.json, and rc=2 UNSIGNED for the two councilof.ai files",
+        "2026-09-27T03:52:54Z: csoai-site production deploy log (deployment caf5d012.csoai-site.pages.dev) - the signed card and the new key were served on csoai.org first, so no signed card is served before its key resolves",
+        "councilof-ai commit 8325539dd (2026-09-27T04:37:38Z): did.json gains did:web:csoai.org#card-attestation-2; the v1.1.0 card is signed under it",
+        "2026-09-27T06:05:58Z: the same verifier returned rc=0 VALID for both csoai.org files",
+        "2026-09-27T06:55:59Z: councilof.ai deploy of ab6df4590 (contains 8325539dd) completed; the signed card is served on councilof.ai from then",
+        "2026-09-27T09:42:24Z: re-run for this entry, rc=0 VALID for all four files under --require-kid did:web:csoai.org#card-attestation-2, tamper control INVALID"
+      ],
+      "what_was_wrong": "Until 27 Sep, https://csoai.org/.well-known/agent-card.json and /.well-known/agent.json served an older A2A agent card, 'Council of AI Measurement Agent' version 0.1.0 with 2 skills, that presented itself as signed. identity.signedWith named did:web:csoai.org#site-release-1, and signatures[0] carried a JWS protected header with alg EdDSA and that kid. A2A specification 8.4.3 says that field is a JWS. Checked that way, it failed against the site-release-1 key in csoai.org's own /.well-known/did.json: scripts/verify_agent_card_jws.py returned rc=1 INVALID for both files. The bytes had been produced under the card's own declared rule, Ed25519 over the hex SHA-256 of its sorted-key JSON, so an A2A client got a signature that failed. At the same time councilof.ai served the current card, version 1.1.0 with 10 skills, with no signature at all (rc=2 UNSIGNED).",
+      "how_caught": "The csoai.org card review on 2026-09-27 ran the repository's independent verifier, scripts/verify_agent_card_jws.py, against the cards served at both origins. The verifier is written without the signer's code. A re-run at 03:35:18Z gave the same results. The failing signature was then checked against every key in did.json under the card's self-declared rule. That showed the key matched and the signing rule did not.",
+      "what_changed": "Resolved by re-signing under a new card key. The private half of did:web:csoai.org#card-attestation-1 is held on no automation host, so the owner approved a key rotation on 27 Sep. Commit 8325539dd adds one verification method, did:web:csoai.org#card-attestation-2, to did.json with its assertionMethod entry. It signs the version 1.1.0 card (10 skills) under that key as an A2A 8.4 JWS. The key went live on csoai.org before any card signed under it was served. #card-attestation-1 stays published and is not revoked, because the 335 cards in the signed card index verify under it. The board keys are unchanged. Live result at 2026-09-27T09:42:24Z: scripts/verify_agent_card_jws.py --require-kid did:web:csoai.org#card-attestation-2 returns rc=0 VALID for https://csoai.org/.well-known/agent-card.json, https://csoai.org/.well-known/agent.json, https://councilof.ai/.well-known/agent-card.json and https://councilof.ai/.well-known/agent.json. All four serve the same bytes, sha256 fd9d2e84d3a03142123384564ebc0edc4c0e4fb30c79d12c49f995b04d3abfe7, and a one-byte tamper control reads INVALID. csoai.org no longer serves the version 0.1.0 card. No page, llms.txt or llms-full.txt stated that the 0.1.0 card's signature verified, so there was no wording to withdraw. This entry records the period in which it did not verify.",
+      "status": "CORRECTED - card re-signed under did:web:csoai.org#card-attestation-2; verifies VALID on both origins",
+      "reached_the_public": true,
+      "evidence": [
+        "https://csoai.org/.well-known/agent-card.json",
+        "https://councilof.ai/.well-known/agent-card.json",
+        "https://csoai.org/.well-known/did.json (#card-attestation-2)",
+        "scripts/verify_agent_card_jws.py (exit 0 VALID, 1 INVALID, 2 UNSIGNED)",
+        "public/interop/agent-card-jws-input.json (state SIGNED)",
+        "councilof-ai commit 8325539dd"
+      ]
+    },
+    {
+      "id": "C-2026-0927-04",
+      "date": "2026-09-27",
+      "detected_at": "UNRECORDED",
+      "detected_window": {
+        "not_before": "2026-08-19T09:24:39Z",
+        "not_after": "2026-08-26T19:06:55Z",
+        "basis": "not before the cards were signed (body.created 2026-08-19T09:24:39Z on all 335); not after commit 7413ca200, the first commit that says a card's public_framing is frozen at signing and must not be read as the board"
+      },
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "public/signed/cards/*.json body.created 2026-08-19T09:24:39.152331Z to 2026-08-19T09:24:39.174226Z for the 335 indexed cards",
+        "councilof-ai commit 7413ca200 (2026-08-26T19:06:55Z): the shared card verifier prints a framing_frozen line for every card that carries public_framing",
+        "councilof-ai commit e985a4a2b (2026-08-28T04:30:37Z): the producer tools/card_emitter.py switched PUBLIC_FRAMING to 'counts live on GET /api/gspc'; the commit message records that the signed originals keep the old string",
+        "P1 truth review, 2026-09-27: re-read all 335 bodies and found no ledger entry for the field (day precision)",
+        "published_at is UNRECORDED: this entry is the first ledger statement, and the deploy that first serves it was not recorded when it was written"
+      ],
+      "what_was_wrong": "All 335 signed measurement cards in the signed card index (public/signed/card_index.json, n_cards 335, bodies under public/signed/cards/) carry the field body.public_framing = '13 measured of 14 quotable'. That was true of the board when the cards were signed on 2026-08-19. It is stale now. GET /api/gspc read at 2026-09-27T09:42:24Z returns totals.axes 23, totals.measured_axes 23 and totals.unmeasured_axes 0. The field states the board, not the card it sits in, and these cards have been public since August, so a reader of any one card could take '13 measured of 14' as the current board. Scope is this field in the signed card index only. The public-root leaves (root.json) and the card wrapper files are separate corpora and are not counted here.",
+      "how_caught": "The P1 truth review on 2026-09-27 read public_framing in each of the 335 bodies in the signed card index and recomputed each card id from its body (335 of 335 match). The same stale string is in every one, and this ledger had no entry for it. The staleness was known internally before that. Commit 7413ca200 (26 Aug) made the card verifier say the string is frozen, and commit e985a4a2b (28 Aug) changed the producer and noted the signed originals, but neither published a correction here. This entry closes that gap.",
+      "what_changed": "No signed card changes. Since commit e985a4a2b (2026-08-28T04:30:37Z) the card producer, tools/card_emitter.py, writes public_framing = 'counts live on GET /api/gspc', so no card it signs carries a typed board count. harness/mine/cards/MANIFEST.json was updated in the same commit. The 335 signed originals are kept byte for byte, because they are historical signed records and re-signing would break references to them. A card's id is the sha256 of its body, so re-signing would give every card a new id. Ids from this set are referenced by five OTS-anchored files: public/signed/gspc-board.2026-09-25.signed.json, public/interop/jail-index.json, public/interop/canonical-23-axis-index-v0.1.json, public/interop/xrpl-attest-run.json and public/interop/three-loops/measurement-x402_challenge_check-x402_payai_cdp-20260917T052406Z.json. Their proofs would then name ids that no longer exist. There is also no signing path today for did:web:csoai.org#card-attestation-1, the key that signed these cards. How to read it: public_framing in these cards describes the board as of 2026-08-19 and nothing more. The live counts are totals.axes, totals.measured_axes and totals.unmeasured_axes at GET https://councilof.ai/api/gspc. The public card verifier already says this under its framing_frozen check (functions/_lib/cardVerify.ts).",
+      "status": "CORRECTED AT PRODUCER - signed originals kept byte for byte; read live counts from /api/gspc",
+      "reached_the_public": true,
+      "evidence": [
+        "public/signed/card_index.json (n_cards 335; every indexed body carries public_framing '13 measured of 14 quotable')",
+        "tools/card_emitter.py PUBLIC_FRAMING (commit e985a4a2b)",
+        "functions/_lib/cardVerify.ts framing_frozen check (commit 7413ca200)",
+        "https://councilof.ai/api/gspc (totals.axes, totals.measured_axes, totals.unmeasured_axes)"
+      ]
+    },
+    {
       "id": "C-2026-0927-03",
       "date": "2026-09-27",
       "detected_at": "2026-09-27",
@@ -1301,20 +1365,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "9c8f68ee2b5a17e4a3d1a117663bc466b9d141a2ed873cc1bb251f4288d1c40c",
+    id: "95e8ee3ff4b122145c8a3f3f4198e725b1b0352c2a7733e022f115a72d57cef0",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "ae565d7cb33db08b3340221cac6c98b46784f8e8fc22c81bf4b3a65f095b783119c9fa231d6cfcd40dc17c1953432931591fb58870d6316bd929e881ed4ac00a",
+    signature: "714ff259ee97578b67c8cd882e04749a7b96eafd5d9f31edc25d466c0f99697d3a05856eb9ee376f36d34313c2884868a8d79fb5dcb38f996a69139c489c6309",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "9c8f68ee2b5a17e4a3d1a117663bc466b9d141a2ed873cc1bb251f4288d1c40c",
+          "content_id": "95e8ee3ff4b122145c8a3f3f4198e725b1b0352c2a7733e022f115a72d57cef0",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 74,
-          "latest_entry_id": "C-2026-0927-03",
-          "ledger_canonical_bytes": 133977,
+          "entries": 76,
+          "latest_entry_id": "C-2026-0927-05",
+          "ledger_canonical_bytes": 142946,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-27T04:57:21Z"
+          "signed_at": "2026-09-27T09:42:39Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
