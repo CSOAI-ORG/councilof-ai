@@ -6,7 +6,11 @@ const R = (p: string) => JSON.parse(readFileSync(resolve(__dirname, "../..", p),
 const card = R("public/.well-known/agent-card.json");
 const did = R("public/.well-known/did.json");
 const jwsInput = R("public/interop/agent-card-jws-input.json");
-const CARD_KID = "did:web:csoai.org#card-attestation-1";
+// #card-attestation-2 (added 2026-09-27, owner-approved rotation) signs the agent card: the private half of
+// #card-attestation-1 is not held where the card is signed. #card-attestation-1 stays published and is NOT
+// revoked — the signed card index (335 cards) verifies under it.
+const CARD_KID = "did:web:csoai.org#card-attestation-2";
+const BOARD_KIDS = ["did:web:csoai.org#board-attestation-1", "did:web:csoai.org#gspc-board-22axis-2026", "did:web:csoai.org#estate-chain-1"];
 
 // RFC 8785 JCS for the shape this card actually has: objects, arrays, strings, booleans.
 // Array.prototype.sort() orders keys by UTF-16 code units, which is what RFC 8785 §3.2.3 requires.
@@ -78,11 +82,12 @@ describe("the agent card's signing input describes the card that is actually ser
     expect(si.length).toBe(jwsInput.signing_input_bytes);
   });
 
-  it("the signing input names #card-attestation-1 and never a board key", () => {
+  it("the signing input names #card-attestation-2 and never a board key", () => {
     expect(jwsInput.alg).toBe("EdDSA");
     expect(jwsInput.kid).toBe(CARD_KID);
     const hdr = JSON.parse(Buffer.from(jwsInput.protected_b64u, "base64url").toString("utf8"));
     expect(hdr).toEqual({ alg: "EdDSA", kid: CARD_KID, typ: "JOSE" });
+    for (const b of BOARD_KIDS) expect(jwsInput.kid).not.toBe(b);
   });
 
   it("a signed card verifies (Node crypto, did.json key); an unsigned card says so and claims nothing", async () => {
@@ -90,7 +95,7 @@ describe("the agent card's signing input describes the card that is actually ser
     const sigs = (card.signatures ?? []) as Array<{ protected: string; signature: string }>;
     if (sigs.length === 0) {
       expect(jwsInput.state).toBe("UNSIGNED");
-      expect(jwsInput.note).toMatch(/^UNSIGNED — awaiting the private half of did:web:csoai\.org#card-attestation-1/);
+      expect(jwsInput.note).toMatch(/^UNSIGNED — awaiting the private half of did:web:csoai\.org#card-attestation-2/);
       return;
     }
     expect(jwsInput.state).toBe("SIGNED");
