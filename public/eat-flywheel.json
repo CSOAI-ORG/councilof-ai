@@ -1,0 +1,160 @@
+{
+  "capability_counts": {
+    "audience": {
+      "agent": 202,
+      "both": 25
+    },
+    "kind": {
+      "a2a_skill": 10,
+      "http": 186,
+      "mcp_tool": 16,
+      "population_door": 10,
+      "well_known": 5
+    },
+    "lifecycle": {
+      "DOOR_CLOSED": 1,
+      "LIVE": 192,
+      "METHOD_NOT_ALLOWED": 1,
+      "NOT_IMPLEMENTED": 13,
+      "QUARANTINED_PRE_RELEASE": 15,
+      "RETIRED": 5
+    },
+    "payment": {
+      "free": 194,
+      "free_preview_then_x402": 17,
+      "not_sold": 1,
+      "x402": 15
+    },
+    "surfaces": {
+      "a2a": 10,
+      "llms": 73,
+      "mcp": 16,
+      "nav": 22,
+      "openapi": 176
+    },
+    "total": 227
+  },
+  "content_id": "83c5ef8ab598a7213afb32c6d060d02ece81f6cfe48e5d895a3e17bc9c6e39b2",
+  "kind": "public-observation-projection",
+  "laws": [
+    "listing or discovery is not measurement, certification, endorsement, or compliance",
+    "public capability declaration does not prove runtime behavior",
+    "payment does not create a GSPC measurement",
+    "generated is not deployed; deployed is not independently read back",
+    "live/source contract drift blocks a full-site release but is not itself a measurement failure",
+    "this projection reports public observations; it does not expose private agent state"
+  ],
+  "private_eat_state": "NOT_INCLUDED_IN_PUBLIC_INDEX",
+  "public_observations": {
+    "a2a_skills": 10,
+    "corrections": 73,
+    "distinct_nonself_payers": 1,
+    "gspc_axes": 23,
+    "gspc_measured_axes": 23,
+    "gspc_unmeasured_axes": 0,
+    "mcp_free_tools": 12,
+    "mcp_paid_tools": 4,
+    "nonself_settlements": 1,
+    "x402_mode": "live",
+    "x402_resources": 25
+  },
+  "schema": "csoai.eat-flywheel-public/0.2",
+  "source_commit": "fccf15a70767b8406effbc38a4b28a8273f486c9",
+  "source_commit_semantics": "last Git commit modifying council-os/capabilities.json",
+  "source_observations": {
+    "a2a": {
+      "bytes": 15608,
+      "content_type": "application/a2a+json",
+      "sha256": "f7e56ce023a3584f6855a723a714c0fabfbe2bf7a8d7cd77c0e76c44d4e3359a",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/agent-card.json"
+    },
+    "corrections": {
+      "bytes": 142498,
+      "content_type": "application/json",
+      "excluded_volatile_fields": [
+        "signature_check.checked_at"
+      ],
+      "semantic_hash_scope": "JSON body excluding signature_check.checked_at only",
+      "semantic_sha256": "30295952537e1db1dbb2d58f718e2d05a0456db2e938f3271203ae5af8069406",
+      "status": 200,
+      "url": "https://councilof.ai/api/corrections"
+    },
+    "gspc": {
+      "bytes": 72873,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "f348582bf39320e8d002e96575707843d0ae9a7c9416bdc64e5838fa42d50c5f",
+      "status": 200,
+      "url": "https://councilof.ai/api/gspc"
+    },
+    "quickstart": {
+      "bytes": 4664,
+      "content_type": "application/json",
+      "sha256": "a2f8b49a0ac0daf0eaa7058da544249c5bdd068b31a7e5ae1e43272d09220864",
+      "status": 200,
+      "url": "https://councilof.ai/quickstart.json"
+    },
+    "receipt_verifier": {
+      "bytes": 29799,
+      "content_type": "application/octet-stream",
+      "sha256": "e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab",
+      "status": 200,
+      "url": "https://councilof.ai/verifier/verify_receipt.py"
+    },
+    "revenue": {
+      "bytes": 4908,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "07c2fbb99ef57558ea5076a16322b21a583b1115b9bc10f70df8adc8f53eb7b5",
+      "status": 200,
+      "url": "https://councilof.ai/api/revenue"
+    },
+    "state": {
+      "bytes": 43465,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "d658ebe0ece63fcf46de8d4354de160489a0c791e28bd3e748cf56fdb6b5814a",
+      "status": 200,
+      "url": "https://councilof.ai/api/state"
+    },
+    "x402": {
+      "bytes": 114570,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "ba6586d610eca73c4cf93b140103cd802bf934d631fb17f480e8b1a017e3166d",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/x402.json"
+    }
+  },
+  "surface_parity": {
+    "a2a": {
+      "boundary": "Compares the canonical repository declaration with the live public Agent Card only. A mismatch is release/source drift, not a GSPC measurement failure, endorsement, or certification result.",
+      "declared_live_skill_count": 10,
+      "declared_live_skill_ids": [
+        "article50-detect",
+        "benchmark-quality-register",
+        "east-west-crosswalk",
+        "estate-index",
+        "eu-ai-act-screen",
+        "gspc-board",
+        "measured-badge",
+        "measurement-capsules",
+        "server-evidence",
+        "x402-discovery"
+      ],
+      "declared_only": [],
+      "observed_live_skill_count": 10,
+      "observed_live_skill_ids": [
+        "article50-detect",
+        "benchmark-quality-register",
+        "east-west-crosswalk",
+        "estate-index",
+        "eu-ai-act-screen",
+        "gspc-board",
+        "measured-badge",
+        "measurement-capsules",
+        "server-evidence",
+        "x402-discovery"
+      ],
+      "observed_only": [],
+      "state": "CONSISTENT"
+    }
+  }
+}
