@@ -80,8 +80,9 @@ export type X402Env = CdpEnv & {
   // offer-receipt extension's offers and receipts. Absent ⇒ 402s and 200s are unsigned and SAY SO
   // on the `csoai.offer_receipt` sidecar; nothing is ever fabricated in its place.
   BOARD_SIGN_KEY_PKCS8_B64?: string;
-  // Per-SKU price overrides (strings, as Cloudflare passes them) are read via _skus.ts.
-  [k: string]: string | undefined;
+  X402_PROMO_NOW?: string;
+  // Pages bindings may be objects (KV, ASSETS, etc.). Dynamic price reads are narrowed at use.
+  [k: string]: unknown;
 };
 
 /**
@@ -232,7 +233,7 @@ export function x402Accepts(
   const normalAtomic =
     env.X402_AMOUNT && env.X402_AMOUNT !== ""
       ? env.X402_AMOUNT
-      : usdToAtomic(resolvePriceUsd(opts.skuId, opts.tier, env));
+      : usdToAtomic(resolvePriceUsd(opts.skuId, opts.tier, env as unknown as Record<string, string | undefined>));
   const now = Date.parse(env.X402_PROMO_NOW || new Date().toISOString());
   const promoActive =
     normalAtomic !== "0" &&
@@ -404,7 +405,7 @@ export type SettlementRecord = {
  * refuse a paid artefact.
  */
 export type RecordOutcome =
-  | { stored: true; record: SettlementRecord }
+  | { stored: true; record: SettlementRecord; reason?: never }
   | { stored: false; reason: string; record: SettlementRecord | null };
 
 export async function recordSettlement(

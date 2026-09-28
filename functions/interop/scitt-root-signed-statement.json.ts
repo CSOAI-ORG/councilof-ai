@@ -19,7 +19,7 @@ import root from "../../public/root.json";
 
 // Web-standard digest: Pages Functions have no node:crypto.
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
-  const d = await crypto.subtle.digest("SHA-256", bytes);
+  const d = await crypto.subtle.digest("SHA-256", bytes.slice().buffer as ArrayBuffer);
   return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 

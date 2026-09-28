@@ -60,6 +60,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
 
   // Worker state (live or stale fallback)
   const worker = await buildWorker(env);
+  const workerRecord = worker as unknown as Record<string, unknown>;
+  const workerData =
+    workerRecord.worker && typeof workerRecord.worker === "object"
+      ? workerRecord.worker as Record<string, unknown>
+      : null;
 
   // Signed cards: how many are signed vs unsigned
   const cardRows: Array<{ signed?: boolean }> = Array.isArray(cards.cards) ? cards.cards : [];
@@ -88,19 +93,19 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
   );
 
   // Queue depth from worker (if live)
-  const queue = worker.status === "LIVE" && worker.worker
+  const queue = worker.status === "LIVE" && workerData
     ? {
-        depth: typeof (worker.worker as Record<string, unknown>).jobs_total === "number" ? (worker.worker as Record<string, unknown>).jobs_total : null,
-        successful_runs: typeof (worker.worker as Record<string, unknown>).successful_runs === "number" ? (worker.worker as Record<string, unknown>).successful_runs : null,
-        failed_runs: typeof (worker.worker as Record<string, unknown>).failed_runs === "number" ? (worker.worker as Record<string, unknown>).failed_runs : null,
-        transport_errors: typeof (worker.worker as Record<string, unknown>).transport_errors === "number" ? (worker.worker as Record<string, unknown>).transport_errors : null,
-        state: typeof (worker.worker as Record<string, unknown>).state === "string" ? (worker.worker as Record<string, unknown>).state : null,
+        depth: typeof workerData.jobs_total === "number" ? workerData.jobs_total : null,
+        successful_runs: typeof workerData.successful_runs === "number" ? workerData.successful_runs : null,
+        failed_runs: typeof workerData.failed_runs === "number" ? workerData.failed_runs : null,
+        transport_errors: typeof workerData.transport_errors === "number" ? workerData.transport_errors : null,
+        state: typeof workerData.state === "string" ? workerData.state : null,
       }
     : { depth: null, successful_runs: null, failed_runs: null, transport_errors: null, state: null };
 
   // Publication lag: root as_of vs pod last_success_at
-  const lastSuccess = worker.status === "LIVE" && worker.worker
-    ? (worker.worker as Record<string, unknown>).last_success_at as string | undefined
+  const lastSuccess = worker.status === "LIVE" && workerData
+    ? workerData.last_success_at as string | undefined
     : undefined;
   const rootLagHours = rootAsOf && lastSuccess ? ageHours(rootAsOf) : null;
 

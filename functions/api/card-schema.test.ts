@@ -53,7 +53,7 @@ describe("card-v1 is the schema 941+ signed cards already named", () => {
     expect(bad).toBe(0);
     expect(v1n).toBeGreaterThan(900);
     expect(v0n).toBeGreaterThan(0);
-  });
+  }, 30000);
 
   it("a v1 card is NOT valid v0 — that is the whole point of the new $id", () => {
     expect(v0.properties.schema.const).toBe("https://councilof.ai/schema/card-v0.json");

@@ -37,11 +37,21 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     fetch(u("/api/gspc")),
   ]);
 
-  const board = boardRes.ok ? await boardRes.json().catch(() => null) : null;
-  const index = indexRes.ok ? await indexRes.json().catch(() => null) : null;
-  const meas = measRes.ok ? await measRes.json().catch(() => null) : null;
-  const crossBorder = crossBorderRes.ok ? await crossBorderRes.json().catch(() => null) : null;
-  const gspc = gspcRes.ok ? await gspcRes.json().catch(() => null) : null;
+  const board = boardRes.ok
+    ? (await boardRes.json().catch(() => null)) as Record<string, any> | null
+    : null;
+  const index = indexRes.ok
+    ? (await indexRes.json().catch(() => null)) as Record<string, any> | null
+    : null;
+  const meas = measRes.ok
+    ? (await measRes.json().catch(() => null)) as Record<string, any> | null
+    : null;
+  const crossBorder = crossBorderRes.ok
+    ? (await crossBorderRes.json().catch(() => null)) as Record<string, any> | null
+    : null;
+  const gspc = gspcRes.ok
+    ? (await gspcRes.json().catch(() => null)) as Record<string, any> | null
+    : null;
   const livingTotals = gspc?.totals
     ? {
         see: "/api/gspc",

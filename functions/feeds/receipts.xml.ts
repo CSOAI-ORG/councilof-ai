@@ -90,7 +90,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   do {
     const page = await kv.list({ prefix: "settled:tx:", cursor, limit: 1000 });
     for (const k of page.keys) keys.push(k.name);
-    cursor = page.list_complete ? undefined : page.cursor;
+    cursor = page.list_complete ? undefined : ("cursor" in page ? page.cursor : undefined);
   } while (cursor && keys.length < 5000);
 
   const rows: Array<[string, Rec]> = [];
