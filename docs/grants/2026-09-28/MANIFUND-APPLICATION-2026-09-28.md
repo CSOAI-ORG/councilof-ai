@@ -4,7 +4,7 @@ Status: HELD. Owner asks: (1) create the Manifund account as Nicholas Templeman 
 
 Lane: grants-20260928. Every figure below was read from a live endpoint on 2026-09-28 between 13:07Z and 13:45Z. Before publishing, re-read each endpoint and replace any figure that has moved. Never add the three card corpora together.
 
-Why Manifund: anyone can create a public proposal. Manifund states it offers "Fiscal sponsorship, for non-501c3 entities, including individuals, for-profits, and international organizations" (manifund.org/about/donor-faq). CSOAI Ltd is a for-profit UK company, so the grant would go through that route and Manifund's due diligence. Its donor FAQ says "We typically ask donors to cover a 5% ops & fiscal sponsorship fee on donations."
+Why Manifund: anyone can create a public proposal. Manifund's donor FAQ lists, among the services donors use it for, "Fiscal sponsorship, for non-501c3 entities, including individuals, for-profits, and international organizations", described as a lightweight sponsorship "where we remit funds after reviewing" the proposal (manifund.org/about/donor-faq). CSOAI Ltd is a for-profit UK company, so the grant would go through that route and Manifund's due diligence. Its donor FAQ says "We typically ask donors to cover a 5% ops & fiscal sponsorship fee on donations."
 
 ---
 
