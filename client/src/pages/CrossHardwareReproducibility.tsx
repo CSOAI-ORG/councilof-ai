@@ -11,6 +11,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import { hubDatasetLd, ldJson } from "@/lib/measurementRecordLd";
 import PlainEmail from "@/components/PlainEmail";
 
 const TITLE = "Cross-hardware reproducibility of LLM evaluation results | Council of AI";
@@ -59,6 +60,9 @@ async function loadRoots(): Promise<Record_[]> {
 
 const A = "underline underline-offset-4";
 
+// schema.org Dataset JSON-LD for the dataset this page fronts, pinned to the commit the page reads.
+const LD = hubDatasetLd({ page: "/research/cross-hardware-reproducibility/", dataset: DS, name: TITLE.replace(/ \| Council of AI$/, ""), description: DESCRIPTION, version: REV });
+
 export default function CrossHardwareReproducibility() {
   const [data, setData] = useState<Loaded | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -89,6 +93,7 @@ export default function CrossHardwareReproducibility() {
 
   return (
     <div data-testid="xhw-page" className="mx-auto max-w-3xl px-4 py-10 sm:py-14">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(LD) }} />
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <Link href="/research-transparency/">Research</Link> › <span>Cross-hardware reproducibility</span>
       </nav>
