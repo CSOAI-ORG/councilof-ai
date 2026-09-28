@@ -1,0 +1,199 @@
+{
+  "schema": "csoai.claim-maintenance-receipt/0.1",
+  "created_utc": "2026-09-28T02:38:12.900431Z",
+  "source_watch_receipt": {
+    "path": "/home/ubuntu/_claim-maintenance-run-20260928-a/out/watch/latest-receipt.json",
+    "sha256": "80c748744f2e44878dae403cf5363e9605fc4e99cfb73cadca850683e1983b96"
+  },
+  "plan": {
+    "watch_run_id": "20260928T023123Z",
+    "observed_changes": 21,
+    "triggering_changes": [
+      {
+        "claim": "CL-5",
+        "kind": "interval_past_a_feed's_own_declared_heartbeat"
+      }
+    ],
+    "impacted_claims": [
+      "CL-5"
+    ],
+    "held_for_review": [
+      {
+        "claim": "CR-1",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CR-2",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CR-3",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "AR-1",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "AR-2",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "LF-1",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "LF-2",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "LF-3",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "LF-4",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "LF-5",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CS-1",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CS-2",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CS-3",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CS-4",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "EC-1",
+        "kind": "dated_claim_has_reached_its_resolution_date",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "RH-3",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "IN-1",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "IN-2",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "IN-5",
+        "kind": "source_digest_differs_from_the_recorded_read",
+        "reason": "no executable claim harness is registered for this claim id"
+      },
+      {
+        "claim": "CL-3",
+        "kind": "source_not_reachable_this_run",
+        "reason": "transport/read failure is not evidence of a changed claim"
+      }
+    ],
+    "action": "REMEASURE_REGISTRY",
+    "remeasurement_scope": [
+      "CL-5"
+    ],
+    "assembly_scope": [
+      "CL-1",
+      "CL-2",
+      "CL-3",
+      "CL-4",
+      "CL-5",
+      "ON-1",
+      "ON-2",
+      "ON-3"
+    ],
+    "scope_reason": "only impacted claim harnesses execute; unchanged claims are carried from the prior registry and verified field-for-field after assembly"
+  },
+  "state": "READY_TO_PUBLISH",
+  "publication_state": "STAGED_IN_REPO_NOT_YET_PUBLIC",
+  "signature_state": "VERIFIED",
+  "timestamp_state": "PENDING_CALENDAR_COMMITMENT",
+  "remeasurement": {
+    "returncode": 0,
+    "executed_claims": [
+      "CL-5"
+    ],
+    "carried_forward_inputs": [
+      "CL-1",
+      "CL-2",
+      "CL-3",
+      "CL-4",
+      "ON-1",
+      "ON-2",
+      "ON-3"
+    ],
+    "stdout_tail": "WROTE CL-5.json state=CLAIM_MEASURED\n",
+    "stderr_tail": ""
+  },
+  "assembly": {
+    "returncode": 0,
+    "stdout_tail": "WROTE /home/ubuntu/_claim-maintenance-run-20260928-a/out/maintenance2/run-20260928T023123Z/candidate/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json\n  self-check: registry_digest, Merkle root and all inclusion proofs reproduce from the served bytes\n  claims=8 states={'UNMEASURED': 2, 'CLAIM_MEASURED': 5, 'CLAIM_CAPTURED': 1}\n  merkle_root=829936682a9bfbd2cb1fdff1993702b73613ea25a7e4022953385b39c04cda1f\n  registry_digest=f3bdedbfdf55b410c3b004dec42ee4a1422fd7c4f386911565dae37f60d74331\n  file_sha256=bc3f15297e21c275e8988bdbaf9dc7302ae79cc6dc1555af792542edf7144e6c\n",
+    "stderr_tail": ""
+  },
+  "carry_forward_verification": {
+    "state": "PASS",
+    "claims": [
+      "CL-1",
+      "CL-2",
+      "CL-3",
+      "CL-4",
+      "ON-1",
+      "ON-2",
+      "ON-3"
+    ]
+  },
+  "candidate": {
+    "registry": "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json",
+    "sha256": "bc3f15297e21c275e8988bdbaf9dc7302ae79cc6dc1555af792542edf7144e6c",
+    "supersedes": "claimreg-ondo-chainlink-2026-09-22-rev2.json",
+    "signed_sidecar": "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json",
+    "signed_sha256": "9366c39f6aaeaf4bd0c3c1c6a92bc7e619d9a5ea0f90a6bf8b7d4bcd959d83a6"
+  },
+  "signature": {
+    "returncode": 0,
+    "stdout_tail": "SIGNED claimreg-ondo-chainlink-maintenance-20260928T023900Z.json sha256=bc3f15297e21c275e8988bdbaf9dc7302ae79cc6dc1555af792542edf7144e6c\n  root=829936682a9bfbd2cb1fdff1993702b73613ea25a7e4022953385b39c04cda1f signed_at=2026-09-28T02:39:00.859Z auth=pod-token\n  verified against https://csoai.org/.well-known/did.json#board-attestation-1; failing control rejected as required\n  -> /home/ubuntu/_claim-maintenance-run-20260928-a/out/maintenance2/run-20260928T023123Z/candidate/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json\n",
+    "stderr_tail": ""
+  },
+  "timestamp": {
+    "returncode": 0,
+    "stdout_tail": "  OK    claimreg-ondo-chainlink-maintenance-20260928T023900Z.json  sha256=bc3f15297e21c275  calendars=3  proof=600B  binds=True  attestations=3\n  OK    claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json  sha256=9366c39f6aaeaf4b  calendars=3  proof=600B  binds=True  attestations=3\n\nwrote /home/ubuntu/_claim-maintenance-run-20260928-a/out/maintenance2/run-20260928T023123Z/candidate/ots-stamp-batch-2026-09-17.json\n",
+    "stderr_tail": ""
+  },
+  "staged_public_paths": [
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.json.ots",
+    "/claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json.ots"
+  ]
+}
