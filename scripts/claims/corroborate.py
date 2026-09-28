@@ -81,17 +81,20 @@ ORG_DOMAINS: dict[str, list[str]] = {
 }
 
 _CC_API: str | None = None
+_CC_SOURCE: dict | None = None
 
 
-def cc_api() -> tuple[str | None, dict]:
+def cc_api(bounded: bool = False) -> tuple[str | None, dict]:
     """The newest Common Crawl index, asked for once per process."""
-    global _CC_API
-    r, data = c.get_json(CC_COLLINFO, timeout=45)
-    if _CC_API:
-        return _CC_API, c.source(r, "Common Crawl collection list")
+    global _CC_API, _CC_SOURCE
+    if _CC_API and _CC_SOURCE:
+        return _CC_API, dict(_CC_SOURCE)
+    r, data = c.get_json(CC_COLLINFO, timeout=15 if bounded else 45)
+    src = c.source(r, "Common Crawl collection list (newest collection used)")
     if r["ok"] and isinstance(data, list) and data:
         _CC_API = data[0].get("cdx-api")
-    return _CC_API, c.source(r, "Common Crawl collection list (newest collection used)")
+        _CC_SOURCE = src
+    return _CC_API, src
 
 
 def on_domain(url: str, domains: list[str]) -> bool:
@@ -108,7 +111,7 @@ def find_term(text: str, term: str) -> tuple[bool, str | None]:
     return True, ("…" if a else "") + text[a:m.end() + QUOTE_CHARS // 2].strip() + "…"
 
 
-def _sitemap_urls(domain: str) -> tuple[list[str], list[dict], bool]:
+def _sitemap_urls(domain: str, bounded: bool = False) -> tuple[list[str], list[dict], bool]:
     """Every URL the organisation's own sitemap publishes, one index level deep.
 
     Returns (urls, sources, reached): `reached` stays unset when the organisation's server answered
@@ -118,7 +121,7 @@ def _sitemap_urls(domain: str) -> tuple[list[str], list[dict], bool]:
     sources, locs, sitemaps = [], [], []
     reached = False
     for host in (domain, f"www.{domain}"):
-        r = c.get(f"https://{host}/robots.txt", timeout=45)
+        r = c.get(f"https://{host}/robots.txt", timeout=8 if bounded else 45)
         sources.append(c.source(r, "the organisation's own robots.txt, for its Sitemap: lines"))
         if r["ok"]:
             reached = True
@@ -129,13 +132,13 @@ def _sitemap_urls(domain: str) -> tuple[list[str], list[dict], bool]:
     if guessed:
         sitemaps = [f"https://{domain}/sitemap.xml", f"https://www.{domain}/sitemap.xml"]
     seen: set[str] = set()
-    queue = sitemaps[:MAX_SITEMAPS]
+    queue = sitemaps[:(2 if bounded else MAX_SITEMAPS)]
     while queue and len(locs) < MAX_SITEMAP_URLS:
         sm = queue.pop(0)
         if sm in seen:
             continue
         seen.add(sm)
-        rr = c.get(sm, timeout=150)
+        rr = c.get(sm, timeout=12 if bounded else 150)
         note = "sitemap named by robots.txt"
         if guessed:
             note = ("sitemap tried at the conventional path because robots.txt named none; a 404 here is "
@@ -159,9 +162,9 @@ def _sitemap_urls(domain: str) -> tuple[list[str], list[dict], bool]:
     return locs[:MAX_SITEMAP_URLS], sources, reached
 
 
-def _cc_urls(domain: str, term: str) -> tuple[list[str], int, list[dict]]:
+def _cc_urls(domain: str, term: str, bounded: bool = False) -> tuple[list[str], int, list[dict]]:
     """(slug matches, control count, sources). The control is whether CC sees the domain at all."""
-    api, s0 = cc_api()
+    api, s0 = cc_api(bounded=bounded)
     sources = [s0]
     if not api:
         return [], 0, sources
@@ -169,21 +172,23 @@ def _cc_urls(domain: str, term: str) -> tuple[list[str], int, list[dict]]:
     # The public index throttles. A throttled control must not be published as "this domain is not
     # indexed", so it is retried with backoff and its HTTP status is recorded either way.
     control, ctl = 0, {"ok": False, "reason": "not attempted"}
-    for attempt in range(3):
-        ctl = c.get(base + "&limit=200", timeout=150)
+    for attempt in range(1 if bounded else 3):
+        ctl = c.get(base + "&limit=200", timeout=12 if bounded else 150)
         if ctl["ok"]:
             control = len([l for l in ctl["body"].decode("utf-8", "replace").splitlines() if '"url"' in l])
             break
-        time.sleep(5 * (attempt + 1))
+        if not bounded:
+            time.sleep(5 * (attempt + 1))
     sources.append(c.source(ctl, "control: does the Common Crawl index hold ANY page for this domain"))
     flt = urllib.parse.quote(f"~url:(?i).*\\b{re.escape(term.lower())}\\b.*")
     hit = {"ok": False, "reason": "not attempted", "url": base, "status": None,
            "accessed_utc": c.now_iso(), "bytes": 0, "sha256": ""}
-    for attempt in range(3):
-        hit = c.get(base + f"&limit=200&filter={flt}", timeout=180)
+    for attempt in range(1 if bounded else 3):
+        hit = c.get(base + f"&limit=200&filter={flt}", timeout=12 if bounded else 180)
         if hit["ok"] or hit.get("status") == 404:  # 404 = the index answered: no captures matched
             break
-        time.sleep(5 * (attempt + 1))
+        if not bounded:
+            time.sleep(5 * (attempt + 1))
     sources.append(c.source(hit, f"Common Crawl URLs on this domain whose slug contains {term!r}"))
     urls: list[str] = []
     if hit["ok"]:
@@ -199,7 +204,8 @@ def _cc_urls(domain: str, term: str) -> tuple[list[str], int, list[dict]]:
     return urls, control, sources
 
 
-def check(org: str, term: str, domains: list[str] | None = None, pause: float = 0.4) -> dict:
+def check(org: str, term: str, domains: list[str] | None = None, pause: float = 0.4,
+          bounded: bool = False) -> dict:
     doms = domains or ORG_DOMAINS.get(org) or []
     if not doms:
         return {"organisation": org, "term": term, "status": "NOT_SEARCHED",
@@ -213,7 +219,7 @@ def check(org: str, term: str, domains: list[str] | None = None, pause: float = 
     for d in doms:
         # The homepage is always read in full text, so no organisation is concluded on zero pages.
         text_pages.append(f"https://{d}/")
-        locs, ss, reached = _sitemap_urls(d)
+        locs, ss, reached = _sitemap_urls(d, bounded=bounded)
         sources.extend(ss)
         sitemap_urls += len(locs)
         sitemap_reached = sitemap_reached or reached
@@ -224,7 +230,13 @@ def check(org: str, term: str, domains: list[str] | None = None, pause: float = 
         for u in (newsy or locs)[:MAX_TEXT_PAGES]:
             if u not in text_pages:
                 text_pages.append(u)
-        cc, control, ss2 = _cc_urls(d, term)
+        # In the bounded multi-entity sweep, a readable sitemap is already a conclusive index
+        # control. Do not spend another network budget on Common Crawl unless the site index could
+        # not be read. The full single-subject harness still uses both routes.
+        if bounded and reached and locs:
+            cc, control, ss2 = [], 0, []
+        else:
+            cc, control, ss2 = _cc_urls(d, term, bounded=bounded)
         sources.extend(ss2)
         cc_control += control
         cc_reached = cc_reached or control > 0
@@ -233,9 +245,11 @@ def check(org: str, term: str, domains: list[str] | None = None, pause: float = 
                 candidates.append(u)
     fetched, hits = [], []
     read_ok = 0
-    for u in (candidates[:MAX_FETCH] + [p for p in text_pages[:MAX_TEXT_PAGES] if p not in candidates]):
-        time.sleep(pause)
-        pr = c.get(u, timeout=40)
+    fetch_cap = 2 if bounded else MAX_FETCH
+    page_cap = 1 if bounded else MAX_TEXT_PAGES
+    for u in (candidates[:fetch_cap] + [p for p in text_pages[:page_cap] if p not in candidates]):
+        time.sleep(0.05 if bounded else pause)
+        pr = c.get(u, timeout=8 if bounded else 40)
         rec = c.source(pr)
         fetched.append(rec)
         if not pr["ok"]:
