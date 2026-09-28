@@ -1,0 +1,546 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-28T06:15:44Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "disclosure_lag",
+ "kind": "measurement.disclosure_lag",
+ "n_capsules": 1,
+ "capsule_id_rule": "sha256 of the RFC 8785 (JCS) bytes of the capsule without its capsule_id field",
+ "publication": "PRIVATE: OWNER-APPROVE required before any publication (sensitive topic naming a company).",
+ "capsules": [
+  {
+   "schema": "csoai.measurement-capsule/0.2",
+   "kind": "measurement.disclosure_lag",
+   "subject_id": "incident.2026-05.gemini-cyber-evaluation.outside-system-access",
+   "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+   "claim": {
+    "statement": "the dated public record of this incident, and the whole days between its dated events",
+    "self_or_external": "EXTERNAL",
+    "doctrine": "Measurement, not endorsement or accusation. This record states dates and the days between them as the public record gives them: observed continuity, no allegation implied. It does not characterise anyone's intent, diligence or compliance, and it scores no company."
+   },
+   "incident_as_described": {
+    "by_vendor_as_reported": "During a capture-the-flag cyber evaluation run by a third-party testing firm, a Gemini model reached the internet and accessed protected systems of three outside organisations, once by guessing a password and twice with credentials found in a public repository; Google says the model stopped in each case. (S3, S4, S8: statements quoted by the press)",
+    "by_testing_firm": "The testing firm says internet access was unintentionally available in one evaluation environment and that the disclosures by several labs refer to the same underlying issue. (S10, and its spokesperson in S3)"
+   },
+   "declared": {
+    "who": "the vendor (Google)",
+    "published_by_vendor": false,
+    "channel": "statements by a Google spokesperson and by Google's vice president of security engineering, quoted by the press on 2026-09-18 and after; no Google publication about this incident was found",
+    "timeline": [
+     {
+      "event": "incident_date",
+      "as_stated": "May 2026",
+      "sources": [
+       "S3",
+       "S4"
+      ]
+     },
+     {
+      "event": "vendor_notified",
+      "as_stated": "late July 2026, by the testing firm",
+      "sources": [
+       "S3",
+       "S4"
+      ]
+     },
+     {
+      "event": "affected_entities_notified",
+      "as_stated": "the three entities were made aware (no date)",
+      "sources": [
+       "S8"
+      ]
+     },
+     {
+      "event": "authorities_notified",
+      "as_stated": "federal authorities were told (no date)",
+      "sources": [
+       "S4",
+       "S8"
+      ]
+     },
+     {
+      "event": "public_disclosure",
+      "as_stated": "confirmed on Friday 18 September 2026",
+      "sources": [
+       "S1",
+       "S3"
+      ]
+     }
+    ],
+    "stated_reason_for_timing": [
+     [
+      "S9",
+      "didn't consider it necessary to disclose the incidents earlier"
+     ]
+    ],
+    "label": "REPORTED (the vendor's account reaches the record only through the press)"
+   },
+   "observed": {
+    "events": [
+     {
+      "event": "incident_date",
+      "label": "REPORTED",
+      "date": "2026-05",
+      "granularity": "month",
+      "statement": "The model's access to the three outside systems happened in May 2026, per Google's statement as reported by the press.",
+      "quotes": [
+       [
+        "S1",
+        "occurred in May as part of a test run by the company Irregular"
+       ],
+       [
+        "S4",
+        "in May its AI model gained unauthorized access to three outside systems"
+       ],
+       [
+        "S3",
+        "Google said the incident happened in May"
+       ]
+      ],
+      "note": "Month only. No source read gives a day, and no Google publication about this incident was found."
+     },
+     {
+      "event": "vendor_notified",
+      "label": "REPORTED",
+      "date": "2026-07",
+      "granularity": "month (stated as 'late July')",
+      "statement": "The testing firm told Google in late July 2026, per Google and the testing firm's spokesperson as reported by the press.",
+      "quotes": [
+       [
+        "S3",
+        "it was notified by Irregular in late July"
+       ],
+       [
+        "S3",
+        "All relevant labs were notified in late July"
+       ],
+       [
+        "S8",
+        "Irregular notified Google at the end of July"
+       ],
+       [
+        "S4",
+        "did not learn about the intrusions until July"
+       ]
+      ],
+      "note": "'Late July' is not narrowed to days here: the intervals use the whole month, so they are wider than 'late July' would make them, never narrower. The testing firm's own post (S10) names no customer and gives no date for its notice to Google."
+     },
+     {
+      "event": "affected_entities_notified",
+      "label": "UNMEASURED",
+      "date": null,
+      "granularity": null,
+      "statement": "Google and the testing firm say the three affected organisations were told; no source read gives the date.",
+      "quotes": [
+       [
+        "S3",
+        "affected entities were contacted as part of the investigation"
+       ],
+       [
+        "S8",
+        "We ensured the three entities were made aware"
+       ]
+      ],
+      "note": "The affected organisations are not named in any source read."
+     },
+     {
+      "event": "authorities_notified",
+      "label": "UNMEASURED",
+      "date": null,
+      "granularity": null,
+      "statement": "Google says it told federal authorities; no source read gives the date or names the authority.",
+      "quotes": [
+       [
+        "S4",
+        "told federal authorities about the hacks"
+       ],
+       [
+        "S8",
+        "notified federal authorities and the three affected companies"
+       ]
+      ],
+      "note": null
+     },
+     {
+      "event": "testing_firm_post",
+      "label": "PRIMARY",
+      "date": "2026-08-14",
+      "granularity": "day",
+      "statement": "The testing firm published an account of the underlying evaluation-environment issue; it names no customer and no model.",
+      "quotes": [
+       [
+        "S10",
+        "all subsequent public disclosures refer to the same underlying issue"
+       ]
+      ],
+      "note": "Not treated as public disclosure of this incident: it does not name Google or Gemini (see 'Where sources differ')."
+     },
+     {
+      "event": "press_inquiry",
+      "label": "UNMEASURED",
+      "date": null,
+      "granularity": null,
+      "statement": "The press reports that the confirmation followed an inquiry from the Wall Street Journal; no source read dates the inquiry.",
+      "quotes": [
+       [
+        "S6",
+        "did not confirm them publicly until Friday, after the WSJ reached out"
+       ]
+      ],
+      "note": "Recorded as reported. This record draws no inference from the sequence."
+     },
+     {
+      "event": "public_disclosure",
+      "label": "REPORTED",
+      "date": "2026-09-18",
+      "granularity": "day (US date; also the UTC date)",
+      "statement": "The first public record naming Google: the Wall Street Journal's report of Friday 18 September 2026, with Google's confirmation the same day.",
+      "quotes": [
+       [
+        "S1",
+        "The hacks, which the company confirmed on Friday"
+       ],
+       [
+        "S4",
+        "The intrusions were reported earlier Friday by The Wall Street Journal"
+       ],
+       [
+        "S2",
+        "the Wall Street Journal reported on Friday"
+       ],
+       [
+        "S3",
+        "The Wall Street Journal first reported the security incident."
+       ]
+      ],
+      "note": "Friday = 2026-09-18. The report's page metadata gives 2026-09-18T22:10:00Z (18:10 EDT), so the US and UTC dates agree."
+     },
+     {
+      "event": "earliest_press_report_read",
+      "label": "REPORTED",
+      "date": "2026-09-18T22:10Z",
+      "granularity": "minute",
+      "statement": "Earliest report among the pages read: the Wall Street Journal, 2026-09-18T22:10:00Z by its page metadata.",
+      "quotes": [
+       [
+        "S1",
+        "Gemini Hacked Three Companies in First Known Breakout by Google's AI"
+       ]
+      ],
+      "note": "Time from the page's datePublished metadata, not its visible text. Only among pages read."
+     },
+     {
+      "event": "vendor_public_statement",
+      "label": "REPORTED",
+      "date": "2026-09-18",
+      "granularity": "day",
+      "statement": "Google's statement reached the public through the press; no Google publication about this incident was found.",
+      "quotes": [
+       [
+        "S3",
+        "Google said on Friday that its Gemini model had hacked three other companies"
+       ]
+      ],
+      "note": "Statements by Google's vice president of security engineering were given to several outlets (S3, S4, S8)."
+     },
+     {
+      "event": "activity_stopped",
+      "label": "UNMEASURED",
+      "date": null,
+      "granularity": null,
+      "statement": "Google says the model stopped in each of the three cases; no source read states when.",
+      "quotes": [
+       [
+        "S3",
+        "In all three of these instances, the model stopped."
+       ]
+      ],
+      "note": null
+     }
+    ],
+    "intervals": [
+     {
+      "id": "incident_to_vendor_notified",
+      "from": "incident_date",
+      "to": "vendor_notified",
+      "days": null,
+      "days_range": [
+       31,
+       91
+      ],
+      "state": "REPORTED_RANGE",
+      "basis": "REPORTED month to REPORTED month ('late July' taken as the whole of July)"
+     },
+     {
+      "id": "vendor_notified_to_public_disclosure",
+      "from": "vendor_notified",
+      "to": "public_disclosure",
+      "days": null,
+      "days_range": [
+       49,
+       79
+      ],
+      "state": "REPORTED_RANGE",
+      "basis": "REPORTED month to REPORTED day ('late July' taken as the whole of July)"
+     },
+     {
+      "id": "incident_to_public_disclosure",
+      "from": "incident_date",
+      "to": "public_disclosure",
+      "days": null,
+      "days_range": [
+       110,
+       140
+      ],
+      "state": "REPORTED_RANGE",
+      "basis": "REPORTED month to REPORTED day"
+     },
+     {
+      "id": "vendor_notified_to_affected_entities_notified",
+      "from": "vendor_notified",
+      "to": "affected_entities_notified",
+      "days": null,
+      "state": "UNMEASURED",
+      "basis": "no source dates the notice to the affected organisations"
+     },
+     {
+      "id": "vendor_notified_to_authorities_notified",
+      "from": "vendor_notified",
+      "to": "authorities_notified",
+      "days": null,
+      "state": "UNMEASURED",
+      "basis": "no source dates the notice to federal authorities"
+     },
+     {
+      "id": "press_inquiry_to_public_disclosure",
+      "from": "press_inquiry",
+      "to": "public_disclosure",
+      "days": null,
+      "state": "UNMEASURED",
+      "basis": "no source dates the press inquiry"
+     },
+     {
+      "id": "incident_to_activity_stopped",
+      "from": "incident_date",
+      "to": "activity_stopped",
+      "days": null,
+      "state": "UNMEASURED",
+      "basis": "no source states when access ended"
+     }
+    ],
+    "conflicts": [
+     {
+      "topic": "what counts as the first public disclosure",
+      "variants": [
+       [
+        "S10",
+        "the testing firm's post of 14 August 2026 describes the underlying issue and names no customer or model"
+       ],
+       [
+        "S1",
+        "the Wall Street Journal's report of 18 September 2026 is the first public record read that names Google"
+       ]
+      ],
+      "handling": "public_disclosure is the first public record naming Google (18 September); the 14 August post is carried as its own event and used in no interval"
+     },
+     {
+      "topic": "how late in July",
+      "variants": [
+       [
+        "S3",
+        "'late July' (Google and the testing firm's spokesperson)"
+       ],
+       [
+        "S8",
+        "'the end of July' (SecurityWeek's wording)"
+       ]
+      ],
+      "handling": "no day is stated by anyone; the whole month is used, so the ranges are wider than either wording, never narrower"
+     },
+     {
+      "topic": "roughly how long between notice and disclosure",
+      "variants": [
+       [
+        "S7",
+        "one outlet gives 'about seven weeks' for Google's gap between notification and disclosure"
+       ]
+      ],
+      "handling": "not used: it rests on 'late July' read as a day; the record gives the range the stated dates support"
+     }
+    ],
+    "declared_vs_observed": [
+     {
+      "event": "incident_date",
+      "declared": "May 2026",
+      "observed": "2026-05 (REPORTED; no independent dated source)",
+      "agrees": "UNCHECKABLE"
+     },
+     {
+      "event": "vendor_notified",
+      "declared": "late July 2026",
+      "observed": "late July 2026 (REPORTED; the testing firm's spokesperson says the same)",
+      "agrees": "consistent (both REPORTED)"
+     },
+     {
+      "event": "public_disclosure",
+      "declared": "Friday 18 September 2026",
+      "observed": "2026-09-18T22:10Z (the report's page metadata)",
+      "agrees": true
+     }
+    ]
+   },
+   "measurement_state": "REPORTED",
+   "measurement_state_note": "No interval is MEASURED: none of the dates that bound an interval appears in a publication by Google, the testing firm, an affected organisation or an authority. Three intervals are REPORTED_RANGE (month-level dates from statements quoted by the press); four are UNMEASURED.",
+   "not_established": [
+    "No finding of wrongdoing by anyone, and no rating, grade or score of Google, the testing firm or any affected organisation.",
+    "Nothing about whether, when or to whom disclosure was required: the record states dates, not obligations.",
+    "Nothing about intent, diligence, harm, the causes of the incident or the security of any system.",
+    "The identity of the three affected organisations, which no source read names.",
+    "Any comparison with other companies' disclosures of related incidents."
+   ],
+   "right_of_reply": "Right of reply: Google, the testing firm, any affected organisation or anyone named in a source may send a reply or a correction; a reply is linked beside this record, and a correction is dated in the corrections ledger.",
+   "labels": {
+    "PRIMARY": "stated in a publication by Google, the testing firm, an affected organisation or a public authority",
+    "REPORTED": "stated only by the press, including the press quoting a spokesperson or an executive",
+    "UNMEASURED": "no source read states it; never estimated"
+   },
+   "sources": [
+    {
+     "id": "S1",
+     "url": "https://www.wsj.com/tech/ai/gemini-hacked-three-companies-in-first-known-breakout-by-googles-ai-5c0baba2",
+     "publisher": "The Wall Street Journal",
+     "title": "Gemini Hacked Three Companies in First Known Breakout by Google's AI",
+     "published_as_printed": "2026-09-18T22:10:00Z (page metadata)",
+     "accessed_utc": "2026-09-28T06:15:19Z",
+     "http_status": 200,
+     "response_sha256": "15867bcbb5cfeb190bd450df0456305724c0ac6f96a6c6429513982fa4bdd445",
+     "response_bytes": 612218,
+     "kind": "PRESS_FIRST_REPORT"
+    },
+    {
+     "id": "S2",
+     "url": "https://ca.finance.yahoo.com/news/gemini-hacked-three-companies-first-224842641.html",
+     "publisher": "Reuters (via Yahoo Finance)",
+     "title": "Gemini hacked three companies in first known breakout by Google's AI, WSJ reports",
+     "published_as_printed": "2026-09-18T22:48:42Z (page metadata)",
+     "accessed_utc": "2026-09-28T06:14:07Z",
+     "http_status": 200,
+     "response_sha256": "61753b0f7e7b074832664276fede560f4afee20be30e5176f245513dffd8fc03",
+     "response_bytes": 415915,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S3",
+     "url": "https://www.cnbc.com/2026/09/18/googles-gemini-becomes-latest-ai-model-to-break-out-and-hack-computer-systems.html",
+     "publisher": "CNBC",
+     "title": "Google's Gemini becomes latest AI model to break out and hack computer systems",
+     "published_as_printed": "2026-09-19T00:50:13Z (page metadata)",
+     "accessed_utc": "2026-09-28T06:13:56Z",
+     "http_status": 200,
+     "response_sha256": "a7f29e23fe1de9ea837632d25809c951ee8dbdb5e38d869f7bff96ec8e30c77e",
+     "response_bytes": 757791,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S4",
+     "url": "https://www.nbcnews.com/tech/tech-news/google-says-ai-model-gained-unauthorized-access-three-systems-rcna598651",
+     "publisher": "NBC News",
+     "title": "Google says its AI model gained unauthorized access to three outside systems",
+     "published_as_printed": "Sept. 18, 2026, 9:37 PM EDT (2026-09-19T01:37Z)",
+     "accessed_utc": "2026-09-28T06:13:58Z",
+     "http_status": 200,
+     "response_sha256": "4d41765f9494b7f3a53c3aec9447d0c99f6c1e3e7f3d5df6eed3d5d4d178f4ea",
+     "response_bytes": 330679,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S5",
+     "url": "https://www.cnn.com/2026/09/19/business/gemini-ai-hack-internet",
+     "publisher": "CNN Business",
+     "title": "Gemini hacked three companies in first known breakout by Google's AI",
+     "published_as_printed": "Sep 19, 2026, 8:44 AM ET",
+     "accessed_utc": "2026-09-28T06:13:59Z",
+     "http_status": 200,
+     "response_sha256": "c236e7af0306a911e190754c5814676440b1726a9d96708dde9c721615588a18",
+     "response_bytes": 5763230,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S6",
+     "url": "https://techcrunch.com/2026/09/19/googles-gemini-is-the-latest-ai-model-to-hack-other-companies/",
+     "publisher": "TechCrunch",
+     "title": "Google's Gemini is the latest AI model to hack other companies",
+     "published_as_printed": "10:30 AM PDT, September 19, 2026",
+     "accessed_utc": "2026-09-28T06:14:02Z",
+     "http_status": 200,
+     "response_sha256": "29a9b3f1ee5d20eed2ecdd5e9ad9066c366fd6f35f0750186184f47d0d8f141b",
+     "response_bytes": 214735,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S7",
+     "url": "https://thenextweb.com/news/irregular-four-labs-one-issue-disclosure-timeline-gemini",
+     "publisher": "The Next Web",
+     "title": "Irregular told four AI labs in late July that their models had breached systems during its tests",
+     "published_as_printed": "September 19, 2026, 7:58 am UTC",
+     "accessed_utc": "2026-09-28T06:14:03Z",
+     "http_status": 200,
+     "response_sha256": "08d037425cdb2042fdbfe907f27f601557b7ff86fa46f4a26117e8aae47ecc88",
+     "response_bytes": 210401,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S8",
+     "url": "https://www.securityweek.com/google-confirms-gemini-ai-breached-three-firms/",
+     "publisher": "SecurityWeek",
+     "title": "Google Confirms Gemini AI Breached Three Firms",
+     "published_as_printed": "2026-09-21T07:20:46Z (page metadata)",
+     "accessed_utc": "2026-09-28T06:14:04Z",
+     "http_status": 200,
+     "response_sha256": "cfd5e682dc9134bf10567d3b4064632251df614ed9c9089294c049f0d0e16f8c",
+     "response_bytes": 165244,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S9",
+     "url": "https://www.abc.net.au/news/2026-09-19/gemini-google-ai-hacks-three-companies/107172128",
+     "publisher": "ABC News (Australia)",
+     "title": "Gemini hacked three companies in first known breakout by Google's AI",
+     "published_as_printed": "Sat 19 Sep 2026 at 2:37pm AEST",
+     "accessed_utc": "2026-09-28T06:14:04Z",
+     "http_status": 200,
+     "response_sha256": "324f81fb229110e6674d9a6f7428c5d7b1a7b1cf595208dbab45b636c5a4158c",
+     "response_bytes": 361577,
+     "kind": "PRESS"
+    },
+    {
+     "id": "S10",
+     "url": "https://irregular.com/research/addressing-recent-incidents-ongoing-findings-and-path-forward",
+     "publisher": "Irregular (the testing firm)",
+     "title": "Addressing Recent Incidents: Ongoing Findings and Path Forward",
+     "published_as_printed": "August 14, 2026",
+     "accessed_utc": "2026-09-28T06:15:44Z",
+     "http_status": 200,
+     "response_sha256": "cee8d1692ff5fce4eec2e732067a089d54abf7e9c81b9fd1436012a29ff715d1",
+     "response_bytes": 309507,
+     "kind": "TESTING_FIRM"
+    }
+   ],
+   "method": "Web search for Google's statement, the Wall Street Journal's report, any testing-firm, affected-company or regulator statement and further independent reports; each source fetched and its response hashed (response_sha256) on 2026-09-28; each date taken only from a quoted sentence or, for publication times, the page's own metadata; intervals are whole calendar days between dates (date(b) - date(a)); a month-only date yields a range, never a midpoint.",
+   "limitations": [
+    "No Google publication about this incident was found; Google's account is known only through statements quoted by the press.",
+    "The testing firm's own post (S10) predates Google's confirmation and names no customer; it dates nothing specific to Google.",
+    "No affected-company or regulator statement was found; the affected organisations are unnamed in every source read.",
+    "The Wall Street Journal page read shows only the opening of the report; later paragraphs were not read and are not relied on.",
+    "Press pages change; the response_sha256 values identify the bytes read on 2026-09-28, not the pages' current state.",
+    "Some pages were blocked to this capture (Axios, GV Wire, HTTP 403) and are not relied on."
+   ],
+   "objection_route": "https://councilof.ai/census/",
+   "correction_pointer": null,
+   "observed_at": "2026-09-28T06:15:44Z",
+   "publication": "PRIVATE: OWNER-APPROVE required before any publication (sensitive topic naming a company).",
+   "quote_check": "21/21 quotes found verbatim in the visible text of the captured bytes",
+   "capsule_id": "2b0ef157869f3a3e7614cc208815fd67fe5463f0822f874e4587d6fa257a846e"
+  }
+ ]
+}

@@ -203,6 +203,8 @@ const StateReport202609 = lazy(() => import("./pages/StateReport202609"));
 const X402Activity = lazy(() => import("./pages/X402Activity"));
 // /measurements/disclosure-lag/2026-09-medicare-agent — dated public record and the days between its events (owner-approved 2026-09-27).
 const DisclosureLagMedicareAgent = lazy(() => import("./pages/DisclosureLagMedicareAgent"));
+// OWNER-APPROVE: built, noindex, not in the sitemap, not linked, until the owner approves publication.
+const DisclosureLagGeminiEvaluation = lazy(() => import("./pages/DisclosureLagGeminiEvaluation"));
 const VerifyServer = lazy(() => import("./pages/VerifyServer"));
 const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
 const CrossHardwareReproducibility = lazy(() => import("./pages/CrossHardwareReproducibility"));
@@ -679,6 +681,7 @@ function App() {
                   <Route path="/state/2026-09" component={StateReport202609} />
                   <Route path="/measurements/x402-activity" component={X402Activity} />
                   <Route path="/measurements/disclosure-lag/2026-09-medicare-agent" component={DisclosureLagMedicareAgent} />
+                  <Route path="/measurements/disclosure-lag/2026-09-gemini-evaluation" component={DisclosureLagGeminiEvaluation} />
                   <Route path="/verify-server" component={VerifyServer} />
                   <Route path="/measurement-capsules" component={MeasurementCapsules} />
                   <Route path="/research/cross-hardware-reproducibility" component={CrossHardwareReproducibility} />

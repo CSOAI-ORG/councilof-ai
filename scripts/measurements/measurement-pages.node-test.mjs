@@ -124,12 +124,79 @@ const CASES = [
       test("disclosure-lag: published: indexable, in the sitemap, scope and objection route visible", () => {
         const page = read("client/src/pages/DisclosureLagMedicareAgent.tsx").toString();
         assert.ok(!/noindex/.test(page), "no robots noindex on the page");
-        assert.ok(!read("public/_headers").toString().includes("/measurements/disclosure-lag/"), "no X-Robots-Tag rule");
+        // No _headers rule may cover this page (its own path, or a wildcard over the whole series); other records in the
+        // series may carry their own held-page rule.
+        assert.ok(!/^\/measurements\/disclosure-lag\/(2026-09-medicare-agent|\*)/m.test(read("public/_headers").toString()), "no X-Robots-Tag rule");
         assert.ok(read("public/sitemap.xml").toString().includes("https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/"));
         assert.ok(/no claim about anyone’s intent, about the causes of\s+the incident, or about the security of any system/.test(page));
         assert.ok(page.includes('href="/census/"'), "objection route");
       });
       test("disclosure-lag: no hand-typed figures in the page", () => noHandTypedFigures("client/src/pages/DisclosureLagMedicareAgent.tsx"));
+    },
+  },
+  {
+    // OWNER-APPROVE: the second disclosure-lag record is built noindex, delisted from the sitemap and unlinked until the owner approves.
+    name: "disclosure-lag/2026-09-gemini-evaluation",
+    run() {
+      const slug = "2026-09-gemini-evaluation";
+      const route = `/measurements/disclosure-lag/${slug}`;
+      const base = `public/measurements/disclosure-lag/${slug}/record`;
+      const pagePath = "client/src/pages/DisclosureLagGeminiEvaluation.tsx";
+      test("disclosure-lag gemini: the page reads the published record bytes", () => {
+        assert.ok(read(`${base}.json`).equals(read(`client/src/data/measurements/disclosure-lag/${slug}.json`)));
+      });
+      test("disclosure-lag gemini: record is board-signed and timestamped", () => {
+        checkSigned(`${base}.json`, `${base}.signed.json`, `${base}.json.ots`, `measurements/disclosure-lag/${slug}/record.json`);
+      });
+      test("disclosure-lag gemini: intervals recomputed from the dates; no estimate; quotes short and cited", () => {
+        const c = JSON.parse(read(`${base}.json`)).capsules[0];
+        const ev = Object.fromEntries(c.observed.events.map((e) => [e.event, e]));
+        const ms = (s) => Date.parse(s + "T00:00:00Z");
+        const bounds = (s) => {
+          if (s.length === 7) {
+            const [y, m] = s.split("-").map(Number);
+            return [ms(s + "-01"), Date.UTC(y, m, 1) - 86400000];
+          }
+          const d = ms(s.slice(0, 10));
+          return [d, d];
+        };
+        const day = (x) => Math.round(x / 86400000);
+        for (const iv of c.observed.intervals) {
+          const a = ev[iv.from], b = ev[iv.to];
+          assert.ok(a && b, `${iv.id} names unknown events`);
+          if (a.date === null || b.date === null) {
+            assert.equal(iv.state, "UNMEASURED", `${iv.id}: an undated end must be UNMEASURED`);
+            assert.equal(iv.days, null, iv.id);
+            assert.equal(iv.days_range, undefined, `${iv.id}: no estimated range for an undated end`);
+            continue;
+          }
+          const [a0, a1] = bounds(a.date), [b0, b1] = bounds(b.date);
+          if (a0 === a1 && b0 === b1) assert.equal(iv.days, day(b0 - a0), iv.id);
+          else assert.deepEqual(iv.days_range, [day(b0 - a1), day(b1 - a0)], `${iv.id}: a month yields a range, never a midpoint`);
+          if (iv.state.startsWith("MEASURED")) assert.ok(a.label === "PRIMARY" && b.label === "PRIMARY", `${iv.id} MEASURED needs PRIMARY ends`);
+        }
+        for (const e of c.observed.events) if (e.date === null) assert.equal(e.label, "UNMEASURED", `${e.event}: undated means UNMEASURED`);
+        const ids = new Set(c.sources.map((s) => s.id));
+        const quotes = [...c.observed.events.flatMap((e) => e.quotes), ...c.declared.stated_reason_for_timing];
+        for (const [id, q] of quotes) {
+          assert.ok(ids.has(id), `quote cites unlisted ${id}`);
+          assert.ok(q.trim().split(/\s+/).length < 15, `quote over 14 words: ${q}`);
+        }
+        for (const s of c.sources) assert.match(s.response_sha256 ?? "", /^[0-9a-f]{64}$/, `${s.id} has a response hash`);
+        assert.ok(c.not_established.length > 0 && /right of reply/i.test(c.right_of_reply));
+        assert.equal(c.publication.startsWith("PRIVATE: OWNER-APPROVE"), true);
+      });
+      test("disclosure-lag gemini: held (noindex, out of the sitemap, unlinked) until approved", () => {
+        const page = read(pagePath).toString();
+        const approved = /export const OWNER_APPROVED = true;/.test(page);
+        if (!approved) {
+          assert.ok(/noindex/.test(page), "noindex while unapproved");
+          assert.ok(!read("public/sitemap.xml").toString().includes(route), "absent from the sitemap while unapproved");
+          assert.ok(read("scripts/generate-sitemap.mjs").toString().includes(`["${route}", "noindex: owner approval pending"]`), "DELISTED");
+          assert.ok(new RegExp(`^${route}/?\\*?\\s*\\n\\s+X-Robots-Tag: noindex`, "m").test(read("public/_headers").toString()), "_headers noindex rule");
+        }
+      });
+      test("disclosure-lag gemini: no hand-typed figures in the page", () => noHandTypedFigures(pagePath));
     },
   },
 ];
