@@ -35,6 +35,10 @@ node scripts/signed-json-guard.mjs dist/client >/workspace/ci/signed-json-guard.
 # leaked. The gate holds only leak-scan digests from the signed commitments records and exits 2
 # when there is no record (an unread list is not a clean scan), which blocks here too.
 { node scripts/canary-leak-gate.mjs --selftest && node scripts/canary-leak-gate.mjs dist/client public; } >/workspace/ci/canary-leak-gate.log 2>&1 && echo "  canary-leak-gate ok: $(tail -1 /workspace/ci/canary-leak-gate.log | cut -c1-120)" | tee -a $LOG || { echo "  canary-leak-gate FAILED (exit held; file + digest only, never the token)" | tee -a $LOG; tail -4 /workspace/ci/canary-leak-gate.log | sed "s/^/    /"; exit 15; }
+# Sandbox wall (28 Sep 2026): SovSpace sandbox records (reactions, prediction commits, scores, the calibration ledger,
+# the scoreboard), its predictor ids, its twin signing key and its data URLs never ship on councilof.ai. Selftest first,
+# so a guard that cannot fail holds the deploy too. Known exceptions are named in the guard and printed on every run.
+{ node scripts/sandbox-wall-guard.mjs --selftest && node scripts/sandbox-wall-guard.mjs dist/client functions; } >/workspace/ci/sandbox-wall-guard.log 2>&1 && echo "  sandbox-wall-guard ok: $(tail -1 /workspace/ci/sandbox-wall-guard.log | cut -c1-120)" | tee -a $LOG || { echo "  sandbox-wall-guard FAILED (sandbox bytes on a measurement surface)" | tee -a $LOG; tail -5 /workspace/ci/sandbox-wall-guard.log | sed "s/^/    /"; exit 18; }
 # functions/ is deployed by Pages from the project root, never as static assets; prod 404s it. Drop it, then
 # run the repo's own Pages guard so a file-cap breach fails HERE with the count, not at upload after a 6-minute prerender.
 rm -rf dist/client/functions
