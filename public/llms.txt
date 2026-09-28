@@ -30,7 +30,7 @@ Public lock (language only — every count lives on the API, none is frozen here
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
 
 Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
-23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
+23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
 Also quote `totals.public_leader_count` beside any "23 measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
 What MEASURED means on this board, said plainly, because it is narrower than it sounds: a slot is
@@ -38,8 +38,8 @@ MEASURED when a real run exists behind it and that run's artifact is published. 
 axis has been shown to distinguish one model from another. Whether a leader's lead over the fleet is
 statistically real is a SEPARATE determination, it has its own live fields, and today not one axis
 carries a separated lead: across `totals.comparison_axes` = 14 model-comparison axes,
-`totals.separated_leads` = 0, `totals.ties` = 2, and
-`totals.untested_separations` = 12. (The 9 deterministic-fact axes have no
+`totals.separated_leads` = 0, `totals.ties` = 8, and
+`totals.untested_separations` = 6. (The 9 deterministic-fact axes have no
 fleet and no leader, so no separation test applies to them and they are not counted as untested.)
 So "23 measured of 23" is a statement that a run exists behind every slot. It is not a
 statement that any axis can tell two models apart, and it must never be written so that a reader
@@ -293,23 +293,23 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 - Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104
 - Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
-Lid (quote live `totals.lid`): 23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
+Lid (quote live `totals.lid`): 23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
 
 ## Distribution — measured, PARTIAL, and not adoption
 
 Derived at generation from https://councilof.ai/interop/distribution-latest.json (same bytes on
-disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-09-24T07:14:02Z).
+disk at public/interop/distribution-latest.json, schema csoai.distribution/0.1, artifact as_of 2026-09-28T06:18:04Z).
 Re-read it live; do not quote these figures without the state and coverage beside them.
 
-- Packages published across three registries: 837 (huggingface 116 · npm 324 · pypi 397). Three registries are
+- Packages published across three registries: 850 (huggingface 129 · npm 324 · pypi 397). Three registries are
   three populations. The package ROWS are added; the download counts of different registries are
   reported per registry and the totals below are the artifact's own, not an arithmetic of this line.
-- Downloads in the last 30 days: 386,320 downloads — state PARTIAL, 836 of 837 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: last 30 days, each registry over its own 30-day window. as_of 2026-09-24T07:14:02Z.
-- Downloads since first release (cumulative): 2,655,891 downloads — state PARTIAL, 836 of 837 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: cumulative, all time. as_of 2026-09-24T07:14:02Z.
+- Downloads in the last 30 days: 391,415 downloads — state PARTIAL, 849 of 850 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: last 30 days, each registry over its own 30-day window. as_of 2026-09-28T06:18:04Z.
+- Downloads since first release (cumulative): 2,712,482 downloads — state PARTIAL, 849 of 850 counters answered, so it is a LOWER BOUND over those, never a total over all of them. Window: cumulative, all time. as_of 2026-09-28T06:18:04Z.
 - The 30-day and cumulative figures are different WINDOWS over the same packages. They are never
   added to each other, and neither is a count of people: mirrors, CI and crawlers are inside both.
 - Counter that did not answer, named rather than absorbed: pypi `meok-.github-profile` — http 404. Its value is null, never 0.
-- Two third-party counters over the same PyPI packages DISAGREE: on 5 sampled packages pypistats.org read about 2.94x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
+- Two third-party counters over the same PyPI packages DISAGREE: on 5 sampled packages pypistats.org read about 2.92x lower than the source published above. That divergence is recorded, not resolved by picking one, and the LARGER of the two is what is published — which is exactly why it is labelled gross. Quote this ratio beside the number.
 - A download is distribution. It is not adoption, not a user, not a customer, and not a measurement.
   Reach says how far the board travels; authority stays GET /api/gspc, the signed cards and free verify.
 - Per-entity shares (CSOAI Ltd and MEOK AI Labs publish from one account and are labelled, never
@@ -339,14 +339,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-26T12:33:32Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-26T13:11:58Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 642. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 626.
-- Still calendar-pending: 16. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 639.
+- Still calendar-pending: 3. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 60 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
@@ -384,7 +384,7 @@ Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 23 measured beside 3 public leader scores. Lid: 23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 23 measured beside 9 public leader scores. Lid: 23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 
@@ -427,7 +427,6 @@ the change goes in the corrections ledger.
   There is no "certified" badge and there never will be.
 - One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
 - Python reader and card verifier: pip install "csoai-gspc[verify]"
-
 ## Public operational indexes
 
 - Layer-0 drive-through capability/lifecycle projection: https://councilof.ai/layer0-drive-through.json

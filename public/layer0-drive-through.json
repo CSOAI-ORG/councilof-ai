@@ -1,6 +1,6 @@
 {
   "canonical_source": "council-os/capabilities.json",
-  "canonical_source_sha256": "b8ef8df13bbb3b916d9542813a3c500ccccc20f470f839506796ac87deb85998",
+  "canonical_source_sha256": "39e3cb2aca8565d978a9f55976ead7e921a4c6d63b25275d6b3192dac9d8d317",
   "capabilities": [
     {
       "audience": "agent",
@@ -509,7 +509,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1530,7 +1529,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1576,7 +1574,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1726,7 +1723,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1879,7 +1875,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -2285,6 +2280,7 @@
         "safe": true
       },
       "surfaces": [
+        "openapi",
         "llms"
       ]
     },
@@ -2517,9 +2513,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2539,9 +2533,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2561,9 +2553,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2583,9 +2573,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2605,9 +2593,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2627,9 +2613,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2649,9 +2633,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2671,9 +2653,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2693,9 +2673,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2715,9 +2693,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2825,7 +2801,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -2957,7 +2932,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -3259,7 +3233,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -3368,7 +3341,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -4030,7 +4002,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -4180,7 +4151,9 @@
         "request": "/api/ras/mcp-probe?url=https://councilof.ai/mcp",
         "safe": true
       },
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -4219,7 +4192,9 @@
         "request": "/api/ras/x402-check?url=https://councilof.ai/api/free-door",
         "safe": true
       },
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -4258,7 +4233,9 @@
         "request": "/api/ras/supply?asset=USDC&ledger=ethereum",
         "safe": true
       },
-      "surfaces": []
+      "surfaces": [
+        "openapi"
+      ]
     },
     {
       "audience": "agent",
@@ -4972,7 +4949,7 @@
       ]
     }
   ],
-  "content_id": "ccd0eff331aa98b2df256d80e2f24d3c771e11c2867119701dcaee8e85b9f89e",
+  "content_id": "94c3330034c6c2ba5a1b8825a0d224c179597d9d8b9194079f63644cc3e6f056",
   "counts": {
     "audience": {
       "agent": 202,
@@ -5004,7 +4981,7 @@
       "llms": 73,
       "mcp": 16,
       "nav": 22,
-      "openapi": 176
+      "openapi": 160
     },
     "total": 227
   },
@@ -5264,6 +5241,6 @@
   ],
   "routing_note": "Only lifecycle=LIVE entries are projected in declared_live. Other declarations remain visible for correction/history but are not represented as callable now. Runtime measurement state remains owned by the relevant measurement evidence.",
   "schema": "csoai.layer0-drive-through/0.3",
-  "source_commit": "fccf15a70767b8406effbc38a4b28a8273f486c9",
+  "source_commit": "c0f3f29f1beb48d6bb30e97e3076a0cd001a6fd2",
   "source_commit_semantics": "last Git commit modifying council-os/capabilities.json"
 }
