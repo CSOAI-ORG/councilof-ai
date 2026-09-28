@@ -10,8 +10,10 @@ generator calls `apply()` on the README text it is about to write, so the next r
 WHAT IS VERBATIM. `block()`, `fm_split()`, `fm_licence()`, `set_licence()`, `title_of()`, `LIC_LABEL`, the
 licence decisions in `LIC_FIX` and the notes in `LIC_NOTE` are copied from gen_cards.py unchanged, so
 `apply(live_card, repo_id) == live_card` byte for byte on every card L5 wrote (test_cite_block.py and
-`python3 cite_block.py diff-live` check exactly that). The one addition is `LIC_LABEL[None]`, used only when a
-card states no licence at all (none of the 127 did after L5).
+`python3 cite_block.py diff-live` check exactly that). Two additions: `LIC_LABEL[None]`, used only when a
+card states no licence at all (none of the 127 did after L5); and a card that already carries a block keeps its
+BibTeX key, and its year and DOI when the dataset is not in the registry, so the three cards other producers made
+after L5 (measurement-capsules, state-of-the-agent-internet, x402-activity) are reproduced too.
 
 WHAT IT NEVER DOES. It reads no network, invents no number and chooses no licence except the eight decisions
 L5 recorded with their sources. Year and DOI come from cite-block-registry.json (read from the HF API by L5:
@@ -98,12 +100,12 @@ def title_of(fm, body, name):
     return m.group(1).strip() if m else name
 
 
-def block(name, title, year, lic, doi):
+def block(name, title, year, lic, doi, key=None):
     url = f"https://huggingface.co/datasets/csoai/{name}"
     cite = f"CSOAI Ltd (Council of AI). *{title}*. {year}. Hugging Face dataset `csoai/{name}`. {url}"
     if doi:
         cite += f". DOI: [{doi}](https://doi.org/{doi})"
-    key = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+    key = key or re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
     bib = [f"@misc{{csoai_{key},", f"  title        = {{{title}}},", "  author       = {{CSOAI Ltd}},",
            f"  year         = {{{year}}},", f"  howpublished = {{Hugging Face dataset, {url}}},"]
     if doi:
@@ -159,12 +161,22 @@ def apply(readme: str, repo_id: str, *, year: int | None = None, doi: str | None
             extra = {"license_name": "csoai-mixed-data",
                      "license_link": f"https://huggingface.co/datasets/csoai/{name}/blob/main/README.md#licence-note"}
         fm = set_licence(fm, lic, extra)
+    # A card that already carries a block keeps its citation: the BibTeX key always, and the year and DOI
+    # when the registry has no entry for the dataset (a card made after L5 by another producer), so a
+    # rebuild never churns a citation that is already published.
+    prev = extract(body) or ""
+    m = re.search(r"@misc\{csoai_([A-Za-z0-9_]+),", prev)
+    prev_key = m.group(1) if m else None
+    m = re.search(r"(?m)^  year         = \{(\d{4})\},$", prev)
+    prev_year = int(m.group(1)) if m else None
+    m = re.search(r"(?m)^  doi          = \{([^}]+)\},$", prev)
+    prev_doi = m.group(1) if m else None
     if year is None:
-        year = reg.get("year") or _dt.datetime.now(_dt.timezone.utc).year
+        year = reg.get("year") or prev_year or _dt.datetime.now(_dt.timezone.utc).year
     if doi is None:
-        doi = reg.get("doi")
+        doi = reg.get("doi") if name in registry() else prev_doi
     title = title_of(fm, body, name).replace("{", "(").replace("}", ")")
-    blk = block(name, title, year, lic, doi)
+    blk = block(name, title, year, lic, doi, key=prev_key)
     if START in body:
         body = re.sub(re.escape(START) + r".*?" + re.escape(END) + r"\n?", "", body, flags=re.S)
     if name in LIC_NOTE and "## Licence note" not in body:

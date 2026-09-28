@@ -154,6 +154,16 @@ class TheBlock(unittest.TestCase):
         self.assertNotIn("DOI", new)
         self.assertIn(f"year         = {{{dt.datetime.now(dt.timezone.utc).year}}}", new)
 
+    def test_a_published_citation_is_kept_on_rebuild(self):
+        # a card another producer made after L5, with its own BibTeX key, year and DOI, not in the registry
+        once = cb.apply(CARD, "csoai/made-later", year=2025, doi="10.57967/hf/1")
+        custom = once.replace("@misc{csoai_made_later,", "@misc{csoai_made_later_v0_2,")
+        again = cb.apply(custom, "csoai/made-later")
+        self.assertEqual(again, custom)
+        self.assertIn("@misc{csoai_made_later_v0_2,", again)
+        self.assertIn("year         = {2025},", again)
+        self.assertIn("doi          = {10.57967/hf/1},", again)
+
     def test_only_the_recorded_licence_decisions_change_a_licence(self):
         mit = CARD.replace("license: cc-by-4.0", "license: mit")
         fixed = cb.apply(mit, "csoai/living-catalog")          # L5 decision: mit -> cc-by-4.0
