@@ -1,0 +1,50 @@
+{
+ "schema": "csoai.eval-format-fit/0.1",
+ "checked_at": "2026-09-28",
+ "question": "Where would our published measurements be accepted in open eval-aggregation formats, without ranking, and what does each need?",
+ "subject": "the signed card index (/signed/card_index.json), own models excluded",
+ "formats": [
+  {
+   "format": "Every Eval Ever (EEE) v0.3.0",
+   "fit": "FIT",
+   "why": "A results schema built for aggregate numbers from any harness, with per-record provenance (source_metadata.additional_details holds the card sha256 and Ed25519 signature) and first-class 'documentation' records. No leaderboard is rendered from a submission.",
+   "evidence": "Tag v0.3.0 released 2026-09-27; eval.schema.json sha256 c9c6195aec8a9dfa0b2aba4924ac1aa8a184c9d8ca97cee778cb531088e39b48. The staged export (harness/eval-export/eee) validates 58/58 with the package's own CLI.",
+   "accepted_at": "huggingface.co/datasets/evaleval/EEE_datastore, by pull request on the Hub (the licence is MIT)",
+   "account": "Hugging Face write access (the csoai org exists). The registry resolver can create registry entries, so calling it is an owner decision too.",
+   "state": "STAGED; submission HELD for the owner"
+  },
+  {
+   "format": "Croissant 1.1 (MLCommons)",
+   "fit": "FIT for describing datasets and banks; not a results format",
+   "why": "Croissant describes a dataset's files, fields and responsible-AI metadata. It carries no model scores, so it complements EEE rather than replacing it.",
+   "evidence": "GET huggingface.co/api/datasets/csoai/gspc-swarm/croissant -> 200, conformsTo croissant/1.1, 12 recordSets, CC-BY-4.0. GET .../csoai/councilof-ai-evidence/croissant -> 200 but 0 recordSets: the card corpus is not machine-described until the dataset gets a tabular config (for example a cards.jsonl declared under configs:).",
+   "accepted_at": "Hugging Face (generated automatically for public datasets), Kaggle, OpenML, Google Dataset Search; required by the NeurIPS Datasets and Benchmarks track",
+   "account": "None new for the automatic Hugging Face export. Adding a tabular config or RAI fields is a dataset-card edit, which is a publication: owner or the data-products lane.",
+   "state": "ALREADY LIVE for public csoai datasets; gap noted for the card corpus"
+  },
+  {
+   "format": "HELM (Stanford CRFM)",
+   "fit": "NOT A FIT for these cards",
+   "why": "HELM results are produced by HELM's own runner over HELM scenarios, and the public HELM leaderboards are run by CRFM. Writing HELM run files for runs HELM never made would misstate the harness. EEE already ships a HELM-to-EEE converter, so EEE is the aggregation point for HELM-shaped results as well.",
+   "accepted_at": "A new scenario can be contributed by pull request to github.com/stanford-crfm/helm. That needs published bank items, and our banks' item lists are not published.",
+   "account": "GitHub account (the CSOAI-ORG account is flagged); owner decision",
+   "state": "NOT PURSUED"
+  },
+  {
+   "format": "lm-evaluation-harness (EleutherAI) native results",
+   "fit": "PARTIAL: honest only for runs made with lm-eval",
+   "why": "The native results JSON (acc,none / acc_stderr,none, configs, versions) records a specific harness run. Our cards were not made with lm-eval, so re-shaping them into that format would misstate how they were produced. The one native-format dataset we already publish (huggingface.co/datasets/csoai/lmeval-official-format) measures only a model we built, so doctrine excludes it from any comparative export.",
+   "accepted_at": "Future lm-eval runs of third-party models can go straight into EEE through EEE's lm_eval converter, which is the recommended path for the next measurement refresh. Contributing our banks as lm-eval task YAMLs would be a pull request to github.com/EleutherAI/lm-evaluation-harness and needs published items.",
+   "account": "GitHub account for a task contribution; owner decision",
+   "state": "NOT PURSUED for existing cards"
+  },
+  {
+   "format": "Hugging Face Community Evals (.eval_results/*.yaml in model repos; eval.yaml in benchmark datasets)",
+   "fit": "DOCTRINE CONFLICT",
+   "why": "Registering a benchmark renders a leaderboard on the dataset page, which is a ranking. Results reach third-party model repos only by pull request to those repos, which is unsolicited contact. EEE's model-page converter also skips any model whose Hub repo does not resolve, and our Ollama tags do not.",
+   "accepted_at": "huggingface.co model and dataset repos",
+   "account": "Hugging Face account",
+   "state": "NOT RECOMMENDED"
+  }
+ ]
+}

@@ -1,0 +1,205 @@
+{
+ "schema": "csoai.directory-parity/0.1",
+ "checked_at": "2026-09-28T13:59:50Z",
+ "subject": "the GSPC measurement MCP server (remote https://councilof.ai/mcp; stdio npm csoai-gspc-mcp)",
+ "method": "Public GETs; one MCP initialize + tools/list to our own endpoint. Descriptions recorded verbatim. A surface that does not answer is SEARCH_INCONCLUSIVE; absence only from a complete listing or a search that returned results.",
+ "surfaces": {
+  "live_endpoint": {
+   "url": "https://councilof.ai/mcp",
+   "http": [
+    200,
+    200
+   ],
+   "serverInfo": {
+    "name": "csoai-gspc-mcp",
+    "version": "1.4.2"
+   },
+   "instructions": "GSPC MCP. 12 free read-only tools and 4 paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.",
+   "tools": 16
+  },
+  "repo_manifests_unpublished": {
+   "server.json": {
+    "name": "ai.councilof/gspc",
+    "version": "1.4.2",
+    "description": "16 HTTP tools (12 free, 4 x402). GSPC board + Ed25519 + trust counts. Measure, never certify.",
+    "remotes": [
+     "https://councilof.ai/mcp"
+    ],
+    "packages": [
+     "npm:csoai-gspc-mcp@0.2.2"
+    ]
+   },
+   "package.json": {
+    "name": "csoai-gspc-mcp",
+    "version": "0.2.2",
+    "description": "Stdio MCP server for Council of AI's GSPC board and signed measurement evidence. Sixteen tools: twelve free readers and four x402-metered evidence tools. Measurement only, never certification. Zero runtime dependencies."
+   },
+   "glama.json": {
+    "name": "csoai-gspc-mcp",
+    "displayName": "Council of AI GSPC",
+    "description": "Live GSPC board, three-state signed-card verify, public-root merkle. Keywords: AI governance, model safety, EU AI Act, agent verification. Measurement, never certification. Unmeasured is first-class."
+   }
+  },
+  "mcp_registry": {
+   "query": "GET https://registry.modelcontextprotocol.io/v0/servers?search=councilof|gspc (latest per name)",
+   "entries": {
+    "ai.councilof/gspc": {
+     "version": "1.4.3",
+     "description": "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+     "status": "active",
+     "updatedAt": "2026-09-28T04:29:37.212219Z",
+     "remotes": [
+      "https://councilof.ai/mcp/"
+     ],
+     "packages": []
+    },
+    "io.github.CSOAI-ORG/councilof_mcp": {
+     "version": "1.0.1",
+     "description": "CouncilOf.AI MCP — the UK sovereign defence BFT council orchestrator. UK MOD + AUKUS Pillar 2 procur",
+     "status": "active",
+     "updatedAt": "2026-09-06T04:23:19.395144Z",
+     "remotes": [],
+     "packages": [
+      "pypi:councilof_mcp@1.0.1"
+     ]
+    },
+    "io.github.CSOAI-ORG/gspc": {
+     "version": "1.4.2",
+     "description": "12 HTTP tools (8 free, 4 x402). GSPC board + Ed25519 + trust counts. Measure, never certify.",
+     "status": "active",
+     "updatedAt": "2026-09-14T01:51:01.456832Z",
+     "remotes": [
+      "https://councilof.ai/mcp"
+     ],
+     "packages": [
+      "npm:csoai-gspc-mcp@0.2.2"
+     ]
+    }
+   }
+  },
+  "npm": {
+   "http": 200,
+   "latest": "0.2.2",
+   "description": "Stdio MCP server for Council of AI's GSPC board and signed measurement evidence. Twelve tools: eight free readers and four x402-metered evidence tools. Measurement only, never certification. Zero runtime dependencies."
+  },
+  "smithery": {
+   "query": "GET https://registry.smithery.ai/servers?q=<csoai|gspc|council of ai|councilof.ai>&pageSize=100",
+   "entries": {
+    "csgaglobal/csoai-compliance-council": {
+     "http": 200,
+     "displayName": "csoai-compliance-council",
+     "description": "",
+     "tools": 4,
+     "deploymentUrl": "https://csoai-compliance-council--csgaglobal.run.tools",
+     "homepage": null
+    },
+    "csoai/gspc": {
+     "http": 200,
+     "displayName": "Council of AI GSPC",
+     "description": "Independent AI-governance measurement over MCP. Canonical remote: POST https://councilof.ai/mcp. Free board and signed-evidence verification tools; x402 evidence assembly is separately metered. Stdio package: csoai-gspc-mcp@0.2.2. Documentation: https://councilof.ai/api-docs/. Measurement, not certification; UNMEASURED and UNCHECKABLE remain explicit.",
+     "tools": 13,
+     "deploymentUrl": "https://gspc--csoai.run.tools",
+     "homepage": null
+    },
+    "csoai/gspc-mcp": {
+     "http": 200,
+     "displayName": "Council of AI GSPC (HTTP)",
+     "description": "Independent AI-governance measurement MCP over streamable HTTP (https://councilof.ai/mcp, no auth for the free tools). Free read tools: the live GSPC board totals and axes, signed measurement cards, the public Merkle root and inclusion proofs, card verification under the published Ed25519 key. x402-metered evidence tools: commission a card for a subject, Article 50 marking evidence, RWA evidence, receipt batches — each returns its payment challenge when called without payment. Call tools/list for the current set; https://councilof.ai/.well-known/x402.json lists every door. Measurement, never certification; a grade is never sold; verification stays free. Keywords: AI governance, model safety, EU AI Act, agent verification.",
+     "tools": 12,
+     "deploymentUrl": "https://gspc-mcp--csoai.run.tools",
+     "homepage": null
+    }
+   }
+  },
+  "glama": {
+   "url": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+   "http": 200,
+   "title": "Council of AI GSPC by CSOAI-ORG | Glama",
+   "overview": "Query and verify the Council of AI GSPC measurement board — live totals, axis rows, signed-card verification, and card listings — without certification. Fetch live board totals: slot count and measured count with as _ of dates, or UNREACHABLE if the board cannot be fetched. Get one axis row by name (case-insensitive): n, accuracy, interval, MEASURED/UNMEASURED status, family, and dates; unknown names return the list of available axes. Verify a signed measurement card (object, JSON string, or URL) against the pinned Ed25519 key: VALID, INVALID (with reason), or UNCHECKABLE. List signed-card index rows with declared vs actual counts, optional axis filter and limit, and show disagreements with the card store endpoint without reconciling them.",
+   "tools_scored": 12,
+   "scored_at": "2026-09-12 11:45",
+   "api_note": "glama.ai/api/mcp/v1 answered 401 without credentials; the public page was read instead"
+  },
+  "docker": {
+   "mcp_catalog": {
+    "source": "GET api.github.com/repos/docker/mcp-registry/git/trees/main?recursive=1",
+    "http": 200,
+    "truncated": false,
+    "servers_listed": 328,
+    "ours": []
+   },
+   "hub_search_csoai": {
+    "http": 200,
+    "repos": [
+     {
+      "repo": "csoai/meok-sovereign",
+      "description": "MEOK.ai Sovereign AI MCP Server - 24/7 Vast.ai Serverless"
+     }
+    ]
+   }
+  }
+ },
+ "parity": {
+  "rows": [
+   {
+    "surface": "live endpoint (initialize + tools/list)",
+    "version": "1.4.2",
+    "tools": 16,
+    "endpoint": "https://councilof.ai/mcp",
+    "description": null
+   },
+   {
+    "surface": "MCP registry ai.councilof/gspc",
+    "version": "1.4.3",
+    "tools": null,
+    "endpoint": "https://councilof.ai/mcp/",
+    "description": "Dated AI measurements and signed evidence over MCP. Free verification; never certification."
+   },
+   {
+    "surface": "MCP registry io.github.CSOAI-ORG/gspc",
+    "version": "1.4.2",
+    "tools": null,
+    "endpoint": "https://councilof.ai/mcp",
+    "description": "12 HTTP tools (8 free, 4 x402). GSPC board + Ed25519 + trust counts. Measure, never certify."
+   },
+   {
+    "surface": "npm csoai-gspc-mcp",
+    "version": "0.2.2",
+    "tools": null,
+    "endpoint": null,
+    "description": "Stdio MCP server for Council of AI's GSPC board and signed measurement evidence. Twelve tools: eight free readers and four x402-metered evidence tools. Measurement only, never certification. Zero runtime dependencies."
+   },
+   {
+    "surface": "Smithery csoai/gspc",
+    "version": null,
+    "tools": 13,
+    "endpoint": "https://gspc--csoai.run.tools",
+    "description": "Independent AI-governance measurement over MCP. Canonical remote: POST https://councilof.ai/mcp. Free board and signed-evidence verification tools; x402 evidence assembly is separately metered. Stdio package: csoai-gspc-mcp@0.2.2. Documentation: https://councilof.ai/api-docs/. Measurement, not certification; UNMEASURED and UNCHECKABLE remain explicit."
+   },
+   {
+    "surface": "Smithery csoai/gspc-mcp",
+    "version": null,
+    "tools": 12,
+    "endpoint": "https://gspc-mcp--csoai.run.tools",
+    "description": "Independent AI-governance measurement MCP over streamable HTTP (https://councilof.ai/mcp, no auth for the free tools). Free read tools: the live GSPC board totals and axes, signed measurement cards, the public Merkle root and inclusion proofs, card verification under the published Ed25519 key. x402-metered evidence tools: commission a card for a subject, Article 50 marking evidence, RWA evidence, receipt batches — each returns its payment challenge when called without payment. Call tools/list for the current set; https://councilof.ai/.well-known/x402.json lists every door. Measurement, never certification; a grade is never sold; verification stays free. Keywords: AI governance, model safety, EU AI Act, agent verification."
+   },
+   {
+    "surface": "Glama CSOAI-ORG/councilof-ai",
+    "version": null,
+    "tools": 12,
+    "endpoint": null,
+    "description": "Query and verify the Council of AI GSPC measurement board — live totals, axis rows, signed-card verification, and card listings — without certification. Fetch live board totals: slot count and measured count with as _ of dates, or UNREACHABLE if the board cannot be fetched. Get one axis row by name (case-insensitive): n, accuracy, interval, MEASURED/UNMEASURED status, family, and dates; unknown names return the list of available axes. Verify a signed measurement card (object, JSON string, or URL) against the pinned Ed25519 key: VALID, INVALID (with reason), or UNCHECKABLE. List signed-card index rows with declared vs actual counts, optional axis filter and limit, and show disagreements with the card store endpoint without reconciling them."
+   }
+  ],
+  "distinct_descriptions": 6,
+  "distinct_tool_counts": [
+   12,
+   13,
+   16
+  ],
+  "identical_everywhere": false,
+  "not_this_server": {
+   "csgaglobal/csoai-compliance-council": "carries a CSOAI-like name but does not describe this server; ownership UNMEASURED"
+  }
+ }
+}
