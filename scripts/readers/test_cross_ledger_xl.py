@@ -276,6 +276,69 @@ class Parsers(unittest.TestCase):
         self.assertEqual([(r["product"], r["label"], r["issuer_says"]) for r in depr], [("EURT", "Ethereum", "deprecated")])
 
 
+
+# Issuer pages whose identifiers live only in explorer hrefs (EURCV: sgforge.com, EURAU: allunity.com), trimmed to their shape.
+EURCV_HTML = (
+    '<a href="https://etherscan.io/token/0x5422374B27757da72d5265cC745ea906E0446634" class="bg_ov_black" target="_blank">\n'
+    '  <span class="title">USD CoinVertible<br>Ethereum smart contract\n<svg></svg></span></a>\n'
+    '<a href="https://etherscan.io/token/0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2" class="bg_ov_black" target="_blank">\n'
+    '  <span class="title">EUR CoinVertible<br>Ethereum smart contract\n<svg></svg></span></a>\n'
+    '<a href="https://bithomp.com/fr/account/rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL" class="bg_ov_black" target="_blank">\n'
+    '  <span class="title">EUR CoinVertible<br>XRPL Issuer\n<svg></svg></span></a>\n'
+    '<a href="https://stellar.expert/explorer/public/asset/EURCV-GCEYGIVOLAVBF2TG2RUSGTUJCIN75KEX3NGLMY4VPL4GFE5L355AXW3G-2" class="bg_ov_black">\n'
+    '  <span class="title">EUR CoinVertible<br>Stellar smart contract\n<svg></svg></span></a>\n')
+EURAU_HTML = (
+    '<p class="framer-text">EURAU on Base</p><div>Token Standard ERC-20</div><p>Mainnet Address</p>'
+    '<a class="framer-text" href="https://basescan.org/address/0x4933a85b5b5466fbaf179f72d3de273c287ec2c2" target="_blank">Mainnet Address</a>'
+    '<div class="ssr-variant"><p class="framer-text">EURAU on BNB Smart Chain</p></div>'
+    '<div class="ssr-variant"><p class="framer-text">EURAU on BNB Chain</p></div>'
+    '<a href="https://bsctrace.com/address/0x4933A85b5b5466Fbaf179F72D3DE273c287EC2c2">Mainnet Address</a>'
+    '<p class="framer-text">EURAU on Stellar</p><div>Token Standard SEP-41</div>'
+    '<a href="https://stellar.expert/explorer/public/contract/CB44W727WSLHPXJ47A6DHF5D34RKWSOZAMEDXO3CF5TEEEQ2ZX4V3VRI">Mainnet Address</a>'
+    '<p class="framer-text">EURAU on Tempo</p><div>Token Standard TIP-20</div><p>Mainnet Address</p>')
+
+
+class HtmlLinkLabelled(unittest.TestCase):
+    def test_eurcv_links_paired_with_their_own_label(self):   # positive twin
+        il = REG["assets"]["eurcv"]["issuer_list"]
+        rows = x.parse_html_link_labelled((EURCV_HTML * 2).encode(), il)   # the page renders the block twice
+        self.assertEqual([(r["label"], r["identifier"]) for r in rows],
+                         [("Ethereum smart contract", "0x5F7827FDeb7c20b443265Fc2F40845B715385Ff2"),
+                          ("XRPL Issuer", "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL"),
+                          ("Stellar smart contract", "EURCV-GCEYGIVOLAVBF2TG2RUSGTUJCIN75KEX3NGLMY4VPL4GFE5L355AXW3G")])
+        self.assertNotIn("0x5422374B27757da72d5265cC745ea906E0446634", [r["identifier"] for r in rows])   # USDCV is another product
+
+    def test_eurau_label_without_link_is_listed_not_dropped(self):
+        il = REG["assets"]["eurau"]["issuer_list"]
+        rows = x.parse_html_link_labelled(EURAU_HTML.encode(), il)
+        got = {r["label"]: r["identifier"] for r in rows}
+        self.assertEqual(got["Base"], "0x4933a85b5b5466fbaf179f72d3de273c287ec2c2")
+        self.assertEqual(got["BNB Chain"], "0x4933A85b5b5466Fbaf179F72D3DE273c287EC2c2")
+        self.assertEqual(got["Stellar"], "CB44W727WSLHPXJ47A6DHF5D34RKWSOZAMEDXO3CF5TEEEQ2ZX4V3VRI")
+        self.assertIsNone(got["Tempo"])   # listed, no link in these bytes: must surface, never borrow a neighbour's address
+        self.assertTrue([r for r in rows if r["label"] == "Tempo"][0]["parse_reason"].startswith("LISTED_NO_IDENTIFIER_PARSED"))
+        self.assertNotIn("BNB Smart Chain", got)   # declared label variant of the parsed "BNB Chain" card
+
+    def test_control_link_never_crosses_into_the_next_label(self):   # must-fail control
+        il = REG["assets"]["eurau"]["issuer_list"]
+        html = '<p>EURAU on Arc</p><p>Mainnet Address</p><p>EURAU on Base</p><a href="https://basescan.org/address/0xabc">x</a>'
+        got = {r["label"]: r["identifier"] for r in x.parse_html_link_labelled(html.encode(), il)}
+        self.assertIsNone(got["Arc"])            # Base's link is not Arc's
+        self.assertEqual(got["Base"], "0xabc")
+
+    def test_control_undeclared_variant_still_surfaces(self):   # must-fail control: only the registry's alias is merged
+        il = dict(REG["assets"]["eurau"]["issuer_list"], label_variants={})
+        got = {r["label"]: r["identifier"] for r in x.parse_html_link_labelled(EURAU_HTML.encode(), il)}
+        self.assertIn("BNB Smart Chain", got)
+        self.assertIsNone(got["BNB Smart Chain"])
+
+    def test_eurau_eurcv_owner_named_and_mapped(self):
+        self.assertIn("EURCV", REG["selection"]["owner_named"])
+        self.assertIn("EURAU", REG["selection"]["owner_named"])
+        self.assertEqual(REG["assets"]["eurau"]["label_to_ledger"]["Stellar"], "stellar-soroban")
+        self.assertNotIn("stellar-soroban", REG["ledgers"])        # not read: no Soroban adapter
+        self.assertIn("stellar-soroban", REG["no_adapter_reasons"])
+
 class Politeness(unittest.TestCase):
     def test_one_request_per_host_per_interval(self):
         lim = x.HostLimiter(0.3)

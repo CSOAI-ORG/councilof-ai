@@ -186,15 +186,86 @@ class Resp(dict):
         return self["body"].decode("utf-8", "replace")
 
 
+class CondCache:
+    """Validators + bytes of earlier full GETs, so a re-read can be conditional (RFC 9110 If-None-Match /
+    If-Modified-Since). Only sources that send an ETag or Last-Modified are kept. On a 304 the parsers get the
+    stored bytes (sha256-checked) with fetched_at = this check, so every downstream reading is of the same bytes
+    as a full fetch would carry; the fetch log records the 304 truthfully (wire_status 304, wire_bytes 0,
+    observation UNCHANGED_SINCE <time those bytes were fetched in full>, prior_evidence {sha256, fetched_at,
+    record_date}). Nothing is skipped: every URL is still requested, every run."""
+
+    def __init__(self, root, record_date=None):
+        self.root = pathlib.Path(root)
+        (self.root / "bodies").mkdir(parents=True, exist_ok=True)
+        self.idx_path = self.root / "index.json"
+        try:
+            self.idx = json.loads(self.idx_path.read_text())
+        except Exception:
+            self.idx = {}
+        self.record_date = record_date
+        self.used = set()
+
+    def lookup(self, url):
+        e = self.idx.get(url)
+        return e if e and (e.get("etag") or e.get("last_modified")) else None
+
+    def _body_path(self, h):
+        return self.root / "bodies" / f"{h}.gz"
+
+    def store(self, url, r):
+        hd = r.get("headers") or {}
+        et, lm = hd.get("etag"), hd.get("last-modified")
+        if not (et or lm):
+            self.idx.pop(url, None)
+            return
+        p = self._body_path(r["sha256"])
+        if not p.exists():
+            tmp = p.with_suffix(".tmp")
+            tmp.write_bytes(gzip.compress(r["body"], mtime=0))
+            os.replace(tmp, p)
+        self.idx[url] = {"etag": et, "last_modified": lm, "sha256": r["sha256"], "n_bytes": r["n_bytes"],
+                         "status": r["status"], "content_type": r.get("content_type"), "final_url": r.get("final_url"),
+                         "fetched_at": r["fetched_at"], "record_date": self.record_date}
+        self.used.add(r["sha256"])
+
+    def replay(self, url, prior, wire):
+        p = self._body_path(prior["sha256"])
+        try:
+            body = gzip.decompress(p.read_bytes())
+        except Exception:
+            return None
+        if sha(body) != prior["sha256"]:
+            return None
+        self.used.add(prior["sha256"])
+        return Resp(url=url, final_url=prior.get("final_url") or url, method="GET", status=prior["status"],
+                    content_type=prior.get("content_type") or "", body=body, sha256=prior["sha256"], n_bytes=len(body),
+                    fetched_at=wire["fetched_at"], error=None, headers=wire.get("headers") or {}, wire_status=304,
+                    unchanged_since=prior["fetched_at"],
+                    prior_evidence={"sha256": prior["sha256"], "fetched_at": prior["fetched_at"],
+                                    "record_date": prior.get("record_date"), "etag": prior.get("etag"),
+                                    "last_modified": prior.get("last_modified")})
+
+    def save(self):
+        """Keep only entries whose bytes this run used; delete unreferenced bodies (bounded disk)."""
+        self.idx = {u: e for u, e in self.idx.items() if e["sha256"] in self.used}
+        tmp = self.idx_path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(self.idx, indent=1, sort_keys=True) + "\n")
+        os.replace(tmp, self.idx_path)
+        for p in (self.root / "bodies").glob("*.gz"):
+            if p.name[:-3] not in self.used:
+                p.unlink()
+
+
 class Http:
     """GET-mostly client: one UA, >= min_interval s between requests to the same host, optional
     robots.txt (RFC 9309: 4xx -> no rules; 5xx / unreachable -> fully disallowed), one retry on 5xx or
     timeout, every request recorded (url, method, status, bytes, sha256) in self.log."""
 
-    def __init__(self, min_interval=1.05, timeout=40, sleep=time.sleep, clock=time.monotonic, opener=None):
+    def __init__(self, min_interval=1.05, timeout=40, sleep=time.sleep, clock=time.monotonic, opener=None, cache=None):
         self.min_interval, self.timeout, self.sleep, self.clock = min_interval, timeout, sleep, clock
         self.last, self.robots, self.log = {}, {}, []
         self.opener = opener or urllib.request.build_opener()
+        self.cache = cache  # CondCache or None: conditional GETs (If-None-Match / If-Modified-Since)
 
     def _wait(self, host):
         t = self.last.get(host)
@@ -251,6 +322,10 @@ class Http:
 
     def _record(self, r, note=None):
         e = {k: r.get(k) for k in ("url", "method", "status", "n_bytes", "sha256", "fetched_at", "error")}
+        if r.get("wire_status") == 304:  # status/n_bytes/sha256 = the representation read (as a full fetch would
+            # carry it); wire_status/wire_bytes = what the network carried: a 304 validating the stored bytes
+            e.update(wire_status=304, wire_bytes=0, observation=f"UNCHANGED_SINCE {r['unchanged_since']}",
+                     prior_evidence=r["prior_evidence"])
         if note:
             e["note"] = note
         self.log.append(e)
@@ -263,11 +338,26 @@ class Http:
                          n_bytes=0, fetched_at=utcnow(), error="ROBOTS_DISALLOWED: " + why, headers={})
                 self._record(r, note)
                 return r
+        prior = self.cache.lookup(url) if self.cache is not None and not headers else None
+        cond = dict(headers or {})
+        if prior:
+            if prior.get("etag"):
+                cond["if-none-match"] = prior["etag"]
+            if prior.get("last_modified"):
+                cond["if-modified-since"] = prior["last_modified"]
         for i in range(retries + 1):
-            r = self._once(url, "GET", None, headers)
+            r = self._once(url, "GET", None, cond)
             if not (r["status"] is None or r["status"] >= 500) or i == retries:
                 break
             self.sleep(3)
+        if prior and r["status"] == 304:
+            rr = self.cache.replay(url, prior, r)
+            if rr is None:  # cached bytes gone or altered: fetch in full; never vouch for bytes we cannot show
+                r = self._once(url, "GET", None, headers)
+            else:
+                r = rr
+        if self.cache is not None and not headers and r.ok and r.get("error") is None and r.get("wire_status") != 304:
+            self.cache.store(url, r)
         self._record(r, note)
         return r
 
@@ -1426,9 +1516,14 @@ def write_status(path, **kw):
 
 def build_record(date, cat, indices, cells, own, prev, http_log):
     rec = {
-        "schema": SCHEMA_RECORD, "date": date, "as_of": utcnow(), "host": os.uname().nodename,
+        "schema": SCHEMA_RECORD, "date": date, "as_of": utcnow(), "host": "nodename-sha256:" + sha(os.uname().nodename.encode())[:16],  # the measuring host by digest: its name carries internal codenames the public brand gate refuses
         "instrument": {"name": "self_parity.py", "version": VERSION, "code_sha256": sha(pathlib.Path(__file__).read_bytes()), "git_head": git_head(),
-                       "user_agent": UA, "rate": ">= 1.05 s between requests to one host"},
+                       "user_agent": UA, "rate": ">= 1.05 s between requests to one host",
+                       "conditional_requests": ("GETs to sources that sent an ETag or Last-Modified are conditional; a 304 is "
+                                                "logged with wire_status 304, wire_bytes 0, observation UNCHANGED_SINCE <full-fetch "
+                                                "time> and prior_evidence; status/n_bytes/sha256 are of the stored bytes (same "
+                                                "sha256), read at this check time. Every URL is still requested every run.")
+                                               if any(e.get("wire_status") == 304 for e in http_log) else None},
         "method": {
             "states": list(STATES), "openness": list(OPENNESS),
             "not_listed_rule": "NOT_LISTED only from a COMPLETE read of an OPEN_DIRECTORY index (with a passing positive control for presence probes)",
@@ -1474,7 +1569,7 @@ def run(a):
         write_status(status, at=utcnow(), result="FAILED_DISK_FLOOR", date=date)
         return 1
     out.mkdir(parents=True, exist_ok=True)
-    http = Http()
+    http = Http(cache=None if a.no_http_cache else CondCache(root / "http-cache", date))
     log("catalogue: reading our offerings from live bytes")
     cat, _ = read_catalog(http)
     catalog = {"schema": SCHEMA_CATALOG, "as_of": utcnow(), "offerings": cat,
@@ -1488,6 +1583,11 @@ def run(a):
     cells = build_cells(cat, indices)
     own = own_surface_cells(cat, indices)
     prev = previous_record(root, date)
+    if http.cache is not None:
+        http.cache.save()
+    n304 = sum(1 for e in http.log if e.get("wire_status") == 304)
+    log(f"fetch: {len(http.log)} requests, {sum(e.get('wire_bytes', e.get('n_bytes')) or 0 for e in http.log)} wire bytes, "
+        f"{n304} answered 304 (UNCHANGED_SINCE, stored bytes re-read)")
     rec = build_record(date, cat, indices, cells, own, prev, http.log)
     fl = gzip.compress("\n".join(json.dumps(e, sort_keys=True) for e in http.log).encode(), mtime=0)
     (out / "fetch-log.json.gz").write_bytes(fl)
@@ -1542,6 +1642,7 @@ def main(argv=None):
     r.add_argument("--force", action="store_true")
     r.add_argument("--no-sign", action="store_true")
     r.add_argument("--no-ots", action="store_true")
+    r.add_argument("--no-http-cache", action="store_true", help="unconditional GETs (no If-None-Match / If-Modified-Since)")
     c = sp.add_parser("catalog")
     c.add_argument("--out", default="-")
     a = ap.parse_args(argv)

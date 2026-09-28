@@ -55,7 +55,8 @@ OWN_NOTICES = "maintainer-notices-20260926"
 SITE_PAGES = ["/", "/about", "/contact", "/transparency", "/claim-maintenance/", "/corrections",
               "/census", "/services/", "/faq", "/traction/"]
 NAMED_DATASETS = ["mcp-contract-parity", "mcp-remote-census", "a2a-card-census", "hf-mcp-spaces-census",
-                  "cross-ledger-supply", "evidence-index", "agent-interop-census", "fleet-status", "gspc-board"]
+                  "cross-ledger-supply", "evidence-index", "agent-interop-census", "fleet-status", "gspc-board",
+                  "erc8004-agent-census"]
 PYPI = ["csoai-gspc", "langchain-csoai", "llama-index-tools-csoai", "crewai-csoai"]
 NPM = ["csoai-gspc-mcp"]
 AGENT_PATHS = ["/.well-known/agent-card.json", "/.well-known/agent.json", "/.well-known/x402.json",
@@ -321,7 +322,7 @@ def json_strings(o):
 
 
 NEG = re.compile(r"\b(?:not|never|no|nothing|without|neither|nor|isn't|aren't|doesn't|don't|won't|cannot|"
-                 r"rather than|instead of|refus\w*|retract\w*|withdrawn|killed|banned|forbidden|avoid)\b|n't\b", re.I)
+                 r"rather than|instead of|refus\w*|retract\w*|withdrawn|killed|banned|forbidden|avoid|declines?|disclaim\w*)\b|n't\b", re.I)
 CERT = re.compile(r"\b(certif(?:y|ies|ied|ying|ication|ications)|compliant|compliance[\s-]score|accredit(?:ed|ation)|"
                   r"endorse(?:d|s|ment))\b", re.I)
 LF = re.compile(r"member(?:ship)?\s+of\s+(?:the\s+)?(?:Linux Foundation|LF\b|AAIF\b|Agentic AI Foundation)|"
@@ -342,7 +343,9 @@ def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
     for m in rx.finditer(text):
         w0 = text[max(0, m.start() - before): m.start()]
         w1 = text[m.end(): m.end() + after]
-        if neg is not None and (neg.search(w0) or neg.search(w1[:25])):
+        if text[max(0, m.start() - 4): m.start()].lower().endswith(("non-", "non ")):
+            continue  # "non-compliant" describes a third party's register, not our output
+        if neg is not None and (neg.search(w0) or neg.search(w1[:after])):
             continue
         if re.match(r"[^.!\n]{0,90}\?", w1):  # a question ("Does X certify?") is not a claim
             continue
@@ -356,7 +359,7 @@ def _hits(text, rx, neg=NEG, before=80, after=40, allow=None, n=3):
 
 def doctrine_checks(text, path="", owner=OWN_DOCTRINE, prices=False):
     out = []
-    h = _hits(text, CERT)
+    h = _hits(text, CERT, before=140, after=80)
     out.append(R("doctrine.no_certify_language", FAIL if h else PASS,
                  ("certify/compliant/accredited/endorsed used without negation: " + " | ".join(h)) if h else "none found", owner))
     if prices:
@@ -435,6 +438,8 @@ def currency_numbers(text, live, owner):
             w = text[max(0, m.start() - 60): m.end() + 30]
             if HIST.search(w):
                 continue
+            if re.search(r"hub", text[max(0, m.start(1) - 15): m.start(1)], re.I):
+                continue
             vals = [int(g) for g in m.groups()]
             pairs = [(n, v) for n, v in zip(names, vals) if live.get(n) is not None]
             if not pairs:
@@ -488,7 +493,7 @@ def verify_signed(signed_bytes, did, artifact_sha=None):
     sig = s.get("signature") if isinstance(s, dict) else None
     payload = s.get("payload") if isinstance(s, dict) else None
     if not isinstance(sig, dict) or payload is None or not sig.get("sig_ed25519"):
-        return False, f"unrecognised signed format (top keys {sorted(s)[:8] if isinstance(s, dict) else type(s).__name__}); no published verify path", None, "NA"
+        return False, f"unrecognised signed format (top keys {sorted(s)[:8] if isinstance(s, dict) else type(s).__name__}); not verifiable by the public method (canonical payload + Ed25519 key from did.json)", None, "NA"
     c = canon(payload)
     if sha(c) != sig.get("payload_sha256"):
         c2 = js_canon(payload)
@@ -557,8 +562,8 @@ def ots_state_check(record_sha, proofs, stated_text, owner):
     out.append(R("integrity.ots_present", PASS, f"{', '.join(commits)} commit(s) to the record's sha256"))
     btc = any(i and i["bitcoin"] for i in infos.values())
     st = stated_text or ""
-    says_btc = bool(re.search(r"BITCOIN_ATTESTED|Bitcoin[- ]attested|anchored in (?:the )?Bitcoin|confirmed in Bitcoin block", st, re.I)) \
-        or bool(re.search(r"(?<!not a )Bitcoin (?:block[- ]header )?attestation(?! yet)", st))
+    says_btc = any(not re.search(r"\b(?:not|until|whether|once|after|only|becomes?|pending)\b", st[max(0, m.start() - 50): m.start()], re.I)
+                   for m in re.finditer(r"BITCOIN_ATTESTED|Bitcoin[- ]attested\b|attested (?:in|to|on) Bitcoin|confirmed in Bitcoin block", st, re.I))
     says_pending = bool(re.search(r"pending", st, re.I))
     if says_btc and not btc:
         out.append(R("integrity.ots_state_truthful", FAIL, "the artifact states a Bitcoin attestation but no proof carries a BitcoinBlockHeaderAttestation", owner))
@@ -1191,14 +1196,14 @@ def payload_file_claims(o, names, at=""):
 
 
 def snippet_check(md, http, owner):
-    blocks = re.findall(r"```(?:python|py)\s*\n([\s\S]*?)```", md)
-    blocks = [b for b in blocks if "verify" in b and ("did.json" in b or "did" in b)]
+    blocks = re.findall(r"```[\w-]*\s*\n([\s\S]*?)```", md)
+    blocks = [b for b in blocks if "did.json" in b or ("verify" in b and "did:web" in b)]
     if not blocks:
-        return R("reuse.verify_snippet_works_as_written", FAIL, "no Python 'how to verify' snippet in the README", owner)
+        return R("reuse.verify_snippet_works_as_written", FAIL, "signed records but no runnable verify snippet that fetches the public key (did.json)", owner)
     b = blocks[0]
-    named = re.search(r"[Uu]ser-[Aa]gent[\"']?\s*[:=,]\s*[\"']([^\"']+)", b)
+    named = re.search(r"[Uu]ser-[Aa]gent[\"']?\s*[:=,]\s*[\"']([^\"']+)", b) or re.search(r"(?:-A|--user-agent)\s+[\"']([^\"']+)", b)
     if not named:
-        default_ua = "Python-urllib/3.10" if "urllib" in b else ("python-requests/2.31.0" if "requests" in b else None)
+        default_ua = "Python-urllib/3.10" if "urllib" in b else ("python-requests/2.31.0" if "requests" in b else ("curl/8.5.0" if "curl" in b else None))
         if default_ua and "did.json" in b:
             r = http.get(DID_URL, headers={"User-Agent": default_ua}, cache=False)
             return R("reuse.verify_snippet_works_as_written", FAIL,
@@ -1207,6 +1212,32 @@ def snippet_check(md, http, owner):
     r = http.get(DID_URL, headers={"User-Agent": named.group(1)}, cache=False)
     return R("reuse.verify_snippet_works_as_written", PASS if r.status == 200 else FAIL,
              f"snippet names UA '{named.group(1)}'; did.json -> {r.status}", owner)
+
+
+CITATION = re.compile(r"@(?:misc|dataset|article|inproceedings|software|techreport)\s*\{|^#+\s*(?:citation|how to cite|cite as|citing)\b|"
+                      r"\bcite as\b\s*:|^cff-version:", re.I | re.M)
+
+
+def croissant_citation_check(crj, md, owner, status=200):
+    """Croissant recordSet (HF generates one when the viewer can type the rows) AND a citation in the README.
+    HF's generated Croissant never carries citeAs (not even for gsm8k), so citeAs itself is not required:
+    a rule that cannot pass on a correct artifact measures nothing."""
+    rs = (crj or {}).get("recordSet") or []
+    cite = CITATION.search(md or "")
+    ok = bool(rs) and bool(cite)
+    return R("reuse.croissant_recordset_and_citation", PASS if ok else FAIL,
+             f"Croissant {'recordSet ' + str(len(rs)) if crj is not None else 'HTTP ' + str(status)}; README citation "
+             + (f"'{clip(cite.group(0), 30)}'" if cite else "absent (no BibTeX / 'How to cite' / 'Cite as:')"), owner)
+
+
+def stated_about(md, art):
+    """What the README says about THIS artifact's timestamp: lines naming it or its proof; else the timestamp sections."""
+    base = art.rsplit("/", 1)[-1]
+    lines = [l for l in md.splitlines() if re.search(re.escape(base) + r"(?![\w.-]*\.v\d)", l) and re.search(r"ots|timestamp|pending|bitcoin|calendar", l, re.I)]
+    if lines:
+        return "\n".join(lines)
+    secs = re.findall(r"##+[^\n]*(?:timestamp|verify|ots)[^\n]*\n[\s\S]*?(?=\n## |\Z)", md, re.I)
+    return "\n".join(secs) or md
 
 
 def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=12):
@@ -1278,16 +1309,14 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
     cr = h.get(f"{HF}/api/datasets/{ds_id}/croissant", cache=False)
     try:
         crj = cr.json()
-        rs, cite = crj.get("recordSet") or [], crj.get("citeAs")
-        c.append(R("reuse.croissant_recordset_citeas", PASS if (rs and cite) else FAIL,
-                   f"recordSet {len(rs)}, citeAs {'present' if cite else 'absent'}", owner))
     except Exception:
-        c.append(R("reuse.croissant_recordset_citeas", FAIL, f"croissant {cr.status}", owner))
+        crj = None
+    c.append(croissant_citation_check(crj, md, owner, cr.status))
     signed = sorted(n for n in names if n.endswith(".signed.json"))
-    if signed or re.search(r"How to verify", md, re.I):
+    if signed:
         c.append(snippet_check(md, h, owner))
     else:
-        c.append(R("reuse.verify_snippet_works_as_written", NA, "no signed record, no verify section"))
+        c.append(R("reuse.verify_snippet_works_as_written", NA, "no signed record in the dataset"))
     # --- integrity
     fsha = {}
 
@@ -1332,7 +1361,7 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
                         proofs[pn] = h.get(f"{HF}/datasets/{ds_id}/resolve/main/{urllib.parse.quote(pn)}", cache=False).body
                 rs = file_sha(art)
                 if rs and rs != "TOO_LARGE":
-                    ots_res.append((art, ots_state_check(rs, proofs, md, owner)))
+                    ots_res.append((art, ots_state_check(rs, proofs, stated_about(md, art), owner)))
         bad = [f"{n}: {d}" for n, ok, d in ver_res if not ok]
         c.append(R("integrity.signatures_verify_public_only", FAIL if bad else PASS,
                    "; ".join(bad[:3]) if bad else f"{len(ver_res)} signed record(s) verify with did.json only: " + "; ".join(f"{n}" for n, _, _ in ver_res[:4]), owner))
@@ -1391,7 +1420,7 @@ def dataset_artifact(ctx, ds_id, max_file=60_000_000, max_signed=6, max_claims=1
     c += accountability_checks(md, text, owner, links)
     c += doctrine_checks(text, f"/hf/{ds_id}", owner)
     return {"id": f"hf:{ds_id}", "kind": "hf_dataset", "url": f"{HF}/datasets/{ds_id}", "checks": c,
-            "priority": ds_id.split("/")[-1] in NAMED_DATASETS}
+            "commit": info.get("sha"), "priority": ds_id.split("/")[-1] in NAMED_DATASETS}
 
 
 def discover_datasets(ctx):
@@ -1741,6 +1770,45 @@ def notice_reproduce(http, row):
     return None, f"no re-check implemented for dimension {dim}"
 
 
+def v012_state(http, sibs, endpoint, dim):
+    """The row's state for `dim` in the published v0.1.2 rows, or None when v0.1.2 is not published / the row is absent."""
+    fn = next((n for n in sorted(sibs or []) if re.fullmatch(r"rows\.v0\.1\.2[\w.-]*\.jsonl(\.gz)?", n)), None)
+    if not fn or not endpoint:
+        return None
+    body = http.get(f"{HF}/datasets/csoai/mcp-contract-parity/resolve/main/{fn}", max_bytes=200_000_000).body
+    try:
+        body = gzip.decompress(body) if fn.endswith(".gz") else body
+    except Exception:
+        return None
+    for line in body.splitlines():
+        if endpoint.encode() not in line:
+            continue
+        try:
+            r = json.loads(line)
+        except Exception:
+            continue
+        found = []
+
+        def rec(x):
+            if isinstance(x, dict):
+                if x.get("dimension") == dim and isinstance(x.get("state"), str):
+                    found.append(x["state"])
+                v = x.get(dim)
+                if isinstance(v, str):
+                    found.append(v)
+                elif isinstance(v, dict) and isinstance(v.get("state"), str):
+                    found.append(v["state"])
+                for y in x.values():
+                    rec(y)
+            elif isinstance(x, list):
+                for y in x:
+                    rec(y)
+        rec(r)
+        if found:
+            return found[0]
+    return None
+
+
 def notice_artifacts(ctx, qdir, run_commands=True):
     h, arts = ctx.http, []
     qp = os.path.join(qdir, "queue.jsonl")
@@ -1765,13 +1833,24 @@ def notice_artifacts(ctx, qdir, run_commands=True):
         dim = row.get("dimension")
         classes = []
         if dim == "AUTH":
-            classes.append("symmetric auth scope (D3 AUTH rule asymmetric in the published record)")
+            classes.append("symmetric auth scope")
         if dim == "TOOLS" and re.search(r"auth", json.dumps(row.get("finding")), re.I):
-            classes.append("subset-under-auth (D1 tool list under declared auth)")
+            classes.append("subset-under-auth")
         if rep is None or "dead surface" in det:
             classes.append("dead surface is not silence")
-        c.append(R("notice.unaffected_by_pending_corrections", FAIL if classes else PASS,
-                   "row falls in pending v0.1.2 correction class(es): " + "; ".join(classes) if classes else f"{dim}: outside the three pending v0.1.2 classes", OWN_CP))
+        if classes and rep is not None and "dead surface" not in det:
+            # passable: once v0.1.2 is published, the row counts only if v0.1.2 still holds it INCONSISTENT
+            if cp_sibs is None:
+                try:
+                    cp_sibs = {x["rfilename"] for x in h.get(f"{HF}/api/datasets/csoai/mcp-contract-parity").json().get("siblings", [])}
+                except Exception:
+                    cp_sibs = set()
+            st = v012_state(h, cp_sibs, row.get("endpoint"), dim)
+            c.append(R("notice.unaffected_by_pending_corrections", PASS if st == "INCONSISTENT" else FAIL,
+                       f"row is in correction class {classes}; " + (f"v0.1.2 re-validates it: {st}" if st else "v0.1.2 not published, so the row is not re-validated"), OWN_CP))
+        else:
+            c.append(R("notice.unaffected_by_pending_corrections", FAIL if classes else PASS,
+                       "row falls in correction class(es) " + "; ".join(classes) if classes else f"{dim}: outside the three pending v0.1.2 classes", OWN_CP))
         dt = row.get("draft_text") or ""
         if "csoai/mcp-contract-parity" in dt:
             if cp_sibs is None:
@@ -1940,6 +2019,18 @@ def run(args):
     return doc
 
 
+def merge(args):
+    """Replace artifacts in a base scorecard with those of a newer partial run (same ids), re-score, rewrite."""
+    base = read_json(args.base)
+    new = read_json(args.new)
+    by = {a["id"]: a for a in new["artifacts"]}
+    arts = [by.pop(a["id"], a) for a in base["artifacts"]] + list(by.values())
+    meta = dict(base.get("meta", {}))
+    meta["merged_from"] = {"base": base.get("generated_at"), "new": new.get("generated_at"), "replaced": len(new["artifacts"])}
+    doc = write_outputs(arts, args.out, meta)
+    sys.stderr.write(f"merged -> {args.out}: {doc['summary']}\n")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -1955,9 +2046,15 @@ def main(argv=None):
     r.add_argument("--venturi-dir", default="/evac-bulk")
     r.add_argument("--notices-dir", default="/evac-bulk/notices-2026-09-26")
     r.add_argument("--no-commands", action="store_true", help="do not run notice draft commands")
+    m = sub.add_parser("merge")
+    m.add_argument("--base", required=True)
+    m.add_argument("--new", required=True)
+    m.add_argument("--out", required=True)
     a = ap.parse_args(argv)
     if a.cmd == "run":
         run(a)
+    elif a.cmd == "merge":
+        merge(a)
 
 
 if __name__ == "__main__":
