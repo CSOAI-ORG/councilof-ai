@@ -248,7 +248,7 @@ export default function ToolsPage() {
       <MomentumStrip
         variant="panel"
         title="The tools, and how far they travel"
-        ids={["mcp_tools", "x402_doors", "pypi_all_time", "hf_downloads_30d"]}
+        ids={["mcp_tools", "x402_doors", "pypi_all_time", "hf_downloads_30d_other"]}
       />
       <SignedAgentTravel />
       <TwoSpeed />

@@ -152,6 +152,22 @@ Operational state of our own jobs; not a measurement of anyone else, not a servi
 """
 
 
+def card(repo):
+    """The dataset card this publisher writes: README passed through cite_block.apply(), which adds the
+    How-to-cite / corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026).
+    cite_block.py is scripts/hf/ in the repository and is vendored beside this file where it runs on Oracle
+    (~/fleet/sv/). None when it cannot be found: the caller then leaves the live card as it is, because a card
+    written without the block would strip it from the live one (fix-producer-not-artifact)."""
+    here = os.path.dirname(os.path.abspath(__file__))
+    for d in (here, os.path.join(here, "..", "hf"), os.path.join(here, "..", "scripts", "hf")):
+        if os.path.exists(os.path.join(d, "cite_block.py")):
+            if d not in sys.path:
+                sys.path.insert(0, d)
+            from cite_block import apply
+            return apply(README, repo)
+    return None
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--status", default="~/fleet/fleet_status.json")
@@ -202,8 +218,12 @@ def main(argv=None):
         api = HfApi(token=token)
         api.create_repo(a.repo, repo_type="dataset", private=False, exist_ok=True)
         if prev is None:
-            api.upload_file(path_or_fileobj=io.BytesIO(README.encode()), path_in_repo="README.md",
-                            repo_id=a.repo, repo_type="dataset", commit_message="README")
+            readme = card(a.repo)
+            if readme is None:
+                print("README not written: cite_block.py not found beside the publisher; the live card is kept", file=sys.stderr)
+            else:
+                api.upload_file(path_or_fileobj=io.BytesIO(readme.encode()), path_in_repo="README.md",
+                                repo_id=a.repo, repo_type="dataset", commit_message="README")
         api.upload_file(path_or_fileobj=io.BytesIO(body.encode()), path_in_repo=PATH_IN_REPO,
                         repo_id=a.repo, repo_type="dataset",
                         commit_message="fleet status %s" % doc.get("published_at"))

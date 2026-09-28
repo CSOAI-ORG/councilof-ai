@@ -8,8 +8,14 @@
  * with a module-level copy as a second tier when the Cache API is unavailable (local runs, tests).
  * `generated_at` is the moment the reads ran; every figure also carries its own `as_of`. A cached
  * copy never outlives its TTL, and a source that failed on the read is absent from it, not zeroed.
+ *
+ * HEAD. Pages dispatches HEAD only to an `onRequestHead` export. Without one, HEAD on /api/momentum and
+ * /api/momentum/ fell through to the /api catch-all's 404 JSON while GET answered 200 on both (measured
+ * 2026-09-28T14:54Z), so a link checker or `curl -I` recorded the endpoint as missing. HEAD now answers
+ * with the status and headers the GET would, and no body.
  */
 import { SCHEMA, TTL_SECONDS, buildMomentum, type Deps, type Payload } from "./_momentum";
+import { headFromGet } from "./_head";
 
 let memo: { at: number; payload: Payload } | null = null;
 
@@ -64,3 +70,5 @@ export const onRequestGet: PagesFunction = async ({ request, waitUntil }) => {
   }
   return res;
 };
+
+export const onRequestHead = headFromGet(onRequestGet);

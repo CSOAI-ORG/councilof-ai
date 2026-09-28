@@ -483,6 +483,11 @@ Built {t['as_of']}.
 
 <!-- /csoai-hubcard-v2 -->
 """
+# The How-to-cite / corrections / verification block (lane L5, 28 Sep 2026) has ONE producer,
+# scripts/hf/cite_block.py; the card passes through it so a rebuild keeps the block on the live card.
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "hf"))
+from cite_block import apply as cite_apply  # noqa: E402
+card = cite_apply(card, "csoai/agent-interop-census")
 open(os.path.join(OUT, "README.md"), "w").write(card)
 
 # rebuild manifest to include the card

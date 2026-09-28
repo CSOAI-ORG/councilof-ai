@@ -27,7 +27,7 @@ const ROWS: { name: string; how: string; href: string }[] = [
   },
   {
     name: "Hugging Face datasets and downloads",
-    how: "The Hugging Face API for author csoai, public datasets only. Downloads are the Hub’s own rolling 30-day count, summed.",
+    how: "The Hugging Face API for author csoai, public datasets only. Downloads are the Hub’s own rolling 30-day count, which counts one download per IP address, dataset and five minutes. They are two figures that are never added: the datasets our own services read (each one is named, with the code that reads it, in hf_self_read in the endpoint’s payload) and all our other public datasets. Our own jobs also read some of the other datasets, and that share cannot be separated from the Hub’s count, so it is UNMEASURED.",
     href: "https://huggingface.co/csoai",
   },
   {
