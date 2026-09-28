@@ -19,6 +19,10 @@ class Vectors(unittest.TestCase):
             for n, root in v[name]["roots_by_size"].items():
                 self.assertEqual(layout.merkle_root(ver, v[name]["ids"][: int(n)]), root, (name, n))
 
+    def test_chained_daily_index_lays_out_under_v02(self):
+        self.assertEqual(layout.INDEX_SCHEMAS["csoai.measurement-capsule-index/0.3"], "0.2")
+        self.assertNotIn("csoai.measurement-capsule-index/0.4", layout.INDEX_SCHEMAS)
+
     def test_bundle_shards_are_complete(self):
         files = json.loads((FIX / "layout-bundle.json").read_text())["files"]
         shards = [k for k in files if "/endpoints/" in k]

@@ -45,6 +45,9 @@ const CAPSULE_SCHEMAS: Record<string, RuleVersion> = {
 const INDEX_SCHEMAS: Record<string, RuleVersion> = {
   "csoai.venturi-index/0.1": "0.1",
   "csoai.measurement-capsule-index/0.2": "0.2",
+  // 0.3 = the chained daily index (0.2 plus prev_index_* / gap_days / freshness). Same batch and root rules; laid out
+  // under v0.2 by scripts/measurement_capsule_layout.py, so it reads under "0.2".
+  "csoai.measurement-capsule-index/0.3": "0.2",
 };
 export const capsuleVersion = (schema: unknown): RuleVersion | null =>
   typeof schema === "string" ? CAPSULE_SCHEMAS[schema] ?? null : null;

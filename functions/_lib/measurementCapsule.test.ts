@@ -12,7 +12,7 @@ import VECTORS from "./__fixtures__/measurement/capsule-vectors.json";
 import ENDPOINTS from "./__fixtures__/measurement/endpoint-vectors.json";
 import BUNDLE from "./__fixtures__/measurement/layout-bundle.json";
 import SPLIT from "./__fixtures__/measurement/layout-bundle-split.json";
-import {
+import { indexVersion,
   DOCTRINE,
   merkle,
   rootFromProof,
@@ -39,6 +39,14 @@ function serve(files: Record<string, string>) {
   });
 }
 afterEach(() => vi.unstubAllGlobals());
+
+describe("index schema versions", () => {
+  it("reads the chained daily index 0.3 under the v0.2 rules, and nothing unknown", () => {
+    expect(indexVersion("csoai.measurement-capsule-index/0.3")).toBe("0.2");
+    expect(indexVersion("csoai.measurement-capsule-index/0.2")).toBe("0.2");
+    expect(indexVersion("csoai.measurement-capsule-index/0.4")).toBeNull();
+  });
+});
 
 describe("capsule ids and Merkle roots match the reference implementation", () => {
   for (const [name, ver] of [["v02", "0.2"], ["v01", "0.1"]] as const) {
