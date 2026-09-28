@@ -20,7 +20,6 @@ import {
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
   CSOAI_LID,
-  hasPaymentHeader,
   type X402Env,
 } from "./_x402";
 import { railMode } from "./_x402_config";
@@ -63,14 +62,14 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     data_only: true,
     streams,
     free_for: ["regulators", "the public", "anyone verifying"],
-    sold: "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    sold: "assembly + cadence of public source blocks with exact digests; source signatures are not verified by assembly — never the facts, which stay free",
     never: ["scores as a product", "ranking", "rating", "certificate"],
   };
 
   const reads = {signals,first_fine_watch:fines,root,card_index:cardIndex} as Reads;
   const missing = missingFeedSources(reads);
   // A partial source inventory is a preview, never a paid assembled feed.
-  if ((wantManifest || (wantFeed && hasPaymentHeader(request))) && missing.length) {
+  if ((wantManifest || wantFeed) && missing.length) {
     return json({schema:"csoai.eunomia-data/0.2",kind:"feed_unavailable",state:"UNCHECKABLE",missing_sources:missing,settled:false,signing_attempted:false,free_preview:`${origin}/api/eunomia-data`},503);
   }
   const manifest = missing.length ? null : await makeFeedManifest(reads,origin);
@@ -80,7 +79,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, delivery_manifest:manifest, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
-  const description = "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.";
+  const description = "An assembled JSON feed of public enforcement and measurement source blocks with exact digests. Source signatures are not verified by assembly. Data only — no scores, no ranking.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -103,7 +102,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       resourceUrl,
       description,
       serviceName: "CSOAI Data Feed",
-      tags: ["data", "feed", "enforcement", "signed", "x402"],
+      tags: ["data", "feed", "enforcement", "source-hashed", "x402"],
       accepts,
       bazaar,
       csoai: { schema: "csoai.eunomia-data/0.2", per: "feed-pull", lid: CSOAI_LID, ...preview,
@@ -112,7 +111,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         free_manifest: `${origin}/api/eunomia-data?manifest=1`,
         delivery_manifest: manifest,
         read_before_settle: {complete:missing.length===0, missing_sources:missing},
-        deliverable: "the assembled signed data feed for this lane — data only, never a score and never a rank",
+        deliverable: "the assembled source-hashed data feed for this lane — data only, never a score and never a rank",
         rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402` },
     });
     return paymentRequiredResponseSigned(paymentRequired, env);
@@ -133,7 +132,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       kind: "feed",
       lane: "commercial-data",
       data_only: true,
-      note: "Each block is the published bytes with its own signature/kid; verify every block offline. Nothing here is a score product.",
+      note: "Each block retains its source content and digest. Source signatures are not verified by assembly; unsigned indexes remain unsigned. Nothing here is a score product.",
       blocks: feedBlocks(reads),
       delivery_manifest: manifest,
       request_record: targetRecord,
