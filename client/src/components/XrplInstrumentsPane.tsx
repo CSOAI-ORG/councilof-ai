@@ -19,12 +19,24 @@ type XrplAsset = {
   symbol?: string;
   issuer?: string;
   kind?: string;
-  holders?: number;
-  supply?: number;
+  holders?: number | null;
+  holders_state?: string;
+  supply?: number | null;
+  supply_state?: string;
   verified_via?: string;
   sha256?: string;
   sig_ed25519?: string | null;
 };
+
+/**
+ * A missing figure prints the state the API gives it (GET /api/xrpl carries holders_state /
+ * supply_state, e.g. UNMEASURED) and UNCHECKABLE when it gives none. Never a bare dash: a dash
+ * reads as blank, and blank is not a measurement state.
+ */
+export function xrplFigure(value: number | null | undefined, state: string | undefined): string {
+  if (typeof value === "number" && Number.isFinite(value)) return value.toLocaleString();
+  return typeof state === "string" && state.trim() ? state.trim() : "UNCHECKABLE";
+}
 
 type XrplDoc = {
   schema?: string;
@@ -98,10 +110,8 @@ export default function XrplInstrumentsPane() {
                 <td className="py-2 pr-4 font-mono font-bold text-gray-900">{a.symbol}</td>
                 <td className="py-2 pr-4 text-gray-700">{a.issuer}</td>
                 <td className="py-2 pr-4 text-gray-700">{a.kind}</td>
-                <td className="py-2 pr-4 tabular-nums text-gray-700">{a.holders ?? "—"}</td>
-                <td className="py-2 pr-4 tabular-nums text-gray-700">
-                  {a.supply != null ? a.supply.toLocaleString() : "—"}
-                </td>
+                <td className="py-2 pr-4 tabular-nums text-gray-700">{xrplFigure(a.holders, a.holders_state)}</td>
+                <td className="py-2 pr-4 tabular-nums text-gray-700">{xrplFigure(a.supply, a.supply_state)}</td>
                 <td className="py-2 pr-4 text-gray-600">{a.verified_via || "—"}</td>
                 <td className="py-2">
                   {a.sig_ed25519 ? (

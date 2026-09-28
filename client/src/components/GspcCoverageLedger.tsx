@@ -46,13 +46,15 @@ async function readJson(url: string, signal: AbortSignal): Promise<unknown> {
 
 function Cell({ cell }: { cell: CoverageCell }) {
   if (cell.value === null) {
+    // Visible words, not a dash: on a phone there is no hover, and a dash reads as blank.
+    // slate-500 keeps AA contrast on white (slate-400 measured ~2.6:1).
     return (
       <span
-        className="text-slate-400"
+        className="text-[11px] font-medium text-slate-500"
         title={`${cell.source} · ${cell.field} · ${cell.unavailable}`}
         aria-label={`not published by ${cell.source}`}
       >
-        —
+        not published
       </span>
     );
   }
@@ -200,7 +202,7 @@ export default function GspcCoverageLedger() {
                     </td>
                     <td className="px-3 py-3">
                       {row.writesBoard === null ? (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-[11px] font-medium text-slate-500">UNCHECKABLE</span>
                       ) : row.writesBoard ? (
                         <span className="font-semibold text-emerald-800">
                           YES
