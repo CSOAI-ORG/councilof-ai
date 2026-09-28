@@ -143,7 +143,7 @@ export default function BoardAttestation({
   const bgCls = dark ? "bg-[#05140d]" : "bg-white";
   const textMuted = dark ? "text-emerald-100/70" : "text-gray-600";
   const textPrimary = dark ? "text-emerald-50" : "text-gray-900";
-  const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? "text-emerald-300/60" : "text-emerald-700/70"}`;
+  const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? "text-emerald-300/60" : "text-emerald-700"}`;
   const hoverCls = `cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md ${dark ? "hover:border-emerald-400/40" : "hover:border-emerald-500/40"}`;
   const clickHintCls = `ml-auto shrink-0 ${dark ? "text-emerald-400/50" : "text-emerald-600/40"}`;
 
