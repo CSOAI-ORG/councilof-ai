@@ -6,11 +6,14 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const filteredPagesBuild = process.env.CSOAI_FILTERED_PAGES_BUILD === '1';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   root: path.resolve(__dirname),
-  publicDir: '../public',
+  // Production pre-stages public/ without proofs so Vite never spends disk copying
+  // a tree the Pages deployment deliberately excludes. Dev behaviour stays unchanged.
+  publicDir: filteredPagesBuild ? false : '../public',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -30,7 +33,9 @@ export default defineConfig({
   },
   build: {
     outDir: '../dist/client',
-    emptyOutDir: true,
+    // The filtered production build starts with a clean, pre-staged public tree.
+    // Vite must retain those exact assets while writing its compiled bundles.
+    emptyOutDir: filteredPagesBuild ? false : true,
     sourcemap: false,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
