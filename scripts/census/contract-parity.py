@@ -1627,6 +1627,7 @@ def build013(a):
     rec["instrument"] = (f"scripts/census/contract-parity.py {VERSION} comparators and readers (commit {a.fix_commit}); "
                          "fresh read, not a reclassification")
     rec["run"]["population_note"] = meta["population_note"]
+    rec["run"]["read_gaps"] = json.loads((pathlib.Path(a.compare_dir) / "summary.json").read_text())["read_gaps"]  # why PARTIAL, as 0.1.2 records it
     rec["run"]["population_not_planned_at_reprobe"] = meta["population_not_planned_at_reprobe"]
     rec["timing"] = meta["timing"]
     rec["inputs"] = meta["inputs"]
