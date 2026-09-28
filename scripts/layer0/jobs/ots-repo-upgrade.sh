@@ -31,16 +31,21 @@ echo "pending proofs: ${#pending[@]}"
 set +e; python3 scripts/ots-upgrade.py "${pending[@]}"; set -e
 changed=$(git status --porcelain -- public | awk '{print $2}')
 [ -z "$changed" ] && { echo "NO_CHANGE (calendars have not committed yet)"; exit 0; }
-mkdir -p "$L0_CANON/.bc"; for f in $changed; do cp "$f" "$L0_CANON/.bc/"; done
+# one flat dir for the checker (it globs *.ots, not recursively); path-mangled names so two proofs
+# with the same basename in different directories cannot overwrite each other and go unchecked
+mkdir -p "$L0_CANON/.bc"; n=0
+for f in $changed; do cp "$f" "$L0_CANON/.bc/$(printf %s "$f" | tr / _)"; n=$((n+1)); done
 python3 scripts/ots_block_check.py --dir "$L0_CANON/.bc" --out "$L0_STATE/ots-upgrade-check-$L0_DAY.json"
-python3 - "$L0_STATE/ots-upgrade-check-$L0_DAY.json" <<'PY'
+python3 - "$L0_STATE/ots-upgrade-check-$L0_DAY.json" "$n" <<'PY'
 import json, sys
 d = json.load(open(sys.argv[1]))
-bad = {k: v for k, v in d.get("files", {}).items() if k != "MATCHES_BLOCK_HEADER"}
-sys.exit(1 if bad else 0)
+files = d.get("files", {})
+bad = {k: v for k, v in files.items() if k != "MATCHES_BLOCK_HEADER"}
+if bad or files.get("MATCHES_BLOCK_HEADER", 0) != int(sys.argv[2]):
+    print(f"GATE: {files} for {sys.argv[2]} changed proofs - nothing committed"); sys.exit(1)
 PY
 BR="lane/ots-upgrade-$(date -u +%Y%m%d)"
 git checkout -q -b "$BR"
 git add -- $changed
-git -c user.name=CSOAI -c user.email=nicholas@csoai.org commit -q -m "ots: upgrade $(echo "$changed" | wc -l) pending proof(s) to Bitcoin attestations, block headers checked on two explorers"
-if [ "${PUSH:-0}" = 1 ]; then git push -q origin "$BR"; echo "pushed $BR"; else B="$L0_STATE/${BR//\//-}.bundle"; git bundle create "$B" "$BR" >/dev/null; echo "bundle $B"; fi
+git -c user.name=CSOAI -c user.email=nicholas@csoai.org commit -q -m "ots: upgrade $n pending proof(s) to Bitcoin attestations; each new attestation matches its block header as public explorers report it (report: ots-upgrade-check-$L0_DAY.json)"
+if [ "${PUSH:-0}" = 1 ]; then git push -q origin "$BR"; echo "pushed $BR"; else B="$L0_STATE/${BR//\//-}.bundle"; git bundle create "$B" "$L0_SHA..$BR" >/dev/null; echo "bundle $B (thin: $L0_SHA..$BR)"; fi
