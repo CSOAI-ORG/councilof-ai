@@ -8,9 +8,12 @@
  * Nothing here is a new verifier. The signature rule is the repo's ONE shared
  * implementation (functions/_lib/cardVerify.ts, transpiled into ./cardVerify.mjs by
  * scripts/build.mjs). This file only:
- *   1. resolves the pinned key for cards that name a DID instead of carrying a pubkey
+ *   1. names the pinned key for cards that name a DID instead of carrying a pubkey
  *      (the mill cards under /interop/mill-cards-signed/ are signed under
- *      did:web:csoai.org#board-attestation-1 and carry `did`, not `pubkey`);
+ *      did:web:csoai.org#board-attestation-1 and carry `did`, not `pubkey`). The shared
+ *      verifier resolves that DID from its own pinned set; this file only reports it,
+ *      and never adds a `pubkey` to the card (a card naming both an inline key and a DID
+ *      is key_ambiguous in the shared rule, so injecting one would break a valid card);
  *   2. collapses the shared verdict's check list into the three states;
  *   3. asks GET /api/proof?sha= whether the id is a leaf of the last published root,
  *      and recomputes the returned merkle path locally against /root.json.
@@ -40,6 +43,9 @@ const UNCHECKABLE_CODES = new Set([
   "ed25519_unsupported",
   "key_malformed",
   "signature_malformed",
+  // The shared verifier classes these as "could not complete" too (its UNCHECKABLE_REASONS).
+  "key_ambiguous",
+  "key_not_pinned",
 ]);
 
 /** Pinned anchor for a DID verification-method id, or null. Pinned in source — no fetch. */
@@ -69,9 +75,11 @@ function hasNonAscii(v) {
 export function prepare(input) {
   const notes = [];
   let rec = input;
+  let wrapped = false;
   if (isObj(rec) && isObj(rec.card) && Array.isArray(rec.proof)) {
     notes.push("Unwrapped a public-root card wrapper ({card, proof}); the inner card is what was checked.");
     rec = rec.card;
+    wrapped = true;
   }
   let pinnedBy = null;
   // The published rule for a measurement card is hex: 64-hex id, 64-hex pubkey, 128-hex
@@ -114,15 +122,28 @@ export function prepare(input) {
         },
       };
     }
-    rec = { ...rec, pubkey: anchor.hex };
+    // The shared verifier resolves `did` from its own pinned set (the same table as
+    // anchorForDid); the card is passed through unchanged.
     pinnedBy = anchor.id;
     notes.push(`The card carries no pubkey; it names ${anchor.id}. That key was taken from the anchor set PINNED in this verifier's source, not fetched.`);
     if (anchor.id !== CARD_ATTESTATION_KID) {
       notes.push(`Note: this is not the card-attestation key. Cards under /interop/mill-cards-signed/ are signed under ${anchor.id} by design (scripts/sign_mill_cards.py).`);
     }
   }
-  return { rec, notes, pinnedBy };
+  return { rec, notes, pinnedBy, wrapped };
 }
+
+/**
+ * The public-root leaves (councilof.ai/cards/<sha16>.json, schema card-v0/card-v1) ARE a
+ * shape CSOAI publishes; this offline verifier just does not implement their signature
+ * rule. Saying "not a shape CSOAI publishes" about them was false, so a recognised
+ * public-root leaf gets its own UNCHECKABLE reason. The state is unchanged.
+ */
+export const PUBLIC_ROOT_LEAF_REASON =
+  "Public-root card leaf (the councilof.ai/cards/ shape). This offline verifier does not implement that family's signature rule, so its signature was NOT checked: UNCHECKABLE, which is not a finding of forgery. Whether it is a leaf of the last published root is the inclusion row; the root recipe is HOW-TO-VERIFY-ROOT.md.";
+const isPublicRootLeaf = (rec) =>
+  isObj(rec) && typeof rec.sha256 === "string" && HEX64.test(rec.sha256) &&
+  typeof rec.schema === "string" && /\/schema\/card-v[01]\.json$/.test(rec.schema);
 
 /**
  * Collapse the shared verdict into one of three states with one reason.
@@ -178,6 +199,9 @@ export async function verifyOffline(input) {
   }
   const verdict = await verifyCard(prepared.rec, []); // [] = no live did.json cross-check; the pinned set decides
   const three = collapse(verdict, { pinnedBy: prepared.pinnedBy });
+  if (verdict.family === "unknown" && prepared.wrapped && isPublicRootLeaf(prepared.rec)) {
+    three.reason = PUBLIC_ROOT_LEAF_REASON;
+  }
   const body = isObj(prepared.rec) && isObj(prepared.rec.body) ? prepared.rec.body : {};
   return {
     ...three,
