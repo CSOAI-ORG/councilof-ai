@@ -14,6 +14,7 @@
 import { useEffect, type ReactNode } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import { measurementRecordLd, ldJson } from "@/lib/measurementRecordLd";
 import PlainEmail from "@/components/PlainEmail";
 import REC from "@/data/measurements/disclosure-lag/2026-09-medicare-agent.json";
 
@@ -118,6 +119,9 @@ const days = (iv: Iv) =>
       ? `${iv.days_range[0]} to ${iv.days_range[1]}${iv.days_if_2026_08_11 !== undefined ? ` (${iv.days_if_2026_08_11} if the one-outlet day is used)` : ""}`
       : "not stated";
 
+// schema.org Dataset JSON-LD, copied from the same record bytes (client/src/lib/measurementRecordLd.ts).
+const LD = measurementRecordLd(BASE, REC, TITLE.replace(/ \| Council of AI$/, ""), DESCRIPTION);
+
 export default function DisclosureLagMedicareAgent() {
   useEffect(() => {
     document.title = TITLE;
@@ -126,6 +130,7 @@ export default function DisclosureLagMedicareAgent() {
 
   return (
     <article data-testid="disclosure-lag-medicare" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ldJson(LD) }} />
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <span>Measurements</span> › <span>Disclosure lag</span>
       </nav>
