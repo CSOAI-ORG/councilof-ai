@@ -74,6 +74,8 @@
     {
       "id": "mcp-registry-domain",
       "format": "MCP Registry server.json (schema 2025-12-11), domain namespace, remote-only",
+      "remote_url": "https://councilof.ai/mcp/",
+      "remote_url_why": "The door with a trailing slash. The bare https://councilof.ai/mcp is registered under io.github.CSOAI-ORG/gspc and the registry refuses one remote URL under two names, so both published ai.councilof/gspc versions (1.4.2 on 2026-09-26, 1.4.3 on 2026-09-28) carry /mcp/; a descriptor naming the bare URL could not be published. Both forms answer the same MCP initialize (read 2026-09-28). check.mjs pins this to identity.door modulo the one slash.",
       "output": [
         "distribution/mcp-registry/ai.councilof-gspc/server.json"
       ],
@@ -372,7 +374,7 @@
       "flagged_org_affected": false
     }
   ],
-  "published_channels_note": "Every place a Layer 0 artifact is, or is declared to be, live. scripts/harness-x/parity_live.py reads each one (daily, scripts/pod-loops/harness-x-parity.sh). kind rendered-only = rendered here and not yet listed: reported UNCHECKABLE, never CONSISTENT.",
+  "published_channels_note": "Every place a Layer 0 artifact is, or is declared to be, live. scripts/harness-x/parity_live.py reads each one (daily, scripts/pod-loops/harness-x-parity.sh). kind rendered-only = rendered here and not yet listed: reported UNCHECKABLE, never CONSISTENT. kinds smithery / a2a-registry = third-party directories that copy the door or the agent card (compared, never edited from here); listing-unreadable = a directory that lists us but cannot be read without a key we do not hold: UNCHECKABLE.",
   "published_channels": [
     {
       "id": "site-mcp-door",
@@ -567,6 +569,32 @@
       "kind": "rendered-only",
       "row": "docker-mcp-catalog",
       "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "smithery-csoai-gspc",
+      "kind": "smithery",
+      "name": "csoai/gspc",
+      "listing": "https://smithery.ai/server/csoai/gspc",
+      "why_listed": "a third-party directory's copy of the door (found 2026-09-28 by search); its tool list is Smithery's own scan, refreshed only from the listing's settings (owner account)"
+    },
+    {
+      "id": "a2a-registry-agent-card",
+      "kind": "a2a-registry",
+      "well_known": "https://councilof.ai/.well-known/agent-card.json",
+      "search": "councilof",
+      "why_listed": "a2aregistry.org copy of the agent card (submitted per mcp/gspc-server/REGISTRY-SUBMISSIONS.md); compared with the card served now"
+    },
+    {
+      "id": "glama-listing",
+      "kind": "listing-unreadable",
+      "name": "glama.ai",
+      "why": "glama.ai lists the server (HTML search, 2026-09-28) but its API answers 401 without a key and we hold none; the HTML is not a stable contract, so nothing is compared"
+    },
+    {
+      "id": "pulsemcp-listing",
+      "kind": "listing-unreadable",
+      "name": "pulsemcp.com",
+      "why": "PulseMCP's v0beta API is sunset (410) and v0.1 needs an X-API-Key we do not hold; whether and how it lists the server is unread"
     }
   ]
 }

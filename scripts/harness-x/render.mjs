@@ -121,6 +121,11 @@ emit("distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json", j({
   packages: [{ registryType: "npm", identifier: NPM_ID, version: NPM_VERSION, transport: { type: "stdio" } }],
   _meta: regMeta,
 }));
+// The domain name's remote is the door with a trailing slash: the bare URL is registered under the
+// io.github name and the registry refuses one remote URL under two names (distribution.json explains).
+const domainRow = dist.distribution.find((r) => r.id === "mcp-registry-domain") || {};
+const DOMAIN_REMOTE = domainRow.remote_url || ID.door;
+if (DOMAIN_REMOTE.replace(/\/$/, "") !== ID.door) throw new Error(`mcp-registry-domain remote_url ${DOMAIN_REMOTE} is not the door ${ID.door}`);
 emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
   $schema: mcpServer.$schema,
   name: dist.registry_names.domain,
@@ -128,7 +133,7 @@ emit("distribution/mcp-registry/ai.councilof-gspc/server.json", j({
   description: regDescription,
   version: REMOTE_VERSION,
   websiteUrl: ID.website,
-  remotes: [{ type: "streamable-http", url: ID.door }],
+  remotes: [{ type: "streamable-http", url: DOMAIN_REMOTE }],
   _meta: regMeta,
 }));
 
@@ -960,7 +965,7 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
 
 // ── 11. SUBMIT.md ───────────────────────────────────────────────────────────────────────────
 const rowsById0 = Object.fromEntries(dist.distribution.map((r) => [r.id, r]));
-const PY_ORDER = `Publish csoai-gspc ${pyClientVersion} to PyPI first: this package requires csoai-gspc>=${pyClientVersion}, and \`scripts/harness-x/parity_live.py\` reports that floor uninstallable until it is there.`;
+const PY_ORDER = `Publish csoai-gspc ${pyClientVersion} to PyPI first: this package requires csoai-gspc>=${pyClientVersion}, and \`scripts/harness-x/parity_live.py\` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)`;
 const PY_NO_REUSE = `The source version is ${AV}. PyPI and npm refuse to re-upload a version, so any content change moves adapter_version; parity_live.py flags a live version whose bytes the source no longer produces.`;
 const STEPS = {
   "mcp-registry-github": [
@@ -972,6 +977,7 @@ const STEPS = {
     "`mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>` — the key whose public half is served at /.well-known/mcp-registry-auth.",
     "`mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.",
     "CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.",
+    `The remote is \`${DOMAIN_REMOTE}\` (the door plus one slash): the bare door is registered under the io.github name and the registry refuses one remote URL under two names. Publish a version above the registry's current isLatest; registry versions are immutable.`,
   ],
   "claude-plugin": [
     "Create a public repo on CouncilofAI-CSOAI (not CSOAI-ORG); copy distribution/plugin/ to its root.",

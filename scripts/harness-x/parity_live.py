@@ -20,6 +20,9 @@ submits nothing, authenticates nowhere and holds no token.
   parity_live.py [--repo DIR] [--out FILE]      live read
   parity_live.py --install DIR                  also: install each package into a fresh venv / npm
                                                 cache under DIR and run it against the live board
+      [--install-python PY]                     the interpreter those venvs come from (the HOST). A package
+                                                the host cannot run (Requires-Python, sqlite3) is SKIPPED
+                                                with both sides named, never failed and never passed
   parity_live.py --self-test                    offline, fixture transport
 
 Exit 1 if any channel is INCONSISTENT, else 0 (UNCHECKABLE is reported in the RESULT line).
@@ -266,11 +269,16 @@ def check_registry(net, src, spec):
     off = latest[0]["_meta"]["io.modelcontextprotocol.registry/official"]
     want = src.resolve(spec["version_source"])
     ch.check("isLatest version == source", srv.get("version") == want, want, srv.get("version"))
-    door = src.id["door"]
+    # The rendered descriptor is what the owner publishes, so its remote URL is the source. The domain
+    # name carries the door WITH a trailing slash (the bare URL is held by the io.github name, and the
+    # registry refuses one remote URL under two names); check.mjs pins it to the door modulo that slash.
+    want_url = src.id["door"]
+    rendered = src.json(spec["rendered"]) if spec.get("rendered") else None
+    if rendered and (rendered.get("remotes") or [{}])[0].get("url"):
+        want_url = rendered["remotes"][0]["url"]
     urls = [r.get("url") for r in srv.get("remotes") or []]
-    ch.check("remote url == door (byte-exact)", urls == [door], door, ", ".join(map(str, urls)))
-    if spec.get("rendered"):
-        rendered = src.json(spec["rendered"])
+    ch.check("remote url == source (byte-exact)", urls == [want_url], want_url, ", ".join(map(str, urls)))
+    if rendered:
         ch.check("description == rendered descriptor", srv.get("description") == rendered.get("description"),
                  rendered.get("description"), srv.get("description"))
     if spec.get("expect_status"):
@@ -308,7 +316,10 @@ def check_pypi(net, src, spec, cache):
     info = d["info"]
     want = src.resolve(spec["version_source"])
     live_v = info.get("version")
-    same_v = ch.check("latest version == source", live_v == want, want, live_v)
+    ahead = vtuple(live_v) > vtuple(want)
+    same_v = ch.check("latest version == source", live_v == want, want, live_v,
+                      note=("PyPI's latest sorts ABOVE the source: a release the source never declared (a second "
+                            "producer). pip resolves to it, so the source must move past it." if ahead else None))
     readme_check(ch, src, info.get("description"))
     if spec.get("source_readme"):
         readme_check(ch, src, src.text(spec["source_readme"]), label="source README")
@@ -491,29 +502,122 @@ def check_rendered_only(src, spec):
     return ch
 
 
+def check_smithery(net, src, spec):
+    """A third-party directory's copy of the door: its tool names, the door it names, the stdio pin it names."""
+    ch = Channel(spec["id"], "smithery", spec["name"])
+    try:
+        d = net.get_json("https://registry.smithery.ai/servers/" + spec["name"])
+    except Exception as e:
+        ch.cannot(f"{type(e).__name__}: {e}")
+        return ch
+    want = list(src.lock["free"]) + list(src.lock["paid"])
+    names = [t.get("name") for t in d.get("tools") or []]
+    ch.check("listed tool names == fleet lock (as a set)", sorted(names) == sorted(want),
+             f"{len(want)}: {','.join(sorted(want))}", f"{len(names)}: {','.join(sorted(names))}")
+    desc = d.get("description") or ""
+    ch.check("listing names the door", src.id["door"] in desc, src.id["door"], desc[:160])
+    pins = sorted(set(re.findall(r"csoai-gspc-mcp@(\d+(?:\.\d+)+)", desc)))
+    if pins:
+        npm_v = src.resolve("npm_stdio_package_json")
+        ch.check("stdio pin the listing names == source npm version", pins == [npm_v], npm_v, ",".join(pins))
+    return ch
+
+
+def check_a2a_registry(net, src, spec):
+    """The A2A registry's copy of our agent card against the card councilof.ai serves right now."""
+    ch = Channel(spec["id"], "a2a-registry", spec["well_known"])
+    try:
+        d = net.get_json("https://a2aregistry.org/api/agents?search=" + urllib.parse.quote(spec["search"]))
+        card = net.get_json(spec["well_known"])
+    except Exception as e:
+        ch.cannot(f"{type(e).__name__}: {e}")
+        return ch
+    rows = [a for a in d.get("agents") or [] if a.get("wellKnownURI") == spec["well_known"]]
+    if not rows:
+        ch.check("listed", False, spec["well_known"], f"ABSENT from search {spec['search']!r}")
+        return ch
+    row = rows[0]
+    for k in ("name", "version", "description"):
+        ch.check(f"listed {k} == served agent card {k}", row.get(k) == card.get(k),
+                 (card.get(k) or "")[:160] if isinstance(card.get(k), str) else card.get(k),
+                 (row.get(k) or "")[:160] if isinstance(row.get(k), str) else row.get(k))
+    card_urls = set(re.findall(r'"url":\s*"([^"]+)"', json.dumps(card)))
+    ch.check("listed url is an interface the served card declares", row.get("url") in card_urls,
+             ", ".join(sorted(u for u in card_urls if "/api/" in u))[:200], row.get("url"))
+    return ch
+
+
+def check_listing_unreadable(src, spec):
+    ch = Channel(spec["id"], "listing", spec.get("name", spec["id"]))
+    ch.cannot(spec["why"])
+    return ch
+
+
 # ------------------------------------------------------------------------------------ install
 def _run(cmd, cwd, env=None, timeout=1800, stdin=None):
     return subprocess.run(cmd, cwd=cwd, env={**os.environ, **(env or {})}, timeout=timeout,
                           capture_output=True, text=True, input=stdin)
 
 
-def install_pypi(root, spec, version, board_pc):
-    """Fresh venv + fresh pip cache under root; install NAME==VERSION from PyPI; run its smoke."""
+def install_pypi(root, spec, version, board_pc, python=None, requires_python=None):
+    """Fresh venv + fresh pip cache under root; install NAME==VERSION from PyPI; run its smoke.
+
+    The interpreter is the HOST, not the package: it is recorded in every result, a Requires-Python the
+    interpreter does not meet is a SKIP naming both (never a FAIL of the package), and so is a run that
+    dies on the host's sqlite3 (chromadb, pulled in by crewai, refuses sqlite3 < 3.35.0; Ubuntu 20.04
+    ships 3.31.1). A SKIP is not a pass: the channel stays UNCHECKABLE on that step unless it is re-run
+    with --install-python pointing at an interpreter that can measure it."""
+    python = python or sys.executable
+    host = _interp(python)
+    if requires_python and host.get("python") and not satisfies(host["python"], requires_python):
+        return {"state": SKIP, "step": "requires-python", "host": host,
+                "why": f"install interpreter {python} is Python {host['python']}; {spec['name']} {version} "
+                       f"declares Requires-Python {requires_python} (pass --install-python)"}
     d = tempfile.mkdtemp(prefix=f"{spec['name']}-", dir=root)
     env = {"PIP_CACHE_DIR": os.path.join(d, "pip-cache"), "PIP_DISABLE_PIP_VERSION_CHECK": "1"}
-    r = _run([sys.executable, "-m", "venv", os.path.join(d, "venv")], d)
+    r = _run([python, "-m", "venv", os.path.join(d, "venv")], d)
     if r.returncode:
-        return {"state": FAIL, "step": "venv", "tail": r.stderr[-400:]}
+        return {"state": FAIL, "step": "venv", "host": host, "tail": r.stderr[-400:]}
     py = os.path.join(d, "venv", "bin", "python")
     t0 = time.time()
     r = _run([py, "-m", "pip", "install", "-q", f"{spec['name']}=={version}"], d, env)
     if r.returncode:
-        return {"state": FAIL, "step": "pip install", "seconds": round(time.time() - t0), "tail": r.stderr[-600:]}
+        return {"state": FAIL, "step": "pip install", "host": host, "seconds": round(time.time() - t0), "tail": r.stderr[-600:]}
     r = _run([py, "-c", spec["smoke"]], d, timeout=300)
     out = (r.stdout or "").strip().splitlines()
     ok = r.returncode == 0 and bool(out) and board_pc in out[-1]
-    return {"state": PASS if ok else FAIL, "step": "run", "dir": d, "seconds": round(time.time() - t0),
+    if not ok and "unsupported version of sqlite3" in (r.stderr or ""):
+        return {"state": SKIP, "step": "run", "host": host, "dir": d,
+                "why": f"host sqlite3 {host.get('sqlite')} under {python} is below what a dependency requires "
+                       f"(chromadb: sqlite3 >= 3.35.0); the package was not measured (pass --install-python)"}
+    return {"state": PASS if ok else FAIL, "step": "run", "host": host, "dir": d, "seconds": round(time.time() - t0),
             "stdout_tail": out[-1][:200] if out else "", "stderr_tail": (r.stderr or "")[-300:] if not ok else ""}
+
+
+def _interp(python):
+    """The install host: Python and sqlite3 versions of the interpreter the venvs are made from."""
+    try:
+        r = _run([python, "-c", "import sys,sqlite3,json;print(json.dumps({'python':'%d.%d.%d'%sys.version_info[:3],"
+                                "'sqlite':sqlite3.sqlite_version}))"], None, timeout=60)
+        return {"interpreter": python, **json.loads(r.stdout.strip().splitlines()[-1])}
+    except Exception as e:
+        return {"interpreter": python, "python": None, "sqlite": None, "error": f"{type(e).__name__}: {e}"}
+
+
+def satisfies(version, spec):
+    """'3.8.10' against a Requires-Python like '>=3.10' or '>=3.9,<4' (the operators PyPI metadata uses)."""
+    v = vtuple(version)
+    for clause in [c.strip() for c in (spec or "").split(",") if c.strip()]:
+        m = re.match(r"(>=|<=|==|!=|~=|>|<)\s*([0-9][0-9.*]*)", clause)
+        if not m:
+            continue
+        op, w = m.group(1), vtuple(m.group(2).replace(".*", ""))
+        vv = v[:len(w)] if op in ("==", "!=") and m.group(2).endswith(".*") else v
+        ok = {">=": vv >= w, "<=": vv <= w, ">": vv > w, "<": vv < w, "==": vv == w, "!=": vv != w,
+              "~=": vv >= w and vv[:max(len(w) - 1, 1)] == w[:max(len(w) - 1, 1)]}[op]
+        if not ok:
+            return False
+    return True
 
 
 def install_npm_stdio(root, spec, version, lock_names):
@@ -541,7 +645,7 @@ def install_npm_stdio(root, spec, version, lock_names):
 
 
 # ------------------------------------------------------------------------------------ run
-def run(repo, net, install_root=None):
+def run(repo, net, install_root=None, install_python=None):
     src = Source(repo)
     specs = src.dist.get("published_channels")
     if not specs:
@@ -564,6 +668,12 @@ def run(repo, net, install_root=None):
                 ch = check_hf_space(net, src, spec, pypi_cache)
             elif k == "rendered-only":
                 ch = check_rendered_only(src, spec)
+            elif k == "smithery":
+                ch = check_smithery(net, src, spec)
+            elif k == "a2a-registry":
+                ch = check_a2a_registry(net, src, spec)
+            elif k == "listing-unreadable":
+                ch = check_listing_unreadable(src, spec)
             else:
                 ch = Channel(spec["id"], k, "?")
                 ch.cannot(f"unknown kind {k}")
@@ -581,16 +691,22 @@ def run(repo, net, install_root=None):
             installs["*"] = {"state": SKIP, "why": f"board unreadable: {e}"}
         lock_names = list(src.lock["free"]) + list(src.lock["paid"])
         for spec, ch in zip(specs, out):
-            live = pypi_cache.get(spec.get("name"), {}).get("info", {}).get("version") if spec["kind"] == "pypi" else None
+            info = pypi_cache.get(spec.get("name"), {}).get("info", {}) if spec["kind"] == "pypi" else {}
+            live = info.get("version")
             if spec["kind"] == "pypi" and spec.get("smoke") and live and board_pc:
-                installs[spec["id"]] = r = install_pypi(install_root, spec, live, board_pc)
+                installs[spec["id"]] = r = install_pypi(install_root, spec, live, board_pc, install_python,
+                                                        info.get("requires_python"))
             elif spec["kind"] == "npm" and spec.get("stdio_smoke") and ch.state != UNCHECKABLE:
                 ver = next((c["live"] for c in ch.checks if c["check"] == "latest version == source"), None)
                 installs[spec["id"]] = r = install_npm_stdio(install_root, spec, ver, lock_names)
             else:
                 continue
+            if r["state"] == SKIP:
+                ch.skip("clean install + run from a fresh temp dir", f"NOT MEASURED on this host: {r['why']}")
+                continue
             ch.check("clean install + run from a fresh temp dir", r["state"] == PASS, "installs and answers LIVE",
-                     json.dumps({k: v for k, v in r.items() if k in ("step", "stdout_tail", "tools", "differ", "tail", "stderr_tail")})[:400])
+                     json.dumps({k: v for k, v in r.items() if k in ("step", "stdout_tail", "tools", "differ", "tail", "stderr_tail")})[:400],
+                     note=("host " + json.dumps(r["host"])) if r.get("host") else None)
     states = {s: sum(1 for c in out if c.state == s) for s in (CONSISTENT, INCONSISTENT, UNCHECKABLE)}
 
     def declared(key):
@@ -640,8 +756,11 @@ def self_test():
                 {"id": "door", "kind": "site-mcp", "url": ident["door"], "version_source": "remote"},
                 {"id": "py-old", "kind": "pypi", "name": "pkg-old", "version_source": "adapters", "source_dir": "x"},
                 {"id": "py-none", "kind": "pypi", "name": "pkg-none", "version_source": "adapters", "source_dir": "x"},
+                {"id": "py-ahead", "kind": "pypi", "name": "pkg-ahead", "version_source": "adapters", "source_dir": "x"},
                 {"id": "reg-down", "kind": "mcp-registry", "name": "a/b", "version_source": "remote"},
-                {"id": "form", "kind": "rendered-only"}]}
+                {"id": "smith", "kind": "smithery", "name": "o/s"},
+                {"id": "form", "kind": "rendered-only"},
+                {"id": "keyed", "kind": "listing-unreadable", "name": "k", "why": "API needs a key"}]}
     json.dump(dist, open(os.path.join(tmp, "council-os/distribution.json"), "w"))
     json.dump({"version": "1.4.3"}, open(os.path.join(tmp, "mcp/server.json"), "w"))
     json.dump({"free": ["a"], "paid": ["b"]}, open(os.path.join(tmp, "functions/mcp/tool-fleet.lock.json"), "w"))
@@ -654,16 +773,25 @@ def self_test():
             return 200, {}, ("event: message\ndata: " + json.dumps({"jsonrpc": "2.0", "id": 1, "result": res})).encode()
         if url.endswith("/pkg-old/json"):
             return 200, {}, json.dumps({"info": {"version": "0.1.0", "description": links}, "releases": {"0.1.0": [{}]}, "urls": []}).encode()
+        if url.endswith("/pkg-ahead/json"):
+            return 200, {}, json.dumps({"info": {"version": "0.1.2", "description": links}, "releases": {"0.1.2": [{}]}, "urls": []}).encode()
         if url.endswith("/pkg-none/json"):
             return 404, {}, b"{}"
+        if url.endswith("/servers/o/s"):
+            return 200, {}, json.dumps({"description": f"remote {ident['door']}", "tools": [{"name": "b"}, {"name": "a"}]}).encode()
         raise TimeoutError("registry timed out")
 
     rep = run(tmp, Net(transport))
     got = {c["id"]: c["state"] for c in rep["channels"]}
-    want = {"door": CONSISTENT, "py-old": INCONSISTENT, "py-none": UNCHECKABLE, "reg-down": UNCHECKABLE, "form": UNCHECKABLE}
+    want = {"door": CONSISTENT, "py-old": INCONSISTENT, "py-none": UNCHECKABLE, "py-ahead": INCONSISTENT,
+            "reg-down": UNCHECKABLE, "smith": CONSISTENT, "form": UNCHECKABLE, "keyed": UNCHECKABLE}
     quoted = next(c for c in rep["channels"] if c["id"] == "py-old")["checks"][0]
-    ok = got == want and quoted.get("source") == "0.1.1" and quoted.get("live") == "0.1.0"
-    print(json.dumps({"self_test": "PASS" if ok else "FAIL", "got": got, "quoted": quoted}))
+    ahead = next(c for c in rep["channels"] if c["id"] == "py-ahead")["checks"][0]
+    host = [satisfies("3.8.10", ">=3.10"), satisfies("3.12.14", ">=3.10"), satisfies("3.11.8", ">=3.9,<4"),
+            satisfies("4.0.0", ">=3.9,<4")]
+    ok = (got == want and quoted.get("source") == "0.1.1" and quoted.get("live") == "0.1.0" and not quoted.get("note")
+          and "ABOVE" in (ahead.get("note") or "") and host == [False, True, True, False])
+    print(json.dumps({"self_test": "PASS" if ok else "FAIL", "got": got, "quoted": quoted, "satisfies": host}))
     return 0 if ok else 1
 
 
@@ -672,11 +800,13 @@ def main(argv=None):
     ap.add_argument("--repo", default=os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
     ap.add_argument("--out", help="write the JSON report here")
     ap.add_argument("--install", metavar="DIR", help="also install + run each package from a fresh dir under DIR")
+    ap.add_argument("--install-python", metavar="PY", default=os.environ.get("HXP_INSTALL_PYTHON"),
+                    help="interpreter the install venvs are made from (default: this one); it is recorded as the host")
     ap.add_argument("--self-test", action="store_true")
     a = ap.parse_args(argv)
     if a.self_test:
         return self_test()
-    rep = run(a.repo, Net(), a.install)
+    rep = run(a.repo, Net(), a.install, a.install_python)
     text = json.dumps(rep, indent=1, ensure_ascii=False)
     if a.out:
         os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)

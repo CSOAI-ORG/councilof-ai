@@ -148,7 +148,10 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     }
     rec(id, "name", doc.name === name, doc.name);
     rec(id, "version == live", doc.version === WANT_VERSION, doc.version);
-    rec(id, "remote == door", doc.remotes?.[0]?.url === DOOR && doc.remotes[0].type === "streamable-http", doc.remotes?.[0]?.url);
+    // the domain name carries the door with one trailing slash (the bare URL is held by the github name)
+    const wantRemote = (dist.distribution.find((r) => r.id === id) || {}).remote_url || DOOR;
+    rec(id, wantRemote === DOOR ? "remote == door" : "remote == door + trailing slash (declared remote_url)",
+      wantRemote.replace(/\/$/, "") === DOOR && doc.remotes?.[0]?.url === wantRemote && doc.remotes[0].type === "streamable-http", doc.remotes?.[0]?.url);
     const fl = doc._meta["io.modelcontextprotocol.registry/publisher-provided"]["ai.councilof/fleet"];
     rec(id, "fleet names == locked", sameList([...fl.free, ...fl.paid], EXPECT_TOOLS), `${fl.free.length}+${fl.paid.length}`);
   }

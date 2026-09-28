@@ -14,7 +14,11 @@
 #                different bytes is INCONSISTENT: PyPI and npm refuse the re-upload, so the source must move.
 #   install      Sundays also --install: each package installed from the public registry into a fresh
 #                venv / npm cache under a new temp dir and run against the live board, holding
-#                /workspace/locks/heavy.lock (the build pod is 2 vCPU / 4 GB).
+#                /workspace/locks/heavy.lock (the build pod is 2 vCPU / 4 GB). The venvs come from
+#                HXP_INSTALL_PYTHON, else uv's managed CPython 3.12 (its own sqlite3; the pods' system
+#                pythons carry sqlite3 3.31, which chromadb -- pulled in by crewai -- refuses), else
+#                python3. The interpreter is recorded per install; a host it cannot run on is a named
+#                SKIP, never a package FAIL and never a pass.
 #   receipt      ONE RESULT line per run in logs/harness-x-parity.log. "all consistent" is a line too:
 #                a loop with no log line never ran.
 #
@@ -35,7 +39,7 @@ BARE=${HXP_BARE:-/workspace/git/councilof-ai.git}
 REF=${HXP_REF:-origin/master}
 OUTD="$OUT/harness-x-parity"
 mkdir -p "$OUTD"
-export PATH=/workspace/tools/node/bin:$PATH
+export PATH=/workspace/tools/node/bin:/root/.local/bin:/workspace/tools/bin:$PATH
 
 # One clone per purpose, sparse: the shared checkouts on this pod get reset --hard under whoever uses them.
 if [ ! -d "$CLONE/.git" ]; then
@@ -55,7 +59,10 @@ MODE=live
 if [ "$(date -u +%u)" = "7" ] || [ "${HXP_INSTALL:-0}" = "1" ]; then
   INST=$(mktemp -d "${TMPDIR:-/tmp}/harness-x-parity-install.XXXXXX") || { log harness-x-parity "FAIL mktemp"; exit 1; }
   ARGS+=(--install "$INST")
-  MODE="live+install($INST)"
+  IPY=${HXP_INSTALL_PYTHON:-}
+  if [ -z "$IPY" ] && command -v uv >/dev/null 2>&1; then IPY=$(uv python find 3.12 2>/dev/null || true); fi
+  [ -n "$IPY" ] && ARGS+=(--install-python "$IPY")
+  MODE="live+install($INST,python=${IPY:-python3})"
   mkdir -p /workspace/locks
   RUN=(flock /workspace/locks/heavy.lock timeout 3000 python3 "$CLONE/scripts/harness-x/parity_live.py" "${ARGS[@]}")
 else
