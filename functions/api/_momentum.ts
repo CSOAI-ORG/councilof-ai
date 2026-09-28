@@ -15,6 +15,8 @@
  *   · A partial read is never presented as the population: where a sum is over what answered, the
  *     figure says "at least" and names how many answered.
  *   · Windows are never added: all-time, 30-day and 7-day stay separate fields.
+ *   · Hugging Face downloads of the datasets our own services read and of the rest are two figures,
+ *     never added; our own share inside the rest is UNMEASURED (SELF_READ_DATASETS below).
  *   · A third-party listing is shown only if its page or API names us on this request, and every
  *     listing travels with "A listing is not an endorsement."
  *   · No price, no score or rank of anyone, no conformity wording, no membership labels here (the
@@ -71,6 +73,9 @@ export interface Figure {
   detail_url?: string;
   trend?: Trend;
   lower_bound?: boolean;
+  /** Parts of what this figure counts that are not measured. Each stays UNMEASURED with its reason and
+   *  is never printed as a number. */
+  unmeasured?: { field: string; state: "UNMEASURED"; reason: string }[];
 }
 
 export interface Listing {
@@ -120,6 +125,9 @@ export interface Payload {
   anchors: Anchor[];
   recent: RecentItem[];
   omitted: Omitted[];
+  /** The datasets whose Hugging Face downloads are reported as read by our own services, each with the
+   *  files that read it, and the rule HF counts downloads by. */
+  hf_self_read: { rule_url: string; datasets: readonly SelfReadDataset[] };
 }
 
 export interface Deps {
@@ -389,7 +397,50 @@ export async function capsulesFigure(deps: Deps): Promise<Got<CapsuleRead>> {
   };
 }
 
-type HfRead = { figs: Figure[]; dois: { id: string; doi: string }[]; censusIds: string[] };
+type HfRead = { figs: Figure[]; dois: { id: string; doi: string }[]; censusIds: string[]; omitted: Omitted[] };
+
+/**
+ * DOWNLOADS OUR OWN SERVICES MAKE. Hugging Face counts a dataset download per IP address, repository
+ * and 5-minute window, for GET or HEAD requests (HF_DOWNLOAD_RULE_URL), and its public API reports no
+ * downloader identity. Some of our datasets are read by our own code, so part of their count is us.
+ * They are named here, each with the files that read it, and their downloads are reported in their own
+ * figure, never added to the rest. `momentum-selfread.test.ts` holds this list to the code:
+ *   · every dataset a Pages function reads at request time (a /datasets/<id>/resolve/ or
+ *     /api/datasets/<id>/tree/ URL, or a dataset passed to the functions/_lib/reach/hf.ts readers) must
+ *     be listed with that file, and every "request" entry must be read by the files it names;
+ *   · every "job" entry's named files must exist and read the dataset.
+ * The list is a list, not a count (a count hides a swap). Our publish, grading and mirroring jobs read
+ * other datasets now and then too; that share of "other" is not separable from the public API and is
+ * reported as UNMEASURED, never estimated. Not listed: the census_rows reads, which ask datasets-server
+ * for its row counts and do not download the datasets' files.
+ */
+export const HF_DOWNLOAD_RULE_URL = "https://huggingface.co/docs/hub/datasets-download-stats";
+
+export interface SelfReadDataset {
+  id: string;
+  /** "request": a councilof.ai Pages function reads it while answering a request.
+   *  "job": one of our scheduled or queued jobs reads it as its working state. */
+  when: "request" | "job";
+  /** The files in the councilof-ai repository that read it. */
+  readers: string[];
+}
+
+export const SELF_READ_DATASETS: readonly SelfReadDataset[] = [
+  { id: "csoai/gspc-hub-cards", when: "request", readers: ["functions/api/hub-cards.ts"] },
+  { id: "csoai/x402-bazaar-conformance", when: "request", readers: ["functions/api/coverage.ts", "functions/api/x402/[name].ts"] },
+  { id: "csoai/evidence-index", when: "request", readers: ["functions/api/_momentum.ts", "functions/_lib/reach/notes.ts"] },
+  { id: "csoai/distribution-footprint", when: "request", readers: ["functions/api/_momentum.ts"] },
+  { id: "csoai/cross-ledger-supply", when: "request", readers: ["functions/_lib/reach/stablecoins.ts"] },
+  { id: "csoai/a2a-card-census", when: "request", readers: ["functions/_lib/reach/agentCards.ts"] },
+  { id: "csoai/hub-queue", when: "job", readers: ["scripts/hf/hf_jobs_mill.py", "scripts/runpod_gspc_local_mill.py"] },
+  { id: "csoai/fleet-status", when: "job", readers: ["fleet/publish_fleet_status.py", "scripts/pubbus/publish-fleet-status.py"] },
+  { id: "csoai/gspc-boards", when: "job", readers: ["scripts/watch_public_root.py", "scripts/sync_hf_gspc.py"] },
+];
+
+export const SELF_SHARE_REASON =
+  "Hugging Face's public API gives a download count per dataset and says nothing about who downloaded. " +
+  "Our own publish, grading and mirroring jobs also read some of these datasets, and that share cannot be " +
+  "separated from the count, so it is not estimated.";
 
 export async function huggingFaceFigures(deps: Deps): Promise<Got<HfRead>> {
   const d = await read(deps, HF_DATASETS_API);
@@ -398,10 +449,9 @@ export async function huggingFaceFigures(deps: Deps): Promise<Got<HfRead>> {
   const pub = d.value.filter((x: any) => x && x.private === false && typeof x.id === "string" && x.id.startsWith("csoai/"));
   if (!pub.length) return { ok: false, reason: "HF datasets API listed no public csoai/* dataset" };
   if (!pub.every((x: any) => isCount(x.downloads))) return { ok: false, reason: "HF datasets API: a downloads field is missing" };
-  const dl30 = pub.reduce((a: number, x: any) => a + x.downloads, 0);
   const likes = pub.reduce((a: number, x: any) => a + (isCount(x.likes) ? x.likes : 0), 0);
-  const allTime = pub.every((x: any) => isCount(x.downloadsAllTime)) ? pub.reduce((a: number, x: any) => a + x.downloadsAllTime, 0) : null;
   const read_at = deps.now().toISOString();
+  const omitted: Omitted[] = [];
   const figs: Figure[] = [];
   const ds = exact(pub.length);
   figs.push({
@@ -418,27 +468,55 @@ export async function huggingFaceFigures(deps: Deps): Promise<Got<HfRead>> {
     source_label: "Hugging Face API · datasets?author=csoai (public only)",
     detail: likes > 0 ? `${nf.format(likes)} likes` : undefined,
   });
-  if (dl30 > 0) {
-    const f = floorCompact(dl30);
+  // Two download figures, never added: the datasets our own services read, and every other public one.
+  const selfIds = new Set(SELF_READ_DATASETS.map((s) => s.id));
+  const parts: { id: string; rows: any[]; label: string; source_label: string; detail: (n: number, all: number | null) => string; extra: Partial<Figure> }[] = [
+    {
+      id: "hf_downloads_30d_self_read",
+      rows: pub.filter((x: any) => selfIds.has(x.id)),
+      label: "downloads of the datasets our own services read, last 30 days",
+      source_label: "Hugging Face API · downloads (HF's rolling 30 days), summed over the public datasets named in hf_self_read",
+      detail: (n) => `${n} datasets our own code reads, named in hf_self_read; our own reads are inside this count`,
+      extra: {},
+    },
+    {
+      id: "hf_downloads_30d_other",
+      rows: pub.filter((x: any) => !selfIds.has(x.id)),
+      label: "downloads of our other public datasets (not the ones our own services read), last 30 days",
+      source_label: "Hugging Face API · downloads (HF's rolling 30 days), summed over the public csoai/* datasets not named in hf_self_read",
+      detail: (n, all) => `${n} datasets${all ? ` · ${floorCompact(all).display} all-time` : ""} · our own share inside is UNMEASURED`,
+      extra: { unmeasured: [{ field: "self_share", state: "UNMEASURED", reason: SELF_SHARE_REASON }] },
+    },
+  ];
+  for (const p of parts) {
+    const n30 = p.rows.reduce((a: number, x: any) => a + x.downloads, 0);
+    if (!p.rows.length || n30 === 0) {
+      omitted.push({ id: p.id, reason: p.rows.length ? "Hugging Face reports no downloads for these datasets in its 30-day window" : "no public dataset in this group" });
+      continue;
+    }
+    const all = p.rows.every((x: any) => isCount(x.downloadsAllTime)) ? p.rows.reduce((a: number, x: any) => a + x.downloadsAllTime, 0) : null;
+    const f = n30 >= 100_000 ? floorCompact(n30) : exact(n30);
     figs.push({
-      id: "hf_downloads_30d",
+      id: p.id,
       group: "reach",
-      label: "dataset downloads on Hugging Face, last 30 days",
-      value: dl30,
-      display: dl30 >= 100_000 ? f.display : exact(dl30).display,
-      display_sr: dl30 >= 100_000 ? f.sr : exact(dl30).sr,
+      label: p.label,
+      value: n30,
+      display: f.display,
+      display_sr: f.sr,
       unit: "downloads",
       as_of: read_at,
       as_of_basis: "read",
       source_url: `${HF}/csoai`,
-      source_label: "Hugging Face API · downloads (HF's rolling 30 days), summed over public csoai/* datasets",
-      detail: allTime && allTime > dl30 ? `${floorCompact(allTime).display} all-time` : "HF's rolling 30-day count",
+      source_label: p.source_label,
+      detail: p.detail(p.rows.length, all && all > n30 ? all : null),
+      detail_url: HF_DOWNLOAD_RULE_URL,
+      ...p.extra,
     });
   }
   const dois: { id: string; doi: string }[] = [];
   for (const x of pub) for (const t of Array.isArray(x.tags) ? x.tags : []) if (typeof t === "string" && t.startsWith("doi:10.")) dois.push({ id: x.id, doi: t.slice(4) });
   const censusIds = pub.map((x: any) => x.id as string).filter((id: string) => /census/i.test(id));
-  return { ok: true, value: { figs, dois, censusIds } };
+  return { ok: true, value: { figs, dois, censusIds, omitted } };
 }
 
 export async function censusRowsFigure(deps: Deps, ids: string[]): Promise<Got<Figure>> {
@@ -760,6 +838,7 @@ export const RULES = [
   "Rounded figures round down and carry '+'. A partial read says 'at least' and names what answered.",
   "All-time, 30-day and 7-day windows are separate fields and are never added.",
   "Download counts include mirrors and automated traffic; they are not people, users or customers.",
+  "Hugging Face downloads are two figures that are never added: the datasets our own services read (named in hf_self_read) and our other public datasets. Our own share inside the second is UNMEASURED.",
   "A third-party listing is shown only if it names us on this read. A listing is not an endorsement.",
 ];
 
@@ -790,8 +869,10 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
   if (caps.ok) figures.push(caps.value.fig);
   else omitted.push({ id: "capsules", reason: caps.reason });
   take("pypi_all_time", pypi);
-  if (hf.ok) figures.push(...hf.value.figs);
-  else omitted.push({ id: "hf_datasets", reason: hf.reason });
+  if (hf.ok) {
+    figures.push(...hf.value.figs);
+    omitted.push(...hf.value.omitted);
+  } else omitted.push({ id: "hf_datasets", reason: hf.reason });
   take("census_rows", census);
   take("mcp_tools", tools);
   take("x402_doors", doors);
@@ -870,5 +951,6 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
     anchors,
     recent: recent.slice(0, 6),
     omitted,
+    hf_self_read: { rule_url: HF_DOWNLOAD_RULE_URL, datasets: SELF_READ_DATASETS },
   };
 }

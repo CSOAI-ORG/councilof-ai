@@ -33,6 +33,8 @@ export interface MomentumFigure {
   detail_url?: string;
   trend?: { delta: number; window: string; text: string };
   lower_bound?: boolean;
+  /** Parts of what the figure counts that are not measured; never printed as a number. */
+  unmeasured?: { field: string; state: "UNMEASURED"; reason: string }[];
 }
 
 export interface MomentumListing {
