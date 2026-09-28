@@ -91,6 +91,9 @@ Subcommands
   publish-correction   upload the 0.1.1 files + a README Corrections section in one commit; 0.1 files byte-identical
   correct-0.1.2 / publish-0.1.2   the same for record.v0.1.2.json (supersedes 0.1.1); README re-rendered with the
            current figures on top, earlier text kept below it; 0.1 and 0.1.1 files byte-identical
+  build-0.1.3   record.v0.1.3.json: a FRESH read of the 0.1.2 plan's endpoints (new live probe, new frame and registry
+           read, new surface collect) graded by the 0.1.2 comparators. Not a correction: 0.1.2 stays the record
+           for 25 Sep; 0.1.3 describes its own dates. --run-meta supplies timing / inputs / population wording.
   --self-test   offline suite + must-fail controls (see test_contract_parity.py)
 """
 from __future__ import annotations
@@ -1604,6 +1607,54 @@ def build(a):
     print(f"record.json {len(raw)} bytes sha256={sha(raw)}")
 
 
+def build013(a):
+    """record.v0.1.3.json + rows.v0.1.3.jsonl.gz from a fresh plan / collect / compare. Every figure is recomputed from the
+    rows by build(); this adds the 0.1.3 identity, the run's own timing and inputs, and the earlier record's figures beside
+    (never subtracted from) this run's, because the populations differ."""
+    out, stage = pathlib.Path(a.out), pathlib.Path(a.stage)
+    base_out, base_stage = out / "_build", stage / "_build"
+    b = argparse.Namespace(**vars(a))
+    b.out, b.stage = str(base_out), str(base_stage)
+    build(b)
+    rec = json.loads((base_out / "record.json").read_text())
+    rb = (base_stage / "rows.jsonl.gz").read_bytes()
+    meta = json.loads(pathlib.Path(a.run_meta).read_text())
+    prev_b = pathlib.Path(a.old_record).read_bytes()
+    prev = json.loads(prev_b)
+    assert prev.get("record_version") == "0.1.2", "the previous record must be record.v0.1.2.json"
+    rec["record_version"] = "0.1.3"
+    rec["instrument"] = (f"scripts/census/contract-parity.py {VERSION} comparators and readers (commit {a.fix_commit}); "
+                         "fresh read, not a reclassification")
+    rec["run"]["population_note"] = meta["population_note"]
+    rec["run"]["population_not_planned_at_reprobe"] = meta["population_not_planned_at_reprobe"]
+    rec["timing"] = meta["timing"]
+    rec["inputs"] = meta["inputs"]
+    rec["what_it_does_not_show"] = [x if not x.startswith("simultaneity") else meta["simultaneity_line"]
+                                    for x in rec["what_it_does_not_show"]]
+    rec["previous_record"] = {
+        "record": "record.v0.1.2.json", "sha256": sha(prev_b), "as_of": prev.get("as_of"),
+        "relation": ("0.1.2 is the record of the 25 Sep 2026 read (reclassified 26 Sep) and stays published unchanged. 0.1.3 is a "
+                     "new read of the endpoints 0.1.2 planned, on a new date, graded by the same comparators. It does not "
+                     "correct 0.1.2 and is not a change series: its population is the subset of those endpoints that answered "
+                     "the 0.1.3 re-probe, so a difference between the two sets of figures mixes change in the services with "
+                     "change in who answered."),
+        "figures_0_1_2": {"n_planned": prev["run"]["n_planned"], "n_attempted": prev["run"]["n_attempted"],
+                          "read_state": prev["run"]["read_state"], "dimension_states": prev["dimension_states"],
+                          "endpoints_with_any_inconsistent": prev["endpoints_with_any_inconsistent"]},
+    }
+    rec["published_files"] = {"rows.v0.1.3.jsonl.gz": {"sha256": sha(rb), "rows": rec["published_files"]["rows.jsonl.gz"]["rows"]}}
+    rec["verify"] = {
+        "signature": ("record.v0.1.3.signed.json (when present): canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); "
+                      "sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.v0.1.3.json); "
+                      "verify sig_ed25519 with #board-attestation-1 in https://csoai.org/.well-known/did.json"),
+        "timestamp": "record.v0.1.3.json.ots when present: OpenTimestamps over sha256(record.v0.1.3.json); PENDING until Bitcoin-attested",
+        "rows": "sha256(rows.v0.1.3.jsonl.gz) must equal published_files; every figure in this record is recomputed from those rows"}
+    raw = (json.dumps(rec, indent=1, sort_keys=True, ensure_ascii=False) + "\n").encode()
+    (out / "record.v0.1.3.json").write_bytes(raw)
+    (stage / "rows.v0.1.3.jsonl.gz").write_bytes(rb)
+    print(f"record.v0.1.3.json {len(raw)} bytes sha256={sha(raw)}; rows.v0.1.3.jsonl.gz sha256={sha(rb)}")
+
+
 def sign(a):
     from cryptography.hazmat.primitives.asymmetric import ed25519
     out = pathlib.Path(a.out)
@@ -2833,7 +2884,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("cmd", nargs="?", choices=["plan", "collect", "compare", "build", "sign", "ots", "readme", "correct",
                                                "publish-correction", "correct-0.1.2", "probe-record",
-                                               "publish-0.1.2", "viewer"])
+                                               "publish-0.1.2", "viewer", "build-0.1.3"])
     ap.add_argument("--record", default="record.json")
     ap.add_argument("--old-record")
     ap.add_argument("--old-rows")
@@ -2869,6 +2920,7 @@ def main(argv=None):
     ap.add_argument("--read-timeout", type=float, default=12.0)
     ap.add_argument("--token", default="~/.secrets/board-sign-pod-token")
     ap.add_argument("--exclusions", help="probe-exclusions.json (default: the committed file beside mcp-remote-probe.py)")
+    ap.add_argument("--run-meta", help="build-0.1.3: JSON with timing, inputs, population wording for the fresh read")
     ap.add_argument("--self-test", action="store_true")
     a = ap.parse_args(argv)
     if a.self_test:
@@ -2879,7 +2931,8 @@ def main(argv=None):
         os.makedirs(a.out, exist_ok=True)
     {"plan": plan, "collect": collect, "compare": compare, "build": build, "sign": sign, "ots": ots,
      "readme": readme, "correct": correct, "publish-correction": publish_correction,
-     "correct-0.1.2": correct012, "probe-record": probe_record, "publish-0.1.2": publish012, "viewer": viewer}[a.cmd](a)
+     "correct-0.1.2": correct012, "probe-record": probe_record, "publish-0.1.2": publish012, "viewer": viewer,
+     "build-0.1.3": build013}[a.cmd](a)
     return 0
 
 
