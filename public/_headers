@@ -140,8 +140,3 @@
 # index them under this domain. Added 2026-09-24; the sitemap leaves them out by the same pattern.
 /interop/:report/mirrors/*
   X-Robots-Tag: noindex, nofollow
-
-# OWNER-APPROVE (2026-09-28): the second disclosure-lag measurement is built but not published until the owner approves.
-# The page also carries robots noindex and is delisted from the sitemap. Remove this rule when OWNER_APPROVED is set true.
-/measurements/disclosure-lag/2026-09-gemini-evaluation/*
-  X-Robots-Tag: noindex, nofollow, noarchive

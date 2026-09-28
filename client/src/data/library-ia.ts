@@ -170,7 +170,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/measurements/x402-activity",
   // /measurements/disclosure-lag/2026-09-medicare-agent — disclosure-lag measurement (owner-approved 2026-09-27).
   "/measurements/disclosure-lag/2026-09-medicare-agent",
-  // OWNER-APPROVE (noindex, delisted from the sitemap until approved): second disclosure-lag measurement (2026-09-28).
+  // /measurements/disclosure-lag/2026-09-gemini-evaluation — second disclosure-lag measurement (owner-approved 2026-09-28).
   "/measurements/disclosure-lag/2026-09-gemini-evaluation",
   // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
   "/verify-server",

@@ -135,7 +135,7 @@ const CASES = [
     },
   },
   {
-    // OWNER-APPROVE: the second disclosure-lag record is built noindex, delisted from the sitemap and unlinked until the owner approves.
+    // Second disclosure-lag record; owner approved publication 2026-09-28.
     name: "disclosure-lag/2026-09-gemini-evaluation",
     run() {
       const slug = "2026-09-gemini-evaluation";
@@ -184,17 +184,16 @@ const CASES = [
         }
         for (const s of c.sources) assert.match(s.response_sha256 ?? "", /^[0-9a-f]{64}$/, `${s.id} has a response hash`);
         assert.ok(c.not_established.length > 0 && /right of reply/i.test(c.right_of_reply));
-        assert.equal(c.publication.startsWith("PRIVATE: OWNER-APPROVE"), true);
+        assert.equal(c.publication.startsWith("PRIVATE: OWNER-APPROVE"), true, "signed before approval; bytes published unchanged");
       });
-      test("disclosure-lag gemini: held (noindex, out of the sitemap, unlinked) until approved", () => {
+      test("disclosure-lag gemini: published: indexable, in the sitemap, scope, reply and objection route visible", () => {
         const page = read(pagePath).toString();
-        const approved = /export const OWNER_APPROVED = true;/.test(page);
-        if (!approved) {
-          assert.ok(/noindex/.test(page), "noindex while unapproved");
-          assert.ok(!read("public/sitemap.xml").toString().includes(route), "absent from the sitemap while unapproved");
-          assert.ok(read("scripts/generate-sitemap.mjs").toString().includes(`["${route}", "noindex: owner approval pending"]`), "DELISTED");
-          assert.ok(new RegExp(`^${route}/?\\*?\\s*\\n\\s+X-Robots-Tag: noindex`, "m").test(read("public/_headers").toString()), "_headers noindex rule");
-        }
+        assert.ok(!/noindex|OWNER_APPROVED|owner-approve-notice/.test(page), "no robots noindex or draft gate on the page");
+        assert.ok(!new RegExp(`^${route}`, "m").test(read("public/_headers").toString()), "no X-Robots-Tag rule for this page");
+        assert.ok(!read("scripts/generate-sitemap.mjs").toString().includes(`["${route}"`), "not DELISTED");
+        assert.ok(read("public/sitemap.xml").toString().includes(`https://councilof.ai${route}/`), "in the sitemap");
+        assert.ok(/no claim about anyone’s intent, about the causes of\s+the incident, or about the security of any system/.test(page));
+        assert.ok(page.includes('href="/census/"') && page.includes("C.right_of_reply"), "objection route and right of reply");
       });
       test("disclosure-lag gemini: no hand-typed figures in the page", () => noHandTypedFigures(pagePath));
     },
