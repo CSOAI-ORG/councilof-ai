@@ -153,8 +153,8 @@ describe("measured_on.model is derived from the rows", () => {
     const m = board.measured_on.model as string;
     expect(f.models_in_rows).toBe(f.base_count + f.own_count + f.other_count);
     expect(m).toContain(`${f.models_in_rows}-model fleet`);
-    expect(m).toContain(`${f.base_count} base models, ranked`);
-    expect(m).toContain(`${f.own_count} CSOAI own fine-tunes, excluded before ranking and never counted in a comparison`);
+    expect(m).toContain(`${f.base_count} base models, compared`);
+    expect(m).toContain(`${f.own_count} CSOAI own fine-tunes, excluded before comparison and never counted in a comparison`);
     for (const b of f.base_models as string[]) expect(m).toContain(b);
     if (f.other_count === 0) {
       expect(m).toContain("no other model is in the rows");

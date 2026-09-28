@@ -194,8 +194,8 @@ export function measuredOnModel(axes: readonly Axisish[]): string {
     .join("; ");
   return (
     `Behavioural (model-comparison) axis with published per-item rows: ${rowAxes.length} of ${cmp.length} ` +
-    `(${ROWS_POWER.dataset}). The rows hold a ${f.models_in_rows}-model fleet: ${f.base_count} base models, ranked ` +
-    `(${f.base_models.join(", ")}), and ${f.own_count} CSOAI own fine-tunes, excluded before ranking and never ` +
+    `(${ROWS_POWER.dataset}). The rows hold a ${f.models_in_rows}-model fleet: ${f.base_count} base models, compared ` +
+    `(${f.base_models.join(", ")}), and ${f.own_count} CSOAI own fine-tunes, excluded before comparison and never ` +
     `counted in a comparison${others}. Counted from the rows, not typed. ` +
     (retired.length
       ? `${retired.join(", ")}: the published rows are a retired bank; the served row states its own fleet on the axis. `
