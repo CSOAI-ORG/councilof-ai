@@ -6,7 +6,7 @@
  *
  * The page shows three things, all read from GET /api/gspc when the request is served:
  *   totals.public_count (verbatim), measured_on.date as the as_of (verbatim), and a link to
- *   councilof.ai/gspc. It also prints the separation line, which the board says to read beside
+ *   councilof.ai/board/. It also prints the separation line, which the board says to read beside
  *   the count and never instead of it, so a reader cannot take "N measured" to mean N leaders.
  *
  * It is not a badge. It carries no mark, grade, rank, score or pass/fail, and no partner
@@ -69,7 +69,7 @@ const head = (theme: string | null, title: string) =>
   `<style>${style(theme)}</style></head><body><main>`;
 
 const foot =
-  `<p class="l"><a href="${BOARD_PAGE}" target="_blank" rel="noopener">councilof.ai/gspc</a>` +
+  `<p class="l"><a href="${BOARD_PAGE}" target="_blank" rel="noopener">councilof.ai/board</a>` +
   ` · <a href="${BOARD_API}" target="_blank" rel="noopener">JSON</a>` +
   ` · <a href="${SITE}/cite/gspc" target="_blank" rel="noopener">cite</a>` +
   ` · measurement, not certification</p></main></body></html>\n`;

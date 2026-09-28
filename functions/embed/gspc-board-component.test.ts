@@ -43,7 +43,7 @@ describe("<gspc-board>", () => {
     const html = el.shadowRoot.innerHTML;
     expect(html).toContain(`data-field="public_count">${CAPTURE.totals.public_count}</p>`);
     expect(html).toContain(`as_of: ${CAPTURE.measured_on.date}`);
-    expect(html).toContain('href="https://councilof.ai/gspc"');
+    expect(html).toContain('href="https://councilof.ai/board/"');
     expect(el.getAttribute("data-state")).toBe("derived");
   });
   it("HTTP error, network failure and a count-less payload all read 'unread' with no count", async () => {

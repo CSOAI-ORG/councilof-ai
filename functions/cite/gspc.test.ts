@@ -17,7 +17,7 @@ describe("/cite/gspc: two references, each with what it is", () => {
   it("BibTeX: the live board by URL with the board's own count and as_of, plus the methodology DOI the board names", () => {
     const b = bibtex(READ, NOW());
     expect(b).toContain("@misc{csoai_gspc_board,");
-    expect(b).toContain("url          = {https://councilof.ai/gspc}");
+    expect(b).toContain("url          = {https://councilof.ai/board/}");
     expect(b).toContain("urldate      = {2026-09-28}");
     expect(b).toContain(CAPTURE.totals.public_count);
     expect(b).toContain(CAPTURE.measured_on.date);
@@ -54,7 +54,7 @@ describe("/cite/gspc: two references, each with what it is", () => {
     expect(Array.isArray(await c.json())).toBe(true);
     const j = await (await handle(ctx("?format=json"), stub(), NOW)).json();
     expect(j.board.public_count).toBe(CAPTURE.totals.public_count);
-    expect(j.text).toContain("https://councilof.ai/gspc");
+    expect(j.text).toContain("https://councilof.ai/board/");
     expect((await handle(ctx("?format=ris"), stub(), NOW)).status).toBe(400);
   });
   it("unread board: the URL reference survives, the count does not, and no DOI is invented", async () => {

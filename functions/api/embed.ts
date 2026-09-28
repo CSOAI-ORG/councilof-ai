@@ -15,7 +15,7 @@ export const onRequestGet: PagesFunction = async () => {
       web_component: "https://councilof.ai/embed/gspc-board.js",
       web_component_tag: "<gspc-board></gspc-board>",
       oembed: "https://councilof.ai/oembed?url=https%3A%2F%2Fcouncilof.ai%2Fembed%2Fboard&format=json",
-      shows: "totals.public_count and measured_on.date (as_of) from GET /api/gspc, verbatim, with a link to /gspc; no badge and no score",
+      shows: "totals.public_count and measured_on.date (as_of) from GET /api/gspc, verbatim, with a link to /board/; no badge and no score",
     },
     feeds: {
       board_changes_json: "https://councilof.ai/feeds/board.json",

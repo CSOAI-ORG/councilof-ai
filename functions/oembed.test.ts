@@ -26,6 +26,8 @@ describe("/oembed: oEmbed 1.0 for the GSPC board embed", () => {
   it("accepts /gspc, /gspc/, www, and passes a theme through; nothing else", () => {
     expect(embedSrcFor("https://councilof.ai/gspc")).toBe("https://councilof.ai/embed/board");
     expect(embedSrcFor("https://www.councilof.ai/gspc/")).toBe("https://councilof.ai/embed/board");
+    expect(embedSrcFor("https://councilof.ai/board/")).toBe("https://councilof.ai/embed/board");
+    expect(embedSrcFor("https://councilof.ai/board")).toBe("https://councilof.ai/embed/board");
     expect(embedSrcFor("https://councilof.ai/embed/board?theme=dark")).toBe("https://councilof.ai/embed/board?theme=dark");
     expect(embedSrcFor("https://councilof.ai/embed/board?theme=<x>")).toBe("https://councilof.ai/embed/board");
     expect(embedSrcFor("https://evil.example/gspc")).toBeNull();

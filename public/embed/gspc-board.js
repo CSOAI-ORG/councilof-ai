@@ -2,7 +2,7 @@
 
    Live data from the GSPC board. It shows three things read from GET /api/gspc: the board's
    totals.public_count (verbatim), measured_on.date as the as_of (verbatim), and a link to
-   councilof.ai/gspc. It also prints totals.separation_public_count, which the board says to
+   councilof.ai/board/. It also prints totals.separation_public_count, which the board says to
    read beside the count and never instead of it.
 
    It is not a badge. It shows no mark, grade, rank, score or pass/fail. Nothing in it is
@@ -22,7 +22,7 @@
 (function (root) {
   "use strict";
   var API = "https://councilof.ai/api/gspc";
-  var PAGE = "https://councilof.ai/gspc";
+  var PAGE = "https://councilof.ai/board/";
 
   function esc(s) {
     return String(s == null ? "" : s)
@@ -56,7 +56,7 @@
     ".l{margin:0;font-size:12px;color:var(--muted)}a{color:var(--accent)}";
 
   var FOOT =
-    '<p class="l"><a href="' + PAGE + '" target="_blank" rel="noopener">councilof.ai/gspc</a> · measurement, not certification</p>';
+    '<p class="l"><a href="' + PAGE + '" target="_blank" rel="noopener">councilof.ai/board</a> · measurement, not certification</p>';
 
   function render(state) {
     if (state === "loading") return '<style>' + CSS + '</style><div class="b" part="board"><p class="k">GSPC board</p><p class="c" data-field="loading">reading the board…</p>' + FOOT + "</div>";

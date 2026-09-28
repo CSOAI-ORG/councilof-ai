@@ -26,7 +26,8 @@ export type Ctx = { request: Request; env: unknown; waitUntil: (p: Promise<unkno
 export type BoardSource = (ctx: Ctx) => Promise<Response>;
 
 export const SITE = "https://councilof.ai";
-export const BOARD_PAGE = `${SITE}/gspc`;
+/** The board page's canonical URL. /gspc and /board both answer 308 to it (public/_redirects). */
+export const BOARD_PAGE = `${SITE}/board/`;
 export const BOARD_API = `${SITE}/api/gspc`;
 export const EMBED_PAGE = `${SITE}/embed/board`;
 

@@ -69,7 +69,7 @@ describe("/feeds/board.json and /feeds/board.atom", () => {
     const f = await jsonFeed(ctx(), stub(agreeing));
     expect(f.version).toBe("https://jsonfeed.org/version/1.1");
     expect(f.feed_url).toBe("https://councilof.ai/feeds/board.json");
-    expect(f.home_page_url).toBe("https://councilof.ai/gspc");
+    expect(f.home_page_url).toBe("https://councilof.ai/board/");
     expect(f._gspc.live_public_count).toBe(newest.doc.totals.public_count);
     for (const i of f.items) {
       expect(typeof i.id).toBe("string");

@@ -13,7 +13,7 @@
  * URL scheme (these are the only URLs it answers for, and the ones to list in a provider
  * registry):
  *   https://councilof.ai/embed/board  (optionally ?theme=light|dark)
- *   https://councilof.ai/gspc  and  https://councilof.ai/gspc/
+ *   https://councilof.ai/board/ (the board page), and /board, /gspc, /gspc/ (each 308s to it)
  *   the same paths on www.councilof.ai
  *
  * Status codes, per the spec:
@@ -28,7 +28,7 @@ const MIN_W = 280;
 const MIN_H = 160;
 
 const HOSTS = new Set(["councilof.ai", "www.councilof.ai"]);
-const PATHS = new Set(["/embed/board", "/embed/board/", "/gspc", "/gspc/"]);
+const PATHS = new Set(["/embed/board", "/embed/board/", "/board", "/board/", "/gspc", "/gspc/"]);
 
 /** Returns the iframe src for an accepted URL, or null if the URL is not one we embed. */
 export function embedSrcFor(raw: string): string | null {
@@ -106,7 +106,7 @@ export function handle(request: Request): Response {
   const format = (q.get("format") ?? "json").toLowerCase();
   if (format !== "json" && format !== "xml") return plain(501, `oEmbed: format ${format} is not implemented (json, xml)`);
   const src = embedSrcFor(raw);
-  if (!src) return plain(404, "oEmbed: no embed for that url (accepted: https://councilof.ai/embed/board, https://councilof.ai/gspc)");
+  if (!src) return plain(404, "oEmbed: no embed for that url (accepted: https://councilof.ai/embed/board, https://councilof.ai/board/)");
   const o = oembedFor(src, q.get("maxwidth"), q.get("maxheight"));
   const headers = { ...COMMON, "cache-control": "public, max-age=3600" };
   const head = request.method === "HEAD";

@@ -43,7 +43,7 @@ describe("/embed/board: framable, script-free, live totals only", () => {
     expect(r.headers.get("x-gspc-board")).toBe("derived");
     expect(html).toContain(`data-field="public_count">${CAPTURE.totals.public_count}</p>`);
     expect(html).toContain(`as_of: ${CAPTURE.measured_on.date}`);
-    expect(html).toContain('href="https://councilof.ai/gspc"');
+    expect(html).toContain('href="https://councilof.ai/board/"');
     expect(html).toContain("Live data from the GSPC board");
     expect(html).toContain("measurement, not certification");
   });
