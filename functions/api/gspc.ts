@@ -592,7 +592,11 @@ export const onRequestGet: PagesFunction = async (context) => {
       "to nothing.",
     axes: selected.map(withResolvableBank),
     // In the payload for honesty; NOT the board. See the note on each entry.
-    measured_in_lane: axis ? undefined : MEASURED_IN_LANE,
+    // Omit the member entirely for axis-filtered snapshots. An own property whose value is
+    // undefined is serialised by canonical() as the literal `undefined`, then omitted by
+    // JSON.stringify; signing those different byte sequences makes the filtered board fail
+    // independent site_attestation verification.
+    ...(axis ? {} : { measured_in_lane: MEASURED_IN_LANE }),
     domains: [
       {
         domain: "cross-border",
