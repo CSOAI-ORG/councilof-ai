@@ -196,4 +196,10 @@ card-attestation key) even though it is perfectly self-consistent.
 - In a repo checkout the canonical files are read directly; `npm run prepack`
   (`pack.mjs`) copies them into the tarball and refuses to pack on drift.
 
+## Data, corrections, verification
+
+- Live board (the data): <https://councilof.ai/api/gspc>
+- Corrections ledger: <https://councilof.ai/corrections/> (JSON: <https://councilof.ai/api/corrections>)
+- Verify a card, free: <https://councilof.ai/gspc-verify/>
+
 Apache-2.0. CSOAI Ltd (UK 16939677).

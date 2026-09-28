@@ -157,14 +157,15 @@ print(len(errs)); [print(e) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
     if (OFFLINE) { rec(id, "registry isLatest", null, "offline"); continue; }
     let latest = null, why = "";
     try {
-      const r = await fetch(`https://registry.modelcontextprotocol.io/v0/servers?search=${encodeURIComponent(name)}`, { signal: AbortSignal.timeout(20000) });
-      const d = await r.json();
+      // /versions answers in <1 s; ?search= took 20-40 s from the pod (2026-09-28) and timed out as a FAIL.
+      const r = await fetch(`https://registry.modelcontextprotocol.io/v0/servers/${encodeURIComponent(name)}/versions`, { signal: AbortSignal.timeout(30000) });
+      const d = r.status === 404 ? { servers: [] } : await r.json();
       const hit = (d.servers || []).filter((x) => x.server?.name === name)
         .find((x) => x._meta?.["io.modelcontextprotocol.registry/official"]?.isLatest);
       latest = hit ? hit.server.version : "ABSENT";
     } catch (e) { why = `UNREACHABLE (${e.name})`; }
-    if (id === "mcp-registry-github") rec(id, "registry isLatest == live server version (nothing to publish)", latest === WANT_VERSION, latest ?? why);
-    else rec(id, "registry state recorded (not yet registered is expected)", latest !== null, latest === "ABSENT" ? "ABSENT — not registered; owner step" : latest ?? why);
+    if (id === "mcp-registry-github") rec(id, "registry isLatest recorded (deprecated alias: nothing new is published under it)", latest !== null, latest ?? why);
+    else rec(id, "registry isLatest == source server version", latest === WANT_VERSION, `registry ${latest ?? why} / source ${WANT_VERSION}`);
   }
   // the domain variant must not declare an npm package whose mcpName names the other namespace
   const dom = readJson("distribution/mcp-registry/ai.councilof-gspc/server.json");
@@ -397,6 +398,13 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   rec("*", "no affirmative 'certif' (negations allowed, listed)", affirmative.length === 0,
     affirmative.length ? affirmative.slice(0, 3).join(" | ") : `0 affirmative · ${negated.length} negated`);
   rec("*", "no public price", prices.length === 0, prices.slice(0, 3).join(" | ") || "0");
+
+  // (e) every README-like output points at the data, the corrections ledger and free verification
+  const I = dist.identity;
+  const readmes = allOutputs.filter((p) => /(README|readme|SKILL|GEMINI)\.md$/.test(p));
+  const noLinks = readmes.filter((p) => { const t = read(p); return ![I.board, I.corrections, I.verify_page].every((u) => t.includes(u)); });
+  rec("*", "every README carries data + corrections ledger + verify links", readmes.length > 0 && noLinks.length === 0,
+    noLinks.join(", ") || `${readmes.length} README-like files`);
 }
 
 // ── report ──────────────────────────────────────────────────────────────────────────────────

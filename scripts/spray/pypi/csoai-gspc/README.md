@@ -104,6 +104,7 @@ specific bytes scored on a frozen bank at a specific time. No slot is for sale.
 
 - Live board: <https://councilof.ai/api/gspc>
 - Verify in a browser, free and with no account: <https://councilof.ai/gspc-verify>
+- Corrections ledger: <https://councilof.ai/corrections/> (JSON: <https://councilof.ai/api/corrections>)
 - How to verify by hand: <https://councilof.ai/signed/HOW-TO-VERIFY.md>
 - Every frozen bank as its own repository: <https://huggingface.co/csoai>
 - Board mirror and `check-board.sh`: <https://github.com/CSOAI-ORG/gspc-board>
