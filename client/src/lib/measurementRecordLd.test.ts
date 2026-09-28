@@ -34,3 +34,16 @@ describe("measurement record Dataset JSON-LD", () => {
     expect(ldJson({ a: "</script>" })).toBe('{"a":"\\u003c/script>"}');
   });
 });
+
+describe("hub dataset JSON-LD", () => {
+  it("the research page fronts csoai/cross-hardware-reproducibility with a Croissant pointer", async () => {
+    const { hubDatasetLd } = await import("./measurementRecordLd");
+    const ld = hubDatasetLd({ page: "/research/cross-hardware-reproducibility/", dataset: "csoai/cross-hardware-reproducibility", name: "n", description: "d".repeat(60), version: "abc" });
+    expect(ld.sameAs).toBe("https://huggingface.co/datasets/csoai/cross-hardware-reproducibility");
+    expect(ld.subjectOf.url).toBe("https://huggingface.co/api/datasets/csoai/cross-hardware-reproducibility/croissant");
+    expect("license" in ld).toBe(false);
+    const src = readFileSync(resolve(ROOT, "client/src/pages/CrossHardwareReproducibility.tsx"), "utf8");
+    expect(src).toMatch(/hubDatasetLd\(\{ page: "\/research\/cross-hardware-reproducibility\/", dataset: DS, /);
+    expect(src).toMatch(/dangerouslySetInnerHTML=\{\{ __html: ldJson\(LD\) \}\}/);
+  });
+});

@@ -41,3 +41,32 @@ export function measurementRecordLd(recordBase: string, rec: RecordFile, name: s
 
 /** Serialised for a <script type="application/ld+json"> body: no "<" can close the element early. */
 export const ldJson = (o: unknown) => JSON.stringify(o).replace(/</g, "\\u003c");
+
+/**
+ * A page that fronts one Hugging Face dataset (csoai/<name>): a Dataset node whose sameAs is the Hub
+ * page and whose subjectOf is the Hub's Croissant description. No licence is typed here: the Hub
+ * card is the authority for it, and Croissant carries it.
+ */
+export function hubDatasetLd(o: { page: string; dataset: string; name: string; description: string; version?: string }) {
+  const hub = `https://huggingface.co/datasets/${o.dataset}`;
+  const org = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Council of AI", url: `${SITE}/` };
+  return {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "@id": `${SITE}${o.page}#dataset`,
+    name: o.name,
+    description: o.description,
+    url: `${SITE}${o.page}`,
+    sameAs: hub,
+    ...(o.version ? { version: o.version } : {}),
+    isAccessibleForFree: true,
+    creator: org,
+    publisher: org,
+    subjectOf: {
+      "@type": "CreativeWork",
+      name: `Croissant metadata for ${o.dataset} (Hugging Face)`,
+      encodingFormat: "application/ld+json",
+      url: `https://huggingface.co/api/datasets/${o.dataset}/croissant`,
+    },
+  };
+}
