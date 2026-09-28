@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.3.0",
+  "evaluation_id": "councilof-ai__gspc-card-corpus/llama3.2:3b/2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467",
+  "evaluation_timestamp": "2026-08-19T09:24:39.158267+00:00",
+  "retrieved_timestamp": "1790604349.0",
+  "source_metadata": {
+    "source_name": "Council of AI signed card corpus (/signed/card_index.json)",
+    "source_type": "documentation",
+    "source_organization_name": "Council of AI (CSOAI Ltd, UK company 16939677)",
+    "source_organization_url": "https://councilof.ai",
+    "evaluator_relationship": "third_party",
+    "additional_details": {
+      "card_sha256": "2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467",
+      "card_signature_ed25519": "2fbdc0be903b43e5bd36dfeff4e04444e733eb462dbfc1a600c1bf171f002e991778c32b25fec0f152c0414a887a7e4cad025560219e58e57d7f8fb14b5a5f08",
+      "card_signing_key": "did:web:csoai.org#card-attestation-1",
+      "card_signing_pubkey_hex": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+      "card_preimage_rule": "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+      "card_url": "https://councilof.ai/signed/cards/2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467.json",
+      "card_verified_by_exporter": "id == sha256(preimage) and Ed25519(preimage) under did:web:csoai.org#card-attestation-1, checked 2026-09-28T14:05:49Z",
+      "card_index_url": "https://councilof.ai/signed/card_index.json",
+      "card_index_sha256": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+      "card_index_head": "66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da",
+      "how_to_verify": "https://councilof.ai/signed/HOW-TO-VERIFY.md",
+      "corpus": "The signed card index (one of three separately counted card sets the publisher keeps). These are benchmark axes, not the publisher's governance board, and the two are never added.",
+      "card_timestamp_note": "evaluation_timestamp is the card's signing stamp (body.created); the run's own start time is not in the card.",
+      "card_body_note": "The signed body also carries a public_framing string current at signing; it is not a live count. The board's count authority is https://councilof.ai/api/gspc.",
+      "what_this_does_not_establish": "That a model is good, or better than another. One score on one short bank on one date.",
+      "export_rules": "Own models excluded; instrument-suspect cells held. See the adapter report for every card not exported and why."
+    }
+  },
+  "eval_library": {
+    "name": "councilof-ai-gspc-card-factory",
+    "version": "unknown",
+    "additional_details": {
+      "card_kind": "gspc.measurement-card",
+      "card_chain_prev": "94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1",
+      "version_note": "The card records no harness version."
+    }
+  },
+  "model_info": {
+    "name": "llama3.2:3b",
+    "id": "meta-llama/llama3.2-3b",
+    "developer": "Meta",
+    "inference_platform": "ollama",
+    "additional_details": {
+      "deployment_type": "self_deployed",
+      "model_availability": "open_weights",
+      "ollama_tag": "llama3.2:3b",
+      "ollama_library_url": "https://ollama.com/library/llama3.2:3b",
+      "ollama_library_checked_at": "2026-09-28T14:05:52Z",
+      "model_id_resolution": "UNVERIFIED. The eval-card-registry resolver was not called (it can create registry entries). The id follows the datastore's existing Ollama-tag precedent (data/wordle_arena/qwen/qwen3-14b). The weights digest behind the tag at run time is not recorded in the card.",
+      "runtime_basis": "The recorded model name is an Ollama library tag; the run log naming the runtime is not published."
+    }
+  },
+  "evaluation_results": [
+    {
+      "evaluation_result_id": "councilof-ai__gspc-card-corpus/llama3.2:3b/2820aa929f4640c1ab47f85c4eb03451cbda1906d34f90f70c5f35c5edc76467#gspc-safety#accuracy",
+      "evaluation_name": "councilof-ai.gspc-safety",
+      "source_data": {
+        "dataset_name": "councilof-ai/gspc-safety",
+        "source_type": "other",
+        "additional_details": {
+          "bank_label": "Safety",
+          "bank_description": "Refusal and safe-completion behaviour on a frozen safety bank.",
+          "bank_items": "UNMEASURED: not recorded in the card",
+          "bank_item_list": "UNMEASURED: the item list is not published with the card",
+          "bank_digest": "UNMEASURED: the card records the axis id only",
+          "axis_register": "https://councilof.ai/signed/card-matrix.json"
+        }
+      },
+      "evaluation_timestamp": "2026-08-19T09:24:39.158267+00:00",
+      "metric_config": {
+        "evaluation_description": "Refusal and safe-completion behaviour on a frozen safety bank.",
+        "metric_id": "accuracy",
+        "metric_name": "Accuracy",
+        "metric_kind": "accuracy",
+        "metric_unit": "proportion",
+        "lower_is_better": false,
+        "score_type": "continuous",
+        "min_score": 0.0,
+        "max_score": 1.0
+      },
+      "score_details": {
+        "score": 1.0,
+        "details": {
+          "card_field": "body.accuracy",
+          "card_value": "1.0",
+          "num_samples": "UNMEASURED: the card does not record how many items were graded"
+        }
+      }
+    }
+  ]
+}
