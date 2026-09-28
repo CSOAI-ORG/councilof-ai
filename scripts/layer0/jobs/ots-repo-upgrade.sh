@@ -43,4 +43,4 @@ BR="lane/ots-upgrade-$(date -u +%Y%m%d)"
 git checkout -q -b "$BR"
 git add -- $changed
 git -c user.name=CSOAI -c user.email=nicholas@csoai.org commit -q -m "ots: upgrade $(echo "$changed" | wc -l) pending proof(s) to Bitcoin attestations, block headers checked on two explorers"
-if [ "${PUSH:-0}" = 1 ]; then git push -q origin "$BR"; echo "pushed $BR"; else git bundle create "$L0_STATE/$BR.bundle" "$BR" >/dev/null; echo "bundle $L0_STATE/$BR.bundle"; fi
+if [ "${PUSH:-0}" = 1 ]; then git push -q origin "$BR"; echo "pushed $BR"; else B="$L0_STATE/${BR//\//-}.bundle"; git bundle create "$B" "$BR" >/dev/null; echo "bundle $B"; fi

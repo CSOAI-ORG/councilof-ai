@@ -21,7 +21,8 @@ l0_canon() {  # l0_canon <sparse dir>... ; sets L0_CANON and L0_SHA
   L0_CANON="$(mktemp -d "${L0_TMP:-/root/l0-tmp}/canon-XXXXXX")"
   trap 'rm -rf "$L0_CANON"' EXIT
   git clone -q --shared --no-checkout --branch "$L0_BRANCH" "$L0_MIRROR" "$L0_CANON"
-  git -C "$L0_CANON" sparse-checkout set --cone "$@"
+  git -C "$L0_CANON" sparse-checkout init --cone   # git 2.25 on the pod: `set --cone` is read as a path
+  git -C "$L0_CANON" sparse-checkout set "$@"
   git -C "$L0_CANON" checkout -q "$L0_BRANCH"
   L0_SHA="$(git -C "$L0_CANON" rev-parse HEAD)"
   echo "canon $L0_BRANCH $L0_SHA"
