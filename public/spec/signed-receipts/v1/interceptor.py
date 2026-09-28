@@ -3,12 +3,26 @@
 Attach: receipt = issue_receipt(signer, task_id, subject_card, claims)
         task.metadata["signed-receipts/v1"] = receipt
 Verify: ok, reason = verify_receipt(receipt, resolve_did=fetch_did_document)
+        result, reason = verify_receipt_result(receipt, resolve_did=...)
 
 Only dependency: cryptography. Canonicalisation: RFC 8785 (JCS) — full
-implementation (UTF-16 key sort, ES6 number serialisation, string escaping,
-surrogate-pair escaping for astral chars). Verification: recompute content_id,
+implementation (UTF-16 key sort, ES6 number serialisation, string escaping;
+astral chars as raw UTF-8, as ECMAScript JSON.stringify emits them — corrected
+2026-09-28, see _esc_str). Verification: recompute content_id,
 resolve kid -> DID doc -> exact public-key match (with revocation support per
 SPEC §5 append-only rotation), check Ed25519.
+
+Three results, never two (corrected 2026-09-28):
+  VALID            integrity holds AND the kid resolved to a DID document that
+                   lists exactly the signing key, unrevoked.
+  INVALID          malformed, content_id mismatch, bad signature, or the DID
+                   document resolved and does not list the key (or revokes it).
+  UNVERIFIABLE_KEY integrity holds against the key the receipt carries, but
+                   the kid could not be resolved, so authorship is unknown.
+Before 2026-09-28 verify_receipt returned (True, "VALID (integrity) ...")
+when no resolver was given. A self-signed receipt carrying an attacker's own
+key passed that check: the defect IETF SCITT architecture issue #462 cites.
+verify_receipt keeps its (bool, str) shape; the bool is now True only for VALID.
 
 Register: a receipt is evidence of what was claimed and when — never a
 certification, endorsement, or conformity mark.
@@ -18,7 +32,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import time
 from typing import Any, Callable
 
@@ -46,7 +59,6 @@ _ESC_SHORT = {
     "\r": "\\r",
 }
 
-_EXP_RE = re.compile(r"^([0-9.-]+)[eE]([+-]?)([0-9]+)$")
 
 
 def _utf16_units(s: str) -> list[int]:
@@ -64,20 +76,23 @@ def _utf16_units(s: str) -> list[int]:
 
 
 def _esc_str(s: str) -> str:
-    """RFC 8785 string escaping: \b \t \n \f \r short forms, \\uXXXX for other
-    control chars, surrogate pairs for astral chars (ECMAScript
-    JSON.stringify semantics — matches the IETF JCS interop suite)."""
+    """RFC 8785 string escaping (ECMAScript JSON.stringify semantics): \b \t \n \f \r
+    short forms, \\uXXXX for other control chars and for lone surrogates, and
+    every other character — astral ones included — emitted as itself (UTF-8).
+
+    Corrected 2026-09-28: this used to escape astral chars as a \\uD83D\\uDE00
+    surrogate pair. JSON.stringify("\U0001F600") is the raw character, so any
+    receipt carrying an emoji or other astral char canonicalised to different
+    bytes here than in every RFC 8785 implementation, and cross-verification
+    failed. Conformance vector valid-jcs-edge covers it."""
     out: list[str] = []
     for ch in s:
         if ch in _ESC_SHORT:
             out.append(_ESC_SHORT[ch])
             continue
         cp = ord(ch)
-        if cp < 0x20:
+        if cp < 0x20 or 0xD800 <= cp <= 0xDFFF:
             out.append("\\u%04x" % cp)
-        elif cp > 0xFFFF:
-            cp -= 0x10000
-            out.append("\\u%04x\\u%04x" % (0xD800 + (cp >> 10), 0xDC00 + (cp & 0x3FF)))
         else:
             out.append(ch)
     return "".join(out)
@@ -90,16 +105,36 @@ def _num(n: float | int) -> str:
         if abs(n) > 2**53:
             raise ValueError(f"integer {n} exceeds JCS safe integer domain (|n| <= 2^53)")
         return str(n)
-    # ES6 Number.prototype.toString semantics: shortest round-trip, no -0,
-    # exponent with sign and no leading zeros.
+    # ES6 Number.prototype.toString semantics: shortest round-trip, no -0.
+    # Corrected 2026-09-28: this used Python's repr() thresholds, so 1e-05 came out
+    # "1e-5" (ECMAScript: "0.00001") and 1e16 "1e+16" (ECMAScript: "10000000000000000").
+    if n != n or n in (float("inf"), float("-inf")):
+        raise ValueError("non-finite number is not JSON")
     if n == 0:
         return "0"  # also covers -0.0
-    s = repr(n)
-    m = _EXP_RE.match(s)
-    if m:
-        mant, sign, exp = m.groups()
-        return f"{mant}e{sign}{int(exp)}"
-    return s
+    return _es_float(n)
+
+
+def _es_float(n: float) -> str:
+    """ECMAScript Number::toString for a finite, non-zero float (RFC 8785 section 3.2.2.3)."""
+    from decimal import Decimal
+
+    sign, digs, exp = Decimal(repr(abs(n))).as_tuple()
+    d = "".join(map(str, digs)).rstrip("0") or "0"
+    exp += len(digs) - len(d) if len(d) < len(digs) else 0
+    k = len(d)
+    e = k + exp  # value = 0.d * 10^e
+    out: str
+    if k <= e <= 21:
+        out = d + "0" * (e - k)
+    elif 0 < e <= 21:
+        out = d[:e] + "." + d[e:]
+    elif -6 < e <= 0:
+        out = "0." + "0" * (-e) + d
+    else:
+        x = e - 1
+        out = (d if k == 1 else d[0] + "." + d[1:]) + "e" + ("+" if x > 0 else "-") + str(abs(x))
+    return ("-" if n < 0 else "") + out
 
 
 def _canon(obj: Any) -> bytes:
@@ -215,41 +250,77 @@ def _vm_keys(doc: dict) -> list[tuple[str, dict]]:
     return out
 
 
-def verify_receipt(
-    receipt: dict,
-    resolve_did: Callable[[str], dict] | None = None,
-) -> tuple[bool, str]:
-    """Offline integrity always; identity + revocation too when resolve_did given.
+VALID = "VALID"
+INVALID = "INVALID"
+UNVERIFIABLE_KEY = "UNVERIFIABLE_KEY"
+RESULTS = (VALID, INVALID, UNVERIFIABLE_KEY)
 
+
+def verify_receipt_result(
+    receipt: dict,
+    resolve_did: Callable[[str], dict | None] | None = None,
+) -> tuple[str, str]:
+    """Return (result, reason); result is one of VALID, INVALID, UNVERIFIABLE_KEY.
+
+    Integrity (content_id + Ed25519 over the JCS body) is checked first; a
+    receipt that fails it is INVALID whether or not its key resolves.
     resolve_did(did) -> DID document dict (e.g. fetched from
-    https://<host>/.well-known/did.json). Never raises.
+    https://<host>/.well-known/did.json), or None / an exception when the
+    document cannot be obtained. No resolver, or a failed resolution, gives
+    UNVERIFIABLE_KEY — never VALID. Never raises.
     """
     try:
+        if not isinstance(receipt, dict) or not isinstance(receipt.get("signature"), dict):
+            return INVALID, "malformed: no signature object"
         env = receipt["signature"]
+        if env.get("alg") != "Ed25519":
+            return INVALID, f"unsupported alg {env.get('alg')!r} (this verifier checks Ed25519)"
+        kid = env.get("kid")
+        if not isinstance(kid, str) or "#" not in kid or not kid.startswith("did:"):
+            return INVALID, f"malformed: kid {kid!r} is not a DID URL"
         body = {k: v for k, v in receipt.items() if k != "signature"}
         unsigned = {k: v for k, v in body.items() if k != "content_id"}
         if body.get("content_id") != _sha256(_canon(unsigned)):
-            return False, "content_id mismatch"
+            return INVALID, "content_id mismatch"
         pub_raw = bytes.fromhex(env["signer_public_key"])
         Ed25519PublicKey.from_public_bytes(pub_raw).verify(bytes.fromhex(env["sig"]), _canon(body))
-        if resolve_did is None:
-            return True, f"VALID (integrity) — kid {env.get('kid')} not resolved"
-        did = env.get("kid", "").split("#")[0]
+    except Exception as e:  # noqa: BLE001
+        return INVALID, f"{type(e).__name__}: {e}".strip()
+
+    did = kid.split("#")[0]
+    if resolve_did is None:
+        return UNVERIFIABLE_KEY, f"signature matches the key the receipt carries, but kid {kid} was not resolved (no resolver): authorship unverified"
+    try:
         doc = resolve_did(did)
+    except Exception as e:  # noqa: BLE001
+        return UNVERIFIABLE_KEY, f"DID document for {did} could not be resolved ({type(e).__name__}: {e}): authorship unverified"
+    if not isinstance(doc, dict):
+        return UNVERIFIABLE_KEY, f"DID document for {did} could not be resolved: authorship unverified"
+
+    try:
         pub_hex = pub_raw.hex()
-        matched_id = None
         for vm_id, entry in _vm_keys(doc):
             vm_hex = entry.get("hex")
             if vm_hex == pub_hex or (entry.get("key") and entry["key"] == pub_raw):
-                matched_id = vm_id
                 if entry["revoked"]:
-                    return False, f"signature valid but key REVOKED in DID doc ({vm_id})"
-                break
-        if matched_id is None:
-            return False, f"signature valid but key NOT in DID doc for {did}"
-        return True, f"VALID — key matches published DID doc for {did} ({matched_id})"
+                    return INVALID, f"signature valid but key REVOKED in DID doc ({vm_id})"
+                return VALID, f"key matches published DID doc for {did} ({vm_id})"
     except Exception as e:  # noqa: BLE001
-        return False, f"INVALID — {type(e).__name__}: {e}"
+        return INVALID, f"DID document for {did} is malformed ({type(e).__name__}: {e})"
+    return INVALID, f"signature valid but key NOT in DID doc for {did}"
+
+
+def verify_receipt(
+    receipt: dict,
+    resolve_did: Callable[[str], dict | None] | None = None,
+) -> tuple[bool, str]:
+    """(ok, reason). ok is True only for VALID; reason starts with the result code.
+
+    Kept for callers of the (bool, str) shape. Use verify_receipt_result() to
+    tell INVALID from UNVERIFIABLE_KEY without parsing the reason.
+    """
+    result, reason = verify_receipt_result(receipt, resolve_did)
+    return result == VALID, f"{result} — {reason}"
 
 
 # ---------------------------------------------------------------------- tests

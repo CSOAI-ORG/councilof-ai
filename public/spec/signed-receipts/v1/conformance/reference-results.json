@@ -1,0 +1,26 @@
+{
+  "implementation": "CSOAI reference: interceptor.py verify_receipt_result (core); @fractalai/pqc-agent-receipts-conformance 0.3.1 verifyProfile (interop)",
+  "results": {
+    "valid-publickeyhex": "VALID",
+    "valid-publickeymultibase": "VALID",
+    "valid-publickeyjwk": "VALID",
+    "valid-jcs-edge": "VALID",
+    "tampered-payload": "INVALID",
+    "tampered-payload-content-id-recomputed": "INVALID",
+    "tampered-signature": "INVALID",
+    "different-key-forgery": "INVALID",
+    "unresolvable-key": "UNVERIFIABLE_KEY",
+    "unresolvable-key-forgery": "UNVERIFIABLE_KEY",
+    "unresolvable-key-unsupported-method": "UNVERIFIABLE_KEY",
+    "tampered-and-unresolvable": "INVALID",
+    "key-substring-match": "INVALID",
+    "revoked-key": "INVALID",
+    "wrong-canonicalisation-key-order": "INVALID",
+    "wrong-canonicalisation-whitespace": "INVALID",
+    "malformed-no-signature": "INVALID",
+    "fractalai-mldsa65-valid": "VALID",
+    "fractalai-mldsa65-no-trusted-key": "UNVERIFIABLE_KEY",
+    "fractalai-mldsa65-tampered": "INVALID",
+    "fractalai-mldsa65-forged": "INVALID"
+  }
+}

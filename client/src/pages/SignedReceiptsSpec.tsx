@@ -6,6 +6,11 @@
  * huggingface.co/datasets/csoai/councilof-ai-source at commit 96bf3a07 (held equal by
  * SignedReceiptsSpec.test.ts). Never edit the text here; a new draft is a new file.
  *
+ * interceptor.py and test_interceptor.py are NOT the mirror bytes any more: on 2026-09-28 the
+ * verifier stopped returning VALID on an unresolvable key (IETF SCITT architecture #462) and its
+ * RFC 8785 string and number serialisation was corrected. The mirror copy @96bf3a07 is the
+ * pre-correction version. The conformance kit lives at /spec/signed-receipts/v1/conformance/.
+ *
  * The one sentence about third-party use is the one verified on 27 Sep 2026 against the npm
  * tarball @fractalai/pqc-agent-receipts-conformance@0.3.1 (README, vectors/a2a-receipt-ml-dsa-65.json,
  * src/profiles.mjs). Nothing stronger is said: no adoption, endorsement or partnership.
@@ -24,8 +29,9 @@ const DESCRIPTION =
 const BASE = "/spec/signed-receipts/v1";
 const FILES = [
   { href: `${BASE}/SPEC.md`, name: "SPEC.md", what: "the specification, draft 0.2 (the text on this page)" },
-  { href: `${BASE}/interceptor.py`, name: "interceptor.py", what: "reference implementation: signs and verifies receipts" },
+  { href: `${BASE}/interceptor.py`, name: "interceptor.py", what: "reference implementation: signs and verifies receipts (corrected 28 Sep 2026)" },
   { href: `${BASE}/test_interceptor.py`, name: "test_interceptor.py", what: "its regression suite (python3 test_interceptor.py)" },
+  { href: `${BASE}/conformance/`, name: "conformance/", what: "golden vectors and a one-command runner: implement it in 5 minutes" },
 ];
 const PINNED =
   "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/96bf3a07d4f944e9a9ed577e329ef10e20d38dfc/contributions/a2a-signed-receipts/f80de2731ceb";
@@ -64,10 +70,21 @@ export default function SignedReceiptsSpec() {
           ))}
         </ul>
         <p className="mt-3 text-sm leading-relaxed text-slate-700">
-          The same bytes are pinned in our source mirror at <A href={PINNED}>councilof-ai-source @ 96bf3a07</A>. Earlier
+          SPEC.md is pinned byte for byte in our source mirror at <A href={PINNED}>councilof-ai-source @ 96bf3a07</A>. The
+          mirror's interceptor.py is the version before 28 September 2026, which returned VALID when it could not resolve the
+          signing key; the copy here returns UNVERIFIABLE_KEY instead. Earlier
           references to the GitHub repository <code className="rounded bg-white px-1">CSOAI-ORG/a2a-signed-receipts</code> do not
           resolve at present; this page replaces them. The extension URI itself is{" "}
           <A href="/a2a/extensions/signed-receipts/v1/">https://councilof.ai/a2a/extensions/signed-receipts/v1</A>.
+        </p>
+      </section>
+
+      <section aria-labelledby="implement" className="mt-8">
+        <h2 id="implement" className="text-xl font-bold text-slate-900">Implementing it?</h2>
+        <p className="mt-3 leading-relaxed text-slate-700">
+          The <A href={`${BASE}/conformance/`}>conformance kit</A> has 17 Ed25519 cases, 4 ML-DSA-65 interop cases and a
+          runner: <code className="rounded bg-slate-100 px-1">node run.mjs my-results.json</code>. A PASS means your results
+          match the vectors. It is not a certification.
         </p>
       </section>
 

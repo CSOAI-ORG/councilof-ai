@@ -1,0 +1,894 @@
+{
+  "schema": "csoai.signed-receipts-conformance/1",
+  "spec": "https://councilof.ai/spec/signed-receipts/",
+  "extension_uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1",
+  "receipt_schema": "a2a.signed-receipt/0.1",
+  "generated": "2026-09-28",
+  "license": "Apache-2.0",
+  "what_pass_means": "PASS means an implementation's result for a case matches the expected result in this file. It is not a certification, an endorsement or a conformity mark.",
+  "results": {
+    "VALID": "content_id equals sha256(JCS(receipt minus content_id and signature)); the Ed25519 signature over JCS(receipt minus signature) verifies under signature.signer_public_key; and the DID in signature.kid resolves to a document listing exactly that key, not revoked.",
+    "INVALID": "Malformed, content_id mismatch, bad signature, or the DID document resolved and does not list the key, or marks it revoked. Integrity is checked first: a receipt that fails it is INVALID even if its key is also unresolvable.",
+    "UNVERIFIABLE_KEY": "Integrity holds against the key the receipt carries, but the DID in signature.kid could not be resolved (no resolver, unsupported method, network failure). Authorship is unknown. Never report this as VALID (IETF SCITT architecture issue #462)."
+  },
+  "resolution_fixture": "did_documents maps a DID (signature.kid up to '#') to its DID document. A DID absent from the map is unresolvable. Implementations must resolve only through this map, never the network.",
+  "reason_codes_informative": [
+    "KEY_RESOLVED",
+    "CONTENT_ID_MISMATCH",
+    "BAD_SIGNATURE",
+    "KEY_NOT_IN_DID_DOCUMENT",
+    "KEY_REVOKED",
+    "DID_UNRESOLVABLE",
+    "MALFORMED"
+  ],
+  "not_covered": [
+    "Time validity: SPEC draft 0.2 defines issued_at only, with no validity window, so there are no expired or not-yet-valid cases.",
+    "Issuer binding: SPEC draft 0.2 does not require the issuer field to equal the DID in signature.kid, so no case tests it. A later draft should."
+  ],
+  "test_keys": {
+    "note": "Deterministic TEST keys (seed = sha256(\"csoai signed-receipts/v1 conformance test key: \" + label)). They sign nothing but these vectors.",
+    "issuer": {
+      "did": "did:web:issuer.example",
+      "kid": "did:web:issuer.example#key-1",
+      "ed25519_seed_hex": "c059515545cbfd3cedea92256b5175076c41abea22e1b5e074aa5c20fbc9b26e",
+      "public_key_hex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+    },
+    "attacker": {
+      "ed25519_seed_hex": "785ef0c53bfe463a86203a69bb8572790b69d320ab54cd9a8a97b5b80f9e00df",
+      "public_key_hex": "b5758568cfd57ce19cc05770d72a9ee356537cdd5c47b651ec0ec46ad37910a0"
+    }
+  },
+  "candidate_output_format": {
+    "results": {
+      "<case id>": "VALID | INVALID | UNVERIFIABLE_KEY"
+    }
+  },
+  "cases": [
+    {
+      "id": "valid-publickeyhex",
+      "what": "Genuine receipt; the issuer DID document lists the key as publicKeyHex.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "VALID",
+      "reason_code": "KEY_RESOLVED"
+    },
+    {
+      "id": "valid-publickeymultibase",
+      "what": "Same receipt; the DID document lists the key as base58btc publicKeyMultibase.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyMultibase": "zNefirz3puvXWHvRHcmkb8qyU6U9mGR8qiwjPcNkAqV2"
+            }
+          ]
+        }
+      },
+      "expected": "VALID",
+      "reason_code": "KEY_RESOLVED"
+    },
+    {
+      "id": "valid-publickeyjwk",
+      "what": "Same receipt; the DID document lists the key as an OKP/Ed25519 publicKeyJwk.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyJwk": {
+                "kty": "OKP",
+                "crv": "Ed25519",
+                "x": "BYvJs9VsA6aDm49Iy7Gs9oer6dWpF54VA_CItQIivBE"
+              }
+            }
+          ]
+        }
+      },
+      "expected": "VALID",
+      "reason_code": "KEY_RESOLVED"
+    },
+    {
+      "id": "valid-jcs-edge",
+      "what": "Genuine receipt whose claims exercise RFC 8785: UTF-16 key order (U+1F600 sorts before U+FB01), non-ASCII text, 0.5 and 1e+30.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-jcs",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "café € 😀",
+            "evidence_sha256": "691b8f88c06cb8b4d0b742db2f4f161567d51c3d3f174c06f534cf8ed539c8a1",
+            "ﬁ": "fi-ligature key",
+            "😀": "astral key",
+            "score": 0.5,
+            "big": 1e+30,
+            "count": 3
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "4081c632451c1615e5199bbb1a092efa4002bbef53e542ddab82f1437fb96998",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "f220a2a969046e6de1fca4d09c6d717f367b0660179503b7d383d14f9b542fd1a1a2fefbaeb40bf402b76264df14a43b06d80b054d2991e00cb1d594ba66d30b"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "VALID",
+      "reason_code": "KEY_RESOLVED"
+    },
+    {
+      "id": "tampered-payload",
+      "what": "task_id edited after signing; content_id and signature left as issued.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-002",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "CONTENT_ID_MISMATCH"
+    },
+    {
+      "id": "tampered-payload-content-id-recomputed",
+      "what": "claims edited and content_id recomputed to match; the signature is the original. Checking content_id alone is not enough.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "forged detail",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "07903495183f3009ffb899bc19dcbc568d478657ca93e0664132858088d1efbc",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "BAD_SIGNATURE"
+    },
+    {
+      "id": "tampered-signature",
+      "what": "One bit of the signature flipped.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "362f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "BAD_SIGNATURE"
+    },
+    {
+      "id": "different-key-forgery",
+      "what": "An attacker's own key signs a self-consistent receipt naming the issuer's kid and carrying the attacker's public key. The issuer's DID document lists the real key.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "b5758568cfd57ce19cc05770d72a9ee356537cdd5c47b651ec0ec46ad37910a0",
+          "sig": "dea41eb172ccc326d38f215b8e74fffce615946a7be4a225069e31b6bbbfd523f31922e9415632f47f7b7ea9d0d85f42a923850c84e46791f74151e022558b04"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "KEY_NOT_IN_DID_DOCUMENT"
+    },
+    {
+      "id": "unresolvable-key",
+      "what": "Genuine receipt, but the issuer's DID document cannot be obtained (the resolver has no document for this DID: host down, 404, offline). The signature checks against the key the receipt carries; whose key it is, is unknown. SCITT architecture issue #462.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {},
+      "expected": "UNVERIFIABLE_KEY",
+      "reason_code": "DID_UNRESOLVABLE"
+    },
+    {
+      "id": "unresolvable-key-forgery",
+      "what": "The different-key forgery above, with the DID document unobtainable. Self-consistent, so integrity passes; it must still never be VALID.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "b5758568cfd57ce19cc05770d72a9ee356537cdd5c47b651ec0ec46ad37910a0",
+          "sig": "dea41eb172ccc326d38f215b8e74fffce615946a7be4a225069e31b6bbbfd523f31922e9415632f47f7b7ea9d0d85f42a923850c84e46791f74151e022558b04"
+        }
+      },
+      "did_documents": {},
+      "expected": "UNVERIFIABLE_KEY",
+      "reason_code": "DID_UNRESOLVABLE"
+    },
+    {
+      "id": "unresolvable-key-unsupported-method",
+      "what": "Genuine signature under a kid whose DID method the verifier cannot resolve (did:example).",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:example:unsupported#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "UNVERIFIABLE_KEY",
+      "reason_code": "DID_UNRESOLVABLE"
+    },
+    {
+      "id": "tampered-and-unresolvable",
+      "what": "Tampered payload and an unobtainable DID document. Integrity is checked first, so this is INVALID, not UNVERIFIABLE_KEY.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-002",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {},
+      "expected": "INVALID",
+      "reason_code": "CONTENT_ID_MISMATCH"
+    },
+    {
+      "id": "key-substring-match",
+      "what": "The DID document lists a key whose hex CONTAINS the signing key (00 + key + 00). Keys match exactly or not at all.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "00058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc1100"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "KEY_NOT_IN_DID_DOCUMENT"
+    },
+    {
+      "id": "revoked-key",
+      "what": "The DID document lists the signing key with \"revoked\": true (SPEC section 5, append-only rotation).",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "372f97ebd55dcad170e506a58430108b429dce37acea427b2f458c2e0dcdbad6ce2eedf1430b0d8cb9e83ce7a2178c6ebfd220d8be789c15f600d327f150250f"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+              "revoked": true
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "KEY_REVOKED"
+    },
+    {
+      "id": "wrong-canonicalisation-key-order",
+      "what": "content_id and signature computed over insertion-order JSON (schema, issuer, subject_card, ...) instead of RFC 8785 sorted keys.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "e94944ca8869a516b9f96b2528e18c99a1b4b2f61e2aa82a56cfb85fa30c47f1",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "3f6aa88bad306ad098d0596731aba49702e4b4d0ba057927bcbec8279587a2cd8ad40a07b081b3c90160065a9f1adb8dddf27222a5f988af6a3181828b941306"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "CONTENT_ID_MISMATCH"
+    },
+    {
+      "id": "wrong-canonicalisation-whitespace",
+      "what": "content_id and signature computed over sorted-key JSON with \", \" and \": \" separators (Python json.dumps default) instead of RFC 8785.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "c37bcdbb8b27a595a7384a8ab28df54edc0d0beb041c66d9e4e95a158beb441f",
+        "signature": {
+          "alg": "Ed25519",
+          "kid": "did:web:issuer.example#key-1",
+          "signer_public_key": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11",
+          "sig": "bddfd03d0bebbf5efd58dcdbec19aeba8b36a1afa27d82c2778578caf177d1a5c9324ca7e719f0799de2585fa31757fc3c619c65c14f8954698a30bd1fd32c07"
+        }
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "CONTENT_ID_MISMATCH"
+    },
+    {
+      "id": "malformed-no-signature",
+      "what": "The signature object is missing.",
+      "receipt": {
+        "schema": "a2a.signed-receipt/0.1",
+        "issuer": "did:web:issuer.example",
+        "subject_card": "https://issuer.example/.well-known/agent-card.json",
+        "task_id": "task-001",
+        "claims": [
+          {
+            "type": "measurement",
+            "detail": "demo",
+            "evidence_sha256": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e"
+          }
+        ],
+        "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+        "issued_at": "2026-09-28T00:00:00Z",
+        "content_id": "371b5da5cbc716b4bbe77bd3491564c9e38197b679c0a4cdbbe009beada9f5ab"
+      },
+      "did_documents": {
+        "did:web:issuer.example": {
+          "@context": [
+            "https://www.w3.org/ns/did/v1"
+          ],
+          "id": "did:web:issuer.example",
+          "verificationMethod": [
+            {
+              "id": "did:web:issuer.example#key-1",
+              "type": "JsonWebKey2020",
+              "controller": "did:web:issuer.example",
+              "publicKeyHex": "058bc9b3d56c03a6839b8f48cbb1acf687abe9d5a9179e1503f088b50222bc11"
+            }
+          ]
+        }
+      },
+      "expected": "INVALID",
+      "reason_code": "MALFORMED"
+    }
+  ],
+  "interop": {
+    "source": {
+      "package": "@fractalai/pqc-agent-receipts-conformance",
+      "version": "0.3.1",
+      "file": "vectors/a2a-receipt-ml-dsa-65.json",
+      "file_sha256": "edcc3ced6a53d5a9cc34e56f745b22e0784efcfdf903ece646de1d37fd5cf3b6",
+      "npm": "https://www.npmjs.com/package/@fractalai/pqc-agent-receipts-conformance",
+      "license": "Apache-2.0 (https://www.apache.org/licenses/LICENSE-2.0)",
+      "credit": "Receipts, keys and signatures are FractalAI's, copied unmodified. The expected results are CSOAI's mapping of that suite's own four assertions (authentic, fail-closed, tamper rejected, forgery rejected) onto the three result codes."
+    },
+    "profile": "a2a-receipt-ml-dsa-65",
+    "alg": "ML-DSA-65 (FIPS 204)",
+    "key_encoding": "base64 (signer_public_key and sig), where the Ed25519 core uses hex",
+    "trust_model": "trusted_public_keys: a receipt is VALID only when its signer_public_key is in this list. An empty list stands for an unresolvable key.",
+    "cases": [
+      {
+        "id": "fractalai-mldsa65-valid",
+        "what": "Genuine ML-DSA-65 receipt; the issuer key is trusted.",
+        "receipt": {
+          "schema": "a2a.signed-receipt/0.1",
+          "issuer": "did:web:fractalai.example",
+          "subject_card": "https://fractalai.example/.well-known/agent-card.json",
+          "task_id": "task-001",
+          "claims": [
+            {
+              "type": "measurement",
+              "detail": "x402 settlement",
+              "evidence_sha256": "d261037f90b3750e2862ae8ce2a827b9fabd9596fce70cad95241b4c5bcd1851"
+            }
+          ],
+          "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+          "issued_at": "2026-09-03T00:00:00Z",
+          "content_id": "33b2204c61ad5e89e317a274e2a9101655815720451cfcedb73ca70e79336b68",
+          "signature": {
+            "alg": "ML-DSA-65",
+            "kid": "did:web:fractalai.example#receipt-1",
+            "signer_public_key": "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",
+            "sig": "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"
+          }
+        },
+        "trusted_public_keys": [
+          "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"
+        ],
+        "expected": "VALID",
+        "reason_code": "KEY_RESOLVED"
+      },
+      {
+        "id": "fractalai-mldsa65-no-trusted-key",
+        "what": "The same genuine receipt with no trusted key: FractalAI's fail-closed assertion.",
+        "receipt": {
+          "schema": "a2a.signed-receipt/0.1",
+          "issuer": "did:web:fractalai.example",
+          "subject_card": "https://fractalai.example/.well-known/agent-card.json",
+          "task_id": "task-001",
+          "claims": [
+            {
+              "type": "measurement",
+              "detail": "x402 settlement",
+              "evidence_sha256": "d261037f90b3750e2862ae8ce2a827b9fabd9596fce70cad95241b4c5bcd1851"
+            }
+          ],
+          "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+          "issued_at": "2026-09-03T00:00:00Z",
+          "content_id": "33b2204c61ad5e89e317a274e2a9101655815720451cfcedb73ca70e79336b68",
+          "signature": {
+            "alg": "ML-DSA-65",
+            "kid": "did:web:fractalai.example#receipt-1",
+            "signer_public_key": "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",
+            "sig": "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"
+          }
+        },
+        "trusted_public_keys": [],
+        "expected": "UNVERIFIABLE_KEY",
+        "reason_code": "DID_UNRESOLVABLE"
+      },
+      {
+        "id": "fractalai-mldsa65-tampered",
+        "what": "task_id changed after signing without recomputing content_id → content_id mismatch → signatureValid=false",
+        "receipt": {
+          "schema": "a2a.signed-receipt/0.1",
+          "issuer": "did:web:fractalai.example",
+          "subject_card": "https://fractalai.example/.well-known/agent-card.json",
+          "task_id": "task-002",
+          "claims": [
+            {
+              "type": "measurement",
+              "detail": "x402 settlement",
+              "evidence_sha256": "d261037f90b3750e2862ae8ce2a827b9fabd9596fce70cad95241b4c5bcd1851"
+            }
+          ],
+          "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+          "issued_at": "2026-09-03T00:00:00Z",
+          "content_id": "33b2204c61ad5e89e317a274e2a9101655815720451cfcedb73ca70e79336b68",
+          "signature": {
+            "alg": "ML-DSA-65",
+            "kid": "did:web:fractalai.example#receipt-1",
+            "signer_public_key": "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",
+            "sig": "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"
+          }
+        },
+        "trusted_public_keys": [
+          "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"
+        ],
+        "expected": "INVALID",
+        "reason_code": "CONTENT_ID_MISMATCH"
+      },
+      {
+        "id": "fractalai-mldsa65-forged",
+        "what": "ATTACKER key signs a self-consistent receipt claiming issuer did:web:fractalai.example → verifies but untrusted key → valid=false",
+        "receipt": {
+          "schema": "a2a.signed-receipt/0.1",
+          "issuer": "did:web:fractalai.example",
+          "subject_card": "https://fractalai.example/.well-known/agent-card.json",
+          "task_id": "task-001",
+          "claims": [
+            {
+              "type": "measurement",
+              "detail": "x402 settlement",
+              "evidence_sha256": "d261037f90b3750e2862ae8ce2a827b9fabd9596fce70cad95241b4c5bcd1851"
+            }
+          ],
+          "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+          "issued_at": "2026-09-03T00:00:00Z",
+          "content_id": "33b2204c61ad5e89e317a274e2a9101655815720451cfcedb73ca70e79336b68",
+          "signature": {
+            "alg": "ML-DSA-65",
+            "kid": "did:web:fractalai.example#receipt-1",
+            "signer_public_key": "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",
+            "sig": "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"
+          }
+        },
+        "trusted_public_keys": [
+          "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"
+        ],
+        "expected": "INVALID",
+        "reason_code": "KEY_NOT_IN_DID_DOCUMENT"
+      }
+    ]
+  }
+}
