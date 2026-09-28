@@ -101,8 +101,8 @@ function ClientCompatibility() {
         </table>
       </div>
       <p className="mt-4 text-[11px] text-gray-400">
-        Tool counts differ by implementation: the HTTP endpoint served {compat.backend.tools_observed} tools on{" "}
-        {compat.as_of}; the npm stdio package is versioned separately. Measurement, not certification.
+        Tool catalogues are versioned observations rather than a permanent count. Query <code className="font-mono">tools/list</code>{" "}
+        on the implementation you connect to; the HTTP endpoint and npm stdio package are versioned separately. Measurement, not certification.
       </p>
     </section>
   );
@@ -276,7 +276,7 @@ export default function ConnectGSPC() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              Seven free read-only tools
+              Selected free read-only tools
             </h2>
             <ul className="space-y-1.5">
               {TOOLS.map(([name, desc]) => (
@@ -287,10 +287,9 @@ export default function ConnectGSPC() {
               ))}
             </ul>
             <p className="mt-2 text-[11px] text-gray-400">
-              These seven are a subset. On {compat.as_of} the HTTP endpoint served {compat.backend.tools_observed} tools,{" "}
-              {compat.backend.paid_tools_observed} of them x402-metered; npm{" "}
-              <code className="font-mono">csoai-gspc-mcp@0.2.2</code> served 12 (no{" "}
-              <code className="font-mono">mcp_trust</code>). Receipts are in the client test register below.
+              This is a selected set, not a frozen catalogue. Query <code className="font-mono">tools/list</code>{" "}
+              on the implementation you connect to for its current tool names and version. HTTP and npm/stdio{" "}
+              releases can move independently; the client test register below records the dated surfaces we actually observed.
             </p>
           </div>
         </div>
