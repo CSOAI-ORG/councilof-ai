@@ -1,6 +1,6 @@
 {
  "schema": "csoai.layer0-automation/0.1",
- "as_of": "2026-09-28T15:45Z",
+ "as_of": "2026-09-28T21:16Z",
  "what_this_is": "Every Layer 0 step, whether it runs by itself today, and the staged job for each manual one. A staged job is written and tested but NOT installed in any crontab: installing it is the integrator's step, and jobs marked owner_gated run only on the owner's say-so.",
  "hosts": {
   "build_pod": "the only deploy host; heavy work under flock /workspace/locks/heavy.lock",
@@ -27,7 +27,24 @@
    "state": "MANUAL",
    "staged_job": "scripts/layer0/jobs/ots-repo-upgrade.sh (bundle by default; PUSH=1 pushes lane/ots-upgrade-<day>, never master)",
    "schedule": "daily 13:10Z on the build pod (after the Oracle flywheel pass)",
-   "today": "both Layer 0 proofs already carry Bitcoin attestations on canon master (4 and 3 blocks); the job is NO_CHANGE for Layer 0 today"
+   "today": "both Layer 0 ceremony proofs already carried Bitcoin attestations on canon master (4 and 3 blocks); NO_CHANGE for Layer 0 itself",
+   "pin_rule": "a pending proof whose sha256 another tracked file pins, or that has a <subject>.ots.json sidecar, is NOT upgraded by the job; the pinning producer re-emits first. The derived public/interop/ots/manifest.json is rebuilt in the same commit and the deploy gate scripts/pod-loops/root_ots_manifest_gate.py must pass; llms.txt is regenerated only when canon llms.txt was fresh before the job",
+   "why_pin_rule": "the first job test (15:57Z) would have landed 41 upgraded proofs whose old digests 18 other files pinned (ots-state sidecars, the 2026-09-28 root witness, census records, test fixtures), 18 of them under public/interop without the manifest rebuild the deploy gate requires",
+   "test_run": "2026-09-28T21:12Z on the lanes pod against lane/layer0-20260928: 43 pending, 18 pinned (held; listed in ots-repo-upgrade-20260928T2112Z.json), 25 upgraded; 87 new attestations, 82 matched on blockstream.info and mempool.space, 5 on blockstream.info alone (mempool.space did not answer); manifest gate VALID_PREIMAGE_ONLY. The 25 proofs are the last commit on lane/layer0-20260928",
+   "needs": "python3 with opentimestamps and node on the host (the build pod has both; the lanes pod needs a uv venv)"
+  },
+  {
+   "id": "ots-pinned-reemit",
+   "what": "re-emit the files that pin a still-pending proof (ots-state sidecars, root witness, census records, fixtures) so the ots-repo-upgrade job may land that proof",
+   "state": "MANUAL, PER PRODUCER",
+   "why_no_generic_job": "the 20 pinning files come from different producers and one (the root witness) is a witnessed record; a job that rewrote them would be editing other lanes' evidence",
+   "today": "18 pending proofs held by 20 pinning files (list: the ots-repo-upgrade report)"
+  },
+  {
+   "id": "llms-txt-regen",
+   "what": "public/llms.txt and llms-full.txt regenerated whenever an input they print moves (board lid, OTS manifest)",
+   "state": "MANUAL (npm run capabilities:render runs it; nothing runs it when the manifest or the board moves)",
+   "today": "stale on canon master 982fe3f6d: regenerating from unchanged inputs changes 45 lines in 2 files (lid 3 -> 9 public leader scores, ties 2 -> 8, OTS manifest as_of and counts). Not this lane's file: left to its producer; the fix at land time is node scripts/llms-txt.mjs"
   },
   {
    "id": "ots-block-check",
