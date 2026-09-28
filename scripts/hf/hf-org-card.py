@@ -78,6 +78,12 @@ BANK_REPOS = {f"{ORG}/{s}" for s in BANK_SLUGS}
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "harness" / "gspc-top100"))
 from test_bank_canary_rule import check as canary_check, is_canary  # noqa: E402
 
+# The How-to-cite / corrections / verification block (lane L5, 28 Sep 2026) has ONE producer,
+# scripts/hf/cite_block.py. Every dataset card this script writes passes through it; without it the
+# next hubcard run would strip the block L5 wrote onto the live card (fix-producer-not-artifact).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from cite_block import apply as cite_apply  # noqa: E402
+
 
 def fetch_json(url: str, timeout: int = 30, data: bytes | None = None, headers: dict | None = None) -> tuple[dict | None, str]:
     h = {"accept": "application/json", "user-agent": "csoai-hf-org-card/1"}
@@ -761,7 +767,7 @@ def hubcard(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") ->
     axis = axis_for_repo(repo, d) if d.get("state") == "DERIVED" else None
     if axis:
         body = splice(body, live_row_block(axis), LIVE_ROW_OPEN, LIVE_ROW_CLOSE, before=HUB_OPEN)
-    new = join_front_matter(fm, body)
+    new = cite_apply(join_front_matter(fm, body), repo)
     (dest / "README.md").write_text(new, encoding="utf-8")
     uploads.append((dest / "README.md", "README.md"))
     p, n, fails = score_card(kind, new, sorted(have | {"manifest.jsonl"}), True)
@@ -835,7 +841,7 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
         f"3rd Floor, 86–90 Paul Street, London EC2A 4NE. Card derived {d['as_of']}.",
         HUB_CLOSE, "",
     ])
-    (out / "README.md").write_text(join_front_matter(fm, body), encoding="utf-8")
+    (out / "README.md").write_text(cite_apply(join_front_matter(fm, body), BOARD_DATASET), encoding="utf-8")
     print(f"dataset files written to {out}")
     if push:
         raise RuntimeError("gspc-board is published atomically by scripts/spray/gspc-spray.py --hf; "

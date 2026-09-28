@@ -115,6 +115,11 @@ import time
 import urllib.parse
 import urllib.request
 
+# The How-to-cite / corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026)
+# has ONE producer, scripts/hf/cite_block.py; the staged card passes through it so a rebuild keeps the block.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "hf"))
+from cite_block import apply as cite_apply  # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -1844,6 +1849,7 @@ commitment, not a Bitcoin attestation**.
 CC-BY-4.0. Cite as: Council of AI (CSOAI), *MCP contract parity, measured read 2026-09-25*, {HF_REPO}.
 """
     stage.mkdir(parents=True, exist_ok=True)
+    md = cite_apply(md, HF_REPO)
     (stage / "README.md").write_text(md)
     for n in ("record.json", "record.signed.json", "record.json.ots", "record.ots.json"):
         (stage / n).write_bytes((out / n).read_bytes())
