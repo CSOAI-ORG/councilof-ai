@@ -12,10 +12,9 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.population.corrections",
         "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
-      "description": "Population door: Corrections ledger, full history — 60 correction entries in the source-maintained ledger, as of 2026-09-20, state INDEXED. one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "description": "Population door: Corrections ledger, full history — 76 correction entries in the source-maintained ledger, as of 2026-09-27, state INDEXED. one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -46,12 +45,13 @@
     ],
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the Corrections ledger, full history slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_manifest": "https://councilof.ai/api/pop/corrections/manifest",
     "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
     "free_sources": [
       "functions/api/corrections.ts#LEDGER",
       "/api/corrections"
     ],
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "a grade",
       "a rank",
@@ -69,24 +69,24 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "population-slice",
     "population": "corrections",
     "preview": {
-      "as_of": "2026-09-20",
+      "as_of": "2026-09-27",
       "head": {
-        "entries_with_detected_at": 0,
+        "entries_with_detected_at": 76,
         "first_date": "2026-08-19",
         "free_endpoint": "/api/corrections serves the whole ledger free and stays free; this door meters the assembled full-history slice with per-entry content digests",
         "identification": "an entry is a fact about the estate's own history, never a claim about anyone else; ids are the ledger's own",
-        "last_date": "2026-09-20",
+        "last_date": "2026-09-27",
         "license": "CC-BY-4.0",
         "policy": "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
-        "reached_the_public_true": 3,
+        "reached_the_public_true": 19,
         "schema": "csoai.corrections/0.1"
       },
-      "n": 60,
+      "n": 76,
       "n_unit": "correction entries in the source-maintained ledger",
       "reason": null,
       "source": [
@@ -96,7 +96,7 @@
       "state": "INDEXED",
       "unmeasured": [
         "append-only storage proof: none is claimed by the ledger",
-        "correction latency: computable only for the 0 entries carrying detected_at; never inferred from prose"
+        "correction latency: computable only for the 76 entries carrying detected_at; never inferred from prose"
       ]
     },
     "rail": {
@@ -117,7 +117,7 @@
         },
         "output": {
           "example": {
-            "as_of": "2026-09-20",
+            "as_of": "2026-09-27",
             "attestation": {
               "payload": {
                 "kind": "csoai.population.slice/0.1",
@@ -130,7 +130,7 @@
             },
             "id": "corrections",
             "kind": "slice",
-            "n": 60,
+            "n": 76,
             "n_unit": "correction entries in the source-maintained ledger",
             "rows": "<the population rows / artifact bytes, verbatim>",
             "schema": "csoai.population-door/0.1",
@@ -200,7 +200,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvY29ycmVjdGlvbnMiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzUsInZlcnNpb24iOjF9.cK-PEWsGi6XMk3UuxgpY6_hRahpwJiSZqjRTkHwhpYeutvTaHPr4WHCbfJBAIMFpGEO2kIY2XE1oPOKHOs29Cw"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvY29ycmVjdGlvbnMiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTA1NzI0OTIsInZlcnNpb24iOjF9.8zDvwgu9K6_uY2LuaYFfTY1KNtUz3cXm0xpJ9UWQKMfyB3SqXzKmzsUgmYfTw6fNKkXNo7YV7xLkZYbrDANnDQ"
           }
         ]
       },
@@ -239,7 +239,7 @@
     }
   },
   "resource": {
-    "description": "Population door: Corrections ledger, full history — 60 correction entries in the source-maintained ledger, as of 2026-09-20, state INDEXED. one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "description": "Population door: Corrections ledger, full history — 76 correction entries in the source-maintained ledger, as of 2026-09-27, state INDEXED. one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
     "mimeType": "application/json",
     "serviceName": "CSOAI Population Door",
     "tags": [

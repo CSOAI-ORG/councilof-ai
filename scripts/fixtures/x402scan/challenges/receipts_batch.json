@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.receipts_batch",
         "sku_id": "receipts_batch",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "per_batch"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
       "extra": {
@@ -27,7 +26,7 @@
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-22T15%3A48%3A53Z",
+      "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-28T04%3A59%3A50Z",
       "scheme": "exact"
     }
   ],
@@ -35,8 +34,8 @@
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
     "explainer": "https://councilof.ai/pricing",
-    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-22T15%3A48%3A53Z&preview=1",
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-28T04%3A59%3A50Z&preview=1",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "settlement or payment receipts — none are published (/api/receipts/latest is UNPUBLISHED)",
       "a conclusion about any leaf, subject or asset",
@@ -52,12 +51,12 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "batch",
     "preview": {
       "batch_bytes": 600256,
-      "batch_sha256": "61f54293e096c96760e8692bf119c23e0cdc104867b065b8da94f63d2bb75d66",
+      "batch_sha256": "5abc8946bc742c44a8ef7f1ccb8563a7df4ef9e0c633f121b6e2544e742300d1",
       "cap": 200,
       "count": 200,
       "matched": 4084,
@@ -83,7 +82,7 @@
       ],
       "window": {
         "from": "2026-01-01T00:00:00Z",
-        "to": "2026-09-22T15:48:53Z"
+        "to": "2026-09-28T04:59:50Z"
       }
     },
     "rail": {
@@ -102,7 +101,7 @@
           "method": "GET",
           "queryParams": {
             "from": "2026-01-01T00:00:00Z",
-            "to": "2026-09-22T15:48:53Z"
+            "to": "2026-09-28T04:59:50Z"
           },
           "type": "http"
         },
@@ -204,7 +203,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZWNlaXB0cy9iYXRjaCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDA5MzAzMywidmVyc2lvbiI6MX0.eSgWISPOEYMdcLM-QjeylBhjMWA5URQcLk6l8hrG5Y2hu_HcQ-8Zqgijawq6uGA4OgkyuBSsWOp6Kl2FyCtoCw"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZWNlaXB0cy9iYXRjaD9mcm9tPTIwMjYtMDEtMDFUMDAlM0EwMCUzQTAwWiZ0bz0yMDI2LTA5LTI4VDA0JTNBNTklM0E1MFoiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTA1NzI0OTAsInZlcnNpb24iOjF9.H-1SHjxih_pzp-a4m7Qi_HrYy4ErE61OdHXFtOfOYWt3piJGitCjBfsc3cfXjUbfp1QsEkk1PVmHCkJA95OPCw"
           }
         ]
       },
@@ -253,7 +252,7 @@
       "attestation",
       "x402"
     ],
-    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-22T15%3A48%3A53Z"
+    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-28T04%3A59%3A50Z"
   },
   "x402Version": 2
 }

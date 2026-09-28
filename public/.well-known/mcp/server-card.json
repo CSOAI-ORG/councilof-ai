@@ -49,7 +49,25 @@
     "free_tools": 12,
     "metered_tools": 4,
     "streaming": false,
-    "auth_required": false
+    "auth_required": false,
+    "tool_names_sha256": "4d5671a50bf129615aaa82ef56a0382c1fd85c2781d41cef1b65f3e48a7b0134",
+    "free_door_tool_names": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "x402_trust",
+      "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence"
+    ],
+    "free_door_tool_names_sha256": "64fcfc150e8164eeb2ffadcd8378d10cd72e305efce52f1dfd317c43763c0974",
+    "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
+    "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
   "authentication": {
     "required": false,

@@ -21,6 +21,7 @@
  * Doctrine: never paywalls /api/gspc, /api/xrpl or /root.json — those stay free and this endpoint
  * reads them like any stranger. Buyer-led. MEASURED is never written here (state PROBED/UNMEASURED).
  */
+import { headFromGet } from "../_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -435,3 +436,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

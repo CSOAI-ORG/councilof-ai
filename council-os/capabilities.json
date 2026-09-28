@@ -117,18 +117,6 @@
       "path": "/.well-known/x402.json",
       "method": "GET",
       "reason": "a /.well-known document; the OpenAPI producer covers functions/api only"
-    },
-    {
-      "id": "api-measurement-fresh-capsule",
-      "path": "/api/measurement/fresh-capsule",
-      "method": "GET",
-      "reason": "x402 door added by lane venturi-arms-20260926 in a functions/api subdirectory: the walker reads top-level functions/api/*.ts only, and build_openapi.py renders paid doors from the LIVE /api/x402 catalog fixture (scripts/fixtures/x402scan), which can carry this door only after deploy + build_openapi.py --fetch. Remove both exemptions in that same commit."
-    },
-    {
-      "id": "api-measurement-fresh-capsule-post",
-      "path": "/api/measurement/fresh-capsule",
-      "method": "POST",
-      "reason": "x402 door added by lane venturi-arms-20260926 in a functions/api subdirectory: the walker reads top-level functions/api/*.ts only, and build_openapi.py renders paid doors from the LIVE /api/x402 catalog fixture (scripts/fixtures/x402scan), which can carry this door only after deploy + build_openapi.py --fetch. Remove both exemptions in that same commit."
     }
   ],
   "capabilities": [
@@ -771,7 +759,6 @@
         "csoai.art50.marking-evidence/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -2064,7 +2051,6 @@
         "csoai.eunomia-data/0.2"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -2123,7 +2109,6 @@
         "csoai.evidence-bundle/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -2328,7 +2313,6 @@
         "csoai.feeds.provider-diff/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -2523,7 +2507,6 @@
         "csoai.free-door/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -3045,6 +3028,7 @@
         "csoai.measurement-capsule/0.2"
       ],
       "surfaces": [
+        "openapi",
         "llms"
       ],
       "probe": {
@@ -3342,9 +3326,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/a2a",
@@ -3368,9 +3350,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/claim-watch",
@@ -3394,9 +3374,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/corrections",
@@ -3420,9 +3398,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/layer0",
@@ -3446,9 +3422,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/mcp-registry",
@@ -3472,9 +3446,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/ots-proofs",
@@ -3498,9 +3470,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/stablecoins",
@@ -3524,9 +3494,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/swift",
@@ -3550,9 +3518,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/x402-bazaar",
@@ -3576,9 +3542,7 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "schema_refs": [],
-      "surfaces": [
-        "openapi"
-      ],
+      "surfaces": [],
       "probe": {
         "method": "POST",
         "request": "/api/pop/xrpl",
@@ -3717,7 +3681,6 @@
         "csoai.public-root-proof/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -3899,7 +3862,6 @@
         "csoai.receipts.batch/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -4295,7 +4257,6 @@
         "csoai.request-attestation/0.2"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -4439,7 +4400,6 @@
         "csoai.rwa-evidence/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -5285,7 +5245,6 @@
         "csoai.wrapper.parity/0.1"
       ],
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ],
@@ -5479,7 +5438,9 @@
       "schema_refs": [
         "csoai.ras.mcp-probe/0.1"
       ],
-      "surfaces": [],
+      "surfaces": [
+        "openapi"
+      ],
       "probe": {
         "method": "GET",
         "request": "/api/ras/mcp-probe?url=https://councilof.ai/mcp",
@@ -5532,7 +5493,9 @@
       "schema_refs": [
         "csoai.ras.x402-check/0.1"
       ],
-      "surfaces": [],
+      "surfaces": [
+        "openapi"
+      ],
       "probe": {
         "method": "GET",
         "request": "/api/ras/x402-check?url=https://councilof.ai/api/free-door",
@@ -5588,7 +5551,9 @@
         "csoai.ras.supply-read/0.1",
         "csoai.ras.supply/0.1"
       ],
-      "surfaces": [],
+      "surfaces": [
+        "openapi"
+      ],
       "probe": {
         "method": "GET",
         "request": "/api/ras/supply?asset=USDC&ledger=ethereum",

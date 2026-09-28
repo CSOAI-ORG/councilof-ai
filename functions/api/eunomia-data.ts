@@ -13,6 +13,7 @@
 //                                             the signed First-Fine Watch feed, the root, the card
 //                                             index — source bytes and digests, with signatures only
 //                                             where the source publishes them.
+import { headFromGet } from "./_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -187,3 +188,6 @@ export const onRequestOptions: PagesFunction = async () => new Response(null,{st
   "access-control-allow-headers":`content-type, x-payment, payment-signature, x-payment-signature, ${EXPECTED_FEED_HEADER}`,
   "access-control-max-age":"600","cache-control":"no-store",
 }});
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

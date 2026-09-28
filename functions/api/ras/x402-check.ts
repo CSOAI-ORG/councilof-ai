@@ -22,6 +22,7 @@
  *
  * Not: a seller's honesty, product quality, price, or whether a door delivers after payment.
  */
+import { headFromGet } from "../_head";
 import { x402Accepts, declareBazaarHttpGet } from "../_x402";
 import { rasDoor, nowIso, type RasEnv, type RasComputation } from "../_ras_door";
 import { checkUrl, checkUrlSyntax, guardedFetch, memoResolver, type Resolver, dohResolver } from "../_ras_net";
@@ -163,3 +164,6 @@ export const onRequestGet: PagesFunction<RasEnv> = async ({ request, env }) => {
 };
 
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

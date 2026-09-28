@@ -28,6 +28,7 @@
  * Doctrine: buyer-led; the free ledger /interop/wrapped-asset-parity-*.json stays free and this
  * endpoint reads the chain like any stranger. Never paywalls /api/gspc or /root.json.
  */
+import { headFromGet } from "./_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -336,3 +337,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

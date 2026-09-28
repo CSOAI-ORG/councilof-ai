@@ -8,6 +8,7 @@
  * The snapshot as_of values are read from the live files, never typed.
  * If only one snapshot exists, the delta is UNCHECKABLE (no previous to compare).
  */
+import { headFromGet } from "../_head";
 import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
@@ -239,3 +240,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 };
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

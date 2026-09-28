@@ -20,6 +20,7 @@
  * Never: a grade, a rank, a verdict about any row, or a paywall on the artifact itself (every
  * source path is a free public file or a free endpoint, named in `source`).
  */
+import { headFromGet } from "./_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -259,3 +260,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 export const onRequestPost = onRequestGet;
 
 export { POPULATIONS, POPULATION_IDS };
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);
