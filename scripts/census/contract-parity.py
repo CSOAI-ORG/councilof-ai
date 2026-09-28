@@ -1623,6 +1623,7 @@ def build013(a):
     prev = json.loads(prev_b)
     assert prev.get("record_version") == "0.1.2", "the previous record must be record.v0.1.2.json"
     rec["record_version"] = "0.1.3"
+    rec["schema"] = SCHEMA + ".3"  # csoai.mcp-contract-parity/0.1.3 (0.1.2 carried /0.1.2)
     rec["instrument"] = (f"scripts/census/contract-parity.py {VERSION} comparators and readers (commit {a.fix_commit}); "
                          "fresh read, not a reclassification")
     rec["run"]["population_note"] = meta["population_note"]
