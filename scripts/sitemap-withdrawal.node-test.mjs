@@ -37,12 +37,21 @@ test('build:client regenerates _redirects before the sitemap reads it', () => {
   assert.ok(redirects < sitemap, 'generate-redirects.mjs must run before generate-sitemap.mjs');
 });
 
-test('client-side <Redirect> alias routes are never listed', () => {
+test('client-side <Redirect> aliases are excluded unless a reviewed static page owns the path', () => {
   const xml = readFileSync(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
   const app = readFileSync(new URL('../client/src/App.tsx', import.meta.url), 'utf8');
+  const redirectsSource = readFileSync(new URL('./generate-redirects.mjs', import.meta.url), 'utf8');
+  const marker = 'const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([';
+  const start = redirectsSource.indexOf(marker);
+  const reviewedBlock = redirectsSource.slice(start, redirectsSource.indexOf(']);', start) + 3);
+  const reviewedStatic = new Set([...reviewedBlock.matchAll(/"([^"]+)"/g)].map((x) => x[1]));
   const aliases = [...app.matchAll(/<Route\b[^>]*?\bpath="([^":]+)"[^>]*>\s*\{\s*\(\)\s*=>\s*<Redirect\b/g)].map((x) => x[1]);
   assert.ok(aliases.includes('/lookup'), 'alias detector must see the known /lookup alias');
+  assert.ok(reviewedStatic.has('/governance'), 'reviewed static ownership must include /governance');
+  assert.ok(xml.includes('<loc>https://councilof.ai/governance/</loc>'), '/governance static front should remain discoverable');
   for (const a of aliases) {
-    assert.ok(!xml.includes(`<loc>https://councilof.ai${a}</loc>`) && !xml.includes(`<loc>https://councilof.ai${a}/</loc>`), `${a} is a client-side alias`);
+    if (reviewedStatic.has(a)) continue;
+    const listed = xml.includes(`<loc>https://councilof.ai${a}</loc>`) || xml.includes(`<loc>https://councilof.ai${a}/</loc>`);
+    assert.ok(!listed, `${a} is a client-side alias`);
   }
 });
