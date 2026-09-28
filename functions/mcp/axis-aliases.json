@@ -1,0 +1,101 @@
+{
+  "schema": "csoai.axis-aliases/1",
+  "note": "THE ONE axis alias table. Keys are the canonical axis ids exactly as GET https://councilof.ai/api/gspc spells them (axes[].axis). Values are the other spellings a caller meets: the board row's own dataset code (csoai/gspc-<code> -> <code> and gspc-<code>) and the gspc-<axis> spelling the signed card index uses. Nothing else is an alias: an index name with no grounded link to a board row (arc-30, care-refusal-help, jail-escape-detection, swarm-candidates, ...) stays its own name. Resolution is case-insensitive: trim, lowercase, canonical match first, then alias. Byte-identical copies ship in mcp/gspc-server/axis-aliases.json (npm) and scripts/spray/pypi/csoai-gspc/csoai_gspc/axis_aliases.json (PyPI); functions/mcp/axis-aliases.test.ts fails if a copy drifts or a key stops being a board row.",
+  "axes": {
+    "governance": [
+      "gov",
+      "gspc-gov",
+      "gspc-governance"
+    ],
+    "safety": [
+      "agi",
+      "gspc-agi",
+      "gspc-safety"
+    ],
+    "provenance": [
+      "prv",
+      "gspc-prv",
+      "gspc-provenance"
+    ],
+    "continuity": [
+      "asi",
+      "gspc-asi",
+      "gspc-continuity"
+    ],
+    "conformance": [
+      "mcp",
+      "gspc-mcp",
+      "gspc-conformance"
+    ],
+    "openness": [
+      "oss",
+      "gspc-oss",
+      "gspc-openness"
+    ],
+    "machinery-conformity": [
+      "mach",
+      "gspc-mach",
+      "gspc-machinery-conformity"
+    ],
+    "care": [
+      "gspc-care"
+    ],
+    "cross-reality": [
+      "xr",
+      "gspc-xr",
+      "gspc-cross-reality"
+    ],
+    "detector-interop": [
+      "det",
+      "gspc-det",
+      "gspc-detector-interop"
+    ],
+    "art5-safeguard": [
+      "art5",
+      "gspc-art5",
+      "gspc-art5-safeguard"
+    ],
+    "swarm": [
+      "gspc-swarm"
+    ],
+    "affect": [
+      "gspc-affect"
+    ],
+    "jail": [
+      "jail-goldbank",
+      "gspc-jail-goldbank",
+      "gspc-jail"
+    ],
+    "effect-binding": [
+      "gspc-effect-binding"
+    ],
+    "provenance-controls": [
+      "gspc-provenance-controls"
+    ],
+    "reserve-attestation": [
+      "gspc-reserve-attestation"
+    ],
+    "regulatory-framework": [
+      "gspc-regulatory-framework"
+    ],
+    "distribution-integrity": [
+      "gspc-distribution-integrity"
+    ],
+    "custody-disclosure": [
+      "gspc-custody-disclosure"
+    ],
+    "ai-adoption-components": [
+      "ai-economy-index",
+      "gspc-ai-economy-index",
+      "gspc-ai-adoption-components"
+    ],
+    "labour-components": [
+      "human-labour-index",
+      "gspc-human-labour-index",
+      "gspc-labour-components"
+    ],
+    "humanoid-labour-index": [
+      "gspc-humanoid-labour-index"
+    ]
+  }
+}

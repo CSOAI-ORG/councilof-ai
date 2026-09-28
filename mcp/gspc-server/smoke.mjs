@@ -13,6 +13,7 @@
  */
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
+import { readFileSync } from "node:fs";
 import { generateKeyPairSync, sign as edSign, createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
@@ -74,22 +75,13 @@ notify("notifications/initialized");
 const list = await rpc("tools/list");
 const names = list.result.tools.map((t) => t.name);
 console.log(`tools: ${names.join(", ")}`);
-const thirteen = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-  "x402_trust",
-  "mcp_trust",
-  "commission_card",
-  "art50_marking_evidence",
-  "rwa_evidence",
-  "receipts_batch",
+const freeDefs = JSON.parse(readFileSync(fileURLToPath(new URL("./gspc-tools.json", import.meta.url)), "utf8"));
+const paidDefs = JSON.parse(readFileSync(fileURLToPath(new URL("./paid-tools.json", import.meta.url)), "utf8"));
+const expectedNames = [
+  ...(Array.isArray(freeDefs) ? freeDefs : freeDefs.tools ?? []).map((tool) => tool.name),
+  ...(Array.isArray(paidDefs) ? paidDefs : paidDefs.tools ?? []).map((tool) => tool.name),
 ];
-expect("tools/list is the canonical thirteen names (9 free + 4 metered)", names.join(","), thirteen.join(","));
+expect("tools/list matches shipped free + paid definitions", names.join(","), expectedNames.join(","));
 
 // ---- live tools ----
 const totals = await rpc("tools/call", { name: "board_totals", arguments: {} });
