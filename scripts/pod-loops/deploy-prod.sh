@@ -5,6 +5,8 @@ set -uo pipefail
 # One deploy at a time, enforced by the kernel, not by pgrep (22 Sep 2026: two waiters launched 33 s apart and raced).
 exec 9>/workspace/ci/deploy.lock; flock -n 9 || { echo "another deploy holds /workspace/ci/deploy.lock; exiting"; exit 0; }
 export PATH=/workspace/tools/node/bin:$PATH
+# The HF write token (evidence-sync only) never reaches npm, vite, prerender or wrangler: keep it unexported.
+EVTOK=${HF_TOKEN:-}; unset HF_TOKEN
 CI=/workspace/ci/councilof-ai; LOG=/workspace/ci/deploy-prod.log; REF=${1:-master}
 echo "=== deploy-prod $(date -u +%FT%TZ) ref=$REF" | tee -a $LOG
 cd $CI && git fetch -q origin && git checkout -q -f "origin/$REF" && echo "  at $(git rev-parse --short HEAD)" | tee -a $LOG
@@ -36,14 +38,17 @@ node scripts/signed-json-guard.mjs dist/client >/workspace/ci/signed-json-guard.
 # functions/ is deployed by Pages from the project root, never as static assets; prod 404s it. Drop it, then
 # run the repo's own Pages guard so a file-cap breach fails HERE with the count, not at upload after a 6-minute prerender.
 rm -rf dist/client/functions
-# Owner decision 22 Sep 2026: proofs/ (3,993 .ots) leaves the site for the HF mirror to stay under Pages' 20,000-file cap.
-# Every /proofs/* link keeps resolving via a 302 to the mirror, which holds the full tree (verified anonymously before this ran).
-rm -rf dist/client/proofs
-grep -q '^/proofs/\* ' dist/client/_redirects 2>/dev/null || python3 - <<'PYI'
+# Owner decisions 22 Sep (proofs/) and 28 Sep 2026 (cards/): both leave the upload to stay under Pages' 20,000-file cap.
+# Every /proofs/* and /cards/* link keeps resolving via a 302 to the PUBLIC HF dataset csoai/councilof-ai-evidence, which
+# the evidence-sync gate below makes byte-equal to this build before the upload (it holds the deploy otherwise).
+rm -rf dist/client/proofs dist/client/cards
+grep -q '^/cards/\* ' dist/client/_redirects 2>/dev/null || python3 - <<'PYI'
 import pathlib, re
 p = pathlib.Path("dist/client/_redirects"); L = p.read_text().splitlines()
-block = ["# proofs live on the HF mirror (Pages 20,000-file cap; decided 2026-09-22)",
-         "/proofs/* https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat 302", ""]
+EV = "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main"
+block = ["# proofs/ and cards/ live on HF csoai/councilof-ai-evidence (Pages 20,000-file cap; decided 2026-09-22 / 2026-09-28)",
+         *([f"/proofs/* {EV}/proofs/:splat 302"] if not any(l.startswith("/proofs/*") for l in L) else []),
+         f"/cards/* {EV}/cards/:splat 302", ""]
 i = next((k for k, l in enumerate(L) if re.match(r"^/\S*\*\s", l)), len(L))   # before the first splat rule, never after the catch-all
 L[i:i] = block; p.write_text("\n".join(L) + "\n"); print(f"    /proofs/* rule inserted at line {i+1}")
 PYI
@@ -65,5 +70,9 @@ echo "  sitemap-built ok" | tee -a "$LOG"
 # the pointer, root, proof, or the manifest row binding all three.
 /usr/bin/python3 scripts/pod-loops/root_ots_manifest_gate.py --public-dir dist/client >/workspace/ci/root-ots-built.log 2>&1 || { echo "  root-ots-built FAILED; upload blocked" | tee -a "$LOG"; exit 14; }
 echo "  root-ots-built ok" | tee -a "$LOG"
+# Evidence sync (28 Sep 2026): cards/ and proofs/ are served from HF, so the dataset must hold THIS build's bytes before
+# the upload, or /api/proof and MCP get_card would serve paths into the previous root. HF_TOKEN comes only from the
+# environment (streamed on stdin by the Oracle auto-land trigger); without it the gate is check-only and holds on any drift.
+HF_TOKEN=$EVTOK /usr/bin/python3 scripts/pod-loops/evidence_sync.py ${EVTOK:+--apply} --public-dir public --message "sync from councilof.ai build $(git rev-parse --short HEAD)" --receipt /workspace/ci/evidence-sync.json >/workspace/ci/evidence-sync.log 2>&1 && echo "  evidence-sync ok: $(tail -1 /workspace/ci/evidence-sync.log | cut -c1-160)" | tee -a $LOG || { echo "  evidence-sync FAILED; upload blocked" | tee -a $LOG; tail -3 /workspace/ci/evidence-sync.log | sed "s/^/    /"; exit 17; }
 npx wrangler pages deploy dist/client --project-name=councilof-ai --branch=master --commit-dirty=true >/workspace/ci/wrangler-deploy.log 2>&1 && echo "  DEPLOYED: $(grep -oE "https://[a-z0-9]+\.councilof-ai\.pages\.dev" /workspace/ci/wrangler-deploy.log | tail -1)" | tee -a $LOG || { echo "  deploy FAILED" | tee -a $LOG; tail -4 /workspace/ci/wrangler-deploy.log | sed "s/^/    /"; exit 8; }
 echo "=== done $(date -u +%FT%TZ)" | tee -a $LOG

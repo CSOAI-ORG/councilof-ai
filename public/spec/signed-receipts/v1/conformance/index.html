@@ -49,7 +49,8 @@
 <pre><code>curl -sO https://councilof.ai/spec/signed-receipts/v1/conformance/run.mjs &amp;&amp; node run.mjs my-results.json</code></pre>
       Or with Python and the <code>cryptography</code> package:
 <pre><code>curl -sO https://councilof.ai/spec/signed-receipts/v1/conformance/run.py &amp;&amp; python3 run.py my-results.json</code></pre>
-      Each prints PASS or FAIL per case and exits 0 only when every core case matches.</li>
+      Each prints PASS or FAIL per case and exits 0 only when every core case matches. Both read the published
+      <a href="vectors.json">vectors.json</a> by default, so no other file is needed; add <code>--vectors &lt;path&gt;</code> to use a local copy.</li>
   </ol>
 
   <h2>The three results</h2>
@@ -94,7 +95,7 @@
   <ul>
     <li><a href="vectors.json">vectors.json</a>: the cases, result definitions and the published test keys.</li>
     <li><a href="run.mjs">run.mjs</a>: the Node runner (WebCrypto Ed25519). <code>node run.mjs --self</code> checks the
-      vectors with its own verifier.</li>
+      published vectors with its own verifier (<code>python3 run.py --self</code> does the same).</li>
     <li><a href="run.py">run.py</a>: the same runner in Python (<code>cryptography</code> only).</li>
     <li><a href="reference-results.json">reference-results.json</a>: our reference's results. All 21 match.</li>
     <li><a href="example-fail-results.json">example-fail-results.json</a>: the results of our verifier as it was before

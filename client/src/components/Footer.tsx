@@ -59,7 +59,7 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
-        { name: 'Current evidence mirror', href: 'https://huggingface.co/datasets/csoai/councilof-ai-mirror', external: true },
+        { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Honesty gate', href: '/honesty' },
         // The readable ledger page (renders /api/corrections), not raw JSON.

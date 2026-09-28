@@ -398,7 +398,7 @@ x-payment-response: <base64 settlement response>
 curl -s https://csoai.org/.well-known/did.json -o did.json
 node card-v0-verify.mjs receipt.json did.json            # your paid receipt
 # try it now on a published leaf:
-curl -s https://councilof.ai/cards/090963760060e3ee.json -o leaf.json
+curl -sL https://councilof.ai/cards/090963760060e3ee.json -o leaf.json
 node card-v0-verify.mjs leaf.json did.json
 # observed: VALID  payload signed by did:web:csoai.org#board-attestation-1 · sha256 …   (exit 0; a changed byte gives INVALID, exit 1)`}</Code>
         <Code>{`# the measurement cards the receipt references (payload.reserve[].card) verify with the card verifier
