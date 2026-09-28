@@ -35,11 +35,28 @@ MODES
                                     carry signed cards and whether the rows' leader has a signed
                                     per-model card of its own.
   --dataset-revision SHA            the Hugging Face commit the rows were read from (recorded).
+  --power REPO                      (2026-09-28, board honesty) write ONLY the unsigned generated
+                                    module functions/api/_gspc_rows_power.ts inside REPO: per axis
+                                    distinct_items, paired_items, the observed discordance rate and
+                                    the minimum detectable effect (MDE) of the board's own test at
+                                    80% power, plus the fleet roster counted from the rows. It never
+                                    writes the signed public record, so it can run without a re-sign.
+
+POWER (added 2026-09-28; the test itself is unchanged)
+  A TIE says the test did not separate two models. It does not say how large a difference the
+  test could have seen. The MDE is the smallest accuracy difference (leader minus best base
+  model) that the exact two-sided McNemar test at p<0.05 detects with 80% probability, given the
+  axis's paired items and its observed discordance rate (the share of paired items on which
+  exactly one of the two models is right). It is computed by exact binomial enumeration with the
+  same mcnemar() body, not a normal approximation. When no difference up to the observed
+  discordance reaches 80% power, the MDE is null with state NOT_REACHABLE — never a number.
 
 WHAT IT DOES NOT DO
   It does not re-grade a row, re-run a model, or edit the frozen 2026-08-13 manifests (their
   peritem_sha256 is null, and they stay as signed). It binds the rows by hash in a NEW record.
   A TIE is not a win and is never published as one. UNTESTED is not a tie.
+  --board refuses to rewrite the public record when a .signed.json beside it binds different
+  bytes (pass --allow-signed-rewrite only when a re-sign follows in the same change).
 """
 from __future__ import annotations
 
@@ -220,6 +237,161 @@ def verify_sums(rows_dir):
     return hashlib.sha256(sums_bytes).hexdigest(), {k: v[0] for k, v in listed.items()}
 
 
+# ── power: what size of difference could the fixed test have seen? (2026-09-28) ─────────────
+ALPHA = 0.05
+POWER = 0.80
+
+
+def _binom_pmf(k, n, p):
+    if p <= 0.0:
+        return 1.0 if k == 0 else 0.0
+    if p >= 1.0:
+        return 1.0 if k == n else 0.0
+    return math.exp(math.lgamma(n + 1) - math.lgamma(k + 1) - math.lgamma(n - k + 1)
+                    + k * math.log(p) + (n - k) * math.log1p(-p))
+
+
+def reject_kmax(n, alpha=ALPHA):
+    """For every discordant count D in 0..n: the largest k such that mcnemar(k, D-k) < alpha, or -1
+    when no split of D discordant items can reach it. Uses the SAME mcnemar() body as the test, so
+    the rejection region is the board's, not an approximation of it."""
+    table = []
+    for d in range(n + 1):
+        k = -1
+        for i in range(d // 2 + 1):
+            p = mcnemar(i, d - i)
+            if p is not None and p < alpha:
+                k = i
+            else:
+                break
+        table.append(k)
+    return table
+
+
+def mcnemar_power(n, psi, delta, alpha=ALPHA, kmax=None):
+    """Probability that the exact two-sided McNemar test at `alpha` rejects, for n paired items,
+    discordance probability psi (P exactly one of the two is right) and accuracy difference delta
+    (leader minus comparator; 0 <= delta <= psi). Exact enumeration over the discordant count."""
+    if not (0.0 <= delta <= psi <= 1.0):
+        raise ValueError(f"need 0 <= delta <= psi <= 1, got delta={delta} psi={psi}")
+    if n < 1 or psi == 0.0:
+        return 0.0
+    kmax = kmax if kmax is not None else reject_kmax(n, alpha)
+    pi = (psi + delta) / (2.0 * psi)  # P(leader-only-correct | discordant)
+    total = 0.0
+    for d in range(n + 1):
+        k = kmax[d]
+        if k < 0:
+            continue
+        pd = _binom_pmf(d, n, psi)
+        if pd < 1e-15:
+            continue
+        rej = sum(_binom_pmf(b, d, pi) for b in range(0, k + 1))
+        rej += sum(_binom_pmf(b, d, pi) for b in range(d - k, d + 1))
+        total += pd * rej
+    return min(1.0, total)
+
+
+def mcnemar_mde(n, psi, alpha=ALPHA, power=POWER, tol=1e-5):
+    """Smallest delta in [0, psi] with mcnemar_power >= power, rounded UP to 0.001 (conservative).
+    Returns (mde, state): state is MEASURED, NOT_REACHABLE (even delta = psi, every discordant
+    item favouring one model, stays under `power`) or UNDEFINED (no paired item, or no discordant
+    one: psi == 0, so there is no difference the test could be asked to see)."""
+    if n < 1 or psi <= 0.0:
+        return None, "UNDEFINED"
+    kmax = reject_kmax(n, alpha)
+    if mcnemar_power(n, psi, psi, alpha, kmax) < power:
+        return None, "NOT_REACHABLE"
+    lo, hi = 0.0, psi
+    while hi - lo > tol:
+        mid = (lo + hi) / 2.0
+        if mcnemar_power(n, psi, mid, alpha, kmax) >= power:
+            hi = mid
+        else:
+            lo = mid
+    return min(psi, math.ceil(hi * 1000 - 1e-9) / 1000), "MEASURED"
+
+
+def fleet_roster(models):
+    """Count the fleet from the model ids that actually appear in the rows. Names only for base
+    models (third-party); our own fine-tunes are counted, never listed or ranked."""
+    models = set(models)
+    own = sorted(m for m in models if is_own(m))
+    base = sorted(m for m in models if m in BASES)
+    other = sorted(m for m in models if m not in BASES and not is_own(m))
+    return {"models_in_rows": len(models), "base_count": len(base), "base_models": base,
+            "own_count": len(own), "other_count": len(other), "other_models": other}
+
+
+def axis_power(res_ext, distinct_items, alpha=ALPHA, power=POWER):
+    """Power figures for one axis from its own-model-excluded test result (leader vs best base)."""
+    paired = res_ext["paired_items"]
+    disc = res_ext["b10"] + res_ext["c01"]
+    psi = disc / paired if paired else 0.0
+    mde, state = mcnemar_mde(paired, psi, alpha, power)
+    return {
+        "distinct_items": distinct_items,
+        "paired_items": paired,
+        "discordant_items": disc,
+        "discordance_rate": round(psi, 4),
+        "mde": mde,
+        "mde_state": state,
+    }
+
+
+def power_rows(rows_dir):
+    """The --power pass: verify the rows, then per axis the own-excluded test inputs and the MDE.
+    No shuffle control (it decides nothing here), no card index, no signed record."""
+    peritem_sha256, _sums = verify_sums(rows_dir)
+    axes, models = {}, set()
+    for axis, fname in AXIS_FILE.items():
+        raw = open(os.path.join(rows_dir, fname), "rb").read()
+        rows = [json.loads(line) for line in raw.decode("utf-8").splitlines() if line.strip()]
+        models.update(r["model"] for r in rows)
+        ext = run(rows, lambda m: not is_own(m))
+        axes[axis] = {"file": fname, "sha256": hashlib.sha256(raw).hexdigest(),
+                      "leader": ext["leader"]["model"], "next_best": ext["runner_up"]["model"],
+                      "mcnemar_p": ext["mcnemar_p"], "verdict": ext["verdict"],
+                      **axis_power(ext, len({r["item"] for r in rows}))}
+    return peritem_sha256, fleet_roster(models), axes
+
+
+def write_power_module(repo, rows_dir, revision):
+    peritem_sha256, fleet, axes = power_rows(rows_dir)
+    module = {
+        "schema": "csoai.gspc-rows-power/0.1",
+        "dataset": DATASET,
+        "dataset_revision": revision,
+        "peritem_sha256": peritem_sha256,
+        "alpha": ALPHA,
+        "power": POWER,
+        "method": "Minimum detectable effect (MDE): the smallest accuracy difference between the leader and the "
+                  "best base model that the board's exact two-sided McNemar test (p<0.05) detects with 80% "
+                  "probability, given the axis's paired items and its observed discordance rate (the share of "
+                  "paired items on which exactly one of the two models is right). Exact binomial enumeration "
+                  "with the same test body, not a normal approximation; rounded up to 0.001. Our own models are "
+                  "removed before ranking, as for separation. NOT_REACHABLE means no difference up to the "
+                  "observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no "
+                  "paired item is discordant, so the test has nothing to count.",
+        "fleet": {**fleet,
+                  "rule": "Counted from the model ids present in the published rows. Base models are ranked; "
+                          "CSOAI's own fine-tunes are excluded before ranking and never counted in a comparison."},
+        "producer": "scripts/gspc_separation_from_rows.py --power",
+        "signed": False,
+        "signed_note": "Not a signed artifact. It adds power figures beside the signed rows record "
+                       "(/interop/gspc-peritem-rows-2026-08-12.json) and changes none of that record's bytes.",
+        "axes": axes,
+    }
+    ts = ("/** GENERATED by scripts/gspc_separation_from_rows.py --power from the published per-item rows\n"
+          f" * ({DATASET}@{revision}). Do not edit by hand — re-run the producer.\n"
+          " * Unsigned: it sits beside the signed rows record and changes none of its bytes. */\n"
+          "export const ROWS_POWER = " + json.dumps(module, indent=2, ensure_ascii=False) + " as const;\n")
+    out = os.path.join(repo, "functions/api/_gspc_rows_power.ts")
+    with open(out, "w", encoding="utf-8") as fh:
+        fh.write(ts)
+    return module
+
+
 def test_rows(rows_dir, nperm):
     peritem_sha256, sums = verify_sums(rows_dir)
     out = {}
@@ -325,7 +497,7 @@ def sentence(ext):
             f"p={ext['mcnemar_p']}).")
 
 
-def board(repo, peritem_sha256, sums, results, revision):
+def board(repo, peritem_sha256, sums, results, revision, allow_signed_rewrite=False):
     cards = card_models(repo)
     axes = {}
     for axis, res in results.items():
@@ -369,8 +541,18 @@ def board(repo, peritem_sha256, sums, results, revision):
         "objections": "https://councilof.ai/census/",
     }
     rec_path = os.path.join(repo, "public/interop/gspc-peritem-rows-2026-08-12.json")
-    with open(rec_path, "w", encoding="utf-8") as fh:
-        fh.write(json.dumps(record, indent=2, ensure_ascii=False) + "\n")
+    rec_bytes = (json.dumps(record, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    signed_path = rec_path[: -len(".json")] + ".signed.json"
+    if os.path.exists(signed_path) and not allow_signed_rewrite:
+        bound = json.load(open(signed_path, encoding="utf-8")).get("payload", {}).get("artifact", {}).get("sha256")
+        got = hashlib.sha256(rec_bytes).hexdigest()
+        if bound != got:
+            raise SystemExit(f"ABORT {os.path.basename(signed_path)} binds sha256 {bound}; this run would write "
+                             f"{got}. Refusing to change signed bytes. Set CREATED_UTC to the signed record's "
+                             "created_utc to reproduce it, or pass --allow-signed-rewrite with a re-sign in the "
+                             "same change.")
+    with open(rec_path, "wb") as fh:
+        fh.write(rec_bytes)
     ts = ("/** GENERATED by scripts/gspc_separation_from_rows.py from the published per-item rows\n"
           f" * ({DATASET}@{revision}). Do not edit by hand — re-run the producer. */\n"
           "export const ROWS_SEPARATION = " + json.dumps(record, indent=2, ensure_ascii=False) + " as const;\n")
@@ -385,7 +567,21 @@ def main():
     ap.add_argument("--json", help="write the full test result here")
     ap.add_argument("--board", help="councilof-ai repo root: write the board module + public record")
     ap.add_argument("--dataset-revision", default="UNRECORDED")
+    ap.add_argument("--power", metavar="REPO",
+                    help="write ONLY the unsigned functions/api/_gspc_rows_power.ts (distinct_items, MDE, fleet)")
+    ap.add_argument("--allow-signed-rewrite", action="store_true",
+                    help="with --board: rewrite the public record even when its .signed.json binds other bytes")
     a = ap.parse_args()
+    if a.power:
+        mod = write_power_module(a.power, a.rows, a.dataset_revision)
+        f = mod["fleet"]
+        print(f"fleet models_in_rows={f['models_in_rows']} base={f['base_count']} own={f['own_count']} "
+              f"other={f['other_count']}")
+        for axis, e in mod["axes"].items():
+            print(f"  power {axis:21s} distinct={e['distinct_items']:4d} paired={e['paired_items']:4d} "
+                  f"disc={e['discordant_items']:3d} psi={e['discordance_rate']:.4f} mde={e['mde']} {e['mde_state']}")
+        if not (a.json or a.board):
+            return 0
     peritem_sha256, sums, results = test_rows(a.rows, NPERM)
     for axis, r in results.items():
         e = r["own_model_excluded"]
@@ -400,7 +596,7 @@ def main():
                        "axes": results}, fh, indent=1, sort_keys=True, ensure_ascii=False)
             fh.write("\n")
     if a.board:
-        rec = board(a.board, peritem_sha256, sums, results, a.dataset_revision)
+        rec = board(a.board, peritem_sha256, sums, results, a.dataset_revision, a.allow_signed_rewrite)
         for axis, e in rec["axes"].items():
             print(f"  board {axis:21s} {e['determination']:9s} {e.get('untested_reason_code', '')} "
                   f"{e.get('leader_card', {}).get('state', '')}")
