@@ -260,6 +260,17 @@ html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
     word-break: break-word;
   }
 
+  /* Whole-word sizing for a table that sits in its own scroller. word-break:break-word on <html>
+     keeps a long hash or URL from widening a page, but inside a table it lets auto layout crush a
+     column to a single glyph: at 390px "100.0%" rendered as "100 / .0%", n=237 as "2 / 3 / 7",
+     "Average" as "AV / ER / AG / E" (/board/models, /gspc/<axis>, /stablecoins, /memberships).
+     A table that is the direct child of a scroll container cannot widen the page — it scrolls
+     inside its box — so there it sizes from whole words. Any table outside a scroller keeps the
+     inherited rule. Base layer: a table can opt back out with a [word-break:break-word] utility. */
+  :is(.overflow-x-auto, .overflow-auto, .overflow-x-scroll) > table {
+    word-break: normal;
+  }
+
   /* WCAG AA focus states — generous, consistent, no browser default ring */
   :focus-visible {
     outline: 2px solid var(--primary);

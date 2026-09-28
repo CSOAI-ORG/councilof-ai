@@ -579,7 +579,9 @@ export default function MeasuredModels() {
             zero, and a measured zero appears as <span className="font-mono">0·</span>.
           </p>
           <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-            <table className="w-full text-left text-xs" data-testid="coverage-matrix">
+            {/* Opts OUT of the base-layer whole-word table sizing (styles/index.css): this matrix has a
+                sticky model column, and sized from whole model ids it would fill a phone. */}
+            <table className="w-full text-left text-xs [word-break:break-word]" data-testid="coverage-matrix">
               <thead className="border-b border-gray-200 bg-gray-50 text-[10px] uppercase text-gray-600">
                 <tr>
                   <th className="sticky left-0 z-10 bg-gray-50 px-3 py-2 font-semibold">Model</th>
