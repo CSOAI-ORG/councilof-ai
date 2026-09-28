@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AlertTriangle, Database, ExternalLink, Search } from "lucide-react";
 import {
   filterStablecoinReadiness,
-  loadStablecoinReadiness,
+  loadStablecoinReadinessOnce,
   stablecoinEvidenceFlags,
   type StablecoinReadiness,
   type StablecoinReadinessAsset,
@@ -63,7 +63,7 @@ export default function StablecoinReadinessView() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
-    loadStablecoinReadiness(controller.signal).then((value) => { setData(value); setSelectedId(value.assets.find((asset) => asset.measurement.state === "MEASURED")?.id || value.assets[0]?.id || null); }).catch((reason: Error) => { if (reason.name !== "AbortError") setError(reason.message); });
+    loadStablecoinReadinessOnce().then((value) => { if (controller.signal.aborted) return; setData(value); setSelectedId(value.assets.find((asset) => asset.measurement.state === "MEASURED")?.id || value.assets[0]?.id || null); }).catch((reason: Error) => { if (!controller.signal.aborted && reason.name !== "AbortError") setError(reason.message); });
     loadStablecoinPromotionQueue(controller.signal).then(setQueue).catch(() => { /* readiness remains usable if the operational queue is unavailable */ });
     return () => controller.abort();
   }, []);
