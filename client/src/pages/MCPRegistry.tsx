@@ -177,9 +177,9 @@ export default function MCPRegistry() {
           {filtered.map((s) => (
             <Card key={s.slug} className="p-5 flex flex-col border hover:border-emerald-400 hover:shadow-md transition-all">
               <div className="flex items-start justify-between gap-2 mb-2">
-                <Link href={`/mcp/${s.slug}`}>
-                  <h3 className="font-bold text-base leading-tight hover:text-emerald-600 cursor-pointer">{s.name}</h3>
-                </Link>
+                {/* 2026-09-28: no /mcp/<slug> link. /mcp/* is the MCP server's Pages Function, which
+                    answers 404 for every catalogue slug, so each card linked twice to a dead page. */}
+                <h3 className="font-bold text-base leading-tight">{s.name}</h3>
                 {s.builtInHouse && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[10px] shrink-0">In-house</Badge>}
               </div>
               <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.description}</p>
@@ -190,11 +190,6 @@ export default function MCPRegistry() {
                 ))}
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <Link href={`/mcp/${s.slug}`}>
-                  <span className="inline-flex items-center gap-1 text-sm font-medium text-emerald-600 hover:text-emerald-700 cursor-pointer">
-                    Details <ArrowRight className="h-3.5 w-3.5" />
-                  </span>
-                </Link>
                 <a
                   href={s.url}
                   target="_blank"

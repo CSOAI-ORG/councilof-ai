@@ -81,6 +81,16 @@ function cutAtWord(s: string, max: number): string {
   return (at > max * 0.6 ? cut.slice(0, at) : cut).replace(/[,;:\s]+$/, "");
 }
 
+// A clamp that ends "…behind them, and the." reads as broken copy in a search result (found live
+// 2026-09-28 on all six /for/* pages). After cutting at a word boundary, drop trailing words
+// that cannot end a clause.
+const DANGLING = new Set(["a", "an", "the", "and", "or", "of", "to", "for", "with", "in", "on", "by", "at", "from", "its", "their", "what", "which", "that", "is", "are", "as", "but", "nor"]);
+function trimDangling(s: string): string {
+  const words = s.replace(/[,;:\s]+$/, "").split(" ");
+  while (words.length > 1 && DANGLING.has(words[words.length - 1].toLowerCase())) words.pop();
+  return words.join(" ").replace(/[,;:\s—–-]+$/, "");
+}
+
 /**
  * Build a description that lands inside [DESCRIPTION_MIN, DESCRIPTION_MAX] from a specific
  * lead sentence plus the site's standing line. The lead is never invented — it is the name of
@@ -100,7 +110,7 @@ export function fitDescription(lead: string): string {
     if (candidate.length >= DESCRIPTION_MIN && candidate.length <= DESCRIPTION_MAX) return candidate;
   }
   // The lead alone is too long: clamp it at a word boundary and keep the shortest doctrine tail.
-  const clamped = cutAtWord(base, DESCRIPTION_MAX - " Measurement, not certification.".length - 1);
+  const clamped = trimDangling(cutAtWord(base, DESCRIPTION_MAX - " Measurement, not certification.".length - 1));
   const withTail = clamped.replace(/[.]+$/, "") + ". Measurement, not certification.";
   return withTail.length >= DESCRIPTION_MIN ? withTail : cutAtWord(base, DESCRIPTION_MAX);
 }
@@ -140,7 +150,7 @@ const FAMILIES: Family[] = [
   {
     pattern: "/for/:persona",
     name: (p) => `Council of AI for ${slugTitle(p).toLowerCase()} readers`,
-    lead: (n) => `${n}: the measurements that matter for this role, the signed evidence behind them, and the honest limits of what a measurement can show.`,
+    lead: (n) => `${n}: the measurements that matter to this role, the signed evidence behind them and their honest limits.`,
   },
   {
     pattern: "/vs/:slug",
