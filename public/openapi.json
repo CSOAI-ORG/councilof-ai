@@ -9482,6 +9482,22 @@
         "summary": "GET /api/x402-trust-seller?host=<catalog-host>"
       }
     },
+    "/api/xl": {
+      "get": {
+        "description": "GET /api/xl \u2014 the signed cross-ledger daily record, free and verbatim: the newest xl-daily record on the public Hugging Face dataset csoai/cross-ledger-supply, byte for byte as published, served only after its Ed25519-signed wrapper verifies under the pinned board key and pins the sha256 of exactly these bytes. ?date=YYYY-MM-DD serves that day's record; ?part=signed serves the signed wrapper itself. A record that does not verify is never served (503). The values are each ledger's own supply figure (totalSupply() or its equivalent), not issued or outstanding supply, reserves or redeemability, and nothing here ranks issuers.",
+        "operationId": "get__api_xl",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/xl \u2014 the signed cross-ledger daily record, free and verbatim: the newest xl-daily record on the public Hugging Face dataset csoai/cross-ledger-supply, byte for byte as published, served\u2026"
+      }
+    },
     "/api/xrpl": {
       "get": {
         "description": "GET /api/xrpl \u2014 reader of the committed public-root 16.",
@@ -9611,7 +9627,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 98,
+    "public_operations": 99,
     "quarantined": [
       {
         "buyable": false,

@@ -30,10 +30,14 @@ export async function xlDates(ctx: Ctx): Promise<string[]> {
   return (await hfTree(ctx, XL_DS, "xl-daily")).filter((x) => x.type === "directory").map((x) => x.path.split("/").pop()!).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
 }
 
-/** The newest signed xl-daily record, or the one for `onDate` (null when no record exists for that date). */
-export async function loadXl(ctx: Ctx): Promise<XlData>;
-export async function loadXl(ctx: Ctx, onDate: string): Promise<XlData | null>;
-export async function loadXl(ctx: Ctx, onDate?: string): Promise<XlData | null> {
+export interface XlLocation { date: string; version: string; path: string; signedPath: string }
+
+/**
+ * Where the newest xl-daily record (or the one for `onDate`) lives: the newest dated directory, and in
+ * it the highest re-derivation vN (a day with no vN directory is v1). null when that date has no
+ * record. One rule, shared by the entity pages and the verbatim proxy at /api/xl.
+ */
+export async function xlLocate(ctx: Ctx, onDate?: string): Promise<XlLocation | null> {
   const dates = await xlDates(ctx);
   if (onDate && !dates.includes(onDate)) return null;
   if (!dates.length) throw new SourceError(`${XL_DS} file listing`, "no xl-daily record");
@@ -42,7 +46,17 @@ export async function loadXl(ctx: Ctx, onDate?: string): Promise<XlData | null> 
   const versions = inDay.filter((x) => x.type === "directory").map((x) => x.path.split("/").pop()!).filter((v) => /^v\d+$/.test(v)).sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
   const version = versions.length ? versions[versions.length - 1] : "v1";
   const base = versions.length ? `xl-daily/${date}/${version}` : `xl-daily/${date}`;
-  const record = await signedRecord(ctx, XL_DS, `${base}/xl-daily-${date}.json`, `${base}/xl-daily-${date}.signed.json`);
+  return { date, version, path: `${base}/xl-daily-${date}.json`, signedPath: `${base}/xl-daily-${date}.signed.json` };
+}
+
+/** The newest signed xl-daily record, or the one for `onDate` (null when no record exists for that date). */
+export async function loadXl(ctx: Ctx): Promise<XlData>;
+export async function loadXl(ctx: Ctx, onDate: string): Promise<XlData | null>;
+export async function loadXl(ctx: Ctx, onDate?: string): Promise<XlData | null> {
+  const loc = await xlLocate(ctx, onDate);
+  if (!loc) return null;
+  const { date, version } = loc;
+  const record = await signedRecord(ctx, XL_DS, loc.path, loc.signedPath);
   const j = record.json as Json;
   const parity = (j.parity || {}) as Json;
   const findings = [
