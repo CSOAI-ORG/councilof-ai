@@ -1,13 +1,21 @@
 {
-  "schema": "csoai.well-known/0.1",
-  "slug": "charter",
-  "name": "Charter",
-  "description": "Build a charter for a fictional AI system, get signed",
-  "as_of": "20260904T060144Z",
-  "links": {
-    "self": "https://councilof.ai/.well-known/charter.json",
-    "live_board": "https://councilof.ai/api/gspc",
-    "verify": "https://councilof.ai/gspc-verify",
-    "x402_catalog": "https://councilof.ai/api/x402"
-  }
+  "schema": "csoai.charter-pointer/0.2",
+  "status": "CURRENT_OPERATIONAL_CHARTER",
+  "updated_at": "2026-09-28T14:30:00Z",
+  "name": "Council of AI Operational Constitutional Harness Charter",
+  "current": {
+    "human": "https://councilof.ai/constitutional-harness/",
+    "machine": "https://councilof.ai/.well-known/constitutional-harness.json",
+    "version": "0.1.0",
+    "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+    "publication_state": "PUBLIC_TWO_HOST_VERIFIED",
+    "signature_state": "UNSIGNED"
+  },
+  "amendments": "https://councilof.ai/.well-known/charter-amendments.json",
+  "legacy": {
+    "previous_descriptor_sha256": "98c88e8db6d92c4e61ceecbcfe416ed342cfe34f07469ae454e3bdbd29077ced",
+    "state": "SUPERSEDED_DESCRIPTOR",
+    "note": "Previous descriptor described a fictional charter builder. Historical partnership-charter material remains historical/reference content and does not override the operational runtime charter."
+  },
+  "claim_boundary": "This pointer identifies the current CSOAI runtime/evidence charter; it is not legislation, certification, accreditation, regulatory approval, or legal advice."
 }

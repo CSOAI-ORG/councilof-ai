@@ -1,0 +1,52 @@
+{
+  "schema": "csoai.public-constitutional-openshell-canary/0.1",
+  "date": "2026-09-28",
+  "state": "VERIFIED_BOUNDED_CANARY",
+  "scope": "Owner-authorized read-only public-evidence canary",
+  "resource": "https://councilof.ai/root.json",
+  "architecture": {
+    "constitutional_gate": "csoai.constitutional-request-composition/0.1",
+    "runtime": "NVIDIA OpenShell",
+    "openshell_version": "0.1.0",
+    "evidence_graph": "SovSpace",
+    "measurement_plane": "GSPC"
+  },
+  "execution": {
+    "action": "read_evidence",
+    "policy_sha256": "b6dd94812434fbeac116a1df682020f13cd8d293b2157310f43d4bdc97b9dac9",
+    "effect_bytes": 24505,
+    "effect_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+    "fresh_witness_exact_byte_match": true
+  },
+  "receipt": {
+    "original_state": "BOUND_EFFECT_UNVERIFIED",
+    "verified_state": "BOUND_EFFECT_VERIFIED",
+    "verified_receipt_content_id": "1d6218ec6acb5a936663a733e8e45abf43640e7fc074dc95b359810b878a2476"
+  },
+  "controls": {
+    "allowed_get": true,
+    "denied_post": true,
+    "denied_unlisted_egress": true,
+    "denied_filesystem_escape": true,
+    "outside_resource_constitutionally_denied": true,
+    "execution_action_constitutionally_denied": true
+  },
+  "dependency_maintenance": {
+    "source": "https://councilof.ai/root.json",
+    "sovspace_record": "openshell-r6-canary:1d6218ec6acb5a936663a733",
+    "source_change_reaches_record": true,
+    "impact_truncated": false
+  },
+  "limits": [
+    "This is a bounded owner-controlled read-only canary, not general production execution.",
+    "The canary does not establish customer/enterprise IdP authentication.",
+    "Fresh byte verification is not an independent organization or certification.",
+    "No payment, signing, private customer data, production write, regulatory conclusion, or model training occurred.",
+    "OpenBMC hardware evidence remains UNMEASURED until an owner-controlled BMC is connected."
+  ],
+  "verify": {
+    "public_resource": "https://councilof.ai/root.json",
+    "verifier": "https://councilof.ai/gspc-verify/",
+    "correction_history": "https://councilof.ai/corrections/"
+  }
+}

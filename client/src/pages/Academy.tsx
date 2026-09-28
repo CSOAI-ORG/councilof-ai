@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 
 // Academy - training + demo distribution surface. Turns the OS into courses anyone can
 // learn from and share. Each track is a short, sharable path through the live OS.
+// Every href must be a page that serves 200 as written: no 308 hops into the OS lobby and
+// no withdrawn pages (2026-09-28: /gspc-scoreboard, /towns and /legacy all dead-ended).
 type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: { t: string; href: string }[] };
 const TRACKS: Track[] = [
-  { id: "board", name: "Read the living board", level: "Beginner", mins: 15, blurb: "What is measured, what is empty, how to check a card. Completion attests training, not conformity.", steps: [
-    { t: "Open Council OS", href: "/dashboard?tab=home" },
-    { t: "The living board — empty cells stay empty", href: "/gspc-scoreboard" },
-    { t: "Verify a card in your browser", href: "/gspc-verify" },
-    { t: "Ask as the reader you are", href: "/dashboard?ask=&tab=home" + encodeURIComponent("In plain words, what does the Council of AI actually measure?") },
+  { id: "board", name: "Read the living board", level: "Beginner", mins: 15, blurb: "What is measured, what is empty, how to check a card. Finishing a track certifies nothing; a completion record needs a reproduced measurement.", steps: [
+    { t: "Open Council OS", href: "/dashboard/?tab=home" },
+    { t: "The living board — empty cells stay empty", href: "/dashboard/?tab=board" },
+    { t: "Verify a card in your browser", href: "/gspc-verify/" },
+    { t: "Ask as the reader you are", href: "/dashboard/?tab=home&ask=" + encodeURIComponent("In plain words, what does the Council of AI actually measure?") },
   ]},
   { id: "found", name: "Foundations of AI Governance", level: "Beginner", mins: 20, blurb: "Why governance, where it comes from, and how the OS decides.", steps: [
     { t: "Rediscovered, Not Invented - 4,000 years", href: "/lineage" },
@@ -17,7 +19,7 @@ const TRACKS: Track[] = [
     { t: "Try the Council yourself", href: "/try" },
   ]},
   { id: "law", name: "Know Your Jurisdiction", level: "Beginner", mins: 15, blurb: "Read the cross-layer law stack for any place.", steps: [
-    { t: "MEOK Law by jurisdiction", href: "/meok-law" },
+    { t: "Jurisdiction engine — cross-layer AI law", href: "/meok-law/" },
     { t: "Framework Temples", href: "/temples" },
     { t: "Relevance Map", href: "/map" },
   ]},
@@ -26,10 +28,10 @@ const TRACKS: Track[] = [
     { t: "Industry Playbooks", href: "/playbooks" },
     { t: "Ask the Council about your system", href: "/try" },
   ]},
-  { id: "build", name: "Build on the OS", level: "Advanced", mins: 30, blurb: "Legacy bridging, Council towns, and the distribution model.", steps: [
-    { t: "Legacy Bridge", href: "/legacy" },
-    { t: "Council Towns - the multiplication engine", href: "/towns" },
-    { t: "Services - the whole OS", href: "/services" },
+  { id: "build", name: "Build on the OS", level: "Advanced", mins: 30, blurb: "Signed records you can re-check, the evidence doors, and how a completion record is earned.", steps: [
+    { t: "Measurement capsules — signed, checkable records", href: "/measurement-capsules/" },
+    { t: "Services — supported feeds and evidence doors", href: "/services/" },
+    { t: "Completion records — how they work", href: "/academy/#completion-records" },
   ]},
 ];
 
