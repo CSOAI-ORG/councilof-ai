@@ -55,7 +55,12 @@ const RULES = [
     // sov3 / sov33 / sov34 (and hyphenated variants like sov33-dist-c3), SOVOS,
     // dorado, cibola — internal names, never public. Caught live on /benchmarks
     // 2026-08-25 because this class was missing from the gate.
-    pattern: /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b/i,
+    // venturi / pontius / laputa (added 2026-09-28, lane codename-hygiene): internal architecture
+    // names (the outside-in measurement engine, the bridge fabric, and one more). No trailing \b,
+    // so venturi_capsule and CamelCase joins are caught too. Public copy says "measurement capsule",
+    // "wrapped-asset measurements". "SovX" is NOT here: the owner made it a public product name for
+    // the wrapped-asset measurements on 2026-09-28 (15:30Z ruling); the selftest pins that.
+    pattern: /\bsovos\b|\bsov3\d*(?:-[a-z0-9-]+)?\b|\bdorado\b|\bcibola\b|\bventuri|\bpontius|\blaputa/i,
     why: "Internal codename on a public surface. Use the public-canon name (Council / the fine-tune's neutral description).",
   },
   {
@@ -170,7 +175,7 @@ const RULES = [
   },
 ];
 
-const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b/i;
+const PATH_BANNED = /\b(sovos|sov3\d*|dorado|cibola|ceasai)\b|\b(venturi|pontius|laputa)/i;
 
 /** The distribution catalogues: a confirmed list of package names and the measurement over it. */
 const DISTRIBUTION_CATALOGUE = /^\/interop\/(footprint-packages|distribution-(latest|\d{4}-\d{2}-\d{2}))\.json$/;
@@ -289,6 +294,10 @@ if (SELFTEST) {
     ["retracted_fault_tolerance", "the 33-agent BFT council", "the retraction of the BFT claim is in the refutation ledger"],
     ["sovereign_brand", "Project: Sovereign Signed-Card Anchor", null],
     ["internal_codenames", "PixiJS + SOV3 substrate", null],
+    ["internal_codenames", "the Venturi throat seals one capsule per event", null],
+    ["internal_codenames", "venturi_capsule.py build --adapter operations", null],
+    ["internal_codenames", "Pontius carries admitted evidence across rails", null],
+    ["internal_codenames", "Laputa", null],
   ];
   let bad = 0;
   for (const [id, mustCatch, mustAllow] of CASES) {
@@ -300,6 +309,22 @@ if (SELFTEST) {
     if (mustAllow && rule.allowOn && !rule.allowOn.test(mustAllow)) {
       console.error(`\u2716 selftest: rule "${id}" no longer allows its documented exemption`); bad++;
     }
+  }
+  // Public names the gate must never catch. "SovX" is the owner-approved public product name for the
+  // wrapped-asset measurements (ruling 2026-09-28 15:30Z); a codename rule that swallowed it would strip
+  // an approved name at integration. The neutral names already in public copy must pass too.
+  for (const ok of ["SovX wrapped-asset measurements", "SovX", "measurement capsule", "wrapped-asset parity ledger"]) {
+    for (const rule of RULES) {
+      if (new RegExp(rule.pattern.source, rule.pattern.flags).test(ok)) {
+        console.error(`\u2716 selftest: rule "${rule.id}" catches the public name ${JSON.stringify(ok)}`); bad++;
+      }
+    }
+    if (PATH_BANNED.test(ok) || PATH_BANNED.test("/" + ok.toLowerCase().replace(/\s+/g, "-") + "/")) {
+      console.error(`\u2716 selftest: PATH_BANNED catches the public name ${JSON.stringify(ok)}`); bad++;
+    }
+  }
+  if (!PATH_BANNED.test("/interop/venturi-capsule-index.json") || !publicJsonCodenameHit("/interop/x.json", JSON.stringify({ schema: "csoai.venturi-capsule/0.1" }))) {
+    console.error("\u2716 selftest: path/JSON sweep no longer catches venturi"); bad++;
   }
   // The JSON display sweep is a gate in its own right, so it proves itself the same way:
   // it must CATCH the badge copy that actually shipped, and must PASS the negation keys,

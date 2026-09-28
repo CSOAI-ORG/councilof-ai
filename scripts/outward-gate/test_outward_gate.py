@@ -197,6 +197,38 @@ class TestVenturi(unittest.TestCase):
             self.assertEqual(Status.of(a["checks"], "doctrine.no_decision_fields"), [g.FAIL])
 
 
+class TestCapsuleDiscovery(unittest.TestCase):
+    """The run block must find the day's capsule index under the 0.2 names, and must FAIL (never skip) when none is recent."""
+
+    def lay(self, root, name, batches):
+        wr(os.path.join(root, name), json.dumps({"batches": batches}).encode())
+
+    def test_v02_index_and_batches_are_found(self):
+        sk, did = keypair()
+        with tempfile.TemporaryDirectory() as v:
+            b = os.path.join(v, "measurement-capsules-v0.2-2026-09-28-self_parity")
+            os.mkdir(b)
+            TestVenturi().build(b, sk)
+            self.lay(v, "measurement-index-v0.2-2026-09-28.json", [{"dir": b, "ots_state": "PENDING_CALENDAR_COMMITMENT"}])
+            self.lay(v, "venturi-index-2026-09-26.json", [])
+            arts = g.capsule_artifacts(TestVenturi().ctx(did), v, "2026-09-28")
+            self.assertEqual([a["kind"] for a in arts], ["venturi_index", "venturi_batch"])
+            self.assertTrue(arts[0]["url"].endswith("measurement-index-v0.2-2026-09-28.json"))
+
+    def test_yesterdays_index_is_scored_before_capsule_daily_runs(self):
+        with tempfile.TemporaryDirectory() as v:
+            self.lay(v, "measurement-index-v0.2-2026-09-27.json", [])
+            self.assertEqual(g.newest_capsule_index(v, "2026-09-28"), ("2026-09-27", "measurement-index-v0.2-2026-09-27.json"))
+
+    def test_stale_or_absent_index_fails_not_silent(self):
+        with tempfile.TemporaryDirectory() as v:
+            arts = g.capsule_artifacts(None, v, "2026-09-28")
+            self.assertEqual(Status.of(arts[0]["checks"], "hygiene.resolves"), [g.FAIL])
+            self.lay(v, "venturi-index-2026-09-26.json", [])  # the 0.1 name, two days old: the defect this guards
+            arts = g.capsule_artifacts(None, v, "2026-09-28")
+            self.assertEqual(Status.of(arts[0]["checks"], "hygiene.resolves"), [g.FAIL])
+            self.assertIn("venturi-index-2026-09-26.json", arts[0]["checks"][0]["evidence"])
+
 class TestDoctrine(unittest.TestCase):
     def test_banned_word_in_visible_text_fails(self):
         t = g.visible_text("<main><h1>CSOAI certified models</h1></main>")
