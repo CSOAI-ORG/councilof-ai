@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 import sys
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -124,13 +125,22 @@ def corroboration_measurement(org: str, term: str, domains: list[str]) -> dict:
 
 
 def pontes_participant_measurement() -> dict:
-    rows = {}
-    for org, doms in PONTES_NAMED.items():
+    # Each named entity is an independent public-site read. Run them concurrently so one slow
+    # organisation cannot serialize the whole 18-entity measurement for many minutes. Results are
+    # keyed and sorted below, so scheduling order never changes the published artifact.
+    def read_one(org: str, doms: list[str]):
         try:
-            rows[org] = corroborate.check(org, 'Pontes', domains=doms)
+            return org, corroborate.check(org, 'Pontes', domains=doms)
         except Exception:
-            rows[org] = {'status': 'SEARCH_INCONCLUSIVE', 'meaning': 'harness raised',
+            return org, {'status': 'SEARCH_INCONCLUSIVE', 'meaning': 'harness raised',
                          'traceback': traceback.format_exc()[-400:]}
+
+    rows = {}
+    with ThreadPoolExecutor(max_workers=min(6, len(PONTES_NAMED))) as pool:
+        futures = [pool.submit(read_one, org, doms) for org, doms in PONTES_NAMED.items()]
+        for future in as_completed(futures):
+            org, result = future.result()
+            rows[org] = result
     tally = {s: sorted(k for k, v in rows.items() if v['status'] == s)
              for s in ('CORROBORATED', 'NOT_FOUND', 'SEARCH_INCONCLUSIVE', 'NOT_SEARCHED')}
     conclusive = len(tally['CORROBORATED']) + len(tally['NOT_FOUND'])
