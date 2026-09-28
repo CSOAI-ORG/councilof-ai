@@ -81,6 +81,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         },
       },
     },
+    // THE INPUT AND OUTPUT SCHEMAS LIVE AT FIXED PATHS (added 2026-09-28). x402scan and AgentCash read a
+    // v2 door's input schema from schema.properties.input.properties.body, else .queryParams, and its
+    // output schema from schema.properties.output.properties.example (@agentcash/discovery 1.7.5,
+    // extractSchemas2). This door declared neither, so every registration reported
+    // SCHEMA_INPUT_MISSING and SCHEMA_OUTPUT_MISSING — both severity "error" — on the one door built
+    // to be indexed (x402scan register, 28 Sep 04:08Z). The input schema below is an object with no
+    // properties and additionalProperties:false: it states exactly "no query parameters", which is
+    // the truth. info.input still carries no queryParams key, so the facilitator's check of info
+    // against this schema (the 2026-09-05 rejection above) is unchanged: queryParams is optional here.
     schema: {
       $schema: "https://json-schema.org/draft/2020-12/schema",
       type: "object",
@@ -90,11 +99,41 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           properties: {
             type: { type: "string", const: "http" },
             method: { type: "string", enum: ["GET"] },
+            queryParams: {
+              type: "object",
+              description: "This door takes no query parameters. An unpaid GET answers the zero-amount 402.",
+              properties: {},
+              additionalProperties: false,
+            },
           },
           required: ["type", "method"],
           additionalProperties: false,
         },
-        output: { type: "object", properties: { type: { type: "string" } }, required: ["type"] },
+        output: {
+          type: "object",
+          properties: {
+            type: { type: "string" },
+            // The 200 body a settled (zero) payment returns. The five required keys are the ones the
+            // live Bazaar record already promises (see FULFILMENT below); the rest are added at
+            // request time and may be absent or null.
+            example: {
+              type: "object",
+              properties: {
+                schema: { type: "string", const: "csoai.free-door/0.1" },
+                price_usdc: { type: "number", const: 0 },
+                board: { type: "string" },
+                root: { type: "string" },
+                verify: { type: "string" },
+                catalog: { type: "string" },
+                totals: { description: "/api/gspc totals read live at request time; null when that read failed" },
+                totals_note: { type: "string" },
+                paid: { type: "object" },
+              },
+              required: ["schema", "price_usdc", "board", "root", "verify"],
+            },
+          },
+          required: ["type"],
+        },
       },
       required: ["input"],
     },

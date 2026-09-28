@@ -2295,7 +2295,26 @@
       "get": {
         "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
         "operationId": "x402_free_door",
-        "parameters": [],
+        "parameters": [
+          {
+            "description": "x402 payment payload (base64 JSON) settling the zero-amount challenge. Omit it to read the 402; nothing is charged either way.",
+            "in": "header",
+            "name": "X-PAYMENT",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "x402 v2 payment payload header, accepted in place of X-PAYMENT. Omit it to read the 402.",
+            "in": "header",
+            "name": "PAYMENT-SIGNATURE",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
