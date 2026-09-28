@@ -1,0 +1,49 @@
+{
+ "decode_terms_found_in_source": [
+  "copybook"
+ ],
+ "has_decode_path": false,
+ "mcp_tools": [
+  {
+   "params": [
+    "source_code",
+    "api_key"
+   ],
+   "tool": "parse_cobol_program"
+  },
+  {
+   "params": [
+    "source_code",
+    "max_rules",
+    "api_key"
+   ],
+   "tool": "identify_business_rules"
+  },
+  {
+   "params": [
+    "source_code",
+    "target_stack",
+    "api_key"
+   ],
+   "tool": "estimate_migration_complexity"
+  },
+  {
+   "params": [
+    "loc",
+    "complexity",
+    "api_key"
+   ],
+   "tool": "plan_migration_phases"
+  },
+  {
+   "params": [
+    "source_code",
+    "target_stack",
+    "api_key"
+   ],
+   "tool": "generate_test_harness"
+  }
+ ],
+ "module": "server.py",
+ "package": "cobol-bridge-mcp"
+}
