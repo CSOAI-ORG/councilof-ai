@@ -1,0 +1,9 @@
+# Layer 0 staged jobs - PROPOSED, NOT INSTALLED. Build pod crontab (UTC). The integrator installs.
+# Paths assume the jobs are on canon under scripts/layer0/jobs and a job copy is kept at /workspace/ci-v2/layer0-jobs.
+40 5 * * *   flock -n /workspace/locks/l0-verify.lock  bash /workspace/ci-v2/layer0-jobs/verify-records.sh        >> /workspace/state/layer0/verify-records.log 2>&1
+10 13 * * *  flock -n /workspace/locks/l0-ots.lock     bash /workspace/ci-v2/layer0-jobs/ots-repo-upgrade.sh      >> /workspace/state/layer0/ots-repo-upgrade.log 2>&1
+20 6 * * 1   flock -n /workspace/locks/l0-bc.lock      bash /workspace/ci-v2/layer0-jobs/ots-block-check.sh       >> /workspace/state/layer0/ots-block-check.log 2>&1
+30 6 * * 1   flock -n /workspace/locks/l0-surface.lock bash /workspace/ci-v2/layer0-jobs/surface-reprobe.sh       >> /workspace/state/layer0/surface-reprobe.log 2>&1
+0 7 * * 1    flock -n /workspace/locks/l0-adir.lock    bash /workspace/ci-v2/layer0-jobs/agent-directory-census.sh >> /workspace/state/layer0/agent-directory.log 2>&1
+# root-ceremony-prep.sh: install only after the port (it exits 2 NEEDS_PORT until then)
+# root-ceremony-freeze.sh: on demand, before a ceremony
