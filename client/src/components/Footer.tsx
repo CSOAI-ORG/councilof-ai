@@ -17,6 +17,9 @@ interface FooterLink {
   name: string;
   href: string;
   external?: boolean;
+  /** A same-tab full page load: the address is served by a Pages Function or a static file,
+   *  not by an SPA route, so client-side navigation to it would render the SPA's 404. */
+  native?: boolean;
 }
 
 export function Footer() {
@@ -28,14 +31,14 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Request attestation', href: '/assess' },
-        { name: 'Board', href: '/dashboard?tab=board' },
-        { name: 'Tools — plugin snippet', href: '/tools' },
+        { name: 'Verify a card', href: '/gspc-verify/' },
+        { name: 'Request attestation', href: '/assess/' },
+        { name: 'Board', href: '/dashboard/?tab=board' },
+        { name: 'Tools — plugin snippet', href: '/tools/' },
         { name: 'Ask about a measured run', href: '/contact/?arm=run' },
         { name: 'Ledger', href: '/contact/?arm=ledger' },
         { name: 'Data', href: '/contact/?arm=data' },
-        { name: 'Library', href: '/library' },
+        { name: 'Library', href: '/library/' },
       ],
     },
     // 2026-09-22: a fifth column. Every address below answers today (checked live) and each one
@@ -60,13 +63,31 @@ export function Footer() {
       links: [
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
         { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
-        { name: 'Methodology', href: '/methodology' },
-        { name: 'Honesty gate', href: '/honesty' },
+        { name: 'Methodology', href: '/methodology/' },
+        { name: 'Honesty gate', href: '/honesty/' },
         // The readable ledger page (renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/corrections/' },
-        { name: 'How far this reaches', href: '/reach' },
+        { name: 'How far this reaches', href: '/reach/' },
         { name: 'llms.txt', href: '/llms.txt', external: true },
-        { name: 'API docs', href: '/api-docs' },
+        { name: 'API docs', href: '/api-docs/' },
+      ],
+    },
+    // 2026-09-28 (search-reach): the published record pages. A live crawl of the 443 sitemap URLs
+    // found every one of these with ZERO links from any other page — reachable from the sitemap
+    // alone, so a crawler that follows links never met them and an answer engine had no path in.
+    // Each href answered 200 on 2026-09-28. They are Pages Functions or static files, hence native.
+    {
+      title: 'Records',
+      links: [
+        { name: 'MCP servers — declared vs observed', href: '/mcp-servers/', native: true },
+        { name: 'A2A agent cards — listed vs served', href: '/agent-cards/', native: true },
+        { name: 'x402 doors and hosts', href: '/x402/', native: true },
+        { name: 'Tokenised-asset deployments', href: '/stablecoins/deployments/', native: true },
+        { name: 'Daily measurement notes', href: '/notes/daily/', native: true },
+        { name: 'GSPC axes, one page each', href: '/axes', native: true },
+        { name: 'Signed findings', href: '/findings/', native: true },
+        { name: 'Claim maintenance', href: '/claim-maintenance/', native: true },
+        { name: 'Records feed (Atom)', href: '/feeds/records.xml', native: true },
       ],
     },
     {
@@ -76,18 +97,18 @@ export function Footer() {
         { name: 'Independence and conflicts', href: '/independence/' },
         { name: 'Contact', href: '/contact/' },
         { name: 'Where we take part', href: '/memberships/' },
-        { name: 'Blog', href: '/blog' },
+        { name: 'Blog', href: '/blog/' },
         { name: 'FAQ', href: '/faq/' },
-        { name: 'Careers', href: '/careers' },
+        { name: 'Careers', href: '/careers/' },
       ],
     },
     {
       title: 'Legal',
       links: [
-        { name: 'Disclaimers', href: '/disclaimers' },
-        { name: 'Privacy', href: '/privacy-policy' },
-        { name: 'Terms', href: '/terms-of-service' },
-        { name: 'GDPR / DPA', href: '/dpa' },
+        { name: 'Disclaimers', href: '/disclaimers/' },
+        { name: 'Privacy', href: '/privacy-policy/' },
+        { name: 'Terms', href: '/terms-of-service/' },
+        { name: 'GDPR / DPA', href: '/dpa/' },
       ],
     },
   ];
@@ -157,15 +178,19 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Link columns (4) */}
-        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
+        {/* Link columns (6) */}
+        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h3 className="t-kicker mb-3 text-foreground">{section.title}</h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    {link.external ? (
+                    {link.native ? (
+                      <a href={link.href} className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                        {link.name}
+                      </a>
+                    ) : link.external ? (
                       <a
                         href={link.href}
                         target="_blank"
@@ -288,7 +313,7 @@ export function Footer() {
             Naming a framework is not a claim to comply with it, and taking part in a body is not
             that body endorsing us. We are not certified to SOC 2 or ISO 42001, and we hold no
             certification under any scheme. We publish measurements, never certifications.{' '}
-            <Link href="/memberships" className="text-primary underline underline-offset-2 hover:decoration-2">
+            <Link href="/memberships/" className="text-primary underline underline-offset-2 hover:decoration-2">
               Every participation record, with its evidence
             </Link>
             .
@@ -324,7 +349,7 @@ export function Footer() {
               the argument. */}
           Every stage of how far this work travels is measured separately and never added
           together.{" "}
-          <Link href="/reach" className="text-primary underline underline-offset-2 hover:decoration-2">
+          <Link href="/reach/" className="text-primary underline underline-offset-2 hover:decoration-2">
             All seven stages, including the ones we cannot measure yet
           </Link>
         </p>

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 /**
  * Australia AI Governance Landing Page
  * Framework-specific landing page for Australian AI regulation
@@ -7,7 +6,6 @@ import { useEffect } from "react";
 import { FrameworkLandingPage } from './FrameworkLandingPage';
 
 export default function AustraliaAIGovernancePage() {
-  useEffect(() => { document.title = "AustraliaAIGovernance | CSOAI"; }, []);
   return (
     <FrameworkLandingPage
       frameworkId="australia-ai"

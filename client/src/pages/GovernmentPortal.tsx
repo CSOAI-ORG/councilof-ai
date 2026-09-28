@@ -1,4 +1,4 @@
-import {useState, useEffect } from "react";
+import {useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart3, Lock, Send, TrendingUp, Users, AlertCircle, CheckCircle2 } from "lucide-react";
 
 export default function GovernmentPortal() {
-  useEffect(() => { document.title = "GovernmentPortal | CSOAI"; }, []);
   const [activeTab, setActiveTab] = useState("overview");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
