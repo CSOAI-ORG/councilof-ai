@@ -26,6 +26,7 @@
  * NEVER: a grade, a rank, a certificate, or a paid artefact served free. Verification is free
  * forever, which is exactly why a zero price here is honest rather than promotional.
  */
+import { headFromGet } from "./_head";
 import { x402Accepts, buildPaymentRequiredV2, paymentRequiredResponseSigned, verifyX402Payment, type X402Env } from "./_x402";
 
 type Env = X402Env;
@@ -226,3 +227,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

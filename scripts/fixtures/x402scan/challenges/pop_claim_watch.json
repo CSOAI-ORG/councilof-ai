@@ -12,10 +12,9 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.population.claim-watch",
         "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
-      "description": "Population door: Claim-maintenance registries — 8 claims captured across the published registries, as of 2026-09-22, state INDEXED. one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+      "description": "Population door: Claim-maintenance registries — 198 claims captured across the published registries, as of 2026-09-25, state INDEXED. one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -46,12 +45,24 @@
     ],
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the Claim-maintenance registries slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_manifest": "https://councilof.ai/api/pop/claim-watch/manifest",
     "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
     "free_sources": [
+      "/spec/claim-maintenance/register.json",
+      "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+      "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
+      "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+      "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json.ots",
+      "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
+      "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
+      "/claims/claimreg-hiring-platforms-2026-09-24.json",
+      "/claims/claimreg-hiring-platforms-2026-09-24.json.ots",
+      "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+      "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
       "/claims/claimreg-ondo-chainlink-2026-09-22.json",
       "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots"
     ],
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "a grade",
       "a rank",
@@ -69,15 +80,315 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "population-slice",
     "population": "claim-watch",
     "preview": {
-      "as_of": "2026-09-22",
+      "as_of": "2026-09-25",
       "head": {
+        "claim_states_across_registries": {
+          "CLAIM_CAPTURED": 9,
+          "CLAIM_MEASURED": 61,
+          "UNCHECKABLE": 52,
+          "UNMEASURED": 76
+        },
         "identification": "a claim is a sentence captured verbatim from the vendor's public page or API at the registry's created_utc, typed by kind, with the plan by which it could be measured; the file bytes are served unchanged and never edited",
         "registries": [
+          {
+            "claims": 62,
+            "claims_per_subject": {
+              "16939677": 4,
+              "549300DTUYXVMJXZNY75": 4,
+              "anthropic.com": 2,
+              "arize.com": 3,
+              "armilla.ai": 2,
+              "credo.ai": 3,
+              "galileo.ai": 2,
+              "github.com/Giskard-AI/giskard-oss": 3,
+              "github.com/NVIDIA-NeMo/Guardrails": 4,
+              "github.com/NVIDIA/garak": 3,
+              "github.com/guardrails-ai/guardrails": 2,
+              "github.com/invariantlabs-ai/invariant": 3,
+              "github.com/meta-llama/PurpleLlama": 3,
+              "github.com/microsoft/PyRIT": 1,
+              "helicone.ai": 3,
+              "holisticai.com": 3,
+              "langfuse.com": 5,
+              "mistral.ai": 2,
+              "sebi.gov.in": 3,
+              "traceloop.com": 3,
+              "vanta.com": 4
+            },
+            "created_utc": "2026-09-25",
+            "file": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+            "file_sha256": "eff510e1f9af41d4e76e88361b1c6ef644365f9a7892a24d7ab648c21172e557",
+            "maintainer": "CSOAI Ltd — claim maintenance (measurement, never certification)",
+            "merkle": {
+              "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+              "n_leaves": null,
+              "root": "bd3937319cc57265e78b4ccca67446cc004e7a8ebd00b5e4bbf68792de72b610"
+            },
+            "notes": null,
+            "ots": {
+              "bytes": 565,
+              "path": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
+              "sha256": "4a3779ec11469aa8de803846096f185569fb2a252e796b2b3cd26db19bc1d194",
+              "state": "PENDING"
+            },
+            "registry_digest": "20da0382b4dee5eb2b896f9173282ed57e715274a645eb2e7941268f71e948ae",
+            "registry_digest_reproducible": true,
+            "registry_digest_rule": "sha256 over compact sorted-key UTF-8 integer-only canonical JSON, omitting registry_digest; v0.3 rule, recomputed from served bytes",
+            "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+            "schema": "csoai.claim-registry/0.3",
+            "signature_state": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
+            "states": {
+              "CLAIM_MEASURED": 20,
+              "UNCHECKABLE": 10,
+              "UNMEASURED": 32
+            },
+            "subjects": [
+              "16939677",
+              "vanta.com",
+              "credo.ai",
+              "holisticai.com",
+              "armilla.ai",
+              "arize.com",
+              "langfuse.com",
+              "galileo.ai",
+              "traceloop.com",
+              "helicone.ai",
+              "anthropic.com",
+              "mistral.ai",
+              "549300DTUYXVMJXZNY75",
+              "sebi.gov.in",
+              "github.com/NVIDIA-NeMo/Guardrails",
+              "github.com/NVIDIA/garak",
+              "github.com/guardrails-ai/guardrails",
+              "github.com/microsoft/PyRIT",
+              "github.com/meta-llama/PurpleLlama",
+              "github.com/invariantlabs-ai/invariant",
+              "github.com/Giskard-AI/giskard-oss"
+            ],
+            "supersedes": {
+              "file": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+              "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23",
+              "sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac"
+            }
+          },
+          {
+            "claims": 62,
+            "claims_per_subject": {
+              "16939677": 4,
+              "549300DTUYXVMJXZNY75": 4,
+              "anthropic.com": 2,
+              "arize.com": 3,
+              "armilla.ai": 2,
+              "credo.ai": 3,
+              "galileo.ai": 2,
+              "github.com/Giskard-AI/giskard-oss": 3,
+              "github.com/NVIDIA-NeMo/Guardrails": 4,
+              "github.com/NVIDIA/garak": 3,
+              "github.com/guardrails-ai/guardrails": 2,
+              "github.com/invariantlabs-ai/invariant": 3,
+              "github.com/meta-llama/PurpleLlama": 3,
+              "github.com/microsoft/PyRIT": 1,
+              "helicone.ai": 3,
+              "holisticai.com": 3,
+              "langfuse.com": 5,
+              "mistral.ai": 2,
+              "sebi.gov.in": 3,
+              "traceloop.com": 3,
+              "vanta.com": 4
+            },
+            "created_utc": "2026-09-23",
+            "file": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+            "file_sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+            "maintainer": "CSOAI Ltd — claim maintenance (measurement, never certification)",
+            "merkle": {
+              "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+              "n_leaves": null,
+              "root": "6bbb10ac1a67640480593e6e39a7746b2f3045f67933f1a741cc7704f618e356"
+            },
+            "notes": null,
+            "ots": {
+              "bytes": 770,
+              "path": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json.ots",
+              "sha256": "ffeb9b7765771ea0638178d69a182e9da7f7a977f7a50ddef9cd0c70452417fb",
+              "state": "PENDING"
+            },
+            "registry_digest": "c80ae3e64a6df0504c2c410dfd534282af6fac2cc85560e958e23d0d4f9c5020",
+            "registry_digest_reproducible": true,
+            "registry_digest_rule": "sha256 over compact sorted-key UTF-8 integer-only canonical JSON, omitting registry_digest; v0.3 rule, recomputed from served bytes",
+            "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23",
+            "schema": "csoai.claim-registry/0.3",
+            "signature_state": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-ai-assurance-and-settlement-2026-09-23.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
+            "states": {
+              "CLAIM_MEASURED": 20,
+              "UNCHECKABLE": 10,
+              "UNMEASURED": 32
+            },
+            "subjects": [
+              "16939677",
+              "vanta.com",
+              "credo.ai",
+              "holisticai.com",
+              "armilla.ai",
+              "arize.com",
+              "langfuse.com",
+              "galileo.ai",
+              "traceloop.com",
+              "helicone.ai",
+              "anthropic.com",
+              "mistral.ai",
+              "549300DTUYXVMJXZNY75",
+              "sebi.gov.in",
+              "github.com/NVIDIA-NeMo/Guardrails",
+              "github.com/NVIDIA/garak",
+              "github.com/guardrails-ai/guardrails",
+              "github.com/microsoft/PyRIT",
+              "github.com/meta-llama/PurpleLlama",
+              "github.com/invariantlabs-ai/invariant",
+              "github.com/Giskard-AI/giskard-oss"
+            ],
+            "supersedes": null
+          },
+          {
+            "claims": 29,
+            "claims_per_subject": {
+              "gotohuman.com": 6,
+              "instahuman.com": 4,
+              "invoke.nanocorp.app": 5,
+              "paymanai.com": 5,
+              "rentahuman.ai": 9
+            },
+            "created_utc": "2026-09-25",
+            "file": "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
+            "file_sha256": "1884c028868794c081649e38d2ceed6059ac64e06241157c61a9d1cd036683a7",
+            "maintainer": "CSOAI Ltd — claim maintenance (measurement, never certification)",
+            "merkle": {
+              "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+              "n_leaves": null,
+              "root": "e09531121cc3fa6b98e8777496d24dde0c69083ae933036d614fdc49ee23b175"
+            },
+            "notes": null,
+            "ots": {
+              "bytes": 565,
+              "path": "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
+              "sha256": "51cfdac6805bec064af43f52c7bb68dcadaddba96e3c0d875934d577cb572e55",
+              "state": "PENDING"
+            },
+            "registry_digest": "91a31769c8e18353a9933a28c1f05d5025647c88c0c95c4f612618fb065aff1f",
+            "registry_digest_reproducible": true,
+            "registry_digest_rule": "sha256 over compact sorted-key UTF-8 integer-only canonical JSON, omitting registry_digest; v0.3 rule, recomputed from served bytes",
+            "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+            "schema": "csoai.claim-registry/0.3",
+            "signature_state": "SIGNED BY SIDECAR. The signature is over these bytes, not inside them, because signed bytes are superseded and never edited (spec 9.4). See /claims/claimreg-hiring-platforms-2026-09-24-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing, certifies nobody, and says nothing about any party named here (spec 9.5).",
+            "states": {
+              "CLAIM_MEASURED": 8,
+              "UNCHECKABLE": 16,
+              "UNMEASURED": 5
+            },
+            "subjects": [
+              "rentahuman.ai",
+              "gotohuman.com",
+              "paymanai.com",
+              "invoke.nanocorp.app",
+              "instahuman.com"
+            ],
+            "supersedes": {
+              "file": "/claims/claimreg-hiring-platforms-2026-09-24.json",
+              "registry_id": "claimreg-hiring-platforms-2026-09-24",
+              "sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd"
+            }
+          },
+          {
+            "claims": 29,
+            "claims_per_subject": {
+              "gotohuman.com": 6,
+              "instahuman.com": 4,
+              "invoke.nanocorp.app": 5,
+              "paymanai.com": 5,
+              "rentahuman.ai": 9
+            },
+            "created_utc": "2026-09-24",
+            "file": "/claims/claimreg-hiring-platforms-2026-09-24.json",
+            "file_sha256": "b36639e64146aaa5ee193651330fde1093dcaab294813b43a5deca00992b7cbd",
+            "maintainer": "CSOAI Ltd — claim maintenance (measurement, never certification)",
+            "merkle": {
+              "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+              "n_leaves": null,
+              "root": "72bfe56d27ebb82e368e722963b29f53b416e65914c8a5f694e36f4fb6435358"
+            },
+            "notes": null,
+            "ots": {
+              "path": "/claims/claimreg-hiring-platforms-2026-09-24.json.ots",
+              "reason": "/claims/claimreg-hiring-platforms-2026-09-24.json.ots HTTP 404",
+              "state": "UNMEASURED"
+            },
+            "registry_digest": "ca951f4c45fec358358efd7440537df98d8d382bce6c60562459fb0d565444ea",
+            "registry_digest_reproducible": true,
+            "registry_digest_rule": "sha256 over compact sorted-key UTF-8 integer-only canonical JSON, omitting registry_digest; v0.3 rule, recomputed from served bytes",
+            "registry_id": "claimreg-hiring-platforms-2026-09-24",
+            "schema": "csoai.claim-registry/0.3",
+            "signature_state": "UNSIGNED DRAFT. This registry has not been signed. It was built on a lane branch for review and has no .signed.json sidecar; nothing in it may be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, when one exists, will prove only that these bytes were committed to at that time; it grades nothing and certifies nobody (spec 9.5).",
+            "states": {
+              "CLAIM_MEASURED": 8,
+              "UNCHECKABLE": 16,
+              "UNMEASURED": 5
+            },
+            "subjects": [
+              "rentahuman.ai",
+              "gotohuman.com",
+              "paymanai.com",
+              "invoke.nanocorp.app",
+              "instahuman.com"
+            ],
+            "supersedes": null
+          },
+          {
+            "claims": 8,
+            "claims_per_subject": {
+              "chainlink": 5,
+              "ondo": 3
+            },
+            "created_utc": "2026-09-22",
+            "file": "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+            "file_sha256": "4c8efe065cffbba0c7674907ddb882eb1d4144af543e263a16ac318b0cf2ca59",
+            "maintainer": "CSOAI Ltd — claim maintenance (measurement, not certification)",
+            "merkle": {
+              "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+              "n_leaves": 8,
+              "root": "81d1b4d0eb671da534a4de471f03c02f2ed4ae2fa3d0a58f590a7ce7697be102"
+            },
+            "notes": "Second pass of claim maintenance on named subjects: every claim the public record allows was measured, each one states its window, denominator, method and sources, and each one states what it does not prove. Claims that could not be moved say why.",
+            "ots": {
+              "bytes": 635,
+              "path": "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
+              "sha256": "dcf9b18fe25a2913763b195d07a8a68283a8da1084cad303c04648114f2ba4a1",
+              "state": "PENDING"
+            },
+            "registry_digest": "5edb8b0bb8c54daa04ab06a0a6a7738d12bf0bce54e72d6adf5162e2119bb0bb",
+            "registry_digest_reproducible": true,
+            "registry_digest_rule": "sha256 over Python sorted-indent-1 ASCII JSON omitting registry_digest; legacy rule, recomputed from served bytes",
+            "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+            "schema": "csoai.claim-registry/0.2",
+            "signature_state": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-2026-09-22-rev2.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
+            "states": {
+              "CLAIM_CAPTURED": 1,
+              "CLAIM_MEASURED": 5,
+              "UNMEASURED": 2
+            },
+            "subjects": [
+              "chainlink",
+              "ondo"
+            ],
+            "supersedes": {
+              "file": "/claims/claimreg-ondo-chainlink-2026-09-22.json",
+              "registry_id": "claimreg-ondo-chainlink-2026-09-22",
+              "sha256": "acc0f9ac2712f8b9cbc5c707142b4e7954d16e1582ddcdd5adb2afaf0e0908fe"
+            }
+          },
           {
             "claims": 8,
             "claims_per_subject": {
@@ -88,6 +399,7 @@
             "file": "/claims/claimreg-ondo-chainlink-2026-09-22.json",
             "file_sha256": "acc0f9ac2712f8b9cbc5c707142b4e7954d16e1582ddcdd5adb2afaf0e0908fe",
             "maintainer": "CSOAI Ltd — claim maintenance (measurement, not certification)",
+            "merkle": null,
             "notes": "First live claim-maintenance pass executed permissionlessly from public pages/APIs. States: CLAIM_CAPTURED (hashed, timestamped, source-cited). CLAIM_MEASURED requires the harness runs queued in measurement_plan. No claim of falsity is made about any entry.",
             "ots": {
               "bytes": 735,
@@ -97,7 +409,7 @@
             },
             "registry_digest": "cbec2409cbce299326f8781d9c1b32095809c2ad38e219d61908c22fe17869e6",
             "registry_digest_reproducible": true,
-            "registry_digest_rule": "sha256 of python json.dumps(sort_keys=True, indent=1) [ensure_ascii default] over the file minus registry_digest — recomputed from the served bytes at request time",
+            "registry_digest_rule": "sha256 over Python sorted-indent-1 ASCII JSON omitting registry_digest; legacy rule, recomputed from served bytes",
             "registry_id": "claimreg-ondo-chainlink-2026-09-22",
             "schema": "csoai.claim-registry/0.1",
             "signature_state": "UNSIGNED — signer ceremony pending; OTS-anchored instead (no key required)",
@@ -107,20 +419,39 @@
             "subjects": [
               "chainlink",
               "ondo"
-            ]
+            ],
+            "supersedes": null
           }
-        ]
+        ],
+        "superseded_registry_ids": [
+          "claimreg-ai-assurance-and-settlement-2026-09-23",
+          "claimreg-hiring-platforms-2026-09-24",
+          "claimreg-ondo-chainlink-2026-09-22"
+        ],
+        "supersession_rule": "a superseding registry is a new file; the prior bytes are never edited and both remain served"
       },
-      "n": 8,
+      "n": 198,
       "n_unit": "claims captured across the published registries",
       "reason": null,
       "source": [
+        "/spec/claim-maintenance/register.json",
+        "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+        "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
+        "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+        "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json.ots",
+        "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
+        "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
+        "/claims/claimreg-hiring-platforms-2026-09-24.json",
+        "/claims/claimreg-hiring-platforms-2026-09-24.json.ots",
+        "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+        "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
         "/claims/claimreg-ondo-chainlink-2026-09-22.json",
         "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots"
       ],
       "state": "INDEXED",
       "unmeasured": [
-        "CLAIM_MEASURED: no claim in any registry has been measured yet; every row is CLAIM_CAPTURED with its measurement plan. No claim of falsity is made about any entry."
+        "/claims/claimreg-hiring-platforms-2026-09-24.json.ots HTTP 404",
+        "61 of 198 claim rows across the published registries are CLAIM_MEASURED, 9 remain CLAIM_CAPTURED and 128 are UNMEASURED or UNCHECKABLE — counted from the served bytes at request time, not typed here. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry."
       ]
     },
     "rail": {
@@ -141,7 +472,7 @@
         },
         "output": {
           "example": {
-            "as_of": "2026-09-22",
+            "as_of": "2026-09-25",
             "attestation": {
               "payload": {
                 "kind": "csoai.population.slice/0.1",
@@ -154,7 +485,7 @@
             },
             "id": "claim-watch",
             "kind": "slice",
-            "n": 8,
+            "n": 198,
             "n_unit": "claims captured across the published registries",
             "rows": "<the population rows / artifact bytes, verbatim>",
             "schema": "csoai.population-door/0.1",
@@ -164,6 +495,17 @@
               "transaction": "<0x… or null>"
             },
             "source": [
+              "/spec/claim-maintenance/register.json",
+              "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json",
+              "/claims/claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json.ots",
+              "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+              "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json.ots",
+              "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json",
+              "/claims/claimreg-hiring-platforms-2026-09-24-rev2.json.ots",
+              "/claims/claimreg-hiring-platforms-2026-09-24.json",
+              "/claims/claimreg-hiring-platforms-2026-09-24.json.ots",
+              "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+              "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json.ots",
               "/claims/claimreg-ondo-chainlink-2026-09-22.json",
               "/claims/claimreg-ondo-chainlink-2026-09-22.json.ots"
             ],
@@ -224,7 +566,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvY2xhaW0td2F0Y2giLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzUsInZlcnNpb24iOjF9.nqwSzvpMVUO9bP4nZBbCQx3Q8AyXH3IOW-paRnRh9_ofh8SxQsSFUXcw0Sy7D2tW8_JxXKT6cl60biCKtSQABA"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvY2xhaW0td2F0Y2giLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTA1NzI0OTIsInZlcnNpb24iOjF9.jyRkby-3w3eU5BEZH8vfQJ6D69s8iSEiXhw2uLuSWxY6j0rZqfXQXy7GPqSy0eT5hXq7jqOyQWvNlmmSEKKkCQ"
           }
         ]
       },
@@ -263,7 +605,7 @@
     }
   },
   "resource": {
-    "description": "Population door: Claim-maintenance registries — 8 claims captured across the published registries, as of 2026-09-22, state INDEXED. one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+    "description": "Population door: Claim-maintenance registries — 198 claims captured across the published registries, as of 2026-09-25, state INDEXED. one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
     "mimeType": "application/json",
     "serviceName": "CSOAI Population Door",
     "tags": [

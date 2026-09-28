@@ -16,6 +16,7 @@
 // recomputable for free (the leaves are in /feeds/provider-diff/leaves/, the signed copies in /cards/).
 // What is never sold: a verdict on any change, a grade, the content of any page (never captured).
 // Doctrine: measurement not certification; verify free forever; hash-only; buyer-led.
+import { headFromGet } from "../_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -315,3 +316,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

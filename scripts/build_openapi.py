@@ -6,9 +6,17 @@ WHAT IT DERIVES, AND FROM WHERE (nothing in the artefact is typed here):
                       reused as a library — never a second walker). Every operation whose only
                       declared response is 200 gets `security: []`: OpenAPI's way of saying "no
                       authentication", except for the explicitly reviewed bearer/conditional contracts below. This is what x402scan (@agentcash/discovery) reads as
-                      "public, do not probe". 405/501/503 facades stay unclassified and keep their
-                      x-csoai-lifecycle marker — they are not public reads and must not be sold as such.
-  x402 doors          scripts/fixtures/x402scan/well_known_x402.json  (/.well-known/x402.json resources[])
+                      "public, do not probe". 404/405/501/503 facades (retired, quarantined, not implemented)
+                      are ALSO `security: []` — they require no authentication either — and keep their
+                      x-csoai-lifecycle marker, which is what says they are not public reads. Left
+                      unclassified, x402scan probed each one as a candidate paid endpoint and aggregators
+                      counted ~39 free routes as "x402 endpoints" (28 Sep 2026).
+  x402 doors          functions/.well-known/x402.json.ts — the Pages Function that serves /.well-known/x402.json,
+                      RENDERED offline by scripts/render_x402_manifest.mjs into
+                      scripts/fixtures/x402scan/well_known_x402.json on every build (and compared on --check).
+                      Until 2026-09-28 that fixture was a hand-refreshed copy of the live manifest; it froze at
+                      21 doors while the function grew to 25, and x402scan refused the four missing doors as
+                      notInSpec. One method per door: the method the manifest names (bazaar info.input.method).
                       scripts/fixtures/x402scan/api_x402.json         (/api/x402: rail, tiers, deliverables)
                       scripts/fixtures/x402scan/challenges/<door>.json (the door's own live 402, where captured)
                       functions/api/_skus.ts + the door handler        (default amount for an uncaptured door)
@@ -31,14 +39,14 @@ WHAT x402scan NEEDS (docs/DISCOVERY.md + apps/scan/src/lib/discovery, read 2026-
                  document are inside each door's documented 402 example.
 
 USAGE
-  python3 scripts/build_openapi.py                   # regenerate public/openapi.json from fixtures (offline)
-  python3 scripts/build_openapi.py --check           # regenerate in memory, exit 1 on drift
+  python3 scripts/build_openapi.py                   # re-render the manifest fixture from source, regenerate public/openapi.json (offline)
+  python3 scripts/build_openapi.py --check           # regenerate in memory, exit 1 on drift (manifest fixture vs source, or document)
   python3 scripts/build_openapi.py --selftest        # prove --check can go red
-  python3 scripts/build_openapi.py --fetch           # refresh the 3 catalog fixtures from live (3 requests)
+  python3 scripts/build_openapi.py --fetch           # refresh the 2 live catalog fixtures (/api/x402, /api/gspc) (2 requests)
   python3 scripts/build_openapi.py --fetch --fetch-challenges   # + one GET per door (≤ --max-requests, default 12)
   python3 scripts/build_openapi.py --out PATH        # write elsewhere (tests)
 
-DETERMINISM: no timestamp, no network on the default path, sort_keys=True. info.version is
+DETERMINISM: no timestamp, no network on the default path (the manifest render is a local node call), sort_keys=True. info.version is
 "<catalog schema version>+<sha256 of the fixture bytes>[:12]" so it moves exactly when a source moves.
 """
 from __future__ import annotations
@@ -67,6 +75,10 @@ CATALOG_FIXTURES = {
     "api_x402.json": "/api/x402",
     "api_gspc_totals.json": "/api/gspc",
 }
+# Rendered from source (scripts/render_x402_manifest.mjs), never fetched: the live route and this
+# document then read ONE door list — the function's — instead of a copy that can fall behind.
+SOURCE_RENDERED = {"well_known_x402.json"}
+MANIFEST_RENDERER = HERE / "render_x402_manifest.mjs"
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
 DESCRIPTION_PATHS = {
     "/api/proof": "proof_bundle",
@@ -175,17 +187,14 @@ def sku_default_usd() -> dict[tuple[str, str], float]:
     return out
 
 
-def handler_methods(path: str) -> list[str]:
-    """The verbs a door's own handler exports. Every x402 door does `onRequestPost = onRequestGet`
-    or re-exports both from a shared module, so the door answers POST with the same 402 — and this
-    document said GET only, because the door loop REPLACED the walker's path item instead of
-    merging into it. An agent reading the document concluded POST was unsupported on 21 doors."""
-    f = REPO / "functions" / "api" / (path.removeprefix("/api/") + ".ts")
-    if not f.exists():
-        return ["get"]
-    text = f.read_text()
-    verbs = {m.group(1).lower() for m in re.finditer(r"\bonRequest(Get|Post|Put|Patch|Delete)\b", text)}
-    return sorted(verbs) or ["get"]
+def render_manifest() -> str:
+    """/.well-known/x402.json as functions/.well-known/x402.json.ts renders it (offline, empty env)."""
+    import subprocess
+    r = subprocess.run(["node", str(MANIFEST_RENDERER)], cwd=REPO, capture_output=True, text=True, timeout=180)
+    if r.returncode != 0:
+        raise SystemExit(f"render_x402_manifest.mjs failed ({r.returncode}): {r.stderr.strip()[-600:]}")
+    json.loads(r.stdout)  # must be JSON
+    return r.stdout
 
 
 def handler_sku(path: str) -> tuple[str, str] | None | str:
@@ -228,6 +237,8 @@ def http_get(url: str, budget: Budget) -> tuple[int, dict[str, str], bytes]:
 def fetch_catalogs(budget: Budget) -> None:
     FIX.mkdir(parents=True, exist_ok=True)
     for name, route in CATALOG_FIXTURES.items():
+        if name in SOURCE_RENDERED:
+            continue  # rendered from source on every build; a live copy would only reintroduce drift
         status, _, body = http_get(BASE + route, budget)
         if status != 200:
             raise SystemExit(f"{route} answered {status}; fixtures left untouched")
@@ -309,12 +320,10 @@ def compose(fix: Path = FIX) -> dict:
     walker = load_walker()
     base = walker.build_openapi(walker.discover_endpoints())
     paths: dict[str, dict] = {}
-    public_ops = 0
     for p, item in base["paths"].items():
         for op in item.values():
             if list(op["responses"]) == ["200"]:
                 op["security"] = []  # explicitly public — x402scan lists, never probes
-                public_ops += 1
         paths[p] = item
 
     # Reviewed access contracts: a generic 200 response is not proof of public access.
@@ -331,17 +340,24 @@ def compose(fix: Path = FIX) -> dict:
     })
     for (path, method), (scheme, note) in restricted.items():
         op = paths[path][method]
-        if op.get("security") == []:
-            public_ops -= 1
         op["security"] = [{scheme: []}]
         op["description"] = note + " " + op.get("description", "")
         op["responses"]["401"] = {"description": "Required bearer credential missing or rejected."}
     # The bare GET publishes a contract, while job_id requests are authenticated reads.
     op = paths["/api/action-jobs"]["get"]
     op["security"] = [{}, {"operatorBearer": []}]
-    public_ops -= 1
     op["description"] = "Bare GET returns public contract metadata. Requests with job_id require writer bearer authorization; origin restrictions still apply. " + op.get("description", "")
     op["responses"]["401"] = {"description": "A job_id read requires an authorized writer bearer."}
+
+    # Every other operation: no credential is required, so say so. `security: []` is OpenAPI's
+    # "no authentication" — it does not say the route works; the x-csoai-lifecycle marker beside it
+    # (RETIRED / QUARANTINED_PRE_RELEASE / NOT_IMPLEMENTED / DOOR_CLOSED / METHOD_NOT_ALLOWED) does.
+    # Unclassified, these were probed by x402scan as candidate paid endpoints and counted by
+    # aggregators as x402 routes (x402jp listed ~80 for this origin, most of them free).
+    for item in paths.values():
+        for op in item.values():
+            if "security" not in op:
+                op["security"] = []
 
     # 2. the doors
     shape_donor = None  # the smallest captured challenge lends accepts[0]'s constant fields to uncaptured doors
@@ -515,14 +531,14 @@ def compose(fix: Path = FIX) -> dict:
             op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
         # `indexed_in` is deliberately NOT carried (2026-09-26): /.well-known/x402.json no longer
         # types third-party index membership, which only a read of the index can establish.
-        # One door, every verb its handler actually exports. The 402 contract is identical on
-        # each; only operationId differs, because operationIds must be unique.
-        item = {}
-        for verb in sorted({method} | set(handler_methods(path))):
-            vop = json.loads(json.dumps(op))
-            vop["operationId"] = f"x402_{did}" if verb == method else f"x402_{did}_{verb}"
-            item[verb] = vop
-        paths[path] = item
+        # ONE METHOD PER DOOR — the one the manifest names, which is also the method every door's
+        # bazaar discovery block states (info.input.method). From 2026-09-26 to 2026-09-28 this
+        # emitted x-payment-info on every verb the handler exported, so each door appeared twice
+        # (GET and POST); x402scan registered the POST and its row then contradicted the door's
+        # own discovery metadata, and /api/wrapper/changes (no POST handler, live POST 404) and
+        # /api/art50/marking-evidence (live POST 400) were listed as payable over POST. The GET
+        # answers 402 on all 25 doors (probed live 2026-09-28).
+        paths[path] = {method: op}
         door_paths.append(path)
 
     # 3. the document
@@ -664,7 +680,10 @@ def compose(fix: Path = FIX) -> dict:
             "quarantined": wk.get("quarantined", []),
             "revenue_truth": cat.get("revenue_truth"),
             "doors": door_paths,
-            "public_operations": public_ops,
+            "public_operations": sum(1 for p, item in paths.items() if p not in door_paths
+                                     for op in item.values() if op.get("security") == [] and "x-csoai-lifecycle" not in op),
+            "unauthenticated_facades": sum(1 for p, item in paths.items() if p not in door_paths
+                                           for op in item.values() if op.get("security") == [] and "x-csoai-lifecycle" in op),
         },
     }
     if proofs_doc and proofs_doc.get("proofs"):
@@ -746,7 +765,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--check", action="store_true", help="regenerate in memory and fail on drift")
     ap.add_argument("--selftest", action="store_true", help="prove --check can go red")
-    ap.add_argument("--fetch", action="store_true", help="refresh the catalog fixtures from live (3 requests)")
+    ap.add_argument("--fetch", action="store_true", help="refresh the 2 live catalog fixtures (2 requests); the manifest is always rendered from source")
     ap.add_argument("--fetch-challenges", action="store_true", help="with --fetch: one GET per door, capture each 402")
     ap.add_argument("--max-requests", type=int, default=12, help="hard cap on live requests for --fetch")
     ap.add_argument("--out", type=str, default=str(OUT))
@@ -790,6 +809,26 @@ def main() -> int:
         if args.fetch_challenges:
             fetch_challenges(budget)
         print(f"  requests used: {budget.used}")
+
+    rendered = render_manifest()
+    wk_fixture = FIX / "well_known_x402.json"
+    if args.check:
+        if not wk_fixture.exists() or wk_fixture.read_text() != rendered:
+            print("\u2716 manifest DRIFT: scripts/fixtures/x402scan/well_known_x402.json is not what "
+                  "functions/.well-known/x402.json.ts renders")
+            try:
+                have = {r["url"] for r in json.loads(wk_fixture.read_text())["resources"]}
+                want = {r["url"] for r in json.loads(rendered)["resources"]}
+                for u in sorted(want - have):
+                    print(f"    source adds   {u}")
+                for u in sorted(have - want):
+                    print(f"    source drops  {u}")
+            except Exception:  # noqa: BLE001 — the headline already says what is wrong
+                pass
+            print("  fix: python3 scripts/build_openapi.py && git add scripts/fixtures/x402scan/well_known_x402.json public/openapi.json")
+            return 1
+    else:
+        wk_fixture.write_text(rendered)
 
     spec = compose()
     text = render(spec)

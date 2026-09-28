@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.population.a2a",
         "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "Population door: A2A agent registry population — 391 distinct agents in the a2aregistry-org frame (one frame; not a global count), as of 2026-09-17T05:48:05Z, state INDEXED. the agents enumerable without a credential from the public A2A registry frame, counted within that frame, with the estate's own A2A directory-listing state reported beside it. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
       "extra": {
@@ -46,12 +45,13 @@
     ],
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the A2A agent registry population slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_manifest": "https://councilof.ai/api/pop/a2a/manifest",
     "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
     "free_sources": [
       "/interop/agent-population-2026-09-17.json",
       "/interop/a2a-directories.json"
     ],
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "a grade",
       "a rank",
@@ -69,7 +69,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "population-slice",
     "population": "a2a",
@@ -246,7 +246,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvYTJhIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDM0LCJ2ZXJzaW9uIjoxfQ.D7HH47wbGrVj_E8wdm9j1sbRI3VudbB3hSmlanxtfbh1iMbq7iGFUpn4EnxFAgaTBPv9OqiZZvlFPayJPCtHAw"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvYTJhIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDkxLCJ2ZXJzaW9uIjoxfQ.AwOCvawVR9Vb2XPbhtThgtQ_b7YhkYOuxj_dPqUg7H4bnjRDD7bnBQwneb8SJgJgGeRm8L1ocwkl0oY8j7WiBA"
           }
         ]
       },

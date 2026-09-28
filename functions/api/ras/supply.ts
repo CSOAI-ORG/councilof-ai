@@ -20,6 +20,7 @@
  * grade. The header is not checked against consensus. The free daily artifact the reader
  * publishes stays free; this door sells one fresh read and a signature over it.
  */
+import { headFromGet } from "../_head";
 import { x402Accepts, declareBazaarHttpGet } from "../_x402";
 import { canonicalBytes, sha256Hex } from "../../_lib/cardSign";
 import { rasDoor, nowIso, sha256Text, type RasEnv, type RasComputation } from "../_ras_door";
@@ -299,3 +300,6 @@ export const onRequestGet: PagesFunction<RasEnv> = async ({ request, env }) => {
 };
 
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);
