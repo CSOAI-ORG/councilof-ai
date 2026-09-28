@@ -1,5 +1,3 @@
-[Reading 65 lines from start (total: 65 lines, 0 remaining)]
-
 # DEPLOY-LOCK — councilof.ai production write convention
 
 **One lane owns production writes. Everyone else opens a PR. No exceptions.**
@@ -82,5 +80,3 @@ This is a **break-glass continuity path**, not a second routine writer. It exist
 - **All other lanes** (pod, K3, grok, front-door) contribute via PR against `master`.
 - The `csoai-site` Pages project carries the councilof-ai master surface too — same rule, never push a
   static `_site` over it (it wipes the `/api/*` Functions routing).
-
-[executed on device: NICHOLASs-MacBook-Air-2.local (95c03167-6c81-48cd-83ce-e3a5c3d4b91f)]
