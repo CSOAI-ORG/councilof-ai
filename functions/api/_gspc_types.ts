@@ -52,14 +52,18 @@ export interface AxisScore {
   separation?: "SEPARATED" | "TIE" | "UNTESTED";
   separation_p?: number;      // McNemar exact p on discordant pairs (leader vs best base)
   separation_basis?: string;  // stated when the determination is not McNemar (e.g. Wilson-bound non-overlap)
+  separation_method?: string;
+  separation_evidence?: Record<string, unknown>;
   interval?: [number, number];   // Wilson 95% CI on the leader — present ONLY where the n is honestly independent
   fleet_mean?: number;        // mean accuracy across the measured fleet — the linear aggregator; absent where the fleet mean is not in the signed source
   fleet?: string;             // which fleet this axis was measured on, when NOT the 19-model board fleet
+  quotable_models?: string[];
+  quotable_note?: string;
   mean_harm?: number;         // (1 - item pass rate) x severity, fleet-level, mean — board-v2 axes only
   cvar05_harm?: number | null;   // mean of the WORST 5% of item harms — only where n>=100 (BV floor)
   macro_f1?: number;          // board-v2 axes only — never invented for living-stamp axes
   unparsed_rate?: number;     // board-v2 axes only
-  per_model?: Record<string, Record<string, number | null>>; // living-stamp axes: verbatim per-model rows
+  per_model?: Record<string, Record<string, number | boolean | null>>; // living-stamp axes: verbatim per-model rows
   status: "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
 
   // dataset is the frozen HF bank slug; it is resolved to dataset_url against

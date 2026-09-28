@@ -37,7 +37,9 @@ interface Env { [k: string]: unknown }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const origin = new URL(ctx.request.url).origin;
-  const grab = async (p: string) => { try { return await (await fetch(origin + p)).json(); } catch { return null; } };
+  const grab = async (p: string): Promise<Record<string, any> | null> => {
+    try { return (await (await fetch(origin + p)).json()) as Record<string, any>; } catch { return null; }
+  };
   const [board, reg, rep] = await Promise.all([grab("/api/gspc"), grab("/api/regulation"), grab("/api/reported")]);
 
   const axes: any[] = board?.axes ?? [];

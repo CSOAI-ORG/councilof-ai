@@ -47,15 +47,18 @@ export type Reading = {
 };
 
 export type Fetched =
-  | { ok: true; text: string; json: unknown; status: number }
-  | { ok: false; reason: string; status: number | null };
+  | { ok: true; text: string; json: unknown; status: number; reason?: undefined }
+  | { ok: false; reason: string; status: number | null; text?: undefined; json?: undefined };
 
 export type Io = {
   origin: string;
   /** Read a site-relative path as text + parsed JSON (JSON parse failure is reported, not thrown). */
   get: (path: string) => Promise<Fetched>;
   /** Read a site-relative path as raw bytes (for .ots proofs). */
-  bytes: (path: string) => Promise<{ ok: true; bytes: Uint8Array } | { ok: false; reason: string }>;
+  bytes: (path: string) => Promise<
+    | { ok: true; bytes: Uint8Array; reason?: undefined }
+    | { ok: false; reason: string; bytes?: undefined }
+  >;
   request: Request;
 };
 

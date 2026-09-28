@@ -104,7 +104,7 @@
     {
       "accepts": [
         {
-          "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+          "description": "A card-v0 commission receipt for one named subject: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
           "extra": {
             "name": "USDC",
             "version": "2"
@@ -120,7 +120,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description": "A card-v0 commission receipt for one named subject: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
       "method": "GET",
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"

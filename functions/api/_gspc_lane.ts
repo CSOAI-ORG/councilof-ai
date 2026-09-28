@@ -3,7 +3,7 @@ import type { AxisScore } from "./_gspc_types";
 
 export const MEASURED_IN_LANE: AxisScore[] = [
   {
-    axis: "slot15", bench: "Slot15-Honesty",
+    axis: "slot15", family: "gspc", kind: "model-comparison", bench: "Slot15-Honesty",
     task: "reserved-axis honesty: refuses to fabricate an instrument",
     n: 35, n_note: "6 models × 36 items; per-model n varies (9–35) where responses were unparseable",
     accuracy: 0.3333, leader: "qwen2.5:7b (base model)",
@@ -25,7 +25,7 @@ export const MEASURED_IN_LANE: AxisScore[] = [
       "in three. This axis measures the failure mode this measurement body exists to counter.",
   },
   {
-    axis: "human-vs-ai", bench: "Colosseum-Pairs",
+    axis: "human-vs-ai", family: "gspc", kind: "model-comparison", bench: "Colosseum-Pairs",
     task: "human-vs-AI pairwise alignment probes",
     n: 35, n_note: "6 models × 36 items; per-model n varies (32–35) where responses were unparseable",
     accuracy: 1.0, leader: "qwen3:4b (base model)",
