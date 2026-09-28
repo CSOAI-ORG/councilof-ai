@@ -10,8 +10,7 @@
         "offered_amount_atomic": "0",
         "pricing_basis": "STANDARD",
         "product_id": "csoai.product.request_attestation",
-        "sku_id": "request_attestation",
-        "tier": "per_request"
+        "sku_id": "request_attestation"
       },
       "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion — a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
       "extra": {
@@ -32,7 +31,11 @@
   "catalog": "https://councilof.ai/api/x402",
   "csoai": {
     "deliverable": "the Bazaar door itself: this resource is free and settles for zero. It exists so an index can discover the rail; it sells nothing and a settlement here buys nothing.",
-    "free_preview": "https://councilof.ai/api/free-door",
+    "free_equivalents": [
+      "https://councilof.ai/api/gspc",
+      "https://councilof.ai/root.json"
+    ],
+    "free_preview": "https://councilof.ai/api/gspc",
     "offer_receipt": {
       "alg": "EdDSA",
       "extension": "offer-receipt",
@@ -42,8 +45,9 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
-    }
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
+    },
+    "why_402": "A zero-amount 402 so the x402 Bazaar can index this rail (it catalogues only resources that settle). Nothing is charged. The same content answers 200 with no handshake at free_equivalents."
   },
   "error": "Payment required",
   "extensions": {
@@ -111,7 +115,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIwIiwiYXNzZXQiOiIweDgzMzU4OWZDRDZlRGI2RTA4ZjRjN0MzMkQ0ZjcxYjU0YmRBMDI5MTMiLCJuZXR3b3JrIjoiZWlwMTU1Ojg0NTMiLCJwYXlUbyI6IjB4MjEyNjg2NDA0QTdEMUUxZkQ4OEYzNWVENjIwMGMzYUY3QTc4YWUzMSIsInJlc291cmNlVXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL2ZyZWUtZG9vciIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDA5MzAzMSwidmVyc2lvbiI6MX0.VZLcpfXnJlacTRxere4DHsT8sJiL5s3r8X0fJPedw4_2ZxJ88zG_B6AXxRNYKO7_9sYF8XvwEXzNHGWJ1cL_Cg"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIwIiwiYXNzZXQiOiIweDgzMzU4OWZDRDZlRGI2RTA4ZjRjN0MzMkQ0ZjcxYjU0YmRBMDI5MTMiLCJuZXR3b3JrIjoiZWlwMTU1Ojg0NTMiLCJwYXlUbyI6IjB4MjEyNjg2NDA0QTdEMUUxZkQ4OEYzNWVENjIwMGMzYUY3QTc4YWUzMSIsInJlc291cmNlVXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL2ZyZWUtZG9vciIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDU3MjQ4OCwidmVyc2lvbiI6MX0.Lx5NQC7JvuiAjMGPN2dzpKJjAG3Gcrme36Wuv1rMaPTrRhIKEdJvWEN5jb-5ra3FLUZvKZ6Y3xaHu68Z7jKdAg"
           }
         ]
       },

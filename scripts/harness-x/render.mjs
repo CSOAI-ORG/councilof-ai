@@ -862,6 +862,25 @@ if __name__ == "__main__":
 // ── 10. Well-known descriptors: regenerate DERIVED fields only ──────────────────────────────
 // The rest of each document is owned by the file itself (provider, licence, DOI, discovery);
 // the fields below are the ones that drifted, so they are now rendered from source every time.
+//
+// THE TOOL NAMES, COUNTS AND DIGESTS COME FROM WHAT tools/list SERVES (2026-09-28), not from the
+// registry: functions/mcp/[[path]].ts lists gspc-tools.json then paid-tools.json on /mcp, and
+// gspc-tools.json alone on /mcp/free. These two files said 13 while tools/list said 16 until
+// 26 Sep, and the contract-parity instrument (scripts/census/contract-parity.py) compares exactly
+// these fields with a live tools/list. The registry must name the same fleet; if it does not, this
+// render refuses rather than publish either version. The digest is the instrument's own:
+// sha256 of the sorted tool names joined by "\n".
+const SERVED_FREE = readJson("functions/mcp/gspc-tools.json").tools.map((t) => t.name);
+const SERVED_PAID = readJson("functions/mcp/paid-tools.json").tools.map((t) => t.name);
+const SERVED = [...SERVED_FREE, ...SERVED_PAID];
+const namesSha = (names) => sha256([...names].sort().join("\n"));
+const NAMES_SHA_RULE = 'sha256 of the tool names from tools/list, sorted, joined by "\\n" (UTF-8)';
+if (SERVED.join(",") !== toolNames.join(",") || SERVED_FREE.join(",") !== free.map((t) => t.id).join(",")) {
+  console.error(
+    "harness-x render: REFUSED — council-os/capabilities.json mcp_tool entries and the served definitions " +
+    `(functions/mcp/gspc-tools.json + paid-tools.json) name different fleets.\n  registry: ${toolNames.join(",")}\n  served:   ${SERVED.join(",")}`);
+  process.exit(2);
+}
 const stdio = `npx -y ${NPM_ID}@${NPM_VERSION}`;
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
 {
@@ -880,10 +899,15 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
   card.endpoints.mcp.free_note =
     `${FREE_DOOR} serves the ${word(free.length)} free readers only, from the same definitions and handlers as ${ID.door}: ` +
     "no payment tool and no payment text. It is the address for chat clients and directories that list no payment software.";
-  card.capabilities.tools = toolNames;
-  card.capabilities.total_tools = tools.length;
-  card.capabilities.free_tools = free.length;
-  card.capabilities.metered_tools = paid.length;
+  card.capabilities.tools = SERVED;
+  card.capabilities.total_tools = SERVED.length;
+  card.capabilities.free_tools = SERVED_FREE.length;
+  card.capabilities.metered_tools = SERVED_PAID.length;
+  card.capabilities.tool_names_sha256 = namesSha(SERVED);
+  card.capabilities.free_door_tool_names = SERVED_FREE;
+  card.capabilities.free_door_tool_names_sha256 = namesSha(SERVED_FREE);
+  card.capabilities.tool_names_sha256_rule = NAMES_SHA_RULE;
+  card.capabilities.derived_from = `tools/list of ${ID.door} (functions/mcp/gspc-tools.json + paid-tools.json) and of ${FREE_DOOR} (gspc-tools.json)`;
   card.doctrine = DOCTRINE;
   card.generated_by = "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, endpoints.mcp.free, endpoints.mcp.free_note, capabilities.*, doctrine)";
   emit(rel, j(card));
@@ -893,23 +917,27 @@ const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} 
   const m = readJson(rel);
   m.servers[0].stdio = stdio;
   m.servers[0].free_url = FREE_DOOR;
-  m.servers[0].free_tools = free.map((t) => t.id);
+  m.servers[0].free_tools = SERVED_FREE;
+  m.servers[0].free_tool_names_sha256 = namesSha(SERVED_FREE);
   m.servers[0].registry.name = dist.registry_names.canonical;
   m.servers[0].registry.deprecated_alias = dist.registry_names.deprecated_alias;
   m.servers[0].registry.version = REMOTE_VERSION;
-  m.measured.total_tools = tools.length;
-  m.measured.free_tools = free.length;
-  m.measured.metered_tools = paid.length;
-  m.measured.tools = toolNames;
+  m.measured.total_tools = SERVED.length;
+  m.measured.free_tools = SERVED_FREE.length;
+  m.measured.metered_tools = SERVED_PAID.length;
+  m.measured.tools = SERVED;
+  m.measured.tool_names_sha256 = namesSha(SERVED);
+  m.measured.tool_names_sha256_rule = NAMES_SHA_RULE;
+  m.measured.derived_from = `tools/list of ${ID.door}: functions/mcp/gspc-tools.json + paid-tools.json`;
   m.measured.note =
     `POST /mcp tools/list: ${fleetProse}. mill-tool \`measure\` is dropped. witness_hash remains quarantined and is not advertised. ` +
     `MCP Registry server ${REMOTE_VERSION} points here. A listing does not prove paid settlement or delivery.`;
-  m.planted.tools = toolNames;
+  m.planted.tools = SERVED;
   m.planted.note =
     `The product door: ${fleetProse}. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. ` +
     "No jail run from MCP. mill-tool `measure` dropped.";
   m.doctrine = DOCTRINE;
-  m.generated_by = "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].free_url, servers[0].free_tools, servers[0].registry, measured.*, planted.*, doctrine)";
+  m.generated_by = "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].free_url, servers[0].free_tools, servers[0].free_tool_names_sha256, servers[0].registry, measured.*, planted.*, doctrine)";
   emit(rel, j(m));
 }
 

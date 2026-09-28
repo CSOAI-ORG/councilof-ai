@@ -31,7 +31,8 @@
         "measurement_index",
         "verify_capsule",
         "server_evidence"
-      ]
+      ],
+      "free_tool_names_sha256": "64fcfc150e8164eeb2ffadcd8378d10cd72e305efce52f1dfd317c43763c0974"
     }
   ],
   "catalogue": "https://councilof.ai/mcp",
@@ -60,7 +61,10 @@
       "rwa_evidence",
       "receipts_batch"
     ],
-    "note": "POST /mcp tools/list: twelve free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.2 points here. A listing does not prove paid settlement or delivery."
+    "note": "POST /mcp tools/list: twelve free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.4.2 points here. A listing does not prove paid settlement or delivery.",
+    "tool_names_sha256": "4d5671a50bf129615aaa82ef56a0382c1fd85c2781d41cef1b65f3e48a7b0134",
+    "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
+    "derived_from": "tools/list of https://councilof.ai/mcp: functions/mcp/gspc-tools.json + paid-tools.json"
   },
   "planted": {
     "tools": [
@@ -93,5 +97,5 @@
     "source": "docs/DOCTRINE.md",
     "human_page": "https://councilof.ai/doctrine/"
   },
-  "generated_by": "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].free_url, servers[0].free_tools, servers[0].registry, measured.*, planted.*, doctrine)"
+  "generated_by": "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].free_url, servers[0].free_tools, servers[0].free_tool_names_sha256, servers[0].registry, measured.*, planted.*, doctrine)"
 }

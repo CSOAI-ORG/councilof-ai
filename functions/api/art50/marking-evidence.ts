@@ -29,6 +29,7 @@
  * list bundled), SynthID and every keyed watermark (no public key-free detector), and the
  * open-source DWT-DCT detector (public, but not implemented in this Function).
  */
+import { headFromGet } from "../_head";
 import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHttpGet, paymentRequiredResponseSigned, hasPaymentHeader, CSOAI_LID, type X402Env } from "../_x402";
 import { railMode } from "../_x402_config";
 import { signPayload, cardV0 } from "../../_lib/cardSign";
@@ -485,3 +486,6 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
 
 export const onRequestGet = handle;
 export const onRequestPost = handle;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(handle);

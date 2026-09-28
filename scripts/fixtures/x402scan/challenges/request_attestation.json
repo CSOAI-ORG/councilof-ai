@@ -12,10 +12,9 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.request_attestation",
         "sku_id": "request_attestation",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "per_request"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
-      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
       "extra": {
         "decimals": 6,
         "name": "USD Coin",
@@ -27,15 +26,15 @@
       "mimeType": "application/json",
       "network": "eip155:8453",
       "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-      "resource": "https://councilof.ai/api/request-attestation",
+      "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
       "scheme": "exact"
     }
   ],
   "csoai": {
     "catalog": "https://councilof.ai/api/x402",
-    "deliverable": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+    "deliverable": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
     "explainer": "https://councilof.ai/pricing",
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "rank",
       "certificate",
@@ -52,7 +51,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "request",
     "preview": {
@@ -63,6 +62,21 @@
       "free_board": "https://councilof.ai/api/gspc",
       "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
       "free_verify": "https://councilof.ai/gspc-verify",
+      "interop_collection": {
+        "included_in_paid_reserve": false,
+        "match_basis": "CASE_INSENSITIVE_MODEL_SUBSTRING",
+        "matching_active_leaves": 0,
+        "note": "These are active root references whose model contains the query text, not exact subject identities, card-v1 reserve entries or new GSPC board scores. Check each card signature independently; this unsigned pointer and root-byte match do not prove Bitcoin anchoring. Payment does not include these references.",
+        "pointer_url": "https://councilof.ai/interop/card-root-latest.json",
+        "root_active_leaves": 1423,
+        "root_as_of": "2026-09-24T16:23:03Z",
+        "root_integrity": "BYTE_MATCHES_UNSIGNED_POINTER",
+        "root_sha256": "0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e",
+        "root_url": "https://councilof.ai/interop/card-root-2026-09-24-d9195149ce5e.json",
+        "sample_card_urls": [],
+        "signature_verification": "NOT_PERFORMED",
+        "state": "ROOT_REFERENCES_AVAILABLE"
+      },
       "read_from": "https://councilof.ai/signed/card-matrix.json",
       "signed_cards_on_file": 0,
       "subject": "model-or-subject-id"
@@ -179,7 +193,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDMxLCJ2ZXJzaW9uIjoxfQ.Yi8b7ZNVCOrQK4PkrM0LKgjy1_NROq9KHQJge-NzkzxB6qaGZFF_9-Rz-FfZARFObR6HTaGtwgAidKoQFn5EBw"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yZXF1ZXN0LWF0dGVzdGF0aW9uP3N1YmplY3Q9bW9kZWwtb3Itc3ViamVjdC1pZCIsInNjaGVtZSI6ImV4YWN0IiwidmFsaWRVbnRpbCI6MTc5MDU3MjQ4OCwidmVyc2lvbiI6MX0.zL5rg2TLzQsqsU7IEBADZdCJuWRJ7xonUNJ_thzL3pLQ9dbLq7zkIqc7kBhxQfm_5OgD2KxCO5tyDBAn3_bGBQ"
           }
         ]
       },
@@ -218,7 +232,7 @@
     }
   },
   "resource": {
-    "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+    "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
     "mimeType": "application/json",
     "serviceName": "CSOAI Request Attest",
     "tags": [
@@ -227,7 +241,7 @@
       "measurement",
       "x402"
     ],
-    "url": "https://councilof.ai/api/request-attestation"
+    "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
   },
   "x402Version": 2
 }

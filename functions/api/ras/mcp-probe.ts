@@ -27,6 +27,7 @@
  * A probe is not a grade and not a measurement on the board. RESPONDED says the endpoint answered
  * a discovery handshake at fetched_at; it says nothing about what its tools do.
  */
+import { headFromGet } from "../_head";
 import { x402Accepts, declareBazaarHttpGet } from "../_x402";
 import { rasDoor, nowIso, sha256Text, type RasEnv, type RasComputation } from "../_ras_door";
 import { checkUrl, checkUrlSyntax, guardedFetch, memoResolver, type Resolver, dohResolver } from "../_ras_net";
@@ -252,3 +253,6 @@ export const onRequestGet: PagesFunction<RasEnv> = async ({ request, env }) => {
 };
 
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

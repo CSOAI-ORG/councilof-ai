@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.issuance",
         "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
       "extra": {
@@ -35,14 +34,16 @@
     "catalog": "https://councilof.ai/api/x402",
     "data_only": true,
     "deliverable": "the assembled signed data feed for this lane — data only, never a score and never a rank",
+    "delivery_manifest": null,
     "free_for": [
       "regulators",
       "the public",
       "anyone verifying"
     ],
+    "free_manifest": "https://councilof.ai/api/eunomia-data?manifest=1",
     "free_preview": "https://councilof.ai/api/eunomia-data",
     "lane": "commercial-data",
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "scores as a product",
       "ranking",
@@ -59,7 +60,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "feed-pull",
     "rail": {
@@ -68,29 +69,33 @@
       "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
       "pay_to_configured": true
     },
+    "read_before_settle": {
+      "complete": false,
+      "missing_sources": [
+        "signals",
+        "first_fine_watch",
+        "root",
+        "card_index"
+      ]
+    },
     "schema": "csoai.eunomia-data/0.2",
     "sold": "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
     "streams": {
       "card_index": {
-        "href": "https://councilof.ai/signed/card_index.json",
-        "rows": 335
+        "rows": null,
+        "unreadable": "Source read, JSON parsing or transport was uncheckable"
       },
       "first_fine_watch": {
-        "href": "https://councilof.ai/api/fines",
-        "kid": null,
-        "signed": true
+        "signed": null,
+        "unreadable": "Source read, JSON parsing or transport was uncheckable"
       },
       "root": {
-        "as_of": "2026-09-22T08:54:02Z",
-        "card_count": 305,
-        "href": "https://councilof.ai/root.json",
-        "merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4"
+        "as_of": null,
+        "unreadable": "Source read, JSON parsing or transport was uncheckable"
       },
       "signals": {
-        "each": "https://councilof.ai/signals/<axis>.signed.json",
-        "href": "https://councilof.ai/signals/_index.json",
-        "rows": 14,
-        "schema": "csoai.signals-index/0.2"
+        "rows": null,
+        "unreadable": "Source read, JSON parsing or transport was uncheckable"
       }
     }
   },
@@ -183,7 +188,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGEiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzEsInZlcnNpb24iOjF9.3Btf-3gSTzmI1P6i6B76y-hcPin1K75RkFXa6M_eCscS2XQ7jD7GsC4tV7XhO2MIdhpbV4bJQd6xNEsKTaoQBQ"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldW5vbWlhLWRhdGE_ZmVlZD0xIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDg5LCJ2ZXJzaW9uIjoxfQ.z0TJ-F70C7pA8BdssWRPqYOGIj9xR2kCKnFLvoX86nSx1aqFGye5kQxbfw4f27f9SMB72BYIOZLTrHwdTcZaCg"
           }
         ]
       },

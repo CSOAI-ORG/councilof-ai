@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.request_attestation",
         "sku_id": "request_attestation",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "per_request"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "A signed wrapped-asset parity card for usdc.e:arbitrum: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.",
       "extra": {
@@ -36,7 +35,7 @@
     "deliverable": "one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present",
     "free_ledger": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-13.json",
     "free_preview": "https://councilof.ai/api/wrapper?id=usdc.e%3Aarbitrum&preview=1",
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "rating",
       "guarantee",
@@ -55,7 +54,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "pair-request",
     "rail": {
@@ -163,7 +162,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS93cmFwcGVyIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDMyLCJ2ZXJzaW9uIjoxfQ.CPri_9cjURsEVrzgn04bz5OIOtAgWWW3VAAkonnpoKAUdjj5Az2XrzvzEpjY7NwvuYlGX8R_CtbHyfW0FES_Cg"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS93cmFwcGVyP2lkPXVzZGMuZSUzQWFyYml0cnVtIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDg5LCJ2ZXJzaW9uIjoxfQ.2584pXOS1ebdlLjNTKyNkkbzpvF4ALC1Pxy5KW8VNympOPBA9VOYT2wDVs3IaGmVbViG-y1PTexsJ4A0aLp8Cw"
           }
         ]
       },
