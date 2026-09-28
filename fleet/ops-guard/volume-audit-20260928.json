@@ -1,0 +1,419 @@
+{
+ "schema": "csoai.ops-guard.volume-audit/0.1",
+ "lane": "ops-guard-20260928",
+ "moves_made": "none",
+ "pod_volume": {
+  "path": "/workspace (RunPod network volume, MooseFS mount; df shows the cluster, not the quota)",
+  "quota": "250 GB per the lane brief; not readable from inside the pod (UNMEASURED here)",
+  "used_du": [
+   {
+    "at": "2026-09-28T14:00Z",
+    "kib": 163029547,
+    "gib": 155.48
+   },
+   {
+    "at": "2026-09-28T15:10Z",
+    "kib": 183445404,
+    "gib": 174.95
+   }
+  ],
+  "headroom_gb_if_quota_250GB": 62.2,
+  "growth_gib_between_reads": 19.47,
+  "growth_by_dir_gib": {
+   "/workspace/lanes-clones": 15.43,
+   "/workspace/lanes": 4.02
+  },
+  "top_dirs_1510": [
+   [
+    "/workspace/offload",
+    117.67
+   ],
+   [
+    "/workspace/lanes-clones",
+    30.82
+   ],
+   [
+    "/workspace/lanes",
+    17.89
+   ],
+   [
+    "/workspace/tools",
+    2.09
+   ],
+   [
+    "/workspace/staging",
+    2.06
+   ],
+   [
+    "/workspace/csoai-offload",
+    1.8
+   ],
+   [
+    "/workspace/csoai-release-candidate-20260926",
+    1.75
+   ],
+   [
+    "/workspace/estate-src",
+    0.19
+   ],
+   [
+    "/workspace/sov-space",
+    0.17
+   ],
+   [
+    "/workspace/work",
+    0.15
+   ]
+  ],
+  "offload_subdirs": [
+   [
+    "/workspace/offload/mac-from-mac-20260910",
+    35.17
+   ],
+   [
+    "/workspace/offload/mac-evac-20260912",
+    26.76
+   ],
+   [
+    "/workspace/offload/oracle-20260926",
+    17.26
+   ],
+   [
+    "/workspace/offload/mac-20260926",
+    12.58
+   ],
+   [
+    "/workspace/offload/mac-m2-csoai-20260925",
+    9.0
+   ],
+   [
+    "/workspace/offload/mac-move-20260928",
+    6.98
+   ],
+   [
+    "/workspace/offload/mac-cold",
+    6.52
+   ],
+   [
+    "/workspace/offload/m2-downloads-2026-09-28",
+    3.3
+   ],
+   [
+    "/workspace/offload/mac-clawd-wip-20260928",
+    0.03
+   ]
+  ]
+ },
+ "lanes_clones": {
+  "gib_1510": 30.82,
+  "clones": 88,
+  "finding": "each lane clone is a full copy of the mirror's objects: `git clone --filter=blob:none <path>` ignores the filter on a local path (git prints 'use file://'), so every clone carries ~0.85 GiB .git (ops-guard clone: .git 887,832 KiB vs mirror 917,542 KiB)",
+  "state_1500Z": "all but 2 clone HEADs are in the staging mirror (capsule-publish-20260928, dois-20260928 are not); several are dirty (x402-revenue 16,610 paths, wrapper-ledger-caip 34,418) -- active lanes, not reapable now"
+ },
+ "duplicates": {
+  "within_offload_sha256": {
+   "manifests": [
+    "mac-cold.sha256",
+    "mac-evac-20260912.sha256",
+    "mac-from-mac-20260910.sha256"
+   ],
+   "rows": 394367,
+   "dup_hashes": 54052,
+   "dup_bytes_gib": 5.98,
+   "top_pairs_gib": [
+    [
+     "mac-cold/csoai-static-deploy2  ==  mac-from-mac-20260910/csoai-static-deploy2",
+     2.029
+    ],
+    [
+     "mac-evac-20260912/orphaned-worktrees  ==  mac-evac-20260912/orphaned-worktrees",
+     0.891
+    ],
+    [
+     "mac-cold/csoai-static-deploy2  ==  mac-evac-20260912/clawd-workspace",
+     0.836
+    ],
+    [
+     "mac-evac-20260912/orphaned-worktrees  ==  mac-from-mac-20260910/wt-tui3-trust-llms",
+     0.461
+    ],
+    [
+     "mac-cold/csoai-static-deploy2  ==  mac-cold/csoai-static-deploy2",
+     0.27
+    ],
+    [
+     "mac-evac-20260912/orphaned-worktrees  ==  mac-from-mac-20260910/wt-gov-pod-loops",
+     0.192
+    ],
+    [
+     "mac-evac-20260912/.grokbot  ==  mac-from-mac-20260910/aiverify-moonshot",
+     0.145
+    ],
+    [
+     "mac-evac-20260912/orphaned-worktrees  ==  mac-from-mac-20260910/councilof-ai",
+     0.127
+    ],
+    [
+     "mac-evac-20260912/.grokbot  ==  mac-from-mac-20260910/csoai-static-did-gspc",
+     0.113
+    ],
+    [
+     "mac-evac-20260912/meok-ai  ==  mac-from-mac-20260910/meok",
+     0.092
+    ],
+    [
+     "mac-evac-20260912/.grokbot  ==  mac-from-mac-20260910/kimi-regen",
+     0.087
+    ],
+    [
+     "mac-evac-20260912/.grokbot  ==  mac-evac-20260912/.grokbot",
+     0.083
+    ]
+   ]
+  },
+  "held_in_private_hf_pod_archives": {
+   "method": "pod offload file counted as held on HF when an HF pod-archive MANIFEST row has the same last-3 path components and the same size; name+size match, not a content hash",
+   "hf_manifest_rows": {
+    "mac-archive": 205233,
+    "mac-built": 111473,
+    "mac-cold": 38981,
+    "mac-offload": 236616
+   },
+   "matched_gib_upper_bound": 7.18,
+   "note": "csoai-static-deploy2 is counted under both mac-cold and mac-from-mac-20260910 (same HF rows); unique HF-held bytes are lower",
+   "top": [
+    [
+     "mac-cold",
+     "csoai-static-deploy2",
+     "mac-cold",
+     1.68,
+     21243
+    ],
+    [
+     "mac-from-mac-20260910",
+     "csoai-static-deploy2",
+     "mac-cold",
+     1.68,
+     21211
+    ],
+    [
+     "mac-evac-20260912",
+     "orphaned-worktrees",
+     "mac-built",
+     0.838,
+     10129
+    ],
+    [
+     "mac-cold",
+     "_evacuation",
+     "mac-cold",
+     0.578,
+     9630
+    ],
+    [
+     "mac-evac-20260912",
+     "clawd-workspace",
+     "mac-cold",
+     0.535,
+     8246
+    ],
+    [
+     "mac-cold",
+     "csoai-static-deploy2",
+     "mac-archive",
+     0.287,
+     6270
+    ],
+    [
+     "mac-from-mac-20260910",
+     "csoai-static-deploy2",
+     "mac-archive",
+     0.287,
+     6336
+    ],
+    [
+     "mac-from-mac-20260910",
+     "wt-tui3-trust-llms",
+     "mac-built",
+     0.279,
+     3347
+    ],
+    [
+     "mac-evac-20260912",
+     ".grokbot",
+     "mac-offload",
+     0.191,
+     10771
+    ],
+    [
+     "mac-from-mac-20260910",
+     "wt-gov-pod-loops",
+     "mac-built",
+     0.15,
+     977
+    ],
+    [
+     "mac-evac-20260912",
+     ".grokbot",
+     "mac-archive",
+     0.137,
+     7473
+    ],
+    [
+     "mac-from-mac-20260910",
+     "csoai-static-did-gspc",
+     "mac-offload",
+     0.062,
+     977
+    ]
+   ]
+  },
+  "oracle_evac_bulk": {
+   "mac-backup_kib": 6067924,
+   "mac-evac_kib": 19813288,
+   "vs_pod": "offload/oracle-20260926/{mac-backup-20260808.tar 12,504,391,680 B, sov-mac-evac.tar 1,662,853,120 B, mac-offload.tar 3,046,789,120 B, custody-build.tar 1,321,103,360 B}: overlap with Oracle /evac-bulk UNMEASURED (no manifest on either side)"
+  }
+ },
+ "regenerable_on_volume": [
+  [
+   "/workspace/offload/mac-20260926/councilof-ai-wt-tui4/node_modules",
+   7.71,
+   "npm ci from the mirror's package-lock"
+  ],
+  [
+   "/workspace/offload/mac-m2-csoai-20260925/ollama-hermes3-8b.tar.gz + ollama-qwen3-4b.tar.gz",
+   6.43,
+   "public model weights, re-pullable"
+  ],
+  [
+   "/workspace/offload/mac-evac-20260912/video-prod/.venv",
+   1.13,
+   "pip venv"
+  ],
+  [
+   "/workspace/csoai-offload/m2-mac-20260926/download-installers",
+   1.05,
+   "vendor .dmg installers"
+  ],
+  [
+   "/workspace/offload/mac-m2-csoai-20260925/m4-coai-{t1,tui3}-node_modules-20260925.tar.gz",
+   0.34,
+   "node_modules tarballs"
+  ]
+ ],
+ "proposals_move_nothing_now": [
+  "P1 (biggest lever, lane recipe): clone lanes with `git clone --shared /workspace/staging/mirror/councilof-ai.git` (or file:// so --filter=blob:none applies). Saves ~0.85 GiB per clone; lanes-clones grew 15.4 -> 30.8 GiB between 14:00Z and 15:10Z.",
+  "P2 (integrator, after the one gated merge): reap lanes-clones whose HEAD is in the mirror and whose status is clean (worktree-reaper policy); keep dirty ones.",
+  "P3 (owner-gated): drop regenerable bytes listed above (~16.8 GiB) after a restore test; nothing is deleted by this lane.",
+  "P4 (owner-gated): collapse the 5.98 GiB of byte-identical duplicates across mac-cold / mac-from-mac-20260910 / mac-evac-20260912 (csoai-static-deploy2 alone: 2.03 GiB twice) to one copy.",
+  "P5 (owner-gated): archive offload/oracle-20260926 (18.1 GB of tars, no manifest, no HF copy found) to a private HF pod-archive dataset with SHA256SUMS + MANIFEST like the existing pod-archive-* sets, then free it.",
+  "P6 (owner): mac-home-rest/Photos Library.photoslibrary is 10.80 GiB of personal data; owner decides where it lives."
+ ],
+ "mac_home_read_only": {
+  "measured": "du -x -d 2 -k /Users/nicholas, 2026-09-28T14:5xZ; df /System/Volumes/Data",
+  "home_gib": 127.65,
+  "free_gib": 11.94,
+  "top": [
+   [
+    "~/Library",
+    35.79
+   ],
+   [
+    "~/Library/Application Support",
+    20.9
+   ],
+   [
+    "~/clawd",
+    17.89
+   ],
+   [
+    "~/.hermes",
+    10.6
+   ],
+   [
+    "~/.claude",
+    8.55
+   ],
+   [
+    "~/_alignment",
+    8.14
+   ],
+   [
+    "~/Library/Group Containers",
+    7.32
+   ],
+   [
+    "~/.codex",
+    5.29
+   ],
+   [
+    "~/_alignment/consolidation-20260923",
+    5.27
+   ],
+   [
+    "~/clawd/councilof-ai-work",
+    5.19
+   ],
+   [
+    "~/.claude/worktrees",
+    5.17
+   ],
+   [
+    "~/.git",
+    4.04
+   ],
+   [
+    "~/.git/objects",
+    3.96
+   ],
+   [
+    "~/.local",
+    3.91
+   ],
+   [
+    "~/.hermes/hermes-agent",
+    3.42
+   ],
+   [
+    "~/.claude/projects",
+    3.31
+   ],
+   [
+    "~/Library/Caches",
+    3.04
+   ],
+   [
+    "~/.codex/sessions",
+    2.97
+   ],
+   [
+    "~/.cache",
+    2.96
+   ],
+   [
+    "~/clawd/.git",
+    2.44
+   ],
+   [
+    "~/.local/share",
+    2.43
+   ],
+   [
+    "~/.cache/codex-runtimes",
+    2.35
+   ],
+   [
+    "~/Library/Keychains",
+    2.05
+   ],
+   [
+    "~/csoai-master-verify-20260928",
+    1.96
+   ],
+   [
+    "~/clawd/codex-dashboard-release-20260925",
+    1.83
+   ]
+  ]
+ }
+}
