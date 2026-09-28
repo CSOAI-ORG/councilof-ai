@@ -66,4 +66,13 @@ describe("/wrappers public ledger page", () => {
       for (const s of r.profile.sources) expect(s.retrieved_at).toMatch(/^\d{4}-\d{2}-\d{2}/);
     }
   });
+  it("exposes the free-preview -> 402 -> exact-byte verify -> maintenance path without a typed price", () => {
+    expect(page).toContain('const CHANGES = "/api/wrapper/changes?id="');
+    expect(page).toContain('const VERIFY = "/api/verify"');
+    expect(page).toContain("x-csoai-delivery-sha256");
+    expect(page).toContain("Browser clients can read those headers through CORS");
+    expect(page).toContain("402 terms");
+    expect(page).toContain("buyer acceptance");
+  });
+
 });

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as wrapper, ratioString, normalize, toPreview, findEntry, ROSTER, ATTESTS, KIND, buildPayload, CHAINS } from "./wrapper";
 import { VERDICT_RE } from "./rwa/evidence";
@@ -210,7 +211,12 @@ describe("/api/wrapper — reads the chain before it settles", () => {
     const r = await wrapper(paidCtx());
     expect(r.status).toBe(200);
     expect(r.headers.get("x-payment-response")).toBeTruthy();
-    const card = await r.json();
+    const text = await r.text();
+    expect(r.headers.get("x-csoai-delivery-sha256")).toBe(createHash("sha256").update(text).digest("hex"));
+    expect(r.headers.get("x-csoai-verify-endpoint")).toBe(`${ORIGIN}/api/verify`);
+    expect(r.headers.get("x-csoai-maintenance-preview")).toBe(`${ORIGIN}/api/wrapper/changes?id=usdc.e%3Aarbitrum&preview=1`);
+    expect(r.headers.get("access-control-expose-headers")).toContain("x-csoai-delivery-sha256");
+    const card = JSON.parse(text);
     expect(card.payload.state).toBe("ESCROW_PARITY_READ");
     expect(facilitatorCalls.filter((p) => p.endsWith("/verify")).length).toBeGreaterThan(0);
     expect(facilitatorCalls.filter((p) => p.endsWith("/settle"))).toHaveLength(1);

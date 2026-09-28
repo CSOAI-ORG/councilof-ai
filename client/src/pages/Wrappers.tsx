@@ -7,6 +7,8 @@ const LEDGER = "/interop/wrapped-asset-parity-latest.json";
 const ROOT_KINDS = "/interop/root-kinds.json";
 const HF_DATASET = "https://huggingface.co/datasets/csoai/wrapped-asset-parity";
 const DOOR = "/api/wrapper?id=";
+const CHANGES = "/api/wrapper/changes?id=";
+const VERIFY = "/api/verify";
 const KIND = "csoai.wrapper.parity/0.1";
 
 const PAGE_DESCRIPTION =
@@ -170,8 +172,20 @@ export default function Wrappers() {
           Signed leaves of kind <code className="font-mono">{KIND}</code> under the current root:{" "}
           <strong className="tabular-nums">{signed === null ? "not published on this surface" : signed}</strong>
           {" "}· ledger as of <span className="font-mono">{ledger?.as_of ?? "—"}</span>
-          {" "}· buy one signed card per pair at <code className="font-mono">GET {DOOR}&lt;pair&gt;</code> (free preview with <code className="font-mono">&amp;preview=1</code>; the amount is quoted only in the 402 challenge).
+          {" "}· request one signed card per pair at <code className="font-mono">GET {DOOR}&lt;pair&gt;</code> (free preview with <code className="font-mono">&amp;preview=1</code>; the amount is quoted only in the 402 challenge).
         </p>
+      </section>
+
+      <section aria-labelledby="purchase-path-heading" className="mx-auto max-w-7xl px-5 pb-10">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 id="purchase-path-heading" className="text-2xl font-black">One evidence request, then keep it current</h2>
+          <ol className="mt-4 grid gap-4 text-sm leading-6 text-slate-700 md:grid-cols-3">
+            <li><strong>1 · Inspect free.</strong> Read the pair preview and the change preview before a wallet is involved.</li>
+            <li><strong>2 · Request exact bytes.</strong> The paid response exposes <code className="font-mono">x-csoai-delivery-sha256</code>, the settlement response, and the signed card payload digest. Browser clients can read those headers through CORS.</li>
+            <li><strong>3 · Verify and maintain.</strong> POST the exact delivered card JSON to <a className="underline" href={VERIFY}>{VERIFY}</a> for free verification, then re-read <code className="font-mono">{CHANGES}&lt;pair&gt;&amp;preview=1</code> when the ledger changes.</li>
+          </ol>
+          <p className="mt-4 text-xs leading-5 text-slate-500">A settlement records payment. It does not by itself establish buyer acceptance, continued use, reserve sufficiency, or a later unchanged state.</p>
+        </div>
       </section>
 
       <section id="pairs" aria-labelledby="pairs-heading" className="mx-auto max-w-7xl px-5 pb-16">
@@ -193,7 +207,7 @@ export default function Wrappers() {
                   <th className="px-3 py-2">Escrow ÷ wrapped</th>
                   <th className="px-3 py-2">State</th>
                   <th className="px-3 py-2">Blocks</th>
-                  <th className="px-3 py-2">Card</th>
+                  <th className="px-3 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -221,7 +235,7 @@ export default function Wrappers() {
                     <td className="px-3 py-2 font-mono tabular-nums">{r.escrow_over_wrapped ?? "—"}</td>
                     <td className="px-3 py-2"><span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold">{STATE_LABEL[r.state] ?? r.state}</span>{r.note ? <div className="mt-1 max-w-xs text-xs text-slate-500">{r.note}</div> : null}{r.error ? <div className="mt-1 text-xs text-amber-800">{r.error}</div> : null}</td>
                     <td className="px-3 py-2 font-mono text-xs text-slate-600">{r.wrapped.block?.number ?? "—"}{r.canonical?.block?.number ? ` / ${r.canonical.block.number}` : ""}</td>
-                    <td className="px-3 py-2"><a className="text-emerald-700 underline underline-offset-4" href={`${DOOR}${encodeURIComponent(r.id)}&preview=1`}>preview</a></td>
+                    <td className="px-3 py-2"><span className="flex flex-wrap gap-x-2 gap-y-1"><a className="text-emerald-700 underline underline-offset-4" href={`${DOOR}${encodeURIComponent(r.id)}&preview=1`}>preview</a><a className="text-emerald-700 underline underline-offset-4" href={`${CHANGES}${encodeURIComponent(r.id)}&preview=1`}>changes</a><a className="text-emerald-700 underline underline-offset-4" href={`${DOOR}${encodeURIComponent(r.id)}`}>402 terms</a></span></td>
                   </tr>
                 ))}
               </tbody>

@@ -315,14 +315,20 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     } catch { /* never blocks a paid deliverable */ }
   }
 
+  const deliverySha256 = await sha256Hex(bytes);
+  const maintenancePreview = `${origin}/api/wrapper/changes?id=${encodeURIComponent(id)}&preview=1`;
   return new Response(text, {
     status: 200,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
       "access-control-allow-origin": "*",
+      "access-control-expose-headers": "x-payment-response, x-csoai-card-sha256, x-csoai-delivery-sha256, x-csoai-signed, x-csoai-verify-endpoint, x-csoai-maintenance-preview",
       "x-csoai-card-sha256": leaf.sha256,
+      "x-csoai-delivery-sha256": deliverySha256,
       "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
+      "x-csoai-verify-endpoint": `${origin}/api/verify`,
+      "x-csoai-maintenance-preview": maintenancePreview,
       ...(payment.ok && payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
   });

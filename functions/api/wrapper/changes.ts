@@ -19,6 +19,8 @@ import {
   type X402Env,
 } from "../_x402";
 import { railMode } from "../_x402_config";
+import { sha256Hex } from "../../_lib/cardSign";
+import { WRAPPER_ROSTER } from "../_wrapper_roster";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string };
 
@@ -26,13 +28,14 @@ const ORIGIN = "https://councilof.ai";
 const SNAP_GLOB_PREFIX = "wrapped-asset-parity-";
 const SNAP_GLOB_SUFFIX = ".json";
 
-const json = (body: unknown, status = 200) =>
+const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
       "access-control-allow-origin": "*",
+      ...extraHeaders,
     },
   });
 
@@ -92,13 +95,34 @@ function extractPairData(snap: Record<string, unknown>, pairId: string): Record<
   return null;
 }
 
-function normalizedRead(record: Record<string, unknown>, name: "wrapped_total_supply" | "escrow_balance"): number | null {
+function normalizedRead(record: Record<string, unknown>, name: "wrapped_total_supply" | "escrow_balance"): string | null {
   const reads = record.reads as Record<string, unknown> | undefined;
   const read = reads?.[name] as Record<string, unknown> | undefined;
   const value = read?.normalized ?? record[name];
-  if (value === null || value === undefined || value === "") return null;
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : null;
+  if (typeof value === "string" && /^-?\d+(?:\.\d+)?$/.test(value.trim())) return value.trim();
+  if (typeof value === "number" && Number.isSafeInteger(value)) return String(value);
+  return null;
+}
+
+function exactDelta(current: string, previous: string): string | null {
+  const parse = (value: string) => {
+    const m = /^(-?)(\d+)(?:\.(\d+))?$/.exec(value);
+    if (!m) return null;
+    const frac = m[3] || "";
+    const atomic = BigInt((m[1] ? "-" : "") + m[2] + frac);
+    return { atomic, scale: frac.length };
+  };
+  const a = parse(current); const b = parse(previous);
+  if (!a || !b) return null;
+  const scale = Math.max(a.scale, b.scale);
+  const ai = a.atomic * (10n ** BigInt(scale - a.scale));
+  const bi = b.atomic * (10n ** BigInt(scale - b.scale));
+  const d = ai - bi; const neg = d < 0n; const abs = neg ? -d : d;
+  if (scale === 0) return `${neg ? "-" : ""}${abs}`;
+  const digits = abs.toString().padStart(scale + 1, "0");
+  const whole = digits.slice(0, -scale);
+  const frac = digits.slice(-scale).replace(/0+$/, "");
+  return `${neg ? "-" : ""}${whole}${frac ? "." + frac : ""}`;
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
@@ -106,147 +130,112 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const origin = url.origin;
   const id = (url.searchParams.get("id") || "").trim().toLowerCase();
   const preview = url.searchParams.get("preview") === "1";
+  const knownIds = (WRAPPER_ROSTER as readonly { id: string }[]).map((entry) => entry.id);
 
-  const resourceUrl = `${origin}/api/wrapper/changes?id=${encodeURIComponent(id || "<pair>")}`;
-  const description = `Delta of wrapped supply and escrow for ${id || "<pair>"} since the previous ledger snapshot. Returns per-field changes, not a rate or grade.`;
-
-  // Validate ID format
   if (!id || !/^[a-z0-9.]+:[a-z]+$/.test(id)) {
-    return json({
-      schema: "csoai.wrapper.changes/0.1",
-      error: "bad_request",
-      reason: "pass id=<pair> (e.g. usdc.e:arbitrum)",
-    }, 400);
+    return json({ schema: "csoai.wrapper.changes/0.1", error: "bad_request", reason: "pass id=<pair> (e.g. usdc.e:arbitrum)", known_ids: knownIds }, 400);
+  }
+  if (!knownIds.includes(id)) {
+    return json({ schema: "csoai.wrapper.changes/0.1", error: "not_found", reason: `${id} is not on the wrapper roster. No payment was taken for a 404.`, known_ids: knownIds }, 404);
   }
 
-  // x402 setup
+  const resourceUrl = `${origin}/api/wrapper/changes?id=${encodeURIComponent(id)}`;
+  const description = `Exact decimal delta of wrapped supply and escrow for ${id} since the previous ledger snapshot. Returns point-in-time arithmetic differences, not a rate or grade.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
-  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
-  // Behavior) — that echo is what gets a resource catalogued.
   const bazaar = declareBazaarHttpGet({
     method: "GET",
     queryParams: { id },
-    queryParamsSchema: { properties: { id: { type: "string", description: "pair id (e.g. usdc.e:arbitrum)" } }, required: ["id"] },
-    outputExample: { schema: "csoai.wrapper.changes/0.1", id, wrapped_supply_delta: "<decimal>", escrow_delta: "<decimal>", state: "DELTA_READ" },
+    queryParamsSchema: { properties: { id: { type: "string", description: "wrapper roster id (e.g. usdc.e:arbitrum)" } }, required: ["id"] },
+    outputExample: { schema: "csoai.wrapper.changes/0.1", id, wrapped_supply_delta: "<exact decimal>", escrow_delta: "<exact decimal>", state: "DELTA_READ" },
   });
-  const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+  const challenge = (notPaidReason: string, readBeforeSettle?: Record<string, unknown>) => paymentRequiredResponseSigned(
+    buildPaymentRequiredV2({
+      resourceUrl,
+      description,
+      serviceName: "CSOAI Wrapped-Asset Changes",
+      tags: ["stablecoin", "bridge", "wrapped", "changes", "delta", "x402"],
+      accepts,
+      bazaar,
+      csoai: {
+        schema: "csoai.wrapper.changes/0.1",
+        per: "pair-request",
+        lid: CSOAI_LID,
+        never: ["rating", "guarantee", "verdict", "rank", "certificate", "reserve attestation"],
+        deliverable: "exact decimal delta between two published ledger snapshots, plus settlement echo and sha256 of the exact delivered JSON bytes",
+        free_preview: `${resourceUrl}&preview=1`,
+        source_preview: `${origin}/api/wrapper?id=${encodeURIComponent(id)}&preview=1`,
+        rail: railMode(env),
+        read_before_settle: readBeforeSettle ?? true,
+        not_paid_reason: notPaidReason,
+        catalog: `${origin}/api/x402`,
+      },
+    }), env,
+  );
 
-  if (!preview && !payment.ok) {
-    return paymentRequiredResponseSigned(
-      buildPaymentRequiredV2({
-        resourceUrl,
-        description,
-        serviceName: "CSOAI Wrapped-Asset Changes",
-        tags: ["stablecoin", "bridge", "wrapped", "changes", "delta", "x402"],
-        accepts,
-        bazaar,
-        csoai: {
-          schema: "csoai.wrapper.changes/0.1",
-          per: "pair-request",
-          lid: CSOAI_LID,
-          never: ["rating", "guarantee", "verdict", "rank", "certificate"],
-          deliverable: "delta of wrapped supply and escrow between two ledger snapshots",
-          free_preview: `${resourceUrl}&preview=1`,
-          rail: railMode(env),
-          not_paid_reason: payment.reason,
-          catalog: `${origin}/api/x402`,
-        },
-      }),
-      env,
-    );
-  }
-
-  // Fetch snapshots
+  // READ BEFORE SETTLE. Every source and arithmetic precondition is established before the
+  // facilitator is contacted. A missing snapshot, pair, or field cannot become a paid result.
   const [current, previous] = await fetchLatestSnapshots();
-
+  let result: Record<string, unknown>;
   if (!current) {
-    return json({
-      schema: "csoai.wrapper.changes/0.1",
-      id,
-      state: "UNCHECKABLE",
-      reason: "No current snapshot found at /interop/wrapped-asset-parity-latest.json",
-    });
+    result = { schema: "csoai.wrapper.changes/0.1", id, state: "UNCHECKABLE", reason: "No current snapshot found at /interop/wrapped-asset-parity-latest.json", current_as_of: null, previous_as_of: null, wrapped_supply_delta: null, escrow_delta: null };
+  } else {
+    const currentData = extractPairData(current, id);
+    const currentAsOf = (current.as_of || current.fetched_at || null) as string | null;
+    if (!currentData) {
+      result = { schema: "csoai.wrapper.changes/0.1", id, state: "UNCHECKABLE", reason: `Pair ${id} not found in current snapshot`, current_as_of: currentAsOf, previous_as_of: null, wrapped_supply_delta: null, escrow_delta: null };
+    } else if (!previous) {
+      result = { schema: "csoai.wrapper.changes/0.1", id, state: "UNCHECKABLE", reason: "Only one snapshot exists — no previous ledger to compare", current_as_of: currentAsOf, previous_as_of: null, wrapped_supply_delta: null, escrow_delta: null };
+    } else {
+      const previousData = extractPairData(previous, id);
+      const previousAsOf = (previous.as_of || previous.fetched_at || null) as string | null;
+      if (!previousData) {
+        result = { schema: "csoai.wrapper.changes/0.1", id, state: "UNCHECKABLE", reason: `Pair ${id} not found in previous snapshot`, current_as_of: currentAsOf, previous_as_of: previousAsOf, wrapped_supply_delta: null, escrow_delta: null };
+      } else {
+        const currentSupply = normalizedRead(currentData, "wrapped_total_supply");
+        const previousSupply = normalizedRead(previousData, "wrapped_total_supply");
+        const currentEscrow = normalizedRead(currentData, "escrow_balance");
+        const previousEscrow = normalizedRead(previousData, "escrow_balance");
+        const supplyDelta = currentSupply !== null && previousSupply !== null ? exactDelta(currentSupply, previousSupply) : null;
+        const escrowDelta = currentEscrow !== null && previousEscrow !== null ? exactDelta(currentEscrow, previousEscrow) : null;
+        if (supplyDelta === null || escrowDelta === null) {
+          result = { schema: "csoai.wrapper.changes/0.1", id, state: "UNCHECKABLE", reason: "One or more normalized supply or escrow reads are absent or not exact decimals", current_as_of: currentAsOf, previous_as_of: previousAsOf, wrapped_supply_delta: null, escrow_delta: null };
+        } else {
+          result = {
+            schema: "csoai.wrapper.changes/0.1", id, state: "DELTA_READ",
+            current_as_of: currentAsOf, previous_as_of: previousAsOf,
+            wrapped_supply_delta: supplyDelta, escrow_delta: escrowDelta,
+            current_state: currentData.state || null, previous_state: previousData.state || null,
+            arithmetic: "exact decimal subtraction via scaled integers; no binary floating point",
+            note: "Deltas are arithmetic differences between two point-in-time snapshots. Not a rate, not a grade, not a reserve attestation.",
+          };
+        }
+      }
+    }
   }
-
-  const currentData = extractPairData(current, id);
-  if (!currentData) {
-    return json({
-      schema: "csoai.wrapper.changes/0.1",
-      id,
-      state: "NOT_FOUND",
-      reason: `Pair ${id} not found in current snapshot`,
-    });
-  }
-
-  const currentAsOf = (current.as_of || current.fetched_at || null) as string | null;
-
-  if (!previous) {
-    // Only one snapshot — can't compute delta
-    const result = {
-      schema: "csoai.wrapper.changes/0.1",
-      id,
-      state: "UNCHECKABLE",
-      reason: "Only one snapshot exists — no previous ledger to compare",
-      current_as_of: currentAsOf,
-      previous_as_of: null,
-      wrapped_supply_delta: null,
-      escrow_delta: null,
-    };
-    return preview ? json({ ...result, preview: true }) : json(result);
-  }
-
-  const previousData = extractPairData(previous, id);
-  const previousAsOf = (previous.as_of || previous.fetched_at || null) as string | null;
-
-  if (!previousData) {
-    return json({
-      schema: "csoai.wrapper.changes/0.1",
-      id,
-      state: "UNCHECKABLE",
-      reason: `Pair ${id} not found in previous snapshot`,
-      current_as_of: currentAsOf,
-      previous_as_of: previousAsOf,
-      wrapped_supply_delta: null,
-      escrow_delta: null,
-    });
-  }
-
-  // Compute deltas
-  const currentSupply = normalizedRead(currentData, "wrapped_total_supply");
-  const previousSupply = normalizedRead(previousData, "wrapped_total_supply");
-  const currentEscrow = normalizedRead(currentData, "escrow_balance");
-  const previousEscrow = normalizedRead(previousData, "escrow_balance");
-
-  if ([currentSupply, previousSupply, currentEscrow, previousEscrow].some((value) => value === null)) {
-    return json({
-      schema: "csoai.wrapper.changes/0.1",
-      id,
-      state: "UNCHECKABLE",
-      reason: "One or more normalized supply or escrow reads are absent",
-      current_as_of: currentAsOf,
-      previous_as_of: previousAsOf,
-      wrapped_supply_delta: null,
-      escrow_delta: null,
-    });
-  }
-
-  const result = {
-    schema: "csoai.wrapper.changes/0.1",
-    id,
-    state: "DELTA_READ",
-    current_as_of: currentAsOf,
-    previous_as_of: previousAsOf,
-    wrapped_supply_delta: currentSupply! - previousSupply!,
-    escrow_delta: currentEscrow! - previousEscrow!,
-    current_state: currentData.state || null,
-    previous_state: previousData.state || null,
-    note: "Deltas are arithmetic differences between two point-in-time snapshots. Not a rate, not a grade, not a reserve attestation.",
-  };
 
   if (preview) {
-    return json({ ...result, preview: true, preview_note: "Full data requires payment." });
+    return json({ ...result, preview: true, preview_note: "Free arithmetic preview. A paid response adds the facilitator settlement echo and sha256 of these exact delivered JSON bytes." });
   }
 
-  return json(result);
+  if (result.state !== "DELTA_READ") {
+    return challenge(`read before settle: delta is ${String(result.state)} (${String(result.reason || "source precondition failed")}). Nothing was sent to the facilitator.`, { state: result.state, reason: result.reason || null, settled: false });
+  }
+
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+  if (!payment.ok) return challenge(payment.reason);
+
+  const text = JSON.stringify(result, null, 2);
+  const deliverySha256 = await sha256Hex(new TextEncoder().encode(text));
+  return new Response(text, {
+    status: 200,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "x-payment-response, x-csoai-delivery-sha256, x-csoai-maintenance-source",
+      "x-csoai-delivery-sha256": deliverySha256,
+      "x-csoai-maintenance-source": `${origin}/api/wrapper?id=${encodeURIComponent(id)}&preview=1`,
+      ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
+    },
+  });
 };

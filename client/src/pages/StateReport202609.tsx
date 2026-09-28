@@ -447,7 +447,7 @@ export default function StateReport202609() {
         caption="Cross-runtime reproduction of signed measurement cards"
         head={["Measure", "Batch 1", "Batch 2"]}
         rows={[
-          ["Scope", "1 model, 14 axes", <><N id="m2.models" /> models × <N id="m2.axes" /> axes</>],
+          ["Scope", "1 model × 14 axes", <><N id="m2.models" /> models × <N id="m2.axes" /> axes</>],
           ["Cards re-run", <N id="m1.cards" />, <N id="m2.cards" />],
           ["Same grade on every item", <N id="m1.itemwise" />, <N id="m2.itemwise" />],
           ["Same score only (item grades differed)", <N id="m1.aggregate_only" />, <N id="m2.aggregate_only" />],
