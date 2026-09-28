@@ -204,13 +204,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const bad = (reason: string, status: number) =>
     json({ schema: "csoai.wrapper-parity/0.1", error: status === 404 ? "not_found" : "bad_request", reason, known_ids: known, free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`, preview: `${origin}/api/wrapper?id=<roster id>&preview=1` }, status);
 
-  const valid = !!(id && ID_RE.test(id));
-  if (!valid && preview) return bad("pass id=<roster id> (see known_ids)", 400);
-  // Unpaid bare GET stays 402 so an indexer can discover the door. A presented payment must
-  // never settle until the id is a deliverable the roster carries.
-  if (hasPaymentHeader(request) && !valid) return bad("pass id=<roster id> before presenting payment", 400);
+  const hasId = id.length > 0;
+  const valid = !!(hasId && ID_RE.test(id));
+  // The bare discovery door stays 402, but once a caller names a subject we validate that
+  // subject before advertising payment. A malformed or unknown id is never a payable resource.
+  if (hasId && !valid) return bad("pass id=<roster id> (see known_ids)", 400);
   const entry = valid ? findEntry(id) : undefined;
-  if (hasPaymentHeader(request) && valid && !entry) return bad(`${id} is not on the roster. No payment was taken for a 404.`, 404);
+  if (valid && !entry) return bad(`${id} is not on the roster. No payment was taken for a 404.`, 404);
 
   const description = `A signed wrapped-asset parity card for ${id || "<id>"}: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });

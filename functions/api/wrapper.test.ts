@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as wrapper, ratioString, normalize, toPreview, findEntry, ROSTER, ATTESTS, KIND, buildPayload, CHAINS } from "./wrapper";
 import { VERDICT_RE } from "./rwa/evidence";
+import { CSOAI_LID } from "./_x402";
 import { ESTATE_PAY_TO } from "./_x402_config";
 // The reader is the roster's source of truth; the TS mirror must never drift from it.
 import { ROSTER as READER_ROSTER } from "../../scripts/readers/wrapped-asset-parity-reader.mjs";
@@ -66,15 +67,25 @@ describe("/api/wrapper — arithmetic and doctrine", () => {
 });
 
 describe("/api/wrapper — doors", () => {
-  it("bare GET is a 402 (indexable); bad id on preview is 400 with the known ids; unknown id with payment is 404 and takes nothing", async () => {
-    stubChain();
+  it("bare GET is a 402, but malformed or unknown requested ids fail before any payment challenge", async () => {
+    const facilitatorCalls: string[] = [];
+    stubChain({ facilitatorCalls });
     expect((await wrapper(ctx("/api/wrapper"))).status).toBe(402);
-    const bad = await wrapper(ctx("/api/wrapper?id=???&preview=1"));
-    expect(bad.status).toBe(400);
-    expect((await bad.json()).known_ids).toContain("usdc.e:arbitrum");
-    const unknown = await wrapper(ctx("/api/wrapper?id=nope:chain", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": "e30=" }));
-    expect(unknown.status).toBe(404);
-    expect((await unknown.json()).reason).toMatch(/No payment was taken/);
+
+    for (const path of ["/api/wrapper?id=???", "/api/wrapper?id=???&preview=1"]) {
+      const bad = await wrapper(ctx(path, { X402_FACILITATOR_URL: "https://f.example" }));
+      expect(bad.status).toBe(400);
+      expect(bad.headers.get("PAYMENT-REQUIRED")).toBeNull();
+      expect((await bad.json()).known_ids).toContain("usdc.e:arbitrum");
+    }
+
+    for (const headers of [{}, { "x-payment": "e30=" }]) {
+      const unknown = await wrapper(ctx("/api/wrapper?id=nope:chain", { X402_FACILITATOR_URL: "https://f.example" }, headers));
+      expect(unknown.status).toBe(404);
+      expect(unknown.headers.get("PAYMENT-REQUIRED")).toBeNull();
+      expect((await unknown.json()).reason).toMatch(/No payment was taken/);
+    }
+    expect(facilitatorCalls).toEqual([]);
   });
 
   it("402 carries the shared accepts entry, the free preview and ledger pointers, and x402 v2 + bazaar", async () => {
@@ -89,7 +100,9 @@ describe("/api/wrapper — doors", () => {
     expect(b.csoai.free_preview).toBe(`${ORIGIN}/api/wrapper?id=usdc.e%3Aarbitrum&preview=1`);
     expect(b.csoai.free_ledger).toMatch(/wrapped-asset-parity/);
     expect(b.extensions?.bazaar ?? b.extensions).toBeTruthy();
-    expect(VERDICT_RE.test(JSON.stringify(b).replace(/22 axes measured/g, ""))).toBe(false);
+    expect(b.csoai.lid).toBe(CSOAI_LID);
+    const { lid, ...scoped } = b.csoai;
+    expect(VERDICT_RE.test(JSON.stringify({ ...b, csoai: scoped }))).toBe(false);
   });
 
   it("preview is free and unsigned: reads present, no signature, no raw-read hashes; escrow pair carries the ratio", async () => {
