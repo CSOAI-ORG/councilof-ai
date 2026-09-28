@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# Synthetic fixture (not a capture). best_effort lets the sandbox start without Landlock.
+version: 1
+filesystem_policy:
+  include_workdir: false
+  read_only: [/usr, /etc]
+  read_write: [/tmp]
+landlock:
+  compatibility: best_effort

@@ -1,0 +1,223 @@
+{
+ "adapter": {
+  "name": "openshell-declared-vs-observed",
+  "version": "0.1.0"
+ },
+ "summary": {
+  "result": "DIVERGENT",
+  "rows": 3,
+  "witnessed_rows": 3,
+  "counts": {
+   "DIVERGED": 1,
+   "HELD": 2
+  },
+  "codes": {
+   "DENY_DECLARED_AUDIT_PASSTHROUGH": 1
+  },
+  "strict": false
+ },
+ "inputs": {
+  "policy_sha256": "56f099d115b4acf5a73aa41e85339623386c006624328d5b5c18dce130de2ee1",
+  "enforcer_logs": [
+   {
+    "path": "enforcer.log",
+    "sha256": "4c7cd7692708a5ac47d8318e1023d5622485a17dd2cb635cc3a5cb00702d3ee4"
+   }
+  ],
+  "enforcer_lines": 13,
+  "enforcer_records_parsed": 10,
+  "witness_sha256": "0a1313e4a599f74375700a5907961ed94fb4514ca8fac096cc99f95f195a896c",
+  "witness_rows": 3
+ },
+ "rows": [
+  {
+   "kind": "egress",
+   "attempt": {
+    "host": "example.org",
+    "port": 443,
+    "method": "GET",
+    "path": "/"
+   },
+   "declared": {
+    "effect": "denied_by_policy",
+    "layer": "l4",
+    "rule": null,
+    "reason": "no matching policy (default deny)"
+   },
+   "enforcer": {
+    "records": [
+     {
+      "source": "enforcer.log",
+      "line": 9,
+      "format": "shorthand",
+      "t": "2026-09-28T13:42:46.927Z",
+      "kind": "net",
+      "action": "DENIED",
+      "policy": "-",
+      "engine": "opa",
+      "reason": "endpoint example.org:443 is not allowed by any policy",
+      "raw_sha256": "49759c4022e136518c534fe3496dc2c309edb575850df2d4ac9826607823f01e"
+     }
+    ],
+    "claim": "DENIED"
+   },
+   "witness": {
+    "kind": "egress",
+    "t": "2026-09-28T13:42:46.914Z",
+    "host": "example.org",
+    "port": 443,
+    "method": "GET",
+    "path": "/",
+    "binary": "/usr/bin/curl",
+    "left": false,
+    "evidence": {
+     "source": "client_transcript",
+     "client": "curl 7.68.0",
+     "via_proxy": "127.0.0.1:39128",
+     "http_connect": 403,
+     "http_code": 0,
+     "size_download": 0
+    },
+    "record_sha256": "b7a29e3776c123f5ccc09fe41631e721218f2c2c1144234984f0441c11b88032"
+   },
+   "comparison": "HELD",
+   "row": 1
+  },
+  {
+   "kind": "egress",
+   "attempt": {
+    "host": "example.com",
+    "port": 443,
+    "method": "GET",
+    "path": "/"
+   },
+   "declared": {
+    "effect": "denied_by_policy",
+    "layer": "l7",
+    "rule": "example_audit",
+    "enforcement": "audit",
+    "reason": "deny_rules GET /**"
+   },
+   "enforcer": {
+    "records": [
+     {
+      "source": "enforcer.log",
+      "line": 10,
+      "format": "shorthand",
+      "t": "2026-09-28T13:42:47.113Z",
+      "kind": "net",
+      "action": "ALLOWED",
+      "policy": "example_audit",
+      "engine": "opa",
+      "raw_sha256": "cde6c773fda54ffc38ed6218600bc8251d5ec928218cb351e1dd192eb8e01c54"
+     },
+     {
+      "source": "enforcer.log",
+      "line": 11,
+      "format": "shorthand",
+      "t": "2026-09-28T13:42:47.170Z",
+      "kind": "http",
+      "action": "ALLOWED",
+      "policy": "example_audit",
+      "engine": "l7",
+      "raw_sha256": "8ac18eca162015593800051fbe43727f524a4f020b242aec01b41a0aa1e7f45d"
+     }
+    ],
+    "claim": "ALLOWED"
+   },
+   "witness": {
+    "kind": "egress",
+    "t": "2026-09-28T13:42:47.052Z",
+    "host": "example.com",
+    "port": 443,
+    "method": "GET",
+    "path": "/",
+    "binary": "/usr/bin/curl",
+    "left": true,
+    "evidence": {
+     "source": "client_transcript",
+     "client": "curl 7.68.0",
+     "via_proxy": "127.0.0.1:39128",
+     "http_connect": 200,
+     "http_code": 200,
+     "size_download": 559,
+     "body_sha256": "ff67a9d764d6a2367a187734e697f6a53217db9a21c101d410a113ca871a299d",
+     "body_is_proxy_error": false
+    },
+    "record_sha256": "d5c7dc53862a2184bea90697fc123ceb0fb6b428974fc6f0520cb6da8321254b"
+   },
+   "comparison": "DIVERGED",
+   "code": "DENY_DECLARED_AUDIT_PASSTHROUGH",
+   "row": 2
+  },
+  {
+   "kind": "egress",
+   "attempt": {
+    "host": "example.net",
+    "port": 443,
+    "method": "GET",
+    "path": "/"
+   },
+   "declared": {
+    "effect": "denied_by_policy",
+    "layer": "l7",
+    "rule": "example_enforce",
+    "enforcement": "enforce",
+    "reason": "deny_rules GET /**"
+   },
+   "enforcer": {
+    "records": [
+     {
+      "source": "enforcer.log",
+      "line": 12,
+      "format": "shorthand",
+      "t": "2026-09-28T13:42:47.366Z",
+      "kind": "net",
+      "action": "ALLOWED",
+      "policy": "example_enforce",
+      "engine": "opa",
+      "raw_sha256": "bf7fa6093c10f4357cadaef4259e84a004d26fe10bf33ef25351d0a4271b1013"
+     },
+     {
+      "source": "enforcer.log",
+      "line": 13,
+      "format": "shorthand",
+      "t": "2026-09-28T13:42:47.424Z",
+      "kind": "http",
+      "action": "DENIED",
+      "policy": "example_enforce",
+      "engine": "l7",
+      "reason": "L7_REQUEST deny GET example.net:443/ reason=GET / blocked by deny rule",
+      "raw_sha256": "dc5cd5d8b49e01ebffc16904366cff6efee738caff21fcaf7fe2a34aa4740004"
+     }
+    ],
+    "claim": "DENIED"
+   },
+   "witness": {
+    "kind": "egress",
+    "t": "2026-09-28T13:42:47.294Z",
+    "host": "example.net",
+    "port": 443,
+    "method": "GET",
+    "path": "/",
+    "binary": "/usr/bin/curl",
+    "left": false,
+    "evidence": {
+     "source": "client_transcript",
+     "client": "curl 7.68.0",
+     "via_proxy": "127.0.0.1:39128",
+     "http_connect": 200,
+     "http_code": 403,
+     "size_download": 318,
+     "body_sha256": "587879358e06d4d560831f1b1c1af39fbb0bde10c861c37e85bd03fedb61d5cb",
+     "body_is_proxy_error": true,
+     "proxy_error": "policy_denied"
+    },
+    "record_sha256": "11b29235de7cdcb737a2f56baf0a2f87594da38473fcba5a50c2b6771eb96a56"
+   },
+   "comparison": "HELD",
+   "row": 3
+  }
+ ],
+ "signing_key": "published TEST key"
+}

@@ -1,0 +1,50 @@
+{
+ "captured": "2026-09-28T13:42:33Z to 2026-09-28T13:42:47Z",
+ "host": {
+  "kind": "RunPod CPU container (the build pod), Ubuntu 20.04 userland",
+  "kernel": "6.8.0-106-generic",
+  "capabilities": "CapEff 0x00000000a80405fb: no CAP_NET_ADMIN, CAP_SYS_ADMIN or CAP_NET_RAW",
+  "why_network_proxy_role": "A full OpenShell sandbox needs a Docker, Podman, Kubernetes or MicroVM driver and a network namespace; none is available in this container (see docs/proofof/SANDBOX-V0.md, 2026-09-25). The supervisor's --role network-proxy runs the same OPA policy engine and L7 proxy on a loopback listener without isolation."
+ },
+ "openshell": {
+  "repository": "https://github.com/NVIDIA/OpenShell",
+  "licence": "Apache-2.0 (GitHub API license.spdx_id, read 2026-09-28)",
+  "release": "v0.1.2",
+  "release_published": "2026-09-28T03:58:00Z",
+  "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+  "asset": "openshell-supervisor-x86_64-unknown-linux-gnu.tar.gz",
+  "asset_sha256": "801d717f4211b4c24449b08a47ce5571ff623ce993c10d44e133dbe2edc36611",
+  "asset_checksum": "verified with sha256sum -c against the release's openshell-supervisor-checksums-sha256.txt",
+  "binary": "openshell-supervisor 0.1.2",
+  "binary_sha256": "7185e4e5a2c3292c4b044d92a6d083e6c1dce0e48dee12f49ca425ce53e2ba92",
+  "policy_rules": {
+   "path": "crates/openshell-supervisor-network/data/sandbox-policy.rego at v0.1.2",
+   "sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41",
+   "vendored_here": false
+  },
+  "telemetry": "OPENSHELL_TELEMETRY_ENABLED=false for every run",
+  "install_size": "supervisor binary 32.6 MB; sandbox and prover binaries also fetched (10.8 MB, 32.6 MB) and checksum-verified, not used in the capture"
+ },
+ "commands": [
+  "openshell-supervisor --role network-proxy --listen 127.0.0.1:39128 --policy-rules sandbox-policy.rego --policy-data policy.yaml --tls-dir tls --log-level info   (under timeout 60; stderr -> enforcer.log)",
+  "curl -sS -m 15 -x http://127.0.0.1:39128 --cacert tls/openshell-ca.pem -o body-<host>.bin -w <fields> https://example.org/",
+  "curl ... https://example.com/",
+  "curl ... https://example.net/"
+ ],
+ "client": "curl 7.68.0 (OpenSSL 1.1.1f)",
+ "not_captured": [
+  "OCSF JSONL. The network-proxy role has no gateway settings channel, so ocsf_json_enabled stays false; /var/log/openshell-ocsf.2026-09-28.log was created with 0 bytes. The shorthand lines in enforcer.log are the only enforcer record.",
+  "Binary identity. The network-proxy role runs with require_binary_identity:false and records the process as -(0). The adapter matches endpoints only for these records and says so in each row.",
+  "Whether the proxy opened a TCP or TLS connection to example.net before refusing the GET. The client witness sees the request, not the proxy's upstream socket.",
+  "File and syscall attempts. This role runs no sandboxed workload, so there is no Landlock or seccomp layer to observe."
+ ],
+ "files": {
+  "policy.yaml": "the declared policy used for the capture (ours)",
+  "enforcer.log": "the supervisor's stderr, unedited; byte-identical in content to /var/log/openshell.2026-09-28.log except two millisecond timestamps",
+  "client-transcript.raw.txt": "curl -w output as captured; curl 7.68 left %{url} and %{exitcode} empty, so the lines are not valid JSON",
+  "client-stderr.txt": "curl stderr as captured",
+  "proxy-denial-body.json": "the proxy's 403 body for example.net, as received",
+  "witness.jsonl": "output of build_witness.py over the transcript and response bodies",
+  "example.com body": "559 bytes, sha256 ff67a9d764d6a2367a187734e697f6a53217db9a21c101d410a113ca871a299d, not redistributed"
+ }
+}

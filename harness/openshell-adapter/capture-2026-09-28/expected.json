@@ -1,0 +1,11 @@
+{
+ "what": "Real capture, OpenShell v0.1.2 network-proxy role on the build pod, 2026-09-28T13:42Z. Three requests. example.org has no rule and was refused at CONNECT. example.com has a deny rule for every GET but is in audit enforcement (the documented default), and the origin's page came back. example.net has the same deny rule in enforce mode and the proxy answered policy_denied. The adapter must return DIVERGENT (exit 1) on the example.com row.",
+ "result": "DIVERGENT",
+ "exit": 1,
+ "enforcer_records_parsed": 10,
+ "rows": [
+  {"row": 1, "attempt_host": "example.org", "comparison": "HELD"},
+  {"row": 2, "attempt_host": "example.com", "comparison": "DIVERGED", "code": "DENY_DECLARED_AUDIT_PASSTHROUGH"},
+  {"row": 3, "attempt_host": "example.net", "comparison": "HELD"}
+ ]
+}
