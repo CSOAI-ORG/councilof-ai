@@ -156,9 +156,10 @@ def pontes_participant_measurement() -> dict:
         'state': 'CLAIM_MEASURED',
         'measured_at': c.now_iso(),
         'method': ('take the entities the publisher\'s own press release names, and for each one search that '
-                   'entity\'s OWN published index (robots.txt -> sitemaps, plus the keyless Common Crawl URL '
-                   'index for its domain) for the programme name, quoting any hit from the entity\'s own '
-                   'visible page text'),
+                   'entity\'s OWN published index (robots.txt -> a bounded sitemap read; the keyless Common '
+                   'Crawl URL index is the fallback when that site index cannot be read) for the programme '
+                   'name, quoting any hit from the entity\'s own visible page text. Network reads are time '
+                   'bounded; a timeout becomes SEARCH_INCONCLUSIVE, never an absence'),
         'window': 'each named entity\'s public web presence as served at measured_at',
         'denominator': {
             'entities_named_by_the_publisher': len(PONTES_NAMED),

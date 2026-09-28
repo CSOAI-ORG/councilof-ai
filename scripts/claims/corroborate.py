@@ -121,7 +121,7 @@ def _sitemap_urls(domain: str, bounded: bool = False) -> tuple[list[str], list[d
     sources, locs, sitemaps = [], [], []
     reached = False
     for host in (domain, f"www.{domain}"):
-        r = c.get(f"https://{host}/robots.txt", timeout=15 if bounded else 45)
+        r = c.get(f"https://{host}/robots.txt", timeout=8 if bounded else 45)
         sources.append(c.source(r, "the organisation's own robots.txt, for its Sitemap: lines"))
         if r["ok"]:
             reached = True
@@ -132,13 +132,13 @@ def _sitemap_urls(domain: str, bounded: bool = False) -> tuple[list[str], list[d
     if guessed:
         sitemaps = [f"https://{domain}/sitemap.xml", f"https://www.{domain}/sitemap.xml"]
     seen: set[str] = set()
-    queue = sitemaps[:MAX_SITEMAPS]
+    queue = sitemaps[:(2 if bounded else MAX_SITEMAPS)]
     while queue and len(locs) < MAX_SITEMAP_URLS:
         sm = queue.pop(0)
         if sm in seen:
             continue
         seen.add(sm)
-        rr = c.get(sm, timeout=30 if bounded else 150)
+        rr = c.get(sm, timeout=12 if bounded else 150)
         note = "sitemap named by robots.txt"
         if guessed:
             note = ("sitemap tried at the conventional path because robots.txt named none; a 404 here is "
@@ -173,7 +173,7 @@ def _cc_urls(domain: str, term: str, bounded: bool = False) -> tuple[list[str], 
     # indexed", so it is retried with backoff and its HTTP status is recorded either way.
     control, ctl = 0, {"ok": False, "reason": "not attempted"}
     for attempt in range(1 if bounded else 3):
-        ctl = c.get(base + "&limit=200", timeout=30 if bounded else 150)
+        ctl = c.get(base + "&limit=200", timeout=12 if bounded else 150)
         if ctl["ok"]:
             control = len([l for l in ctl["body"].decode("utf-8", "replace").splitlines() if '"url"' in l])
             break
@@ -184,7 +184,7 @@ def _cc_urls(domain: str, term: str, bounded: bool = False) -> tuple[list[str], 
     hit = {"ok": False, "reason": "not attempted", "url": base, "status": None,
            "accessed_utc": c.now_iso(), "bytes": 0, "sha256": ""}
     for attempt in range(1 if bounded else 3):
-        hit = c.get(base + f"&limit=200&filter={flt}", timeout=30 if bounded else 180)
+        hit = c.get(base + f"&limit=200&filter={flt}", timeout=12 if bounded else 180)
         if hit["ok"] or hit.get("status") == 404:  # 404 = the index answered: no captures matched
             break
         if not bounded:
@@ -230,7 +230,13 @@ def check(org: str, term: str, domains: list[str] | None = None, pause: float = 
         for u in (newsy or locs)[:MAX_TEXT_PAGES]:
             if u not in text_pages:
                 text_pages.append(u)
-        cc, control, ss2 = _cc_urls(d, term, bounded=bounded)
+        # In the bounded multi-entity sweep, a readable sitemap is already a conclusive index
+        # control. Do not spend another network budget on Common Crawl unless the site index could
+        # not be read. The full single-subject harness still uses both routes.
+        if bounded and reached and locs:
+            cc, control, ss2 = [], 0, []
+        else:
+            cc, control, ss2 = _cc_urls(d, term, bounded=bounded)
         sources.extend(ss2)
         cc_control += control
         cc_reached = cc_reached or control > 0
@@ -239,11 +245,11 @@ def check(org: str, term: str, domains: list[str] | None = None, pause: float = 
                 candidates.append(u)
     fetched, hits = [], []
     read_ok = 0
-    fetch_cap = 5 if bounded else MAX_FETCH
-    page_cap = 8 if bounded else MAX_TEXT_PAGES
+    fetch_cap = 2 if bounded else MAX_FETCH
+    page_cap = 1 if bounded else MAX_TEXT_PAGES
     for u in (candidates[:fetch_cap] + [p for p in text_pages[:page_cap] if p not in candidates]):
-        time.sleep(0.1 if bounded else pause)
-        pr = c.get(u, timeout=15 if bounded else 40)
+        time.sleep(0.05 if bounded else pause)
+        pr = c.get(u, timeout=8 if bounded else 40)
         rec = c.source(pr)
         fetched.append(rec)
         if not pr["ok"]:
