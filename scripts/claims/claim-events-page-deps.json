@@ -1,0 +1,9 @@
+{
+ "schema": "csoai.claim-events-page-deps/0.1",
+ "host": "councilof.ai",
+ "note": "Pages and the claim-event dependencies they render. scripts/claims/claim-events-changed-pages.mjs lists a page for IndexNow/lastmod only when one of these changed. A subject page is added here when its subject is DISCLOSED (its registry is LIVE in the claim-maintenance register), keyed by the refs the feed carries for it.",
+ "pages": [
+  { "url": "https://councilof.ai/api/claims/events", "depends_on": ["feed"] },
+  { "url": "https://councilof.ai/api/claims/events/head", "depends_on": ["feed"] }
+ ]
+}
