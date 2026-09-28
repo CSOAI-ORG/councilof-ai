@@ -94,14 +94,15 @@ dd{margin:0}
   "Resolve a did:web identifier yourself and verify an Ed25519 signature over a stated preimage.",
   "A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.",
   "Three published card counts describe three different sets. Measure their overlap instead of adding them.",
-  "A signature over a whole payload: remove the stamp, canonicalise what is left under the stated rule, verify under the named key."
+  "A signature over a whole payload: remove the stamp, canonicalise what is left under the stated rule, verify under the named key.",
+  "Read a jurisdiction's rule as bytes: the quoted Article 50(2) text hashes to its published digest, and a marking result names its method and its time. Not detected never means absent."
  ],
  "assesses": "Completion means reproduced. An exercise is complete only when its state is REPRODUCED: the sha256 of your result equals the sha256 of the published result, both written as canonical JSON {measurement, value} (keys sorted, no whitespace), and the exercise's negative control failed as it must.",
- "timeRequired": "PT70M",
+ "timeRequired": "PT80M",
  "hasCourseInstance": {
   "@type": "CourseInstance",
   "courseMode": "Online",
-  "courseWorkload": "PT70M"
+  "courseWorkload": "PT80M"
  },
  "hasPart": [
   {
@@ -236,6 +237,23 @@ dd{margin:0}
    "timeRequired": "PT10M",
    "isAccessibleForFree": true,
    "assesses": "The stamp verifies. It attests the integrity of the snapshot as served, not a re-measurement.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#article-50-marking",
+   "name": "Reproduce an Article 50 marking measurement, then apply it to your own output",
+   "description": "Read a jurisdiction's rule as bytes: the quoted Article 50(2) text hashes to its published digest, and a marking result names its method and its time. Not detected never means absent.",
+   "url": "https://councilof.ai/academy/exercises/#article-50-marking",
+   "position": 9,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT10M",
+   "isAccessibleForFree": true,
+   "assesses": "Your {text_sha256, subject_sha256, subject_bytes, container, c2pa_manifest_store} equals the preview's, field for field.",
    "isPartOf": {
     "@id": "https://councilof.ai/academy/exercises/#course"
    }
@@ -423,6 +441,25 @@ node run-exercises.mjs --json     # the transcript, for your records</code></pre
 <pre><code>node run-exercises.mjs --only board-stamp</code></pre>
 <button type="button" class="run-one" data-id="board-stamp">Run this exercise</button>
 <div class="result" data-result="board-stamp" aria-live="polite"></div>
+</article>
+<article class="ex" id="article-50-marking">
+<header><span class="num" aria-hidden="true">9</span><div><h2>Reproduce an Article 50 marking measurement, then apply it to your own output</h2><p class="meta">About 10 minutes · reads <code>/api/art50/marking-evidence?url=&lt;output&gt;&amp;preview=1</code>, <code>&lt;output&gt;</code></p></div></header>
+<p>Read a jurisdiction's rule as bytes: the quoted Article 50(2) text hashes to its published digest, and a marking result names its method and its time. Not detected never means absent.</p>
+<ol class="steps">
+<li>Pick a PNG output. The default is <code>/og-image.png</code>; to apply the exercise to a system of your own, give the https URL of a PNG it generated (<code>--subject &lt;url&gt;</code>, or <code>?subject=&lt;url&gt;</code> on this page).</li>
+<li>Fetch the free preview <code>/api/art50/marking-evidence?url=&lt;output&gt;&amp;preview=1</code>. Hash <code>law.text</code> as UTF-8 and compare with <code>law.text_sha256</code>: the Article 50(2) wording you read is the wording that was hashed.</li>
+<li>Fetch the output yourself and compute its sha256 and its length in bytes (the preview's <code>measurement.subject</code>).</li>
+<li>Walk the PNG chunks from byte 8. A C2PA manifest store sits in a chunk of type <code>caBX</code>. Write DETECTED or NOT_DETECTED for the method <code>c2pa.manifest-store</code> and compare with the preview's <code>measurement.checked</code>.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>Your {text_sha256, subject_sha256, subject_bytes, container, c2pa_manifest_store} equals the preview's, field for field.</dd>
+<dt>Negative control</dt><dd>Flip the mark in your copy (insert an empty <code>caBX</code> chunk after IHDR, or strip every <code>caBX</code> chunk if one was found): your detector must change its answer.</dd>
+<dt>Live tools</dt><dd><code>GET /api/art50/marking-evidence?url=&lt;output&gt;&amp;preview=1 (free, unsigned)</code> · <code>GET the output itself</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only article-50-marking</code></pre>
+<button type="button" class="run-one" data-id="article-50-marking">Run this exercise</button>
+<div class="result" data-result="article-50-marking" aria-live="polite"></div>
 </article>
 <!-- generated:exercises:end -->
 

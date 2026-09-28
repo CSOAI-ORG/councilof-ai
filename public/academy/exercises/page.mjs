@@ -6,6 +6,8 @@ import { EXERCISES, TRANSCRIPT_SCHEMA, runExercise } from "./run-exercises.mjs";
 // A local review copy (127.0.0.1 / localhost) reads the public site; everything it reads sends CORS
 // headers except the charter files, so charter-hash is UNCHECKABLE there and REPRODUCED in production.
 const edge = ["127.0.0.1", "localhost"].includes(location.hostname) ? "https://councilof.ai" : location.origin;
+/** ?subject=<https URL of a PNG> applies the Article 50 exercise to an output of your own. */
+const subject = new URLSearchParams(location.search).get("subject") || undefined;
 const results = new Map();
 const $ = (sel) => document.querySelector(sel);
 
@@ -49,7 +51,7 @@ async function runOne(id) {
   const target = document.querySelector(`[data-result="${CSS.escape(id)}"]`);
   if (!ex || !target) return null;
   target.replaceChildren(el("span", { class: "state RUNNING" }, "RUNNING"), " reading the published bytes…");
-  const r = await runExercise(ex, { edge });
+  const r = await runExercise(ex, { edge, subject });
   results.set(id, r);
   render(target, r);
   $("#download").hidden = results.size === 0;

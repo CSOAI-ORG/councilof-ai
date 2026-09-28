@@ -199,6 +199,9 @@ const sources = new Set();
 
 const all = surfaces.flatMap((s) => s.modules);
 const flat = all.flatMap((m) => m.findings).concat(surfaces.flatMap((s) => s.page_findings || []));
+// What a visitor can actually reach: routed surfaces, plus data files a routed page imports.
+const servedModules = surfaces.flatMap((s) => (s.served === true ? s.modules : s.served === "SEE_CONSUMERS" ? s.modules.filter((m) => m.routed_consumer_pages?.length) : []));
+const servedFlat = servedModules.flatMap((m) => m.findings).concat(surfaces.filter((s) => s.served === true).flatMap((s) => s.page_findings || []));
 const doc = {
   schema: SCHEMA,
   what: "Every learning module in the councilof-ai client, where it is served, which reproducible exercise realises it, and flags in its copy. Generated from source; flags are for a human to act on, never automatic edits.",
@@ -211,6 +214,9 @@ const doc = {
     modules_with_exercise: all.filter((m) => m.exercises.length).length,
     exercises: EXERCISES.length,
     findings: summarise(flat),
+    served_modules: servedModules.length,
+    served_modules_without_exercise: servedModules.filter((m) => !m.exercises.length).map((m) => m.id),
+    findings_in_served_copy: summarise(servedFlat),
   },
   exercises: EXERCISES.map((e) => ({ id: e.id, title: e.title, realises: e.realises })),
   surfaces,

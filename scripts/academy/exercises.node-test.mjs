@@ -175,3 +175,36 @@ test("board-totals: counts derived from the rows must equal the totals", async (
   const typed = await runner.runExercise(ex, { edge: "https://fixture.invalid", fetchImpl: fakeEdge({ "/api/gspc": { axes, totals: { axes: 3, measured_axes: 3, public_count: "fixture" } }, "/mcp": mcp() }) });
   assert.equal(typed.state, "NOT_REPRODUCED", "a total that disagrees with its rows must not reproduce");
 });
+
+/** A PNG built from [type, data] chunks (CRC left 0: the walk reads structure, as the measurer does). */
+const png = (...chunks) => Buffer.concat([
+  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+  ...chunks.map(([type, data = Buffer.alloc(0)]) => {
+    const h = Buffer.alloc(8);
+    h.writeUInt32BE(data.length, 0);
+    h.write(type, 4, "latin1");
+    return Buffer.concat([h, data, Buffer.alloc(4)]);
+  }),
+]);
+
+test("article-50-marking: text, subject and the caBX walk reproduce; a wrong published field does not", async () => {
+  const ex = runner.EXERCISES.find((e) => e.id === "article-50-marking");
+  const text = "Providers of AI systems … fixture wording — non-ASCII kept";
+  const subject = "https://fixture.invalid/og-image.png";
+  const q = "/api/art50/marking-evidence?url=" + encodeURIComponent(subject) + "&preview=1";
+  const run = (bytes, result, law = { article: "Article 50(2)", text, text_sha256: H(text) }) => {
+    const preview = { mode: "preview", fetched_at: "fixture", law, measurement: { subject: { url: subject, sha256: sha(bytes), bytes: bytes.length, container: "png" }, checked: [{ method: "c2pa.manifest-store", result }] } };
+    return runner.runExercise(ex, { edge: "https://fixture.invalid", fetchImpl: fakeEdge({ [q]: preview, "/og-image.png": new Response(bytes) }) });
+  };
+  const plain = png(["IHDR", Buffer.alloc(13)], ["IDAT", Buffer.from("x")], ["IEND"]);
+  const marked = png(["IHDR", Buffer.alloc(13)], ["caBX", Buffer.from("jumb")], ["IDAT", Buffer.from("x")], ["IEND"]);
+  const a = await run(plain, "NOT_DETECTED");
+  assert.equal(a.state, "REPRODUCED", a.reason);
+  assert.equal(a.control.value, "DETECTED", "inserting a caBX chunk must flip the detector");
+  const b = await run(marked, "DETECTED");
+  assert.equal(b.state, "REPRODUCED", b.reason);
+  assert.equal(b.control.value, "NOT_DETECTED", "stripping the caBX chunk must flip the detector");
+  assert.equal((await run(plain, "DETECTED")).state, "NOT_REPRODUCED", "a published DETECTED over an unmarked PNG must not reproduce");
+  assert.equal((await run(plain, "NOT_DETECTED", { text, text_sha256: H(text + ".") })).state, "NOT_REPRODUCED", "a text digest that does not bind the quoted text must not reproduce");
+  assert.equal((await run(Buffer.from("GIF89a-not-a-png"), "NOT_DETECTED")).state, "UNCHECKABLE", "bytes that are not PNG are uncheckable here, not a failure");
+});

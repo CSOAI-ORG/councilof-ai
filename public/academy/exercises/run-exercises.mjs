@@ -18,6 +18,7 @@
  *     node run-exercises.mjs --only verify-card,inclusion
  *     node run-exercises.mjs --json > transcript.json
  *     node run-exercises.mjs --card <card id> --leaf-index <n> --edge <origin>
+ *     node run-exercises.mjs --only article-50-marking --subject <https URL of a PNG you generated>
  *
  * Exit 0: every exercise ran was REPRODUCED. 1: at least one NOT_REPRODUCED. 2: none failed,
  * but at least one was UNCHECKABLE (could not be checked is a different claim from failed).
@@ -232,6 +233,43 @@ function randomIndex(n) {
   return a[0] % n;
 }
 
+// PNG: an 8-byte signature, then chunks [length u32 BE][type, 4 ASCII][data][crc u32]. The walk
+// mirrors the published measurer (functions/_lib/c2pa.ts): a C2PA store is a `caBX` chunk.
+const PNG_SIG = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+function pngChunks(b) {
+  if (b.length <= 8 || PNG_SIG.some((x, k) => b[k] !== x)) return null;
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  const out = [];
+  let i = 8;
+  while (i + 12 <= b.length) {
+    const len = dv.getUint32(i);
+    const type = String.fromCharCode(b[i + 4], b[i + 5], b[i + 6], b[i + 7]);
+    out.push({ start: i, end: Math.min(b.length, i + 12 + len), type });
+    if (type === "IEND") break;
+    i += 12 + len;
+  }
+  return out;
+}
+/** "DETECTED" | "NOT_DETECTED" for method c2pa.manifest-store; null when the bytes are not PNG. */
+export function pngC2paStore(b) {
+  const cs = pngChunks(b);
+  if (!cs) return null;
+  return cs.some((c) => c.type === "caBX") ? "DETECTED" : "NOT_DETECTED";
+}
+function pngInsertAfterFirst(b, type) {
+  const cs = pngChunks(b);
+  const at = cs?.length ? cs[0].end : 8;
+  const chunk = new Uint8Array(12); // length 0, the type, crc left 0: the walk reads structure, not CRC
+  for (let k = 0; k < 4; k++) chunk[4 + k] = type.charCodeAt(k);
+  return concat(concat(b.subarray(0, at), chunk), b.subarray(at));
+}
+function pngStripChunks(b, type) {
+  const cs = pngChunks(b) || [];
+  let out = b.subarray(0, 8);
+  for (const c of cs) if (c.type !== type) out = concat(out, b.subarray(c.start, c.end));
+  return out;
+}
+
 // ---------------------------------------------------------------- the exercises
 //
 // Each run() returns { measurement, yours, published, control:{description, discriminates},
@@ -282,7 +320,7 @@ export const EXERCISES = [
   {
     id: "verify-card",
     title: "Verify one signed measurement card with your own code",
-    realises: ["learn/board", "academy/attest"],
+    realises: ["learn/board", "academy/attest", "learn/build"],
     teaches: "Pin the key before trusting a signature; recompute the id from the canonical body; tell VALID, INVALID and UNCHECKABLE apart.",
     tools: ["GET /.well-known/did.json", "GET /signed/card_index.json", "GET /signed/cards/<id>.json", "MCP verify_card"],
     inputs: ["/.well-known/did.json", "/signed/card_index.json", "/signed/cards/<id>.json"],
@@ -365,7 +403,7 @@ export const EXERCISES = [
   {
     id: "inclusion",
     title: "Prove a leaf is inside the public root",
-    realises: ["academy/foundations"],
+    realises: ["academy/foundations", "learn/build"],
     teaches: "Recompute a Merkle root from one leaf and its audit path, and why the leaf count is part of the check.",
     tools: ["GET /root.json", "GET /api/proof?sha=<leaf>", "MCP verify_inclusion"],
     inputs: ["/root.json", "/api/proof?sha=<leaf>"],
@@ -455,7 +493,7 @@ export const EXERCISES = [
   {
     id: "charter-hash",
     title: "Reproduce the charter hash",
-    realises: ["academy/foundations"],
+    realises: ["academy/foundations", "learn/found"],
     teaches: "A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.",
     tools: ["GET /.well-known/charter.json", "GET the charter document it points to"],
     inputs: ["/.well-known/charter.json", "current.machine"],
@@ -558,16 +596,58 @@ export const EXERCISES = [
       };
     },
   },
+  {
+    id: "article-50-marking",
+    title: "Reproduce an Article 50 marking measurement, then apply it to your own output",
+    realises: ["learn/law", "learn/sector", "academy/your-jurisdiction", "academy/apply"],
+    teaches: "Read a jurisdiction's rule as bytes: the quoted Article 50(2) text hashes to its published digest, and a marking result names its method and its time. Not detected never means absent.",
+    tools: ["GET /api/art50/marking-evidence?url=<output>&preview=1 (free, unsigned)", "GET the output itself"],
+    inputs: ["/api/art50/marking-evidence?url=<output>&preview=1", "<output>"],
+    steps: [
+      "Pick a PNG output. The default is `/og-image.png`; to apply the exercise to a system of your own, give the https URL of a PNG it generated (`--subject <url>`, or `?subject=<url>` on this page).",
+      "Fetch the free preview `/api/art50/marking-evidence?url=<output>&preview=1`. Hash `law.text` as UTF-8 and compare with `law.text_sha256`: the Article 50(2) wording you read is the wording that was hashed.",
+      "Fetch the output yourself and compute its sha256 and its length in bytes (the preview's `measurement.subject`).",
+      "Walk the PNG chunks from byte 8. A C2PA manifest store sits in a chunk of type `caBX`. Write DETECTED or NOT_DETECTED for the method `c2pa.manifest-store` and compare with the preview's `measurement.checked`.",
+    ],
+    expected: "Your {text_sha256, subject_sha256, subject_bytes, container, c2pa_manifest_store} equals the preview's, field for field.",
+    control: "Flip the mark in your copy (insert an empty `caBX` chunk after IHDR, or strip every `caBX` chunk if one was found): your detector must change its answer.",
+    minutes: 10,
+    async run(r, opts) {
+      const subject = new URL(opts.subject || "/og-image.png", r.edge).href;
+      if (!subject.startsWith("https://")) throw new Uncheckable(`the output must be an https URL: ${subject}`);
+      const pv = await r.getJson(`/api/art50/marking-evidence?url=${encodeURIComponent(subject)}&preview=1`);
+      const law = pv?.law;
+      const subj = pv?.measurement?.subject;
+      const pub = (pv?.measurement?.checked || []).find((c) => c.method === "c2pa.manifest-store");
+      if (pv?.mode !== "preview" || typeof law?.text !== "string" || !law.text_sha256 || !subj?.sha256 || !pub) {
+        throw new Uncheckable("the preview did not carry law.text, law.text_sha256, measurement.subject and a c2pa.manifest-store row");
+      }
+      if (subj.container !== "png") throw new Uncheckable(`this exercise walks PNG chunks only; the preview read a ${subj.container} container`);
+      const bytes = await r.getBytes(subject);
+      const mine = pngC2paStore(bytes);
+      if (mine === null) throw new Uncheckable("the bytes you fetched do not start with the PNG signature");
+      const flipped = mine === "DETECTED" ? pngStripChunks(bytes, "caBX") : pngInsertAfterFirst(bytes, "caBX");
+      const controlValue = pngC2paStore(flipped);
+      return {
+        measurement: "art50.marking_evidence.preview",
+        yours: { text_sha256: await sha256Hex(utf8(law.text)), subject_sha256: await sha256Hex(bytes), subject_bytes: bytes.length, container: "png", c2pa_manifest_store: mine },
+        published: { text_sha256: law.text_sha256, subject_sha256: subj.sha256, subject_bytes: subj.bytes, container: subj.container, c2pa_manifest_store: pub.result },
+        control: { description: mine === "DETECTED" ? "every caBX chunk stripped" : "an empty caBX chunk inserted after IHDR", value: controlValue, discriminates: controlValue !== null && controlValue !== mine },
+        cross_check: null,
+        note: `${law.article || "Article 50(2)"}: measured at ${pv.fetched_at || "?"} by the named method only; the preview lists what it did not measure in unmeasured[]. Not detected never means absent, and a detection is not a conformity opinion.`,
+      };
+    },
+  },
 ];
 
 // ---------------------------------------------------------------- the harness
 
-export async function runExercise(ex, { edge = DEFAULT_EDGE, fetchImpl = globalThis.fetch, card, leafIndex } = {}) {
+export async function runExercise(ex, { edge = DEFAULT_EDGE, fetchImpl = globalThis.fetch, card, leafIndex, subject } = {}) {
   const r = makeReader(edge, fetchImpl);
   const started_at = new Date().toISOString();
   const base = { id: ex.id, title: ex.title, started_at };
   try {
-    const out = await ex.run(r, { card, leafIndex });
+    const out = await ex.run(r, { card, leafIndex, subject });
     const yours_sha256 = await sha256Hex(resultBytes(out.measurement, out.yours));
     const published_sha256 = await sha256Hex(resultBytes(out.measurement, out.published));
     const equal = yours_sha256 === published_sha256;
@@ -611,6 +691,7 @@ if (IS_NODE) {
       edge: flag("--edge") || DEFAULT_EDGE,
       only: flag("--only") ? flag("--only").split(",").map((s) => s.trim()).filter(Boolean) : undefined,
       card: flag("--card"),
+      subject: flag("--subject"),
       leafIndex: flag("--leaf-index") !== undefined ? Number(flag("--leaf-index")) : undefined,
     };
     const unknown = (opts.only || []).filter((id) => !EXERCISES.some((e) => e.id === id));
@@ -620,9 +701,9 @@ if (IS_NODE) {
       process.stdout.write(JSON.stringify(transcript, null, 2) + "\n");
     } else {
       for (const x of transcript.results) {
-        console.log(`${x.state.padEnd(15)} ${x.id.padEnd(15)} ${x.state === "REPRODUCED" ? `sha256 ${x.yours_sha256.slice(0, 16)}…` : x.reason}`);
-        if (x.note) console.log(`${" ".repeat(32)}${x.note}`);
-        if (x.cross_check) console.log(`${" ".repeat(32)}cross-check ${x.cross_check.tool}: ${x.cross_check.state}`);
+        console.log(`${x.state.padEnd(15)} ${x.id.padEnd(19)} ${x.state === "REPRODUCED" ? `sha256 ${x.yours_sha256.slice(0, 16)}…` : x.reason}`);
+        if (x.note) console.log(`${" ".repeat(36)}${x.note}`);
+        if (x.cross_check) console.log(`${" ".repeat(36)}cross-check ${x.cross_check.tool}: ${x.cross_check.state}`);
       }
       console.log(`\n${transcript.rubric}\nNot a certification of anything.`);
     }

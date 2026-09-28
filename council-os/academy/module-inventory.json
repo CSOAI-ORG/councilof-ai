@@ -7,14 +7,21 @@
   "totals": {
     "surfaces": 5,
     "modules": 63,
-    "modules_with_exercise": 4,
-    "exercises": 8,
+    "modules_with_exercise": 10,
+    "exercises": 9,
     "findings": {
       "boundary": 1,
       "typed_count": 3,
       "certificate_negated": 7,
       "price": 22,
       "certificate": 52
+    },
+    "served_modules": 10,
+    "served_modules_without_exercise": [],
+    "findings_in_served_copy": {
+      "boundary": 1,
+      "typed_count": 1,
+      "certificate_negated": 2
     }
   },
   "exercises": [
@@ -31,7 +38,8 @@
       "title": "Verify one signed measurement card with your own code",
       "realises": [
         "learn/board",
-        "academy/attest"
+        "academy/attest",
+        "learn/build"
       ]
     },
     {
@@ -45,7 +53,8 @@
       "id": "inclusion",
       "title": "Prove a leaf is inside the public root",
       "realises": [
-        "academy/foundations"
+        "academy/foundations",
+        "learn/build"
       ]
     },
     {
@@ -59,7 +68,8 @@
       "id": "charter-hash",
       "title": "Reproduce the charter hash",
       "realises": [
-        "academy/foundations"
+        "academy/foundations",
+        "learn/found"
       ]
     },
     {
@@ -75,6 +85,16 @@
       "realises": [
         "learn/board",
         "academy/foundations"
+      ]
+    },
+    {
+      "id": "article-50-marking",
+      "title": "Reproduce an Article 50 marking measurement, then apply it to your own output",
+      "realises": [
+        "learn/law",
+        "learn/sector",
+        "academy/your-jurisdiction",
+        "academy/apply"
       ]
     }
   ],
@@ -143,7 +163,9 @@
               "href": "\"/try\""
             }
           ],
-          "exercises": [],
+          "exercises": [
+            "charter-hash"
+          ],
           "findings": []
         },
         {
@@ -165,7 +187,9 @@
               "href": "\"/map\""
             }
           ],
-          "exercises": [],
+          "exercises": [
+            "article-50-marking"
+          ],
           "findings": [
             {
               "kind": "boundary",
@@ -194,7 +218,9 @@
               "href": "\"/try\""
             }
           ],
-          "exercises": [],
+          "exercises": [
+            "article-50-marking"
+          ],
           "findings": []
         },
         {
@@ -216,7 +242,10 @@
               "href": "\"/services\""
             }
           ],
-          "exercises": [],
+          "exercises": [
+            "verify-card",
+            "inclusion"
+          ],
           "findings": []
         }
       ]
@@ -285,7 +314,9 @@
               "href": "/tc260"
             }
           ],
-          "exercises": [],
+          "exercises": [
+            "article-50-marking"
+          ],
           "findings": []
         },
         {
@@ -306,7 +337,9 @@
               "href": "/policy-generator"
             }
           ],
-          "exercises": [],
+          "exercises": [
+            "article-50-marking"
+          ],
           "findings": []
         },
         {

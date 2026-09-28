@@ -78,7 +78,8 @@
       "teaches": "Pin the key before trusting a signature; recompute the id from the canonical body; tell VALID, INVALID and UNCHECKABLE apart.",
       "realises": [
         "learn/board",
-        "academy/attest"
+        "academy/attest",
+        "learn/build"
       ],
       "tools": [
         "GET /.well-known/did.json",
@@ -159,7 +160,8 @@
       "time_required": "PT10M",
       "teaches": "Recompute a Merkle root from one leaf and its audit path, and why the leaf count is part of the check.",
       "realises": [
-        "academy/foundations"
+        "academy/foundations",
+        "learn/build"
       ],
       "tools": [
         "GET /root.json",
@@ -236,7 +238,8 @@
       "time_required": "PT5M",
       "teaches": "A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.",
       "realises": [
-        "academy/foundations"
+        "academy/foundations",
+        "learn/found"
       ],
       "tools": [
         "GET /.well-known/charter.json",
@@ -339,6 +342,47 @@
           "control.discriminates == true"
         ],
         "evidence": "The board-stamp entry of your transcript."
+      }
+    },
+    {
+      "id": "article-50-marking",
+      "position": 9,
+      "url": "https://councilof.ai/academy/exercises/#article-50-marking",
+      "title": "Reproduce an Article 50 marking measurement, then apply it to your own output",
+      "time_required": "PT10M",
+      "teaches": "Read a jurisdiction's rule as bytes: the quoted Article 50(2) text hashes to its published digest, and a marking result names its method and its time. Not detected never means absent.",
+      "realises": [
+        "learn/law",
+        "learn/sector",
+        "academy/your-jurisdiction",
+        "academy/apply"
+      ],
+      "tools": [
+        "GET /api/art50/marking-evidence?url=<output>&preview=1 (free, unsigned)",
+        "GET the output itself"
+      ],
+      "inputs": [
+        "/api/art50/marking-evidence?url=<output>&preview=1",
+        "<output>"
+      ],
+      "steps": [
+        "Pick a PNG output. The default is `/og-image.png`; to apply the exercise to a system of your own, give the https URL of a PNG it generated (`--subject <url>`, or `?subject=<url>` on this page).",
+        "Fetch the free preview `/api/art50/marking-evidence?url=<output>&preview=1`. Hash `law.text` as UTF-8 and compare with `law.text_sha256`: the Article 50(2) wording you read is the wording that was hashed.",
+        "Fetch the output yourself and compute its sha256 and its length in bytes (the preview's `measurement.subject`).",
+        "Walk the PNG chunks from byte 8. A C2PA manifest store sits in a chunk of type `caBX`. Write DETECTED or NOT_DETECTED for the method `c2pa.manifest-store` and compare with the preview's `measurement.checked`."
+      ],
+      "expected": "Your {text_sha256, subject_sha256, subject_bytes, container, c2pa_manifest_store} equals the preview's, field for field.",
+      "negative_control": "Flip the mark in your copy (insert an empty `caBX` chunk after IHDR, or strip every `caBX` chunk if one was found): your detector must change its answer.",
+      "commands": {
+        "node": "node run-exercises.mjs --only article-50-marking"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The article-50-marking entry of your transcript."
       }
     }
   ]
