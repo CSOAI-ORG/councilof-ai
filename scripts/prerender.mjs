@@ -1,4 +1,6 @@
-import {captureBoardReference,finishBoardReference} from './surface/render-board-reference.mjs';
+import {resolveBoardReference,finishBoardReference} from './surface/render-board-reference.mjs';
+import {commitBoard} from './surface/commit-board.mjs';
+import {guardRenderedBoard} from './surface/board-render-guard.mjs';
 import { parseRenderRequest, validateOfflineOrigin, allowOfflineRequest, snapshotFailure } from "./surface/prerender-io.mjs";
 /* prerender.mjs — turn a Vite SPA build into real HTML files, one per route.
  *
@@ -60,6 +62,7 @@ import http from "node:http";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync, copyFileSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { rewriteCanonical } from "./surface/canonical-url.mjs";
 import { loadRouteHeads, rewriteHead } from "./surface/route-title.mjs";
 
@@ -537,8 +540,24 @@ function restampShellAssetTags(capturedHtml, shellHtml) {
 
 const shell = readFileSync(join(DIST, "index.html"), "utf8");
 // Freeze one validated full-board response for every headline in this renderer run.
+//
+// THE BOARD OF THIS COMMIT, NOT OF WHICHEVER DEPLOY IS LIVE (28 Sep 2026). This used to freeze
+// DATA_ORIGIN's /api/gspc — the board of the deployment serving production at that moment, which
+// is the previous deploy at best and, on 28 Sep, one pushed from outside this pipeline (f8747b3e,
+// source ee8ff86, on neither the mirror nor GitHub). Deploy 44340409 therefore baked "2 tied,
+// 12 untested" into its pages while its own /api/gspc said 8 TIE · 6 UNTESTED, and the next deploy
+// baked 8 again. Now the commit's own functions/api/gspc.ts is run offline and is the authority;
+// the live bytes are served only when they are the same board (then they carry a real signature),
+// otherwise the commit's bytes are served unsigned. A failure to compute the commit's board fails
+// the run: there is no remembered board to fall back to.
 const BOARD_REFERENCE = 'prerender-board-reference.json';
-const frozenBoard = await captureBoardReference(DIST,new URL('/api/gspc',DATA_ORIGIN).href,BOARD_REFERENCE);
+const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url));
+const commitGspc = await commitBoard(REPO_ROOT).catch((e) => { console.error(`prerender: this commit's /api/gspc could not be computed — ${e?.message || e}`); process.exit(1); });
+if (commitGspc.status !== 200) { console.error(`prerender: this commit's /api/gspc answered HTTP ${commitGspc.status}`); process.exit(1); }
+const board = await resolveBoardReference(DIST,new URL('/api/gspc',DATA_ORIGIN).href,BOARD_REFERENCE,{commitRaw:commitGspc.raw});
+const frozenBoard = board.raw;
+const boardFromCommit = board.served_from !== 'LIVE_ORIGIN_SAME_BOARD_AS_COMMIT';
+console.log(`board: served ${board.served_from} (live origin: ${board.live_relation})`);
 
 // Every non-2xx or unreachable response the data proxy saw, so a failed run can name its cause
 // instead of leaving 19 identical BAKED-FETCH-FAILURE lines and no explanation.
@@ -550,6 +569,13 @@ const srv = http.createServer((q, r) => {
   const p = parsed.pathname;
   if(p==='/api/gspc'&&!new URL(q.url,'http://render.invalid').search) {
     r.writeHead(200,{'content-type':'application/json','cache-control':'no-store'});r.end(q.method==='HEAD'?undefined:frozenBoard);return;
+  }
+  // ?axis= views: when the live origin serves a different board, answer them from this commit too.
+  if(p==='/api/gspc'&&boardFromCommit) {
+    commitBoard(REPO_ROOT,new URL(q.url,'http://render.invalid').search).then(({status,contentType,raw})=>{
+      r.writeHead(status,{'content-type':contentType,'cache-control':'no-store'});r.end(q.method==='HEAD'?undefined:raw);
+    }).catch(()=>{r.writeHead(502);r.end();});
+    return;
   }
   const f = join(DIST, p);
   try {
@@ -940,8 +966,17 @@ if (dups.length) {
   console.log(`\nDuplicate <title> across routes — react-helmet is not firing before the snapshot:`);
   dups.slice(0, 5).forEach(([t, v]) => console.log(`  ${v.length}×  "${t.slice(0, 60)}"`));
 }
+// THE PAGES AGREE WITH THE BOARD THEY WERE RENDERED FROM. Checked before any report is written, so
+// a disagreeing build leaves no report and fails (scripts/surface/board-render-guard.mjs).
+const boardGuard = guardRenderedBoard(DIST, results, frozenBoard);
+console.log(`\nboard-render-guard: ${boardGuard.checked} pages checked — ${boardGuard.violations.length} disagreement(s) with the served board`);
+if (boardGuard.violations.length) {
+  for (const v of boardGuard.violations.slice(0, 40)) console.error(`  ${v.route}  [${v.rule}] "${v.found}"  (${v.mismatch})`);
+  console.error(`board-render-guard FAILED: prerendered pages print separation figures the board payload does not carry. No report written.`);
+  process.exit(1);
+}
 writeFileSync("prerender-report.json", JSON.stringify(results, null, 1));
 finishBoardReference(BOARD_REFERENCE,'prerender-report.json');
-writeFileSync("prerender-context.json", JSON.stringify({observed_at:new Date().toISOString(),mode:OFFLINE_REVIEW?'PRIVATE_OFFLINE_REVIEW':'CONFIGURED_DATA_ORIGIN',data_origin:DATA_ORIGIN,route_count:results.length,production_verified:false,external_browser_requests:OFFLINE_REVIEW?'BLOCKED':'NOT_MEASURED'},null,2));
+writeFileSync("prerender-context.json", JSON.stringify({observed_at:new Date().toISOString(),mode:OFFLINE_REVIEW?'PRIVATE_OFFLINE_REVIEW':'CONFIGURED_DATA_ORIGIN',data_origin:DATA_ORIGIN,board_served_from:board.served_from,board_live_relation:board.live_relation,board_pages_checked:boardGuard.checked,route_count:results.length,production_verified:false,external_browser_requests:OFFLINE_REVIEW?'BLOCKED':'NOT_MEASURED'},null,2));
 console.log(`\nwrote prerender-report.json`);
 console.log(`Ship only if THIN is small and you have looked at every route in it.`);
