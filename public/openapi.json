@@ -176,7 +176,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.3+b6b4344e90b0",
+    "version": "0.3+c01b29c2a75e",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Offer & Receipt emission is conditional: a 402 carries server-signed offers only when the Pages signing key is available; a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to /api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. 23 axes measured \u00b7 14 model fleets \u00b7 0 separated leaders \u00b7 9 public leader scores \u00b7 9 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -311,7 +311,7 @@
     },
     "/api/art50/marking-evidence": {
       "get": {
-        "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion. preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
+        "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free. preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
         "operationId": "x402_art50_marking_evidence",
         "parameters": [
           {
@@ -340,12 +340,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
+                  "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "A signed card recording whether named methods detected a machine-readable mark in one named output at one time."
+            "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free."
           },
           "402": {
             "content": {
@@ -525,7 +525,7 @@
                     }
                   },
                   "resource": {
-                    "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
+                    "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Article 50 marking evidenc",
                     "tags": [
@@ -1317,7 +1317,7 @@
     },
     "/api/eunomia-data": {
       "get": {
-        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking. Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
+        "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL. Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
         "operationId": "x402_eunomia_data",
         "parameters": [
           {
@@ -1359,12 +1359,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
+                  "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
                   "type": "object"
                 }
               }
             },
-            "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking."
+            "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL."
           },
           "402": {
             "content": {
@@ -1529,7 +1529,7 @@
                     }
                   },
                   "resource": {
-                    "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
+                    "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Data Feed",
                     "tags": [
@@ -1597,7 +1597,7 @@
     },
     "/api/evidence-bundle": {
       "get": {
-        "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination. Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
+        "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify. Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
         "operationId": "x402_evidence_bundle",
         "parameters": [
           {
@@ -1643,12 +1643,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
+                  "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination."
+            "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify."
           },
           "402": {
             "content": {
@@ -1829,7 +1829,7 @@
                     }
                   },
                   "resource": {
-                    "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.",
+                    "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Evidence Bundle",
                     "tags": [
@@ -1953,7 +1953,7 @@
     },
     "/api/feeds/provider-diff": {
       "get": {
-        "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict. Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
+        "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free. Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
         "operationId": "x402_feeds_provider_diff",
         "parameters": [
           {
@@ -1982,12 +1982,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
+                  "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict."
+            "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free."
           },
           "402": {
             "content": {
@@ -2153,7 +2153,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
+                    "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Provider Diff Feed",
                     "tags": [
@@ -2293,7 +2293,7 @@
     },
     "/api/free-door": {
       "get": {
-        "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+        "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
         "operationId": "x402_free_door",
         "parameters": [],
         "responses": {
@@ -2301,12 +2301,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero.",
+                  "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
                   "type": "object"
                 }
               }
             },
-            "description": "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero."
+            "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json."
           },
           "402": {
             "content": {
@@ -2446,7 +2446,7 @@
                     }
                   },
                   "resource": {
-                    "description": "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero because it is free forever. That is the real price, not a promotion \u2014 a grade is never sold. Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.",
+                    "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Free Door",
                     "url": "https://councilof.ai/api/free-door"
@@ -2746,7 +2746,7 @@
     },
     "/api/measurement/fresh-capsule": {
       "get": {
-        "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only \u2014 the endpoint's own discovery documents vs its initialize + tools/list answer. Returns CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id. Measurement, not endorsement; verification stays free.",
+        "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
         "operationId": "x402_measurement_fresh_capsule",
         "parameters": [
           {
@@ -2790,12 +2790,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "One csoai.measurement-capsule/0.2: the endpoint's own discovery documents vs its live initialize + tools/list answer for one dimension, CONSISTENT / INCONSISTENT / UNCHECKABLE, sha256 of every read, board signature pinning the capsule id. Read before settle.",
+                  "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "One csoai.measurement-capsule/0.2: the endpoint's own discovery documents vs its live initialize + tools/list answer for one dimension, CONSISTENT / INCONSISTENT / UNCHECKABLE, sha256 of every read, board signature pinning the capsule id. Read before settle."
+            "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free."
           },
           "402": {
             "content": {
@@ -2973,7 +2973,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only \u2014 the endpoint's own discovery documents vs its initialize + tools/list answer. Returns CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id. Measurement, not endorsement; verification stays free.",
+                    "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Fresh Capsule",
                     "tags": [
@@ -3269,7 +3269,7 @@
     },
     "/api/pop/a2a": {
       "get": {
-        "description": "A2A registry population slice \u2014 the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+        "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
         "operationId": "x402_pop_a2a",
         "parameters": [
           {
@@ -3288,12 +3288,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A2A registry population slice \u2014 the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+                  "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "A2A registry population slice \u2014 the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count."
+            "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -3462,7 +3462,7 @@
                     }
                   },
                   "resource": {
-                    "description": "A2A registry population slice \u2014 the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+                    "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -3524,7 +3524,7 @@
     },
     "/api/pop/claim-watch": {
       "get": {
-        "description": "Claim-maintenance registries slice \u2014 each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+        "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
         "operationId": "x402_pop_claim_watch",
         "parameters": [
           {
@@ -3543,12 +3543,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Claim-maintenance registries slice \u2014 each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+                  "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Claim-maintenance registries slice \u2014 each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity."
+            "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -3728,7 +3728,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Claim-maintenance registries slice \u2014 each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+                    "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -3790,7 +3790,7 @@
     },
     "/api/pop/corrections": {
       "get": {
-        "description": "Corrections ledger slice, full history \u2014 every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+        "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
         "operationId": "x402_pop_corrections",
         "parameters": [
           {
@@ -3809,12 +3809,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Corrections ledger slice, full history \u2014 every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+                  "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Corrections ledger slice, full history \u2014 every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice."
+            "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -3983,7 +3983,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Corrections ledger slice, full history \u2014 every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+                    "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -4044,7 +4044,7 @@
     },
     "/api/pop/layer0": {
       "get": {
-        "description": "Layer-0 ceremony slice \u2014 every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+        "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
         "operationId": "x402_pop_layer0",
         "parameters": [
           {
@@ -4063,12 +4063,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Layer-0 ceremony slice \u2014 every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+                  "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Layer-0 ceremony slice \u2014 every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated."
+            "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -4237,7 +4237,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Layer-0 ceremony slice \u2014 every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+                    "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -4299,7 +4299,7 @@
     },
     "/api/pop/mcp-registry": {
       "get": {
-        "description": "MCP registry listings slice \u2014 every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+        "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
         "operationId": "x402_pop_mcp_registry",
         "parameters": [
           {
@@ -4318,12 +4318,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "MCP registry listings slice \u2014 every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+                  "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "MCP registry listings slice \u2014 every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption."
+            "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -4492,7 +4492,7 @@
                     }
                   },
                   "resource": {
-                    "description": "MCP registry listings slice \u2014 every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+                    "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -4554,7 +4554,7 @@
     },
     "/api/pop/ots-proofs": {
       "get": {
-        "description": "OpenTimestamps proof manifest slice \u2014 every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+        "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
         "operationId": "x402_pop_ots_proofs",
         "parameters": [
           {
@@ -4573,12 +4573,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "OpenTimestamps proof manifest slice \u2014 every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+                  "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "OpenTimestamps proof manifest slice \u2014 every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored."
+            "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -4746,7 +4746,7 @@
                     }
                   },
                   "resource": {
-                    "description": "OpenTimestamps proof manifest slice \u2014 every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+                    "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -4808,7 +4808,7 @@
     },
     "/api/pop/stablecoins": {
       "get": {
-        "description": "Stablecoin universe slice \u2014 every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+        "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
         "operationId": "x402_pop_stablecoins",
         "parameters": [
           {
@@ -4827,12 +4827,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Stablecoin universe slice \u2014 every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+                  "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Stablecoin universe slice \u2014 every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation."
+            "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -5000,7 +5000,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Stablecoin universe slice \u2014 every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+                    "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -5061,7 +5061,7 @@
     },
     "/api/pop/swift": {
       "get": {
-        "description": "SWIFT-linked bank census slice \u2014 every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+        "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
         "operationId": "x402_pop_swift",
         "parameters": [
           {
@@ -5080,12 +5080,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "SWIFT-linked bank census slice \u2014 every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+                  "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "SWIFT-linked bank census slice \u2014 every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list."
+            "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -5253,7 +5253,7 @@
                     }
                   },
                   "resource": {
-                    "description": "SWIFT-linked bank census slice \u2014 every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+                    "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -5315,7 +5315,7 @@
     },
     "/api/pop/x402-bazaar": {
       "get": {
-        "description": "x402 Bazaar listings slice \u2014 the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+        "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
         "operationId": "x402_pop_x402_bazaar",
         "parameters": [
           {
@@ -5334,12 +5334,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "x402 Bazaar listings slice \u2014 the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+                  "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "x402 Bazaar listings slice \u2014 the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery."
+            "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -5508,7 +5508,7 @@
                     }
                   },
                   "resource": {
-                    "description": "x402 Bazaar listings slice \u2014 the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+                    "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -5569,7 +5569,7 @@
     },
     "/api/pop/xrpl": {
       "get": {
-        "description": "XRPL issued-asset slice \u2014 the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+        "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
         "operationId": "x402_pop_xrpl",
         "parameters": [
           {
@@ -5588,12 +5588,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "XRPL issued-asset slice \u2014 the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+                  "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "XRPL issued-asset slice \u2014 the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating."
+            "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -5764,7 +5764,7 @@
                     }
                   },
                   "resource": {
-                    "description": "XRPL issued-asset slice \u2014 the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+                    "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Population Door",
                     "tags": [
@@ -5882,7 +5882,7 @@
     },
     "/api/proof": {
       "get": {
-        "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade. Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
+        "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json. Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
         "operationId": "x402_proof",
         "parameters": [
           {
@@ -5912,12 +5912,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+                  "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
                   "type": "object"
                 }
               }
             },
-            "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade."
+            "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json."
           },
           "402": {
             "content": {
@@ -6081,7 +6081,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+                    "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Proof Bundle",
                     "tags": [
@@ -6181,7 +6181,7 @@
     },
     "/api/ras/mcp-probe": {
       "get": {
-        "description": "MCP discovery probe receipt \u2014 one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade.",
+        "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
         "operationId": "x402_ras_mcp_probe",
         "parameters": [
           {
@@ -6203,12 +6203,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "MCP discovery probe receipt \u2014 one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade.",
+                  "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "MCP discovery probe receipt \u2014 one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade."
+            "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify."
           },
           "402": {
             "content": {
@@ -6386,7 +6386,7 @@
                     }
                   },
                   "resource": {
-                    "description": "MCP discovery probe receipt \u2014 one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade.",
+                    "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI MCP Probe",
                     "tags": [
@@ -6449,7 +6449,7 @@
     },
     "/api/ras/supply": {
       "get": {
-        "description": "Token supply read receipt \u2014 one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation.",
+        "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
         "operationId": "x402_ras_supply",
         "parameters": [
           {
@@ -6497,12 +6497,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Token supply read receipt \u2014 one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation.",
+                  "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "Token supply read receipt \u2014 one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation."
+            "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify."
           },
           "402": {
             "content": {
@@ -6702,7 +6702,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Token supply read receipt \u2014 one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation.",
+                    "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Supply Read",
                     "tags": [
@@ -6764,7 +6764,7 @@
     },
     "/api/ras/x402-check": {
       "get": {
-        "description": "x402 challenge conformance receipt \u2014 one live GET of a public x402 resource scored by the daily census rule (HTTP 402, PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body), Ed25519-signed. A non-conformant result is delivered as found.",
+        "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
         "operationId": "x402_ras_x402_check",
         "parameters": [
           {
@@ -6786,12 +6786,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "x402 challenge conformance receipt \u2014 one live GET of a public x402 resource scored by the daily census rule (HTTP 402, PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body), Ed25519-signed. A non-conformant result is delivered as found.",
+                  "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
                   "type": "object"
                 }
               }
             },
-            "description": "x402 challenge conformance receipt \u2014 one live GET of a public x402 resource scored by the daily census rule (HTTP 402, PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body), Ed25519-signed. A non-conformant result is delivered as found."
+            "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify."
           },
           "402": {
             "content": {
@@ -6966,7 +6966,7 @@
                     }
                   },
                   "resource": {
-                    "description": "x402 challenge conformance receipt \u2014 one live GET of a public x402 resource scored by the daily census rule (HTTP 402, PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body), Ed25519-signed. A non-conformant result is delivered as found.",
+                    "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI x402 Check",
                     "tags": [
@@ -7043,7 +7043,7 @@
     },
     "/api/receipts/batch": {
       "get": {
-        "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts. preview=1 is free digest. Paid leaves require from (HTTP 402).",
+        "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free. preview=1 is free digest. Paid leaves require from (HTTP 402).",
         "operationId": "x402_receipts_batch",
         "parameters": [
           {
@@ -7085,12 +7085,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+                  "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts."
+            "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free."
           },
           "402": {
             "content": {
@@ -7276,7 +7276,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+                    "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Receipts Batch",
                     "tags": [
@@ -7505,7 +7505,7 @@
     },
     "/api/request-attestation": {
       "get": {
-        "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+        "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key it carries sig_ed25519:null and unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
         "operationId": "x402_request_attestation",
         "parameters": [
           {
@@ -7534,12 +7534,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+                  "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key it carries sig_ed25519:null and unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell."
+            "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key it carries sig_ed25519:null and unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free."
           },
           "402": {
             "content": {
@@ -7712,7 +7712,7 @@
                     }
                   },
                   "resource": {
-                    "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+                    "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key it carries sig_ed25519:null and unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Request Attest",
                     "tags": [
@@ -7820,7 +7820,7 @@
     },
     "/api/rwa/evidence": {
       "get": {
-        "description": "A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee. preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
+        "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free. preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
         "operationId": "x402_rwa_evidence",
         "parameters": [
           {
@@ -7850,12 +7850,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
+                  "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee."
+            "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free."
           },
           "402": {
             "content": {
@@ -8027,7 +8027,7 @@
                     }
                   },
                   "resource": {
-                    "description": "A signed XRPL evidence card for RLUSD: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
+                    "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI RWA Evidence",
                     "tags": [
@@ -8542,7 +8542,7 @@
     },
     "/api/wrapper": {
       "get": {
-        "description": "A signed wrapped-asset parity card for usdc.e:arbitrum: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio \u2014 not a rate, a grade or a reserve attestation. preview=1 is free unsigned. Paid signed card requires id (HTTP 402).",
+        "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. Paid signed card requires id (HTTP 402 when the pair is readable; an UNMEASURED pair answers HTTP 200 preview-only and is never sold).",
         "operationId": "x402_wrapper",
         "parameters": [
           {
@@ -8572,12 +8572,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "A signed wrapped-asset parity card: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain at pinned finalized blocks, raw reads sha256'd, BigInt ratio. A read \u2014 not a rate, a grade or a reserve attestation.",
+                  "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "A signed wrapped-asset parity card: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain at pinned finalized blocks, raw reads sha256'd, BigInt ratio. A read \u2014 not a rate, a grade or a reserve attestation."
+            "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -8750,7 +8750,7 @@
                     }
                   },
                   "resource": {
-                    "description": "A signed wrapped-asset parity card for usdc.e:arbitrum: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio \u2014 not a rate, a grade or a reserve attestation.",
+                    "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Wrapped-Asset Parity",
                     "tags": [
@@ -8811,9 +8811,321 @@
         }
       }
     },
+    "/api/wrapper/asset/dai": {
+      "get": {
+        "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED.",
+        "operationId": "x402_wrapper_asset_dai",
+        "parameters": [
+          {
+            "description": "Free preview: same request, no payment, no signature",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/wrapper/asset/dai"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "issuance door \u2014 /api/wrapper/asset/dai",
+        "tags": [
+          "x402",
+          "issuance"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/wrapper/asset/dai",
+          "free_preview": "https://councilof.ai/api/wrapper/asset/dai?preview=1",
+          "paid_for": "issuance"
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
+      }
+    },
+    "/api/wrapper/asset/usdc": {
+      "get": {
+        "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED.",
+        "operationId": "x402_wrapper_asset_usdc",
+        "parameters": [
+          {
+            "description": "Free preview: same request, no payment, no signature",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/wrapper/asset/usdc"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "issuance door \u2014 /api/wrapper/asset/usdc",
+        "tags": [
+          "x402",
+          "issuance"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/wrapper/asset/usdc",
+          "free_preview": "https://councilof.ai/api/wrapper/asset/usdc?preview=1",
+          "paid_for": "issuance"
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
+      }
+    },
+    "/api/wrapper/asset/usdt": {
+      "get": {
+        "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED.",
+        "operationId": "x402_wrapper_asset_usdt",
+        "parameters": [
+          {
+            "description": "Free preview: same request, no payment, no signature",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free. preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/wrapper/asset/usdt"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The PAYMENT-REQUIRED response header carries its minimal v2 subset (x402Version, error, resource, accepts[] payment fields); extensions and the csoai sidecar are in this body only. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of the minimal v2 PaymentRequired: x402Version, error, resource, accepts[] (scheme, network, amount, asset, payTo, maxTimeoutSeconds, extra) \u2014 under 4 KiB",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "issuance door \u2014 /api/wrapper/asset/usdt",
+        "tags": [
+          "x402",
+          "issuance"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/wrapper/asset/usdt",
+          "free_preview": "https://councilof.ai/api/wrapper/asset/usdt?preview=1",
+          "paid_for": "issuance"
+        },
+        "x-payment-info": {
+          "protocols": [
+            "x402"
+          ]
+        }
+      }
+    },
     "/api/wrapper/changes": {
       "get": {
-        "description": "Delta of wrapped supply and escrow for usdc.e:arbitrum since the previous ledger snapshot. Returns per-field changes, not a rate or grade.",
+        "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
         "operationId": "x402_wrapper_changes",
         "parameters": [
           {
@@ -8843,12 +9155,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "description": "Delta of wrapped supply and escrow between two ledger snapshots. A diff \u2014 not a rate, a grade or a reserve attestation.",
+                  "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
                   "type": "object"
                 }
               }
             },
-            "description": "Delta of wrapped supply and escrow between two ledger snapshots. A diff \u2014 not a rate, a grade or a reserve attestation."
+            "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free."
           },
           "402": {
             "content": {
@@ -9010,7 +9322,7 @@
                     }
                   },
                   "resource": {
-                    "description": "Delta of wrapped supply and escrow for usdc.e:arbitrum since the previous ledger snapshot. Returns per-field changes, not a rate or grade.",
+                    "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
                     "mimeType": "application/json",
                     "serviceName": "CSOAI Wrapped-Asset Changes",
                     "tags": [
@@ -9224,6 +9536,9 @@
       "/api/rwa/evidence",
       "/api/wrapper",
       "/api/wrapper/changes",
+      "/api/wrapper/asset/usdc",
+      "/api/wrapper/asset/usdt",
+      "/api/wrapper/asset/dai",
       "/api/art50/marking-evidence",
       "/api/feeds/provider-diff",
       "/api/receipts/batch",

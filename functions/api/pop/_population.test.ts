@@ -305,9 +305,13 @@ describe("the 402 challenge", () => {
       expect(ext.bazaar.schema.properties.input.properties).not.toHaveProperty("queryParams");
       const entry = POPULATIONS.find((p) => p.id === id)!;
       const pv = await preview(id);
-      expect(resource.description).toContain(entry.title);
-      if (pv.as_of) expect(resource.description).toContain(pv.as_of);
-      expect(resource.description).toContain(`state ${pv.state}`);
+      // The description is the canonical text every surface carries (x402-descriptions.json); the
+      // live reading — title, as_of, state — rides beside it in csoai.reading_sentence.
+      expect(resource.description).toBe((descriptions as Record<string, string>)[`pop_${id}`]);
+      const sentence = String((b.csoai as Record<string, unknown>).reading_sentence);
+      expect(sentence).toContain(entry.title);
+      if (pv.as_of) expect(sentence).toContain(pv.as_of);
+      expect(sentence).toContain(`state ${pv.state}`);
       const accepts = b.accepts as typeof ref.accepts;
       const a = accepts[0] as typeof refAccept & { resource: string };
       expect(a.resource).toBe(`${ORIGIN}/api/pop/${id}`);
@@ -327,12 +331,12 @@ describe("the 402 challenge", () => {
     expect(SKU).toEqual({ skuId: "issuance", tier: "reserve" });
   });
 
-  it("still 402s when every artifact is unreadable, saying so in the description", async () => {
+  it("still 402s when every artifact is unreadable, saying so in csoai.reading_sentence", async () => {
     stubDisk(undefined, { nothing: true });
     const r = await call(door, ctx("/api/pop/stablecoins"));
     expect(r.status).toBe(402);
-    const b = (await r.json()) as { resource: { description: string }; extensions: { bazaar: unknown } };
-    expect(b.resource.description).toMatch(/UNMEASURED/);
+    const b = (await r.json()) as { resource: { description: string }; extensions: { bazaar: unknown }; csoai: { reading_sentence: string } };
+    expect(b.csoai.reading_sentence).toMatch(/UNMEASURED/);
     expect(b.extensions.bazaar).toBeTruthy();
   });
 

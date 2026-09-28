@@ -80,10 +80,25 @@ CATALOG_FIXTURES = {
 SOURCE_RENDERED = {"well_known_x402.json"}
 MANIFEST_RENDERER = HERE / "render_x402_manifest.mjs"
 DESCRIPTION_SOURCE = REPO / "functions" / "api" / "x402-descriptions.json"
+WRAPPER_ASSET_DOORS = REPO / "functions" / "api" / "_wrapper_asset_doors.json"
 DESCRIPTION_PATHS = {
+    # Every door, not three (2026-09-28): the canonical text is the one source the manifest, each
+    # door's 402 (and so the Bazaar extension's catalogue entry), capabilities.json and llms.txt read.
+    "/api/free-door": "free_door",
     "/api/proof": "proof_bundle",
     "/api/request-attestation": "request_attestation",
     "/api/receipts/batch": "receipts_batch",
+    "/api/evidence-bundle": "evidence_bundle",
+    "/api/eunomia-data": "data_feed",
+    "/api/rwa/evidence": "rwa_evidence",
+    "/api/wrapper": "wrapper",
+    "/api/wrapper/changes": "wrapper_changes",
+    "/api/art50/marking-evidence": "art50_marking_evidence",
+    "/api/feeds/provider-diff": "provider_diff",
+    "/api/measurement/fresh-capsule": "fresh_capsule",
+    "/api/ras/mcp-probe": "ras_mcp_probe",
+    "/api/ras/x402-check": "ras_x402_check",
+    "/api/ras/supply": "ras_supply",
     # Population doors: /api/pop/<id> -> pop_<id> (same bytes the manifest and catalogue read).
     **{f"/api/pop/{pop}": f"pop_{pop}" for pop in (
         "stablecoins", "swift", "xrpl", "x402-bazaar", "mcp-registry", "a2a",
@@ -163,7 +178,8 @@ FREE_TIER_OP_NOTE: dict[str, str] = {
     "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
     "/api/art50/marking-evidence": "preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
     "/api/receipts/batch": "preview=1 is free digest. Paid leaves require from (HTTP 402).",
-    "/api/wrapper": "preview=1 is free unsigned. Paid signed card requires id (HTTP 402).",
+    "/api/wrapper": "preview=1 is free unsigned. Paid signed card requires id (HTTP 402 when the pair is readable; an UNMEASURED pair answers HTTP 200 preview-only and is never sold).",
+    **{f"/api/wrapper/asset/{a}": "preview=1 is free unsigned. The unpaid GET answers HTTP 402 when at least one pair is readable, HTTP 200 preview-only when every pair is UNMEASURED." for a in (d["asset"] for d in json.loads(WRAPPER_ASSET_DOORS.read_text())["doors"])},
 }
 
 
@@ -203,6 +219,13 @@ def handler_sku(path: str) -> tuple[str, str] | None | str:
     if not f.exists():
         return None
     text = f.read_text()
+    # A static route file that only re-exports a shared handler (functions/api/wrapper/asset/usdc.ts →
+    # ./[asset].ts) charges what that handler charges: read the handler it names.
+    reexport = re.search(r'export\s*\{[^}]*\}\s*from\s*"(\.[^"]+)"', text)
+    if reexport and "x402Accepts" not in text:
+        target = f.parent / (reexport.group(1) + ".ts")
+        if target.exists():
+            text = target.read_text()
     if re.search(r'X402_AMOUNT:\s*"0"', text):
         return "zero"
     consts = dict(re.findall(r'^const\s+(SKU\w*)\s*=\s*"(\w+)"', text, re.M))
@@ -475,6 +498,11 @@ def compose(fix: Path = FIX) -> dict:
                 {"name": "x-csoai-expected-feed-sha256", "in": "header", "required": False, "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "description": "Digest retained from the pre-payment manifest. A changed assembled feed is rejected with409 before the facilitator is called."},
             ])
         canonical_description = canonical_descriptions.get(DESCRIPTION_PATHS.get(path, ""))
+        if canonical_description is None and path.startswith("/api/wrapper/asset/"):
+            # One template for the per-asset doors, the asset's symbol filled in — as the door renders it.
+            door = next((d for d in load(WRAPPER_ASSET_DOORS)["doors"] if d["asset"] == path.rsplit("/", 1)[1]), None)
+            if door:
+                canonical_description = canonical_descriptions["wrapper_asset"].replace("{ASSET}", door["symbol"])
         description = canonical_description or (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
         note = FREE_TIER_OP_NOTE.get(path)
         if note and note not in description:

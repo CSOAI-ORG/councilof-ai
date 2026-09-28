@@ -1,0 +1,46 @@
+{
+  "schema": "csoai.evm-rpcs/0.1",
+  "rule": "Ordered keyless public JSON-RPC endpoints per chain. Reads try them in order and fall through on any HTTP or JSON-RPC error (rate limits included). A block is pinned only when one operator reports it under the finalized tag AND a second, different operator (registrable domain) returns the same hash at that height; otherwise the read is UNMEASURED. No endpoint here needs a key. Order was set from a live probe from the build pod on 2026-09-28: finalized tag, pinned eth_call by number and by EIP-1898 block hash, per endpoint.",
+  "read_by": [
+    "functions/api/wrapper.ts (the /api/wrapper door and the per-asset doors)",
+    "scripts/readers/wrapped-asset-parity-reader.mjs (the free ledger)"
+  ],
+  "checked_at": "2026-09-28",
+  "chains": {
+    "ethereum": {
+      "chainId": 1,
+      "rpcs": ["https://eth.drpc.org", "https://ethereum-rpc.publicnode.com", "https://1rpc.io/eth", "https://rpc.flashbots.net"],
+      "notes": "rpc.flashbots.net answered the finalized tag but refused eth_call (HTTP 403) on 2026-09-28, so it is last: it can confirm a block hash, not serve a read. eth.llamarpc.com answered 525 and eth.merkle.io 429; both left out."
+    },
+    "base": {
+      "chainId": 8453,
+      "rpcs": ["https://mainnet.base.org", "https://base.drpc.org", "https://base-rpc.publicnode.com", "https://1rpc.io/base"],
+      "notes": "base-rpc.publicnode.com refused eth_call by block number (403) and accepted it by block hash on 2026-09-28; 1rpc.io/base rate-limited (429)."
+    },
+    "optimism": {
+      "chainId": 10,
+      "rpcs": ["https://mainnet.optimism.io", "https://optimism.drpc.org", "https://1rpc.io/op", "https://optimism-rpc.publicnode.com"],
+      "notes": "optimism-rpc.publicnode.com refused eth_call by block number (403) on 2026-09-28."
+    },
+    "arbitrum": {
+      "chainId": 42161,
+      "rpcs": ["https://arb1.arbitrum.io/rpc", "https://1rpc.io/arb", "https://arbitrum.drpc.org", "https://arbitrum-one-rpc.publicnode.com"],
+      "notes": "arbitrum.drpc.org answered eth_call with HTTP 400 and arbitrum-one-rpc.publicnode.com refused historical state on 2026-09-28; both still confirm block hashes."
+    },
+    "polygon": {
+      "chainId": 137,
+      "rpcs": ["https://polygon-bor-rpc.publicnode.com", "https://polygon.drpc.org", "https://1rpc.io/matic"],
+      "notes": "polygon-rpc.com answers 401 without a key since 2026-09; left out."
+    },
+    "zksync-era": {
+      "chainId": 324,
+      "rpcs": ["https://mainnet.era.zksync.io", "https://zksync.drpc.org", "https://1rpc.io/zksync2-era"],
+      "notes": "zksync-era-rpc.publicnode.com answered 404 on 2026-09-28; left out."
+    },
+    "flare": {
+      "chainId": 14,
+      "rpcs": ["https://flare-api.flare.network/ext/C/rpc", "https://flare.drpc.org", "https://flare.rpc.thirdweb.com"],
+      "notes": "flare-rpc.publicnode.com answered 404 on 2026-09-28; left out."
+    }
+  }
+}

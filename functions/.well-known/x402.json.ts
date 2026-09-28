@@ -19,7 +19,22 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config"
 import { OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL, X402_SIGNER_KID } from "../api/_x402_offer";
 import { USDC_BASE } from "../api/_skus";
 import { challengeAccept, toV1Requirements, x402Accepts, type X402Env } from "../api/_x402";
-import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, REQUEST_ATTESTATION_DESCRIPTION, POPULATION_DESCRIPTIONS } from "../api/_x402_descriptions";
+import {
+  PROOF_BUNDLE_DESCRIPTION,
+  RECEIPTS_BATCH_DESCRIPTION,
+  REQUEST_ATTESTATION_DESCRIPTION,
+  POPULATION_DESCRIPTIONS,
+  FREE_DOOR_DESCRIPTION,
+  EVIDENCE_BUNDLE_DESCRIPTION,
+  DATA_FEED_DESCRIPTION,
+  RWA_EVIDENCE_DESCRIPTION,
+  WRAPPER_DESCRIPTION,
+  WRAPPER_CHANGES_DESCRIPTION,
+  ART50_MARKING_EVIDENCE_DESCRIPTION,
+  PROVIDER_DIFF_DESCRIPTION,
+  wrapperAssetDescription,
+} from "../api/_x402_descriptions";
+import WRAPPER_ASSET_DOORS from "../api/_wrapper_asset_doors.json";
 import { POPULATION_IDS } from "../api/_population";
 import { RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "../api/_x402_descriptions";
 import { RAS_OUTPUT_SCHEMAS } from "../api/_ras_schemas";
@@ -55,6 +70,10 @@ export const offerFor = (url: string): ListingOffer | null => {
   const path = new URL(url).pathname;
   const pop = path.match(/^\/api\/pop\/([^/]+)$/);
   if (pop) return { ...POPULATION_SKU, productId: `csoai.product.population.${pop[1]}` };
+  // PER-ASSET WRAPPER DOORS (functions/api/wrapper/asset/[asset].ts): the /api/wrapper SKU and tier,
+  // path-scoped by construction (the door's resource.url carries no query).
+  const asset = path.match(/^\/api\/wrapper\/asset\/([a-z0-9]+)$/);
+  if (asset) return { skuId: "request_attestation", tier: "per_request", productId: `csoai.product.wrapper.asset.${asset[1]}` };
   return OFFERS[path] ?? null;
 };
 
@@ -145,9 +164,8 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
         url: `${origin}/api/free-door`,
         paid_for: null,
         amount: "0",
-        description:
-          "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
-        ...req(`${origin}/api/free-door`, "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying."),
+        description: FREE_DOOR_DESCRIPTION,
+        ...req(`${origin}/api/free-door`, FREE_DOOR_DESCRIPTION),
         note: "Payable and priced at zero — it settles, and charges nothing. It answers 402 rather than 200 on purpose: the x402 Bazaar catalogues only a resource that settles, so a 200 route cannot be indexed. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one. To read the same content without any x402 handshake, GET a free_equivalents URL — those answer 200.",
         free_equivalents: [`${origin}/api/gspc`, `${origin}/root.json`],
       },
@@ -161,28 +179,38 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       // endpoint does return the valid list in its 404 body, so the buyer can recover — but a
       // placeholder that names what it wants costs nothing and spends no round trip.
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, paid_for: "assembly",
-        description:
-          "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
-        ...req(`${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.")  },
+        description: EVIDENCE_BUNDLE_DESCRIPTION,
+        ...req(`${origin}/api/evidence-bundle?obligation=article-50&bundle=1`, EVIDENCE_BUNDLE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly",
-        description:
-          "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
-        ...req(`${origin}/api/eunomia-data?feed=1`, "Signed derivative data feed — validated measurement series, authenticated and ready to build on.")  },
+        description: DATA_FEED_DESCRIPTION,
+        ...req(`${origin}/api/eunomia-data?feed=1`, DATA_FEED_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly",
         description: PROOF_BUNDLE_DESCRIPTION,
         ...req(`${origin}/api/proof?bundle=1`, PROOF_BUNDLE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/rwa/evidence?asset=RLUSD`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1`,
-        description:
-          "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
-        ...req(`${origin}/api/rwa/evidence?asset=RLUSD`, "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.")  },
+        description: RWA_EVIDENCE_DESCRIPTION,
+        ...req(`${origin}/api/rwa/evidence?asset=RLUSD`, RWA_EVIDENCE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/wrapper?id=usdc.e:arbitrum`, paid_for: "issuance", free_preview: `${origin}/api/wrapper?id=<wrapped-symbol:chain>&preview=1`,
-        description:
-          "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
-        ...req(`${origin}/api/wrapper?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.")  },
+        description: WRAPPER_DESCRIPTION,
+        ...req(`${origin}/api/wrapper?id=usdc.e:arbitrum`, WRAPPER_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, paid_for: "assembly", free_preview: `${origin}/api/wrapper/changes?id=usdc.e:arbitrum&preview=1`,
-        description:
-          "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
-        ...req(`${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.")  },
+        description: WRAPPER_CHANGES_DESCRIPTION,
+        ...req(`${origin}/api/wrapper/changes?id=usdc.e:arbitrum`, WRAPPER_CHANGES_DESCRIPTION)  },
+      // PER-ASSET WRAPPER DOORS — derived from functions/api/_wrapper_asset_doors.json, never retyped.
+      // PATH-SCOPED (no query): each is its own resource, so an index that keeps only query-less URLs
+      // can list it. Each reads every roster pair of one asset; all-UNMEASURED answers 200, never 402.
+      ...(WRAPPER_ASSET_DOORS as { doors: { asset: string; symbol: string }[] }).doors.map((d) => {
+        const description = wrapperAssetDescription(d.symbol);
+        return {
+          method: "GET",
+          url: `${origin}/api/wrapper/asset/${d.asset}`,
+          paid_for: "issuance",
+          asset: d.symbol,
+          free_preview: `${origin}/api/wrapper/asset/${d.asset}?preview=1`,
+          description,
+          ...req(`${origin}/api/wrapper/asset/${d.asset}`, description),
+        };
+      }),
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
@@ -190,13 +218,11 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       // could not be bought. Probed live 2026-09-05: ?vendor=openai -> 400,
       // ?url=<a real asset> -> 402.
       { method: "GET", url: `${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1`,
-        description:
-          "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
-        ...req(`${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.")  },
+        description: ART50_MARKING_EVIDENCE_DESCRIPTION,
+        ...req(`${origin}/api/art50/marking-evidence?url=https://councilof.ai/og-image.png`, ART50_MARKING_EVIDENCE_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly",
-        description:
-          "Provider change record — measurable differences between two measurement rounds for a named model provider.",
-        ...req(`${origin}/api/feeds/provider-diff?history=1`, "Provider change record — measurable differences between two measurement rounds for a named model provider.")  },
+        description: PROVIDER_DIFF_DESCRIPTION,
+        ...req(`${origin}/api/feeds/provider-diff?history=1`, PROVIDER_DIFF_DESCRIPTION)  },
       { method: "GET", url: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1`,
         description: RECEIPTS_BATCH_DESCRIPTION,
         ...req(`${origin}/api/receipts/batch?from=2026-01-01T00:00:00Z`, RECEIPTS_BATCH_DESCRIPTION)  },
@@ -222,7 +248,8 @@ export const onRequestGet: PagesFunction<X402Env> = async ({ request, env }) => 
       // loop walks this list, so a door listed here is settled — and therefore indexed — without
       // anyone asking. Descriptions are the canonical bytes in x402-descriptions.json.
       ...POPULATION_IDS.map((id) => {
-        const description = POPULATION_DESCRIPTIONS[id] || `Population door ${id} — a read-transform of the estate's own published artifact.`;
+        const description = POPULATION_DESCRIPTIONS[id];
+        if (!description) throw new Error(`x402.json: no canonical description for population ${id} in functions/api/x402-descriptions.json`);
         return {
           method: "GET",
           url: `${origin}/api/pop/${id}`,

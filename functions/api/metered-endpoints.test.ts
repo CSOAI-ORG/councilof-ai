@@ -217,6 +217,10 @@ describe("catalog + discovery", () => {
       "rwa_evidence",
       "wrapper_parity",
       "wrapper_changes",
+      // per-asset wrapper doors, in functions/api/_wrapper_asset_doors.json order
+      "wrapper_asset_usdc",
+      "wrapper_asset_usdt",
+      "wrapper_asset_dai",
       "fresh_capsule",
       "art50_marking_evidence",
       "provider_diff_feed",

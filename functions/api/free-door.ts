@@ -28,6 +28,7 @@
  */
 import { headFromGet } from "./_head";
 import { x402Accepts, buildPaymentRequiredV2, paymentRequiredResponseSigned, verifyX402Payment, type X402Env } from "./_x402";
+import { FREE_DOOR_DESCRIPTION } from "./_x402_descriptions";
 
 type Env = X402Env;
 
@@ -41,10 +42,9 @@ type Env = X402Env;
  * The seed script no longer truncates, but any OTHER indexer may, so the opening sentence is
  * written to survive being cut at 120 with its meaning intact.
  */
-export const DESCRIPTION =
-  "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero " +
-  "because it is free forever. That is the real price, not a promotion — a grade is never sold. " +
-  "Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.";
+// The canonical text lives in functions/api/x402-descriptions.json (free_door) — the one source the
+// manifest, this 402 (and so the Bazaar extension's catalogue entry) and llms.txt all read.
+export const DESCRIPTION = FREE_DOOR_DESCRIPTION;
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);

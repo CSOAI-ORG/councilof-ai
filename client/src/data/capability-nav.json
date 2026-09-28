@@ -25,6 +25,9 @@
       "api-rwa-evidence-post",
       "api-state",
       "api-wrapper-post",
+      "api-wrapper-asset-usdc-post",
+      "api-wrapper-asset-usdt-post",
+      "api-wrapper-asset-dai-post",
       "api-x402"
     ]
   },
@@ -253,11 +256,44 @@
       "id": "api-wrapper-post",
       "kind": "http",
       "name": "Wrapper (POST)",
-      "description": "GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at provider-reported finalized blocks, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
+      "description": "GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at a FINALIZED block whose hash a SECOND, different RPC operator confirmed, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
       "audience": "both",
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/wrapper",
+      "method": "POST"
+    },
+    {
+      "id": "api-wrapper-asset-usdc-post",
+      "kind": "http",
+      "name": "Wrapper asset pack USDC (POST)",
+      "description": "POST alias of GET /api/wrapper/asset/usdc for gateways that POST {}; the body is ignored.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/wrapper/asset/usdc",
+      "method": "POST"
+    },
+    {
+      "id": "api-wrapper-asset-usdt-post",
+      "kind": "http",
+      "name": "Wrapper asset pack USDT (POST)",
+      "description": "POST alias of GET /api/wrapper/asset/usdt for gateways that POST {}; the body is ignored.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/wrapper/asset/usdt",
+      "method": "POST"
+    },
+    {
+      "id": "api-wrapper-asset-dai-post",
+      "kind": "http",
+      "name": "Wrapper asset pack DAI (POST)",
+      "description": "POST alias of GET /api/wrapper/asset/dai for gateways that POST {}; the body is ignored.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/wrapper/asset/dai",
       "method": "POST"
     },
     {
