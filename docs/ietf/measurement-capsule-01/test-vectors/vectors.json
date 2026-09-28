@@ -1,0 +1,137 @@
+{
+ "_label": "SYNTHETIC TEST VECTORS for draft-templeman-scitt-measurement-capsule-01 (work in progress). Signed with the RFC 8032 section 7.1 TEST 1 key, whose secret is public. Anything it signs proves nothing. Subjects are .example names; source digests are SHA-256 of labelled placeholder strings.",
+ "schema": "capsule-01.test-vectors/0.1",
+ "generator": "gen_vectors.py (standard library + cryptography)",
+ "test_key": {
+  "source": "RFC 8032 section 7.1 TEST 1",
+  "secret_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+  "public_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+  "kid": "did:web:measurer.example#test-key-1"
+ },
+ "V1_capsules": [
+  {
+   "capsule_id": "790c6908bf69e6863301aa6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d",
+   "jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"790c6908bf69e6863301aa6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"declared\":{\"protocol_version\":\"2025-06-18\",\"surface\":\"registry\"},\"differential\":{\"differs\":[\"protocol_version\"]},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"the registry entry and the endpoint were read 40 seconds apart from one location\"],\"measurement_state\":\"INCONSISTENT\",\"observed\":{\"exchange\":\"initialize\",\"protocol_version\":\"2025-11-25\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":\"62e37c1818f25a0bd931d75c9e1da28b262d50afd980c39172165ab6ed34fa07\",\"registry_entry\":\"bc012a010624de5fe157b48c4c8222b82d1a326374a44c67a428ad25f836d387\"},\"subject_id\":\"https://mcp-a.example/mcp\"}"
+  },
+  {
+   "capsule_id": "7933cc6a2b3daa915e651da0e70bbb558640763062e08bbf831e8cc7946c7570",
+   "jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"7933cc6a2b3daa915e651da0e70bbb558640763062e08bbf831e8cc7946c7570\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"declared\":{\"protocol_version\":\"2025-11-25\",\"surface\":\"registry\"},\"differential\":{\"differs\":null,\"reason\":\"no observed value to compare\"},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"one attempt from one location; a later attempt may be answered\"],\"measurement_state\":\"UNCHECKABLE\",\"observed\":{\"exchange\":\"initialize\",\"read\":\"no response within 10 seconds\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":null,\"registry_entry\":\"a876e13e958a734cfcf536bd5129b2e7563b934e12686039dda4fb31bd5e3b8e\"},\"subject_id\":\"https://mcp-c.example/mcp\"}"
+  },
+  {
+   "capsule_id": "97e3e57263664c1f980664c73da0aad987daf292552b5d9f0e87b594d2dcde8a",
+   "jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"97e3e57263664c1f980664c73da0aad987daf292552b5d9f0e87b594d2dcde8a\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"declared\":{\"protocol_version\":\"2025-03-26\",\"surface\":\"registry\"},\"differential\":{\"differs\":[\"protocol_version\"]},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"the registry entry and the endpoint were read 12 seconds apart from one location\"],\"measurement_state\":\"INCONSISTENT\",\"observed\":{\"exchange\":\"initialize\",\"protocol_version\":\"2025-06-18\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":\"9adc261e01d0be331520988dfd7ef6f695a4913db787c30785b3da18ff754ef6\",\"registry_entry\":\"6831a8bb78e904edb5414f4500c9e2273e605e8bde20d88cbd8b1debd76f1708\"},\"subject_id\":\"https://mcp-e.example/mcp\"}"
+  },
+  {
+   "capsule_id": "bd7cef2dd9f66b6140ab03cfd4a3958aa5e91f8e54df9533de27a9e891f541a1",
+   "jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"bd7cef2dd9f66b6140ab03cfd4a3958aa5e91f8e54df9533de27a9e891f541a1\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"declared\":{\"protocol_version\":\"2025-11-25\",\"surface\":\"registry\"},\"differential\":{\"differs\":[]},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"agreement at one reading says nothing about later readings\"],\"measurement_state\":\"CONSISTENT\",\"observed\":{\"exchange\":\"initialize\",\"protocol_version\":\"2025-11-25\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":\"ca1c89f83bddb722fb622840b37369e6f54ccb39e8b551d847e77237274c0ba7\",\"registry_entry\":\"f5eaa32378a42194f2f42ce89e5cb99771155a57fa534bbb4f5972a913da239d\"},\"subject_id\":\"https://mcp-b.example/mcp\"}"
+  },
+  {
+   "capsule_id": "c79034f8eb5e79924077a6a18530cd6033547230f373d0340d2ceeae0b09ae62",
+   "jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"c79034f8eb5e79924077a6a18530cd6033547230f373d0340d2ceeae0b09ae62\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"declared\":{\"protocol_version\":\"2025-06-18\",\"surface\":\"registry\"},\"differential\":{\"differs\":[]},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"agreement at one reading says nothing about later readings\"],\"measurement_state\":\"CONSISTENT\",\"observed\":{\"exchange\":\"initialize\",\"protocol_version\":\"2025-06-18\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":\"fc76345513787441dcfee653f46cc4d5cf1f38ad8f9ec3e920aa8dd4181ef466\",\"registry_entry\":\"ded62933d454058f05e1ead85fa34b78fb805f59aeeafcf99d2fc470b6ba53b8\"},\"subject_id\":\"https://mcp-d.example/mcp\"}"
+  }
+ ],
+ "V2_batch": {
+  "leaves_sorted": [
+   "790c6908bf69e6863301aa6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d",
+   "7933cc6a2b3daa915e651da0e70bbb558640763062e08bbf831e8cc7946c7570",
+   "97e3e57263664c1f980664c73da0aad987daf292552b5d9f0e87b594d2dcde8a",
+   "bd7cef2dd9f66b6140ab03cfd4a3958aa5e91f8e54df9533de27a9e891f541a1",
+   "c79034f8eb5e79924077a6a18530cd6033547230f373d0340d2ceeae0b09ae62"
+  ],
+  "merkle_root": "609d0f628fd70eeefd53d834333af8efa4d12b6e536f28f421f2cad18063b092",
+  "capsules_file_sha256": "1176503b88f5a198c43af09e2f6cc9ab8ab4eb1820a555ae484e4bc0461b7f48",
+  "capsules_file_bytes": 5036,
+  "record_jcs_utf8": "{\"as_of\":\"2026-09-25T12:30:00Z\",\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsules_file\":{\"bytes\":5036,\"format\":\"one JCS capsule per line, LF-terminated, sorted by capsule_id\",\"sha256\":\"1176503b88f5a198c43af09e2f6cc9ab8ab4eb1820a555ae484e4bc0461b7f48\"},\"excluded\":{},\"inclusion_rule\":\"every endpoint in the synthetic list of five; nothing excluded\",\"kind\":\"measurement.contract_parity\",\"merkle\":\"RFC 9162 section 2.1.1 Merkle Tree Hash, SHA-256, over the capsule_id values as 32-byte strings sorted ascending\",\"merkle_root\":\"609d0f628fd70eeefd53d834333af8efa4d12b6e536f28f421f2cad18063b092\",\"n_capsules\":5,\"schema\":\"csoai.measurement-capsule-batch/0.2\",\"states\":{\"CONSISTENT\":2,\"INCONSISTENT\":2,\"UNCHECKABLE\":1}}",
+  "record_sha256": "77c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af975",
+  "audit_path": {
+   "leaf_index": 2,
+   "tree_size": 5,
+   "leaf": "97e3e57263664c1f980664c73da0aad987daf292552b5d9f0e87b594d2dcde8a",
+   "path": [
+    "ec8bb44e799ff3af50b4e5fb250f5090689b7e30d54a44ff92378e45607624d9",
+    "015d548669d37c398fa2c86502caa5edf42fde88c502e2df194feb3b3634128f",
+    "2726cbfb4f5551190f1c834055f1db56334cfe62ed55db73c4dee7233dbbafcb"
+   ]
+  }
+ },
+ "V3_cose_sign1_attached": {
+  "protected_edn": "{1: -19, 3: \"application/vnd.csoai.measurement-capsule-batch+json\", 4: 'did:web:measurer.example#test-key-1', 15: {1: \"did:web:measurer.example\", 2: \"measurement.contract_parity\", 6: 1790000000}}",
+  "protected_hex": "a401320378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e0458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b80",
+  "sig_structure_hex": "846a5369676e61747572653158a1a401320378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e0458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b80405903027b2261735f6f66223a22323032362d30392d32355431323a33303a30305a222c22617574686f726974795f7374617465223a224e4f4e453a206d6561737572656d656e74206f6e6c793b20746869732063617073756c65206772616e747320616e64207265636f726473206e6f20657865637574696f6e20617574686f72697479222c2263617073756c65735f66696c65223a7b226279746573223a353033362c22666f726d6174223a226f6e65204a43532063617073756c6520706572206c696e652c204c462d7465726d696e617465642c20736f727465642062792063617073756c655f6964222c22736861323536223a2231313736353033623838663561313938633433616630396532663663633961623861623465623138323061353535616534383465346263303436316237663438227d2c226578636c75646564223a7b7d2c22696e636c7573696f6e5f72756c65223a22657665727920656e64706f696e7420696e207468652073796e746865746963206c697374206f6620666976653b206e6f7468696e67206578636c75646564222c226b696e64223a226d6561737572656d656e742e636f6e74726163745f706172697479222c226d65726b6c65223a2252464320393136322073656374696f6e20322e312e31204d65726b6c65205472656520486173682c205348412d3235362c206f766572207468652063617073756c655f69642076616c7565732061732033322d6279746520737472696e677320736f7274656420617363656e64696e67222c226d65726b6c655f726f6f74223a2236303964306636323866643730656565666435336438333433333361663865666134643132623665353336663238663432316632636164313830363362303932222c226e5f63617073756c6573223a352c22736368656d61223a2263736f61692e6d6561737572656d656e742d63617073756c652d62617463682f302e32222c22737461746573223a7b22434f4e53495354454e54223a322c22494e434f4e53495354454e54223a322c22554e434845434b41424c45223a317d7d",
+  "signature_hex": "cec79a49b8eb0fbebaccbe7a907029257e33838e8fab950f91699b2ef0c9a02a907fe789805f552f75763dbcdc881be034661c039375bfcf039bed630b666b06",
+  "cose_sign1_hex": "d28458a1a401320378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e0458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b80a05903027b2261735f6f66223a22323032362d30392d32355431323a33303a30305a222c22617574686f726974795f7374617465223a224e4f4e453a206d6561737572656d656e74206f6e6c793b20746869732063617073756c65206772616e747320616e64207265636f726473206e6f20657865637574696f6e20617574686f72697479222c2263617073756c65735f66696c65223a7b226279746573223a353033362c22666f726d6174223a226f6e65204a43532063617073756c6520706572206c696e652c204c462d7465726d696e617465642c20736f727465642062792063617073756c655f6964222c22736861323536223a2231313736353033623838663561313938633433616630396532663663633961623861623465623138323061353535616534383465346263303436316237663438227d2c226578636c75646564223a7b7d2c22696e636c7573696f6e5f72756c65223a22657665727920656e64706f696e7420696e207468652073796e746865746963206c697374206f6620666976653b206e6f7468696e67206578636c75646564222c226b696e64223a226d6561737572656d656e742e636f6e74726163745f706172697479222c226d65726b6c65223a2252464320393136322073656374696f6e20322e312e31204d65726b6c65205472656520486173682c205348412d3235362c206f766572207468652063617073756c655f69642076616c7565732061732033322d6279746520737472696e677320736f7274656420617363656e64696e67222c226d65726b6c655f726f6f74223a2236303964306636323866643730656565666435336438333433333361663865666134643132623665353336663238663432316632636164313830363362303932222c226e5f63617073756c6573223a352c22736368656d61223a2263736f61692e6d6561737572656d656e742d63617073756c652d62617463682f302e32222c22737461746573223a7b22434f4e53495354454e54223a322c22494e434f4e53495354454e54223a322c22554e434845434b41424c45223a317d7d5840cec79a49b8eb0fbebaccbe7a907029257e33838e8fab950f91699b2ef0c9a02a907fe789805f552f75763dbcdc881be034661c039375bfcf039bed630b666b06"
+ },
+ "V4_cose_hash_envelope": {
+  "protected_edn": "{1: -19, 4: 'did:web:measurer.example#test-key-1', 15: {1: \"did:web:measurer.example\", 2: \"measurement.contract_parity\", 6: 1790000000}, 258: -16, 259: \"application/vnd.csoai.measurement-capsule-batch+json\", 260: \"https://measurer.example/batches/contract_parity/record.json\"}",
+  "payload_hex": "77c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af975",
+  "protected_hex": "a601320458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b801901022f19010378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e190104783c68747470733a2f2f6d656173757265722e6578616d706c652f626174636865732f636f6e74726163745f7061726974792f7265636f72642e6a736f6e",
+  "sig_structure_hex": "846a5369676e61747572653158e8a601320458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b801901022f19010378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e190104783c68747470733a2f2f6d656173757265722e6578616d706c652f626174636865732f636f6e74726163745f7061726974792f7265636f72642e6a736f6e40582077c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af975",
+  "signature_hex": "4e09a643366cabff54914397ef7389b6f53d2706bdaee6aca2fdd6c0361e284eb7e1da1f2ab986c0bd09127f2de6b07ccf61cf28ba5600b18778558418d5c504",
+  "cose_sign1_hex": "d28458e8a601320458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b801901022f19010378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e190104783c68747470733a2f2f6d656173757265722e6578616d706c652f626174636865732f636f6e74726163745f7061726974792f7265636f72642e6a736f6ea0582077c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af97558404e09a643366cabff54914397ef7389b6f53d2706bdaee6aca2fdd6c0361e284eb7e1da1f2ab986c0bd09127f2de6b07ccf61cf28ba5600b18778558418d5c504"
+ },
+ "N_controls": [
+  {
+   "id": "N1-forbidden-member",
+   "expected": {
+    "state": "reject",
+    "rule": "no-authority-member"
+   },
+   "why": "a member named decision is forbidden at any depth",
+   "capsule_jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"edce5ac74351724ad83951c6c251f69498ca7040b1289ff57de3c6503b974649\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"decision\":\"none recorded\",\"declared\":{\"protocol_version\":\"2025-06-18\",\"surface\":\"registry\"},\"differential\":{\"differs\":[\"protocol_version\"]},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"the registry entry and the endpoint were read 40 seconds apart from one location\"],\"measurement_state\":\"INCONSISTENT\",\"observed\":{\"exchange\":\"initialize\",\"protocol_version\":\"2025-11-25\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":\"62e37c1818f25a0bd931d75c9e1da28b262d50afd980c39172165ab6ed34fa07\",\"registry_entry\":\"bc012a010624de5fe157b48c4c8222b82d1a326374a44c67a428ad25f836d387\"},\"subject_id\":\"https://mcp-a.example/mcp\"}"
+  },
+  {
+   "id": "N2-source-not-a-digest",
+   "expected": {
+    "state": "reject",
+    "rule": "sources-digest-only"
+   },
+   "why": "sources carries a URL where only digests are allowed",
+   "capsule_jcs_utf8": "{\"authority_state\":\"NONE: measurement only; this capsule grants and records no execution authority\",\"capsule_id\":\"028d20c3215ba6f06f23af7b8fabfa9827e6cd1881443dc1618c6b4815abaefd\",\"claim\":{\"statement\":\"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"},\"correction_pointer\":null,\"declared\":{\"protocol_version\":\"2025-11-25\",\"surface\":\"registry\"},\"differential\":{\"differs\":null,\"reason\":\"no observed value to compare\"},\"effect_reference\":null,\"kind\":\"measurement.contract_parity\",\"limitations\":[\"one attempt from one location; a later attempt may be answered\"],\"measurement_state\":\"UNCHECKABLE\",\"observed\":{\"exchange\":\"initialize\",\"read\":\"no response within 10 seconds\"},\"observed_at\":\"2026-09-25T12:00:00Z\",\"schema\":\"csoai.measurement-capsule/0.2\",\"sources\":{\"initialize_response\":null,\"registry_entry\":\"https://registry.example/v0/servers/b\"},\"subject_id\":\"https://mcp-c.example/mcp\"}"
+  },
+  {
+   "id": "N3-stored-line-not-jcs",
+   "expected": {
+    "state": "reject",
+    "rule": "stored-bytes-are-jcs"
+   },
+   "why": "the stored line is indented JSON, so it is not the JCS bytes the identifier covers",
+   "stored_line_utf8": "{\n \"authority_state\": \"NONE: measurement only; this capsule grants and records no execution authority\",\n \"capsule_id\": \"7933cc6a2b3daa915e651da0e70bbb558640763062e08bbf831e8cc7946c7570\",\n \"claim\": {\n  \"statement\": \"the protocol version a registry entry declares for this endpoint equals the version the endpoint returns from initialize\"\n },\n \"correction_pointer\": null,\n \"declared\": {\n  \"protocol_version\": \"2025-11-25\",\n  \"surface\": \"registry\"\n },\n \"differential\": {\n  \"differs\": null,\n  \"reason\": \"no observed value to compare\"\n },\n \"effect_reference\": null,\n \"kind\": \"measurement.contract_parity\",\n \"limitations\": [\n  \"one attempt from one location; a later attempt may be answered\"\n ],\n \"measurement_state\": \"UNCHECKABLE\",\n \"observed\": {\n  \"exchange\": \"initialize\",\n  \"read\": \"no response within 10 seconds\"\n },\n \"observed_at\": \"2026-09-25T12:00:00Z\",\n \"schema\": \"csoai.measurement-capsule/0.2\",\n \"sources\": {\n  \"initialize_response\": null,\n  \"registry_entry\": \"a876e13e958a734cfcf536bd5129b2e7563b934e12686039dda4fb31bd5e3b8e\"\n },\n \"subject_id\": \"https://mcp-c.example/mcp\"\n}"
+  },
+  {
+   "id": "N4-payload-byte-flipped",
+   "expected": {
+    "state": "reject",
+    "rule": "cose-signature"
+   },
+   "why": "one payload byte of V3 changed; the signature no longer verifies",
+   "cose_sign1_hex": "d28458a1a401320378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e0458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b80a05903027b2261735f6f66223a22323032362d30392d32355431323a33303a30305a222c22617574686f726974795f7374617465223a224e4f4e453a206d6561737572656d656e74206f6e6c793b20746869732063617073756c65206772616e747320616e64207265636f726473206e6f20657865637574696f6e20617574686f72697479222c2263617073756c65735f66696c65223a7b226279746573223a353033362c22666f726d6174223a226f6e65204a43532063617073756c6520706572206c696e652c204c462d7465726d696e617465642c20736f727465642062792063617073756c655f6964222c22736861323536223a2231313736353033623838663561313938633433616630396532663663633961623861623465623138323061353535616534383465346263303436316237663438227d2c226578636c75646564223a7b7d2c22696e636c7573696f6e5f72756c65223a22657665727920656e64706f696e7420696e207468652073796e746865746963206c697374206f6620666976653b206e6f7468696e67206578636c75646564222c226b696e64223a226d6561737572656d656e742e636f6e74726163745f706172697479222c226d65726b6c65223a2252464320393136322073656374696f6e20322e312e31204d65726b6c65205472656520486173682c205348412d3235362c206f766572207468652063617073756c655f69642076616c7565732061732033322d6279746520737472696e677320736f7274656420617363656e64696e67222c226d65726b6c655f726f6f74223a2236303964306636323866643730656565666435336438333433333361663865666134643132623665353336663238663432316632636164313830363362303932222c226e5f63617073756c6573223a352c22736368656d61223a2263736f61692e6d6561737572656d656e742d63617073756c652d62617463682f302e32222c22737461746573223a7b22434f4e53495354454e54223a322c22494e434f4e53495354454e54223a322c22554e434845434b41424c45223a317d7c5840cec79a49b8eb0fbebaccbe7a907029257e33838e8fab950f91699b2ef0c9a02a907fe789805f552f75763dbcdc881be034661c039375bfcf039bed630b666b06"
+  },
+  {
+   "id": "N5-hash-envelope-with-label-3",
+   "expected": {
+    "state": "reject",
+    "rule": "rfc9995-no-label-3"
+   },
+   "why": "RFC 9995: label 3 (content_type) MUST NOT be present with a hash envelope payload",
+   "protected_hex": "a701320378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e0458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b801901022f19010378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e190104783c68747470733a2f2f6d656173757265722e6578616d706c652f626174636865732f636f6e74726163745f7061726974792f7265636f72642e6a736f6e",
+   "cose_sign1_hex": "d28459011fa701320378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e0458236469643a7765623a6d656173757265722e6578616d706c6523746573742d6b65792d310fa30178186469643a7765623a6d656173757265722e6578616d706c6502781b6d6561737572656d656e742e636f6e74726163745f706172697479061a6ab13b801901022f19010378346170706c69636174696f6e2f766e642e63736f61692e6d6561737572656d656e742d63617073756c652d62617463682b6a736f6e190104783c68747470733a2f2f6d656173757265722e6578616d706c652f626174636865732f636f6e74726163745f7061726974792f7265636f72642e6a736f6ea0582077c6996d9794b8defcf4e885470c7138fe78c0cd16ec63b6b6497cae8e8af9755840b6f15f1ff4161a82d75ae48884a07f8d787d830dbfff4ad8523dcea540bccbd9fb9ed07468c7201d8a57d194eee7f9de2336b1e010f7c1b4664d95bd52e2bc00"
+  },
+  {
+   "id": "N6-duplicated-last-leaf",
+   "expected": {
+    "state": "reject",
+    "rule": "leaf-set-no-duplicates"
+   },
+   "why": "the leaf list repeats its last member; its root differs from V2 and n no longer equals n_capsules",
+   "leaves": [
+    "790c6908bf69e6863301aa6cdb922ef2f51e37cc8bd6374da261bf5a39a0ae4d",
+    "7933cc6a2b3daa915e651da0e70bbb558640763062e08bbf831e8cc7946c7570",
+    "97e3e57263664c1f980664c73da0aad987daf292552b5d9f0e87b594d2dcde8a",
+    "bd7cef2dd9f66b6140ab03cfd4a3958aa5e91f8e54df9533de27a9e891f541a1",
+    "c79034f8eb5e79924077a6a18530cd6033547230f373d0340d2ceeae0b09ae62",
+    "c79034f8eb5e79924077a6a18530cd6033547230f373d0340d2ceeae0b09ae62"
+   ],
+   "root": "be5ef0eec54cd416b2c6b2d673ab95e41027289bd138819dfe04611d61872852"
+  }
+ ]
+}
