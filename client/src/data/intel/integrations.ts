@@ -56,12 +56,15 @@ export const INTEGRATIONS: Integration[] = [
   },
   {
     slug: 'attestation-api',
-    name: 'Ed25519 Attestation API',
+    name: 'Ed25519 card verifier',
     kind: 'attestation',
-    description: 'Issue and verify Ed25519-signed compliance attestations — provenance you can prove.',
-    endpoint: 'https://meok-attestation-api.vercel.app',
+    // 2026-09-28 (meok-boundary lane): this pointed at a separate business's attestation API on a
+    // Vercel host that answers HTTP 402. Council of AI hosts no one else's product; the drawer now
+    // points at its own free verifier, which is live and documents itself on GET.
+    description: 'Verify an Ed25519-signed Council of AI measurement card. Free. Three answers: VALID, INVALID or UNCHECKABLE.',
+    endpoint: 'https://councilof.ai/api/verify',
     frameworks: ['eu-ai-act', 'iso-42001', 'nist-ai-rmf'],
-    connect: 'POST /sign to issue an attestation; POST /verify to check one.',
+    connect: 'POST the card JSON, or {"card": "<card URL>"}, to /api/verify. GET /api/verify explains how.',
   },
   {
     slug: 'layer-0',

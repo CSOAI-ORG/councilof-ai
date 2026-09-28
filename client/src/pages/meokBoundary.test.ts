@@ -3,7 +3,8 @@
 // has no independence, so no page this site mounts may carry a MEOK product name, link to a MEOK
 // product route, or point at a MEOK backend. Before this lane /ei3 was a "MEOK ONE" product page
 // that placed its own stack first among named vendors, /authority offered a "MEOK Open" badge,
-// and ten pages sent readers to /meok-law. The alias URL /meok-law still serves the jurisdiction
+// ten pages sent readers to /meok-law, and the /opengridworks tools drawer linked a MEOK
+// attestation API on a Vercel host that answers 402. The alias URL /meok-law still serves the jurisdiction
 // engine (retiring it needs an owner-authorised sitemap withdrawal); nothing links to it.
 //
 // Scope: pages reachable from a <Route> in App.tsx. Comments are stripped before matching, so the
@@ -11,6 +12,7 @@
 import { describe, expect, it } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { INTEGRATIONS } from "../data/intel/integrations";
 
 const SRC = resolve(__dirname, "..");
 const read = (p: string) => readFileSync(resolve(SRC, p), "utf8");
@@ -62,6 +64,14 @@ describe("no mounted page hosts or advertises a MEOK product", () => {
     const app = read("App.tsx");
     expect(app).toMatch(/<Route path="\/law" component=\{JurisdictionEngine\} \/>/);
     expect(app).not.toMatch(/component=\{MeokLaw\}/);
+  });
+
+  it("the /opengridworks tools drawer points at no MEOK backend", () => {
+    // Every endpoint the drawer renders as a link must be a host this site answers for.
+    const hosts = INTEGRATIONS.filter((i) => i.endpoint).map((i) => new URL(i.endpoint!).hostname);
+    expect(hosts.length).toBeGreaterThan(0);
+    expect(hosts.filter((h) => /meok/i.test(h) || h.endsWith(".vercel.app"))).toEqual([]);
+    expect(INTEGRATIONS.find((i) => i.slug === "attestation-api")?.endpoint).toBe("https://councilof.ai/api/verify");
   });
 
   it("/ei3 states the boundary and stays UNMEASURED", () => {
