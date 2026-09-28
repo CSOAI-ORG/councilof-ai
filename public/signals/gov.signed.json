@@ -1,23 +1,81 @@
 {
  "axis": "gov",
- "content_id": "ff97b6eaf87cb6483d9bcb2be691c7a713c3bc97a4e04a9914f81df316a72621",
- "elo_leader": "qwen3:4b",
- "elo_leader_score": 1975.4,
- "games_leader": 194,
- "generated": "2026-08-24T09:11:56Z",
+ "axis_status": "MEASURED",
+ "content_id": "42ddbd11f62d7e08598cc5eaae3b6ea7357b9f3896b72f5f714ca26b75c747ce",
+ "elo_decided_games": 228,
+ "elo_leader": null,
+ "elo_leader_score": null,
+ "elo_ranked_models": 7,
+ "elo_runner_up": {
+  "ci": [
+   0.424,
+   0.873
+  ],
+  "elo": 1564.6,
+  "games": 13,
+  "model": "qwen3:8b",
+  "winrate": 0.692
+ },
+ "elo_separation": "TIE",
+ "elo_source": {
+  "content_id": "b126b711de15662514cac4f462e461f2cbe46b20e25452da609ff3daddab3f40",
+  "generated": "2026-09-24T16:42:59Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 119,
+ "elo_top": {
+  "ci": [
+   0.549,
+   0.814
+  ],
+  "elo": 1592.1,
+  "games": 43,
+  "model": "phi3.5:3.8b",
+  "winrate": 0.698
+ },
+ "evidence_relation": "SEPARATE_EVIDENCE",
+ "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (phi3.5:3.8b, qwen3:8b, phi4:14b, mistral:7b, llama3.1:8b, gemma3:12b, nemotron-3-nano:30b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
+ "games_leader": null,
+ "generated": "2026-09-24T16:43:00Z",
  "majority_baseline": 0.2911,
  "models": 19,
  "not_a_certification": true,
- "note": "From the live axis register + signed per-axis Elo leaderboard. Honest signals only; thin-n axes say so. Measurement, not certification.",
- "register": "MEASURED",
- "schema": "csoai.axis-signal/0.1",
+ "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds (deterministic grader on frozen banks). Thin-n axes say so. scored_items/models/majority_baseline are REGISTER fields about the axis's frozen bank, not these rounds. Measurement, not certification.",
+ "rank_rule": "arena rule: >=2 models with >=5 decided games each and ONE model's Wilson 95% win-rate CI lower bound above EVERY other ranked model's upper bound; else TIE. UNMEASURED = not enough to rank. On win-rate intervals, never path-dependent Elo order.",
+ "register": "UNTESTED",
+ "schema": "csoai.axis-signal/0.4",
  "scored_items": 237,
+ "separation_authority": {
+  "board_axis": "governance",
+  "board_bench": "GovBench",
+  "board_leader": null,
+  "board_n": 237,
+  "board_separation": "UNTESTED",
+  "note": "This axis's separation authority. status/register are ITS verdict. Where elo_separation differs, the board governs the AXIS separation; this file governs only the arena rounds.",
+  "surface": "GET /api/gspc"
+ },
+ "separation_of": "recorded pairwise arena rounds, NOT the axis's frozen bank; never the axis's verdict.",
  "signature": {
   "alg": "Ed25519",
-  "content_id": "ff97b6eaf87cb6483d9bcb2be691c7a713c3bc97a4e04a9914f81df316a72621",
-  "note": "Ed25519 over canonical content_id. Verify: recompute, sha256=content_id, ed25519==sig with PUBKEY.",
-  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "sig": "MqnuG8GEFKNdp9zeaxRJK3CaDod/XkmZwHV1KcC2mcE/kclUyr7QOmkUBE6wBFCL9p9FSmVBLVyjrvifgfs0Cw=="
+  "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
+  "content_id": "42ddbd11f62d7e08598cc5eaae3b6ea7357b9f3896b72f5f714ca26b75c747ce",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "payload_sha256": "42ddbd11f62d7e08598cc5eaae3b6ea7357b9f3896b72f5f714ca26b75c747ce",
+  "preimage": "canonical(body minus content_id, signature)",
+  "sig_ed25519": "4779040db3cca91b0e19223abc789ccc5dc6dafe37e23513afade91ab1dbc33d0b270b9a2ab3763e5c2314e04c13eaabf9022634411ffe29c4e70e091756de0d",
+  "signed_at": "2026-09-24T16:43:00.653Z",
+  "signer_auth": "pod-token",
+  "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
- "status": "MEASURED"
+ "signer": "did:web:csoai.org#board-attestation-1",
+ "status": "UNTESTED",
+ "supersedes": {
+  "content_id": "2f645adde054b2d47fdf82c677484ba8c1c83fb9ded424f4395de8d69ac19eea",
+  "elo_leader_then": null,
+  "generated": "2026-09-24T15:38:15Z",
+  "note": "superseded, never edited; new bytes, new signature",
+  "signer": "did:web:csoai.org#board-attestation-1",
+  "status_then": "UNTESTED"
+ }
 }

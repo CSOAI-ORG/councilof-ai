@@ -55,6 +55,8 @@ describe("/api/press.json is derived, and refuses to announce what did not happe
       expect(d.distribution_surfaces.live).toBeNull();
       expect(d.distribution_surfaces.kind).toBe("unmeasured");
       expect(d.distribution_surfaces.note).toContain("not a published surface");
+      expect(d.distribution_surfaces.scope).toContain("not a census");
+      expect(d.distribution_surfaces.note).not.toContain("NO surface is confirmed live");
     }
   });
 
@@ -62,7 +64,7 @@ describe("/api/press.json is derived, and refuses to announce what did not happe
     const d = await build();
     const subjects = d.not_announced.map((n) => n.subject);
     expect(subjects).toContain("first outside settlement status");
-    expect(subjects).toContain("N sites live");
+    expect(subjects).toContain("N confirmed placements in this spray log");
     expect(d.commercial_evidence.state).toBe("UNCHECKABLE");
     expect(d.commercial_evidence.outside_settlements).toBeNull();
     expect(d.not_announced.find((n) => n.subject.includes("settlement"))!.state).toBe("UNCHECKABLE");

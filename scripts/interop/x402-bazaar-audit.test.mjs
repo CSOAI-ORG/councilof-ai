@@ -87,11 +87,20 @@ describe("the Bazaar audit refuses to turn a partial read into a population", ()
     expect(i.ours).toHaveLength(1);
     expect(i.ours[0].resource).toBe("https://councilof.ai/api/free-door");
     expect(i.ours[0].description_chars).toBe(120);
-    expect(i.manifest_declared).toBe(10); // 10 doors since /api/wrapper (2026-09-13)
+    // DERIVED, never frozen. This read `toBe(10)` and went red the moment the manifest fixture
+    // was refreshed from live and carried 21 resources — the ten /api/pop/* population doors and
+    // /api/wrapper/changes had been advertised and uncaptured. A door count typed into a test is
+    // the same defect the test itself exists to catch: a number nothing retires.
+    const declared = JSON.parse(
+      readFileSync(resolve(import.meta.dirname, "../fixtures/x402scan/well_known_x402.json"), "utf8"),
+    ).resources.filter((r) => r.url).length;
+    expect(declared, "the manifest fixture declares no door").toBeGreaterThan(0);
+    expect(i.manifest_declared).toBe(declared);
     expect(i.manifest_indexed).toBe(1);
     expect(i.manifest_current).toEqual([]);
     expect(i.manifest_stale).toEqual(["https://councilof.ai/api/free-door"]);
-    expect(i.manifest_missing).toHaveLength(9); // 10 declared − 1 indexed (free-door) in this fixture
+    // every declared door except the one this fixture indexes
+    expect(i.manifest_missing).toHaveLength(declared - 1);
   });
 
   it("an empty result is a claim only because the scan was complete", () => {

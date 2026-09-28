@@ -22,6 +22,11 @@ export default function LobbyBoardPane() {
         actually carries: model-comparison axes may have signed cards and rankings;
         deterministic-facts axes link their own run artifacts. A TIE never crowns a winner.
       </p>
+      <p className="mt-2 text-[12px] text-slate-600">
+        Separate mill-card runs and their dated roots are available in{" "}
+        <a className="text-emerald-800 underline" href="/dashboard?tab=cards">Signed cards</a>.
+        A signed run is not automatically a new board score.
+      </p>
       <div className="mt-6">
         <GspcTerminal />
       </div>

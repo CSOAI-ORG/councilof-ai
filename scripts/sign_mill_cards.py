@@ -10,7 +10,8 @@ those canonical body bytes, not the digest):
                  locally, through lib/estate_sign.py — the same loader, canonical form
                  and Ed25519 primitive scripts/publish_public_root.py signs the public
                  root with. Added 2026-09-16 because GitHub Actions stopped running on
-                 2026-09-15 and the pod chain (scripts/pod-loops/sign.sh) is the only
+                 2026-09-15 and the pod's hourly mill slice (scripts/pod-loops/mill-hourly.sh,
+                 which superseded the never-installed pod-chain sign.sh) is the only
                  other road to a signed card. Never a laptop key: the pod holds the key
                  in $LANES/.secrets and hands it to this process as an env var only.
                  The key value is never printed, never written, never logged.

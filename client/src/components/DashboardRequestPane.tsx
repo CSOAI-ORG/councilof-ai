@@ -281,6 +281,9 @@ export default function DashboardRequestPane() {
                 </>
               )}
             </p>
+            <Link href="/dashboard?tab=board" className="mt-4 inline-flex text-sm font-semibold text-emerald-200 underline underline-offset-4 hover:text-white">
+              Looking for published measurements? Open the GSPC board →
+            </Link>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right">
             <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-200/70">

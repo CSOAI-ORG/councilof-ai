@@ -311,9 +311,9 @@
 
 <main>
 
-  <h1>All 22 GSPC axes</h1>
-  <p class="lede">Every axis the Council of AI measures. Every empty slot is labelled <strong>UNMEASURED</strong> — never zero, never faked, never filled. Every figure is a signed card you can re-check.</p>
-  <p class="lid">Board count: quote live totals.public_count from GET /api/gspc</p>
+  <h1>All 23 GSPC axes</h1>
+  <p class="lede">Every axis on the Council of AI board. An empty slot is labelled <strong>UNMEASURED</strong> — never zero or filled in. Check each row's evidence and attestation state; some fact runs are content-addressed but unsigned.</p>
+  <p class="lid">Current GSPC counts and dated evidence are on the live board</p>
 
   <h2>14 model-comparison axes</h2>
   <p class="lede">A model fleet answers a frozen bank. Graded deterministically. No model in the verdict.</p>
@@ -334,8 +334,8 @@
     <a class="axis" href="/axis/jail.html"><span class="name">jail <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=71 · sep=TIE</span></a>
   </div>
 
-  <h2>8 deterministic-fact axes</h2>
-  <p class="lede">A rule with no model, no fleet, no judgement. Reads the public ledger and labels what it can and cannot prove. <strong>None is an index. None is a score.</strong></p>
+  <h2>9 deterministic-fact axes</h2>
+  <p class="lede">A rule with no model, no fleet, no judgement. These probes read their named public sources and label what they can and cannot prove. <strong>None is a model score.</strong></p>
   <div class="axes">
     <a class="axis" href="/axis/provenance-controls.html"><span class="name">provenance-controls <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 ChainFacts</span></a>
     <a class="axis" href="/axis/reserve-attestation.html"><span class="name">reserve-attestation <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 issuers</span></a>
@@ -345,6 +345,7 @@
     <a class="axis" href="/axis/ai-adoption-components.html"><span class="name">ai-adoption-components <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">Eurostat n=2</span></a>
     <a class="axis" href="/axis/labour-components.html"><span class="name">labour-components <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=2 components</span></a>
     <a class="axis" href="/axis/humanoid-labour-index.html"><span class="name">humanoid-labour-index <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=8 disclosure URLs</span></a>
+    <a class="axis" href="/axis/effect-binding.html"><span class="name">effect-binding <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=261 third-party servers · one operating point</span></a>
   </div>
 
   <div class="footer">
@@ -363,7 +364,7 @@
       "name": "CSOAI Ltd",
       "url": "https://csoai.org",
       "logo": "https://councilof.ai/favicon.ico",
-      "description": "Independent AI-governance measurement body. Board count: quote live totals.public_count from GET /api/gspc. Measurement, not certification.",
+      "description": "Independent AI-governance measurement body. Current GSPC counts and dated evidence are on the live board. Measurement, not certification.",
       "foundingDate": "2025",
       "areaServed": "Worldwide",
       "sameAs": [
@@ -375,8 +376,8 @@
       "@type": "WebSite",
       "@id": "https://councilof.ai/#website",
       "url": "https://councilof.ai/",
-      "name": "All 22 GSPC axes \u00b7 Council of AI",
-      "description": "The full list of 22 GSPC axes \u2014 14 model-comparison + 8 deterministic-fact. Every axis links to its page. Every empty slot is labelled UNMEASURED.",
+      "name": "All 23 GSPC axes \u00b7 Council of AI",
+      "description": "The full list of 23 GSPC axes \u2014 14 model-comparison + 9 deterministic-fact. Every axis links to its page. Read the live board for current status and attestation state.",
       "publisher": {
         "@id": "https://csoai.org/#organization"
       }
@@ -385,8 +386,8 @@
 }
 </script>
 
-<!-- Board count: quote live totals.public_count from GET /api/gspc. -->
-<noscript><p style="text-align:center;font-size:12px;color:#666;padding:8px">Board count: quote live totals.public_count from GET /api/gspc.</p></noscript>
+<!-- Current GSPC counts and dated evidence are on the live board. -->
+<noscript><p style="text-align:center;font-size:12px;color:#666;padding:8px">Current GSPC counts and dated evidence are on the live board.</p></noscript>
 </main>
 
 <footer class="site-footer">
@@ -420,7 +421,7 @@
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">Board count: quote live totals.public_count from GET /api/gspc</span>
+    <span class="lid-phrase">Current GSPC counts and dated evidence are on the live board</span>
   </div>
 </footer>
 

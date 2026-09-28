@@ -18,7 +18,7 @@
  * computed on a field that was never there, on a board whose promise is that
  * every number is recomputable.
  *
- * ── THE THREE STATES, WHICH ARE NOT THE SAME STATE ────────────────────────────
+ * ── THE FOUR STATES, WHICH ARE NOT THE SAME STATE ─────────────────────────────
  * 1. A figure exists          -> render it.
  * 2. n=0, `declared-slot`     -> `unmeasured`. Never `0%` (that asserts a
  *                                measurement of zero) and never a blank (that
@@ -29,6 +29,9 @@
  *                                (its coverage over its own declared universe)
  *                                rather than an empty percentage. Calling this
  *                                row `unmeasured` would under-claim a signed run.
+ * 4. MEASURED model-comparison without a public leader -> the fleet ran, but
+ *                                leader attribution or its signed card is absent.
+ *                                Say "no public leader score", not "no run".
  *
  * Nothing here types a number. Every value returned is read off the /api/gspc
  * payload the caller already fetched; when the payload does not carry it, the
@@ -46,6 +49,7 @@ export interface AxisCellSource {
   accuracy?: number;
   accuracy_is?: string;
   leader?: string;
+  public_leader_state?: string;
   separation?: string;
   interval?: [number, number] | number[];
   coverage?: string;
@@ -70,6 +74,8 @@ export type AccuracyCell =
   | { state: "figure"; text: string; prefix: string; lowerBound?: string }
   /** Measured, but by deterministic facts — no accuracy exists to show. */
   | { state: "facts"; text: string; detail?: string; title: string }
+  /** A model-comparison run exists, but the board publishes no attributable leader score. */
+  | { state: "no-public-leader"; text: string; title: string }
   /** No measurement exists. The published status word. */
   | { state: "unmeasured"; text: string; title: string };
 
@@ -101,6 +107,18 @@ export function accuracyCell(a: AxisCellSource, digits = 1): AccuracyCell {
         "not a gap in it.",
     };
   }
+  if (a.status === "MEASURED") {
+    const reason = a.public_leader_state === "EXCLUDED_OWN_MODEL"
+      ? "The point leader was CSOAI's own model, excluded from the public ranking; no external re-ranking is asserted."
+      : a.public_leader_state === "NO_SIGNED_CARD"
+        ? "The candidate leader has no signed per-model card in the public index, so no leader score is asserted."
+        : "No attributable public leader score is carried in this board row.";
+    return {
+      state: "no-public-leader",
+      text: "no public leader score",
+      title: `This axis is MEASURED: a run exists. ${reason} The absence of a leader score does not make the axis unmeasured.`,
+    };
+  }
   return {
     state: "unmeasured",
     text: UNMEASURED_WORD,
@@ -119,7 +137,7 @@ export function accuracyCell(a: AxisCellSource, digits = 1): AccuracyCell {
  */
 export function intervalCell(a: AxisCellSource): { text: string; title?: string } {
   const iv = a.interval;
-  if (Array.isArray(iv) && iv.length === 2 && iv.every((v) => typeof v === "number" && Number.isFinite(v))) {
+  if (hasAccuracy(a) && Array.isArray(iv) && iv.length === 2 && iv.every((v) => typeof v === "number" && Number.isFinite(v))) {
     return { text: `${(iv[0] * 100).toFixed(1)}–${(iv[1] * 100).toFixed(1)}%` };
   }
   if (hasAccuracy(a)) {
@@ -132,6 +150,12 @@ export function intervalCell(a: AxisCellSource): { text: string; title?: string 
     return {
       text: "not applicable — no accuracy to bound",
       title: "A deterministic-facts axis has no accuracy, so there is nothing for an interval to bound.",
+    };
+  }
+  if (a.status === "MEASURED") {
+    return {
+      text: "not published — no public leader score",
+      title: "A run exists, but the board publishes no public leader accuracy to bound with an interval.",
     };
   }
   return { text: UNMEASURED_WORD, title: "Nothing was measured, so there is no interval." };

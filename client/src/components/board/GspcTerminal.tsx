@@ -7,8 +7,8 @@ export { axisRunEvidence } from "./runEvidence";
  *
  * One board, every surface a window onto it. This reads the LIVE sources and
  * never types a count or a score:
- *   · GET /api/gspc              — the 22-axis board (leader, n, interval, separation, status)
- *   · GET /arena/elo_reference.json — signed per-axis model rankings (Ed25519, content_id)
+ *   · GET /api/gspc              — the admitted board (leader, n, interval, separation, status)
+ *   · GET /arena/elo_reference.json — a separate signed arena snapshot
  *   · GET /signed/card_index.json   — signed measurement cards, for verify links
  *
  * Honesty is built in: UNMEASURED / declared slots stay UNMEASURED — never 0.000.
@@ -76,14 +76,14 @@ type Elo = {
   content_id?: string;
   method?: string;
   register?: string;
-  signature?: { alg?: string; pubkey?: string; sig?: string; content_id?: string };
+  signature?: { alg?: string; pubkey?: string; sig?: string; content_id?: string; did?: string; sig_ed25519?: string; envelope?: { content_id?: string } };
 };
 
 type CardIndex = { cards?: { axis?: string; card?: string; card_url?: string; signed?: boolean }[]; n_cards?: number };
 
 type Load<T> = { state: "loading" | "ok" | "error"; data?: T; err?: string };
 
-/** A content ID identifies bytes; an Elo reference is signed only when its signature is explicit. */
+/** Presence is not verification. The arena snapshot has its own timestamp. */
 export function eloReferenceEvidence(elo: Elo | undefined): string {
   const signature = elo?.signature;
   const contentId = elo?.content_id || signature?.content_id;
@@ -91,16 +91,24 @@ export function eloReferenceEvidence(elo: Elo | undefined): string {
     signature?.alg?.toLowerCase() === "ed25519" &&
     typeof signature.pubkey === "string" && signature.pubkey.trim().length > 0 &&
     typeof signature.sig === "string" && signature.sig.trim().length > 0;
+  // The DID names the board key. The pod token only authorises the request.
+  const boardSigned =
+    signature?.alg?.toLowerCase() === "ed25519" &&
+    signature.did === "did:web:csoai.org#board-attestation-1" &&
+    signature.envelope?.content_id === contentId &&
+    typeof signature.sig_ed25519 === "string" && /^[0-9a-f]{128}$/i.test(signature.sig_ed25519);
+  const generated = typeof elo?.generated === "string" && elo.generated
+    ? ` · snapshot ${elo.generated}` : "";
 
-  if (explicitlySigned) {
+  if (explicitlySigned || boardSigned) {
     return contentId
-      ? `Elo reference Ed25519-signed · content_id ${contentId.slice(0, 10)}…`
-      : "Elo reference Ed25519-signed";
+      ? `Arena Ed25519 signature present, unchecked · content_id ${contentId.slice(0, 10)}…${generated}`
+      : `Arena Ed25519 signature present, unchecked${generated}`;
   }
   if (contentId) {
-    return `Elo reference content-addressed unsigned · content_id ${contentId.slice(0, 10)}…`;
+    return `Arena content-addressed unsigned · content_id ${contentId.slice(0, 10)}…${generated}`;
   }
-  return "Elo reference loaded · no attestation state declared";
+  return `Arena loaded · no attestation state declared${generated}`;
 }
 
 function useJson<T>(url: string): Load<T> {

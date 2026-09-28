@@ -186,7 +186,23 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
     // The queue does not exist: refuse before settlement so nothing is charged.
     return json({ schema: WITNESS_SCHEMA, status: "NOT_YET", reason: "WITNESS_KV not bound", note: "No payment was taken. Bind the KV namespace on Pages (wrangler.jsonc kv_namespaces → WITNESS_KV) to open the queue.", preview }, 503);
   }
-  const payment = hasPaymentHeader ? await verifyX402Payment(request, env, resourceUrl, accepts[0]) : { ok: false, reason: "no x-payment header" as string };
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    // Discovery examples only — never the caller's URL (it stays with the buyer's record).
+    queryParams: { sha256: "<64-hex>", label: "<text>", url: "https://<public-url>" },
+    queryParamsSchema: {
+      properties: {
+        sha256: { type: "string", description: "SHA-256 hex of the bytes to witness (or omit and pass url=)" },
+        label: { type: "string", description: "Optional free label (≤120 chars, no verdict words); appears on the leaf" },
+        url: { type: "string", description: "Optional public https URL; fetched once with our UA, robots honoured, hashed, never stored" },
+      },
+    },
+    outputExample: { schema: WITNESS_SCHEMA, status: "queued", sha256: "<64hex>", rfc3161: { tsa, status: "TIMESTAMPED" }, status_url: statusUrl("<64hex>") },
+  });
+  const payment = hasPaymentHeader ? await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar }) : { ok: false, reason: "no x-payment header" as string };
 
   if (!payment.ok) {
     const paymentRequired = buildPaymentRequiredV2({
@@ -195,19 +211,7 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
       serviceName: "CSOAI Witness Hash",
       tags: ["witness", "sha256", "rfc3161", "attestation", "x402"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        // Discovery examples only — never the caller's URL (it stays with the buyer's record).
-        queryParams: { sha256: "<64-hex>", label: "<text>", url: "https://<public-url>" },
-        queryParamsSchema: {
-          properties: {
-            sha256: { type: "string", description: "SHA-256 hex of the bytes to witness (or omit and pass url=)" },
-            label: { type: "string", description: "Optional free label (≤120 chars, no verdict words); appears on the leaf" },
-            url: { type: "string", description: "Optional public https URL; fetched once with our UA, robots honoured, hashed, never stored" },
-          },
-        },
-        outputExample: { schema: WITNESS_SCHEMA, status: "queued", sha256: "<64hex>", rfc3161: { tsa, status: "TIMESTAMPED" }, status_url: statusUrl("<64hex>") },
-      }),
+      bazaar,
       csoai: {
         schema: WITNESS_SCHEMA,
         per: "digest",

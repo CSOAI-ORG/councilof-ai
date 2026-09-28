@@ -76,7 +76,7 @@ const TOOLS: Tool[] = [
       "No second tab and no second login.",
       "Every pane is a real page you can open today.",
     ],
-    image: "/images/band/hardened.png",
+    image: "/images/band/hardened.webp",
     alt: "A field of pale solids joined by a lattice of green light",
     door: { kind: "route", path: "/dashboard?tab=home" },
   },
@@ -111,7 +111,7 @@ const TOOLS: Tool[] = [
       "Three states only: VALID · INVALID · UNCHECKABLE.",
     ],
     note: "No account and no fee, permanently.",
-    image: "/images/method/receipt.png",
+    image: "/images/method/receipt.webp",
     alt: "A pale slab split by green light, stamped “Ed25519 Verified”",
     door: { kind: "pane", pane: "verify" },
   },
@@ -128,13 +128,12 @@ const TOOLS: Tool[] = [
       "You keep the signed card. Publishing it is your decision.",
       "Slots we could not fill stay empty and are named.",
     ],
-    // /assess matches /measure: measurement is metered; verify free. OWNER RULING 6 Sep 2026 — no prices,
-    // no tiers, no payment-processor names anywhere: free, or pay-as-you-go x402 at the 402.
-    // Verify stays free. Do not claim a free signed run on this tile.
-    note: "Measurement is metered; verify stays free.",
+    // /assess currently commissions a receipt over existing evidence. A fresh
+    // scoped run starts with an enquiry, not that x402 receipt workflow.
+    note: "Scoped runs are arranged by enquiry; card verification stays free.",
     image: "/images/detail/evidence_vault_detail.jpg",
     alt: "Clay figures pointing at a card reading “3KB credential” in front of an open vault",
-    door: { kind: "pane", pane: "measured" },
+    door: { kind: "route", path: "/contact?arm=run" },
   },
   {
     id: "tool-gpai",
@@ -150,7 +149,7 @@ const TOOLS: Tool[] = [
       "Independent evidence — not a conformity mark, and not legal advice.",
     ],
     note: "Independent evidence. Not a conformity mark, and not legal advice.",
-    image: "/images/method/ast.png",
+    image: "/images/method/ast.webp",
     alt: "A block of carved statute breaking apart into a branching tree of true/false conditions",
     door: { kind: "pane", pane: "evidence" },
   },
@@ -168,7 +167,7 @@ const TOOLS: Tool[] = [
       "Built only from what is actually on the board.",
     ],
     note: "Built only from what is actually on the board. Free forever.",
-    image: "/images/method/foundry.png",
+    image: "/images/method/foundry.webp",
     alt: "A pale moulded form lifting out of a split block of clay on a beam of green light",
     door: { kind: "pane", pane: "embed" },
   },
@@ -203,7 +202,7 @@ const TOOLS: Tool[] = [
       "COBOL copybook and underwriting-rule rows sit beside the public board.",
       "A specialist register is still measurement — never a certificate.",
     ],
-    image: "/images/loop/four-states.png",
+    image: "/images/loop/four-states.webp",
     alt: "Specimens sealed in glass tubes, turning from grey clay to a lit green core",
     door: { kind: "task", task: "specialist-registers" },
   },
@@ -221,7 +220,7 @@ const TOOLS: Tool[] = [
       "Any future finding must pass the same measurement and evidence gates as the board.",
     ],
     note: "Read-only today. The report intake is explicitly unavailable rather than pretending to file.",
-    image: "/images/loop/outcry.png",
+    image: "/images/loop/outcry.webp",
     objectPosition: "left center",
     alt: "A raw jagged signal trace behind a glass panel labelled “unstructured outcry”",
     door: { kind: "pane", pane: "watchdog" },
@@ -318,7 +317,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           )}
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
-            Open this tool
+            {tool.id === "tool-measured" ? "Enquire about a run" : "Open this tool"}
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </div>

@@ -18,6 +18,8 @@ export type HealthTerm = {
   we_say: string;
 };
 
+import { BOARD_COUNT_OBSERVED, BOARD_LID_OBSERVED, BOARD_OBSERVED_AT } from "./boardCount";
+
 export const HEALTH_TERMS_RULING =
   "Speak like a chart: vital signs, deferred systems, complete record. Do not speak like NEWS.";
 
@@ -25,8 +27,16 @@ export const HEALTH_TERMS_RULING =
  * Static chrome fallback ONLY — never invents a measured/unmeasured split.
  * Prefer healthVoiceFromLive() with totals from GET /api/gspc.
  */
+const observedLeaders =
+  BOARD_COUNT_OBSERVED.public_leader_count === null
+    ? "totals.public_leader_count"
+    : `${BOARD_COUNT_OBSERVED.public_leader_count} public leader scores`;
+const observedMeasured = BOARD_COUNT_OBSERVED.measured_axes;
 export const HEALTH_VOICE =
-  "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well. Quote live GET /api/gspc totals.public_count beside totals.public_leader_count (3 public leader scores) — 22 measured is not 22 leaders. Lid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+  "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well. " +
+  `Quote live GET /api/gspc totals.public_count beside totals.public_leader_count (${observedLeaders}) — ` +
+  `${observedMeasured} measured is not ${observedMeasured} leaders. ` +
+  `Lid (as observed ${BOARD_OBSERVED_AT}): ${BOARD_LID_OBSERVED}`;
 
 /** Bind health chrome to live board totals — never type 15/7 or 15-of-22. */
 export function healthVoiceFromLive(opts: {
@@ -43,13 +53,12 @@ export function healthVoiceFromLive(opts: {
   const leaders =
     typeof opts.public_leader_count === "number" ? opts.public_leader_count : null;
   const count = (opts.public_count || "").trim() || `${axes} axis · ${measured} measured`;
+  // A1 clause: the leader count travels with the count. Live value first, then the
+  // recorded observation; if neither carries one, the clause is omitted, not typed.
+  const leaderCount = leaders ?? BOARD_COUNT_OBSERVED.public_leader_count;
   const countWithLeaders =
-    leaders === null
-      ? `${count} · 3 public leader scores`
-      : `${count} · ${leaders} public leader scores`;
-  const lid =
-    (opts.lid || "").trim() ||
-    "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+    leaderCount === null ? count : `${count} · ${leaderCount} public leader scores`;
+  const lid = (opts.lid || "").trim() || BOARD_LID_OBSERVED;
   const deferred =
     unmeasured === 0
       ? "No systems deferred — every declared slot carries a measurement."

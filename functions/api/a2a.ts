@@ -10,7 +10,11 @@
  *
  * WHAT IT DOES
  *   SendMessage             -> a Message (never a Task). One explicit Part.data
- *                              {skill,input} selects one of the seven skills on the public card.
+ *                              {skill,input} selects one of the skills on the public card (SKILL_IDS;
+ *                              the card is RENDERED from council-os/capabilities.json, so the two sets
+ *                              are one). The count is never typed here: it named a smaller figure while SKILL_IDS
+ *                              held one more, on a contract GET /api/a2a serves. Describe the defect, never
+ *                              reproduce the stale token: a guard that reads this file would match it.
  *                              Each skill calls a fixed same-origin, free handler. The legacy
  *                              one-part text "board" request remains a narrow compatibility alias.
  *   GetTask / CancelTask    -> TaskNotFoundError (-32001): this agent keeps no task store.
@@ -67,7 +71,11 @@ export const A2A_ERROR = {
 // Every v1.0 method name and what this door does with it. Exposed on GET so a stranger
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
-  SendMessage: "answered with a Message from one explicit {skill,input} selector; seven card skills route to fixed free handlers",
+  SendMessage:
+    "answered with a Message from one explicit {skill,input} selector; every card skill routes to a fixed, free, " +
+    "same-origin handler. The set is the skills array on this response - read it rather than a number: this " +
+    "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
+    "now fails on any skill count typed into this file.",
   SendStreamingMessage: "UnsupportedOperationError -32004 (streaming is false on the card)",
   GetTask: "TaskNotFoundError -32001 (no task store)",
   ListTasks: "UnsupportedOperationError -32004 (no task store)",
@@ -99,6 +107,7 @@ type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
 
 type SkillSelection = { skill: SkillId; input: Json };
+type CapabilityHelp = { kind: "CAPABILITY_HELP" };
 
 class SourceError extends Error {
   constructor(
@@ -266,7 +275,7 @@ const exactKeys = (input: Json, required: string[], optional: string[] = []): bo
     && Object.keys(input).every((key) => allowed.has(key));
 };
 
-function parseSkillSelection(message: Json): SkillSelection | string {
+function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
   if (parts.length !== 1) {
     return "exactly one Part is required; additional semantic parts are not ignored";
@@ -279,8 +288,14 @@ function parseSkillSelection(message: Json): SkillSelection | string {
     return "Part content is a oneof: supply exactly one of text, data, url, or raw";
   }
   if (semanticKeys[0] === "text") {
-    if (str(part.text)?.trim().toLowerCase() === "board") return { skill: "gspc-board", input: {} };
-    return "structured Part.data {skill,input} is required (legacy text compatibility is only the exact word `board`)";
+    const text = str(part.text)?.trim().replace(/\s+/g, " ").toLowerCase();
+    if (text === "board") return { skill: "gspc-board", input: {} };
+    // A2A directory task probes send this generic greeting. Answer with the
+    // declared capability contract, never with a measurement or a guessed skill.
+    if (text === "hello, what can you do?" || text === "what can you do?" || text === "help") {
+      return { kind: "CAPABILITY_HELP" };
+    }
+    return "structured Part.data {skill,input} is required (text accepts only board or a capability-help greeting)";
   }
   if (semanticKeys[0] !== "data") {
     return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
@@ -550,6 +565,34 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
       field: "params.message.parts",
     });
   }
+  if ("kind" in selection) {
+    return reply(id, {
+      result: {
+        message: {
+          messageId: crypto.randomUUID(),
+          contextId: str(message.contextId) ?? crypto.randomUUID(),
+          role: "ROLE_AGENT",
+          parts: [
+            {
+              text: `I publish AI-governance measurements and evidence. For a result, send one Part.data {skill,input}; available skill IDs: ${SKILL_IDS.join(", ")}. This capability description is not a measurement or certification.`,
+              mediaType: "text/plain",
+            },
+            {
+              data: {
+                kind: "CAPABILITY_HELP",
+                state: "DESCRIPTIVE_ONLY",
+                protocolVersion: A2A_PROTOCOL_VERSION,
+                skills: [...SKILL_IDS],
+                selector: { skill: "gspc-board", input: {} },
+                register: REGISTER,
+              },
+              mediaType: "application/json",
+            },
+          ],
+        },
+      },
+    });
+  }
   const invalidInput = validateSkillInput(selection);
   if (invalidInput) {
     return rpcError(id, A2A_ERROR.INVALID_PARAMS, invalidInput, "INVALID_SKILL_INPUT", {
@@ -606,8 +649,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     endpoint: new URL("/api/a2a", origin).toString(),
     agent_card: new URL(CARD_PATH, origin).toString(),
     methods: METHODS,
+    // Derived, never typed: the skill ids this router accepts. A reader counts this array; no
+    // sentence on this endpoint states how many there are.
+    skills: [...SKILL_IDS],
     version_rule:
-      "Send `A2A-Version: 1.0`. An absent header is served as 1.0 for v1.0 method names; any other version, and the 0.3 method names such as message/send, get VersionNotSupportedError -32009.",
+      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3, which this interface does not serve; it returns VersionNotSupportedError -32009. The 0.3 method names such as message/send are also unsupported.",
     tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
     register: REGISTER,
     example: {
@@ -656,7 +702,16 @@ export const onRequestPost: PagesFunction = async (context) => {
   }
 
   const requested = (request.headers.get("a2a-version") ?? "").trim();
-  if (requested && !/^1\.0(\.\d+)?$/.test(requested)) {
+  if (!requested) {
+    return rpcError(
+      id,
+      A2A_ERROR.VERSION_NOT_SUPPORTED,
+      `An absent A2A-Version means 0.3, which this interface does not serve; send A2A-Version: ${A2A_PROTOCOL_VERSION} and the v1.0 method name (for example SendMessage)`,
+      "VERSION_NOT_SUPPORTED",
+      { requested: "0.3", supported: [A2A_PROTOCOL_VERSION], missingVersionHeader: true },
+    );
+  }
+  if (requested !== A2A_PROTOCOL_VERSION) {
     return rpcError(
       id,
       A2A_ERROR.VERSION_NOT_SUPPORTED,

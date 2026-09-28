@@ -168,7 +168,7 @@ export default function DashboardWorkspace({
 
   return (
     <div
-      className="relative flex h-full min-h-0 bg-muted/20"
+      className="relative flex h-full min-h-0 bg-[var(--surface-canvas,#fafaf7)]"
       data-testid="dashboard-workspace"
     >
       <Dialog>
@@ -211,35 +211,35 @@ export default function DashboardWorkspace({
                 <div className="mx-auto max-w-3xl text-center">
                   <nav
                     aria-label="Council workspace modes"
-                    className="mx-auto mt-12 flex w-fit flex-wrap items-center justify-center gap-1 rounded-full border border-border bg-card p-1 shadow-sm xl:mt-0"
+                    className="scrollbar-none mx-auto mt-12 flex w-full max-w-full items-center justify-start gap-1 overflow-x-auto rounded-full border border-border bg-card p-1 shadow-sm sm:w-fit sm:justify-center xl:mt-0"
                   >
                     <span
-                      className="rounded-full bg-emerald-900 px-3 py-1.5 text-xs font-semibold text-white"
+                      className="shrink-0 rounded-full bg-emerald-900 px-2.5 py-1.5 text-[11px] font-semibold text-white sm:px-3 sm:text-xs"
                       aria-current="page"
                     >
                       Council chat
                     </span>
                     <Link
                       href="/dashboard?tab=space"
-                      className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
                     >
                       Model arena
                     </Link>
                     <Link
                       href="/dashboard?tab=learn"
-                      className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
                     >
                       Learn
                     </Link>
                     <Link
                       href="/dashboard?tab=play"
-                      className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
                     >
                       Games
                     </Link>
                     <Link
                       href="/dashboard?tab=tools"
-                      className="rounded-full px-3 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted"
+                      className="shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground hover:bg-muted sm:px-3 sm:text-xs"
                     >
                       Tools
                     </Link>
@@ -257,10 +257,22 @@ export default function DashboardWorkspace({
                     starter actions only prefill or open a real surface.
                   </p>
 
-                  <div className="mt-6 grid gap-3 text-left sm:grid-cols-2">
+                  <div className="mt-5 hidden flex-wrap items-center justify-center gap-2 text-[11px] font-medium text-muted-foreground sm:flex">
+                    <span className="rounded-full border border-border bg-card px-3 py-1.5">
+                      {toolPhase === "ready" ? `${tools.length} MCP tools declared` : toolPhase === "failed" ? "MCP catalogue unavailable" : "Reading MCP catalogue…"}
+                    </span>
+                    <span className="rounded-full border border-border bg-card px-3 py-1.5">
+                      Verification runs in your browser
+                    </span>
+                    <span className="rounded-full border border-border bg-card px-3 py-1.5">
+                      Actions stop for approval
+                    </span>
+                  </div>
+
+                  <div className="mt-5 grid gap-3 text-left sm:grid-cols-2">
                     <Link
                       href="/dashboard?tab=space"
-                      className="group rounded-2xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
+                      className="card-quiet card-quiet-hover group p-4"
                     >
                       <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <Swords
@@ -276,7 +288,7 @@ export default function DashboardWorkspace({
                     </Link>
                     <Link
                       href="/dashboard?tab=learn"
-                      className="group rounded-2xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
+                      className="card-quiet card-quiet-hover group p-4"
                     >
                       <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <BookOpenCheck
@@ -292,7 +304,7 @@ export default function DashboardWorkspace({
                     </Link>
                     <Link
                       href="/dashboard?tab=verify"
-                      className="group rounded-2xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
+                      className="card-quiet card-quiet-hover group p-4"
                     >
                       <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <ShieldCheck
@@ -309,7 +321,7 @@ export default function DashboardWorkspace({
                       href={`/dashboard?tab=home&ask=${encodeURIComponent(
                         "Help me diagnose a failed AI governance check. Explain the evidence, propose a reversible fix and verification test, then wait for my approval before any action.",
                       )}`}
-                      className="group rounded-2xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
+                      className="card-quiet card-quiet-hover group p-4"
                     >
                       <span className="flex items-center gap-2 text-sm font-semibold text-foreground">
                         <Wrench

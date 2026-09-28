@@ -2,7 +2,7 @@
   "schema": "csoai.mcp-registry/1",
   "generated_by": "scripts/mcp-probe.mjs",
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
-  "probe_host": "NICHOLASs-MacBook-Air-2.local",
+  "probe_host": "pod",
   "targets_file": "scripts/mcp-targets.json",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
@@ -27,8 +27,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-09-22T08:33:25.057Z",
-    "finished": "2026-09-22T08:33:25.937Z"
+    "started": "2026-09-22T15:24:31.098Z",
+    "finished": "2026-09-22T15:24:33.696Z"
   },
   "servers": [
     {
@@ -39,7 +39,7 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-22T08:33:25.380Z",
+      "last_probed": "2026-09-22T15:24:32.490Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.2",
@@ -52,7 +52,7 @@
         },
         {
           "name": "get_axis",
-          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": [
             "axis"
           ]
@@ -138,7 +138,7 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-22T08:33:25.751Z",
+      "last_probed": "2026-09-22T15:24:33.090Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.2",
@@ -151,7 +151,7 @@
         },
         {
           "name": "get_axis",
-          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": [
             "axis"
           ]
@@ -237,7 +237,7 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-22T08:33:25.892Z",
+      "last_probed": "2026-09-22T15:24:33.290Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.2",
@@ -250,7 +250,7 @@
         },
         {
           "name": "get_axis",
-          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": [
             "axis"
           ]
@@ -336,7 +336,7 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-22T08:33:25.936Z",
+      "last_probed": "2026-09-22T15:24:33.695Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
       "server_version": "0.2.2",
@@ -349,7 +349,7 @@
         },
         {
           "name": "get_axis",
-          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc: n, accuracy, interval, MEASURED or UNMEASURED status, family, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+          "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
           "required_args": [
             "axis"
           ]
@@ -445,9 +445,9 @@
       "declared_by": null,
       "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
       "catalogue_claim": {
-        "tools_count": 6,
-        "status": "LIVE",
-        "verified": false
+        "verified": false,
+        "claim_state": "UNVERIFIED_HISTORICAL",
+        "asserted_tools_count": 6
       }
     },
     {
@@ -468,9 +468,9 @@
       "declared_by": null,
       "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
       "catalogue_claim": {
-        "tools_count": 3,
-        "status": "LIVE",
-        "verified": false
+        "verified": false,
+        "claim_state": "UNVERIFIED_HISTORICAL",
+        "asserted_tools_count": 3
       }
     },
     {
@@ -491,9 +491,9 @@
       "declared_by": null,
       "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
       "catalogue_claim": {
-        "tools_count": 4,
-        "status": "LIVE",
-        "verified": false
+        "verified": false,
+        "claim_state": "UNVERIFIED_HISTORICAL",
+        "asserted_tools_count": 4
       }
     },
     {
@@ -514,9 +514,9 @@
       "declared_by": null,
       "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
       "catalogue_claim": {
-        "tools_count": 5,
-        "status": "LIVE",
-        "verified": false
+        "verified": false,
+        "claim_state": "UNVERIFIED_HISTORICAL",
+        "asserted_tools_count": 5
       }
     },
     {
@@ -537,9 +537,9 @@
       "declared_by": null,
       "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
       "catalogue_claim": {
-        "tools_count": 8,
-        "status": "LIVE",
-        "verified": false
+        "verified": false,
+        "claim_state": "UNVERIFIED_HISTORICAL",
+        "asserted_tools_count": 8
       }
     },
     {
@@ -560,9 +560,9 @@
       "declared_by": null,
       "catalogue_source": "functions/api/mcp.ts hardcoded array (pre-2026-08-26)",
       "catalogue_claim": {
-        "tools_count": 4,
-        "status": "LIVE",
-        "verified": false
+        "verified": false,
+        "claim_state": "UNVERIFIED_HISTORICAL",
+        "asserted_tools_count": 4
       }
     }
   ]

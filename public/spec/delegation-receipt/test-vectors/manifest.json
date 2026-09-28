@@ -1,0 +1,63 @@
+{
+  "_label": "TEST VECTORS. Signed with TEST KEYS (test-keys.json). Verify with --did-doc test-did.json.",
+  "schema": "csoai.delegation-receipt.test-vectors/0.1",
+  "trust_anchor": "test-did.json",
+  "vectors": [
+    {
+      "failures": [],
+      "file": "01-valid-fully-evidenced.json",
+      "verdict": "VALID"
+    },
+    {
+      "failures": [],
+      "file": "02-valid-absent-principal.json",
+      "verdict": "VALID"
+    },
+    {
+      "failures": [],
+      "file": "03-valid-unchecked-outcome.json",
+      "verdict": "VALID"
+    },
+    {
+      "failures": [
+        "ID_MISMATCH",
+        "BAD_SIGNATURE"
+      ],
+      "file": "04-invalid-tampered-body.json",
+      "verdict": "INVALID"
+    },
+    {
+      "failures": [
+        "UNTRUSTED_SIGNER"
+      ],
+      "file": "05-invalid-untrusted-signer.json",
+      "verdict": "INVALID"
+    },
+    {
+      "failures": [
+        "BAD_SIGNATURE"
+      ],
+      "file": "06-invalid-bad-signature.json",
+      "verdict": "INVALID"
+    },
+    {
+      "failures": [
+        "INCOHERENT_EVIDENCE_STATE"
+      ],
+      "file": "07-invalid-incoherent-state.json",
+      "verdict": "INVALID"
+    },
+    {
+      "failures": [],
+      "file": "08-unsigned-record.json",
+      "verdict": "UNSIGNED"
+    },
+    {
+      "failures": [
+        "PERSONAL_DATA_SUSPECTED"
+      ],
+      "file": "09-invalid-personal-data.json",
+      "verdict": "INVALID"
+    }
+  ]
+}

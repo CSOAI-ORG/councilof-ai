@@ -188,7 +188,7 @@ describe("applyHead writes title, description, OG and canonical into a document"
     expect(doc.nodes["property=og:title"]?.get("content")).toBe("Methodology | CSOAI");
     expect(doc.nodes["rel=canonical"]?.get("href")).toBe("https://councilof.ai/methodology/");
     applyHead(resolveHead("/about"), doc);
-    expect(doc.title).toBe("About | CSOAI");
+    expect(doc.title).toBe("About | Council of AI");
     expect(doc.nodes["property=og:url"]?.get("content")).toBe("https://councilof.ai/about/");
   });
 

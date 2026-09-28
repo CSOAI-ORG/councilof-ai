@@ -6,7 +6,7 @@
  * that read: the pod's counters, the job it is on, and when it last succeeded. Nothing is stored,
  * nothing is invented — if the pod does not answer, the state is OFFLINE with the HTTP result,
  * never a remembered number. Counters are the worker's own (since its process started), and the
- * cards it stages reach the board only through runpod-intake → runpod-land → OIDC signer → PR.
+ * staged outputs need separate admission and guarded release; worker counters do not prove publication.
  */
 type Env = { RUNPOD_WORKER_HEALTH_URL?: string; WORKER_STATE_KV?: KVNamespace };
 
@@ -43,7 +43,7 @@ export async function buildWorker(env: Env, fetcher: typeof fetch = fetch) {
     schema: "csoai.worker-state/0.1",
     endpoint: "/api/worker",
     source: url,
-    what: "The RunPod GSPC compute worker's own /health, read at request time. A compute lane, not an authority lane: nothing here is signed or MEASURED; staged cards reach the board only through the intake → signer → human-merged PR path.",
+    what: "The RunPod GSPC compute worker's own /health, read at request time. Compute state only: no counter here is a signed measurement or publication receipt. Staged outputs require separate admission and guarded release; unadmitted or withdrawn rows do not reach the board.",
   };
   let http: number | null = null;
   try {

@@ -1,0 +1,25 @@
+{
+ "state": "UNMEASURED",
+ "evidence_state": "SEARCH_INCONCLUSIVE",
+ "reason": "The German commercial register (Handelsregister) answers only through an interactive search form, which this harness does not submit. The keyless aggregator route was tried: its web search served a body reading 'HAProxy Challenge We need to verify you are human before you can continue. Please solve this Captcha and we will get you' (HTTP 200), and its API answered HTTP 401 because it requires a token, so it was dropped rather than worked around. Nothing is concluded about the entity",
+ "measured_at": "2026-09-24T15:31:40Z",
+ "sources": [
+  {
+   "url": "https://opencorporates.com/companies?q=gotoHuman",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:31:39Z",
+   "response_bytes": 1536,
+   "response_sha256": "80512038006569aaf97bffac9a1dc7ba09ab82982f9b5545489883e633abccda",
+   "note": "OpenCorporates web search (keyless)"
+  },
+  {
+   "url": "https://api.opencorporates.com/v0.4/companies/search?q=gotoHuman",
+   "status": 401,
+   "accessed_utc": "2026-09-24T15:31:40Z",
+   "response_bytes": 83,
+   "response_sha256": "e76fc386dae863467db0164e0a555ec35f90e25045cfe746ffc1b83a1d133d8c",
+   "reason": "HTTP 401",
+   "note": "OpenCorporates API search (requires a token; dropped)"
+  }
+ ]
+}

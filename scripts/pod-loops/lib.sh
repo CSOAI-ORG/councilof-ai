@@ -14,6 +14,11 @@ LOGS=$LANES/logs
 OUT=$LANES/out
 STATE=$LANES/state
 REPO=$LANES/councilof-ai
+# $REPO is a SPARSE clone of the bare repo (/workspace/git/councilof-ai.git). This is the set it must carry,
+# in one place. Before 2026-09-25 it held scripts/grants scripts/hf scripts/census harness/gspc-top100;
+# cross-ledger.sh adds scripts/readers + scripts/adapters (the reader imports scripts.adapters) and
+# hitl-probe-weekly.sh adds scripts/hitl. A loop that needs a path calls repo_sparse_ensure before reading it.
+REPO_SPARSE="scripts/grants scripts/hf scripts/census harness/gspc-top100 scripts/readers scripts/adapters scripts/hitl"
 mkdir -p "$LOGS" "$OUT" "$STATE"
 
 now() { date -u +%Y-%m-%dT%H:%M:%SZ; }
@@ -50,28 +55,17 @@ pids_of() { ps -eo pid,args | grep -v grep | grep -- "$1" | awk '{print $1}'; }
 
 disk_free_gb() { df -BG --output=avail "$1" | tail -1 | tr -dc '0-9'; }
 
-# ---- pod chain (land → sign → root → ots; scripts land.sh sign.sh root.sh ots.sh) -----------
-# chain_repo  -> the checkout the chain reads and writes (CHAIN_REPO overrides $REPO).
-chain_repo() { echo "${CHAIN_REPO:-$REPO}"; }
-# chain_dry   -> 0 (true) when DRY_RUN=1: print what would run, write nothing, stamp nothing.
-chain_dry() { [ "${DRY_RUN:-0}" = "1" ]; }
-# chain_log <stage> <inputs_count> <outputs_count> <sha256-of-outputs-list> <cmd...>
-#   ONE line per run in $LOGS/chain.log: "<utc> <stage> <in> <out> <sha> <cmd>". The sha is
-#   chain_tools.py new's digest over the "sha256  path" lines this run produced (content-
-#   bound), so two machines producing identical bytes log identical digests. A dry run logs
-#   stage "<stage>[dry]" with "-" for the sha. A stage with nothing to do still logs: no line
-#   in chain.log means the stage never ran (silent-no-op doctrine).
-chain_log() {
-  local stage=$1 nin=$2 nout=$3 sha=$4; shift 4
-  local line="$(now) $stage $nin $nout $sha $*"
-  echo "$line" >> "$LOGS/chain.log"; echo "$line"
+# repo_sparse_ensure [path...] -> adds each path (default: all of $REPO_SPARSE) that $REPO's sparse set lacks.
+# Never removes a path and never touches a clone that is not sparse (a full clone already has everything).
+repo_sparse_ensure() {
+  [ -d "$REPO/.git" ] || { echo "repo_sparse_ensure: $REPO is not a clone"; return 1; }
+  [ "$(git -C "$REPO" config --get core.sparseCheckout)" = "true" ] || return 0
+  local have p missing=""
+  have=$(git -C "$REPO" sparse-checkout list 2>/dev/null)
+  for p in ${*:-$REPO_SPARSE}; do printf '%s\n' "$have" | grep -qxF "$p" || missing="$missing $p"; done
+  [ -z "$missing" ] || git -C "$REPO" sparse-checkout add $missing
 }
-# chain_slot <name> [--now]  -> proceed (0) or already done this UTC hour (1). --now and
-#   DRY_RUN bypass the stamp; the scheduler passes --now because it stamps before spawning.
-chain_slot() {
-  local name=$1 flag=${2:-}
-  if chain_dry || [ "$flag" = "--now" ]; then return 0; fi
-  stamp "chain-$name" hour
-}
-# chain_tools.py sits beside THIS file (the repo's scripts/pod-loops or the pod's $LOOPS install).
-CHAIN_TOOLS=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/chain_tools.py
+
+# Third-party Python packages for the loops live on /workspace so a container wipe cannot remove them
+# (25 Sep 2026: huggingface_hub et al. vanished with /root). List: requirements-pod.txt; lock: /workspace/tools/pylib.lock
+export PYTHONPATH=/workspace/tools/pylib${PYTHONPATH:+:$PYTHONPATH}

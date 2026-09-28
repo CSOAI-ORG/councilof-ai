@@ -1,6 +1,6 @@
 {
   "schema": "csoai.mcp-tool-fleet-lock/1",
-  "note": "K-1 fleet-size lock (2026-09-22). The ONE committed statement of which tools the /mcp door serves, by NAME. It is not a count typed by hand: functions/mcp/tool-fleet.lock.test.ts fails when these names differ from gspc-tools.json + paid-tools.json (what the handler serves), from evidence/mcp-registry.json (what the last probe returned), from the well-known descriptors that state a count, or — with FLEET_LOCK_LIVE=1 — from the live tools/list at https://councilof.ai/mcp. Change the fleet and this file must change in the same commit. witness_hash is quarantined and is not in the fleet. Measurement, never certification.",
+  "note": "K-1 fleet-size lock (2026-09-22). The ONE committed statement of which tools the /mcp door serves, by NAME. RENDERED from council-os/capabilities.json by scripts/capability-render.mjs — not typed, and not a second registry. functions/mcp/tool-fleet.lock.test.ts fails when these names differ from gspc-tools.json + paid-tools.json (what the handler serves), from evidence/mcp-registry.json (what the last probe returned), from the well-known descriptors that state a count, or — with FLEET_LOCK_LIVE=1 — from the live tools/list at https://councilof.ai/mcp. Change the fleet and this file must change in the same commit. fleet_size below is the length of free + paid computed at render time, never typed. witness_hash is quarantined and is not in the fleet. Measurement, never certification.",
   "door": "https://councilof.ai/mcp",
   "free": [
     "board_totals",

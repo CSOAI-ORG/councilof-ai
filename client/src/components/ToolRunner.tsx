@@ -374,6 +374,36 @@ export function challengeFromResult(
   return null;
 }
 
+/** Read the free reserve disclosure from the same 402 response as the payment terms. */
+export function paidReservePreviewFromResult(result: RunnerToolResult): {
+  signedCardsOnFile: number;
+  corpusAsOf: string | null;
+} | null {
+  const raw = (result as { raw?: Record<string, unknown> }).raw;
+  const rpcResult = raw?.result && typeof raw.result === "object"
+    ? (raw.result as Record<string, unknown>) : null;
+  for (const root of [result.structuredContent, rpcResult?.structuredContent]) {
+    if (!root || typeof root !== "object") continue;
+    const paymentRequired = (root as Record<string, unknown>).payment_required;
+    if (!paymentRequired || typeof paymentRequired !== "object") continue;
+    const csoai = (paymentRequired as Record<string, unknown>).csoai;
+    if (!csoai || typeof csoai !== "object") continue;
+    const detail = csoai as Record<string, unknown>;
+    if (typeof detail.schema !== "string" ||
+        !detail.schema.startsWith("csoai.request-attestation/")) continue;
+    const preview = detail.preview;
+    if (!preview || typeof preview !== "object") continue;
+    const value = preview as Record<string, unknown>;
+    const count = value.signed_cards_on_file;
+    if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 0) continue;
+    return {
+      signedCardsOnFile: count,
+      corpusAsOf: typeof value.corpus_as_of === "string" ? value.corpus_as_of : null,
+    };
+  }
+  return null;
+}
+
 export function resultOutcome(result: RunnerToolResult): string | null {
   const payload = result.structuredContent;
   if (!payload || typeof payload !== "object" || Array.isArray(payload))
@@ -535,6 +565,10 @@ export default function ToolRunner({
   const payChallenge = useMemo(
     () =>
       output && paymentContext ? challengeFromResult(output.result) : null,
+    [output, paymentContext],
+  );
+  const reservePreview = useMemo(
+    () => output && paymentContext ? paidReservePreviewFromResult(output.result) : null,
     [output, paymentContext],
   );
 
@@ -851,6 +885,7 @@ export default function ToolRunner({
               {payChallenge && paymentContext ? (
                 <X402PayButton
                   challenge={payChallenge}
+                  reservePreview={reservePreview}
                   executePayment={(header) =>
                     executePayment(paymentContext, header)
                   }
@@ -1048,7 +1083,9 @@ export default function ToolRunner({
                   {busy
                     ? "Calling POST /mcp…"
                     : isPaidTool(active)
-                      ? "Call metered path"
+                      ? typeof draft.x_payment === "string" && draft.x_payment.trim()
+                        ? "Submit signed payment"
+                        : "Check terms · no payment"
                       : "Run tool"}
                 </button>
               </form>
@@ -1104,9 +1141,20 @@ export default function ToolRunner({
                       </button>
                     </div>
                   </header>
-                  <pre className="max-h-[30rem] overflow-auto bg-[#04120c] p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
-                    <code>{output.result.text}</code>
-                  </pre>
+                  {output.result.text.length > 4000 ? (
+                    <details className="bg-[#04120c]">
+                      <summary className="cursor-pointer px-4 py-3 text-xs font-semibold text-emerald-50">
+                        View complete machine response ({output.result.text.length.toLocaleString()} characters)
+                      </summary>
+                      <pre className="max-h-[30rem] overflow-auto p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
+                        <code>{output.result.text}</code>
+                      </pre>
+                    </details>
+                  ) : (
+                    <pre className="max-h-[30rem] overflow-auto bg-[#04120c] p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
+                      <code>{output.result.text}</code>
+                    </pre>
+                  )}
                   <footer className="border-t border-slate-900/10 bg-slate-50 px-4 py-2.5 text-[10px] leading-relaxed text-slate-600">
                     Source:{" "}
                     <code className="font-mono">POST {MCP_RPC_ENDPOINT}</code> ·

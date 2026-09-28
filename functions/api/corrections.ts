@@ -34,6 +34,136 @@ export const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0924-03",
+      date: "2026-09-24",
+      first_observed_at: "2026-09-24T17:09:33Z",
+      what_was_wrong: "The 14 signed cards from the 16:10 UTC hourly local-model run were served from /interop/mill-cards-signed/ even though their exact intake receipts remained VERIFIED_QUARANTINE with authority.admitted=false. Thirteen wrappers said quotable=true; the safety wrapper was already UNMEASURED/quotable=false. A valid byte signature and a public URL did not establish canonical admission.",
+      why_it_was_wrong: "The hourly lander accepted rc=0 and merged signed-card files to the public master without checking admission authority. The signer checked evidence integrity but the RunPod path did not require a separate admission transition. The GSPC fleet board did not consume this cohort.",
+      what_changed: "The original signed bytes remain available for audit. Fourteen exact card IDs and SHA-256 digests are appended to public/interop/mill-cards-signed/WITHDRAWN.jsonl, and public/corrections/mill16-unadmitted-2026-09-24.json provides a machine-readable reader notice. The hourly lander source now contains a fail-closed admission gate; installation and next-land readback must be verified separately before claiming operational prevention. This correction does not grant admission or assert Bitcoin anchoring.",
+      status: "WITHDRAWN FROM QUOTABLE USE; signed bytes preserved; GSPC board unchanged",
+      reached_the_public: true,
+      evidence: [
+        "https://councilof.ai/corrections/mill16-unadmitted-2026-09-24.json",
+        "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl",
+        "docs/operations/MILL_20260924T16_ADMISSION_REVIEW.md @ be2a26e45",
+        "https://councilof.ai/api/gspc"
+      ],
+      note: "The notice identifies the exact 14 URLs, IDs, hashes and intake receipts. This is a publication-authority correction, not a verdict that the underlying graded observations are false. No score from this cohort should be represented as admitted measurement pending a separate review."
+    },
+    {
+      "date": "2026-09-22",
+      "evidence": [
+        "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify",
+        "https://councilof.ai/api/state",
+        "drift-draft/snapshots/2026-09-22T14.json"
+      ],
+      "first_observed_at": "2026-09-22T14:25:27Z",
+      "id": "C-2026-0924-02",
+      "status": "CORRECTED BY A DATED SUPERSESSION NOTE; THE ORIGINAL NOTE IS NOT EDITED",
+      "note": "Promoted from draft D-2026-09-22T14-05 by the owner. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint 025f75a98669c0d4; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
+      "reached_the_public": true,
+      "what_changed": "Published a dated supersession note, public/corrections/public-corrections-living-stamp-unverifiable-json-2026-09-22-C-2026-0924-02-SUPERSEDES.md, beside the 2026-08-28 file, which is not edited: it was true when written. Read live on 2026-09-24, /api/state card_chain.bodies_verified_valid is 335 (kind measured): the signed card index holds 335 cards and all 335 verify. This is one of three separate card counts (council-os/CARD-CORPORA.md) and is never added to or substituted for the other two.",
+      "what_was_wrong": "public/corrections/living-stamp-unverifiable.json reads attestations_that_do_verify (measurement cards) = 150 while the compared surface reads 335. Source A: public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#attestations_that_do_verify (sha256 ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49; as_of 2026-08-28T17:19:43+01:00 = last commit touching the file). Source B: https://councilof.ai/api/state (sha256 efc1ffbbba84b4d20bf1e4e16c249fdbf901063563e07775841c8b33d224e300; as_of 2026-09-22T14:25:28Z = fetched_at (payload carries no as_of)). Compared at 2026-09-22T14:25:27Z (snapshot 2026-09-22T14).",
+      "why_it_was_wrong": "A number typed on a static surface. The endpoint derives its count from the axis array (or the card index) at request time, so a typed copy goes stale the moment the measured surface moves. This loop records the disagreement; it does not establish why the copy was typed."
+    },
+    {
+      "date": "2026-09-22",
+      "evidence": [
+        "public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged",
+        "https://councilof.ai/api/gspc",
+        "drift-draft/snapshots/2026-09-22T14.json"
+      ],
+      "first_observed_at": "2026-09-22T14:25:27Z",
+      "id": "C-2026-0924-01",
+      "status": "CORRECTED BY A DATED SUPERSESSION NOTE; THE ORIGINAL NOTE IS NOT EDITED",
+      "note": "Promoted from draft D-2026-09-22T14-04 by the owner. Auto-drafted by drift-draft.py on the pod; kind typed_claim_disagrees; fingerprint d1520d8783752683; snapshot 2026-09-22T14 sha256 1528b03ee6ce0091bf61c9f7de464ca884175f91ab60b7833544c5b65dce50d0 (no previous snapshot). No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark; it is a recorded disagreement between two byte-sources.",
+      "reached_the_public": true,
+      "what_changed": "Published a dated supersession note beside the 2026-08-28 file, which is not edited: it was true when written. Read live on 2026-09-24, the board lists 23 axes and 0 unmeasured. Five of the seven slot names are axes marked MEASURED (custody-disclosure, distribution-integrity, humanoid-labour-index, regulatory-framework, reserve-attestation). The other two are retired names kept as dataset slugs: ai-economy-index is now ai-adoption-components and human-labour-index is now labour-components, both MEASURED.",
+      "what_was_wrong": "public/corrections/living-stamp-unverifiable.json reads unmeasured_slots_unchanged = [\"ai-economy-index\", \"custody-disclosure\", \"distribution-integrity\", \"human-labour-index\", \"humanoid-labour-index\", \"regulatory-framework\", \"reserve-attestation\"] while the compared surface reads []. Source A: public/corrections/living-stamp-unverifiable.json @ cb773b2f9894#unmeasured_slots_unchanged (sha256 ea601d5ee48f80df32831d8ef3e18789f3bcae0299d14d2ead2edcbef5da9d49; as_of 2026-08-28T17:19:43+01:00 = last commit touching the file). Source B: https://councilof.ai/api/gspc (sha256 6496ac94d3cadfff3671e47125bc1f29a8468c028372a7f8350a65856ad39f9e; as_of behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25 = measured_on.date (prose, not compared as a timestamp)). Compared at 2026-09-22T14:25:27Z (snapshot 2026-09-22T14).",
+      "why_it_was_wrong": "A number typed on a static surface. The endpoint derives its count from the axis array (or the card index) at request time, so a typed copy goes stale the moment the measured surface moves. This loop records the disagreement; it does not establish why the copy was typed."
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": [
+        "https://councilof.ai/api/gspc"
+      ],
+      "first_observed_at": "2026-09-23T03:55:06Z",
+      "id": "C-2026-0923-02",
+      "note": "Promoted from draft D-2026-09-23T03-02 by the owner. HAND-DRAFTED by the arena-separation lane (feat/arena-separation-2026-09-23), not by drift-draft.py's detector, and placed in the same approve-queue so promote-draft.sh D-2026-09-23T03-02 is the only step. kind summary_omits_measured_negative; fingerprint 236d1c31f796639e. No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark.",
+      "reached_the_public": true,
+      "what_changed": "Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). functions/api/gspc.ts now derives the separation aggregate ONCE, beside the counts it already derived, so a reader meets the negative at the same moment as the measured count. totals.separation_public_count reads \"0 of 14 model-comparison axis separated a leader, 2 TIE, 12 UNTESTED\", with a note saying to read it WITH public_count and never instead of it. totals.count_grammar, the line the payload already points readers to, now carries the same sentence and the rule behind it: a measurement is not a separated leader, a point-estimate lead is not a measured advantage, and UNTESTED is not a tie. totals.lid, the one line the estate asks readers to quote verbatim and the line the home page renders verbatim, now states \"0 separated leaders\". separated_leads, ties and untested_separations read the same three constants instead of re-deriving them, so the headline, the grammar, the tallies and limitations[0] cannot drift apart - the defect this file already records at C-2026-0922 (G-3, two derivations of one quantity) is not reintroduced. functions/api/gspc.lid-truth.test.ts was extended to parse the new lid number against totals.separated_leads and to assert that the three separation states account for every model-comparison axis with none folded into another.",
+      "what_was_wrong": "totals carries axes, measured_axes, unmeasured_axes, quotable_axes and the count line '23 axis · 23 measured', and no aggregate of the separation field at all. The same payload's limitations[0] states the measured position plainly: of the 14 model-comparison axes, 2 TIE, 12 UNTESTED. The count line is the line every other surface quotes, so the figure that travels is the one that cannot carry the negative.",
+      "why_it_was_wrong": "A measured axis and an axis that can tell two models apart are different claims, and only the first is derived into totals. Separation is present per-axis in the array and stated in limitations, so the aggregate is derivable from bytes already served; it is simply not derived. This records the omission, not an intent."
+    },
+    {
+      "date": "2026-09-23",
+      "evidence": [
+        "https://councilof.ai/api/gspc",
+        "https://councilof.ai/signals/swarm.signed.json"
+      ],
+      "first_observed_at": "2026-09-23T03:55:06Z",
+      "id": "C-2026-0923-01",
+      "note": "Promoted from draft D-2026-09-23T03-01 by the owner. HAND-DRAFTED by the arena-separation lane (feat/arena-separation-2026-09-23), not by drift-draft.py's detector, and placed in the same approve-queue so promote-draft.sh D-2026-09-23T03-01 is the only step. kind measured_surfaces_disagree; fingerprint 7d98363c444e75d8. No ledger id is assigned until promote-draft.sh runs. Nothing here is a grade or a mark.",
+      "reached_the_public": true,
+      "what_changed": "Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). Establishing which surface was right came first, and the answer is that neither was wrong about its own bytes: the board grades a frozen 37-item SwarmBench v2b bank for per-item accuracy, the signal ranks recorded pairwise arena rounds by win-rate, and on this axis the two fleets share no model at all - the board's leader qwen2.5:7b is not among the three models ranked in the arena. Two determinations were wearing one word. Regenerating the signals under the 0.3 all-other-ranked-models rule that landed earlier the same day does NOT resolve it: nemotron-3-nano:30b's Wilson lower bound 0.796 clears both other ranked models' upper bounds (0.513, 0.435), so the arena verdict stays SEPARATED. The disagreement was never a rule-version artefact. The remedy is that one surface stops claiming the axis's separation. scripts/emit_signals.py (schema csoai.axis-signal/0.4) now joins every signal to its board row on the board's own dataset slug, with no typed crosswalk, and defers status and register to the board's separation verdict; it refuses to sign a signal whose board row it cannot find. The arena determination is not discarded: it stays in full in the elo_ fields, scoped by separation_of, by separation_authority (carrying the board's verdict, leader, bench and n) and by evidence_relation SEPARATE_EVIDENCE, which states in the signed bytes that the two are never added, reconciled or substituted. All 14 per-axis signals were regenerated through the producer and re-signed under did:web:csoai.org#board-attestation-1; no signed artifact was edited in place. swarm's published status moves MEASURED to UNTESTED and the superseded bytes are recorded in the new file's supersedes block. Separately, the signal now publishes register_board_drift on swarm rather than carrying the stale count silently: the axis register still describes the retired 40-item PROTOCOL bank while the board serves 37. That row is published as PUBLISHED_NOT_RECONCILED and deliberately not retyped, because reconciling it also requires majority_baseline re-derived on the current bank, which has not been done and is not invented. Four planted controls in scripts/arena/test_arena_controls.py hold the shape, including one that plants arena evidence that separates on an axis the board has not tested and asserts the chain cannot publish it as MEASURED.",
+      "what_was_wrong": "Two surfaces this organisation publishes and signs give different answers to the same question about the same axis. GET /api/gspc reports swarm separation UNTESTED with leader 'qwen2.5:7b (base model)' over n=37. /signals/swarm.signed.json reports elo_separation SEPARATED with elo_leader 'nemotron-3-nano:30b' over 18 decided arena games. A reader asking whether we can tell two models apart on swarm gets two answers and two different model names, both carrying the board signature.",
+      "why_it_was_wrong": "They are two different determinations over two different corpora — the board's is a paired McNemar test on the 2026-08-12 fleet run, the signal's is a Wilson interval over the hourly arena rounds — and neither surface says so where the other can be read. Nothing here establishes which is right. Recording the disagreement is the point; a surface that is silent about a second published answer is the defect."
+    },
+    {
+      id: "C-2026-0922-02",
+      date: "2026-09-22",
+      first_observed_at: "2026-09-22T12:48Z",
+      what_was_wrong:
+        "32 signed measurement cards for the jail axis under /interop/mill-cards-signed/ published " +
+        "an accuracy for jailbreak-escape detection that was never measured. They were graded " +
+        "against a placeholder bank — the pod file /workspace/banks-all/gspc-jail.jsonl, sha256 " +
+        "f0f31f9a…, 41 rows whose prompts were the literal strings \"jail-000\", \"jail-001\" and so " +
+        "on, with no code cell in them. Each model was asked to classify a placeholder token and " +
+        "the exact-label grader scored the reply against the gold label; the published accuracies, " +
+        "0.0 to 0.9487, are an artifact of which label a model happens to prefer. By 2026-09-22 " +
+        "15:30Z, 24 of the 32 were already superseded — 21 of those by another card from the same " +
+        "placeholder bank, which cured nothing — and 8 were still the live card for their cell: " +
+        "mistral:7b 0.9487 (n=39), phi3.5:3.8b 0.25 (n=40), qwen2.5:1.5b 0.0732 (n=41), " +
+        "mistral-nemo:12b and qwen2.5:0.5b-instruct 0.0488 (n=41), gemma3:4b 0.0256 (n=39), " +
+        "qwen2.5:7b 0.0244 (n=41), qwen3:4b 0 (n=41). All 32 carried status MEASURED and all 32 " +
+        "verify under did:web:csoai.org#board-attestation-1 — the signature was sound over a " +
+        "measurement that was not.",
+      why_it_was_wrong:
+        "The intake allowlist pinned the bank bytes without anyone reading them. " +
+        "verify_runpod_gspc_intake.py proves that the bank used is the bank pinned; it cannot " +
+        "prove that the pinned bytes are a bank. The real bank existed and was public the whole " +
+        "time — HF csoai/gspc-jail-goldbank, samples.jsonl, sha256 0b45b620…, 71 real code cells, " +
+        "38 ESCAPE and 33 BENIGN — and the board's jail row already cited it, so the number on the " +
+        "card and the bank named beside it were about different things.",
+      what_changed:
+        "Nothing was deleted and no signed byte was edited. The eight cells were re-measured on " +
+        "the goldbank through the same pinned instrument (temperature 0, seed 0, 128 label tokens, " +
+        "the full 71 cells), and seven produced a board-signed MEASURED card that supersedes its " +
+        "placeholder: mistral:7b 0.9853 (n=68), gemma3:4b 0.8169 (n=71), phi3.5:3.8b 0.6308 " +
+        "(n=65), mistral-nemo:12b 0.6056 (n=71), qwen2.5:7b 0.5857 (n=70), qwen2.5:1.5b 0.4648 " +
+        "(n=71), qwen2.5:0.5b-instruct 0.4648 (n=71). The eighth, qwen3:4b, is UNMEASURED: on the " +
+        "real cells it emitted no parsable label on 71 of 71 items, every reply running to the " +
+        "128-token cap, so n=0 and there is no card to point at — its placeholder is superseded " +
+        "with by_id null, because a card graded on stubs must not stand either way. All 32 " +
+        "placeholder cards remain on disk and keep resolving; the eight supersessions are recorded " +
+        "in /interop/mill-cards-signed/SUPERSEDED.jsonl naming this entry and the two bank " +
+        "digests. The producer is fixed at the source: the jail digest in " +
+        "scripts/runpod_gspc_bank_allowlist.current.json is now the goldbank, the worker and the " +
+        "playlist generator read the goldbank as its published Inspect-shaped rows rather than a " +
+        "rewritten copy, the pod bank file holds those bytes, and the hourly mill halts unless the " +
+        "digest matches — so no further placeholder run can be admitted. Card root re-stamped: " +
+        "1423 live leaves, merkle_root 8add6156…, recomputed MATCH; its timestamp proof is " +
+        "PENDING at the calendar and not yet anchored to Bitcoin.",
+      reached_the_public: true,
+      note:
+        "The two 0.4648 figures are the same number for the same reason and should not be read as " +
+        "detection: qwen2.5:0.5b-instruct and qwen2.5:1.5b answered BENIGN on all 71 cells, and 33 " +
+        "of the 71 cells are BENIGN. Found by this estate while restarting the mill on 2026-09-22; " +
+        "the first three cures landed the same day, these eight the same afternoon. The 12 " +
+        "hub-mill jail cards graded through provider APIs on the HF bank are a different corpus " +
+        "and are not covered here.",
+    },
+    {
       id: "C-2026-0922-01",
       date: "2026-09-18",
       first_observed_at: "2026-09-18T00:00Z",
@@ -750,26 +880,57 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "aa7a8211d3671330e0dcacf1a719125f9cb09dd4ba80272fc1fac617e652f367",
-    signer: "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
-    signature: "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
-    sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
-    key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append MUST re-issue the signature over the new bytes; a stale signature is a published defect, never a silent edit, and never a bare id bump.",
+    id: "f90c8e82013a5125194269b29988cce4f8e6ae8dc01631db21b5c8e043029b9c",
+    signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    did: "did:web:csoai.org#board-attestation-1",
+    signature: "12ab5df7b966fa36bad6232555b678012fd9bdb9ea54a14d805dabf635c36133eadaf1b1f3ea6e19de148bd10882830c3f7b5fe2d7eb7d08eec11af3d80fc90c",
+    attestation: {
+          "artifact": "csoai.corrections/0.1",
+          "content_id": "f90c8e82013a5125194269b29988cce4f8e6ae8dc01631db21b5c8e043029b9c",
+          "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
+          "entries": 65,
+          "latest_entry_id": "C-2026-0924-02",
+          "ledger_canonical_bytes": 99014,
+          "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
+          "schema": "csoai.corrections-attestation/0.1",
+          "signed_at": "2026-09-24T11:21:19Z"
+    },
+    sig_input:
+      "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
+      "The attestation names the digest of the ledger body and the rule that produces it.",
+    key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
+    note:
+      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
+      "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
+      "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
+      "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +
+      "cannot green the flag any more - id is inside the signed attestation, and the handler verifies the " +
+      "Ed25519 bytes at request time, not just a digest match.",
   },
 };
 
-// Serve-time staleness guard: recompute content_id of the committed body; if it
-// does not match the embedded signature's id, serve with a VISIBLE flag rather
-// than silently serving a broken signature. Doctrine: a stale signature is a
-// published defect, never a silent edit.
-// NOTE: the canonical MUST match the off-chain signer exactly. The estate signs
-// with Python json.dumps(body, sort_keys=True, separators=(",",":")) — recursive
-// key sort, compact separators, and ensure_ascii=True (every non-ASCII char as
-// \uXXXX). (An earlier version used an array-replacer JSON.stringify which emits
-// a top-level-only key whitelist and serializes every nested entry as {} — a
-// hash no signer could ever reproduce, so the guard flagged VALID ledgers as
-// STALE forever. Fix: reproduce the signer's canonical byte-for-byte.)
+// Serve-time signature check. Two independent things are established on every request, from the
+// same bytes the reader is about to receive:
+//
+//   1. the ledger body still canonicalises to the digest the signed attestation names, and
+//   2. the Ed25519 signature over that attestation verifies under did:web:csoai.org#board-attestation-1.
+//
+// BOTH, because either alone is a hole. A digest match alone is what this endpoint used to do,
+// and its own note warned about the consequence: "Updating id alone would make this field read
+// VALID while the Ed25519 bytes still cover the older content." Nothing stopped that from
+// happening — the flag was a string comparison, not a verification. It is a verification now, and
+// the id is INSIDE the signed attestation, so there is no id left to bump.
+//
+// The state is derived here, never typed. VALID is only ever printed after the check ran and
+// passed. A runtime that cannot do Ed25519 reports UNCHECKABLE, never VALID and never INVALID —
+// "we could not check" and "it does not verify" are different facts and must not share a word.
+//
+// NOTE: the canonical MUST match the off-chain signer exactly. The content digest is over
+// Python json.dumps(body, sort_keys=True, separators=(",",":")) with ensure_ascii=True (every
+// non-ASCII char as \uXXXX). (An earlier version used an array-replacer JSON.stringify which
+// emits a top-level-only key whitelist and serializes every nested entry as {} — a hash no
+// signer could ever reproduce, so the guard flagged VALID ledgers as STALE forever. Fix:
+// reproduce the signer's canonical byte-for-byte.)
 function canonJson(obj: unknown): string {
   const j = (o: unknown): string => {
     if (Array.isArray(o)) return "[" + o.map(j).join(",") + "]";
@@ -781,13 +942,174 @@ function canonJson(obj: unknown): string {
     return JSON.stringify(o);
   };
   // ensure_ascii=True: escape every non-ASCII char as \uXXXX (4-digit lowercase hex)
-  return j(obj).replace(/[\u0080-\uffff]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
+  return j(obj).replace(/[-￿]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
 }
+
+// The attestation is ASCII-only by construction (scripts/sign-corrections-ledger.mjs refuses to
+// sign one that is not), so canonJson reproduces the signer's own preimage rule — functions/_lib
+// /cardSign.ts canonicalBytes, which is the same sort and separators with ensure_ascii=false —
+// byte for byte over that object. One rule, no branch.
+
+/**
+ * did:web:csoai.org#board-attestation-1, mirrored from https://csoai.org/.well-known/did.json.
+ *
+ * Pinned rather than fetched. A Pages Function that fetched its own trust root on every request
+ * would make this flag depend on a second origin being reachable, and "UNCHECKABLE because
+ * csoai.org was slow" is not a fact about this ledger. The pin is compared against the live DID
+ * document by scripts/verify_corrections_signature.py, which the trust-chain pod loop runs on a
+ * schedule — a key rotation is supposed to be noticed there, loudly, not absorbed here silently.
+ */
+const BOARD_DID = "did:web:csoai.org#board-attestation-1";
+const BOARD_KEY_HEX = "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170";
+
+/**
+ * Keys this handler ADDS to the response at request time. They are computed from the ledger and
+ * are not part of the signed body, so a third party recomputing content_id from the served JSON
+ * strips exactly these first. Published in signature_check.unsigned_wrapper_fields so nobody has
+ * to read this file to reproduce the digest. Kept in lockstep with the same list in
+ * scripts/sign-corrections-ledger.mjs and scripts/verify_corrections_signature.py.
+ */
+const UNSIGNED_WRAPPER_FIELDS = [
+  "signature",
+  "signature_state",
+  "signature_check",
+  "correction_latency",
+  "note",
+  "fix_requires",
+];
 
 async function sha256Hex(s: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
   return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
+
+function hexToBytes(h: string): Uint8Array {
+  const clean = h.trim().toLowerCase();
+  if (!/^[0-9a-f]*$/.test(clean) || clean.length % 2) throw new Error("not hex");
+  return Uint8Array.from(clean.match(/../g) ?? [], (b) => parseInt(b, 16));
+}
+
+/** true = verified, false = does not verify, null = this runtime could not check it. */
+async function verifyEd25519(msg: string, sigHex: string, pubHex: string): Promise<boolean | null> {
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      hexToBytes(pubHex) as BufferSource,
+      { name: "Ed25519" },
+      false,
+      ["verify"],
+    );
+    return await crypto.subtle.verify(
+      { name: "Ed25519" },
+      key,
+      hexToBytes(sigHex) as BufferSource,
+      new TextEncoder().encode(msg),
+    );
+  } catch {
+    return null;
+  }
+}
+
+type LedgerSignature = {
+  id?: string;
+  signer?: string;
+  did?: string;
+  signature?: string;
+  attestation?: { content_id?: string; entries?: number; [k: string]: unknown };
+};
+
+export type SignatureState = "VALID" | "STALE" | "INVALID_SIGNATURE" | "UNSIGNED" | "UNCHECKABLE";
+
+export type SignatureCheck = {
+  state: SignatureState;
+  checked_at: string;
+  recomputed_content_id: string;
+  attested_content_id: string | null;
+  content_id_matches: boolean;
+  ed25519_verified: boolean | null;
+  key: string;
+  key_ed25519_hex: string;
+  unsigned_wrapper_fields: string[];
+  how: string;
+  means: string;
+};
+
+/**
+ * Exported so the check is testable without a running edge, and so nothing else in this estate
+ * can invent a second opinion about what VALID means.
+ */
+export async function checkSignature(ledger: Record<string, unknown>): Promise<SignatureCheck> {
+  const body = { ...ledger } as Record<string, unknown>;
+  for (const k of UNSIGNED_WRAPPER_FIELDS) delete body[k];
+  const recomputed = await sha256Hex(canonJson(body));
+
+  const sig = (ledger.signature ?? null) as LedgerSignature | null;
+  const att = sig?.attestation ?? null;
+  const attested = typeof att?.content_id === "string" ? att.content_id : null;
+  const contentIdMatches = attested !== null && attested === recomputed && sig?.id === recomputed;
+
+  const verified =
+    att && typeof sig?.signature === "string"
+      ? await verifyEd25519(canonJson(att), sig.signature, BOARD_KEY_HEX)
+      : null;
+
+  const state: SignatureState =
+    !sig || !att || typeof sig.signature !== "string"
+      ? "UNSIGNED"
+      : verified === null
+        ? "UNCHECKABLE"
+        : verified === false
+          ? "INVALID_SIGNATURE"
+          : contentIdMatches
+            ? "VALID"
+            : "STALE";
+
+  return {
+    state,
+    checked_at: new Date().toISOString(),
+    recomputed_content_id: recomputed,
+    attested_content_id: attested,
+    content_id_matches: contentIdMatches,
+    ed25519_verified: verified,
+    key: BOARD_DID,
+    key_ed25519_hex: BOARD_KEY_HEX,
+    unsigned_wrapper_fields: UNSIGNED_WRAPPER_FIELDS,
+    how:
+      "Computed on this request, from these bytes. Strip unsigned_wrapper_fields from this " +
+      "document, canonicalise with json.dumps(sort_keys=True, separators=(',',':'), " +
+      "ensure_ascii=True), SHA-256 it: that is recomputed_content_id and it must equal " +
+      "signature.attestation.content_id and signature.id. Then verify signature.signature as " +
+      "Ed25519 over the same canonical form of signature.attestation under key_ed25519_hex, " +
+      "which is the published key for " + BOARD_DID + ". Both must hold.",
+    means:
+      "VALID: both held. STALE: the signature verifies but the body has moved since it was " +
+      "issued, so it no longer describes what you are reading. INVALID_SIGNATURE: the bytes do " +
+      "not verify under the published key. UNSIGNED: no signature is published. UNCHECKABLE: " +
+      "this runtime could not perform Ed25519 — not a claim about the signature either way.",
+  };
+}
+
+const STATE_NOTE: Record<SignatureState, string> = {
+  VALID:
+    "The signature was verified on this request over these bytes, under " +
+    "did:web:csoai.org#board-attestation-1. Re-issued 2026-09-22 after a month of reading STALE: " +
+    "the ledger had been appended 46 times since it was signed on 2026-08-22 and nothing re-signed " +
+    "it. See signature_check for how to reproduce this yourself.",
+  STALE:
+    "The published signature verifies, but it was issued over an earlier body: the ledger has been " +
+    "appended since. A stale signature is a published defect, never a silent edit. TO CLEAR IT: " +
+    "re-issue over the current bytes with scripts/sign-corrections-ledger.mjs, which signs through " +
+    "POST /api/board-sign. signature.id is inside the signed attestation, so there is nothing that " +
+    "can be bumped to turn this field green without a real signature.",
+  INVALID_SIGNATURE:
+    "The published signature does NOT verify under the published key. Read nothing in this ledger " +
+    "as attested until that is resolved. This is a louder failure than STALE and is never to be " +
+    "downgraded to one.",
+  UNSIGNED: "No signature is published with this ledger. Unsigned is honest; a fabricated signature is not.",
+  UNCHECKABLE:
+    "This runtime could not perform the Ed25519 verification, so the signature is neither confirmed " +
+    "nor refuted here. UNCHECKABLE is a first-class state and is never printed as VALID.",
+};
 
 export const onRequestGet: PagesFunction = async () => {
   // TUI-4 (2026-09-13): correction latency, honestly bounded. Entries MAY now carry an
@@ -811,30 +1133,20 @@ export const onRequestGet: PagesFunction = async () => {
     note: "Measured only where both dates are explicit fields; never inferred from prose.",
   };
 
-  const body = { ...LEDGER } as Record<string, unknown>;
-  delete body.signature;
-  const canonical = canonJson(body);
-  const cid = await sha256Hex(canonical);
-  const embeddedId = (LEDGER.signature as { id?: string } | undefined)?.id ?? null;
-  const signatureState = embeddedId && cid === embeddedId ? "VALID" : "STALE";
-  const out0 =
-    signatureState === "VALID"
-      ? LEDGER
-      : {
-          ...LEDGER,
-        signature_state: "STALE",
-        note:
-          "Signature is stale because the ledger was appended after signing. A stale signature is a " +
-          "published defect, never a silent edit. TO CLEAR IT: re-sign the ledger with the estate key " +
-          "(did:web:csoai.org, signer d4cb0eaa) over the canonical form named in signature.sig_input — " +
-          "Python json.dumps(body minus signature, sort_keys=True, separators=(',',':'), ensure_ascii=True) " +
-          "— then update BOTH signature.id and signature.signature together. Updating id alone would make " +
-          "this field read VALID while the Ed25519 bytes still cover the older content, which is a worse " +
-          "defect than the stale flag it hides. The key is not in this repository, so this is an " +
-          "owner-supervised re-sign.",
-        fix_requires: "estate signing key (not in repo)",
-      };
-  const out = { ...out0, correction_latency: correctionLatency };
+  const check = await checkSignature(LEDGER as unknown as Record<string, unknown>);
+
+  // signature_state is ALWAYS emitted. It used to appear only when the check failed, so a reader
+  // could not tell a verified ledger from one where the field had been dropped — absence is not
+  // a pass.
+  const out: Record<string, unknown> = {
+    ...LEDGER,
+    signature_state: check.state,
+    signature_check: check,
+    note: STATE_NOTE[check.state],
+    correction_latency: correctionLatency,
+  };
+  if (check.state !== "VALID") out.fix_requires = "re-issue over the current bytes: scripts/sign-corrections-ledger.mjs";
+
   return new Response(JSON.stringify(out, null, 2), {
     headers: {
       "content-type": "application/json",

@@ -1,0 +1,80 @@
+{
+  "schema": "csoai.gspc-harness-self-check/0.1",
+  "title": "Pod measurement harness: re-check of every signed card it produced",
+  "as_of": "2026-09-24T14:57:19+00:00",
+  "kind": "SELF_CHECK",
+  "signed": false,
+  "unsigned_reason": "A re-check of our own pipeline. Signing it with our own key would add nothing a reader cannot get by re-running it; the inputs below are public and the method is deterministic.",
+  "honesty": "This is our harness checking our own cards. It is not a third-party measurement, not on the board, not a grade of any model and not evidence about any model's accuracy. It scores the harness (did it produce a verifiable card over the bank it was supposed to use), never the model.",
+  "harness": "pod-measurement (the RunPod mill that produces /interop/mill-cards-signed/)",
+  "checks": {
+    "id_recomputes": "sha256 of the canonical body (sorted keys, compact separators, ensure_ascii=True) equals card.id",
+    "signature_valid": "Ed25519 over those bytes verifies under did:web:csoai.org#board-attestation-1, read live from https://csoai.org/.well-known/did.json, and again offline under the key pinned in packages/gspc-card-verifier/profile/csoai-gspc-1.json",
+    "bank_pinned": "compute_evidence.bank_sha256 is an allowlisted digest for the card's axis (scripts/runpod_gspc_bank_allowlist.current.json)",
+    "root_inclusion": "the card is a leaf of the dated card root /interop/card-root-latest.json points to; superseded cards and cards newer than the root abstain"
+  },
+  "population": {
+    "cards_read": 2797,
+    "produced_by_this_harness": 885,
+    "not_attributed": 1912,
+    "not_attributed_means": "cards not produced by the pod mill (other producers); not checked here"
+  },
+  "results": {
+    "passed_all_checks": 852,
+    "failed": 33,
+    "failed_by_check": {
+      "bank_pinned": 33,
+      "id_recomputes": 0,
+      "signature_valid": 0
+    },
+    "per_component": {
+      "bank_provenance": {
+        "CONFIRMED": 852,
+        "CONTRADICTED": 0,
+        "REFUTED": 33,
+        "UNRESOLVED": 0
+      },
+      "content_integrity": {
+        "CONFIRMED": 885,
+        "CONTRADICTED": 0,
+        "REFUTED": 0,
+        "UNRESOLVED": 0
+      },
+      "root_inclusion": {
+        "CONFIRMED": 168,
+        "CONTRADICTED": 0,
+        "REFUTED": 0,
+        "UNRESOLVED": 717
+      },
+      "signature": {
+        "CONFIRMED": 885,
+        "CONTRADICTED": 0,
+        "REFUTED": 0,
+        "UNRESOLVED": 0
+      }
+    },
+    "distinct_cases": 185,
+    "mean_case_score": 0.9351,
+    "conservative_95_lower_bound": 0.8996,
+    "latency": "not observed: cards are re-checked after the fact; never written as 0"
+  },
+  "the_33_and_the_32": "All 33 bank_pinned failures are jail-axis cards graded on the placeholder bank f0f31f9a556266ce6f06660440b5ff819a19ee0b7801d72e78020a1ceda3a66e (runs of 5-14 Sep). Correction C-2026-0922-02 (/api/corrections) counts the 32 of them that carried status MEASURED; the 33rd, signed-jail-93152fee78d0.json (n=2), carried UNMEASURED and never claimed a measurement. It still counts here because this check asks whether the harness used the right bank, whatever the status. Two questions, two numbers; neither corrects the other. All 33 are superseded.",
+  "witnesses": {
+    "root_ceremony": {
+      "merkle_root": "5f61d16f0c184ca40ef6d8cc3091d3e46f905f6116be4b7a7891cc4989fea184",
+      "as_of": "2026-09-24T14:18:05Z",
+      "recomputes": true
+    },
+    "did_document_sha256": "1231cee4d60b518d95eb33d752c12940fc6436c39269c5c02bf57b7e19ddbe0b",
+    "allowlist_sha256": "5f1a499b9224fe57c47d01d68a92632f37b3421061ef56bb1aaef56b6de6ad59"
+  },
+  "nothing_is_voted": "Each component keeps its own verdict (CONFIRMED / REFUTED / CONTRADICTED / UNRESOLVED); there is no overall verdict.",
+  "reproduce": [
+    "Take public/interop/mill-cards-signed/ and scripts/runpod_gspc_bank_allowlist.current.json from the site or repository.",
+    "For each signed-*.json whose body.model starts with 'ollama:' and whose compute_evidence.run_id is a pod run, apply the four checks above.",
+    "Count distinct cases by (model, axis) cell, keeping the latest card per cell for the case score."
+  ],
+  "refreshed": "hourly on the measurement pod (loop harness-outcomes, :57); this file is the dated snapshot of 2026-09-24",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "license": "CC-BY-4.0"
+}

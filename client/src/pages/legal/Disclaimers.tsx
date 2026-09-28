@@ -218,7 +218,7 @@ export default function Disclaimers() {
                       insurance coverage based on their risk tier.
                     </li>
                     <li>
-                      <strong>Certified analysts need their own coverage.</strong> Individual AI Safety Analysts
+                      <strong>Analysts need their own coverage.</strong> Individual AI Safety Analysts
                       should consider professional indemnity insurance for their consulting activities.
                     </li>
                     <li>
@@ -266,7 +266,7 @@ export default function Disclaimers() {
                       quoted figures depending on their expertise, availability, and market conditions.
                     </li>
                     <li>
-                      <strong>Certification does not guarantee employment.</strong> While we facilitate
+                      <strong>Training or participation does not guarantee employment.</strong> While we facilitate
                       connections between analysts and organizations, we do not guarantee job placement.
                     </li>
                     <li>

@@ -1,0 +1,168 @@
+{
+  "canonical_origin": "https://councilof.ai",
+  "content_id": "7141f0d31bc7eb8ab8430d3e5ae9ae9fd814707f66a515097280f7993e208a2f",
+  "existing_live_surfaces": [
+    {
+      "path": "/.well-known/x402.json",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/.well-known/agent-card.json",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/api/revenue",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/quickstart.json",
+      "state": "LIVE_READ_BACK_200"
+    },
+    {
+      "path": "/verifier/verify_receipt.py",
+      "state": "LIVE_READ_BACK_200"
+    }
+  ],
+  "kind": "public-release-state",
+  "laws": [
+    "listing or discovery is not measurement, certification, endorsement, or compliance",
+    "public capability declaration does not prove runtime behavior",
+    "payment does not create a GSPC measurement",
+    "generated is not deployed; deployed is not independently read back"
+  ],
+  "machine_access_baseline": {
+    "claim_boundary": "Reachability observation only; not a security finding and not a claim about vendor intent.",
+    "counts": {
+      "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE": 5
+    },
+    "method": "One default Python urllib request plus curl, explicit agent and browser User-Agent requests per existing live reference surface from the release-builder network.",
+    "rows": [
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/.well-known/x402.json",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/.well-known/agent-card.json",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/api/revenue",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/quickstart.json",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/verifier/verify_receipt.py",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      }
+    ]
+  },
+  "release_gate": {
+    "pass_condition": "all nine surfaces return 200 from both witnesses; matching body hashes; no previously-live surface regresses",
+    "required_independent_witnesses": 2
+  },
+  "schema": "csoai.layer0-distribution/0.2",
+  "source_commit": "57d64a9fbc5d9f1e0a3428f6dd824687c2a0f016",
+  "source_observations": {
+    "a2a": {
+      "bytes": 13018,
+      "content_type": "application/a2a+json",
+      "sha256": "b6474156e927483e5e156780f2e0fbd82f12e86d7efd25edc22be597a73aed19",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/agent-card.json"
+    },
+    "corrections": {
+      "bytes": 109485,
+      "content_type": "application/json",
+      "excluded_volatile_fields": [
+        "signature_check.checked_at"
+      ],
+      "semantic_hash_scope": "JSON body excluding signature_check.checked_at only",
+      "semantic_sha256": "280d39428efe816d5bb13ccbcbff0fc47585d1db1f0ec28f7d18fa24fb88c0ce",
+      "status": 200,
+      "url": "https://councilof.ai/api/corrections"
+    },
+    "gspc": {
+      "bytes": 72650,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "be45a7ed47dc7f43a0ab83b75d3ce60909f918ecf386af7c11a78c0d5a708cca",
+      "status": 200,
+      "url": "https://councilof.ai/api/gspc"
+    },
+    "quickstart": {
+      "bytes": 4664,
+      "content_type": "application/json",
+      "sha256": "a2f8b49a0ac0daf0eaa7058da544249c5bdd068b31a7e5ae1e43272d09220864",
+      "status": 200,
+      "url": "https://councilof.ai/quickstart.json"
+    },
+    "receipt_verifier": {
+      "bytes": 29799,
+      "content_type": "application/octet-stream",
+      "sha256": "e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab",
+      "status": 200,
+      "url": "https://councilof.ai/verifier/verify_receipt.py"
+    },
+    "revenue": {
+      "bytes": 4908,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "07c2fbb99ef57558ea5076a16322b21a583b1115b9bc10f70df8adc8f53eb7b5",
+      "status": 200,
+      "url": "https://councilof.ai/api/revenue"
+    },
+    "state": {
+      "bytes": 41214,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "af1f451fadeb87985b6d156f4745b3440b48b901ad5d3ba2f9a6225e1bff2d60",
+      "status": 200,
+      "url": "https://councilof.ai/api/state"
+    },
+    "x402": {
+      "bytes": 27501,
+      "content_type": "application/json; charset=utf-8",
+      "sha256": "358cf6bcf418faf8b19e85f47c3c4128e7567a5ef1160e4b141272d06d1f84a9",
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/x402.json"
+    }
+  },
+  "staged_surfaces": [
+    {
+      "path": "/layer0-drive-through.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/eat-flywheel.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/layer0-distribution.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/progress-index.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    }
+  ]
+}

@@ -4,21 +4,21 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>effect-binding · Council of AI · GSPC axis deep reference</title>
-<meta name="description" content="See the live board for the canonical definition." />
+<meta name="description" content="A dated, read-only boundary probe of remote MCP tool-call servers: whether an unauthorised extra argument is refused at the tool boundary. It does not observe backend effects or establish a vendor's security posture." />
 <meta name="robots" content="index,follow" />
 <meta property="og:title" content="effect-binding · Council of AI axis" />
-<meta property="og:description" content="See the live board for the canonical definition." />
+<meta property="og:description" content="A dated, read-only boundary probe of remote MCP tool-call servers: whether an unauthorised extra argument is refused at the tool boundary. It does not observe backend effects or establish a vendor's security posture." />
 <meta property="og:image" content="https://councilof.ai/og-image.png" />
-<meta property="og:url" content="https://councilof.ai/axis/effect-binding.html" />
+<meta property="og:url" content="https://councilof.ai/axis/effect-binding" />
 <meta property="og:type" content="article" />
-<link rel="canonical" href="https://councilof.ai/axis/effect-binding.html" />
+<link rel="canonical" href="https://councilof.ai/axis/effect-binding" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "GSPC axis: effect-binding",
-  "description": "See the live board for the canonical definition.",
-  "url": "https://councilof.ai/axis/effect-binding.html",
+  "description": "A dated, read-only boundary probe of remote MCP tool-call servers: whether an unauthorised extra argument is refused at the tool boundary. It does not observe backend effects or establish a vendor's security posture.",
+  "url": "https://councilof.ai/axis/effect-binding",
   "inLanguage": "en",
   "publisher": {
     "@type": "Organization",
@@ -50,39 +50,39 @@
 </head>
 <body>
 <main class="wrap">
-  <p class="lid">Board count: quote live totals.public_count from GET /api/gspc</p>
+  <p class="lid"><a href="/gspc">See the live GSPC board and current counts</a></p>
   <h1>effect-binding</h1>
   <div class="meta">
     <span class="pill lid-pill">family: gspc</span>
     <span class="pill">kind: deterministic-facts</span>
     <span class="pill">n: 261</span>
     
-    <span class="pill">separation: UNTRIED</span>
   </div>
 
   <h2>What this axis measures</h2>
-  <p>See the live board for the canonical definition.</p>
+  <p>A dated, read-only boundary probe of remote MCP tool-call servers: whether an unauthorised extra argument is refused at the tool boundary. It does not observe backend effects or establish a vendor's security posture.</p>
 
   <h2>Why it matters</h2>
-  <p>The GSPC board reports its count in the lid phrase — <strong>totals.public_count</strong>, read live. This axis is one of them; the live board at <code>GET /api/gspc</code> is the authority. Anything frozen or quoted is hearsay.</p>
+  <p>The GSPC board reports its current count in <strong>totals.public_count</strong>. A dated snapshot is useful for reproduction when its date and scope stay attached. Read the live board for the latest state.</p>
+
+  <h2>Scope and exclusions</h2><p>261 third-party MCP servers received a verdict (BINDS 0 · PARTIAL 23 · DOES_NOT_BIND 238) out of 600 tried from a frozen shuffled slice (seed 20260922) of the 20,992 third-party servers with a remote URL in the public MCP registry on 2026-09-22. 230 UNCHECKABLE (141 behind an auth wall), 78 UNREACHABLE, 30 with no read-only tool and 1 with no tools are recorded and never counted. A server count, never pooled with bank-item n.</p><p>The verdict population is biased toward servers that answer anonymous callers: every server that demanded credentials is UNCHECKABLE by rule, never probed and never FAIL. Our own 41 registry entries are tabled separately in the artifact and are not in n.</p>
 
   
 
   <h2>What's NOT here</h2>
-  <p>This is a <strong>measurement</strong> axis, not a certification axis. The board never claims this model is "approved" or "compliant". A passing score is a public, signed record of what was measured, on which instrument, with which confidence interval — verifiable in your browser at <a href="https://councilof.ai/gspc-verify">/gspc-verify</a>.</p>
+  <p>This is <strong>measurement, not certification</strong>. A board row does not by itself prove a signature, Merkle-root inclusion, Bitcoin anchoring, a model approval or compliance. Check each evidence step separately.</p>
 
   <h2>The numbers</h2>
-  <ul>
-    <li><strong>n</strong> = the number of frozen item bank cells the model was scored against</li>
-    <li><strong>accuracy</strong> = the deterministic grade (only on model-comparison axes)</li>
-    <li><strong>separation</strong> = SEPARATED (one model is statistically the leader), TIE (multiple models tied), or UNTRIED (n too small)</li>
-  </ul>
+  <p><strong>n=261</strong> tool-call servers probed. This is a count within the declared run scope, not a model-bank size, accuracy or statistical separation. Read the live row for exclusions and limitations.</p>
+
+  <h2>Read the dated probe</h2>
+  <p><a href="/axis/effect-binding-server-probe-2026-09-22">How the 600-server effect-binding probe was run and verified</a> explains the read-only method, all 339 attempts without a binding verdict, the signed envelope, and what the result cannot establish.</p>
 
   <h2>Verify this axis</h2>
-  <p>The live data is on <a href="https://councilof.ai/api/gspc">/api/gspc</a>. The canonical form is at <a href="https://councilof.ai/root.json">/root.json</a>. The witness receipts are at <a href="https://councilof.ai/signed/">/signed/</a>. The corrections ledger is at <a href="https://councilof.ai/api/corrections">/api/corrections</a>. The OTS anchor is at <a href="https://councilof.ai/api/state">/api/state</a>.</p>
+  <p>Read the <a href="https://councilof.ai/api/gspc">live board</a> and <a href="https://councilof.ai/interop/effect-binding-server-probe-2026-09-22.signed.json">published run evidence</a>. The <a href="https://councilof.ai/api/corrections">corrections ledger</a> records later changes. Signature verification and any root or OTS inclusion are distinct checks; none is inferred from this page.</p>
 
   <footer>
-    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · did:web:csoai.org#card-attestation-1</p>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a></p>
     <p style="margin-top:.5rem;font-style:italic;">Measurement, not certification. Anyone can re-check.</p>
   </footer>
 </main>

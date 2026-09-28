@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/%40csoai%2Flayer0)](https://www.npmjs.com/package/@csoai/layer0)
 [![npm downloads](https://img.shields.io/npm/dm/%40csoai%2Flayer0)](https://www.npmjs.com/package/@csoai/layer0)
-[![license](https://img.shields.io/npm/l/%40csoai%2Flayer0)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+[![license](https://img.shields.io/npm/l/%40csoai%2Flayer0)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/packages/layer0-js/LICENSE)
 
 
 Make any tool, MCP server, package or plugin **Layer‑0‑governed + A2A‑ready** in ~15 lines.
@@ -51,3 +51,7 @@ Conformance levels (see `CSOAI_Layer0_A2A_Protocol.md`): wrapping with `governed
 | `verify(envelope, peerKey?)` | verify an inbound A2A envelope |
 
 Backend: `api-server/` (Express) + `api-server/a2a.js`. MIT. https://csoai.org
+
+## Licence
+
+Apache-2.0 from 0.2.0 (see `LICENSE` and `NOTICE`). Earlier versions remain MIT.

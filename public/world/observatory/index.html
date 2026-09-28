@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <meta name="description" content="Explore source-linked Council simulation summaries. Each row points to a dated public source; imported signature flags are not treated as verified signatures.">
+  <link rel="canonical" href="https://councilof.ai/world/observatory/">
+  <link rel="alternate" type="application/json" href="./index.json" title="Council simulation index data">
+  <link rel="alternate" type="application/json" href="./city-2026-09-23.json" title="Dated Micropolis DESIGN city projection">
+  <title>Simulation Observatory | Council of AI</title>
+  <style>
+    :root { color-scheme: dark; --bg:#081017; --panel:#101d29; --line:#293b48; --ink:#eaf3f6; --muted:#acc0ca; --accent:#74e6c0; --blue:#9cbeff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--accent); }
+    a:focus-visible, input:focus-visible, select:focus-visible, button:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+    .shell { max-width:1120px; padding:0 24px; margin:0 auto; }
+    header { border-bottom:1px solid var(--line); }
+    header .shell { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:68px; }
+    .brand { color:var(--ink); text-decoration:none; font-weight:750; letter-spacing:.01em; }
+    nav { display:flex; flex-wrap:wrap; gap:18px; font-size:14px; }
+    main { padding-top:50px; padding-bottom:76px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; font-size:12px; font-weight:750; letter-spacing:.13em; }
+    h1 { font-size:clamp(38px,6vw,68px); letter-spacing:-.045em; line-height:1.05; margin:12px 0 20px; max-width:850px; }
+    .lead { max-width:800px; font-size:19px; color:var(--muted); margin:0 0 28px; }
+    .notice { background:#14271f; border:1px solid #2a7053; border-radius:14px; padding:17px 20px; max-width:900px; }
+    .notice strong { color:#c0f5db; }
+    .stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin:32px 0; }
+    .stat { border:1px solid var(--line); border-radius:14px; padding:18px; background:var(--panel); min-height:128px; }
+    .label { color:var(--muted); font-size:13px; }
+    .value { font-size:31px; font-weight:760; line-height:1.2; margin:10px 0 5px; overflow-wrap:anywhere; }
+    .small { color:var(--muted); font-size:13px; }
+    h2 { font-size:25px; letter-spacing:-.02em; margin:48px 0 8px; }
+    .section-intro { color:var(--muted); max-width:750px; margin:0 0 18px; }
+    .provenance { border:1px solid var(--line); border-radius:14px; background:var(--panel); padding:20px; display:grid; gap:10px; }
+    .provenance div { display:grid; grid-template-columns:180px minmax(0,1fr); gap:14px; }
+    .mono { font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; overflow-wrap:anywhere; }
+    .controls { display:flex; gap:12px; flex-wrap:wrap; margin:22px 0 18px; }
+    input, select, button { background:#0c1823; border:1px solid #506575; border-radius:9px; color:var(--ink); padding:10px 12px; font:inherit; }
+    input { flex:1; min-width:210px; }
+    button { cursor:pointer; }
+    .moments { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .moment { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px; }
+    .moment h3 { font-size:18px; line-height:1.25; margin:0; }
+    .moment p { margin:0; color:var(--muted); }
+    .moment .disclosure { font-size:12px; }
+    .moment button { margin-top:auto; align-self:flex-start; }
+    .records { display:grid; gap:10px; }
+    .record { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px 18px; }
+    .record-head { display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; color:var(--muted); font-size:13px; }
+    .axis { color:var(--accent); text-transform:uppercase; font-weight:750; letter-spacing:.08em; }
+    .intent { margin:9px 0; overflow-wrap:anywhere; }
+    .source-detail { margin-top:10px; color:var(--muted); }
+    .source-detail summary { cursor:pointer; color:var(--accent); }
+    .source-detail pre { white-space:pre-wrap; overflow-wrap:anywhere; margin:10px 0 0; padding:12px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); }
+    .source-check { display:flex; align-items:center; flex-wrap:wrap; gap:10px; }
+    .empty { color:var(--muted); font-style:italic; }
+    .pager { display:flex; align-items:center; gap:14px; margin-top:20px; }
+    .pager button:disabled { opacity:.45; cursor:not-allowed; }
+    footer { border-top:1px solid var(--line); color:var(--muted); padding:22px 0 36px; font-size:13px; }
+    @media(max-width:900px) { .moments { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:700px) { .moments { grid-template-columns:1fr; } .stats { grid-template-columns:1fr; } .provenance div { grid-template-columns:1fr; gap:3px; } header .shell { align-items:flex-start; flex-direction:column; padding-top:15px; padding-bottom:15px; } }
+  </style>
+</head>
+<body>
+  <header><div class="shell"><a class="brand" href="/">Council of AI</a><nav aria-label="Primary"><a href="/world/">Council OS world</a><a href="/dashboard/?tab=board">GSPC board</a><a href="/gspc-verify/">Verify a record</a></nav></div></header>
+  <main class="shell">
+    <div class="eyebrow">Council OS · source-linked research view</div>
+    <h1>Simulation Observatory</h1>
+    <p class="lead">Explore the public J-Space event summaries as a searchable, dated index. This view is a projection of a published source file, not a stream of current activity or a measurement of real organisations.</p>
+    <div class="notice"><strong>Evidence boundary.</strong> The source marks events as signed, but this import did not verify those signatures. Hash checks cover the imported snapshot, not the upstream signature or any real-world outcome. No certification or safety verdict is implied.</div>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><div class="label">Source summaries indexed</div><div class="value" id="count">—</div><div class="small">Rows from the dated public source</div></div>
+      <div class="stat"><div class="label">Source generated</div><div class="value" id="source-date">—</div><div class="small">This is the source date, not today's run count</div></div>
+      <div class="stat"><div class="label">Upstream signatures verified here</div><div class="value">0</div><div class="small">Boolean flags are not cryptographic verification</div></div>
+    </div>
+    <section aria-labelledby="city-heading">
+      <h2 id="city-heading">Micropolis city snapshot</h2>
+      <p class="section-intro">A bounded DESIGN simulation export from 23 September 2026. The RunPod ingest matched the source delta to its manifest and latest row before this projection was made. This is a dated snapshot, not a continuously served feed or a real city outcome.</p>
+      <div class="stats" aria-live="polite">
+        <div class="stat"><div class="label">Simulation rows in this snapshot</div><div class="value" id="city-rows">—</div><div class="small">Bounded source export; not independent users</div></div>
+        <div class="stat"><div class="label">Source generated</div><div class="value" id="city-date">—</div><div class="small">UTC capture time, not current site activity</div></div>
+        <div class="stat"><div class="label">Latest simulation tick</div><div class="value" id="city-tick">—</div><div class="small">No real-world compliance meaning</div></div>
+      </div>
+      <div class="provenance">
+        <div><span class="label">Public projection</span><span><a href="./city-2026-09-23.json">Download dated city JSON</a></span></div>
+        <div><span class="label">Raw delta SHA-256</span><span class="mono" id="city-source-hash">—</span></div>
+        <div><span class="label">Scope</span><span>The full raw export is not public in this view; its digest was checked during ingestion. The downloadable JSON includes only DESIGN simulation fields.</span></div>
+        <div><span class="label">Snapshot status</span><span id="city-status">Loading dated projection…</span></div>
+      </div>
+    </section>
+    <section aria-labelledby="source-heading">
+      <h2 id="source-heading">Where these rows came from</h2>
+      <p class="section-intro">The source URL and exact digest are included so readers can download the source and compare bytes. The import's hash head is a local linkage check, not a Bitcoin anchor or signed receipt.</p>
+      <div class="provenance">
+        <div><span class="label">Public source</span><span><a id="source-link" href="/j-space/events.json">/j-space/events.json</a></span></div>
+        <div><span class="label">Source SHA-256</span><span class="mono" id="source-hash">—</span></div>
+        <div><span class="label">Visitor verification</span><span class="source-check"><button type="button" id="verify-source">Check public source bytes</button><span id="source-verify-status" role="status">Not checked in this browser.</span></span></div>
+        <div><span class="label">Import head hash</span><span class="mono" id="import-hash">—</span></div>
+        <div><span class="label">Import status</span><span id="import-status">Loading…</span></div>
+        <div><span class="label">Machine-readable index</span><span><a href="./index.json">Download index.json</a></span></div>
+      </div>
+    </section>
+    <section aria-labelledby="moments-heading">
+      <h2 id="moments-heading">Candidate moments from the snapshot</h2>
+      <p class="section-intro" id="moments-intro">Loading source-linked cards…</p>
+      <div class="moments" id="moments" aria-live="polite"></div>
+    </section>
+    <section aria-labelledby="browse-heading">
+      <h2 id="browse-heading">Browse the summaries</h2>
+      <p class="section-intro" id="result-count">Loading dated source…</p>
+      <div class="controls"><input id="query" type="search" placeholder="Search axis, source ID or intent" aria-label="Search summaries"><select id="axis-filter" aria-label="Filter by axis"><option value="">All axes</option></select></div>
+      <div class="records" id="records" aria-live="polite"></div>
+      <div class="pager"><button type="button" id="previous">Previous</button><span id="page-label">—</span><button type="button" id="next">Next</button></div>
+    </section>
+  </main>
+  <footer><div class="shell">Council of AI · measurement, not certification. A directory entry or simulation event is not adoption, independent use or a paid result.</div></footer>
+  <script>
+  (() => {
+    const $ = id => document.getElementById(id);
+    const size = 25;
+    let rows = [], filtered = [], page = 0, indexData = null, sourcePromise = null;
+    const date = epoch => Number.isFinite(epoch) ? new Date(epoch * 1000).toISOString().slice(0, 10) : 'date unavailable';
+    const sourceStatus = message => { $('source-verify-status').textContent = message; };
+    const verifiedSource = () => {
+      if (!indexData) return Promise.reject(new Error('index has not loaded'));
+      if (!sourcePromise) {
+        sourcePromise = (async () => {
+          if (indexData.source?.url !== 'https://councilof.ai/j-space/events.json' || !/^[a-f0-9]{64}$/.test(indexData.source?.sha256 || '')) {
+            throw new Error('source URL or digest is not the expected public source');
+          }
+          const response = await fetch('/j-space/events.json', { cache: 'no-store' });
+          if (!response.ok) throw new Error(`source HTTP ${response.status}`);
+          const bytes = await response.arrayBuffer();
+          const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))]
+            .map(value => value.toString(16).padStart(2, '0')).join('');
+          if (digest !== indexData.source.sha256) throw new Error('source SHA-256 differs from the published index');
+          const source = JSON.parse(new TextDecoder().decode(bytes));
+          if (!Array.isArray(source.events) || source.events.length !== indexData.source.event_count || source.n_events !== source.events.length) {
+            throw new Error('source event count differs from the published index');
+          }
+          return source;
+        })();
+        sourcePromise.catch(() => { sourcePromise = null; });
+      }
+      return sourcePromise;
+    };
+    $('verify-source').addEventListener('click', async () => {
+      sourceStatus('Checking public source bytes…');
+      try {
+        const source = await verifiedSource();
+        sourceStatus(`MATCH — SHA-256 and ${source.events.length.toLocaleString()} source rows checked in this browser. Upstream signatures remain unverified.`);
+      } catch (error) {
+        sourceStatus(`UNCHECKABLE — ${error.message}. No signature or outcome claim made.`);
+      }
+    });
+    const addText = (parent, tag, value, className) => {
+      const child = document.createElement(tag);
+      if (className) child.className = className;
+      child.textContent = String(value ?? '');
+      parent.appendChild(child);
+      return child;
+    };
+    const render = () => {
+      const term = $('query').value.trim().toLowerCase();
+      const axis = $('axis-filter').value;
+      filtered = rows.filter(row => (!axis || row.axis === axis) && (!term || [row.axis, row.source_id, row.intent].some(value => String(value ?? '').toLowerCase().includes(term))));
+      page = Math.min(page, Math.max(0, Math.ceil(filtered.length / size) - 1));
+      $('result-count').textContent = `${filtered.length.toLocaleString()} summaries match. Source-generated data; no signature check performed by this view.`;
+      $('records').replaceChildren();
+      for (const row of filtered.slice(page * size, (page + 1) * size)) {
+        const card = document.createElement('article'); card.className = 'record';
+        const head = document.createElement('div'); head.className = 'record-head';
+        addText(head, 'span', row.axis || 'unclassified', 'axis');
+        addText(head, 'span', `${date(row.source_epoch)} · source ID ${row.source_id || 'missing'}`, 'mono');
+        card.appendChild(head);
+        addText(card, 'div', row.intent || 'No intent text in source.', row.intent ? 'intent' : 'intent empty');
+        const detail = document.createElement('details'); detail.className = 'source-detail';
+        addText(detail, 'summary', 'Inspect exact source row');
+        const detailBody = addText(detail, 'div', 'Open to check the public source bytes and this row.');
+        detail.addEventListener('toggle', async () => {
+          if (!detail.open || detail.dataset.checked === 'true') return;
+          detailBody.textContent = 'Checking public source bytes and row…';
+          try {
+            const source = await verifiedSource();
+            const original = source.events[row.source_index];
+            if (!original || original.id !== row.source_id || original.axis !== row.axis ||
+                (original.intent || '') !== row.intent || original.epoch !== row.source_epoch) {
+              throw new Error('source row differs from the indexed summary');
+            }
+            detailBody.replaceChildren();
+            addText(detailBody, 'p', `MATCH — source row ${row.source_index + 1} of ${source.events.length}. The upstream signed flag is ${String(original.signed)}; its signature was not verified here.`);
+            addText(detailBody, 'pre', JSON.stringify(original, null, 2), 'mono');
+            detail.dataset.checked = 'true';
+          } catch (error) {
+            detailBody.textContent = `UNCHECKABLE — ${error.message}. No source match inferred.`;
+          }
+        });
+        card.appendChild(detail);
+        $('records').appendChild(card);
+      }
+      if (!filtered.length) addText($('records'), 'p', 'No summaries match these filters.', 'empty');
+      $('page-label').textContent = filtered.length ? `Page ${page + 1} of ${Math.ceil(filtered.length / size)}` : 'No pages';
+      $('previous').disabled = page === 0;
+      $('next').disabled = (page + 1) * size >= filtered.length;
+    };
+    const renderMoments = cards => {
+      $('moments').replaceChildren();
+      $('moments-intro').textContent = `${cards.length} source-linked editorial leads. These are simulation summaries, not findings about real organisations or verified signatures.`;
+      for (const item of cards) {
+        const article = document.createElement('article'); article.className = 'moment';
+        addText(article, 'div', item.axis || 'unclassified', 'axis');
+        addText(article, 'h3', item.title || 'Untitled candidate');
+        addText(article, 'p', item.hook || 'No summary available.');
+        addText(article, 'p', item.disclosure || 'Simulation; upstream signature not verified.', 'disclosure');
+        const button = document.createElement('button'); button.type = 'button';
+        button.textContent = `Find source ${item.source_id || 'event'}`;
+        button.addEventListener('click', () => {
+          $('query').value = String(item.source_id || '');
+          $('axis-filter').value = '';
+          page = 0; render();
+          $('browse-heading').scrollIntoView({ behavior: 'smooth' });
+          $('query').focus({ preventScroll: true });
+        });
+        article.appendChild(button);
+        $('moments').appendChild(article);
+      }
+    };
+    $('query').addEventListener('input', () => { page = 0; render(); });
+    $('axis-filter').addEventListener('change', () => { page = 0; render(); });
+    $('previous').addEventListener('click', () => { if (page) { page--; render(); } });
+    $('next').addEventListener('click', () => { if ((page + 1) * size < filtered.length) { page++; render(); } });
+    fetch('./index.json', { cache: 'no-store' }).then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }).then(data => {
+      if (data.schema !== 'csoai.simulation-observatory/1' || !Array.isArray(data.events) || data.events.length !== data.source?.event_count) throw new Error('Unrecognised index schema or row count');
+      indexData = data;
+      rows = data.events;
+      renderMoments(Array.isArray(data.cards) ? data.cards : []);
+      $('count').textContent = rows.length.toLocaleString();
+      $('source-date').textContent = String(data.source.generated_at || 'unknown').slice(0, 10);
+      $('source-hash').textContent = data.source.sha256 || 'unavailable';
+      $('import-hash').textContent = data.import.head_hash || 'unavailable';
+      $('import-status').textContent = 'Summary rows matched to source; imported hash chain checked; upstream signatures not verified.';
+      $('source-link').href = data.source.url;
+      const axes = [...new Set(rows.map(row => row.axis).filter(Boolean))].sort();
+      for (const value of axes) { const option = document.createElement('option'); option.value = value; option.textContent = value; $('axis-filter').appendChild(option); }
+      render();
+    }).catch(error => {
+      $('result-count').textContent = `Index unavailable (${error.message}). No counts inferred.`;
+      $('import-status').textContent = 'Unavailable';
+      $('records').replaceChildren();
+    });
+    fetch('./city-2026-09-23.json', { cache: 'no-store' }).then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    }).then(data => {
+      if (data.schema !== 'csoai.simulation-city-snapshot/1' || !Array.isArray(data.rows) || data.kind !== 'dated DESIGN simulation projection') throw new Error('Unrecognised city snapshot');
+      if (data.rows.length !== data.source?.rows_checked || data.latest?.tick !== data.rows.at(-1)?.tick) throw new Error('City row count or latest tick mismatch');
+      $('city-rows').textContent = data.rows.length.toLocaleString();
+      $('city-date').textContent = String(data.source.generated_at || 'unknown').replace('T', ' ').slice(0, 16) + ' UTC';
+      $('city-tick').textContent = String(data.latest.tick);
+      $('city-source-hash').textContent = data.source.delta_sha256 || 'unavailable';
+      $('city-status').textContent = 'Dated DESIGN simulation projection; source digest and latest row checked at ingest. No real-world verdict.';
+    }).catch(error => {
+      $('city-status').textContent = `City snapshot unavailable (${error.message}). No values inferred.`;
+    });
+  })();
+  </script>
+</body>
+</html>

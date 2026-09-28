@@ -24,7 +24,7 @@ axes = board.get('axes', [])
 fact_names = {
     'provenance-controls','reserve-attestation','regulatory-framework',
     'distribution-integrity','custody-disclosure','ai-adoption-components',
-    'labour-components','humanoid-labour-index'
+    'labour-components','humanoid-labour-index','effect-binding'
 }
 
 TEMPLATE = """<!doctype html>
@@ -92,7 +92,7 @@ TEMPLATE = """<!doctype html>
   <p>This axis is a measurement, not a certificate. An empty result is labelled UNMEASURED, never 0, never "passed". TIE means indistinguishable on this axis. SEPARATED means the leader's lead is statistically real. None of this is a stamp of approval.</p>
 
   <footer>
-    <p><strong>CSOAI Ltd</strong> · UK 16939677 · <a href="/visual-board.html">All 22 axes</a> · <a href="https://councilof.ai/gspc-verify">/gspc-verify</a> · <a href="https://councilof.ai/api/gspc?axis={slug}">/api/gspc?axis={slug}</a></p>
+    <p><strong>CSOAI Ltd</strong> · UK 16939677 · <a href="/visual-board.html">Current board</a> · <a href="https://councilof.ai/gspc-verify">/gspc-verify</a> · <a href="https://councilof.ai/api/gspc?axis={slug}">/api/gspc?axis={slug}</a></p>
     <p>Measurement, not certification. Anyone can re-check.</p>
   </footer>
 </main>

@@ -29,7 +29,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { spawn } from "node:child_process";
-import { hostname } from "node:os";
+import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 
@@ -43,6 +43,27 @@ const PROBE_METHOD =
   "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion " +
   PROTOCOL_VERSION + ". A server counts as reachable only if initialize returned a JSON-RPC result.";
 const TIMEOUT_MS = Number(process.env.MCP_PROBE_TIMEOUT_MS || 15000);
+
+// ---------------------------------------------------------------- probe environment
+/**
+ * G-1 (2026-09-22): this field used to be `hostname()`, so evidence/mcp-registry.json —
+ * and therefore GET /api/mcp, /api/tools and /api/state — published the operator's laptop
+ * name, `NICHOLASs-MacBook-Air-2.local`, in a public catalogue. A machine name is not a
+ * measurement; it identifies a person's hardware and tells a reader nothing about the probe.
+ *
+ * The field still answers the only question it was ever for — WHERE did the probe run — but
+ * from a closed vocabulary that cannot carry a hostname. `validate()` rejects anything outside
+ * PROBE_ENVIRONMENTS, so a future edit that reintroduces hostname() fails `--check`, which
+ * runs inside `npm run build:client`. Structurally unable, not merely fixed.
+ */
+const PROBE_ENVIRONMENTS = ["github-actions", "ci-runner", "pod", "workstation"];
+
+function probeEnvironment() {
+  if (process.env.GITHUB_ACTIONS === "true") return "github-actions";
+  if (process.env.CI) return "ci-runner";
+  if (existsSync("/workspace")) return "pod";
+  return "workstation";
+}
 
 // ---------------------------------------------------------------- transport
 
@@ -249,6 +270,23 @@ async function probeStdioOne(target) {
   }
 }
 
+/** Keys a catalogue may NOT assert: reachability and liveness are probe-only. */
+const CLAIMED_STATE_KEYS = ["status", "state", "health", "availability", "live", "reachable", "uptime"];
+
+/**
+ * Keep a catalogue's asserted NUMBERS (clearly labelled and unverified); drop anything that
+ * asserts a STATE. `asserted_tools_count` is deliberately not called `tools_count` so no reader
+ * and no code path can mistake it for the derived, probed figure.
+ */
+function stripClaimedState(claim) {
+  const out = { verified: false, claim_state: "UNVERIFIED_HISTORICAL" };
+  for (const [k, v] of Object.entries(claim)) {
+    if (CLAIMED_STATE_KEYS.includes(k.toLowerCase())) continue;
+    out[k === "tools_count" ? "asserted_tools_count" : k] = v;
+  }
+  return out;
+}
+
 function catalogueRecord(entry) {
   return {
     id: entry.id,
@@ -267,8 +305,16 @@ function catalogueRecord(entry) {
     error: null,
     declared_by: null,
     catalogue_source: entry.catalogue_source || null,
+    // G-2 (2026-09-22): this used to spread the targets file verbatim, so six servers that
+    // have NO published endpoint and have never been contacted were published under
+    // `catalogue_claim: { status: "LIVE" }` on GET /api/mcp. "LIVE" is a reachability
+    // assertion, and the only thing that may assert reachability here is a probe that
+    // returned. The claim block is kept as PROVENANCE of what the pre-2026-08-26 hardcoded
+    // array asserted, but every status-shaped key is dropped on the way through: a claim
+    // may carry numbers a catalogue asserted, never a state this estate did not observe.
+    // The record's own honest state is the top-level status, `catalogued-not-probed`.
     catalogue_claim: entry.catalogue_claim
-      ? { ...entry.catalogue_claim, verified: false }
+      ? stripClaimedState(entry.catalogue_claim)
       : null,
   };
 }
@@ -319,7 +365,7 @@ async function run(outPath) {
     schema: "csoai.mcp-registry/1",
     generated_by: "scripts/mcp-probe.mjs",
     probe_method: PROBE_METHOD,
-    probe_host: hostname(),
+    probe_host: probeEnvironment(),
     targets_file: "scripts/mcp-targets.json",
     honesty_contract: [
       "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
@@ -352,6 +398,16 @@ function validate(artifact) {
   ok(artifact.schema === "csoai.mcp-registry/1", "wrong schema");
   ok(typeof artifact.probe_method === "string" && artifact.probe_method.length > 20, "probe_method missing");
   ok(typeof artifact.probe_host === "string" && artifact.probe_host.length > 0, "probe_host missing");
+  // G-1: a machine name may never reach a public catalogue.
+  ok(
+    PROBE_ENVIRONMENTS.includes(artifact.probe_host),
+    `probe_host "${artifact.probe_host}" is not one of ${PROBE_ENVIRONMENTS.join(" | ")} — ` +
+      "a machine hostname is not a measurement and must never be serialised"
+  );
+  ok(
+    !/\.local\b|MacBook|\.lan\b|\.home\b/i.test(JSON.stringify(artifact)),
+    "artifact contains a machine hostname (.local / MacBook / .lan / .home)"
+  );
   ok(Array.isArray(artifact.servers), "servers missing");
 
   const VALID = new Set(["reachable", "unreachable", "catalogued-not-probed"]);
@@ -370,6 +426,21 @@ function validate(artifact) {
     }
     if (s.catalogue_claim) {
       ok(s.catalogue_claim.verified === false, `${s.id}: a catalogue claim must be marked unverified`);
+      // G-2: only a probe may assert a state. A catalogue may assert numbers, never liveness.
+      for (const k of Object.keys(s.catalogue_claim)) {
+        ok(
+          !CLAIMED_STATE_KEYS.includes(k.toLowerCase()),
+          `${s.id}: catalogue_claim.${k} asserts a state on a server that was never probed`
+        );
+      }
+      ok(
+        s.catalogue_claim.tools_count === undefined,
+        `${s.id}: catalogue_claim.tools_count reads as the probed figure — use asserted_tools_count`
+      );
+      ok(
+        !/\bLIVE\b/.test(JSON.stringify(s.catalogue_claim)),
+        `${s.id}: catalogue_claim still says LIVE on a ${s.status} server`
+      );
     }
   }
 
@@ -388,7 +459,7 @@ function selftest() {
   const bad = {
     schema: "csoai.mcp-registry/1",
     probe_method: PROBE_METHOD,
-    probe_host: "test",
+    probe_host: PROBE_ENVIRONMENTS[0],
     counts: { reachable_endpoints: 0, reachable_distinct_servers: 0, tools_probed: 0 },
     // the exact defect this script exists to prevent
     servers: [{ id: "x", status: "catalogued-not-probed", last_probed: new Date().toISOString(), tools_count: 6, tools: [] }],
@@ -399,7 +470,48 @@ function selftest() {
     console.error("SELFTEST FAIL: validator did not catch a synthesised last_probed / tools_count");
     process.exit(1);
   }
-  console.log("selftest ok — validator rejects fabricated freshness and unmeasured counts");
+  // G-1: the exact defect that shipped a laptop name to a public catalogue.
+  const hostnamed = {
+    schema: "csoai.mcp-registry/1",
+    probe_method: PROBE_METHOD,
+    probe_host: "NICHOLASs-MacBook-Air-2.local",
+    counts: { reachable_endpoints: 0, reachable_distinct_servers: 0, tools_probed: 0 },
+    servers: [],
+  };
+  const hostErrs = validate(hostnamed);
+  if (!hostErrs.some((e) => e.includes("machine hostname is not a measurement"))) {
+    console.error("SELFTEST FAIL: validator accepted a machine hostname as probe_host");
+    process.exit(1);
+  }
+
+  // G-2: the exact defect that published status:"LIVE" on six never-probed servers.
+  const liveClaim = {
+    schema: "csoai.mcp-registry/1",
+    probe_method: PROBE_METHOD,
+    probe_host: PROBE_ENVIRONMENTS[0],
+    counts: { reachable_endpoints: 0, reachable_distinct_servers: 0, tools_probed: 0 },
+    servers: [{
+      id: "csoai-anchors", status: "catalogued-not-probed", last_probed: null, tools_count: null, tools: [],
+      catalogue_claim: { tools_count: 3, status: "LIVE", verified: false },
+    }],
+  };
+  const claimErrs = validate(liveClaim);
+  const claimCaught =
+    claimErrs.some((e) => e.includes("asserts a state on a server that was never probed")) &&
+    claimErrs.some((e) => e.includes("still says LIVE"));
+  if (!claimCaught) {
+    console.error("SELFTEST FAIL: validator accepted a LIVE catalogue claim on an unprobed server");
+    process.exit(1);
+  }
+
+  // stripClaimedState must be the thing that makes the above unreachable in practice.
+  const stripped = stripClaimedState({ tools_count: 3, status: "LIVE" });
+  if (stripped.status !== undefined || stripped.tools_count !== undefined || stripped.asserted_tools_count !== 3) {
+    console.error("SELFTEST FAIL: stripClaimedState did not drop the status claim / rename the count");
+    process.exit(1);
+  }
+
+  console.log("selftest ok — validator rejects fabricated freshness, unmeasured counts, machine hostnames and LIVE catalogue claims");
 }
 
 // ---------------------------------------------------------------- main

@@ -1,0 +1,44 @@
+{
+ "servers": [
+  {
+   "server": {
+    "name": "io.example/gamma",
+    "version": "0.1.0",
+    "remotes": [
+     {
+      "type": "streamable-http",
+      "url": "https://gamma-space.hf.space/gradio_api/mcp/sse"
+     }
+    ],
+    "packages": [
+     {
+      "registryType": "npm",
+      "identifier": "@example/gamma"
+     }
+    ]
+   },
+   "_meta": {
+    "io.modelcontextprotocol.registry/official": {
+     "status": "active",
+     "isLatest": true
+    }
+   }
+  },
+  {
+   "server": {
+    "name": "io.example/delta",
+    "version": "3.0.0",
+    "packages": [
+     {
+      "registryType": "pypi",
+      "identifier": "delta"
+     }
+    ]
+   },
+   "_meta": {}
+  }
+ ],
+ "metadata": {
+  "count": 2
+ }
+}

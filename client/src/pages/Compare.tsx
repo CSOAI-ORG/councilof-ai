@@ -147,8 +147,9 @@ export default function Compare({ focus }: { focus?: string }) {
       m.name = "description";
       document.head.appendChild(m);
     }
-    m.content =
-      "What Council of AI publishes, with the artifact behind every row: a living board, signed cards anyone can recompute, every chain position, and a corrections ledger. We have not assessed the vendors named here and publish no finding about them. Measurement, not certification.";
+    m.content = fname
+      ? `Council of AI vs ${fname}: what we publish, with the artifact behind every row. We have not assessed ${fname} and will not characterise it; see its own site.`
+      : "What Council of AI publishes, with the artifact behind every row: a living board, signed cards anyone can recompute, every chain position, and a corrections ledger. We have not assessed the vendors named here and publish no finding about them. Measurement, not certification.";
     const ld = focusFaq
       ? {
           ...JSONLD,

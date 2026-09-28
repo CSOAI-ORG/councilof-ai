@@ -1,0 +1,40 @@
+# Correction C-2026-0923-02: the board's headline count cannot express that no axis currently separates two models, although the same payload's limitations already say so
+
+**Register id C-2026-0923-02. Promoted from draft D-2026-09-23T03-02.** Generated 2026-09-23T03:55:06Z by the arena-separation lane
+(hand-drafted, not detector output). Not published, not merged, no ledger id.
+
+Kind: `summary_omits_measured_negative` - fingerprint `236d1c31f796639e`
+
+## The byte-sources compared
+
+- **A** (measured): `https://councilof.ai/api/gspc`  
+  sha256 `bcd2ff15b03180106d3ae48ef0be8682da0c1d0976e9624180aededdcd744230` - as_of `2026-09-23T03:55:06Z` (fetched_at (payload carries no as_of))
+
+## The field
+
+`totals (no separation aggregate)`
+
+```
+was: totals.public_count = "23 axis · 23 measured"; totals has no separation field
+now: limitations[0] of the same payload: 14 model-comparison axes, 2 TIE, 12 UNTESTED
+```
+
+## Why it matters
+
+A measured axis and an axis that can tell two models apart are different claims, and only the first is derived into totals. Separation is present per-axis in the array and stated in limitations, so the aggregate is derivable from bytes already served; it is simply not derived. This records the omission, not an intent.
+
+## What was wrong
+
+totals carries axes, measured_axes, unmeasured_axes, quotable_axes and the count line '23 axis · 23 measured', and no aggregate of the separation field at all. The same payload's limitations[0] states the measured position plainly: of the 14 model-comparison axes, 2 TIE, 12 UNTESTED. The count line is the line every other surface quotes, so the figure that travels is the one that cannot carry the negative.
+
+## Proposed remedy (owner decides)
+
+Fixed at the cause on branch fix/signed-surface-agreement-2026-09-23 (pushed to the pod bare repo, NOT merged at the time of this entry). functions/api/gspc.ts now derives the separation aggregate ONCE, beside the counts it already derived, so a reader meets the negative at the same moment as the measured count. totals.separation_public_count reads "0 of 14 model-comparison axis separated a leader, 2 TIE, 12 UNTESTED", with a note saying to read it WITH public_count and never instead of it. totals.count_grammar, the line the payload already points readers to, now carries the same sentence and the rule behind it: a measurement is not a separated leader, a point-estimate lead is not a measured advantage, and UNTESTED is not a tie. totals.lid, the one line the estate asks readers to quote verbatim and the line the home page renders verbatim, now states "0 separated leaders". separated_leads, ties and untested_separations read the same three constants instead of re-deriving them, so the headline, the grammar, the tallies and limitations[0] cannot drift apart - the defect this file already records at C-2026-0922 (G-3, two derivations of one quantity) is not reintroduced. functions/api/gspc.lid-truth.test.ts was extended to parse the new lid number against totals.separated_leads and to assert that the three separation states account for every model-comparison axis with none folded into another.
+
+## Reproduce
+
+```bash
+curl -sS 'https://councilof.ai/api/gspc' | sha256sum   # expect bcd2ff15b03180106d3ae48ef0be8682da0c1d0976e9624180aededdcd744230
+```
+
+Measurement, not a mark of conformity. UNMEASURED, UNTESTED and TIE stay first-class; nothing here is a grade.

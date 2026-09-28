@@ -64,9 +64,25 @@
       "key_document": "https://csoai.org/.well-known/did.json",
       "also": [
         "https://councilof.ai/verifier/gspc-verify.mjs for the measurement cards the receipt references",
-        "https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/verify_receipt.py for the signed offer and receipt"
+        "https://councilof.ai/verifier/verify_receipt.py for the signed offer and receipt"
       ],
-      "expect": "VALID (exit 0), INVALID (exit 1) or UNCHECKABLE (exit 2)"
+      "expect": "VALID (exit 0), INVALID (exit 1) or UNCHECKABLE (exit 2)",
+      "offer_receipt_checker": {
+        "url": "https://councilof.ai/verifier/verify_receipt.py",
+        "manifest": "https://councilof.ai/verifier/receipt-toolkit.json",
+        "guide": "https://councilof.ai/verifier/receipt-toolkit.md",
+        "format": "x402 compact JWS offer/receipt, not card-v0",
+        "default_network": "One public DID-document read; saved DID file supports offline replay",
+        "payment_verification": false
+      },
+      "assembled_feed_checker": {
+        "manifest": "https://councilof.ai/api/eunomia-data?manifest=1",
+        "verifier": "https://councilof.ai/verifier/verify_feed_delivery.mjs",
+        "guide": "https://councilof.ai/verifier/feed-delivery.md",
+        "pin_header": "x-csoai-expected-feed-sha256",
+        "scope": "Assembled payload.blocks and optional unsigned response/request records; not signature or payment verification",
+        "network_calls": 0
+      }
     }
   ],
   "excludes_self": true,

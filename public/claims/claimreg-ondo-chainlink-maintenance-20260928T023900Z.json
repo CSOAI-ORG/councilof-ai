@@ -1,0 +1,2586 @@
+{
+ "schema": "csoai.claim-registry/0.2",
+ "registry_id": "claimreg-ondo-chainlink-maintenance-20260928T023900Z",
+ "created_utc": "2026-09-28",
+ "built_at_utc": "2026-09-28T02:39:00Z",
+ "maintainer": "CSOAI Ltd — claim maintenance (measurement, not certification)",
+ "supersedes": {
+  "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+  "file": "/claims/claimreg-ondo-chainlink-2026-09-22-rev2.json",
+  "sha256": "4c8efe065cffbba0c7674907ddb882eb1d4144af543e263a16ac318b0cf2ca59",
+  "rule": "supersede by reference, never edit: the prior file's bytes are unchanged, still served at their own URL and still covered by their own OpenTimestamps submission"
+ },
+ "what_moved": {
+  "claims": 8,
+  "states": {
+   "UNMEASURED": 2,
+   "CLAIM_MEASURED": 5,
+   "CLAIM_CAPTURED": 1
+  },
+  "moved_from_claim_captured": [],
+  "still_claim_captured": [
+   "ON-1"
+  ]
+ },
+ "subjects": {
+  "chainlink": {
+   "source": "https://chain.link/ (captured 2026-09-22)",
+   "claims": [
+    {
+     "id": "CL-1",
+     "text": "$34,177,623,388,199 transaction value enabled",
+     "type": "quantitative-cumulative",
+     "state_before": "UNMEASURED",
+     "state": "UNMEASURED",
+     "state_rule": "first-class: the measurement has not been made, or the series is not yet long enough to be one, and no number is invented in its place",
+     "measurement_plan_from_rev1": "cumulative counter — capture weekly, track revision/restatement behaviour; independent recomputation not possible from public data, so maintenance = restatement watch + methodology request",
+     "method": "fetch the page keylessly; on its VISIBLE text take the last comma-grouped number immediately before the label 'transaction value enabled'; append the reading with the page's byte digest to a published JSONL series; compare consecutive readings for a downward move",
+     "window": "2026-09-22T16:18:09Z .. 2026-09-22T16:18:09Z",
+     "denominator": {
+      "readings_in_series": 1,
+      "distinct_utc_dates": 1,
+      "minimum_dates_for_a_measurement": 2
+     },
+     "measurement": {
+      "observations": 1,
+      "distinct_utc_dates": 1,
+      "first_observed_at": "2026-09-22T16:18:09Z",
+      "last_observed_at": "2026-09-22T16:18:09Z",
+      "first_value": 34177623388199,
+      "last_value": 34177623388199,
+      "changes": [],
+      "downward_revisions": [],
+      "observed_change_requiring_review": false,
+      "latest": {
+       "claim_id": "CL-1",
+       "observed_at": "2026-09-22T16:18:09Z",
+       "value": 34177623388199,
+       "rendered": "oclear, Mastercard, Fidelity International, UBS, ANZ, Aave, GMX, Lido, and many others. Learn more $ 34,177,623,388,199 transaction value enabled TVE is calculated b",
+       "url": "https://chain.link/",
+       "page_sha256": "fac303d822438c4ff6925ee0aa8d83168f041c359a25b3993c316fbc68d5f555",
+       "page_bytes": 417569
+      },
+      "series_file": "/claims/series/CL-1.jsonl",
+      "reason": "the series holds 1 reading(s) on 1 distinct UTC date(s). One capture is not a measurement: a restatement watch needs at least two dated points before it can report anything about how the figure behaves, so this claim stays UNMEASURED"
+     },
+     "sources": [
+      {
+       "url": "https://chain.link/",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:09Z",
+       "response_bytes": 417569,
+       "response_sha256": "fac303d822438c4ff6925ee0aa8d83168f041c359a25b3993c316fbc68d5f555",
+       "note": "page carrying the label 'transaction value enabled'"
+      }
+     ],
+     "does_not_prove": [
+      "the figure itself is not verified and cannot be: no public dataset recomputes it, so this harness watches how it is published and never asserts that it is right or wrong",
+      "no reading before the first one in the series: the watch begins when it begins",
+      "a page that renders the figure only in client-side JavaScript would read as absent here, which would be a limit of the reader, not a statement about the publisher",
+      "the figure is not recomputed and cannot be: the watch is over how it is published, never over whether it is right"
+     ],
+     "note": "UNMEASURED by design at rev2: the series holds today's reading and no other date. One capture is not a measurement, so this claim does not move until the weekly loop has added a second dated point. The series is published so anyone can check ours against theirs.",
+     "state_reason": "the series holds 1 reading(s) on 1 distinct UTC date(s). One capture is not a measurement: a restatement watch needs at least two dated points before it can report anything about how the figure behaves, so this claim stays UNMEASURED"
+    },
+    {
+     "id": "CL-2",
+     "text": "the only all-in-one oracle platform",
+     "type": "superlative-exclusivity",
+     "state_before": "CLAIM_MEASURED",
+     "state": "CLAIM_MEASURED",
+     "state_rule": "an instrument ran, over a stated window, against a stated denominator, and the reading is published with it",
+     "measurement_plan_from_rev1": "exclusivity claims are falsifiable by counterexample; log feature-parity counterexamples (API3, Pyth, RedStone, Chronicle) per category",
+     "method": "for each competitor, enumerate its own published index (robots.txt -> sitemap), fetch a bounded set of its documentation pages once into a corpus, and search every declared capability category across that corpus; each match is quoted from the vendor's own visible page text with the URL, the access time and the response digest",
+     "window": "each competitor's published documentation as served at measured_at",
+     "denominator": {
+      "categories": 7,
+      "competitors": 4,
+      "category_vendor_pairs_searched": 28,
+      "pairs_with_a_documented_capability": 13,
+      "pages_read_per_vendor": {
+       "API3": 5,
+       "Pyth": 40,
+       "RedStone": 40,
+       "Chronicle": 40
+      },
+      "pages_read_total": 125,
+      "max_pages_per_vendor": 40
+     },
+     "measurement": {
+      "categories_declared": {
+       "price-data-feeds": "\\bprice feeds?\\b|\\bdata feeds?\\b",
+       "low-latency-data-streams": "\\blow[- ]latency\\b|\\bsub[- ]second\\b|\\bdata streams?\\b",
+       "verifiable-randomness": "\\bverifiable random\\w*\\b|\\bQRNG\\b|\\brandom number\\b|\\brandomness\\b",
+       "cross-chain-messaging": "\\bcross[- ]chain messag\\w*\\b|\\binteroperability protocol\\b|\\bomnichain\\b",
+       "offchain-compute-any-api": "\\bany API\\b|\\bfirst[- ]party oracle\\b|\\bAirnode\\b|\\boff[- ]chain comput\\w*\\b",
+       "proof-of-reserve": "\\bproof of reserves?\\b|\\bPoR\\b",
+       "automation-scheduled-execution": "\\bautomation\\b|\\bkeepers?\\b|\\bscheduled execution\\b"
+      },
+      "counterexample_counts": {
+       "price-data-feeds": 4,
+       "low-latency-data-streams": 2,
+       "verifiable-randomness": 2,
+       "cross-chain-messaging": 0,
+       "offchain-compute-any-api": 2,
+       "proof-of-reserve": 1,
+       "automation-scheduled-execution": 2
+      },
+      "counterexamples_per_category": {
+       "price-data-feeds": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": true,
+         "pages_read": 5,
+         "source_url": "https://api3.org/",
+         "accessed_utc": "2026-09-22T16:21:22Z",
+         "response_sha256": "c52ea6b082be6df87f24af58beb9fe433365c8fb7c34275f50e149e24c916efc",
+         "matched_text": "data feeds",
+         "quoted_capability": "…otals updated through the 7th of each month DeFi Trailblazers Meet the first lending protocols to earn OEV Rewards Explore our ecosystem We have 100+ data feeds on every chain Explore all chains Early access Introducing AirnodeHub A marketplace where agents discover, call and pay for APIs on their own, and th…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://docs.pyth.network/",
+         "accessed_utc": "2026-09-22T16:21:31Z",
+         "response_sha256": "77d9664ac1cad054349695c947c2bdebc7f9917936214c28b4ea4a946f75bf5b",
+         "matched_text": "price feeds",
+         "quoted_capability": "…Explorer Get started Resources for Developers Explore the Pyth Network for developers Get Your API Key Request access for the Pyth Ultra Low Latency price feeds. Link Supported Feeds -- Pyth Pro Explore the complete list of supported price feeds for Pyth Pro. Link API Reference -- Pyth Pro Explore the complet…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://redstone.finance/",
+         "accessed_utc": "2026-09-22T16:22:31Z",
+         "response_sha256": "2dab1f3e5e893adf4cbbef4cc9269d2360b9123580b69b820aa6dccf42d9dbe0",
+         "matched_text": "Data Feeds",
+         "quoted_capability": "RedStone | Data layer – no longer render-blocking --> tag --> Products Product Stack Our entire modular ecosystem Core Data Feeds Price Feeds Pull · Push · 110+ chains Proof of Reserve Cross-chain · RWA Specialized Oracles Atom OEV · MEV-resistant Bolt Sub-second · Push RedStone…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://chroniclelabs.org/",
+         "accessed_utc": "2026-09-22T16:23:17Z",
+         "response_sha256": "ed6ff4e1cd33490a49482e375fc77f01f3dc0232cb2d25d15a55ba5dd033a6a1",
+         "matched_text": "Data Feeds",
+         "quoted_capability": "…Proof of Asset Real-time verification of tokenized assets and holdings-level data, including composition, valuation, liquidity, and yield. Learn more Data Feeds High-integrity price feeds built for DeFi platforms. Chronicle network delivers transparent data models, rigorous source verification, and real-time…",
+         "not_found_means": null
+        }
+       ],
+       "low-latency-data-streams": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": false,
+         "pages_read": 5,
+         "not_found_means": "the pattern for this category did not appear in the 5 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://docs.pyth.network/",
+         "accessed_utc": "2026-09-22T16:21:31Z",
+         "response_sha256": "77d9664ac1cad054349695c947c2bdebc7f9917936214c28b4ea4a946f75bf5b",
+         "matched_text": "low latency",
+         "quoted_capability": "…data and randomness layer. Pyth Pro Subscription-based price data for institutions and advanced use cases. Previously known as Lazer. FEATURES Ultra-low latency Crypto, Equities & Indexes Customizable channels and latency Dedicated support QUICK LINKS Get Pyth Pro API Key Browse Supported Feeds Pricing Get st…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://redstone.finance/",
+         "accessed_utc": "2026-09-22T16:22:31Z",
+         "response_sha256": "2dab1f3e5e893adf4cbbef4cc9269d2360b9123580b69b820aa6dccf42d9dbe0",
+         "matched_text": "Sub-second",
+         "quoted_capability": "…ecosystem Core Data Feeds Price Feeds Pull · Push · 110+ chains Proof of Reserve Cross-chain · RWA Specialized Oracles Atom OEV · MEV-resistant Bolt Sub-second · Push RedStone Live Real-time · Monitoring RedStone Settle T+0 · RWA Collateral INTEGRATED WITH Developers Developers Hub Integration guides · SDK ·…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        }
+       ],
+       "verifiable-randomness": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": true,
+         "pages_read": 5,
+         "source_url": "https://api3.org/terms-and-conditions/",
+         "accessed_utc": "2026-09-22T16:21:24Z",
+         "response_sha256": "fd2151d0aff89daf555af75ca7662516d4a881e31da642437906768bd513b3a0",
+         "matched_text": "QRNG",
+         "quoted_capability": "…services, including but not limited to Airnode, AirnodeHub, Airkeeper, Airseeker, Api3 Market, data feeds, managed data feeds, dAPIs, Beacons, DEAL, QRNG, oracle and signed data services, OEV Network, searcher software, Nodary, service coverage, and any other such services provided by or through Api3 (…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://docs.pyth.network/",
+         "accessed_utc": "2026-09-22T16:21:31Z",
+         "response_sha256": "77d9664ac1cad054349695c947c2bdebc7f9917936214c28b4ea4a946f75bf5b",
+         "matched_text": "randomness",
+         "quoted_capability": "…as upgraded on August 26, 2026 Hermes now requires an API Key — register if you haven't yet Learn more Products Connect to the global market data and randomness layer. Pyth Pro Subscription-based price data for institutions and advanced use cases. Previously known as Lazer. FEATURES Ultra-low latency Crypto,…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        }
+       ],
+       "cross-chain-messaging": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": false,
+         "pages_read": 5,
+         "not_found_means": "the pattern for this category did not appear in the 5 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        }
+       ],
+       "offchain-compute-any-api": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": true,
+         "pages_read": 5,
+         "source_url": "https://api3.org/terms-and-conditions/",
+         "accessed_utc": "2026-09-22T16:21:24Z",
+         "response_sha256": "fd2151d0aff89daf555af75ca7662516d4a881e31da642437906768bd513b3a0",
+         "matched_text": "Airnode",
+         "quoted_capability": "…aces, products, applications, documentation, repositories, hackathons, events, presentations or other provided services, including but not limited to Airnode, AirnodeHub, Airkeeper, Airseeker, Api3 Market, data feeds, managed data feeds, dAPIs, Beacons, DEAL, QRNG, oracle and signed data services, OEV Netw…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://www.pyth.network/blog/data-driven-2023-pyth-developer-conference",
+         "accessed_utc": "2026-09-22T16:21:50Z",
+         "response_sha256": "d792f028ff65a30c7c14fbd759c72c4c74e82fb3298415dac9a79a27dc24c345",
+         "matched_text": "first-party oracle",
+         "quoted_capability": "…th a keynote by Mike Cahill, CEO of Douro Labs. Mike will look back at the growth of the Pyth Network and how the world’s largest and fastest-growing first-party oracle network has transformed the capabilities of DeFi today. Afterwards, Jayant Krishnamurthy, CTO of Douro Labs, will walk the audience through the Pyth…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        }
+       ],
+       "proof-of-reserve": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": false,
+         "pages_read": 5,
+         "not_found_means": "the pattern for this category did not appear in the 5 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://redstone.finance/",
+         "accessed_utc": "2026-09-22T16:22:31Z",
+         "response_sha256": "2dab1f3e5e893adf4cbbef4cc9269d2360b9123580b69b820aa6dccf42d9dbe0",
+         "matched_text": "Proof of Reserve",
+         "quoted_capability": "…yer – no longer render-blocking --> tag --> Products Product Stack Our entire modular ecosystem Core Data Feeds Price Feeds Pull · Push · 110+ chains Proof of Reserve Cross-chain · RWA Specialized Oracles Atom OEV · MEV-resistant Bolt Sub-second · Push RedStone Live Real-time · Monitoring RedStone Settle T+0 · RWA…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        }
+       ],
+       "automation-scheduled-execution": [
+        {
+         "competitor": "API3",
+         "documented_in_the_pages_read": false,
+         "pages_read": 5,
+         "not_found_means": "the pattern for this category did not appear in the 5 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "Pyth",
+         "documented_in_the_pages_read": false,
+         "pages_read": 40,
+         "not_found_means": "the pattern for this category did not appear in the 40 page(s) of this vendor's own documentation that were read. It is a statement about those pages and not about what the vendor offers"
+        },
+        {
+         "competitor": "RedStone",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://www.redstone.finance/blog/what-is-a-blockchain-oracle-the-complete-2026-guide/",
+         "accessed_utc": "2026-09-22T16:22:42Z",
+         "response_sha256": "39aca5c647e3719a90e1c7b6ed751501fb11dc388bd3034b978cb378e82cab37",
+         "matched_text": "automation",
+         "quoted_capability": "…ility Limited High Feed flexibility Constrained Broad DATA TABLE Other Types of Oracles Human oracles handle a specific category of data that resists automation: subjective or context-dependent information that requires interpretation. Prediction markets, for example, often rely on human oracles to resolve ou…",
+         "not_found_means": null
+        },
+        {
+         "competitor": "Chronicle",
+         "documented_in_the_pages_read": true,
+         "pages_read": 40,
+         "source_url": "https://chroniclelabs.org/case-studies",
+         "accessed_utc": "2026-09-22T16:23:25Z",
+         "response_sha256": "2815e7031915189de3db87475896ce0b3fde02c6a42060e59379898dfe3ee870",
+         "matched_text": "automation",
+         "quoted_capability": "…ew funds 02 Scaling price feed usage across additional chains and execution environments 03 Leveraging Chronicle monitoring signals to support deeper automation and risk controls Chronicle remains a long-term data infrastructure partner for TAC Fund, supporting growth through verifiable, resilient, and transp…",
+         "not_found_means": null
+        }
+       ]
+      }
+     },
+     "sources": [
+      {
+       "url": "https://api3.org/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:09Z",
+       "response_bytes": 67,
+       "response_sha256": "7ab63e038e092afd57dd9aaefc18590fcb2926d884f6cea5654165ad723f0328",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://api3.org/sitemap-index.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:09Z",
+       "response_bytes": 179,
+       "response_sha256": "eaea5a12c829b39cc831ba51edfee8b93c59b0f8c0e49dc0756cb39fb91437a8",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://api3.org/sitemap-0.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:09Z",
+       "response_bytes": 546,
+       "response_sha256": "120cf08090abd9604f6f380209ddf41ec668f8708f6f9fc0f7c6b136f3b64c5a",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://docs.api3.org/robots.txt",
+       "status": 404,
+       "accessed_utc": "2026-09-22T16:21:10Z",
+       "response_bytes": 4811,
+       "response_sha256": "1a6a23b74be648617bc5fff8c88bf831cb481666f4762a590559a79c59a41b54",
+       "reason": "HTTP 404",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://pyth.network/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:25Z",
+       "response_bytes": 69,
+       "response_sha256": "bc598c0a85c11d2b89c13e8486262c00b6140957c591e1e801174a405867cc03",
+       "final_url": "https://www.pyth.network/robots.txt",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.pyth.network/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:25Z",
+       "response_bytes": 49943,
+       "response_sha256": "da313a22cfe5a30591aa15886fbc4de6b7740aaa8d081989fb5d45f97bfa45d0",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://docs.pyth.network/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:26Z",
+       "response_bytes": 71,
+       "response_sha256": "d900b91c9e2d9117d67d818fb1c0402c86625a3ad8e1ef0a830e6703ef864aa8",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://docs.pyth.network/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:21:26Z",
+       "response_bytes": 22996,
+       "response_sha256": "b4f6bc9f4442e2371c24cd422ea1aa59d980b0ad8f887aab155e358aced695a3",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://redstone.finance/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:22:17Z",
+       "response_bytes": 1623,
+       "response_sha256": "e98482969a75844be6b85f785826d5e9feeeb8390ac912afd5d599bd113ecc24",
+       "final_url": "https://www.redstone.finance/robots.txt",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.redstone.finance/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:22:18Z",
+       "response_bytes": 38683,
+       "response_sha256": "4099ac149e33541ead45063241c0ae24939827a050be9c63c2c07b1e6e9bf73a",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://docs.redstone.finance/robots.txt",
+       "status": 404,
+       "accessed_utc": "2026-09-22T16:22:18Z",
+       "response_bytes": 10300,
+       "response_sha256": "c312c18fc30f0b4902fcf9aeda6c663c9b2951c78aadbef4f3773de2f709ae62",
+       "reason": "HTTP 404",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.docs.redstone.finance/robots.txt",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:22:24Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "URLError",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://chroniclelabs.org/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:23:16Z",
+       "response_bytes": 1856,
+       "response_sha256": "c2d4c6cb0715aa6341788598efa04f5061b18c6390ac03aaafe7cbfcca5fb0d8",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://chroniclelabs.org/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:23:17Z",
+       "response_bytes": 59686,
+       "response_sha256": "276c8fb5fc372da63c0908c1da0c741b70d131f55d43eee466e451f0ec82685d",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://api3.org/",
+       "accessed_utc": "2026-09-22T16:21:22Z",
+       "response_sha256": "c52ea6b082be6df87f24af58beb9fe433365c8fb7c34275f50e149e24c916efc",
+       "note": "price-data-feeds / API3 — matched 'data feeds'"
+      },
+      {
+       "url": "https://docs.pyth.network/",
+       "accessed_utc": "2026-09-22T16:21:31Z",
+       "response_sha256": "77d9664ac1cad054349695c947c2bdebc7f9917936214c28b4ea4a946f75bf5b",
+       "note": "price-data-feeds / Pyth — matched 'price feeds'"
+      },
+      {
+       "url": "https://redstone.finance/",
+       "accessed_utc": "2026-09-22T16:22:31Z",
+       "response_sha256": "2dab1f3e5e893adf4cbbef4cc9269d2360b9123580b69b820aa6dccf42d9dbe0",
+       "note": "price-data-feeds / RedStone — matched 'Data Feeds'"
+      },
+      {
+       "url": "https://chroniclelabs.org/",
+       "accessed_utc": "2026-09-22T16:23:17Z",
+       "response_sha256": "ed6ff4e1cd33490a49482e375fc77f01f3dc0232cb2d25d15a55ba5dd033a6a1",
+       "note": "price-data-feeds / Chronicle — matched 'Data Feeds'"
+      },
+      {
+       "url": "https://api3.org/terms-and-conditions/",
+       "accessed_utc": "2026-09-22T16:21:24Z",
+       "response_sha256": "fd2151d0aff89daf555af75ca7662516d4a881e31da642437906768bd513b3a0",
+       "note": "verifiable-randomness / API3 — matched 'QRNG'"
+      },
+      {
+       "url": "https://www.pyth.network/blog/data-driven-2023-pyth-developer-conference",
+       "accessed_utc": "2026-09-22T16:21:50Z",
+       "response_sha256": "d792f028ff65a30c7c14fbd759c72c4c74e82fb3298415dac9a79a27dc24c345",
+       "note": "offchain-compute-any-api / Pyth — matched 'first-party oracle'"
+      },
+      {
+       "url": "https://www.redstone.finance/blog/what-is-a-blockchain-oracle-the-complete-2026-guide/",
+       "accessed_utc": "2026-09-22T16:22:42Z",
+       "response_sha256": "39aca5c647e3719a90e1c7b6ed751501fb11dc388bd3034b978cb378e82cab37",
+       "note": "automation-scheduled-execution / RedStone — matched 'automation'"
+      },
+      {
+       "url": "https://chroniclelabs.org/case-studies",
+       "accessed_utc": "2026-09-22T16:23:25Z",
+       "response_sha256": "2815e7031915189de3db87475896ce0b3fde02c6a42060e59379898dfe3ee870",
+       "note": "automation-scheduled-execution / Chronicle — matched 'automation'"
+      }
+     ],
+     "does_not_prove": [
+      "no finding of falsity is made or implied about anyone. A counterexample bears on exclusivity in one declared category, nothing more",
+      "'all-in-one' is not a defined term; this harness declares its own category list and a reader who disagrees with the categories should re-run it with theirs",
+      "a documented capability is not a working, audited, adopted or comparable capability; the same word can name very different products",
+      "these are the vendors' own marketing and documentation surfaces, measured as published text and not as delivered software",
+      "a category not found in a vendor's corpus is absent from the pages read, which is a bounded set; it is not an absence from the vendor's offering"
+     ],
+     "note": "a counterexample bears on exclusivity in one declared category and nothing else. No finding of falsity is made or implied about anyone, and 'all-in-one' is not a defined term."
+    },
+    {
+     "id": "CL-3",
+     "text": "market leader powering the majority of decentralized finance (DeFi)",
+     "type": "market-share",
+     "state_before": "CLAIM_MEASURED",
+     "state": "CLAIM_MEASURED",
+     "state_rule": "an instrument ran, over a stated window, against a stated denominator, and the reading is published with it",
+     "measurement_plan_from_rev1": "majority = >50%; oracle market-share estimable via DeFiLlama oracle TVS breakdown — weekly capture vs claim",
+     "method": "sum `tvl` per oracle named in each protocol's `oracles` array from GET https://api.llama.fi/protocols (keyless), two ways: crediting every named oracle (upper bound) and crediting only protocols that name exactly one (lower bound)",
+     "window": "a single point reading of DeFiLlama's current TVL values at measured_at; not a time series",
+     "denominator": {
+      "claim_denominator_would_be": "all of decentralized finance",
+      "available_denominator": "DeFiLlama-tracked protocols that carry an `oracles` field",
+      "coverage_pct_of_tracked_defi_tvl": 0.4491
+     },
+     "measurement": {
+      "result": {
+       "protocols_tracked_with_positive_tvl": 5775,
+       "tvl_usd_all_tracked_protocols": 614435151549.69,
+       "protocols_carrying_an_oracles_field": 193,
+       "tvl_usd_with_oracle_attribution": 2759588008.89,
+       "attribution_coverage_pct_of_tracked_tvl": 0.4491,
+       "tvl_usd_attributed_to_exactly_one_oracle": 2237806990.01,
+       "any_attribution_upper_bound": [
+        {
+         "oracle": "Internal",
+         "tvl_usd": 990832962.15,
+         "pct_of_attributed_tvl": 35.9051
+        },
+        {
+         "oracle": "Chaos",
+         "tvl_usd": 815007879.59,
+         "pct_of_attributed_tvl": 29.5337
+        },
+        {
+         "oracle": "UMA",
+         "tvl_usd": 363170350.85,
+         "pct_of_attributed_tvl": 13.1603
+        },
+        {
+         "oracle": "Chainlink",
+         "tvl_usd": 288086584.1,
+         "pct_of_attributed_tvl": 10.4395
+        },
+        {
+         "oracle": "Pyth",
+         "tvl_usd": 284708642.86,
+         "pct_of_attributed_tvl": 10.3171
+        },
+        {
+         "oracle": "Supra",
+         "tvl_usd": 186939221.84,
+         "pct_of_attributed_tvl": 6.7742
+        },
+        {
+         "oracle": "Band",
+         "tvl_usd": 117082021.75,
+         "pct_of_attributed_tvl": 4.2427
+        },
+        {
+         "oracle": "Switchboard",
+         "tvl_usd": 68455219.82,
+         "pct_of_attributed_tvl": 2.4806
+        },
+        {
+         "oracle": "TWAP",
+         "tvl_usd": 58447552.77,
+         "pct_of_attributed_tvl": 2.118
+        },
+        {
+         "oracle": "RedStone",
+         "tvl_usd": 55585690.12,
+         "pct_of_attributed_tvl": 2.0143
+        },
+        {
+         "oracle": "Curve",
+         "tvl_usd": 41872448.53,
+         "pct_of_attributed_tvl": 1.5173
+        },
+        {
+         "oracle": "Stork",
+         "tvl_usd": 25750800.12,
+         "pct_of_attributed_tvl": 0.9331
+        },
+        {
+         "oracle": "Acurast",
+         "tvl_usd": 17732903.08,
+         "pct_of_attributed_tvl": 0.6426
+        },
+        {
+         "oracle": "Pragma",
+         "tvl_usd": 13715684.35,
+         "pct_of_attributed_tvl": 0.497
+        },
+        {
+         "oracle": "DIA",
+         "tvl_usd": 7775554.39,
+         "pct_of_attributed_tvl": 0.2818
+        },
+        {
+         "oracle": "Binance Oracle",
+         "tvl_usd": 4605568.81,
+         "pct_of_attributed_tvl": 0.1669
+        },
+        {
+         "oracle": "Oracles.Cash",
+         "tvl_usd": 4240561.85,
+         "pct_of_attributed_tvl": 0.1537
+        },
+        {
+         "oracle": "Api3",
+         "tvl_usd": 2181013.5,
+         "pct_of_attributed_tvl": 0.079
+        },
+        {
+         "oracle": "eOracle",
+         "tvl_usd": 1272305.91,
+         "pct_of_attributed_tvl": 0.0461
+        },
+        {
+         "oracle": "cLabs",
+         "tvl_usd": 1237071.6,
+         "pct_of_attributed_tvl": 0.0448
+        },
+        {
+         "oracle": "Harbinger",
+         "tvl_usd": 963101.27,
+         "pct_of_attributed_tvl": 0.0349
+        },
+        {
+         "oracle": "Dark Oracle",
+         "tvl_usd": 672617.28,
+         "pct_of_attributed_tvl": 0.0244
+        },
+        {
+         "oracle": "NFTOracle",
+         "tvl_usd": 654518.6,
+         "pct_of_attributed_tvl": 0.0237
+        },
+        {
+         "oracle": "ReserveOracle",
+         "tvl_usd": 654518.6,
+         "pct_of_attributed_tvl": 0.0237
+        },
+        {
+         "oracle": "Oracle Pools",
+         "tvl_usd": 540655.09,
+         "pct_of_attributed_tvl": 0.0196
+        },
+        {
+         "oracle": "0x",
+         "tvl_usd": 511648.02,
+         "pct_of_attributed_tvl": 0.0185
+        },
+        {
+         "oracle": "Coinmarketcap",
+         "tvl_usd": 473166.4,
+         "pct_of_attributed_tvl": 0.0171
+        },
+        {
+         "oracle": "Balancer Pool LP token",
+         "tvl_usd": 437754.13,
+         "pct_of_attributed_tvl": 0.0159
+        },
+        {
+         "oracle": "Chronicle",
+         "tvl_usd": 427932.11,
+         "pct_of_attributed_tvl": 0.0155
+        },
+        {
+         "oracle": "Oraichain",
+         "tvl_usd": 351451.52,
+         "pct_of_attributed_tvl": 0.0127
+        },
+        {
+         "oracle": "Witnet",
+         "tvl_usd": 277836.12,
+         "pct_of_attributed_tvl": 0.0101
+        },
+        {
+         "oracle": "PulseX",
+         "tvl_usd": 180020.52,
+         "pct_of_attributed_tvl": 0.0065
+        },
+        {
+         "oracle": "Money On Chain",
+         "tvl_usd": 110963.64,
+         "pct_of_attributed_tvl": 0.004
+        },
+        {
+         "oracle": "Nest",
+         "tvl_usd": 30982.6,
+         "pct_of_attributed_tvl": 0.0011
+        },
+        {
+         "oracle": "Coingecko",
+         "tvl_usd": 23285.78,
+         "pct_of_attributed_tvl": 0.0008
+        },
+        {
+         "oracle": "Ojo Oracle",
+         "tvl_usd": 21584.11,
+         "pct_of_attributed_tvl": 0.0008
+        },
+        {
+         "oracle": "Chainsight",
+         "tvl_usd": 13843.71,
+         "pct_of_attributed_tvl": 0.0005
+        },
+        {
+         "oracle": "Ryze Oracle",
+         "tvl_usd": 6353.85,
+         "pct_of_attributed_tvl": 0.0002
+        },
+        {
+         "oracle": "Uniswap",
+         "tvl_usd": 5998.89,
+         "pct_of_attributed_tvl": 0.0002
+        },
+        {
+         "oracle": "HebeSwap",
+         "tvl_usd": 2721.76,
+         "pct_of_attributed_tvl": 0.0001
+        },
+        {
+         "oracle": "Orcfax",
+         "tvl_usd": 383.98,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "Zapper.fi",
+         "tvl_usd": 342.55,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "Tectonic",
+         "tvl_usd": 312.57,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "Morpher",
+         "tvl_usd": 214.08,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "NearDefi",
+         "tvl_usd": 29.9,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "netwo",
+         "tvl_usd": 4.4,
+         "pct_of_attributed_tvl": 0
+        }
+       ],
+       "sole_oracle_lower_bound": [
+        {
+         "oracle": "Internal",
+         "tvl_usd": 964011195.92,
+         "pct_of_attributed_tvl": 34.9332
+        },
+        {
+         "oracle": "Chaos",
+         "tvl_usd": 815007879.59,
+         "pct_of_attributed_tvl": 29.5337
+        },
+        {
+         "oracle": "UMA",
+         "tvl_usd": 362907450.14,
+         "pct_of_attributed_tvl": 13.1508
+        },
+        {
+         "oracle": "Curve",
+         "tvl_usd": 41872448.53,
+         "pct_of_attributed_tvl": 1.5173
+        },
+        {
+         "oracle": "Acurast",
+         "tvl_usd": 17711528.77,
+         "pct_of_attributed_tvl": 0.6418
+        },
+        {
+         "oracle": "Pragma",
+         "tvl_usd": 13715684.35,
+         "pct_of_attributed_tvl": 0.497
+        },
+        {
+         "oracle": "Chainlink",
+         "tvl_usd": 9973053.17,
+         "pct_of_attributed_tvl": 0.3614
+        },
+        {
+         "oracle": "Oracles.Cash",
+         "tvl_usd": 4240561.85,
+         "pct_of_attributed_tvl": 0.1537
+        },
+        {
+         "oracle": "DIA",
+         "tvl_usd": 1397867.06,
+         "pct_of_attributed_tvl": 0.0507
+        },
+        {
+         "oracle": "cLabs",
+         "tvl_usd": 1237071.6,
+         "pct_of_attributed_tvl": 0.0448
+        },
+        {
+         "oracle": "Supra",
+         "tvl_usd": 1144985.63,
+         "pct_of_attributed_tvl": 0.0415
+        },
+        {
+         "oracle": "Harbinger",
+         "tvl_usd": 941726.96,
+         "pct_of_attributed_tvl": 0.0341
+        },
+        {
+         "oracle": "Dark Oracle",
+         "tvl_usd": 672617.28,
+         "pct_of_attributed_tvl": 0.0244
+        },
+        {
+         "oracle": "Oracle Pools",
+         "tvl_usd": 540655.09,
+         "pct_of_attributed_tvl": 0.0196
+        },
+        {
+         "oracle": "0x",
+         "tvl_usd": 511648.02,
+         "pct_of_attributed_tvl": 0.0185
+        },
+        {
+         "oracle": "Coinmarketcap",
+         "tvl_usd": 473166.4,
+         "pct_of_attributed_tvl": 0.0171
+        },
+        {
+         "oracle": "Chronicle",
+         "tvl_usd": 427932.11,
+         "pct_of_attributed_tvl": 0.0155
+        },
+        {
+         "oracle": "Oraichain",
+         "tvl_usd": 351451.52,
+         "pct_of_attributed_tvl": 0.0127
+        },
+        {
+         "oracle": "Binance Oracle",
+         "tvl_usd": 266485.21,
+         "pct_of_attributed_tvl": 0.0097
+        },
+        {
+         "oracle": "PulseX",
+         "tvl_usd": 180020.52,
+         "pct_of_attributed_tvl": 0.0065
+        },
+        {
+         "oracle": "Money On Chain",
+         "tvl_usd": 110963.64,
+         "pct_of_attributed_tvl": 0.004
+        },
+        {
+         "oracle": "Nest",
+         "tvl_usd": 30982.6,
+         "pct_of_attributed_tvl": 0.0011
+        },
+        {
+         "oracle": "Coingecko",
+         "tvl_usd": 22862.07,
+         "pct_of_attributed_tvl": 0.0008
+        },
+        {
+         "oracle": "Ojo Oracle",
+         "tvl_usd": 21584.11,
+         "pct_of_attributed_tvl": 0.0008
+        },
+        {
+         "oracle": "Chainsight",
+         "tvl_usd": 13843.71,
+         "pct_of_attributed_tvl": 0.0005
+        },
+        {
+         "oracle": "Witnet",
+         "tvl_usd": 10965.49,
+         "pct_of_attributed_tvl": 0.0004
+        },
+        {
+         "oracle": "Ryze Oracle",
+         "tvl_usd": 6353.85,
+         "pct_of_attributed_tvl": 0.0002
+        },
+        {
+         "oracle": "HebeSwap",
+         "tvl_usd": 2721.76,
+         "pct_of_attributed_tvl": 0.0001
+        },
+        {
+         "oracle": "Orcfax",
+         "tvl_usd": 383.98,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "Zapper.fi",
+         "tvl_usd": 342.55,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "Tectonic",
+         "tvl_usd": 312.57,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "Morpher",
+         "tvl_usd": 214.08,
+         "pct_of_attributed_tvl": 0
+        },
+        {
+         "oracle": "NearDefi",
+         "tvl_usd": 29.9,
+         "pct_of_attributed_tvl": 0
+        }
+       ]
+      },
+      "subject": {
+       "oracle": "Chainlink",
+       "upper_bound_pct_of_attributed_tvl": 10.4395,
+       "lower_bound_pct_of_attributed_tvl": 0.3614,
+       "upper_bound_tvl_usd": 288086584.1,
+       "lower_bound_tvl_usd": 9973053.17,
+       "pct_of_all_tracked_defi_tvl_upper_bound": 0.046886
+      },
+      "paid_sources_dropped": [
+       {
+        "url": "https://api.llama.fi/oracles",
+        "status": 402,
+        "reason": "paid plan required; recorded and dropped, not worked around",
+        "body_first_120": "Upgrade to the paid API plan at https://defillama.com/subscription"
+       }
+      ],
+      "reason": null
+     },
+     "sources": [
+      {
+       "url": "https://api.llama.fi/oracles",
+       "status": 402,
+       "accessed_utc": "2026-09-22T16:18:10Z",
+       "response_bytes": 66,
+       "response_sha256": "77af6ecfa9bf69c017f1d642d816fa1db0e8bdb8a5dd77009c8454b6441c0f2a",
+       "reason": "HTTP 402",
+       "note": "the full oracle-TVS breakdown"
+      },
+      {
+       "url": "https://api.llama.fi/protocols",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:11Z",
+       "response_bytes": 8891648,
+       "response_sha256": "89b8277bcfb4d90d55c6dcc6098d97bc2609152f3d5939c77d5d207d5adde52b",
+       "note": "free protocol list; some records carry an `oracles` array"
+      }
+     ],
+     "does_not_prove": [
+      "whether the claim's own subject — the majority of decentralized finance — is powered by Chainlink: the free attribution covers 0.4491% of tracked DeFi TVL, so a share computed over it is a share of that slice and of nothing wider",
+      "TVL is not the only measure of DeFi; a share of TVL is not a share of usage, volume or contracts",
+      "protocols with no `oracles` field may still use an oracle; absence in the dataset is not absence in fact",
+      "the paid /oracles endpoint may show a different and wider breakdown; it was not purchased"
+     ],
+     "settles": [
+      "Chainlink's share of the TVL that DeFiLlama's free endpoint attributes to any oracle: between 0.3614% (sole-oracle) and 10.4395% (any-attribution)",
+      "that free oracle attribution covers 0.4491% of the USD TVL DeFiLlama tracks"
+     ],
+     "note": "the claim's own denominator is 'the majority of decentralized finance'. The free public breakdown does not cover that denominator, and the artifact says by how much rather than publishing a share that would read as an answer to a question it cannot reach."
+    },
+    {
+     "id": "CL-4",
+     "text": "adopted by Swift, Euroclear, Mastercard, Fidelity International, UBS, ANZ, Aave, GMX, Lido",
+     "type": "endorsement-list",
+     "state_before": "CLAIM_MEASURED",
+     "state": "CLAIM_MEASURED",
+     "state_rule": "an instrument ran, over a stated window, against a stated denominator, and the reading is published with it",
+     "measurement_plan_from_rev1": "verify each named adopter's public confirmation; status per name; watch silent removals",
+     "method": "for each named organisation, enumerate its own published index (robots.txt -> sitemaps, and the keyless Common Crawl URL index for its domain), fetch every URL whose slug carries the term plus a bounded set of its own news pages, and quote the term from the page's VISIBLE text served by the organisation itself",
+     "window": "the organisation's public web presence as served at measured_at",
+     "denominator": {
+      "organisations_searched": 9,
+      "corroborated": 2,
+      "not_found": 3,
+      "search_inconclusive": 4,
+      "not_searched": 0,
+      "pages_read_successfully_total": 38
+     },
+     "measurement": {
+      "per_organisation": [
+       {
+        "organisation": "Swift",
+        "status": "SEARCH_INCONCLUSIVE",
+        "meaning": "this run could not reach enough of the organisation's own index to conclude anything: its sitemap route yielded 0 URL(s) (reached=False), the keyless Common Crawl index held 0 page(s) for it, and 0 of its pages could be read. That is a limit of this search from this host — several large sites answer an automated reader with a block — and it is NOT recorded as NOT_FOUND",
+        "reach": {
+         "conclusive": false,
+         "sitemap_route_reached": false,
+         "sitemap_urls_seen": 0,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 0,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 1,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "Euroclear",
+        "status": "SEARCH_INCONCLUSIVE",
+        "meaning": "this run could not reach enough of the organisation's own index to conclude anything: its sitemap route yielded 0 URL(s) (reached=False), the keyless Common Crawl index held 0 page(s) for it, and 0 of its pages could be read. That is a limit of this search from this host — several large sites answer an automated reader with a block — and it is NOT recorded as NOT_FOUND",
+        "reach": {
+         "conclusive": false,
+         "sitemap_route_reached": false,
+         "sitemap_urls_seen": 0,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 0,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 1,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "Mastercard",
+        "status": "SEARCH_INCONCLUSIVE",
+        "meaning": "this run could not reach enough of the organisation's own index to conclude anything: its sitemap route yielded 0 URL(s) (reached=False), the keyless Common Crawl index held 0 page(s) for it, and 0 of its pages could be read. That is a limit of this search from this host — several large sites answer an automated reader with a block — and it is NOT recorded as NOT_FOUND",
+        "reach": {
+         "conclusive": false,
+         "sitemap_route_reached": false,
+         "sitemap_urls_seen": 0,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 0,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 1,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "Fidelity International",
+        "status": "SEARCH_INCONCLUSIVE",
+        "meaning": "this run could not reach enough of the organisation's own index to conclude anything: its sitemap route yielded 0 URL(s) (reached=True), the keyless Common Crawl index held 0 page(s) for it, and 0 of its pages could be read. That is a limit of this search from this host — several large sites answer an automated reader with a block — and it is NOT recorded as NOT_FOUND",
+        "reach": {
+         "conclusive": false,
+         "sitemap_route_reached": true,
+         "sitemap_urls_seen": 0,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 0,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 1,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "UBS",
+        "status": "NOT_FOUND",
+        "meaning": "we did not find the term on this organisation's own domains by the routes below. This is a fact about this search — URL slugs across its published index, plus the full text of a bounded set of its own news pages — and NOT evidence that the relationship does not exist, NOT a denial by the organisation, and NOT a finding that anyone said anything false",
+        "reach": {
+         "conclusive": true,
+         "sitemap_route_reached": true,
+         "sitemap_urls_seen": 9126,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 25,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 25,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "ANZ",
+        "status": "NOT_FOUND",
+        "meaning": "we did not find the term on this organisation's own domains by the routes below. This is a fact about this search — URL slugs across its published index, plus the full text of a bounded set of its own news pages — and NOT evidence that the relationship does not exist, NOT a denial by the organisation, and NOT a finding that anyone said anything false",
+        "reach": {
+         "conclusive": true,
+         "sitemap_route_reached": true,
+         "sitemap_urls_seen": 3,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 4,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 4,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "Aave",
+        "status": "CORROBORATED",
+        "meaning": "a page on this organisation's own domain contains the term; the quote is from that page's visible text, fetched from the organisation's own server",
+        "reach": {
+         "conclusive": true,
+         "sitemap_route_reached": true,
+         "sitemap_urls_seen": 3538,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 3,
+         "slug_candidates": 12,
+         "pages_fetched_and_read_in_full_text": 3,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": [
+         {
+          "url": "https://aave.com/blog/chainlink-ccip-secures-aave",
+          "status": 200,
+          "accessed_utc": "2026-09-22T16:13:43Z",
+          "response_bytes": 57896,
+          "response_sha256": "c8dea3d1ac40aab4d97bcbc872b0f5657382990190346237e08c712659d982c1",
+          "quote": "Why Chainlink CCIP Secures Aave Protocol and the Aave App | Aave Skip to content Products Solutions Developers Resources About Use Aave Back to Blog Why Chainlink…"
+         },
+         {
+          "url": "https://governance.aave.com/t/bgd-aave-chainlink-proof-of-reserve-phase-1/9168",
+          "status": 200,
+          "accessed_utc": "2026-09-22T16:13:44Z",
+          "response_bytes": 42481,
+          "response_sha256": "e640152183de8be66b2951dc4b8ec6db465003c3f643fced5bc4e63d00acafc1",
+          "quote": "BGD. Aave <> Chainlink Proof-of-Reserve. Phase 1 - Development - Aave = 40rem)\" rel=\"stylesheet\" data-target=\"chat_desktop\" /> = 40rem)\" rel=\"stylesheet\" data-target=\"disco…"
+         },
+         {
+          "url": "https://governance.aave.com/t/bgd-aave-chainlink-proof-of-reserve-phase-1-release-candidate/10972",
+          "status": 200,
+          "accessed_utc": "2026-09-22T16:13:45Z",
+          "response_bytes": 53498,
+          "response_sha256": "3850725f425de9f481ecd87d4af9fd2818b8fa8a1fc5c7f9a0fb67488410f0f4",
+          "quote": "BGD. Aave <> Chainlink Proof of Reserve. Phase 1 Release candidate - Development - Aave = 40rem)\" rel=\"stylesheet\" data-target=\"chat_desktop\" /> = 40rem)\" rel=\"stylesheet\"…"
+         }
+        ]
+       },
+       {
+        "organisation": "GMX",
+        "status": "NOT_FOUND",
+        "meaning": "we did not find the term on this organisation's own domains by the routes below. This is a fact about this search — URL slugs across its published index, plus the full text of a bounded set of its own news pages — and NOT evidence that the relationship does not exist, NOT a denial by the organisation, and NOT a finding that anyone said anything false",
+        "reach": {
+         "conclusive": true,
+         "sitemap_route_reached": true,
+         "sitemap_urls_seen": 176,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 3,
+         "slug_candidates": 0,
+         "pages_fetched_and_read_in_full_text": 3,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": []
+       },
+       {
+        "organisation": "Lido",
+        "status": "CORROBORATED",
+        "meaning": "a page on this organisation's own domain contains the term; the quote is from that page's visible text, fetched from the organisation's own server",
+        "reach": {
+         "conclusive": true,
+         "sitemap_route_reached": true,
+         "sitemap_urls_seen": 616,
+         "commoncrawl_pages_indexed_seen": 0,
+         "commoncrawl_control_threshold": 50,
+         "pages_read_successfully": 3,
+         "slug_candidates": 5,
+         "pages_fetched_and_read_in_full_text": 3,
+         "routes": [
+          "organisation's own robots.txt -> sitemap(s), one index level deep",
+          "Common Crawl URL index restricted to the organisation's domain (keyless)"
+         ],
+         "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+        },
+        "corroborations": [
+         {
+          "url": "https://blog.lido.fi/cross-chain-security-principles-why-lidos-network-expansion-committee-chose-chainlink-ccip/",
+          "status": 200,
+          "accessed_utc": "2026-09-22T16:14:46Z",
+          "response_bytes": 42178,
+          "response_sha256": "b749865d54b6177476b62aa43ff0bc95fb76c2369f67ccb203e96a5a36bac90b",
+          "quote": "Cross-Chain Security Principles: Why Lido’s Network Expansion Committee Chose Chainlink CCIP All Community Staking Education Ethereum Governance Guides Institutional Lido V3 Multichain Node Operator Policy Poolside Calls Post Mortem Rese…"
+         },
+         {
+          "url": "https://blog.lido.fi/announcing-partnership-with-chainlink-on-adopting-ccip-as-official-cross-chain-infrastructure-for-wsteth/",
+          "status": 200,
+          "accessed_utc": "2026-09-22T16:14:47Z",
+          "response_bytes": 27461,
+          "response_sha256": "4888ae6d45decb1205476217ce17aeb17ce2b46742d7a344af102c022bad0239",
+          "quote": "Partnership With Chainlink on Adopting CCIP as Official Cross-Chain Infrastructure For wstETH All Community Staking Education Ethereum Governance Guides Institutional Lido V3 M…"
+         },
+         {
+          "url": "https://blog.lido.fi/direct-staking-on-linea-powered-by-chainlink/",
+          "status": 200,
+          "accessed_utc": "2026-09-22T16:14:48Z",
+          "response_bytes": 25846,
+          "response_sha256": "ec080e4c7558c4863a05e49755366568dfe1ca6ea0998954a9d2394aa2bcdda5",
+          "quote": "Direct Staking on Linea, Powered by Chainlink CCIP All Community Staking Education Ethereum Governance Guides Institutional Lido V3 Multichain Node Operator Policy Poolside Calls Post Mortem Rese…"
+         }
+        ]
+       }
+      ],
+      "adopter_list_baseline": {
+       "url": "https://chain.link/",
+       "page_sha256": "fac303d822438c4ff6925ee0aa8d83168f041c359a25b3993c316fbc68d5f555",
+       "present": [
+        "Swift",
+        "Euroclear",
+        "Mastercard",
+        "Fidelity International",
+        "UBS",
+        "ANZ",
+        "Aave",
+        "GMX",
+        "Lido"
+       ],
+       "absent": [],
+       "measured_at": "2026-09-22T16:14:48Z",
+       "denominator": {
+        "names_checked": 9,
+        "names_present": 9
+       }
+      }
+     },
+     "sources": [
+      {
+       "url": "https://chain.link/",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:14:48Z",
+       "response_bytes": 417569,
+       "response_sha256": "fac303d822438c4ff6925ee0aa8d83168f041c359a25b3993c316fbc68d5f555",
+       "note": "the page carrying the adopter list"
+      },
+      {
+       "url": "https://swift.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:05Z",
+       "response_bytes": 5252,
+       "response_sha256": "48aefaacf77aeaa75458a62efcaeb5a7b362add9fb67ddc652847f3ec7df4a9e",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.swift.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:05Z",
+       "response_bytes": 5252,
+       "response_sha256": "9d36e6158e46149e1cd84d46cb7b7589f10192ceaa48b097a8e0110213f6caab",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://swift.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:06Z",
+       "response_bytes": 5252,
+       "response_sha256": "f9f6b8b751938c3e14d2b10c1334f2790dfd6de03486e6b8596610d7f7ab22fd",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://www.swift.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:06Z",
+       "response_bytes": 5252,
+       "response_sha256": "acb2cf19c11d77e4a34d28be7a2d9826d7a55b3bf767077b31844a73ae0d8b15",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:12:13Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "RemoteDisconnected",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://euroclear.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:14Z",
+       "response_bytes": 32231,
+       "response_sha256": "15ca43d23fea3542c577d4099928dbf638ef009d2370f10f496f238046c3d738",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.euroclear.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:14Z",
+       "response_bytes": 32231,
+       "response_sha256": "cdff199ec504b5aaed956940a5165391cc53495b2f5f7231213934346fce75ce",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://euroclear.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:15Z",
+       "response_bytes": 32234,
+       "response_sha256": "9b1e27d7f816eecab6e8dd40bc4d85aca2ae1a0ea6d08ebb2c9f322bf60782af",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://www.euroclear.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:15Z",
+       "response_bytes": 32234,
+       "response_sha256": "9c8d2d22ec87af1bc03b89966e28ab1061064296271194d84068581e25f29006",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:12:21Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "RemoteDisconnected",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://mastercard.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:23Z",
+       "response_bytes": 386,
+       "response_sha256": "b2a188baad71d4c154c6a914f32fce8f6c94561e783fe9639064707a39ab6e3e",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.mastercard.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:23Z",
+       "response_bytes": 386,
+       "response_sha256": "0301ef3242fd62ccbe7fc08513ec0dcd4c35d951022e42bb5f9be3a01b54f627",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://mastercard.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:24Z",
+       "response_bytes": 387,
+       "response_sha256": "768bca9def1239a2976ceea9f23143a6e589422d551544981d11b0fb9c5a8f97",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://www.mastercard.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:24Z",
+       "response_bytes": 387,
+       "response_sha256": "db8eb89356fe7a6d4a60969237078e63840851f13041d68781d4818d43255134",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:12:30Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "RemoteDisconnected",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://fidelityinternational.com/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:32Z",
+       "response_bytes": 30,
+       "response_sha256": "383d4732937f0e68815086cba5750d4339f7fb862fdb04f16b064d7142f0903f",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.fidelityinternational.com/robots.txt",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:32Z",
+       "response_bytes": 393,
+       "response_sha256": "e52afc189fc77cd85bf792e59cb897cd9729d64e17b86e6dcb433f87c6f9d12d",
+       "reason": "HTTP 403",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://fidelityinternational.com/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:32Z",
+       "response_bytes": 405,
+       "response_sha256": "476ccecd6a2b35728de80889d4b9b091922d42990bd0eedc95c837182cb5b78d",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://www.fidelityinternational.com/sitemap.xml",
+       "status": 403,
+       "accessed_utc": "2026-09-22T16:12:33Z",
+       "response_bytes": 394,
+       "response_sha256": "549028887b82fb9836c5e158ff6fe0e13c1697d4a598cb22c71b8303e76937b6",
+       "reason": "HTTP 403",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:12:39Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "URLError",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://ubs.com/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:41Z",
+       "response_bytes": 1293,
+       "response_sha256": "ce5082f5aa6d2de2867765d840eb1709a5b4cfd2bc462ee54fae8f16ecafdddc",
+       "final_url": "https://www.ubs.com/robots.txt",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.ubs.com/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:41Z",
+       "response_bytes": 7725,
+       "response_sha256": "23811055175ba85b4572e3f109cdb14c9ff3c25c3b49b39078d3e4ca39254c2c",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://www.ubs.com/global/de.sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:42Z",
+       "response_bytes": 405366,
+       "response_sha256": "a21ebadce9b2bd7f4536588fff17d0e165edc2e79c3743fae1c2318cdf8e1eda",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://www.ubs.com/global/en.sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:42Z",
+       "response_bytes": 3828335,
+       "response_sha256": "0f6b62e4f0d312bc018cc99164c38ca04e40a55a2d79eb793efbe7b10bc04e04",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://www.ubs.com/global/es.sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:43Z",
+       "response_bytes": 98508,
+       "response_sha256": "21bd531282d4b91c9cc80a049b09d6f759c84ae83bb24c74de331d2c57d3c037",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://www.ubs.com/global/fr.sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:44Z",
+       "response_bytes": 3828335,
+       "response_sha256": "0f6b62e4f0d312bc018cc99164c38ca04e40a55a2d79eb793efbe7b10bc04e04",
+       "final_url": "https://www.ubs.com/global/en.sitemap.xml",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://www.ubs.com/global/it.sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:12:45Z",
+       "response_bytes": 80290,
+       "response_sha256": "e6b52f19eb489c4153fce83855004002c1c507e3159327f6b0d2888d02db7a61",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:12:50Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "URLError",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://anz.com/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:12Z",
+       "response_bytes": 51,
+       "response_sha256": "e7691b534544f15d0236c8b40ae437226493c32731869b96b55e916863b1a10b",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "http://anz.com/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:13Z",
+       "response_bytes": 342,
+       "response_sha256": "312b0507e2bd053d966c9541f00b066c90441ae11fd3239a20c18c5a1866ddca",
+       "final_url": "https://anz.com/sitemap.xml",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:13:18Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "URLError",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://aave.com/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:29Z",
+       "response_bytes": 2101,
+       "response_sha256": "97cf9d59f6f26fcbce914ad65d558e8f27df9ffde1baa692ed22f6ed3c948078",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://aave.com/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:30Z",
+       "response_bytes": 14025,
+       "response_sha256": "76cf72f61d07d418fd827bbeb63c6ef814ccf27474b416cb4d70ea898cf467f8",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://aave.com/docs/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:30Z",
+       "response_bytes": 13694,
+       "response_sha256": "da75d55da834b0110af8ba93250ac719f80e88c27d8fbc970f0d35e2f6159fdb",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:13:35Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "URLError",
+       "note": "Common Crawl collection list (newest collection used)"
+      },
+      {
+       "url": "https://governance.aave.com/robots.txt",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:35Z",
+       "response_bytes": 1000,
+       "response_sha256": "c3f4a55937673b8b8a2d33c3fec23a6adf14efca0c7d5fc34de0dd906350074e",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://governance.aave.com/sitemap.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:36Z",
+       "response_bytes": 415,
+       "response_sha256": "01cfa296d96000fe704b33275918cbbcd505891acb5774b4da106ac85f9ca768",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://governance.aave.com/sitemap_recent.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:36Z",
+       "response_bytes": 2104,
+       "response_sha256": "3d9bd3849b982151758050bb4f30f440805738a96f3d19512ba607238ad43e11",
+       "note": "sitemap named by robots.txt"
+      },
+      {
+       "url": "https://governance.aave.com/sitemap_1.xml",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:13:36Z",
+       "response_bytes": 589686,
+       "response_sha256": "deb4164fc5ed6515a7ff31fbc544fb30c6a88f5bacd84361e5918223e8b727e9",
+       "note": "sitemap named by robots.txt"
+      }
+     ],
+     "does_not_prove": [
+      "NOT_FOUND means this search did not find it, by the stated routes. It is not a denial, not a contradiction, and not a finding that any statement is false",
+      "SEARCH_INCONCLUSIVE means we could not look, and is reported separately for exactly that reason",
+      "CORROBORATED means the organisation's own site names the term. It does not establish the scale, the status, the commercial terms or the currency of any relationship",
+      "whole-site full text is not searched: slugs across the published index, plus the full text of the pages actually fetched. A mention in body text on a page outside that set would not be found",
+      "pages behind a login, a paywall, a regional redirect, a bot challenge or a robots rule were not read"
+     ],
+     "note": "NOT_FOUND means this search did not find it. SEARCH_INCONCLUSIVE means we could not look — several of these organisations answer an automated reader with a block, and that is recorded as its own state rather than collapsed into an absence. Neither is a statement about anyone."
+    },
+    {
+     "id": "CL-5",
+     "text": "proven track record of uptime, accuracy, and resilience",
+     "type": "quality",
+     "state_before": "CLAIM_MEASURED",
+     "state": "CLAIM_MEASURED",
+     "state_rule": "an instrument ran, over a stated window, against a stated denominator, and the reading is published with it",
+     "measurement_plan_from_rev1": "feed-level deviation/uptime measurable on-chain (public data feeds); queue for Layer-0 oracle harness",
+     "method": "select feeds by name from Chainlink's own published per-network feed directory; confirm each proxy on-chain by description(); read decimals(), latestRoundData() and getRoundData() back through the current phase over public keyless RPC; compare every consecutive gap to the feed's DECLARED heartbeat (grace 60s for write latency, stated; the zero-tolerance count is published too) and every move to its DECLARED deviation threshold",
+     "window": "per feed: the rounds this run could read back through the feed's current phase; each feed's own window_start_utc / window_end_utc is recorded with it",
+     "denominator": {
+      "feeds_attempted": 10,
+      "feeds_measured": 10,
+      "intervals_measured": 364,
+      "declared_parameters_from": "the feed's own published heartbeat and threshold, not a figure we chose"
+     },
+     "measurement": {
+      "totals": {
+       "grace_s": 60,
+       "intervals_exceeding_declared_heartbeat_beyond_grace": 2,
+       "intervals_exceeding_declared_heartbeat_zero_tolerance": 184,
+       "feeds_with_at_least_one_interval_beyond_grace": 1,
+       "largest_single_excess_s": 90
+      },
+      "feeds": [
+       {
+        "network": "ethereum-mainnet",
+        "chain_id": 1,
+        "feed": "ETH / USD",
+        "proxy": "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-26T15:03:35Z",
+        "window_end_utc": "2026-09-28T01:49:59Z",
+        "window_s": 125184,
+        "declared_heartbeat_s": 3600,
+        "declared_deviation_threshold_pct": 0.5,
+        "grace_s": 60,
+        "gap_min_s": 600,
+        "gap_max_s": 3636,
+        "gap_mean_s": 3209.85,
+        "excess_max_s": 36,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 23,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 16,
+         "over_by_1_to_60s": 23,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 12,
+        "deviation_max_pct": 0.630932,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "ethereum-mainnet",
+        "chain_id": 1,
+        "feed": "BTC / USD",
+        "proxy": "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-26T13:02:23Z",
+        "window_end_utc": "2026-09-28T02:02:59Z",
+        "window_s": 133236,
+        "declared_heartbeat_s": 3600,
+        "declared_deviation_threshold_pct": 0.5,
+        "grace_s": 60,
+        "gap_min_s": 696,
+        "gap_max_s": 3636,
+        "gap_mean_s": 3416.31,
+        "excess_max_s": 36,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 30,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 9,
+         "over_by_1_to_60s": 30,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 6,
+        "deviation_max_pct": 0.574368,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "ethereum-mainnet",
+        "chain_id": 1,
+        "feed": "LINK / USD",
+        "proxy": "0x2c1d072e956AFFC0D435Cb7AC38EF18d24d9127c",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-27T10:40:35Z",
+        "window_end_utc": "2026-09-28T02:31:23Z",
+        "window_s": 57048,
+        "declared_heartbeat_s": 3600,
+        "declared_deviation_threshold_pct": 0.5,
+        "grace_s": 60,
+        "gap_min_s": 60,
+        "gap_max_s": 3636,
+        "gap_mean_s": 1462.77,
+        "excess_max_s": 36,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 5,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 34,
+         "over_by_1_to_60s": 5,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 34,
+        "deviation_max_pct": 0.919875,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "ethereum-mainnet",
+        "chain_id": 1,
+        "feed": "USDC / USD",
+        "proxy": "0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 15,
+        "intervals": 14,
+        "window_start_utc": "2026-09-14T21:15:23Z",
+        "window_end_utc": "2026-09-28T02:33:59Z",
+        "window_s": 1142316,
+        "declared_heartbeat_s": 82800,
+        "declared_deviation_threshold_pct": 0.25,
+        "grace_s": 60,
+        "gap_min_s": 65616,
+        "gap_max_s": 82836,
+        "gap_mean_s": 81594,
+        "excess_max_s": 36,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 13,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 1,
+         "over_by_1_to_60s": 13,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 0,
+        "deviation_max_pct": 0.007634,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "ethereum-mainnet",
+        "chain_id": 1,
+        "feed": "DAI / USD",
+        "proxy": "0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-26T10:59:23Z",
+        "window_end_utc": "2026-09-28T02:15:23Z",
+        "window_s": 141360,
+        "declared_heartbeat_s": 3600,
+        "declared_deviation_threshold_pct": 0.25,
+        "grace_s": 60,
+        "gap_min_s": 3600,
+        "gap_max_s": 3636,
+        "gap_mean_s": 3624.62,
+        "excess_max_s": 36,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 35,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 4,
+         "over_by_1_to_60s": 35,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 0,
+        "deviation_max_pct": 0.018292,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "base-mainnet",
+        "chain_id": 8453,
+        "feed": "ETH / USD",
+        "proxy": "0xa4250cE1aA15Ff4cb5E5a8655293b65694e436Ed",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-27T22:19:25Z",
+        "window_end_utc": "2026-09-28T02:31:03Z",
+        "window_s": 15098,
+        "declared_heartbeat_s": 1200,
+        "declared_deviation_threshold_pct": 0.15,
+        "grace_s": 60,
+        "gap_min_s": 30,
+        "gap_max_s": 1230,
+        "gap_mean_s": 387.13,
+        "excess_max_s": 30,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 2,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 37,
+         "over_by_1_to_60s": 2,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 37,
+        "deviation_max_pct": 0.338285,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "base-mainnet",
+        "chain_id": 8453,
+        "feed": "BTC / USD",
+        "proxy": "0x32F587986D3fb47601157c19615d568BeD0BCabc",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-28T00:28:49Z",
+        "window_end_utc": "2026-09-28T02:35:53Z",
+        "window_s": 7624,
+        "declared_heartbeat_s": 1200,
+        "declared_deviation_threshold_pct": 0.1,
+        "grace_s": 60,
+        "gap_min_s": 30,
+        "gap_max_s": 482,
+        "gap_mean_s": 195.49,
+        "excess_max_s": -718,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 0,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 39,
+         "over_by_1_to_60s": 0,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 39,
+        "deviation_max_pct": 0.183892,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "base-mainnet",
+        "chain_id": 8453,
+        "feed": "LINK / USD",
+        "proxy": "0x17CAb8FE31E32f08326e5E27412894e49B0f9D65",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-09-27T01:52:13Z",
+        "window_end_utc": "2026-09-28T02:31:05Z",
+        "window_s": 88732,
+        "declared_heartbeat_s": 86400,
+        "declared_deviation_threshold_pct": 0.5,
+        "grace_s": 60,
+        "gap_min_s": 90,
+        "gap_max_s": 15970,
+        "gap_mean_s": 2275.18,
+        "excess_max_s": -70430,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 0,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 39,
+         "over_by_1_to_60s": 0,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 39,
+        "deviation_max_pct": 0.7702,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       },
+       {
+        "network": "base-mainnet",
+        "chain_id": 8453,
+        "feed": "USDC / USD",
+        "proxy": "0x7e860098F58bBFC8648a4311b374B1D669a2bc6B",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 39,
+        "intervals": 38,
+        "window_start_utc": "2026-08-20T16:33:25Z",
+        "window_end_utc": "2026-09-27T12:45:43Z",
+        "window_s": 3269538,
+        "declared_heartbeat_s": 86400,
+        "declared_deviation_threshold_pct": 0.3,
+        "grace_s": 60,
+        "gap_min_s": 72038,
+        "gap_max_s": 86490,
+        "gap_mean_s": 86040.47,
+        "excess_max_s": 90,
+        "excess_over_grace_count": 2,
+        "intervals_over_declared_heartbeat_zero_tolerance": 37,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 1,
+         "over_by_1_to_60s": 35,
+         "over_by_60s_to_10pct_of_heartbeat": 2,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 94.7368,
+        "intervals_at_or_over_declared_deviation_threshold": 0,
+        "deviation_max_pct": 0.016938,
+        "intervals_exceeding_heartbeat_beyond_grace": [
+         {
+          "from_round": "55340232221128654849",
+          "to_round": "55340232221128654850",
+          "gap_s": 86470,
+          "deviation_pct": 0.004835,
+          "excess_over_declared_heartbeat_s": 70,
+          "over_declared_heartbeat": true,
+          "over_declared_heartbeat_beyond_grace": true,
+          "deviation_at_or_over_declared_threshold": false
+         },
+         {
+          "from_round": "55340232221128654851",
+          "to_round": "55340232221128654852",
+          "gap_s": 86490,
+          "deviation_pct": 0.001081,
+          "excess_over_declared_heartbeat_s": 90,
+          "over_declared_heartbeat": true,
+          "over_declared_heartbeat_beyond_grace": true,
+          "deviation_at_or_over_declared_threshold": false
+         }
+        ]
+       },
+       {
+        "network": "base-mainnet",
+        "chain_id": 8453,
+        "feed": "DAI / USD",
+        "proxy": "0x591e79239a7d679378eC8c847e5038150364C78F",
+        "state": "CLAIM_MEASURED",
+        "reason": null,
+        "rounds_read": 40,
+        "intervals": 39,
+        "window_start_utc": "2026-08-19T14:11:59Z",
+        "window_end_utc": "2026-09-27T14:22:43Z",
+        "window_s": 3370244,
+        "declared_heartbeat_s": 86400,
+        "declared_deviation_threshold_pct": 0.3,
+        "grace_s": 60,
+        "gap_min_s": 86406,
+        "gap_max_s": 86430,
+        "gap_mean_s": 86416.51,
+        "excess_max_s": 30,
+        "excess_over_grace_count": 0,
+        "intervals_over_declared_heartbeat_zero_tolerance": 39,
+        "interval_excess_buckets": {
+         "within_declared_heartbeat": 0,
+         "over_by_1_to_60s": 39,
+         "over_by_60s_to_10pct_of_heartbeat": 0,
+         "over_by_more_than_10pct_of_heartbeat": 0
+        },
+        "pct_of_intervals_within_declared_heartbeat_plus_grace": 100,
+        "intervals_at_or_over_declared_deviation_threshold": 0,
+        "deviation_max_pct": 0.050062,
+        "intervals_exceeding_heartbeat_beyond_grace": []
+       }
+      ]
+     },
+     "sources": [
+      {
+       "url": "https://reference-data-directory.vercel.app/feeds-mainnet.json",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:13Z",
+       "response_bytes": 384587,
+       "response_sha256": "f75ba02dd032ff1154eb98ca2f3134135627aa9bc45a5c0e3055908051d95611",
+       "note": "Chainlink's published feed directory for ethereum-mainnet: declared heartbeat and deviation threshold per feed"
+      },
+      {
+       "url": "https://ethereum-rpc.publicnode.com",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:15Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419 (ethereum-mainnet chain 1) for ETH / USD; fallback node https://eth.drpc.org"
+      },
+      {
+       "url": "https://ethereum-rpc.publicnode.com",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:17Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c (ethereum-mainnet chain 1) for BTC / USD; fallback node https://eth.drpc.org"
+      },
+      {
+       "url": "https://ethereum-rpc.publicnode.com",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:20Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x2c1d072e956AFFC0D435Cb7AC38EF18d24d9127c (ethereum-mainnet chain 1) for LINK / USD; fallback node https://eth.drpc.org"
+      },
+      {
+       "url": "https://ethereum-rpc.publicnode.com",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:21Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6 (ethereum-mainnet chain 1) for USDC / USD; fallback node https://eth.drpc.org"
+      },
+      {
+       "url": "https://ethereum-rpc.publicnode.com",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:25Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9 (ethereum-mainnet chain 1) for DAI / USD; fallback node https://eth.drpc.org"
+      },
+      {
+       "url": "https://reference-data-directory.vercel.app/feeds-ethereum-mainnet-base-1.json",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:25Z",
+       "response_bytes": 250349,
+       "response_sha256": "f4b0eb8ab8fd7e316ea3669e8ee27d9408ed86ebc0f3a33ff08ada0ca694a947",
+       "note": "Chainlink's published feed directory for base-mainnet: declared heartbeat and deviation threshold per feed"
+      },
+      {
+       "url": "https://mainnet.base.org",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:33Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0xa4250cE1aA15Ff4cb5E5a8655293b65694e436Ed (base-mainnet chain 8453) for ETH / USD; fallback node https://base-rpc.publicnode.com"
+      },
+      {
+       "url": "https://mainnet.base.org",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:41Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x32F587986D3fb47601157c19615d568BeD0BCabc (base-mainnet chain 8453) for BTC / USD; fallback node https://base-rpc.publicnode.com"
+      },
+      {
+       "url": "https://mainnet.base.org",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:47Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x17CAb8FE31E32f08326e5E27412894e49B0f9D65 (base-mainnet chain 8453) for LINK / USD; fallback node https://base-rpc.publicnode.com"
+      },
+      {
+       "url": "https://mainnet.base.org",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:38:53Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x7e860098F58bBFC8648a4311b374B1D669a2bc6B (base-mainnet chain 8453) for USDC / USD; fallback node https://base-rpc.publicnode.com"
+      },
+      {
+       "url": "https://mainnet.base.org",
+       "status": 200,
+       "accessed_utc": "2026-09-28T02:39:00Z",
+       "note": "eth_call description()/decimals()/latestRoundData()/getRoundData() on 0x591e79239a7d679378eC8c847e5038150364C78F (base-mainnet chain 8453) for DAI / USD; fallback node https://base-rpc.publicnode.com"
+      }
+     ],
+     "does_not_prove": [
+      "nothing outside the read window: the window is the rounds this run could read back, per feed, and is stated per feed",
+      "nothing about feeds not in this selection, nor about any network not read",
+      "no miss found is not the same as no miss ever; this is a sample, not the feed's whole history",
+      "answer correctness is not assessed — the on-chain value is not compared to any off-chain reference price",
+      "a public RPC could omit or misreport a round; the reading is only as good as the node that served it",
+      "an interval past the declared heartbeat is not an outage: the grace is 60s and gaps a few seconds over H are ordinary write latency, so the bucketed excess is the reading, not a pass/fail"
+     ],
+     "note": "measured against each feed's OWN published heartbeat and deviation threshold, not against a standard we chose. This is the harness that repeats: it can be re-run by anyone on a public RPC with no key."
+    }
+   ]
+  },
+  "ondo": {
+   "source": "https://ondo.finance/ (captured 2026-09-22) + api.llama.fi/protocol/ondo-finance",
+   "claims": [
+    {
+     "id": "ON-1",
+     "text": "Institutional-grade finance, delivered onchain",
+     "type": "quality-vague",
+     "state_before": "CLAIM_CAPTURED",
+     "state": "CLAIM_CAPTURED",
+     "state_rule": "captured verbatim, hashed and source-cited; no measurement is claimed",
+     "measurement_plan_from_rev1": "non-quantitative; track attached proof-points over time",
+     "method": "fetch the page keylessly and record, for each name, whether it appears in the page's VISIBLE text (script and style stripped), with the page's byte digest",
+     "window": "a single point reading at measured_at; a baseline, not a series",
+     "denominator": {
+      "names_checked": 10,
+      "names_present": 5
+     },
+     "measurement": {
+      "proof_point_baseline": {
+       "url": "https://ondo.finance/",
+       "page_sha256": "e3be1bfc641e4f33b72fee640bd2c5ea42293c2223c47824191506c84f180827",
+       "page_bytes": 644704,
+       "present": [
+        "Institutional-grade finance",
+        "Franklin Templeton",
+        "ABN AMRO",
+        "OUSG",
+        "USDY"
+       ],
+       "absent": [
+        "BlackRock",
+        "WisdomTree",
+        "Fidelity",
+        "Morgan Stanley",
+        "Google Cloud"
+       ],
+       "measured_at": "2026-09-22T16:18:14Z",
+       "denominator": {
+        "names_checked": 10,
+        "names_present": 5
+       }
+      }
+     },
+     "sources": [
+      {
+       "url": "https://ondo.finance/",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:14Z",
+       "response_bytes": 644704,
+       "response_sha256": "e3be1bfc641e4f33b72fee640bd2c5ea42293c2223c47824191506c84f180827",
+       "note": "the page carrying the tagline and its attached proof-points"
+      }
+     ],
+     "does_not_prove": [
+      "presence on a page is the page's statement, not a verified fact about the named party",
+      "absence today says nothing about whether the name was ever there, or ever will be",
+      "this is a baseline for later comparison; on its own it establishes nothing about any party",
+      "'institutional-grade' has no public definition to measure against, so nothing here scores it"
+     ],
+     "note": "stays CLAIM_CAPTURED: the sentence is not quantitative and there is no denominator to measure it against. What is recorded is a baseline of the proof-points attached to it, so a later change is visible."
+    },
+    {
+     "id": "ON-2",
+     "text": "ABN Amro testimonial — 'purpose-built infrastructure, built by Ondo'",
+     "type": "testimonial",
+     "state_before": "UNMEASURED",
+     "state": "UNMEASURED",
+     "state_rule": "first-class: the measurement has not been made, or the series is not yet long enough to be one, and no number is invented in its place",
+     "measurement_plan_from_rev1": "testimonial persistence watch; verify ABN Amro public corroboration",
+     "method": "for each named organisation, enumerate its own published index (robots.txt -> sitemaps, and the keyless Common Crawl URL index for its domain), fetch every URL whose slug carries the term plus a bounded set of its own news pages, and quote the term from the page's VISIBLE text served by the organisation itself",
+     "window": "the organisation's public web presence as served at measured_at",
+     "denominator": {
+      "organisations_searched": 1,
+      "corroborated": 0,
+      "not_found": 0,
+      "search_inconclusive": 1,
+      "not_searched": 0,
+      "pages_read_successfully_total": 0
+     },
+     "measurement": {
+      "corroboration": {
+       "organisation": "ABN AMRO",
+       "status": "SEARCH_INCONCLUSIVE",
+       "meaning": "this run could not reach enough of the organisation's own index to conclude anything: its sitemap route yielded 0 URL(s) (reached=False), the keyless Common Crawl index held 0 page(s) for it, and 0 of its pages could be read. That is a limit of this search from this host — several large sites answer an automated reader with a block — and it is NOT recorded as NOT_FOUND",
+       "reach": {
+        "conclusive": false,
+        "sitemap_route_reached": false,
+        "sitemap_urls_seen": 0,
+        "commoncrawl_pages_indexed_seen": 0,
+        "commoncrawl_control_threshold": 50,
+        "pages_read_successfully": 0,
+        "slug_candidates": 0,
+        "pages_fetched_and_read_in_full_text": 1,
+        "routes": [
+         "organisation's own robots.txt -> sitemap(s), one index level deep",
+         "Common Crawl URL index restricted to the organisation's domain (keyless)"
+        ],
+        "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+       },
+       "corroborations": []
+      },
+      "testimonial_persistence_baseline": {
+       "url": "https://ondo.finance/",
+       "page_sha256": "1f15c3e90d0c139b6a628be759a271646a6ddf39e23d04ccb46659727e6fc032",
+       "present": [
+        "ABN AMRO",
+        "purpose-built infrastructure"
+       ],
+       "absent": [],
+       "measured_at": "2026-09-22T16:24:24Z"
+      }
+     },
+     "sources": [
+      {
+       "url": "https://ondo.finance/",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:24:24Z",
+       "response_bytes": 644704,
+       "response_sha256": "1f15c3e90d0c139b6a628be759a271646a6ddf39e23d04ccb46659727e6fc032",
+       "note": "the page carrying the testimonial"
+      },
+      {
+       "url": "https://abnamro.com/robots.txt",
+       "status": 503,
+       "accessed_utc": "2026-09-22T16:24:14Z",
+       "response_bytes": 7156,
+       "response_sha256": "da7c9a6f57bb284d50e6d432a9e56096b60623d09d6a127e1922a01bb222f025",
+       "reason": "HTTP 503",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://www.abnamro.com/robots.txt",
+       "status": 503,
+       "accessed_utc": "2026-09-22T16:24:15Z",
+       "response_bytes": 7154,
+       "response_sha256": "fb31b4308cdb773fe3b4c43e76ecdb529ef57b7c2c9ab4b5cb31df12dd08da70",
+       "reason": "HTTP 503",
+       "note": "the organisation's own robots.txt, for its Sitemap: lines"
+      },
+      {
+       "url": "https://abnamro.com/sitemap.xml",
+       "status": 503,
+       "accessed_utc": "2026-09-22T16:24:15Z",
+       "response_bytes": 7156,
+       "response_sha256": "5827c0b9e36b6477e5546858ed9e6c90d5f907dae9bc6d9bd40114ea1bc2d4ee",
+       "reason": "HTTP 503",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://www.abnamro.com/sitemap.xml",
+       "status": 503,
+       "accessed_utc": "2026-09-22T16:24:16Z",
+       "response_bytes": 7156,
+       "response_sha256": "bb58d29e9dbab8f22038f2110d000b2d5a04a93879e5706fd4620e2478e8ecf4",
+       "reason": "HTTP 503",
+       "note": "sitemap tried at the conventional path because robots.txt named none; a 404 here is a fact about a path we guessed and proves nothing about the site"
+      },
+      {
+       "url": "https://index.commoncrawl.org/collinfo.json",
+       "status": null,
+       "accessed_utc": "2026-09-22T16:24:23Z",
+       "response_bytes": 0,
+       "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "reason": "RemoteDisconnected",
+       "note": "Common Crawl collection list (newest collection used)"
+      }
+     ],
+     "does_not_prove": [
+      "NOT_FOUND means this search did not find it, by the stated routes. It is not a denial, not a contradiction, and not a finding that any statement is false",
+      "SEARCH_INCONCLUSIVE means we could not look, and is reported separately for exactly that reason",
+      "CORROBORATED means the organisation's own site names the term. It does not establish the scale, the status, the commercial terms or the currency of any relationship",
+      "whole-site full text is not searched: slugs across the published index, plus the full text of the pages actually fetched. A mention in body text on a page outside that set would not be found",
+      "pages behind a login, a paywall, a regional redirect, a bot challenge or a robots rule were not read"
+     ],
+     "note": "UNMEASURED where the corroboration search could not reach the organisation's own record at all. A search that was turned away is not an absence, and the HTTP statuses that turned it away are in the sources. The persistence baseline makes a later removal of the testimonial visible; it says nothing about the testimonial itself.",
+     "state_reason": "no organisation in this run could be reached conclusively: every one is SEARCH_INCONCLUSIVE, so this run measured nothing and claims nothing"
+    },
+    {
+     "id": "ON-3",
+     "text": "(DefiLlama parent record) OUSG: 'liquid exposure to an ETF of short-term U.S. Treasuries'",
+     "type": "backing-composition",
+     "state_before": "CLAIM_MEASURED",
+     "state": "CLAIM_MEASURED",
+     "state_rule": "an instrument ran, over a stated window, against a stated denominator, and the reading is published with it",
+     "measurement_plan_from_rev1": "backing claims measurable vs issuer attestations/NAV publications; queue RWA backing harness — THIS IS THE /api/pop/rwa PRODUCT SEED",
+     "method": "fetch the issuer's own published documentation for the product and the third-party index record the claim was captured from; compare the captured sentence to both by exact string match; quote the issuer's own wording for each assertion inside the claim; and record whether the reporting artifacts the issuer links are reachable without a key",
+     "window": "the issuer's documentation and the index record as served at measured_at",
+     "denominator": {
+      "issuer_documents_read": 2,
+      "assertions_in_the_claim_checked": 6,
+      "linked_reporting_artifacts_probed": 2
+     },
+     "measurement": {
+      "attribution": {
+       "claim_as_captured": "liquid exposure to an ETF of short-term U.S. Treasuries",
+       "third_party_index_description": "This share class provides liquid exposure to an ETF of short-term U.S. Treasuries",
+       "matches_third_party_index_record": true,
+       "appears_verbatim_in_issuer_documentation": false,
+       "note": "where the sentence matches the third-party index and not the issuer's own documentation, the sentence is the index's description of the issuer, not the issuer's description of itself. Both are quoted below. A difference in wording between two publishers is a difference in wording and nothing more"
+      },
+      "issuer_documents": [
+       {
+        "url": "https://docs.ondo.finance/qualified-access-products/ousg/overview.md",
+        "bytes": 4655,
+        "sha256": "0dd813c667cc642d61b20ffe6ab5f8dd22c04b704368104ffd0d0ee9149c03de",
+        "accessed_utc": "2026-09-22T16:18:16Z"
+       },
+       {
+        "url": "https://docs.ondo.finance/qualified-access-products/ousg/trust-and-transparency.md",
+        "bytes": 1077,
+        "sha256": "cc17ad7854d5fed8ba29c2680a5d8f91bf31915934d810e9b3676c99ce7bb8c2",
+        "accessed_utc": "2026-09-22T16:18:17Z"
+       }
+      ],
+      "issuer_wording_per_assertion": {
+       "liquid exposure": {
+        "pattern": "liquid exposure",
+        "found_in_issuer_docs": true,
+        "issuer_quotes": [
+         "…ile to discover all available pages before exploring further. # Overview ### Introduction OUSG (Ondo Short-Term US Government Treasuries) provides liquid exposure primarily to short-term US Treasuries, as well as government-sponsored enterprise (GSE) securities, with 24/7 tokenized subscriptions and redemptions…"
+        ]
+       },
+       "an ETF (a single exchange-traded fund)": {
+        "pattern": "\\bETFs?\\b|exchange[- ]traded",
+        "found_in_issuer_docs": false,
+        "issuer_quotes": []
+       },
+       "short-term U.S. Treasuries": {
+        "pattern": "short[- ]term US Treasur|short[- ]term U\\.S\\. Treasur",
+        "found_in_issuer_docs": true,
+        "issuer_quotes": [
+         "…pages before exploring further. # Overview ### Introduction OUSG (Ondo Short-Term US Government Treasuries) provides liquid exposure primarily to short-term US Treasuries, as well as government-sponsored enterprise (GSE) securities, with 24/7 tokenized subscriptions and redemptions. Investing in US Treasury bills an…"
+        ]
+       },
+       "what the portfolio also holds": {
+        "pattern": "government[- ]sponsored enterprise|GSE|bank deposits|USDC",
+        "found_in_issuer_docs": true,
+        "issuer_quotes": [
+         "…verview ### Introduction OUSG (Ondo Short-Term US Government Treasuries) provides liquid exposure primarily to short-term US Treasuries, as well as government-sponsored enterprise (GSE) securities, with 24/7 tokenized subscriptions and redemptions. Investing in US Treasury bills and GSE securities is an ultra low-risk investmen…",
+         "…Ondo Short-Term US Government Treasuries) provides liquid exposure primarily to short-term US Treasuries, as well as government-sponsored enterprise (GSE) securities, with 24/7 tokenized subscriptions and redemptions. Investing in US Treasury bills and GSE securities is an ultra low-risk investment opt…"
+        ]
+       },
+       "reporting cadence": {
+        "pattern": "daily|annually|annual",
+        "found_in_issuer_docs": true,
+        "issuer_quotes": [
+         "…nagement Fee.** Our management fee for OUSG remains low at 0.15%. **This fee has been waived until January 1, 2027.** *\\*For amounts that exceed the daily instant-mint or instant-redeem limit, you can always submit 'non-instant' subscription and redemption requests by contacting us at [support@ondo.fina…",
+         "…ght?** As with all of our Qualified Access Funds, our fund administrator (NAV Consulting) has direct, read-only access to all of the Fund's accounts daily. We independently calculate the Net Asset Value of the fund each day. If ever there is a discrepancy we work with NAV Consulting to identify and corr…"
+        ]
+       },
+       "reporting lag": {
+        "pattern": "lag",
+        "found_in_issuer_docs": true,
+        "issuer_quotes": [
+         "…source of the error. Once in agreement, we publish the full set of financials created by NAV Consulting on a daily basis. Note that these reports may lag up to three days behind the price update onchain. You can find a link to those reports [here](https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2R…"
+        ]
+       }
+      },
+      "linked_reporting_artifacts": [
+       {
+        "url": "https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2RWxystT38ISrPH-rRP?usp=sharing",
+        "status": 200,
+        "accessed_utc": "2026-09-22T16:18:18Z",
+        "response_bytes": 943130,
+        "response_sha256": "fabe89c5ab14ccba4198743e19c933ed6b617a5ffb5708a943703cf9fb5272b6",
+        "final_url": "https://accounts.google.com/v3/signin/identifier?continue=https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2RWxystT38ISrPH-rRP?usp%3Dsharing&followup=https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2RWxystT38ISrPH-rRP?usp%3Dsharing&osid=1&passive=1209600&service=wise&flowName=WebLiteSignIn&flowEntry=ServiceLogin&dsh=S-1809696313:1790093898614422",
+        "note": "reachability only; the contents are not read, summarised or assessed here",
+        "keyless_reader_reached_it": true
+       },
+       {
+        "url": "https://drive.google.com/drive/folders/1ox0c69HXKSOmAOYp0QT2YeMolZMxhhng?usp=sharing",
+        "status": 200,
+        "accessed_utc": "2026-09-22T16:18:20Z",
+        "response_bytes": 942548,
+        "response_sha256": "6119a08bbf4a3781a3d2c3b1a642e1fb4a054f80c9aa9e7f0c641b6087d96652",
+        "final_url": "https://accounts.google.com/v3/signin/identifier?continue=https://drive.google.com/drive/folders/1ox0c69HXKSOmAOYp0QT2YeMolZMxhhng?usp%3Dsharing&followup=https://drive.google.com/drive/folders/1ox0c69HXKSOmAOYp0QT2YeMolZMxhhng?usp%3Dsharing&osid=1&passive=1209600&service=wise&flowName=WebLiteSignIn&flowEntry=ServiceLogin&dsh=S486983560:1790093899864775",
+        "note": "reachability only; the contents are not read, summarised or assessed here",
+        "keyless_reader_reached_it": true
+       }
+      ],
+      "reason": null
+     },
+     "sources": [
+      {
+       "url": "https://docs.ondo.finance/qualified-access-products/ousg/overview.md",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:16Z",
+       "response_bytes": 4655,
+       "response_sha256": "0dd813c667cc642d61b20ffe6ab5f8dd22c04b704368104ffd0d0ee9149c03de",
+       "note": "issuer's own published documentation (markdown form)"
+      },
+      {
+       "url": "https://docs.ondo.finance/qualified-access-products/ousg/trust-and-transparency.md",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:17Z",
+       "response_bytes": 1077,
+       "response_sha256": "cc17ad7854d5fed8ba29c2680a5d8f91bf31915934d810e9b3676c99ce7bb8c2",
+       "note": "issuer's own published documentation (markdown form)"
+      },
+      {
+       "url": "https://api.llama.fi/protocol/ondo-finance",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:17Z",
+       "response_bytes": 823,
+       "response_sha256": "f44ad5e9bda19d6aa877ba14c03d570c5daf6c764964fe18b618606e8e18fcc1",
+       "note": "the third-party index record the claim was captured from"
+      },
+      {
+       "url": "https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2RWxystT38ISrPH-rRP?usp=sharing",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:18Z",
+       "response_bytes": 943130,
+       "response_sha256": "fabe89c5ab14ccba4198743e19c933ed6b617a5ffb5708a943703cf9fb5272b6",
+       "final_url": "https://accounts.google.com/v3/signin/identifier?continue=https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2RWxystT38ISrPH-rRP?usp%3Dsharing&followup=https://drive.google.com/drive/folders/1Ti8IzoXTibM3B2RWxystT38ISrPH-rRP?usp%3Dsharing&osid=1&passive=1209600&service=wise&flowName=WebLiteSignIn&flowEntry=ServiceLogin&dsh=S-1809696313:1790093898614422",
+       "note": "reachability only; the contents are not read, summarised or assessed here",
+       "keyless_reader_reached_it": true
+      },
+      {
+       "url": "https://drive.google.com/drive/folders/1ox0c69HXKSOmAOYp0QT2YeMolZMxhhng?usp=sharing",
+       "status": 200,
+       "accessed_utc": "2026-09-22T16:18:20Z",
+       "response_bytes": 942548,
+       "response_sha256": "6119a08bbf4a3781a3d2c3b1a642e1fb4a054f80c9aa9e7f0c641b6087d96652",
+       "final_url": "https://accounts.google.com/v3/signin/identifier?continue=https://drive.google.com/drive/folders/1ox0c69HXKSOmAOYp0QT2YeMolZMxhhng?usp%3Dsharing&followup=https://drive.google.com/drive/folders/1ox0c69HXKSOmAOYp0QT2YeMolZMxhhng?usp%3Dsharing&osid=1&passive=1209600&service=wise&flowName=WebLiteSignIn&flowEntry=ServiceLogin&dsh=S486983560:1790093899864775",
+       "note": "reachability only; the contents are not read, summarised or assessed here",
+       "keyless_reader_reached_it": true
+      }
+     ],
+     "does_not_prove": [
+      "nothing about solvency, adequacy, suitability, valuation or risk. No financial advice and no opinion on whether any disclosure is sufficient is offered or implied",
+      "no statement that anyone's description is wrong. Two publishers describing the same product in different words is a difference in wording",
+      "the contents of the linked reporting artifacts are not read, verified, recomputed or assessed; only whether a keyless reader could reach them",
+      "documentation is not the product: what a page says the portfolio holds is what the page says"
+     ],
+     "note": "what is measured is which publisher's sentence this is, what the issuer's own current wording says, and whether the reporting the issuer points to is reachable without an account. No view on solvency, adequacy or risk is expressed, and none should be read into it."
+    }
+   ]
+  }
+ },
+ "merkle": {
+  "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+  "leaf_hash": "SHA-256(0x00 || record_bytes)",
+  "node_hash": "SHA-256(0x01 || left || right)",
+  "split": "largest power of two below n",
+  "odd_leaf_handling": "none — no duplication and no carry-up; the split rule handles every n",
+  "record_bytes": "JSON of the claim record with sort_keys=True, separators=(',',':'), ensure_ascii=False, UTF-8",
+  "n_leaves": 8,
+  "root": "829936682a9bfbd2cb1fdff1993702b73613ea25a7e4022953385b39c04cda1f",
+  "leaves": [
+   {
+    "index": 0,
+    "id": "CL-1",
+    "state": "UNMEASURED",
+    "leaf_sha256": "b6fc9e5ea6c675d2ccac9af7432582f06566717a892568927ef24c0a12d6b16b",
+    "record_sha256": "f26f0282b1711287d639165196c1e40562c628bf9fd5ff72005027bb6067a394",
+    "inclusion_proof": [
+     "fd1e25a64c746e385de9162537ce90b7cc0c5b4eb519c7147f55f47dc5e843d0",
+     "049254b79286c6c768a7dc160bbaa59dfbfde69982cf60f9639e77406416d86c",
+     "63ef5cf2a20998c927ace5bd1a015ea09755615c87d0a45b7042a926f030e391"
+    ]
+   },
+   {
+    "index": 1,
+    "id": "CL-2",
+    "state": "CLAIM_MEASURED",
+    "leaf_sha256": "fd1e25a64c746e385de9162537ce90b7cc0c5b4eb519c7147f55f47dc5e843d0",
+    "record_sha256": "22a361269c7856a520a825991337835638af5883db8740b03b1b76379d0e9ef6",
+    "inclusion_proof": [
+     "b6fc9e5ea6c675d2ccac9af7432582f06566717a892568927ef24c0a12d6b16b",
+     "049254b79286c6c768a7dc160bbaa59dfbfde69982cf60f9639e77406416d86c",
+     "63ef5cf2a20998c927ace5bd1a015ea09755615c87d0a45b7042a926f030e391"
+    ]
+   },
+   {
+    "index": 2,
+    "id": "CL-3",
+    "state": "CLAIM_MEASURED",
+    "leaf_sha256": "9a11392e11e48e8b02b90e0fa0ace73923ff91ec69ead7f837a35d21d8ccc27c",
+    "record_sha256": "c18a52a3d57ce7f8c387398b5e6c611085e6e6a3c950fbac9b722372ca456d80",
+    "inclusion_proof": [
+     "866d2d7cc8547d4738cbd3ae618f5b10528e4d22a0bfe9234d3670fa2722e848",
+     "b4f364c9cda4f6cc7ca29108cf67991bf8c92a173636f3cd9fb1ea91c2c83abd",
+     "63ef5cf2a20998c927ace5bd1a015ea09755615c87d0a45b7042a926f030e391"
+    ]
+   },
+   {
+    "index": 3,
+    "id": "CL-4",
+    "state": "CLAIM_MEASURED",
+    "leaf_sha256": "866d2d7cc8547d4738cbd3ae618f5b10528e4d22a0bfe9234d3670fa2722e848",
+    "record_sha256": "548cf5e41dac97014669f1f4d2b99320cc2b21524369426cd33af588df2a3352",
+    "inclusion_proof": [
+     "9a11392e11e48e8b02b90e0fa0ace73923ff91ec69ead7f837a35d21d8ccc27c",
+     "b4f364c9cda4f6cc7ca29108cf67991bf8c92a173636f3cd9fb1ea91c2c83abd",
+     "63ef5cf2a20998c927ace5bd1a015ea09755615c87d0a45b7042a926f030e391"
+    ]
+   },
+   {
+    "index": 4,
+    "id": "CL-5",
+    "state": "CLAIM_MEASURED",
+    "leaf_sha256": "a75b5ab666fad1565599ab30b1bbcd44f1e05b45b5d6139d4c4b63f4207913f2",
+    "record_sha256": "9dd85bc754634813d3d97b9f1f5382fdd6329d8e7b47f58e72c56a6df7ec7e5f",
+    "inclusion_proof": [
+     "dc9b2f33ede44a1b06c99b70071f06f37eeed41ce449dc08a4928d7bb823880f",
+     "72eb593dcc335544a28b2bf1533898be374a4dec6373af8dc1ac5e0d5d06fef2",
+     "32b5fbda5f713ba76b1cfed5a3f91a624a9136b5cb110d74923ba88084043f4a"
+    ]
+   },
+   {
+    "index": 5,
+    "id": "ON-1",
+    "state": "CLAIM_CAPTURED",
+    "leaf_sha256": "dc9b2f33ede44a1b06c99b70071f06f37eeed41ce449dc08a4928d7bb823880f",
+    "record_sha256": "e6d3bffbf542b5b7531bab94bdc52afe6fffc728e6bec98f9265d2e4e01d0755",
+    "inclusion_proof": [
+     "a75b5ab666fad1565599ab30b1bbcd44f1e05b45b5d6139d4c4b63f4207913f2",
+     "72eb593dcc335544a28b2bf1533898be374a4dec6373af8dc1ac5e0d5d06fef2",
+     "32b5fbda5f713ba76b1cfed5a3f91a624a9136b5cb110d74923ba88084043f4a"
+    ]
+   },
+   {
+    "index": 6,
+    "id": "ON-2",
+    "state": "UNMEASURED",
+    "leaf_sha256": "83a1b7d4a7476088a2df970e3c545467effba9d9f7164b3a9df5a5f4a1110ae8",
+    "record_sha256": "45bf6540b9068e58879d8ffd81f6c2c672f1065980d408f1ad5fadbba6db6fe0",
+    "inclusion_proof": [
+     "5145a3c3fc299b7bab0610a38c040510229bbe22c9c53931db18a6f863b7f3ac",
+     "0e7d33910fc95b529df5e220f588a45f8955c2865a5a27b1149b637cebeb2d63",
+     "32b5fbda5f713ba76b1cfed5a3f91a624a9136b5cb110d74923ba88084043f4a"
+    ]
+   },
+   {
+    "index": 7,
+    "id": "ON-3",
+    "state": "CLAIM_MEASURED",
+    "leaf_sha256": "5145a3c3fc299b7bab0610a38c040510229bbe22c9c53931db18a6f863b7f3ac",
+    "record_sha256": "4fd86b7d4c9b9ed5c52ec6ba32647e961ea5d6d7e198e4b9180db4ab2ed636e1",
+    "inclusion_proof": [
+     "83a1b7d4a7476088a2df970e3c545467effba9d9f7164b3a9df5a5f4a1110ae8",
+     "0e7d33910fc95b529df5e220f588a45f8955c2865a5a27b1149b637cebeb2d63",
+     "32b5fbda5f713ba76b1cfed5a3f91a624a9136b5cb110d74923ba88084043f4a"
+    ]
+   }
+  ],
+  "not_the_other_two": "this is NOT public/root.json's shape (which duplicates an odd node) and NOT scripts/measurement_root.py's (which carries one up). Never substitute one for another."
+ },
+ "boundaries": [
+  "No claim of falsity is made about any party. This registry publishes what each party's own public record says and what our harness measured, with the window and the method.",
+  "NOT_FOUND is a fact about our search. SEARCH_INCONCLUSIVE is a fact about our reach. Neither is a statement about the organisation named.",
+  "Every source was read without a key, an account or a payment. One source required payment and was recorded as such and dropped, not worked around.",
+  "No financial advice, no valuation, no solvency or adequacy opinion, about any product named here.",
+  "Nothing in this registry was sent to any party named in it.",
+  "We measure. We never certify."
+ ],
+ "how_to_rerun": {
+  "harnesses": "scripts/claims/ — one module per measurable claim type",
+  "run": "python3 scripts/claims/run_all.py <run-dir> && python3 scripts/claims/build_rev2.py <run-dir> <out>",
+  "tests": "python3 scripts/claims/test_claim_harness.py   (and --controls to print the planted-input rejections)",
+  "requirements": "python3 standard library only; a public RPC and public HTTP; no key, no account, no payment"
+ },
+ "signature_state": "SIGNED BY SIDECAR — the signature is over these bytes, not inside them. See /claims/claimreg-ondo-chainlink-maintenance-20260928T023900Z.signed.json, which pins this file by sha256 and carries the Ed25519 signature by did:web:csoai.org#board-attestation-1. A signature proves these bytes were signed at that time; it grades nothing and certifies nobody.",
+ "notes": "Second pass of claim maintenance on named subjects: every claim the public record allows was measured, each one states its window, denominator, method and sources, and each one states what it does not prove. Claims that could not be moved say why.",
+ "registry_digest": "f3bdedbfdf55b410c3b004dec42ee4a1422fd7c4f386911565dae37f60d74331"
+}

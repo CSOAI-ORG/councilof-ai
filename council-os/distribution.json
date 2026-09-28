@@ -1,0 +1,368 @@
+{
+  "schema": "csoai.distribution/1",
+  "what": "ONE declaration of every platform format Layer 0 is distributed into. scripts/harness-x/render.mjs generates distribution/** (and regenerates the derived fields of public/.well-known/mcp/server-card.json and public/.well-known/mcp.json) from this file plus council-os/capabilities.json (the tools), mcp/gspc-server/server.json (the versions) and docs/DOCTRINE.md (verified against the pin below). Nothing here is published, submitted or registered: the owner does that, from distribution/SUBMIT.md. A sibling of capabilities.json rather than a block inside it, so capability-render --check and capability-registry validateShape stay untouched.",
+  "rules": [
+    "No hand-typed counts. Every count in an output is the length of an array computed at render time.",
+    "No hand-typed server version. The remote version is read from mcp/gspc-server/server.json and scripts/harness-x/check.mjs requires it to equal the live serverInfo.version.",
+    "The doctrine is pinned by sha256. render refuses to run when docs/DOCTRINE.md no longer hashes to doctrine.sha256; re-pin deliberately with `node scripts/harness-x/render.mjs --pin-doctrine`.",
+    "Every artifact carries doctrine.sha256 in its declared carrier file(s). The doctrine TEXT stays here and in docs/DOCTRINE.md; outputs carry the hash and the source path, never a copy that can go stale.",
+    "Measurement only. No affirmative certification wording, no public price, verification free. check.mjs enforces all three over every output."
+  ],
+  "doctrine": {
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/",
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "text": "# Doctrine — Council of AI\n\nIndependent measurement body (CSOAI Ltd, UK 16939677).  \nLive board: `GET https://councilof.ai/api/gspc`. Verify: https://councilof.ai/gspc-verify.\n\n1. **We measure. We do not certify.** No notified body, no conformity mark, no “Art 50 certified.”\n2. **A grade is never sold.** Verify is free forever. Paid work is run / sign / attach / report.\n3. **The card is isolated.** GSPC card-v1 preimage does not grow new kinds. Attachments hang off it by digest, each with its own `preimage_rule` and three states.\n4. **UNMEASURED is first-class.** Empty cells stay empty. Do not guess. Quote slots and measurements together: live grammar is **22 · 15 · 7** until the stamped board says otherwise.\n5. **Fail closed.** Missing stamp → UNCHECKABLE, never a cached LIVE.\n6. **Bind, don’t migrate.** Pins and adapters. No 600-repo monorepo. Lifestyle MCPs are not the product.\n7. **Mainnet copy needs stamp + law.** No GSPC credential as a grade. No token, bond, or “everyone gets a cut.”\n8. **We eat our own cooking.** If we cannot verify it, we do not ship it.\n\nRoute: `client/src/pages/Doctrine.tsx` → `/doctrine` (lane `xrpl-hash-labels`). Live apex is **404** until this lane merges. Counts on the page come from `GET /api/gspc`, not typed.\n"
+  },
+  "identity": {
+    "publisher": "CSOAI Ltd",
+    "company_number": "16939677",
+    "jurisdiction": "GB",
+    "email": "nicholas@csoai.org",
+    "website": "https://councilof.ai",
+    "door": "https://councilof.ai/mcp",
+    "board": "https://councilof.ai/api/gspc",
+    "verify_page": "https://councilof.ai/gspc-verify/",
+    "privacy": "https://councilof.ai/privacy/",
+    "terms": "https://councilof.ai/terms/",
+    "support": "https://councilof.ai/contact/",
+    "icon": "https://councilof.ai/csoai-icon.svg",
+    "openapi_actions": "https://councilof.ai/api/openapi.json",
+    "registry_auth": "https://councilof.ai/.well-known/mcp-registry-auth",
+    "repository": "https://github.com/CSOAI-ORG/councilof-ai",
+    "display_name": "Council of AI — GSPC Measurement Tools",
+    "short_name": "Council of AI GSPC"
+  },
+  "version_sources": {
+    "remote": "mcp/gspc-server/server.json#/version",
+    "npm_stdio": "mcp/gspc-server/server.json#/packages/0/version",
+    "npm_stdio_package_json": "mcp/gspc-server/package.json#/version",
+    "python_client": "scripts/spray/pypi/csoai-gspc/pyproject.toml#project.version",
+    "layer0_js": "packages/layer0-js/package.json#/version",
+    "adapters": "council-os/distribution.json#/adapter_version"
+  },
+  "adapter_version": "0.1.0",
+  "plugin_name": "gspc",
+  "registry_names": {
+    "github": "io.github.CSOAI-ORG/gspc",
+    "domain": "ai.councilof/gspc"
+  },
+  "distribution": [
+    {
+      "id": "mcp-registry-github",
+      "format": "MCP Registry server.json (schema 2025-12-11), GitHub-namespace",
+      "output": [
+        "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json"
+      ],
+      "licence": "n/a (registry metadata); npm package csoai-gspc-mcp is Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "registry.modelcontextprotocol.io via mcp-publisher (login github)",
+      "owner_approval_needed": true,
+      "approver": "Nick — GitHub login as a CSOAI-ORG member",
+      "flagged_org_impact": "Login and repository URL depend on the flagged CSOAI-ORG account. 1.4.2 is already the live isLatest entry, so there is nothing to publish until the version moves.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "mcp-registry-domain",
+      "format": "MCP Registry server.json (schema 2025-12-11), domain namespace, remote-only",
+      "output": [
+        "distribution/mcp-registry/ai.councilof-gspc/server.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/mcp-registry/ai.councilof-gspc/server.json"
+      ],
+      "licence": "n/a (registry metadata)",
+      "version_source": "remote",
+      "listing_channel": "registry.modelcontextprotocol.io via mcp-publisher (login http --domain councilof.ai)",
+      "owner_approval_needed": true,
+      "approver": "Nick — holds the Ed25519 private key matching /.well-known/mcp-registry-auth",
+      "flagged_org_impact": "None: domain auth does not touch GitHub. No npm package and no repository URL are declared, because the npm package's mcpName names the GitHub namespace and the repository is dark to anonymous readers.",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "claude-plugin",
+      "format": "Claude Code plugin (.claude-plugin/plugin.json + marketplace.json + .mcp.json + one skill)",
+      "output": [
+        "distribution/plugin/.claude-plugin/plugin.json",
+        "distribution/plugin/.claude-plugin/marketplace.json",
+        "distribution/plugin/.mcp.json",
+        "distribution/plugin/skills/gspc/SKILL.md",
+        "distribution/plugin/README.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/skills/gspc/SKILL.md",
+        "distribution/plugin/README.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "Claude Code plugin marketplace = a public git repo (`/plugin marketplace add <owner>/<repo>`)",
+      "owner_approval_needed": true,
+      "approver": "Nick — push from a public, unflagged GitHub account",
+      "flagged_org_impact": "Blocked on CSOAI-ORG (repos dark to anonymous readers). Host the marketplace repo on CouncilofAI-CSOAI.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "cursor-plugin",
+      "format": "Cursor plugin (.cursor-plugin/plugin.json + shared .mcp.json + skill)",
+      "output": [
+        "distribution/plugin/.cursor-plugin/plugin.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/.cursor-plugin/plugin.json"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "Cursor marketplace submission (public git repo)",
+      "owner_approval_needed": true,
+      "approver": "Nick — Cursor account + public repo",
+      "flagged_org_impact": "Same repo as claude-plugin; host on CouncilofAI-CSOAI.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "grok-plugin",
+      "format": "Grok plugin marketplace (.grok-plugin/marketplace.json)",
+      "output": [
+        "distribution/plugin/.grok-plugin/marketplace.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/plugin/.grok-plugin/marketplace.json"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "repo-hosted marketplace file (same repo as claude-plugin)",
+      "owner_approval_needed": true,
+      "approver": "Nick",
+      "flagged_org_impact": "Same repo as claude-plugin.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "claude-connector",
+      "format": "Claude connectors directory — remote MCP submission field values",
+      "output": [
+        "distribution/claude/connector.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/claude/connector.json"
+      ],
+      "licence": "n/a (form values)",
+      "version_source": "remote",
+      "listing_channel": "Anthropic connectors directory submission form",
+      "owner_approval_needed": true,
+      "approver": "Nick — submits the form under CSOAI Ltd",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "gemini-extension",
+      "format": "Gemini CLI extension (gemini-extension.json + GEMINI.md context file)",
+      "output": [
+        "distribution/gemini/gemini-extension.json",
+        "distribution/gemini/GEMINI.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/gemini/GEMINI.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "listing_channel": "Gemini CLI extensions gallery (indexes public GitHub repos; `gemini extensions install <repo-url>`)",
+      "owner_approval_needed": true,
+      "approver": "Nick — public repo on an unflagged account",
+      "flagged_org_impact": "Blocked on CSOAI-ORG; host on CouncilofAI-CSOAI.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "openai-app",
+      "format": "OpenAI Apps SDK submission field values (remote MCP) + Custom GPT Actions pointer",
+      "output": [
+        "distribution/openai/app.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/openai/app.json"
+      ],
+      "licence": "n/a (form values)",
+      "version_source": "remote",
+      "listing_channel": "OpenAI platform dashboard — app submission (ChatGPT apps directory)",
+      "owner_approval_needed": true,
+      "approver": "Nick — OpenAI organisation verification + submitting account",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "pypi-langchain-csoai",
+      "format": "Python package (pyproject, setuptools) — LangChain BaseTool over csoai-gspc",
+      "output": [
+        "distribution/python/langchain-csoai/pyproject.toml",
+        "distribution/python/langchain-csoai/README.md",
+        "distribution/python/langchain-csoai/LICENSE",
+        "distribution/python/langchain-csoai/langchain_csoai/__init__.py",
+        "distribution/python/langchain-csoai/langchain_csoai/_board.py",
+        "distribution/python/langchain-csoai/langchain_csoai/tools.py"
+      ],
+      "doctrine_carriers": [
+        "distribution/python/langchain-csoai/langchain_csoai/_board.py",
+        "distribution/python/langchain-csoai/README.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "adapters",
+      "listing_channel": "PyPI (twine upload with an owner API token)",
+      "owner_approval_needed": true,
+      "approver": "Nick — PyPI account (token upload works; trusted publishing needs GitHub)",
+      "flagged_org_impact": "Trusted publishing via GitHub Actions is blocked while the org is flagged; token upload is not.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "pypi-llama-index-tools-csoai",
+      "format": "Python package (pyproject, setuptools) — LlamaIndex BaseToolSpec over csoai-gspc",
+      "output": [
+        "distribution/python/llama-index-tools-csoai/pyproject.toml",
+        "distribution/python/llama-index-tools-csoai/README.md",
+        "distribution/python/llama-index-tools-csoai/LICENSE",
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/__init__.py",
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/_board.py",
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/base.py"
+      ],
+      "doctrine_carriers": [
+        "distribution/python/llama-index-tools-csoai/llama_index/tools/csoai/_board.py",
+        "distribution/python/llama-index-tools-csoai/README.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "adapters",
+      "listing_channel": "PyPI (twine upload); optional LlamaHub listing via PR to run-llama/llama_index",
+      "owner_approval_needed": true,
+      "approver": "Nick — PyPI account; LlamaHub PR from a public account",
+      "flagged_org_impact": "LlamaHub PR must come from an unflagged account.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "pypi-crewai-csoai",
+      "format": "Python package (pyproject, setuptools) — CrewAI BaseTool over csoai-gspc",
+      "output": [
+        "distribution/python/crewai-csoai/pyproject.toml",
+        "distribution/python/crewai-csoai/README.md",
+        "distribution/python/crewai-csoai/LICENSE",
+        "distribution/python/crewai-csoai/crewai_csoai/__init__.py",
+        "distribution/python/crewai-csoai/crewai_csoai/_board.py",
+        "distribution/python/crewai-csoai/crewai_csoai/tools.py"
+      ],
+      "doctrine_carriers": [
+        "distribution/python/crewai-csoai/crewai_csoai/_board.py",
+        "distribution/python/crewai-csoai/README.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "adapters",
+      "listing_channel": "PyPI (twine upload)",
+      "owner_approval_needed": true,
+      "approver": "Nick — PyPI account",
+      "flagged_org_impact": "As pypi-langchain-csoai.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "npm-ai-sdk-gspc",
+      "format": "npm package (ESM) — Vercel AI SDK tool() over the /mcp door; optional @csoai/layer0 governed wrapper",
+      "output": [
+        "distribution/npm/ai-sdk-gspc/package.json",
+        "distribution/npm/ai-sdk-gspc/README.md",
+        "distribution/npm/ai-sdk-gspc/LICENSE",
+        "distribution/npm/ai-sdk-gspc/gspc-client.js",
+        "distribution/npm/ai-sdk-gspc/index.js",
+        "distribution/npm/ai-sdk-gspc/index.d.ts"
+      ],
+      "doctrine_carriers": [
+        "distribution/npm/ai-sdk-gspc/gspc-client.js",
+        "distribution/npm/ai-sdk-gspc/package.json"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "adapters",
+      "listing_channel": "npm (@csoai scope)",
+      "owner_approval_needed": true,
+      "approver": "Nick — npm Bypass-2FA granular token (account is WebAuthn, not TOTP)",
+      "flagged_org_impact": "Provenance attestation (npm publish --provenance) needs GitHub Actions; publish without it.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "npm-mastra-gspc",
+      "format": "npm package (ESM) — Mastra createTool() over the /mcp door; optional @csoai/layer0 governed wrapper",
+      "output": [
+        "distribution/npm/mastra-gspc/package.json",
+        "distribution/npm/mastra-gspc/README.md",
+        "distribution/npm/mastra-gspc/LICENSE",
+        "distribution/npm/mastra-gspc/gspc-client.js",
+        "distribution/npm/mastra-gspc/index.js",
+        "distribution/npm/mastra-gspc/index.d.ts"
+      ],
+      "doctrine_carriers": [
+        "distribution/npm/mastra-gspc/gspc-client.js",
+        "distribution/npm/mastra-gspc/package.json"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "adapters",
+      "listing_channel": "npm (@csoai scope)",
+      "owner_approval_needed": true,
+      "approver": "Nick — npm Bypass-2FA granular token",
+      "flagged_org_impact": "As npm-ai-sdk-gspc.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "docker-mcp-catalog",
+      "format": "docker/mcp-registry servers/<name>/{server.yaml,tools.json,readme.md}, type remote",
+      "output": [
+        "distribution/docker/servers/csoai-gspc/server.yaml",
+        "distribution/docker/servers/csoai-gspc/tools.json",
+        "distribution/docker/servers/csoai-gspc/readme.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/docker/servers/csoai-gspc/server.yaml",
+        "distribution/docker/servers/csoai-gspc/readme.md"
+      ],
+      "licence": "n/a (catalog metadata)",
+      "version_source": "remote",
+      "listing_channel": "GitHub PR to docker/mcp-registry",
+      "owner_approval_needed": true,
+      "approver": "Nick — PR from a public, unflagged GitHub account",
+      "flagged_org_impact": "Cannot be opened from CSOAI-ORG; open from CouncilofAI-CSOAI.",
+      "flagged_org_affected": true
+    },
+    {
+      "id": "hf-space",
+      "format": "Hugging Face Space (Gradio, mcp_server=True) over csoai-gspc",
+      "output": [
+        "distribution/hf-space/csoai-gspc-mcp/README.md",
+        "distribution/hf-space/csoai-gspc-mcp/app.py",
+        "distribution/hf-space/csoai-gspc-mcp/requirements.txt"
+      ],
+      "doctrine_carriers": [
+        "distribution/hf-space/csoai-gspc-mcp/app.py",
+        "distribution/hf-space/csoai-gspc-mcp/README.md"
+      ],
+      "licence": "Apache-2.0",
+      "version_source": "python_client",
+      "listing_channel": "huggingface.co/spaces/csoai/gspc-mcp (git push or huggingface_hub upload)",
+      "owner_approval_needed": true,
+      "approver": "Nick — HF write token for the csoai org",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false
+    },
+    {
+      "id": "well-known-server-card",
+      "format": "councilof.ai /.well-known/mcp/server-card.json + /.well-known/mcp.json (derived fields only)",
+      "output": [
+        "public/.well-known/mcp/server-card.json",
+        "public/.well-known/mcp.json"
+      ],
+      "doctrine_carriers": [
+        "public/.well-known/mcp/server-card.json",
+        "public/.well-known/mcp.json"
+      ],
+      "licence": "CC-BY-4.0 (as the card states)",
+      "version_source": "remote",
+      "listing_channel": "this repo → deploy to councilof.ai",
+      "owner_approval_needed": true,
+      "approver": "Nick — merge; ships with the next deploy",
+      "flagged_org_impact": "None beyond the normal merge path.",
+      "flagged_org_affected": false
+    }
+  ]
+}

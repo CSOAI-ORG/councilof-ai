@@ -181,7 +181,25 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const description =
     "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU_ID, tier: "history_batch", description });
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { history: "1" },
+    // `since` is declared here because the blob must match the door. An undeclared parameter
+    // is exactly the mismatch that stopped /api/free-door indexing on 2026-09-05, where
+    // info.input carried a key the schema's additionalProperties:false refused.
+    queryParamsSchema: {
+      properties: {
+        history: { type: "string", const: "1" },
+        since: { type: "string", description: "ISO-8601 instant; return only diffs newer than this" },
+      },
+      required: ["history"],
+    },
+    outputExample: { schema: "csoai.feeds.provider-diff/0.1", kind: "history", diffs: [], leaves: {}, root: {} },
+  });
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   if (!payment.ok) {
     const paymentRequired = buildPaymentRequiredV2({
@@ -190,21 +208,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Provider Diff Feed",
       tags: ["diff", "terms", "model-card", "article-50", "x402"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        queryParams: { history: "1" },
-        // `since` is declared here because the blob must match the door. An undeclared parameter
-        // is exactly the mismatch that stopped /api/free-door indexing on 2026-09-05, where
-        // info.input carried a key the schema's additionalProperties:false refused.
-        queryParamsSchema: {
-          properties: {
-            history: { type: "string", const: "1" },
-            since: { type: "string", description: "ISO-8601 instant; return only diffs newer than this" },
-          },
-          required: ["history"],
-        },
-        outputExample: { schema: "csoai.feeds.provider-diff/0.1", kind: "history", diffs: [], leaves: {}, root: {} },
-      }),
+      bazaar,
       csoai: {
         schema: "csoai.feeds.provider-diff/0.1",
         per: "history-batch",

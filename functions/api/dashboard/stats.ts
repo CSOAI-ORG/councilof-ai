@@ -56,8 +56,25 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
 
   const measuredAxes = num(gspcSrc, (v) => v?.totals?.measured_axes);
   const quotableAxes = num(gspcSrc, (v) => v?.totals?.quotable_axes);
-  const signedCards = num(cardsSrc, (v) => v?.cards?.signed ?? v?.signed);
-  const cardCount = num(cardsSrc, (v) => v?.cards?.count ?? v?.count);
+  // /api/cards includes the separately published cross-border card in its living
+  // registry totals. This dashboard tile is labelled as the signed measurement
+  // card index, so keep that other corpus out of both numbers.
+  const livingSignedCards = num(cardsSrc, (v) => v?.cards?.signed ?? v?.signed);
+  const livingCardCount = num(cardsSrc, (v) => v?.cards?.count ?? v?.count);
+  const separateCrossBorderCount = Number(cardsSrc.ok && cards?.cross_border?.card === "cross-border-card");
+  const separateSignedCrossBorderCount = Number(
+    separateCrossBorderCount === 1 && cards.cross_border.signed === true,
+  );
+  const cardCount = livingCardCount === null
+    ? null
+    : livingCardCount >= separateCrossBorderCount
+      ? livingCardCount - separateCrossBorderCount
+      : null;
+  const signedCards = livingSignedCards === null
+    ? null
+    : livingSignedCards >= separateSignedCrossBorderCount
+      ? livingSignedCards - separateSignedCrossBorderCount
+      : null;
 
   // /api/oracle-fleet reports a single host's health and carries no `online` and
   // no `nodes`. Deriving 0 from their absence asserted "no nodes online", which

@@ -1,0 +1,27 @@
+{
+  "schema": "csoai.claim-reference-code/0.1",
+  "as_of": "2026-09-25T05:36:37Z",
+  "version": "0.2",
+  "url": "https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+  "files": {
+    "claim-capture.mjs": {
+      "sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d",
+      "bytes": 26742,
+      "source": "scripts/claim-capture.mjs",
+      "license": "MIT"
+    }
+  },
+  "extractors": {
+    "csoai-visible-text/1": "extractVisibleTextRule1: the extractor of the v0.1 reference, carried unchanged so digests recorded under it recompute like with like (spec v0.2 5.6.1, 6.3.1)",
+    "csoai-visible-text/2": "extractVisibleText: used for every new capture (spec v0.2 5.6.1)"
+  },
+  "supersedes": {
+    "path": "/spec/claim-maintenance/v0.1/reference/claim-capture.mjs",
+    "manifest": "/spec/claim-maintenance/v0.1/reference/manifest.json",
+    "sha256": "a634515bec5e8999d73bf55d2e2c8641351fe0070d40596afa4877f2f3e86f60",
+    "bytes": 19949,
+    "rule": "superseded by reference, never edited: the v0.1 copy keeps its bytes at its own URL, and they are the bytes deposited at 10.5281/zenodo.22901908"
+  },
+  "execution": "Download and inspect before running. Verification mode is local. Network capture should only use permitted public sources; the reference does not grant access permission.",
+  "mirror_scope": "Exact same existing owned source; no independent assurance or rewritten implementation asserted."
+}

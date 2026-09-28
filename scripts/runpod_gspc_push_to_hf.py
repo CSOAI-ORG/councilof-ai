@@ -11,6 +11,7 @@ or signatures; the separate intake verifier still decides admission.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import os
 import re
 import stat
@@ -25,6 +26,7 @@ REQUIRED = ("card-unsigned.json", "items.jsonl", "run.json")
 MAX_COMMIT_FILES = 300
 MAX_COMMIT_BYTES = 50 * 1024 * 1024
 CHUNK_BYTES = 1024 * 1024
+MAX_VERIFY_WORKERS = 4
 
 
 class IntakeError(Exception):
@@ -172,12 +174,37 @@ def connect(repo: str, api_class: Any, token_file: Path | None = None) -> tuple[
     raise IntakeError("no credential could read the private intake. " + "; ".join(tried))
 
 
+def verify_upstream_bytes(
+    api: Any, repo: str, revision: str, checks: list[tuple[str, FrozenFile]],
+) -> None:
+    """Byte-compare every upstream file at one immutable revision before writes.
+
+    Four downloads at most run together; each batch must finish successfully
+    before another starts. Errors and conflicts fail closed before any commit.
+    """
+    def check(item: tuple[str, FrozenFile]) -> None:
+        key, local = item
+        remote = api.hf_hub_download(
+            repo_id=repo, repo_type="dataset", filename=key, revision=revision,
+        )
+        if not equal_bytes(local.path, Path(remote)):
+            raise IntakeError(f"upstream byte conflict: {key}; no upload performed")
+
+    with ThreadPoolExecutor(max_workers=MAX_VERIFY_WORKERS) as pool:
+        for start in range(0, len(checks), MAX_VERIFY_WORKERS):
+            futures = [pool.submit(check, item)
+                       for item in checks[start:start + MAX_VERIFY_WORKERS]]
+            for future in futures:
+                future.result()
+
+
 def push_runs(
     api: Any, repo: str, revision: str, upstream: set[str], runs: list[FrozenRun],
     operation_class: Any, *, dry_run: bool = False,
 ) -> tuple[int, int]:
     """Preflight every conflict before committing any bounded, complete bundles."""
     planned: list[list[tuple[str, FrozenFile]]] = []
+    upstream_checks: list[tuple[str, FrozenFile]] = []
     skipped = 0
     for run in runs:
         missing = []
@@ -185,11 +212,7 @@ def push_runs(
             key = f"{run.relative}/{name}"
             local = run.files[name]
             if key in upstream:
-                remote = api.hf_hub_download(
-                    repo_id=repo, repo_type="dataset", filename=key, revision=revision,
-                )
-                if not equal_bytes(local.path, Path(remote)):
-                    raise IntakeError(f"upstream byte conflict: {key}; no upload performed")
+                upstream_checks.append((key, local))
             else:
                 missing.append((key, local))
         if missing:
@@ -198,6 +221,8 @@ def push_runs(
             planned.append(missing)
         else:
             skipped += 1
+
+    verify_upstream_bytes(api, repo, revision, upstream_checks)
 
     batches: list[list[list[tuple[str, FrozenFile]]]] = []
     batch: list[list[tuple[str, FrozenFile]]] = []

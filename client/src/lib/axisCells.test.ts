@@ -49,6 +49,17 @@ const behavioural = {
   interval: [0.639, 0.755] as [number, number],
 };
 
+/** Live /api/gspc?axis=governance shape on 2026-09-23: run exists, own leader excluded. */
+const governanceNoPublicLeader = {
+  axis: "governance",
+  family: "gspc",
+  kind: "model-comparison",
+  n: 237,
+  status: "MEASURED",
+  public_leader_state: "EXCLUDED_OWN_MODEL",
+  separation: "UNTESTED",
+};
+
 const everyCellText = (a: Parameters<typeof accuracyCell>[0]) => {
   const acc = accuracyCell(a);
   const parts = [acc.text, intervalCell(a).text, separationNote(a) ?? ""];
@@ -58,7 +69,7 @@ const everyCellText = (a: Parameters<typeof accuracyCell>[0]) => {
 };
 
 describe("no board cell renders NaN", () => {
-  for (const axis of [provenanceControls, declaredSlot, behavioural]) {
+  for (const axis of [provenanceControls, declaredSlot, behavioural, governanceNoPublicLeader]) {
     it(`${axis.axis} — every cell is NaN-free`, () => {
       expect(everyCellText(axis)).not.toMatch(/NaN/);
     });
@@ -68,6 +79,36 @@ describe("no board cell renders NaN", () => {
     // Defence in depth: NaN arriving IN the payload must not become "NaN%" either.
     expect(everyCellText({ ...behavioural, accuracy: NaN })).not.toMatch(/NaN/);
     expect(everyCellText({ ...behavioural, accuracy: Infinity })).not.toMatch(/NaN/);
+  });
+});
+
+describe("measured model-comparison axis without a public leader", () => {
+  it("does not call the governance run an unmeasured open slot", () => {
+    const cell = accuracyCell(governanceNoPublicLeader);
+    expect(cell.state).toBe("no-public-leader");
+    expect(cell.text).toBe("no public leader score");
+    expect(cell.title).toMatch(/run exists/);
+    expect(cell.title).toMatch(/own model, excluded from the public ranking/);
+    expect(cell.title).not.toMatch(/No run exists|open slot/i);
+  });
+
+  it("does not invent an accuracy or interval when no signed leader card is public", () => {
+    const axis = {
+      ...governanceNoPublicLeader,
+      axis: "safety",
+      public_leader_state: "NO_SIGNED_CARD",
+      interval: [0.2, 0.8], // a stale interval must not imply a public leader figure
+    };
+    const cell = accuracyCell(axis);
+    expect(cell.state).toBe("no-public-leader");
+    expect(cell.title).toMatch(/no signed per-model card/);
+    expect(intervalCell(axis).text).toBe("not published — no public leader score");
+    expect(intervalCell(axis).text).not.toMatch(/%|unmeasured/i);
+  });
+
+  it("distinguishes a withheld leader interval from a truly unmeasured interval", () => {
+    expect(intervalCell(governanceNoPublicLeader).text).toBe("not published — no public leader score");
+    expect(intervalCell(declaredSlot).text).toBe(UNMEASURED_WORD);
   });
 });
 

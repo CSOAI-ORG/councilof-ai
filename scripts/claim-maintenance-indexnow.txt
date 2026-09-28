@@ -1,0 +1,13 @@
+# URLs the claim-maintenance lane added or changed. Submit AFTER the deploy that
+# makes them live, never before — indexnow-submit.mjs fetches each one and sends
+# only a 200, and requires --changed, so running this early costs nothing but
+# also achieves nothing:
+#
+#   node scripts/indexnow-submit.mjs --changed --file scripts/claim-maintenance-indexnow.txt
+#
+# This is a change list, not a sitemap. Do not add URLs that did not change.
+https://councilof.ai/claim-maintenance/
+https://councilof.ai/spec/claim-maintenance/v0.1/
+https://councilof.ai/spec/claim-maintenance/
+https://councilof.ai/llms.txt
+https://councilof.ai/llms-full.txt

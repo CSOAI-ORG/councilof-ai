@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import contextlib
+import hashlib
 import importlib.util
 import io
 import os
 import sys
+import threading
+import time
 import tempfile
 import types
 import unittest
@@ -51,7 +54,7 @@ class FakeHub:
         assert kwargs["revision"] == self.head
         key = kwargs["filename"]
         self.downloads.append((key, kwargs["revision"]))
-        path = self.cache / f"download-{len(self.downloads)}"
+        path = self.cache / f"download-{hashlib.sha256(key.encode()).hexdigest()}"
         path.write_bytes(self.files[key])
         return str(path)
 
@@ -137,6 +140,51 @@ class PushTests(unittest.TestCase):
         self.hub.files = self.fixture()
         self.assertEqual(self.execute(), (0, 1))
         self.assertEqual(len(self.hub.downloads), 3)
+        self.assertEqual(self.hub.commits, [])
+
+    def test_upstream_checks_are_bounded_and_all_complete_before_write(self) -> None:
+        self.hub.files = self.fixture("existing-0")
+        for number in range(1, 5):
+            self.hub.files.update(self.fixture(f"existing-{number}"))
+        self.fixture("new")
+        original = self.hub.hf_hub_download
+        lock = threading.Lock()
+        active = peak = 0
+
+        def delayed_download(**kwargs):
+            nonlocal active, peak
+            with lock:
+                active += 1
+                peak = max(active, peak)
+            try:
+                time.sleep(0.01)
+                return original(**kwargs)
+            finally:
+                with lock:
+                    active -= 1
+
+        original_commit = self.hub.create_commit
+
+        def checked_commit(**kwargs):
+            self.assertEqual(active, 0)
+            self.assertEqual(len(self.hub.downloads), 15)
+            return original_commit(**kwargs)
+
+        with mock.patch.object(self.hub, "hf_hub_download", side_effect=delayed_download), \
+             mock.patch.object(self.hub, "create_commit", side_effect=checked_commit):
+            self.assertEqual(self.execute(), (1, 5))
+        self.assertGreater(peak, 1)
+        self.assertLessEqual(peak, push.MAX_VERIFY_WORKERS)
+        self.assertEqual(len(self.hub.downloads), 15)
+        self.assertEqual(len(self.hub.commits), 1)
+        self.assertEqual(len(self.hub.commits[0]["files"]), 3)
+
+    def test_upstream_download_error_stops_before_any_commit(self) -> None:
+        self.hub.files = self.fixture("existing")
+        self.fixture("new")
+        with mock.patch.object(self.hub, "hf_hub_download", side_effect=RuntimeError("network failure")):
+            with self.assertRaisesRegex(RuntimeError, "network failure"):
+                self.execute()
         self.assertEqual(self.hub.commits, [])
 
     def test_complete_remote_run_with_changed_bytes_is_rejected(self) -> None:

@@ -6,9 +6,8 @@
  */
 
 import { Link } from 'wouter';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { BookOpen, Linkedin, Mail } from 'lucide-react';
 import FooterVerifyStrip from './FooterVerifyStrip';
-import LiveCounters from './LiveCounters';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
@@ -29,23 +28,42 @@ export function Footer() {
       title: 'Product',
       links: [
         { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Get measured', href: '/assess' },
+        { name: 'Request attestation', href: '/assess' },
         { name: 'Board', href: '/dashboard?tab=board' },
         { name: 'Tools — plugin snippet', href: '/tools' },
-        { name: 'Run / re-attest', href: '/assess' },
+        { name: 'Ask about a measured run', href: '/contact?arm=run' },
         { name: 'Ledger', href: '/contact?arm=ledger' },
         { name: 'Data', href: '/contact?arm=data' },
         { name: 'Library', href: '/library' },
+      ],
+    },
+    // 2026-09-22: a fifth column. Every address below answers today (checked live) and each one
+    // is a door an AGENT needs and a human never guesses: the board, the tool surface, the A2A
+    // card, the payment manifest with its ten free population previews, the keys and llms.txt.
+    // They were reachable only from inside the home page before, so a reader arriving on any
+    // other route could not find them at all.
+    {
+      title: 'For machines',
+      links: [
+        { name: 'Board JSON — /api/gspc', href: '/api/gspc', external: true },
+        { name: 'Tool surface — /mcp', href: '/mcp', external: true },
+        { name: 'Agent card', href: '/.well-known/agent.json', external: true },
+        { name: 'Metered doors + free previews', href: '/.well-known/x402.json', external: true },
+        { name: 'Our public keys', href: '/.well-known/did.json', external: true },
+        { name: 'Signed evidence root', href: '/root.json', external: true },
+        { name: 'OpenAPI description', href: '/openapi.json', external: true },
       ],
     },
     {
       title: 'Evidence',
       links: [
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
+        { name: 'Current evidence mirror', href: 'https://huggingface.co/datasets/csoai/councilof-ai-mirror', external: true },
         { name: 'Methodology', href: '/methodology' },
         { name: 'Honesty gate', href: '/honesty' },
         // The readable ledger (DashboardAttestationsPane renders /api/corrections), not raw JSON.
         { name: 'Corrections', href: '/dashboard?tab=attestations' },
+        { name: 'How far this reaches', href: '/reach' },
         { name: 'llms.txt', href: '/llms.txt', external: true },
         { name: 'API docs', href: '/api-docs' },
       ],
@@ -73,7 +91,7 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/CSOAI-ORG' },
+    { name: 'Source snapshot', icon: BookOpen, href: 'https://huggingface.co/datasets/csoai/councilof-ai-source' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];
@@ -140,7 +158,7 @@ export function Footer() {
         </div>
 
         {/* Link columns (4) */}
-        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h3 className="t-kicker mb-3 text-foreground">{section.title}</h3>
@@ -168,93 +186,108 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Framework logos — self-hosted badge art; links to the real framework home */}
+        {/*
+          FRAMEWORKS WE MEASURE AGAINST — text, with the relationship named, never a logo row.
+
+          WHAT WAS HERE UNTIL 2026-09-23, and why it went. Nine <img> badges drawn in-house at
+          /images/badges/frameworks/*.svg: an EU AI Act badge rendering the European emblem's
+          circle of twelve stars in the emblem's own #003399 and #FFCC00, a redrawn Tux for the
+          Linux Foundation, and seven more. They are not those bodies' assets; they are our
+          imitations of their marks, and every one of them sat under our own heading in our own
+          footer. That is the arrangement a reader reads as affiliation.
+
+          The five frameworks in the first group are the sharpest case, because we hold NO
+          standing with any of them — we measure AGAINST the EU AI Act, NIST AI RMF, ISO/IEC
+          42001 and DORA, and there is no relationship to depict. The block had to carry a
+          disclaimer ("we are not certified to SOC 2 or ISO 42001") directly under the art to
+          stay honest, which is the tell: art that needs a disclaimer beside it is the wrong art.
+          The four memberships in the second group ARE real, but a membership is a fact we can
+          state in words with a date and a link, which is strictly more information than a logo.
+
+          No body's brand terms were cited for any of the nine, and none of them licenses a third
+          party to redraw its mark. So this is now the pattern MembershipStrip already uses on
+          /memberships and on the home page: organisation, the kind of participation, and a link
+          to that body's own page. Standing and evidence for every membership stay on
+          /memberships, backed by public/interop/memberships.json, which
+          scripts/memberships-check.mjs re-fetches so a claim cannot outlive its evidence.
+
+          The nine SVGs are left on disk unreferenced rather than deleted, so this decision can
+          be read against the exact bytes it was made about.
+        */}
         <div className="border-t border-border pt-6 mb-6">
           <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
             Frameworks we measure against
           </p>
-          <ul className="flex flex-wrap items-center justify-center gap-2.5 list-none p-0 m-0">
+          <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
             {[
               {
-                src: '/images/badges/frameworks/eu-ai-act.svg',
-                alt: 'EU AI Act',
+                name: 'EU AI Act',
+                detail: 'Regulation (EU) 2024/1689',
                 href: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai',
-                title: 'EU Artificial Intelligence Act — framework we measure against',
               },
               {
-                src: '/images/badges/frameworks/nist-ai-rmf.svg',
-                alt: 'NIST AI RMF',
+                name: 'NIST AI RMF',
+                detail: 'framework we measure against',
                 href: 'https://www.nist.gov/itl/ai-risk-management-framework',
-                title: 'NIST AI Risk Management Framework — we measure against; we are not certified',
               },
               {
-                src: '/images/badges/frameworks/iso-42001.svg',
-                alt: 'ISO/IEC 42001',
+                name: 'ISO/IEC 42001',
+                detail: 'framework we measure against',
                 href: 'https://www.iso.org/standard/81230.html',
-                title: 'ISO/IEC 42001 AI management systems — we are not certified',
               },
               {
-                src: '/images/badges/frameworks/dora.svg',
-                alt: 'DORA',
+                name: 'DORA',
+                detail: 'framework we measure against',
                 href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
-                title: 'Digital Operational Resilience Act — we measure against; we are not certified',
               },
-              {
-                src: '/images/badges/frameworks/c2pa.svg',
-                alt: 'C2PA',
-                href: 'https://c2pa.org/',
-                title: 'C2PA Content Credentials — contributor member',
-              },
-              {
-                src: '/images/badges/frameworks/oin.svg',
-                alt: 'Open Invention Network',
-                href: 'https://openinventionnetwork.com/',
-                title: 'Open Invention Network — member',
-              },
-              {
-                src: '/images/badges/frameworks/lot-network.svg',
-                alt: 'LOT Network',
-                href: 'https://lotnet.com/',
-                title: 'LOT Network — member',
-              },
-              {
-                src: '/images/badges/frameworks/dif.svg',
-                alt: 'Decentralized Identity Foundation',
-                href: 'https://identity.foundation/',
-                title: 'Decentralized Identity Foundation — did:web trust root',
-              },
-              {
-                src: '/images/badges/frameworks/linux-foundation.svg',
-                alt: 'Linux Foundation',
-                href: 'https://www.linuxfoundation.org/',
-                // Standing and evidence live on /memberships (public/interop/memberships.json); this
-                // title states nothing the manifest does not, so it cannot drift from it.
-                title: 'Linux Foundation — our standing and its evidence are on /memberships',
-              },
-            ].map((b) => (
-              <li key={b.alt}>
+            ].map((f) => (
+              <li key={f.name}>
                 <a
-                  href={b.href}
+                  href={f.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title={b.title}
-                  className="block rounded-lg border border-border bg-background p-1 shadow-sm transition hover:border-emerald-600/40 hover:shadow"
+                  className="inline-flex items-baseline gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs transition hover:border-emerald-600/40"
                 >
-                  <img
-                    src={b.src}
-                    alt={b.alt}
-                    width={160}
-                    height={40}
-                    className="h-9 w-auto sm:h-10"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <span className="font-bold text-foreground">{f.name}</span>
+                  <span className="text-muted-foreground">· {f.detail}</span>
                 </a>
               </li>
             ))}
           </ul>
+
+          <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mt-6 mb-4">
+            Bodies we take part in
+          </p>
+          <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
+            {[
+              { name: 'C2PA', detail: 'contributor', href: 'https://c2pa.org/' },
+              { name: 'Open Invention Network', detail: 'member', href: 'https://openinventionnetwork.com/' },
+              { name: 'LOT Network', detail: 'member', href: 'https://lotnet.com/' },
+              { name: 'Decentralized Identity Foundation', detail: 'did:web trust root', href: 'https://identity.foundation/' },
+              { name: 'Linux Foundation', detail: 'hosts DIF and C2PA', href: 'https://www.linuxfoundation.org/' },
+            ].map((f) => (
+              <li key={f.name}>
+                <a
+                  href={f.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-baseline gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs transition hover:border-emerald-600/40"
+                >
+                  <span className="font-bold text-foreground">{f.name}</span>
+                  <span className="text-muted-foreground">· {f.detail}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
           <p className="text-muted-foreground text-xs text-center mt-4 font-medium">
-            We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
+            Naming a framework is not a claim to comply with it, and taking part in a body is not
+            that body endorsing us. We are not certified to SOC 2 or ISO 42001, and we hold no
+            certification under any scheme. Measurement credential, never certification.{' '}
+            <Link href="/memberships" className="text-primary hover:underline">
+              Every participation record, with its evidence
+            </Link>
+            .
           </p>
         </div>
 
@@ -268,12 +301,59 @@ export function Footer() {
           </a>
         </p>
 
-        {/* Adoption funnel, compact — every stage read live from /api/footprint, "—" until it lands */}
-        <LiveCounters variant="footer" />
+        {/*
+          OWNER RULING 2026-09-22: the seven-stage funnel came out of the site chrome. Four of the
+          seven can only say UNMEASURED today, and rendering that column at the foot of every
+          page — the home page included — made a row of absences the last thing every visitor
+          read. Nothing is hidden and no stage is dropped: the whole funnel, every stage with its
+          own state, source and as-of, is published at /api/footprint, and it is named here.
+          When the lane rebuilding that measurement lands, this is the line to revisit.
+        */}
+        <p className="text-muted-foreground text-xs text-center mt-4 mb-2">
+          {/* The stages are NAMED on the funnel surface itself, not here. Listing them in this
+              line put the commercial ones back on every page in prose, which is the same
+              placement problem as the pills. One link, and the discipline lives where it is
+              the argument. */}
+          Every stage of how far this work travels is measured separately and never added
+          together.{" "}
+          <Link href="/reach" className="text-primary hover:underline">
+            All seven stages, including the ones we cannot measure yet
+          </Link>
+        </p>
 
         {/* Where we take part — one line from public/interop/memberships.json; every name links to
             its evidence. Participation is not endorsement, a listing is not adoption. */}
         <MembershipStrip variant="footer" />
+
+        {/*
+          The trust row. A careful reader - and every serious agent - looks for exactly these
+          five before believing anything else on a site, and until now they were scattered
+          across three columns or not linked at all. Each href was fetched on 2026-09-22 and
+          answered 200; /security.txt (without .well-known) is a 404 and is deliberately not
+          linked. This row never carries a count, so it cannot go stale.
+        */}
+        <div className="border-t border-border pt-6 mb-6" data-testid="footer-trust-row">
+          <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 list-none p-0 m-0 text-xs">
+            {[
+              { href: '/.well-known/did.json', label: 'Our decentralised identifier', hint: 'the keys every signature is checked against' },
+              { href: '/.well-known/security.txt', label: 'Security contact', hint: 'how to report a vulnerability to us' },
+              { href: '/llms.txt', label: 'llms.txt', hint: 'what this site is, written for machines' },
+              { href: 'https://find-and-update.company-information.service.gov.uk/company/16939677', label: 'Companies House 16939677', hint: 'CSOAI Ltd on the public register' },
+              { href: '/api/corrections', label: 'Corrections ledger', hint: 'everything we have published and had to correct' },
+            ].map((l) => (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  title={l.hint}
+                  {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  className="text-muted-foreground hover:text-primary underline decoration-dotted underline-offset-4 transition-colors"
+                >
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">

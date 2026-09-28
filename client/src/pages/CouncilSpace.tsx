@@ -35,9 +35,12 @@ function GlobeView() {
   return (
     <div className="mx-auto max-w-6xl px-6 pb-10">
       <div className="overflow-hidden rounded-2xl border border-sky-500/25">
-        <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 bg-[#05140d] px-4 py-2">
           <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">The Council Globe — the GLOBE AI OS, living inside Council Space{ask ? " · flown to your scenario" : ""}</div>
-          <a href="/globe3d.html" className="text-[11px] font-semibold text-sky-200 hover:underline">Open full screen →</a>
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="/world/observatory/" className="text-[11px] font-semibold text-sky-200 hover:underline">Source-linked observatory →</a>
+            <a href="/globe3d.html" className="text-[11px] font-semibold text-sky-200 hover:underline">Open full screen →</a>
+          </div>
         </div>
         <iframe ref={frameRef} onLoad={onLoad} src="/globe3d.html" title="Council 3D Governance Earth" loading="lazy" className="block h-[70vh] w-full" style={{ border: 0 }} />
       </div>

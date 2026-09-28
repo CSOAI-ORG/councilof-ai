@@ -744,13 +744,13 @@ export const AXIS_SETS: AxisSet[] = [
     id: "board",
     name: "The public board",
     headline:
-      "The flagship instrument. A fleet of language models answers a frozen set of questions, and every answer is graded by a fixed rule rather than by another model's opinion.",
+      "The flagship board combines model-comparison runs on frozen question banks with deterministic fact runs on named public records. Each row states which kind it is and what was measured.",
     measures:
-      "Whether a model gets governance, safety, provenance and continuity questions right — plus a financial half that reads facts off public ledger records rather than asking a model anything.",
-    subject: "language models, and (for the financial half) named financial instruments",
+      "Behavioural rows grade model answers by fixed rules. Fact rows read public ledger records, published series or other named sources without testing a model.",
+    subject: "language models on comparison rows; named instruments or public records on fact rows",
     establishes: [
-      "How a named model scored, on a named question bank, on a named date.",
-      "Whether the best model's lead over the rest of the field is statistically real, or is close enough that the ordering could flip on a re-run.",
+      "For a model-comparison row, how a named model scored on a named question bank and date.",
+      "For a model-comparison row, whether its evidence separates a leader, shows a tie or leaves separation untested.",
       "Exactly which slots have nothing behind them — those rows are published on purpose.",
     ],
     doesNotEstablish: [
@@ -760,7 +760,7 @@ export const AXIS_SETS: AxisSet[] = [
       "That a financial row is a rating, a risk opinion, or investment advice. It records which flags an account carries — what that implies about risk is not measured here.",
     ],
     relation:
-      "This is the set every other count on this page should be compared against, and the only one whose number belongs in a sentence about 'the board'. The other six measure different things over different populations, so they carry their own numbers by design, not by drift.",
+      "This is the only set whose count belongs in a sentence about 'the board'. The other sets measure different things over different populations, so they carry their own counts by design.",
     countAuthority: "GET /api/gspc → totals.public_count",
     artifact: { href: "/api/gspc", label: "/api/gspc" },
     detailPage: { href: "/dashboard?tab=board", label: "the full board, axis by axis" },
@@ -824,7 +824,7 @@ export const AXIS_SETS: AxisSet[] = [
       "A different instrument over a different axis list. It was mistaken for a stale copy of the board for a long time; it is not one, and forcing its number to match the board's would destroy information rather than fix a contradiction.",
     countAuthority: "/arena/elo_reference.json → axes[]",
     artifact: { href: "/arena/elo_reference.json", label: "/arena/elo_reference.json" },
-    detailPage: { href: "/arena-scoreboard", label: "the arena leaderboard" },
+    detailPage: { href: "/arena-scoreboard", label: "the historical arena replay (29 August)" },
     freshness:
       "The date is the `generated` field inside the signed reference — when the ratings were computed from the rounds played. It is not a render time.",
     fetchUrl: "/arena/elo_reference.json",

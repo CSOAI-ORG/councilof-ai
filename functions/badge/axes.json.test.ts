@@ -26,23 +26,33 @@ describe("/badge/axes.json — a badge that cannot drift from the board", () => 
     expect(body.message).toBe(`${measured} of ${axes.length}`);
   });
 
-  it("says 22 of 23 today — 22 measured of 23 slots since ADR-002 — which is what the live board says", async () => {
+  it("never repeats a superseded figure, and its figure is the axis arrays' figure", async () => {
+    const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
+    const total = axes.length;
+    const measured = axes.filter((a) => a.status === "MEASURED").length;
     const { body } = await badge();
-    expect(body.message).toBe("22 of 23");
-    // and the stale figure this file exists to kill must never reappear
+    // Derived, never typed: this file once asserted "22 of 23" (ADR-002 declared slot,
+    // 2026-09-16) and went red the day slot 23 was measured (2026-09-22). A badge test
+    // that types a count is the same defect as the badge that typed one.
+    expect(body.message).toMatch(/^\d+ of \d+$/);
+    expect(body.message).toBe(`${measured} of ${total}`);
+    expect(measured).toBeLessThanOrEqual(total);
+    // the stale figure this file exists to kill must never reappear
     expect(body.message).not.toBe("15 of 22");
   });
 
   it("goes amber on its own if a slot ever ships without a run behind it", async () => {
     const axes = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
     const allMeasured = axes.every((a) => a.status === "MEASURED");
+    const unmeasured = axes.filter((a) => a.status !== "MEASURED").map((a) => a.axis);
     const { body } = await badge();
+    // The colour is a function of the arrays and nothing else. Between 2026-09-16 (ADR-002
+    // declared effect-binding with no run) and 2026-09-22 (its server probe signed, n=261)
+    // this was observed amber; since then it is observed green. Neither state is typed here:
+    // whichever the arrays say, the badge must agree, and the set of unmeasured slots must
+    // be exactly the set that drives the colour.
     expect(body.color).toBe(allMeasured ? "brightgreen" : "orange");
-    // Since ADR-002 (2026-09-16) this is not hypothetical: effect-binding is a declared
-    // slot with no run, so the badge IS amber today, on its own, with nobody editing a
-    // colour. That is the mechanism this test exists to prove, observed rather than mocked.
-    expect(allMeasured).toBe(false);
-    expect(body.color).toBe("orange");
+    expect(unmeasured.length === 0).toBe(allMeasured);
   });
 
   it("claims a count and never a grade", async () => {

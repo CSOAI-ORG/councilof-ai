@@ -35,7 +35,7 @@
 // to /gspc-verify, where the number is recomputable from its rows.
 
 import { AXES_A } from "./_gspc_axes_a";
-import { publicLeaderCount } from "./gspc";
+import { currentBoardLid, publicLeaderCount } from "./gspc";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
@@ -64,11 +64,10 @@ import { verifyCard } from "../_lib/cardVerify";
 // the badge is wrong, not the board.
 const AXES = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 
-// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — badge alt must carry the 3-leader clause
-// beside 22 measured. Visible message stays short; aria-label/title carry the full lid.
-// Numbers match live GET /api/gspc (22·22·0, public_leader_count=3). Do not invent leaders.
-const BOARD_LID =
-  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — badge alt carries the derived
+// public-leader clause. Visible message stays short; aria-label/title carry the
+// full lid from the board's public axis view. Do not invent leaders.
+const BOARD_LID = currentBoardLid();
 
 const boardCounts = () => {
   const m = AXES.filter((a) => a.status === "MEASURED");
@@ -83,7 +82,7 @@ const boardCounts = () => {
   // was "computed here from the same axis arrays". Same rule GET /api/gspc applies,
   // imported rather than restated, so the badge cannot drift from the board.
   const leaders = publicLeaderCount(AXES);
-  // Bare "22 measured" without the leader clause is retired (A1).
+  // A bare measured count without the leader clause is retired (A1).
   const withLeaders = `${publicCount} · ${leaders} public leader scores`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested

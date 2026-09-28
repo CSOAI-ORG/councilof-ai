@@ -77,7 +77,7 @@ def main() -> None:
         f"| settlements (one number) | {settlements if settlements is not None else '0 (none yet)'} | `{BASE}/api/revenue` |",
         "",
         "- doctrine: measurement, not certification — the public root is verified free.",
-        "- The estate runs itself: see /api/body-state for stage timestamps.",
+        "- Current RunPod compute state is available at /api/worker; it is not signing, publication, or paid-use evidence.",
     ]
     out_md = OUT / "report-2026-09.md"
     out_md.write_text("\n".join(md))

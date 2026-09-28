@@ -39,7 +39,7 @@ ship independently into the SovOS Games arcade.
 | Axis feed | Governance · Safety · Care (human-vs-AI comparison cells, METR 19%-gap instrument) |
 | Engine | FastChat pairwise-voting code (Apache-2.0) + human_solver_bridge (pod, built) |
 | Purpose | The signed human-vs-AI arena — every bet is a preference label, signed |
-| Status | DESIGN — bridge code exists on pod; needs Empirica/oTree seat |
+| Status | LOCAL PRACTICE at `/games/ruler` (2026-09-24): label items from the frozen `csoai/gspc-jail-goldbank`, reveal gold + published signed model answers (`/interop/jail-peritem-v3.json`), bet "which answer was the model's?" against a declared simulated seat (seeded coin). Nothing is sent; human admission is a flag, OFF, until the DPIA is signed off and the intake accepts a human-labelling observation. The two-human networked seat still needs Empirica/oTree. |
 
 ## Slot 3 — "MONOCULTURE" (failure-hunt board game)
 

@@ -11,7 +11,7 @@ export const PRIMARY_LINKS: { name: string; href: string }[] = [
   // Services sits between Board and Verify: it is the list of doors the rail
   // publishes, read live from /.well-known/x402.json — not a brochure.
   { name: "Services", href: "/services" },
-  { name: "Board", href: "/dashboard?tab=board" },
+  { name: "Board", href: "/board/" },
   { name: "Council OS", href: "/dashboard" },
   { name: "Tools", href: "/tools" },
 ];
@@ -19,13 +19,13 @@ export const PRIMARY_LINKS: { name: string; href: string }[] = [
 export const navigation: NavGroup[] = [
   {
     name: 'Measure',
-    href: '/dashboard?tab=board',
+    href: '/board/',
     icon: BarChart2,
     description: 'The instrument and its living board',
     submenu: [
-      { section: 'The board', name: 'The GSPC board', href: '/dashboard?tab=board', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
-      { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head on the same frozen items. Deterministic grading — no model judges another' },
-      { name: 'Arena — benchmarks', href: '/gspc-arena?view=benchmarks', description: 'The per-bank view of the arena: which instrument, which rows, which result' },
+      { section: 'The board', name: 'The GSPC board', href: '/board/', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
+      { name: 'Arena practice world', href: '/gspc-arena', description: 'Practice and historical replay, separate from the current signed Elo reference' },
+      { name: 'Arena — current reference', href: '/board/?set=arena', description: 'The dated signed Elo reference, its measured and empty rows, and its source file' },
       { name: 'Arena — live training', href: '/gspc-arena?view=training', description: 'Runs in progress. Practice stays practice and is never quoted' },
       { name: 'Measured models', href: '/models', description: 'Ranked by signed GSPC results, not by parameter count' },
       { name: 'Measured results', href: '/benchmarks', description: 'Every number traces to a published artefact — the losses included' },
@@ -60,6 +60,7 @@ export const navigation: NavGroup[] = [
       { name: 'Council Verify', href: '/gspc-verify', description: 'Paste a card. Your browser recomputes the signature. Free forever' },
       { name: 'Council Ledger', href: '/council-licensing', description: 'Signed evidence feed for insurers, procurement and deployers — never a purchased rank' },
       { name: 'Council Data', href: '/licensing-agreement', description: 'Licensed signed corpus. Buy data, never a score' },
+      { name: 'Claim maintenance', href: '/claim-maintenance/', description: 'Public claims register, dated corrections and an enquiry route; monitoring is scoped separately' },
       { section: 'Modules', name: 'GPAI Evidence Pack', href: '/gpai-evidence', description: 'Independent third-party evidence a GPAI provider can hand the AI Office. Evidence, never a conformity mark' },
       { name: 'CRA Readiness Kit', href: '/cra-readiness', description: 'The 24h / 72h / 14-day ENISA runbook and signed SBOM workflow we run on ourselves' },
       { name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots, coverage stated first — never a credit rating' },
@@ -102,7 +103,7 @@ export const navigation: NavGroup[] = [
       { name: 'Lobby home', href: '/dashboard?tab=home', description: 'Chat is the OS. The lobby frames the live page — a pane can never drift from the page it shows' },
       { section: 'Panes', name: 'Live board', href: '/dashboard?tab=board', description: 'The living GSPC board, with in-lane measurements beside it — never mixed into board totals' },
       { name: 'Verify a card', href: '/dashboard?tab=verify', description: 'The offline verifier, in the workspace' },
-      { name: 'Get measured', href: '/dashboard?tab=measured', description: 'Booking is not live. Verify stays free.' },
+      { name: 'Request attestation', href: '/dashboard?tab=measured', description: 'Inspect a commission receipt and existing cards; a fresh run is separate. Verify stays free.' },
       { name: 'Council Space', href: '/dashboard?tab=space', description: 'The continuous contest — model against model on one instrument' },
       { name: 'Models', href: '/models', description: 'What we measured, and what it scored' },
       { name: 'Tools', href: '/tools', description: 'The published MCP surface, runnable' },

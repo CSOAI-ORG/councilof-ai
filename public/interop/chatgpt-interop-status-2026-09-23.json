@@ -1,0 +1,31 @@
+{
+  "schema": "csoai.legacy-interop-status/0.1",
+  "reviewed_utc": "2026-09-23T11:22:06Z",
+  "state": "CORRECTION_NOTICE",
+  "note": "The three linked 2026-09-05 interop design files are retained byte-for-byte because their adjacent OpenTimestamps proofs bind those exact historical bytes. Their capability claims are superseded by this notice. The proofs timestamp the old files; they do not make the old claims true.",
+  "historical_files": [
+    {
+      "url": "https://councilof.ai/interop/chatgpt-plugin.json",
+      "sha256": "9e3e5c5b78fd00a2fbd1a033ea42f563ab25ff2e90f9a9aac96fa6b0fc0e7f1a",
+      "correction": "This is not a current plugin contract. POST /measure and POST /anchor have no current Pages Function; the legacy 22-axis count and automatic signed-card wording must not be repeated. Use the canonical OpenAPI and live board instead."
+    },
+    {
+      "url": "https://councilof.ai/interop/deep-research-integration.json",
+      "sha256": "ad29652a73cf13c6cea027d05731aaf6f21382a0f39ed07335b80ce1faa96485",
+      "correction": "Design proposal only. No integration that measures and signs every ChatGPT Deep Research claim is established. GET /api/research returned HTTP 404 on this review."
+    },
+    {
+      "url": "https://councilof.ai/interop/finish-chatgpt-features.json",
+      "sha256": "b8840bdb2e9a6413681441740d5987a6c019338a1b92b610cb0b31f6afc574e2",
+      "correction": "The five APIs labelled LIVE in this historical file are retired. Anonymous GET /api/memory, /api/files, /api/sandbox, /api/operator and /api/atlas each returned HTTP 503 on this review."
+    }
+  ],
+  "current_sources": {
+    "board": "https://councilof.ai/api/gspc",
+    "api_contract": "https://councilof.ai/openapi.json",
+    "signed_card_verifier": "https://councilof.ai/gspc-verify",
+    "corrections": "https://councilof.ai/api/corrections"
+  },
+  "signature_state": "UNSIGNED_CORRECTION_NOTICE",
+  "bitcoin_anchor_state": "NOT_CLAIMED"
+}

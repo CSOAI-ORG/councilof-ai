@@ -67,6 +67,22 @@ export const PINNED_ANCHORS: Anchor[] = [
 ];
 
 /** Resolve a DID-keyed card only against the verifier's offline pin set. */
+/** JSON.stringify of the key-sorted object — functions/_lib/cardSign.ts canonicalBytes, the
+ *  bytes POST /api/board-sign signs. Non-ASCII stays literal (unlike pyCanonical). */
+export function jsCanonical(v: unknown): string {
+  const rec = (x: unknown): unknown => {
+    if (Array.isArray(x)) return x.map(rec);
+    if (x && typeof x === "object") {
+      const o = x as Record<string, unknown>;
+      const out: Record<string, unknown> = {};
+      for (const k of Object.keys(o).sort()) out[k] = rec(o[k]);
+      return out;
+    }
+    return x;
+  };
+  return JSON.stringify(rec(v));
+}
+
 function pinnedKeyForDid(did: string): Anchor | null {
   return PINNED_ANCHORS.find((anchor) => anchor.id === did) ?? null;
 }
@@ -433,6 +449,10 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   let keyRaw: string | null;
   let namedKeyId: string | null = null;
   let idLabel: string;
+  // 2026-09-22: board-signed content_id cards (axis signals, elo reference). The signature
+  // is Ed25519 over canonical BYTES — of the envelope when one is present (it commits to
+  // content_id), else of the body — never over the hex id. The key is named by DID.
+  let signedWhat = "the content_id";
 
   try {
     if (family === "gspc.measurement-card") {
@@ -482,7 +502,37 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
       // This family signs the ASCII hex of content_id, not the preimage.
       sigOver = utf8(declaredId);
       const s = r.signature;
-      if (isObj(s)) {
+      if (isObj(s) && typeof s.did === "string" && typeof s.sig_ed25519 === "string") {
+        namedKeyId = s.did;
+        const pin = pinnedKeyForDid(namedKeyId);
+        if (!pin) {
+          checks.push({
+            label: "Signing key",
+            ok: null,
+            code: "key_not_pinned",
+            detail: `UNCHECKABLE — ${namedKeyId} is not in this verifier's offline pin set.`,
+          });
+          return { family, family_label: FAMILY_LABEL[family], valid: false, state: "UNCHECKABLE", reasons: ["key_not_pinned"], checks, id: declaredId };
+        }
+        keyRaw = pin.hex;
+        sigRaw = s.sig_ed25519;
+        if (isObj(s.envelope)) {
+          if (s.envelope.content_id !== declaredId) {
+            fail("envelope_mismatch");
+            checks.push({
+              label: "Envelope",
+              ok: false,
+              code: "envelope_mismatch",
+              detail: "The signed envelope names a different content_id than the card declares — the signature covers other bytes.",
+            });
+          }
+          sigOver = utf8(jsCanonical(s.envelope));
+          signedWhat = "the canonical envelope bytes, which commit to the content_id";
+        } else {
+          sigOver = preimage;
+          signedWhat = "the canonical body bytes";
+        }
+      } else if (isObj(s)) {
         sigRaw = typeof s.sig === "string" ? s.sig : typeof s.signature === "string" ? s.signature : null;
         keyRaw = typeof s.pubkey === "string" ? s.pubkey : null;
       } else {
@@ -644,10 +694,10 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
           code: sigOk ? "signature_valid" : "signature_invalid",
           detail: sigOk
             ? `VALID against ${anchorId ?? `an unpublished key ${keyHex?.slice(0, 8)}…`} — Ed25519 verifies over ${
-                family === "gspc.measurement-card" ? "the canonical body bytes" : "the content_id"
+                family === "gspc.measurement-card" ? "the canonical body bytes" : signedWhat
               }.`
             : `INVALID — the signature does not verify over ${
-                family === "gspc.measurement-card" ? "the canonical body bytes" : "the content_id"
+                family === "gspc.measurement-card" ? "the canonical body bytes" : signedWhat
               } under the key the card carries. The bytes and the signature disagree; ` +
               `this is not a statement about key publication.`,
         });

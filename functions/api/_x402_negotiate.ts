@@ -132,7 +132,12 @@ export async function facilitatorDialect(
 export function toDialectPayload(
   payload: Record<string, unknown>,
   version: 1 | 2,
-  v2ctx?: { accepted?: Record<string, unknown>; resource?: { url: string; description?: string; mimeType?: string } },
+  v2ctx?: {
+    accepted?: Record<string, unknown>;
+    resource?: { url: string; description?: string; mimeType?: string };
+    /** The server's own PaymentRequired `extensions` (the bazaar block it advertised in its 402). */
+    extensions?: Record<string, unknown>;
+  },
 ): Record<string, unknown> {
   const net = typeof payload.network === "string" ? payload.network : "";
   if (version === 1) {
@@ -156,10 +161,29 @@ export function toDialectPayload(
   //
   // `payload` — the buyer's signature and authorization — is passed through untouched. Only the
   // envelope around it is restated, and the recipient is inside the signed tuple regardless.
+  //
+  // THE BAZAAR ECHO, DONE SERVER-SIDE. specs/extensions/bazaar.md, "Client Behavior": "Clients are
+  // expected to echo the `bazaar` extension from `PaymentRequired` into their `PaymentPayload`.
+  // If the extension is omitted, discovery cataloging will not occur." The facilitator catalogues
+  // off the PaymentPayload it receives on settle — and until 2026-09-22 this envelope carried no
+  // `extensions` at all, whatever the buyer had echoed: the buyer's copy was never read and the
+  // server never supplied its own. Six query-less base URLs in the index and five doors absent
+  // after confirmed settles was the visible result. The server knows its own declaration, so it
+  // supplies it here; a buyer who echoed one keeps precedence key by key, because the spec puts
+  // the echo on the client and the server must not overwrite what the buyer signed against.
+  const buyerExtensions =
+    payload.extensions && typeof payload.extensions === "object" && !Array.isArray(payload.extensions)
+      ? (payload.extensions as Record<string, unknown>)
+      : undefined;
+  const extensions =
+    v2ctx?.extensions || buyerExtensions
+      ? { ...(v2ctx?.extensions || {}), ...(buyerExtensions || {}) }
+      : undefined;
   const out: Record<string, unknown> = {
     x402Version: 2,
     ...(v2ctx?.resource ? { resource: v2ctx.resource } : {}),
     ...(v2ctx?.accepted ? { accepted: v2ctx.accepted } : {}),
+    ...(extensions ? { extensions } : {}),
     payload: payload.payload,
   };
   if (net) out.network = toCaip2Network(net);

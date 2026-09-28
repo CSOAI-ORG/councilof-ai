@@ -39,7 +39,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // sortable by any axis, every cell verifiable. /rankings folds into it. Primary,
   // or it ships flagged "archived" under a route the nav actively promotes.
   "/leaderboard",
-  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
+  "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/verify-leaderboard", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/watchdog-hub",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
@@ -54,6 +54,13 @@ export const PRIMARY_PATHS = new Set<string>([
   // A current page the badge block and census READMEs link to; unregistered it
   // would ship flagged "archived" under a link we actively promote.
   "/get-listed",
+  // Claim maintenance — the named category, its CC0 specification and the live register.
+  // A current front-door page; unregistered it would ship the ArchivedBanner under the one
+  // route that has to read as authoritative to a stranger who has never met us.
+  "/claim-maintenance",
+  // /games/ruler — GAMES_SLATE slot 2, local-only practice over the frozen jail goldbank with
+  // published signed model answers. A current page; unregistered it would ship "archived".
+  "/games/ruler",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
@@ -64,6 +71,11 @@ export const PRIMARY_PATHS = new Set<string>([
   // Evidence notes index; each /notes/<id> page is covered by PRIMARY_PREFIXES below.
   "/notes",
   // Products — the family, and who it is for
+  // /how-we-work — the eight bands retired from the front door on 2026-09-23 (HomeStrengths,
+  // HomeMachineSurface, HomeReach, ToolStack, LivingStages, HomeFilms, the reviewed reading
+  // list and HomeNavigator). The home page links to it from two places, so unregistered it
+  // would ship the ArchivedBanner under a link the front door actively promotes.
+  "/how-we-work",
   "/products", "/attestation", "/gpai-evidence", "/cra-readiness", "/financial-axes", "/stablecoins", "/wrappers", "/quickstart", "/evaluator-access",
   "/distribution-integrity", "/rlusd", "/embed", "/white-label", "/badge", "/cobol", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
@@ -103,6 +115,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
+  // /signals is an actively promoted evidence page. Without this exact path the
+  // global archive banner incorrectly says the current Signals page is superseded.
+  "/signals", "/signals/2026-09-24",
   "/benchmark-quality", "/mcps",
   // Promoted to a first-class Council OS read-only Watchdog destination.
   "/watchdog-hub",
@@ -121,6 +136,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/academy", "/verify-certificate", "/accreditation",
   // Company
   "/about", "/library", "/contact", "/disclaimers",
+  // These three routes serve the operative Terms v1.1 and are indexed. Calling
+  // the current contract a "reference / archive" contradicts its acceptance text.
+  "/terms-of-service", "/terms", "/legal/terms",
   "/faq", "/traction",
   // #148 — /dispute is a live Charter Article 18 page, not an archive.
   // Without this entry it shipped under the "Reference / archive" banner.
@@ -131,6 +149,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // /memberships — where we take part, from public/interop/memberships.json. Linked from the
   // home strip and the footer; unregistered it would ship under the "archived" banner.
   "/memberships",
+  // /reach — the full seven-stage funnel. Linked from the home page and from the footer
+  // of every route, so unregistered it would ship the "archived" banner under a link the site
+  // is actively promoting, on the page whose whole point is that the number is current.
+  "/reach",
   // /pricing — real pricing page (was a 308 redirect, now a live surface).
   "/pricing",
   // /governance — governance framework page.
@@ -153,7 +175,10 @@ export const PRIMARY_PATHS = new Set<string>([
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/", "/notes/"];
+// Each /gspc/:axis route renders the current /api/gspc board, including its
+// axis deep-dive. Marking that live measurement view as an archive misleads
+// readers following the axis links from the home page.
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/", "/notes/", "/gspc/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));

@@ -58,35 +58,29 @@ describe("stale copy honesty", () => {
   });
 
   it("publishes the current HTTP and npm tool boundaries", () => {
+    // WAS: a typed twelve-name list, 8 free, registry "1.4.0" and "csoai-gspc-mcp@0.2.1" — pins that
+    // went stale the day mcp_trust shipped (13 tools, 9 free) and the registry moved to 1.4.2, so this
+    // case held the drift in place. The derived fields of both files are now RENDERED by
+    // scripts/harness-x/render.mjs; they are checked here against the fleet lock and the registry
+    // file they are rendered from, never against a typed count or version.
     const j = JSON.parse(mcp);
-    const twelve = [
-      "board_totals",
-      "get_axis",
-      "verify_card",
-      "list_cards",
-      "get_root",
-      "get_card",
-      "verify_inclusion",
-      "x402_trust",
-      "commission_card",
-      "art50_marking_evidence",
-      "rwa_evidence",
-      "receipts_batch",
-    ];
-    expect(j.planted.tools).toEqual(twelve);
-    expect(j.measured.tools).toEqual(twelve);
-    expect(j.measured.total_tools).toBe(12);
-    expect(j.measured.free_tools).toBe(8);
-    expect(j.measured.metered_tools).toBe(4);
+    const lock = JSON.parse(readFileSync(resolve(__dirname, "../../../functions/mcp/tool-fleet.lock.json"), "utf8"));
+    const registry = JSON.parse(readFileSync(resolve(__dirname, "../../../mcp/gspc-server/server.json"), "utf8"));
+    const fleet = [...lock.free, ...lock.paid];
+    expect(j.planted.tools).toEqual(fleet);
+    expect(j.measured.tools).toEqual(fleet);
+    expect(j.measured.total_tools).toBe(fleet.length);
+    expect(j.measured.free_tools).toBe(lock.free.length);
+    expect(j.measured.metered_tools).toBe(lock.paid.length);
     expect(j.measured.note).toMatch(/witness_hash (?:is|remains) quarantined/i);
-    expect(j.servers[0].registry.version).toBe("1.4.0");
+    expect(j.servers[0].registry.version).toBe(registry.version);
     const card = JSON.parse(mcpCard);
-    expect(card.capabilities.total_tools).toBe(12);
-    expect(card.capabilities.free_tools).toBe(8);
-    expect(card.capabilities.tools).toEqual(twelve);
-    expect(card.description).toMatch(/server 1\.4\.0/);
+    expect(card.capabilities.total_tools).toBe(fleet.length);
+    expect(card.capabilities.free_tools).toBe(lock.free.length);
+    expect(card.capabilities.tools).toEqual(fleet);
+    expect(card.description).toContain(`server ${registry.version}`);
     expect(card.endpoints.mcp.stdio).toBe(
-      "npx -y csoai-gspc-mcp@0.2.1",
+      `npx -y ${registry.packages[0].identifier}@${registry.packages[0].version}`,
     );
     // The agent card no longer lists /mcp as an A2A interface (it does not speak A2A;
     // spec v1.0.1 §8.3.1). The npm-tools copy it used to carry lives in mcp.json, asserted

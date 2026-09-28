@@ -153,20 +153,26 @@ describe("canonical GSPC terminal evidence truth", () => {
         cardIndex={EMPTY_CARDS}
       />,
     );
-    expect(html).toContain("Elo reference content-addressed unsigned");
+    expect(html).toContain("Arena content-addressed unsigned");
     expect(html).not.toContain("signed Elo reference");
-    expect(html).not.toContain("Elo reference Ed25519-signed");
+    expect(html).not.toContain("Arena Ed25519 signature present");
   });
 
   it("does not infer an Elo signature from a content ID", () => {
     expect(eloReferenceEvidence({ content_id: "abcdef1234567890" })).toBe(
-      "Elo reference content-addressed unsigned · content_id abcdef1234…",
+      "Arena content-addressed unsigned · content_id abcdef1234…",
     );
     expect(
       eloReferenceEvidence({
         content_id: "abcdef1234567890",
         signature: { alg: "Ed25519", pubkey: "public", sig: "signature" },
       }),
-    ).toBe("Elo reference Ed25519-signed · content_id abcdef1234…");
+    ).toBe("Arena Ed25519 signature present, unchecked · content_id abcdef1234…");
+    expect(
+      eloReferenceEvidence({
+        content_id: "abcdef1234567890",
+        signature: { alg: "Ed25519", did: "did:web:csoai.org#board-attestation-1", envelope: { content_id: "abcdef1234567890" }, sig_ed25519: "ab".repeat(64) },
+      }),
+    ).toBe("Arena Ed25519 signature present, unchecked · content_id abcdef1234…");
   });
 });

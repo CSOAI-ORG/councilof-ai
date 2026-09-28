@@ -54,6 +54,11 @@ class CardRootAutomationTests(unittest.TestCase):
         first = build(stamp=True, now=self.now, signed_dir=self.signed, out_dir=self.public, submitter=submit)
         first_root = first["root_path"].read_bytes()
         first_proof = first["ots_path"].read_bytes()
+        first_pointer = json.loads(first["pointer_path"].read_text())
+        self.assertEqual(first_pointer["root_url"], "/interop/card-root-2026-09-14.json")
+        self.assertEqual(first_pointer["root_sha256"], hashlib.sha256(first_root).hexdigest())
+        self.assertEqual(first_pointer["n_leaves"], 1)
+        self.assertEqual(first_pointer["ots_url"], "/interop/card-root-2026-09-14.json.ots")
 
         self.card("000000000002", 2)
         second = build(stamp=True, now=self.now, signed_dir=self.signed, out_dir=self.public, submitter=submit)
@@ -64,6 +69,10 @@ class CardRootAutomationTests(unittest.TestCase):
         self.assertEqual(first["root_path"].read_bytes(), first_root)
         self.assertEqual(first["ots_path"].read_bytes(), first_proof)
         self.assertEqual(second["proof_state"]["state"], "pending")
+        second_pointer = json.loads(second["pointer_path"].read_text())
+        self.assertEqual(second_pointer["root_url"], f"/interop/{second['root_path'].name}")
+        self.assertEqual(second_pointer["root_sha256"], hashlib.sha256(second["root_path"].read_bytes()).hexdigest())
+        self.assertEqual(second_pointer["n_leaves"], 2)
 
         calls = submit.call_count
         second_root = second["root_path"].read_bytes()
@@ -73,6 +82,15 @@ class CardRootAutomationTests(unittest.TestCase):
         self.assertEqual(submit.call_count, calls)
         self.assertEqual(second["root_path"].read_bytes(), second_root)
         self.assertEqual(second["ots_path"].read_bytes(), second_proof)
+        self.assertEqual(json.loads(repeated["pointer_path"].read_text()), second_pointer)
+
+    def test_unstamped_root_pointer_does_not_imply_bitcoin_anchor(self):
+        self.card("000000000001")
+        made = build(now=self.now, signed_dir=self.signed, out_dir=self.public)
+        pointer = json.loads(made["pointer_path"].read_text())
+        self.assertIsNone(pointer["ots_url"])
+        self.assertEqual(pointer["kind"], "DISCOVERY_POINTER_ONLY")
+        self.assertIn("not proof of a Bitcoin anchor", pointer["scope"])
 
     def test_identical_cards_are_deduplicated(self):
         original = self.card("000000000001")

@@ -128,7 +128,6 @@ const YieldInternal = lazy(() => import("./pages/YieldInternal"));
 const YieldDashboard = lazy(() => import("./pages/YieldDashboard"));
 const ClaritySpecimen = lazy(() => import("./pages/ClaritySpecimen"));
 const CustodyDisclosure = lazy(() => import("./pages/CustodyDisclosure"));
-const MergeMe = lazy(() => import("./pages/MergeMe"));
 const HealthInventory = lazy(() => import("./pages/HealthInventory"));
 const RlusdSpecimen = lazy(() => import("./pages/RlusdSpecimen"));
 const Rlusd = lazy(() => import("./pages/Rlusd"));
@@ -191,6 +190,10 @@ const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 // /memberships — where we take part, every row from public/interop/memberships.json with its evidence.
 const Memberships = lazy(() => import("./pages/Memberships"));
+// /reach — the WHOLE funnel, including the four stages that carry no number and the
+// reason each one carries none. The home page and the footer show the two stages a stranger can
+// use; this is the one click behind them, and it is where the commercial stages live.
+const Reach = lazy(() => import("./pages/Reach"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
@@ -212,6 +215,11 @@ const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Stablecoins = lazy(() => import("./pages/Stablecoins"));
 const Wrappers = lazy(() => import("./pages/Wrappers"));
 const Quickstart = lazy(() => import("./pages/Quickstart"));
+// /how-we-work — the eight bands retired from the front door on 2026-09-23. Lazy, because a
+// reader who never leaves the home page should not pay for LivingStages or the film band.
+const HowWeWork = lazy(() => import("./pages/HowWeWork"));
+const ClaimMaintenance = lazy(() => import("./pages/ClaimMaintenance"));
+const GamesRuler = lazy(() => import("./pages/GamesRuler"));
 const Insurers = lazy(() => import("./pages/Insurers"));
 const Coliseum = lazy(() => import("./pages/Coliseum"));
 const OpenSourceFramework = lazy(() => import("./pages/OpenSourceFramework"));
@@ -292,6 +300,7 @@ const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const SectorsAtlas = lazy(() => import("./pages/SectorsAtlas"));
 const Signals = lazy(() => import("./pages/Signals"));
+const SignedMillBatch20260924 = lazy(() => import("./pages/SignedMillBatch20260924"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
 const CouncilHub = lazy(() => import("./pages/CouncilHub"));
@@ -636,6 +645,7 @@ function App() {
                   <Route path="/library/:sector" component={Library} />
                   <Route path="/honesty" component={Honesty} />
                   <Route path="/memberships" component={Memberships} />
+                  <Route path="/reach" component={Reach} />
                   <Route path="/dispute" component={Dispute} />
                   <Route path="/east-west" component={EastWest} />
                   <Route path="/challenge" component={Challenge} />
@@ -658,6 +668,9 @@ function App() {
                   <Route path="/stablecoins" component={Stablecoins} />
                   <Route path="/wrappers" component={Wrappers} />
                   <Route path="/quickstart" component={Quickstart} />
+                  <Route path="/how-we-work" component={HowWeWork} />
+                  <Route path="/claim-maintenance" component={ClaimMaintenance} />
+                  <Route path="/games/ruler" component={GamesRuler} />
                   <Route path="/evaluator-access" component={EvaluatorAccess} />
                   <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
@@ -811,6 +824,7 @@ function App() {
                   <Route path="/how-it-works" component={HowItWorks} />
                   <Route path="/sectors" component={SectorsAtlas} />
                   <Route path="/registers" component={Registers} />
+                  <Route path="/signals/2026-09-24" component={SignedMillBatch20260924} />
                   <Route path="/signals" component={Signals} />
                   <Route path="/regions" component={RegionsMap} />
                   {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
@@ -1080,7 +1094,6 @@ function App() {
                   <Route path="/feed" component={ContentReviewNotice} />
                   <Route path="/stablewatch" component={FeedLaunchPack} />
                   <Route path="/custody" component={CustodyDisclosure} />
-                  <Route path="/merge-me" component={MergeMe} />
                   <Route path="/specimens/clarity" component={ClaritySpecimen} />
                   <Route path="/specimens/rlusd" component={RlusdSpecimen} />
                   <Route path="/rlusd" component={Rlusd} />

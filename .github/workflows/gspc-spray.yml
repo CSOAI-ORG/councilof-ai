@@ -87,7 +87,7 @@ jobs:
         # The same probe with the OAuth access_token as a Bearer returns HTTP 200 — which is
         # exactly why the Mac, holding a cached access_token, publishes fine. So: unpin, and
         # give the runner the token rather than the key.
-        run: pip install --quiet cryptography huggingface_hub kaggle build twine
+        run: pip install --quiet cryptography huggingface_hub pyarrow kaggle build twine
 
       # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
       # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED

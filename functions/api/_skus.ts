@@ -134,8 +134,8 @@ export const SKUS: Record<string, Sku> = {
     id: "request_attestation",
     name: "Request Attestation (RAS)",
     artifact:
-      "one request-attestation response for a named subject on the frozen bank — lid " +
-      "22 axes · 14 fleets · 3 public leaders · 8 fact runs; never a certificate, never a rank sale",
+      "one request-attestation response for a named subject; current board scope is reported by " +
+      "GET /api/gspc, not frozen into this SKU description; never a certificate or rank sale",
     unit: "1 request (per subject × optional axis)",
     sells: "issuance",
     prices: {

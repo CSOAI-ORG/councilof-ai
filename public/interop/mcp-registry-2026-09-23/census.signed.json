@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.signed-artifact/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/mcp-registry-2026-09-23/census.json",
+      "sha256": "a92446533f9108bca52b5d60df1fa1350cfc3795a67d731b19bd2bc6995902da",
+      "bytes": 2720,
+      "schema": "csoai.mcp-registry-census/0.1",
+      "as_of": "2026-09-23T05:23:59Z"
+    },
+    "record_id": null,
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "what_this_proves": "these bytes were signed by the board key at this time; not a grade, not an endorsement, and no claim about any third party named in the artifact"
+  },
+  "sig_ed25519": "aef380773b45912b45e27f4c691a1b204f2c7acfbd4e1b460df22fa95bb22cb29c361e79c445e43408156a374fd5d9dc9a2997460bad91987599c8c7ecda420d",
+  "sig_encoding": "hex",
+  "key": "did:web:csoai.org#board-attestation-1",
+  "key_source": "https://csoai.org/.well-known/did.json",
+  "verified_locally": true,
+  "failing_control_rejected": true,
+  "signed_utc": "2026-09-23T05:29:09Z",
+  "verify_with": "canonical JSON (sort_keys, separators=(',',':')) of .payload, Ed25519 over those exact bytes"
+}

@@ -120,4 +120,22 @@ describe("/api/revenue — SKU notes derive the rail state from env, never from 
     const body = await call(liveEnv);
     expect(body.skus.issuance.note.startsWith(canonNote.trim())).toBe(true);
   });
+
+  it("keeps rail-state prose true when recorded revenue is non-null", async () => {
+    const kv = kvFrom({
+      "settled:tx:paid": rec("paid", "0xAAAA", false, new Date().toISOString()),
+    });
+    for (const env of [
+      { REVENUE_KV: kv },
+      { ...liveEnv, REVENUE_KV: kv },
+      { ...liveEnv, X402_PAY_TO: "invalid", REVENUE_KV: kv },
+    ]) {
+      const body = await call(env);
+      expect(body.one_number).toMatchObject({ all_time: 1, settlements: 1 });
+      expect(body.settled_usdc).toMatchObject({ count: 500000, status: "MEASURED" });
+      expect(String(body.settled_usdc.note)).toContain(`x402 rail: ${railMode(env).mode}`);
+      expect(String(body.settled_usdc.note)).not.toMatch(/this count (?:stays|is) (?:honestly )?null/i);
+      expect(body.contract.null_rule).not.toMatch(/every count (?:stays|is) (?:honestly )?null/i);
+    }
+  });
 });

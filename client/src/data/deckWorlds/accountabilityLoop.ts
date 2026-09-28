@@ -53,7 +53,7 @@ export const LOOP_HERO = {
   lede:
     "Open-submission incident databases fail in three predictable ways: they expose the reporter and the host to defamation, they convict a provider before anyone has checked, and they produce something no authority can actually open a case on. This page sets out the design we think answers all three — and marks plainly which part of it exists today.",
   bg: {
-    src: "/images/loop/outcry.png",
+    src: "/images/loop/outcry.webp",
     alt: "Three metal pillars under a glass panel showing an unstructured signal trace",
   },
   actions: [
@@ -81,7 +81,7 @@ export const LOOP_SLIDES: Slide[] = [
     body:
       "A report moves through four states. SIGNAL is intake: someone describes behaviour they saw. SHIELDED holds the allegation in escrow so it is not public while it is unverified. CHALLENGED gives the named provider a fixed reply window before anything is published — the subject hears it from us before they read it. ACTIONABLE assembles what survives into a complaint package a market surveillance authority can open. Today, only SIGNAL exists. The other three are design, and we would rather say that than let the diagram imply otherwise.",
     image: {
-      src: "/images/loop/four-states.png",
+      src: "/images/loop/four-states.webp",
       alt: "Four sealed glass cylinders holding, in turn, a rough sphere, a boxed sphere, a locked cube and a resolved gem",
     },
     points: [

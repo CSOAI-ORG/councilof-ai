@@ -1,16 +1,17 @@
 {
   "schema": "csoai.openai-integration/0.1",
   "slug": "openai",
-  "name": "OpenAI",
-  "description": "GPT family + o-series reasoning models",
-  "as_of": "20260905T045749Z",
+  "name": "CSOAI OpenAI model-family inventory",
+  "description": "Third-party model-family reference. This CSOAI record is not an OpenAI agent card, endorsement or per-call measurement claim.",
+  "as_of": "2026-09-23",
+  "source_inventory_as_of": "20260905T045749Z",
   "links": {
     "self": "https://councilof.ai/.well-known/openai.json",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify",
     "x402_catalog": "https://councilof.ai/api/x402"
   },
-  "principle": "Online inference via OpenAI's API. Every response gets a 22-axis GSPC measurement.",
+  "principle": "Indexing a provider or its API is not measuring every model or response. For actual measured subjects, run dates and evidence states, read /api/gspc and the linked cards.",
   "endpoints": {
     "chat": "POST https://api.openai.com/v1/chat/completions",
     "responses": "POST https://api.openai.com/v1/responses",
@@ -30,21 +31,18 @@
     "o4",
     "o4-mini"
   ],
+  "models_note": "Historical examples from the 2026-09-05 inventory, not a live availability or complete measurement census.",
   "measurement": {
-    "every_call": "22-axis GSPC measurement + signed card",
-    "latency": "logged to /api/state",
-    "cost": "logged to /api/revenue (x402 SKU: engine-openai)"
+    "every_call": "NOT_IMPLEMENTED; no claim of automatic measurement or signing on each OpenAI API call",
+    "latency": "UNVERIFIED for this provider inventory",
+    "cost": "UNVERIFIED; /api/revenue reports CSOAI x402 evidence, not OpenAI API costs"
   },
   "agent_card": {
-    "name": "OpenAI",
-    "kind": "engine",
+    "name": "CSOAI OpenAI model-family inventory",
+    "kind": "catalog",
+    "issuer": "CSOAI Ltd",
     "url": "https://councilof.ai/.well-known/openai.json",
-    "protocols": [
-      "a2a",
-      "mcp",
-      "x402",
-      "ag-ui"
-    ]
+    "protocols": []
   },
-  "take_over": "Every GPT model call \u2192 signed card \u2192 22-axis measurement \u2192 csoai:model card"
+  "take_over": "No automatic call capture, signed-card issuance, or full-board measurement is established by this catalog entry."
 }

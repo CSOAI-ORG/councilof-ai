@@ -12,6 +12,7 @@ import {
   LIVE_HEALTH_PIN,
   readCorrectionsCount,
 } from "./healthInventory";
+import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION } from "./boardCount";
 
 const products = readFileSync(resolve(__dirname, "../pages/Products.tsx"), "utf8");
 
@@ -19,14 +20,19 @@ describe("Health inventory — correct facts, not a score", () => {
   it("quotes N of M and refuses a fused health number", () => {
     expect(HEALTH_RULING).toMatch(/never one number/i);
     expect(HEALTH_PUBLIC_LINE).toMatch(/N measured of M declared/);
-    expect(LIVE_HEALTH_PIN.declared).toBe(22);
-    expect(LIVE_HEALTH_PIN.measured).toBe(22);
-    expect(LIVE_HEALTH_PIN.empty).toBe(0);
+    // Board fields are derived from the recorded observation, never typed here or in the pin.
+    expect(LIVE_HEALTH_PIN.declared).toBe(BOARD_COUNT_OBSERVED.axes);
+    expect(LIVE_HEALTH_PIN.measured).toBe(BOARD_COUNT_OBSERVED.measured_axes);
+    expect(LIVE_HEALTH_PIN.empty).toBe(BOARD_COUNT_OBSERVED.unmeasured_axes);
+    expect(LIVE_HEALTH_PIN.board).toBe(BOARD_COUNT_OBSERVED.public_count);
+    expect(LIVE_HEALTH_PIN.declared).toBeGreaterThan(0);
+    expect(LIVE_HEALTH_PIN.measured).toBeLessThanOrEqual(LIVE_HEALTH_PIN.declared);
+    expect(LIVE_HEALTH_PIN.board_as_at).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(LIVE_HEALTH_PIN.corrections).toBe(47);
     expect(LIVE_HEALTH_PIN.as_at).toBeTruthy();
     expect(LIVE_HEALTH_PIN.corrections_as_at).toBeTruthy();
-    // the pin's own header cites 969 items and the live board sums 969
-    expect(LIVE_HEALTH_PIN.items).toBe(969);
+    // items is the board's own sum as observed, not a number typed in the pin
+    expect(LIVE_HEALTH_PIN.items).toBe(BOARD_OBSERVATION.items);
     expect(LIVE_HEALTH_PIN.not_a_certification).toBe(true);
     expect(HEALTH_NEVER.some((n) => /0–100 health score|0-100 health score/i.test(n))).toBe(true);
     expect(HEALTH_NEVER.some((n) => /mean of axis/i.test(n))).toBe(true);
@@ -49,7 +55,10 @@ describe("Health inventory — correct facts, not a score", () => {
     ).toBe(
       "22 measured of 22 declared; verify pass; evidence present; rerun empty; eligibility ELIGIBLE; corrections touching this digest 0.",
     );
-    expect(boardHealthLine()).toMatch(/22 measured of 22 declared/);
+    // The board line quotes the recorded observation, never a pair typed in this test.
+    expect(boardHealthLine()).toMatch(
+      new RegExp(`^${BOARD_COUNT_OBSERVED.measured_axes} measured of ${BOARD_COUNT_OBSERVED.axes} declared`),
+    );
     // The board line must NOT answer the per-digest question with the whole-ledger
     // total. No per-digest query exists, so the only true answer is "unknown".
     expect(boardHealthLine()).toMatch(/corrections touching this digest unknown/);

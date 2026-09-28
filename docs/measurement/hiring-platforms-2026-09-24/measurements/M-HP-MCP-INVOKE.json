@@ -1,0 +1,134 @@
+{
+ "state": "CLAIM_MEASURED",
+ "evidence_state": "MEASURED",
+ "measured_at": "2026-09-24T15:28:07Z",
+ "method": "read the official MCP registry search API for the term (keyless), filter to the named server where one is given, and record every version entry and the repository URL it declares; read the npm registry document and the npm downloads API for the package the entry names; read the unauthenticated GitHub REST record for every declared repository. Each of those records is held by the registry or code host, not by the subject",
+ "window": "the registries as served at measured_at; npm downloads over the window npm states in the result",
+ "denominator": {
+  "registries_read": 1,
+  "declared_repositories": 1
+ },
+ "result": {
+  "subject": "Invoke",
+  "mcp_registry_search_term": "nanocorp",
+  "mcp_registry_entries_matching": "4",
+  "mcp_registry_latest_version": "0.1.4",
+  "mcp_registry_latest_published_utc": "2026-08-22T18:33:30.993772Z",
+  "mcp_registry_declared_repositories": [
+   "https://github.com/nanocorp-hq/invoke"
+  ],
+  "declared_repositories_readable_by_unauthenticated_reader": "0",
+  "declared_repositories_not_served": "1",
+  "n": 1
+ },
+ "registry": {
+  "evidence_state": "MEASURED",
+  "term": "nanocorp",
+  "name_filter": "app.nanocorp.invoke/human-tasks",
+  "entries_returned_by_search": 7,
+  "entries_matching_name": 4,
+  "next_cursor": null,
+  "entries": [
+   {
+    "name": "app.nanocorp.invoke/human-tasks",
+    "version": "0.1.1",
+    "repository_url": "https://github.com/nanocorp-hq/invoke",
+    "remotes": [
+     "https://invoke.nanocorp.app/mcp"
+    ],
+    "packages": [],
+    "status": "active",
+    "published_at": "2026-07-27T10:19:13.024167Z",
+    "is_latest": false
+   },
+   {
+    "name": "app.nanocorp.invoke/human-tasks",
+    "version": "0.1.2",
+    "repository_url": "https://github.com/nanocorp-hq/invoke",
+    "remotes": [
+     "https://invoke.nanocorp.app/mcp"
+    ],
+    "packages": [],
+    "status": "active",
+    "published_at": "2026-08-12T16:03:01.247735Z",
+    "is_latest": false
+   },
+   {
+    "name": "app.nanocorp.invoke/human-tasks",
+    "version": "0.1.3",
+    "repository_url": "https://github.com/nanocorp-hq/invoke",
+    "remotes": [
+     "https://invoke.nanocorp.app/mcp"
+    ],
+    "packages": [],
+    "status": "active",
+    "published_at": "2026-08-19T17:32:41.717696Z",
+    "is_latest": false
+   },
+   {
+    "name": "app.nanocorp.invoke/human-tasks",
+    "version": "0.1.4",
+    "repository_url": "https://github.com/nanocorp-hq/invoke",
+    "remotes": [
+     "https://invoke.nanocorp.app/mcp"
+    ],
+    "packages": [],
+    "status": "active",
+    "published_at": "2026-08-22T18:33:30.993772Z",
+    "is_latest": true
+   }
+  ],
+  "source": {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?search=nanocorp",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:28:07Z",
+   "response_bytes": 12163,
+   "response_sha256": "81f2f7c0d0c1ebb967d74852279fb50ab0e7c0cf90b12c6b26cb73d19b507d5e",
+   "note": "official MCP registry search for 'nanocorp'"
+  }
+ },
+ "npm": null,
+ "repositories": [
+  {
+   "declared_url": "https://github.com/nanocorp-hq/invoke",
+   "repository": "nanocorp-hq/invoke",
+   "evidence_state": "SEARCH_INCONCLUSIVE",
+   "status": 404,
+   "source": {
+    "url": "https://api.github.com/repos/nanocorp-hq/invoke",
+    "status": 404,
+    "accessed_utc": "2026-09-24T15:28:07Z",
+    "response_bytes": 118,
+    "response_sha256": "4f50e254a719a6b1b06b529bdaa08980e4acf0878aad0090cba7771f6ebdf0b9",
+    "reason": "HTTP 404",
+    "note": "GitHub public repository record for nanocorp-hq/invoke"
+   },
+   "meaning": "the code host did not serve this repository to an unauthenticated reader. The GitHub API answers 404 both for a repository that does not exist and for one that is private, so this is recorded with its status and read as neither"
+  }
+ ],
+ "sources": [
+  {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?search=nanocorp",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:28:07Z",
+   "response_bytes": 12163,
+   "response_sha256": "81f2f7c0d0c1ebb967d74852279fb50ab0e7c0cf90b12c6b26cb73d19b507d5e",
+   "note": "official MCP registry search for 'nanocorp'"
+  },
+  {
+   "url": "https://api.github.com/repos/nanocorp-hq/invoke",
+   "status": 404,
+   "accessed_utc": "2026-09-24T15:28:07Z",
+   "response_bytes": 118,
+   "response_sha256": "4f50e254a719a6b1b06b529bdaa08980e4acf0878aad0090cba7771f6ebdf0b9",
+   "reason": "HTTP 404",
+   "note": "GitHub public repository record for nanocorp-hq/invoke"
+  }
+ ],
+ "does_not_prove": [
+  "that the MCP server works, is safe, or does what the subject says it does. A registry entry records that a publisher who controls the namespace submitted metadata; the registry does not test the server",
+  "that any agent has hired any human through this server. npm download counts include CI systems, mirrors and caches and are not users, installs or transactions",
+  "that a repository which was not served to an unauthenticated reader does not exist; the code host answers the same way for a private repository",
+  "anything about the number of workers, tasks or payments on the platform"
+ ]
+}

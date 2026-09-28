@@ -6,11 +6,11 @@ from GET /api/gspc and the repository's own file tree. Nothing numeric is typed 
     python3 scripts/hf/hf-org-card.py --push               # also `hf upload` the two Space READMEs
     python3 scripts/hf/hf-org-card.py --check              # score every csoai/* card on the 16-point rubric
     python3 scripts/hf/hf-org-card.py --check --public     # public repos only (what a stranger can see)
-    python3 scripts/hf/hf-org-card.py --dataset-board      # regenerate datasets/csoai/gspc-board (parquet only)
+    python3 scripts/hf/hf-org-card.py --dataset-board      # local viewer preview; HF publication is owned by gspc-spray
     python3 scripts/hf/hf-org-card.py --hubcard csoai/x402-bazaar-census [...]   # refresh the 16-point block on a dataset
 
 Two idempotent blocks, each replaced between its own markers and never appended twice:
-    <!-- csoai-live-board --> … <!-- /csoai-live-board -->   the derived 22-axis table (Spaces + board datasets)
+    <!-- csoai-live-board --> … <!-- /csoai-live-board -->   the live-derived axis table (Spaces + board datasets)
     <!-- csoai-hubcard-v2 --> … <!-- /csoai-hubcard-v2 -->   the 16-point rubric block (every card)
 
 The ONE living Space rule: this script never creates a Space or a repo. The viewer rule: a
@@ -568,6 +568,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "Status words: `LOADING` / `UNREACHABLE` / `UNMEASURED` / `UNCHECKABLE`.",
         "",
         f"**Lid:** {d['lid']}" if d["state"] == "DERIVED" else f"**Lid:** UNCHECKABLE — `GET {API}` did not answer at {as_of}.",
+        "A public leader score is a published field, not proof of a separated leader; read each row's status and separation.",
         "",
         f"**This repository:** {ONE_LINERS.get(repo, GENERIC_ONE_LINER)}",
         "",
@@ -798,18 +799,20 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
         "**Council of AI · CSOAI Ltd (UK Companies House 16939677).** This dataset is a *printer* of "
         f"`GET {API}`: every row is derived from the live axis array at the `as_of` below and nothing is typed. "
         "The viewer reads one format only (`board.parquet`); `board.jsonl` carries the same rows for readers without parquet. "
-        "Older files in this repo (`board.json`, `board.parquet.json`, `gspc-board.jsonl`, `living-board.json`) are earlier "
-        "exports kept as history — they are superseded by the live API, not edited, and must not be quoted as the board.",
+        "The top-level `board.json` and `living-board.json` are exact copies of the latest "
+        "`snapshot/board.json` when published by the GSPC snapshot publisher. "
+        "This locally generated viewer preview is not a new signature or anchor; the live API remains authoritative.",
         "",
         render(d),
         "## Files",
         "",
         "| file | what |", "|---|---|",
-        "| `board.parquet` | the 22 derived rows — the only file the viewer reads |",
+        f"| `board.parquet` | the {len(rows)} derived rows — the only file the viewer reads |",
         "| `board.jsonl` | the same rows, one JSON object per line |",
         "| `manifest.jsonl` | sha256 + byte length of the derived files, with the as_of |",
         "| `axis-register.json`, `board-axes.json` | axis register and slot list, mirrored from the live API |",
-        "| `board.json`, `board.parquet.json`, `gspc-board.jsonl`, `living-board.json` | earlier exports, history only |",
+        "| `board.json`, `living-board.json` | current snapshot aliases owned by gspc-spray |",
+        "| `board.parquet.json`, `gspc-board.jsonl` | earlier derived exports; retain their own dates |",
         "",
         HUB_OPEN,
         "## The live board is the authority",
@@ -818,7 +821,9 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
         "Verify a card free at <https://councilof.ai/gspc-verify>; the signed Merkle root is <https://councilof.ai/root.json>; "
         f"every CSOAI repo is at <https://huggingface.co/csoai>; the methodology DOI is <https://doi.org/{DOI}>.",
         "",
-        f"**Lid:** {d['lid']}",
+        f"**Lid:** this dated export records {len(rows)} axis rows. "
+        "For current measured counts and separated leaders, read the live board; "
+        "TIE and UNTESTED are not wins. Measurement, not certification.",
         "",
         "## Citation", "", "```bibtex", "@misc{csoai_dataset_gspc_board,",
         "  title        = {GSPC Board Export — Council of AI / GSPC},", "  author       = {{CSOAI Ltd}},",
@@ -833,8 +838,8 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
     (out / "README.md").write_text(join_front_matter(fm, body), encoding="utf-8")
     print(f"dataset files written to {out}")
     if push:
-        for f in ("board.parquet", "board.jsonl", "manifest.jsonl", "README.md"):
-            hf_upload(out / f, BOARD_DATASET, "dataset", f, f"derive {f} from GET /api/gspc at {d['as_of']}")
+        raise RuntimeError("gspc-board is published atomically by scripts/spray/gspc-spray.py --hf; "
+                           "--dataset-board is a local viewer preview only")
 
 
 # ── main ──────────────────────────────────────────────────────────────────────────────────

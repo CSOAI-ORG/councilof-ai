@@ -2,7 +2,7 @@
  * GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).
  *
  * Sell path: pay-to-recompute / re-attest per request — never a rank, never a certificate,
- * never a score. Lid: 22 axes · 14 fleets · 3 public leaders · 8 fact runs.
+ * never a score. The current lid is imported from _x402 and must match GET /api/gspc.
  *
  *   free   GET ?subject=<id>[&axis=<slug>]            → 402 challenge + a FREE PREVIEW of what
  *                                                        already exists for that subject (signed
@@ -99,10 +99,151 @@ async function reserveFor(origin: string, subject: string, axis: string): Promis
   }
 }
 
+
+type InteropAvailability = {
+  state: "ROOT_REFERENCES_AVAILABLE" | "UNCHECKABLE";
+  pointer_url: string;
+  root_url: string | null;
+  root_sha256: string | null;
+  root_as_of: string | null;
+  root_active_leaves: number | null;
+  matching_active_leaves: number | null;
+  match_basis: "CASE_INSENSITIVE_MODEL_SUBSTRING";
+  sample_card_urls: string[];
+  root_integrity: "BYTE_MATCHES_UNSIGNED_POINTER" | "UNCHECKABLE";
+  signature_verification: "NOT_PERFORMED";
+  included_in_paid_reserve: false;
+  note: string;
+  reason?: string;
+};
+
+type InteropLeaf = { modelLower: string; axis: string; card: string };
+type InteropRootCache = {
+  key: string; asOf: string; nLeaves: number; leaves: InteropLeaf[];
+};
+const POINTER_LIMIT = 4 * 1024;
+const ROOT_LIMIT = 8 * 1024 * 1024;
+let interopRootCache: InteropRootCache | null = null;
+let interopRootPending: { key: string; promise: Promise<InteropRootCache> } | null = null;
+
+async function readBounded(response: Response, limit: number): Promise<Uint8Array> {
+  const size = response.headers.get("content-length");
+  if (size && /^\d+$/.test(size) && Number(size) > limit) throw new Error("source exceeds byte limit");
+  if (!response.body) {
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (bytes.byteLength > limit) throw new Error("source exceeds byte limit");
+    return bytes;
+  }
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let length = 0;
+  try {
+    for (;;) {
+      const part = await reader.read();
+      if (part.done) break;
+      length += part.value.byteLength;
+      if (length > limit) throw new Error("source exceeds byte limit");
+      chunks.push(part.value);
+    }
+  } catch (e) {
+    await reader.cancel().catch(() => {});
+    throw e;
+  }
+  const bytes = new Uint8Array(length);
+  let at = 0;
+  for (const chunk of chunks) { bytes.set(chunk, at); at += chunk.byteLength; }
+  return bytes;
+}
+
+/** Free discovery of a separate mill-card root; never silently add its leaves to paid reserve. */
+async function interopAvailabilityFor(origin: string, subject: string, axis: string): Promise<InteropAvailability> {
+  const pointerUrl = new URL("/interop/card-root-latest.json", origin).toString();
+  const base = {
+    pointer_url: pointerUrl,
+    match_basis: "CASE_INSENSITIVE_MODEL_SUBSTRING" as const,
+    signature_verification: "NOT_PERFORMED" as const,
+    included_in_paid_reserve: false as const,
+    note: "These are active root references whose model contains the query text, not exact subject identities, card-v1 reserve entries or new GSPC board scores. Check each card signature independently; this unsigned pointer and root-byte match do not prove Bitcoin anchoring. Payment does not include these references.",
+  };
+  const uncheckable = (reason: string): InteropAvailability => ({
+    ...base, state: "UNCHECKABLE", root_url: null, root_sha256: null, root_as_of: null,
+    root_active_leaves: null, matching_active_leaves: null, sample_card_urls: [],
+    root_integrity: "UNCHECKABLE", reason,
+  });
+  try {
+    const pr = await fetch(pointerUrl);
+    if (!pr.ok) return uncheckable("pointer HTTP " + pr.status);
+    const pointer = JSON.parse(new TextDecoder().decode(await readBounded(pr, POINTER_LIMIT))) as Record<string, any>;
+    const rootPath = String(pointer.root_url || "");
+    const expected = String(pointer.root_sha256 || "");
+    if (pointer.schema !== "csoai.card-root-pointer/1" ||
+        pointer.kind !== "DISCOVERY_POINTER_ONLY" ||
+        !/^\/interop\/card-root-\d{4}-\d{2}-\d{2}(?:-[a-f0-9]{12})?\.json$/.test(rootPath) ||
+        !/^[a-f0-9]{64}$/.test(expected) ||
+        !Number.isSafeInteger(pointer.n_leaves) || pointer.n_leaves < 0) {
+      return uncheckable("pointer shape is not checkable");
+    }
+    const rootUrl = new URL(rootPath, origin).toString();
+    const key = origin + "|" + expected;
+    const loadRoot = async (): Promise<InteropRootCache> => {
+      const rr = await fetch(rootUrl);
+      if (!rr.ok) throw new Error("root HTTP " + rr.status);
+      const bytes = await readBounded(rr, ROOT_LIMIT);
+      const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes.buffer as ArrayBuffer))]
+        .map((b) => b.toString(16).padStart(2, "0")).join("");
+      if (digest !== expected) throw new Error("root bytes differ from pointer digest");
+      const root = JSON.parse(new TextDecoder().decode(bytes)) as Record<string, any>;
+      if (root.kind !== "csoai.card-root/1" || !Array.isArray(root.leaves) ||
+          root.leaves.length !== root.n_leaves ||
+          !Number.isSafeInteger(root.n_leaves) || root.n_leaves < 0 ||
+          !/^[a-f0-9]{64}$/.test(String(root.merkle_root || "")) ||
+          !root.leaves.every((leaf: Record<string, unknown>) =>
+            /^signed-[a-z0-9-]+-[a-f0-9]{12}\.json$/.test(String(leaf.card || "")) &&
+            typeof leaf.model === "string" && typeof leaf.axis === "string")) {
+        throw new Error("root shape is not checkable");
+      }
+      return {
+        key, asOf: String(root.as_of), nLeaves: root.n_leaves,
+        leaves: root.leaves.map((leaf: Record<string, string>) => ({
+          modelLower: leaf.model.toLowerCase(), axis: leaf.axis, card: leaf.card,
+        })),
+      };
+    };
+
+    let current: InteropRootCache;
+    if (interopRootCache?.key === key) {
+      current = interopRootCache;
+    } else {
+      if (interopRootPending?.key !== key) interopRootPending = { key, promise: loadRoot() };
+      const pending = interopRootPending!;
+      try {
+        current = await pending.promise;
+        interopRootCache = current;
+      } finally {
+        if (interopRootPending === pending) interopRootPending = null;
+      }
+    }
+    if (current.asOf !== pointer.as_of || current.nLeaves !== pointer.n_leaves)
+      return uncheckable("root count or timestamp differs from pointer");
+    const needle = subject.toLowerCase();
+    const matching = current.leaves.filter((leaf) =>
+      leaf.modelLower.includes(needle) && (!axis || leaf.axis === axis));
+    return {
+      ...base, state: "ROOT_REFERENCES_AVAILABLE", root_url: rootUrl, root_sha256: expected,
+      root_as_of: current.asOf, root_active_leaves: current.nLeaves,
+      matching_active_leaves: matching.length,
+      sample_card_urls: matching.slice(0, 4).map((leaf) =>
+        new URL("/interop/mill-cards-signed/" + leaf.card, origin).toString()),
+      root_integrity: "BYTE_MATCHES_UNSIGNED_POINTER",
+    };
+  } catch (e) {
+    return uncheckable((e as Error).message || "root unavailable");
+  }
+}
+
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
-  const resourceUrl = new URL("/api/request-attestation", origin).toString();
   const subject = (url.searchParams.get("subject") || "").trim();
   const axis = (url.searchParams.get("axis") || "").trim().toLowerCase();
 
@@ -134,12 +275,42 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }, 400);
   }
 
+  // Canonicalize only the validated inputs this route uses. Copying request.url would
+  // leak ignored tracking or credential query parameters into a signed offer and paid receipt.
+  const resource = new URL("/api/request-attestation", origin);
+  if (subject) resource.searchParams.set("subject", subject);
+  if (axis) resource.searchParams.set("axis", axis);
+  const resourceUrl = resource.toString();
+
   const description = REQUEST_ATTESTATION_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { subject: subject || "model-or-subject-id", ...(axis ? { axis } : {}) },
+    queryParamsSchema: {
+      properties: {
+        subject: { type: "string", description: "Subject to commission (model id, instrument id, or card sha)" },
+        axis: { type: "string", description: "Optional axis slug; omit for the subject-level commission" },
+      },
+      required: ["subject"],
+    },
+    outputExample: {
+      schema: "https://councilof.ai/schema/card-v0.json",
+      surface: "ras.commission",
+      subject: "model-or-subject-id",
+      payload: { status: "COMMISSIONED", reserve: [], fresh_run: "UNMEASURED" },
+      sig_ed25519: "<hex or null>",
+      unmeasured: ["root_inclusion"],
+    },
+  });
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   // The free preview is the same whether or not the caller pays: what already exists.
   const reserve = subject ? await reserveFor(origin, subject, axis) : { cells: [], as_of: null, source: "no subject given" };
+  const interop = !payment.ok && subject ? await interopAvailabilityFor(origin, subject, axis) : null;
   const preview = {
     subject: subject || null,
     axis: axis || null,
@@ -148,6 +319,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     cards: reserve.cells.slice(0, 40).map((c) => ({ axis: c.axis, card: c.card, card_url: c.card_url })),
     corpus_as_of: reserve.as_of,
     read_from: reserve.source,
+    interop_collection: interop,
     free_preview: `${origin}/api/request-attestation?subject=<id>`,
         free_verify: `${origin}/gspc-verify`,
     free_board: `${origin}/api/gspc`,
@@ -160,25 +332,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       serviceName: "CSOAI Request Attest",
       tags: ["attestation", "ras", "measurement", "x402"],
       accepts,
-      bazaar: declareBazaarHttpGet({
-        method: "GET",
-        queryParams: { subject: subject || "model-or-subject-id", ...(axis ? { axis } : {}) },
-        queryParamsSchema: {
-          properties: {
-            subject: { type: "string", description: "Subject to commission (model id, instrument id, or card sha)" },
-            axis: { type: "string", description: "Optional axis slug; omit for the subject-level commission" },
-          },
-          required: ["subject"],
-        },
-        outputExample: {
-          schema: "https://councilof.ai/schema/card-v0.json",
-          surface: "ras.commission",
-          subject: "model-or-subject-id",
-          payload: { status: "COMMISSIONED", reserve: [], fresh_run: "UNMEASURED" },
-          sig_ed25519: "<hex or null>",
-          unmeasured: ["root_inclusion"],
-        },
-      }),
+      bazaar,
       csoai: {
         schema: "csoai.request-attestation/0.2",
         per: "request",
@@ -201,7 +355,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
   const source_urls = [
-    resourceUrl + `?subject=${encodeURIComponent(subject)}` + (axis ? `&axis=${encodeURIComponent(axis)}` : ""),
+    resourceUrl,
     ...(tx ? [`https://basescan.org/tx/${tx}`] : []),
     reserve.source.startsWith("http") ? reserve.source : `${origin}/signed/card-matrix.json`,
   ];

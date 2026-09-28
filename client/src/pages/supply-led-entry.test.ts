@@ -5,8 +5,18 @@ import { describe, expect, it } from "vitest";
 const source = (path: string) =>
   readFileSync(resolve(__dirname, path), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
 
+/**
+ * The homepage LEFT this list on 2026-09-22 and has its own assertion below instead.
+ *
+ * The four labels encode a supply-led ORDER - show what was measured, then what changed, then
+ * how to check it, then how to take a feed - and that order is still the contract on every
+ * surface named here. What the homepage could not keep was the LABELS: "Access supported feeds"
+ * tells a first-time reader nothing, and four buttons cannot reach a business that also has a
+ * corrections ledger, ten population doors, a tool surface, a participation record and a
+ * library. The front door now asks the five questions a reader actually arrives with, in the
+ * same supply-led order, and the test below pins that.
+ */
 const surfaces = [
-  ["homepage", source("HomeVerify.tsx")],
   ["board", source("../components/home/HomeGspcBoard.tsx")],
   ["services", source("Services.tsx")],
   ["quickstart", source("Quickstart.tsx")],
@@ -27,6 +37,33 @@ describe("public entry surfaces use the supply-led evidence hierarchy", () => {
       expect(positions).toEqual([...positions].sort((a, b) => a - b));
     });
   }
+
+  it("homepage: the same order, asked as the questions a reader arrives with", () => {
+    const nav = source("../components/home/HomeNavigator.tsx");
+    const order = [
+      "What have you measured?", // the measurements
+      "How do I check it?", // verification
+      "Can I use it?", // the feeds, the tools and a commissioned run
+      "What have you got wrong?", // the change record
+      "Who are you?",
+    ];
+    const positions = order.map((label) => nav.indexOf(label));
+    expect(positions.every((position) => position >= 0)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+
+    // And measurement still precedes commissioning on the front door itself. HomeNavigator
+    // moved to /how-we-work on 2026-09-23 (the home page was 27,743px tall, so its lower bands
+    // were published to almost nobody). What this assertion has always been about is the ORDER
+    // of the supply-led hierarchy, so it is pinned where each band now renders: the front door
+    // still leads with what is measured before it asks for anything, and the directory of every
+    // door comes last on the page that carries it.
+    const home = source("HomeVerify.tsx");
+    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeCredibility"));
+    expect(home.indexOf("<HomeCredibility")).toBeLessThan(home.indexOf('id="board"'));
+
+    const deep = source("HowWeWork.tsx");
+    expect(deep.indexOf("<HomeStrengths")).toBeLessThan(deep.indexOf("<HomeNavigator"));
+  });
 
   it("quickstart keeps commissioning after the four public reads", () => {
     const text = source("Quickstart.tsx");

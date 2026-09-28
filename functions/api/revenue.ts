@@ -49,15 +49,69 @@ export type RevenueEnv = {
 // facilitator was provisioned (2026-09-03) this endpoint said "live" in one field and "mock" in
 // another, on the same payload, about money. Same defect, second field. A note about the rail
 // reads itself off railMode(env); counters.json keeps the doctrine and nothing about the env.
+// A rail clause must not assert that a metric is null: recorded settlements can leave a
+// non-null count even when the current configuration changes.
 function withRailState(env: RevenueEnv, canonNote: string | undefined): string {
   const r = railMode(env);
-  const rail = r.facilitator_configured
-    ? `x402 rail: ${r.mode} — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.`
-    : `x402 rail: ${r.mode} — no facilitator is provisioned, so no receipt can settle and this count is honestly null.`;
+  const rail = r.mode === "live"
+    ? `x402 rail: ${r.mode} — a facilitator is provisioned; settled receipts can be counted when recorded.`
+    : `x402 rail: ${r.mode} — no live settlement path is configured; new receipts cannot settle through this configuration.`;
   return [(canonNote || "").trim(), rail].filter(Boolean).join(" ");
 }
 
 const canon = (countersDoc as { counters: Record<string, CanonCounter> }).counters;
+
+/** A settlement record as recordSettlement() (functions/api/_x402.ts) wrote it, read back loosely:
+ *  old records lack fields later versions carry, so every field is optional here. */
+export type StoredSettlement = {
+  payer?: string | null;
+  self?: boolean;
+  settled_at?: string;
+  zero_value?: boolean;
+  amount_atomic?: string | null;
+  bazaar?: { status?: string } | null;
+  resource?: string | null;
+  transaction?: string | null;
+  network?: string | null;
+};
+
+/** How many settled:tx:* keys one read will enumerate before it stops — bounded so the surface
+ *  cannot spend an unbounded KV budget; the bound is reported, never silently applied. */
+export const SETTLEMENT_KEY_LIMIT = 5000;
+
+/**
+ * listSettlementRecords — THE ONE enumeration of `settled:tx:*`. /api/revenue derives the One
+ * Number from it and /api/door-settles derives each door's last settle from it; neither re-parses
+ * the store on its own, so a record both surfaces can read is one record, read one way.
+ * A key whose value is missing or not JSON is counted in `unreadable`, never dropped silently.
+ */
+export async function listSettlementRecords(
+  kv: KVNamespace,
+  limit = SETTLEMENT_KEY_LIMIT,
+): Promise<{ keys: string[]; records: { key: string; record: StoredSettlement }[]; unreadable: number; truncated: boolean }> {
+  const keys: string[] = [];
+  let cursor: string | undefined;
+  let truncated = false;
+  do {
+    const page = await kv.list({ prefix: "settled:tx:", cursor, limit: 1000 });
+    for (const k of page.keys) keys.push(k.name);
+    // KVNamespaceListResult is a union; the cursor exists only on the incomplete branch.
+    cursor = page.list_complete ? undefined : (page as { cursor?: string }).cursor;
+    if (cursor && keys.length >= limit) truncated = true;
+  } while (cursor && keys.length < limit);
+  const records: { key: string; record: StoredSettlement }[] = [];
+  let unreadable = 0;
+  for (const key of keys) {
+    const raw = await kv.get(key);
+    if (!raw) { unreadable++; continue; }
+    try {
+      records.push({ key, record: JSON.parse(raw) as StoredSettlement });
+    } catch {
+      unreadable++;
+    }
+  }
+  return { keys, records, unreadable, truncated };
+}
 
 // Pull one revenue metric: prefer a live KV tally if bound, else the canon value (null).
 async function metric(
@@ -121,13 +175,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
       source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted" };
   }
   try {
-    const keys: string[] = [];
-    let cursor: string | undefined;
-    do {
-      const page = await kv.list({ prefix: "settled:tx:", cursor, limit: 1000 });
-      for (const k of page.keys) keys.push(k.name);
-      cursor = page.list_complete ? undefined : page.cursor;
-    } while (cursor && keys.length < 5000);
+    const listed = await listSettlementRecords(kv);
     const since = Date.now() - 30 * 24 * 3600 * 1000;
     const all = new Set<string>();
     const recent = new Set<string>();
@@ -136,7 +184,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
     let selfSettlements = 0;
     let zeroValueSettlements = 0;
     let externalSettledAtomic = 0n;
-    let unreadable = 0;
+    const unreadable = listed.unreadable;
     // WHETHER THE FACILITATOR SAID IT INDEXED US. _x402.ts records this on every settle
     // (readBazaarOutcome, the EXTENSION-RESPONSES sidechannel) precisely because a facilitator
     // only MAY report the outcome and x402#2112 records one that never does, leaving services
@@ -146,12 +194,7 @@ async function oneNumber(env: RevenueEnv): Promise<Record<string, unknown>> {
     // Counted across ALL records, self included — Move A settled our own doors, and those are
     // exactly the settles whose indexing outcome we need. Aggregate only, like everything here.
     const bazaarOutcomes: Record<string, number> = {};
-    for (const name of keys) {
-      const raw = await kv.get(name);
-      if (!raw) { unreadable++; continue; }
-      let r: { payer?: string | null; self?: boolean; settled_at?: string; zero_value?: boolean;
-               amount_atomic?: string | null; bazaar?: { status?: string } | null; resource?: string | null };
-      try { r = JSON.parse(raw); } catch { unreadable++; continue; }
+    for (const { record: r } of listed.records) {
       const bz = r.bazaar?.status ?? "ABSENT";
       bazaarOutcomes[bz] = (bazaarOutcomes[bz] ?? 0) + 1;
       const payer = (r.payer || "").toLowerCase();
@@ -258,11 +301,11 @@ export async function buildRevenue(env: RevenueEnv) {
         "Counts read from counters.json (the counter canon) and, where bound, the REVENUE_KV " +
         "tallies. Nothing is fetched over HTTP and no count is typed by hand.",
       null_rule:
-        `A count is null, never 0, when there is no source. The x402 rail is currently ` +
+        `A count is null, never 0, when its source has no measured value. The x402 rail is currently ` +
         `${railMode(env).mode}` +
-        (railMode(env).facilitator_configured
-          ? ` — a facilitator is provisioned, so a settled receipt can be counted; every count stays null until one settles.`
-          : ` — no facilitator is provisioned, so no receipt can settle and every count is honestly null.`),
+        (railMode(env).mode === "live"
+          ? ` — a facilitator is provisioned; settled receipts can be counted when recorded.`
+          : ` — no live settlement path is configured; new receipts cannot settle through this configuration.`),
       north_of_truth:
         "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on " +
         "Base, single-use. Chain adjudicates, not the CRM.",

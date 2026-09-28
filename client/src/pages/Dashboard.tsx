@@ -182,17 +182,18 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 space-y-6">
+      <div className="mx-auto w-full max-w-[1600px] space-y-6 p-4 sm:p-6 lg:p-8">
         {/* Page Header */}
-        <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-4 rounded-3xl border border-emerald-950/10 bg-[linear-gradient(135deg,#ffffff_0%,#f6fbf8_58%,#eef9f2_100%)] p-5 shadow-[0_18px_50px_rgba(6,21,15,0.06)] sm:p-6">
           <div>
             {/* h2, not h1: this page renders inside DashboardWorkspace, which owns the page's
                 single <h1> ("What are you working on?" on the home surface). Two <h1>s in one
                 document is an accessibility fault, and it broke the shell smoke's strict-mode
                 locator on 2026-09-04, blocking every deploy. */}
-            <h2 className="text-2xl font-semibold font-primary">Dashboard</h2>
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-800"><CircleDot className="h-3 w-3" /> Live evidence workspace</div>
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Measurement control room</h2>
             <p className="text-muted-foreground text-sm">
-              Account activity and measured evidence. Empty values remain UNMEASURED.
+              Read the public board, inspect signed evidence, and keep measured, indexed, and operational states separate. Empty values remain UNMEASURED.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -217,7 +218,7 @@ export default function Dashboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => setLocation(action.href)}
-                  className="hidden md:flex items-center gap-2"
+                  className="hidden items-center gap-2 rounded-xl border-emerald-950/10 bg-white/80 text-slate-800 shadow-sm hover:border-emerald-200 hover:bg-emerald-50 md:flex"
                 >
                   <Icon className="h-4 w-4" />
                   {action.label}
@@ -227,8 +228,42 @@ export default function Dashboard() {
           </div>
         </div>
 
+        <section
+          aria-label="Public evidence status"
+          className="grid overflow-hidden rounded-2xl border border-emerald-400/15 bg-[#06150f] text-white shadow-[0_14px_40px_rgba(3,17,11,0.12)] sm:grid-cols-2 xl:grid-cols-4"
+        >
+          {[
+            {
+              label: "Public board",
+              value: gspcStats?.public_count || (gspcStats ? `${gspcStats.measured_axes} measured axes` : "Board unavailable"),
+              note: "Measurement state",
+            },
+            {
+              label: "Signed evidence",
+              value: cardStats ? `${cardStats.signed} signed` : "—",
+              note: cardStats ? `${cardStats.count} indexed cards` : "Card index unavailable",
+            },
+            {
+              label: "Estate census",
+              value: estateIndex?.entries?.value != null ? `${estateIndex.entries.value} indexed` : "—",
+              note: "Indexed is not measured",
+            },
+            {
+              label: "Operating rule",
+              value: "Measure · sign · verify",
+              note: "Never certification",
+            },
+          ].map((signal) => (
+            <div key={signal.label} className="border-white/10 p-4 sm:border-r sm:p-5 xl:last:border-r-0">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">{signal.label}</p>
+              <p className="mt-2 text-base font-bold text-emerald-50">{signal.value}</p>
+              <p className="mt-1 text-xs text-emerald-100/55">{signal.note}</p>
+            </div>
+          ))}
+        </section>
+
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {metrics.map((metric, idx) => {
             const Icon = metric.icon;
             return (
@@ -238,7 +273,7 @@ export default function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: idx * 0.05 }}
               >
-                <Card className="bg-card border-border hover:shadow-md transition-shadow">
+                <Card className="card-quiet card-quiet-hover h-full bg-card">
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -483,9 +518,9 @@ export default function Dashboard() {
                   DEFAULT_DATA as if it were this account's measurements. No
                   per-framework comparison is measured for the account yet, so the
                   cell says so — it does not chart example numbers. */}
-              <div className="flex h-full flex-col justify-center rounded-xl border border-gray-200 bg-white p-8 text-center">
-                <p className="font-semibold text-gray-900">Framework comparison — UNMEASURED</p>
-                <p className="mt-1 text-sm text-gray-500">
+              <div className="flex h-full flex-col justify-center rounded-xl border border-border bg-card p-8 text-center">
+                <p className="font-semibold text-foreground">Framework comparison — UNMEASURED</p>
+                <p className="mt-1 text-sm text-muted-foreground">
                   No per-framework scores are measured for this account, so nothing is plotted.
                   Example data is never charted as yours.
                 </p>
@@ -493,9 +528,9 @@ export default function Dashboard() {
             </motion.div>
           </div>
         ) : (
-          <div className="rounded-xl border border-gray-200 bg-white p-8 text-center">
-            <p className="text-gray-900 font-semibold">No trend data yet</p>
-            <p className="mt-1 text-sm text-gray-500">
+          <div className="rounded-xl border border-border bg-card p-8 text-center">
+            <p className="font-semibold text-foreground">No trend data yet</p>
+            <p className="mt-1 text-sm text-muted-foreground">
               Charts appear once your AI systems have real measurements behind them —
               we don&apos;t plot example data as if it were yours.
             </p>

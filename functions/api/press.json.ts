@@ -131,13 +131,14 @@ export async function build(env: RevenueEnv = {}) {
       proof: "curl -s https://councilof.ai/api/gspc | jq -r .doi",
     },
     distribution_surfaces: {
+      scope: "Committed spray log only; not a census of all public distribution surfaces.",
       live: live || null,
       by_status: sprayCounts,
       kind: live ? "counted" : "unmeasured",
       note: live
-        ? "Surfaces confirmed published."
-        : "NO surface is confirmed live. The spray log records drafted and queued rows only, every one owner-gated. A drafted row is not a published surface, and this field stays null rather than 0 so the gap is legible rather than counted as an achievement.",
-      proof: "jq '[.[].status]|group_by(.)|map({(.[0]):length})|add' scripts/badger/_spray-log-v2.json",
+        ? "Confirmed placements in this committed spray log. Other public listings and downloads are evidenced separately at /memberships and /reach."
+        : "This committed spray log contains no confirmed live placement. Drafted and queued entries are not a published surface. The log is not a census of all public distribution: separately evidenced listings and downloads appear at /memberships and /reach. Its live-placement count remains null until this log records a confirmed placement.",
+      proof: "In a source checkout: jq '[.[].status]|group_by(.)|map({(.[0]):length})|add' scripts/badger/_spray-log-v2.json",
     },
     commercial_evidence: {
       state: outsideSettlementMeasured ? "MEASURED" : settlementLedgerMeasured ? "MEASURED_ZERO" : "UNCHECKABLE",
@@ -173,7 +174,7 @@ export async function build(env: RevenueEnv = {}) {
       },
       {
         q: "What have you NOT measured?",
-        a: `${revenueAnswer} Distribution: ${live ? `${live} surfaces are confirmed live` : "no surface is confirmed live in the committed spray log; drafted and queued rows are not counted as placements"}. The board publishes its own unmeasured slots rather than hiding them: quote totals.unmeasured_axes from /api/gspc.`,
+        a: `${revenueAnswer} Distribution: ${live ? `${live} surfaces are confirmed live` : "no placement is confirmed live in this committed spray log; this does not negate separately evidenced public listings"}. The board publishes its own unmeasured slots rather than hiding them: quote totals.unmeasured_axes from /api/gspc.`,
       },
       {
         q: "Can I verify one of your measurements myself, without an account?",
@@ -186,12 +187,12 @@ export async function build(env: RevenueEnv = {}) {
     ],
     not_announced: [
       ...(firstSettlementClaim ? [firstSettlementClaim] : []),
-      {
-        subject: "N sites live",
+      ...(!live ? [{
+        subject: "N confirmed placements in this spray log",
         state: "NOT HAPPENED",
-        why: "The spray log carries drafted and queued rows and no live ones. Announcing a number of live surfaces would be counting drafts as placements.",
-        proof: "jq '[.[]|select(.status==\"live\")]|length' scripts/badger/_spray-log-v2.json",
-      },
+        why: "The committed spray log has no live placement. It is not a census of all public distribution; separately evidenced listings are outside this log. Drafts and queued rows cannot be counted as placements.",
+        proof: "In a source checkout: jq '[.[]|select(.status==\"live\" or .status==\"published\")]|length' scripts/badger/_spray-log-v2.json",
+      }] : []),
     ],
   };
 }

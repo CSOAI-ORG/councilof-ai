@@ -72,6 +72,11 @@ DESCRIPTION_PATHS = {
     "/api/proof": "proof_bundle",
     "/api/request-attestation": "request_attestation",
     "/api/receipts/batch": "receipts_batch",
+    # Population doors: /api/pop/<id> -> pop_<id> (same bytes the manifest and catalogue read).
+    **{f"/api/pop/{pop}": f"pop_{pop}" for pop in (
+        "stablecoins", "swift", "xrpl", "x402-bazaar", "mcp-registry", "a2a",
+        "ots-proofs", "layer0", "corrections", "claim-watch",
+    )},
 }
 
 
@@ -140,7 +145,7 @@ PARAM_GATE_DESC: dict[str, str] = {
 # Operation-level free vs paid note (appended when missing from challenge prose).
 FREE_TIER_OP_NOTE: dict[str, str] = {
     "/api/proof": "Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
-    "/api/eunomia-data": "Bare path (no query) is the free preview tier (HTTP 200). Paid signed feed requires feed=1 (HTTP 402).",
+    "/api/eunomia-data": "Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
     "/api/feeds/provider-diff": "Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
     "/api/evidence-bundle": "Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
     "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
@@ -168,6 +173,19 @@ def sku_default_usd() -> dict[tuple[str, str], float]:
         if sku:
             out[(sku, m.group(1))] = float(m.group(2))
     return out
+
+
+def handler_methods(path: str) -> list[str]:
+    """The verbs a door's own handler exports. Every x402 door does `onRequestPost = onRequestGet`
+    or re-exports both from a shared module, so the door answers POST with the same 402 — and this
+    document said GET only, because the door loop REPLACED the walker's path item instead of
+    merging into it. An agent reading the document concluded POST was unsupported on 21 doors."""
+    f = REPO / "functions" / "api" / (path.removeprefix("/api/") + ".ts")
+    if not f.exists():
+        return ["get"]
+    text = f.read_text()
+    verbs = {m.group(1).lower() for m in re.finditer(r"\bonRequest(Get|Post|Put|Patch|Delete)\b", text)}
+    return sorted(verbs) or ["get"]
 
 
 def handler_sku(path: str) -> tuple[str, str] | None | str:
@@ -435,6 +453,11 @@ def compose(fix: Path = FIX) -> dict:
             })
             seen.add("sha")
 
+        if path == "/api/eunomia-data":
+            parameters.extend([
+                {"name": "manifest", "in": "query", "required": False, "schema": {"type": "string", "enum": ["1"]}, "description": "Free manifest; takes priority over feed=1 and never settles a payment."},
+                {"name": "x-csoai-expected-feed-sha256", "in": "header", "required": False, "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "description": "Digest retained from the pre-payment manifest. A changed assembled feed is rejected with409 before the facilitator is called."},
+            ])
         canonical_description = canonical_descriptions.get(DESCRIPTION_PATHS.get(path, ""))
         description = canonical_description or (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
         note = FREE_TIER_OP_NOTE.get(path)
@@ -484,9 +507,21 @@ def compose(fix: Path = FIX) -> dict:
                               **({"payment_required_header_bytes": entry["payment_required_header_bytes"]} if entry.get("payment_required_header_bytes") else {})},
             },
         }
+        if path == "/api/eunomia-data":
+            op["responses"]["409"] = {"description": "Retained feed digest differs; no payment settled."}
+            op["responses"]["503"] = {"description": "Required source unavailable or invalid; no payment settled."}
+            op["x-csoai"]["free_manifest"] = BASE + "/api/eunomia-data?manifest=1"
+            op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
         if r.get("indexed_in"):
             op["x-csoai"]["indexed_in"] = r["indexed_in"]
-        paths[path] = {method: op}
+        # One door, every verb its handler actually exports. The 402 contract is identical on
+        # each; only operationId differs, because operationIds must be unique.
+        item = {}
+        for verb in sorted({method} | set(handler_methods(path))):
+            vop = json.loads(json.dumps(op))
+            vop["operationId"] = f"x402_{did}" if verb == method else f"x402_{did}_{verb}"
+            item[verb] = vop
+        paths[path] = item
         door_paths.append(path)
 
     # 3. the document
@@ -507,7 +542,7 @@ def compose(fix: Path = FIX) -> dict:
         f"a settled 200 carries a signed receipt only when settlement exposes the required payer and transaction evidence and that key is available. "
         f"The extension uses JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at "
         f"https://csoai.org/.well-known/did.json. Check either without trusting this document: POST it to "
-        f"/api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. {lid}"
+        f"/api/receipts/verify, or download https://councilof.ai/verifier/verify_receipt.py; default mode reads the public DID document, and a retained key document allows offline replay. {lid}"
     )
     spec = {
         "openapi": "3.1.0",
@@ -608,7 +643,7 @@ def compose(fix: Path = FIX) -> dict:
                 "kid": "did:web:csoai.org#board-attestation-1",
                 "did_document": "https://csoai.org/.well-known/did.json",
                 "verify_hosted": f"{BASE}/api/receipts/verify",
-                "verify_offline": "scripts/verify_receipt.py",
+                "verify_offline": "https://councilof.ai/verifier/verify_receipt.py",
                 "receipts_by_payer": f"{BASE}/api/receipts?payer=0x…",
             },
             "schema_of_source": {"well_known": wk["schema"], "catalog": cat["schema"]},
@@ -640,6 +675,67 @@ def compose(fix: Path = FIX) -> dict:
     return spec
 
 
+# ───────────────────────────── the capability registry cross-check ─────────────────────────────
+REGISTRY = REPO / "council-os" / "capabilities.json"
+
+
+def registry_crosscheck(spec: dict) -> list[str]:
+    """council-os/capabilities.json is the ONE declaration; this document is one of its renders.
+
+    Three ways they can disagree, all the same defect in different directions:
+      · the document carries an operation no capability declares — the catalogue claims something
+        the registry does not know about, which is how a dead path survives a purge;
+      · a capability declares surface "openapi" and the document does not carry it — the catalogue
+        is missing a door the estate advertises. This is exactly how the ten /api/pop/* doors and
+        /api/wrapper/changes sat in /.well-known/x402.json and in no OpenAPI operation until
+        2026-09-22, invisible to every indexer that reads this document;
+      · a capability's lifecycle and the document's x-csoai-lifecycle marker disagree — one route,
+        two vocabularies.
+    A route the OpenAPI producer cannot reach at all is NAMED in registry.openapi_gap, never
+    counted: a new one has to be added there deliberately, and a stale exemption fails here.
+    """
+    if not REGISTRY.exists():
+        return ["council-os/capabilities.json is missing — the document has no declaration behind it"]
+    reg = json.loads(REGISTRY.read_text())
+    errs: list[str] = []
+    declared: dict[tuple[str, str], dict] = {}
+    for c in reg["capabilities"]:
+        if c.get("path"):
+            declared[(c["path"], c["method"].lower())] = c
+    gap = {(g["path"], g["method"].lower()) for g in reg.get("openapi_gap", [])}
+    verbs = {"get", "post", "put", "patch", "delete", "head", "options"}
+
+    documented: set[tuple[str, str]] = set()
+    for path, item in spec["paths"].items():
+        for method, op in item.items():
+            if method.lower() not in verbs:
+                continue
+            key = (path, method.lower())
+            documented.add(key)
+            c = declared.get(key)
+            if c is None:
+                errs.append(f"{method.upper()} {path}: documented here and declared by no capability entry")
+                continue
+            if key in gap:
+                errs.append(
+                    f"{method.upper()} {path}: named in registry.openapi_gap as unreachable by this producer, "
+                    "yet the document carries it — remove the stale exemption"
+                )
+            want, got = c["lifecycle"], op.get("x-csoai-lifecycle", "LIVE")
+            if want != got:
+                errs.append(
+                    f"{method.upper()} {path}: the registry says lifecycle {want}, the document marks it {got} "
+                    "— one route, two vocabularies"
+                )
+
+    for (path, method), c in sorted(declared.items()):
+        if "openapi" in c.get("surfaces", []) and (path, method) not in documented:
+            errs.append(
+                f"{method.upper()} {path} ({c['id']}): declared for the openapi surface and absent from the document"
+            )
+    return errs
+
+
 def render(spec: dict) -> str:
     return json.dumps(spec, indent=2, sort_keys=True) + "\n"
 
@@ -667,7 +763,24 @@ def main() -> int:
             print("✖ build_openapi selftest: a moved amount did not change the rendered bytes")
             return 1
         print("✓ build_openapi selftest: a moved 402 amount changes the rendered bytes, so --check can go red")
-        return 0
+        # and prove the registry cross-check can go red in each of its three directions
+        planted = compose()
+        planted["paths"]["/api/a-path-no-capability-declares"] = {"get": {"responses": {"200": {"description": "x"}}}}
+        e1 = registry_crosscheck(planted)
+        planted2 = compose()
+        del planted2["paths"][planted2["x-x402"]["doors"][0]]
+        e2 = registry_crosscheck(planted2)
+        planted3 = compose()
+        next(iter(planted3["paths"]["/api/gspc"].values()))["x-csoai-lifecycle"] = "RETIRED"
+        e3 = registry_crosscheck(planted3)
+        checks = (
+            (any("declared by no capability entry" in x for x in e1), "an operation no capability declares"),
+            (any("absent from the document" in x for x in e2), "a declared door missing from the document"),
+            (any("two vocabularies" in x for x in e3), "a lifecycle the registry contradicts"),
+        )
+        for ok, label in checks:
+            print(("✓ " if ok else "✖ ") + f"registry cross-check catches {label}")
+        return 0 if all(ok for ok, _ in checks) else 1
 
     if args.fetch:
         budget = Budget(args.max_requests)
@@ -680,6 +793,13 @@ def main() -> int:
     spec = compose()
     text = render(spec)
     doors = spec["x-x402"]["doors"]
+    xerrs = registry_crosscheck(spec)
+    if xerrs:
+        print(f"\u2716 openapi vs council-os/capabilities.json: {len(xerrs)} disagreement(s)")
+        for e in xerrs:
+            print("    " + e)
+        print("  fix: reconcile the declaration (node scripts/capability-seed.mjs) or the producer — never both by hand")
+        return 1
     if args.check:
         if not out.exists():
             print(f"✖ {out.relative_to(REPO)} is missing — run: python3 scripts/build_openapi.py")

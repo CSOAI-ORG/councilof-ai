@@ -1,0 +1,72 @@
+{
+  "schema": "csoai.protected-manifest/0.1",
+  "what_this_is": "Paths and content patterns that must never appear in a public tree (this repository, a published dataset, a package). Read by scripts/policy/check_no_protected.py. Policy: docs/policy/OPEN-AND-PROTECTED.md.",
+  "private_store": "https://huggingface.co/datasets/csoai/private-calibration (private, org members only)",
+  "classes": {
+    "reach_calibration": {
+      "why": "reach tables joined into the probe plan, and any tuned routing/reach weights",
+      "globs": [
+        "**/npm-weekly-downloads.json",
+        "**/pypi-downloads-7d.json",
+        "**/dockerhub-pulls.json",
+        "**/plan-top20.jsonl.gz",
+        "**/plan-top20.v1-npm-only.jsonl.gz",
+        "**/reach-tables/**",
+        "**/calibration-private/**",
+        "**/*.calibration.json",
+        "**/routing-weights*.json",
+        "**/reach-weights*.json"
+      ]
+    },
+    "private_negative_controls": {
+      "why": "generators of private negative controls (a published generator lets a target train against it)",
+      "globs": [
+        "**/negative-controls-private/**",
+        "**/*.negctl-generator.*",
+        "**/private-negative-control*"
+      ]
+    },
+    "priority_heuristics": {
+      "why": "what we probe first and why, beyond the published plan rule",
+      "globs": [
+        "**/priority-heuristics/**",
+        "**/*.priority-weights.json"
+      ]
+    },
+    "customer_data": {
+      "why": "customer data and configurations",
+      "globs": [
+        "**/customer-data/**",
+        "**/customer-configs/**",
+        "**/*.customer.json",
+        "**/*.customer.yaml"
+      ]
+    },
+    "keys_and_secrets": {
+      "why": "witness / signing private keys and credentials",
+      "globs": [
+        "**/witness-keys/**",
+        "**/.secrets/**",
+        "**/hf_token",
+        "**/*.private.pem",
+        "**/*-private-key.pem",
+        "**/id_ed25519",
+        "**/id_rsa",
+        "**/.csoai-keys.env"
+      ],
+      "content_patterns": [
+        "-----BEGIN (?:RSA |EC |DSA |OPENSSH |ENCRYPTED )?PRIVATE KEY-----",
+        "\\bhf_[A-Za-z0-9]{34}\\b",
+        "\\bgh[pousr]_[A-Za-z0-9]{36}\\b",
+        "\\bsk-ant-[A-Za-z0-9_-]{20,}"
+      ]
+    }
+  },
+  "public_by_decision": {
+    "plan-top20.json": "the plan CONFIG (fraction, counts, ranking rule) was published on 2026-09-25 in the signed mcp-remote-census record and the public HF dataset csoai/mcp-remote-census; it is open by that act and is deliberately not listed above",
+    "scripts/census/reach.py": "the ranking CODE is open (Apache-2.0 intent); only its calibrated inputs are protected"
+  },
+  "allow": {
+  },
+  "content_scan_max_bytes": 2000000
+}

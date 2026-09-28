@@ -8,6 +8,16 @@ One tool, both estate signature styles, zero trust, zero network:
                             "pubkey": b64, "content_id": ...}}
                             canonical = json.dumps(body sans content_id/signature,
                             sort_keys, compact) -> sha256 == content_id -> Ed25519
+  style B-DID (board-signed signals / elo reference, 2026-09-22):
+                            {"content_id": sha256hex, "signer": "did:web:HOST#KEYID",
+                            "signature": {"did": ..., "sig_ed25519": hex, "payload_sha256": hex,
+                            ["envelope": {...content_id...}]}}
+                            canonical = compact key-sorted JSON, int-valued floats as ints
+                            (board_sign.canonical); content_id = sha256(canonical(body sans
+                            content_id/signature)). The Ed25519 signature is over the canonical
+                            BYTES of the envelope when present (envelope.content_id must equal
+                            the recomputed content_id), else over the canonical body bytes. The
+                            key is resolved from the did:web document (pin with --did-doc).
   style C (mill cards):     {"alg": "Ed25519", "body": {...}, "id": sha256hex,
                             "preimage_rule": "sha256(canonical body)",
                             "signature": hex, "did": "did:web:HOST#KEYID"}
@@ -167,6 +177,43 @@ def verify_style_c(d, did_doc_path=None):
             f"the whole body; key from {source}")
 
 
+def _canonical_board(obj):
+    """board_sign.canonical: compact, key-sorted, ensure_ascii=False, int-valued floats as ints."""
+    import math
+    def norm(o):
+        if isinstance(o, float):
+            if not math.isfinite(o):
+                raise ValueError("non-finite float")
+            return int(o) if o.is_integer() else o
+        if isinstance(o, dict):
+            return {k: norm(v) for k, v in o.items()}
+        if isinstance(o, list):
+            return [norm(v) for v in o]
+        return o
+    return json.dumps(norm(obj), sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+
+
+def verify_style_b_did(d, did_doc_path=None):
+    sig = d["signature"]
+    if sig.get("alg", "Ed25519") != "Ed25519":
+        raise SystemExit(f"GATE: unknown alg {sig.get('alg')!r} — refusing to guess.")
+    body = {k: v for k, v in d.items() if k not in ("content_id", "signature")}
+    cid = hashlib.sha256(_canonical_board(body)).hexdigest()
+    assert cid == d["content_id"], "content_id mismatch (canonical changed!)"
+    env = sig.get("envelope")
+    if env is not None:
+        assert env.get("content_id") == cid, "envelope.content_id does not commit to the body"
+        preimage = _canonical_board(env)
+        what = "canonical envelope bytes (envelope commits to content_id)"
+    else:
+        preimage = _canonical_board(body)
+        what = "canonical body bytes"
+    assert hashlib.sha256(preimage).hexdigest() == sig["payload_sha256"], "payload_sha256 mismatch"
+    pub, source = _resolve_did_web(sig["did"], did_doc_path)
+    Ed25519PublicKey.from_public_bytes(pub).verify(bytes.fromhex(sig["sig_ed25519"]), preimage)
+    return f"style-B-DID (board-signed): Ed25519 over {what}; key from {source}"
+
+
 def _selftest():
     """Prove each verdict can actually be reached — especially the failures.
 
@@ -214,6 +261,19 @@ def _selftest():
         "sig": base64.b64encode(sk.sign(b_cid.encode())).decode(),
         "pubkey": base64.b64encode(pub).decode(), "content_id": b_cid})
 
+    # style B-DID fixtures: signature over canonical bytes, key from the DID doc
+    bd_body = {"axis": "gov", "status": "TIE", "elo_top": {"elo": 1516.0, "games": 7}, "signer": did_url}
+    bd_cid = hashlib.sha256(_canonical_board(bd_body)).hexdigest()
+    style_bd = dict(bd_body, content_id=bd_cid, signature={
+        "alg": "Ed25519", "did": did_url, "sig_ed25519": sk.sign(_canonical_board(bd_body)).hex(),
+        "payload_sha256": hashlib.sha256(_canonical_board(bd_body)).hexdigest()})
+    bd_env = {"schema": "env", "content_id": bd_cid}
+    style_bd_env = dict(bd_body, content_id=bd_cid, signature={
+        "alg": "Ed25519", "did": did_url, "sig_ed25519": sk.sign(_canonical_board(bd_env)).hex(),
+        "payload_sha256": hashlib.sha256(_canonical_board(bd_env)).hexdigest(), "envelope": bd_env})
+    bd_wrongkey = dict(style_bd, signature=dict(style_bd["signature"], sig_ed25519=other.sign(_canonical_board(bd_body)).hex()))
+    bd_env_swapped = dict(style_bd_env, status="MEASURED")   # body edited; envelope still names old cid
+
     tampered = card_c()
     tampered["body"] = dict(tampered["body"], n=99)          # id no longer commits
     resigned_id = card_c()
@@ -232,6 +292,12 @@ def _selftest():
         ("valid style-B",                style_b,                                    0, "VALID"),
         ("style-B tampered",             dict(style_b, value=2),                     1, "INVALID"),
         ("unknown signature style",      {"kind": "not-signed"},                     1, "UNKNOWN"),
+        ("valid style-B-DID",            style_bd,                                   0, "VALID"),
+        ("valid style-B-DID envelope",   style_bd_env,                               0, "VALID"),
+        ("style-B-DID tampered body",    dict(style_bd, status="MEASURED"),          1, "INVALID"),
+        ("style-B-DID wrong key",        bd_wrongkey,                                1, "INVALID"),
+        ("style-B-DID envelope body edited", bd_env_swapped,                         1, "INVALID"),
+        ("style-B-DID key absent",       dict(style_bd, signature=dict(style_bd["signature"], did="did:web:example.test#nope")), 1, "GATE"),
     ]
 
     me = str(Path(__file__).resolve())
@@ -279,6 +345,8 @@ def main():
             note = verify_style_c(d, did_doc)
         elif isinstance(d.get("signature"), str) and "signer" in d:
             note = verify_style_a(d)
+        elif isinstance(d.get("signature"), dict) and "sig_ed25519" in d["signature"] and "did" in d["signature"]:
+            note = verify_style_b_did(d, did_doc)
         elif isinstance(d.get("signature"), dict) and "pubkey" in d["signature"]:
             note = verify_style_b(d)
         else:
@@ -291,6 +359,8 @@ def main():
         return 1
     if "did" in d and "body" in d:
         signer = d["did"]
+    elif isinstance(d.get("signature"), dict) and d["signature"].get("did"):
+        signer = d["signature"]["did"]
     elif "signer" in d:
         signer = d["signer"][:16]
     else:

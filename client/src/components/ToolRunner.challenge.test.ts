@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { challengeFromResult } from "@/components/ToolRunner";
+import { challengeFromResult, paidReservePreviewFromResult } from "@/components/ToolRunner";
 
 const base = { ok: false, text: "", state: "runtime_observed" as const };
 
@@ -87,5 +87,40 @@ describe("challengeFromResult", () => {
     expect(c?.payTo).toBe("0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31");
     expect(c?.amount).toBe("20000");
     expect(c?.network).toBe("eip155:8453");
+  });
+});
+
+
+describe("paid reserve disclosure", () => {
+  it("extracts a zero-card reserve and its date before any payment", () => {
+    const result = {
+      ...base,
+      structuredContent: {
+        status: "PAYMENT_REQUIRED",
+        payment_required: {
+          csoai: {
+            schema: "csoai.request-attestation/0.2",
+            preview: { signed_cards_on_file: 0, corpus_as_of: "2026-08-19T00:00:00Z" },
+          },
+        },
+      },
+    } as never;
+    expect(paidReservePreviewFromResult(result)).toEqual({
+      signedCardsOnFile: 0,
+      corpusAsOf: "2026-08-19T00:00:00Z",
+    });
+  });
+
+  it("does not invent a reserve count for another door or malformed input", () => {
+    expect(paidReservePreviewFromResult({
+      ...base, structuredContent: { payment_required: { csoai: {
+        schema: "csoai.other/1", preview: { signed_cards_on_file: 0 },
+      } } },
+    } as never)).toBeNull();
+    expect(paidReservePreviewFromResult({
+      ...base, structuredContent: { payment_required: { csoai: {
+        schema: "csoai.request-attestation/0.2", preview: { signed_cards_on_file: "0" },
+      } } },
+    } as never)).toBeNull();
   });
 });

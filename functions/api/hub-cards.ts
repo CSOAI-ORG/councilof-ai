@@ -69,7 +69,9 @@ type ParsedRows =
 
 interface Supersession {
   superseded_id: string;
-  by_id: string;
+  // Explicit null means the old card has no replacement. If the old card is
+  // indexed, a separate matching withdrawal is required before excluding it.
+  by_id: string | null;
   model: string;
   axis: string;
 }
@@ -279,13 +281,23 @@ function parseSupersessions(text: string): LedgerRead {
         reason: `invalid jsonl row ${offset + 1}: row is not an object`,
       };
     }
-    for (const field of ["superseded_id", "by_id", "model", "axis"] as const) {
+    for (const field of ["superseded_id", "model", "axis"] as const) {
       if (typeof value[field] !== "string" || !value[field].trim()) {
         return {
           ok: false,
           reason: `invalid jsonl row ${offset + 1}: ${field} must be a non-empty string`,
         };
       }
+    }
+    if (value.by_id === null) {
+      if (value.by_file !== null || typeof value.reason !== "string" || !value.reason.trim()) {
+        return {
+          ok: false,
+          reason: `invalid jsonl row ${offset + 1}: null by_id requires null by_file and a reason`,
+        };
+      }
+    } else if (typeof value.by_id !== "string" || !value.by_id.trim()) {
+      return { ok: false, reason: `invalid jsonl row ${offset + 1}: by_id must be a non-empty string or an explicit no-replacement null` };
     }
     if (value.superseded_id === value.by_id) {
       return {
@@ -295,7 +307,7 @@ function parseSupersessions(text: string): LedgerRead {
     }
     entries.push({
       superseded_id: value.superseded_id as string,
-      by_id: value.by_id as string,
+      by_id: value.by_id as string | null,
       model: value.model as string,
       axis: value.axis as string,
     });
@@ -414,7 +426,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     for (const entry of ledger.entries) {
       const predecessors = cellsById.get(entry.superseded_id) ?? [];
       if (!predecessors.length) continue;
-      const replacements = cellsById.get(entry.by_id) ?? [];
+      const replacements = entry.by_id === null ? [] : (cellsById.get(entry.by_id) ?? []);
       const expectedPair = `${entry.model}\u0000${entry.axis}`;
       const predecessorMatches = predecessors.every(
         (cell) => `${cell.model}\u0000${cell.axis}` === expectedPair,
@@ -429,6 +441,20 @@ export const onRequestGet: PagesFunction = async (ctx) => {
           ...entry,
           reason: "predecessor pair does not match ledger",
         });
+      } else if (entry.by_id === null) {
+        // A no-replacement marker can retire an observed row only through the
+        // separately checked withdrawal ledger.
+        const matchingWithdrawal = withdrawals.ok && withdrawals.entries.some(
+          (withdrawal) =>
+            withdrawal.withdrawn_id === entry.superseded_id &&
+            `${withdrawal.model}\u0000${withdrawal.axis}` === expectedPair,
+        );
+        if (!matchingWithdrawal) {
+          unresolvedSupersessions.push({
+            ...entry,
+            reason: "no replacement and no matching withdrawal record",
+          });
+        }
       } else if (!replacementMatches) {
         unresolvedSupersessions.push({
           ...entry,
@@ -445,6 +471,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     ? rawCells.filter((cell) => !(cell.card_sha256 && excludableIds.has(cell.card_sha256)))
     : rawCells;
   const supersededExcluded = ledger.ok ? rawCells.length - afterLedger.length : null;
+  const noReplacementMarkers = ledger.ok ? ledger.entries.filter((entry) => entry.by_id === null).length : null;
 
   // Withdrawal runs AFTER supersession, so a predecessor retired in favour of a card
   // that was later withdrawn stays retired: the pair then has no live card, which is
@@ -533,7 +560,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       status_is_passed_through:
         "Each row's status is exactly as published. This endpoint never upgrades a cell. A valid signature over a body that says UNMEASURED means the cell is UNMEASURED.",
       not_the_board:
-        "These cells are not the 22-axis board. The board is GET /api/gspc; quote totals.public_count.",
+        "These cells are not the GSPC board. The board is GET /api/gspc; quote totals.public_count.",
       own_fleet_is_elsewhere:
         "GET /api/findings carries the CSOAI fleet, which is a different population and is measured against the same frozen banks.",
       unreachable_is_not_empty: allIndexesRead
@@ -545,11 +572,11 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         ? `Discovered from the dataset: ${indexes.length} index file(s) published under mill-cards/.`
         : "UNCHECKABLE — the dataset listing did not answer, so this fell back to the four indexes this endpoint knows about. There may be others, so counts are not claimed complete.",
       one_cell_per_pair:
-        "A (model, axis) appears once. A predecessor is dropped only when its exact by_id replacement is observed for the same pair; unresolved supersessions withhold totals. Remaining duplicates are collapsed keeping the row from the rebuilt INDEX.jsonl.",
+        "A (model, axis) appears once. A predecessor is dropped when its exact by_id replacement is observed for the same pair, or moved to withdrawn_cells when a no-replacement marker has a matching withdrawal record. Unresolved entries withhold totals. Remaining duplicates are collapsed keeping the row from the rebuilt INDEX.jsonl.",
       superseded_ledger: ledger.ok
         ? unresolvedSupersessions.length
-          ? `Read, but ${unresolvedSupersessions.length} observed predecessor row(s) lacked an observed same-pair replacement. No unresolved predecessor was dropped and population totals are withheld.`
-          : `Read. ${supersededExcluded} served row(s) referenced a card whose exact same-pair replacement was observed and were dropped.`
+          ? `Read, but ${unresolvedSupersessions.length} observed predecessor row(s) lacked an observed same-pair replacement or matching withdrawal. No unresolved predecessor was dropped and population totals are withheld.`
+          : `Read. ${supersededExcluded} served row(s) had an observed same-pair replacement and were dropped. ${noReplacementMarkers} explicit no-replacement marker(s) were retained for the withdrawal check.`
         : `UNREADABLE (${ledger.reason}). Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.`,
       withdrawn_ledger: withdrawals.ok
         ? unresolvedWithdrawals.length
@@ -575,7 +602,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         "n_measured on /api/state → hub_census counts a DIFFERENT population (the 3M-listing " +
         "census walk) and is not this number.",
       partial_read_has_no_total: complete
-        ? "Discovery, every index, the supersession ledger and the withdrawal ledger answered, every observed predecessor had its exact same-pair replacement, and every withdrawal matched its row; counts therefore describe the observed published population."
+        ? "Discovery, every index, the supersession ledger and the withdrawal ledger answered, every observed predecessor had its exact same-pair replacement or a matching withdrawal, and every withdrawal matched its row; counts therefore describe the observed published population."
         : "Discovery, an index, the supersession or withdrawal ledger, an observed replacement, or a withdrawal's pair could not be checked, so population totals are null. counts.read_so_far describes retrieved rows only: it may omit unread rows or include unresolved predecessors, and is neither a guaranteed floor nor a complete live population.",
     },
     counts: {
@@ -588,6 +615,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       read_so_far: seen,
       // null means the ledger did not answer — NOT that nothing was superseded.
       superseded_excluded: supersededExcluded,
+      no_replacement_markers: noReplacementMarkers,
       duplicates_collapsed: duplicatesCollapsed,
       rows_served_by_indexes: rawCells.length,
       indexes_read: reached,

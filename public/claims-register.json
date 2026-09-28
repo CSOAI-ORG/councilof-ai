@@ -4,7 +4,7 @@
   "purpose": "Every material capability claim CSOAI makes on a public surface, with the evidence a stranger can check and the status that claim has actually earned. A capability we plan to build is not a capability we advertise; planned work is labelled planned.",
   "doctrine": "live = shipped and checkable today · devnet = proven on a test network only, not production · unmeasured = the thing exists but we have not measured it, and we say so rather than implying we have · planned = intended, not built or not shipped · retired = previously published, now withdrawn (with the reason).",
   "how_to_challenge": "If a claim here does not match what you can verify, that is a defect. Report it at nicholas@csoai.org and it goes to the corrections feed at /api/corrections.",
-  "generated_at": "2026-09-04",
+  "generated_at": "2026-09-23",
   "statuses": [
     "live",
     "devnet",
@@ -15,14 +15,16 @@
   "claims": [
     {
       "id": "CR-001",
-      "claim": "Every published measurement card is signed with Ed25519 over a SHA-256 hash chain and can be verified offline against did:web:csoai.org, without our servers or our permission.",
+      "claim": "Cards in /signed/card_index.json are individually Ed25519-signed over their canonical body bytes. Each card ID is the SHA-256 of those bytes, and its signed body carries a prev link. A separately signed /signed/chain.json manifest declares the sequence for offline verification against the pinned did:web:csoai.org card-attestation key.",
       "status": "live",
       "evidence": [
         "/gspc-verify",
         "/signed/card_index.json",
+        "/signed/chain.json",
+        "/signed/HOW-TO-VERIFY.md",
         "/.well-known/did.json"
       ],
-      "notes": "This is the whole trust path. No blockchain and no timestamp authority sits in it."
+      "notes": "This claim is scoped to the indexed /signed/cards corpus. The index is not itself a signed sequence proof: verify the manifest and card bodies, compare predecessor links, and reconcile their IDs. This proves issuer custody and the declared order, not measurement correctness or an independent timestamp or Bitcoin anchor."
     },
     {
       "id": "CR-002",

@@ -1,0 +1,55 @@
+{
+  "name": "@csoai/ai-sdk-gspc",
+  "version": "0.1.0",
+  "description": "Vercel AI SDK tool for the Council of AI GSPC measurement board.",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./client": "./gspc-client.js"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "gspc-client.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "peerDependencies": {
+    "ai": ">=5",
+    "zod": ">=3.23",
+    "@csoai/layer0": ">=0.2.0"
+  },
+  "peerDependenciesMeta": {
+    "@csoai/layer0": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "csoai",
+    "gspc",
+    "layer0",
+    "measurement",
+    "mcp",
+    "ai-sdk",
+    "vercel"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://councilof.ai",
+  "csoai": {
+    "doctrine": {
+      "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+      "source": "docs/DOCTRINE.md",
+      "human_page": "https://councilof.ai/doctrine/"
+    },
+    "door": "https://councilof.ai/mcp",
+    "generator": "scripts/harness-x/render.mjs"
+  }
+}

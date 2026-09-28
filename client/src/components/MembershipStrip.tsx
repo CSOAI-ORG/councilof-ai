@@ -50,6 +50,9 @@ export interface MembershipsManifest {
   honesty_line: string;
   groups: { id: string; label: string }[];
   rows: MembershipRow[];
+  /** Bodies a reader might expect in the table and will not find, each with the reason. */
+  excluded_note?: string;
+  excluded?: { org: string; why: string; reason?: string; evidence?: string }[];
 }
 
 export const MEMBERSHIPS = manifest as unknown as MembershipsManifest;
@@ -74,8 +77,14 @@ export function evidenceHref(row: MembershipRow): string {
 
 /**
  * badgeRows — the compact home row: one pill per body the owner asked to see on the first screen
- * (Linux Foundation, OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each. Derived
- * from the manifest by predicate, so a body that leaves the manifest leaves the row.
+ * (Linux Foundation, OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each, plus one
+ * pill per remaining group so the hero shows the whole footprint rather than only the standards
+ * bodies. Derived from the manifest by predicate, so a body that leaves the manifest leaves the
+ * row, and every count is computed from the rows — none is typed.
+ *
+ * Filings are deliberately NOT given a hero pill. A consultation response is a submission, and a
+ * submission beside a row of memberships reads as a standing. It stays on /memberships, where the
+ * row says what it is.
  */
 export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string; kind: MembershipKind; href: string; count?: number }[] {
   const std = m.rows.filter((r) => r.group === "standards");
@@ -85,6 +94,15 @@ export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string
   };
   const w3c = std.filter((x) => /^W3C /.test(x.org));
   const ietf = std.filter((x) => /^IETF /.test(x.org));
+  /** One pill for a whole group, labelled by the group and standing by its commonest kind. */
+  const group = (id: string, label: string) => {
+    const rows = m.rows.filter((r) => r.group === id);
+    if (!rows.length) return [];
+    const tally = new Map<MembershipKind, number>();
+    for (const r of rows) tally.set(r.kind, (tally.get(r.kind) ?? 0) + 1);
+    const kind = [...tally.entries()].sort((a, b) => b[1] - a[1])[0][0];
+    return [{ label, kind, href: `/memberships#${id}`, count: rows.length }];
+  };
   return [
     ...one(/^The Linux Foundation/, "Linux Foundation"),
     ...one(/^Open Secure AI Alliance/, "Open Secure AI Alliance"),
@@ -92,7 +110,16 @@ export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string
     ...one(/^Decentralized Identity Foundation/, "DIF"),
     ...(w3c.length ? [{ label: "W3C Community Groups", kind: w3c[0].kind, href: "/memberships#standards", count: w3c.length }] : []),
     ...(ietf.length ? [{ label: "IETF", kind: "participant" as MembershipKind, href: "/memberships#standards", count: ietf.length }] : []),
+    // Every other declared group gets one pill, derived. A group added to the manifest appears
+    // here without anyone editing this file; `standards` is already covered by the named pills
+    // above, and `filings` is excluded on purpose (see the note on this function).
+    ...m.groups.filter((g) => g.id !== "standards" && g.id !== "filings").flatMap((g) => group(g.id, g.label)),
   ];
+}
+
+/** True when a pill's href leaves the site. wouter's Link pushes history and would break these. */
+export function isExternalHref(href: string): boolean {
+  return /^https?:\/\//i.test(href);
 }
 
 export function groupedRows(m: MembershipsManifest = MEMBERSHIPS): { id: string; label: string; rows: MembershipRow[] }[] {
@@ -145,14 +172,43 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
 
   if (variant === "badges") {
     const badges = badgeRows();
+    const pill =
+      "inline-flex max-w-full items-center gap-x-1.5 whitespace-nowrap rounded-full border border-border px-3 py-1 text-foreground/80 transition hover:border-foreground/40 hover:text-foreground";
     return (
-      <div data-testid="membership-strip-badges" className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[12px]">
-        {badges.map((b) => (
-          <Link key={b.label} href={b.href} className="rounded-full border border-border px-3 py-1 text-foreground/80 hover:text-foreground">
-            {b.label} · {KIND_LABEL[b.kind]}{b.count && b.count > 1 ? ` · ${b.count}` : ""}
-          </Link>
-        ))}
-        <Link href="/memberships" className="px-2 py-1 underline-offset-2 hover:underline">Where we take part →</Link>
+      <div data-testid="membership-strip-badges" className="mt-4">
+        <ul className="flex list-none flex-wrap items-center justify-center gap-1.5 p-0 text-[12px] sm:gap-2">
+          {badges.map((b) => {
+            const label = (
+              <>
+                <span className="truncate font-medium">{b.label}</span>
+                <span aria-hidden="true" className="text-foreground/40">·</span>
+                <span className="text-foreground/70">{KIND_LABEL[b.kind]}</span>
+                {b.count && b.count > 1 ? <span className="text-foreground/50">· {b.count}</span> : null}
+              </>
+            );
+            return (
+              <li key={b.label} className="max-w-full">
+                {isExternalHref(b.href) ? (
+                  <a href={b.href} rel="noopener noreferrer" className={pill}>
+                    {label}
+                  </a>
+                ) : (
+                  <Link href={b.href} className={pill}>
+                    {label}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
+          <li>
+            <Link href="/memberships" className="inline-block px-2 py-1 underline-offset-2 hover:underline">
+              Where we take part →
+            </Link>
+          </li>
+        </ul>
+        <p className="mt-2 px-4 text-center text-[11px] leading-snug text-muted-foreground" data-testid="membership-strip-badges-honesty">
+          {HONESTY_LINE}
+        </p>
       </div>
     );
   }

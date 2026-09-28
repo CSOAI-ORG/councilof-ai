@@ -1,23 +1,63 @@
 {
  "axis": "agi",
- "content_id": "2e7ff8f640f7c8fce1d6043aba19cb0cf48add65112f2c6dd8f2b606941d1717",
+ "axis_status": "MEASURED",
+ "content_id": "83a2843b229b5231807e0c8c68f735bd89a3cab99b42fbaac997a7cefe0334f9",
+ "elo_decided_games": 3,
  "elo_leader": null,
  "elo_leader_score": null,
+ "elo_ranked_models": 0,
+ "elo_runner_up": null,
+ "elo_separation": "UNMEASURED",
+ "elo_source": {
+  "content_id": "b126b711de15662514cac4f462e461f2cbe46b20e25452da609ff3daddab3f40",
+  "generated": "2026-09-24T16:42:59Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 194,
+ "elo_top": null,
+ "evidence_relation": "SEPARATE_EVIDENCE",
+ "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader gemma3:12b is NOT among the models ranked here (none). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
  "games_leader": null,
- "generated": "2026-08-24T09:11:56Z",
+ "generated": "2026-09-24T16:43:00Z",
  "majority_baseline": 0.5278,
  "models": 19,
  "not_a_certification": true,
- "note": "From the live axis register + signed per-axis Elo leaderboard. Honest signals only; thin-n axes say so. Measurement, not certification.",
- "register": "MEASURED",
- "schema": "csoai.axis-signal/0.1",
+ "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds (deterministic grader on frozen banks). Thin-n axes say so. scored_items/models/majority_baseline are REGISTER fields about the axis's frozen bank, not these rounds. Measurement, not certification.",
+ "rank_rule": "arena rule: >=2 models with >=5 decided games each and ONE model's Wilson 95% win-rate CI lower bound above EVERY other ranked model's upper bound; else TIE. UNMEASURED = not enough to rank. On win-rate intervals, never path-dependent Elo order.",
+ "register": "TIE",
+ "schema": "csoai.axis-signal/0.4",
  "scored_items": 36,
+ "separation_authority": {
+  "board_axis": "safety",
+  "board_bench": "DefBench",
+  "board_leader": "gemma3:12b (base model)",
+  "board_n": 36,
+  "board_separation": "TIE",
+  "note": "This axis's separation authority. status/register are ITS verdict. Where elo_separation differs, the board governs the AXIS separation; this file governs only the arena rounds.",
+  "surface": "GET /api/gspc"
+ },
+ "separation_of": "recorded pairwise arena rounds, NOT the axis's frozen bank; never the axis's verdict.",
  "signature": {
   "alg": "Ed25519",
-  "content_id": "2e7ff8f640f7c8fce1d6043aba19cb0cf48add65112f2c6dd8f2b606941d1717",
-  "note": "Ed25519 over canonical content_id. Verify: recompute, sha256=content_id, ed25519==sig with PUBKEY.",
-  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "sig": "f6Q9Sh08l/Qo8D46zFNz9EonP26UV/Hae0GJA8g5q14cqGfaN7aHEAREwlID3cbe/UL4zPl0cKpzKD0oi1jmDA=="
+  "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
+  "content_id": "83a2843b229b5231807e0c8c68f735bd89a3cab99b42fbaac997a7cefe0334f9",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "payload_sha256": "83a2843b229b5231807e0c8c68f735bd89a3cab99b42fbaac997a7cefe0334f9",
+  "preimage": "canonical(body minus content_id, signature)",
+  "sig_ed25519": "84096abe5799146cfa0879155d45fed8d56d79fe122f08caa50052d354fc5ae91402575f2d933b2de4c4a7881c582610f1dfef923e49a9fa9336d31960e3c509",
+  "signed_at": "2026-09-24T16:43:01.239Z",
+  "signer_auth": "pod-token",
+  "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
- "status": "MEASURED"
+ "signer": "did:web:csoai.org#board-attestation-1",
+ "status": "TIE",
+ "supersedes": {
+  "content_id": "103d26a68152521cdcf10644df85c0987e94aec66e59a65a4015f38c585fe9fe",
+  "elo_leader_then": null,
+  "generated": "2026-09-24T15:38:15Z",
+  "note": "superseded, never edited; new bytes, new signature",
+  "signer": "did:web:csoai.org#board-attestation-1",
+  "status_then": "TIE"
+ }
 }

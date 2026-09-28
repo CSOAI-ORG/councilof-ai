@@ -17,6 +17,8 @@
  */
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import HomeGspcBoard, {
   BoardStrip,
   HubResultsBoard,
@@ -24,10 +26,11 @@ import HomeGspcBoard, {
   SPACE_PAGE_URL,
   STRIP_N,
   hubAxes,
+  hubModelObservations,
   leaderStateOf,
   measuredHubCells,
   separationLabel,
-  topHubModels,
+  type HubCell,
   type HubCardsPayload,
   visibleAxes,
 } from "./HomeGspcBoard";
@@ -121,6 +124,30 @@ const hubPayload: HubCardsPayload = {
   ],
 };
 
+// These are two public Governance cards from different frozen banks and instruments.
+// The Hub feed omits those two hashes, so the UI cannot infer comparability.
+const mixedBankCells: (HubCell & { bank_sha256: string; instrument_sha256: string })[] = [
+  {
+    model: "ollama:qwen3:8b@sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    axis: "governance", status: "MEASURED", accuracy: 0.5781, n: 237,
+    card_sha256: "35c1c79d2c0f7a19dcdedd8ab5ae3ed17f93e127df95b9d8e4c080c08313c816",
+    card_url: "https://councilof.ai/interop/mill-cards-signed/signed-governan-35c1c79d2c0f.json",
+    signed: true,
+    bank_sha256: "b93f9808f01416737a5944fec0ab8c3eda1dbba808daf7dda33a516b0cd61997",
+    instrument_sha256: "26748039926077a25f0f6b10f3ed5fd58c0c727af5bfd5f996ec8f569d68c95c",
+  },
+  {
+    model: "Qwen/Qwen3-4B",
+    axis: "governance", status: "MEASURED", accuracy: 0.6667, n: 30,
+    card_sha256: "bd8ab023dec0dc98d177e3f07dd92868b438ac95861a955bbac4aefdac3a035a",
+    card_url: "https://councilof.ai/interop/mill-cards-signed/signed-governan-bd8ab023dec0.json",
+    signed: true,
+    bank_sha256: "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+    instrument_sha256: "86216fbb18db98165e7b2feda74f90d89d05fcd8a0208aed82fee37956d8a659",
+  },
+];
+const mixedBankPayload: HubCardsPayload = { counts: { complete: true, measured: 2 }, cells: mixedBankCells };
+
 const rowCount = (html: string) => (html.match(/data-axis-row="/g) ?? []).length;
 
 async function loadThroughMockedFetch(): Promise<GspcPayload> {
@@ -133,6 +160,20 @@ async function loadThroughMockedFetch(): Promise<GspcPayload> {
 
 describe("HomeGspcBoard (mocked /api/gspc)", () => {
   afterEach(() => vi.unstubAllGlobals());
+
+  it("describes the actual attestation request reached from the live board", () => {
+    const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
+    const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
+    const seo = JSON.parse(readFileSync(resolve(__dirname, "../../data/seo-head.json"), "utf8"));
+    expect(app).toContain('if (["/assess", "/assessment", "/readiness-assessment"].includes(path))');
+    expect(app).toContain('<DashboardDoor defaultTab="measured" />');
+    expect(html).toContain('href="/assess"');
+    expect(html).toContain("Inspect the attestation request");
+    expect(html).toContain("it does not start a new GSPC run");
+    expect(html).not.toContain("Need a new scoped run?");
+    expect(seo.routes["/assess"].description).toContain("does not trigger a new GSPC run");
+    expect(seo.routes["/assess"].description).not.toContain("Runs are metered per call");
+  });
 
   it("quotes the mocked totals.public_count verbatim, read through the shared loader", async () => {
     const data = await loadThroughMockedFetch();
@@ -250,6 +291,9 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
   it("table view carries the same rows", () => {
     const table = renderToStaticMarkup(<BoardStrip axes={payload.axes as GspcAxis[]} initiallyExpanded initialView="table" />);
     expect(table).toContain('data-testid="board-table"');
+    expect(table).toContain('aria-label="Scrollable GSPC axis table"');
+    expect(table).toContain('tabindex="0"');
+    expect(table).toContain("Swipe sideways to read all columns");
     expect(rowCount(table)).toBe(payload.axes!.length);
     expect(table).toContain('data-leader-state="EXCLUDED_OWN_MODEL"');
     expect(table).toContain("deterministic facts · no leader accuracy");
@@ -261,6 +305,10 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("Signed model-card matrix");
     expect(html).toContain('href="/api/gspc"');
     expect(html).toContain("Measurement, not certification. Empty stays empty.");
+    expect(html).toContain("The evidence root is signed separately from this live board.");
+    expect(html).toContain('href="/api/state"');
+    expect(html).toContain("the preserved signed board snapshot");
+    expect(html).not.toContain("Root is signed. Witnesses bind");
     expect(html).toContain("Witnesses bind exact root bytes and may still be pending.");
     expect(html).not.toContain("Root is signed and witnessed.");
     expect(html).not.toMatch(/sovereign|ceasai|byzantine|\bBFT\b/i);
@@ -283,18 +331,32 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain("publisher/model-1");
     expect(html).not.toContain("publisher/pending");
     expect(html.match(/data-hub-model-row=/g) ?? []).toHaveLength(9);
-    expect(html).toContain("Ordering is not a separation test");
-    expect(html).toContain("deterministic fact axes do not rank models");
+    expect(html).toContain("not a top-nine ranking");
+    expect(html).toContain("deterministic fact axes do not score models");
   });
 
-  it("filters Hub rows by exact published state and sorts without fusing instruments", () => {
+  it("filters Hub rows by exact published state and orders observations by model, never score", () => {
     expect(hubAxes(hubPayload)).toEqual(["gspc-governance", "gspc-safety"]);
     expect(measuredHubCells(hubPayload)).toHaveLength(12);
-    const leaders = topHubModels(hubPayload, "gspc-safety");
-    expect(leaders).toHaveLength(9);
-    expect(leaders[0].accuracy).toBe(1);
-    expect(leaders[1].accuracy).toBe(1);
-    expect(leaders.every((cell) => cell.axis === "gspc-safety" && cell.status === "MEASURED" && cell.signed)).toBe(true);
+    const observations = hubModelObservations(hubPayload, "gspc-safety");
+    expect(observations).toHaveLength(9);
+    expect(observations[0].model).toBe("publisher/model-1");
+    expect(observations.every((cell) => cell.axis === "gspc-safety" && cell.status === "MEASURED" && cell.signed)).toBe(true);
+  });
+
+  it("does not rank real Governance cards from different banks and keeps both evidence links", () => {
+    expect(mixedBankCells[0].bank_sha256).not.toBe(mixedBankCells[1].bank_sha256);
+    expect(mixedBankCells[0].instrument_sha256).not.toBe(mixedBankCells[1].instrument_sha256);
+    const observations = hubModelObservations(mixedBankPayload, "governance");
+    expect(observations.map((cell) => cell.model)).toEqual(mixedBankCells.map((cell) => cell.model));
+    expect(observations[0].accuracy).toBeLessThan(observations[1].accuracy!);
+    const html = renderToStaticMarkup(<HubResultsBoard data={mixedBankPayload} />);
+    expect(html).not.toContain(">Rank</th>");
+    expect(html).not.toContain("Top nine by published score");
+    expect(html).toContain("not ranked or directly comparable");
+    expect(html).toContain("Check each signed card for its bank and instrument hashes");
+    for (const cell of mixedBankCells) expect(html).toContain(`href="${cell.card_url}"`);
+    expect(html.indexOf('data-hub-model-row="ollama:')).toBeLessThan(html.indexOf('data-hub-model-row="Qwen/'));
   });
 
   it("withholds Hub population totals when an index read is incomplete", () => {

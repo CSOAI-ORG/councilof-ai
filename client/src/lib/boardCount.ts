@@ -56,6 +56,21 @@ export interface FamilyCount {
   sentence: string;
 }
 
+/** Instrument kinds across all families; a GSPC-family fact run is still a fact run. */
+export interface BoardKindSplit {
+  comparison_axes: number;
+  fact_runs: number;
+}
+
+/** Use axis kinds, not family totals: effect-binding is a GSPC-family fact run. */
+export function boardKindSplitFromPayload(payload: unknown): BoardKindSplit | null {
+  const axes = (payload as { axes?: unknown })?.axes;
+  if (!Array.isArray(axes) || axes.length === 0) return null;
+  const comparison_axes = axes.filter((axis) => axis?.kind === "model-comparison").length;
+  const fact_runs = axes.filter((axis) => axis?.kind === "deterministic-facts").length;
+  return comparison_axes + fact_runs === axes.length ? { comparison_axes, fact_runs } : null;
+}
+
 export interface BoardCount {
   /** Slots on the board. NOT a count of measurements. */
   axes: number;
@@ -96,6 +111,40 @@ function grammarSentence(axes: number, measured: number, unmeasured: number): st
 
 const observed = (facts as any)?.counts?.axis_count?.observed ?? {};
 
+const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+const str = (v: unknown): string | null => (typeof v === "string" && v.trim() ? v.trim() : null);
+
+/**
+ * The raw recorded observation: every field copied VERBATIM off GET /api/gspc
+ * totals by scripts/refresh-board-observation.mjs (the block's only producer).
+ * `null` means the endpoint did not publish that field when it was read — a
+ * surface then shows nothing for it, never a typed stand-in.
+ */
+export const BOARD_OBSERVATION = {
+  observed_at: str(observed.observed_at) ?? "",
+  public_count: str(observed.value),
+  axes: num(observed.axes),
+  measured_axes: num(observed.measured_axes),
+  unmeasured_axes: num(observed.unmeasured_axes),
+  quotable_axes: num(observed.quotable_axes),
+  public_leader_count: num(observed.public_leader_count),
+  model_fleets: num(observed.model_fleets),
+  fact_runs: num(observed.fact_runs),
+  items: num(observed.items),
+  lid: str(observed.lid),
+} as const;
+
+/** ISO date (YYYY-MM-DD) the observation was recorded. Say it when you show the fallback. */
+export const BOARD_OBSERVED_AT: string = BOARD_OBSERVATION.observed_at;
+
+/**
+ * The board's own lid sentence (totals.lid) as last observed. Quoted only until
+ * the live board answers; nothing here composes a lid from typed numbers, and
+ * when no lid was observed the fallback names the field instead of a count.
+ */
+export const BOARD_LID_OBSERVED: string =
+  BOARD_OBSERVATION.lid ?? "Lid: GET /api/gspc totals.lid (not yet observed).";
+
 /**
  * The last recorded observation of the board, read out of the facts ledger.
  * Not an authority: `live` is false and the endpoint always wins.
@@ -108,8 +157,8 @@ export const BOARD_COUNT_OBSERVED: BoardCount = {
     typeof observed.value === "string" && observed.value.trim()
       ? observed.value
       : publicCountSentence(Number(observed.axes) || 0, Number(observed.measured_axes) || 0),
-  public_leader_count: null,
-  lid: null,
+  public_leader_count: BOARD_OBSERVATION.public_leader_count,
+  lid: BOARD_OBSERVATION.lid,
   count_grammar: grammarSentence(
     Number(observed.axes) || 0,
     Number(observed.measured_axes) || 0,

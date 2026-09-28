@@ -1,0 +1,56 @@
+{
+ "state": "CLAIM_MEASURED",
+ "evidence_state": "MEASURED",
+ "measured_at": "2026-09-24T15:30:41Z",
+ "method": "enumerate every page of the two public, keyless x402 discovery indexes (Coinbase CDP Bazaar at limit=100 per page, PayAI at limit=1000 per page) to the total each index reports, and select the resources whose URL host is one of the subject's declared hosts. Each index is held by its facilitator, not by the subject",
+ "window": "each index as served during this run; the read instants are in denominator",
+ "denominator": {
+  "cdp": {
+   "resources_read": "16888",
+   "reported_total": "16888",
+   "complete": true,
+   "read_utc": "2026-09-24T15:30:31Z"
+  },
+  "payai": {
+   "resources_read": "6871",
+   "reported_total": "6871",
+   "complete": true,
+   "read_utc": "2026-09-24T15:30:41Z"
+  }
+ },
+ "result": {
+  "subject": "RentAHuman",
+  "hosts_searched": [
+   "rentahuman.ai",
+   "www.rentahuman.ai",
+   "api.rentahuman.ai"
+  ],
+  "resources_listed_on_subject_hosts": "0",
+  "status": "NOT_FOUND_IN_INDEXES",
+  "indexes_read_completely": true,
+  "per_index": {
+   "cdp": [],
+   "payai": []
+  },
+  "n": 2
+ },
+ "sources": [
+  {
+   "url": "https://api.cdp.coinbase.com/platform/v2/x402/discovery/resources",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:30:31Z",
+   "note": "169 page(s), 16888 resource(s) of a reported 16888; page digests are in the lane evidence index"
+  },
+  {
+   "url": "https://facilitator.payai.network/discovery/resources",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:30:41Z",
+   "note": "7 page(s), 6871 resource(s) of a reported 6871; page digests are in the lane evidence index"
+  }
+ ],
+ "does_not_prove": [
+  "that the subject does or does not accept x402 payments. A discovery index lists a resource after it has been registered with, or settled through, that facilitator with discovery metadata; a working x402 endpoint that settles elsewhere or omits the metadata is not listed",
+  "NOT_FOUND_IN_INDEXES is a fact about two indexes at one time, not an absence of the rail and not a finding that any statement is false",
+  "that a listed resource settles, delivers, or is safe to pay. A listing is not a settlement"
+ ]
+}

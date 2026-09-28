@@ -1,0 +1,35 @@
+# runtime probes, pod 1l6y59gv9wmgif, 2026-09-25T07:51:35Z
+## host
+Linux 6.17.0-35-generic x86_64
+CapEff:	00000000a80405fb
+CapBnd:	00000000a80405fb
+NoNewPrivs:	0
+Seccomp:	2
+Seccomp_filters:	1
+ls: cannot access '/dev/kvm': No such file or directory
+docker absent
+podman absent
+kubectl absent
+## unshare
+unshare: unshare failed: Operation not permitted
+unshare: unshare failed: Operation not permitted
+## openshell-sandbox 0.0.116 standalone (--policy-rules/--policy-data)
+2026-09-25T07:51:35.763Z OCSF CONFIG:CONFIGURED [INFO] OPA runtime binary identity mode configured [source:files require_binary_identity:true] [source:files]
+2026-09-25T07:51:35.769Z OCSF CONFIG:ENRICHED [INFO] Enriched policy with baseline filesystem paths for proxy mode
+2026-09-25T07:51:35.769Z OCSF CONFIG:CREATING [INFO] Creating network namespace [ns:sandbox-a335a4f6 host_veth:veth-h-a335a4f6 sandbox_veth:veth-s-a335a4f6]
+Error:   × Network namespace creation failed and proxy mode requires isolation.
+  │ Ensure CAP_NET_ADMIN and CAP_SYS_ADMIN are available and iproute2 is
+  │ installed. Error: /usr/sbin/ip netns add sandbox-a335a4f6 failed: mount
+  │ --make-shared /run/netns failed: Operation not permitted
+
+## openshell-sandbox 0.0.117-dev.289 capability-probe (uid 999, CapBnd=0, NNP=1)
+{"qualified":true,"uid":999,"gid":999,"supplementary_groups":[],"capabilities_zero":true,"no_new_privileges":true,"sandbox_dumpable":false,"child_dumpable":true,"child_core_limit_zero":true,"same_uid_self_protection":true,"landlock_abi":7,"landlock_allow_deny":true,"seccomp_notification":true,"seccomp_addfd_send":true,"task_memory_copy":true,"connected_send_fast_path":true,"socket_virtualization":true,"dns_relay_bind":true,"udp_dns_round_trip":true,"tcp_dns_round_trip":true,"tcp_allow_round_trip":true,"tcp_deny_round_trip":true,"wait_killable_recv":true,"seccomp_listener_mode":"killable","task_memory_writes_disabled":false}
+
+## bubblewrap 0.4.0
+bwrap: Creating new namespace failed: Operation not permitted
+## firejail 0.9.62 --net=none (FAILS OPEN)
+Warning: an existing sandbox was detected. curl will run without any additional sandboxing features
+http=200
+## gVisor runsc release-20260921.0
+Error executing inside namespace: re-executing self: fork/exec /proc/self/exe: operation not permitted
+creating container: cannot create gofer process: gofer: fork/exec /proc/self/exe: operation not permitted

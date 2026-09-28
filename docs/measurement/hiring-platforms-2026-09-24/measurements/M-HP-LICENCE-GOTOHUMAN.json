@@ -1,0 +1,43 @@
+{
+ "state": "CLAIM_MEASURED",
+ "measured_at": "2026-09-24T15:30:42Z",
+ "method": "read the unauthenticated GitHub REST record for the named repository and take the SPDX identifier GitHub's own licence detector reports for it",
+ "window": "the repository as GitHub served it at 2026-09-24T15:30:42Z",
+ "denominator": {
+  "repositories_checked": 1
+ },
+ "result": {
+  "repository": "gotohuman/gotohuman-mcp-server",
+  "asserted": "MIT",
+  "assertion_kind": "spdx-identifier",
+  "spdx_reported_by_github": "MIT",
+  "matches_asserted": true,
+  "licence_file_path": "LICENSE",
+  "licence_file_opening_text": "MIT License Copyright (c) 2025 gotoHuman Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge",
+  "n": 1
+ },
+ "sources": [
+  {
+   "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:30:42Z",
+   "response_bytes": 5676,
+   "response_sha256": "0252a5ea9c4f87c8d4f47e900dd56d154a813c7d9fc71ad50f8ea62115b391b4",
+   "note": "GitHub public repository record for gotohuman/gotohuman-mcp-server"
+  },
+  {
+   "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server/license",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:30:42Z",
+   "response_bytes": 2440,
+   "response_sha256": "3469a813d2f92b79c5d7a16db9ac7e143dec6d0328bf57ce6f4fc704c668c08a",
+   "note": "the LICENCE file GitHub detects in gotohuman/gotohuman-mcp-server"
+  }
+ ],
+ "does_not_prove": [
+  "that every file in the repository carries that licence; GitHub's detector reads the repository licence file and is a heuristic over it",
+  "that a detector result of NOASSERTION or 'Other' indicates the asserted licence is wrong. GitHub reports that value for any repository whose licensing its heuristic cannot reduce to a single SPDX identifier, which routinely includes repositories that carry a standard licence plus a second licence for part of the tree. The licence file text is recorded beside the detector result for exactly that reason",
+  "that the vendor product, the hosted service or any other repository is under that licence",
+  "anything about whether the software works, is maintained, or is safe to use"
+ ]
+}

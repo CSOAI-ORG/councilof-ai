@@ -1,0 +1,168 @@
+{
+ "state": "CLAIM_MEASURED",
+ "evidence_state": "MEASURED",
+ "measured_at": "2026-09-24T15:27:36Z",
+ "method": "read the official MCP registry search API for the term (keyless), filter to the named server where one is given, and record every version entry and the repository URL it declares; read the npm registry document and the npm downloads API for the package the entry names; read the unauthenticated GitHub REST record for every declared repository. Each of those records is held by the registry or code host, not by the subject",
+ "window": "the registries as served at measured_at; npm downloads over the window npm states in the result",
+ "denominator": {
+  "registries_read": 2,
+  "declared_repositories": 1
+ },
+ "result": {
+  "subject": "gotoHuman",
+  "mcp_registry_search_term": "gotohuman",
+  "mcp_registry_entries_matching": "0",
+  "mcp_registry_latest_version": null,
+  "mcp_registry_latest_published_utc": null,
+  "mcp_registry_declared_repositories": [
+   "https://github.com/gotohuman/gotohuman-mcp-server"
+  ],
+  "declared_repositories_readable_by_unauthenticated_reader": "1",
+  "declared_repositories_not_served": "0",
+  "n": 1,
+  "npm_package": "@gotohuman/mcp-server",
+  "npm_latest": "0.2.2",
+  "npm_versions_published": "4",
+  "npm_first_published_utc": "2025-04-24T21:57:41.439Z",
+  "npm_downloads_last_month": "206",
+  "npm_downloads_last_month_window": [
+   "2026-08-23",
+   "2026-09-21"
+  ]
+ },
+ "registry": {
+  "evidence_state": "MEASURED",
+  "term": "gotohuman",
+  "name_filter": null,
+  "entries_returned_by_search": 0,
+  "entries_matching_name": 0,
+  "next_cursor": null,
+  "entries": [],
+  "source": {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?search=gotohuman",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:35Z",
+   "response_bytes": 38,
+   "response_sha256": "bd77acb780201187e66256677f13e4145d6839a056c477181355b19589b40f23",
+   "note": "official MCP registry search for 'gotohuman'"
+  }
+ },
+ "npm": {
+  "evidence_state": "MEASURED",
+  "package": "@gotohuman/mcp-server",
+  "latest": "0.2.2",
+  "versions_published": 4,
+  "first_published_utc": "2025-04-24T21:57:41.439Z",
+  "last_modified_utc": "2026-06-01T23:45:39.069Z",
+  "manifest_licence_field": "MIT",
+  "manifest_repository_field": null,
+  "deprecated_latest": null,
+  "source": {
+   "url": "https://registry.npmjs.org/@gotohuman%2fmcp-server",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:36Z",
+   "response_bytes": 11067,
+   "response_sha256": "d6165f0b3a89d283a931df3f43d56998fe1293d0a7d9c2b28f64956a2d6d3a07",
+   "note": "npm registry document for @gotohuman/mcp-server"
+  },
+  "note": "maintainer names and e-mail addresses in the registry document are personal data and are not carried here",
+  "downloads": {
+   "last-week": {
+    "downloads": 38,
+    "start": "2026-09-15",
+    "end": "2026-09-21"
+   },
+   "last-month": {
+    "downloads": 206,
+    "start": "2026-08-23",
+    "end": "2026-09-21"
+   }
+  },
+  "download_sources": [
+   {
+    "url": "https://api.npmjs.org/downloads/point/last-week/@gotohuman/mcp-server",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:27:36Z",
+    "response_bytes": 90,
+    "response_sha256": "2d8b3afe29419ab5ea1a85018ef2035b691baf8d412a0281718e32cb5afef751",
+    "note": "npm downloads last-week for @gotohuman/mcp-server"
+   },
+   {
+    "url": "https://api.npmjs.org/downloads/point/last-month/@gotohuman/mcp-server",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:27:36Z",
+    "response_bytes": 91,
+    "response_sha256": "689fe04d6211c010b4ccd2adaa045a86b9e9fa66d6d262fa849bf1ea58fef379",
+    "note": "npm downloads last-month for @gotohuman/mcp-server"
+   }
+  ]
+ },
+ "repositories": [
+  {
+   "declared_url": "https://github.com/gotohuman/gotohuman-mcp-server",
+   "repository": "gotohuman/gotohuman-mcp-server",
+   "evidence_state": "MEASURED",
+   "stars": 52,
+   "forks": 10,
+   "licence_spdx_reported_by_github": "MIT",
+   "archived": false,
+   "pushed_at": "2026-06-01T23:44:53Z",
+   "source": {
+    "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:27:36Z",
+    "response_bytes": 5676,
+    "response_sha256": "0252a5ea9c4f87c8d4f47e900dd56d154a813c7d9fc71ad50f8ea62115b391b4",
+    "note": "GitHub public repository record for gotohuman/gotohuman-mcp-server"
+   }
+  }
+ ],
+ "sources": [
+  {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?search=gotohuman",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:35Z",
+   "response_bytes": 38,
+   "response_sha256": "bd77acb780201187e66256677f13e4145d6839a056c477181355b19589b40f23",
+   "note": "official MCP registry search for 'gotohuman'"
+  },
+  {
+   "url": "https://registry.npmjs.org/@gotohuman%2fmcp-server",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:36Z",
+   "response_bytes": 11067,
+   "response_sha256": "d6165f0b3a89d283a931df3f43d56998fe1293d0a7d9c2b28f64956a2d6d3a07",
+   "note": "npm registry document for @gotohuman/mcp-server"
+  },
+  {
+   "url": "https://api.npmjs.org/downloads/point/last-week/@gotohuman/mcp-server",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:36Z",
+   "response_bytes": 90,
+   "response_sha256": "2d8b3afe29419ab5ea1a85018ef2035b691baf8d412a0281718e32cb5afef751",
+   "note": "npm downloads last-week for @gotohuman/mcp-server"
+  },
+  {
+   "url": "https://api.npmjs.org/downloads/point/last-month/@gotohuman/mcp-server",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:36Z",
+   "response_bytes": 91,
+   "response_sha256": "689fe04d6211c010b4ccd2adaa045a86b9e9fa66d6d262fa849bf1ea58fef379",
+   "note": "npm downloads last-month for @gotohuman/mcp-server"
+  },
+  {
+   "url": "https://api.github.com/repos/gotohuman/gotohuman-mcp-server",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:36Z",
+   "response_bytes": 5676,
+   "response_sha256": "0252a5ea9c4f87c8d4f47e900dd56d154a813c7d9fc71ad50f8ea62115b391b4",
+   "note": "GitHub public repository record for gotohuman/gotohuman-mcp-server"
+  }
+ ],
+ "does_not_prove": [
+  "that the MCP server works, is safe, or does what the subject says it does. A registry entry records that a publisher who controls the namespace submitted metadata; the registry does not test the server",
+  "that any agent has hired any human through this server. npm download counts include CI systems, mirrors and caches and are not users, installs or transactions",
+  "that a repository which was not served to an unauthenticated reader does not exist; the code host answers the same way for a private repository",
+  "anything about the number of workers, tasks or payments on the platform"
+ ]
+}

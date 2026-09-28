@@ -82,7 +82,7 @@ describe("Tier 1 — /api/request-attestation", () => {
       new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })),
     );
     const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
-    const r = await ras(ctx("/api/request-attestation?subject=qwen3", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    const r = await ras(ctx("/api/request-attestation?subject=qwen3&api_key=DO_NOT_PUBLISH", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
     expect(r.status).toBe(200);
     expect(r.headers.get("x-payment-response")).toBeTruthy();
     const b = await r.json();
@@ -91,6 +91,8 @@ describe("Tier 1 — /api/request-attestation", () => {
     expect(b.card.sig_ed25519).toBeNull();
     expect(b.card.unmeasured).toEqual(expect.arrayContaining(["root_inclusion", "sig_ed25519", "fresh_run_schedule"]));
     expect(b.card.source_urls).toContain("https://basescan.org/tx/0xtx");
+    expect(b.card.source_urls[0]).toBe("https://councilof.ai/api/request-attestation?subject=qwen3");
+    expect(JSON.stringify(b)).not.toContain("DO_NOT_PUBLISH");
     expect(b.card.payload).toMatchObject({ status: "COMMISSIONED", reserve_count: 2, fresh_run: "UNMEASURED" });
     expect(b.bytes).toBeLessThanOrEqual(3072);
     expect(JSON.stringify(b.card)).not.toMatch(/accuracy/);
@@ -181,7 +183,9 @@ describe("Tier 3 — /api/eunomia-data", () => {
     const p = await (await feed(ctx("/api/eunomia-data"))).json();
     expect(p.kind).toBe("preview");
     expect(p.streams.signals.rows).toBe(2);
-    expect(p.streams.first_fine_watch.signed).toBe(true);
+    expect(p.streams.first_fine_watch.unreadable).toBeUndefined();
+    // No board signing key is bound in this unit-test environment: readable is not signed.
+    expect(p.streams.first_fine_watch.signed).toBe(false);
     expect(p.streams.root.card_count).toBe(50);
     const r = await feed(ctx("/api/eunomia-data?feed=1"));
     expect(r.status).toBe(402);
@@ -218,6 +222,17 @@ describe("catalog + discovery", () => {
       "art50_marking_evidence",
       "provider_diff_feed",
       "receipts_batch",
+      // population doors, in registry order (functions/api/_population.ts)
+      "pop_stablecoins",
+      "pop_swift",
+      "pop_xrpl",
+      "pop_x402-bazaar",
+      "pop_mcp-registry",
+      "pop_a2a",
+      "pop_ots-proofs",
+      "pop_layer0",
+      "pop_corrections",
+      "pop_claim-watch",
     ]);
     expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"]);
     expect(JSON.stringify(c)).not.toContain('"id":"witness_hash"');

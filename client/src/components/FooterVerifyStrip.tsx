@@ -17,10 +17,11 @@ interface VerifyBadge {
 
 const BADGES: VerifyBadge[] = [
   {
-    label: 'GitHub · CSOAI-ORG',
-    href: 'https://github.com/CSOAI-ORG',
-    title: 'CSOAI public source estate on GitHub',
-    logo: '/images/badges/verify/github.svg',
+    label: 'Hugging Face · source snapshot',
+    href: 'https://huggingface.co/datasets/csoai/councilof-ai-source',
+    title: 'Dated source snapshot on Hugging Face; repository publication is separate from site deployment',
+    logo: '/images/badges/verify/huggingface.svg',
+    wide: true,
   },
   {
     label: 'Hugging Face · csoai',
@@ -76,14 +77,14 @@ const BADGES: VerifyBadge[] = [
     label: 'Software Heritage · archived',
     href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai',
     title:
-      'The source of this site is permanently archived by Software Heritage (UNESCO). Archived 2 September 2026, visit status full, SWHID swh:1:ori:8725f4054f527b3abdd47868de7fac5c956069f0 — a third party holds a copy that does not depend on us or on GitHub.',
+      'A 2 September 2026 source snapshot is archived by Software Heritage (SWHID swh:1:ori:8725f4054f527b3abdd47868de7fac5c956069f0). This archived origin is separate from current site deployment.',
     logo: '/images/badges/verify/software-heritage.svg',
   },
   {
     label: 'Sigstore Rekor · root witnessed',
     href: 'https://councilof.ai/interop/root-witness-pointer.json',
     title:
-      'Every published root is witnessed in the Sigstore Rekor public transparency log. This pointer carries the CURRENT entry URL and a MATCH/DRIFTED verdict — the log index changes on every publish, so it is not hard-coded here.',
+      'The dated pointer links the witnessed root to its Rekor entry and records a drift check at a particular time. Check its date and current status before relying on it.',
     logo: '/images/badges/verify/sigstore.svg',
   },
   {

@@ -30,6 +30,18 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
   const u = (p: string) => new URL(p, origin).toString();
+  // Some directories cached the bare route. Send them to the existing x402 door;
+  // payment verification and settlement remain bound to its canonical URL.
+  if (!url.search) {
+    return new Response(null, {
+      status: 307,
+      headers: {
+        location: u("/api/proof?bundle=1"),
+        "cache-control": "no-store",
+        "access-control-allow-origin": "*",
+      },
+    });
+  }
   const sha = (url.searchParams.get("sha") || "").trim().toLowerCase();
   const bundle = url.searchParams.get("bundle") === "1";
   // Payment is VERIFIED, not assumed from header presence. Only evaluated for the paid
@@ -41,8 +53,33 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const accepts = bundle
     ? x402Accepts(env as X402Env, resourceUrl, { skuId: "issuance", tier: "reserve", description })
     : [];
+  // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+  // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+  // Behavior) — that echo is what gets a resource catalogued.
+  const bazaar = declareBazaarHttpGet({
+    method: "GET",
+    queryParams: { bundle: "1" },
+    queryParamsSchema: {
+      properties: {
+        bundle: {
+          type: "string",
+          const: "1",
+          description: "Must be 1 to request the paid proof bundle",
+        },
+      },
+      required: ["bundle"],
+    },
+    outputExample: {
+      schema: "csoai.public-root-proof/0.1",
+      kind: "bundle",
+      merkle_root: "<hex>",
+      n: 0,
+      proofs: [],
+      note: "Paid bundle of inclusion proofs. Not a grade.",
+    },
+  });
   const payment = bundle
-    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0])
+    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0], { bazaar })
     : { ok: false, reason: "not a bundle request" };
   const paid = payment.ok;
 
@@ -56,28 +93,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
         serviceName: "CSOAI Proof Bundle",
         tags: ["proof", "merkle", "measurement", "attestation"],
         accepts,
-        bazaar: declareBazaarHttpGet({
-          method: "GET",
-          queryParams: { bundle: "1" },
-          queryParamsSchema: {
-            properties: {
-              bundle: {
-                type: "string",
-                const: "1",
-                description: "Must be 1 to request the paid proof bundle",
-              },
-            },
-            required: ["bundle"],
-          },
-          outputExample: {
-            schema: "csoai.public-root-proof/0.1",
-            kind: "bundle",
-            merkle_root: "<hex>",
-            n: 0,
-            proofs: [],
-            note: "Paid bundle of inclusion proofs. Not a grade.",
-          },
-        }),
+        bazaar,
         csoai: {
           schema: "csoai.public-root-proof/0.1",
           per: "proof-bundle",
@@ -88,13 +104,13 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
           // free and exactly what settling buys. Five of nine doors carried neither on 2026-09-06,
           // so a buyer reading the challenge could not tell what they were paying for.
           free_preview: "/api/proof?sha=<64-hex>",
-          deliverable: "one inclusion proof for the given leaf against the signed public root, with the root and the path — verification of it stays free forever",
+          deliverable: "Available inclusion proofs for the last published signed public root: leaf hashes, indexes, paths, Merkle root and card count. The full root signature envelope is free at /root.json, and a single inclusion proof is free at /api/proof?sha=<64-hex>.",
           settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
           verification:
             "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
           not_paid_reason: payment.reason,
           bazaar_note:
-            "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+            "A qualifying settlement may trigger Bazaar catalog processing; it can remain processing or be rejected. Catalog inclusion requires separate public readback.",
           catalog: u("/api/x402"),
         },
       });
@@ -287,3 +303,32 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+/**
+ * HEAD is a read-only availability probe for directories. Never validate a
+ * payment or fetch a proof from a HEAD request, even if it carries headers.
+ */
+export const onRequestHead: PagesFunction = async (context) => {
+  const url = new URL(context.request.url);
+  if (!url.search) {
+    return new Response(null, {
+      status: 307,
+      headers: {
+        location: new URL("/api/proof?bundle=1", url.origin).toString(),
+        "cache-control": "no-store",
+        "access-control-allow-origin": "*",
+      },
+    });
+  }
+  if (url.searchParams.get("bundle") === "1") {
+    const response = await onRequestGet({
+      ...context,
+      request: new Request(url.toString(), { method: "GET" }) as unknown as typeof context.request,
+    });
+    return new Response(null, { status: response.status, headers: response.headers });
+  }
+  return new Response(null, {
+    status: 405,
+    headers: { allow: "GET", "cache-control": "no-store" },
+  });
+};

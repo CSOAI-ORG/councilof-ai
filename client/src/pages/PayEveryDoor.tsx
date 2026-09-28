@@ -9,30 +9,43 @@ import {
   type X402Challenge,
 } from "@/lib/x402Wallet";
 import {
+  DELIST_AFTER_DAYS,
+  DELIST_RISK_DAYS,
+  DOOR_SETTLES_PATH,
+  FOUR02_LISTING_PATH,
   LISTING_PATH,
   MANIFEST_PATH,
   THE_LINE,
+  daysSince,
+  delistRisk,
   doorFromSearch,
   doorsFromManifest,
   explorerTxUrl,
+  index402For,
   listingFor,
   payDoor,
   quoteDoor,
   remainingDoors,
   selectDoor,
+  settleFor,
+  walkTally,
   type Door,
+  type DoorSettlesReading,
   type DoorState,
+  type Index402Listing,
+  type Index402Reading,
   type Listing,
   type ListingReading,
   type QuoteOutcome,
+  type SettleReading,
 } from "@/lib/payEveryDoor";
 
 /**
  * /pay — pay every x402 door of the estate from the owner's own wallet, one click each.
  *
- * WHY. An x402 index catalogues a resource only off a CONFIRMED SETTLE through its facilitator
- * (docs/product/X402-BAZAAR-AUDIT.md). There is no registration call. The manifest can be
- * perfect and the door invisible until someone settles through it. This page is the someone.
+ * WHY. A successful settle can create a facilitator record used by settlement-based
+ * discovery. The 402 Index is a separate directory with its own listing and health state.
+ * Neither a manifest entry nor an index row proves an independent buyer.
  *
  * WHAT IT READS, NEVER TYPES. The door list is /.well-known/x402.json, live. Each door's terms
  * — amount, asset, network, payTo — are its own 402 challenge, live. The listing column is the
@@ -47,6 +60,15 @@ import {
  * THREE OUTCOMES AND NO FOURTH. DELIVERED with whatever settle reference the door echoed;
  * UNSETTLED when the door answered 402 again, with the facilitator's reason verbatim; REJECTED
  * when the wallet declined, in which case nothing was sent and nothing was charged.
+ *
+ * THE STATUS COLUMN (2026-09-22, the owner's build spec §D). Three cells per door, each from its
+ * own reader: PayAI indexed (/api/x402-listing), 402 Index listed with the index's health word
+ * (/api/x402-listing-402index), and the last settle THIS SITE recorded (/api/door-settles, the
+ * same settled:tx:* records /api/revenue counts). The site's settlement-freshness warning
+ * uses DELIST_AFTER_DAYS as a review window and turns red at DELIST_RISK_DAYS, or when there is
+ * nothing on record — null is UNMEASURED, never "recent". This is a heuristic, not an index
+ * delisting policy. "Settle all" walks each live challenge through the same one-settle path,
+ * one wallet confirmation each, and keeps a running tally.
  */
 
 const TITLE = "Pay every x402 door — one settle each | Council of AI";
@@ -92,11 +114,12 @@ export function ChallengeSummary({ challenge }: { challenge: X402Challenge }) {
   );
 }
 
+/** PayAI indexed: yes / no / UNVERIFIED — the index's own row, with its last_updated. */
 export function ListingCell({ listing }: { listing: Listing }) {
   if (listing.status === "LISTED") {
     return (
-      <p className="text-[11px] leading-relaxed text-emerald-800" data-testid="pay-listing">
-        <span className="font-semibold">LISTED</span> in the PayAI index
+      <p className="text-[11px] leading-relaxed text-emerald-800" data-testid="pay-listing" data-status="yes">
+        <span className="font-semibold">Yes</span> · LISTED in the PayAI index
         {listing.lastUpdated ? <> · last updated {listing.lastUpdated}</> : <> · no last_updated on the row</>}
         <span className="block text-slate-500">index read {listing.asOf}</span>
       </p>
@@ -104,8 +127,8 @@ export function ListingCell({ listing }: { listing: Listing }) {
   }
   if (listing.status === "NOT_LISTED") {
     return (
-      <p className="text-[11px] leading-relaxed text-amber-800" data-testid="pay-listing">
-        <span className="font-semibold">NOT LISTED</span> in the PayAI index
+      <p className="text-[11px] leading-relaxed text-amber-800" data-testid="pay-listing" data-status="no">
+        <span className="font-semibold">No</span> · NOT LISTED in the PayAI index
         <span className="block text-slate-500">
           read in full {listing.asOf}
           {listing.scanned !== null && listing.declared !== null ? ` · ${listing.scanned} of ${listing.declared} rows` : ""}
@@ -114,8 +137,115 @@ export function ListingCell({ listing }: { listing: Listing }) {
     );
   }
   return (
-    <p className="text-[11px] leading-relaxed text-slate-600" data-testid="pay-listing">
-      <span className="font-semibold">UNCHECKABLE</span> · {listing.reason}
+    <p className="text-[11px] leading-relaxed text-slate-600" data-testid="pay-listing" data-status="unverified">
+      <span className="font-semibold">UNVERIFIED</span> · UNCHECKABLE · {listing.reason}
+    </p>
+  );
+}
+
+/** 402 Index listed: yes with the index's health word / no / UNVERIFIED. */
+export function Index402Cell({ listing }: { listing: Index402Listing }) {
+  if (listing.status === "LISTED") {
+    const healthy = listing.health === "healthy";
+    return (
+      <p className={`text-[11px] leading-relaxed ${healthy ? "text-emerald-800" : "text-amber-800"}`} data-testid="pay-status-402index" data-status="yes">
+        <span className="font-semibold">Yes</span> · listed · health{" "}
+        <span className="font-semibold">{listing.health || "not stated by the index"}</span>
+        {listing.lastChecked ? <> · last checked {listing.lastChecked}</> : <> · no last_checked on the row</>}
+        {listing.exact ? null : <> · matched on the route, not the exact url</>}
+        <span className="block text-slate-500">
+          search read {listing.asOf}
+          {listing.domainVerified === false ? " · domain_verified: no (as the index reports it)" : listing.domainVerified === true ? " · domain_verified: yes" : ""}
+        </span>
+      </p>
+    );
+  }
+  if (listing.status === "NOT_LISTED") {
+    return (
+      <p className="text-[11px] leading-relaxed text-amber-800" data-testid="pay-status-402index" data-status="no">
+        <span className="font-semibold">No</span> · not listed in the 402 Index
+        <span className="block text-slate-500">
+          search read in full {listing.asOf}
+          {listing.scanned !== null && listing.declared !== null ? ` · ${listing.scanned} of ${listing.declared} rows` : ""}
+        </span>
+      </p>
+    );
+  }
+  return (
+    <p className="text-[11px] leading-relaxed text-slate-600" data-testid="pay-status-402index" data-status="unverified">
+      <span className="font-semibold">UNVERIFIED</span> · UNCHECKABLE · {listing.reason}
+    </p>
+  );
+}
+
+const DELIST_RISK_TEXT = "delist risk";
+
+/**
+ * Last settle: the instant this site recorded, or null. Red — with the words "delist risk" — when
+ * the last settle is DELIST_RISK_DAYS or more ago, or there is none on record. A door DELIVERED
+ * on this page in this session shows that settle instead: it is newer than anything on record.
+ */
+export function SettleCell({ settle, state, now }: { settle: SettleReading; state: DoorState; now: number }) {
+  if (state.kind === "delivered") {
+    const tx = state.settlement?.transaction ?? null;
+    return (
+      <p className="text-[11px] leading-relaxed text-emerald-800" data-testid="pay-status-settle" data-risk="false">
+        <span className="font-semibold">Settled this session</span>
+        {tx ? <> · tx <code className="break-all font-mono">{shortHex(tx)}</code></> : <> · the facilitator named no transaction</>}
+        <span className="block text-slate-500">this page's own observation, ahead of the site's records</span>
+      </p>
+    );
+  }
+  if (settle.status === "SETTLED") {
+    const risk = delistRisk(settle.lastSettle, now);
+    const days = daysSince(settle.lastSettle, now);
+    const explorer = explorerTxUrl(settle.network, settle.tx);
+    return (
+      <p className={`text-[11px] leading-relaxed ${risk ? "text-red-800" : "text-emerald-800"}`} data-testid="pay-status-settle" data-risk={risk ? "true" : "false"}>
+        <span className="font-semibold">{settle.lastSettle.slice(0, 10)}</span>
+        {days !== null ? <> · {days} day{days === 1 ? "" : "s"} ago</> : null}
+        {risk ? (
+          <>
+            {" "}
+            · <span className="font-bold uppercase tracking-wide">{DELIST_RISK_TEXT}</span> — this site's settlement-freshness warning; check each index's listing status separately
+          </>
+        ) : null}
+        <span className="block text-slate-500">
+          {settle.tx ? (
+            <>
+              tx{" "}
+              {explorer ? (
+                <a href={explorer} target="_blank" rel="noreferrer" className="font-mono underline">
+                  {shortHex(settle.tx)}
+                </a>
+              ) : (
+                <code className="font-mono">{shortHex(settle.tx)}</code>
+              )}
+            </>
+          ) : (
+            "no transaction on the record"
+          )}
+          {settle.self === true ? " · self-funded heartbeat, not a buyer" : ""}
+          {settle.exact ? "" : " · matched on the route, not the exact url"}
+          {" · records read "}
+          {settle.asOf}
+        </span>
+      </p>
+    );
+  }
+  if (settle.status === "NONE_ON_RECORD") {
+    return (
+      <p className="text-[11px] leading-relaxed text-red-800" data-testid="pay-status-settle" data-risk="true">
+        <span className="font-semibold">None on record</span> · UNMEASURED ·{" "}
+        <span className="font-bold uppercase tracking-wide">{DELIST_RISK_TEXT}</span>
+        <span className="block text-slate-500">no settlement record for this door on this site as of {settle.asOf}; nothing is inferred from a listing</span>
+      </p>
+    );
+  }
+  return (
+    <p className="text-[11px] leading-relaxed text-red-800" data-testid="pay-status-settle" data-risk="true">
+      <span className="font-semibold">UNMEASURED</span> ·{" "}
+      <span className="font-bold uppercase tracking-wide">{DELIST_RISK_TEXT}</span> · {settle.reason}
     </p>
   );
 }
@@ -215,6 +345,9 @@ export function DoorCard({
   quote,
   state,
   listing,
+  index402,
+  settle,
+  now,
   busy,
   onPay,
 }: {
@@ -222,6 +355,9 @@ export function DoorCard({
   quote: QuoteOutcome | "reading" | undefined;
   state: DoorState;
   listing: Listing;
+  index402: Index402Listing;
+  settle: SettleReading;
+  now: number;
   busy: boolean;
   onPay: () => void;
 }) {
@@ -257,29 +393,42 @@ export function DoorCard({
         </div>
       </div>
 
-      <div className="mt-3 grid gap-3 md:grid-cols-2">
-        <div className="rounded-lg bg-slate-50 p-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Live 402 challenge</p>
-          <div className="mt-1.5">
-            {quote === undefined || quote === "reading" ? (
-              <p className="text-[11px] text-slate-600">Reading the door's challenge…</p>
-            ) : quote.kind === "challenge" ? (
-              <ChallengeSummary challenge={quote.challenge} />
-            ) : quote.kind === "no-challenge" ? (
-              <p className="text-[11px] text-slate-600">
-                <span className="font-semibold">NO CHALLENGE</span> · {quote.detail}
-              </p>
-            ) : (
-              <p className="text-[11px] text-slate-600">
-                <span className="font-semibold">UNCHECKABLE</span> · {quote.detail}
-              </p>
-            )}
+      <div className="mt-3 rounded-lg bg-slate-50 p-3">
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Live 402 challenge</p>
+        <div className="mt-1.5">
+          {quote === undefined || quote === "reading" ? (
+            <p className="text-[11px] text-slate-600">Reading the door's challenge…</p>
+          ) : quote.kind === "challenge" ? (
+            <ChallengeSummary challenge={quote.challenge} />
+          ) : quote.kind === "no-challenge" ? (
+            <p className="text-[11px] text-slate-600">
+              <span className="font-semibold">NO CHALLENGE</span> · {quote.detail}
+            </p>
+          ) : (
+            <p className="text-[11px] text-slate-600">
+              <span className="font-semibold">UNCHECKABLE</span> · {quote.detail}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-3 grid gap-2 sm:grid-cols-3" data-testid="pay-status">
+        <div className="min-w-0 rounded-lg bg-slate-50 p-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">PayAI indexed</p>
+          <div className="mt-1.5 break-words">
+            <ListingCell listing={listing} />
           </div>
         </div>
-        <div className="rounded-lg bg-slate-50 p-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Listing</p>
-          <div className="mt-1.5">
-            <ListingCell listing={listing} />
+        <div className="min-w-0 rounded-lg bg-slate-50 p-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">402 Index listed</p>
+          <div className="mt-1.5 break-words">
+            <Index402Cell listing={index402} />
+          </div>
+        </div>
+        <div className="min-w-0 rounded-lg bg-slate-50 p-3">
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">Last settle</p>
+          <div className="mt-1.5 break-words">
+            <SettleCell settle={settle} state={state} now={now} />
           </div>
         </div>
       </div>
@@ -299,7 +448,12 @@ export default function PayEveryDoor() {
   const [quotes, setQuotes] = useState<Record<string, QuoteOutcome | "reading" | undefined>>({});
   const [states, setStates] = useState<Record<string, DoorState | undefined>>({});
   const [reading, setReading] = useState<ListingReading | null | "reading">("reading");
+  const [reading402, setReading402] = useState<Index402Reading | null | "reading">("reading");
+  const [settles, setSettles] = useState<DoorSettlesReading | null | "reading">("reading");
+  // One clock reading per page load for the delist arithmetic, so every row is judged against the same instant.
+  const [now] = useState<number>(() => Date.now());
   const [walking, setWalking] = useState<{ at: number; of: number } | null>(null);
+  const [walkQueue, setWalkQueue] = useState<string[]>([]);
   const [walkNote, setWalkNote] = useState<string | null>(null);
   const busyRef = useRef(false);
   const walletRef = useRef<EIP6963ProviderDetail | null>(null);
@@ -345,6 +499,27 @@ export default function PayEveryDoor() {
           setReading({ kind: "UNCHECKABLE", as_of: new Date().toISOString(), absence_determinate: false, rows: [], reason: (e as Error)?.message || String(e) });
       }
     })();
+    (async () => {
+      try {
+        const r = await fetch(FOUR02_LISTING_PATH, { headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error(`${FOUR02_LISTING_PATH} answered HTTP ${r.status}`);
+        const j = (await r.json()) as Index402Reading;
+        if (!cancelled) setReading402(j);
+      } catch (e) {
+        if (!cancelled)
+          setReading402({ kind: "UNCHECKABLE", as_of: new Date().toISOString(), absence_determinate: false, rows: [], reason: (e as Error)?.message || String(e) });
+      }
+    })();
+    (async () => {
+      try {
+        const r = await fetch(DOOR_SETTLES_PATH, { headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error(`${DOOR_SETTLES_PATH} answered HTTP ${r.status}`);
+        const j = (await r.json()) as DoorSettlesReading;
+        if (!cancelled) setSettles(j);
+      } catch (e) {
+        if (!cancelled) setSettles({ kind: "UNMEASURED", as_of: new Date().toISOString(), rows: [], reason: (e as Error)?.message || String(e) });
+      }
+    })();
     return () => {
       cancelled = true;
     };
@@ -353,8 +528,14 @@ export default function PayEveryDoor() {
   const selected = doors ? selectDoor(doors, wanted) : null;
   const visible = doors ? (selected ? [selected] : doors) : [];
   const readingValue = reading === "reading" ? null : reading;
+  const reading402Value = reading402 === "reading" ? null : reading402;
+  const settlesValue = settles === "reading" ? null : settles;
   const remaining = doors ? remainingDoors(visible, quotes, states).length : null;
   const walkingNow = walking !== null;
+  const tally = walkTally(walkQueue, states);
+  const atRisk = doors
+    ? visible.filter((d) => states[d.url]?.kind !== "delivered" && delistRisk(settleFor(d, settlesValue).lastSettle, now)).length
+    : null;
 
   const setDoorState = (url: string, state: DoorState) => {
     if (mountedRef.current) setStates((prev) => ({ ...prev, [url]: state }));
@@ -402,13 +583,18 @@ export default function PayEveryDoor() {
     }
   }
 
-  /** Walk the remaining doors one by one; each waits for its own wallet confirmation. */
+  /**
+   * SETTLE ALL — the monthly heartbeat. Walk every door with a live challenge that has not been
+   * delivered, one by one; each waits for its own wallet confirmation, and the tally is read off
+   * the door states as they land. A declined wallet stops the walk; the doors after it stay unopened.
+   */
   async function onPayAll() {
     if (busyRef.current || !doors) return;
     busyRef.current = true;
     setWalkNote(null);
     try {
       const queue = remainingDoors(visible, quotes, states);
+      setWalkQueue(queue.map((d) => d.url));
       for (let i = 0; i < queue.length; i++) {
         if (!mountedRef.current) return;
         setWalking({ at: i + 1, of: queue.length });
@@ -438,8 +624,8 @@ export default function PayEveryDoor() {
           {MANIFEST_PATH}
         </a>{" "}
         as it stands now, each with the terms its own live 402 states and a Pay with wallet button that signs those exact terms
-        in your wallet and retries the door once. An index catalogues a door only after a confirmed settle, so this is how a
-        door becomes findable: not by describing it, by paying it.
+        in your wallet and retries the door once. A successful settle can support facilitator-based discovery. The 402 Index
+        is a separate directory whose listing status is read independently; neither listing proves an independent buyer.
       </p>
       <p className="mt-3 rounded-lg border border-slate-900/10 bg-slate-50 px-3 py-2 text-[12px] font-medium leading-relaxed text-slate-800" data-testid="pay-the-line">
         {THE_LINE}
@@ -460,24 +646,45 @@ export default function PayEveryDoor() {
         </p>
       ) : null}
 
+      <p className="mt-3 text-[11px] leading-relaxed text-slate-600" data-testid="pay-status-legend">
+        Each door carries three status cells: whether the PayAI index holds a row for it, whether the 402 Index lists it and
+        the health word that index gives it, and the last settle this site recorded through it. This site uses a {DELIST_AFTER_DAYS}-day
+        settlement-review window and flags <q>{DELIST_RISK_TEXT}</q> at {DELIST_RISK_DAYS} days, or when there is nothing on record.
+        That flag is a heuristic, not an index's delisting decision; none on record is UNMEASURED, not a recent settle.
+      </p>
+
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={() => void onPayAll()}
           disabled={!doors || walkingNow || remaining === 0}
-          data-testid="pay-all"
+          data-testid="settle-all"
           className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
         >
-          {walkingNow ? `Paying door ${walking!.at} of ${walking!.of}…` : "Pay all remaining"}
+          {walkingNow ? `Settling door ${walking!.at} of ${walking!.of}…` : "Settle all"}
         </button>
         <span className="text-[12px] text-slate-600">
           {doors === null && !manifestError
             ? "Reading the manifest…"
             : manifestError
               ? null
-              : `${visible.length} door${visible.length === 1 ? "" : "s"} declared · ${remaining} with a live challenge not yet delivered`}
+              : `${visible.length} door${visible.length === 1 ? "" : "s"} declared · ${remaining} with a live challenge not yet delivered${
+                  atRisk !== null && settlesValue ? ` · ${atRisk} at ${DELIST_RISK_TEXT}` : ""
+                }`}
         </span>
       </div>
+      <p className="mt-2 text-[11px] leading-relaxed text-slate-500">
+        Settle all queues every door with a live challenge, in manifest order, through the same one-settle path as each
+        door's own button: one wallet confirmation per door, nothing batched, nothing signed in advance. A successful settle
+        updates this site's record; check each index's listing status separately. A settle from our own wallet is recorded as a
+        self-settlement, never as a buyer.
+      </p>
+      {walkQueue.length > 0 ? (
+        <p className="mt-2 text-[12px] text-slate-700" data-testid="settle-all-tally">
+          <span className="font-semibold">Settle all:</span> {tally.delivered} settled · {tally.unsettled} unsettled · {tally.rejected} declined ·{" "}
+          {tally.failed} failed · {tally.pending} pending · of {tally.queued} queued
+        </p>
+      ) : null}
       {walkNote ? (
         <p className="mt-2 text-[12px] text-amber-800" data-testid="pay-walk-note">
           {walkNote}
@@ -491,13 +698,32 @@ export default function PayEveryDoor() {
 
       {reading !== "reading" && reading && reading.kind === "UNCHECKABLE" ? (
         <p className="mt-3 text-[11px] text-slate-600" data-testid="pay-index-note">
-          Index read: UNCHECKABLE · {reading.reason}
+          PayAI index read: UNCHECKABLE · {reading.reason}
         </p>
       ) : reading !== "reading" && reading ? (
         <p className="mt-3 text-[11px] text-slate-600" data-testid="pay-index-note">
-          Index read {reading.as_of}: {reading.scanned} of {reading.declared_total} rows in the PayAI index
+          PayAI index read {reading.as_of}: {reading.scanned} of {reading.declared_total} rows
           {reading.absence_determinate ? " (read in full — absence is a finding)" : " (not read in full — absence is not a finding)"}.
           The Coinbase CDP index is not read here; settles do not yet route through it.
+        </p>
+      ) : null}
+      {reading402 !== "reading" && reading402 && reading402.kind === "UNCHECKABLE" ? (
+        <p className="mt-1 text-[11px] text-slate-600" data-testid="pay-402index-note">
+          402 Index read: UNCHECKABLE · {reading402.reason}
+        </p>
+      ) : reading402 !== "reading" && reading402 ? (
+        <p className="mt-1 text-[11px] text-slate-600" data-testid="pay-402index-note">
+          402 Index search read {reading402.as_of}: {reading402.scanned} of {reading402.declared_total} rows for {reading402.index?.query || "our host"}
+          {reading402.absence_determinate ? " (read in full — absence is a finding within that search)" : " (not read in full — absence is not a finding)"}.
+        </p>
+      ) : null}
+      {settles !== "reading" && settles && settles.kind !== "MEASURED" ? (
+        <p className="mt-1 text-[11px] text-slate-600" data-testid="pay-settles-note">
+          Settlement records: UNMEASURED · {settles.reason}
+        </p>
+      ) : settles !== "reading" && settles ? (
+        <p className="mt-1 text-[11px] text-slate-600" data-testid="pay-settles-note">
+          Settlement records read {settles.as_of}: {settles.rows.length} door{settles.rows.length === 1 ? "" : "s"} with a settle on record on this site.
         </p>
       ) : null}
 
@@ -509,6 +735,9 @@ export default function PayEveryDoor() {
             quote={quotes[door.url]}
             state={states[door.url] ?? { kind: "idle" }}
             listing={listingFor(door, readingValue)}
+            index402={index402For(door, reading402Value)}
+            settle={settleFor(door, settlesValue)}
+            now={now}
             busy={walkingNow}
             onPay={() => void onPayOne(door)}
           />
@@ -524,8 +753,8 @@ export default function PayEveryDoor() {
           facilitator's reason as the door relayed it. REJECTED means the wallet declined and nothing left this page.
         </p>
         <p className="mt-2">
-          Measurement, not a mark: paying a door catalogues it in an index; it grades nothing and proves nothing about the artefact
-          beyond the settle reference shown.
+          Measurement, not a mark: a successful payment can create a facilitator settlement record; check each directory
+          listing separately. It grades nothing and proves nothing about the artefact beyond the settle reference shown.
         </p>
       </section>
     </main>

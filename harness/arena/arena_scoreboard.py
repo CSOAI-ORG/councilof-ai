@@ -53,8 +53,10 @@ def load_rounds(path: Path) -> list:
 def discover_models(rounds):
     models = set()
     for r in rounds:
-        for k in r:
-            if k not in ("round", "ts", "axis", "winner"):
+        for k, v in r.items():
+            # a model key carries {score, elo}; anything else (bank_sha256, item, grader,
+            # answers ...) is provenance, never a model (2026-09-22)
+            if isinstance(v, dict) and "score" in v:
                 models.add(k)
     return sorted(models)
 
@@ -70,7 +72,7 @@ def per_axis_elo(rounds, models, n_boot=300, seed=None):
         if "axis" not in r:
             continue
         # convert {ma: {'score':s}, mb: {'score':s}, 'winner': w} -> pairwise round
-        keys = [k for k in r if k not in ("round", "ts", "axis", "winner")]
+        keys = [k for k, v in r.items() if isinstance(v, dict) and "score" in v]
         if len(keys) < 2:
             continue
         a, b = keys[0], keys[1]
@@ -136,7 +138,7 @@ def main():
     # 1. Overall (across all axes) Elo — the "general" board.
     overall_und = []
     for r in rounds:
-        keys = [k for k in r if k not in ("round", "ts", "axis", "winner")]
+        keys = [k for k, v in r.items() if isinstance(v, dict) and "score" in v]
         if len(keys) < 2:
             continue
         a, b = keys[0], keys[1]

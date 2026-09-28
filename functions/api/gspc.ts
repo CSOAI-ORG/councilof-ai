@@ -211,6 +211,21 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
 export const publicView = (axes: typeof AXES) =>
   axes.map(excludeOwnLeader).map(dropUncardedLeader);
 
+// One formatter for the board and every catalogue that quotes it. The source is
+// the public view, so an excluded own-model leader never reappears in a lid.
+export const boardLidFromAxes = (axes: typeof AXES): string => {
+  const measured = axes.filter((a) => a.status === "MEASURED");
+  const comparisons = axes.filter((a) => a.kind === "model-comparison");
+  const facts = measured.filter((a) => a.kind === "deterministic-facts");
+  const measuredComparisons = comparisons.filter((a) => a.status === "MEASURED");
+  const separated = measuredComparisons.filter((a) => a.separation === "SEPARATED").length;
+  const publicLeaders = measuredComparisons.filter((a) => typeof a.leader === "string").length;
+  return `${measured.length} axes measured · ${comparisons.length} model fleets · ${separated} separated leaders · ` +
+    `${publicLeaders} public leader scores · ${facts.length} fact runs · TIE is TIE · not a certificate.`;
+};
+
+export const currentBoardLid = (): string => boardLidFromAxes(publicView(AXES));
+
 export const publicLeaderCount = (axes: typeof AXES): number =>
   publicView(axes).filter(
     (a) => a.kind === "model-comparison" && a.status === "MEASURED" && typeof a.leader === "string",
@@ -383,6 +398,38 @@ export const onRequestGet: PagesFunction = async (context) => {
         const all = selected.filter((a) => a.family === fam);
         return { axes: all.length, measured: all.filter((a) => a.status === "MEASURED").length };
       };
+      // ── the lid's four numbers, derived ONCE ────────────────────────────
+      // G-3 (2026-09-22): the lid used to compose its own counts inline, and one of them
+      // came from a DIFFERENT expression than the totals field beside it: the lid read
+      // `bySelectedFamily("financial").measured` (8) while `totals.fact_runs` read
+      // `factRuns.length` (9). They agreed until ADR-002 made effect-binding a
+      // deterministic-facts axis in the GSPC family — then the served payload carried
+      // "8 fact runs" in the lid and `"fact_runs": 9` two fields away, on the same object.
+      // Two derivations of one quantity will always drift; there is now exactly one.
+      //
+      // factRunCount counts deterministic-facts axes that carry a MEASURED run. A declared
+      // slot with no run behind it is not a run, so it is not counted as one — the same
+      // rule measured_axes keeps. Today all 9 are measured, so this number is unchanged.
+      // ── the separation aggregate, derived ONCE (D-2026-09-23T03-02) ──────────
+      // totals carried measured_axes and the count line at the top, and the separation
+      // tallies forty fields below, behind a wall of prose. Every surface that quotes the
+      // headline quoted "23 axis · 23 measured" and inherited the blind spot: the payload
+      // could not express the NEGATIVE — that 0 of the 14 model-comparison axes has been
+      // shown to tell two models apart — although limitations[0] of the same payload
+      // already said so correctly. A count of RUNS is not a count of proven leaders.
+      // These three consts are the single derivation: separated_leads/ties/
+      // untested_separations, separation_public_count, count_grammar and the lid all read
+      // them, so a second derivation cannot drift from the first (see the G-3 note above).
+      const separatedLeads = cmp.filter((a) => a.separation === "SEPARATED").length;
+      const tieCount = cmp.filter((a) => a.separation === "TIE").length;
+      const untestedCount = cmp.filter((a) => a.separation === "UNTESTED").length;
+      const separationPublicCount =
+        `${separatedLeads} of ${cmp.length} model-comparison ${cmp.length === 1 ? "axis" : "axes"} separated a leader · ` +
+        `${tieCount} TIE · ${untestedCount} UNTESTED`;
+      const modelFleetCount = selected.filter((a: any) => a.kind === "model-comparison").length;
+      const factRunCount = factRuns.filter((a) => a.status === "MEASURED").length;
+      const publicLeaderScoreCount = externallyLedAxes.length;
+
       return {
         axes: selected.length,
         measured_axes: measured,
@@ -391,17 +438,30 @@ export const onRequestGet: PagesFunction = async (context) => {
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
-        model_fleets: selected.filter((a: any) => a.kind === "model-comparison").length,
-        fact_runs: factRuns.length,
+        // Quote this BESIDE public_count. measured counts axis that carry a run; it has
+        // never been a count of axis that can tell two models apart, and until now the
+        // payload had no field that said so at the point the count is read.
+        separation_public_count: separationPublicCount,
+        separation_public_count_note:
+          "Read with public_count, never instead of it. measured_axes counts axis with a RUN behind " +
+          "them; it is not a count of axis with a separated leader. SEPARATED, TIE and UNTESTED are " +
+          "three states and none is folded into another. Derived from the axis array, never typed. " +
+          "The same three numbers appear below as separated_leads / ties / untested_separations and " +
+          "in limitations[0]; there is one derivation.",
+        model_fleets: modelFleetCount,
+        fact_runs: factRunCount,
         count_grammar:
           unmeasured === 0
-            ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
+            ? `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board and every one carries a measurement — no ` +
               `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
-              `future slot is added with no run behind it, this line separates the two again on its own.`
-            : `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
+              `future slot is added with no run behind it, this line separates the two again on its own. ` +
+              `A measurement is not a separated leader: ${separationPublicCount}. A point-estimate lead ` +
+              `is not a measured advantage, and UNTESTED is not a tie.`
+            : `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board; ${measured} of them carry a measurement and ` +
               `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
               `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
-              `so the gap is visible; it is not evidence of anything having been measured.`,
+              `so the gap is visible; it is not evidence of anything having been measured. ` +
+              `A measurement is not a separated leader either: ${separationPublicCount}.`,
         by_family: {
           gspc: {
             ...bySelectedFamily("gspc"),
@@ -453,9 +513,9 @@ export const onRequestGet: PagesFunction = async (context) => {
           "Read items as 'rows behind the board', not as a single comparable sample.",
         // Separation stats are over model-comparison axis ONLY — see comparison_axes.
         comparison_axes: cmp.length,
-        separated_leads: cmp.filter((a) => a.separation === "SEPARATED").length,
-        ties: cmp.filter((a) => a.separation === "TIE").length,
-        untested_separations: cmp.filter((a) => a.separation === "UNTESTED").length,
+        separated_leads: separatedLeads,
+        ties: tieCount,
+        untested_separations: untestedCount,
         separation_scope_note:
           "Separation asks whether a leader's lead over a fleet is statistically real, so it applies " +
           "only to the model-comparison axes. The financial axes have no fleet and no leader: they are " +
@@ -467,10 +527,12 @@ export const onRequestGet: PagesFunction = async (context) => {
         // BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — public leaders ≠ measured axes.
         // Same derivation as externally_led_axes (carded external leaders only).
         // Keep measured_axes unchanged; do not invent leaders for withheld axes.
-        public_leader_count: externallyLedAxes.length,
-        lid:
-          `${measured} axes measured · ${cmp.length} model fleets · ${externallyLedAxes.length} public leader scores · ` +
-          `${bySelectedFamily("financial").measured} fact runs · TIE is TIE · not a certificate.`,
+        public_leader_count: publicLeaderScoreCount,
+        // Every number here is the SAME binding the totals field beside it publishes.
+        // functions/api/gspc.lid-truth.test.ts re-parses this string and asserts each
+        // number against measured_axes / model_fleets / separated_leads / public_leader_count /
+        // fact_runs, so a lid can never again read a count the payload contradicts.
+        lid: boardLidFromAxes(selected),
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
@@ -547,8 +609,8 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      `Of the ${comparisonSlots.length} model-comparison axis, ${separationTestedCount} have a published statistical-separation determination: ${separatedNames.length} SEPARATED${separatedNames.length ? ` (${separatedNames.join(", ")})` : ""} and ${tieCount} TIE. Methods are stated per axis; most use paired McNemar tests, while any alternative must publish its basis and supporting evidence. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axis are not model comparisons and are not in this denominator.`,
-      `${selected.length} axis are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. The financial-fact axis are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
+      `Of the ${comparisonSlots.length} model-comparison ${comparisonSlots.length === 1 ? "axis" : "axes"}, ${separationTestedCount} have a published statistical-separation determination: ${separatedNames.length} SEPARATED${separatedNames.length ? ` (${separatedNames.join(", ")})` : ""} and ${tieCount} TIE. Methods are stated per axis; most use paired McNemar tests, while any alternative must publish its basis and supporting evidence. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axes are not model comparisons and are not in this denominator.`,
+      `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board and ${selected.filter((a) => a.status === "MEASURED").length} ${selected.filter((a) => a.status === "MEASURED").length === 1 ? "carries" : "carry"} a measurement. See totals.count_grammar. The financial-fact axes are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
       "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
       "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. Those slots are now component-fact objects (ai-adoption-components, labour-components), not indexes. Do not restore the v0.1 sticker.",

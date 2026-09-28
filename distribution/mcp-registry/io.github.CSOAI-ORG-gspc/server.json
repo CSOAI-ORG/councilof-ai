@@ -1,0 +1,58 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.CSOAI-ORG/gspc",
+  "title": "Council of AI GSPC",
+  "description": "13 tools (9 free, 4 x402-metered): GSPC board, evidence, Ed25519 card verify. Measurement only.",
+  "repository": {
+    "url": "https://github.com/CSOAI-ORG/councilof-ai",
+    "source": "github",
+    "subfolder": "mcp/gspc-server"
+  },
+  "version": "1.4.2",
+  "websiteUrl": "https://councilof.ai",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://councilof.ai/mcp"
+    }
+  ],
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "csoai-gspc-mcp",
+      "version": "0.2.2",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "ai.councilof/doctrine": {
+        "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+        "source": "docs/DOCTRINE.md",
+        "human_page": "https://councilof.ai/doctrine/"
+      },
+      "ai.councilof/fleet": {
+        "free": [
+          "board_totals",
+          "get_axis",
+          "verify_card",
+          "list_cards",
+          "get_root",
+          "get_card",
+          "verify_inclusion",
+          "x402_trust",
+          "mcp_trust"
+        ],
+        "paid": [
+          "commission_card",
+          "art50_marking_evidence",
+          "rwa_evidence",
+          "receipts_batch"
+        ]
+      },
+      "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json"
+    }
+  }
+}

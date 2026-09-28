@@ -1,0 +1,316 @@
+{
+  "schema": "csoai.arena-bank-audit/0.1",
+  "as_of": "2026-09-23",
+  "what_this_is": "The label vocabulary the arena derives from each register bank it fetches, read from the published bytes with the arena's own loader. No model was called.",
+  "loader": "harness/arena/axis_arena.py load_bank_file",
+  "vocabulary_rule": "sorted({expected}) minus {None, \"\", \"KEYWORD_MATCH\", \"0\", \"1\"} — axis_arena.py main(); a bank whose expected values are all 0/1 therefore has no vocabulary at all",
+  "url_pattern": "lanes/loops/arena-hourly.sh: https://huggingface.co/datasets/csoai/gspc-${AXIS}/resolve/main/items.jsonl",
+  "axis_name_note": "arena_axis is the rotation name (scripts/arena/rotation.py AXES) and is what the HF URL is built from; board_axis is what GET /api/gspc calls the same axis. They differ for two: agi/safety and asi/continuity.",
+  "banks": [
+    {
+      "arena_axis": "gov",
+      "board_axis": "governance",
+      "url": "https://huggingface.co/datasets/csoai/gspc-gov/resolve/main/items.jsonl",
+      "sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+      "bytes": 106824,
+      "items_loaded": 237,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "HIGH_RISK": 59,
+        "LIMITED_RISK": 59,
+        "MINIMAL_RISK": 69,
+        "PROHIBITED": 50
+      },
+      "arena_label_vocabulary": [
+        "HIGH_RISK",
+        "LIMITED_RISK",
+        "MINIMAL_RISK",
+        "PROHIBITED"
+      ],
+      "label_count": 4,
+      "majority_share": 0.2911,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "prv",
+      "board_axis": "provenance",
+      "url": "https://huggingface.co/datasets/csoai/gspc-prv/resolve/main/items.jsonl",
+      "sha256": "79711366e29e237a56249f1573ae6bdb5a0f1b3ab78728232c5f25ceebb08c2e",
+      "bytes": 8036,
+      "items_loaded": 32,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "DESTROYED": 15,
+        "SURVIVES": 17
+      },
+      "arena_label_vocabulary": [
+        "DESTROYED",
+        "SURVIVES"
+      ],
+      "label_count": 2,
+      "majority_share": 0.5312,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "agi",
+      "board_axis": "safety",
+      "url": "https://huggingface.co/datasets/csoai/gspc-agi/resolve/main/items.jsonl",
+      "sha256": "702e01db54194f2b464871d883304063a6dd57878418572ee3c5b4e10b307e99",
+      "bytes": 8309,
+      "items_loaded": 36,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "COMPLY": 19,
+        "REFUSE": 17
+      },
+      "arena_label_vocabulary": [
+        "COMPLY",
+        "REFUSE"
+      ],
+      "label_count": 2,
+      "majority_share": 0.5278,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "asi",
+      "board_axis": "continuity",
+      "url": "https://huggingface.co/datasets/csoai/gspc-asi/resolve/main/items.jsonl",
+      "sha256": "a3ff4e3158a538a90ce7c26c2a402af6d078d66334bf48a93607e26fea689850",
+      "bytes": 8824,
+      "items_loaded": 33,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "NOT_APPLICABLE": 11,
+        "QUANTUM_SAFE": 13,
+        "QUANTUM_VULNERABLE": 9
+      },
+      "arena_label_vocabulary": [
+        "NOT_APPLICABLE",
+        "QUANTUM_SAFE",
+        "QUANTUM_VULNERABLE"
+      ],
+      "label_count": 3,
+      "majority_share": 0.3939,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "mcp",
+      "board_axis": "conformance",
+      "url": "https://huggingface.co/datasets/csoai/gspc-mcp/resolve/main/items.jsonl",
+      "sha256": "9955a9c145640d693773d6cfdbef9554eb8025332b5247da9bc2b9f250908f0b",
+      "bytes": 8617,
+      "items_loaded": 35,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "CONFORMS": 18,
+        "VIOLATES": 17
+      },
+      "arena_label_vocabulary": [
+        "CONFORMS",
+        "VIOLATES"
+      ],
+      "label_count": 2,
+      "majority_share": 0.5143,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "oss",
+      "board_axis": "openness",
+      "url": "https://huggingface.co/datasets/csoai/gspc-oss/resolve/main/items.jsonl",
+      "sha256": "3fc33a13be287fbed8b8f850828194291ae37d1250158e743a6c87d775af6a4f",
+      "bytes": 8852,
+      "items_loaded": 32,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "PERMITTED": 16,
+        "RESTRICTED": 16
+      },
+      "arena_label_vocabulary": [
+        "PERMITTED",
+        "RESTRICTED"
+      ],
+      "label_count": 2,
+      "majority_share": 0.5,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "mach",
+      "board_axis": "machinery-conformity",
+      "url": "https://huggingface.co/datasets/csoai/gspc-mach/resolve/main/items.jsonl",
+      "sha256": "fdbe463c3f0268600ebf9e70372db1f27ac5668b30276323e247de86adbbc51c",
+      "bytes": 10104,
+      "items_loaded": 33,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "NOT_SAFETY_FUNCTION": 9,
+        "OUT_OF_SCOPE": 12,
+        "PART_A": 12
+      },
+      "arena_label_vocabulary": [
+        "NOT_SAFETY_FUNCTION",
+        "OUT_OF_SCOPE",
+        "PART_A"
+      ],
+      "label_count": 3,
+      "majority_share": 0.3636,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "care",
+      "board_axis": "care",
+      "url": "https://huggingface.co/datasets/csoai/gspc-care/resolve/main/items.jsonl",
+      "sha256": "3cf9c16dbb6bf5b4b64e342fb3481c1d0d6ceee09c5a1a2e6936b0d4775f2aad",
+      "bytes": 28128,
+      "items_loaded": 200,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "0": 100,
+        "1": 100
+      },
+      "arena_label_vocabulary": [],
+      "label_count": 0,
+      "majority_share": 0.5,
+      "state": "NO_LABEL_VOCABULARY",
+      "consequence": "the arena falls through to its generic EU-AI-Act prompt and the legacy scorer; answers that name no bank label grade ungraded"
+    },
+    {
+      "arena_axis": "xr",
+      "board_axis": "cross-reality",
+      "url": "https://huggingface.co/datasets/csoai/gspc-xr/resolve/main/items.jsonl",
+      "sha256": "9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446",
+      "bytes": 8888,
+      "items_loaded": 32,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "CONFIRM": 13,
+        "PROCEED": 8,
+        "REFUSE": 11
+      },
+      "arena_label_vocabulary": [
+        "CONFIRM",
+        "PROCEED",
+        "REFUSE"
+      ],
+      "label_count": 3,
+      "majority_share": 0.4062,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "det",
+      "board_axis": "detector-interop",
+      "url": "https://huggingface.co/datasets/csoai/gspc-det/resolve/main/items.jsonl",
+      "sha256": "73a30d6d32f4012b11a7ba2138abe8017f74f06faf40ac3f32e0094fe87ba36c",
+      "bytes": 12453,
+      "items_loaded": 33,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "DIVERGENT": 7,
+        "INTEROPERABLE": 26
+      },
+      "arena_label_vocabulary": [
+        "DIVERGENT",
+        "INTEROPERABLE"
+      ],
+      "label_count": 2,
+      "majority_share": 0.7879,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "art5",
+      "board_axis": "art5-safeguard",
+      "url": "https://huggingface.co/datasets/csoai/gspc-art5/resolve/main/items.jsonl",
+      "sha256": "60f08ca251d3afb6e085e66cb3e15a5c79b2f4e5422f16221c1fbf026748d672",
+      "bytes": 9370,
+      "items_loaded": 36,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "PERMITTED": 19,
+        "PROHIBITED": 17
+      },
+      "arena_label_vocabulary": [
+        "PERMITTED",
+        "PROHIBITED"
+      ],
+      "label_count": 2,
+      "majority_share": 0.5278,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "swarm",
+      "board_axis": "swarm",
+      "url": "https://huggingface.co/datasets/csoai/gspc-swarm/resolve/main/items.jsonl",
+      "sha256": "ab318986d684ebf8a46682a5b82ad7594b1bbd01f7acb25a50e94a3d868076a1",
+      "bytes": 15267,
+      "items_loaded": 37,
+      "canary_rows": 0,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "KEYWORD_MATCH": 37
+      },
+      "arena_label_vocabulary": [],
+      "label_count": 0,
+      "majority_share": 1.0,
+      "state": "NO_LABEL_VOCABULARY",
+      "consequence": "the arena falls through to its generic EU-AI-Act prompt and the legacy scorer; answers that name no bank label grade ungraded"
+    },
+    {
+      "arena_axis": "affect",
+      "board_axis": "affect",
+      "url": "https://huggingface.co/datasets/csoai/gspc-affect/resolve/main/items.jsonl",
+      "sha256": "5ce11c084a6e968cc49314cfec2898725fb7b01513dc117f869be17b4a263bc7",
+      "bytes": 17438,
+      "items_loaded": 41,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "DISCLOSE": 11,
+        "PERMITTED": 12,
+        "PROHIBITED": 18
+      },
+      "arena_label_vocabulary": [
+        "DISCLOSE",
+        "PERMITTED",
+        "PROHIBITED"
+      ],
+      "label_count": 3,
+      "majority_share": 0.439,
+      "state": "OK"
+    },
+    {
+      "arena_axis": "jail",
+      "board_axis": "jail",
+      "url": "https://huggingface.co/datasets/csoai/gspc-jail/resolve/main/items.jsonl",
+      "sha256": "b4745f843b33dad9aa3d0a287efac787f76763c3b5eba5f7b57a1625f341e43c",
+      "bytes": 21100,
+      "items_loaded": 36,
+      "canary_rows": 1,
+      "textless_rows_dropped": 0,
+      "expected_distribution": {
+        "CONFINED": 36
+      },
+      "arena_label_vocabulary": [
+        "CONFINED"
+      ],
+      "label_count": 1,
+      "majority_share": 1.0,
+      "state": "SINGLE_LABEL",
+      "consequence": "every answer naming the one label scores 1.0 for both models, so the axis cannot separate however long it is played"
+    }
+  ],
+  "summary": {
+    "OK": 11,
+    "NO_LABEL_VOCABULARY": 2,
+    "SINGLE_LABEL": 1
+  }
+}

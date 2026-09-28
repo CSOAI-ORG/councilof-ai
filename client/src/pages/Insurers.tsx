@@ -424,6 +424,9 @@ function InsurersEvidencePack() {
                             )}
                           </span>
                         )}
+                        {acc.state === "no-public-leader" && (
+                          <span title={acc.title} className="font-sans text-gray-600">{acc.text}</span>
+                        )}
                         {acc.state === "unmeasured" && (
                           <span
                             title={acc.title}

@@ -26,7 +26,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "separated leader. Empty cells stay empty.",
     axes: AXES,
     note: "Static from GSPC_AXIS_REGISTRY.json (ruled source of truth) + jail GoldBank floor. " +
-      "Per-axis results are independently signed; see /api/cards and /signed/ for verification. " +
-      "Living board counts: GET /api/gspc. Canon lock: do not invent 22 axes.",
+      "Verify any issued card against its own signature and key at /api/cards and /signed/. " +
+      "Supporting fact runs can be content-addressed but unsigned; GET /api/gspc reports each run's attestation state. " +
+      "Current board counts: GET /api/gspc totals.public_count; this register is not a live slot tally.",
   });
 };

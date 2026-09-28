@@ -1,0 +1,93 @@
+{
+ "schema": "csoai.primary-source-check/0.1",
+ "question": "Is '2026-07-28' a real, published MCP protocol version, and what does it change about version negotiation?",
+ "method": "each URL fetched once with urllib; sha256 is over the exact bytes received; each quote is checked against those bytes after stripping HTML tags (HTML pages), markdown emphasis/backticks, and collapsing whitespace. Bytes are not republished here (third-party content); re-fetch and compare, noting pages can change.",
+ "sources": [
+  {
+   "url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+   "final_url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+   "http_status": 200,
+   "fetched_at": "2026-09-25T08:04:56Z",
+   "bytes": 133679,
+   "sha256": "9e3c347f359baa66725fffe8e88f348299905d236dea320cd8457e8c4619e520",
+   "quotes": [
+    {
+     "quote": "pushing the release button on the next version of the MCP specification, 2026-07-28",
+     "words": 13,
+     "present_in_fetched_bytes": true
+    },
+    {
+     "quote": "officially retired the initialize / initialized exchange",
+     "words": 7,
+     "present_in_fetched_bytes": true
+    }
+   ]
+  },
+  {
+   "url": "https://modelcontextprotocol.io/specification/2026-07-28",
+   "final_url": "https://modelcontextprotocol.io/specification/2026-07-28",
+   "http_status": 200,
+   "fetched_at": "2026-09-25T08:04:57Z",
+   "bytes": 323096,
+   "sha256": "e434010502918455ebe12ede0d8719c3e3dec25ed9655d2a7fc0e4944de021c7",
+   "quotes": [
+    {
+     "quote": "Version 2026-07-28 (latest)",
+     "words": 3,
+     "present_in_fetched_bytes": true
+    }
+   ]
+  },
+  {
+   "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning.md",
+   "final_url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning.md",
+   "http_status": 200,
+   "fetched_at": "2026-09-25T08:04:57Z",
+   "bytes": 11518,
+   "sha256": "28c417b3c38345ae8350b9be20ed1b53fcec564b65c13c25d96ab9cfe7e44e9f",
+   "quotes": [
+    {
+     "quote": "There is no negotiation handshake.",
+     "words": 5,
+     "present_in_fetched_bytes": true
+    },
+    {
+     "quote": "establish a session with an initialize handshake (2025-11-25 and earlier)",
+     "words": 10,
+     "present_in_fetched_bytes": true
+    }
+   ]
+  },
+  {
+   "url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http.md",
+   "final_url": "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports/streamable-http.md",
+   "http_status": 200,
+   "fetched_at": "2026-09-25T08:04:57Z",
+   "bytes": 31525,
+   "sha256": "761f1cd04bfdc4f2c16a362502725ea684341cb7ad99607df927017713af19fc",
+   "quotes": [
+    {
+     "quote": "Every POST request to the MCP endpoint MUST include an MCP-Protocol-Version header.",
+     "words": 12,
+     "present_in_fetched_bytes": true
+    }
+   ]
+  },
+  {
+   "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle.md",
+   "final_url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle.md",
+   "http_status": 200,
+   "fetched_at": "2026-09-25T08:04:58Z",
+   "bytes": 9686,
+   "sha256": "884720004be3ab0e2c65562c33ce8903b30e7c763c4764baed04a2ef8dfd7fa6",
+   "quotes": [
+    {
+     "quote": "Otherwise, the server MUST respond with another protocol version it supports.",
+     "words": 11,
+     "present_in_fetched_bytes": true
+    }
+   ]
+  }
+ ],
+ "verdict": "CONFIRMED"
+}

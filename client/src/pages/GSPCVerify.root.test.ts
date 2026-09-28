@@ -7,6 +7,10 @@ const catalogue = readFileSync(
   resolve(__dirname, "../components/gspc/PublicRootCatalogue.tsx"),
   "utf8",
 );
+const commission = readFileSync(
+  resolve(__dirname, "../../../functions/api/request-attestation.ts"),
+  "utf8",
+);
 
 describe("/gspc-verify two modes — estate card + signed public root", () => {
   it("keeps estate card verify and adds public-root inclusion", () => {
@@ -50,5 +54,18 @@ describe("/gspc-verify two modes — estate card + signed public root", () => {
     expect(page).not.toContain("CHAIN_STATUS");
     expect(page).toContain("Chain replay is not claimed");
     expect(page).toContain("trusted reference hashes");
+  });
+
+  it("describes the paid commission as a receipt over existing evidence, not a fresh run", () => {
+    expect(commission).toContain('fresh_run: "UNMEASURED"');
+    expect(commission).toContain("corpus_as_of: reserve.as_of");
+    expect(commission).toContain("signer: signerState(env)");
+    expect(page).toContain("Free verification → optional commission receipt");
+    expect(page).toContain("Commission receipt · existing evidence");
+    expect(page).toContain("it does not run a new measurement");
+    expect(page).toContain("signer state, corpus date and cards available");
+    expect(page).toContain('href="/dashboard?tab=tools&tool=commission_card"');
+    expect(page).toContain('href="/pay"');
+    expect(page).not.toContain("Paid proof · commission");
   });
 });

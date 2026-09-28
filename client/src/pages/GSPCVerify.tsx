@@ -137,6 +137,19 @@ export default function GSPCVerify() {
             living stamp, missing PQC seal, or verify path not wired) — never paint UNCHECKABLE as
             INVALID by default.
           </p>
+          <div className="mt-6 grid gap-2 sm:grid-cols-3" aria-label="What verification checks">
+            {[
+              ["01", "Hash", "Recompute the content identifier from the exact bytes."],
+              ["02", "Signature", "Check Ed25519 against the published key named by the record."],
+              ["03", "Inclusion", "Where applicable, bind the leaf proof to the published root."],
+            ].map(([n, label, copy]) => (
+              <div key={label} className="rounded-2xl border border-emerald-400/15 bg-white/[0.035] p-4">
+                <p className="font-mono text-[10px] font-bold tracking-[0.18em] text-emerald-400/70">{n}</p>
+                <p className="mt-2 text-sm font-bold text-emerald-50">{label}</p>
+                <p className="mt-1 text-xs leading-5 text-emerald-100/60">{copy}</p>
+              </div>
+            ))}
+          </div>
           <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Verify mode">
             <button
               type="button"
@@ -195,12 +208,14 @@ export default function GSPCVerify() {
             data-testid="governance-retrieve-raas"
           >
             <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">
-              RaaS · free preview → paid proof
+              Free verification → optional commission receipt
             </p>
             <p className="text-[13px] text-emerald-100/80 leading-relaxed">
-              Stranger path for the live governance measurement retrieve. Free preview loads the published
-              bytes into the verifier below — measurement credential only, never a certificate. Paid
-              proof, commission, or feed stays on the commission door after you have seen the preview.
+              Free preview loads a historical signed governance card into the verifier below. Its
+              current board admission and quotability are not established by this example. The paid
+              commission door issues a receipt for a named subject and re-serves signed cards already
+              on file; it does not run a new measurement. Before paying, check the 402 challenge for
+              the signer state, corpus date and cards available for your subject.
             </p>
             <p className="font-mono text-[12px] text-emerald-200/90 break-all">
               <a
@@ -226,14 +241,14 @@ export default function GSPCVerify() {
                 className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/40 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/15"
                 data-testid="governance-commission-cta"
               >
-                Paid proof · commission
+                Commission receipt · existing evidence
               </Link>
               <a
                 href="/pay"
                 className="min-h-[44px] inline-flex items-center rounded-lg border border-emerald-400/25 px-4 py-2 text-sm font-semibold text-emerald-200/90 hover:bg-emerald-500/10"
                 data-testid="governance-pay-cta"
               >
-                Feed / pay door
+                Browse all metered doors
               </a>
             </div>
           </div>

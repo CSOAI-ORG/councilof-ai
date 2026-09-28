@@ -1,12 +1,12 @@
 {
   "schema": "csoai.agents-discovery/0.1",
   "name": "Council of AI",
-  "description": "Independent AI-governance measurement. Publishes a living 22-axis GSPC board, Ed25519-signed measurement cards, and a signed Merkle root. Measurement, not certification.",
-  "as_of": "20260905T133000Z",
+  "description": "Independent AI-governance measurement. Publishes a living GSPC board, Ed25519-signed measurement cards, and a signed Merkle root. Read /api/gspc for current axis counts and each run's attestation state. Measurement, not certification.",
+  "as_of": "20260923T105726Z",
   "free_forever": {
     "principle": "Reading the board and verifying a card are free and always will be. Nothing in this block returns a payment challenge.",
     "doors": [
-      { "id": "board", "url": "https://councilof.ai/api/gspc", "what": "the living 22-axis board with derived totals" },
+      { "id": "board", "url": "https://councilof.ai/api/gspc", "what": "the living board with derived axis totals and run attestation states" },
       { "id": "verify", "url": "https://councilof.ai/gspc-verify", "what": "verify a signed card — VALID, INVALID or UNCHECKABLE" },
       { "id": "card-index", "url": "https://councilof.ai/signed/card_index.json", "what": "the signed card index" },
       { "id": "root", "url": "https://councilof.ai/root.json", "what": "the signed Merkle root" },

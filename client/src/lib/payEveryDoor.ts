@@ -2,10 +2,10 @@
  * payEveryDoor — the /pay page's flow, kept out of the component so it can be tested without a
  * DOM and so the per-door button and "pay all remaining" share ONE path.
  *
- * WHY THE PAGE EXISTS. An x402 index (PayAI today, Coinbase CDP once settles route through it)
- * catalogues a resource only off a confirmed settle through its facilitator. Nothing else lists a
- * door — not metadata, not a manifest, not a registration call (there is none). The owner pays
- * each door once from his own wallet; the index notices. This module is that one settle per door.
+ * WHY THE PAGE EXISTS. A successful payment can create a facilitator settlement record
+ * relevant to settlement-based discovery. PayAI and the 402 Index are separate observed
+ * catalogues; an index row or a self-funded settle does not prove independent demand.
+ * This module implements the one-settle-per-door wallet path.
  *
  * WHAT IT REUSES, DELIBERATELY. The EIP-3009 typed data and the wallet round trip come from
  * `@/lib/x402Wallet` (`buildTypedData`, `signX402Challenge`, `discoverEIP6963`) — the same
@@ -32,10 +32,12 @@ import {
 
 export const MANIFEST_PATH = "/.well-known/x402.json";
 export const LISTING_PATH = "/api/x402-listing";
+export const FOUR02_LISTING_PATH = "/api/x402-listing-402index";
+export const DOOR_SETTLES_PATH = "/api/door-settles";
 
 /** The one sentence the page must carry, verbatim. */
 export const THE_LINE =
-  "Each payment is one settle through the estate's facilitator; an index catalogues a door only after that. This page never holds a key.";
+  "A successful payment can create a facilitator settlement record. PayAI and 402 Index listings are checked separately. This page never holds a key.";
 
 export type Door = {
   url: string;
@@ -305,6 +307,20 @@ export function doorFromSearch(search: string): string | null {
   return raw && raw.trim() ? raw.trim() : null;
 }
 
+/** Two spellings of one resource url: same route key, same decoded query entries (any order). */
+export function sameResource(a: string, b: string): boolean {
+  if (a === b) return true;
+  try {
+    if (routeKey(a) !== routeKey(b)) return false;
+    const q = (u: string) => [...new URL(u).searchParams.entries()].map(([k, v]) => `${k}=${v}`).sort();
+    const qa = q(a);
+    const qb = q(b);
+    return qa.length === qb.length && qa.every((e, i) => e === qb[i]);
+  } catch {
+    return false;
+  }
+}
+
 export function selectDoor(doors: Door[], wanted: string | null): Door | null {
   if (!wanted) return null;
   return (
@@ -332,11 +348,29 @@ export type Listing =
   | { status: "NOT_LISTED"; asOf: string; scanned: number | null; declared: number | null }
   | { status: "UNCHECKABLE"; reason: string };
 
+/**
+ * rowForDoor — the row that describes a door, from any reading keyed by url. A door is its FULL
+ * url; an index or a settlement record may have written the bare path (the settle envelope
+ * stripped the query until 2026-09-22) or the full url. Prefer the exact row, accept the
+ * route-key row — the same rule as functions/api/x402-listing.ts rowForDoor. `exact` says which.
+ */
+export function rowForDoor<T>(rows: T[] | null | undefined, door: Door, urlOf: (row: T) => string | undefined | null): { row: T; exact: boolean } | null {
+  const list = Array.isArray(rows) ? rows : [];
+  const url = (r: T) => {
+    const u = urlOf(r);
+    return typeof u === "string" ? u : "";
+  };
+  const exact = list.find((r) => url(r) !== "" && sameResource(url(r), door.url));
+  if (exact) return { row: exact, exact: true };
+  const byRoute = list.find((r) => url(r) !== "" && routeKey(url(r)) === door.routeKey);
+  return byRoute ? { row: byRoute, exact: false } : null;
+}
+
 /** Per-door reading of the index: listed with its last_updated, absent (only if determinate), or unknown. */
 export function listingFor(door: Door, reading: ListingReading | null | undefined): Listing {
   if (!reading) return { status: "UNCHECKABLE", reason: "the index has not been read" };
   const rows = Array.isArray(reading.rows) ? reading.rows : [];
-  const hit = rows.find((r) => (r.route_key || routeKey(r.resource)) === door.routeKey);
+  const hit = rowForDoor(rows, door, (r) => r.resource)?.row;
   if (hit) {
     return {
       status: "LISTED",
@@ -374,4 +408,128 @@ export function remainingDoors(
     const q = quotes[d.url];
     return q !== undefined && q !== "reading" && q.kind === "challenge" && states[d.url]?.kind !== "delivered";
   });
+}
+
+/** What /api/x402-listing-402index returns — the shape functions/api/x402-listing-402index.ts writes. */
+export type Index402Reading = {
+  kind: "MEASURED" | "UNCHECKABLE";
+  as_of: string;
+  index?: { name: string; url: string; query?: string };
+  declared_total?: number | null;
+  scanned?: number;
+  absence_determinate: boolean;
+  rows: { url: string; route_key?: string; health_status?: string | null; last_checked?: string | null; domain_verified?: boolean | null }[];
+  reason?: string | null;
+};
+
+export type Index402Listing =
+  | { status: "LISTED"; health: string | null; lastChecked: string | null; domainVerified: boolean | null; asOf: string; exact: boolean }
+  | { status: "NOT_LISTED"; asOf: string; scanned: number | null; declared: number | null }
+  | { status: "UNCHECKABLE"; reason: string };
+
+/** Per-door reading of the 402 Index: listed with its health word, absent (only if determinate), or unknown. */
+export function index402For(door: Door, reading: Index402Reading | null | undefined): Index402Listing {
+  if (!reading) return { status: "UNCHECKABLE", reason: "the 402 Index has not been read" };
+  const hit = rowForDoor(reading.rows, door, (r) => r.url);
+  if (hit) {
+    return {
+      status: "LISTED",
+      health: hit.row.health_status ?? null,
+      lastChecked: hit.row.last_checked ?? null,
+      domainVerified: typeof hit.row.domain_verified === "boolean" ? hit.row.domain_verified : null,
+      asOf: reading.as_of,
+      exact: hit.exact,
+    };
+  }
+  if (reading.kind === "MEASURED" && reading.absence_determinate) {
+    return {
+      status: "NOT_LISTED",
+      asOf: reading.as_of,
+      scanned: typeof reading.scanned === "number" ? reading.scanned : null,
+      declared: typeof reading.declared_total === "number" ? reading.declared_total : null,
+    };
+  }
+  return { status: "UNCHECKABLE", reason: reading.reason || "the 402 Index was not read in full; absence would be a guess" };
+}
+
+/** What /api/door-settles returns — the shape functions/api/door-settles.ts writes. */
+export type DoorSettlesReading = {
+  kind: "MEASURED" | "UNMEASURED";
+  as_of: string;
+  rows: { resource: string; route_key?: string; last_settle: string; tx?: string | null; network?: string | null; self?: boolean | null; zero_value?: boolean | null; settles?: number }[];
+  reason?: string | null;
+};
+
+/**
+ * A door's last settle as THIS SITE recorded it. `lastSettle` is null — UNMEASURED — for a door
+ * with no record and for a store that could not be read; both are delist risk, and the reason
+ * says which. Nothing here turns a listing row or a manifest entry into a date.
+ */
+export type SettleReading =
+  | { status: "SETTLED"; lastSettle: string; tx: string | null; network: string | null; self: boolean | null; settles: number | null; asOf: string; exact: boolean }
+  | { status: "NONE_ON_RECORD"; lastSettle: null; asOf: string }
+  | { status: "UNMEASURED"; lastSettle: null; reason: string };
+
+export function settleFor(door: Door, reading: DoorSettlesReading | null | undefined): SettleReading {
+  if (!reading) return { status: "UNMEASURED", lastSettle: null, reason: "the settlement records have not been read" };
+  if (reading.kind !== "MEASURED") {
+    return { status: "UNMEASURED", lastSettle: null, reason: reading.reason || "the settlement records could not be read" };
+  }
+  const hit = rowForDoor(reading.rows, door, (r) => r.resource);
+  if (!hit || typeof hit.row.last_settle !== "string" || !Number.isFinite(Date.parse(hit.row.last_settle))) {
+    return { status: "NONE_ON_RECORD", lastSettle: null, asOf: reading.as_of };
+  }
+  return {
+    status: "SETTLED",
+    lastSettle: hit.row.last_settle,
+    tx: hit.row.tx ?? null,
+    network: hit.row.network ?? null,
+    self: typeof hit.row.self === "boolean" ? hit.row.self : null,
+    settles: typeof hit.row.settles === "number" ? hit.row.settles : null,
+    asOf: reading.as_of,
+    exact: hit.exact,
+  };
+}
+
+/**
+ * SETTLEMENT-FRESHNESS HEURISTIC. The page uses a 30-day internal review window and
+ * turns a door red at 25 days. This does not assert an index's delisting rule. Risk is true when
+ * the last settle is null (UNMEASURED — nothing on record is not "recent"), unparseable, or
+ * 25 days or more before `now`. At exactly 25 days it is red; one millisecond short is not.
+ */
+export const DELIST_AFTER_DAYS = 30;
+export const DELIST_RISK_DAYS = 25;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export function delistRisk(lastSettle: string | null | undefined, now: number | Date): boolean {
+  if (!lastSettle) return true;
+  const at = Date.parse(lastSettle);
+  if (!Number.isFinite(at)) return true;
+  const nowMs = typeof now === "number" ? now : now.getTime();
+  return nowMs - at >= DELIST_RISK_DAYS * DAY_MS;
+}
+
+/** Whole days since an instant, floored; null when the instant is unreadable. For the cell's copy only. */
+export function daysSince(iso: string | null | undefined, now: number | Date): number | null {
+  if (!iso) return null;
+  const at = Date.parse(iso);
+  if (!Number.isFinite(at)) return null;
+  const nowMs = typeof now === "number" ? now : now.getTime();
+  return Math.floor((nowMs - at) / DAY_MS);
+}
+
+/** The running tally of a Settle-all walk, read off the door states — nothing is counted twice. */
+export type WalkTally = { queued: number; delivered: number; unsettled: number; rejected: number; failed: number; pending: number };
+
+export function walkTally(queue: string[], states: Record<string, DoorState | undefined>): WalkTally {
+  const t: WalkTally = { queued: queue.length, delivered: 0, unsettled: 0, rejected: 0, failed: 0, pending: 0 };
+  for (const url of queue) {
+    const k = states[url]?.kind;
+    if (k === "delivered") t.delivered++;
+    else if (k === "unsettled") t.unsettled++;
+    else if (k === "rejected") t.rejected++;
+    else if (k === "error" || k === "wrong-network" || k === "no-wallet") t.failed++;
+    else t.pending++;
+  }
+  return t;
 }

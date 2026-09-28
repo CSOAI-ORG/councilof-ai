@@ -7,12 +7,14 @@
  * how healthy the RECORD is. It is not how healthy the model is, not a
  * fused Council Space grade, and not an investable index.
  *
- * SNAPSHOT, not a live read. Taken 2026-09-02 from GET /api/gspc
- * (22 axis · 22 measured · 0 empty · 969 items) and GET /api/corrections (39).
- *
- * 2026-09-06: the pin said items: 893 while this very header said 969, and the
- * live board still sums 969 across its 22 axes. The struct was wrong against its
- * own provenance line; corrected to 969.
+ * SNAPSHOT, not a live read. The board fields (declared / measured / empty /
+ * items / board) are DERIVED from the recorded observation in facts.json
+ * (counts.axis_count.observed, written by scripts/refresh-board-observation.mjs)
+ * and carry its date as `board_as_at`; the corrections figure was read from
+ * GET /api/corrections on its own date. Until 2026-09-22 the board fields were
+ * typed here by hand and sat six days stale after the board moved to 23 slots
+ * (drift-draft D-2026-09-22T14-10) — the same defect as the 2026-09-06 items
+ * pin (893 typed against a header that said 969).
  *
  * These two numbers move: corrections went 30 → 38 → 39 inside 2026-09-02
  * alone. Any figure pinned here is stale the moment the ledger appends, so it
@@ -26,6 +28,8 @@
  * component; the pin below survives only as a dated fallback for when the door
  * does not answer.
  */
+
+import { BOARD_COUNT_OBSERVED, BOARD_OBSERVATION, BOARD_OBSERVED_AT } from "./boardCount";
 
 export type FactState = "present" | "empty" | "unknown";
 
@@ -52,10 +56,12 @@ export const HEALTH_NEVER = [
 ] as const;
 
 export const LIVE_HEALTH_PIN = {
-  declared: 22,
-  measured: 22,
-  empty: 0,
-  items: 969,
+  declared: BOARD_COUNT_OBSERVED.axes,
+  measured: BOARD_COUNT_OBSERVED.measured_axes,
+  empty: BOARD_COUNT_OBSERVED.unmeasured_axes,
+  items: BOARD_OBSERVATION.items,
+  /** Date the board fields above were observed on GET /api/gspc. */
+  board_as_at: BOARD_OBSERVED_AT,
   index_rows: 15,
   index_schema: "csoai.sov-signal-index/1",
   not_a_certification: true,
@@ -64,7 +70,7 @@ export const LIVE_HEALTH_PIN = {
   corrections: 47,
   corrections_as_at: "6 September 2026",
   as_at: "2 September 2026",
-  board: "22 axis · 22 measured",
+  board: BOARD_COUNT_OBSERVED.public_count,
 } as const;
 
 export const HEALTH_FACTS: HealthFact[] = [

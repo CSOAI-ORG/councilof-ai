@@ -1,0 +1,3 @@
+# Layer O registrations
+
+These are registrations **offered to the Layer O umbrella lane** (`layer-o-umbrella-20260924`). They are not edits of its `axis-harness-registry.json`. That lane owns the registry and decides whether to accept, amend or refuse each entry. Every file here uses that registry's own wedge ids, axis ids, authority states and evidence states, and pins the registry version it read (`registry_read.file_sha256`). It honours each wedge's contract: `application_view_only`, `cannot_override_axis_truth` and `reverify_only_affected_dependencies`. No file here changes the board's axis count or any axis value. Schema: `csoai.layer-o-registration/0.1`.

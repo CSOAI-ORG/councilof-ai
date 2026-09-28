@@ -242,6 +242,42 @@ describe("content_id card families are recognised, not rejected", () => {
     }
   });
 
+  it("board-signed axis signals verify under the pinned board anchor with no live anchors", async () => {
+    const boardSigned = signalFiles.filter((f) => typeof readJson(resolve(SIGNAL_DIR, f)).signature?.did === "string");
+    expect(boardSigned.length).toBeGreaterThan(0);
+    for (const f of boardSigned) {
+      const v = await verifyCard(readJson(resolve(SIGNAL_DIR, f)), []);
+      expect(v.valid, `${f}: ${v.reasons.join(",")}`).toBe(true);
+      expect(v.anchor_id).toBe("did:web:csoai.org#board-attestation-1");
+    }
+  });
+
+  it("a board-signed signal with an edited leader fails as preimage_mismatch", async () => {
+    const f = signalFiles.find((x) => typeof readJson(resolve(SIGNAL_DIR, x)).signature?.did === "string")!;
+    const card = readJson(resolve(SIGNAL_DIR, f));
+    card.elo_leader = "forged:1b";
+    const v = await verifyCard(card, []);
+    expect(v.valid).toBe(false);
+    expect(v.reasons).toContain("preimage_mismatch");
+  });
+
+  it("the elo reference verifies through its board-signed envelope, and a swapped envelope fails", async () => {
+    const ref = readJson(resolve(ROOT, "public/arena/elo_reference.json"));
+    expect(detectFamily(ref)).toBe("csoai.content-id-card");
+    const v = await verifyCard(ref, []);
+    expect(v.valid, v.reasons.join(",")).toBe(true);
+    const swapped = JSON.parse(JSON.stringify(ref));
+    swapped.signature.envelope.content_id = "00".repeat(32);
+    const w = await verifyCard(swapped, []);
+    expect(w.valid).toBe(false);
+    expect(w.reasons).toContain("envelope_mismatch");
+    const edited = JSON.parse(JSON.stringify(ref));
+    edited.n_rounds = edited.n_rounds + 1;
+    const x = await verifyCard(edited, []);
+    expect(x.valid).toBe(false);
+    expect(x.reasons).toContain("preimage_mismatch");
+  });
+
   it("the cross-border card's content_id derives and its signature verifies", async () => {
     const card = readJson(resolve(SIGNAL_DIR, "cross-border-card.signed.json"));
     const v = await verifyCard(card, ANCHORS);

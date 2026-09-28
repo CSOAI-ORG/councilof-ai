@@ -45,7 +45,7 @@ const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      // shell (soft 404) instead of the directory index.
                      "/signed",
                      // 48h thesis stack JSON (index + watches) — serve as assets.
-                     "/stack"];
+                     "/stack", "/world/observatory"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -71,6 +71,16 @@ const EXISTING = [
   // renders our server icon got nothing. Redirected to the icon we already serve rather than
   // committing a second copy in another format: one icon, one source of truth. Browsers accept
   // an SVG here; the content-type is image/svg+xml either way.
+  // /alliance-map published a register of other organisations' claims for one morning.
+  // Maintaining that register is the alliance's job, not ours; our own membership is a
+  // row on /memberships, which is what the page was reached for.
+  "/alliance-map          /memberships         308",
+  "/alliance-map/         /memberships         308",
+  // The noindex GitHub PR train is retired: its API returns 404 and the live
+  // lazy chunk is missing. Send old bookmarks to the indexed explanation of
+  // the live measurement workflow rather than advertise a frozen PR queue.
+  "/merge-me             /how-we-work   308",
+  "/merge-me/            /how-we-work   308",
   "/favicon.ico           /csoai-icon.svg      308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
@@ -86,6 +96,7 @@ const EXISTING = [
   // functions/api/card_index.ts instead of a rule here.
   "/card_index.json        /signed/card_index.json  301",
   "/cards/card_index.json  /signed/card_index.json  301",
+  "/world/observatory      /world/observatory/       308",
   // Revenue densify leftover 2026-09-07: GET /public/openapi.json 404. The
   // OpenAPI document lives at public/openapi.json in git and is served at
   // /openapi.json on Pages (public/ is the site root). /public/openapi.json
@@ -164,7 +175,8 @@ const EXISTING = [
   "/containment/   /blog/what-is-monitored-containment/  308",
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
-  "/gspc                   /dashboard?tab=board         308",
+  "/gspc                   /board/                     308",
+  "/gspc/                  /board/                     308",
   // TUI/plugin help used to 404. Help lives at /tools (seven MCP tools).
   "/plugin                 /tools                       301",
   "/plugin/                /tools                       301",

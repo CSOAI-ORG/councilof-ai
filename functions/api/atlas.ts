@@ -1,6 +1,6 @@
 /**
  * atlas — retired until its response can be derived from current evidence.
- * @openapi-unavailable
+ * @openapi-retired
  */
 
 const json = (body: unknown, status = 200) =>

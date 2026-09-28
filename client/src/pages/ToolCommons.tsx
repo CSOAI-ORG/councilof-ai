@@ -199,6 +199,10 @@ export default function ToolCommons() {
                 Its npm description quotes a catalogue size we have not probed. The only counts on
                 this page are the three above, and none of them is that figure.
               </p>
+              <p className="mt-2 rounded-lg border border-amber-300/30 bg-amber-300/10 px-3 py-2 text-[12px] leading-relaxed text-amber-100">
+                The npm governance MCP installs, but its default signing gateway is currently unavailable.
+                For working measurement tools use <a href="https://councilof.ai/mcp" className="font-semibold underline">https://councilof.ai/mcp</a>.
+              </p>
             </div>
             <a href="https://www.npmjs.com/package/csoai-governance-mcp" target="_blank" rel="noopener noreferrer" className="shrink-0 font-mono text-[11px] text-emerald-300/75 underline hover:text-emerald-200">npm ↗</a>
           </div>

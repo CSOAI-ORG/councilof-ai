@@ -65,7 +65,7 @@ const ENGINE = [
 
 const FREE_RAIL = [
   { name: "Verify a card", href: "/gspc-verify", what: "Check any signed verdict offline. Free forever, for anyone." },
-  { name: "The live board", href: "/gspc-scoreboard", what: "Living board GET /api/gspc — counts derived from the signed board; UNMEASURED only if a future slot has no run." },
+  { name: "The live board", href: "/gspc-scoreboard", what: "Living board GET /api/gspc — counts derived from the committed axis arrays. Check GET /api/state for whether the preserved signed board snapshot agrees with those live rows." },
   { name: "The API", href: "/api/gspc", what: "The same board, machine-readable. Agents welcome.", external: true },
   { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
   { name: "Choose an actual job", href: "/dashboard?task=pricing-overview&tab=measured", what: "Free verification, existing RWA or Article 50 evidence, provider history, or a scoped commission. Paid routes disclose the exact amount only in their live 402 challenge." },

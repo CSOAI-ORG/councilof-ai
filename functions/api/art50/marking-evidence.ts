@@ -284,7 +284,22 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     const description =
       "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
     const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
-    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+    // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+    // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+    // Behavior) — that echo is what gets a resource catalogued.
+    const bazaar = declareBazaarHttpGet({
+      method: "GET",
+      queryParams: { url: "https://councilof.ai/og-image.png" },
+      queryParamsSchema: {
+        properties: {
+          url: { type: "string", format: "uri", description: "HTTPS URL of the output to measure" },
+          preview: { type: "string", const: "1" },
+        },
+        required: ["url"],
+      },
+      outputExample: { schema: KIND, measurement: { checked: [] } },
+    });
+    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
     if (!payment.ok) {
       return paymentRequiredResponseSigned(
         buildPaymentRequiredV2({
@@ -293,18 +308,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
           serviceName: "CSOAI Art50 Marking",
           tags: ["art50", "marking", "c2pa", "x402"],
           accepts,
-          bazaar: declareBazaarHttpGet({
-            method: "GET",
-            queryParams: { url: "https://councilof.ai/og-image.png" },
-            queryParamsSchema: {
-              properties: {
-                url: { type: "string", format: "uri", description: "HTTPS URL of the output to measure" },
-                preview: { type: "string", const: "1" },
-              },
-              required: ["url"],
-            },
-            outputExample: { schema: KIND, measurement: { checked: [] } },
-          }),
+          bazaar,
           csoai: { schema: KIND, lid: CSOAI_LID, never: ["conformity", "certificate"] },
         }),
         env,
@@ -353,7 +357,28 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     payment = { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP" };
   } else {
     const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "pack", description });
-    const paid = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+    // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
+    // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
+    // Behavior) — that echo is what gets a resource catalogued.
+    const bazaar = declareBazaarHttpGet({
+      method: "GET",
+      queryParams: { url: input.url || "https://example.org/output.jpg" },
+      queryParamsSchema: {
+        properties: {
+          url: { type: "string", description: "Public URL of the generative output to measure (≤ 20 MiB); or POST the bytes" },
+          preview: { type: "string", description: "1 = free unsigned measurement" },
+        },
+        required: ["url"],
+      },
+      outputExample: {
+        schema: "https://councilof.ai/schema/card-v0.json",
+        surface: SURFACE,
+        payload: { kind: KIND, checked: [{ method: "c2pa.manifest-store", result: "NOT_DETECTED" }], statements: ["marking not detected by method c2pa.manifest-store"] },
+        sig_ed25519: "<hex or null>",
+        unmeasured: ["root_inclusion", "watermark.synthid"],
+      },
+    });
+    const paid = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
     if (!paid.ok) {
       const paymentRequired = buildPaymentRequiredV2({
         resourceUrl,
@@ -361,24 +386,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         serviceName: "CSOAI Article 50 marking evidence",
         tags: ["article-50", "c2pa", "marking", "measurement", "x402"],
         accepts,
-        bazaar: declareBazaarHttpGet({
-          method: "GET",
-          queryParams: { url: input.url || "https://example.org/output.jpg" },
-          queryParamsSchema: {
-            properties: {
-              url: { type: "string", description: "Public URL of the generative output to measure (≤ 20 MiB); or POST the bytes" },
-              preview: { type: "string", description: "1 = free unsigned measurement" },
-            },
-            required: ["url"],
-          },
-          outputExample: {
-            schema: "https://councilof.ai/schema/card-v0.json",
-            surface: SURFACE,
-            payload: { kind: KIND, checked: [{ method: "c2pa.manifest-store", result: "NOT_DETECTED" }], statements: ["marking not detected by method c2pa.manifest-store"] },
-            sig_ed25519: "<hex or null>",
-            unmeasured: ["root_inclusion", "watermark.synthid"],
-          },
-        }),
+        bazaar,
         csoai: {
           schema: KIND,
           per: "pack (1 output × 1 point in time)",

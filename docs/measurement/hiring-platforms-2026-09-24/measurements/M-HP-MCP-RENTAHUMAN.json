@@ -1,0 +1,303 @@
+{
+ "state": "CLAIM_MEASURED",
+ "evidence_state": "MEASURED",
+ "measured_at": "2026-09-24T15:27:18Z",
+ "method": "read the official MCP registry search API for the term (keyless), filter to the named server where one is given, and record every version entry and the repository URL it declares; read the npm registry document and the npm downloads API for the package the entry names; read the unauthenticated GitHub REST record for every declared repository. Each of those records is held by the registry or code host, not by the subject",
+ "window": "the registries as served at measured_at; npm downloads over the window npm states in the result",
+ "denominator": {
+  "registries_read": 2,
+  "declared_repositories": 1
+ },
+ "result": {
+  "subject": "RentAHuman",
+  "mcp_registry_search_term": "rentahuman",
+  "mcp_registry_entries_matching": "9",
+  "mcp_registry_latest_version": "3.7.0",
+  "mcp_registry_latest_published_utc": "2026-09-18T02:19:35.400043Z",
+  "mcp_registry_declared_repositories": [
+   "https://github.com/rentahuman-ai/human-rental-marketplace"
+  ],
+  "declared_repositories_readable_by_unauthenticated_reader": "0",
+  "declared_repositories_not_served": "1",
+  "n": 1,
+  "npm_package": "rentahuman-mcp",
+  "npm_latest": "3.7.0",
+  "npm_versions_published": "55",
+  "npm_first_published_utc": "2026-02-04T14:19:20.090Z",
+  "npm_downloads_last_month": "3330",
+  "npm_downloads_last_month_window": [
+   "2026-08-23",
+   "2026-09-21"
+  ]
+ },
+ "registry": {
+  "evidence_state": "MEASURED",
+  "term": "rentahuman",
+  "name_filter": "io.github.rentahuman-ai/rentahuman",
+  "entries_returned_by_search": 9,
+  "entries_matching_name": 9,
+  "next_cursor": null,
+  "entries": [
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "1.29.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-08-27T13:41:36.237178Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "2.1.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-08-30T22:51:44.313612Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.0.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-03T02:01:27.935854Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.2.1",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-11T02:24:31.02289Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.3.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-11T02:46:54.160302Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.4.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-11T22:02:06.730523Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.5.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-16T04:25:01.441667Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.6.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-16T23:10:47.854179Z",
+    "is_latest": false
+   },
+   {
+    "name": "io.github.rentahuman-ai/rentahuman",
+    "version": "3.7.0",
+    "repository_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+    "remotes": [],
+    "packages": [
+     {
+      "registry": "npm",
+      "identifier": "rentahuman-mcp"
+     }
+    ],
+    "status": "active",
+    "published_at": "2026-09-18T02:19:35.400043Z",
+    "is_latest": true
+   }
+  ],
+  "source": {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?search=rentahuman",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:17Z",
+   "response_bytes": 9008,
+   "response_sha256": "d9a672f71e2563842329173e387097d56767b3c9ec2db3e9d23ab87474d21ab8",
+   "note": "official MCP registry search for 'rentahuman'"
+  }
+ },
+ "npm": {
+  "evidence_state": "MEASURED",
+  "package": "rentahuman-mcp",
+  "latest": "3.7.0",
+  "versions_published": 55,
+  "first_published_utc": "2026-02-04T14:19:20.090Z",
+  "last_modified_utc": "2026-09-18T02:18:31.075Z",
+  "manifest_licence_field": "MIT",
+  "manifest_repository_field": null,
+  "deprecated_latest": null,
+  "source": {
+   "url": "https://registry.npmjs.org/rentahuman-mcp",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:17Z",
+   "response_bytes": 180307,
+   "response_sha256": "83a2ef5d05c5427461f64c6a6265acbe0e2aa0b4195ed9a761b5e13ee4f3e341",
+   "note": "npm registry document for rentahuman-mcp"
+  },
+  "note": "maintainer names and e-mail addresses in the registry document are personal data and are not carried here",
+  "downloads": {
+   "last-week": {
+    "downloads": 824,
+    "start": "2026-09-15",
+    "end": "2026-09-21"
+   },
+   "last-month": {
+    "downloads": 3330,
+    "start": "2026-08-23",
+    "end": "2026-09-21"
+   }
+  },
+  "download_sources": [
+   {
+    "url": "https://api.npmjs.org/downloads/point/last-week/rentahuman-mcp",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:27:17Z",
+    "response_bytes": 84,
+    "response_sha256": "0cf87a5a647e2b4a9228e8577bc6665eef115ac1fd368f77388bd27cffb865c2",
+    "note": "npm downloads last-week for rentahuman-mcp"
+   },
+   {
+    "url": "https://api.npmjs.org/downloads/point/last-month/rentahuman-mcp",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:27:17Z",
+    "response_bytes": 85,
+    "response_sha256": "5c831b1032f75175c0cd4d9cfc44fc8f861ee302860b40220b4f726bda71cc8b",
+    "note": "npm downloads last-month for rentahuman-mcp"
+   }
+  ]
+ },
+ "repositories": [
+  {
+   "declared_url": "https://github.com/rentahuman-ai/human-rental-marketplace",
+   "repository": "rentahuman-ai/human-rental-marketplace",
+   "evidence_state": "SEARCH_INCONCLUSIVE",
+   "status": 404,
+   "source": {
+    "url": "https://api.github.com/repos/rentahuman-ai/human-rental-marketplace",
+    "status": 404,
+    "accessed_utc": "2026-09-24T15:27:18Z",
+    "response_bytes": 118,
+    "response_sha256": "4f50e254a719a6b1b06b529bdaa08980e4acf0878aad0090cba7771f6ebdf0b9",
+    "reason": "HTTP 404",
+    "note": "GitHub public repository record for rentahuman-ai/human-rental-marketplace"
+   },
+   "meaning": "the code host did not serve this repository to an unauthenticated reader. The GitHub API answers 404 both for a repository that does not exist and for one that is private, so this is recorded with its status and read as neither"
+  }
+ ],
+ "sources": [
+  {
+   "url": "https://registry.modelcontextprotocol.io/v0/servers?search=rentahuman",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:17Z",
+   "response_bytes": 9008,
+   "response_sha256": "d9a672f71e2563842329173e387097d56767b3c9ec2db3e9d23ab87474d21ab8",
+   "note": "official MCP registry search for 'rentahuman'"
+  },
+  {
+   "url": "https://registry.npmjs.org/rentahuman-mcp",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:17Z",
+   "response_bytes": 180307,
+   "response_sha256": "83a2ef5d05c5427461f64c6a6265acbe0e2aa0b4195ed9a761b5e13ee4f3e341",
+   "note": "npm registry document for rentahuman-mcp"
+  },
+  {
+   "url": "https://api.npmjs.org/downloads/point/last-week/rentahuman-mcp",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:17Z",
+   "response_bytes": 84,
+   "response_sha256": "0cf87a5a647e2b4a9228e8577bc6665eef115ac1fd368f77388bd27cffb865c2",
+   "note": "npm downloads last-week for rentahuman-mcp"
+  },
+  {
+   "url": "https://api.npmjs.org/downloads/point/last-month/rentahuman-mcp",
+   "status": 200,
+   "accessed_utc": "2026-09-24T15:27:17Z",
+   "response_bytes": 85,
+   "response_sha256": "5c831b1032f75175c0cd4d9cfc44fc8f861ee302860b40220b4f726bda71cc8b",
+   "note": "npm downloads last-month for rentahuman-mcp"
+  },
+  {
+   "url": "https://api.github.com/repos/rentahuman-ai/human-rental-marketplace",
+   "status": 404,
+   "accessed_utc": "2026-09-24T15:27:18Z",
+   "response_bytes": 118,
+   "response_sha256": "4f50e254a719a6b1b06b529bdaa08980e4acf0878aad0090cba7771f6ebdf0b9",
+   "reason": "HTTP 404",
+   "note": "GitHub public repository record for rentahuman-ai/human-rental-marketplace"
+  }
+ ],
+ "does_not_prove": [
+  "that the MCP server works, is safe, or does what the subject says it does. A registry entry records that a publisher who controls the namespace submitted metadata; the registry does not test the server",
+  "that any agent has hired any human through this server. npm download counts include CI systems, mirrors and caches and are not users, installs or transactions",
+  "that a repository which was not served to an unauthenticated reader does not exist; the code host answers the same way for a private repository",
+  "anything about the number of workers, tasks or payments on the platform"
+ ]
+}

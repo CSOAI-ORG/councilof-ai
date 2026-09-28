@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/claims/claimreg-ai-assurance-and-settlement-2026-09-23.json",
+      "sha256": "0fb10e73e325485c96e29d828b27ebe776364ed620303b15e90e49bd3c7c58ac",
+      "schema": "csoai.claim-registry/0.3",
+      "as_of": "2026-09-23"
+    },
+    "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23",
+    "registry_digest": "c80ae3e64a6df0504c2c410dfd534282af6fac2cc85560e958e23d0d4f9c5020",
+    "merkle": {
+      "algorithm": "RFC 9162 §2.1.1 Merkle Tree Hash",
+      "root": "6bbb10ac1a67640480593e6e39a7746b2f3045f67933f1a741cc7704f618e356",
+      "n_leaves": 62
+    },
+    "supersedes": {
+      "registry_id": null,
+      "sha256": null
+    },
+    "claim_states": {
+      "CLAIM_CAPTURED": 0,
+      "CLAIM_MEASURED": 20,
+      "UNMEASURED": 32,
+      "UNCHECKABLE": 10
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below. It does not certify, endorse or grade anything in the registry, and it makes no statement about any party the registry names."
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "1ed0c85aab25b63ab5b8adb3a9bb2d75f25fbf2571c91344dd926ce9bd9de3374b491cda1821421b9388d66cc2d5eb272429c588933f7f6f6c8d2de8acc77e0e",
+    "payload_sha256": "6e5baf491fd356af5cc53ff691677b87b0218f9ce8119c672fadb7be9bf83952",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-23T04:36:19.303Z"
+  },
+  "verify": "canonicalise payload (sort_keys, separators=(',',':'), ensure_ascii=False, UTF-8); its sha256 must equal signature.payload_sha256; verify sig_ed25519 (hex) with #board-attestation-1 from https://csoai.org/.well-known/did.json. Then check payload.artifact.sha256 against the registry file's bytes, and recompute the Merkle root from the registry's claim records with scripts/claims/merkle_rfc9162.py.",
+  "control_run": "the same signature over the payload plus one trailing space was rejected before this file was written"
+}

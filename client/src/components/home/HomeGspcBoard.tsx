@@ -105,10 +105,11 @@ export function defaultHubAxis(data: HubCardsPayload | null | undefined): string
   return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] ?? "";
 }
 
-export function topHubModels(data: HubCardsPayload | null | undefined, axis: string, limit = STRIP_N): HubCell[] {
+/** The feed omits bank/instrument identity, so cells cannot be ranked against one another. */
+export function hubModelObservations(data: HubCardsPayload | null | undefined, axis: string, limit = STRIP_N): HubCell[] {
   return measuredHubCells(data)
     .filter((cell) => cell.axis === axis)
-    .sort((a, b) => (b.accuracy as number) - (a.accuracy as number) || a.model.localeCompare(b.model))
+    .sort((a, b) => a.model.localeCompare(b.model) || String(a.card_sha256 ?? "").localeCompare(String(b.card_sha256 ?? "")))
     .slice(0, limit);
 }
 
@@ -249,6 +250,7 @@ export function BoardStrip({
   const [expanded, setExpanded] = useState(initiallyExpanded);
   const [view, setView] = useState<"list" | "table">(initialView);
   const listId = useId();
+  const scrollHintId = `${listId}-scroll-hint`;
   const rows = visibleAxes(axes, expanded);
   const hidden = axes.length - Math.min(axes.length, STRIP_N);
 
@@ -270,8 +272,12 @@ export function BoardStrip({
       </div>
 
       {view === "table" ? (
-        <div className="mt-2 overflow-x-auto rounded-xl border border-slate-200 dark:border-emerald-900/40">
-          <table className="w-full min-w-[40rem]" data-testid="board-table" id={listId}>
+        <>
+          <p id={scrollHintId} className="mt-2 text-xs text-slate-600 dark:text-emerald-100/70 sm:hidden">
+            Swipe sideways to read all columns, or choose List view for a compact layout.
+          </p>
+          <div className="mt-2 overflow-x-auto rounded-xl border border-slate-200 dark:border-emerald-900/40" role="region" tabIndex={0} aria-label="Scrollable GSPC axis table" aria-describedby={scrollHintId}>
+            <table className="w-full min-w-[64rem]" data-testid="board-table" id={listId}>
             <caption className="sr-only">Every board axis with its n, status, separation and public leader state.</caption>
             <thead className="bg-slate-50 dark:bg-white/5">
               <tr>
@@ -287,10 +293,10 @@ export function BoardStrip({
             <tbody>
               {rows.map((a) => (
                 <tr key={a.axis} data-axis-row={a.axis} className="border-t border-slate-100 dark:border-emerald-900/30">
-                  <td className={`${td} font-semibold`}>{boardAxisLabel(a.axis)}</td>
-                  <td className={td}>{String(a.kind ?? "")}</td>
-                  <td className={td}>{nText(a)}</td>
-                  <td className={td}>{String(a.status ?? "UNMEASURED")}</td>
+                  <td className={`${td} whitespace-nowrap font-semibold`}>{boardAxisLabel(a.axis)}</td>
+                  <td className={`${td} whitespace-nowrap`}>{String(a.kind ?? "")}</td>
+                  <td className={`${td} whitespace-nowrap`}>{nText(a)}</td>
+                  <td className={`${td} whitespace-nowrap`}>{String(a.status ?? "UNMEASURED")}</td>
                   <td className={td}>{separationLabel(a)}</td>
                   <td className={td}>
                     <LeaderText a={a} />
@@ -307,8 +313,9 @@ export function BoardStrip({
                 </tr>
               ))}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </>
       ) : (
         <ol id={listId} className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3" aria-label="Board axes in board order; position is layout, not rank">
           {rows.map((a) => {
@@ -371,7 +378,7 @@ export function HubResultsBoard({
     if (!selectedAxis || !axes.includes(selectedAxis)) setSelectedAxis(fallbackAxis);
   }, [axes, fallbackAxis, selectedAxis]);
 
-  const rows = topHubModels(data, selectedAxis);
+  const rows = hubModelObservations(data, selectedAxis);
   const cells = measuredHubCells(data);
   const modelCount = new Set(cells.map((cell) => cell.model)).size;
   const complete = data?.counts?.complete === true;
@@ -386,7 +393,7 @@ export function HubResultsBoard({
             Hugging Face measured-model results
           </h3>
           <p className="mt-1 max-w-3xl text-sm text-slate-600 dark:text-emerald-100/70">
-            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the GSPC board above: model axes rank measured cells; deterministic fact axes do not rank models.
+            Third-party Hub cells from <code>/api/hub-cards</code>. This is a separate benchmark instrument from the GSPC board above. Each signed card is an observation; deterministic fact axes do not score models.
           </p>
         </div>
         <a href={HUB_CARDS_PAGE_URL} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
@@ -428,26 +435,25 @@ export function HubResultsBoard({
             ))}
           </div>
 
+          <p className="mt-2 text-xs text-amber-900 dark:text-amber-200">
+            These observations may use different frozen banks or instruments. The feed does not identify a common comparison set, so their scores are not ranked or directly comparable. Check each signed card for its bank and instrument hashes.
+          </p>
+
           <div className="mt-2 overflow-x-auto rounded-2xl border border-slate-200 dark:border-emerald-900/40">
             <table className="w-full min-w-[36rem]" data-testid="hub-results-table">
-              <caption className="sr-only">Top nine published measured model cells for {hubAxisLabel(selectedAxis)}, ordered by score.</caption>
+              <caption className="sr-only">Up to nine signed measured observations for {hubAxisLabel(selectedAxis)}, sorted by model name; scores may come from different banks.</caption>
               <thead className="bg-slate-50 dark:bg-white/5">
                 <tr>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Rank</th>
                   <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Model</th>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Score</th>
+                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Observed score</th>
                   <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Evidence</th>
                 </tr>
               </thead>
               <tbody>
-                {rows.map((cell, index) => {
-                  const rank = rows.findIndex((candidate) => candidate.accuracy === cell.accuracy) + 1;
-                  return (
-                    <tr key={`${cell.model}-${cell.axis}`} data-hub-model-row={cell.model} className="border-t border-slate-100 dark:border-emerald-900/30">
-                      <td className="px-3 py-2 text-sm font-bold text-slate-500 dark:text-emerald-100/60">{rank}</td>
+                {rows.map((cell) => (
+                    <tr key={`${cell.model}-${cell.axis}-${cell.card_sha256 ?? ""}`} data-hub-model-row={cell.model} className="border-t border-slate-100 dark:border-emerald-900/30">
                       <td className="px-3 py-2 text-sm font-semibold text-slate-900 dark:text-emerald-50">
                         {cell.model}
-                        {index === 0 ? <span className="ml-2 text-[10px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/55">score order</span> : null}
                       </td>
                       <td className="px-3 py-2 text-sm tabular-nums text-slate-800 dark:text-emerald-100">
                         {fmtPct(cell.accuracy)}{typeof cell.n === "number" ? <span className="ml-2 text-xs text-slate-500 dark:text-emerald-100/55">n {cell.n}</span> : null}
@@ -460,13 +466,12 @@ export function HubResultsBoard({
                         )}
                       </td>
                     </tr>
-                  );
-                })}
+                ))}
               </tbody>
             </table>
           </div>
           <p className="mt-2 text-xs text-slate-500 dark:text-emerald-100/60">
-            Top nine by published score on the selected frozen bank. Ordering is not a separation test, winner claim, compliance verdict, or certificate. Open the signed card to verify a row.
+            Showing up to nine model-name-sorted observations on this axis. The displayed subset is not a top-nine ranking, separation test, winner claim, compliance verdict, or certificate. Open each signed card to verify its own evidence.
           </p>
         </>
       ) : null}
@@ -493,6 +498,12 @@ export default function HomeGspcBoard({
   const { data: hubData, error: hubError, loading: hubLoading } = useHubCardsFeed(injectedHub, injectedHubError);
   const count = publicCountOf(data);
   const axes: GspcAxis[] = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
+  const totals = (data?.totals ?? {}) as any;
+  const measuredAxes = typeof totals.measured_axes === "number" ? totals.measured_axes : axes.filter((a) => a.status === "MEASURED").length;
+  const comparisonAxes = typeof totals.comparison_axes === "number" ? totals.comparison_axes : axes.filter((a) => a.kind === "model-comparison").length;
+  const factRuns = typeof totals.fact_runs === "number" ? totals.fact_runs : axes.filter((a) => a.kind === "deterministic-facts").length;
+  const separated = typeof totals.separated_leads === "number" ? totals.separated_leads : axes.filter((a) => a.separation === "SEPARATED").length;
+  const ties = typeof totals.ties === "number" ? totals.ties : axes.filter((a) => a.separation === "TIE").length;
 
   return (
     <section
@@ -501,9 +512,9 @@ export default function HomeGspcBoard({
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 id="home-gspc-board-h" className="text-xl font-bold">
+          <h1 id="home-gspc-board-h" className="text-xl font-bold">
             GSPC board
-          </h2>
+          </h1>
           <p className="mt-1 text-sm font-semibold text-emerald-800 dark:text-emerald-300" data-testid="gspc-public-count">
             {error
               ? "Board is unreachable right now. Empty stays empty."
@@ -527,7 +538,10 @@ export default function HomeGspcBoard({
             return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · TIE is TIE · not a certificate.` : "";
           })()}
           <span className="block">
-            Root is signed. Witnesses bind exact root bytes and may still be pending. Verify is free.
+            The evidence root is signed separately from this live board. Its signature does not
+            establish that these API rows match the preserved signed board snapshot; check{" "}
+            <a href="/api/state" className="underline">GET /api/state</a> for that snapshot&apos;s status.
+            Witnesses bind exact root bytes and may still be pending. Verify is free.
           </span>
         </p>
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The live API response below is the master view. It is rendered directly here; Hugging Face is a distribution mirror.</p>
@@ -542,6 +556,22 @@ export default function HomeGspcBoard({
         </p>
       </div>
 
+      <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-5" aria-label="Live board summary">
+        {[
+          ["Measured axes", loading ? "…" : String(measuredAxes), `${axes.length || "—"} declared`],
+          ["Model fleets", loading ? "…" : String(comparisonAxes), "comparison axes"],
+          ["Separated", loading ? "…" : String(separated), `${ties} TIE`],
+          ["Fact runs", loading ? "…" : String(factRuns), "public facts"],
+          ["Status", error ? "UNREACHABLE" : loading ? "READING" : "LIVE", error ? "no value inferred" : "from /api/gspc"],
+        ].map(([label, value, note]) => (
+          <div key={label} className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
+            <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">{value}</p>
+            <p className="mt-0.5 text-[11px] text-slate-500 dark:text-emerald-100/55">{note}</p>
+          </div>
+        ))}
+      </div>
+
       <nav aria-label="Published evidence path" className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4" data-testid="board-supply-led-entry">
         <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">1 · Explore measurements</a>
         <a href="/press" className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/40">2 · See what changed</a>
@@ -549,7 +579,7 @@ export default function HomeGspcBoard({
         <a href="/quickstart" className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold hover:bg-slate-50 dark:border-emerald-900/50 dark:hover:bg-emerald-950/40">4 · Access supported feeds</a>
       </nav>
       <p className="mt-2 text-xs text-slate-500 dark:text-emerald-100/60">
-        Need a new scoped run? <a href="/assess" className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">Request a measurement</a> after reviewing the public evidence.
+        Need evidence for a named subject? <a href="/assess" className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">Inspect the attestation request</a>. The paid route issues a commission receipt and re-serves signed cards already on file; it does not start a new GSPC run.
       </p>
 
       {/* The /api/gspc data is the source of truth and renders directly below;

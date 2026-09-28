@@ -1,0 +1,389 @@
+{
+ "as_of": "2026-09-23",
+ "attribution": "Contains material from “Agentic AI – Threats and Mitigations” (v1.0, February 2025) by the OWASP Agentic Security Initiative, OWASP GenAI Security Project, https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/ — licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0). This crosswalk is an adaptation and is published under the same licence. OWASP and the OWASP logo are trademarks of the OWASP Foundation, Inc. OWASP has not reviewed, approved or endorsed this crosswalk; the document is named as factual provenance, not as affiliation or endorsement.",
+ "axes": {
+  "deterministic_facts": [
+   "effect-binding",
+   "provenance-controls",
+   "reserve-attestation",
+   "regulatory-framework",
+   "distribution-integrity",
+   "custody-disclosure",
+   "ai-adoption-components",
+   "labour-components",
+   "humanoid-labour-index"
+  ],
+  "model_comparison": [
+   "governance",
+   "safety",
+   "provenance",
+   "continuity",
+   "conformance",
+   "openness",
+   "machinery-conformity",
+   "care",
+   "cross-reality",
+   "detector-interop",
+   "art5-safeguard",
+   "swarm",
+   "affect",
+   "jail"
+  ],
+  "note": "14 model-comparison axes and 9 deterministic-fact axes, as GET /api/gspc reports them on 2026-09-23. Derive the counts from the endpoint, not here.",
+  "total": 23
+ },
+ "classes": [
+  {
+   "addressed_by_any_axis": false,
+   "adjacent": [],
+   "axes": [],
+   "direct": [],
+   "id": "T1",
+   "name": "Memory Poisoning",
+   "note": "No axis of ours inspects an agent's persisted memory or measures whether injected content survives into a later decision. Every behavioural axis grades a single stateless exchange against a frozen bank, so a fault that only appears across turns cannot show up on this board at all."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "conformance"
+   ],
+   "axes": [
+    {
+     "axis": "effect-binding",
+     "relation": "DIRECT"
+    },
+    {
+     "axis": "conformance",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [
+    "effect-binding"
+   ],
+   "id": "T2",
+   "name": "Tool Misuse",
+   "note": "effect-binding asks the question this class is about: does authorization bind to the request the server actually executes, or only to the tool call the agent declared. conformance measures a model against the tool protocol's own rules, which is the surface tool misuse travels over, not the misuse."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "cross-reality"
+   ],
+   "axes": [
+    {
+     "axis": "effect-binding",
+     "relation": "DIRECT"
+    },
+    {
+     "axis": "cross-reality",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [
+    "effect-binding"
+   ],
+   "id": "T3",
+   "name": "Privilege Compromise",
+   "note": "effect-binding is a probe of servers, and the gap it measures is a privilege gap. cross-reality grades whether an agent claims the authority to act (PROCEED / CONFIRM / REFUSE), which is a judgement about privilege rather than a test of enforcement."
+  },
+  {
+   "addressed_by_any_axis": false,
+   "adjacent": [],
+   "axes": [],
+   "direct": [],
+   "id": "T4",
+   "name": "Resource Overload",
+   "note": "Nothing on the board measures exhaustion of compute, memory or a downstream service. Our own engine was stopped by exactly this on the day this crosswalk was written — by free disk, not by an attacker — and no axis would have caught it."
+  },
+  {
+   "addressed_by_any_axis": false,
+   "adjacent": [],
+   "axes": [],
+   "direct": [],
+   "id": "T5",
+   "name": "Cascading Hallucination Attacks",
+   "note": "No axis measures propagation: every axis grades one answer, never what a wrong answer does to the next step. The estate does run a separate corrections-propagation watch over third-party pages, but that is not an axis, it measures published corrections rather than model output, and it must not be quoted as coverage of this class."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "safety",
+    "art5-safeguard"
+   ],
+   "axes": [
+    {
+     "axis": "safety",
+     "relation": "ADJACENT"
+    },
+    {
+     "axis": "art5-safeguard",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T6",
+   "name": "Intent Breaking & Goal Manipulation",
+   "note": "safety grades calibrated refusal on paired requests and art5-safeguard grades whether a prohibited practice is tripped — both measure resistance to being talked into an outcome. Neither measures a plan or a goal being rewritten mid-task, which is what this class names."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "care",
+    "affect"
+   ],
+   "axes": [
+    {
+     "axis": "care",
+     "relation": "ADJACENT"
+    },
+    {
+     "axis": "affect",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T7",
+   "name": "Misaligned & Deceptive Behaviors",
+   "note": "care scores protecting against helping on paired conduct scenarios and affect covers manipulation, disclosure and vulnerability. Both are about behaviour toward a person. Neither tests for an agent concealing its own behaviour from an operator."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "provenance",
+    "detector-interop"
+   ],
+   "axes": [
+    {
+     "axis": "provenance",
+     "relation": "ADJACENT"
+    },
+    {
+     "axis": "detector-interop",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T8",
+   "name": "Repudiation & Untraceability",
+   "note": "provenance measures whether content marking survives, and detector-interop measures whether detectors agree across implementations — traceability of OUTPUT. No axis measures whether an agent's ACTIONS are logged and attributable, which is the class. Our own signing and receipt apparatus addresses this for our artifacts, and that is an estate practice, not a measurement of anyone."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "provenance-controls"
+   ],
+   "axes": [
+    {
+     "axis": "provenance-controls",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T9",
+   "name": "Identity Spoofing & Impersonation",
+   "note": "provenance-controls reads issuer-identity binding facts on-chain — identity, but of a financial issuer, in a different domain. No axis measures agent or user impersonation."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "cross-reality"
+   ],
+   "axes": [
+    {
+     "axis": "cross-reality",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T10",
+   "name": "Overwhelming Human-in-the-Loop",
+   "note": "cross-reality measures whether a model hands a decision back to a human at all. It says nothing about the volume or fatigue that this class is about: an oversight rate is not an oversight load."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [],
+   "axes": [
+    {
+     "axis": "jail",
+     "relation": "DIRECT"
+    }
+   ],
+   "direct": [
+    "jail"
+   ],
+   "id": "T11",
+   "name": "Unexpected RCE and Code Attacks",
+   "note": "jail grades escape-attempt detection over a 71-cell gold bank of real code cells (38 ESCAPE / 33 BENIGN). It measures DETECTION of such code, not prevention of its execution, and the distinction is the whole difference between this axis and a control."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "swarm",
+    "conformance"
+   ],
+   "axes": [
+    {
+     "axis": "swarm",
+     "relation": "ADJACENT"
+    },
+    {
+     "axis": "conformance",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T12",
+   "name": "Agent Communication Poisoning",
+   "note": "swarm grades multi-agent coordination safety and conformance grades the tool protocol the messages travel over. Neither injects a poisoned message into a channel and measures what the receiving agent then does."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "swarm"
+   ],
+   "axes": [
+    {
+     "axis": "swarm",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [],
+   "id": "T13",
+   "name": "Rogue Agents in Multi-Agent Systems",
+   "note": "swarm is the only axis with more than one agent in it, and it grades coordination safety rather than the detection of a compromised or unmonitored participant."
+  },
+  {
+   "addressed_by_any_axis": false,
+   "adjacent": [],
+   "axes": [],
+   "direct": [],
+   "id": "T14",
+   "name": "Human Attacks on Multi-Agent Systems",
+   "note": "No axis models a human exploiting trust between agents. The board has no adversarial human in it anywhere: every bank is a frozen set of items, not an interactive opponent."
+  },
+  {
+   "addressed_by_any_axis": true,
+   "adjacent": [
+    "care"
+   ],
+   "axes": [
+    {
+     "axis": "affect",
+     "relation": "DIRECT"
+    },
+    {
+     "axis": "care",
+     "relation": "ADJACENT"
+    }
+   ],
+   "direct": [
+    "affect"
+   ],
+   "id": "T15",
+   "name": "Human Manipulation",
+   "note": "affect grades emotional and embodied safety across manipulation, disclosure and vulnerability, which is this class stated as a measurement. care scores the protect-against-help trade-off that manipulation exploits."
+  }
+ ],
+ "companion": {
+  "artifact": "measurement/remediation-crosswalk/2026-09-23/failure-class-to-open-remediation.json",
+  "licence_differs_and_why": "That file is CC-BY-4.0: it cites the taxonomy's identifiers for navigation and reproduces no prose from it. This file is CC-BY-SA-4.0 because it adapts the taxonomy's class names and structure, and share-alike carries over. Two artifacts, two licences, on purpose — name the artifact, never “the licence”.",
+  "what": "A sibling lane maps the same axes the other way: axis to the open tools whose own published material claims to address it, with the axes no open tool addresses called out. Threat class on this side, available remedy on that side; read them together."
+ },
+ "gaps": {
+  "axes_addressing_no_class": [
+   "ai-adoption-components",
+   "continuity",
+   "custody-disclosure",
+   "distribution-integrity",
+   "governance",
+   "humanoid-labour-index",
+   "labour-components",
+   "machinery-conformity",
+   "openness",
+   "regulatory-framework",
+   "reserve-attestation"
+  ],
+  "axes_addressing_no_class_count": 11,
+  "axes_addressing_no_class_why": {
+   "ai-adoption-components": "cited public statistical series, graded by rule. No model, no agent.",
+   "continuity": "post-quantum status of a cryptographic assumption — cryptographic, not agentic.",
+   "custody-disclosure": "deterministic-facts axis over financial issuer disclosures.",
+   "distribution-integrity": "deterministic-facts axis over financial issuer disclosures.",
+   "governance": "EU AI Act risk-tier classification — a regulatory classification task.",
+   "humanoid-labour-index": "does a named vendor publish a dated deployment count. A disclosure fact.",
+   "labour-components": "cited public statistical series, graded by rule. No model, no agent.",
+   "machinery-conformity": "Machinery Regulation safety-function classification — product regulation.",
+   "openness": "licence reasoning versus intended use — a licensing question.",
+   "regulatory-framework": "deterministic-facts axis over financial issuer disclosures.",
+   "reserve-attestation": "deterministic-facts axis over financial issuer disclosures."
+  },
+  "classes_no_axis_addresses": [
+   "T1",
+   "T4",
+   "T5",
+   "T14"
+  ],
+  "classes_no_axis_addresses_count": 4,
+  "classes_total": 15,
+  "classes_with_a_direct_axis": [
+   "T2",
+   "T3",
+   "T11",
+   "T15"
+  ],
+  "classes_with_a_direct_axis_count": 4,
+  "classes_with_adjacent_only": [
+   "T6",
+   "T7",
+   "T8",
+   "T9",
+   "T10",
+   "T12",
+   "T13"
+  ],
+  "classes_with_adjacent_only_count": 7,
+  "reading": "Four of fifteen classes have a DIRECT axis. Four have no axis at all. Seven are touched only adjacently, which for a reader looking for assurance is nearer to nothing than to something. Eleven of our twenty-three axes speak to no class in this taxonomy — they are regulatory, cryptographic, licensing and financial-disclosure measurements, and the board must never be quoted as agentic-risk coverage on their account.",
+  "structural_limits_behind_the_gaps": [
+   "Every behavioural axis grades one stateless exchange against a frozen bank, so any class whose failure only appears across turns (T1, T5) is out of reach by construction, not by oversight.",
+   "No bank contains an adversarial human or a live opponent, so T14 cannot be measured by anything on the board.",
+   "Detection is not prevention. Where an axis grades whether a model NOTICES a hostile input (T11), that is a different quantity from whether a system stops it, and no axis measures the second."
+  ]
+ },
+ "license": "CC-BY-SA-4.0",
+ "license_note": "This file is CC-BY-SA-4.0, NOT the estate's usual CC-BY-4.0, because it adapts a CC BY-SA 4.0 taxonomy and share-alike carries over. Licence differs by artifact on this estate; name the artifact, never “the licence”.",
+ "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+ "relation_vocabulary": {
+  "ADJACENT": "the axis measures something that bears on the class without being it",
+  "DIRECT": "the axis's task is a measurement of this class's failure mode"
+ },
+ "schema": "csoai.agentic-threat-taxonomy-crosswalk/0.1",
+ "source": {
+  "license": "CC-BY-SA-4.0 (Creative Commons Attribution-ShareAlike 4.0 International)",
+  "license_as_published": "Unless otherwise specified, all content on the site is Creative Commons Attribution-ShareAlike v4.0 and provided without warranty of service or accuracy.",
+  "license_source": "publisher's own site footer, read 2026-09-23",
+  "not_verified_from_primary": [
+   "the T1..T15 identifiers and names below: taken from secondary sources and cross-checked between them, because the primary PDF was not retrieved by this lane",
+   "one secondary source refers to T1..T17; that count could not be reconciled against the primary and is recorded here rather than resolved"
+  ],
+  "published": "2025-02-17",
+  "publisher": "OWASP Agentic Security Initiative, OWASP GenAI Security Project",
+  "title": "Agentic AI – Threats and Mitigations",
+  "trademark_notice": "OWASP and the OWASP logo are trademarks of the OWASP Foundation, Inc.",
+  "url": "https://genai.owasp.org/resource/agentic-ai-threats-and-mitigations/",
+  "verified_from_primary": [
+   "title",
+   "version",
+   "published",
+   "license",
+   "trademark_notice"
+  ],
+  "version": "v1.0"
+ },
+ "what_this_is": "A mapping from the axes on GET /api/gspc to the threat classes of a published agentic-risk taxonomy, built to align with that taxonomy's vocabulary. A named class beside an axis means the axis SPEAKS TO it. It does not mean the class is handled, mitigated, covered or conformant, and nothing here certifies anything — not our systems and not anyone else's.",
+ "what_this_is_not": [
+  "Not coverage. Relation DIRECT means the axis's task is a measurement of that class's failure mode, at the sample size the board publishes, and nothing more.",
+  "Not a conformity statement, a certification or an endorsement, and no organisation has reviewed or approved it.",
+  "Not a claim about anyone else's systems. Every axis measures models or public artifacts against a frozen bank; none of it is an assertion of falsity about a vendor.",
+  "Not stable. Axes move; re-derive from the live board rather than quoting this file as the current shape of the board."
+ ]
+}

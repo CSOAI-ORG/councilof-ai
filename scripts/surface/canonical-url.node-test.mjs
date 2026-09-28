@@ -1,6 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { normRoute, rewriteCanonical, servedUrl } from "./canonical-url.mjs";
+import { readFileSync } from "node:fs";
+import { runInNewContext } from "node:vm";
+import { CANONICAL_ALIAS, normRoute, rewriteCanonical, servedUrl } from "./canonical-url.mjs";
 
 const O = "https://councilof.ai";
 
@@ -48,4 +50,56 @@ test("rewriteCanonical: with servedRoutes, an alias target named without its sla
   assert.equal(rewriteCanonical(once, "/coliseum", O, served), once);
   const q = `<link rel="canonical" href="${O}/dashboard?tab=play">`;
   assert.equal(rewriteCanonical(q, "/coliseum", O, served), q);
+});
+
+test("Terms aliases retain pages but name the footer's one canonical contract", () => {
+  for (const route of ["/terms", "/legal/terms"]) {
+    const self = `${O}${route}/`;
+    const html = `<link rel="canonical" href="${self}"><meta property="og:url" content="${self}"><meta name="twitter:url" content="${self}">`;
+    const expected = html.replaceAll(self, `${O}/terms-of-service/`);
+    assert.equal(rewriteCanonical(html, route, O), expected);
+    assert.equal(rewriteCanonical(expected, route, O), expected);
+  }
+  const current = `<link rel="canonical" href="${O}/terms-of-service/">`;
+  assert.equal(rewriteCanonical(current, "/terms-of-service", O), current);
+});
+
+test("browser self-canonical script keeps Terms aliases on the same canonical", () => {
+  const shell = readFileSync(new URL("../../client/index.html", import.meta.url), "utf8");
+  const script = shell.match(/<script>(\(function\(\)\{try\{var p=location\.pathname;[\s\S]*?<\/script>)/)?.[1]
+    .replace(/<\/script>$/, "");
+  assert.ok(script, "per-route metadata script exists");
+  for (const route of ["/terms/", "/terms", "/legal/terms/", "/legal/terms", "/about/"]) {
+    const nodes = {
+      'link[rel=canonical]': { href: "" },
+      'meta[property="og:url"]': { content: "", setAttribute(_name, value) { this.content = value; } },
+      'meta[name="twitter:url"]': { content: "", setAttribute(_name, value) { this.content = value; } },
+    };
+    runInNewContext(script, {
+      location: { pathname: route, origin: O },
+      document: { querySelector: (selector) => nodes[selector] },
+    });
+    const expected = route.startsWith("/about") ? `${O}/about/` : `${O}/terms-of-service/`;
+    assert.equal(nodes['link[rel=canonical]'].href, expected);
+    assert.equal(nodes['meta[property="og:url"]'].content, expected);
+    assert.equal(nodes['meta[name="twitter:url"]'].content, expected);
+  }
+});
+
+test("browser alias map is the build alias map, entry for entry", () => {
+  const shell = readFileSync(new URL("../../client/index.html", import.meta.url), "utf8");
+  const m = shell.match(/var A=(\{[^}]*\});/);
+  assert.ok(m, "inline alias map exists");
+  assert.deepEqual(JSON.parse(m[1]), Object.fromEntries(CANONICAL_ALIAS));
+});
+
+test("a duplicate address names its original; the original keeps itself", () => {
+  const self = `${O}/help-center/`;
+  const html = `<link rel="canonical" href="${self}">`;
+  assert.equal(rewriteCanonical(html, "/help-center", O), `<link rel="canonical" href="${O}/help/">`);
+  const orig = `<link rel="canonical" href="${O}/help/">`;
+  assert.equal(rewriteCanonical(orig, "/help", O), orig);
+  for (const [alias, target] of CANONICAL_ALIAS) {
+    assert.ok(!CANONICAL_ALIAS.has(target), `${alias} -> ${target} must not chain`);
+  }
 });

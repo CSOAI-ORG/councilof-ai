@@ -1,84 +1,164 @@
 {
- "schema": "csoai.signals-index/0.1",
+ "schema": "csoai.signals-index/0.3",
  "signals": [
   {
    "axis": "gov",
-   "status": "MEASURED",
-   "elo_leader": "qwen3:4b",
-   "content_id": "ff97b6eaf87cb648"
+   "status": "UNTESTED",
+   "elo_leader": null,
+   "elo_top": "phi3.5:3.8b",
+   "elo_separation": "TIE",
+   "board_axis": "governance",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "42ddbd11f62d7e08"
   },
   {
    "axis": "prv",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "6fb850a8b55fed81"
+   "elo_top": "phi3.5:3.8b",
+   "elo_separation": "TIE",
+   "board_axis": "provenance",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "f95955cdfae06ff3"
   },
   {
    "axis": "agi",
-   "status": "MEASURED",
+   "status": "TIE",
    "elo_leader": null,
-   "content_id": "2e7ff8f640f7c8fc"
+   "elo_top": null,
+   "elo_separation": "UNMEASURED",
+   "board_axis": "safety",
+   "board_separation": "TIE",
+   "board_leader": "gemma3:12b (base model)",
+   "content_id": "83a2843b229b5231"
   },
   {
    "axis": "asi",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "d2249c22dcd392d5"
+   "elo_top": "phi4:14b",
+   "elo_separation": "TIE",
+   "board_axis": "continuity",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "22d3591c019e7090"
   },
   {
    "axis": "mcp",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "f17d55b6678b1651"
+   "elo_top": null,
+   "elo_separation": "UNMEASURED",
+   "board_axis": "conformance",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "b79c0756d12e58e2"
   },
   {
    "axis": "oss",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "0febc3df70f26d9d"
+   "elo_top": "qwen3:8b",
+   "elo_separation": "TIE",
+   "board_axis": "openness",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "2f2703744a1c6bd1"
   },
   {
    "axis": "mach",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "817bd75de2a56208"
+   "elo_top": "phi4:14b",
+   "elo_separation": "TIE",
+   "board_axis": "machinery-conformity",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "674153c3793661a6"
   },
   {
    "axis": "care",
-   "status": "MEASURED",
-   "elo_leader": "qwen3:4b",
-   "content_id": "cc1555bda91d0141"
+   "status": "UNTESTED",
+   "elo_leader": "mistral:7b",
+   "elo_top": "mistral:7b",
+   "elo_separation": "SEPARATED",
+   "board_axis": "care",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "dbf6a495397bd1d7"
   },
   {
    "axis": "xr",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "d779f1c2f98df4db"
+   "elo_top": "phi3.5:3.8b",
+   "elo_separation": "TIE",
+   "board_axis": "cross-reality",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "afbc9b6399c221f1"
   },
   {
    "axis": "det",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "27a65b05c937c160"
+   "elo_top": "qwen3:8b",
+   "elo_separation": "TIE",
+   "board_axis": "detector-interop",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "b35101ef7f8fb26d"
   },
   {
    "axis": "art5",
-   "status": "MEASURED",
+   "status": "UNTESTED",
    "elo_leader": null,
-   "content_id": "c12c1d3f53def84a"
+   "elo_top": "nemotron-3-nano:30b",
+   "elo_separation": "TIE",
+   "board_axis": "art5-safeguard",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "c2706f8f9ecabb6a"
   },
   {
    "axis": "swarm",
-   "status": "MEASURED",
-   "elo_leader": "qwen2.5:1.5b",
-   "content_id": "9ac918d5979707ce"
+   "status": "UNTESTED",
+   "elo_leader": "nemotron-3-nano:30b",
+   "elo_top": "nemotron-3-nano:30b",
+   "elo_separation": "SEPARATED",
+   "board_axis": "swarm",
+   "board_separation": "UNTESTED",
+   "board_leader": "qwen2.5:7b (base model)",
+   "content_id": "d198cb7f0940c854"
   },
   {
    "axis": "affect",
-   "status": "MEASURED",
-   "elo_leader": "mistral:7b",
-   "content_id": "77c75440789fa744"
+   "status": "UNTESTED",
+   "elo_leader": null,
+   "elo_top": "nemotron-3-nano:30b",
+   "elo_separation": "TIE",
+   "board_axis": "affect",
+   "board_separation": "UNTESTED",
+   "board_leader": null,
+   "content_id": "9286f662805f2f87"
+  },
+  {
+   "axis": "jail",
+   "status": "TIE",
+   "elo_leader": null,
+   "elo_top": null,
+   "elo_separation": "UNMEASURED",
+   "board_axis": "jail",
+   "board_separation": "TIE",
+   "board_leader": "qwen2.5:0.5b-instruct (base model)",
+   "content_id": "440ca7f061f65387"
   }
  ],
- "generated": "2026-08-24T09:11:56Z"
+ "generated": "2026-09-24T16:43:00Z",
+ "signer": "did:web:csoai.org#board-attestation-1",
+ "elo_source_content_id": "b126b711de15662514cac4f462e461f2cbe46b20e25452da609ff3daddab3f40",
+ "board_source": "https://councilof.ai/api/gspc",
+ "status_rule": "status is THE BOARD'S separation verdict for the axis, read from GET /api/gspc: MEASURED = the board separated a leader; TIE = ranked, not separated; UNTESTED = the board publishes no separation determination; UNMEASURED = the axis is not MEASURED on the register. elo_separation is a DIFFERENT instrument's verdict over recorded pairwise arena rounds and is never the axis's verdict; the two are SEPARATE_EVIDENCE and are never reconciled or substituted. Each signal carries separation_authority with the board row it defers to."
 }

@@ -1,0 +1,760 @@
+{
+  "note": "Declarative input to capture_growth.mjs. Each claim names the page it is read from and the state it is published in. A claim moves to CLAIM_MEASURED only where a measurement id resolves to a CLAIM_MEASURED harness output; where the harness returns UNMEASURED the claim stays UNMEASURED and the reason is carried. Nothing here is written by hand into a measured state.",
+  "selection_rule": "Organisations and projects adjacent to what we measure: AI assurance and governance platforms, AI evaluation and observability platforms, AI underwriters, frontier model providers, open-source agent-harness and guardrail frameworks, two public tokenised-settlement programmes, and the maintainer itself (spec 10.6). Within each, the claims selected are those specific enough to capture verbatim and about infrastructure a third party relies on. For the open-source projects the claims are read from each project's OWN repository file, never from press coverage and never from a list handed to us; where a project states a limit on what it does, that statement is captured on the same footing as any other, because a scoped claim is a result and not an absence. No organisation is entered here, or implied to be entered here, on the basis of belonging to any body, alliance or programme: membership is not a claim, it is not captured, and it is not inferred.",
+  "default_next_read_utc": "2026-09-28T09:20:00Z",
+  "subjects": [
+    {
+      "key": "vanta",
+      "name": "Vanta",
+      "identifier": "vanta.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "VA-1",
+          "url": "https://www.vanta.com/",
+          "type": "superlative",
+          "verbatim": "All in the #1 Agentic Trust Platform",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "The ranking is published without a population, a ranking body or a method, and 'Agentic Trust Platform' is a category name this subject publishes for its own product. No public evidence identifies a set within which a rank could be recomputed. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "VA-2",
+          "url": "https://www.vanta.com/",
+          "type": "quantitative-count",
+          "verbatim": "Automatically pull data from 400+ tools",
+          "state": "UNMEASURED",
+          "series": "VA-2",
+          "plan": "restatement watch: the only public enumeration of this figure is the subject's own integrations directory, so counting it would be the claim again rather than evidence about it (spec 4.6). Capture the figure weekly with the page digest, append each dated reading to a published series, and report any revision. One reading is not a series; this stays unmeasured until at least two dated points exist."
+        },
+        {
+          "id": "VA-3",
+          "url": "https://www.vanta.com/",
+          "type": "quantitative-count",
+          "verbatim": "Trusted by 16,000+ customers, from startup to enterprise",
+          "state": "UNMEASURED",
+          "series": "VA-3",
+          "plan": "restatement watch: a customer count rests on an internal counter no third party can recompute. Capture weekly with the page digest and record every revision. Never recomputed, never asserted."
+        },
+        {
+          "id": "VA-4",
+          "url": "https://www.vanta.com/",
+          "type": "third-party-attribution",
+          "verbatim": "Vanta named a Leader in The Forrester Wave™: Governance, Risk, and Compliance Platforms, Q2 2026",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-FORRESTER-VANTA",
+          "plan": "the claim attributes a placement to a named third party, so the measurement is whether that third party's own public record carries it: CORROBORATED with the quote, or NOT_FOUND with the routes searched."
+        }
+      ]
+    },
+    {
+      "key": "credo-ai",
+      "name": "Credo AI",
+      "identifier": "credo.ai",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "CR-1",
+          "url": "https://www.credo.ai/",
+          "type": "superlative",
+          "verbatim": "The trusted leader in AI governance",
+          "state": "UNMEASURED",
+          "measurement": "M-SUPERLATIVE-GOVERNANCE",
+          "plan": "a leadership claim admits one honest outside test: a counterexample. Search a declared set of other organisations publishing in the same category for comparable leadership claims on their own pages, and quote each from that organisation's own bytes."
+        },
+        {
+          "id": "CR-2",
+          "url": "https://www.credo.ai/",
+          "type": "third-party-attribution",
+          "verbatim": "Credo AI Named a Leader in the Forrester Wave™: AI Governance Solutions, Q3 2025",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-FORRESTER-CREDO",
+          "plan": "measure whether the named third party's own public record carries the placement: CORROBORATED with the quote, or NOT_FOUND with the routes searched."
+        },
+        {
+          "id": "CR-3",
+          "url": "https://www.credo.ai/",
+          "type": "quantitative-count",
+          "verbatim": "300+ integrations",
+          "state": "UNMEASURED",
+          "series": "CR-3",
+          "excerpt": true,
+          "plan": "restatement watch: the figure appears inside a longer sentence on the subject's own page and is enumerated nowhere a third party can recount. Capture weekly with the page digest and record every revision."
+        }
+      ]
+    },
+    {
+      "key": "holistic-ai",
+      "name": "Holistic AI",
+      "identifier": "holisticai.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "HO-1",
+          "url": "https://www.holisticai.com/",
+          "type": "superlative",
+          "verbatim": "Holistic AI is a leading enterprise AI Governance Platform delivering full lifecycle oversight—from model discovery to risk management and compliance",
+          "state": "UNMEASURED",
+          "measurement": "M-SUPERLATIVE-GOVERNANCE",
+          "plan": "counterexample log over a declared set of other organisations publishing in the same category, quoted from their own pages."
+        },
+        {
+          "id": "HO-2",
+          "url": "https://www.holisticai.com/",
+          "type": "third-party-attribution",
+          "verbatim": "Holistic AI Named a Challenger in the 2026 Gartner® Magic Quadrant™ for AI Governance Platforms",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-GARTNER-HOLISTIC",
+          "plan": "measure whether the named third party's own public record carries the placement: CORROBORATED with the quote, or NOT_FOUND with the routes searched."
+        },
+        {
+          "id": "HO-3",
+          "url": "https://www.holisticai.com/",
+          "type": "adoption",
+          "verbatim": "The end-to-end AI governance platform trusted by global enterprises running AI at scale.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "No enterprise is named in the claim and no public register records which organisations use this platform, so no public evidence identifies a set to check. This is a statement about the evidence available to the public and not about the subject."
+        }
+      ]
+    },
+    {
+      "key": "armilla",
+      "name": "Armilla",
+      "identifier": "armilla.ai",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "AR-1",
+          "url": "https://www.armilla.ai/",
+          "type": "product-description",
+          "verbatim": "Purpose-built AI insurance for generative AI and AI agents.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "'Purpose-built' is not a quantity and no public evidence distinguishes a purpose-built policy from an adapted one. Policy wordings are not published, so the artifact that would settle it is not public. This is a statement about the evidence, never about the subject."
+        },
+        {
+          "id": "AR-2",
+          "url": "https://www.armilla.ai/",
+          "type": "product-description",
+          "verbatim": "Armilla provides named, affirmative AI insurance that responds to those failure modes directly, so you can deploy with confidence and answer procurement questions in writing.",
+          "state": "UNMEASURED",
+          "plan": "settleable in principle from a published policy wording or a filed surplus-lines form naming the perils affirmatively. This run found no such document on a public surface; watch the subject's own site and public insurance filings for one, and measure against it if it appears."
+        }
+      ]
+    },
+    {
+      "key": "arize",
+      "name": "Arize AI",
+      "identifier": "arize.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "AZ-1",
+          "url": "https://arize.com/",
+          "type": "superlative",
+          "verbatim": "Phoenix is the leading open-source platform for AI observability and evaluation",
+          "state": "UNMEASURED",
+          "measurement": "M-OSS-STARS-PHOENIX",
+          "plan": "operationalise one public, third-party-held signal — stargazers on the code host — across a declared comparison set of open-source platforms in the same category, read in one pass. This is a measurement of that signal and not of leadership."
+        },
+        {
+          "id": "AZ-2",
+          "url": "https://arize.com/",
+          "type": "quantitative-count",
+          "verbatim": "Arize integrates with 40+ models, frameworks, and AI tools",
+          "state": "UNMEASURED",
+          "series": "AZ-2",
+          "excerpt": true,
+          "plan": "restatement watch: the enumeration exists only on the subject's own surfaces. Capture weekly with the page digest and record every revision."
+        },
+        {
+          "id": "AZ-3",
+          "url": "https://arize.com/",
+          "type": "assurance-status",
+          "verbatim": "Arize supports flexible deployment options and is certified to leading security and compliance standards, including SOC 2 Type II, ISO 27001, PCI DSS, HIPAA, and GDPR",
+          "state": "UNMEASURED",
+          "plan": "ISO 27001 certificates are listed in the public directories of some accredited certification bodies, and that is the one element of this claim a stranger can check without an account. Query those directories for the subject and record what is listed; the remaining elements are attested by reports that are not public and stay unmeasured."
+        }
+      ]
+    },
+    {
+      "key": "langfuse",
+      "name": "Langfuse",
+      "identifier": "langfuse.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "LF-1",
+          "url": "https://langfuse.com/",
+          "type": "superlative",
+          "verbatim": "Langfuse is the most widely adopted open-source LLM engineering platform",
+          "state": "UNMEASURED",
+          "measurement": "M-OSS-STARS-LANGFUSE",
+          "plan": "operationalise one public, third-party-held signal — stargazers on the code host — across a declared comparison set, read in one pass. Stars are not adoption and the artifact says so."
+        },
+        {
+          "id": "LF-2",
+          "url": "https://langfuse.com/",
+          "type": "licence",
+          "verbatim": "Open source (MIT)",
+          "state": "UNMEASURED",
+          "measurement": "M-LANGFUSE-LICENCE",
+          "plan": "read the licence the code host's own detector reports for the named repository, and the text of the licence file itself, neither of which is written by the claimant."
+        },
+        {
+          "id": "LF-3",
+          "url": "https://langfuse.com/",
+          "type": "third-party-attribution",
+          "verbatim": "Langfuse joins ClickHouse",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-CLICKHOUSE",
+          "plan": "the claim is about a named third party, so the measurement is whether that party's own public record corroborates it."
+        },
+        {
+          "id": "LF-4",
+          "url": "https://langfuse.com/",
+          "type": "adoption",
+          "verbatim": "Used by 21 of Fortune 50",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "The twenty-one organisations are not named, so no public evidence identifies the set this figure counts. A statement about the evidence available to the public, never about the subject."
+        },
+        {
+          "id": "LF-5",
+          "url": "https://langfuse.com/",
+          "type": "quantitative-count",
+          "verbatim": "Langfuse is used by 50,000+ companies and processes billions of observations per month",
+          "state": "UNMEASURED",
+          "series": "LF-5",
+          "plan": "restatement watch: both figures rest on internal counters no third party can recompute. Capture weekly with the page digest and record every revision."
+        }
+      ]
+    },
+    {
+      "key": "galileo",
+      "name": "Galileo",
+      "identifier": "galileo.ai",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "GA-1",
+          "url": "https://galileo.ai/",
+          "type": "exclusivity",
+          "verbatim": "Only Galileo distills expensive LLM-as-judge evaluators into compact Luna models that run with low-latency and low-cost.",
+          "state": "UNMEASURED",
+          "plan": "the exclusivity is stated over a product this subject names, which nobody else can offer under that name; the answerable question is whether the capability category — distilling a language-model judge into a compact evaluator model — is documented by other vendors in their own materials. Build a counterexample log over a declared set of other vendors' own documentation and quote each match from their bytes. Not run in this pass."
+        },
+        {
+          "id": "GA-2",
+          "url": "https://galileo.ai/",
+          "type": "quantitative-count",
+          "verbatim": "Start with 20+ out-of-box evals for RAG, agents, safety, and security",
+          "state": "UNMEASURED",
+          "series": "GA-2",
+          "excerpt": true,
+          "plan": "restatement watch: the evaluator list is enumerated only in the subject's own documentation. Capture weekly with the page digest and record every revision."
+        }
+      ]
+    },
+    {
+      "key": "traceloop",
+      "name": "Traceloop",
+      "identifier": "traceloop.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "TR-1",
+          "url": "https://www.traceloop.com/",
+          "type": "third-party-attribution",
+          "verbatim": "Traceloop is joining ServiceNow!",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-SERVICENOW",
+          "plan": "the claim is about a named third party, so the measurement is whether that party's own public record corroborates it."
+        },
+        {
+          "id": "TR-2",
+          "url": "https://www.traceloop.com/",
+          "type": "licence",
+          "verbatim": "Traceloop is built on OpenTelemetry and ships with OpenLLMetry, our open-source SDK — giving you transparency without lock-in",
+          "state": "UNMEASURED",
+          "measurement": "M-OPENLLMETRY-LICENCE",
+          "plan": "read the licence the code host's own detector reports for the named SDK repository, and the licence file text."
+        },
+        {
+          "id": "TR-3",
+          "url": "https://www.traceloop.com/",
+          "type": "quantitative-count",
+          "verbatim": "Traceloop supports 20+ providers (OpenAI, Anthropic, Gemini, Bedrock, Ollama), vector DBs (Pinecone, Chroma), and frameworks like LangChain, LlamaIndex, and CrewAI",
+          "state": "UNMEASURED",
+          "series": "TR-3",
+          "plan": "restatement watch on the count; the provider list is enumerable from the subject's own open SDK, which is the claim again rather than evidence about it. Capture weekly with the page digest and record every revision."
+        }
+      ]
+    },
+    {
+      "key": "helicone",
+      "name": "Helicone",
+      "identifier": "helicone.ai",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "HE-1",
+          "url": "https://www.helicone.ai/pricing",
+          "type": "third-party-attribution",
+          "verbatim": "Helicone Joins Mintlify",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-MINTLIFY",
+          "plan": "the claim is about a named third party, so the measurement is whether that party's own public record corroborates it."
+        },
+        {
+          "id": "HE-2",
+          "url": "https://www.helicone.ai/pricing",
+          "type": "licence",
+          "verbatim": "Short answer: Helicone gives you more provider flexibility, is open-source, and scales more cost-effectively",
+          "state": "UNMEASURED",
+          "measurement": "M-HELICONE-LICENCE",
+          "plan": "the claim has three parts and only one is settleable by public evidence: read the licence the code host's own detector reports for the named repository. The other two parts stay unmeasured and the artifact says so.",
+          "measures_only": "the open-source element of this sentence, and nothing else in it. 'More provider flexibility' and 'scales more cost-effectively' are comparisons against an unnamed alternative and are unmeasured"
+        },
+        {
+          "id": "HE-3",
+          "url": "https://www.helicone.ai/pricing",
+          "type": "terms",
+          "verbatim": "Startups 50% off first year For startups under 2 years old and $5M in funding.",
+          "state": "UNMEASURED",
+          "series": "HE-3",
+          "plan": "a published discount term. Settleable only by a party that applies for it, which this maintainer will not do because applying would create a commercial relationship with a subject (spec 10.2). Capture weekly with the page digest and record every revision to the stated terms."
+        }
+      ]
+    },
+    {
+      "key": "anthropic",
+      "name": "Anthropic",
+      "identifier": "anthropic.com",
+      "identifier_kind": "domain",
+      "conflicts": [
+        "The maintainer's capture tooling for this run was operated through a language model supplied by this subject. No payment, sponsorship or agreement of any kind runs between the maintainer and this subject, and nothing about what is captured, measured or published here was requested by, shown to, or influenced by it. Disclosed at artifact level because a reader of this one record should see it (spec 10.3)."
+      ],
+      "claims": [
+        {
+          "id": "AN-1",
+          "url": "https://www.anthropic.com/",
+          "type": "corporate-status",
+          "verbatim": "Anthropic is a public benefit corporation dedicated to securing its benefits and mitigating its risks.",
+          "state": "UNMEASURED",
+          "plan": "the corporate form is recorded in a US state's public company register, which is the one element a stranger can check. Query that register for the entity and record what it returns. Not run in this pass: the register this maintainer reached answers an automated reader with a challenge, and a search that was turned away must never be published as an absence."
+        },
+        {
+          "id": "AN-2",
+          "url": "https://www.anthropic.com/",
+          "type": "quantitative-comparison",
+          "verbatim": "Our most capable Opus model, faster and costs 40% less to run.",
+          "state": "UNMEASURED",
+          "series": "AN-2",
+          "plan": "the cost element is settleable against the subject's own published price list, which is the claim again rather than evidence about it (spec 4.6); the capability and speed elements rest on evaluations this maintainer cannot re-run without payment. Capture weekly with the page digest and record every revision."
+        }
+      ]
+    },
+    {
+      "key": "mistral",
+      "name": "Mistral AI",
+      "identifier": "mistral.ai",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "MI-1",
+          "url": "https://mistral.ai/",
+          "type": "funding",
+          "verbatim": "Mistral raises €3B to make sovereign, open-weight AI the technology frontier",
+          "state": "UNMEASURED",
+          "plan": "a funding round is corroborable against the named participants' own public records and, for a French société anonyme, against filings at the registre du commerce et des sociétés. No participant is named in this headline; read the subject's own linked announcement for the names and corroborate against each one's own record."
+        },
+        {
+          "id": "MI-2",
+          "url": "https://mistral.ai/",
+          "type": "product-description",
+          "verbatim": "In-region inference, open models, and new European infrastructure for sovereign AI",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "'Sovereign AI' has no agreed public definition and no public dataset settles whether an infrastructure meets one. A statement about the evidence available to the public, never about the subject."
+        }
+      ]
+    },
+    {
+      "key": "ecb-pontes",
+      "name": "European Central Bank (Pontes)",
+      "identifier": "549300DTUYXVMJXZNY75",
+      "identifier_kind": "lei",
+      "conflicts": [],
+      "capture_host_note": true,
+      "claims": [
+        {
+          "id": "EC-1",
+          "url": "https://www.ecb.europa.eu/paym/target/pontes/html/index.en.html",
+          "type": "dated-milestone",
+          "verbatim": "The initial launch of Pontes took place 21 September 2026, with subsequent further improvements to be introduced step by step.",
+          "state": "UNMEASURED",
+          "resolution_date": "2026-09-21",
+          "plan": "a dated milestone that has already passed. Settleable by whether the entities the publisher names as onboarded carry the programme on their own public records; that search is the measurement recorded against EC-2 and bears on this claim too."
+        },
+        {
+          "id": "EC-2",
+          "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+          "type": "third-party-attribution",
+          "verbatim": "An initial group of market participants and DLT operators has completed onboarding and is ready to start using Pontes immediately.",
+          "state": "UNMEASURED",
+          "measurement": "M-PONTES-PARTICIPANTS",
+          "plan": "the publisher names eighteen entities in the same release. For each, search that entity's OWN published index for the programme name and quote any hit from its own bytes. The rate is reported over the entities reached, never over the entities named."
+        },
+        {
+          "id": "EC-3",
+          "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+          "type": "dated-commitment",
+          "verbatim": "Enhanced features and longer operating hours will be introduced gradually, with full implementation expected by 2028.",
+          "state": "UNMEASURED",
+          "resolution_date": "2028-12-31",
+          "plan": "a dated commitment with a stated horizon. It becomes settleable from the publisher's own service documentation and the participating infrastructures' own records on its resolution date; until then no measurement is run and none is implied."
+        },
+        {
+          "id": "EC-4",
+          "url": "https://www.ecb.europa.eu/press/pr/date/2026/html/ecb.pr260921~e754847a7b.en.html",
+          "type": "dated-commitment",
+          "verbatim": "The development of an integrated ecosystem for DLT-based financial services continues under Appia, involving experimentation and analytical work by the Eurosystem, Danmarks Nationalbank and stakeholders from the public and private sectors, with the goal of delivering a blueprint by 2028.",
+          "state": "UNMEASURED",
+          "resolution_date": "2028-12-31",
+          "plan": "a dated deliverable. On its resolution date, settleable by whether a blueprint document is published by the named parties; until then no measurement is run."
+        }
+      ]
+    },
+    {
+      "key": "sebi-demat2",
+      "name": "Securities and Exchange Board of India (Demat 2.0)",
+      "identifier": "sebi.gov.in",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "capture_host_note": true,
+      "claims": [
+        {
+          "id": "SB-1",
+          "url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+          "type": "programme-description",
+          "covers": "raw-bytes",
+          "verbatim": "Demat 2.0 is a pilot being undertaken by SEBI to explore the next-generation financial market infrastructure.",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-RBI-DEMAT2",
+          "plan": "the pilot settles its funds leg in another public authority's instrument, so that authority's own public record is an independent surface on which the programme would appear. Search it and quote any hit from its own bytes."
+        },
+        {
+          "id": "SB-2",
+          "url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+          "type": "legal-characterisation",
+          "covers": "raw-bytes",
+          "verbatim": "The pilot does not change the legal character, rights, obligations or regulatory treatment of the corporate bond.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "A characterisation of legal effect. No public dataset settles it; only a court or the regulator itself could, and neither has been asked. A statement about the evidence available to the public, never about the subject."
+        },
+        {
+          "id": "SB-3",
+          "url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2026/1789049630065.pdf",
+          "type": "future-stage",
+          "covers": "raw-bytes",
+          "verbatim": "Stage II: Enablement of secondary-market trading, with access extended to retail participants.",
+          "state": "UNMEASURED",
+          "plan": "a staged commitment published without a date, so no resolution date can be recorded for it and none is invented. Watch the publisher's own circulars and press releases for the enabling instrument and measure against it when one appears."
+        }
+      ]
+    },
+    {
+      "key": "council-of-ai",
+      "name": "Council of AI (CSOAI Ltd)",
+      "identifier": "16939677",
+      "identifier_kind": "company-register",
+      "conflicts": [
+        "This subject IS the maintainer. Every claim here is the maintainer's own, captured and published under the same rules as every other subject, because a body that observes others' claims and exempts its own is running a campaign rather than applying a discipline (spec 10.6). The conflict is total and is stated rather than managed."
+      ],
+      "claims": [
+        {
+          "id": "CS-1",
+          "url": "https://councilof.ai/",
+          "type": "method-description",
+          "verbatim": "We measure how AI systems behave, and sign the answer so you never take our word for it",
+          "state": "UNMEASURED",
+          "plan": "settleable by a stranger: fetch any published signed record keylessly, recompute its digest and check its Ed25519 signature against the DID document at the maintainer's apex. A signature either verifies or it does not, and that answer does not depend on the maintainer's assertion. Run it over a sample with a published selection rule and report the pass count with its denominator."
+        },
+        {
+          "id": "CS-2",
+          "url": "https://councilof.ai/",
+          "type": "terms",
+          "verbatim": "Verification is free forever — no login, no fee, no tier benefit",
+          "state": "UNMEASURED",
+          "measurement": "M-CSOAI-FREE-DOORS",
+          "plan": "the part of this claim that public evidence can reach today is whether a stranger with no account is served by the verification surfaces: request each published verification door with no credential and record the HTTP status. The word 'forever' is about future action and no measurement can reach it; that part stays unmeasured permanently and the artifact says so."
+        },
+        {
+          "id": "CS-3",
+          "url": "https://councilof.ai/",
+          "type": "method-description",
+          "verbatim": "Every answer graded by a rule, never by another AI",
+          "state": "UNMEASURED",
+          "plan": "settleable from the published grader source and the published graded rows: read the grader, then check that every published row carries a rule identifier and a quoted match rather than a model score. Report the count with its denominator. Not run in this pass."
+        },
+        {
+          "id": "CS-4",
+          "url": "https://councilof.ai/",
+          "type": "quantitative-count",
+          "verbatim": "23 axis · 23 measured on the board today",
+          "state": "UNMEASURED",
+          "series": "CS-4",
+          "excerpt": true,
+          "plan": "restatement watch, and held to exactly the standard applied to every other subject: the only enumeration of this figure is the maintainer's own board API, so recomputing it from that API would be the claim again rather than evidence about it (spec 4.6). Capture weekly with the page digest and record every revision, including any downward one."
+        }
+      ]
+    },
+    {
+      "key": "nemo-guardrails",
+      "name": "NVIDIA NeMo Guardrails",
+      "identifier": "github.com/NVIDIA-NeMo/Guardrails",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "NG-1",
+          "url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+          "type": "scope",
+          "verbatim": "The NeMo Guardrails library enables developers building LLM-based applications to add **programmable guardrails** between the application code and the LLM.",
+          "state": "UNCHECKABLE",
+          "covers": "raw-bytes",
+          "uncheckable_reason": "A description of where the library sits in an application. It names no quantity, no rate and no threshold, so there is nothing a third party can recompute from public evidence. A statement about the evidence available to the public, never about the project."
+        },
+        {
+          "id": "NG-2",
+          "url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+          "type": "data-handling-guarantee",
+          "verbatim": "No user content is collected in the event payload.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "this is a guarantee about behaviour, and the behaviour is in the same public repository as the claim. It is settleable by reading the telemetry code path and the event schema it builds, and by running the library offline and reading the audit file it writes. Neither was done in this pass, and the claim is not treated as checked because the source is open."
+        },
+        {
+          "id": "NG-3",
+          "url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+          "type": "stated-limitation",
+          "verbatim": "Audit writes are best effort, and telemetry transmission still proceeds if local audit writing fails.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "a limitation the project states about its own behaviour, which is the kind of claim that costs a publisher something to make. It is settleable from the same public repository by reading the audit write path and its error handling. Not run in this pass."
+        },
+        {
+          "id": "NG-4",
+          "url": "https://raw.githubusercontent.com/NVIDIA-NeMo/Guardrails/main/README.md",
+          "type": "scope-limitation",
+          "verbatim": "NVIDIA Build is intended for evaluation and testing only and must not be used in production environments.",
+          "state": "UNCHECKABLE",
+          "covers": "raw-bytes",
+          "uncheckable_reason": "A restriction the publisher places on a third party's service. It is an instruction to the reader, not a quantity, and no public evidence settles whether an instruction is followed. A statement about the evidence, never about the project."
+        }
+      ]
+    },
+    {
+      "key": "garak",
+      "name": "garak",
+      "identifier": "github.com/NVIDIA/garak",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "GK-1",
+          "url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+          "type": "scope",
+          "verbatim": "`garak` probes for hallucination, data leakage, prompt injection, misinformation, toxicity generation, jailbreaks, and many other weaknesses.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "an enumeration of what the tool probes for, and the probes are in the same public repository. It is settleable by listing the probe modules the published package actually ships and mapping each named category onto them, reporting the categories with no shipped probe as unmapped rather than as absent. Not run in this pass."
+        },
+        {
+          "id": "GK-2",
+          "url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+          "type": "scope",
+          "verbatim": "`garak` checks if an LLM can be made to fail in a way we don't want.",
+          "state": "UNCHECKABLE",
+          "covers": "raw-bytes",
+          "uncheckable_reason": "The success condition is 'a way we don't want', which the sentence leaves to the reader. No public evidence settles a claim whose criterion is undefined in the claim. A statement about the evidence, never about the project."
+        },
+        {
+          "id": "GK-3",
+          "url": "https://raw.githubusercontent.com/NVIDIA/garak/main/README.md",
+          "type": "licence",
+          "verbatim": "`garak`'s a free tool.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "measurement": "M-GARAK-LICENCE",
+          "plan": "read the licence the code host's own detector reports for the named repository, and the text of the licence file itself. Neither is written by the claimant, which is what makes it evidence about the claim rather than the claim again."
+        }
+      ]
+    },
+    {
+      "key": "guardrails-ai",
+      "name": "Guardrails AI",
+      "identifier": "github.com/guardrails-ai/guardrails",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "GR-1",
+          "url": "https://raw.githubusercontent.com/guardrails-ai/guardrails/main/README.md",
+          "type": "scope",
+          "verbatim": "Guardrails is a Python framework that helps build reliable AI applications by performing two key functions:",
+          "state": "UNCHECKABLE",
+          "covers": "raw-bytes",
+          "uncheckable_reason": "'Reliable' is not defined in the claim and no public dataset settles whether an application built with a framework is reliable. A statement about the evidence available to the public, never about the project."
+        },
+        {
+          "id": "GR-2",
+          "url": "https://raw.githubusercontent.com/guardrails-ai/guardrails/main/README.md",
+          "type": "interoperability",
+          "verbatim": "Yes, Guardrails can be used with proprietary and open-source LLMs.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "settleable from the published package: enumerate the model integrations it ships and check that the set spans both proprietary and open-weight providers. The denominator is the integrations shipped, not the models that exist. Not run in this pass."
+        }
+      ]
+    },
+    {
+      "key": "pyrit",
+      "name": "PyRIT",
+      "identifier": "github.com/microsoft/PyRIT",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "PR-1",
+          "url": "https://raw.githubusercontent.com/microsoft/PyRIT/main/README.md",
+          "type": "scope",
+          "verbatim": "The Python Risk Identification Tool for generative AI (PyRIT) is an open source\nframework built to empower security professionals and engineers to proactively\nidentify risks in generative AI systems.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "measurement": "M-PYRIT-LICENCE",
+          "plan": "only one element of this compound sentence is settleable by public evidence: whether the named repository is open source, which the code host's own record answers without the claimant's help. The rest of the sentence describes an intended effect on a user and stays unmeasured.",
+          "measures_only": "the open-source element of this sentence, and nothing else in it. 'Empower' and 'proactively identify risks' name an intended effect on a user, and no public evidence measures an effect on a user; those elements are unmeasured"
+        }
+      ]
+    },
+    {
+      "key": "purplellama",
+      "name": "Purple Llama",
+      "identifier": "github.com/meta-llama/PurpleLlama",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "PL-1",
+          "url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+          "type": "licence",
+          "verbatim": "Components within the Purple Llama project will be licensed permissively enabling both research and commercial usage.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "measurement": "M-PURPLELLAMA-LICENCE",
+          "plan": "read the licence the code host's own detector reports for the named repository, and the text of the licence file itself. Neither is written by the claimant, which is what makes it evidence about the claim rather than the claim again."
+        },
+        {
+          "id": "PL-2",
+          "url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+          "type": "hedged-superlative",
+          "verbatim": "CyberSec Eval v1 was what we believe was the first industry-wide set of cybersecurity safety evaluations for LLMs.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "a priority claim, and the publisher has hedged it in its own words ('what we believe was'). The honest outside test of a priority claim is a documented earlier example from some other party's own published materials, dated. Searching the public record for an earlier industry-wide LLM cybersecurity evaluation suite is settleable in principle and was not run in this pass; until it is, nothing is concluded, and the hedge is recorded as the publisher wrote it."
+        },
+        {
+          "id": "PL-3",
+          "url": "https://raw.githubusercontent.com/meta-llama/PurpleLlama/main/README.md",
+          "type": "scope",
+          "verbatim": "Llama Guard 3 consists of a series of high-performance input and output moderation models designed to support developers to detect various common types of violating content.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "'high-performance' over 'various common types' is settleable only against a named benchmark and a named taxonomy. The same repository names the taxonomy it targets, and public evaluation sets for it exist, so a measurement is possible in principle; it needs model inference this pass did not run. No number is invented in its place."
+        }
+      ]
+    },
+    {
+      "key": "invariant-guardrails",
+      "name": "Invariant Guardrails",
+      "identifier": "github.com/invariantlabs-ai/invariant",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "IV-1",
+          "url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+          "type": "scope-superlative",
+          "verbatim": "Invariant Guardrails is a comprehensive rule-based guardrailing layer for LLM or MCP-powered AI applications.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "'comprehensive' is a coverage claim over a category the sentence does not bound. The answerable version is a counterexample log: whether other projects' own documentation describes rule-based guardrailing over the same surfaces, quoted from their own materials. Not run in this pass."
+        },
+        {
+          "id": "IV-2",
+          "url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+          "type": "integration-guarantee",
+          "verbatim": "It is deployed between your application and your MCP servers or LLM provider, allowing for continuous steering and monitoring, without invasive code changes.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "'without invasive code changes' is settleable from the published integration path: whether the documented deployment requires an application code change at all, or only a configuration or proxy endpoint change. Readable from the same public repository. Not run in this pass."
+        },
+        {
+          "id": "IV-3",
+          "url": "https://raw.githubusercontent.com/invariantlabs-ai/invariant/main/README.md",
+          "type": "licence",
+          "covers": "raw-bytes",
+          "verbatim": "Guardrails is an open source project by [Invariant Labs](https://invariantlabs.ai).",
+          "state": "UNMEASURED",
+          "measurement": "M-INVARIANT-LICENCE",
+          "plan": "read the licence the code host's own detector reports for the named repository, and the text of the licence file itself. Neither is written by the claimant, which is what makes it evidence about the claim rather than the claim again."
+        }
+      ]
+    },
+    {
+      "key": "giskard",
+      "name": "Giskard",
+      "identifier": "github.com/Giskard-AI/giskard-oss",
+      "identifier_kind": "url",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "GI-1",
+          "url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+          "type": "scope",
+          "verbatim": "Giskard is an open-source Python library for **testing and evaluating agentic systems**.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "measurement": "M-GISKARD-LICENCE",
+          "plan": "read the licence the code host's own detector reports for the named repository, and the text of the licence file itself. Neither is written by the claimant, which is what makes it evidence about the claim rather than the claim again."
+        },
+        {
+          "id": "GI-2",
+          "url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+          "type": "stated-limitation",
+          "verbatim": "These are not planned for v3.",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "a statement about what the project will NOT carry forward, which is the kind of claim a publisher gains nothing by making. It becomes settleable when v3 ships: read the published v3 packages and record whether the named components are present. Watched rather than measured, and no date is published for it, so no resolution date is recorded and none is invented."
+        },
+        {
+          "id": "GI-3",
+          "url": "https://raw.githubusercontent.com/Giskard-AI/giskard-oss/main/README.md",
+          "type": "scope",
+          "verbatim": "Built-in evals include string matching, comparisons, regex, semantic similarity, and LLM-as-judge checks (`Groundedness`, `Conformity`, `LLMJudge`).",
+          "state": "UNMEASURED",
+          "covers": "raw-bytes",
+          "plan": "an enumeration settleable against the published package: import it and list the evaluators it actually exposes, reporting any named here with no shipped implementation as unmapped rather than as absent. Not run in this pass."
+        }
+      ]
+    }
+  ]
+}

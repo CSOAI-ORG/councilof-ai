@@ -1,0 +1,132 @@
+{
+  "schema": "csoai.public-receipt-toolkit/1.0",
+  "artifact": {
+    "url": "https://councilof.ai/verifier/verify_receipt.py",
+    "source_path": "scripts/verify_receipt.py",
+    "bytes": 29799,
+    "sha256": "e971628a0f0f6a2d98ac2b5fbba26424ad6088a9a2d0d8fe7fa2f6393e3c76ab",
+    "exact_source_copy": true
+  },
+  "guide": {
+    "url": "https://councilof.ai/verifier/receipt-toolkit.md",
+    "bytes": 6303,
+    "sha256": "ac3e1128faf558a316d677a27c4f83d56736d4b18f28f6cea9e25fd8dec0d18f"
+  },
+  "runtime": {
+    "python": ">=3.9",
+    "external_dependency": "cryptography",
+    "dependency_install_performed": false
+  },
+  "scope": {
+    "format": "x402 Offer & Receipt compact JWS",
+    "algorithm": "Ed25519",
+    "default_key_document": "https://csoai.org/.well-known/did.json",
+    "saved_key_document_supported": true,
+    "signature_replay_requires_wallet": false,
+    "signature_replay_requires_API_key": false,
+    "default_signature_check_public_DID_reads": 1,
+    "chain_check_profile": "eip155-receipt-status/1.1",
+    "transfer_check_profile": "eip155-exact-erc20-event/1.0",
+    "transfer_check": {
+      "opt_in_flag": "--expect-transfer",
+      "caller_pinned_expectation_required": true,
+      "exact_signed_resource_including_query": true,
+      "exact_network_transaction_payer_binding": true,
+      "exact_asset_payer_payee_atomic_amount": true,
+      "one_unambiguous_ERC20_log": true,
+      "maximum_read_only_RPC_calls_per_artifact": 2,
+      "zero_value_purchase_allowed": false,
+      "self_transfer_is_customer": false,
+      "finality_verified": false,
+      "net_balance_change_verified": false,
+      "delivered_payload_verified": false,
+      "revenue_added": false
+    },
+    "chain_check": {
+      "rpc_network_must_match_signed_network": true,
+      "transaction_hash_must_match": true,
+      "execution_status_must_equal": 1,
+      "unknown_exit": 2,
+      "reverted_exit": 1,
+      "maximum_read_only_RPC_calls_per_artifact": 2,
+      "transfer_details_verified": false,
+      "finality_verified": false
+    },
+    "payment_verified": false,
+    "receipt_freshness_verified": false,
+    "measurement_truth_verified": false,
+    "source_identity_independently_verified": false
+  },
+  "transfer_expectation_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://councilof.ai/verifier/receipt-toolkit.json#transfer_expectation_schema",
+    "title": "Caller-pinned exact ERC-20 transfer expectation",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema",
+      "network",
+      "transaction",
+      "asset",
+      "payer",
+      "pay_to",
+      "amount_atomic",
+      "resource_url"
+    ],
+    "properties": {
+      "schema": {
+        "const": "csoai.erc20-transfer-expectation/1.0"
+      },
+      "network": {
+        "type": "string",
+        "pattern": "^eip155:[1-9][0-9]{0,19}$"
+      },
+      "transaction": {
+        "type": "string",
+        "pattern": "^0x[0-9a-fA-F]{64}$"
+      },
+      "asset": {
+        "type": "string",
+        "pattern": "^0x[0-9a-fA-F]{40}$"
+      },
+      "payer": {
+        "type": "string",
+        "pattern": "^0x[0-9a-fA-F]{40}$"
+      },
+      "pay_to": {
+        "type": "string",
+        "pattern": "^0x[0-9a-fA-F]{40}$"
+      },
+      "amount_atomic": {
+        "type": "string",
+        "pattern": "^[1-9][0-9]{0,77}$",
+        "description": "Positive decimal integer below2**256; executable verifier enforces range. Token units, not floating-point currency."
+      },
+      "resource_url": {
+        "type": "string",
+        "format": "uri",
+        "description": "Exact original request resource under verifier-authorized HTTPS host. Query parameters are not stripped."
+      },
+      "log_index": {
+        "type": "integer",
+        "minimum": 0,
+        "description": "Optional exact log identity; executable verifier additionally bounds below2**64."
+      },
+      "known_internal_wallets": {
+        "type": "array",
+        "maxItems": 32,
+        "items": {
+          "type": "string",
+          "pattern": "^0x[0-9a-fA-F]{40}$"
+        }
+      }
+    },
+    "$comment": "Structural aid only. The executable verifier enforces signed-resource identity, nonzero addresses, integer ranges and semantic event checks. This schema is not a proof or payment request."
+  },
+  "related_verifiers": {
+    "card_v0": "https://councilof.ai/verifier/card-v0-verify.mjs",
+    "gspc_card": "https://councilof.ai/verifier/gspc-verify.mjs",
+    "claim_artifact": "https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs"
+  },
+  "generation": "Deterministic from owned source bytes. Manifest is not signed or independently trusted."
+}

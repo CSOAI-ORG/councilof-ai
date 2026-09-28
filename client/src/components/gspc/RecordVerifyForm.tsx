@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { FOCUS } from "../lobby/glass";
-import { verifyRecord, type RecordVerdict } from "@/lib/recordVerify";
+import { lookupRecordUseStatus, verifyRecord, type RecordUseStatus, type RecordVerdict } from "@/lib/recordVerify";
 import { InputBoundVerifier } from "@/lib/inputBoundVerification";
 
 type Tally = { ok: number; fail: number };
+type UseAwareVerdict = RecordVerdict & { useStatus: RecordUseStatus };
 
 /**
  * TallyOptIn — the opt-in public count of completed verifications.
@@ -106,9 +107,9 @@ export default function RecordVerifyForm({
   onVerdict?: (v: RecordVerdict) => void;
 }) {
   const [text, setText] = useState("");
-  const [verdict, setVerdict] = useState<{ result: RecordVerdict; inputHash: string } | null>(null);
+  const [verdict, setVerdict] = useState<{ result: UseAwareVerdict; inputHash: string } | null>(null);
   const [busy, setBusy] = useState(false);
-  const verifier = useRef(new InputBoundVerifier<RecordVerdict>());
+  const verifier = useRef(new InputBoundVerifier<UseAwareVerdict>());
   const light = variant === "light";
   const fieldId = useId();
 
@@ -126,7 +127,13 @@ export default function RecordVerifyForm({
   const run = async () => {
     setBusy(true);
     const snapshot = text;
-    const bound = await verifier.current.run(snapshot, verifyRecord);
+    const bound = await verifier.current.run(snapshot, async (value) => {
+      const [signature, useStatus] = await Promise.all([
+        verifyRecord(value),
+        lookupRecordUseStatus(value),
+      ]);
+      return { ...signature, useStatus };
+    });
     if (!bound) return;
     setVerdict(bound);
     onVerdict?.(bound.result);
@@ -217,6 +224,22 @@ export default function RecordVerifyForm({
                 ? `a check ran and failed (${verdict.result.reasons.join(", ")}); each failure below is reported for what it is.`
                 : `the check could not be completed (${verdict.result.reasons.join(", ") || "see below"}). This is not a finding that the record is forged.`}
           </p>
+          {verdict.result.useStatus.state !== "NOT_APPLICABLE" && (
+            <div
+              data-testid="record-use-status"
+              className={`rounded-lg border p-3 text-[13px] ${verdict.result.useStatus.state === "WITHDRAWN"
+                ? light ? "border-red-400 bg-red-50 text-red-900" : "border-red-400/60 bg-red-500/10 text-red-100"
+                : light ? "border-amber-400 bg-amber-50 text-amber-900" : "border-amber-400/60 bg-amber-500/10 text-amber-100"}`}
+            >
+              <strong>Use status: {verdict.result.useStatus.state === "WITHDRAWN"
+                ? "WITHDRAWN"
+                : verdict.result.useStatus.state === "UNCHECKABLE" ? "UNCHECKABLE" : "NOT ESTABLISHED"}.</strong>{" "}
+              {verdict.result.useStatus.detail}
+              {verdict.result.useStatus.reference && (
+                <> <a className="underline underline-offset-2" href={verdict.result.useStatus.reference}>Read the public withdrawal record</a>.</>
+              )}
+            </div>
+          )}
           <p className={`break-all font-mono text-[11px] ${light ? "text-slate-600" : "text-emerald-100/60"}`}>
             Input SHA-256: {verdict.inputHash}
           </p>

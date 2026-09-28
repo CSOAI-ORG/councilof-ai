@@ -19,6 +19,94 @@ export function servedUrl(route, origin) {
   return r === "/" ? origin : `${origin}${r}/`;
 }
 
+// The footer names /terms-of-service as the one current contract. The two
+// working aliases remain readable, but must not advertise duplicate canonicals.
+//
+// The same holds for 72 more addresses measured 2026-09-24: across the live sitemap, each serves
+// the same title, description and body as the route it maps to, and each advertised itself as the
+// original, so search engines saw duplicate pages. The alias stays readable; its canonical names
+// the route the site's own links use most (ties: the more descriptive path; /law over /meok-law,
+// which names the sister project on a CSOAI page). client/index.html carries the same map for
+// crawlers that run JavaScript; canonical-url.node-test.mjs holds the two copies equal.
+export const CANONICAL_ALIAS = new Map([
+  ["/terms", "/terms-of-service"],
+  ["/legal/terms", "/terms-of-service"],
+  ["/meok-law", "/law"],
+  ["/csoai-law", "/law"],
+  ["/eu-ai-act-explained", "/ai-act-summary"],
+  ["/ai-act-vs-gdpr", "/eu-ai-act-vs-gdpr"],
+  ["/ai-glossary", "/glossary"],
+  ["/ai-governance-guide", "/ai-governance"],
+  ["/aug-2026", "/readiness"],
+  ["/cobol", "/cobolbridge"],
+  ["/open-media", "/commons"],
+  ["/connect-ai", "/connect-gspc"],
+  ["/framework-crosswalks", "/crosswalks"],
+  ["/drift-product", "/drift-audit"],
+  ["/white-label", "/embed"],
+  ["/legal/founding-council", "/founding-council-agreement"],
+  ["/guides/iso-42001", "/iso-42001"],
+  ["/guides/nist-ai-rmf", "/nist-ai-rmf"],
+  ["/guides/tc260", "/tc260"],
+  ["/help-center", "/help"],
+  ["/high-risk-ai", "/high-risk-ai-systems"],
+  ["/rediscovered", "/lineage"],
+  ["/relevance-map", "/map"],
+  ["/map-regions", "/regions"],
+  ["/mcp-tools", "/tool-commons"],
+  ["/prosperity", "/prosperity-fund"],
+  ["/real-world", "/world-3d"],
+  ["/regulator-atlas", "/regulators"],
+  ["/x402-leaderboard", "/x402-board"],
+  // Second batch 2026-09-24: 32 groups whose bodies differ in one related-section link only.
+  ["/usp", "/why"],
+  ["/why-csoai", "/why"],
+  ["/our-difference", "/why"],
+  ["/agents", "/council-vs-agents"],
+  ["/governance-council", "/council-vs-agents"],
+  ["/vs", "/compare"],
+  ["/vs-competitors", "/compare"],
+  ["/cookies", "/cookie-policy"],
+  ["/legal/cookies", "/cookie-policy"],
+  ["/personal-protection", "/protect"],
+  ["/deepfake-protection", "/protect"],
+  ["/rfc-0024", "/fedramp"],
+  ["/oscal-readiness", "/fedramp"],
+  ["/graph", "/governance-graph"],
+  ["/world-data", "/governance-graph"],
+  ["/privacy", "/privacy-policy"],
+  ["/legal/privacy", "/privacy-policy"],
+  ["/agents-network", "/network"],
+  ["/eu-ai-act-faq", "/ai-act-faq"],
+  ["/ai-act-timeline", "/eu-ai-act-timeline"],
+  ["/ailuminate", "/gspc-vs-ailuminate"],
+  ["/competitors", "/battlecards"],
+  ["/trust", "/boards/mcp"],
+  ["/checklist", "/eu-ai-act-checklist"],
+  ["/legal/disclaimers", "/disclaimers"],
+  ["/guides/eu-ai-act", "/eu-ai-act"],
+  ["/frequently-asked-questions", "/faq"],
+  ["/fines", "/penalties"],
+  ["/foundation-models", "/gpai"],
+  ["/framework-temples", "/temples"],
+  ["/regulation-tracker", "/global-regulations"],
+  ["/how", "/how-it-works"],
+  ["/industry-solutions", "/industries"],
+  ["/industry-playbooks", "/playbooks"],
+  ["/iso-eu", "/iso-42001-vs-eu-ai-act"],
+  ["/tracks", "/learn"],
+  ["/legal/licensing", "/licensing-agreement"],
+  ["/legal/membership", "/membership-agreement"],
+  ["/voice", "/minds"],
+  ["/nist-eu", "/nist-vs-eu-ai-act"],
+  ["/sector-atlas", "/sectors"],
+  // Third batch 2026-09-24: /frameworks/* copies of the top-level framework pages.
+  ["/frameworks/eu-ai-act", "/eu-ai-act"],
+  ["/frameworks/iso-42001", "/iso-42001"],
+  ["/frameworks/nist", "/nist-ai-rmf"],
+  ["/frameworks/tc260", "/tc260"],
+]);
+
 /**
  * Rewrite canonical/og:url/twitter:url values that name this route WITHOUT its trailing slash, or
  * name the bare origin (the shell default), to the served URL. Query-string routes are not rewritten.
@@ -34,8 +122,8 @@ export function rewriteCanonical(html, route, origin, servedRoutes = null) {
   if (String(route).includes("?")) return html;
   const r = normRoute(route);
   if (r === "/") return html;
-  const target = servedUrl(r, origin);
-  const from = new Set([`${origin}${r}`, origin, `${origin}/`]);
+  const target = servedUrl(CANONICAL_ALIAS.get(r) || r, origin);
+  const from = new Set([`${origin}${r}`, servedUrl(r, origin), origin, `${origin}/`]);
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   let out = html;
   for (const f of from) {

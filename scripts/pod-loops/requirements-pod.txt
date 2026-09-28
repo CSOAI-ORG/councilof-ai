@@ -1,0 +1,22 @@
+# Third-party packages the pod loops import, installed OUTSIDE the container's wiped /root:
+#   python3 -m pip install --root-user-action=ignore --target /workspace/tools/pylib -r scripts/pod-loops/requirements-pod.txt
+# lib.sh exports PYTHONPATH=/workspace/tools/pylib. Exact resolved versions: /workspace/tools/pylib.lock on the pod.
+# Recorded 2026-09-25 after a container restart removed all of these (huggingface_hub first to fail: gspc-spray).
+huggingface_hub
+pydantic
+pynacl
+eth-account
+base58
+rfc8785
+pyarrow
+pandas
+aiohttp
+a2a-sdk
+mcp
+opentelemetry-api
+opentelemetry-sdk
+pypdf
+PyPDF2
+glom
+fastapi
+pytest

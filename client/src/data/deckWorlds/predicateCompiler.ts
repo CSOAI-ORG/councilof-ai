@@ -60,7 +60,7 @@ export const PREDICATE_HERO = {
   lede:
     "Between a published provision and a score there is a step most assurance skips: turning legal text into something a stranger can run and get the same answer. This page shows that step in full — the frozen corpus it starts from, the structure it is cut into, the boolean it ends as, and the signed record it produces.",
   bg: {
-    src: "/images/method/foundry.png",
+    src: "/images/method/foundry.webp",
     alt: "A block of stone split by a green beam, a machined channel revealed inside it",
   },
   actions: [
@@ -100,7 +100,7 @@ export const PREDICATE_SLIDES: Slide[] = [
     body:
       "The text is parsed into its conditions: a root that is the statutory requirement, branches for each condition it imposes, and leaves that are true-or-false tests. Compilation removes ambiguity from the predicate — it does not remove ambiguity from the law, and it is not allowed to pretend otherwise. Where a provision admits more than one reasonable reading, that is recorded as a dispute rather than silently collapsed into one branch.",
     image: {
-      src: "/images/method/ast.png",
+      src: "/images/method/ast.webp",
       alt: "A carved stone dissolving into particles and reforming as a branching tree whose leaves are labelled as boolean executable conditions",
     },
     points: [
@@ -128,7 +128,7 @@ export const PREDICATE_SLIDES: Slide[] = [
     body:
       "The output is a small signed record: the scores, the sample size behind each one, the confidence interval where one is honest, the hashes, and the signature. It is Ed25519 over RFC-8785 canonical JSON, against the trust root at did:web:csoai.org, and it is deliberately small enough to email or attach to a tender. Re-attestation issues a new record; the old one is never edited. Verification is free, needs no account, and runs in your browser.",
     image: {
-      src: "/images/method/receipt.png",
+      src: "/images/method/receipt.webp",
       alt: "A white slab bearing a green tag reading Ed25519 Verified, a signature seam running through it",
     },
     points: [

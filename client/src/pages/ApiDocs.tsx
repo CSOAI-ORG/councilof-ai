@@ -373,10 +373,10 @@ console.log({
                   How it is measured
                 </Button>
               </Link>
-              <a href="https://github.com/CSOAI-ORG" target="_blank" rel="noopener noreferrer">
+              <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" variant="outline" className="gap-2">
                   <Globe className="w-4 h-4" />
-                  Harness on GitHub
+                  Source snapshot
                 </Button>
               </a>
             </div>

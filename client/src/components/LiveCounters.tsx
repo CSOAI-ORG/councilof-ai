@@ -3,13 +3,29 @@
  *
  * The funnel enforces download ≠ user ≠ execution ≠ customer ≠ recurring customer: each pill is
  * one stage, read from its own source, and nothing is added across stages. A pill prints a
- * number ONLY when the payload carries one for that stage; UNCHECKABLE and UNMEASURED print as
- * those words. Before the payload lands — and in an automated snapshot, where a baked number
- * would be stale the moment it was read — every pill prints "—". No number in this file is typed.
+ * number ONLY when the payload carries one for that stage, and never bare: PARTIAL prints "≥ N"
+ * and STALE prints "N · stale", so the state travels with the figure instead of beside it.
+ * UNCHECKABLE and UNMEASURED print as those words. Download pills also print the window the
+ * figure covers, because a 30-day count and a cumulative count are different measurements and a
+ * reader who is not told which one they are looking at will assume. Before the payload lands —
+ * and in an automated snapshot, where a baked number would be stale the moment it was read —
+ * every pill prints "—". No number in this file is typed; every figure comes from /api/footprint.
  *
- * Variants:
- *   hero   — home page, the three stages a first reader should see, plus the honesty line once.
- *   footer — site chrome, the whole funnel compact.
+ * Variants (owner ruling, 2026-09-22, after looking at the live page):
+ *   hero   — home page: what the work reaches, each figure with its window and its state.
+ *   footer — site chrome: the same, compact.
+ *   funnel — its own page: all seven stages, including every UNMEASURED one and the paying
+ *            wallets, with the line that downloads are not users and users are not customers.
+ *
+ * hero and footer show no commercial stage and no stage the payload has no source for. "Paying
+ * wallets: 1" beside a distribution figure in the millions does not read as honesty in a shop
+ * window; it reads as a weakness we chose to headline. Nothing is deleted to achieve that:
+ * /api/footprint still publishes all seven stages, /api/revenue is untouched, and the funnel
+ * variant renders every one of them. A variant never computes a stage it does not show.
+ *
+ * The words "gross" and "cumulative" are the artifact's names for its own windows and do not go
+ * on the face of a page. Each pill prints the plain span instead — "30 days to 21 Sep 2026",
+ * "since first release" — beside the figure it belongs to.
  *
  * The board's totals.public_count is deliberately NOT a hero pill: the homepage carries ONE
  * count line (HomeGspcTable's) by the 2026-09-16 ruling recorded in LivingStages.tsx. Pass
@@ -19,7 +35,16 @@
  */
 
 import { useEffect, useState } from "react";
-import { FOOTER_STAGES, HERO_STAGES, pillsFor, type FootprintPayload, type Pill, type StageKey } from "./liveCountersFormat";
+import {
+  COMMERCIAL_STAGES,
+  isUnmeasured,
+  pillsFor,
+  stagesFor,
+  type FootprintPayload,
+  type FootprintRow,
+  type Pill,
+  type StageKey,
+} from "./liveCountersFormat";
 
 export const FOOTPRINT_ENDPOINT = "/api/footprint";
 
@@ -59,8 +84,12 @@ function useFootprint(): Status {
   return status;
 }
 
-const TONE: Record<Pill["tone"], string> = {
+/** Every tone the formatter can produce must have a class here: a state with no colour is a
+ *  state a reader does not see. The test asserts this map is exhaustive over Pill["tone"]. */
+export const TONE: Record<Pill["tone"], string> = {
   numeric: "border-emerald-600/30 bg-white text-slate-900",
+  PARTIAL: "border-sky-500/40 bg-sky-50 text-sky-900",
+  STALE: "border-orange-400/60 bg-orange-50 text-orange-900",
   UNCHECKABLE: "border-amber-400/50 bg-amber-50 text-amber-900",
   UNMEASURED: "border-slate-300 bg-slate-50 text-slate-600",
 };
@@ -68,24 +97,33 @@ const TONE: Record<Pill["tone"], string> = {
 function PillView({ pill, compact, placeholder }: { pill: Pill; compact: boolean; placeholder: string | null }) {
   const text = placeholder ?? pill.text;
   const tone = placeholder ? "border-slate-200 bg-white text-slate-500" : TONE[pill.tone];
+  // The evidence artifact when the row was read out of one, otherwise the upstream source.
+  const link = placeholder ? null : (pill.evidenceHref ?? pill.href);
+  const linkLabel = pill.evidenceHref ? "evidence" : "source";
   return (
     <li
       data-stage={pill.key}
       data-state={placeholder ? "pending" : pill.tone}
+      data-window={placeholder ? undefined : (pill.window ?? undefined)}
       title={placeholder ? `${pill.label} · reading ${FOOTPRINT_ENDPOINT}` : pill.title}
       className={`inline-flex items-center gap-1.5 rounded-full border ${compact ? "px-2.5 py-0.5 text-[11px]" : "px-3 py-1 text-xs"} ${tone}`}
     >
       <span className="font-semibold uppercase tracking-wide text-[0.85em] text-slate-500">{pill.label}</span>
       <span className="font-black tabular-nums">{text}</span>
-      {!placeholder && pill.href && (
+      {!placeholder && pill.window && (
+        <span data-testid={`window-${pill.key}`} className="font-normal text-[0.85em] text-slate-500">
+          {pill.window}
+        </span>
+      )}
+      {link && (
         <a
-          href={pill.href}
+          href={link}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`Source for ${pill.label}`}
+          aria-label={`${linkLabel === "evidence" ? "Evidence" : "Source"} for ${pill.label}`}
           className="text-[0.8em] font-medium text-emerald-700 underline decoration-dotted underline-offset-2 hover:text-emerald-900"
         >
-          source
+          {linkLabel}
         </a>
       )}
     </li>
@@ -93,7 +131,7 @@ function PillView({ pill, compact, placeholder }: { pill: Pill; compact: boolean
 }
 
 export interface LiveCountersProps {
-  variant: "hero" | "footer";
+  variant: "hero" | "footer" | "funnel";
   /** Add the board's totals.public_count pill. Off by default on the homepage (one count line per page). */
   showBoard?: boolean;
 }
@@ -101,18 +139,25 @@ export interface LiveCountersProps {
 export default function LiveCounters({ variant, showBoard = false }: LiveCountersProps) {
   const status = useFootprint();
   const compact = variant === "footer";
-  const stages: StageKey[] = [...(variant === "hero" ? HERO_STAGES : FOOTER_STAGES), ...(showBoard ? (["board"] as StageKey[]) : [])];
+  const full = variant === "funnel";
+  const stages: StageKey[] = [...stagesFor(variant), ...(showBoard ? (["board"] as StageKey[]) : [])];
 
   const payload = status.kind === "ready" ? status.payload : null;
-  const pills = pillsFor(payload, stages);
+  // The funnel page shows every stage it asks for. The hero and the footer also drop a stage the
+  // payload has no source for: an UNMEASURED word in a shop window says nothing a reader can use,
+  // and it stays said, in full, on the funnel page.
+  const shown = full ? stages : stages.filter((key) => !isUnmeasured(payload?.[key] as FootprintRow | undefined));
+  const pills = pillsFor(payload, shown);
   // "—" while nothing has landed and in a snapshot. A failed fetch on a live page is a fact worth
   // printing: every pill says UNCHECKABLE, with the reason in its tooltip.
   const placeholder = status.kind === "loading" || status.kind === "snapshot" ? "—" : null;
   const failed = status.kind === "failed" ? status.reason : null;
 
-  const honesty =
-    payload?.honesty ??
-    "Gross counts are published separately from mirror-adjusted and economically verified adoption, because downloads are not users and users are not customers.";
+  // The funnel page carries the doctrine in full; the hero says the part a first reader needs.
+  // Neither prints the artifact's window adjectives.
+  const honesty = full
+    ? "Each stage is a separate measurement of a separate thing, never added to another and never derived from another. Downloads are not users, and users are not customers."
+    : "Counted package by package, on the date shown. Downloads are not users.";
 
   return (
     <section
@@ -120,18 +165,23 @@ export default function LiveCounters({ variant, showBoard = false }: LiveCounter
       data-status={status.kind}
       aria-label="Adoption funnel, read live"
       className={compact ? "mb-6 text-center" : "mx-auto max-w-6xl px-4 pt-8"}
+      data-variant={variant}
     >
       <ul className={`flex flex-wrap ${compact ? "justify-center gap-1.5" : "gap-2"}`}>
         {pills.map((pill) => (
           <PillView
             key={pill.key}
-            pill={failed ? { ...pill, text: "UNCHECKABLE", tone: "UNCHECKABLE", title: `${pill.label} · ${failed}` } : pill}
+            pill={
+              failed
+                ? { ...pill, text: "UNCHECKABLE", tone: "UNCHECKABLE", href: null, evidenceHref: null, window: null, title: `${pill.label} · ${failed}` }
+                : pill
+            }
             compact={compact}
             placeholder={placeholder}
           />
         ))}
       </ul>
-      {variant === "hero" && (
+      {!compact && (
         <p className="mt-2 text-xs text-slate-500">
           {honesty}{" "}
           <a href={FOOTPRINT_ENDPOINT} className="text-emerald-700 underline decoration-dotted underline-offset-2">

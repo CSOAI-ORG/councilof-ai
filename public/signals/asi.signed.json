@@ -1,23 +1,81 @@
 {
  "axis": "asi",
- "content_id": "d2249c22dcd392d59edc12d90fb9be807bb4c6823197f322d6f3c01a0d9075e9",
+ "axis_status": "MEASURED",
+ "content_id": "22d3591c019e7090b6f1c836e3a1928fe1f92d7a6872ef09fdc1e65569b2596d",
+ "elo_decided_games": 43,
  "elo_leader": null,
  "elo_leader_score": null,
+ "elo_ranked_models": 5,
+ "elo_runner_up": {
+  "ci": [
+   0.28,
+   0.72
+  ],
+  "elo": 1510.1,
+  "games": 16,
+  "model": "qwen3:8b",
+  "winrate": 0.5
+ },
+ "elo_separation": "TIE",
+ "elo_source": {
+  "content_id": "b126b711de15662514cac4f462e461f2cbe46b20e25452da609ff3daddab3f40",
+  "generated": "2026-09-24T16:42:59Z",
+  "path": "/arena/elo_reference.json",
+  "schema": "csoai.arena-elo-reference/0.2"
+ },
+ "elo_ties": 106,
+ "elo_top": {
+  "ci": [
+   0.3,
+   0.903
+  ],
+  "elo": 1527.2,
+  "games": 6,
+  "model": "phi4:14b",
+  "winrate": 0.667
+ },
+ "evidence_relation": "SEPARATE_EVIDENCE",
+ "evidence_relation_note": "Never add, reconcile or substitute the two (cf. corpus_relation SEPARATE_CORPORA). Board: per-item accuracy on a frozen bank. Here: win-rate over recorded pairwise rounds. Board leader none is NOT among the models ranked here (phi4:14b, qwen3:8b, phi3.5:3.8b, mistral:7b, llama3.1:8b). Fleet overlap UNMEASURED: no per-axis fleet roster is published and none is invented.",
  "games_leader": null,
- "generated": "2026-08-24T09:11:56Z",
+ "generated": "2026-09-24T16:43:00Z",
  "majority_baseline": 0.3939,
  "models": 19,
  "not_a_certification": true,
- "note": "From the live axis register + signed per-axis Elo leaderboard. Honest signals only; thin-n axes say so. Measurement, not certification.",
- "register": "MEASURED",
- "schema": "csoai.axis-signal/0.1",
+ "note": "From the axis register + the per-axis Elo reference rebuilt from recorded rounds (deterministic grader on frozen banks). Thin-n axes say so. scored_items/models/majority_baseline are REGISTER fields about the axis's frozen bank, not these rounds. Measurement, not certification.",
+ "rank_rule": "arena rule: >=2 models with >=5 decided games each and ONE model's Wilson 95% win-rate CI lower bound above EVERY other ranked model's upper bound; else TIE. UNMEASURED = not enough to rank. On win-rate intervals, never path-dependent Elo order.",
+ "register": "UNTESTED",
+ "schema": "csoai.axis-signal/0.4",
  "scored_items": 33,
+ "separation_authority": {
+  "board_axis": "continuity",
+  "board_bench": "PQCBench",
+  "board_leader": null,
+  "board_n": 33,
+  "board_separation": "UNTESTED",
+  "note": "This axis's separation authority. status/register are ITS verdict. Where elo_separation differs, the board governs the AXIS separation; this file governs only the arena rounds.",
+  "surface": "GET /api/gspc"
+ },
+ "separation_of": "recorded pairwise arena rounds, NOT the axis's frozen bank; never the axis's verdict.",
  "signature": {
   "alg": "Ed25519",
-  "content_id": "d2249c22dcd392d59edc12d90fb9be807bb4c6823197f322d6f3c01a0d9075e9",
-  "note": "Ed25519 over canonical content_id. Verify: recompute, sha256=content_id, ed25519==sig with PUBKEY.",
-  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "sig": "MLD1R70M6UHIVUcmDAmgo30cv2ZF1eWbCW+9o9ZIIyWBgb1ezLlmqHY472fYKpifD8zXVpkdTEjNCLydk7Z4CA=="
+  "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
+  "content_id": "22d3591c019e7090b6f1c836e3a1928fe1f92d7a6872ef09fdc1e65569b2596d",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "payload_sha256": "22d3591c019e7090b6f1c836e3a1928fe1f92d7a6872ef09fdc1e65569b2596d",
+  "preimage": "canonical(body minus content_id, signature)",
+  "sig_ed25519": "7912de4bb63ddb028f6aa28a6823710163404503ffb49da21872c4dbc36ed63be616b24ae685f944a2f35ffb3215c35fe3ccd436faaaa2ab76e4a2c12fab0402",
+  "signed_at": "2026-09-24T16:43:01.492Z",
+  "signer_auth": "pod-token",
+  "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
  },
- "status": "MEASURED"
+ "signer": "did:web:csoai.org#board-attestation-1",
+ "status": "UNTESTED",
+ "supersedes": {
+  "content_id": "5a16ec317237dc20f03bab21bbcdee20174b38406ec1c28609ab146921554c7e",
+  "elo_leader_then": null,
+  "generated": "2026-09-24T15:38:15Z",
+  "note": "superseded, never edited; new bytes, new signature",
+  "signer": "did:web:csoai.org#board-attestation-1",
+  "status_then": "UNTESTED"
+ }
 }

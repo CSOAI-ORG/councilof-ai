@@ -1,0 +1,52 @@
+{
+  "schema": "csoai.public-consumption-discovery/1.0",
+  "purpose": "Read-only public entry points; no inference, writes, payments, privileged tools or private incident export.",
+  "reference_version": "1.0",
+  "auth_required_for_public_reads": false,
+  "automatically_execute_links": false,
+  "code_license": "MIT",
+  "source_rights": "Original source and artifact terms apply independently.",
+  "entry_points": [
+    {
+      "id": "claim-capture",
+      "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/claim-capture/latest.json",
+      "method": "GET",
+      "scope": "Version-pinned public capture release; not a paid product revision."
+    },
+    {
+      "id": "operations",
+      "url": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/operations/claim-maintenance/latest.json",
+      "method": "GET",
+      "scope": "Dated operational readback with per-producer observation times."
+    },
+    {
+      "id": "gspc",
+      "url": "https://councilof.ai/api/gspc",
+      "method": "GET",
+      "scope": "Live board metadata; measured slots and model-separation results differ."
+    },
+    {
+      "id": "claim-register",
+      "url": "https://councilof.ai/api/claims/register",
+      "method": "GET",
+      "scope": "Generated claim registry; subject state not a reputation score."
+    },
+    {
+      "id": "population-manifest",
+      "url": "https://councilof.ai/api/pop/stablecoins/manifest",
+      "method": "GET",
+      "scope": "Free contract for the actual offered product; no payment attempted."
+    },
+    {
+      "id": "mcp",
+      "url": "https://councilof.ai/mcp",
+      "method": "POST",
+      "jsonrpc_method": "tools/list",
+      "accept": [
+        "application/json",
+        "text/event-stream"
+      ],
+      "scope": "Discovery only; do not call declared paid or mutating tools without separate authority."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "csoai.claim-maintenance.spec/0.1",
+  "name": "Claim Maintenance",
+  "version": "0.2",
+  "date": "2026-09-25",
+  "status": "published",
+  "canonical_url": "https://councilof.ai/spec/claim-maintenance/v0.2/",
+  "document_of_record": "https://councilof.ai/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md",
+  "document_sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e",
+  "artifact_schema_url": "https://councilof.ai/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+  "states": [
+    "CLAIM_CAPTURED",
+    "CLAIM_MEASURED",
+    "UNMEASURED",
+    "UNCHECKABLE"
+  ],
+  "register_url": "https://councilof.ai/api/claims/register",
+  "reference_implementation": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/claim-capture.mjs",
+  "reference_implementation_same_site": {
+    "url": "https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+    "sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d",
+    "manifest": "https://councilof.ai/spec/claim-maintenance/v0.2/reference/manifest.json"
+  },
+  "licence": "CC0-1.0",
+  "licence_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "reference_implementation_licence": "MIT",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "cite_as": "Council of AI. Claim Maintenance, version 0.2. CSOAI Ltd, 2026-09-25. https://councilof.ai/spec/claim-maintenance/v0.2/",
+  "not": [
+    "not fact-checking",
+    "not certification",
+    "not auditing",
+    "not reputation scoring",
+    "not adversarial journalism"
+  ],
+  "asserts_no_falsity": true,
+  "derives_no_mark_or_score": true
+}

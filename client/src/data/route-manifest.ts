@@ -323,6 +323,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "China Ai Law"
  },
  {
+  "path": "/claim-maintenance",
+  "comp": "ClaimMaintenance",
+  "title": "Claim Maintenance"
+ },
+ {
   "path": "/claims-register",
   "comp": "ClaimsRegister",
   "title": "Claims Register"
@@ -848,6 +853,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Faq Page"
  },
  {
+  "path": "/games/ruler",
+  "comp": "GamesRuler",
+  "title": "Games Ruler"
+ },
+ {
   "path": "/get-listed",
   "comp": "GetListed",
   "title": "Get Listed"
@@ -1076,6 +1086,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/how-it-works/enterprise",
   "comp": "EnterpriseHowItWorks",
   "title": "Enterprise How It Works"
+ },
+ {
+  "path": "/how-we-work",
+  "comp": "HowWeWork",
+  "title": "How We Work"
  },
  {
   "path": "/hr-ai-act",
@@ -1316,11 +1331,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/meok-law",
   "comp": "MeokLaw",
   "title": "Meok Law"
- },
- {
-  "path": "/merge-me",
-  "comp": "MergeMe",
-  "title": "Merge Me"
  },
  {
   "path": "/methodology",
@@ -1623,6 +1633,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Rating The Raters"
  },
  {
+  "path": "/reach",
+  "comp": "Reach",
+  "title": "Reach"
+ },
+ {
   "path": "/readiness",
   "comp": "Readiness",
   "title": "Readiness"
@@ -1801,6 +1816,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/signals",
   "comp": "Signals",
   "title": "Signals"
+ },
+ {
+  "path": "/signals/2026-09-24",
+  "comp": "SignedMillBatch20260924",
+  "title": "Signed Mill Batch20260924"
  },
  {
   "path": "/simulate",

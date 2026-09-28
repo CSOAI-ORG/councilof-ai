@@ -11,10 +11,30 @@
   ],
   "check": "node scripts/memberships-check.mjs",
   "groups": [
-    { "id": "standards", "label": "Standards bodies" },
-    { "id": "registries", "label": "Registries & indexes" },
-    { "id": "scholarly", "label": "Scholarly ids" },
-    { "id": "filings", "label": "Regulatory filings" }
+    {
+      "id": "standards",
+      "label": "Standards bodies"
+    },
+    {
+      "id": "registries",
+      "label": "Registries & indexes"
+    },
+    {
+      "id": "scholarly",
+      "label": "Scholarly identifiers"
+    },
+    {
+      "id": "filings",
+      "label": "Regulatory filings"
+    },
+    {
+      "id": "policy",
+      "label": "Policy programmes"
+    },
+    {
+      "id": "commons",
+      "label": "Open-source commons"
+    }
   ],
   "rows": [
     {
@@ -28,7 +48,12 @@
       "evidence": "https://www.w3.org/community/aikr/participants",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Templeman", "csoai"] },
+      "check": {
+        "expect": [
+          "Templeman",
+          "csoai"
+        ]
+      },
       "what_it_proves": "Nicholas Templeman is listed on the group's public participants page, representing csoai ltd, which means the organisation signed the W3C Community Contributor License Agreement for this group.",
       "what_it_does_not_prove": "Council of AI is not a W3C Member. Community Groups are free and open to anyone; joining one confers no W3C membership, no vote, and no W3C review of our work. The group has adopted nothing of ours.",
       "state": "VERIFIED",
@@ -47,7 +72,12 @@
       "evidence": "https://www.w3.org/community/agent-conformance/participants",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Templeman", "csoai"] },
+      "check": {
+        "expect": [
+          "Templeman",
+          "csoai"
+        ]
+      },
       "what_it_proves": "Nicholas Templeman is listed on the group's public participants page, representing csoai ltd.",
       "what_it_does_not_prove": "Not W3C Membership. The group has not adopted, reviewed or endorsed any Council of AI benchmark or conformance method; participation is the whole of the claim.",
       "state": "VERIFIED",
@@ -64,7 +94,12 @@
       "evidence": "https://www.w3.org/community/agent-identity/participants",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Templeman", "csoai"] },
+      "check": {
+        "expect": [
+          "Templeman",
+          "csoai"
+        ]
+      },
       "what_it_proves": "Nicholas Templeman is listed on the group's public participants page.",
       "what_it_does_not_prove": "Individual participation, not an organisational seat and not W3C Membership. The group has adopted nothing of ours.",
       "state": "VERIFIED",
@@ -81,7 +116,11 @@
       "evidence": "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["templeman"] },
+      "check": {
+        "expect": [
+          "templeman"
+        ]
+      },
       "what_it_proves": "One individual-submission Internet-Draft, authored by Nicholas Templeman, is live on the IETF Datatracker. It is the only active Internet-Draft in our name.",
       "what_it_does_not_prove": "An Internet-Draft is not endorsed by the IETF and holds no formal standing; the draft's own boilerplate says so. It has not been adopted by the SCITT working group or any other. There is no such status as 'IETF member'.",
       "state": "VERIFIED",
@@ -100,7 +139,11 @@
       "evidence": "https://mailarchive.ietf.org/arch/msg/scitt/ETVUZjsZ8XgkWR2XUW5oMexkdug/",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Templeman"] },
+      "check": {
+        "expect": [
+          "Templeman"
+        ]
+      },
       "what_it_proves": "A message from Nicholas Templeman is in the public IETF mail archive for the scitt list.",
       "what_it_does_not_prove": "Posting to an open mailing list is participation only. It is not working-group membership (there is none), not consensus, and not adoption of anything we proposed.",
       "state": "VERIFIED",
@@ -117,7 +160,11 @@
       "evidence": "https://mailarchive.ietf.org/arch/msg/agentproto/LeKdTLTa6e_XBUfSO7Q8tiDuMvE/",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Templeman"] },
+      "check": {
+        "expect": [
+          "Templeman"
+        ]
+      },
       "what_it_proves": "A message from Nicholas Templeman is in the public IETF mail archive for the agentproto list.",
       "what_it_does_not_prove": "Open-list participation only; no adoption, no consensus, no standing.",
       "state": "VERIFIED",
@@ -134,7 +181,11 @@
       "evidence": "https://mailarchive.ietf.org/arch/msg/audit/P6BcIxUmlzk3F6zz51bM-U6KDjI/",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Templeman"] },
+      "check": {
+        "expect": [
+          "Templeman"
+        ]
+      },
       "what_it_proves": "A message from Nicholas Templeman is in the public IETF mail archive for the audit list.",
       "what_it_does_not_prove": "Open-list participation only. The audit effort is a proposed charter, not a working group we belong to; no adoption, no consensus, no standing.",
       "state": "VERIFIED",
@@ -151,7 +202,11 @@
       "evidence": "https://c2pa.org/membership/",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["CSOAI LTD"] },
+      "check": {
+        "expect": [
+          "CSOAI LTD"
+        ]
+      },
       "what_it_proves": "CSOAI LTD appears on the public C2PA membership page under Contributor Members.",
       "what_it_does_not_prove": "Contributor is the entry tier: no steering role, no vote on the specification. Membership does not mean C2PA has reviewed or approved any Council of AI implementation, and no Council of AI product has passed the C2PA conformance program.",
       "state": "VERIFIED",
@@ -180,20 +235,20 @@
     {
       "id": "linux-foundation",
       "org": "The Linux Foundation",
-      "short": "Linux Foundation (Silver)",
+      "short": "Linux Foundation",
       "group": "standards",
       "kind": "member",
       "since": "2026-09-21",
-      "since_basis": "Linux Foundation membership agreement completed via Docusign on 2026-09-21 (INBOX 8987); the LF onboarding record M-018884 states Silver Membership with an expiry of 2027-09-30.",
-      "evidence": "INBOX 8987 (Docusign completed, 2026-09-21) and INBOX 8988 (2026-09-21); LF onboarding record M-018884 (login required)",
-      "evidence_kind": "account_page",
+      "since_basis": "The Linux Foundation sent CSOAI LTD one DocuSign envelope carrying the membership agreement for its Open Secure AI Alliance and Linux Foundation memberships (INBOX 8955, 2026-09-21). DocuSign reported that envelope completed by all parties at 22:56 UTC the same day (INBOX 8987). The tier, Silver, and the 2027-09-30 expiry come from the LF member portal record M-018884, which requires a login.",
+      "evidence": "INBOX 8955 (the Linux Foundation, 2026-09-21: one DocuSign envelope carrying the membership agreement for both the Open Secure AI Alliance and the Linux Foundation memberships) and INBOX 8987 (DocuSign, 2026-09-21 22:56 UTC: 'All parties have completed'); LF member portal record M-018884 (login required)",
+      "evidence_kind": "private_email",
       "public_evidence": false,
-      "what_it_proves": "CSOAI LTD signed the Linux Foundation membership agreement and holds a Silver membership record with the Foundation.",
-      "what_it_does_not_prove": "The public Linux Foundation members page did not list us on 2026-09-22, so a stranger cannot yet confirm this from a public URL. Silver is a paid participation tier; it is not a Linux Foundation endorsement of our method, and no LF project has adopted our work.",
+      "what_it_proves": "CSOAI LTD's Linux Foundation membership agreement was executed: DocuSign reported the envelope completed by all parties on 2026-09-21.",
+      "what_it_does_not_prove": "The evidence is private. We rely on DocuSign's completion notice and have not re-read the completed document; the Silver tier is taken from the login-required portal record, not from any mail. The Foundation's public members page did not list us on 2026-09-22. Membership is a paid participation tier, not an endorsement of our method, and no Linux Foundation project has adopted our work.",
       "state": "VERIFIED",
-      "verified_on": "2026-09-22",
+      "verified_on": "2026-09-23",
       "question": "Is Council of AI a member of the Linux Foundation?",
-      "answer": "Yes, at the Silver tier: CSOAI LTD completed the Linux Foundation membership agreement on 2026-09-21 and holds membership record M-018884, valid to 2027-09-30. The evidence is currently private (the signed agreement and the onboarding record) because the public members page had not been updated on 2026-09-22. Silver membership is a paid participation tier, not an endorsement by the Foundation or by any of its projects."
+      "answer": "Yes. The Linux Foundation membership agreement was completed by all parties via DocuSign on 2026-09-21; the Foundation's member portal gives the tier as Silver (record M-018884, login required). The evidence is private: the Foundation's public members page did not list us on 2026-09-22. Membership is a paid participation tier, not an endorsement by the Foundation or by any of its projects."
     },
     {
       "id": "osaia",
@@ -202,16 +257,66 @@
       "group": "standards",
       "kind": "member",
       "since": "2026-09-21",
-      "since_basis": "Application received 2026-09-18 (INBOX 8859); the Alliance's onboarding mail of 2026-09-21 opens 'Thank you for becoming a member' (INBOX 8988), the same day the participation agreement was completed.",
-      "evidence": "INBOX 8988 (The Linux Foundation, 2026-09-21) and INBOX 8859 (2026-09-18)",
+      "since_basis": "Application received 2026-09-18 (INBOX 8859). The Participation Agreement and Funding Charter travelled in the DocuSign envelope the Linux Foundation sent on 2026-09-21 (INBOX 8955), reported completed by all parties at 22:56 UTC (INBOX 8987). At 23:17 UTC the Alliance's onboarding mail opened 'Thank you for becoming a member of the Open Secure AI Alliance!' (INBOX 8988).",
+      "evidence": "INBOX 8987 (DocuSign 'All parties have completed', 2026-09-21, attaching the Open Secure AI Alliance Participation Agreement and Funding Charter), INBOX 8988 (the Alliance, 2026-09-21: 'Thank you for becoming a member') and INBOX 8859 (application received, 2026-09-18)",
       "evidence_kind": "private_email",
       "public_evidence": false,
-      "what_it_proves": "The Open Secure AI Alliance records CSOAI LTD as a General Member and has begun onboarding.",
-      "what_it_does_not_prove": "secureaialliance.org did not list us on 2026-09-22. The discussion note we sent to the Alliance's SAFE thread on 2026-09-21 is a contribution, not adoption; membership is not an endorsement of Council of AI tooling.",
+      "what_it_proves": "CSOAI LTD is a member of the Open Secure AI Alliance: the participation agreement was completed by all parties on 2026-09-21 and the Alliance welcomed CSOAI LTD as a member the same day.",
+      "what_it_does_not_prove": "No record we checked names a membership class, so we name none. The evidence is private, and secureaialliance.org publishes no member list. The note CSOAI published to the Alliance's SAFE discussion is our own; we have no record of SAFE adopting or acknowledging it. Membership is not an endorsement of Council of AI tooling.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-23",
+      "question": "Is Council of AI a member of the Open Secure AI Alliance?",
+      "answer": "Yes. The Alliance's participation agreement was completed by all parties via DocuSign on 2026-09-21, and the Alliance's onboarding mail that day welcomed CSOAI LTD as a member. The evidence is private correspondence, because the Alliance publishes no member list. The note CSOAI published to the Alliance's SAFE discussion is our own; we have no record of SAFE adopting or acknowledging it. Membership is not an endorsement."
+    },
+    {
+      "id": "eu-ai-pact",
+      "org": "European Commission — AI Pact",
+      "short": "EU AI Pact",
+      "group": "policy",
+      "kind": "participant",
+      "since": "2026-08-20",
+      "since_basis": "The AI Office wrote on 2026-08-20 opening \"Thank you for having recently joined the AI Pact\" and invited this address to the AI Pact community on Microsoft Teams (INBOX 7036); the Teams guest invitation arrived the same day (INBOX 7035).",
+      "evidence": "INBOX 7036 (EU-AI-PACT@ec.europa.eu, 2026-08-20) and INBOX 7035 (2026-08-20)",
+      "evidence_kind": "private_email",
+      "public_evidence": false,
+      "what_it_proves": "The European Commission's AI Office records this address as having joined the AI Pact and invited it to the AI Pact community.",
+      "what_it_does_not_prove": "We have not signed the AI Pact's voluntary pledges, and the Commission's public AI Pact page did not name Council of AI when checked on 2026-09-22 — so this row is private evidence, not a signatory claim. Joining the community is not a statement by anyone that we comply with the AI Act, and it is not a relationship with the AI Office: the AI Office declined in writing on 2026-08-17 to review or validate our work.",
       "state": "VERIFIED",
       "verified_on": "2026-09-22",
-      "question": "Is Council of AI a member of the Open Secure AI Alliance?",
-      "answer": "Yes, as a General Member: the Alliance's onboarding mail of 2026-09-21 records CSOAI LTD as a member after an application received on 2026-09-18. The evidence is private correspondence because the Alliance's site did not list members on 2026-09-22. Membership is not adoption: the note we contributed to the Alliance's SAFE discussion asks questions of the group and requests nothing be adopted."
+      "question": "Has Council of AI joined the EU AI Pact?",
+      "answer": "Yes. The European Commission's AI Office wrote on 2026-08-20 thanking Council of AI for having joined the AI Pact and invited us to its community. The evidence is that correspondence rather than a public page, because the Commission's AI Pact page did not name us when checked on 2026-09-22. We have not signed the AI Pact's voluntary pledges, so this is participation in the community and not a signatory claim, and it says nothing about whether any AI system complies with the AI Act."
+    },
+    {
+      "id": "bsi-art1-comments",
+      "org": "BSI — comments on draft BS ISO/IEC 4213 (project 2024-01986), committee ART/1",
+      "short": "BSI ART/1 comments",
+      "group": "standards",
+      "kind": "contributor",
+      "since": "2026-09-15",
+      "since_basis": "Fourteen comments on the draft were sent to the BSI project mailbox on 2026-09-15; BSI Standards Assist replied the same day that the comments \"have now been shared with the committee manager of ART/1\" (INBOX 8363). A BSI Standards Development account was created on 2026-08-22 (INBOX 7116).",
+      "evidence": "INBOX 8363 (AdminStart@bsigroup.com, 2026-09-15) and INBOX 7116 (2026-08-22)",
+      "evidence_kind": "private_email",
+      "public_evidence": false,
+      "what_it_proves": "BSI received fourteen comments from Council of AI on a draft British Standard and passed them to the manager of committee ART/1, the UK committee for artificial intelligence.",
+      "what_it_does_not_prove": "We are NOT a member of ART/1 and have not been nominated to it. Commenting on a public draft is open to anyone; it is not committee membership, it is not a vote, and no comment of ours has been accepted into any standard. ART/1 mirrors ISO/IEC JTC 1/SC 42 and CEN-CENELEC JTC 21, and this row says nothing about our standing in either.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-22"
+    },
+    {
+      "id": "mcpservers-org",
+      "org": "mcpservers.org directory — server \"Council of AI — GSPC\"",
+      "short": "mcpservers.org",
+      "group": "registries",
+      "kind": "listed",
+      "since": "2026-09-05",
+      "since_basis": "mcpservers.org wrote on 2026-09-05 that the submission \"has been approved and is now live\", naming the listing URL https://mcpservers.org/servers/csoai-org/councilof-ai (INBOX 7848).",
+      "evidence": "INBOX 7848 (contact@mcpservers.org, 2026-09-05)",
+      "evidence_kind": "private_email",
+      "public_evidence": false,
+      "what_it_proves": "A Council of AI MCP server was accepted into the mcpservers.org directory.",
+      "what_it_does_not_prove": "The listing is self-submitted and the directory reviewed the submission, not the measurements. The row is private evidence because mcpservers.org answers HTTP 403 to every automated client: the only place our name appears in that response is the URL we ourselves requested, echoed back in the challenge, which proves nothing about the page.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-22"
     },
     {
       "id": "mcp-registry",
@@ -224,7 +329,11 @@
       "evidence": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["io.github.CSOAI-ORG"] },
+      "check": {
+        "expect": [
+          "io.github.CSOAI-ORG"
+        ]
+      },
       "what_it_proves": "Servers published under the io.github.CSOAI-ORG namespace are in the official MCP Registry; the API answers with them.",
       "what_it_does_not_prove": "Registry entries are self-published under a GitHub namespace. The registry reviews nothing, ranks nothing, and a listing does not mean any client ships, installs or recommends these servers.",
       "state": "VERIFIED",
@@ -243,7 +352,13 @@
       "evidence": "https://facilitator.payai.network/discovery/resources",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "mode": "paged", "limit": 1000, "expect": ["councilof.ai"] },
+      "check": {
+        "mode": "paged",
+        "limit": 1000,
+        "expect": [
+          "councilof.ai"
+        ]
+      },
       "what_it_proves": "councilof.ai x402 doors appear in the PayAI facilitator's public discovery index (the check walks every page of the index until it finds them).",
       "what_it_does_not_prove": "A discovery listing is self-registered. It is not a settlement, a buyer, revenue, or PayAI's opinion of the doors. Read live settlement counts from GET /api/revenue, never from this row.",
       "state": "VERIFIED",
@@ -260,7 +375,12 @@
       "evidence": "https://huggingface.co/csoai",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "url": "https://huggingface.co/api/organizations/csoai/overview", "expect": ["Council of AI"] },
+      "check": {
+        "url": "https://huggingface.co/api/organizations/csoai/overview",
+        "expect": [
+          "Council of AI"
+        ]
+      },
       "what_it_proves": "An organisation named Council of AI exists on Hugging Face under the handle csoai and publishes datasets and models there.",
       "what_it_does_not_prove": "Hosting is not curation: Hugging Face reviews nothing we upload. Download counters are distribution, not adoption or a grade.",
       "state": "VERIFIED",
@@ -277,7 +397,12 @@
       "evidence": "https://pypi.org/project/csoai/",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "url": "https://pypi.org/pypi/csoai/json", "expect": ["csoai"] },
+      "check": {
+        "url": "https://pypi.org/pypi/csoai/json",
+        "expect": [
+          "csoai"
+        ]
+      },
       "what_it_proves": "Packages published by CSOAI Ltd are on the Python Package Index.",
       "what_it_does_not_prove": "PyPI reviews nothing. Download counts are distribution, not adoption; a package on PyPI is not a standard.",
       "state": "VERIFIED",
@@ -294,7 +419,12 @@
       "evidence": "https://www.npmjs.com/package/csoai-gspc-mcp",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "url": "https://registry.npmjs.org/csoai-gspc-mcp", "expect": ["csoai-gspc-mcp"] },
+      "check": {
+        "url": "https://registry.npmjs.org/csoai-gspc-mcp",
+        "expect": [
+          "csoai-gspc-mcp"
+        ]
+      },
       "what_it_proves": "The csoai-gspc-mcp package is published on the npm registry.",
       "what_it_does_not_prove": "npm reviews nothing. Download counts are distribution, not adoption.",
       "state": "VERIFIED",
@@ -311,7 +441,12 @@
       "evidence": "https://www.bestpractices.dev/en/projects/14391",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["councilof", "csoai"] },
+      "check": {
+        "expect": [
+          "councilof",
+          "csoai"
+        ]
+      },
       "what_it_proves": "The councilof-ai project is registered in the OpenSSF Best Practices badge programme.",
       "what_it_does_not_prove": "Badge criteria are self-attested by the project. Registration is not a badge, and a badge is not a security audit. The completion state is whatever the project page says on the day, not what this row says.",
       "state": "VERIFIED",
@@ -328,7 +463,12 @@
       "evidence": "https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/CSOAI-ORG/councilof-ai",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "url": "https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visit/latest/?require_snapshot=true", "expect": ["CSOAI-ORG"] },
+      "check": {
+        "url": "https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visit/latest/?require_snapshot=true",
+        "expect": [
+          "CSOAI-ORG"
+        ]
+      },
       "what_it_proves": "The repository has been archived by Software Heritage with at least one full snapshot.",
       "what_it_does_not_prove": "Archival is preservation, not review or endorsement. The most recent snapshot may lag the repository; the latest save request failed and is recorded as such.",
       "state": "VERIFIED",
@@ -345,7 +485,11 @@
       "evidence": "https://smithery.ai/servers/csoai/gspc",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["csoai"] },
+      "check": {
+        "expect": [
+          "csoai"
+        ]
+      },
       "what_it_proves": "The gspc server has a page in the Smithery directory.",
       "what_it_does_not_prove": "A directory page is a listing. Any score the directory shows is the directory's, not a measurement of ours, and a listing is not adoption.",
       "state": "VERIFIED",
@@ -362,7 +506,12 @@
       "evidence": "https://orcid.org/0009-0001-3869-1068",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "url": "https://pub.orcid.org/v3.0/0009-0001-3869-1068/person", "expect": ["Templeman"] },
+      "check": {
+        "url": "https://pub.orcid.org/v3.0/0009-0001-3869-1068/person",
+        "expect": [
+          "Templeman"
+        ]
+      },
       "what_it_proves": "A public ORCID record exists for the founder, naming Council of AI (CSOAI Ltd).",
       "what_it_does_not_prove": "An ORCID iD is an identifier. It is not a credential, an affiliation check, or a review of any work attached to it.",
       "state": "VERIFIED",
@@ -381,9 +530,37 @@
       "evidence": "https://doi.org/10.5281/zenodo.21991104",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Council of AI", "CSOAI"] },
+      "check": {
+        "expect": [
+          "Council of AI",
+          "CSOAI"
+        ]
+      },
       "what_it_proves": "A methodology record by Council of AI is published on Zenodo with a resolving DOI.",
       "what_it_does_not_prove": "Zenodo hosts; it does not referee. A DOI is a persistent identifier, not peer review and not an endorsement of the method.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-22"
+    },
+    {
+      "id": "openaire",
+      "org": "OpenAIRE Explore — research product record harvested from Zenodo",
+      "short": "OpenAIRE",
+      "group": "scholarly",
+      "kind": "listed",
+      "since": "2026-09-22",
+      "since_basis": "OpenAIRE carries no date we can cite for when the record was harvested; the date given is when this check first queried OpenAIRE for the DOI and found the record naming us. The OpenAIRE record's own status field read UNDER_CURATION on that day.",
+      "evidence": "https://explore.openaire.eu/search/publication?pid=10.5281%2Fzenodo.21991105",
+      "evidence_kind": "public_url",
+      "public_evidence": true,
+      "check": {
+        "expect": [
+          "Council of AI",
+          "CSOAI",
+          "Templeman"
+        ]
+      },
+      "what_it_proves": "The Zenodo deposit 10.5281/zenodo.21991105 has been harvested into OpenAIRE, the European open-science aggregator, and the record names Council of AI. It means the deposit is discoverable through OpenAIRE and through the services that consume it.",
+      "what_it_does_not_prove": "Harvesting is automatic. OpenAIRE aggregates from Zenodo without reviewing, refereeing or endorsing anything, and the record's own status field read UNDER_CURATION when checked. This is indexing, not peer review, not publication in a journal, and not a statement by OpenAIRE about the work.",
       "state": "VERIFIED",
       "verified_on": "2026-09-22"
     },
@@ -398,7 +575,12 @@
       "evidence": "https://www.wikidata.org/wiki/Q141128616",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "url": "https://www.wikidata.org/wiki/Special:EntityData/Q141128616.json", "expect": ["Council of AI"] },
+      "check": {
+        "url": "https://www.wikidata.org/wiki/Special:EntityData/Q141128616.json",
+        "expect": [
+          "Council of AI"
+        ]
+      },
       "what_it_proves": "A Wikidata item exists for Council of AI (CSOAI Ltd).",
       "what_it_does_not_prove": "A Wikidata item is not notability, recognition or endorsement; its statements are community-editable and only as good as their sources.",
       "state": "VERIFIED",
@@ -415,7 +597,12 @@
       "evidence": "https://github.com/ror-community/ror-updates/issues/39647",
       "evidence_kind": "public_url",
       "public_evidence": true,
-      "check": { "expect": ["Council of AI", "CSOAI"] },
+      "check": {
+        "expect": [
+          "Council of AI",
+          "CSOAI"
+        ]
+      },
       "what_it_proves": "A request to add Council of AI to ROR is open and public.",
       "what_it_does_not_prove": "No ROR identifier has been issued. A request is not a registration; ROR curators may decline it.",
       "state": "PENDING",
@@ -495,21 +682,132 @@
       "kind": "filed",
       "since": null,
       "since_basis": "Comment drafted; the owner submits it on regulations.gov by hand. Until a tracking number exists the row stays PENDING and claims nothing.",
-      "evidence": "https://www.regulations.gov/docket/TREAS-DO-2026-0496",
+      "evidence": "https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale",
       "evidence_kind": "public_url",
       "public_evidence": true,
+      "check": {
+        "expect": [
+          "TREAS-DO-2026-0496"
+        ]
+      },
       "deadline": "2026-10-19",
-      "what_it_proves": "The docket is open for comment. Nothing more: no comment from Council of AI is on it yet.",
-      "what_it_does_not_prove": "Not filed. When it is filed, the row will carry the regulations.gov tracking number; a filing is still not recognition.",
+      "what_it_proves": "The rule is published and open for comment: Federal Register document 2026-16796, published 2026-08-18, docket TREAS-DO-2026-0496, comments close 2026-10-19. Nothing more: no comment from Council of AI is on it yet.",
+      "what_it_does_not_prove": "Not filed. The evidence link is the Federal Register document rather than the regulations.gov docket page because regulations.gov answers HTTP 403 to every non-browser client, which would make this row fail its own check for a reason that has nothing to do with the filing. Comments are still submitted at https://www.regulations.gov/docket/TREAS-DO-2026-0496. When the comment is filed, the row will carry the regulations.gov tracking number; a filing is still not recognition.",
       "state": "PENDING",
       "verified_on": "2026-09-22",
       "question": "Has Council of AI filed with the US Treasury on the GENIUS Act docket?",
-      "answer": "Not yet. A comment for docket TREAS-DO-2026-0496 at https://www.regulations.gov/docket/TREAS-DO-2026-0496 is drafted and will be submitted by hand; until a tracking number exists this entry is marked PENDING and claims nothing. The docket closes on 2026-10-19."
+      "answer": "Not yet. A comment on Treasury's GENIUS Act rule, Federal Register document 2026-16796 at https://www.federalregister.gov/documents/2026/08/18/2026-16796/genius-act-regulations-on-payment-stablecoin-issuance-offer-and-sale, docket TREAS-DO-2026-0496, is drafted and will be submitted by hand at regulations.gov; until a tracking number exists this entry is marked PENDING and claims nothing. Comments close on 2026-10-19."
+    },
+    {
+      "id": "open-invention-network",
+      "org": "Open Invention Network — OIN 2.0 licensee",
+      "short": "Open Invention Network",
+      "group": "commons",
+      "kind": "member",
+      "since": "2026-08-15",
+      "since_basis": "The OIN 2.0 License Agreement was signed on 2026-08-15 and OIN wrote the same day, \"Welcome to OIN 2.0 — You're Officially Part of the Community!\" (INBOX 6827). OIN's public community page lists us as CSOAI LTD.",
+      "evidence": "https://openinventionnetwork.com/community-of-licensees/",
+      "evidence_kind": "public_url",
+      "public_evidence": true,
+      "check": {
+        "expect": [
+          "CSOAI LTD"
+        ]
+      },
+      "what_it_proves": "CSOAI LTD has signed the OIN 2.0 License Agreement and appears by name on Open Invention Network's public list of licensees, which means we grant and receive a royalty-free patent cross-licence covering the Linux System definition.",
+      "what_it_does_not_prove": "This is a patent non-aggression arrangement and nothing else. It is not a standards body, it is not an AI governance body, and OIN has reviewed, endorsed or adopted nothing we publish. It says nothing about our measurements.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-22",
+      "question": "Is Council of AI a member of the Open Invention Network?",
+      "answer": "Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named on Open Invention Network's public list of licensees at https://openinventionnetwork.com/community-of-licensees/. That is a royalty-free patent cross-licence covering the Linux System definition — a patent non-aggression arrangement, not a standards body and not an endorsement of anything Council of AI measures or publishes."
+    },
+    {
+      "id": "lot-network",
+      "org": "LOT Network — member",
+      "short": "LOT Network",
+      "group": "commons",
+      "kind": "member",
+      "since": "2026-08-23",
+      "since_basis": "LOT Network wrote on 2026-08-23 with the subject \"Welcome CSOAI LTD to LOT Network\" (INBOX 7148), after the joining mail of 2026-08-14 (INBOX 6829). The public member directory lists CSOAI LTD under C.",
+      "evidence": "https://lotnet.com/members/?dir=1&name_directory_startswith=C",
+      "evidence_kind": "public_url",
+      "public_evidence": true,
+      "check": {
+        "expect": [
+          "CSOAI LTD"
+        ]
+      },
+      "what_it_proves": "CSOAI LTD appears by name in LOT Network's public member directory, which means we take part in its licence-on-transfer arrangement against patent assertion entities.",
+      "what_it_does_not_prove": "Like the OIN row, this is a patent arrangement and nothing more. LOT Network is not a standards body, not an AI governance body, and has adopted, reviewed or endorsed nothing we publish.",
+      "state": "VERIFIED",
+      "verified_on": "2026-09-22"
     }
   ],
+  "excluded_note": "Bodies a reader might expect to find above, and are not there. Three reasons appear: we hold something weaker than the word would suggest, we are not eligible, or the body has no membership to hold. Each says which. This list exists so that absence from the table is an answer rather than a gap.",
   "excluded": [
-    { "org": "World Economic Forum", "why": "A personal Strategic Intelligence account was opened on 2026-09-21. That is an account, not a membership or partnership, so it is not listed." },
-    { "org": "NVIDIA Inception", "why": "No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed." },
-    { "org": "Agentry", "why": "The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page." }
+    {
+      "org": "World Economic Forum — AI Governance Alliance",
+      "reason": "not_open",
+      "why": "A personal Strategic Intelligence account was opened on 2026-09-21. That is a reader account on My Forum, not a membership or a partnership. WEF corporate participation runs through Partnership, which is invitation-based, revenue-screened and charged in six figures a year, and the AI Governance Alliance is a community inside that structure rather than an open sign-up. weforum.org answers HTTP 403 to every automated client we tried on 2026-09-22, so even that description rests on secondary reporting and is not something we can evidence ourselves. Not listed.",
+      "evidence": "https://www.weforum.org/communities/ai-governance-alliance/"
+    },
+    {
+      "org": "European Commission — General-Purpose AI Code of Practice",
+      "reason": "not_eligible",
+      "why": "The Commission's own text limits signing to providers of general-purpose AI models. Council of AI provides no general-purpose AI model; we measure models other people place on the market. Signing would misdescribe what we are, so we have not applied and will not. This is an eligibility answer, not a backlog item.",
+      "evidence": "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai"
+    },
+    {
+      "org": "OECD.AI Network of Experts (ONE AI)",
+      "reason": "not_open",
+      "why": "Members are nominated by OECD member countries and by stakeholder delegations, which renew or replace their representatives each year. There is no application form and no expression-of-interest route, so there is nothing for us to have applied to. The OECD door that is open to a company is the Catalogue of Tools & Metrics for Trustworthy AI, and that is a submission rather than a membership.",
+      "evidence": "https://oecd.ai/en/network-of-experts"
+    },
+    {
+      "org": "Global Partnership on AI (GPAI)",
+      "reason": "not_applicable",
+      "why": "GPAI membership is held by countries, and its work has been integrated with the OECD. There has never been a company membership to apply for, so any claim of GPAI participation by a company is a category error."
+    },
+    {
+      "org": "LF AI & Data Foundation",
+      "reason": "not_eligible",
+      "why": "The free Associate tier is limited to government bodies, nonprofits and universities. CSOAI Ltd is a private for-profit company and fails that at the first requirement. The tier we could buy starts at USD 15,000 a year at our headcount, less an existing-Linux-Foundation-member discount, and we have not bought it. We do hold Linux Foundation membership at Silver, which is the row above; it is not the same thing.",
+      "evidence": "https://lfaidata.foundation/join/"
+    },
+    {
+      "org": "IETF",
+      "reason": "not_applicable",
+      "why": "The IETF has no membership. What is true and checkable is listed above as three mailing-list rows and one Internet-Draft. Three further submissions uploaded on 2026-09-12 were never posted and are not documents on the Datatracker, so they are not participation and are not counted here."
+    },
+    {
+      "org": "C2PA conformance programme",
+      "reason": "in_flight",
+      "why": "Distinct from C2PA membership, which is listed above with public evidence. A conformance application has been in flight since 2026-08-17 and must be resubmitted on the programme's 0.2 intake form. An application is not a conformance result and nothing about it is claimed on any Council of AI surface."
+    },
+    {
+      "org": "MLCommons",
+      "reason": "no_record",
+      "why": "A full sweep of nicholas@csoai.org across the whole of 2026 — every folder, headers and full-text body search — returns exactly one message containing the word MLCommons, and it is outbound: a note we wrote on 2026-09-17 about a measurement WE published, in which MLCommons AILuminate is one of fifteen organisations we examined. There is no welcome, no invoice, no agreement and no confirmation of any kind. Council of AI is not a member of MLCommons and no row claims otherwise. MLCommons does publish a free Observer tier for organisations of nought to nine employees, which we would qualify for; if we ever apply, the conflict — that we have published a measurement about them — is declared in the application and recorded here."
+    },
+    {
+      "org": "OpenML",
+      "reason": "unverified",
+      "why": "A sign-up mail arrived on 2026-08-19 (INBOX 7000) and it is a verification request: \"To verify your email address, please click\". No confirmation followed, no later OpenML mail exists, and openml.org serves its profiles from a client-side application that we could not query for a user. We therefore cannot show that the account was ever completed. Signing up is not registration, so there is no row — and this entry exists so the absence is recorded rather than read as an oversight."
+    },
+    {
+      "org": "Glama",
+      "reason": "unverified",
+      "why": "Glama mail confirms an account from 2026-04-16 and several approved MCP-server listings. We cannot show it publicly: Glama's index requires an API key, and its terms require visible attribution and a link wherever its records are displayed, which is a condition on republishing rather than an evidence URL a stranger can open. Listed here rather than as a row until a stable public URL exists."
+    },
+    {
+      "org": "NVIDIA Inception",
+      "reason": "no_record",
+      "why": "No application or acceptance record exists in the mailbox as of 2026-09-22. Not listed."
+    },
+    {
+      "org": "Agentry",
+      "reason": "no_record",
+      "why": "The operator's follow-up mail of 2026-09-15 says the agent is listed, but no public listing URL was located and the automated listing confirmation is not in the mailbox. Not listed until a stranger can open the page."
+    }
   ]
 }

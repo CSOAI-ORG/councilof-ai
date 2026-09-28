@@ -1,0 +1,126 @@
+{
+ "state": "CLAIM_MEASURED",
+ "reason": null,
+ "measured_at": "2026-09-24T15:31:38Z",
+ "method": "search the named third party's OWN published index — its robots.txt and sitemaps, plus the keyless Common Crawl URL index for its domain — fetch every URL whose slug carries the term together with a bounded set of its own news pages, and quote the term from the visible text served by that party itself",
+ "window": "PayFacto's public web presence as served at measured_at",
+ "denominator": {
+  "third_parties_searched": 1,
+  "pages_read_successfully": 3,
+  "sitemap_urls_seen": 117,
+  "commoncrawl_pages_indexed_seen": 200
+ },
+ "result": {
+  "third_party": "PayFacto",
+  "term": "gotoHuman",
+  "status": "NOT_FOUND",
+  "quotes": [],
+  "quote_urls": [],
+  "n": 1
+ },
+ "detail": {
+  "organisation": "PayFacto",
+  "term": "gotoHuman",
+  "domains_searched": [
+   "payfacto.com"
+  ],
+  "status": "NOT_FOUND",
+  "meaning": "we did not find the term on this organisation's own domains by the routes below. This is a fact about this search — URL slugs across its published index, plus the full text of a bounded set of its own news pages — and NOT evidence that the relationship does not exist, NOT a denial by the organisation, and NOT a finding that anyone said anything false",
+  "reach": {
+   "conclusive": true,
+   "sitemap_route_reached": true,
+   "sitemap_urls_seen": 117,
+   "commoncrawl_pages_indexed_seen": 200,
+   "commoncrawl_control_threshold": 50,
+   "pages_read_successfully": 3,
+   "slug_candidates": 0,
+   "pages_fetched_and_read_in_full_text": 3,
+   "routes": [
+    "organisation's own robots.txt -> sitemap(s), one index level deep",
+    "Common Crawl URL index restricted to the organisation's domain (keyless)"
+   ],
+   "not_searched": "the full text of the whole site; only slugs across the index plus the fetched pages"
+  },
+  "corroborations": [],
+  "pages_fetched": [
+   "https://payfacto.com/",
+   "https://payfacto.com/payfacto-announces-c150-million-equity-investment-led-by-flexpoint-ford/",
+   "https://payfacto.com/newsroom/"
+  ],
+  "sources": [
+   {
+    "url": "https://payfacto.com/robots.txt",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:43Z",
+    "response_bytes": 172,
+    "response_sha256": "936ed2a0b83087c17d5b0fb6cba6c23a6e444793788e47be67b11314bdf08f41",
+    "note": "the organisation's own robots.txt, for its Sitemap: lines"
+   },
+   {
+    "url": "https://payfacto.com/sitemap_index.xml",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:44Z",
+    "response_bytes": 642,
+    "response_sha256": "2677bff9dcf8d3ffdbe6a18bb2ac219facedb7dae75ce1500bb2e3f894f8c655",
+    "note": "sitemap named by robots.txt"
+   },
+   {
+    "url": "https://payfacto.com/post-sitemap.xml",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:45Z",
+    "response_bytes": 7043,
+    "response_sha256": "20d4522be9b782df68454067208872091f744e87e8774f47d5e677cf32989ff6",
+    "note": "sitemap named by robots.txt"
+   },
+   {
+    "url": "https://payfacto.com/page-sitemap.xml",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:46Z",
+    "response_bytes": 172390,
+    "response_sha256": "ef3aa3cfc41903079d07381bdb3398aa013d1c6eeed34f7072873e197c00a05a",
+    "note": "sitemap named by robots.txt"
+   },
+   {
+    "url": "https://payfacto.com/local-sitemap.xml",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:47Z",
+    "response_bytes": 383,
+    "response_sha256": "caada8bfc4ff74733b00f63912be21a1c6d8efc51f4efccddceafd9655fe1664",
+    "note": "sitemap named by robots.txt"
+   },
+   {
+    "url": "https://index.commoncrawl.org/collinfo.json",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:48Z",
+    "response_bytes": 35226,
+    "response_sha256": "fdfe1131836096ec8ff6047997a035acbf464036a2ea09887239c949e0df41f9",
+    "note": "Common Crawl collection list (newest collection used)"
+   },
+   {
+    "url": "https://index.commoncrawl.org/CC-MAIN-2026-39-index?url=payfacto.com&matchType=domain&output=json&limit=200",
+    "status": 200,
+    "accessed_utc": "2026-09-24T15:30:53Z",
+    "response_bytes": 134688,
+    "response_sha256": "ce8375c5e9a8858b8a8a65d1c686d8a23d007c856fa1bd6edf8c3915db31ad4a",
+    "note": "control: does the Common Crawl index hold ANY page for this domain"
+   },
+   {
+    "url": "https://index.commoncrawl.org/CC-MAIN-2026-39-index?url=payfacto.com&matchType=domain&output=json&limit=200&filter=~url%3A%28%3Fi%29.%2A%5Cbgotohuman%5Cb.%2A",
+    "status": 404,
+    "accessed_utc": "2026-09-24T15:31:33Z",
+    "response_bytes": 50,
+    "response_sha256": "f163e9c17816e5de720c0468d79253d0920040a12123dd73f06b8690c2c645b4",
+    "reason": "HTTP 404",
+    "note": "Common Crawl URLs on this domain whose slug contains 'gotoHuman'"
+   }
+  ],
+  "checked_at": "2026-09-24T15:31:38Z"
+ },
+ "does_not_prove": [
+  "this search read 3 page(s) of this party's own site and saw 117 URL(s) in its published index and 200 page(s) for it in the keyless Common Crawl index. It cannot pass a registration wall, a paywall, a bot challenge or a robots rule, and research and analyst firms commonly place report content behind one. Content there would not be found by this search, and its absence from this result is a property of the routes used",
+  "NOT_FOUND is a fact about this search by the stated routes. It is not a denial by the third party, not a contradiction of the claim, and not a finding that anything is false",
+  "SEARCH_INCONCLUSIVE means this host could not reach enough of that party's own index to conclude anything, and is reported separately for exactly that reason",
+  "CORROBORATED means the third party's own site names the term. It does not establish the scale, status, commercial terms or currency of any relationship",
+  "whole-site full text is not searched: slugs across the published index plus the full text of the pages actually fetched"
+ ]
+}

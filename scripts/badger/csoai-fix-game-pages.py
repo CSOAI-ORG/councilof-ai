@@ -1,19 +1,8 @@
 #!/usr/bin/env python3
-"""csoai-fix-game-pages.py — fix the 9 game pages returning 404.
+"""Regenerate the eight public game concept pages without runtime claims.
 
-Games that return 404:
-  - council-town (404)
-  - tournament (404)
-  - judge (404)
-  - incident (404)
-  - civic (404)
-  - swarm (404)
-  - + charter (404 .html, 200 /)
-  - + compliance (404 .html, 200 /)
-
-Fix: add .html variant for each + add redirects so /:slug resolves.
-
-Lane-doable: just file generation.
+These are informational pages. The public games catalogue distinguishes
+PRACTICE_ONLY concepts from working play, and these pages issue no signed card.
 """
 
 from __future__ import annotations
@@ -29,7 +18,7 @@ def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
-# The 9 games that need pages (or .html alias)
+# Current public concept pages. Use their exact filenames.
 GAMES = [
     "council-town",
     "tournament",
@@ -37,24 +26,24 @@ GAMES = [
     "incident",
     "civic",
     "swarm",
-    "charter",
-    "compliance",
+    "games-charter",
+    "games-compliance",
 ]
 
 
 def build_game_page(slug: str) -> str:
-    """Build a placeholder game page."""
-    title = slug.replace("-", " ").title()
+    """Build an informational concept page."""
+    title = slug.removeprefix("games-").replace("-", " ").title()
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — Council of AI</title>
-<link rel="canonical" href="https://councilof.ai/{slug}.html">
+<link rel="canonical" href="https://councilof.ai/{slug}">
 <meta name="robots" content="index, follow">
 <meta property="og:title" content="{title} — Council of AI">
-<meta property="og:url" content="https://councilof.ai/{slug}.html">
+<meta property="og:url" content="https://councilof.ai/{slug}">
 <link rel="icon" href="https://councilof.ai/csoai-icon.svg">
 <style>
 body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #1f2937; margin: 0; padding: 0; }}
@@ -68,19 +57,19 @@ h1 {{ color: #16a34a; font-size: 36px; margin-bottom: 16px; }}
 <body>
 <main>
 <h1>{title}</h1>
-<p class="lede">A 22-axis GSPC-governed game. Every turn emits a signed card.</p>
+<p class="lede">{title} is a Council game concept. This page has no playable turn, game-issued signed card or live GSPC measurement.</p>
 <div class="card">
-<h2>What it is</h2>
-<p>{title} is one of the 15 games wired to the 33-agent BFT council.</p>
+<h2>Current status</h2>
+<p>The public <a href="https://councilof.ai/interop/games-arcade.json">game-planning catalogue</a> distinguishes concepts from working play surfaces. A published page is not evidence that its proposed council mechanics, signing or anchoring run.</p>
 </div>
 <div class="card">
-<h2>How to play</h2>
-<p>Every interaction emits a 3KB signed card. Anchored to OTS + Sigstore Rekor + EAS on Base.</p>
-<a class="btn" href="https://councilof.ai/dashboard">Open dashboard →</a>
+<h2>What you can use now</h2>
+<p>Read the <a href="https://councilof.ai/api/gspc">living GSPC board</a> for current axis counts, measurements and evidence states. This concept page does not write to that board.</p>
+<a class="btn" href="https://councilof.ai/dashboard">Open Council OS →</a>
 </div>
 <div class="card">
-<h2>Standards</h2>
-<p>Verified at <a href="https://councilof.ai/gspc-verify">/gspc-verify</a>.</p>
+<h2>Verification</h2>
+<p><a href="https://councilof.ai/gspc-verify">Verify an existing measurement card</a> independently. Card verification does not validate this game concept.</p>
 </div>
 </main>
 </body>

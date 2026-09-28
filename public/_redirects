@@ -5,16 +5,21 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 13/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 14/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
+/alliance-map          /memberships         308
+/alliance-map/         /memberships         308
+/merge-me             /how-we-work   308
+/merge-me/            /how-we-work   308
 /favicon.ico           /csoai-icon.svg      308
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
 /signed/publisher-health.json  /publisher-health.json  308
 /card_index.json        /signed/card_index.json  301
 /cards/card_index.json  /signed/card_index.json  301
+/world/observatory      /world/observatory/       308
 /public/openapi.json   /openapi.json   308
 /public/openapi.json/  /openapi.json   308
 /arena                 /dashboard?tab=play  308
@@ -91,7 +96,8 @@
 /containment/   /blog/what-is-monitored-containment/  308
 /legal                  /disclaimers                 308
 /vulnerability          /vulnerability-disclosure    308
-/gspc                   /dashboard?tab=board         308
+/gspc                   /board/                     308
+/gspc/                  /board/                     308
 /plugin                 /tools                       301
 /plugin/                /tools                       301
 /gspc/ai-economy-index     /gspc-scoreboard#ai-adoption-components  308
@@ -233,7 +239,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (390) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (396) ---
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -285,6 +291,7 @@
 /certificates  /certificates/  308
 /checklist  /checklist/  308
 /china-ai-law  /china-ai-law/  308
+/claim-maintenance  /claim-maintenance/  308
 /claims-register  /claims-register/  308
 /classifier  /classifier/  308
 /cobol  /cobol/  308
@@ -387,6 +394,7 @@
 /frameworks/tc260  /frameworks/tc260/  308
 /frameworks/uk-ai-bill  /frameworks/uk-ai-bill/  308
 /frequently-asked-questions  /frequently-asked-questions/  308
+/games/ruler  /games/ruler/  308
 /get-listed  /get-listed/  308
 /global-ai-regulation  /global-ai-regulation/  308
 /global-ai-safety-initiative  /global-ai-safety-initiative/  308
@@ -429,6 +437,7 @@
 /horus  /horus/  308
 /how  /how/  308
 /how-it-works  /how-it-works/  308
+/how-we-work  /how-we-work/  308
 /hr-ai-act  /hr-ai-act/  308
 /humanoids-poc  /humanoids-poc/  308
 /industries  /industries/  308
@@ -469,8 +478,8 @@
 /mcp-tools  /mcp-tools/  308
 /me  /me/  308
 /membership-agreement  /membership-agreement/  308
+/memberships  /memberships/  308
 /meok-law  /meok-law/  308
-/merge-me  /merge-me/  308
 /metrology  /metrology/  308
 /minds  /minds/  308
 /motion-lab  /motion-lab/  308
@@ -496,6 +505,7 @@
 /owasp-agentic  /owasp-agentic/  308
 /owasp-asi  /owasp-asi/  308
 /packs/eu-article-50  /packs/eu-article-50/  308
+/pay  /pay/  308
 /pdca  /pdca/  308
 /pdca-simulator  /pdca-simulator/  308
 /penalties  /penalties/  308
@@ -520,6 +530,7 @@
 /quickstart  /quickstart/  308
 /radar  /radar/  308
 /rating-the-raters  /rating-the-raters/  308
+/reach  /reach/  308
 /readiness  /readiness/  308
 /real-world  /real-world/  308
 /receipt  /receipt/  308
@@ -559,6 +570,7 @@
 /settings  /settings/  308
 /settings/notifications  /settings/notifications/  308
 /signals  /signals/  308
+/signals/2026-09-24  /signals/2026-09-24/  308
 /signup  /signup/  308
 /singapore-ai-governance  /singapore-ai-governance/  308
 /sla  /sla/  308
@@ -688,6 +700,7 @@
 /datasets/*  /datasets/:splat  200
 /signed/*  /signed/:splat  200
 /stack/*  /stack/:splat  200
+/world/observatory/*  /world/observatory/:splat  200
 
 # --- SPA catch-all: hand the shell to wouter; unknown paths 404 in-app ---
 # canary-2026-08-22-7fb8: if /zzz-spa-test-7fb8 is still honest-404, this file did not reach the edge

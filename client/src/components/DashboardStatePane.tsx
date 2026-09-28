@@ -12,7 +12,7 @@ const OsPanels = lazy(() => import("@/components/OsPanels"));
  *  Moved here from the home page (owner ruling 2 Sep: the home board is the living Space).
  *
  *  One grammar, six probes, one verify page. The seven rails are the tapes that the
- *  22-axis board hangs from — XRPL, SWIFT, AGENTS, MCP, A2A, TRACE, OTEL. Readers
+ *  current board hangs from — XRPL, SWIFT, AGENTS, MCP, A2A, TRACE, OTEL. Readers
  *  only. They write nothing onto the board — quote `GET /api/gspc` for scores.
  */
 export default function DashboardStatePane() {

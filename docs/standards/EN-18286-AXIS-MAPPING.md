@@ -59,20 +59,21 @@ granularity only.)*
 
 ### 1.2 The GSPC board
 
-The GSPC board carries **22 axes, all measured**, per the source of truth at
+As checked on 23 September 2026, the GSPC board carries **23 axes, all measured**, per the source of truth at
 `GET https://councilof.ai/api/gspc`:
 
 - **14 behavioural model-comparison axes:** governance, safety, provenance,
   continuity, conformance, openness, machinery-conformity, care,
   cross-reality, detector-interop, art5-safeguard, swarm, affect, jail.
-- **8 deterministic-fact financial axes:** provenance-controls,
+- **9 deterministic-fact axes:** the eight financial/domain axes — provenance-controls,
   reserve-attestation, regulatory-framework, distribution-integrity,
   custody-disclosure, ai-adoption-components, labour-components,
-  humanoid-labour-index.
+  humanoid-labour-index — and effect-binding, a server-boundary probe in the GSPC family.
 
-Every board figure is a measurement: derived from frozen instruments and
-deterministic grading, Ed25519-signed per card, rolled to a signed Merkle
-public root, with a public corrections ledger. **Measurement, not
+Every board figure is a measurement from a named instrument and grading rule.
+Signed cards, unsigned fact runs, the public root and the corrections ledger
+have distinct evidence states; the live board reports these per run. A
+content-addressed fact run is not thereby signed. **Measurement, not
 certification.**
 
 Related estate assets referenced by this map:

@@ -2,8 +2,8 @@
 <llms-sitemap xmlns="http://councilof.ai/llms-sitemap/0.1">
   <title>Council of AI — LLM-discovery sitemap</title>
   <description>Every public, AI-agent-readable surface on councilof.ai. Each entry includes the URL, the human + machine content, and a one-line description. This file is the answer-engine cousin of /sitemap.xml.</description>
-  <as_of>2026-09-03</as_of>
-  <lid>Board count: quote live totals.public_count from GET /api/gspc · measurement, not certification</lid>
+  <as_of>2026-09-23</as_of>
+  <lid>Current GSPC counts and dated evidence are on the live board · measurement, not certification</lid>
   <entry>
     <url>https://councilof.ai/</url>
     <description>Council of AI homepage — the entry point for independent AI governance measurement.</description>
@@ -12,9 +12,15 @@
   </entry>
   <entry>
     <url>https://councilof.ai/api/gspc</url>
-    <description>LIVE 22-axis GSPC board (GET returns JSON; cite `totals.public_count`, never a typed integer).</description>
+    <description>Current GSPC board JSON; cite `totals.public_count` from the response rather than a count copied into this sitemap.</description>
     <category>api · json</category>
     <priority>1.0</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/interop/chatgpt-interop-status-2026-09-23.json</url>
+    <description>Current correction notice for three retained historical ChatGPT interop design files. Their timestamp proofs bind old bytes, not the claims inside them.</description>
+    <category>corrections · json</category>
+    <priority>0.8</priority>
   </entry>
   <entry>
     <url>https://councilof.ai/gspc-verify</url>
@@ -54,7 +60,7 @@
   </entry>
   <entry>
     <url>https://councilof.ai/axes-deep.html</url>
-    <description>The canonical 22-axis reference — each axis: scope, what's MEASURED, the discipline (TIE is TIE), the lane (where to look).</description>
+    <description>Axis reference — scope and measurement discipline. For the current axis count and status, read GET /api/gspc.</description>
     <category>reference</category>
     <priority>0.9</priority>
   </entry>
@@ -198,7 +204,7 @@
   </entry>
   <entry>
     <url>https://councilof.ai/sitemap.xml</url>
-    <description>The XML sitemap (482 URLs) for classical search engines.</description>
+    <description>The current XML sitemap for search engines; fetch it to determine its URL count.</description>
     <category>seo · xml</category>
     <priority>0.7</priority>
   </entry>

@@ -1,0 +1,319 @@
+{
+  "note": "Declarative input to capture-growth.mjs for the hiring-platforms registry (DRAFT). Each claim names the page it is read from and the state it is published in. A claim moves to CLAIM_MEASURED only where a measurement id resolves to a CLAIM_MEASURED output of scripts/claims/measure_hiring.py; where that harness returns UNMEASURED the claim stays UNMEASURED and the harness's reason is carried. Nothing here is written by hand into a measured state.",
+  "subjects_file": "scripts/claims/subjects-hiring-platforms-2026-09-24.json",
+  "harness": "scripts/claims/measure_hiring.py",
+  "selection_rule": "Platforms on which an AI agent engages a human to perform a task, or a human engages an agent, and which publish a machine interface for it (an MCP server, a REST API or an x402 resource). Three were named to this lane (RentAHuman, gotoHuman, Payman); two more were added from third-party indexes: Invoke, because the official MCP registry lists a hosted server for it that describes hiring a human, and InstaHuman, because it is one of four hosts in the two public x402 discovery indexes whose resource descriptions offer work done by a person, and the only one of the four whose own page describes a marketplace of paid human workers engaged by agents. Both publish their own site and terms. Candidates were dropped where the operator is a single natural person (humanforai.dev, yourhuman.ai, missionforhire.com), because a measurement of such a subject is a measurement of a person, or where the service is not a hiring platform on its own page (human4ai.ai, parahuman.co). Within each subject the claims selected are those specific enough to capture verbatim and about something a worker, an agent operator or a regulator would rely on: headcount, interfaces, payment rails, escrow and dispute, identity checks, worker classification and the operating entity. Where a subject states a limit on what it does, that statement is captured on the same footing as any other claim, because a scoped claim is a result and not an absence. No person is named, and no personal data is captured.",
+  "default_next_read_utc": "2026-10-01T09:20:00Z",
+  "signature_state": "UNSIGNED DRAFT. This registry has not been signed. It was built on a lane branch for review and has no .signed.json sidecar; nothing in it may be described as signed until a sidecar that pins these bytes by sha256 exists (spec 9.1, 9.4). A signature, when one exists, will prove only that these bytes were committed to at that time; it grades nothing and certifies nobody (spec 9.5).",
+  "timestamp_state": "NOT SUBMITTED. No OpenTimestamps receipt has been requested for this file. The three words of spec 8.1 are reserved, and none of them applies to this file yet.",
+  "registry_boundaries": [
+    "No claim of falsity is made about any party, anywhere in this file. Where a measurement differs from a claim, the claim, the measured value, the window, the denominator and the method are recorded and nothing further is said. The reader draws the conclusion; this maintainer does not.",
+    "A listing here is not an endorsement and it is not an accusation. It means a public page is being read on a schedule.",
+    "Nothing here is a finding about the employment status of any worker, the lawfulness of any platform, or the adequacy of any human oversight. Statements a subject makes about worker classification, identity checks, escrow or dispute resolution are captured as that subject's statements; the only bodies that can settle the first of those are courts and tribunals, and none of their records was read.",
+    "Every source was read without a key, an account or a payment. No account was created, no form was submitted, no task was posted and no payment was made. A source that required a token was dropped and recorded in the harness output, never worked around.",
+    "A page or register this reader could not obtain is SEARCH_INCONCLUSIVE with its HTTP status recorded. It is never recorded as an absence. The code host answers 404 both for a repository that does not exist and for a private one, so a 404 there is read as neither.",
+    "A /.well-known file that is PRESENT is evidence that the file was published and nothing more; what it says is the subject speaking again. Where this lane read one, it is used only as that.",
+    "No personal data is carried. Package-registry maintainer names and e-mail addresses, and the street address and telephone number on a regulator's filer record, were present in bytes that were read and hashed; they are not reproduced here.",
+    "The maintainer publishes its own MCP servers in the official MCP registry and its own x402 resources in the same discovery indexes read here. That is co-listing in a public index, not a relationship with any subject, and it is stated so a reader can weigh it."
+  ],
+  "subjects": [
+    {
+      "key": "rentahuman",
+      "name": "RentAHuman",
+      "identifier": "rentahuman.ai",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "RH-1",
+          "url": "https://rentahuman.ai/",
+          "type": "quantitative-count",
+          "verbatim": "RentAHuman is a live marketplace with 787,000+ registered humans across 100+ countries.",
+          "state": "UNMEASURED",
+          "series": "RH-1",
+          "plan": "restatement watch: a registered-user count rests on an internal counter no third party can recompute, and the only public enumeration is the subject's own worker directory, so counting it would be the claim again rather than evidence about it (spec 4.6). Capture the figure weekly with the page digest and record every revision. The same page also renders a live counter labelled Rentable humans; that figure changes between reads and is recorded in the lane's evidence file, not captured as a claim. Never recomputed, never asserted."
+        },
+        {
+          "id": "RH-2",
+          "url": "https://rentahuman.ai/",
+          "type": "interface-availability",
+          "verbatim": "Connect your AI agent via our MCP server or REST API.",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-MCP-RENTAHUMAN",
+          "measures_only": "whether the MCP server this sentence names is published in the official MCP registry and on npm, as those two registries record it, and whether the repository the registry entry declares is served by the code host. The REST API is not measured",
+          "plan": "read the official MCP registry and the npm registry for the named server and package, and the code host for the declared repository."
+        },
+        {
+          "id": "RH-3",
+          "url": "https://rentahuman.ai/docs",
+          "type": "payment-rail",
+          "verbatim": "Sign up and fund your wallet by paying USDC on Base — no card, no checkout page.",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-X402-RENTAHUMAN",
+          "measures_only": "whether either public x402 discovery index lists a resource on the subject's hosts. Whether the payment route works, and whether wallet funds are held as described, are not measured",
+          "plan": "enumerate both public x402 discovery indexes in full and select resources on the subject's hosts."
+        },
+        {
+          "id": "RH-4",
+          "url": "https://rentahuman.ai/",
+          "type": "custody-of-funds",
+          "verbatim": "Funds are held until the task is done",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "Where task funds are held, by whom and under what licence is not recorded on any public surface this reader found. The subject's terms name a card processor, but a processor does not publish which merchants hold balances for others, and no escrow ledger is public. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "RH-5",
+          "url": "https://rentahuman.ai/terms",
+          "type": "scope-statement",
+          "verbatim": "RentAHuman does not perform background checks of users of the Platform and is not required to verify all users, although we may require identity, payment, location, or other verification for certain users or transactions in our discretion.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "A statement of the subject's own verification practice. Which users were checked, and how, is held only by the subject and its identity vendor, if any; no public record shows it. The statement is captured because a scoped claim is a result, and it sits beside the subject's API documentation, which describes an optional per-task government-ID requirement. This is a statement about the evidence, never about the subject."
+        },
+        {
+          "id": "RH-6",
+          "url": "https://rentahuman.ai/terms",
+          "type": "worker-classification-statement",
+          "verbatim": "Workers using the Platform are not independent contractors or employees of RentAHuman, including where a Task is offered, priced, or paid at an hourly rate.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "How a working relationship is classified is decided by a court or tribunal applying the law of the place where the work is done, on the facts of the relationship, and not by the wording of a contract. No public decision about this subject was found by this reader, and none was searched for in any court register. The statement is captured as the subject's own words; nothing here is a finding about any worker's status."
+        },
+        {
+          "id": "RH-7",
+          "url": "https://rentahuman.ai/terms",
+          "type": "dispute-process",
+          "verbatim": "RentAHuman provides a dispute resolution mechanism for transactions conducted through our escrow system.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "Dispute outcomes, volumes and times are held only by the subject; no public register or third-party record carries them. The subject's API documentation describes a buyer-only dispute call, which is the subject describing its own interface again. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "RH-8",
+          "url": "https://rentahuman.ai/terms",
+          "type": "entity-identity",
+          "verbatim": "RawLabs, Inc. dba RentAHuman.ai",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-ENTITY-RAWLABS",
+          "plan": "settleable in principle from the incorporation register of the entity's home state. The terms name the entity and a San Francisco business address but no state of incorporation; the state registers answer only through an interactive search form, which this harness does not submit. The keyless SEC route was tried and cannot settle incorporation either way."
+        },
+        {
+          "id": "RH-9",
+          "url": "https://registry.npmjs.org/rentahuman-mcp/latest",
+          "type": "licence",
+          "verbatim": "\"license\":\"MIT\"",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-LICENCE-RENTAHUMAN",
+          "plan": "a licence field in a package manifest is written by the publisher. The independent reading is the code host's own licence detection for the repository the official MCP registry entry declares; read it with the unauthenticated GitHub API."
+        }
+      ]
+    },
+    {
+      "key": "gotohuman",
+      "name": "gotoHuman",
+      "identifier": "gotohuman.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "GT-1",
+          "url": "https://www.gotohuman.com/",
+          "type": "data-protection",
+          "verbatim": "We are GDPR-compliant and your data is stored on secure European servers.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "No public register records GDPR compliance, and where data is stored is not observable from outside: the network location of a public endpoint shows where requests are served, not where data is kept. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "GT-2",
+          "url": "https://www.gotohuman.com/",
+          "type": "third-party-attribution",
+          "verbatim": "How PayFacto, a leading global payment processing company handling $10 billion in annual transaction volume, is using gotoHuman",
+          "state": "UNMEASURED",
+          "measurement": "M-CORR-PAYFACTO-GOTOHUMAN",
+          "measures_only": "whether the named third party's own public site names gotoHuman. The description of that third party's size and standing is about the third party and is not measured (spec 1.4)",
+          "plan": "measure whether the named third party's own public record carries the relationship: CORROBORATED with the quote, or NOT_FOUND with the routes searched."
+        },
+        {
+          "id": "GT-3",
+          "url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/package.json",
+          "type": "licence",
+          "verbatim": "\"license\": \"MIT\"",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-LICENCE-GOTOHUMAN",
+          "plan": "a licence field in a package manifest is written by the publisher; read the code host's own licence detection for the same repository."
+        },
+        {
+          "id": "GT-4",
+          "url": "https://raw.githubusercontent.com/gotohuman/gotohuman-mcp-server/main/README.md",
+          "type": "interface-availability",
+          "verbatim": "Use our MCP server to request human approvals from your AI workflows via MCP or add it to your IDE to help with integration.",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-MCP-GOTOHUMAN",
+          "measures_only": "how the official MCP registry, the npm registry and the code host each record the MCP server this sentence names. Whether it requests approvals as described is not measured",
+          "plan": "read the official MCP registry search, the npm registry and the code host."
+        },
+        {
+          "id": "GT-5",
+          "url": "https://www.gotohuman.com/imprint",
+          "type": "entity-identity",
+          "verbatim": "gotoHuman UG (haftungsbeschränkt)",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-ENTITY-GOTOHUMAN",
+          "plan": "settleable in principle from the German commercial register. The imprint names the entity and a Berlin address but no register number, and the register answers only through an interactive search form, which this harness does not submit."
+        },
+        {
+          "id": "GT-6",
+          "url": "https://www.gotohuman.com/",
+          "type": "third-party-attestation",
+          "verbatim": "the core services we use are certified under SOC 3 and ISO 27001",
+          "state": "UNCHECKABLE",
+          "excerpt": true,
+          "uncheckable_reason": "The sentence attributes attestations to unnamed service providers. With no provider named, there is no third party whose own record could be read. This is a statement about the evidence available to the public and not about the subject."
+        }
+      ]
+    },
+    {
+      "key": "payman",
+      "name": "Payman",
+      "identifier": "paymanai.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "PM-1",
+          "url": "https://paymanai.com/",
+          "type": "third-party-attestation",
+          "verbatim": "SOC 2 Certified",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "A SOC 2 report is an attestation issued by an audit firm to the organisation and distributed under restricted use. No public register of SOC 2 reports exists, the auditor is not named on the page, and the subject's trust portal is an access-request surface. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "PM-2",
+          "url": "https://paymanai.com/",
+          "type": "adoption",
+          "verbatim": "Already trusted by financial institutions across the country",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "No institution is named in the claim, so no public evidence identifies a set to check. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "PM-3",
+          "url": "https://paymanai.com/",
+          "type": "entity-identity",
+          "verbatim": "© 2026 Payman AI, Inc. All rights reserved.",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-ENTITY-PAYMAN",
+          "measures_only": "whether the SEC's own EDGAR record holds a filer under the exact entity name this notice carries, with its state of incorporation and filing history. The copyright assertion itself is not measured",
+          "plan": "read the SEC EDGAR submissions record for the entity name."
+        },
+        {
+          "id": "PM-4",
+          "url": "https://paymanai.com/",
+          "type": "product-description",
+          "verbatim": "We deploy AI agents that handle money.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "No deployment, customer or transaction is named, and deployments of this kind are recorded only by the subject and its customers. This is a statement about the evidence available to the public and not about the subject. The Internet Archive holds earlier copies of this page describing a different product; that history is recorded in the lane's evidence file as dated copies of the subject's own words, and it is not a measurement of this claim."
+        },
+        {
+          "id": "PM-5",
+          "url": "https://web.archive.org/web/20241005225726id_/https://paymanai.com/",
+          "type": "superlative",
+          "verbatim": "Payman is the first AI to Human platform that allows AI to pay people for what it needs.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "This sentence is read from the Internet Archive's copy of the subject's home page made on 2024-10-05, not from the live page. A claim to be first is published without a population, a date of first operation or a method, so no public evidence identifies a set within which an order could be recomputed. It is captured so the record of what this subject said about paying humans has a dated, hashed anchor; its absence from the live page at this read is an observation about two pages and not a finding about the claim (spec 4.9)."
+        }
+      ]
+    },
+    {
+      "key": "invoke",
+      "name": "Invoke",
+      "identifier": "invoke.nanocorp.app",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "IN-1",
+          "url": "https://invoke.nanocorp.app/",
+          "type": "service-level",
+          "verbatim": "a vetted human delivers the structured result within 24 hours",
+          "excerpt": true,
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "The only public record of task timings is the subject's own task board, which is the claim again (spec 4.6). How workers are vetted is not published. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "IN-2",
+          "url": "https://invoke.nanocorp.app/",
+          "type": "transaction-record",
+          "verbatim": "Proven end-to-end: A local-data agent posted a phone-hours task, a human applied, completed it in 43 minutes, and the poster approved the $22 payout.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "The proof the page links to is a page on the subject's own site, which is the subject speaking again (spec 4.6). No payment processor, ledger or third party publishes a record of the payout. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "IN-3",
+          "url": "https://invoke.nanocorp.app/terms",
+          "type": "payment-rail",
+          "verbatim": "Task posting fees are processed through Stripe and are non-refundable unless required by law.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "A card processor does not publish its merchant list, and the checkout host named in the subject's API documentation is the subject's own domain. No public record shows which processor settles these fees. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "IN-4",
+          "url": "https://invoke.nanocorp.app/terms",
+          "type": "worker-classification-statement",
+          "verbatim": "We facilitate the connection but are not a party to agreements between Task Posters and Workers.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "Whether a platform is a party to, or controls, the work arranged through it is decided by a court or tribunal on the facts, not by the wording of terms. No public decision about this subject was found by this reader, and none was searched for in any court register. The statement is captured as the subject's own words; nothing here is a finding about any worker's status. The terms read name no legal entity."
+        },
+        {
+          "id": "IN-5",
+          "url": "https://invoke.nanocorp.app/for-agents",
+          "type": "interface-availability",
+          "verbatim": "Add the hosted MCP endpoint to Claude Desktop, Cursor, or any Streamable HTTP MCP client.",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-MCP-INVOKE",
+          "measures_only": "how the official MCP registry records the hosted server this sentence names, and whether the repository that registry entry declares is served by the code host. Whether the endpoint works is not measured",
+          "plan": "read the official MCP registry for the server and the code host for its declared repository."
+        }
+      ]
+    },
+    {
+      "key": "instahuman",
+      "name": "InstaHuman",
+      "identifier": "instahuman.com",
+      "identifier_kind": "domain",
+      "conflicts": [],
+      "claims": [
+        {
+          "id": "IH-1",
+          "url": "https://instahuman.com/",
+          "type": "custody-of-funds",
+          "verbatim": "Funds are reserved when the job is posted. Only valid completed tests are paid.",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "Where reserved funds are held, and which tests were paid, is recorded only by the subject and its payment providers; no public ledger or register carries it. This is a statement about the evidence available to the public and not about the subject."
+        },
+        {
+          "id": "IH-2",
+          "url": "https://instahuman.com/legal/terms-of-use",
+          "type": "worker-classification-statement",
+          "verbatim": "Testers act as independent contractors",
+          "state": "UNCHECKABLE",
+          "uncheckable_reason": "How a working relationship is classified is decided by a court or tribunal applying the law of the place where the work is done, on the facts of the relationship, and not by the wording of terms. No public decision about this subject was found by this reader, and none was searched for in any court register. The statement is captured as the subject's own words; nothing here is a finding about any tester's status."
+        },
+        {
+          "id": "IH-3",
+          "url": "https://instahuman.com/legal/terms-of-use",
+          "type": "payment-rail",
+          "verbatim": "Payments and payouts are handled by third-party providers (e.g., Stripe).",
+          "state": "UNMEASURED",
+          "measurement": "M-HP-X402-INSTAHUMAN",
+          "measures_only": "whether either public x402 discovery index, each held by a payment facilitator other than the subject, lists a resource on the subject's hosts. Which providers handle the subject's payments and payouts, and whether Stripe is one, is not measured",
+          "plan": "enumerate both public x402 discovery indexes in full and select resources on the subject's hosts."
+        },
+        {
+          "id": "IH-4",
+          "url": "https://instahuman.com/legal/terms-of-use",
+          "type": "entity-identity",
+          "verbatim": "operated by Hallway LLC (DBA InstaHuman)",
+          "state": "UNMEASURED",
+          "plan": "settleable in principle from the business register of the state the entity is formed in. The terms name the entity and select the law of Maryland but do not state where the entity is formed, and state business registers answer only through an interactive search form, which this harness does not submit. No route was run in this capture."
+        }
+      ]
+    }
+  ]
+}

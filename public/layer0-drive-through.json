@@ -1,0 +1,4967 @@
+{
+  "available_now_count": 179,
+  "available_now_ids": [
+    "api-a2a",
+    "api-a2a-post",
+    "api-action-jobs",
+    "api-action-jobs-patch",
+    "api-action-jobs-post",
+    "api-arena-scoreboard",
+    "api-art50-marking-evidence",
+    "api-art50-marking-evidence-post",
+    "api-article50",
+    "api-article50-post",
+    "api-assess",
+    "api-assess-key",
+    "api-assess-post",
+    "api-axis-register",
+    "api-badge",
+    "api-bank-complete",
+    "api-benchmark-quality",
+    "api-board-sign-post",
+    "api-body-state",
+    "api-cards",
+    "api-certificate-schema",
+    "api-challenge",
+    "api-challenge-post",
+    "api-chat-post",
+    "api-checkout-post",
+    "api-claims-register",
+    "api-clarity",
+    "api-commission-queue",
+    "api-commissions",
+    "api-comparison",
+    "api-compute",
+    "api-contact-post",
+    "api-corpus-watch-status",
+    "api-corrections",
+    "api-counters",
+    "api-coverage",
+    "api-coverage-truth",
+    "api-cross",
+    "api-dashboard-stats",
+    "api-detect",
+    "api-detect-post",
+    "api-detector-interop",
+    "api-distribution-ledger",
+    "api-door-settles",
+    "api-east-west-bench",
+    "api-embed",
+    "api-eu-ai-act",
+    "api-eunomia-data",
+    "api-eunomia-data-post",
+    "api-evidence-bundle",
+    "api-evidence-bundle-post",
+    "api-evidence-github",
+    "api-evidence-intake-post",
+    "api-evidence-pack",
+    "api-fabric",
+    "api-feed-xml",
+    "api-feeds-provider-diff",
+    "api-feeds-provider-diff-post",
+    "api-findings",
+    "api-fines",
+    "api-footprint",
+    "api-free-door",
+    "api-free-door-post",
+    "api-gspc",
+    "api-hf-spaces",
+    "api-hub-cards",
+    "api-interop-bulk",
+    "api-lead",
+    "api-lead-post",
+    "api-learning-scenarios",
+    "api-locale",
+    "api-mcp",
+    "api-methodology",
+    "api-observability",
+    "api-og",
+    "api-openapi-json",
+    "api-otel",
+    "api-owasp-report",
+    "api-paddle-webhook",
+    "api-paddle-webhook-post",
+    "api-pop-a2a",
+    "api-pop-a2a-post",
+    "api-pop-claim-watch",
+    "api-pop-claim-watch-post",
+    "api-pop-corrections",
+    "api-pop-corrections-post",
+    "api-pop-layer0",
+    "api-pop-layer0-post",
+    "api-pop-mcp-registry",
+    "api-pop-mcp-registry-post",
+    "api-pop-ots-proofs",
+    "api-pop-ots-proofs-post",
+    "api-pop-stablecoins",
+    "api-pop-stablecoins-post",
+    "api-pop-swift",
+    "api-pop-swift-post",
+    "api-pop-x402-bazaar",
+    "api-pop-x402-bazaar-post",
+    "api-pop-xrpl",
+    "api-pop-xrpl-post",
+    "api-pqc",
+    "api-press-json",
+    "api-proof",
+    "api-proof-post",
+    "api-provider-canary",
+    "api-provider-canary-post",
+    "api-receipt-status",
+    "api-receipts",
+    "api-receipts-batch",
+    "api-receipts-batch-post",
+    "api-receipts-latest",
+    "api-receipts-verify",
+    "api-receipts-verify-post",
+    "api-refund",
+    "api-refund-post",
+    "api-registers",
+    "api-regulation",
+    "api-regulator-findings",
+    "api-report",
+    "api-reported",
+    "api-request-attestation",
+    "api-request-attestation-post",
+    "api-revenue",
+    "api-root",
+    "api-router",
+    "api-rwa-evidence",
+    "api-rwa-evidence-post",
+    "api-security",
+    "api-specialists",
+    "api-state",
+    "api-summary",
+    "api-swift",
+    "api-tools",
+    "api-trace",
+    "api-verify",
+    "api-verify-post",
+    "api-verify-tally",
+    "api-verify-tally-post",
+    "api-wave-dashboard",
+    "api-webhooks",
+    "api-webhooks-delete",
+    "api-webhooks-post",
+    "api-witness-status",
+    "api-worker",
+    "api-wrapper",
+    "api-wrapper-changes",
+    "api-wrapper-post",
+    "api-x402",
+    "api-x402-listing",
+    "api-x402-listing-402index",
+    "api-x402-trust-seller",
+    "api-xrpl",
+    "api-yield",
+    "art50_marking_evidence",
+    "article50-detect",
+    "benchmark-quality-register",
+    "board_totals",
+    "commission_card",
+    "east-west-crosswalk",
+    "estate-index",
+    "eu-ai-act-screen",
+    "get_axis",
+    "get_card",
+    "get_root",
+    "gspc-board",
+    "list_cards",
+    "mcp_trust",
+    "measured-badge",
+    "receipts_batch",
+    "rwa_evidence",
+    "verify_card",
+    "verify_inclusion",
+    "well-known-api-catalog",
+    "well-known-mcp-registry-auth",
+    "well-known-scitt-configuration",
+    "well-known-x402",
+    "well-known-x402-json",
+    "x402-discovery",
+    "x402_trust"
+  ],
+  "canonical_source": "council-os/capabilities.json",
+  "canonical_source_sha256": "663834c70bd1dedf1f195e10982be5d7cd290f39a8292cb04b73a08bc5fdd7dc",
+  "capabilities": [
+    {
+      "audience": "agent",
+      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
+      "description_state": "DOCUMENTED",
+      "id": "article50-detect",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "Article 50 provenance detection (free)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "article-50",
+        "provenance",
+        "detection",
+        "verification",
+        "c2pa"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "description_state": "DOCUMENTED",
+      "id": "benchmark-quality-register",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "Benchmark-quality register",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "meta-evaluation",
+        "benchmark-quality",
+        "reproducibility",
+        "governance"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
+      "description_state": "DOCUMENTED",
+      "id": "east-west-crosswalk",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "East-West crosswalk & cross-border card",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "cross-border",
+        "crosswalk",
+        "measurement",
+        "verification"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "SendMessage answers with the estate census summary from GET /api/state -> estate_index, and the full index is GET /interop/master-consolidation-2026-09-16.json with its OpenTimestamps proof beside it. Every artefact CSOAI holds across this repository, Hugging Face, GitHub, Kaggle and Oracle Object Storage, committed to one Merkle root. Read it as a census, never as evidence: INDEXED means we found the artefact and measured nothing against it, and UNSIGNED means a card body exists carrying signature: null awaiting a signing decision. Two leaf classes sit under the root and are never added together: a bytes leaf is the sha256 of an artefact we read, a record leaf is the sha256 of our own note about a remote artefact we did not download and proves nothing about the remote bytes. The root is UNSIGNED, so it records when the set existed and not who assembled it, and it is therefore not Rekor-witnessable the way public/root.json is. It does not replace root.json or the signed card index, each of which commits to its own separate corpus with zero identifier overlap. Some identifiers are withheld because they carry internal names; those entries are kept and their digests untouched, so inclusion can still be proved by a holder of the real identifier. Measurement, never certification.",
+      "description_state": "DOCUMENTED",
+      "id": "estate-index",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "Estate index (census, not evidence)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "census",
+        "provenance",
+        "merkle",
+        "measurement"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST https://councilof.ai/api/assess with a system description. Keyword matches name the Annex III categories and Article 5 patterns a human should inspect; no model is consulted. It does not establish legal tier, applicability, exceptions or compliance, and an empty description is UNMEASURED, not a low-risk finding. When no signing key is provisioned the report says UNSIGNED out loud.",
+      "description_state": "DOCUMENTED",
+      "id": "eu-ai-act-screen",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "EU AI Act screening helper (deterministic, text-only)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "eu-ai-act",
+        "screening",
+        "deterministic"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "description_state": "DOCUMENTED",
+      "id": "gspc-board",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "Signed GSPC Board",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "description_state": "DOCUMENTED",
+      "id": "measured-badge",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "Measured Badge",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "measurement",
+        "governance",
+        "verification"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
+      "description_state": "DOCUMENTED",
+      "id": "x402-discovery",
+      "kind": "a2a_skill",
+      "lifecycle": "LIVE",
+      "name": "x402 discovery + free door",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "tags": [
+        "x402",
+        "discovery",
+        "payments",
+        "measurement"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/a2a — the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
+      "description_state": "DOCUMENTED",
+      "id": "api-a2a",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "A2a",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/a2a",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/a2a — the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.",
+      "description_state": "DOCUMENTED",
+      "id": "api-a2a-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "A2a (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/a2a",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/action-jobs — bounded, durable action-intent ledger staging.",
+      "description_state": "DOCUMENTED",
+      "id": "api-action-jobs",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Action jobs",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/action-jobs",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/action-jobs — bounded, durable action-intent ledger staging.",
+      "description_state": "DOCUMENTED",
+      "id": "api-action-jobs-patch",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Action jobs (PATCH)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "PATCH",
+        "request": "/api/action-jobs",
+        "safe": false,
+        "unsafe_reason": "PATCH would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/action-jobs — bounded, durable action-intent ledger staging.",
+      "description_state": "DOCUMENTED",
+      "id": "api-action-jobs-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Action jobs (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/action-jobs",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-agentic-fix",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Agentic fix",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/agentic-fix",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-agentic-fix-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Agentic fix (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/agentic-fix",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first.",
+      "description_state": "DOCUMENTED",
+      "id": "api-arena-scoreboard",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Arena scoreboard",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/arena/scoreboard",
+        "safe": true
+      },
+      "surfaces": [
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+      "description_state": "DOCUMENTED",
+      "id": "api-art50-marking-evidence",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Art50 marking evidence",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "/api/art50/marking-evidence — the Article 50 marking-evidence pack.",
+      "description_state": "DOCUMENTED",
+      "id": "api-art50-marking-evidence-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Art50 marking evidence (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/art50/marking-evidence",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/article50 — issues an Article 50 passport (free tier, HMAC-signed). GET /api/article50?verify=1&... — re-verifies a signature, statelessly.",
+      "description_state": "DOCUMENTED",
+      "id": "api-article50",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Article50",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/article50",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/article50 — issues an Article 50 passport (free tier, HMAC-signed). GET /api/article50?verify=1&... — re-verifies a signature, statelessly.",
+      "description_state": "DOCUMENTED",
+      "id": "api-article50-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Article50 (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/article50",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/assess — a deterministic, text-only EU AI Act screening helper.",
+      "description_state": "DOCUMENTED",
+      "id": "api-assess",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Assess",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/assess",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/assess/key — the verification half of the signed assessment. AssessTool's copy tells readers to fetch the public key from here and check the signature themselves; until now the path didn't exist. Returns the Ed25519 public key derived from the same secret the signer uses — or an honest 404 when no key is provisioned, never a made-up key.",
+      "description_state": "DOCUMENTED",
+      "id": "api-assess-key",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Assess key",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/assess/key",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/assess — a deterministic, text-only EU AI Act screening helper.",
+      "description_state": "DOCUMENTED",
+      "id": "api-assess-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Assess (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/assess",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "atlas — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-atlas",
+      "kind": "http",
+      "lifecycle": "RETIRED",
+      "name": "Atlas",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/atlas",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "atlas — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-atlas-post",
+      "kind": "http",
+      "lifecycle": "RETIRED",
+      "name": "Atlas (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/atlas",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/axis-register — the GSPC axis register (canonical scored rows).",
+      "description_state": "DOCUMENTED",
+      "id": "api-axis-register",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Axis register",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/axis-register",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-badge",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Badge",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/badge",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/bank-complete — evidence-derived reader for the bank × chain × stablecoin census. Data is embedded at build time (zero-drift with public/interop/bank-registry.json).",
+      "description_state": "DOCUMENTED",
+      "id": "api-bank-complete",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Bank complete",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/bank-complete",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "The day every artifact cited in this file was actually fetched.",
+      "description_state": "DOCUMENTED",
+      "id": "api-benchmark-quality",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Benchmark quality",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/benchmark-quality",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/board-sign — two callers, one key. Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64. The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.",
+      "description_state": "DOCUMENTED",
+      "id": "api-board-sign-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Board sign (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/board-sign",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/body-state — live route reporting the retired GitHub Actions run-history source; no current workflow timestamps.",
+      "description_state": "DOCUMENTED",
+      "id": "api-body-state",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Body state",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/body-state",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/cards — live signed-measurement surface (G4 fix).",
+      "description_state": "DOCUMENTED",
+      "id": "api-cards",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Cards",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/cards",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/certificate-schema — the schema URL the issuer and the verifier agree on.",
+      "description_state": "DOCUMENTED",
+      "id": "api-certificate-schema",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Certificate schema",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/certificate-schema",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-challenge",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Challenge",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/challenge",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-challenge-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Challenge (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/challenge",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-chat-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Chat (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/chat",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/checkout — public door is closed.",
+      "description_state": "DOCUMENTED",
+      "id": "api-checkout-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Checkout (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/checkout",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "The register of every subject Council of AI maintains public claims on, under the Claim Maintenance specification v0.1 (https://councilof.ai/spec/claim-maintenance/v0.1/, CC0). Per subject: claim count, the count in each of the four states (CLAIM_CAPTURED, CLAIM_MEASURED, UNMEASURED, UNCHECKABLE), first-captured date, last-read date, next scheduled read, and the URL of the registry artifact. Generated from the registry files on disk, never hand-listed, and carrying its own as_of. Filter with ?subject= or ?state=; a filtered view labels itself and still reports the whole register's totals. Free. Not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism: no entry states or implies that any claim is false, and no score, rank or index may be derived from these counts.",
+      "description_state": "DOCUMENTED",
+      "id": "api-claims-register",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Claim maintenance register",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/claims/register",
+        "safe": true
+      },
+      "surfaces": [
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-clarity",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Clarity",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/clarity",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/commission-queue — mill-visible QUEUED intents.",
+      "description_state": "DOCUMENTED",
+      "id": "api-commission-queue",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Commission queue",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/commission-queue",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/commissions — the open commission queue, read from the same store that holds the settlements (REVENUE_KV, `ras:<receipt sha>` records written by /api/request-attestation).",
+      "description_state": "DOCUMENTED",
+      "id": "api-commissions",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Commissions",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/commissions",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-comparison",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Comparison",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/comparison",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/compute — probe surface for the two-machine wire.",
+      "description_state": "DOCUMENTED",
+      "id": "api-compute",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Compute",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/compute",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/contact — the contact form. Fields stored verbatim when KV (LEADS) is bound; honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded to third parties.",
+      "description_state": "DOCUMENTED",
+      "id": "api-contact-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Contact (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/contact",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-corpus-watch",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Corpus watch",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/corpus-watch",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-corpus-watch-post",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Corpus watch (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "POST",
+        "request": "/api/corpus-watch",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/corpus-watch/status — serves the watcher heartbeat JSON with register-honest semantics.",
+      "description_state": "DOCUMENTED",
+      "id": "api-corpus-watch-status",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Corpus watch status",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/corpus-watch/status",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-corrections",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Corrections",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/corrections",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/counters — Wave-1 public-utility counters (EXP 005), derived from artifacts.",
+      "description_state": "DOCUMENTED",
+      "id": "api-counters",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Counters",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/counters",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/coverage — one machine-readable lifecycle view over the estate.",
+      "description_state": "DOCUMENTED",
+      "id": "api-coverage",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Coverage",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/coverage",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/coverage-truth — distiguish indexed, runnable, measured, signed.",
+      "description_state": "DOCUMENTED",
+      "id": "api-coverage-truth",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Coverage truth",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/coverage-truth",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-cross",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Cross",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/cross",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-dashboard",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Dashboard",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/dashboard",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-dashboard-post",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Dashboard (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "POST",
+        "request": "/api/dashboard",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/dashboard/stats — DSH board metrics from live public APIs on apex.",
+      "description_state": "DOCUMENTED",
+      "id": "api-dashboard-stats",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Dashboard stats",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/dashboard/stats",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/decide — not implemented; no decision attestation is created.",
+      "description_state": "DOCUMENTED",
+      "id": "api-decide",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Decide",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/decide",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/detect — free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET /api/detect — service descriptor.",
+      "description_state": "DOCUMENTED",
+      "id": "api-detect",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Detect",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/detect",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/detect — free Article 50 provenance VERIFICATION (EU AI Act 50(2)). GET /api/detect — service descriptor.",
+      "description_state": "DOCUMENTED",
+      "id": "api-detect-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Detect (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/detect",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/detector-interop — open, signed detector-interoperability matrix.",
+      "description_state": "DOCUMENTED",
+      "id": "api-detector-interop",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Detector interop",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/detector-interop",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/distribution-ledger — one deduplicated list of every outward surface CSOAI has shipped to, with canonical URL, state, checked_at, and proof for each entry.",
+      "description_state": "DOCUMENTED",
+      "id": "api-distribution-ledger",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Distribution ledger",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/distribution-ledger",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/door-settles — for each door the site holds a settlement record for: when it last settled and the transaction the facilitator named. Read from the SAME records /api/revenue counts (`settled:tx:*` in REVENUE_KV, written by recordSettlement in functions/api/_x402.ts), through the same enumerator (listSettlementRecords in revenue.ts) — one parser, two surfaces.",
+      "description_state": "DOCUMENTED",
+      "id": "api-door-settles",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Door settles",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/door-settles",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-east-west-bench",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "East west bench",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/east-west-bench",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/embed — machine contract for the white-label kit. Counts are not typed here. The badge and embed.js read GET /api/gspc.",
+      "description_state": "DOCUMENTED",
+      "id": "api-embed",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Embed",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/embed",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/eu-ai-act — evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI). Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations).",
+      "description_state": "DOCUMENTED",
+      "id": "api-eu-ai-act",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Eu ai act",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/eu-ai-act",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
+      "description_state": "DOCUMENTED",
+      "id": "api-eunomia-data",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Eunomia data",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/eunomia-data?feed=1",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
+      "description_state": "DOCUMENTED",
+      "id": "api-eunomia-data-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Eunomia data (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/eunomia-data",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+      "description_state": "DOCUMENTED",
+      "id": "api-evidence-bundle",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Evidence bundle",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/evidence-bundle?obligation=article-50&bundle=1",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/evidence-bundle — Tier 2: an evidence bundle mapped to ONE regulatory obligation.",
+      "description_state": "DOCUMENTED",
+      "id": "api-evidence-bundle-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Evidence bundle (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/evidence-bundle",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/evidence/github?owner=X&repo=Y — proxy to GitHub API for repo evidence. Returns: { evidence: [{sha, date, message, author}], error?, rateLimit? }",
+      "description_state": "DOCUMENTED",
+      "id": "api-evidence-github",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Evidence github",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          400
+        ],
+        "method": "GET",
+        "request": "/api/evidence/github",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/evidence-intake — explicit candidate measurement intake.",
+      "description_state": "DOCUMENTED",
+      "id": "api-evidence-intake-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Evidence intake (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/evidence-intake",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-evidence-pack",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Evidence pack",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/evidence-pack",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/fabric -- normalized, read-only capability evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-fabric",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Fabric",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/fabric",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-feed-xml",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Feed",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/feed.xml",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+      "description_state": "DOCUMENTED",
+      "id": "api-feeds-provider-diff",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Feeds provider diff",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/feeds/provider-diff?history=1",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "A safe reference for an invoice line: letters, digits, dot, dash, underscore; ≤64 chars.",
+      "description_state": "DOCUMENTED",
+      "id": "api-feeds-provider-diff-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Feeds provider diff (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/feeds/provider-diff",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "files — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-files",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Files",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/files",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "files — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-files-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Files (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/files",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-findings",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Findings",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/findings",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/fines — First-Fine Watch: signed coverage of the public AI enforcement record.",
+      "description_state": "DOCUMENTED",
+      "id": "api-fines",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Fines",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/fines",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/footprint — the adoption funnel, one stage per row, nothing summed across stages.",
+      "description_state": "DOCUMENTED",
+      "id": "api-footprint",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Footprint",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/footprint",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
+      "description_state": "DOCUMENTED",
+      "id": "api-free-door",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Free door",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200,
+          402
+        ],
+        "method": "GET",
+        "request": "/api/free-door",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/free-door — a REAL x402 door priced at zero.",
+      "description_state": "DOCUMENTED",
+      "id": "api-free-door-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Free door (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/free-door",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/fulfill — public fulfillment door is closed.",
+      "description_state": "DOCUMENTED",
+      "id": "api-fulfill",
+      "kind": "http",
+      "lifecycle": "DOOR_CLOSED",
+      "name": "Fulfill",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          404
+        ],
+        "method": "GET",
+        "request": "/api/fulfill",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/growth-loops — retired until loop status is derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-growth-loops",
+      "kind": "http",
+      "lifecycle": "RETIRED",
+      "name": "Growth loops",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/growth-loops",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "The PUBLIC view of the axes, and the count of axes that still carry a public leader.",
+      "description_state": "DOCUMENTED",
+      "id": "api-gspc",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Gspc",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/gspc",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-hf-spaces",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Hf spaces",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/hf-spaces",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "An index either answered or it did not. `ok: true` with zero cells is a real, empty index — it has been read. Only `ok: false` is unread, and it always carries the reason, because \"we could not read it\" and \"it holds nothing\" are different facts and only one of them is ours to assert.",
+      "description_state": "DOCUMENTED",
+      "id": "api-hub-cards",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Hub cards",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/hub-cards",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/include — not implemented; no Merkle inclusion proof is produced.",
+      "description_state": "DOCUMENTED",
+      "id": "api-include",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Include",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/include",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/interop-bulk — metered bulk/replay access to signed interop surfaces.",
+      "description_state": "DOCUMENTED",
+      "id": "api-interop-bulk",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Interop bulk",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          400
+        ],
+        "method": "GET",
+        "request": "/api/interop-bulk",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/lead — accepts the \"email me the signed report\" form.",
+      "description_state": "DOCUMENTED",
+      "id": "api-lead",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Lead",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/lead",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/lead — accepts the \"email me the signed report\" form.",
+      "description_state": "DOCUMENTED",
+      "id": "api-lead-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Lead (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/lead",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/learn-loop — quarantined pre-release surface.",
+      "description_state": "DOCUMENTED",
+      "id": "api-learn-loop",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Learn loop",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/learn-loop",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/learn-loop — quarantined pre-release surface.",
+      "description_state": "DOCUMENTED",
+      "id": "api-learn-loop-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Learn loop (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/learn-loop",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-learning-scenarios",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Learning scenarios",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/learning-scenarios",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-locale",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Locale",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/locale",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/mcp — the MCP registry, served from a PROBED artifact.",
+      "description_state": "DOCUMENTED",
+      "id": "api-mcp",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Mcp",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/mcp",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "memory — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-memory",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Memory",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/memory",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "memory — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-memory-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Memory (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/memory",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-methodology",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Methodology",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/methodology",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-mint",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Mint",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/mint",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/observability — machine-readable estate health.",
+      "description_state": "DOCUMENTED",
+      "id": "api-observability",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Observability",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/observability",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-og",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Og",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/og",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/openapi.json — an OpenAPI 3.1 description of the PUBLIC read endpoints that already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.",
+      "description_state": "DOCUMENTED",
+      "id": "api-openapi-json",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Openapi",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/openapi.json",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "operator — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-operator",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Operator",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/operator",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "operator — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-operator-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Operator (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/operator",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/otel — collector presence. LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis.",
+      "description_state": "DOCUMENTED",
+      "id": "api-otel",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Otel",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/otel",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/owasp-report — OWASP LLM Top 10 ↔ GSPC axis coverage report.",
+      "description_state": "DOCUMENTED",
+      "id": "api-owasp-report",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Owasp report",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/owasp-report",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description_state": "DOCUMENTED",
+      "id": "api-paddle-webhook",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Paddle webhook",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/paddle-webhook",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description_state": "DOCUMENTED",
+      "id": "api-paddle-webhook-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Paddle webhook (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/paddle-webhook",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-a2a-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop a2a (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/a2a",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-claim-watch-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop claim watch (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/claim-watch",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-corrections-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop corrections (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/corrections",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-layer0-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop layer0 (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/layer0",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-mcp-registry-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop mcp registry (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/mcp-registry",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-ots-proofs-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop ots proofs (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/ots-proofs",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-stablecoins-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop stablecoins (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/stablecoins",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-swift-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop swift (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/swift",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-x402-bazaar-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop x402 bazaar (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/x402-bazaar",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-pop-xrpl-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pop xrpl (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/pop/xrpl",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/pqc — continuity mill vs estate signer. Not a 23rd axis. Continuity MEASURED ≠ we are PQC.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pqc",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Pqc",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/pqc",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/press.json — what changed, with the command that proves each line.",
+      "description_state": "DOCUMENTED",
+      "id": "api-press-json",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Press",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/press.json",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/prod-readiness — retired until readiness is derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-prod-readiness",
+      "kind": "http",
+      "lifecycle": "RETIRED",
+      "name": "Prod readiness",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/prod-readiness",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+      "description_state": "DOCUMENTED",
+      "id": "api-proof",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Proof",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/proof?bundle=1",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/proof — inclusion proofs for public-root leaves.",
+      "description_state": "DOCUMENTED",
+      "id": "api-proof-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Proof (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/proof",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary.",
+      "description_state": "DOCUMENTED",
+      "id": "api-provider-canary",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Provider canary",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/provider-canary",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/provider-canary -- public configuration status; never probes. POST /api/provider-canary -- authenticated, fixed one-token capability canary.",
+      "description_state": "DOCUMENTED",
+      "id": "api-provider-canary-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Provider canary (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/provider-canary",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/receipt-status — current receipt issuance status.",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipt-status",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipt status",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/receipt-status",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/receipts?payer=0x… — settlement receipts for one payer.",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipts",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipts",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          400
+        ],
+        "method": "GET",
+        "request": "/api/receipts",
+        "safe": true
+      },
+      "surfaces": [
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipts-batch",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipts batch",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/receipts/batch?from=2026-01-01T00:00:00Z",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/receipts/batch?from=<iso>&to=<iso> — a historical batch of the estate's measurement receipts, sold over the existing x402 rail (SKU receipts_batch, x402-or-invoice).",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipts-batch-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipts batch (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/receipts/batch",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/receipts/latest — aggregate state of the signed x402 receipt store.",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipts-latest",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipts latest",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/receipts/latest",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/receipts/verify — hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipts-verify",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipts verify",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/receipts/verify",
+        "safe": true
+      },
+      "surfaces": [
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "POST /api/receipts/verify — hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
+      "description_state": "DOCUMENTED",
+      "id": "api-receipts-verify-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Receipts verify (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/receipts/verify",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/refund — record a refund or chargeback and revoke entitlement + cert.",
+      "description_state": "DOCUMENTED",
+      "id": "api-refund",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Refund",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/refund",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/refund — record a refund or chargeback and revoke entitlement + cert.",
+      "description_state": "DOCUMENTED",
+      "id": "api-refund-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Refund (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/refund",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/registers — unsigned static benchmark summaries.",
+      "description_state": "DOCUMENTED",
+      "id": "api-registers",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Registers",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/registers",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/regulation — source-cited regulation deadline feed.",
+      "description_state": "DOCUMENTED",
+      "id": "api-regulation",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Regulation",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/regulation",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-regulator-findings",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Regulator findings",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/regulator-findings",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-report",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Report",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/report",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-report-post",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Report (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "POST",
+        "request": "/api/report",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/reported — third-party figures we carry but did not measure.",
+      "description_state": "DOCUMENTED",
+      "id": "api-reported",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Reported",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/reported",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/reported — third-party figures we carry but did not measure.",
+      "description_state": "DOCUMENTED",
+      "id": "api-reported-post",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Reported (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "POST",
+        "request": "/api/reported",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description_state": "DOCUMENTED",
+      "id": "api-request-attestation",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Request attestation",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/request-attestation?subject=model-or-subject-id",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).",
+      "description_state": "DOCUMENTED",
+      "id": "api-request-attestation-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Request attestation (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/request-attestation",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/revenue — the three-SKU revenue instrumentation (EXEC-A-REVENUE.md §5).",
+      "description_state": "DOCUMENTED",
+      "id": "api-revenue",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Revenue",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/revenue",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/root — alias of public/root.json. Same bytes the static door serves. Never a second forest.",
+      "description_state": "DOCUMENTED",
+      "id": "api-root",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Root",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/root",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/router — the bounded discovery + interop + packages router.",
+      "description_state": "DOCUMENTED",
+      "id": "api-router",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Router",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/router",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+      "description_state": "DOCUMENTED",
+      "id": "api-rwa-evidence",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Rwa evidence",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/rwa/evidence?asset=RLUSD",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/rwa/evidence?asset=<symbol|issuer_address> — per-request signed evidence card of ONE XRPL asset's deterministic on-ledger state. Sold to machines over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
+      "description_state": "DOCUMENTED",
+      "id": "api-rwa-evidence-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Rwa evidence (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/rwa/evidence",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "sandbox — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-sandbox",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Sandbox",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/sandbox",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "sandbox — retired until its response can be derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-sandbox-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Sandbox (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/sandbox",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-security",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Security",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/security",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/sov-town/state.jsonl — live SOV Town sim state (STAGING, DESIGN-labelled).",
+      "description_state": "DOCUMENTED",
+      "id": "api-sov-town-state-jsonl",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Sov town state",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/sov-town/state.jsonl",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/specialists — the signed specialist-team feed, served LIVE + pass-through.",
+      "description_state": "DOCUMENTED",
+      "id": "api-specialists",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Specialists",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/specialists",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/state — the ONE live state surface every lane quotes instead of asserting.",
+      "description_state": "DOCUMENTED",
+      "id": "api-state",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "State",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/state",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-subscribe",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Subscribe",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/subscribe",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-subscribe-post",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Subscribe (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "POST",
+        "request": "/api/subscribe",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/summary — one-shot media-briefing payload.",
+      "description_state": "DOCUMENTED",
+      "id": "api-summary",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Summary",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/summary",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/swift — reader of public/interop/swift-census.json. Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first, not MEASURED. Not a SWIFT client feed. writes_board=false. Supersedes the swift-17 tape; 26 named banks sourced, 40+ universe cited.",
+      "description_state": "DOCUMENTED",
+      "id": "api-swift",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Swift",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/swift",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/synthesis — retired until mappings is derived from current evidence.",
+      "description_state": "DOCUMENTED",
+      "id": "api-synthesis",
+      "kind": "http",
+      "lifecycle": "RETIRED",
+      "name": "Synthesis",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/synthesis",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/tools?q=<query> — the MCP tool catalogue, derived from a PROBED artifact.",
+      "description_state": "DOCUMENTED",
+      "id": "api-tools",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Tools",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/tools",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
+      "description_state": "DOCUMENTED",
+      "id": "api-trace",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Trace",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          400
+        ],
+        "method": "GET",
+        "request": "/api/trace",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
+      "description_state": "DOCUMENTED",
+      "id": "api-trace-post",
+      "kind": "http",
+      "lifecycle": "METHOD_NOT_ALLOWED",
+      "name": "Trace (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          405
+        ],
+        "method": "POST",
+        "request": "/api/trace",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/verify — verify a posted measurement card. GET explains how.",
+      "description_state": "DOCUMENTED",
+      "id": "api-verify",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Verify",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/verify",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/verify-batch — not implemented; no cards are verified.",
+      "description_state": "DOCUMENTED",
+      "id": "api-verify-batch",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Verify batch",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/verify-batch",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/verify-card — not implemented; no card is verified.",
+      "description_state": "DOCUMENTED",
+      "id": "api-verify-card",
+      "kind": "http",
+      "lifecycle": "NOT_IMPLEMENTED",
+      "name": "Verify card",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          501
+        ],
+        "method": "GET",
+        "request": "/api/verify-card",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "POST /api/verify — verify a posted measurement card. GET explains how.",
+      "description_state": "DOCUMENTED",
+      "id": "api-verify-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Verify (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/verify",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-verify-tally",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Verify tally",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/verify-tally",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-verify-tally-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Verify tally (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/verify-tally",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "api-wave-dashboard",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Wave dashboard",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/wave-dashboard",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET/POST /api/webhooks — webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
+      "description_state": "DOCUMENTED",
+      "id": "api-webhooks",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Webhooks",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/webhooks",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET/POST /api/webhooks — webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
+      "description_state": "DOCUMENTED",
+      "id": "api-webhooks-delete",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Webhooks (DELETE)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "DELETE",
+        "request": "/api/webhooks",
+        "safe": false,
+        "unsafe_reason": "DELETE would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET/POST /api/webhooks — webhook CRUD (in-memory + KV if bound). GET: returns array of { id, url, events, active, created_at } POST: creates new webhook with { url, events } DELETE: ?id=X removes a webhook",
+      "description_state": "DOCUMENTED",
+      "id": "api-webhooks-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Webhooks (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/webhooks",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/witness — quarantined paid witness surface.",
+      "description_state": "DOCUMENTED",
+      "id": "api-witness",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Witness",
+      "payment": "not_sold",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "GET",
+        "request": "/api/witness",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "/api/witness — quarantined paid witness surface.",
+      "description_state": "DOCUMENTED",
+      "id": "api-witness-post",
+      "kind": "http",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "name": "Witness (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          503
+        ],
+        "method": "POST",
+        "request": "/api/witness",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/witness/status?sha256=<64hex> — free, always. The state of one witnessed digest:",
+      "description_state": "DOCUMENTED",
+      "id": "api-witness-status",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Witness status",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          400
+        ],
+        "method": "GET",
+        "request": "/api/witness/status",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/worker — the GPU worker's state, read from the pod's own health endpoint at request time.",
+      "description_state": "DOCUMENTED",
+      "id": "api-worker",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Worker",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/worker",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+      "description_state": "DOCUMENTED",
+      "id": "api-wrapper",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Wrapper",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/wrapper?id=usdc.e:arbitrum",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+      "description_state": "DOCUMENTED",
+      "id": "api-wrapper-changes",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Wrapper changes",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/wrapper/changes?id=usdc.e:arbitrum",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at provider-reported finalized blocks, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
+      "description_state": "DOCUMENTED",
+      "id": "api-wrapper-post",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Wrapper (POST)",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/api/wrapper",
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "GET /api/x402 — the machine catalog of the metered rail. NO AMOUNTS HERE.",
+      "description_state": "DOCUMENTED",
+      "id": "api-x402",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "X402",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/x402",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms",
+        "nav"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/x402-listing — what the PayAI discovery index holds for OUR doors, read live.",
+      "description_state": "DOCUMENTED",
+      "id": "api-x402-listing",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "X402 listing",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/x402-listing",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/x402-listing-402index — what the 402 Index (402index.io) holds for OUR doors, read live.",
+      "description_state": "DOCUMENTED",
+      "id": "api-x402-listing-402index",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "X402 listing 402index",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/x402-listing-402index",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/x402-trust-seller?host=<catalog-host>",
+      "description_state": "DOCUMENTED",
+      "id": "api-x402-trust-seller",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "X402 trust seller",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/x402-trust-seller",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/xrpl — reader of the committed public-root 16.",
+      "description_state": "DOCUMENTED",
+      "id": "api-xrpl",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Xrpl",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/xrpl",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /api/yield — the weekly yield dashboard (V3 brief G5.6).",
+      "description_state": "DOCUMENTED",
+      "id": "api-yield",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Yield",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/yield",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
+      "description_state": "DOCUMENTED",
+      "id": "art50_marking_evidence",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "art50_marking_evidence",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          200,
+          402
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "description_state": "DOCUMENTED",
+      "id": "board_totals",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "board_totals",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
+      "description_state": "DOCUMENTED",
+      "id": "commission_card",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "commission_card",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          200,
+          402
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification.",
+      "description_state": "DOCUMENTED",
+      "id": "get_axis",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "get_axis",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+      "description_state": "DOCUMENTED",
+      "id": "get_card",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "get_card",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
+      "description_state": "DOCUMENTED",
+      "id": "get_root",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "get_root",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+      "description_state": "DOCUMENTED",
+      "id": "list_cards",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "list_cards",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine — host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
+      "description_state": "DOCUMENTED",
+      "id": "mcp_trust",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "mcp_trust",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+      "description_state": "DOCUMENTED",
+      "id": "receipts_batch",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "receipts_batch",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          200,
+          402
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
+      "description_state": "DOCUMENTED",
+      "id": "rwa_evidence",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "rwa_evidence",
+      "payment": "x402",
+      "probe": {
+        "expect_status": [
+          200,
+          402
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+      "description_state": "DOCUMENTED",
+      "id": "verify_card",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "verify_card",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Check a sha256 against the live public-root merkle via GET /api/proof?sha=. Three states only: VALID (included), INVALID (not a leaf), UNCHECKABLE (proof endpoint unreachable). Does not claim Ed25519 unless sig_ed25519 is present and checked separately. Never a grade.",
+      "description_state": "DOCUMENTED",
+      "id": "verify_inclusion",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "verify_inclusion",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification.",
+      "description_state": "DOCUMENTED",
+      "id": "x402_trust",
+      "kind": "mcp_tool",
+      "lifecycle": "LIVE",
+      "name": "x402_trust",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "POST",
+        "request": "/mcp",
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "surfaces": [
+        "mcp",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-a2a",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop a2a",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/a2a",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-claim-watch",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop claim watch",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/claim-watch",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-corrections",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop corrections",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/corrections",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-layer0",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop layer0",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/layer0",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-mcp-registry",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop mcp registry",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/mcp-registry",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-ots-proofs",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop ots proofs",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/ots-proofs",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-stablecoins",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop stablecoins",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/stablecoins",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-swift",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop swift",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/swift",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-x402-bazaar",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop x402 bazaar",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/x402-bazaar",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+      "description_state": "DOCUMENTED",
+      "id": "api-pop-xrpl",
+      "kind": "population_door",
+      "lifecycle": "LIVE",
+      "name": "Pop xrpl",
+      "payment": "free_preview_then_x402",
+      "probe": {
+        "expect_status": [
+          402
+        ],
+        "method": "GET",
+        "request": "/api/pop/xrpl",
+        "safe": true
+      },
+      "surfaces": [
+        "openapi",
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "RFC 9727 entry points, not a second price, tool or measurement inventory.",
+      "description_state": "DOCUMENTED",
+      "id": "well-known-api-catalog",
+      "kind": "well_known",
+      "lifecycle": "LIVE",
+      "name": "Api catalog",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/.well-known/api-catalog",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "",
+      "description_state": "UNDOCUMENTED",
+      "id": "well-known-mcp-registry-auth",
+      "kind": "well_known",
+      "lifecycle": "LIVE",
+      "name": "Mcp registry auth",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/.well-known/mcp-registry-auth",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "GET /.well-known/scitt-configuration — what a SCITT client finds when it probes the conventional discovery path, stated truthfully: the estate operates NO transparency service.",
+      "description_state": "DOCUMENTED",
+      "id": "well-known-scitt-configuration",
+      "kind": "well_known",
+      "lifecycle": "LIVE",
+      "name": "Scitt configuration",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/.well-known/scitt-configuration",
+        "safe": true
+      },
+      "surfaces": []
+    },
+    {
+      "audience": "agent",
+      "description": "GET /.well-known/x402 and /.well-known/x402/ — 308 to the JSON door. Agents probe the suffix-less well-known; the file we ship is x402.json. Pack assembly only. Does not fill a cell.",
+      "description_state": "DOCUMENTED",
+      "id": "well-known-x402",
+      "kind": "well_known",
+      "lifecycle": "LIVE",
+      "name": "X402",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          308
+        ],
+        "method": "GET",
+        "request": "/.well-known/x402",
+        "safe": true
+      },
+      "surfaces": [
+        "llms"
+      ]
+    },
+    {
+      "audience": "agent",
+      "description": "GET /.well-known/x402.json — the x402 discovery manifest, served live so `mode` is derived from env (never typed). Replaces the static file that pointed agents at a mock pack host; the metered resources live on THIS origin. No amounts here — they live in each 402 challenge.",
+      "description_state": "DOCUMENTED",
+      "id": "well-known-x402-json",
+      "kind": "well_known",
+      "lifecycle": "LIVE",
+      "name": "X402",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/.well-known/x402.json",
+        "safe": true
+      },
+      "surfaces": [
+        "llms"
+      ]
+    }
+  ],
+  "content_id": "173f16fe0a5831fe056a1a9d471e6aef1d5a17bb0d8f1810d50d0ea32e906d78",
+  "counts": {
+    "audience": {
+      "agent": 189,
+      "both": 25
+    },
+    "kind": {
+      "a2a_skill": 8,
+      "http": 178,
+      "mcp_tool": 13,
+      "population_door": 10,
+      "well_known": 5
+    },
+    "lifecycle": {
+      "DOOR_CLOSED": 1,
+      "LIVE": 179,
+      "METHOD_NOT_ALLOWED": 1,
+      "NOT_IMPLEMENTED": 13,
+      "QUARANTINED_PRE_RELEASE": 15,
+      "RETIRED": 5
+    },
+    "payment": {
+      "free": 189,
+      "free_preview_then_x402": 15,
+      "not_sold": 1,
+      "x402": 9
+    },
+    "surfaces": {
+      "a2a": 8,
+      "llms": 67,
+      "mcp": 13,
+      "nav": 22,
+      "openapi": 176
+    },
+    "total": 214
+  },
+  "kind": "public-operational-index",
+  "laws": [
+    "listing or discovery is not measurement, certification, endorsement, or compliance",
+    "public capability declaration does not prove runtime behavior",
+    "payment does not create a GSPC measurement",
+    "generated is not deployed; deployed is not independently read back",
+    "declared is not callable; only lifecycle=LIVE is included in available_now",
+    "quarantined, retired, closed and not-implemented entries remain visible but unavailable"
+  ],
+  "routing_note": "Only lifecycle=LIVE entries are projected in available_now. Other declarations remain visible for correction/history but are not represented as callable now. Runtime measurement state remains owned by the relevant measurement evidence.",
+  "schema": "csoai.layer0-drive-through/0.3",
+  "source_commit": "57d64a9fbc5d9f1e0a3428f6dd824687c2a0f016",
+  "unavailable_by_lifecycle": {
+    "DOOR_CLOSED": [
+      "api-fulfill"
+    ],
+    "METHOD_NOT_ALLOWED": [
+      "api-trace-post"
+    ],
+    "NOT_IMPLEMENTED": [
+      "api-corpus-watch",
+      "api-corpus-watch-post",
+      "api-dashboard",
+      "api-dashboard-post",
+      "api-decide",
+      "api-include",
+      "api-mint",
+      "api-report-post",
+      "api-reported-post",
+      "api-subscribe",
+      "api-subscribe-post",
+      "api-verify-batch",
+      "api-verify-card"
+    ],
+    "QUARANTINED_PRE_RELEASE": [
+      "api-agentic-fix",
+      "api-agentic-fix-post",
+      "api-files",
+      "api-files-post",
+      "api-learn-loop",
+      "api-learn-loop-post",
+      "api-memory",
+      "api-memory-post",
+      "api-operator",
+      "api-operator-post",
+      "api-sandbox",
+      "api-sandbox-post",
+      "api-sov-town-state-jsonl",
+      "api-witness",
+      "api-witness-post"
+    ],
+    "RETIRED": [
+      "api-atlas",
+      "api-atlas-post",
+      "api-growth-loops",
+      "api-prod-readiness",
+      "api-synthesis"
+    ]
+  },
+  "unavailable_now_count": 35
+}
