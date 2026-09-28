@@ -474,6 +474,18 @@ def compose(fix: Path = FIX) -> dict:
                 {"name": "manifest", "in": "query", "required": False, "schema": {"type": "string", "enum": ["1"]}, "description": "Free manifest; takes priority over feed=1 and never settles a payment."},
                 {"name": "x-csoai-expected-feed-sha256", "in": "header", "required": False, "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "description": "Digest retained from the pre-payment manifest. A changed assembled feed is rejected with409 before the facilitator is called."},
             ])
+        # /api/free-door takes no query parameters, and a paid operation with neither `parameters` nor a
+        # requestBody draws L3_INPUT_SCHEMA_MISSING from x402scan / AgentCash (@agentcash/discovery
+        # extractInputSchema, read 2026-09-28). What the door does read is the payment header
+        # (functions/api/free-door.ts reads X-PAYMENT or PAYMENT-SIGNATURE), so that is what it declares
+        # — nothing invented, both optional, and omitting them is how a caller reads the zero-amount 402.
+        if path == "/api/free-door" and not parameters:
+            parameters.extend([
+                {"name": "X-PAYMENT", "in": "header", "required": False, "schema": {"type": "string"},
+                 "description": "x402 payment payload (base64 JSON) settling the zero-amount challenge. Omit it to read the 402; nothing is charged either way."},
+                {"name": "PAYMENT-SIGNATURE", "in": "header", "required": False, "schema": {"type": "string"},
+                 "description": "x402 v2 payment payload header, accepted in place of X-PAYMENT. Omit it to read the 402."},
+            ])
         canonical_description = canonical_descriptions.get(DESCRIPTION_PATHS.get(path, ""))
         description = canonical_description or (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
         note = FREE_TIER_OP_NOTE.get(path)
