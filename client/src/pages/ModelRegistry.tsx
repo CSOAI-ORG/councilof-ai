@@ -82,6 +82,17 @@ function useGspc(): { axes: GspcAxis[]; source: string; measuredOn: string; publ
 
 function fmtCI(lo: number, hi: number) { return `[${lo.toFixed(3)}, ${hi.toFixed(3)}]`; }
 
+export function presentRegistryLimitation(text: string): string {
+  // During a release, prerender can read the currently deployed /api/gspc before the
+  // candidate Functions are live. Older payloads carried a seven-axis separation subset
+  // as "Separation on 7 axes", which is easy to misread as the board's total axis count.
+  // Preserve the evidence and named subset, but make its scope explicit in the page.
+  return text.replace(
+    /^Separation on 7 axes \(([^)]+)\) is computed/,
+    "Legacy subset note: separation on the named model-comparison subset ($1) is computed",
+  );
+}
+
 export function partitionModelRegistryAxes(axes: GspcAxis[]) {
   return {
     modelComparison: axes.filter((axis) => axis.kind === "model-comparison"),
@@ -168,7 +179,7 @@ export default function ModelRegistry() {
             <details className="mt-2 text-[11px] text-slate-600">
               <summary className="cursor-pointer">Limitations ({limitations.length})</summary>
               <ul className="mt-1 list-disc pl-4">
-                {limitations.map((l, i) => <li key={i}>{l}</li>)}
+                {limitations.map((l, i) => <li key={i}>{presentRegistryLimitation(l)}</li>)}
               </ul>
             </details>
           )}
