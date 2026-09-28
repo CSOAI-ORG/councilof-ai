@@ -7,7 +7,9 @@
 #   floor    / and /evac-bulk must each have >= 2 GB free, else FAILED (nothing run)
 #   quota    trailing-7-day kernel wall time from this log must be < QUOTA_CAP_H (default 20 h of Kaggle's ~30 h)
 #   code     persistent sparse clone of REAL master (build pod /workspace/staging/mirror/councilof-ai.git), fetched
-#   model    rotation over the 11 fleet models whose 3090 manifest digest is pinned in the intake receipts
+#   model    rotation over the 11 fleet models whose 3090 manifest digest is pinned in the intake receipts, plus the
+#            newest classes pinned in newest-models.json (an unmeasured one goes first, in priority order)
+#   hold     no kernel push while $HERE/HOLD exists or the Kaggle credential is on the deny list (state HELD, rc 75)
 #   kernel   PRIVATE Kaggle kernel $KID (GPU T4x2, internet): code + 14 pinned banks embedded; no CSOAI secret
 #   pull     kernel output -> $OUT/<H>-<slug>/pull
 #   verify   verify_runpod_gspc_intake.py per run -> chain_tools.py stage -> land_mill_cards.py --require-evidence
@@ -110,11 +112,34 @@ PY
 # 3. prerequisites
 [ -s "$TOKEN" ] || fail "pod token absent ($TOKEN)"
 [ -x "$KAGGLE" ] || fail "kaggle CLI absent ($KAGGLE)"
+
+# 3b. Kaggle credential guard (28 Sep: the token in use leaked; the owner rotates it). No kernel is pushed while the HOLD
+# file exists, or with a credential file whose sha256 is on the deny list (rotate-kaggle-credential.sh writes it). Logged as
+# HELD, never FAILED, so a hold can never count toward a newest model's two-FAILED skip. No credential byte is printed.
+HOLD_FILE=${MKD_HOLD:-$HERE/HOLD}
+DENY=${MKD_KAGGLE_DENY:-$HOME/.secrets/kaggle-credential-denylist.sha256}
+if [ -e "$HOLD_FILE" ]; then
+  receipt HELD "hold file $HOLD_FILE present ($(head -c 160 "$HOLD_FILE" | tr -c '[:print:]' ' ')); no kernel pushed" 75; exit 75
+fi
+if [ -s "$DENY" ]; then
+  for f in "$HOME/.kaggle/access_token" "$HOME/.kaggle/kaggle.json"; do
+    [ -s "$f" ] || continue
+    if grep -qxF -e "$(sha256sum "$f" | cut -c1-64)" -e "$(tr -d '[:space:]' < "$f" | sha256sum | cut -c1-64)" "$DENY"; then
+      receipt HELD "kaggle credential $f is on the deny list $DENY (leaked/revoked); rotate it, then run rotate-kaggle-credential.sh; no kernel pushed" 75; exit 75
+    fi
+  done
+fi
 [ -d "$CLONE/.git" ] || fail "clone absent ($CLONE)"
 
-# 4. code: fetch REAL master from the build pod staging mirror (port read from the auto-land trigger, one truth)
-PORT=$(sed -n 's/^PORT=\([0-9]*\).*/\1/p' $HOME/lanes/bin/auto-land-trigger.sh | head -1)
-HOSTP=$(sed -n 's/.*HOST=\(root@[0-9.]*\).*/\1/p' $HOME/lanes/bin/auto-land-trigger.sh | head -1)
+# 4. code: fetch REAL master from the build pod staging mirror (address from ~/fleet/build-pod.env, one truth)
+# The ONE build-pod address is ~/fleet/build-pod.env ("every Oracle job that ssh-es to the build pod sources this file",
+# pod rebuild 28 Sep). The sed over auto-land-trigger.sh that stood here returns an empty PORT since that script began
+# sourcing the env file (13:09Z 28 Sep), and the 10:40Z slice that day already fell back to the Oracle mirror because the
+# old pod died at 09:00Z. An unreadable env file is not fatal here: the fetch fails, base_note says so, and landing falls
+# back to the Oracle mirror exactly as before.
+BUILD_POD_PORT=; BUILD_POD_HOST=
+. "${MKD_POD_ENV:-$HOME/fleet/build-pod.env}" 2>/dev/null || true
+PORT=$BUILD_POD_PORT; HOSTP=$BUILD_POD_HOST
 export GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=20 -i $FLEET_KEY -p ${PORT:-0}"
 git -C "$CLONE" remote set-url origin "ssh://$HOSTP/workspace/staging/mirror/councilof-ai.git"
 base_note=fetched

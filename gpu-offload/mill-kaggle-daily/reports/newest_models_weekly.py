@@ -370,7 +370,7 @@ def main(argv=None) -> int:
                 "Results from a single hardware run are NOT ADMITTED to the GSPC board (owner rule 2026-09-26: an "
                 "independent second runtime must reproduce the same grade on every item). Every card below is held.",
                 "TIE and UNTESTED are distinct: TIE = two or more third-party models measured on the same bank and the "
-                "exact McNemar test (leader vs runner-up) gives p >= 0.05; UNTESTED = fewer than two measured, so no "
+                "exact McNemar test on the pair with the two highest raw rates gives p >= 0.05; UNTESTED = fewer than two measured, so no "
                 "comparison was made.",
                 "CSOAI's own models are excluded from every comparison; no ranking of our own models appears.",
                 "No 'best model' claim unless the verdict is SEPARATED, and then only as a within-week single-runtime "
@@ -379,8 +379,9 @@ def main(argv=None) -> int:
             "quota": {"kernel_wall_s_this_window": wall, "cap_h": args.quota_cap_h,
                       "used_share": round(wall / (args.quota_cap_h * 3600), 3)},
             "slices": slices, "separation": seps, "newest_class": newest_status,
-            "inventory": ({k: inv[k] for k in ("_file", "as_of", "_age_days", "_stale", "window", "open_weight",
-                                                "outside_window_notable", "frontier_none_in_window", "kaggle_budget")}
+            "inventory": ({k: inv.get(k) for k in ("_file", "as_of", "_age_days", "_stale", "window", "open_weight",
+                                                    "recent_60d", "outside_window_notable", "frontier_none_in_window",
+                                                    "frontier_free_summary", "kaggle_budget")}
                           if inv else None),
             "token_basis": token_basis, "frontier_cost": costs,
             "frontier_cost_assumptions": inv.get("frontier_cost_assumptions") if inv else None,
@@ -406,7 +407,7 @@ def render_md(r: dict) -> str:
     w = r["window"]
     L.append(f"# Newest models — weekly measurement report ({r['report_date']})\n")
     L.append(f"Window {w['from'][:16]}Z to {w['to_exclusive'][:16]}Z (UTC, 7 days, end exclusive). Generated {r['generated_at']} by "
-             "`oracle-micro-2:~/lanes/mill-kaggle-daily/reports/newest_models_weekly.py`. "
+             "`gpu-offload/mill-kaggle-daily/reports/newest_models_weekly.py` (control plane). "
              f"**{r['publication']}**\n")
     L.append("## Standing rules\n")
     for s in r["standing_rules"]:
@@ -423,7 +424,7 @@ def render_md(r: dict) -> str:
                  f"{m['licence']} | {m['params']/1e9:.2f}B | {m['status']} |")
 
     L.append("\n## Slices run this week\n")
-    L.append("| slice | model | class | state | axes signed | kernel s | branch@commit |")
+    L.append("| slice | model | class | state | axis cards signed | kernel s | branch@commit |")
     L.append("|---|---|---|---|---|---|---|")
     for s in r["slices"]:
         L.append(f"| {s['slice']} | `{s['model']}` | {s['class']} | {s['state']} | {s['signed']} | "
@@ -455,7 +456,7 @@ def render_md(r: dict) -> str:
     if not r["separation"]:
         L.append("No axis had a measured third-party model this week: every axis is UNTESTED.")
     else:
-        L.append("| axis | verdict | models measured | leader vs runner-up | paired | b10/c01 | McNemar p |")
+        L.append("| axis | verdict | models measured | pair tested (A vs B; order carries no meaning unless SEPARATED) | paired | b10/c01 | McNemar p |")
         L.append("|---|---|---|---|---|---|---|")
         for sp in r["separation"]:
             if sp["verdict"] == "UNTESTED":
@@ -475,6 +476,18 @@ def render_md(r: dict) -> str:
         for m in inv["open_weight"]:
             L.append(f"| {m['name']} | {m['lab']} | {m['released']} | {m['params_b']}B | {m['licence']} | "
                      f"{m['fits_kaggle']} | {m.get('rotation') or m['why']} |")
+        if inv.get("recent_60d"):   # inventory schema 0.2: models released after the fleet froze that the 30-day window missed
+            L.append("\n**Recent class (released in the last 60 days, outside the 30-day window):**\n")
+            L.append("| model | lab | released | params | licence | fits Kaggle 2xT4 | note |")
+            L.append("|---|---|---|---|---|---|---|")
+            for m in inv["recent_60d"]:
+                L.append(f"| {m['name']} | {m['lab']} | {m['released']} | {m['params_b']}B | {m['licence']} | "
+                         f"{m['fits_kaggle']} | {m.get('rotation') or m['why']} |")
+        fs = inv.get("frontier_free_summary")
+        if fs:
+            L.append("\n**Frontier API access:** free (closed): " + "; ".join(fs.get("free_closed_frontier", [])) +
+                     ". Needs spend (owner): " + ", ".join(fs.get("needs_spend_owner", [])) +
+                     ". Not available: " + ", ".join(fs.get("not_available", [])) + ". " + fs.get("blocker_for_any_api_run", ""))
     if r.get("frontier_cost"):
         tb = r["token_basis"]
         L.append(f"\n## Frontier API models — cost of one full 14-axis run (information only; nothing was spent)\n")
