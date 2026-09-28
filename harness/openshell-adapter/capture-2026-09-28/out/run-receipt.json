@@ -1,0 +1,57 @@
+{
+ "schema": "a2a.signed-receipt/0.1",
+ "issuer": "did:web:issuer.example",
+ "subject_card": "urn:example:openshell-network-proxy:capture-2026-09-28",
+ "task_id": "openshell-declared-vs-observed/da090ef718660145",
+ "claims": [
+  {
+   "type": "openshell.declared_vs_observed.run",
+   "result": "DIVERGENT",
+   "detail": "3 rows, 3 with an independent witness; comparisons {'DIVERGED': 1, 'HELD': 2}; codes {'DENY_DECLARED_AUDIT_PASSTHROUGH': 1}",
+   "counts": {
+    "DIVERGED": 1,
+    "HELD": 2
+   },
+   "codes": {
+    "DENY_DECLARED_AUDIT_PASSTHROUGH": 1
+   },
+   "inputs": {
+    "policy_sha256": "56f099d115b4acf5a73aa41e85339623386c006624328d5b5c18dce130de2ee1",
+    "enforcer_logs": [
+     {
+      "path": "enforcer.log",
+      "sha256": "4c7cd7692708a5ac47d8318e1023d5622485a17dd2cb635cc3a5cb00702d3ee4"
+     }
+    ],
+    "enforcer_lines": 13,
+    "enforcer_records_parsed": 10,
+    "witness_sha256": "0a1313e4a599f74375700a5907961ed94fb4514ca8fac096cc99f95f195a896c",
+    "witness_rows": 3
+   },
+   "enforcer": {
+    "product": "OpenShell",
+    "version": "0.1.2"
+   },
+   "adapter": {
+    "name": "openshell-declared-vs-observed",
+    "version": "0.1.0",
+    "sha256": "313ab39b74d1c923a4e56a8df06a00aaef5a53b9450ead7f703e0ef3927b2506"
+   },
+   "row_receipts": [
+    "94ddcbee47a5abf1e253facc5aedc5ca045edb3cb617bcebefda23a29d18a982",
+    "fab3ab17bf2e5619a8db54eb2d5664c6b2ab1b3c6b8b069a3833b05f0b44e202",
+    "044155f0732a748b14a4347682cf0dfe29a702ed5a11449f94c6b239f0899a60"
+   ],
+   "evidence_sha256": "4533d657ce497308e1135657a0c8afe3dd2b08f6c6e0ffd89ef210cf7631f586"
+  }
+ ],
+ "register": "Evidence of what was claimed and when by the issuer. Not a certification, endorsement, or conformity mark.",
+ "issued_at": "2026-09-28T13:43:00Z",
+ "content_id": "c06908bb6bc216b211d70b7ae994e7d74eabaac75847d2f6388700dfcb836ab3",
+ "signature": {
+  "alg": "Ed25519",
+  "kid": "did:web:issuer.example#key-1",
+  "signer_public_key": "4a29f17df31f7bcdf65f27df8868e05321cc3cce3417ce3d24699bf76508c444",
+  "sig": "3b71bc3b4feeb5c3c22bf6d6eb06d48b0e7f0750988e50d419647346cb66991d909800cbb5c26494b90e81e3c0e897ebb75c20aaa38d9dc69621c5094374ad0e"
+ }
+}

@@ -1,0 +1,13 @@
+2026-09-28T13:42:33.892Z OCSF CONFIG:LOADING [INFO] Loading OPA policy engine from local files [rules:/workspace/lanes/openshell-adapter-20260928/capture/sandbox-policy.rego data:/workspace/lanes/openshell-adapter-20260928/capture/policy.yaml]
+2026-09-28T13:42:33.897Z INFO openshell_supervisor_network::opa: Configured OPA runtime binary identity mode
+2026-09-28T13:42:33.898Z OCSF CONFIG:CONFIGURED [INFO] OPA runtime binary identity mode configured [source:files require_binary_identity:false] [source:files]
+2026-09-28T13:42:33.899Z OCSF CONFIG:ENRICHED [INFO] Enriched policy with baseline filesystem paths for proxy mode
+2026-09-28T13:42:33.978Z OCSF CONFIG:ENABLED [INFO] TLS termination enabled: ephemeral CA generated
+2026-09-28T13:42:33.978Z OCSF NET:LISTEN [INFO] 127.0.0.1:39128
+2026-09-28T13:42:33.978Z INFO openshell_supervisor: Network-proxy trust files ready
+2026-09-28T13:42:33.978Z INFO openshell_supervisor: Network-proxy role ready
+2026-09-28T13:42:46.927Z OCSF NET:OPEN [MED] DENIED -(0) -> example.org:443 [policy:- engine:opa] [reason:endpoint example.org:443 is not allowed by any policy]
+2026-09-28T13:42:47.113Z OCSF NET:OPEN [INFO] ALLOWED -(0) -> example.com:443 [policy:example_audit engine:opa]
+2026-09-28T13:42:47.170Z OCSF HTTP:GET [INFO] ALLOWED GET http://example.com:443/ [policy:example_audit engine:l7]
+2026-09-28T13:42:47.366Z OCSF NET:OPEN [INFO] ALLOWED -(0) -> example.net:443 [policy:example_enforce engine:opa]
+2026-09-28T13:42:47.424Z OCSF HTTP:GET [MED] DENIED GET http://example.net:443/ [policy:example_enforce engine:l7] [reason:L7_REQUEST deny GET example.net:443/ reason=GET / blocked by deny rule]

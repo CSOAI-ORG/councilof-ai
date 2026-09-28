@@ -1,0 +1,10 @@
+{
+ "what": "landlock.compatibility is best_effort and the enforcer reports Landlock unavailable, so every declared filesystem denial is out of force; a write to a read-only path then succeeds. The adapter must return DIVERGENT (exit 1).",
+ "result": "DIVERGENT",
+ "exit": 1,
+ "enforcer_records_parsed": 1,
+ "rows": [
+  {"row": 1, "comparison": "DIVERGED", "code": "FS_RULES_NOT_APPLIED"},
+  {"row": 2, "comparison": "DIVERGED", "code": "DENY_DECLARED_EFFECT_OBSERVED"}
+ ]
+}

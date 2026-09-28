@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: Apache-2.0
+# Synthetic fixture (not a capture). No network rules, so no baseline paths are added.
+version: 1
+filesystem_policy:
+  include_workdir: false
+  read_only: [/usr, /lib, /etc]
+  read_write: [/tmp]
+landlock:
+  compatibility: hard_requirement
