@@ -1,0 +1,345 @@
+{
+  "schema": "csoai.academy-exercises/0.1",
+  "id": "https://councilof.ai/academy/exercises/",
+  "name": "Reproduce a published measurement",
+  "version": "0.1",
+  "date_published": "2026-09-28",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "description": "Short exercises that re-run numbers and signatures the Council of AI publishes, from the public bytes, with your own code or in your browser. An exercise is complete only when your result's sha256 equals the published result's sha256 and a deliberately broken copy fails.",
+  "runner": {
+    "url": "https://councilof.ai/academy/exercises/run-exercises.mjs",
+    "run": "curl -sO https://councilof.ai/academy/exercises/run-exercises.mjs && node run-exercises.mjs",
+    "requires": "Node 20 or later, or a current web browser. No dependencies.",
+    "exit_codes": {
+      "0": "every exercise run was REPRODUCED",
+      "1": "at least one NOT_REPRODUCED",
+      "2": "none failed, at least one UNCHECKABLE"
+    },
+    "transcript_schema": "csoai.academy-exercise-transcript/0.1"
+  },
+  "result_rule": "sha256 of canonical JSON {\"measurement\": <name>, \"value\": <value>}, keys sorted, no whitespace. Your result and the published result are hashed under the same rule.",
+  "numbers": "No count is typed into this course. Every value is read from the live site at the moment an exercise runs, and the transcript records which bytes were read.",
+  "completion": {
+    "rule": "Completion means reproduced. An exercise is complete only when its state is REPRODUCED: the sha256 of your result equals the sha256 of the published result, both written as canonical JSON {measurement, value} (keys sorted, no whitespace), and the exercise's negative control failed as it must.",
+    "keep": "Keep the transcript entry: your result, the published result, both sha256 digests, the control, and the sha256 of every input you read, with the time you read it.",
+    "not_completion": [
+      "Reading a page, watching a video or passing a quiz.",
+      "A VALID answer from the published verifier on its own: that is a cross-check, not a reproduction.",
+      "An UNCHECKABLE state (the check could not run) or a partial read.",
+      "A match whose negative control also passed: a check that cannot fail proves nothing."
+    ],
+    "scope": "A reproduced exercise says your recomputation agreed with the published bytes when you ran it. It says nothing about your competence, about any organisation's conformity, or about any system. The Council of AI certifies nothing."
+  },
+  "not_a_certification": true,
+  "exercises": [
+    {
+      "id": "board-totals",
+      "position": 1,
+      "url": "https://councilof.ai/academy/exercises/#board-totals",
+      "title": "Read the living board and count it yourself",
+      "time_required": "PT5M",
+      "teaches": "How a published total is derived from the rows beneath it, and why slots and measurements are two numbers that are never added.",
+      "realises": [
+        "learn/board",
+        "dashboard/learn"
+      ],
+      "tools": [
+        "GET /api/gspc",
+        "MCP board_totals"
+      ],
+      "inputs": [
+        "/api/gspc"
+      ],
+      "steps": [
+        "Fetch `/api/gspc`.",
+        "Count the rows of `axes[]` (slots) and the rows whose `status` is `MEASURED` (measurements).",
+        "Compare your two counts with `totals.axes` and `totals.measured_axes`."
+      ],
+      "expected": "Your `{axes, measured_axes}` equals the board's own totals, byte for byte after canonicalisation.",
+      "negative_control": "Change one `MEASURED` row to `UNMEASURED` and count again: the result must no longer match.",
+      "commands": {
+        "node": "node run-exercises.mjs --only board-totals"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The board-totals entry of your transcript."
+      }
+    },
+    {
+      "id": "verify-card",
+      "position": 2,
+      "url": "https://councilof.ai/academy/exercises/#verify-card",
+      "title": "Verify one signed measurement card with your own code",
+      "time_required": "PT10M",
+      "teaches": "Pin the key before trusting a signature; recompute the id from the canonical body; tell VALID, INVALID and UNCHECKABLE apart.",
+      "realises": [
+        "learn/board",
+        "academy/attest"
+      ],
+      "tools": [
+        "GET /.well-known/did.json",
+        "GET /signed/card_index.json",
+        "GET /signed/cards/<id>.json",
+        "MCP verify_card"
+      ],
+      "inputs": [
+        "/.well-known/did.json",
+        "/signed/card_index.json",
+        "/signed/cards/<id>.json"
+      ],
+      "steps": [
+        "Read the `#card-attestation-1` key from `/.well-known/did.json` and pin it.",
+        "Pick a card from `/signed/card_index.json` (default: the chain head) and fetch its `card_url`.",
+        "Rebuild the preimage under Rule A (`/signed/HOW-TO-VERIFY.md`), check `sha256(preimage) == id`, then check the Ed25519 signature under the pinned key.",
+        "Ask the published verifier (MCP `verify_card`) about the same card."
+      ],
+      "expected": "Your verdict for the card equals the verdict the published verifier returns for it.",
+      "negative_control": "Append one character to a string in the body: your verifier must answer INVALID (id mismatch).",
+      "commands": {
+        "node": "node run-exercises.mjs --only verify-card"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The verify-card entry of your transcript."
+      }
+    },
+    {
+      "id": "card-chain",
+      "position": 3,
+      "url": "https://councilof.ai/academy/exercises/#card-chain",
+      "title": "Re-measure the whole signed card chain",
+      "time_required": "PT15M",
+      "teaches": "A count published as 'measured' is a claim you can re-run: verify every card in the signed index and count the ones that verify.",
+      "realises": [
+        "academy/attest"
+      ],
+      "tools": [
+        "GET /signed/card_index.json",
+        "GET /signed/cards/<id>.json",
+        "GET /api/state"
+      ],
+      "inputs": [
+        "/.well-known/did.json",
+        "/signed/card_index.json",
+        "/signed/cards/*.json",
+        "/api/state"
+      ],
+      "steps": [
+        "Run the verify-card check on every row of `/signed/card_index.json`.",
+        "Count the VALID ones. A card you could not fetch is UNCHECKABLE, never INVALID.",
+        "Compare your count with `/api/state` → `card_chain.bodies_verified_valid.value`."
+      ],
+      "expected": "Your count of VALID cards equals `card_chain.bodies_verified_valid.value`. This counts the signed card index only; never add it to another card corpus.",
+      "negative_control": "Tamper one card body: your count must drop by one and no longer match.",
+      "commands": {
+        "node": "node run-exercises.mjs --only card-chain"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The card-chain entry of your transcript."
+      }
+    },
+    {
+      "id": "inclusion",
+      "position": 4,
+      "url": "https://councilof.ai/academy/exercises/#inclusion",
+      "title": "Prove a leaf is inside the public root",
+      "time_required": "PT10M",
+      "teaches": "Recompute a Merkle root from one leaf and its audit path, and why the leaf count is part of the check.",
+      "realises": [
+        "academy/foundations"
+      ],
+      "tools": [
+        "GET /root.json",
+        "GET /api/proof?sha=<leaf>",
+        "MCP verify_inclusion"
+      ],
+      "inputs": [
+        "/root.json",
+        "/api/proof?sha=<leaf>"
+      ],
+      "steps": [
+        "Fetch `/root.json`. Reject it unless `card_sha256.length == card_count`.",
+        "Pick a leaf (default: a random one) and fetch its proof from `/api/proof?sha=<leaf>`. Reject the proof if `index >= card_count`.",
+        "Walk the path: `parent = sha256(left || right)` over raw 32-byte digests; the index bit says which side you are on.",
+        "Compare your root with `root.json` → `merkle_root`, and ask MCP `verify_inclusion` about the same leaf."
+      ],
+      "expected": "The root you recompute equals the published `merkle_root`.",
+      "negative_control": "Flip the last hex digit of the leaf and walk the same path: the root must no longer match.",
+      "commands": {
+        "node": "node run-exercises.mjs --only inclusion"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The inclusion entry of your transcript."
+      }
+    },
+    {
+      "id": "root-signature",
+      "position": 5,
+      "url": "https://councilof.ai/academy/exercises/#root-signature",
+      "title": "Check who signed the public root",
+      "time_required": "PT10M",
+      "teaches": "Resolve a did:web identifier yourself and verify an Ed25519 signature over a stated preimage.",
+      "realises": [
+        "academy/foundations"
+      ],
+      "tools": [
+        "GET https://csoai.org/.well-known/did.json (did:web resolution)",
+        "GET /root.json"
+      ],
+      "inputs": [
+        "https://csoai.org/.well-known/did.json",
+        "/.well-known/did.json",
+        "/root.json"
+      ],
+      "steps": [
+        "Resolve `did:web:csoai.org` by fetching `https://csoai.org/.well-known/did.json` and read `#board-attestation-1`.",
+        "Rebuild the preimage stated in `root.json` → `sig_preimage`: canonical JSON of `{kind, schema, as_of, merkle_root, card_count, did_intended}`.",
+        "Verify `root.json` → `sig_ed25519` under that key."
+      ],
+      "expected": "The signature verifies under the key the root names (`did_intended`).",
+      "negative_control": "Add one to `card_count` in the preimage: the signature must no longer verify.",
+      "commands": {
+        "node": "node run-exercises.mjs --only root-signature"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The root-signature entry of your transcript."
+      }
+    },
+    {
+      "id": "charter-hash",
+      "position": 6,
+      "url": "https://councilof.ai/academy/exercises/#charter-hash",
+      "title": "Reproduce the charter hash",
+      "time_required": "PT5M",
+      "teaches": "A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.",
+      "realises": [
+        "academy/foundations"
+      ],
+      "tools": [
+        "GET /.well-known/charter.json",
+        "GET the charter document it points to"
+      ],
+      "inputs": [
+        "/.well-known/charter.json",
+        "current.machine"
+      ],
+      "steps": [
+        "Fetch `/.well-known/charter.json` and read `current.machine` and `current.sha256`.",
+        "Fetch the bytes at `current.machine` exactly as served and compute their sha256."
+      ],
+      "expected": "sha256 of the served charter bytes equals `current.sha256`.",
+      "negative_control": "Hash the same bytes with one newline appended: the digest must differ.",
+      "commands": {
+        "node": "node run-exercises.mjs --only charter-hash"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The charter-hash entry of your transcript."
+      }
+    },
+    {
+      "id": "three-corpora",
+      "position": 7,
+      "url": "https://councilof.ai/academy/exercises/#three-corpora",
+      "title": "Keep the three card corpora apart",
+      "time_required": "PT5M",
+      "teaches": "Three published card counts describe three different sets. Measure their overlap instead of adding them.",
+      "realises": [
+        "learn/board"
+      ],
+      "tools": [
+        "GET /root.json",
+        "GET /signed/card_index.json",
+        "GET /api/state"
+      ],
+      "inputs": [
+        "/root.json",
+        "/signed/card_index.json",
+        "/api/state"
+      ],
+      "steps": [
+        "Collect the public-root leaves (`root.json` → `card_sha256`) and the signed-index ids (`card_index.json` → `cards[].card`).",
+        "Count the identifiers that appear in both sets.",
+        "Compare with `/api/state` → `signed_cards.corpus_relation`."
+      ],
+      "expected": "Your `{relationship, identifier_overlap, public_root_leaves, separately_indexed_signed_cards}` equals the published `corpus_relation`. The two sizes are never added.",
+      "negative_control": "Copy one signed-index id into the root set: the overlap must become 1 and no longer match.",
+      "commands": {
+        "node": "node run-exercises.mjs --only three-corpora"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The three-corpora entry of your transcript."
+      }
+    },
+    {
+      "id": "board-stamp",
+      "position": 8,
+      "url": "https://councilof.ai/academy/exercises/#board-stamp",
+      "title": "Verify the board snapshot stamp",
+      "time_required": "PT10M",
+      "teaches": "A signature over a whole payload: remove the stamp, canonicalise what is left under the stated rule, verify under the named key.",
+      "realises": [
+        "learn/board",
+        "academy/foundations"
+      ],
+      "tools": [
+        "GET /api/gspc",
+        "GET /.well-known/did.json"
+      ],
+      "inputs": [
+        "/api/gspc",
+        "/.well-known/did.json"
+      ],
+      "steps": [
+        "Fetch `/api/gspc` and set `site_attestation` aside.",
+        "Canonicalise the rest under the rule in `site_attestation.sig_input` (keys sorted, no whitespace, non-ASCII literal, ECMAScript numbers).",
+        "Verify `site_attestation.sig` under `#board-attestation-1` from `/.well-known/did.json`."
+      ],
+      "expected": "The stamp verifies. It attests the integrity of the snapshot as served, not a re-measurement.",
+      "negative_control": "Change one axis row's status before canonicalising: the stamp must no longer verify.",
+      "commands": {
+        "node": "node run-exercises.mjs --only board-stamp"
+      },
+      "rubric": {
+        "complete_when": [
+          "state == REPRODUCED",
+          "yours_sha256 == published_sha256",
+          "control.discriminates == true"
+        ],
+        "evidence": "The board-stamp entry of your transcript."
+      }
+    }
+  ]
+}

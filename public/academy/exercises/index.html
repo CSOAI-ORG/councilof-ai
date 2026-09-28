@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reproduce a Measurement — Academy exercises | Council of AI</title>
+<meta name="description" content="Short exercises that re-run published Council of AI numbers and signatures from the public bytes, in your browser or with Node. Complete means your sha256 equals the published one.">
+<link rel="canonical" href="https://councilof.ai/academy/exercises/">
+<link rel="alternate" type="application/json" href="https://councilof.ai/academy/exercises/exercises.json" title="This course as JSON">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Reproduce a Measurement — Academy exercises">
+<meta property="og:description" content="Re-run published numbers and signatures from the public bytes. Complete means your sha256 equals the published one.">
+<meta property="og:url" content="https://councilof.ai/academy/exercises/">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+:root{color-scheme:light dark;--fg:#0f172a;--muted:#475569;--line:#cbd5e1;--bg:#ffffff;--panel:#f8fafc;--accent:#065f46;--accent-bg:#ecfdf5;--warn:#92400e;--warn-bg:#fffbeb;--bad:#991b1b;--bad-bg:#fef2f2;--code-bg:#f1f5f9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--fg:#e2e8f0;--muted:#94a3b8;--line:#334155;--bg:#0b1220;--panel:#0f1a2e;--accent:#6ee7b7;--accent-bg:#052e22;--warn:#fcd34d;--warn-bg:#2a1f05;--bad:#fca5a5;--bad-bg:#2a0b0b;--code-bg:#111c31}}
+:root[data-theme="dark"]{--fg:#e2e8f0;--muted:#94a3b8;--line:#334155;--bg:#0b1220;--panel:#0f1a2e;--accent:#6ee7b7;--accent-bg:#052e22;--warn:#fcd34d;--warn-bg:#2a1f05;--bad:#fca5a5;--bad-bg:#2a0b0b;--code-bg:#111c31}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:52rem;margin:0 auto;padding:2rem 1rem 4rem}
+nav{display:flex;flex-wrap:wrap;gap:.25rem 1rem;margin-bottom:1.75rem;font-size:.9rem}
+a{color:inherit}
+.kicker{margin:0;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-size:1.9rem;line-height:1.2;margin:.35rem 0 .75rem}
+h2{font-size:1.15rem;line-height:1.3;margin:0}
+.lede{color:var(--muted);margin:0 0 1.5rem;font-size:1.05rem}
+.panel{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:1rem;margin:0 0 1.5rem}
+.panel h2{margin-bottom:.5rem}
+.panel ul{margin:.25rem 0 0;padding-left:1.2rem}
+button{font:inherit;font-weight:600;min-height:44px;padding:.55rem 1rem;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--bg);cursor:pointer}
+button.secondary,button.run-one{background:transparent;color:var(--accent)}
+button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button[disabled]{opacity:.6;cursor:progress}
+.actions{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+#run-status{margin:.75rem 0 0;color:var(--muted);font-size:.92rem}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:.6rem .75rem;overflow-x:auto;font-size:.82rem;line-height:1.5;margin:.75rem 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.85em;overflow-wrap:anywhere}
+details summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
+.ex{border-top:1px solid var(--line);padding:1.5rem 0 .5rem}
+.ex header{display:flex;gap:.75rem;align-items:flex-start}
+.num{flex:0 0 2rem;height:2rem;border-radius:999px;background:var(--accent-bg);color:var(--accent);font-weight:800;display:flex;align-items:center;justify-content:center}
+.meta{margin:.2rem 0 0;color:var(--muted);font-size:.85rem}
+.steps{padding-left:1.3rem}
+dl{display:grid;grid-template-columns:minmax(0,1fr);gap:.15rem;margin:.5rem 0}
+dt{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:.5rem}
+dd{margin:0}
+.result:empty{display:none}
+.result{margin:.75rem 0 0;border:1px solid var(--line);border-radius:10px;padding:.75rem;font-size:.9rem;overflow-wrap:anywhere}
+.state{display:inline-block;font-weight:800;font-size:.8rem;letter-spacing:.04em;padding:.15rem .5rem;border-radius:6px}
+.state.REPRODUCED{background:var(--accent-bg);color:var(--accent)}
+.state.UNCHECKABLE,.state.RUNNING{background:var(--warn-bg);color:var(--warn)}
+.state.NOT_REPRODUCED{background:var(--bad-bg);color:var(--bad)}
+.result table{width:100%;border-collapse:collapse;margin-top:.5rem;table-layout:fixed}
+.result th,.result td{text-align:left;vertical-align:top;padding:.3rem .25rem;border-bottom:1px solid var(--line)}
+.result th{width:7.5rem;font-weight:600;color:var(--muted);font-size:.8rem}
+.note{margin-top:2rem;color:var(--muted);font-size:.9rem}
+@media (min-width:40rem){main{padding:2.5rem 1.5rem 4rem}h1{font-size:2.2rem}dl{grid-template-columns:10rem minmax(0,1fr);column-gap:1rem}dt{margin-top:.35rem}}
+</style>
+<!-- generated:lrmi:start -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "Course",
+ "@id": "https://councilof.ai/academy/exercises/#course",
+ "name": "Reproduce a published measurement",
+ "description": "Short exercises that re-run numbers and signatures the Council of AI publishes, from the public bytes, with your own code or in your browser. An exercise is complete only when your result's sha256 equals the published result's sha256 and a deliberately broken copy fails.",
+ "url": "https://councilof.ai/academy/exercises/",
+ "courseCode": "CSOAI-ACADEMY-REPRODUCE-0.1",
+ "version": "0.1",
+ "datePublished": "2026-09-28",
+ "inLanguage": "en",
+ "isAccessibleForFree": true,
+ "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+ "provider": {
+  "@type": "Organization",
+  "@id": "https://councilof.ai/#org",
+  "name": "Council of AI",
+  "url": "https://councilof.ai/"
+ },
+ "learningResourceType": "Course",
+ "educationalLevel": "Beginner",
+ "educationalUse": "Exercise",
+ "interactivityType": "active",
+ "audience": {
+  "@type": "EducationalAudience",
+  "educationalRole": "student"
+ },
+ "competencyRequired": "Running one command in a terminal (Node 20 or later), or a current web browser.",
+ "teaches": [
+  "How a published total is derived from the rows beneath it, and why slots and measurements are two numbers that are never added.",
+  "Pin the key before trusting a signature; recompute the id from the canonical body; tell VALID, INVALID and UNCHECKABLE apart.",
+  "A count published as 'measured' is a claim you can re-run: verify every card in the signed index and count the ones that verify.",
+  "Recompute a Merkle root from one leaf and its audit path, and why the leaf count is part of the check.",
+  "Resolve a did:web identifier yourself and verify an Ed25519 signature over a stated preimage.",
+  "A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.",
+  "Three published card counts describe three different sets. Measure their overlap instead of adding them.",
+  "A signature over a whole payload: remove the stamp, canonicalise what is left under the stated rule, verify under the named key."
+ ],
+ "assesses": "Completion means reproduced. An exercise is complete only when its state is REPRODUCED: the sha256 of your result equals the sha256 of the published result, both written as canonical JSON {measurement, value} (keys sorted, no whitespace), and the exercise's negative control failed as it must.",
+ "timeRequired": "PT70M",
+ "hasCourseInstance": {
+  "@type": "CourseInstance",
+  "courseMode": "Online",
+  "courseWorkload": "PT70M"
+ },
+ "hasPart": [
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#board-totals",
+   "name": "Read the living board and count it yourself",
+   "description": "How a published total is derived from the rows beneath it, and why slots and measurements are two numbers that are never added.",
+   "url": "https://councilof.ai/academy/exercises/#board-totals",
+   "position": 1,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT5M",
+   "isAccessibleForFree": true,
+   "assesses": "Your `{axes, measured_axes}` equals the board's own totals, byte for byte after canonicalisation.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#verify-card",
+   "name": "Verify one signed measurement card with your own code",
+   "description": "Pin the key before trusting a signature; recompute the id from the canonical body; tell VALID, INVALID and UNCHECKABLE apart.",
+   "url": "https://councilof.ai/academy/exercises/#verify-card",
+   "position": 2,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT10M",
+   "isAccessibleForFree": true,
+   "assesses": "Your verdict for the card equals the verdict the published verifier returns for it.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#card-chain",
+   "name": "Re-measure the whole signed card chain",
+   "description": "A count published as 'measured' is a claim you can re-run: verify every card in the signed index and count the ones that verify.",
+   "url": "https://councilof.ai/academy/exercises/#card-chain",
+   "position": 3,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT15M",
+   "isAccessibleForFree": true,
+   "assesses": "Your count of VALID cards equals `card_chain.bodies_verified_valid.value`. This counts the signed card index only; never add it to another card corpus.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#inclusion",
+   "name": "Prove a leaf is inside the public root",
+   "description": "Recompute a Merkle root from one leaf and its audit path, and why the leaf count is part of the check.",
+   "url": "https://councilof.ai/academy/exercises/#inclusion",
+   "position": 4,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT10M",
+   "isAccessibleForFree": true,
+   "assesses": "The root you recompute equals the published `merkle_root`.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#root-signature",
+   "name": "Check who signed the public root",
+   "description": "Resolve a did:web identifier yourself and verify an Ed25519 signature over a stated preimage.",
+   "url": "https://councilof.ai/academy/exercises/#root-signature",
+   "position": 5,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT10M",
+   "isAccessibleForFree": true,
+   "assesses": "The signature verifies under the key the root names (`did_intended`).",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#charter-hash",
+   "name": "Reproduce the charter hash",
+   "description": "A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.",
+   "url": "https://councilof.ai/academy/exercises/#charter-hash",
+   "position": 6,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT5M",
+   "isAccessibleForFree": true,
+   "assesses": "sha256 of the served charter bytes equals `current.sha256`.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#three-corpora",
+   "name": "Keep the three card corpora apart",
+   "description": "Three published card counts describe three different sets. Measure their overlap instead of adding them.",
+   "url": "https://councilof.ai/academy/exercises/#three-corpora",
+   "position": 7,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT5M",
+   "isAccessibleForFree": true,
+   "assesses": "Your `{relationship, identifier_overlap, public_root_leaves, separately_indexed_signed_cards}` equals the published `corpus_relation`. The two sizes are never added.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  },
+  {
+   "@type": "LearningResource",
+   "@id": "https://councilof.ai/academy/exercises/#board-stamp",
+   "name": "Verify the board snapshot stamp",
+   "description": "A signature over a whole payload: remove the stamp, canonicalise what is left under the stated rule, verify under the named key.",
+   "url": "https://councilof.ai/academy/exercises/#board-stamp",
+   "position": 8,
+   "learningResourceType": "Exercise",
+   "educationalUse": "Exercise",
+   "interactivityType": "active",
+   "timeRequired": "PT10M",
+   "isAccessibleForFree": true,
+   "assesses": "The stamp verifies. It attests the integrity of the snapshot as served, not a re-measurement.",
+   "isPartOf": {
+    "@id": "https://councilof.ai/academy/exercises/#course"
+   }
+  }
+ ]
+}
+</script>
+<!-- generated:lrmi:end -->
+</head>
+<body><main>
+<nav aria-label="Related"><a href="/">Council of AI</a><a href="/academy/">Academy</a><a href="/gspc-verify/">Verify a card</a><a href="exercises.json">This course as JSON</a><a href="run-exercises.mjs">Runner source</a></nav>
+<p class="kicker">Council of AI Academy</p>
+<h1>Reproduce a published measurement</h1>
+<p class="lede">Each exercise re-runs one number or signature we publish, from the public bytes, and compares your result with ours. You finish an exercise when the two match and a deliberately broken copy fails.</p>
+
+<section class="panel" aria-labelledby="run-h">
+<h2 id="run-h">Run the exercises</h2>
+<div class="actions">
+<button type="button" id="run-all">Run all in this browser</button>
+<button type="button" id="download" class="secondary" hidden>Download transcript (JSON)</button>
+</div>
+<p id="run-status" role="status" aria-live="polite">Nothing has run yet. Every value on this page appears only after a run reads it from the live site; none is typed in.</p>
+<details>
+<summary>Run with Node instead</summary>
+<pre><code>curl -sO https://councilof.ai/academy/exercises/run-exercises.mjs
+node run-exercises.mjs            # all exercises
+node run-exercises.mjs --json     # the transcript, for your records</code></pre>
+<p class="meta">Node 20 or later. No dependencies. The file you run is the same one this page runs.</p>
+</details>
+</section>
+
+<section class="panel" id="completion" aria-labelledby="completion-h">
+<h2 id="completion-h">Completion means reproduced</h2>
+<ul>
+<li>An exercise is complete only when it says <b>REPRODUCED</b>: the sha256 of your result equals the sha256 of the published result, and the negative control failed as it must.</li>
+<li>Both results are written the same way before hashing: canonical JSON <code>{"measurement": …, "value": …}</code>, keys sorted, no whitespace.</li>
+<li>Reading, watching or passing a quiz is not completion. Neither is a VALID from the published verifier on its own: that is a cross-check.</li>
+<li><b>UNCHECKABLE</b> means the check could not run (a network refusal, a browser without Ed25519). It is not a failure and not a completion.</li>
+<li>Keep your transcript: both results, both digests, the control, and the sha256 of every input you read.</li>
+</ul>
+</section>
+
+<!-- generated:exercises:start -->
+<article class="ex" id="board-totals">
+<header><span class="num" aria-hidden="true">1</span><div><h2>Read the living board and count it yourself</h2><p class="meta">About 5 minutes · reads <code>/api/gspc</code></p></div></header>
+<p>How a published total is derived from the rows beneath it, and why slots and measurements are two numbers that are never added.</p>
+<ol class="steps">
+<li>Fetch <code>/api/gspc</code>.</li>
+<li>Count the rows of <code>axes[]</code> (slots) and the rows whose <code>status</code> is <code>MEASURED</code> (measurements).</li>
+<li>Compare your two counts with <code>totals.axes</code> and <code>totals.measured_axes</code>.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>Your <code>{axes, measured_axes}</code> equals the board's own totals, byte for byte after canonicalisation.</dd>
+<dt>Negative control</dt><dd>Change one <code>MEASURED</code> row to <code>UNMEASURED</code> and count again: the result must no longer match.</dd>
+<dt>Live tools</dt><dd><code>GET /api/gspc</code> · <code>MCP board_totals</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only board-totals</code></pre>
+<button type="button" class="run-one" data-id="board-totals">Run this exercise</button>
+<div class="result" data-result="board-totals" aria-live="polite"></div>
+</article>
+<article class="ex" id="verify-card">
+<header><span class="num" aria-hidden="true">2</span><div><h2>Verify one signed measurement card with your own code</h2><p class="meta">About 10 minutes · reads <code>/.well-known/did.json</code>, <code>/signed/card_index.json</code>, <code>/signed/cards/&lt;id&gt;.json</code></p></div></header>
+<p>Pin the key before trusting a signature; recompute the id from the canonical body; tell VALID, INVALID and UNCHECKABLE apart.</p>
+<ol class="steps">
+<li>Read the <code>#card-attestation-1</code> key from <code>/.well-known/did.json</code> and pin it.</li>
+<li>Pick a card from <code>/signed/card_index.json</code> (default: the chain head) and fetch its <code>card_url</code>.</li>
+<li>Rebuild the preimage under Rule A (<code>/signed/HOW-TO-VERIFY.md</code>), check <code>sha256(preimage) == id</code>, then check the Ed25519 signature under the pinned key.</li>
+<li>Ask the published verifier (MCP <code>verify_card</code>) about the same card.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>Your verdict for the card equals the verdict the published verifier returns for it.</dd>
+<dt>Negative control</dt><dd>Append one character to a string in the body: your verifier must answer INVALID (id mismatch).</dd>
+<dt>Live tools</dt><dd><code>GET /.well-known/did.json</code> · <code>GET /signed/card_index.json</code> · <code>GET /signed/cards/&lt;id&gt;.json</code> · <code>MCP verify_card</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only verify-card</code></pre>
+<button type="button" class="run-one" data-id="verify-card">Run this exercise</button>
+<div class="result" data-result="verify-card" aria-live="polite"></div>
+</article>
+<article class="ex" id="card-chain">
+<header><span class="num" aria-hidden="true">3</span><div><h2>Re-measure the whole signed card chain</h2><p class="meta">About 15 minutes · reads <code>/.well-known/did.json</code>, <code>/signed/card_index.json</code>, <code>/signed/cards/*.json</code>, <code>/api/state</code></p></div></header>
+<p>A count published as 'measured' is a claim you can re-run: verify every card in the signed index and count the ones that verify.</p>
+<ol class="steps">
+<li>Run the verify-card check on every row of <code>/signed/card_index.json</code>.</li>
+<li>Count the VALID ones. A card you could not fetch is UNCHECKABLE, never INVALID.</li>
+<li>Compare your count with <code>/api/state</code> → <code>card_chain.bodies_verified_valid.value</code>.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>Your count of VALID cards equals <code>card_chain.bodies_verified_valid.value</code>. This counts the signed card index only; never add it to another card corpus.</dd>
+<dt>Negative control</dt><dd>Tamper one card body: your count must drop by one and no longer match.</dd>
+<dt>Live tools</dt><dd><code>GET /signed/card_index.json</code> · <code>GET /signed/cards/&lt;id&gt;.json</code> · <code>GET /api/state</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only card-chain</code></pre>
+<button type="button" class="run-one" data-id="card-chain">Run this exercise</button>
+<div class="result" data-result="card-chain" aria-live="polite"></div>
+</article>
+<article class="ex" id="inclusion">
+<header><span class="num" aria-hidden="true">4</span><div><h2>Prove a leaf is inside the public root</h2><p class="meta">About 10 minutes · reads <code>/root.json</code>, <code>/api/proof?sha=&lt;leaf&gt;</code></p></div></header>
+<p>Recompute a Merkle root from one leaf and its audit path, and why the leaf count is part of the check.</p>
+<ol class="steps">
+<li>Fetch <code>/root.json</code>. Reject it unless <code>card_sha256.length == card_count</code>.</li>
+<li>Pick a leaf (default: a random one) and fetch its proof from <code>/api/proof?sha=&lt;leaf&gt;</code>. Reject the proof if <code>index &gt;= card_count</code>.</li>
+<li>Walk the path: <code>parent = sha256(left || right)</code> over raw 32-byte digests; the index bit says which side you are on.</li>
+<li>Compare your root with <code>root.json</code> → <code>merkle_root</code>, and ask MCP <code>verify_inclusion</code> about the same leaf.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>The root you recompute equals the published <code>merkle_root</code>.</dd>
+<dt>Negative control</dt><dd>Flip the last hex digit of the leaf and walk the same path: the root must no longer match.</dd>
+<dt>Live tools</dt><dd><code>GET /root.json</code> · <code>GET /api/proof?sha=&lt;leaf&gt;</code> · <code>MCP verify_inclusion</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only inclusion</code></pre>
+<button type="button" class="run-one" data-id="inclusion">Run this exercise</button>
+<div class="result" data-result="inclusion" aria-live="polite"></div>
+</article>
+<article class="ex" id="root-signature">
+<header><span class="num" aria-hidden="true">5</span><div><h2>Check who signed the public root</h2><p class="meta">About 10 minutes · reads <code>https://csoai.org/.well-known/did.json</code>, <code>/.well-known/did.json</code>, <code>/root.json</code></p></div></header>
+<p>Resolve a did:web identifier yourself and verify an Ed25519 signature over a stated preimage.</p>
+<ol class="steps">
+<li>Resolve <code>did:web:csoai.org</code> by fetching <code>https://csoai.org/.well-known/did.json</code> and read <code>#board-attestation-1</code>.</li>
+<li>Rebuild the preimage stated in <code>root.json</code> → <code>sig_preimage</code>: canonical JSON of <code>{kind, schema, as_of, merkle_root, card_count, did_intended}</code>.</li>
+<li>Verify <code>root.json</code> → <code>sig_ed25519</code> under that key.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>The signature verifies under the key the root names (<code>did_intended</code>).</dd>
+<dt>Negative control</dt><dd>Add one to <code>card_count</code> in the preimage: the signature must no longer verify.</dd>
+<dt>Live tools</dt><dd><code>GET https://csoai.org/.well-known/did.json (did:web resolution)</code> · <code>GET /root.json</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only root-signature</code></pre>
+<button type="button" class="run-one" data-id="root-signature">Run this exercise</button>
+<div class="result" data-result="root-signature" aria-live="polite"></div>
+</article>
+<article class="ex" id="charter-hash">
+<header><span class="num" aria-hidden="true">6</span><div><h2>Reproduce the charter hash</h2><p class="meta">About 5 minutes · reads <code>/.well-known/charter.json</code>, <code>current.machine</code></p></div></header>
+<p>A published digest binds exact bytes: fetch the document the pointer names and hash it yourself.</p>
+<ol class="steps">
+<li>Fetch <code>/.well-known/charter.json</code> and read <code>current.machine</code> and <code>current.sha256</code>.</li>
+<li>Fetch the bytes at <code>current.machine</code> exactly as served and compute their sha256.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>sha256 of the served charter bytes equals <code>current.sha256</code>.</dd>
+<dt>Negative control</dt><dd>Hash the same bytes with one newline appended: the digest must differ.</dd>
+<dt>Live tools</dt><dd><code>GET /.well-known/charter.json</code> · <code>GET the charter document it points to</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only charter-hash</code></pre>
+<button type="button" class="run-one" data-id="charter-hash">Run this exercise</button>
+<div class="result" data-result="charter-hash" aria-live="polite"></div>
+</article>
+<article class="ex" id="three-corpora">
+<header><span class="num" aria-hidden="true">7</span><div><h2>Keep the three card corpora apart</h2><p class="meta">About 5 minutes · reads <code>/root.json</code>, <code>/signed/card_index.json</code>, <code>/api/state</code></p></div></header>
+<p>Three published card counts describe three different sets. Measure their overlap instead of adding them.</p>
+<ol class="steps">
+<li>Collect the public-root leaves (<code>root.json</code> → <code>card_sha256</code>) and the signed-index ids (<code>card_index.json</code> → <code>cards[].card</code>).</li>
+<li>Count the identifiers that appear in both sets.</li>
+<li>Compare with <code>/api/state</code> → <code>signed_cards.corpus_relation</code>.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>Your <code>{relationship, identifier_overlap, public_root_leaves, separately_indexed_signed_cards}</code> equals the published <code>corpus_relation</code>. The two sizes are never added.</dd>
+<dt>Negative control</dt><dd>Copy one signed-index id into the root set: the overlap must become 1 and no longer match.</dd>
+<dt>Live tools</dt><dd><code>GET /root.json</code> · <code>GET /signed/card_index.json</code> · <code>GET /api/state</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only three-corpora</code></pre>
+<button type="button" class="run-one" data-id="three-corpora">Run this exercise</button>
+<div class="result" data-result="three-corpora" aria-live="polite"></div>
+</article>
+<article class="ex" id="board-stamp">
+<header><span class="num" aria-hidden="true">8</span><div><h2>Verify the board snapshot stamp</h2><p class="meta">About 10 minutes · reads <code>/api/gspc</code>, <code>/.well-known/did.json</code></p></div></header>
+<p>A signature over a whole payload: remove the stamp, canonicalise what is left under the stated rule, verify under the named key.</p>
+<ol class="steps">
+<li>Fetch <code>/api/gspc</code> and set <code>site_attestation</code> aside.</li>
+<li>Canonicalise the rest under the rule in <code>site_attestation.sig_input</code> (keys sorted, no whitespace, non-ASCII literal, ECMAScript numbers).</li>
+<li>Verify <code>site_attestation.sig</code> under <code>#board-attestation-1</code> from <code>/.well-known/did.json</code>.</li>
+</ol>
+<dl>
+<dt>Expected</dt><dd>The stamp verifies. It attests the integrity of the snapshot as served, not a re-measurement.</dd>
+<dt>Negative control</dt><dd>Change one axis row's status before canonicalising: the stamp must no longer verify.</dd>
+<dt>Live tools</dt><dd><code>GET /api/gspc</code> · <code>GET /.well-known/did.json</code></dd>
+<dt>Complete when</dt><dd>State is <b>REPRODUCED</b>: your sha256 equals the published sha256 and the control failed.</dd>
+</dl>
+<pre><code>node run-exercises.mjs --only board-stamp</code></pre>
+<button type="button" class="run-one" data-id="board-stamp">Run this exercise</button>
+<div class="result" data-result="board-stamp" aria-live="polite"></div>
+</article>
+<!-- generated:exercises:end -->
+
+<p class="note">These exercises teach verification. A reproduced exercise says your recomputation agreed with the published bytes when you ran it; it says nothing about your competence, any organisation or any system, and the Council of AI certifies nothing. Verifying is free. Content CC0-1.0.</p>
+</main>
+<script type="module" src="page.mjs"></script>
+</body></html>

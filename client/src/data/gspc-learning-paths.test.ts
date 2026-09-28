@@ -1,14 +1,20 @@
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.signed.json";
+import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.2026-09-25.signed.json";
 import {
   CANONICAL_AXIS_COUNT,
   GSPC_LEARNING_PATHS,
+  LEARNING_SNAPSHOT_FILE,
   LEARNING_STAGE_IDS,
+  buildLearningPaths,
   deriveLearningProgress,
   getGspcLearningPath,
 } from "./gspc-learning-paths";
 
 const CANON = BOARD_SNAPSHOT.axes;
+const REPO = fileURLToPath(new URL("../../../", import.meta.url));
 
 describe("GSPC canonical learning paths", () => {
   it("derives one path per existing canonical axis without a parallel list", () => {
@@ -153,5 +159,56 @@ describe("GSPC canonical learning paths", () => {
     expect(Object.isFrozen(first)).toBe(true);
     expect(Object.isFrozen(first.axis)).toBe(true);
     expect(Object.isFrozen(first.stages)).toBe(true);
+  });
+
+  it("falls back to the CURRENT board freeze, never a superseded one", () => {
+    // 2026-09-28: the pane printed "22 canonical paths" from the 2026-09-02 freeze, whose
+    // status file said SUPERSEDED_BY, while the live board carried 23 axes. When a newer
+    // freeze supersedes this one, point the import in gspc-learning-paths.ts at it.
+    const statusFile = LEARNING_SNAPSHOT_FILE.replace(/\.signed\.json$/, ".status.json");
+    const status = JSON.parse(readFileSync(join(REPO, statusFile), "utf8"));
+    expect(status.artifact).toBe(`/${LEARNING_SNAPSHOT_FILE.replace(/^public\//, "")}`);
+    expect(
+      { state: status.state, current: status.current },
+      `${LEARNING_SNAPSHOT_FILE} is ${status.state}; import ${status.superseded_by ?? "the current freeze"} instead`,
+    ).toEqual({ state: "CURRENT", current: true });
+  });
+
+  it("builds one path per row of a live board reply, including axes the freeze lacks", () => {
+    const extra = {
+      axis: "example-new-axis",
+      family: "gspc",
+      kind: "declared-slot",
+      bench: "ExampleBench",
+      task: "an axis added to the live board after the freeze",
+      status: "UNMEASURED",
+    };
+    const live = buildLearningPaths({ axes: [...CANON, extra] });
+    expect(live).toHaveLength(CANON.length + 1);
+    expect(live.at(-1)?.axis).toEqual({
+      id: extra.axis,
+      family: extra.family,
+      kind: extra.kind,
+      bench: extra.bench,
+      task: extra.task,
+    });
+    expect(live.at(-1)?.axis).not.toHaveProperty("status");
+    expect(Object.isFrozen(live)).toBe(true);
+
+    // Progress resolves against the roster it is given, and only that roster.
+    expect(deriveLearningProgress(extra.axis, [])).toBeNull();
+    expect(deriveLearningProgress(extra.axis, ["learn"], live)).toMatchObject({
+      valid: true,
+      activeStageId: "play",
+    });
+  });
+
+  it("refuses a malformed live reply instead of returning a partial roster", () => {
+    expect(() => buildLearningPaths(null)).toThrow();
+    expect(() => buildLearningPaths({ axes: "not-an-array" })).toThrow();
+    expect(() => buildLearningPaths({ axes: [...CANON, CANON[0]] })).toThrow(/duplicate/);
+    expect(() =>
+      buildLearningPaths({ axes: [{ ...CANON[0], family: "unknown" }] }),
+    ).toThrow(/unsupported/);
   });
 });
