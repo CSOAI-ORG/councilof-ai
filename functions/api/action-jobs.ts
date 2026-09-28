@@ -227,7 +227,8 @@ type IdempotencyIndex = {
 };
 
 type BodyRead =
-  { ok: true; value: unknown } | { ok: false; status: number; error: string };
+  | { ok: true; value: unknown; status?: undefined; error?: undefined }
+  | { ok: false; status: number; error: string; value?: undefined };
 
 const JOB_ID = /^job_[0-9a-f]{40}$/;
 const HASH = /^sha256:[0-9a-f]{64}$/;

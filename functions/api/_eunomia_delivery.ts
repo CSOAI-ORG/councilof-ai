@@ -5,7 +5,7 @@ export const EXPECTED_FEED_HEADER='x-csoai-expected-feed-sha256';
 export const SOURCE_CAP=2_000_000;
 export const FEED_SOURCES={signals:'/signals/_index.json',first_fine_watch:'/api/fines',root:'/root.json',card_index:'/signed/card_index.json'} as const;
 export type SourceName=keyof typeof FEED_SOURCES;
-export type SourceRead<T=Record<string,unknown>>={ok:true;body:T;response_sha256:string;response_bytes:number}|{ok:false;reason:string};
+export type SourceRead<T=Record<string,unknown>>={ok:true;body:T;response_sha256:string;response_bytes:number;reason?:undefined}|{ok:false;reason:string;body?:undefined;response_sha256?:undefined;response_bytes?:undefined};
 export type Reads=Record<SourceName,SourceRead>;
 export function expectedFeedDigest(r:Request):string|null{
  const value=r.headers.get(EXPECTED_FEED_HEADER);

@@ -60,12 +60,12 @@ interface Cell {
  * different facts and only one of them is ours to assert.
  */
 type IndexRead =
-  | { ok: true; name: string; cells: Cell[] }
-  | { ok: false; name: string; reason: string };
+  | { ok: true; name: string; cells: Cell[]; reason?: undefined }
+  | { ok: false; name: string; reason: string; cells?: undefined };
 
 type ParsedRows =
-  | { ok: true; cells: Cell[] }
-  | { ok: false; reason: string };
+  | { ok: true; cells: Cell[]; reason?: undefined }
+  | { ok: false; reason: string; cells?: undefined };
 
 interface Supersession {
   superseded_id: string;
@@ -93,7 +93,7 @@ interface Withdrawal {
 
 type UnresolvedWithdrawal = Withdrawal & { reason: string };
 
-type Read<E> = { ok: true; entries: E[] } | { ok: false; reason: string };
+type Read<E> = { ok: true; entries: E[]; reason?: undefined } | { ok: false; reason: string; entries?: undefined };
 type LedgerRead = Read<Supersession>;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -183,7 +183,7 @@ function parseRows(text: string, name: string): ParsedRows {
       card_sha256: o.card_sha256 ?? null,
       card_url: o.card_url ?? null,
       signed: true,
-      unmeasured: o.unmeasured ?? [],
+      unmeasured: Array.isArray(o.unmeasured) ? o.unmeasured as string[] : [],
       index: `${name}.jsonl`,
     });
   }

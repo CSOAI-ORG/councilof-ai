@@ -37,7 +37,7 @@ interface Env { [k: string]: unknown }
 
 export const onRequestGet: PagesFunction<Env> = async (ctx) => {
   const origin = new URL(ctx.request.url).origin;
-  const grab = async (p: string) => { try { return await (await fetch(origin + p)).json(); } catch { return null; } };
+  const grab = async (p: string): Promise<any> => { try { return await (await fetch(origin + p)).json() as any; } catch { return null; } };
   const [board, reg, rep] = await Promise.all([grab("/api/gspc"), grab("/api/regulation"), grab("/api/reported")]);
 
   const axes: any[] = board?.axes ?? [];
@@ -101,8 +101,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
       const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
       const signedBytes = canonical(body); // body WITHOUT signature — reconstructable by anyone
       const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-      const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
-      const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
+      const key = await crypto.subtle.importKey("pkcs8", Uint8Array.from(der).buffer, { name: "Ed25519" }, true, ["sign"]);
+      const sig = hex(await crypto.subtle.sign("Ed25519", key, Uint8Array.from(new TextEncoder().encode(signedBytes)).buffer));
       const jwk = (await crypto.subtle.exportKey("jwk", key)) as JsonWebKey;
       body.signature = {
         attests: "integrity of this composed divergence payload as published by the site (NOT a re-attestation of the underlying legs)",

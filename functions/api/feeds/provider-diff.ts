@@ -62,7 +62,7 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
     },
   });
 
-async function getJson<T>(u: string): Promise<{ ok: true; body: T } | { ok: false; reason: string }> {
+async function getJson<T>(u: string): Promise<{ ok: true; body: T; reason?: undefined } | { ok: false; reason: string; body?: undefined }> {
   try {
     const r = await fetch(u);
     if (!r.ok) return { ok: false, reason: `HTTP ${r.status}` };

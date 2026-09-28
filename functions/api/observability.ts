@@ -87,20 +87,25 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     { id: "none", age_hours: null },
   );
 
-  // Queue depth from worker (if live)
-  const queue = worker.status === "LIVE" && worker.worker
+  // Queue depth from worker (if live). Narrow once so stale/failure variants cannot
+  // masquerade as a live worker payload.
+  const liveWorker: Record<string, unknown> | null =
+    worker.status === "LIVE" && "worker" in worker && worker.worker
+      ? worker.worker as Record<string, unknown>
+      : null;
+  const queue = liveWorker
     ? {
-        depth: typeof (worker.worker as Record<string, unknown>).jobs_total === "number" ? (worker.worker as Record<string, unknown>).jobs_total : null,
-        successful_runs: typeof (worker.worker as Record<string, unknown>).successful_runs === "number" ? (worker.worker as Record<string, unknown>).successful_runs : null,
-        failed_runs: typeof (worker.worker as Record<string, unknown>).failed_runs === "number" ? (worker.worker as Record<string, unknown>).failed_runs : null,
-        transport_errors: typeof (worker.worker as Record<string, unknown>).transport_errors === "number" ? (worker.worker as Record<string, unknown>).transport_errors : null,
-        state: typeof (worker.worker as Record<string, unknown>).state === "string" ? (worker.worker as Record<string, unknown>).state : null,
+        depth: typeof liveWorker.jobs_total === "number" ? liveWorker.jobs_total : null,
+        successful_runs: typeof liveWorker.successful_runs === "number" ? liveWorker.successful_runs : null,
+        failed_runs: typeof liveWorker.failed_runs === "number" ? liveWorker.failed_runs : null,
+        transport_errors: typeof liveWorker.transport_errors === "number" ? liveWorker.transport_errors : null,
+        state: typeof liveWorker.state === "string" ? liveWorker.state : null,
       }
     : { depth: null, successful_runs: null, failed_runs: null, transport_errors: null, state: null };
 
   // Publication lag: root as_of vs pod last_success_at
-  const lastSuccess = worker.status === "LIVE" && worker.worker
-    ? (worker.worker as Record<string, unknown>).last_success_at as string | undefined
+  const lastSuccess = liveWorker
+    ? liveWorker.last_success_at as string | undefined
     : undefined;
   const rootLagHours = rootAsOf && lastSuccess ? ageHours(rootAsOf) : null;
 

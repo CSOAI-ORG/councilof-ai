@@ -84,7 +84,7 @@ async function importEd25519(seed: Uint8Array): Promise<CryptoKey> {
   const pkcs8 = pkcs8FromSeed(seed);
   for (const algo of ["Ed25519", "NODE-ED25519"]) {
     try {
-      return await crypto.subtle.importKey("pkcs8", pkcs8, { name: algo } as EcKeyImportParams, false, [
+      return await crypto.subtle.importKey("pkcs8", Uint8Array.from(pkcs8).buffer, { name: algo } as EcKeyImportParams, false, [
         "sign",
       ]);
     } catch {
@@ -134,7 +134,7 @@ export async function mintCdpJwt(args: MintArgs): Promise<string> {
 
   const signingInput = `${b64url(utf8(JSON.stringify(header)))}.${b64url(utf8(JSON.stringify(claims)))}`;
   const key = await importEd25519(seedFromCdpSecret(args.keySecret));
-  const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, utf8(signingInput)));
+  const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, Uint8Array.from(utf8(signingInput)).buffer));
   return `${signingInput}.${b64url(sig)}`;
 }
 

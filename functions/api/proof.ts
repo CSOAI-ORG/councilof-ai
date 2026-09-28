@@ -114,7 +114,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
           catalog: u("/api/x402"),
         },
       });
-      return paymentRequiredResponseSigned(paymentRequired, env);
+      return paymentRequiredResponseSigned(paymentRequired, env as unknown as X402Env);
     }
   }
 
@@ -252,7 +252,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
 // past card_count points into the duplicated region and was never signed.
   const proofRes = await fetch(u(`/proofs/${sha.slice(0, 16)}.json`));
   if (proofRes.ok) {
-    const body = await proofRes.json();
+    const body = await proofRes.json() as Record<string, unknown>;
     return json({
       schema: "csoai.public-root-proof/0.1",
       kind: "inclusion",
@@ -283,7 +283,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
       404,
     );
   }
-  const wrapped = await cardRes.json();
+  const wrapped = await cardRes.json() as Record<string, any>;
   return json({
     schema: "csoai.public-root-proof/0.1",
     kind: "inclusion",

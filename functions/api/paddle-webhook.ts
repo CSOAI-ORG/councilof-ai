@@ -49,7 +49,7 @@ async function sha256Hex(input: string): Promise<string> {
 }
 
 function canonPayload(payload: Record<string, unknown>): string {
-  return JSON.stringify(payload, Object.keys(payload).sort(), [",", ":"]).replace(/\s/g, "");
+  return JSON.stringify(payload, Object.keys(payload).sort()).replace(/\s/g, "");
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
@@ -109,7 +109,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     verification: { url: "https://councilof.ai/verify", did_document: "https://csoai.org/.well-known/did.json" },
   };
 
-  const canonBytes = JSON.stringify(payload, Object.keys(payload).sort(), [",", ":"]);
+  const canonBytes = JSON.stringify(payload, Object.keys(payload).sort());
   const certId = await sha256Hex(canonBytes);
 
   let sigHex: string | null = null;

@@ -71,17 +71,18 @@ export type X402Env = CdpEnv & {
   // The x402 facilitator that verifies (and settles) a receipt. Absent → metered endpoints
   // stay 402: an unverified receipt is never accepted.
   X402_FACILITATOR_URL?: string;
+  X402_FACILITATOR_TOKEN?: string;
   X402_ASSET?: string; // ERC-20 asset contract the receipt must pay (e.g. USDC on base)
   X402_NETWORK?: string; // e.g. "base"
   X402_PAY_TO?: string; // overrides the estate default in _x402_config.ts
   X402_AMOUNT?: string; // atomic units required (string, as x402 encodes it)
+  X402_PROMO_NOW?: string; // optional ISO instant for deterministic promotional pricing
   // The ONE signing secret the edge holds: PKCS8 Ed25519 for did:web:csoai.org#board-attestation-1
   // ("born and held in Cloudflare; the private half never leaves" — did.json). It signs the
   // offer-receipt extension's offers and receipts. Absent ⇒ 402s and 200s are unsigned and SAY SO
   // on the `csoai.offer_receipt` sidecar; nothing is ever fabricated in its place.
   BOARD_SIGN_KEY_PKCS8_B64?: string;
-  // Per-SKU price overrides (strings, as Cloudflare passes them) are read via _skus.ts.
-  [k: string]: string | undefined;
+  // Price overrides are projected to a string-only record at the pricing call site.
 };
 
 /**
@@ -231,7 +232,7 @@ export function x402Accepts(
   const normalAtomic =
     env.X402_AMOUNT && env.X402_AMOUNT !== ""
       ? env.X402_AMOUNT
-      : usdToAtomic(resolvePriceUsd(opts.skuId, opts.tier, env));
+      : usdToAtomic(resolvePriceUsd(opts.skuId, opts.tier, env as unknown as Record<string, string | undefined>));
   const now = Date.parse(env.X402_PROMO_NOW || new Date().toISOString());
   const promoActive =
     normalAtomic !== "0" &&
@@ -404,7 +405,7 @@ export type SettlementRecord = {
  * refuse a paid artefact.
  */
 export type RecordOutcome =
-  | { stored: true; record: SettlementRecord }
+  | { stored: true; record: SettlementRecord; reason?: undefined }
   | { stored: false; reason: string; record: SettlementRecord | null };
 
 export async function recordSettlement(

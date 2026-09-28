@@ -112,8 +112,8 @@ async function verifyManifest(manifest: Record<string, unknown>): Promise<{
   } else {
     signer = typeof sig.signer === "string" ? sig.signer : null;
     try {
-      const pk = await crypto.subtle.importKey("raw", b64urlToBytes(sig.public_key_x), { name: "Ed25519" }, false, ["verify"]);
-      const ok = await crypto.subtle.verify("Ed25519", pk, hexToBytes(sig.sig), new TextEncoder().encode(canon(claim)));
+      const pk = await crypto.subtle.importKey("raw", Uint8Array.from(b64urlToBytes(sig.public_key_x)).buffer, { name: "Ed25519" }, false, ["verify"]);
+      const ok = await crypto.subtle.verify("Ed25519", pk, Uint8Array.from(hexToBytes(sig.sig)).buffer, Uint8Array.from(new TextEncoder().encode(canon(claim))).buffer);
       if (ok) {
         integrityHeld = true;
         findings.push({

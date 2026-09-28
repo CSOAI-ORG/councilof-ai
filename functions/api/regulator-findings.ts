@@ -55,10 +55,10 @@ function grade(rate: number | null): { grade: string; note: string } {
   return { grade: "CRITICAL", note: "measured non-compliance risk" };
 }
 
-async function fetchJson(request: Request, path: string) {
+async function fetchJson(request: Request, path: string): Promise<any> {
   const res = await fetch(new URL(path, request.url), { headers: { accept: "application/json" } });
   if (!res.ok) return {};
-  try { return await res.json(); } catch { return {}; }
+  try { return await res.json() as any; } catch { return {}; }
 }
 
 function sectorKeys(sector: string): string[] {

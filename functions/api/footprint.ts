@@ -82,8 +82,8 @@ export interface Row {
 }
 
 type Fetched =
-  | { ok: true; status: number; body: unknown }
-  | { ok: false; status: number | null; reason: string };
+  | { ok: true; status: number; body: unknown; reason?: undefined }
+  | { ok: false; status: number | null; reason: string; body?: undefined };
 
 export interface Deps {
   fetch: typeof fetch;

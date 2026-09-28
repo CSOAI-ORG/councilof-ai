@@ -62,7 +62,7 @@ async function listPrefix(
         unreadable++;
       }
     }
-    cursor = page.list_complete ? undefined : page.cursor;
+    cursor = page.list_complete ? undefined : ("cursor" in page ? page.cursor : undefined);
   } while (cursor);
   return { rows, unreadable };
 }

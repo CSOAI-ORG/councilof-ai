@@ -24,7 +24,7 @@ export function canon(v: unknown): string {
 }
 
 async function sha256Hex(bytes: Uint8Array): Promise<string> {
-  const d = await crypto.subtle.digest("SHA-256", bytes);
+  const d = await crypto.subtle.digest("SHA-256", Uint8Array.from(bytes).buffer);
   return Array.from(new Uint8Array(d)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
@@ -67,9 +67,9 @@ export async function toDsse(
   pkcs8Der: Uint8Array,
   keyid: string,
 ): Promise<Record<string, unknown>> {
-  const key = await crypto.subtle.importKey("pkcs8", pkcs8Der, { name: "Ed25519" }, false, ["sign"]);
+  const key = await crypto.subtle.importKey("pkcs8", Uint8Array.from(pkcs8Der).buffer, { name: "Ed25519" }, false, ["sign"]);
   const payload = new TextEncoder().encode(canon(statement));
-  const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, pae(DSSE_PAYLOAD_TYPE, payload)));
+  const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, Uint8Array.from(pae(DSSE_PAYLOAD_TYPE, payload)).buffer));
   return { payloadType: DSSE_PAYLOAD_TYPE, payload: b64(payload), signatures: [{ keyid, sig: b64(sig) }] };
 }
 

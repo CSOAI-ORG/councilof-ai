@@ -56,7 +56,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env, request }) => {
   const x4Count = Array.isArray(x4.rounds) ? x4.rounds.length : 0;
 
   // Coverage register: chains counted
-  const cr = coverageRegister as { chains?: Record<string, Record<string, number>> };
+  const cr = coverageRegister as unknown as { chains?: Record<string, Record<string, unknown>> };
   const chains = cr.chains ?? {};
   let chainIndexed = 0;
   let chainMeasured = 0;

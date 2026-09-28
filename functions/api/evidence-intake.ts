@@ -321,7 +321,7 @@ function validCandidateShape(candidate: JsonRecord): boolean {
 
 export async function verifyCandidateForIntake(
   candidate: unknown,
-): Promise<{ ok: true; sha256: string } | { ok: false; reason: string }> {
+): Promise<{ ok: true; sha256: string; reason?: undefined } | { ok: false; reason: string; sha256?: undefined }> {
   if (!isRecord(candidate) || !validCandidateShape(candidate))
     return { ok: false, reason: "candidate receipt has an unsupported shape" };
   if (utf8(JSON.stringify(candidate)).byteLength > MAX_CANDIDATE_BYTES)

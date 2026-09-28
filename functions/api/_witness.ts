@@ -119,7 +119,7 @@ export function publicView(e: WitnessEntry): Record<string, unknown> {
 const PRIVATE_HOST_RE = /(^|\.)(localhost|local|internal|intranet|lan|home|corp|arpa|test|invalid|example)$/i;
 const IPV4_RE = /^\d{1,3}(\.\d{1,3}){3}$/;
 
-export function guardTarget(raw: string): { ok: true; url: URL } | { ok: false; reason: string } {
+export function guardTarget(raw: string): { ok: true; url: URL; reason?: undefined } | { ok: false; reason: string; url?: undefined } {
   if (!raw || raw.length > 2048) return { ok: false, reason: "url: 1–2048 chars" };
   let u: URL;
   try {
@@ -386,7 +386,7 @@ export async function requestTimestamp(tsa: string, digestHex: string): Promise<
     res = await fetch(tsa, {
       method: "POST",
       headers: { "content-type": "application/timestamp-query", accept: "application/timestamp-reply", "user-agent": UA },
-      body: derTimeStampReq(digest, nonce),
+      body: Uint8Array.from(derTimeStampReq(digest, nonce)).buffer,
       signal: AbortSignal.timeout(15000),
     });
   } catch (e) {

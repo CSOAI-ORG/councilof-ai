@@ -345,7 +345,7 @@ export const onRequestGet: PagesFunction = async (context) => {
 
   // Living stamp is mutated at the edge (below) when BOARD_SIGN_KEY is present.
   // The historical UNVERIFIABLE stamp is kept on `superseded`, never deleted.
-  const measuredOn = {
+  const measuredOn: any = {
     ...MEASURED_ON,
     living_stamp: { ...MEASURED_ON.living_stamp },
   };
@@ -532,7 +532,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         // functions/api/gspc.lid-truth.test.ts re-parses this string and asserts each
         // number against measured_axes / model_fleets / separated_leads / public_leader_count /
         // fact_runs, so a lid can never again read a count the payload contradicts.
-        lid: boardLidFromAxes(selected),
+        lid: boardLidFromAxes(selected as unknown as AxisScore[]),
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
