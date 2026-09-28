@@ -43,6 +43,64 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0928-01",
+      "date": "2026-09-28",
+      "detected_at": "2026-09-28",
+      "detected_window": {
+        "not_before": "2026-09-28T00:00:00Z",
+        "not_after": "2026-09-28T04:36:48Z",
+        "basis": "our own detection is recorded only to the day; not after fix commit 1ae2025fd, which records reproducing the defect on master d06d09837"
+      },
+      "detected_by": "external report",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "IETF SCITT architecture issue #462, opened 2026-09-10T03:53:43Z, quotes the line return True, f\"VALID (integrity) - kid ... not resolved\" from CSOAI-ORG/a2a-signed-receipts@daaa2306 as the running-code case for a third verification result",
+        "councilof-ai commit 1ae2025fd (2026-09-28T04:36:48Z): records the defect reproduced on master d06d09837 with an attacker key, and fixes it; landed in acff54074",
+        "published_at is UNRECORDED: the deploy that first serves the corrected verifier and this entry had not happened when the entry was written"
+      ],
+      "what_was_wrong": "The signed-receipts/v1 reference verifier, interceptor.py, had two faults in verify_receipt(). (1) When it was called without a resolve_did function, it returned True, with a reason reading 'VALID (integrity)' followed by the kid and 'not resolved'. A receipt carries its own public key, so a receipt signed with any key, naming any issuer's kid, came back VALID. Re-checked on 2026-09-28: a receipt signed with a freshly generated key and naming did:web:csoai.org#board-attestation-1 returned True with that reason, and the corrected file returns UNVERIFIABLE_KEY. (2) When a resolver was given but the lookup failed, for example because the DID document could not be fetched, it returned INVALID. So a caller could not tell 'forged' from 'could not check'. The same file was public in three places, and all three copies had the defect: (a) the GitHub repository CSOAI-ORG/a2a-signed-receipts, which IETF SCITT architecture issue #462 cites at commit daaa2306 in a post dated 2026-09-10T03:53:43Z (that repository is not reachable now, so the commit that first introduced the code is not recorded here); (b) the Hugging Face source snapshot csoai/councilof-ai-source, commit 96bf3a07, published 2026-09-25T10:42:26Z (interceptor.py sha256 d908b9e7...); (c) https://councilof.ai/spec/signed-receipts/v1/interceptor.py, the same bytes. The file was added in commit 7d0a7700a (2026-09-27T06:52:22Z) and first served by the deploy of 9e501e01d, completed 2026-09-27T07:32:56Z. Who could have been misled: anyone who ran any of these copies and relied on the boolean from verify_receipt. Without a resolver they would have accepted a forged receipt as the named issuer's. With a failing resolver they would have rejected a genuine one as INVALID. No hosted endpoint ran this code. functions/ contains no import or copy of interceptor.py. POST /api/receipts/verify checks x402 offer and receipt JWS with separate code that requires the kid to resolve in https://csoai.org/.well-known/did.json. Re-checked live on 2026-09-28: a receipt signed with a freshly generated key and naming did:web:csoai.org#attacker-key-1 returned INVALID ('not listed in verificationMethod'), and one naming did:web:csoai.org#board-attestation-1 returned INVALID ('signature does not verify under the resolved key'). POST /api/verify and the MCP verify_card tool check measurement cards with functions/_lib/cardVerify.ts, which does not use this canonicaliser.",
+      "how_caught": "IETF SCITT architecture issue #462, opened by an outside participant, quotes our verifier's return line as the case for its second proposed requirement: a profile must not fall back to valid or invalid for the condition a third result covers. An internal note on 2026-09-22 recorded that the issue cites our work, but did not recognise that it describes a defect in our verifier. On 2026-09-28, while building the conformance kit, we reproduced the defect on master d06d09837 with an attacker key. It was fixed the same day.",
+      "what_changed": "Fixed in commit 1ae2025fd, landed in acff54074. verify_receipt_result() returns one of VALID, INVALID or UNVERIFIABLE_KEY. No resolver, a resolver that raises, or a resolver that returns nothing gives UNVERIFIABLE_KEY, never VALID. Integrity is checked first, so a tampered receipt is INVALID whether or not its key resolves. verify_receipt() keeps its (bool, str) shape, and the bool is True only for VALID. test_interceptor.py gains 8 checks for this case. The conformance kit has 3 unresolvable-key vectors and 1 tampered-and-unresolvable vector, and the verifier before the fix fails them. The Hugging Face copy was replaced at csoai/councilof-ai-source commit 9021aec0 (interceptor.py sha256 b79ed7fe..., equal to the served file). Revision 96bf3a07 keeps the pre-correction bytes, and SNAPSHOT.json records both. The GitHub copy was not changed because the repository is not reachable. How to re-check: download https://councilof.ai/spec/signed-receipts/v1/conformance/ and run 'node run.mjs reference-results.json --vectors vectors.json' (Node, no dependencies) or 'python3 run.py reference-results.json --vectors vectors.json' (needs only cryptography). To test your own verifier, write its result for each case to a file and pass that file instead. example-fail-results.json holds the results of the verifier before the fix, and both runners report FAIL on it. python3 test_interceptor.py in /spec/signed-receipts/v1/ gives 40 PASS, 0 FAIL.",
+      "status": "CORRECTED - reference verifier returns UNVERIFIABLE_KEY, never VALID, for an unresolvable key; served and Hugging Face copies replaced; GitHub copy unchanged (not reachable)",
+      "reached_the_public": true,
+      "evidence": [
+        "https://github.com/ietf-wg-scitt/draft-ietf-scitt-architecture/issues/462",
+        "https://councilof.ai/spec/signed-receipts/v1/interceptor.py (sha256 b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216 after the fix)",
+        "https://councilof.ai/spec/signed-receipts/v1/conformance/ (vectors.json, run.mjs, run.py, reference-results.json, example-fail-results.json)",
+        "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/9021aec0c1459b17f5fa90e734917e20fced970a/contributions/a2a-signed-receipts/f80de2731ceb",
+        "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/96bf3a07d4f944e9a9ed577e329ef10e20d38dfc/contributions/a2a-signed-receipts/f80de2731ceb (pre-correction bytes, kept)",
+        "councilof-ai commits 1ae2025fd and acff54074"
+      ]
+    },
+    {
+      "id": "C-2026-0928-02",
+      "date": "2026-09-28",
+      "detected_at": "2026-09-28",
+      "detected_window": {
+        "not_before": "2026-09-28T00:00:00Z",
+        "not_after": "2026-09-28T04:36:48Z",
+        "basis": "recorded only to the day; not after fix commit 1ae2025fd, the first record of the finding"
+      },
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "councilof-ai commit 1ae2025fd (2026-09-28T04:36:48Z): the first record of the finding and its fix; landed in acff54074",
+        "published_at is UNRECORDED: the deploy that first serves the corrected verifier and this entry had not happened when the entry was written"
+      ],
+      "what_was_wrong": "SPEC.md for signed-receipts/v1 (draft 0.2) says receipts are canonicalised with RFC 8785 (JCS). The reference implementation, interceptor.py, did not follow RFC 8785 in two places. (1) It wrote characters outside the Basic Multilingual Plane, such as emoji, as an escaped surrogate pair, for example \\ud83d\\ude00. RFC 8785, like ECMAScript JSON.stringify, writes the character itself. (2) It wrote floating-point numbers with Python repr() rules, not the ECMAScript Number-to-string rules RFC 8785 requires. An integral-valued float came out with '.0' (2.0 as '2.0', RFC 8785 '2'). Magnitudes from 1e-6 up to 1e-4 came out in exponent form (1e-05 as '1e-5', RFC 8785 '0.00001'). Magnitudes from 1e16 up to 1e21 also came out in exponent form (1e16 as '1e+16', RFC 8785 '10000000000000000'). Python integers were not affected. Re-checked on 2026-09-28 against node JSON.stringify: 9 of 13 probe values differed under the old code, and 0 differ under the corrected code. Effect: a receipt carrying any such character or number canonicalised to different bytes in the reference code than in a conforming RFC 8785 implementation. Its content_id and signature therefore failed across implementations: a receipt issued by the reference code failed in a conforming verifier, and a conforming issuer's receipt failed in the reference verifier. This fault causes wrong rejection. It does not cause false acceptance. The same file was public in three places, and all three copies had the defect: (a) the GitHub repository CSOAI-ORG/a2a-signed-receipts, which IETF SCITT architecture issue #462 cites at commit daaa2306 in a post dated 2026-09-10T03:53:43Z (that repository is not reachable now, so the commit that first introduced the code is not recorded here); (b) the Hugging Face source snapshot csoai/councilof-ai-source, commit 96bf3a07, published 2026-09-25T10:42:26Z (interceptor.py sha256 d908b9e7...); (c) https://councilof.ai/spec/signed-receipts/v1/interceptor.py, the same bytes. The file was added in commit 7d0a7700a (2026-09-27T06:52:22Z) and first served by the deploy of 9e501e01d, completed 2026-09-27T07:32:56Z. Who could have been affected: anyone who issued or verified such receipts with any of these copies, or who compared its bytes with another implementation. No hosted endpoint ran this code. functions/ contains no import or copy of interceptor.py. POST /api/receipts/verify checks x402 offer and receipt JWS with separate code that requires the kid to resolve in https://csoai.org/.well-known/did.json. Re-checked live on 2026-09-28: a receipt signed with a freshly generated key and naming did:web:csoai.org#attacker-key-1 returned INVALID ('not listed in verificationMethod'), and one naming did:web:csoai.org#board-attestation-1 returned INVALID ('signature does not verify under the resolved key'). POST /api/verify and the MCP verify_card tool check measurement cards with functions/_lib/cardVerify.ts, which does not use this canonicaliser.",
+      "how_caught": "Found while building the signed-receipts/v1 conformance kit on 2026-09-28. The kit's vectors are checked by a Node runner that uses JSON.stringify and by the Python reference. The corrected number serialiser was then compared with node JSON.stringify over 3,995 fuzzed doubles, with 0 mismatches.",
+      "what_changed": "Fixed in commit 1ae2025fd, landed in acff54074. _esc_str writes astral characters as themselves and uses \\uXXXX only for control characters and lone surrogates. _num uses the ECMAScript Number::toString algorithm (RFC 8785 section 3.2.2.3). test_interceptor.py gains 2 RFC 8785 checks and runs the published vectors. Vector valid-jcs-edge covers an astral character. The kit also has two wrong-canonicalisation vectors. SPEC.md is hash-pinned (sha256 f5a7400b1963473718156d14e70df6c640ee12881e6c56dc5ecbfac0e9e43efa) and is not edited. Its draft 0.2 change notes still say astral characters are escaped as surrogate pairs. That sentence is an erratum: the conformance kit page states it, and so does this entry. The Hugging Face copy was replaced at csoai/councilof-ai-source commit 9021aec0, and revision 96bf3a07 keeps the pre-correction bytes. The GitHub copy was not changed because the repository is not reachable. How to re-check: download https://councilof.ai/spec/signed-receipts/v1/conformance/ and run 'node run.mjs reference-results.json --vectors vectors.json' (Node, no dependencies) or 'python3 run.py reference-results.json --vectors vectors.json' (needs only cryptography). To test your own verifier, write its result for each case to a file and pass that file instead. example-fail-results.json holds the results of the verifier before the fix, and both runners report FAIL on it. python3 test_interceptor.py in /spec/signed-receipts/v1/ gives 40 PASS, 0 FAIL.",
+      "status": "CORRECTED - reference canonicaliser matches RFC 8785 for astral characters and numbers; SPEC.md draft 0.2 change note on surrogate pairs is an erratum, kept byte for byte",
+      "reached_the_public": true,
+      "evidence": [
+        "https://councilof.ai/spec/signed-receipts/v1/interceptor.py (_esc_str, _num, _es_float)",
+        "https://councilof.ai/spec/signed-receipts/v1/SPEC.md (draft 0.2, sha256 f5a7400b..., unchanged; erratum in its change notes)",
+        "https://councilof.ai/spec/signed-receipts/v1/conformance/ (erratum note; vectors valid-jcs-edge and the wrong-canonicalisation cases)",
+        "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/9021aec0c1459b17f5fa90e734917e20fced970a/contributions/a2a-signed-receipts/f80de2731ceb",
+        "councilof-ai commits 1ae2025fd and acff54074"
+      ]
+    },
+    {
       "id": "C-2026-0927-05",
       "date": "2026-09-27",
       "detected_at": "2026-09-27",
@@ -1365,20 +1423,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "95e8ee3ff4b122145c8a3f3f4198e725b1b0352c2a7733e022f115a72d57cef0",
+    id: "dee2b444bea5f21d8dfed381fcd5439c305fd48cd982d58727f73767d5bc6a4f",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "714ff259ee97578b67c8cd882e04749a7b96eafd5d9f31edc25d466c0f99697d3a05856eb9ee376f36d34313c2884868a8d79fb5dcb38f996a69139c489c6309",
+    signature: "d1f8a0b15cde83452a69e33878cd7ff5cc17931d7ff287d76ddbc56fa9ce2338e9b7d29e33afefead3f327a823571463997934d0b3002f6913a4b67eeeb47f0f",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "95e8ee3ff4b122145c8a3f3f4198e725b1b0352c2a7733e022f115a72d57cef0",
+          "content_id": "dee2b444bea5f21d8dfed381fcd5439c305fd48cd982d58727f73767d5bc6a4f",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 76,
-          "latest_entry_id": "C-2026-0927-05",
-          "ledger_canonical_bytes": 142946,
+          "entries": 78,
+          "latest_entry_id": "C-2026-0928-01",
+          "ledger_canonical_bytes": 155487,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-27T09:42:39Z"
+          "signed_at": "2026-09-28T04:58:38Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
