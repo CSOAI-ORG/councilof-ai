@@ -9,8 +9,7 @@ ONE snapshot directory is built from LIVE truth and pushed, unchanged, to each s
     board.json      GET https://councilof.ai/api/gspc      — the bytes as served, untouched (so its own
                                                             site_attestation still verifies over them)
     root.json       GET https://councilof.ai/root.json     — the bytes as served, untouched
-    SNAPSHOT.json   as_of · read_at · lid · sha256 of both · merkle root · card count · derived counts ·
-                    frozen-bank row counts · the fingerprint that makes every push idempotent
+    SNAPSHOT.json   root publication time · read_at · published measurement-date statement · digests · counts · banks · fingerprint
     README.md       the lid (totals.lid, verbatim) · the axes with status and separation · honest counts ·
                     how a stranger verifies (gspc-verify, root.json inclusion, did:web key)
     gspc-axes.csv / gspc-axes.jsonl   one row per slot
@@ -126,6 +125,15 @@ def canonical(obj) -> bytes:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def measurement_date_statement(board: dict) -> str | None:
+    """Return the board's published date statement; never infer it from root as_of or read_at."""
+    measured_on = board.get("measured_on")
+    if not isinstance(measured_on, dict):
+        return None
+    value = measured_on.get("date")
+    return value.strip() if isinstance(value, str) and value.strip() else None
 
 
 def wait_for(fn, *, tries: int = 12, delay: float = 5.0):
@@ -380,6 +388,7 @@ def derive_counts(board: dict) -> dict:
 
 def axis_rows(board: dict, banks: list[dict]) -> list[dict]:
     bank_by_axis = {b["axis"]: b for b in banks}
+    board_date_statement = measurement_date_statement(board)
     rows = []
     for a in board["axes"]:
         b = bank_by_axis.get(a.get("axis"), {})
@@ -392,6 +401,8 @@ def axis_rows(board: dict, banks: list[dict]) -> list[dict]:
             "leader": a.get("leader") if not a.get("public_leader_state") else None,
             "accuracy": a.get("accuracy") if not a.get("public_leader_state") else None,
             "fleet_mean": a.get("fleet_mean"),
+            "board_measurement_date_statement": board_date_statement,
+            "board_measurement_date_scope": "board-level; not an axis-specific timestamp",
             "dataset": slug, "dataset_url": (BANK_HOST + slug) if slug else None,
             "bank_state": b.get("bank_state"), "bank_rows": b.get("bank_rows"),
         })
@@ -416,13 +427,20 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
         return "—" if v is None or v == "" else str(v)
 
     lines = []
-    lines.append(f"# GSPC board — snapshot as of {as_of}")
+    lines.append(f"# GSPC board — transparency root published at {as_of}")
     lines.append("")
     lines.append(f"**{lid}**")
     lines.append("")
     lines.append(f"`GET {BOARD_URL}` is the authority. This is a snapshot of that GET, read at `{read_at}`, "
-                 f"aligned to the transparency root `root.json` published at `{as_of}`. If the live GET and these "
-                 "files disagree, the live GET wins. A fetch that fails is `UNCHECKABLE` — never a fabricated `0`.")
+                 f"aligned to the transparency root `root.json` published at `{as_of}`. The root timestamp is not "
+                 "a measurement timestamp. If the live GET and these files disagree, the live GET wins. A fetch that "
+                 "fails is `UNCHECKABLE` — never a fabricated `0`.")
+    date_statement = measurement_date_statement(board)
+    if date_statement:
+        lines.append(f"**Published measurement-date statement (board-level; not per-axis):** `{date_statement}`")
+    else:
+        lines.append("**Published measurement-date statement:** unavailable; no measurement freshness is inferred.")
+    lines.append("Source: `board.json` field `measured_on.date`. Fetch time and root publication time are reported separately.")
     lines.append("")
     lines.append("**Measurement, not certification.** A TIE is never a win. An empty slot is a finding, not a zero. "
                  "No slot is for sale.")
@@ -502,8 +520,8 @@ def render_readme(tr: dict, counts: dict, rows: list[dict]) -> str:
     lines.append("|---|---|")
     lines.append(f"| `board.json` | the whole live GET, byte-for-byte (sha256 `{tr['board_sha256']}`) |")
     lines.append(f"| `root.json` | the transparency root, byte-for-byte (sha256 `{tr['root_sha256']}`) |")
-    lines.append("| `SNAPSHOT.json` | as_of, read_at, digests, derived counts, bank rows, and the fingerprint every surface is keyed on |")
-    lines.append("| `gspc-axes.csv` / `gspc-axes.jsonl` | one row per slot |")
+    lines.append("| `SNAPSHOT.json` | root publication time, fetch time, published measurement-date statement, digests, counts, and fingerprint |")
+    lines.append("| `gspc-axes.csv` / `gspc-axes.jsonl` | one row per slot, with the board-level date statement and explicit scope |")
     lines.append("| `check-board.sh` | re-derive the totals and the Merkle root yourself |")
     lines.append("| `manifest.jsonl` | file, bytes, sha256 |")
     lines.append("")
@@ -612,7 +630,11 @@ def build_snapshot(tr: dict, out: Path) -> Path:
 
     snap = {
         "kind": "csoai.gspc-spray-snapshot/1",
-        "as_of": tr["as_of"], "read_at": tr["read_at"], "lid": tr["lid"],
+        "as_of": tr["as_of"], "root_as_of": tr["as_of"], "read_at": tr["read_at"], "lid": tr["lid"],
+        "as_of_scope": "transparency-root publication timestamp; not a measurement timestamp",
+        "measurement_date_statement": measurement_date_statement(tr["board"]),
+        "measurement_date_source": "board.json:measured_on.date",
+        "measurement_date_scope": "board-level statement; not an axis-specific timestamp",
         "board_url": BOARD_URL, "root_url": ROOT_URL,
         "board_sha256": tr["board_sha256"], "board_content_sha256": tr["board_content_sha256"],
         "root_sha256": tr["root_sha256"],
@@ -1020,13 +1042,15 @@ def kaggle_page_text(tr: dict) -> tuple[str, str]:
 
     Nothing here is typed: as_of, read_at, lid, issuer and fingerprint all come from `tr`.
     A hand-added line (a Hub triple, a lane note) is exactly what this text is compared against."""
-    subtitle = f"Snapshot of GET councilof.ai/api/gspc · as_of {tr['as_of']}"
+    subtitle = f"GSPC root published at {tr['as_of']}"
     assert 20 <= len(subtitle) <= 80, f"Kaggle subtitle must be 20–80 chars, got {len(subtitle)}"
     description = (
         f"{tr['lid']}\n\n"
         f"AUTHORITY: GET {BOARD_URL}. This Kaggle copy is a snapshot read at {tr['read_at']}, aligned to the transparency "
-        f"root published at {tr['as_of']}. If the live GET and these files disagree, the live GET wins. A fetch that fails "
-        "is UNCHECKABLE, never a fabricated 0.\n\n"
+        f"root published at {tr['as_of']}. The root timestamp is not a measurement timestamp. "
+        f"Published board-level measurement-date statement (not per-axis): "
+        f"{measurement_date_statement(tr['board']) or 'unavailable; freshness not inferred'}. "
+        "If the live GET and these files disagree, the live GET wins. A fetch that fails is UNCHECKABLE, never a fabricated 0.\n\n"
         "FILES: board.json (the whole GET, unmodified) · root.json (the transparency root, unmodified) · SNAPSHOT.json "
         "(digests, derived counts, bank rows) · gspc-axes.csv / .jsonl (one row per slot) · check-board.sh (re-derive the "
         "totals and the Merkle root yourself) · README.md (the axes, the counts, how to verify).\n\n"
@@ -1485,12 +1509,14 @@ def main(argv: list[str] | None = None) -> int:
                 results.append(result(s, "FAILED", detail=f"{type(e).__name__}: {e}"))
 
     report = {"kind": "csoai.gspc-spray-report/1", "run_at": utc_now(), "as_of": tr["as_of"], "lid": tr["lid"],
+              "measurement_date_statement": measurement_date_statement(tr["board"]),
               "fingerprint": tr["fingerprint"], "snapshot_dir": str(snap), "results": results}
     if args.report:
         Path(args.report).write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
     log("")
-    log(f"as_of {tr['as_of']} · {tr['lid']}")
-    log("| surface | status | url | as_of seen |")
+    log(f"root as_of {tr['as_of']} · {tr['lid']}")
+    log(f"measurement-date statement: {measurement_date_statement(tr['board']) or 'unavailable; freshness not inferred'}")
+    log("| surface | status | url | root as_of seen |")
     log("|---|---|---|---|")
     for r in results:
         log(f"| {r['surface']} | {r['status']} | {r['url'] or '—'} | {r['as_of_seen'] or '—'} |")
