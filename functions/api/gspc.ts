@@ -31,6 +31,50 @@ const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 const isOwnCouncilModel = (name?: string | null): boolean =>
   typeof name === "string" && (/^council\b/i.test(name.trim()) || /\(council specialist\)/i.test(name));
 
+const isOwnModelIdentifier = (value: string): boolean => {
+  const s = value.trim();
+  return (
+    (/^council\b/i.test(s) && /^[\w.:/@+-]+(?:\s+\(council specialist\))?$/i.test(s)) ||
+    /^[\w.:/@+-]+\s+\(council specialist\)$/i.test(s)
+  );
+};
+
+export const collectOwnModelIdentifiers = (value: unknown, found = new Set<string>()): Set<string> => {
+  if (Array.isArray(value)) {
+    for (const item of value) collectOwnModelIdentifiers(item, found);
+  } else if (value && typeof value === "object") {
+    for (const [key, item] of Object.entries(value)) {
+      if (isOwnModelIdentifier(key)) found.add(key);
+      collectOwnModelIdentifiers(item, found);
+    }
+  } else if (typeof value === "string" && isOwnModelIdentifier(value)) {
+    found.add(value);
+  }
+  return found;
+};
+
+export const redactOwnModelIdentifiers = (value: unknown, identifiers: Set<string>): unknown => {
+  const ordered = [...identifiers].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  const aliases = new Map(ordered.map((identifier, i) => [identifier, `CSOAI-owned specialist ${i + 1}`]));
+  const replace = (text: string): string => {
+    let result = text;
+    for (const [identifier, alias] of aliases) {
+      result = result.replace(new RegExp(identifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), alias);
+    }
+    return result;
+  };
+  const visit = (item: unknown): unknown => {
+    if (Array.isArray(item)) return item.map(visit);
+    if (item && typeof item === "object") {
+      return Object.fromEntries(
+        Object.entries(item).map(([key, child]) => [aliases.get(key) ?? replace(key), visit(child)]),
+      );
+    }
+    return typeof item === "string" ? replace(item) : item;
+  };
+  return visit(value);
+};
+
 // Remove our own model from an axis's PUBLIC leader slot. Only touches model-comparison
 // axes our own model led; every external-led axis (and every fact axis) passes through
 // unchanged. The leader-specific numbers (the leader's accuracy, its Wilson interval, its
@@ -43,6 +87,8 @@ const isOwnCouncilModel = (name?: string | null): boolean =>
 // published. Fleet-level aggregates (fleet_mean, mean_harm, cvar05_harm) are NOT a
 // self-preference claim and are kept.
 type PublicAxis = AxisScore & {
+  // May name an external leader withheld for lack of a signed card; own-model identifiers
+  // are deliberately omitted by excludeOwnLeader.
   excluded_leader?: string;
   public_leader_state?: string;
   excluded_note?: string;
@@ -78,7 +124,6 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
     // removed. UNTESTED (not SEPARATED/TIE) keeps this axis out of the separated/tie/mean
     // tallies below, which is the honest count of what the public board can still assert.
     separation: "UNTESTED",
-    excluded_leader: a.leader,
     public_leader_state: "EXCLUDED_OWN_MODEL",
     // The primary note is neutral — the original note narrated our own model leading, which
     // is exactly the self-preference being removed, so it must not be the public sentence.
@@ -299,7 +344,7 @@ const applyRowsSeparation = (a: PublicAxis): RowsAxis => {
   // macro_f1 / unparsed_rate describe the leader that was typed; keep them only when the rows
   // name the same model (safety), never reattribute them to a different one.
   const sameLeader = typeof a.leader === "string" && a.leader.split(" ")[0] === t.leader.model;
-  const ownExcluded = typeof a.excluded_leader === "string" && isOwnCouncilModel(a.excluded_leader);
+  const ownExcluded = a.public_leader_state === "EXCLUDED_OWN_MODEL";
   const card = r.leader_card;
   const cardNote = card?.note ?? "leader shown from per-item rows; no signed per-model card yet";
   const nNote =
@@ -723,7 +768,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
-          `Own council-specialist models were removed from the public per-axis leaders on ` +
+          `CSOAI-owned specialist models were removed from the public per-axis leaders on ` +
           `${ownLedExcludedAxes.length} of the ${cmp.length} model-comparison axes (${ownLedExcludedAxes.join(", ") || "none"}); ` +
           `${externallyLedAxes.length} axes carry an external public leader. A neutral measurement body ` +
           `does not rank its own models against the vendors it measures. This changes leader attribution ` +
@@ -774,7 +819,9 @@ export const onRequestGet: PagesFunction = async (context) => {
       signed_record: "/interop/gspc-peritem-rows-2026-08-12.signed.json",
       producer: ROWS_SEPARATION.producer,
       rule: ROWS_SEPARATION.rule,
-      own_model_exclusion: ROWS_SEPARATION.own_model_exclusion,
+      own_model_exclusion:
+        "CSOAI-owned specialist models are excluded before public ranking. The published external-only " +
+        "re-ranking uses the six-model base-model cohort; internal model identifiers are omitted from this API response.",
       publication_rule: ROWS_SEPARATION.publication_rule,
       frozen_manifests_note: ROWS_SEPARATION.frozen_manifests_note,
       decided_axes: rowsDecided.map((a) => ({
@@ -863,6 +910,15 @@ export const onRequestGet: PagesFunction = async (context) => {
     ],
   };
 
+  // Pseudonymize owned model identifiers across the complete API projection, not only the
+  // leader fields. They can also appear in per-model summaries and historical explanations.
+  // Source cards and signed records remain byte-for-byte untouched; the site attestation below
+  // signs this served projection after pseudonymization.
+  const ownModelIdentifiers = collectOwnModelIdentifiers([AXES, MEASURED_ON, MEASURED_IN_LANE, ROWS_SEPARATION, body]);
+  const publicBody = redactOwnModelIdentifiers(body, ownModelIdentifiers) as Record<string, unknown>;
+  publicBody.public_model_identifier_policy =
+    "CSOAI-owned model names use stable numbered aliases within this response; source measurement cards and signed records are unchanged.";
+
   // ── site attestation ────────────────────────────────────────
   // Sign the served board snapshot at the edge with the dedicated board key
   // (#board-attestation-1, provisioned as a Cloudflare secret; its public half
@@ -938,9 +994,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         tracked_as: "/api/corrections C-2026-0826-08",
       } as typeof measuredOn.living_stamp;
 
-      const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
+      const signedBytes = canonical(publicBody); // served projection WITHOUT site_attestation — reconstructable by anyone
       const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
-      (body as Record<string, unknown>).site_attestation = {
+      publicBody.site_attestation = {
         attests: "integrity of this board snapshot as published by the site (NOT a re-measurement)",
         signer: "did:web:csoai.org#board-attestation-1",
         alg: "Ed25519",
@@ -982,11 +1038,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     } catch {
       // A provisioned-but-broken key must not degrade to a fake pass: omit the
       // field and surface the operational fault in the payload instead.
-      (body as Record<string, unknown>).site_attestation = { error: "board signing key present but unusable — operations must fix; no signature emitted" };
+      publicBody.site_attestation = { error: "board signing key present but unusable — operations must fix; no signature emitted" };
     }
   }
 
-  const response = new Response(JSON.stringify(body, null, 2), {
+  const response = new Response(JSON.stringify(publicBody, null, 2), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "public, max-age=300",

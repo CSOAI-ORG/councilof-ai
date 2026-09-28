@@ -1,7 +1,13 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
-import { CARDED_MODEL_AXES, ROWS_AXES, onRequestGet } from "./gspc";
+import { CARDED_MODEL_AXES, ROWS_AXES, collectOwnModelIdentifiers, onRequestGet, redactOwnModelIdentifiers } from "./gspc";
+import { AXES_A } from "./_gspc_axes_a";
+import { AXES_B } from "./_gspc_axes_b";
+import { AXES_C } from "./_gspc_axes_c";
+import { AXES_FIN } from "./_gspc_axes_fin";
+import { MEASURED_ON } from "./_gspc_types";
+import { MEASURED_IN_LANE } from "./_gspc_lane";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 
 // 2026-09-27: separation on the board-v2 axes is computed from the PUBLISHED per-item rows
@@ -9,7 +15,13 @@ import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 // the served payload and the generated module, never a typed expectation of the result.
 
 type Axis = Record<string, any> & { axis: string; kind?: string; separation?: string };
-type Payload = { axes: Axis[]; totals: Record<string, any>; peritem_rows: Record<string, any>; measured_on: Record<string, any> };
+type Payload = {
+  axes: Axis[];
+  totals: Record<string, any>;
+  peritem_rows: Record<string, any>;
+  measured_on: Record<string, any>;
+  public_model_identifier_policy: string;
+};
 
 async function served(): Promise<Payload> {
   (globalThis as unknown as { caches: unknown }).caches = {
@@ -96,6 +108,40 @@ describe("GET /api/gspc: separation from the published per-item rows", () => {
     // safety's leader gemma3:12b has no gemma3:12b card on the safety card key
     const safety = board.axes.find((a) => a.axis === "safety")!;
     expect(safety.leader_card_state).not.toBe("SIGNED_PER_MODEL_CARD");
+  });
+
+  it("withholds internal own-model identifiers from the public axis and per-item projections", () => {
+    const ownExcluded = board.axes.filter((a) => a.public_leader_state === "EXCLUDED_OWN_MODEL");
+    expect(ownExcluded.length).toBeGreaterThan(0);
+    for (const a of ownExcluded) {
+      expect(a).not.toHaveProperty("excluded_leader");
+      expect(a).toHaveProperty("excluded_note");
+      expect(a).toHaveProperty("historical_measurement_record");
+    }
+    expect(board.peritem_rows.own_model_exclusion).toBe(
+      "CSOAI-owned specialist models are excluded before public ranking. The published external-only " +
+        "re-ranking uses the six-model base-model cohort; internal model identifiers are omitted from this API response.",
+    );
+    expect(String(board.peritem_rows.own_model_exclusion)).not.toMatch(/\bcouncil[-_][a-z0-9]/i);
+  });
+
+  it("pseudonymizes own-model identifiers everywhere in the complete API response", () => {
+    const serialized = JSON.stringify(board);
+    const sourceIdentifiers = collectOwnModelIdentifiers([AXES_A, AXES_B, AXES_C, AXES_FIN, MEASURED_ON, MEASURED_IN_LANE, ROWS_SEPARATION]);
+    expect(sourceIdentifiers.size).toBeGreaterThan(0);
+    for (const identifier of sourceIdentifiers) expect(serialized).not.toContain(identifier);
+    expect(board.public_model_identifier_policy).toMatch(/stable numbered aliases/i);
+  });
+
+  it("redaction control rewrites identifier keys and narrative mentions while preserving values", () => {
+    const canary = "council-private-fixture-v99";
+    const fixture = { [canary]: { note: `Observed by ${canary}`, score: 0.75 } };
+    const ids = collectOwnModelIdentifiers(fixture);
+    const redacted = redactOwnModelIdentifiers(fixture, ids) as Record<string, any>;
+    const serialized = JSON.stringify(redacted);
+    expect(serialized).not.toContain(canary);
+    expect(serialized).toContain("CSOAI-owned specialist 1");
+    expect(redacted["CSOAI-owned specialist 1"].score).toBe(0.75);
   });
 
   it("the producer's carded-axis rule and the board's CARDED_MODEL_AXES are the same rule", () => {
