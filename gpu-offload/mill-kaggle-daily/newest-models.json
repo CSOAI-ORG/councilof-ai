@@ -1,0 +1,46 @@
+{
+ "schema": "csoai.mill-kaggle-newest-pins/0.1",
+ "updated": "2026-09-28T08:00:00Z",
+ "rule": "A newest-class model joins the mill rotation only with (a) a release date from a primary source inside the 30-day window, (b) an open licence that allows evaluation and needs no gated click-through (the kernel holds no HF token), (c) a GGUF whose general.architecture is in upstream llama.cpp (src/llama-arch.cpp) and whose Ollama manifest carries a chat template, (d) weights that fit one Kaggle T4 (16 GB) with room for the KV cache, and (e) a manifest digest pinned HERE before the kernel runs. The kernel halts if the pulled manifest differs from the pin. Our own models are never eligible.",
+ "pin_method": "sha256 of the manifest bytes served by the Ollama registry protocol (GET https://huggingface.co/v2/<ns>/<repo>/manifests/<quant>, Accept application/vnd.docker.distribution.manifest.v2+json). Validated 2026-09-28: the same method applied to registry.ollama.ai/v2/library/qwen2.5/manifests/7b reproduces the 3090 pin 845dbda0... exactly. Fetched twice per model; both fetches identical.",
+ "models": [
+  {
+   "tag": "hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0",
+   "digest": "dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff",
+   "priority": 1,
+   "lab": "Xiaomi (XiaomiMiMo)",
+   "upstream_repo": "XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B",
+   "gguf_repo": "ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF (the llama.cpp org; Q8_0 is the only quant it publishes)",
+   "release_date": "2026-09-21",
+   "release_source": "https://huggingface.co/api/models/XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B createdAt 2026-09-21 (lab's own repo)",
+   "params": 9409813744,
+   "params_source": "HF safetensors.total",
+   "licence": "mit",
+   "gguf_architecture": "qwen35 (present in llama.cpp llama-arch.cpp master, read 2026-09-28)",
+   "weights_bytes": 9527498048,
+   "template": "Qwen im_start chat template with an empty <think></think> prefill (non-thinking mode); stop list includes <think>",
+   "notes": "Vision-capable base (Qwen3.5-9B); the manifest carries a 624 MB projector layer. The mill sends text only.",
+   "added_at": "2026-09-28",
+   "added_by": "newest-models lane 2026-09-28"
+  },
+  {
+   "tag": "hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0",
+   "digest": "c7e50c7ffebc34187452ed4946b57622e7a820bed89ef49a19c52c0b3a9698e0",
+   "priority": 2,
+   "lab": "OpenBMB (Tsinghua NLP / ModelBest)",
+   "upstream_repo": "openbmb/MiniCPM5-2B",
+   "gguf_repo": "openbmb/MiniCPM5-2B-GGUF (the lab's own GGUF)",
+   "release_date": "2026-09-06",
+   "release_source": "https://huggingface.co/api/models/openbmb/MiniCPM5-2B createdAt 2026-09-06 (lab's own repo; GGUF repo created 2026-09-05)",
+   "params": 2516756480,
+   "params_source": "HF safetensors.total",
+   "licence": "apache-2.0",
+   "gguf_architecture": "llama",
+   "weights_bytes": 2679710688,
+   "template": "im_start chat template with an empty <think></think> prefill (non-thinking mode)",
+   "notes": "Q8_0 chosen over Q4_K_M: at 2.5B the fidelity cost of 4-bit is not worth saving 1 GB.",
+   "added_at": "2026-09-28",
+   "added_by": "newest-models lane 2026-09-28"
+  }
+ ]
+}
