@@ -298,6 +298,16 @@ it yourself; we did not vet it.
 ## 10b. SIGNED EVIDENCE RECORDS — census and probe pages (evidence linked from the board, never counted into it)
 
 {{EVIDENCE_RECORDS_SECTION}}
+## 10c. DATED MEASUREMENT RECORDS AND KITS (one page or dataset each)
+
+Each record below is a dated account of what public sources state, with its sources hashed, signed with the board key and timestamped. None makes a claim about anyone's intent, about the causes of an incident, or about the security of any system, and none is a rating.
+
+- Disclosure lag, the Medicare statistics portal agent access: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json (board signature record.signed.json and OpenTimestamps proof record.json.ots beside it)
+- Disclosure lag, the Gemini cyber-evaluation access to outside systems: https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json (same three files)
+- signed-receipts/v1 conformance kit — test vectors, Python and Node runners, reference results; the reference verifier answers UNVERIFIABLE_KEY, never VALID, for a key it cannot resolve: https://councilof.ai/spec/signed-receipts/v1/conformance/ — vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json — specification https://councilof.ai/spec/signed-receipts/
+- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0; results against open-source decoders are held until each project's maintainers have seen them: https://huggingface.co/datasets/csoai/cobol-copybook-decoding-corpus
+- All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
+
 ## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
 
 A regulated category adjacent to ours now exists in US state law.
