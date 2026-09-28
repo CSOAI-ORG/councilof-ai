@@ -881,7 +881,9 @@ export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
     group.tabs.some((tab) => tab.id === id),
   );
   if (direct) return direct;
-  const hidden = DASHBOARD_HIDDEN_GROUPS[id as LobbyTabId];
+  const hidden = Object.prototype.hasOwnProperty.call(DASHBOARD_HIDDEN_GROUPS, id)
+    ? DASHBOARD_HIDDEN_GROUPS[id]
+    : undefined;
   return hidden
     ? DASHBOARD_NAV_GROUPS.find((group) => group.id === hidden) || null
     : null;
@@ -902,5 +904,8 @@ export function normalizeLobbyTabId(id: string): string {
     x402: "swift",
     "x402-doors": "swift",
   };
-  return aliases[value] || value || "home";
+  // URL-derived ids must not inherit Object.prototype entries as destinations.
+  return Object.prototype.hasOwnProperty.call(aliases, value)
+    ? aliases[value]
+    : value || "home";
 }

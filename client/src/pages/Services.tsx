@@ -34,9 +34,11 @@ type Load =
 
 export default function Services() {
   const [load, setLoad] = useState<Load>({ state: "loading" });
+  const [retryToken, setRetryToken] = useState(0);
 
   useEffect(() => {
     let alive = true;
+    setLoad({ state: "loading" });
     void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
       .then((r) => {
         if (!r.ok) return Promise.reject(new Error("HTTP " + r.status));
@@ -52,7 +54,7 @@ export default function Services() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [retryToken]);
 
   const cat = load.state === "live" ? load.catalogue : null;
 
@@ -117,6 +119,13 @@ export default function Services() {
                 rail is down.
               </p>
             )}
+            <button
+              type="button"
+              onClick={() => setRetryToken((value) => value + 1)}
+              className="mt-4 inline-flex min-h-11 items-center rounded-lg border border-amber-200/40 px-4 py-2 text-sm font-semibold text-amber-100 hover:border-amber-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+            >
+              Retry manifest read
+            </button>
           </div>
         ) : (
           <div className="space-y-12">

@@ -76,7 +76,12 @@ async function readChallenge(url: string, signal: AbortSignal): Promise<{ x402Ve
 }
 
 const Code = ({ children }: { children: string }) => (
-  <pre className="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100">
+  <pre
+    tabIndex={0}
+    role="region"
+    aria-label="Scrollable code example"
+    className="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+  >
     <code>{children}</code>
   </pre>
 );
