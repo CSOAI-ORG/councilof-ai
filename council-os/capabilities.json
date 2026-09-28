@@ -1161,14 +1161,13 @@
       "path": "/api/certificate-schema",
       "method": "GET",
       "name": "Certificate schema",
-      "description": "GET /api/certificate-schema — the schema URL the issuer and the verifier agree on.",
+      "description": "certificate-schema — withdrawn; the record is csoai.completion-record/0.1.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
-        "csoai.certificate-schema-endpoint/0.1",
-        "csoai.certificate/0.1"
+        "csoai.retired-endpoint/0.1"
       ],
       "surfaces": [
         "openapi"
@@ -1177,7 +1176,7 @@
         "method": "GET",
         "request": "/api/certificate-schema",
         "expect_status": [
-          200
+          503
         ],
         "safe": true
       },
@@ -3319,15 +3318,13 @@
       "path": "/api/paddle-webhook",
       "method": "GET",
       "name": "Paddle webhook",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
-        "csoai.certificate/0.1",
-        "csoai.measurement-card.issuance",
-        "csoai.paddle-webhook-endpoint/0.1"
+        "csoai.retired-endpoint/0.1"
       ],
       "surfaces": [
         "openapi"
@@ -3336,7 +3333,7 @@
         "method": "GET",
         "request": "/api/paddle-webhook",
         "expect_status": [
-          200
+          503
         ],
         "safe": true
       },
@@ -3348,15 +3345,13 @@
       "path": "/api/paddle-webhook",
       "method": "POST",
       "name": "Paddle webhook (POST)",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
-        "csoai.certificate/0.1",
-        "csoai.measurement-card.issuance",
-        "csoai.paddle-webhook-endpoint/0.1"
+        "csoai.retired-endpoint/0.1"
       ],
       "surfaces": [
         "openapi"
@@ -3365,7 +3360,7 @@
         "method": "POST",
         "request": "/api/paddle-webhook",
         "expect_status": [
-          200
+          503
         ],
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"

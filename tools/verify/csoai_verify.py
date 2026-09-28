@@ -7,8 +7,9 @@ Handles three card shapes:
                   (sha256(canonical body) == id, Ed25519 under the DID key)
   public-root-card  Ed25519 over canonical {did, schema, surface, as_of, sha256}
   csoai-certificate sha256(canon(payload)) == certificate_id, Ed25519 over canon(payload)
-                  under issuer_did — PHASE3 C.3. LEGACY shape of the paid-entitlement issuer
-                  (functions/api/paddle-webhook.ts); kept so any historical object still checks.
+                  under issuer_did — PHASE3 C.3. LEGACY: the paid issuer that produced this shape
+                  (functions/api/paddle-webhook.ts) is withdrawn; kept so any historical object
+                  still checks. New records are csoai.completion-record/0.1 (below).
   completion-record csoai.completion-record/0.1 (Open Badges 3.0 / VC 2.0, eddsa-jcs-2022) —
                   delegated whole to tools/verify/completion_record_verify.py (proof, profile
                   schema, reproduced == published, pseudonymous subject, Bitstring Status List).

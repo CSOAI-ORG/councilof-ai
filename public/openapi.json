@@ -811,18 +811,26 @@
     },
     "/api/certificate-schema": {
       "get": {
-        "description": "GET /api/certificate-schema \u2014 the schema URL the issuer and the verifier agree on.",
+        "description": "certificate-schema \u2014 withdrawn; the record is csoai.completion-record/0.1.",
         "operationId": "get__api_certificate-schema",
         "responses": {
-          "200": {
+          "503": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "code": "RETIRED",
+                  "endpoint": "/api/certificate-schema",
+                  "schema": "csoai.retired-endpoint/0.1",
+                  "status": "UNAVAILABLE"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
           }
         },
         "security": [],
-        "summary": "GET /api/certificate-schema \u2014 the schema URL the issuer and the verifier agree on."
+        "summary": "certificate-schema \u2014 withdrawn; the record is csoai.completion-record/0.1.",
+        "x-csoai-lifecycle": "RETIRED"
       }
     },
     "/api/challenge": {
@@ -3274,32 +3282,48 @@
     },
     "/api/paddle-webhook": {
       "get": {
-        "description": "POST /api/paddle-webhook \u2014 Paddle settlement webhook.",
+        "description": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
         "operationId": "get__api_paddle-webhook",
         "responses": {
-          "200": {
+          "503": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "code": "RETIRED",
+                  "endpoint": "/api/paddle-webhook",
+                  "schema": "csoai.retired-endpoint/0.1",
+                  "status": "UNAVAILABLE"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
           }
         },
         "security": [],
-        "summary": "POST /api/paddle-webhook \u2014 Paddle settlement webhook."
+        "summary": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
+        "x-csoai-lifecycle": "RETIRED"
       },
       "post": {
-        "description": "POST /api/paddle-webhook \u2014 Paddle settlement webhook.",
+        "description": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
         "operationId": "post__api_paddle-webhook",
         "responses": {
-          "200": {
+          "503": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "code": "RETIRED",
+                  "endpoint": "/api/paddle-webhook",
+                  "schema": "csoai.retired-endpoint/0.1",
+                  "status": "UNAVAILABLE"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Retired \u2014 withdrawn, not pre-release. csoai.retired-endpoint/0.1, code RETIRED"
           }
         },
         "security": [],
-        "summary": "POST /api/paddle-webhook \u2014 Paddle settlement webhook."
+        "summary": "paddle-webhook \u2014 withdrawn: records are free and are never called certificates.",
+        "x-csoai-lifecycle": "RETIRED"
       }
     },
     "/api/pop/a2a": {
@@ -9643,7 +9667,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 100,
+    "public_operations": 97,
     "quarantined": [
       {
         "buyable": false,
@@ -9659,7 +9683,7 @@
       "well_known": "csoai.x402/0.2"
     },
     "scheme": "exact",
-    "unauthenticated_facades": 34,
+    "unauthenticated_facades": 37,
     "well_known": "https://councilof.ai/.well-known/x402.json"
   }
 }
