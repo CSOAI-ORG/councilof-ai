@@ -2118,6 +2118,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Vulnerability Disclosure"
  },
  {
+  "path": "/wallet",
+  "comp": "GspcWallet",
+  "title": "Gspc Wallet"
+ },
+ {
   "path": "/watchdog",
   "comp": "Watchdog",
   "title": "Watchdog"

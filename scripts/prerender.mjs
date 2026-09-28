@@ -101,6 +101,9 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   // and /api/door-settles — all Functions.
   "/pay",
   "/pay/",
+  // /wallet reads /api/gspc and /api/corrections; keep the shell rather than baking preview fetch failures.
+  "/wallet",
+  "/wallet/",
   "/assess",
   "/assess/",
   "/assessment",
