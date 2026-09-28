@@ -28,7 +28,8 @@ const DESCRIPTION =
 
 const BASE = "/spec/signed-receipts/v1";
 const FILES = [
-  { href: `${BASE}/SPEC.md`, name: "SPEC.md", what: "the specification, draft 0.2 (the text on this page)" },
+  { href: `${BASE}/draft-0.3/SPEC.md`, name: "draft-0.3/SPEC.md", what: "the specification, draft 0.3 (28 Sep 2026): supersedes draft 0.2, withdraws its surrogate-pair sentence and makes VALID / INVALID / UNVERIFIABLE_KEY normative" },
+  { href: `${BASE}/SPEC.md`, name: "SPEC.md", what: "draft 0.2 (20 Aug 2026), unchanged: the text reproduced on this page" },
   { href: `${BASE}/interceptor.py`, name: "interceptor.py", what: "reference implementation: signs and verifies receipts (corrected 28 Sep 2026)" },
   { href: `${BASE}/test_interceptor.py`, name: "test_interceptor.py", what: "its regression suite (python3 test_interceptor.py)" },
   { href: `${BASE}/conformance/`, name: "conformance/", what: "golden vectors and a one-command runner: implement it in 5 minutes" },
@@ -100,7 +101,8 @@ export default function SignedReceiptsSpec() {
       <section aria-labelledby="spec" className="mt-10 border-t border-slate-200 pt-8">
         <h2 id="spec" className="text-xl font-bold text-slate-900">Specification text</h2>
         <p className="mt-2 text-sm text-slate-600">
-          Reproduced from <A href={`${BASE}/SPEC.md`}>SPEC.md</A> without changes.
+          Reproduced from <A href={`${BASE}/SPEC.md`}>SPEC.md</A> (draft 0.2) without changes. Draft 0.3,{" "}
+          <A href={`${BASE}/draft-0.3/SPEC.md`}>draft-0.3/SPEC.md</A>, supersedes it: its section 0 lists every change.
         </p>
         <div className="mt-4 leading-relaxed text-slate-800">
           <ReactMarkdown

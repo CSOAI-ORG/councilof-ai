@@ -36,7 +36,11 @@ export const PYPI_FOOTPRINT = `${HF}/datasets/csoai/distribution-footprint/resol
 export const PYPI_FOOTPRINT_PAGE = `${HF}/datasets/csoai/distribution-footprint`;
 /** A daily record older than this is stale and is omitted rather than shown as today's figure. */
 export const PYPI_MAX_AGE_HOURS = 48;
-export const ZENODO_BOARD_SNAPSHOT = "22811459";
+/** The board-snapshot CONCEPT record (10.5281/zenodo.22293340), not one version of it. Zenodo's records API answers a
+ *  concept id with a 302 to the newest version, so the title, date and DOI shown follow the latest snapshot.
+ *  Pinning version 22811459 (2026-09-15) kept a "22 axes measured" snapshot on the strip after the 2026-09-22
+ *  version recorded 23. stats.unique_downloads is concept-wide (all versions) either way. */
+export const ZENODO_BOARD_SNAPSHOT = "22293340";
 export const ZENODO_PAPER = "22985467";
 export const METHODOLOGY_URL = "/methodology/#how-momentum-is-measured";
 export const LISTING_LINE = "A listing is not an endorsement.";
@@ -808,7 +812,7 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
       as_of: deps.now().toISOString(),
       as_of_basis: "read",
       source_url: snap.value.url,
-      source_label: `Zenodo API · record ${ZENODO_BOARD_SNAPSHOT} stats.unique_downloads`,
+      source_label: `Zenodo API · concept record ${ZENODO_BOARD_SNAPSHOT} (latest version) stats.unique_downloads, all versions`,
       detail: `DOI ${snap.value.doi}`,
     });
   } else omitted.push({ id: "zenodo_board_snapshot", reason: snap.ok ? "Zenodo reports no downloads yet" : snap.reason });

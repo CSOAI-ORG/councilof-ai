@@ -36,7 +36,9 @@
   <h2>The steps</h2>
   <ol>
     <li>Read the receipt object and the verification rule in the <a href="/spec/signed-receipts/">specification</a>
-      (<a href="/spec/signed-receipts/v1/SPEC.md">SPEC.md</a>, draft 0.2). A receipt is JSON; its bytes are RFC 8785 (JCS);
+      (<a href="/spec/signed-receipts/v1/draft-0.3/SPEC.md">draft 0.3</a>, which withdraws the draft 0.2 erratum below and
+      makes the three results normative; draft 0.2 stays unchanged at <a href="/spec/signed-receipts/v1/SPEC.md">SPEC.md</a>).
+      A receipt is JSON; its bytes are RFC 8785 (JCS);
       <code>content_id</code> is the SHA-256 of the receipt minus <code>content_id</code> and <code>signature</code>; the
       Ed25519 signature covers the receipt minus <code>signature</code>.</li>
     <li>Download <a href="vectors.json"><code>vectors.json</code></a>. Each case gives a <code>receipt</code>, a
@@ -85,11 +87,11 @@
   0.3.1 (FractalAI, Apache-2.0); the expected results map that suite's own four checks onto the three codes. They are
   optional: a candidate that leaves them out gets SKIP, not FAIL. The runners here have no ML-DSA-65, so those cases were
   re-run with that package's own verifier (all four pass).</p>
-  <p>Not covered: time validity (draft 0.2 defines <code>issued_at</code> only, no validity window, so there are no
-  expiry cases), and issuer binding (draft 0.2 does not require <code>issuer</code> to equal the DID in
+  <p>Not covered: time validity (drafts 0.2 and 0.3 define <code>issued_at</code> only, no validity window, so there are no
+  expiry cases), and issuer binding (neither draft requires <code>issuer</code> to equal the DID in
   <code>kid</code>). One erratum in draft 0.2: its change notes say astral characters are escaped as surrogate pairs.
   RFC 8785 emits them as UTF-8, the reference now does too (corrected 28 September 2026), and case
-  <code>valid-jcs-edge</code> tests it.</p>
+  <code>valid-jcs-edge</code> tests it. Draft 0.3 withdraws that sentence (its section 0, item 1).</p>
 
   <h2>Files</h2>
   <ul>

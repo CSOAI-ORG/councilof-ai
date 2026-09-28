@@ -88,8 +88,10 @@ function upstream(): Record<string, Route> {
       }),
     "https://zenodo.org/api/records/22985467": () =>
       json({ doi: "10.5281/zenodo.22985467", metadata: { title: "Same model, same prompts, different answers", publication_date: "2026-09-27" }, stats: { unique_downloads: 0 } }),
-    "https://zenodo.org/api/records/22811459": () =>
-      json({ doi: "10.5281/zenodo.22811459", metadata: { title: "GSPC board snapshot", publication_date: "2026-09-15" }, stats: { unique_downloads: 220 } }),
+    // The concept record id: Zenodo 302s it to the newest version, which is what this mock answers with.
+    // A pin on one version (22811459, "22 axes") would not be answered here and the figure would be omitted.
+    "https://zenodo.org/api/records/22293340": () =>
+      json({ doi: "10.5281/zenodo.22987453", metadata: { title: "GSPC board snapshot", publication_date: "2026-09-22" }, stats: { unique_downloads: 223 } }),
     "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest": () =>
       json({ servers: [{ server: { name: "io.github.CSOAI-ORG/gspc", version: "1.4.2" } }] }),
     "https://raw.githubusercontent.com/EthicalML/awesome-artificial-intelligence-regulation/master/README.md": () => text("# list\n* one\n* [Council of AI](https://councilof.ai) - measurement\n"),

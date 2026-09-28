@@ -3,6 +3,7 @@
 
     python3 scripts/spray/gspc-spray.py --all [--dry-run] [--force] [--report out.json]
     python3 scripts/spray/gspc-spray.py --hf --kaggle --github --zenodo --pypi --npm
+    python3 scripts/spray/gspc-spray.py --zenodo-stage DIR   # prepare the Zenodo version, upload nothing
 
 ONE snapshot directory is built from LIVE truth and pushed, unchanged, to each surface:
 
@@ -16,6 +17,11 @@ ONE snapshot directory is built from LIVE truth and pushed, unchanged, to each s
     gspc-axes.csv / gspc-axes.jsonl   one row per slot
     check-board.sh  re-derives the totals from the live array and recomputes the Merkle root
     manifest.jsonl  file · bytes · sha256
+
+The Zenodo version (one per calendar month) carries the same files plus corrections.json, the signed corrections
+ledger (GET https://councilof.ai/api/corrections, bytes as served), checked before it is included: its content_id
+recomputes and its Ed25519 attestation verifies under the live DID key it names. Its manifest.jsonl covers every
+file in the deposit.
 
 RULES this script enforces on itself
   * Every number is DERIVED at run time from the live GET, root.json and the frozen banks. Nothing is typed.
@@ -58,6 +64,10 @@ DID_URL = "https://councilof.ai/.well-known/did.json"
 VERIFY_URL = "https://councilof.ai/gspc-verify"
 HOWTO_URL = "https://councilof.ai/signed/HOW-TO-VERIFY.md"
 CARD_INDEX_URL = "https://councilof.ai/signed/card_index.json"
+CORRECTIONS_URL = "https://councilof.ai/api/corrections"
+# Keys of /api/corrections that its own signature_check lists as outside the signed body (computed per request).
+CORRECTIONS_UNSIGNED_WRAPPER = ("signature", "signature_state", "signature_check", "correction_latency", "note",
+                                "fix_requires")
 BANK_HOST = "https://huggingface.co/datasets/"
 
 # long axis id -> short bank slug (the frozen banks live at csoai/gspc-<short>/items.jsonl).
@@ -78,6 +88,14 @@ KAGGLE_API = "https://www.kaggle.com/api/v1/datasets"
 GITHUB_REPO = "CSOAI-ORG/gspc-board"
 ZENODO_CONCEPT = 22293340               # concept DOI 10.5281/zenodo.22293340 — board snapshots
 ZENODO_METHODOLOGY_DOI = "10.5281/zenodo.21991104"   # referenced (isDerivedFrom) — NEVER modified
+# The deposit licence is the one the board payload states (totals.license), never the previous version's.
+ZENODO_LICENCE_IDS = {"CC-BY-4.0": "cc-by-4.0", "CC0-1.0": "cc-zero"}
+# Deposit text (title, description, notes, keywords) is outward text. The outward gate's notice word list
+# (scripts/outward-gate/outward_gate.py NOTICE_BANNED) refuses these words even when negated, so the deposit
+# never uses them. test_gspc_spray_skip.py checks built deposit text against that list itself.
+DEPOSIT_TEXT_BANNED = re.compile(r"\bcertif\w*|\bcompliant\b|\bcompliance score|\baccredit\w*|\bendorse\w*|"
+                                 r"\bfailed\b|\bfails\b|\$\s?\d|\bpric(?:e|ing)\b|\bdiscount\b|\bdemo\b|"
+                                 r"\bcertified\b|\bbft\b|\bsovereign\b", re.IGNORECASE)
 PYPI_PROJECT = "csoai-gspc"
 NPM_PACKAGE = "csoai-gspc-mcp"
 
@@ -289,7 +307,7 @@ def read_live_truth() -> dict:
 
     return {
         "board": board, "board_bytes": board_bytes, "root": root, "root_bytes": root_bytes,
-        "did_keys": did_keys, "banks": banks, "lid": lid,
+        "did_keys": did_keys, "did": did, "banks": banks, "lid": lid,
         "as_of": root["as_of"], "read_at": utc_now(),
         "board_sha256": sha256_hex(board_bytes), "board_content_sha256": board_content_sha,
         "root_sha256": sha256_hex(root_bytes), "fingerprint": fingerprint,
@@ -640,6 +658,10 @@ def build_snapshot(tr: dict, out: Path) -> Path:
 
 SNAPSHOT_FILES = ("README.md", "board.json", "root.json", "SNAPSHOT.json", "gspc-axes.csv", "gspc-axes.jsonl",
                   "check-board.sh", "manifest.jsonl")
+ZENODO_FILES = (*SNAPSHOT_FILES, "corrections.json")   # the Zenodo version adds the checked corrections ledger
+# The derived counts a monthly version is compared on (all are in SNAPSHOT.json["counts"]).
+CADENCE_COUNT_KEYS = ("slots", "by_status", "by_kind", "separation_over_model_comparison",
+                      "public_leader_state_over_model_comparison")
 
 
 # ---------------------------------------------------------------------------------------------- results
@@ -1251,6 +1273,291 @@ def zenodo_token() -> str | None:
     return f.read_text().strip() if f.exists() else None
 
 
+def check_corrections(body_bytes: bytes, did: dict) -> dict:
+    """Check the corrections ledger the way its own signature_check says to, and raise on anything else.
+
+    Strip the unsigned wrapper keys, canonicalise (sort_keys, no whitespace, ensure_ascii=True), SHA-256: that must
+    equal signature.attestation.content_id and signature.id. Then the detached Ed25519 signature must verify over the
+    canonical attestation under the key the live DID document publishes for signature.did. STALE (the body moved
+    after signing) and INVALID both raise: a deposit that says it carries the ledger carries a checked one."""
+    import base64
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+    doc = json.loads(body_bytes)
+    sig = doc.get("signature") if isinstance(doc, dict) else None
+    att = (sig or {}).get("attestation") if isinstance(sig, dict) else None
+    if not isinstance(att, dict):
+        raise ValueError("corrections ledger carries no signature.attestation")
+    entries = doc.get("corrections")
+    if not isinstance(entries, list):
+        raise ValueError("corrections ledger carries no corrections[] array")
+    body = {k: v for k, v in doc.items() if k not in CORRECTIONS_UNSIGNED_WRAPPER}
+    content_id = sha256_hex(json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode())
+    if content_id != att.get("content_id") or content_id != sig.get("id"):
+        raise ValueError(f"corrections content_id does not recompute over the served body (STALE or altered): "
+                         f"{content_id[:16]}… vs attested {str(att.get('content_id'))[:16]}…")
+    if att.get("entries") != len(entries):
+        raise ValueError(f"attestation names {att.get('entries')} entries, the body carries {len(entries)}")
+    kid = sig.get("did")
+    methods = did.get("verificationMethod") if isinstance(did, dict) else None
+    method = next((row for row in (methods or []) if isinstance(row, dict) and row.get("id") == kid), None)
+    jwk = (method or {}).get("publicKeyJwk") or {}
+    key_x = jwk.get("x")
+    if jwk.get("kty") != "OKP" or jwk.get("crv") != "Ed25519" or not isinstance(key_x, str):
+        raise ValueError(f"corrections signer {kid!r} has no Ed25519 key in live did.json")
+    public_key = base64.urlsafe_b64decode(key_x + "=" * (-len(key_x) % 4))
+    if sig.get("signer") not in (None, public_key.hex()):
+        raise ValueError("corrections signature.signer differs from the key live did.json publishes")
+    signature = sig.get("signature")
+    if not isinstance(signature, str) or not re.fullmatch(r"[0-9a-f]{128}", signature):
+        raise ValueError("corrections signature is not a 64-byte lowercase-hex Ed25519 signature")
+    try:
+        Ed25519PublicKey.from_public_bytes(public_key).verify(
+            bytes.fromhex(signature),
+            json.dumps(att, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8"))
+    except Exception as e:  # noqa: BLE001 — every verification failure is fail-closed
+        raise ValueError(f"corrections attestation does not verify under {kid} ({type(e).__name__})") from e
+    return {"url": CORRECTIONS_URL, "sha256": sha256_hex(body_bytes), "bytes": len(body_bytes),
+            "content_id": content_id, "entries": len(entries), "latest_entry_id": att.get("latest_entry_id"),
+            "signed_at": att.get("signed_at"), "signer": kid, "schema": doc.get("schema"),
+            "license": doc.get("license"), "state": "VALID",
+            "check": "content_id recomputed over the served body minus " + ", ".join(CORRECTIONS_UNSIGNED_WRAPPER)
+                     + "; Ed25519 over the canonical attestation verified under the live did.json key"}
+
+
+def read_corrections(did: dict) -> tuple[bytes, dict]:
+    log(f"[truth] GET {CORRECTIONS_URL}")
+    try:
+        body = fetch_ok(CORRECTIONS_URL)
+    except Exception as e:  # noqa: BLE001
+        raise Refused(f"{CORRECTIONS_URL} unreadable ({e}); the Zenodo version must carry the corrections ledger")
+    try:
+        return body, check_corrections(body, did)
+    except Exception as e:  # noqa: BLE001
+        raise Refused(f"corrections ledger did not check ({e}); nothing is deposited with an unchecked ledger")
+
+
+def zenodo_licence_id(board: dict) -> str:
+    stated = (board.get("totals") or {}).get("license") or board.get("license")
+    if stated not in ZENODO_LICENCE_IDS:
+        raise Refused(f"the board payload states licence {stated!r}; no Zenodo licence id is mapped for it")
+    return ZENODO_LICENCE_IDS[stated]
+
+
+def zenodo_versions() -> list[dict]:
+    """Published versions of the snapshot concept, newest first, read from the public records API (no token)."""
+    status, body, _ = http(f"https://zenodo.org/api/records?q=conceptrecid:{ZENODO_CONCEPT}&all_versions=true"
+                           f"&size=25&sort=mostrecent", timeout=60)
+    if status != 200:
+        raise RuntimeError(f"Zenodo records query HTTP {status}")
+    hits = json.loads(body)["hits"]["hits"]
+    return [h for h in hits if str(h.get("conceptrecid")) == str(ZENODO_CONCEPT)]
+
+
+def zenodo_previous(hits: list[dict]) -> dict:
+    """The latest published version and the counts its own SNAPSHOT.json recorded (UNCHECKABLE if unreadable)."""
+    if not hits:
+        return {"state": "ABSENT"}
+    h = hits[0]
+    prev = {"id": h["id"], "doi": h.get("doi"), "version": h["metadata"].get("version"),
+            "files": sorted(f.get("key") for f in h.get("files") or [] if f.get("key")),
+            "publication_date": h["metadata"].get("publication_date"),
+            "licence": (h["metadata"].get("license") or {}).get("id") if isinstance(h["metadata"].get("license"), dict)
+            else h["metadata"].get("license")}
+    try:
+        s = json.loads(fetch_ok(f"https://zenodo.org/api/records/{h['id']}/files/SNAPSHOT.json/content", timeout=60))
+        c = s.get("counts") or {}
+        prev["counts"] = {k: c.get(k) for k in CADENCE_COUNT_KEYS}
+        prev["counts_source"] = "that version's own SNAPSHOT.json, read from Zenodo"
+    except Exception as e:  # noqa: BLE001
+        prev["counts"] = None
+        prev["counts_source"] = f"UNCHECKABLE ({e})"
+    return prev
+
+
+def reachable(url: str) -> bool:
+    try:
+        status, _, _ = http(url, headers={"User-Agent": "Mozilla/5.0 (compatible; csoai-gspc-spray)"}, timeout=30)
+        return status == 200
+    except Exception:  # noqa: BLE001
+        return False
+
+
+def zenodo_metadata(tr: dict, counts: dict, corr: dict, prev: dict, prev_meta: dict | None = None) -> tuple[dict, list[dict]]:
+    """Deposit metadata, every number derived from the truth record. Returns (metadata, dropped related ids)."""
+    t = tr["board"]["totals"]
+    st = counts["by_status"]
+    status_line = ", ".join(f"{k} {v}" for k, v in sorted(st.items()))
+    sep = ", ".join(f"{k} {v}" for k, v in sorted(counts["separation_over_model_comparison"].items()))
+    root = tr["root"]
+    if prev.get("counts"):
+        pc = prev["counts"]
+        prev_line = (f"The previous version of this series (<a href=\"https://doi.org/{prev['doi']}\">{prev['doi']}</a>, "
+                     f"as_of {prev['version']}) recorded {pc['slots']} axes: "
+                     + ", ".join(f"{k} {v}" for k, v in sorted((pc.get("by_status") or {}).items()))
+                     + ". The live GET wins over both.")
+    elif prev.get("doi"):
+        prev_line = (f"The previous version is {prev['doi']} (as_of {prev.get('version')}); its counts were "
+                     f"{prev.get('counts_source', 'UNCHECKABLE')}.")
+    else:
+        prev_line = "This concept had no readable previous version when this version was prepared."
+    desc = (
+        f"<p><strong>The live board at <a href=\"{BOARD_URL}\">{BOARD_URL}</a> is the authority.</strong> This record is "
+        f"the monthly archival snapshot of that GET, read at {tr['read_at']} and aligned to the transparency root "
+        f"published at {tr['as_of']}. If the live GET and these files disagree, the live GET wins. A fetch that does not "
+        "succeed is <code>UNCHECKABLE</code>, never a fabricated 0.</p>"
+        f"<p>Derived from the axis array, never typed: {counts['slots']} axes; {status_line}; model-comparison "
+        f"{counts['by_kind'].get('model-comparison', 0)}, deterministic-fact {counts['by_kind'].get('deterministic-facts', 0)}; "
+        f"separation over the model-comparison axes {sep}. The board's own count line: {t.get('public_count')} · "
+        f"{t.get('separation_public_count')}. Printed totals agree with the array: "
+        f"{'yes' if counts['printed_agrees_with_array'] else 'NO'}.</p>"
+        f"<p>{prev_line}</p>"
+        f"<p><strong>Corrections ledger.</strong> corrections.json is GET <a href=\"{CORRECTIONS_URL}\">{CORRECTIONS_URL}</a> "
+        f"as served: {corr['entries']} entries, latest {corr['latest_entry_id']}, content_id <code>{corr['content_id']}</code>, "
+        f"Ed25519 attestation signed {corr['signed_at']} under {corr['signer']}. Both the content_id and the signature were "
+        "checked before this version was prepared; the file's own signature_check field says how to repeat that check. "
+        f"Its stated licence: {corr.get('license')}.</p>"
+        f"<p>Public root (root.json): card_count {root['card_count']}, merkle_root <code>{root['merkle_root']}</code>. That count "
+        "is the leaves under the signed Merkle root only; it is not the signed card index and not the cards bundle, and the "
+        "three are never added together.</p>"
+        "<p>Files: board.json, root.json and corrections.json are the live bytes, unmodified; SNAPSHOT.json carries digests, "
+        "derived counts and frozen-bank row counts; gspc-axes.csv/.jsonl one row per axis; check-board.sh re-derives the "
+        "totals and recomputes the Merkle root; README.md explains how anyone can check it; manifest.jsonl lists every file "
+        "with its sha256.</p>"
+        f"<p>Check a card, free, no account: <a href=\"{VERIFY_URL}\">{VERIFY_URL}</a> · by hand: "
+        f"<a href=\"{HOWTO_URL}\">{HOWTO_URL}</a> · keys via did:web:csoai.org.</p>"
+        "<p>Measurement only. This record issues no mark, grade, rating or approval of any model, vendor or product, and "
+        "it is not legal advice.</p>"
+        f"<p>Derived from the methodology record <a href=\"https://doi.org/{ZENODO_METHODOLOGY_DOI}\">{ZENODO_METHODOLOGY_DOI}</a>. "
+        f"spray-fingerprint: {tr['fingerprint']}</p>"
+    )
+    candidates = [
+        {"identifier": ZENODO_METHODOLOGY_DOI, "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "publication-report"},
+        {"identifier": BOARD_URL, "relation": "isSupplementTo", "scheme": "url"},
+        {"identifier": CORRECTIONS_URL, "relation": "isSupplementTo", "scheme": "url"},
+        {"identifier": f"https://github.com/{GITHUB_REPO}", "relation": "isSupplementTo", "scheme": "url"},
+        {"identifier": f"https://huggingface.co/spaces/{HF_SPACE}", "relation": "isSupplementTo", "scheme": "url"},
+        {"identifier": f"https://huggingface.co/datasets/{HF_DATASET}", "relation": "isSupplementTo", "scheme": "url"},
+        {"identifier": f"https://www.kaggle.com/datasets/{KAGGLE_ID}", "relation": "isSupplementTo", "scheme": "url"},
+    ]
+    related, dropped = [], []
+    for r in candidates:
+        if r["scheme"] == "url" and not reachable(r["identifier"]):
+            dropped.append({**r, "why": "not HTTP 200 to an anonymous GET when this version was prepared"})
+        else:
+            related.append(r)
+    prev_meta = prev_meta or {}
+    keywords = list(prev_meta.get("keywords") or ["AI governance", "EU AI Act", "AI safety", "benchmark", "measurement",
+                                                  "attestation", "Ed25519", "provenance", "transparency", "LLM evaluation",
+                                                  "GSPC", "signed evidence"])
+    if "corrections" not in keywords:
+        keywords.append("corrections")
+    meta = {
+        "title": f"GSPC board snapshot, {tr['as_of']}: {counts['slots']} axes, {status_line}",
+        "upload_type": "dataset",
+        "description": desc,
+        "creators": prev_meta.get("creators") or [{"name": "CSOAI Ltd", "affiliation": "Council of AI (CSOAI Ltd), London, United Kingdom"}],
+        "publication_date": tr["as_of"][:10],
+        "version": tr["as_of"],
+        "license": zenodo_licence_id(tr["board"]),
+        "access_right": "open",
+        "keywords": keywords,
+        "related_identifiers": related,
+        "notes": ("The live GET is the authority; this record is a dated monthly snapshot of it, with the signed corrections "
+                  f"ledger as served. Measurement only. spray-fingerprint: {tr['fingerprint']}"),
+        "language": "eng",
+    }
+    text = " ".join([meta["title"], meta["description"], meta["notes"], " ".join(meta["keywords"])])
+    hit = DEPOSIT_TEXT_BANNED.search(text)
+    if hit:
+        raise Refused(f"deposit text would carry {hit.group(0)!r}, which the outward gate refuses")
+    return meta, dropped
+
+
+def zenodo_this_month(hits: list[dict], as_of: str) -> dict | None:
+    """The published version whose as_of falls in the same calendar month, if any."""
+    return next((h for h in hits if str(h["metadata"].get("version") or "")[:7] == as_of[:7]), None)
+
+
+def zenodo_cadence(hits: list[dict], as_of: str, prev: dict, counts: dict) -> dict:
+    """Monthly cadence: one version per calendar month, plus one whenever the latest version's own SNAPSHOT.json
+    counts differ from the live board's (CADENCE_COUNT_KEYS), or it lacks a file the deposit now carries.
+    An unreadable previous count is treated as changed, never as unchanged."""
+    same = zenodo_this_month(hits, as_of)
+    if not same:
+        return {"state": "DUE", "why": f"no version yet in {as_of[:7]}"}
+    base = {"doi": same.get("doi"), "version": same["metadata"].get("version")}
+    pc = prev.get("counts")
+    if not pc:
+        return {"state": "DUE_COUNTS_CHANGED", **base,
+                "why": f"{as_of[:7]} already has a version whose counts are {prev.get('counts_source', 'UNCHECKABLE')}"}
+    moved = [k for k in CADENCE_COUNT_KEYS if pc.get(k) != counts.get(k)]
+    if moved:
+        return {"state": "DUE_COUNTS_CHANGED", **base, "changed": {k: {"was": pc.get(k), "now": counts.get(k)} for k in moved},
+                "why": f"{as_of[:7]} already has a version, but its derived counts differ in: {', '.join(moved)}"}
+    added = sorted(set(ZENODO_FILES) - set(prev.get("files") or []))
+    if added:
+        return {"state": "DUE_FILES_ADDED", **base, "added": added,
+                "why": f"{as_of[:7]} already has a version, but it lacks {', '.join(added)}"}
+    return {"state": "NOT_DUE", **base, "why": f"{as_of[:7]} already has a version with the same derived counts and files"}
+
+
+def stage_zenodo(tr: dict, snap: Path, out: Path, *, hits: list[dict] | None = None) -> dict:
+    """Prepare the Zenodo version in out/: files/ (exactly what would be uploaded) and zenodo-metadata.json.
+    Uploads nothing; needs no token. Refuses (exit 2) rather than stage an unchecked ledger or a banned word."""
+    body, corr = read_corrections(tr["did"])
+    if hits is None:
+        hits = zenodo_versions()
+    prev = zenodo_previous(hits)
+    counts = json.loads((snap / "SNAPSHOT.json").read_text())["counts"]
+    meta, dropped = zenodo_metadata(tr, counts, corr, prev, hits[0]["metadata"] if hits else None)
+    files = out / "files"
+    if files.exists():
+        shutil.rmtree(files)
+    files.mkdir(parents=True)
+    for name in SNAPSHOT_FILES:
+        if name != "manifest.jsonl":
+            shutil.copy2(snap / name, files / name)
+    (files / "corrections.json").write_bytes(body)
+    rows = []
+    with (files / "manifest.jsonl").open("w", encoding="utf-8") as fh:
+        for f in sorted(files.iterdir()):
+            if f.name == "manifest.jsonl":
+                continue
+            b = f.read_bytes()
+            row = {"file": f.name, "bytes": len(b), "sha256": sha256_hex(b)}
+            rows.append(row)
+            fh.write(json.dumps(row) + "\n")
+    m = (files / "manifest.jsonl").read_bytes()
+    rows.append({"file": "manifest.jsonl", "bytes": len(m), "sha256": sha256_hex(m)})
+    cadence = zenodo_cadence(hits, tr["as_of"], prev, counts)
+    staged = {
+        "_status": "PREPARED, NOT SUBMITTED. Nothing here has been sent to Zenodo. Depositing is an owner action "
+                   "(Zenodo token); this file was written by --zenodo-stage, which uploads nothing.",
+        "kind": "csoai.zenodo-deposit-prepared/1",
+        "prepared_at": utc_now(),
+        "concept_doi": f"10.5281/zenodo.{ZENODO_CONCEPT}",
+        "new_version_of": {"id": prev.get("id"), "doi": prev.get("doi"), "version": prev.get("version"),
+                           "licence": prev.get("licence"), "counts": prev.get("counts"),
+                           "counts_source": prev.get("counts_source")},
+        "monthly_cadence": cadence,
+        "licence_note": (f"The deposit licence is the one the board payload states ({(tr['board'].get('totals') or {}).get('license')}). "
+                         f"The previous version was deposited as {prev.get('licence')}."),
+        "metadata": meta,
+        "related_identifiers_dropped": dropped,
+        "files": [{"upload_as": r["file"], "bytes": r["bytes"], "sha256": r["sha256"]} for r in rows],
+        "corrections_check": corr,
+        "board": {"as_of": tr["as_of"], "read_at": tr["read_at"], "fingerprint": tr["fingerprint"],
+                  "board_sha256": tr["board_sha256"], "root_sha256": tr["root_sha256"],
+                  "printed_totals": counts["printed_totals"], "printed_agrees_with_array": counts["printed_agrees_with_array"]},
+        "generator": GENERATOR,
+    }
+    (out / "zenodo-metadata.json").write_text(json.dumps(staged, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    log(f"[zenodo-stage] {out} — {len(rows)} files, corrections {corr['entries']} entries VALID, "
+        f"licence {meta['license']}, monthly cadence {staged['monthly_cadence']['state']}")
+    return staged
+
+
 def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     concept_url = f"https://doi.org/10.5281/zenodo.{ZENODO_CONCEPT}"
     token = zenodo_token()
@@ -1260,10 +1567,10 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     auth = {"Authorization": f"Bearer {token}"}
     jh = {**auth, "Content-Type": "application/json"}
 
-    status, body, _ = http(f"{Z}/records?q=conceptrecid:{ZENODO_CONCEPT}&all_versions=true&size=25&sort=mostrecent", timeout=60)
-    if status != 200:
-        return [result("zenodo", "FAILED", concept_url, detail=f"records query HTTP {status}")]
-    hits = json.loads(body)["hits"]["hits"]
+    try:
+        hits = zenodo_versions()
+    except Exception as e:  # noqa: BLE001
+        return [result("zenodo", "FAILED", concept_url, detail=str(e))]
     if not hits:
         return [result("zenodo", "FAILED", concept_url, detail="the concept has no published versions — refusing to guess")]
     for h in hits:
@@ -1273,13 +1580,19 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         if not force and tr["fingerprint"] in (m.get("notes") or "") + (m.get("description") or ""):
             return [result("zenodo", "UNCHANGED", f"https://doi.org/{h['doi']}", m.get("version"),
                            f"already carries fingerprint {tr['fingerprint'][:16]}… — use --force to mint another version")]
+    counts = json.loads((snap / "SNAPSHOT.json").read_text())["counts"]
+    cadence = zenodo_cadence(hits, tr["as_of"], zenodo_previous(hits), counts)
+    if cadence["state"] == "NOT_DUE" and not force:
+        return [result("zenodo", "UNCHANGED", f"https://doi.org/{cadence['doi']}", cadence["version"],
+                       f"monthly cadence: {cadence['why']} — use --force for another")]
     latest = hits[0]
-    if str(latest.get("conceptrecid")) != str(ZENODO_CONCEPT):
-        return [result("zenodo", "FAILED", concept_url, detail=f"latest hit {latest['id']} is not under concept {ZENODO_CONCEPT}")]
     if str(latest["id"]) == ZENODO_METHODOLOGY_DOI.split(".")[-1]:
         return [result("zenodo", "FAILED", concept_url, detail="refusing: latest version is the methodology record")]
+    staged = stage_zenodo(tr, snap, snap.parent / (snap.name + "-zenodo"), hits=hits)
+    files = snap.parent / (snap.name + "-zenodo") / "files"
     if dry_run:
-        return [result("zenodo", "DRY-RUN", concept_url, detail=f"would mint a new version after record {latest['id']}")]
+        return [result("zenodo", "DRY-RUN", concept_url,
+                       detail=f"would mint a new version after record {latest['id']} with {len(staged['files'])} files")]
 
     # 1. new version draft
     status, body, _ = http(f"{Z}/deposit/depositions/{latest['id']}/actions/newversion", method="POST", headers=auth, timeout=120)
@@ -1297,58 +1610,15 @@ def spray_zenodo(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
     for f in draft.get("files", []):
         http(f"{Z}/deposit/depositions/{did}/files/{f['id']}", method="DELETE", headers=auth, timeout=60)
     bucket = draft["links"]["bucket"]
-    for name in SNAPSHOT_FILES:
-        status, body, _ = http(f"{bucket}/{name}", method="PUT", data=(snap / name).read_bytes(),
+    for row in staged["files"]:
+        name = row["upload_as"]
+        status, body, _ = http(f"{bucket}/{name}", method="PUT", data=(files / name).read_bytes(),
                                headers={**auth, "Content-Type": "application/octet-stream"}, timeout=120)
         if status not in (200, 201):
             return [result("zenodo", "FAILED", f"https://zenodo.org/deposit/{did}", detail=f"upload {name} HTTP {status}: {body[:200]!r}")]
     # 3. metadata
-    prev = latest["metadata"]
-    counts = json.loads((snap / "SNAPSHOT.json").read_text())["counts"]
-    st = counts["by_status"]
-    desc = (
-        f"<p><strong>The live board at <a href=\"{BOARD_URL}\">{BOARD_URL}</a> is the authority.</strong> This record is a "
-        f"snapshot of that GET, read at {tr['read_at']} and aligned to the transparency root published at {tr['as_of']}. "
-        "If the live GET and these files disagree, the live GET wins. A fetch that fails is <code>UNCHECKABLE</code> — "
-        "never a fabricated 0.</p>"
-        f"<p><strong>Lid:</strong> {tr['lid']}</p>"
-        f"<p>Derived from the axis array, never typed: {counts['slots']} slots; "
-        + "; ".join(f"{k} {v}" for k, v in sorted(st.items()))
-        + f"; model-comparison {counts['by_kind'].get('model-comparison', 0)}, deterministic-fact "
-          f"{counts['by_kind'].get('deterministic-facts', 0)}; separation over the model-comparison axes "
-        + ", ".join(f"{k} {v}" for k, v in sorted(counts['separation_over_model_comparison'].items()))
-        + f". Transparency root: {tr['root']['card_count']} signed cards, merkle_root <code>{tr['root']['merkle_root']}</code>.</p>"
-        f"<p>Files: board.json and root.json are the live bytes, unmodified; SNAPSHOT.json carries digests, derived counts and "
-        "frozen-bank row counts; gspc-axes.csv/.jsonl one row per slot; check-board.sh re-derives the totals and recomputes "
-        "the Merkle root; README.md explains how a stranger verifies.</p>"
-        f"<p>Verify a card, free, no account: <a href=\"{VERIFY_URL}\">{VERIFY_URL}</a> · by hand: "
-        f"<a href=\"{HOWTO_URL}\">{HOWTO_URL}</a> · keys via did:web:csoai.org.</p>"
-        "<p>Not a certification, not a rating, not an endorsement, not legal advice. Measurement, not certification.</p>"
-        f"<p>Derived from the methodology record <a href=\"https://doi.org/{ZENODO_METHODOLOGY_DOI}\">{ZENODO_METHODOLOGY_DOI}</a>. "
-        f"spray-fingerprint: {tr['fingerprint']}</p>"
-    )
-    if BANNED.search(desc):
-        return [result("zenodo", "FAILED", concept_url, detail="description would carry a banned word")]
-    related = [{"identifier": ZENODO_METHODOLOGY_DOI, "relation": "isDerivedFrom", "scheme": "doi", "resource_type": "publication-report"},
-               {"identifier": BOARD_URL, "relation": "isSupplementTo", "scheme": "url"},
-               {"identifier": f"https://github.com/{GITHUB_REPO}", "relation": "isSupplementTo", "scheme": "url"},
-               {"identifier": f"https://huggingface.co/spaces/{HF_SPACE}", "relation": "isSupplementTo", "scheme": "url"},
-               {"identifier": f"https://www.kaggle.com/datasets/{KAGGLE_ID}", "relation": "isSupplementTo", "scheme": "url"}]
-    meta = {
-        "title": f"GSPC board snapshot, {tr['as_of']} — {tr['lid']}",
-        "upload_type": "dataset",
-        "description": desc,
-        "creators": prev.get("creators") or [{"name": "CSOAI Ltd", "affiliation": "Council of AI (CSOAI Ltd), London, United Kingdom"}],
-        "publication_date": tr["as_of"][:10],
-        "version": tr["as_of"],
-        "license": (prev.get("license") or {}).get("id", "cc-zero") if isinstance(prev.get("license"), dict) else (prev.get("license") or "cc-zero"),
-        "access_right": "open",
-        "keywords": prev.get("keywords") or ["AI governance", "EU AI Act", "AI safety", "benchmark", "measurement", "attestation", "Ed25519", "provenance", "transparency", "LLM evaluation", "GSPC", "signed evidence"],
-        "related_identifiers": related,
-        "notes": f"The live GET is the authority; this record is a dated snapshot of it. Measurement, not certification. spray-fingerprint: {tr['fingerprint']}",
-        "language": "eng",
-    }
-    status, body, _ = http(f"{Z}/deposit/depositions/{did}", method="PUT", data=json.dumps({"metadata": meta}).encode(), headers=jh, timeout=60)
+    status, body, _ = http(f"{Z}/deposit/depositions/{did}", method="PUT", data=json.dumps({"metadata": staged["metadata"]}).encode(),
+                           headers=jh, timeout=60)
     if status != 200:
         return [result("zenodo", "FAILED", f"https://zenodo.org/deposit/{did}", detail=f"metadata HTTP {status}: {body[:400]!r}")]
     # 4. publish
@@ -1465,16 +1735,20 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--force", action="store_true", help="republish when only the root's clock moved (same fingerprint)")
     ap.add_argument("--out", default=None, help="snapshot directory (default: a temp dir under $RUNNER_TEMP or /tmp)")
     ap.add_argument("--report", default=None, help="write the per-surface results as JSON here")
+    ap.add_argument("--zenodo-stage", default=None, metavar="DIR",
+                    help="prepare the monthly Zenodo version in DIR (files/ + zenodo-metadata.json); uploads nothing")
     args = ap.parse_args(argv)
 
     chosen = [s for s in SURFACES if getattr(args, s)] or (list(SURFACES) if args.all else [])
-    if not chosen and not args.build_only:
-        ap.error("choose surfaces (--hf --kaggle --github --zenodo --pypi --npm), --all, or --build-only")
+    if not chosen and not args.build_only and not args.zenodo_stage:
+        ap.error("choose surfaces (--hf --kaggle --github --zenodo --pypi --npm), --all, --build-only or --zenodo-stage DIR")
 
     tr = read_live_truth()
     adopt_remote_read_at(tr)
     out = Path(args.out) if args.out else Path(tempfile.mkdtemp(prefix="gspc-spray-", dir=os.environ.get("RUNNER_TEMP")))
     snap = build_snapshot(tr, out)
+    if args.zenodo_stage:
+        stage_zenodo(tr, snap, Path(args.zenodo_stage))
     results: list[dict] = []
     if not args.build_only:
         refuse_newer_remote(chosen, tr)
