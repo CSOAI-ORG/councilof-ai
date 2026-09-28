@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
-// MEOK Law - the cross-layer jurisdiction engine. For any place (town -> county ->
+// Jurisdiction Engine - the cross-layer AI-law reference. For any place (town -> county ->
 // state/province -> nation -> bloc), the OS shows the STACK of AI laws that apply at
-// each layer and how they cross-reference. "It knows, through MEOK Law, what governs
+// each layer and how they cross-reference. "It knows, through the jurisdiction engine, what governs
 // you here." The live engine resolves any address against the framework graph once the
 // Layer 0 backend is on; this shows the model with worked examples now.
 
@@ -55,7 +55,7 @@ const STATUS_TONE: Record<string, string> = {
   "Guidance": "bg-slate-100 text-slate-600",
 };
 
-export default function MeokLaw() {
+export default function JurisdictionEngine() {
   useEffect(() => { document.title = "Jurisdiction Engine - cross-layer AI law | CSOAI"; }, []);
   const [r, setR] = useState("ca");
   const region = REGIONS.find((x) => x.id === r) || REGIONS[0];

@@ -63,8 +63,8 @@ function deconflictHiveCoords(accounts: HiveAccount[]): HiveAccount[] {
 }
 const FRAMEWORKS: Pin[] = [
   { id: "euaa", name: "EU AI Act", region: "EU", lat: 50.85, lng: 4.35, color: "#2563eb", href: "/readiness", note: "Transparency 2 Aug 2026; high-risk Dec 2027 (Omnibus). Brussels." },
-  { id: "gdpr", name: "GDPR", region: "EU", lat: 50.85, lng: 4.36, color: "#1d4ed8", href: "/meok-law", note: "Data + automated-decision safeguards. Brussels." },
-  { id: "coe", name: "Council of Europe AI Treaty", region: "EU", lat: 48.57, lng: 7.75, color: "#7c3aed", href: "/meok-law", note: "First binding AI human-rights treaty. Strasbourg." },
+  { id: "gdpr", name: "GDPR", region: "EU", lat: 50.85, lng: 4.36, color: "#1d4ed8", href: "/law", note: "Data + automated-decision safeguards. Brussels." },
+  { id: "coe", name: "Council of Europe AI Treaty", region: "EU", lat: 48.57, lng: 7.75, color: "#7c3aed", href: "/law", note: "First binding AI human-rights treaty. Strasbourg." },
   { id: "oecd", name: "OECD AI Principles", region: "Global", lat: 48.85, lng: 2.35, color: "#0ea5e9", href: "/regions", note: "Soft-law baseline shaping allied policy. Paris." },
   { id: "iso", name: "ISO/IEC 42001", region: "Global", lat: 46.2, lng: 6.14, color: "#059669", href: "/temples", note: "AI management-system standard. Geneva." },
   { id: "nist", name: "NIST AI RMF", region: "US", lat: 39.14, lng: -77.22, color: "#dc2626", href: "/fedramp", note: "De-facto US risk-management baseline. Gaithersburg." },
@@ -73,7 +73,7 @@ const FRAMEWORKS: Pin[] = [
   { id: "nyc", name: "NYC LL144", region: "US", lat: 40.71, lng: -74.0, color: "#f59e0b", href: "/sectors", note: "Annual AEDT bias-audit attestation. New York." },
   { id: "uk", name: "UK pro-innovation AI", region: "UK", lat: 51.5, lng: -0.12, color: "#9333ea", href: "/regions", note: "Principles-based, regulator-led. London." },
   { id: "aida", name: "Canada AIDA (C-27)", region: "Canada", lat: 45.42, lng: -75.7, color: "#e11d48", href: "/regions", note: "High-impact systems regime. Ottawa." },
-  { id: "pipl", name: "China PIPL", region: "APAC", lat: 39.9, lng: 116.4, color: "#16a34a", href: "/meok-law", note: "Personal-information protection + algorithm rules. Beijing." },
+  { id: "pipl", name: "China PIPL", region: "APAC", lat: 39.9, lng: 116.4, color: "#16a34a", href: "/law", note: "Personal-information protection + algorithm rules. Beijing." },
   { id: "sg", name: "Singapore Model AI", region: "APAC", lat: 1.35, lng: 103.8, color: "#0d9488", href: "/regions", note: "Voluntary governance framework + testing. Singapore." },
 ];
 const COUNCIL: Pin[] = [
@@ -396,7 +396,7 @@ export default function WorldGlobe() {
               <div className="text-lg font-bold text-white/80">Click a node</div>
               <p className="mt-2 text-sm">Frameworks sit at the city where they are made - EU AI Act in Brussels, NIST near DC, PIPL in Beijing. Toggle the Council of AI to see the five agents that govern across them.</p>
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <a href="/meok-law" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">MEOK Law -&gt;</a>
+                <a href="/law" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Law by jurisdiction -&gt;</a>
                 <a href="/regions" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">By region -&gt;</a>
                 <a href="/temples" className="rounded-lg border border-white/15 px-3 py-1.5 font-semibold text-emerald-200 hover:bg-white/10">Temples -&gt;</a>
                 <a href="/watchdog-map" className="rounded-lg border border-amber-400/30 px-3 py-1.5 font-semibold text-amber-200 hover:bg-white/10">Watchdog heat-map -&gt;</a>
