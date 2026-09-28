@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
@@ -18,16 +22,35 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "types": ["node"],
+    "types": [
+      "node",
+      "vite/client"
+    ],
     "paths": {
-      "@/*": ["./client/src/*"],
-      "@/components/*": ["./client/src/components/*"],
-      "@/pages/*": ["./client/src/pages/*"],
-      "@/contexts/*": ["./client/src/contexts/*"],
-      "@/hooks/*": ["./client/src/hooks/*"],
-      "@/lib/*": ["./client/src/lib/*"],
-      "@/styles/*": ["./client/src/styles/*"],
-      "@/types/*": ["./shared/types/*"]
+      "@/*": [
+        "./client/src/*"
+      ],
+      "@/components/*": [
+        "./client/src/components/*"
+      ],
+      "@/pages/*": [
+        "./client/src/pages/*"
+      ],
+      "@/contexts/*": [
+        "./client/src/contexts/*"
+      ],
+      "@/hooks/*": [
+        "./client/src/hooks/*"
+      ],
+      "@/lib/*": [
+        "./client/src/lib/*"
+      ],
+      "@/styles/*": [
+        "./client/src/styles/*"
+      ],
+      "@/types/*": [
+        "./shared/types/*"
+      ]
     }
   },
   "include": [

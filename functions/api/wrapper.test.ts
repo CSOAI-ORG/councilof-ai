@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as wrapper, ratioString, normalize, toPreview, findEntry, ROSTER, ATTESTS, KIND, buildPayload, CHAINS } from "./wrapper";
 import { VERDICT_RE } from "./rwa/evidence";
 import { ESTATE_PAY_TO } from "./_x402_config";
+import { CSOAI_LID } from "./_x402";
 // The reader is the roster's source of truth; the TS mirror must never drift from it.
 import { ROSTER as READER_ROSTER } from "../../scripts/readers/wrapped-asset-parity-reader.mjs";
 
@@ -89,7 +90,7 @@ describe("/api/wrapper — doors", () => {
     expect(b.csoai.free_preview).toBe(`${ORIGIN}/api/wrapper?id=usdc.e%3Aarbitrum&preview=1`);
     expect(b.csoai.free_ledger).toMatch(/wrapped-asset-parity/);
     expect(b.extensions?.bazaar ?? b.extensions).toBeTruthy();
-    expect(VERDICT_RE.test(JSON.stringify(b).replace(/22 axes measured/g, ""))).toBe(false);
+    expect(VERDICT_RE.test(JSON.stringify(b).replaceAll(CSOAI_LID, ""))).toBe(false);
   });
 
   it("preview is free and unsigned: reads present, no signature, no raw-read hashes; escrow pair carries the ratio", async () => {

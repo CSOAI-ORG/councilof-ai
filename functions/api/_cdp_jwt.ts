@@ -40,6 +40,7 @@ function b64url(bytes: Uint8Array): string {
 function utf8(s: string): Uint8Array {
   return new TextEncoder().encode(s);
 }
+const bufferSource = (bytes: Uint8Array): ArrayBuffer => bytes.slice().buffer as ArrayBuffer;
 
 function b64decode(s: string): Uint8Array {
   const norm = s.replace(/-/g, "+").replace(/_/g, "/");
@@ -84,7 +85,7 @@ async function importEd25519(seed: Uint8Array): Promise<CryptoKey> {
   const pkcs8 = pkcs8FromSeed(seed);
   for (const algo of ["Ed25519", "NODE-ED25519"]) {
     try {
-      return await crypto.subtle.importKey("pkcs8", pkcs8, { name: algo } as EcKeyImportParams, false, [
+      return await crypto.subtle.importKey("pkcs8", bufferSource(pkcs8), { name: algo } as EcKeyImportParams, false, [
         "sign",
       ]);
     } catch {
@@ -134,7 +135,7 @@ export async function mintCdpJwt(args: MintArgs): Promise<string> {
 
   const signingInput = `${b64url(utf8(JSON.stringify(header)))}.${b64url(utf8(JSON.stringify(claims)))}`;
   const key = await importEd25519(seedFromCdpSecret(args.keySecret));
-  const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, utf8(signingInput)));
+  const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, bufferSource(utf8(signingInput))));
   return `${signingInput}.${b64url(sig)}`;
 }
 

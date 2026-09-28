@@ -65,11 +65,16 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
     expect(spec["x-x402"].doors.slice().sort()).toEqual([...doors].sort());
   });
 
-  it("uses the method the manifest names for each door", () => {
+  it("includes the manifest method for every door and only documents real handler verbs", () => {
     for (const r of wellKnown.resources) {
       const item = spec.paths[pathOf(r.url)];
       expect(item, r.url).toBeTruthy();
-      expect(Object.keys(item)).toEqual([(r.method ?? "GET").toLowerCase()]);
+      const canonical = (r.method ?? "GET").toLowerCase();
+      expect(Object.keys(item)).toContain(canonical);
+      for (const method of Object.keys(item)) {
+        expect(METHODS, `${method} ${pathOf(r.url)}`).toContain(method);
+        expect(item[method]["x-payment-info"], `${method} ${pathOf(r.url)} must preserve the x402 contract`).toBeTruthy();
+      }
     }
   });
 
@@ -100,7 +105,7 @@ describe("the paid operations are exactly the doors in /.well-known/x402.json", 
 
   it("free-door is the only zero-amount door", () => {
     const zero = paid().filter(({ op }) => op.responses["402"].content["application/json"].example.accepts[0].amount === "0");
-    expect(zero.map(({ path }) => path)).toEqual(["/api/free-door"]);
+    expect([...new Set(zero.map(({ path }) => path))]).toEqual(["/api/free-door"]);
   });
 
   it("describes proof and batch as the artifacts their handlers return", () => {
