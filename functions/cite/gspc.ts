@@ -92,7 +92,8 @@ export function csl(read: BoardRead, now: Date): Array<Record<string, unknown>> 
   if ("facts" in read && read.facts.doi) {
     items.push({
       id: "csoai_gspc_methodology",
-      type: "dataset",
+      // DataCite registers this DOI with resourceTypeGeneral "Report" (read 2026-09-28), so it is cited as one.
+      type: "report",
       title: methodologyTitle(read.facts) ?? "GSPC methodology record",
       author: [{ literal: AUTHOR }],
       publisher: "Zenodo",

@@ -35,6 +35,7 @@ describe("/cite/gspc: two references, each with what it is", () => {
     expect(c[0].accessed).toEqual({ "date-parts": [[2026, 9, 28]] });
     expect(c[0].DOI).toBeUndefined();
     expect(c[1].DOI).toBe(CAPTURE.doi);
+    expect(c[1].type).toBe("report");
     expect(c[1].title).toBe(CAPTURE.doi_note.split(" (")[0]);
   });
   it("format by query or by Accept, as doi.org negotiates", () => {
