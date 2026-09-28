@@ -39,8 +39,9 @@ export PATH=/workspace/tools/node/bin:$PATH
 
 # One clone per purpose, sparse: the shared checkouts on this pod get reset --hard under whoever uses them.
 if [ ! -d "$CLONE/.git" ]; then
-  git clone -q --filter=blob:none --no-checkout "$BARE" "$CLONE" || { log harness-x-parity "FAIL could not clone $BARE"; exit 1; }
-  git -C "$CLONE" sparse-checkout set --cone council-os distribution scripts/harness-x scripts/spray/pypi/csoai-gspc \
+  git clone -q --no-checkout "$BARE" "$CLONE" || { log harness-x-parity "FAIL could not clone $BARE"; exit 1; }
+  # git 2.34 here: "set --cone" would take --cone as a PATH; init --cone first, then set.
+  git -C "$CLONE" sparse-checkout init --cone && git -C "$CLONE" sparse-checkout set council-os distribution scripts/harness-x scripts/spray/pypi/csoai-gspc \
     mcp/gspc-server functions/mcp packages/layer0-js public/.well-known \
     || { log harness-x-parity "FAIL sparse-checkout"; exit 1; }
 fi
