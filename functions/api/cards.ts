@@ -145,9 +145,9 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
         anchoring: crossBorderKid ? "ANCHORED" : "UNANCHORED",
         anchoring_note: crossBorderKid
           ? `The inline key is ${crossBorderKid}, published in did:web:csoai.org.`
-          : "The signature verifies over its own inline key, and that key is not a verificationMethod of " +
-            "did:web:csoai.org, so it cannot be checked against the published trust root. signed=true means a " +
-            "signature is carried, not that it verifies under a published key.",
+          : "The inline signing key is not a verificationMethod of did:web:csoai.org, so this signature cannot be " +
+            "checked against the published trust root, whatever it verifies under. signed=true means a signature " +
+            "is carried, not that it verifies under a published key.",
         title: crossBorder.title || "One signed measurement, every regime mapped",
         schema: crossBorder.schema || "csoai.east-west-card/1",
         content_id: crossBorder.content_id,
