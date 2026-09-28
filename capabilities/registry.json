@@ -2411,6 +2411,19 @@
       "payment": "free"
     },
     {
+      "id": "api-xl",
+      "protocols": [
+        "http"
+      ],
+      "title": "Cross-ledger daily record (signed, verbatim)",
+      "description": "GET /api/xl — the signed cross-ledger daily record, free and verbatim: the newest xl-daily record on the public Hugging Face dataset csoai/cross-ledger-supply, byte for byte as published, served only after its Ed25519-signed wrapper verifies under the pinned board key and pins the sha256 of exactly these bytes. ?date=YYYY-MM-DD serves that day's record; ?part=signed serves the signed wrapper itself. A record that does not verify is never served (503). The values are each ledger's own supply figure (totalSupply() or its equivalent), not issued or outstanding supply, reserves or redeemability, and nothing here ranks issuers.",
+      "endpoint": "/api/xl",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-x402",
       "protocols": [
         "http"
