@@ -252,7 +252,7 @@ def main():
         status_dist[str(r.get("status"))] = status_dist.get(str(r.get("status")), 0) + 1
     summary = {
         "schema": "csoai.x402-bazaar-conformance/0.2", "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "date": a.date, "producer": "scripts/census/x402-bazaar-conformance.py (councilof-ai) run on RunPod pod fpowppss5ngtkw",
+        "date": a.date, "producer": "scripts/census/x402-bazaar-conformance.py (councilof-ai)" + ((" run on " + os.environ["CSOAI_RUN_HOST"].strip()) if os.environ.get("CSOAI_RUN_HOST", "").strip() else ""),
         "method": ("One GET per DISTINCT HOST listed in either public x402 Bazaar (Coinbase CDP, PayAI), using the first "
                    "resource that index advertises for that host. Conformant = HTTP 402 AND a PAYMENT-REQUIRED response "
                    "header AND x402Version 2 in the body AND an extensions.bazaar block. Identifiable UA, 12s timeout, "
