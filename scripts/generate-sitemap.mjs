@@ -187,6 +187,18 @@ const CHANGEFREQ = new Map([
 // catalogue entries. Derive this set from App.tsx so a newly quarantined route
 // cannot remain advertised to crawlers by accident.
 const src = readFileSync(APP_TSX, "utf8");
+// Some SPA alias paths are intentionally owned by reviewed static HTML fronts.
+// Keep one ownership authority by deriving the exception set from the redirects generator.
+const redirectGeneratorSource = readFileSync(join(ROOT, "scripts/generate-redirects.mjs"), "utf8");
+const reviewedMarker = "const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([";
+const reviewedStart = redirectGeneratorSource.indexOf(reviewedMarker);
+const reviewedEnd = reviewedStart < 0 ? -1 : redirectGeneratorSource.indexOf("]);", reviewedStart);
+if (reviewedStart < 0 || reviewedEnd < 0) {
+  throw new Error("[sitemap] reviewed public HTML ownership set is missing from generate-redirects.mjs");
+}
+const reviewedPublicHtmlAppRoutes = new Set(
+  [...redirectGeneratorSource.slice(reviewedStart, reviewedEnd + 3).matchAll(/"([^"]+)"/g)].map((x) => x[1]),
+);
 const reviewNoticePaths = new Set(
   [...src.matchAll(/<Route\b[^>]*?\bpath="([^"]+)"[^>]*?\bcomponent=\{ContentReviewNotice\}/g)]
     .map((match) => match[1]),
@@ -329,7 +341,9 @@ while ((m = routeRe.exec(src)) !== null) {
   // tag disowns it. Measured live 2026-09-14: /ceremony and /lookup were in the sitemap, each
   // 308 -> a 200 copy of another page. The target route is listed in its own right.
   if (/^<Route\b[^>]*?\bpath="[^"]+"[^>]*>\s*\{\s*\(\)\s*=>\s*<Redirect\b/.test(src.slice(m.index, m.index + 400))) {
-    seen.add(p);
+    // A reviewed static front may intentionally own the same URL. Do not mark that path seen:
+    // the static-page pass below must be allowed to add and canonicalise the real HTML surface.
+    if (!reviewedPublicHtmlAppRoutes.has(p)) seen.add(p);
     skippedAlias++;
     continue;
   }
