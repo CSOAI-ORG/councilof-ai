@@ -1,0 +1,81 @@
+{
+  "card": {
+    "as_of": "2026-09-28T07:30:26Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.xrpl-impersonation-mismatch/0.1",
+      "status": "DISCOVERED",
+      "classification": "NOT_IN_VERIFIED_SET",
+      "code": "RLUSD",
+      "issuer": "rLUSDtykL2NVz3HJe1Jqoc7dsxWFVcsmuK",
+      "holders": 59,
+      "supply": 999992178.476369,
+      "first_seen_in_window": "2025-01-09T10:29:28.124Z",
+      "verified_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "wording": "issuer not in the archived verified set — legitimacy UNMEASURED",
+      "verified_method": "estate LOCKED_16 registry"
+    },
+    "product": {
+      "sku": "public-notice",
+      "tier": "free",
+      "free_fields": [
+        "kind",
+        "status",
+        "subject"
+      ],
+      "paid_fields": [],
+      "anchors": {
+        "ots": "pending",
+        "rekor": "pending",
+        "xrpl_memo": "not_yet",
+        "evm_base": "not_yet"
+      }
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c494e00621c742b988ffa3c034b8f7a9963ee4251ff428c0c457f8a248a1be59",
+    "sig_ed25519": "67de70f5f96e9e61a2707c8bfb04c60bcb7465cd7ff7795281cef7d77e9a07d981fccd509777965c41d6b9f79ee051f32f4a9394088a7e3f758ca3dc8713d009",
+    "source_urls": [
+      "https://api.xrpscan.com/api/v1/tokens",
+      "https://xrpscan.com/token/RLUSD.rLUSDtykL2NVz3HJe1Jqoc7dsxWFVcsmuK"
+    ],
+    "subject": "XRPL RLUSD issuer rLUSDtykL2NVz3HJe1Jqoc7dsxWFVcsmuK not in archived verified set",
+    "surface": "public.notice",
+    "tags": [
+      "xrpl",
+      "impersonation-watch",
+      "code:RLUSD",
+      "mismatch"
+    ],
+    "unmeasured": [
+      "issuer_legitimacy",
+      "long_tail_issuance_below_ranking_window"
+    ],
+    "product_block": {
+      "sku": "issuance",
+      "tier": "free",
+      "free_fields": [
+        "payload",
+        "subject",
+        "source_urls",
+        "unmeasured",
+        "as_of"
+      ],
+      "paid_fields": [],
+      "price_ref": "issuance:reserve",
+      "anchors": []
+    }
+  },
+  "proof": [
+    "47583b4658acc62b9178fb3c4f2b66cc8a926308207c32684520504ed607d640",
+    "b0a70889b174acb478c855a9fe0ced7b0bc44362100c3ef65d13f11a165dc3a6",
+    "d5e0b821490e9731bb38f0580a7fb1bf96110d5cb23da6db4d62264a47b4b0f2",
+    "c9eaca0b328563d5bbc955c0837eb24d7b61cc7b1567e320a216f493688ad766",
+    "c52ad22c88f2f12baf00c5812beb6e4c64afbd78540e8b2d1284d6ae283b9537",
+    "d6937e9af7f66866ab3ddac2444bea8c3370f24136b84bf26a12ddbc67605918",
+    "5303bb28da45a9b4a0d8aeaa0572baa206527bddcad1504766410536c9301f93",
+    "f990f76b0ee3d27944d94a9e650ca9970480909a4b922ff4222ee7f19d47e81d",
+    "f7e38e91e1a3331f7da5be39363bae5f80f7d77ce1def9b5a4d625a44ed00d98"
+  ]
+}

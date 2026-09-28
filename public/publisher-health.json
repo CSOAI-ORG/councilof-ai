@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-22T08:54:02Z",
+  "as_of": "2026-09-28T07:32:07Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -11,9 +11,9 @@
     "unsigned_new_leaves": 0,
     "missing_key": false
   },
-  "xrpl_basket_merkle": "a5bdfa038cfc307a255670067ce1a4f874dd2c3f0943534c7027a9c9435ee0c5",
+  "xrpl_basket_merkle": "5b210200574a95beba6520adc180a285667849245e5419eb1424f20158a4823c",
   "represented_tvl": {
-    "usd": 1376102508.3658037,
+    "usd": 1075447304.2899997,
     "source": "https://xrpl.fi/api/metrics",
     "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
   },
@@ -74,7 +74,7 @@
           "signer": "did:web:csoai.org#board-attestation-1",
           "signer_anchored": true,
           "alg": "Ed25519",
-          "signature": "18eb719d07a7ba67e268ea3ba9a58c4a7fbd6122c4a249a0d4f58ba43ece521bb8d7d4401c85dabe86dc6b38915beaa4ba7d971531b621e6ad4c4072f55d8801",
+          "signature": "4485aa3ba81947b9766e014bdbab08b857dd989287bf1fd3a2df9d5607cd249de3e74e0fe58c06f7b79a6e4b866bff674b6245eef40cadc2080b532b6a568b0d",
           "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
           "preimage": {
             "schema": "csoai.gspc-living/0.2",
@@ -87,8 +87,8 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 237,
-                "accuracy": null,
-                "separation": "UNTESTED"
+                "accuracy": 0.5865,
+                "separation": "TIE"
               },
               {
                 "axis": "safety",
@@ -96,7 +96,7 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 36,
-                "accuracy": 0.944,
+                "accuracy": 0.9444,
                 "separation": "TIE"
               },
               {
@@ -105,8 +105,8 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 32,
-                "accuracy": null,
-                "separation": "UNTESTED"
+                "accuracy": 0.7188,
+                "separation": "TIE"
               },
               {
                 "axis": "continuity",
@@ -114,8 +114,8 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 33,
-                "accuracy": null,
-                "separation": "UNTESTED"
+                "accuracy": 0.6061,
+                "separation": "TIE"
               },
               {
                 "axis": "conformance",
@@ -123,8 +123,8 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 35,
-                "accuracy": null,
-                "separation": "UNTESTED"
+                "accuracy": 0.7143,
+                "separation": "TIE"
               },
               {
                 "axis": "openness",
@@ -132,8 +132,8 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 32,
-                "accuracy": null,
-                "separation": "UNTESTED"
+                "accuracy": 0.8438,
+                "separation": "TIE"
               },
               {
                 "axis": "machinery-conformity",
@@ -150,8 +150,8 @@
                 "kind": "model-comparison",
                 "status": "MEASURED",
                 "n": 199,
-                "accuracy": null,
-                "separation": "UNTESTED"
+                "accuracy": 0.405,
+                "separation": "TIE"
               },
               {
                 "axis": "cross-reality",
@@ -306,14 +306,15 @@
             "signer_anchored": false,
             "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
             "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
-            "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
+            "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the signed card index (/signed/card_index.json, corpus 3 in council-os/CARD-CORPORA.md; whole-store check at /api/state → card_chain.bodies_verified_valid) under #card-attestation-1, and site_attestation on this payload under #board-attestation-1; check those instead. The older 150-card figure was a checked subset of that same chain, not a separate corpus.",
             "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
             "reproduction_attempts": 58184,
             "reproduction_verified": 0,
             "tracked_as": "/api/corrections C-2026-0826-08"
           },
           "tracked_as": "/api/corrections C-2026-0826-08"
-        }
+        },
+        "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec"
       }
     }
   },
@@ -375,7 +376,7 @@
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
     "n_leaves": 32,
-    "n_proofs": 28,
+    "n_proofs": 30,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -383,51 +384,51 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 507730293,
-        "block_hash": "0x95a0997479f233a61a81a118c8e6b2d5e00bb8482b006b948d1ee4ced8805181",
-        "block_time": "2026-09-22T08:51:34Z"
+        "block": 509637670,
+        "block_hash": "0x183b4e57ac40b2923a8829a594ece3779302f08a4ea75acdfd94a31923f7bc8c",
+        "block_time": "2026-09-28T07:29:17Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 95900490,
-        "block_hash": "0x075cc3ff50af0c7b30b0dde145ee4ebcda44c1ef38e8beb2e2fb795ae94b3072",
-        "block_time": "2026-09-22T08:51:33Z"
+        "block": 96309736,
+        "block_hash": "0x88bf1a324564f1e3bca05b088d3280ba48e8e6f0bf3e0c86c121180eb99b1a02",
+        "block_time": "2026-09-28T07:29:15Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 51638874,
-        "block_hash": "0x5c9c072f23d5e0454302fe81f4d486ff92c708521d1f9f30acc4d76300eccba8",
-        "block_time": "2026-09-22T08:51:35Z"
+        "block": 51895605,
+        "block_hash": "0xdd0d862f58564fc7e1bf3f1218014b796cb07d30b8c603ea66a63af160429eda",
+        "block_time": "2026-09-28T07:29:17Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 123344228,
-        "block_hash": "0x3d67c04ca8b7b4c30b42d0bb2971b93ed4c1844e34fc1b61c57c4f30c173486c",
-        "block_time": "2026-09-22T08:51:35Z"
+        "block": 124484899,
+        "block_hash": "0x8984eddf66c442ee9c31d266c5556210dbb1ed4f83ec2a242b318b0057194498",
+        "block_time": "2026-09-28T07:29:18Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 26031950,
-        "block_hash": "0x908e74f79b405d28019b90a9e92af448f39c39bf3361362e07d9ca3173cf80c5",
-        "block_time": "2026-09-22T08:51:23Z"
+        "block": 26074462,
+        "block_hash": "0x2e4f3cd70449022f665e760e771c68fc6304029ba81f7934c80c8aa3cd0cf240",
+        "block_time": "2026-09-28T07:29:11Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 100968392,
-        "block_hash": "0x2811adc6eb0cea9ba20f6956e1ce83ab51fa32a7d9a169e93463372a4c66a84e",
-        "block_time": "2026-09-22T08:51:36Z"
+        "block": 101225123,
+        "block_hash": "0xb935e281f7addd0322d40f3c08678c5e459cc77d66e71617b4cf2c4b189b8c8a",
+        "block_time": "2026-09-28T07:29:18Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 157234159,
-        "block_hash": "0xa2c757eee81d9b2d2cdb4c451e13e35e04a918109bd636c764d2230a47592031",
-        "block_time": "2026-09-22T08:51:35Z"
+        "block": 157490891,
+        "block_hash": "0x15c31f21b0e026d9e9316f629e1dce588431c212fffb645ab8b75d9565370a27",
+        "block_time": "2026-09-28T07:29:19Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 94241336,
-        "block_hash": "0x79b1d8a712dedb8b79d7954d7da97ea62d33261d017a75261fe936df7f3018c6",
-        "block_time": "2026-09-22T08:51:37Z"
+        "block": 94583613,
+        "block_hash": "0x2d4963ee8d3687fcf4d7191ab024e6e0f6f8259c24a8b2c17e12e6b60f7218e5",
+        "block_time": "2026-09-28T07:29:20Z"
       }
     },
     "failures": [
@@ -437,14 +438,6 @@
       },
       {
         "subject": "evm:TBILL:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:VBILL:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:bIB01:avalanche",
         "reason": "no endpoint answered eth_getProof"
       }
     ],
@@ -458,35 +451,35 @@
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 507730438,
+        "block": 509637786,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 95900527,
+        "block": 96309759,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 51638892,
+        "block": 51895621,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 123344310,
+        "block": 124484968,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 26031953,
+        "block": 26074464,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 100968410,
+        "block": 101225139,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 157234178,
+        "block": 157490906,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 94241361,
+        "block": 94583634,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
@@ -599,14 +592,14 @@
     "hits": 26,
     "not_in_verified_set": 22,
     "unmeasured": 0,
-    "mirrors_written": 22
+    "mirrors_written": 21
   },
   "xrpl_state_matrix": {
     "status": "CHANGED",
     "pack": "xrpl-16-state-matrix",
-    "matrix_sha256": "143d483e569671679dabe6e3bd039b68064894b61763c643e8ce2a942510c4f4",
-    "ledger_index": 107155574,
-    "n_changed": 7,
+    "matrix_sha256": "16e7969da55e7331449aec865ea8e6351fc16b48ba8732dfb3b175b7e7db73d1",
+    "ledger_index": 107288011,
+    "n_changed": 12,
     "rpc_dark": 0,
     "rpc_uncheckable": 0,
     "metrics_ok": true
@@ -627,7 +620,7 @@
     "n_generators": 4,
     "payload_bytes": 601
   },
-  "card_count": 305,
+  "card_count": 310,
   "xrpl_asset_state_count": 16,
   "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }

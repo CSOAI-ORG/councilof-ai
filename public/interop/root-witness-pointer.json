@@ -1,48 +1,48 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-09-23T05:23:04Z",
+ "as_of": "2026-09-28T07:32:11Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
   "also": "https://councilof.ai/api/root",
-  "sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
-  "bytes": 24505,
-  "merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
-  "card_count": 305,
-  "as_of": "2026-09-22T08:54:02Z"
+  "sha256": "048a1507f9099f2eedb3ab0f60433508e001af6f8c3290e96c30ddefe3eb1963",
+  "bytes": 24865,
+  "merkle_root": "c2ab6d59e530d7dd5999b790c590ca0513e3af6f6fc1514cb8a282232ea768e3",
+  "card_count": 310,
+  "as_of": "2026-09-28T07:32:07Z"
  },
  "corpus_scope": {
   "relationship": "SEPARATE_CORPORA",
-  "public_root_count": 305,
-  "public_root_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+  "public_root_count": 310,
+  "public_root_sha256": "048a1507f9099f2eedb3ab0f60433508e001af6f8c3290e96c30ddefe3eb1963",
   "signed_card_count": 335,
   "signed_card_id_overlap": 0,
   "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
-  "note": "The 305 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
+  "note": "The 310 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
  },
  "witness_sidecar": {
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-09-23-ae8bbfce-proofrefresh.json"
+  "dated_copy": "public/interop/root-witness-2026-09-28-048a1507.json"
  },
  "drift": {
-  "status": "MATCH",
-  "checked_at": "2026-09-23T05:26:34Z",
+  "status": "DRIFTED",
+  "checked_at": "2026-09-28T07:32:12Z",
   "checked_against": "https://councilof.ai/root.json",
-  "witness_artifact_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
+  "witness_artifact_sha256": "048a1507f9099f2eedb3ab0f60433508e001af6f8c3290e96c30ddefe3eb1963",
   "live_root_sha256": "ae8bbfcedf7cc30172498110e7df66a4f6c98c4aae69c9f47cdcba2abc1d334e",
-  "witness_artifact_merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
+  "witness_artifact_merkle_root": "c2ab6d59e530d7dd5999b790c590ca0513e3af6f6fc1514cb8a282232ea768e3",
   "live_root_merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
   "live_root_bytes": 24505,
-  "match_sha256": true,
-  "match_merkle_root": true,
-  "reason": "Exact live-root readback against the unchanged witnessed root; no new measurement or signature."
+  "match_sha256": false,
+  "match_merkle_root": false,
+  "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
- "witness_status_observed_at": "2026-09-23T05:23:04Z",
+ "witness_status_observed_at": "2026-09-28T07:32:10Z",
  "witnesses": {
   "rekor": "WITNESSED",
-  "ots": "CONFIRMED_BITCOIN",
+  "ots": "STAMPED_PENDING_BITCOIN",
   "eas_base": "NOT_YET",
   "xrpl_memo": "NOT_YET"
  },
@@ -55,9 +55,9 @@
  "conflict": {
   "status": "NONE",
   "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-  "as_of": "2026-09-22T08:54:02Z",
-  "merkle_root": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
-  "sidecars_scanned": 49,
+  "as_of": "2026-09-28T07:32:07Z",
+  "merkle_root": "c2ab6d59e530d7dd5999b790c590ca0513e3af6f6fc1514cb8a282232ea768e3",
+  "sidecars_scanned": 51,
   "conflicts": [],
   "byte_variants": [],
   "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
