@@ -1197,7 +1197,7 @@ const formerRuntimeClaim =
   /15\/15 rails|1126\/1126|relentless cycle|Every standard maps|Every package enforces|Every loop updates|live attestation streaming|settling real USDC|33-agent BFT council/i;
 for (const path of retiredApiPaths) {
   const source = readFileSync(path, "utf8");
-  assert.match(source, /@openapi-unavailable/);
+  assert.match(source, /@openapi-retired/);
   assert.match(source, /status: "UNAVAILABLE"/);
   assert.match(source, /code: "RETIRED"/);
   assert.match(source, /}\s*,\s*503\s*,?\s*\);/);
@@ -1354,6 +1354,9 @@ const reviewedPublicHtmlAppRoutes = new Set([
   "/advisory",
   "/benchmarks",
   "/globe",
+  // public/governance/index.html is the canonical machine-readable Governance Fabric front;
+  // the React /governance redirect is legacy and may be shadowed deliberately.
+  "/governance",
 ]);
 const concreteAppRoutes = [...appSource.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .map((match) => match[1].replace(/\/+$/, "") || "/")

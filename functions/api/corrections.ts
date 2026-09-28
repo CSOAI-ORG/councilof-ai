@@ -1294,7 +1294,7 @@ export const LEDGER = {
   },
   "sig_input": "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. The attestation names the digest of the ledger body and the rule that produces it.",
   "key_source": "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
-  "note": "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a 15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone cannot green the flag any more - id is inside the signed attestation, and the handler verifies the Ed25519 bytes at request time, not just a digest match."
+  "note": "RE-ISSUED 2026-09-26T15:46:06Z over the current 73-entry body. The detached attestation pins the ledger content_id; every later append MUST re-issue with scripts/sign-corrections-ledger.mjs. Changing an id alone cannot make the endpoint VALID because the handler verifies both the body digest and Ed25519 signature at request time."
 },
 };
 
