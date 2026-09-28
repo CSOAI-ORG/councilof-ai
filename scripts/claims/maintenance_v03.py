@@ -57,7 +57,7 @@ def plan(repo:Path, receipt:dict):
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2]); ap.add_argument('--watch-receipt',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True); ap.add_argument('--execute',action='store_true'); ap.add_argument('--require-signature',action='store_true')
-    ap.add_argument('--token-file',type=Path,default=Path('/workspace/secrets/board-sign-pod-token')); ap.add_argument('--stamp',action='store_true'); ap.add_argument('--stage-public',action='store_true')
+    ap.add_argument('--token-file',type=Path,default=Path('~/.secrets/board-sign-pod-token')); ap.add_argument('--stamp',action='store_true'); ap.add_argument('--stage-public',action='store_true')
     a=ap.parse_args(); repo=a.repo.resolve(); receipt=load(a.watch_receipt); groups=plan(repo,receipt)
     rid=receipt.get('run_id') or dt.datetime.now(dt.timezone.utc).strftime('%Y%m%dT%H%M%SZ'); work=a.out/f'run-{rid}'; work.mkdir(parents=True,exist_ok=True)
     result={'schema':'csoai.claim-maintenance-v03-receipt/0.1','created_utc':dt.datetime.now(dt.timezone.utc).isoformat().replace('+00:00','Z'),'watch_run_id':rid,
