@@ -22,6 +22,7 @@ import { entries as cards } from "./cards.xml";
 import { entries as roots } from "./roots.xml";
 import { entries as census } from "./x402-census.xml";
 import { entries as notes } from "./notes.xml";
+import { boardEntries } from "./_board";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -30,6 +31,7 @@ interface Desc { name?: string; state?: string; description?: string; as_of?: st
 function feeds() {
   const safe = (f: () => { iso: string }[]) => { try { return f(); } catch { return null; } };
   const c = safe(corrections), k = safe(cards), r = safe(roots), x = safe(census), nt = safe(notes);
+  const bd = safe(boardEntries);
   return [
     { path: "/feeds/corrections.xml", type: "application/rss+xml", title: "Corrections ledger",
       n: c?.length ?? null, newest: c?.[0]?.iso ?? null,
@@ -37,6 +39,12 @@ function feeds() {
     { path: "/feeds/corrections.atom", type: "application/atom+xml", title: "Corrections ledger (Atom)",
       n: c?.length ?? null, newest: c?.[0]?.iso ?? null,
       what: "The same entries in Atom. One source, two syntaxes." },
+    { path: "/feeds/board.atom", type: "application/atom+xml", title: "GSPC board changes",
+      n: bd?.length ?? null, newest: bd?.[0]?.iso ?? null,
+      what: "One entry per signed freeze of the GSPC board: its public count, when it was frozen, and its claim state (CURRENT, or superseded and by what). A superseded freeze stays listed, because its bytes still verify. When the live board has moved past the newest freeze, the subtitle says so." },
+    { path: "/feeds/board.json", type: "application/feed+json", title: "GSPC board changes (JSON Feed)",
+      n: bd?.length ?? null, newest: bd?.[0]?.iso ?? null,
+      what: "The same entries as JSON Feed 1.1. Its _gspc extension compares the live board with the newest signed freeze. One source, two syntaxes." },
     { path: "/feeds/cards.xml", type: "application/rss+xml", title: "Newly signed measurement cards",
       n: k?.length ?? null, newest: k?.[0]?.iso ?? null,
       what: "The newest entries in the SIGNED CARD INDEX, each with the id a stranger can verify. Not the public-root leaf set and not the on-disk wrapper count — three corpora, zero overlap." },
