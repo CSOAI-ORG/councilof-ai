@@ -130,11 +130,14 @@ def pontes_participant_measurement() -> dict:
     # keyed and sorted below, so scheduling order never changes the published artifact.
     def read_one(org: str, doms: list[str]):
         try:
-            return org, corroborate.check(org, 'Pontes', domains=doms)
+            return org, corroborate.check(org, 'Pontes', domains=doms, bounded=True)
         except Exception:
             return org, {'status': 'SEARCH_INCONCLUSIVE', 'meaning': 'harness raised',
                          'traceback': traceback.format_exc()[-400:]}
 
+    # Warm the Common Crawl collection lookup once before fan-out; every worker then reuses the
+    # exact same collection endpoint and source receipt.
+    corroborate.cc_api(bounded=True)
     rows = {}
     with ThreadPoolExecutor(max_workers=min(6, len(PONTES_NAMED))) as pool:
         futures = [pool.submit(read_one, org, doms) for org, doms in PONTES_NAMED.items()]
