@@ -11,6 +11,7 @@ import { AXES_C } from "./_gspc_axes_c";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
 import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
+import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -435,7 +436,9 @@ export const onRequestGet: PagesFunction = async (context) => {
   // (totals, separation stats, means, the axes array, the living stamp) derives from this,
   // so a council model can never re-enter a public count.
   const finFacts = FINANCIAL_FACTS_AS_OF.axes as Record<string, { as_of?: string; status?: string }>;
-  const selected = selectedRaw.map(excludeOwnLeader).map(dropUncardedLeader).map(applyRowsSeparation).map((a) => {
+  // withPower adds distinct_items + the MDE of the separation test (board honesty, 2026-09-28);
+  // applyUnderpowered is the owner-gated UNDERPOWERED state — an identity while it is HELD (OFF).
+  const selected = selectedRaw.map(excludeOwnLeader).map(dropUncardedLeader).map(applyRowsSeparation).map(withPower).map((a) => applyUnderpowered(a)).map((a) => {
     if (a.family !== "financial") return a;
     const row = finFacts[a.axis];
     if (!row || typeof row.as_of !== "string") return a;
@@ -475,6 +478,9 @@ export const onRequestGet: PagesFunction = async (context) => {
   const untestedCount = comparisonSlots.filter((a) => a.separation === "UNTESTED").length;
   const separatedNames = comparisonSlots.filter((a) => a.separation === "SEPARATED").map((a) => a.axis);
   const tieCount = comparisonSlots.filter((a) => a.separation === "TIE").length;
+  // Owner-gated (HELD, OFF): only non-zero when UNDERPOWERED_STATE.enabled. A tested axis whose TIE
+  // the test had too little power to resolve; counted apart from TIE, never folded into it.
+  const underpoweredCount = comparisonSlots.filter((a) => (a.separation as string | undefined) === "UNDERPOWERED").length;
   // Every bank is named by a bare slug (e.g. "csoai/gspc-gov"), which a stranger cannot
   // resolve without already knowing the host. Our own rater-transparency axis measured
   // /api/gspc as carrying ZERO resolvable URLs (2026-08-26) — the exact friction that axis
@@ -518,6 +524,10 @@ export const onRequestGet: PagesFunction = async (context) => {
   // The historical UNVERIFIABLE stamp is kept on `superseded`, never deleted.
   const measuredOn = {
     ...MEASURED_ON,
+    // Derived from the model ids in the published rows (2026-09-28). It replaced the typed
+    // "19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models)":
+    // the rows hold 6 base models and 13 of our own fine-tunes, and no other model.
+    model: measuredOnModel(AXES),
     living_stamp: { ...MEASURED_ON.living_stamp },
     // The 2026-08-13 freeze manifests carry peritem_sha256: null (rows unpublished then). The rows
     // are now published; this is their manifest hash (sha256 of the dataset's SHA256SUMS), read from
@@ -550,7 +560,13 @@ export const onRequestGet: PagesFunction = async (context) => {
     // Playbook T2 (2 Sep 2026): serve the closed state vocabularies so no client hardcodes them.
     state_enum: {
       status: ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"],
-      separation: ["SEPARATED", "TIE", "UNTESTED"],
+      separation: UNDERPOWERED_STATE.enabled
+        ? ["SEPARATED", "TIE", "UNTESTED", "UNDERPOWERED"]
+        : ["SEPARATED", "TIE", "UNTESTED"],
+      // axes[].mde.state (2026-09-28): MEASURED (a number), NOT_REACHABLE (no difference up to the
+      // observed discordance reaches 80% power), UNDEFINED (no discordant item), UNMEASURED (no
+      // paired rows for the served bank). A null MDE is never a zero.
+      mde_state: [...MDE_STATES],
       public_leader_state: ["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
       run_attestation: ["ED25519_SIGNED", "CONTENT_ADDRESSED_UNSIGNED"],
       public_leader_state_absent: "the leader is shown (a public score)",
@@ -610,9 +626,13 @@ export const onRequestGet: PagesFunction = async (context) => {
       const separatedLeads = cmp.filter((a) => a.separation === "SEPARATED").length;
       const tieCount = cmp.filter((a) => a.separation === "TIE").length;
       const untestedCount = cmp.filter((a) => a.separation === "UNTESTED").length;
+      // Owner-gated (HELD): the word appears in the count only once the state is enabled.
+      const underpoweredSeparations = cmp.filter((a) => (a.separation as string | undefined) === "UNDERPOWERED").length;
       const separationPublicCount =
         `${separatedLeads} of ${cmp.length} model-comparison ${cmp.length === 1 ? "axis" : "axes"} separated a leader · ` +
-        `${tieCount} TIE · ${untestedCount} UNTESTED`;
+        `${tieCount} TIE · ` +
+        (UNDERPOWERED_STATE.enabled ? `${underpoweredSeparations} UNDERPOWERED · ` : "") +
+        `${untestedCount} UNTESTED`;
       const modelFleetCount = selected.filter((a: any) => a.kind === "model-comparison").length;
       const factRunCount = factRuns.filter((a) => a.status === "MEASURED").length;
       const publicLeaderScoreCount = externallyLedAxes.length;
@@ -702,6 +722,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         comparison_axes: cmp.length,
         separated_leads: separatedLeads,
         ties: tieCount,
+        ...(UNDERPOWERED_STATE.enabled ? { underpowered_separations: underpoweredSeparations } : {}),
         untested_separations: untestedCount,
         separation_scope_note:
           "Separation asks whether a leader's lead over a fleet is statistically real, so it applies " +
@@ -833,7 +854,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      `Of the ${comparisonSlots.length} model-comparison ${comparisonSlots.length === 1 ? "axis" : "axes"}, ${separationTestedCount} have a published statistical-separation determination: ${separatedNames.length} SEPARATED${separatedNames.length ? ` (${separatedNames.join(", ")})` : ""} and ${tieCount} TIE. Methods are stated per axis; most use paired McNemar tests, while any alternative must publish its basis and supporting evidence. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axes are not model comparisons and are not in this denominator.`,
+      `Of the ${comparisonSlots.length} model-comparison ${comparisonSlots.length === 1 ? "axis" : "axes"}, ${separationTestedCount} have a published statistical-separation determination: ${separatedNames.length} SEPARATED${separatedNames.length ? ` (${separatedNames.join(", ")})` : ""}${UNDERPOWERED_STATE.enabled ? `, ${tieCount} TIE and ${underpoweredCount} UNDERPOWERED (tested, but the bank is too small for the test to reach 80% power; see axes[].mde)` : ` and ${tieCount} TIE`}. Methods are stated per axis; most use paired McNemar tests, while any alternative must publish its basis and supporting evidence. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axes are not model comparisons and are not in this denominator.`,
       `${selected.length} ${selected.length === 1 ? "axis is" : "axes are"} on the board and ${selected.filter((a) => a.status === "MEASURED").length} ${selected.filter((a) => a.status === "MEASURED").length === 1 ? "carries" : "carry"} a measurement. See totals.count_grammar. The financial-fact axes are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
       "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
@@ -896,7 +917,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         // public surface of this payload — the stamp included — names a leader (or its accuracy)
         // that we cannot back: neither our own model on an axis it topped, nor an external model
         // with no signed card.
-        axes: AXES.map(excludeOwnLeader).map(dropUncardedLeader).map(applyRowsSeparation).map((a) => ({
+        // withPower/applyUnderpowered: the same chain as the served axes, so the stamp's separation is
+        // the served one (identical to before while UNDERPOWERED is HELD; only these fields are signed).
+        axes: AXES.map(excludeOwnLeader).map(dropUncardedLeader).map(applyRowsSeparation).map(withPower).map((a) => applyUnderpowered(a)).map((a) => ({
           axis: a.axis,
           family: a.family,
           kind: a.kind,
