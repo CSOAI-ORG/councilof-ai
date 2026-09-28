@@ -397,6 +397,7 @@ const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
   "/advisory",   // reviewed legacy hand-off page
   "/benchmarks", // static-first benchmark registry
   "/globe",      // exact /globe -> /globe3d.html redirect owns this door
+  "/governance", // canonical static Governance Fabric front; React /governance is a legacy redirect
 ]);
 const publicHtmlRouteCollisions = routes
   .map(normFrom)
