@@ -5,79 +5,93 @@ import { InputBoundVerifier } from "@/lib/inputBoundVerification";
 
 type Tally = { ok: number; fail: number };
 
-/**
- * TallyOptIn — the opt-in public count of completed verifications.
- *
- * GRAMMAR (fixed by /api/verify-tally): the tally is a SELF-REPORTED, OPT-IN
- * signal, not a MEASURED number, and every surface that shows it must say so.
- * 2026-08-26: the count was fetched and then never rendered, and a failed POST
- * left the button looking untouched. Both are now visible.
+function readTally(value: unknown): Tally | null {
+  if (!value || typeof value !== "object") return null;
+  const { ok, fail } = value as Partial<Tally>;
+  if (typeof ok !== "number" || typeof fail !== "number" ||
+      !Number.isSafeInteger(ok) || !Number.isSafeInteger(fail) || ok < 0 || fail < 0 ||
+      !Number.isSafeInteger(ok + fail)) return null;
+  return { ok, fail };
+}
+
+/** Only a completed VALID/INVALID result reaches this explicit opt-in control.
+ * Unknown outcomes are not failures. This count is never a measurement or usage proof.
+ * A lost acknowledgement does not prove a write failed, so there is no auto-retry.
  */
 function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" }) {
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "err">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "unknown">("idle");
   const [tally, setTally] = useState<Tally | null>(null);
+  const attempted = useRef(false);
   const light = variant === "light";
+  const muted = light ? "text-slate-600 forced-colors:text-[CanvasText]" : "text-emerald-100/80 forced-colors:text-[CanvasText]";
 
   useEffect(() => {
     let live = true;
-    fetch("/api/verify-tally")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
-      .then((t) => { if (live && t && typeof t.ok === "number") setTally(t); })
-      .catch(() => { /* the tally is a nicety; its absence is not an error worth shouting */ });
-    return () => { live = false; };
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    fetch("/api/verify-tally", { signal: controller.signal })
+      .then((response) => response.ok ? response.json() : null)
+      .then((value) => { if (live) setTally(readTally(value)); })
+      .catch(() => { /* Optional count availability never changes the verdict. */ })
+      .finally(() => clearTimeout(timer));
+    return () => { live = false; clearTimeout(timer); controller.abort(); };
   }, []);
 
-  const muted = light ? "text-slate-600" : "text-emerald-100/70";
   const count = tally ? (
-    <p className={`text-[12px] ${muted}`}>
-      {tally.ok + tally.fail} verification{tally.ok + tally.fail === 1 ? "" : "s"} added to the
-      public tally so far ({tally.ok} matched · {tally.fail} did not) — a self-reported, opt-in
-      signal, not a measurement.
+    <p className={`text-sm leading-relaxed ${muted}`}>
+      {(tally.ok + tally.fail).toLocaleString()} outcomes in the public tally
+      ({tally.ok.toLocaleString()} matched · {tally.fail.toLocaleString()} did not) —
+      a self-reported, opt-in signal, not a measurement.
     </p>
   ) : null;
 
-  if (state === "sent")
-    return (
-      <div className="space-y-1" role="status">
-        <p className={`text-[12px] font-semibold ${light ? "text-emerald-800" : "text-emerald-300"}`}>
-          Counted — thank you.
-        </p>
-        {count}
-      </div>
-    );
+  if (state === "sent") return (
+    <div className="space-y-1" role="status">
+      <p className={`text-sm font-semibold forced-colors:text-[CanvasText] ${light ? "text-emerald-800" : "text-emerald-300"}`}>Counted — thank you.</p>
+      {count}
+    </div>
+  );
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
+      <p className={`text-sm leading-relaxed ${muted}`}>
+        Optional: share only a yes/no outcome. Your record JSON and input hash are not included.
+      </p>
       <button
         type="button"
-        disabled={state === "sending"}
+        disabled={state !== "idle"}
         onClick={async () => {
+          if (attempted.current) return;
+          attempted.current = true;
           setState("sending");
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 5000);
           try {
-            const r = await fetch("/api/verify-tally", {
-              method: "POST",
+            const response = await fetch("/api/verify-tally", {
+              method: "POST", signal: controller.signal,
               headers: { "content-type": "application/json" },
               body: JSON.stringify({ ok }),
             });
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            const t = await r.json();
-            if (typeof t?.ok === "number") setTally({ ok: t.ok, fail: t.fail });
-            setState("sent");
+            if (!response.ok) throw new Error("Tally acknowledgement unavailable");
+            const value: unknown = await response.json();
+            const counts = readTally(value);
+            if (!counts || (value as { counted?: unknown }).counted !== true)
+              throw new Error("Tally acknowledgement invalid");
+            setTally(counts); setState("sent");
           } catch {
-            setState("err");
-          }
+            setState("unknown");
+          } finally { clearTimeout(timer); }
         }}
-        className={`min-h-[44px] rounded-md border px-3 py-1.5 text-[12px] disabled:opacity-50 ${FOCUS} ${
-          light
-            ? "border-emerald-700/30 text-emerald-900 hover:bg-emerald-50"
-            : "border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
+        className={`min-h-[44px] min-w-[44px] rounded-lg border px-3 py-2 text-sm disabled:opacity-60 forced-colors:border-[ButtonText] forced-colors:bg-[Canvas] forced-colors:text-[ButtonText] forced-colors:disabled:opacity-100 ${FOCUS} ${
+          light ? "border-emerald-700/40 text-emerald-900 hover:bg-emerald-50" : "border-emerald-400/50 text-emerald-100 hover:bg-emerald-500/10"
         }`}
       >
-        {state === "sending" ? "Adding…" : "Add to public tally (opt-in — ✓/✗ only)"}
+        {state === "sending" ? "Adding…" : state === "unknown" ? "Tally confirmation unavailable" : "Add result to public tally (optional)"}
       </button>
-      {state === "err" && (
-        <p className="text-[12px] font-semibold text-red-500" role="alert">
-          Could not reach the tally — your verdict above is unaffected; it never left your browser.
+      {state === "unknown" && (
+        <p className={`text-sm leading-relaxed forced-colors:text-[CanvasText] ${light ? "text-amber-800" : "text-amber-200"}`} role="alert">
+          Tally update not confirmed. It may have reached the service, so it will not be sent again automatically.
+          Your record JSON was not included, and your verification result is unchanged.
         </p>
       )}
       {count}
@@ -85,162 +99,136 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   );
 }
 
-export default function RecordVerifyForm({
-  variant = "dark",
-  seed,
-  seedNonce,
-  onVerdict,
-}: {
+export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict }: {
   variant?: "light" | "dark";
-  /**
-   * Text a HOST surface wants loaded into the box — the Council OS pane uses it to
-   * hand the reader a real published card off /signed/chain.json so the tool can be
-   * exercised without first going and finding one. `seedNonce` changes on every
-   * load so the same card can be re-seeded after the reader has edited it. The box
-   * stays fully editable: seeding fills it, it never locks it.
-   */
+  /** Host-provided original text; editable, and never automatically verified. */
   seed?: string;
+  /** Allows the same host-provided record to be loaded again. */
   seedNonce?: number;
-  /** Told the verdict after every run. The Council OS pane uses it to mark the
-   *  "verify a published card" quest on a REAL pass rather than on a link click. */
+  /** Called only for a completed, current-input verdict, never a click. */
   onVerdict?: (v: RecordVerdict) => void;
 }) {
   const [text, setText] = useState("");
   const [verdict, setVerdict] = useState<{ result: RecordVerdict; inputHash: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [failure, setFailure] = useState(false);
+  const [notice, setNotice] = useState("Paste a record to begin. Nothing has been checked yet.");
   const verifier = useRef(new InputBoundVerifier<RecordVerdict>());
+  const attempt = useRef(0);
+  const field = useRef<HTMLTextAreaElement>(null);
   const light = variant === "light";
   const fieldId = useId();
+  const helpId = `${fieldId}-help`;
+  const resultId = `${fieldId}-result`;
+  const muted = light ? "text-slate-600 forced-colors:text-[CanvasText]" : "text-emerald-100/80 forced-colors:text-[CanvasText]";
 
-  useEffect(() => () => verifier.current.invalidate(), []);
+  useEffect(() => () => { attempt.current += 1; verifier.current.invalidate(); }, []);
 
   useEffect(() => {
-    if (typeof seed === "string" && seed) {
-      verifier.current.invalidate();
-      setText(seed);
-      setVerdict(null); // a new record has not been checked yet — never show the old verdict beside it
-      setBusy(false);
+    if (typeof seed === "string") {
+      attempt.current += 1; verifier.current.invalidate();
+      setText(seed); setVerdict(null); setBusy(false); setFailure(false);
+      setNotice(seed.trim() ? "Record loaded. This text has not been checked." : "Ready for a record. Nothing has been checked.");
     }
   }, [seed, seedNonce]);
 
   const run = async () => {
-    setBusy(true);
-    const snapshot = text;
-    const bound = await verifier.current.run(snapshot, verifyRecord);
-    if (!bound) return;
-    setVerdict(bound);
+    if (busy || !text.trim()) return;
+    const current = ++attempt.current;
+    setBusy(true); setFailure(false); setVerdict(null);
+    setNotice("Checking this record. An optional public-key cross-check may take up to three seconds.");
+    let bound: { result: RecordVerdict; inputHash: string } | null;
+    try {
+      bound = await verifier.current.run(text, verifyRecord);
+    } catch {
+      if (current !== attempt.current) return;
+      setBusy(false); setFailure(true); setNotice("Check not completed. Your input is unchanged.");
+      return;
+    }
+    if (!bound || current !== attempt.current) return;
+    setVerdict(bound); setBusy(false);
+    setNotice(`Check complete: ${bound.result.state}. Read the result and its limits below.`);
     onVerdict?.(bound.result);
-    setBusy(false);
   };
 
   const edit = (next: string) => {
-    verifier.current.invalidate();
-    setText(next);
-    setVerdict(null);
-    setBusy(false);
+    attempt.current += 1; verifier.current.invalidate();
+    setText(next); setVerdict(null); setBusy(false); setFailure(false);
+    setNotice(next.trim() ? "Input changed. This text has not been checked." : "Ready for a record. Nothing has been checked.");
   };
 
   return (
-    <div>
-      {/* The textarea had no label of any kind — a screen reader announced only
-          "edit text". The label is visible, not sr-only, because the field also
-          needs a heading a sighted reader can scan to. */}
-      <label
-        htmlFor={fieldId}
-        className={`mb-2 block text-[12px] font-semibold ${light ? "text-slate-800" : "text-emerald-100/80"}`}
-      >
-        Estate record JSON
-      </label>
-      <textarea
-        id={fieldId}
-        value={text}
-        onChange={(e) => edit(e.target.value)}
-        placeholder="Paste one estate record JSON — verification runs entirely in your browser."
-        className={
-          (light
-            ? "h-36 w-full rounded-xl border border-slate-900/15 bg-white p-3 font-mono text-[12px] text-slate-900 placeholder:text-slate-500 [color-scheme:light]"
-            : "h-40 w-full rounded-xl border border-emerald-500/25 bg-[#03110b] p-3 font-mono text-[12px] text-emerald-100 placeholder:text-emerald-100/50 [color-scheme:dark]") +
-          " " +
-          FOCUS
-        }
-      />
-      <div className="mt-3 flex flex-wrap items-center gap-3">
-        <button
-          type="button"
-          onClick={run}
-          disabled={busy || !text.trim()}
-          className={
-            (light
-              ? "rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-40"
-              : "rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-40") +
-            " min-h-[44px] " +
-            FOCUS
-          }
-        >
-          {busy ? "Verifying…" : "Verify this record"}
-        </button>
-        {!text.trim() && (
-          <span className={`text-[12px] ${light ? "text-slate-600" : "text-emerald-100/70"}`}>
-            Paste a record above to enable this.
-          </span>
-        )}
+    <div className="min-w-0 space-y-4">
+      <div>
+        <label htmlFor={fieldId} className={`mb-2 block text-base font-semibold forced-colors:text-[CanvasText] ${light ? "text-slate-900" : "text-emerald-50"}`}>Record JSON</label>
+        <p id={helpId} className={`mb-3 max-w-[65ch] text-sm leading-relaxed ${muted}`}>
+          Paste one original record. The check runs in this browser; the record is not uploaded.
+          A separate request may read published public-key metadata. Editing clears the previous result.
+        </p>
+        <textarea
+          ref={field} id={fieldId} value={text} onChange={(event) => edit(event.target.value)}
+          aria-describedby={helpId}
+          aria-invalid={verdict?.result.reasons.includes("parse_error") || undefined}
+          autoCapitalize="off" autoCorrect="off" spellCheck={false}
+          placeholder="Paste one complete JSON record here"
+          className={`min-h-[176px] w-full rounded-xl border p-3 font-mono text-base leading-relaxed forced-colors:border-[ButtonText] forced-colors:bg-[Canvas] forced-colors:text-[CanvasText] forced-colors:placeholder:text-[GrayText] ${FOCUS} ${
+            light ? "border-slate-400 bg-white text-slate-900 placeholder:text-slate-600 [color-scheme:light]"
+              : "border-emerald-500/50 bg-[#03110b] text-emerald-100 placeholder:text-emerald-100/70 [color-scheme:dark]"
+          }`}
+        />
       </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <button type="button" onClick={run} disabled={busy || !text.trim()}
+          className={`min-h-[44px] min-w-[44px] rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50 forced-colors:border forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText] forced-colors:disabled:opacity-100 ${FOCUS} ${
+            light ? "bg-emerald-700 text-white hover:bg-emerald-800" : "bg-emerald-400 text-[#03110b] hover:bg-emerald-300"
+          }`}>{busy ? "Verifying…" : "Verify this record"}</button>
+        <button type="button" disabled={!text} onClick={() => { edit(""); field.current?.focus(); }}
+          className={`min-h-[44px] min-w-[44px] rounded-lg border px-3 py-2 text-sm disabled:opacity-50 forced-colors:border-[ButtonText] forced-colors:bg-[Canvas] forced-colors:text-[ButtonText] forced-colors:disabled:opacity-100 ${FOCUS} ${
+            light ? "border-slate-400 text-slate-800 hover:bg-slate-50" : "border-emerald-500/50 text-emerald-100 hover:bg-emerald-500/10"
+          }`}>Clear record</button>
+      </div>
+      <p className={`text-sm leading-relaxed ${muted}`} role="status" aria-live="polite" aria-atomic="true">{notice}</p>
+      {failure && <p role="alert" className={`text-sm leading-relaxed forced-colors:text-[CanvasText] ${light ? "text-amber-800" : "text-amber-200"}`}>
+        This browser could not finish the check. Your text is unchanged. Try again, or open the verifier in an up-to-date browser.
+        No VALID or INVALID result has been established.
+      </p>}
       {verdict && (
-        <div className="mt-4 space-y-2" role="status">
-          {/* role="status" announces the panel when it appears, and the headline is
-              the first thing in that live region — so a screen-reader user hears the
-              outcome in words before the per-check list. The headline states the
-              verdict in words, not only a glyph: a reader who takes nothing else from
-              the panel must still leave knowing which way it went.
-              THREE STATES, NEVER TWO: UNCHECKABLE (could not check) is a different
-              claim from INVALID (checked and failed) and is never rendered as one. */}
-          <p
-            data-testid="record-verdict-headline"
-            className={`text-[14px] font-bold ${
-              verdict.result.state === "VALID"
-                ? light ? "text-emerald-800" : "text-emerald-300"
-                : verdict.result.state === "INVALID"
-                  ? light ? "text-red-700" : "text-red-300"
-                  : light ? "text-amber-700" : "text-amber-300"
-            }`}
-          >
+        <section key={`${verdict.inputHash}-${verdict.result.state}`} aria-labelledby={resultId}
+          className={`min-w-0 space-y-3 rounded-xl border p-4 forced-colors:border-[CanvasText] forced-colors:bg-[Canvas] ${light ? "border-slate-300 bg-slate-50" : "border-emerald-500/30 bg-[#03110b]"}`}>
+          <p id={resultId} data-testid="record-verdict-headline" className={`text-base font-semibold leading-relaxed forced-colors:text-[CanvasText] ${
+            verdict.result.state === "VALID" ? light ? "text-emerald-800" : "text-emerald-200"
+              : verdict.result.state === "INVALID" ? light ? "text-red-800" : "text-red-200"
+                : light ? "text-amber-800" : "text-amber-200"
+          }`}>
+            {verdict.result.state === "VALID" ? "✓ VALID — " : verdict.result.state === "INVALID" ? "✗ INVALID — " : "○ UNCHECKABLE — "}
             {verdict.result.state === "VALID"
-              ? "✓ VALID — "
-              : verdict.result.state === "INVALID"
-                ? "✗ INVALID — "
-                : "○ UNCHECKABLE — "}
-            {verdict.result.state === "VALID"
-              ? verdict.result.lines.some((l) => l.code === "signature_valid")
+              ? verdict.result.lines.some((line) => line.code === "signature_valid")
                 ? "this record reproduces its own id and its signature checks out against a published key."
                 : "this record reproduces its declared id, but it carries no signature — a hash match only, not proof of who wrote it."
-              : verdict.result.state === "INVALID"
-                ? `a check ran and failed (${verdict.result.reasons.join(", ")}); each failure below is reported for what it is.`
-                : `the check could not be completed (${verdict.result.reasons.join(", ") || "see below"}). This is not a finding that the record is forged.`}
+              : verdict.result.state === "INVALID" ? "a check ran and failed. The check details identify the mismatch."
+                : "the check could not be completed. This is not a finding that the record is forged."}
           </p>
-          <p className={`break-all font-mono text-[11px] ${light ? "text-slate-600" : "text-emerald-100/60"}`}>
-            Input SHA-256: {verdict.inputHash}
+          <p className={`text-sm leading-relaxed ${muted}`}>
+            {verdict.result.state === "VALID" ? "This result is not certification. Review source dates, admission and corrections before relying on the evidence."
+              : verdict.result.state === "INVALID" ? "Compare this record with the original source. Do not change it merely to make the check pass."
+                : verdict.result.reasons.includes("parse_error") ? "Check that you pasted one complete JSON record, without a code fence or surrounding explanation. Correct the text and verify again."
+                  : "Use a supported original record or ask its publisher for verification instructions. Review the check details before trying again."}
           </p>
-          {/* Keyed by code+index, not by label: two checks can carry the same label
-              and a duplicate React key silently drops a reported failure. */}
-          {verdict.result.lines.map((l, i) => (
-            <div key={`${l.code}-${i}`} className="flex items-start gap-2 text-[13px]">
-              <span
-                aria-hidden="true"
-                className={l.ok === true ? (light ? "text-emerald-700" : "text-emerald-300") : l.ok === false ? (light ? "text-red-700" : "text-red-300") : light ? "text-slate-600" : "text-emerald-100/70"}
-              >
-                {l.ok === true ? "✓" : l.ok === false ? "✗" : "○"}
-              </span>
-              <span className={light ? "text-slate-800" : "text-emerald-100/80"}>
-                <span className="sr-only">{l.ok === true ? "Pass: " : l.ok === false ? "Fail: " : "Not checked: "}</span>
-                <strong>{l.label}:</strong> {l.detail}
-              </span>
+          <p className={`break-all font-mono text-xs leading-relaxed ${muted}`}>Input SHA-256: {verdict.inputHash}</p>
+          <details open={verdict.result.state !== "VALID"} className={`min-w-0 text-sm forced-colors:text-[CanvasText] ${light ? "text-slate-800" : "text-emerald-100"}`}>
+            <summary className={`min-h-[44px] cursor-pointer rounded-md py-3 font-semibold forced-colors:text-[CanvasText] ${FOCUS}`}>Check details ({verdict.result.lines.length})</summary>
+            <div className="space-y-2">
+              {verdict.result.lines.map((line, index) => <div key={`${line.code}-${index}`} className="flex min-w-0 items-start gap-2 leading-relaxed">
+                <span aria-hidden="true">{line.ok === true ? "✓" : line.ok === false ? "✗" : "○"}</span>
+                <span className="min-w-0 [overflow-wrap:anywhere]">
+                  <span className="sr-only">{line.ok === true ? "Pass: " : line.ok === false ? "Fail: " : "Not checked: "}</span>
+                  <strong>{line.label}:</strong> {line.detail}
+                </span>
+              </div>)}
             </div>
-          ))}
-          {/* The tally follows the ACTUAL verdict. It used to be fed a value derived from
-              a verifier that failed every genuine card, so every honest visitor who
-              clicked it filed a false failure into a public counter. */}
-          <TallyOptIn ok={verdict.result.valid} variant={variant} />
-        </div>
+          </details>
+          {verdict.result.state !== "UNCHECKABLE" && <TallyOptIn ok={verdict.result.state === "VALID"} variant={variant}/>}
+        </section>
       )}
     </div>
   );

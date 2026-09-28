@@ -36,12 +36,22 @@ export interface RecordVerdict {
 }
 
 async function loadAnchors(): Promise<Anchor[]> {
-  try {
-    const did = await (await fetch("/.well-known/did.json")).json();
-    return anchorsFromDid(did);
-  } catch {
-    return [];
-  }
+  // This network read is an optional cross-check, not the deciding trust anchor.
+  // Bound both the response and body wait so a stalled endpoint cannot strand the UI.
+  const controller = new AbortController();
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<Anchor[]>((resolve) => {
+    timer = setTimeout(() => { controller.abort(); resolve([]); }, 3000);
+  });
+  const read = async (): Promise<Anchor[]> => {
+    try {
+      const response = await fetch("/.well-known/did.json", { signal: controller.signal });
+      if (!response.ok) return [];
+      return anchorsFromDid(await response.json());
+    } catch { return []; }
+  };
+  try { return await Promise.race([read(), deadline]); }
+  finally { if (timer !== undefined) clearTimeout(timer); }
 }
 
 export async function verifyRecord(raw: string): Promise<RecordVerdict> {
