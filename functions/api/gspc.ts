@@ -30,6 +30,46 @@ const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 const isOwnCouncilModel = (name?: string | null): boolean =>
   typeof name === "string" && (/^council\b/i.test(name.trim()) || /\(council specialist\)/i.test(name));
 
+// Public disclosure boundary: owned model names are not public ranking evidence.
+// Collect identifiers from source records before projecting the response, then redact those
+// exact identifiers wherever they recur in explanatory text or object keys.
+const ownModelIdentifierPattern = /(^|[^A-Za-z0-9])council[-_][a-z0-9][A-Za-z0-9_.:/@+-]*(?:[ ]*[(]council specialist[)])?|(^|[^A-Za-z0-9])[a-z0-9][A-Za-z0-9_.:/@+-]*[ ]*[(]council specialist[)]/gi;
+
+export const collectOwnModelIdentifiers = (value: unknown, found = new Set<string>()): Set<string> => {
+  if (Array.isArray(value)) {
+    for (const item of value) collectOwnModelIdentifiers(item, found);
+  } else if (value && typeof value === "object") {
+    for (const [key, item] of Object.entries(value)) {
+      if (isOwnCouncilModel(key)) found.add(key);
+      collectOwnModelIdentifiers(item, found);
+    }
+  } else if (typeof value === "string") {
+    for (const match of value.matchAll(ownModelIdentifierPattern)) {
+      const identifier = match[0].replace(/^[^A-Za-z0-9]+/, "").trim();
+      if (isOwnCouncilModel(identifier)) found.add(identifier);
+    }
+  }
+  return found;
+};
+
+export const redactOwnModelIdentifiers = (value: unknown, identifiers: Set<string>): unknown => {
+  const ordered = [...identifiers].sort((a, b) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0));
+  const aliases = new Map(ordered.map((identifier, i) => [identifier, `CSOAI-owned specialist ${i + 1}`]));
+  const replace = (input: string): string => {
+    let output = input;
+    for (const [identifier, alias] of aliases) output = output.split(identifier).join(alias);
+    return output;
+  };
+  const visit = (item: unknown): unknown => {
+    if (Array.isArray(item)) return item.map(visit);
+    if (item && typeof item === "object") {
+      return Object.fromEntries(Object.entries(item).map(([key, child]) => [aliases.get(key) ?? replace(key), visit(child)]));
+    }
+    return typeof item === "string" ? replace(item) : item;
+  };
+  return visit(value);
+};
+
 // Remove our own model from an axis's PUBLIC leader slot. Only touches model-comparison
 // axes our own model led; every external-led axis (and every fact axis) passes through
 // unchanged. The leader-specific numbers (the leader's accuracy, its Wilson interval, its
@@ -77,7 +117,8 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
     // removed. UNTESTED (not SEPARATED/TIE) keeps this axis out of the separated/tie/mean
     // tallies below, which is the honest count of what the public board can still assert.
     separation: "UNTESTED",
-    excluded_leader: a.leader,
+    // The original signed source card remains available separately; do not echo an
+    // internal model identifier in this public serving projection.
     public_leader_state: "EXCLUDED_OWN_MODEL",
     // The primary note is neutral — the original note narrated our own model leading, which
     // is exactly the self-preference being removed, so it must not be the public sentence.
@@ -536,7 +577,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
-          `Own council-specialist models were removed from the public per-axis leaders on ` +
+          `CSOAI-owned models were removed from the public per-axis leaders on ` +
           `${ownLedExcludedAxes.length} of the ${cmp.length} model-comparison axes (${ownLedExcludedAxes.join(", ") || "none"}); ` +
           `${externallyLedAxes.length} axes carry an external public leader. A neutral measurement body ` +
           `does not rank its own models against the vendors it measures. This changes leader attribution ` +
@@ -638,6 +679,14 @@ export const onRequestGet: PagesFunction = async (context) => {
     ],
   };
 
+  // Redact exact CSOAI-owned model identifiers from the complete public projection,
+  // including historical notes and nested explanation fields. Signed source cards and
+  // measurement records are not changed. The site signature covers these served bytes.
+  const ownModelIdentifiers = collectOwnModelIdentifiers([AXES, MEASURED_ON, MEASURED_IN_LANE, body]);
+  const publicBody = redactOwnModelIdentifiers(body, ownModelIdentifiers) as Record<string, unknown>;
+  publicBody.public_model_identifier_policy =
+    "CSOAI-owned model identifiers are pseudonymized in this response; source measurement cards and signed records are unchanged.";
+
   // ── site attestation ────────────────────────────────────────
   // Sign the served board snapshot at the edge with the dedicated board key
   // (#board-attestation-1, provisioned as a Cloudflare secret; its public half
@@ -713,9 +762,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         tracked_as: "/api/corrections C-2026-0826-08",
       };
 
-      const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
+      const signedBytes = canonical(publicBody); // served projection WITHOUT site_attestation — reconstructable by anyone
       const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
-      (body as Record<string, unknown>).site_attestation = {
+      publicBody.site_attestation = {
         attests: "integrity of this board snapshot as published by the site (NOT a re-measurement)",
         signer: "did:web:csoai.org#board-attestation-1",
         alg: "Ed25519",
@@ -757,11 +806,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     } catch {
       // A provisioned-but-broken key must not degrade to a fake pass: omit the
       // field and surface the operational fault in the payload instead.
-      (body as Record<string, unknown>).site_attestation = { error: "board signing key present but unusable — operations must fix; no signature emitted" };
+      publicBody.site_attestation = { error: "board signing key present but unusable — operations must fix; no signature emitted" };
     }
   }
 
-  const response = new Response(JSON.stringify(body, null, 2), {
+  const response = new Response(JSON.stringify(publicBody, null, 2), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "public, max-age=300",
