@@ -1,7 +1,7 @@
 {
   "name": "csoai-gspc-mcp",
-  "version": "0.2.2",
-  "description": "Stdio MCP server for Council of AI's GSPC board and signed measurement evidence. Thirteen tools: nine free readers and four x402-metered evidence tools. Measurement only, never certification. Zero runtime dependencies.",
+  "version": "0.2.3-rc.2",
+  "description": "Stdio MCP server for Council of AI's GSPC board and signed measurement evidence. Sixteen tools: twelve free readers and four x402-metered evidence tools. Measurement only, never certification. Zero runtime dependencies.",
   "type": "module",
   "bin": {
     "csoai-gspc-mcp": "index.mjs"
@@ -9,6 +9,7 @@
   "main": "index.mjs",
   "files": [
     "README.md",
+    "axis-aliases.json",
     "gspc-tools.json",
     "index.mjs",
     "paid-tools.json",
@@ -51,5 +52,5 @@
   "engines": {
     "node": ">=20"
   },
-  "mcpName": "io.github.CSOAI-ORG/gspc"
+  "mcpName": "ai.councilof/gspc"
 }

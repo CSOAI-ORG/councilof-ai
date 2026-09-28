@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Drive the shipped stdio server: tools/list must be exactly the names that
- * tools/call actually runs — the nine free tools and the four x402-metered ones.
+ * tools/call actually runs — the twelve free tools and the four x402-metered ones.
  * A listed tool that does not run, or a running tool that is not listed, fails here.
  * Spawns index.mjs — not a reimplementation.
  */
@@ -20,6 +20,9 @@ const FREE = [
   "verify_inclusion",
   "x402_trust",
   "mcp_trust",
+  "measurement_index",
+  "verify_capsule",
+  "server_evidence",
 ];
 const PAID = [
   "commission_card",
@@ -66,7 +69,31 @@ const routeServer = createServer((req, res) => {
   if (url.pathname === "/interop/mcp-trust/latest.json") {
     return answer(res, 200, { kind: "mcp-trust", counts: { total: 13 }, headline: "fixture mcp measurement", not_a_certification: true });
   }
+  if (url.pathname === "/mcp" && req.method === "POST") {
+    // The measurement-capsule readers forward to the door; this fixture door answers like the real one.
+    let body = "";
+    req.on("data", (c) => (body += c));
+    req.on("end", () => {
+      const m = JSON.parse(body);
+      const name = m.params?.name;
+      const sc =
+        name === "server_evidence"
+          ? { state: "NOT_MEASURED", doctrine: "measurement, not endorsement", capsules: [], n_capsules: 0 }
+          : name === "verify_capsule"
+            ? { state: "UNCHECKABLE", doctrine: "measurement, not endorsement", reason: "fixture" }
+            : { state: "PUBLISHED", doctrine: "measurement, not endorsement", n_batches: 0, batches: [] };
+      answer(res, 200, { jsonrpc: "2.0", id: m.id, result: { content: [{ type: "text", text: "fixture" }], structuredContent: sc, isError: false } });
+    });
+    return;
+  }
   if (url.pathname === "/api/request-attestation") {
+    const subject = url.searchParams.get("subject");
+    if (subject?.startsWith("fixture-202-")) {
+      const state = subject === "fixture-202-queue" ? "SETTLED_QUEUE_UNCONFIRMED"
+        : subject === "fixture-202-receipt" ? "QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE" : "FUTURE_PENDING_STATE";
+      return answer(res,202,{state,retry_payment:false,execution:"NOT_OBSERVED",delivery:"NOT_OBSERVED",
+        queue_ack:{commission_id:"synthetic-local-only"}},payment ? {"x-payment-response":routeReceipt} : {});
+    }
     return answer(
       res,
       402,
@@ -143,6 +170,9 @@ const freeCalls = {
   verify_inclusion: { sha256: "bad" },
   x402_trust: {},
   mcp_trust: {},
+  measurement_index: {},
+  verify_capsule: { capsule_json: "{}" },
+  server_evidence: { endpoint_url: "https://nobody.example/mcp" },
 };
 const freeResults = new Map();
 for (const name of FREE) {
@@ -172,6 +202,13 @@ check(
     mcpTrust?.counts && typeof mcpTrust.counts === "object" &&
     typeof mcpTrust?.headline === "string" && mcpTrust.headline.length > 0 &&
     mcpTrust?.not_a_certification === true,
+);
+
+const evidence = freeResults.get("server_evidence")?.result?.structuredContent;
+check(
+  "server_evidence forwards to the door and keeps NOT_MEASURED (never 'clean')",
+  evidence?.state === "NOT_MEASURED" && Array.isArray(evidence?.capsules) && evidence.capsules.length === 0 &&
+    evidence?.answered_by === `${fixtureOrigin}/mcp`,
 );
 
 const unknown = await rpc("tools/call", { name: "not_a_tool", arguments: {} });
@@ -304,6 +341,24 @@ check(
     transportError.result?.structuredContent?.settlement_state === "UNCONFIRMED" &&
     !JSON.stringify(transportError).includes(transportToken),
 );
+
+// 202 receives a response, but does not establish completed commissioned work.
+for (const [subject,state] of [["fixture-202-queue","SETTLED_QUEUE_UNCONFIRMED"],
+  ["fixture-202-receipt","QUEUE_ACCEPTED_RECEIPT_UNAVAILABLE"],
+  ["fixture-202-other","FUTURE_PENDING_STATE"]]) {
+  const response=await rpc("tools/call",{name:"commission_card",arguments:{subject,x_payment:"synthetic-202-auth"}});
+  const p=response.result?.structuredContent;
+  check(`202 ${state} stays nonfinal`,p?.status==="ACCEPTED_NONFINAL" && p?.http_status===202 &&
+    p?.delivery_state==="NOT_ESTABLISHED" && p?.body?.state===state &&
+    p?.body?.queue_ack?.commission_id==="synthetic-local-only");
+  check(`202 ${state} preserves settlement separately and never invites repayment`,
+    p?.settlement_state==="REPORTED_BY_ROUTE" && p?.receipt_state==="PRESENT_UNVERIFIED" &&
+    p?.retry_payment===false && p?.deliverable===undefined && !JSON.stringify(response).includes("synthetic-202-auth"));
+}
+const pendingFree=await rpc("tools/call",{name:"commission_card",arguments:{subject:"fixture-202-queue"}});
+check("202 without authorisation remains nonfinal and unpaid",pendingFree.result?.structuredContent?.status==="ACCEPTED_NONFINAL" &&
+  pendingFree.result?.structuredContent?.settlement_state==="NOT_REQUESTED" &&
+  pendingFree.result?.structuredContent?.retry_payment===false);
 
 const childClosed = new Promise((resolve) => server.once("close", resolve));
 server.stdin.end();

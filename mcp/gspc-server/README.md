@@ -5,7 +5,9 @@
 [![license](https://img.shields.io/npm/l/csoai-gspc-mcp)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
 
 
-[![22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. Three states only: VALID · INVALID · UNCHECKABLE.](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/gspc-scoreboard)
+[![Live GSPC board badge — the counts are drawn live; read them from GET https://councilof.ai/api/gspc. Not a certificate. Three states only: VALID · INVALID · UNCHECKABLE.](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/gspc-scoreboard)
+
+<!-- No board totals or tool counts are typed in this README: they go stale between releases. The live board is GET https://councilof.ai/api/gspc (totals.public_count); the live tool list is tools/list. tools-match-door.test.ts fails if a count is typed here again. -->
 
 Stdio MCP server for the live GSPC board and the signed measurement cards at
 [councilof.ai](https://councilof.ai). Zero dependencies. Node >= 20.
@@ -29,16 +31,19 @@ are reported as two labelled numbers and never reconciled.
 | `get_card` | GET one card-v0 leaf by sha256. VALID / INVALID (not a leaf) / UNCHECKABLE (fetch failed). A 404 leaf is INVALID, not UNCHECKABLE. |
 | `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
 | `x402_trust` | Latest x402 catalog trust snapshot: counts of correct challenges and phantom resources. A 402 is a challenge, not delivery. |
+| `mcp_trust` | Latest MCP handshake census snapshot: counts only. `partial: true` whenever the enumeration did not complete — a cap-limited read is a slice, never the population. |
 
-Eight free tools above; four metered ones below. `tools/list` returns all twelve, and
-`wired-tools.test.mjs` fails if a listed tool does not run or a running tool is not listed.
+The free tools above and the metered ones below are exactly what `tools/list` returns — ask it for
+the current set rather than trusting a number in a README. `wired-tools.test.mjs` fails if a listed
+tool does not run or a running tool is not listed. Axis names are resolved case-insensitively through
+one alias table (`axis-aliases.json`): `governance`, `gov` and `gspc-governance` are the same axis.
 
-The same eight free tools, from the same definitions file
+The same free tools, from the same definitions file
 (`functions/mcp/gspc-tools.json`), are served over HTTP at
 `https://councilof.ai/mcp` (streamable HTTP, JSON-RPC 2.0 POST). Use whichever
 transport your client speaks; the contracts are identical.
 
-### The four x402-metered tools
+### The x402-metered tools
 
 | tool | route | free path |
 |---|---|---|
@@ -56,10 +61,15 @@ Settlement is the route's job, fail-closed.
 
 Top-level statuses describe delivery, not settlement:
 
-- **`PAYMENT_REQUIRED`** — the route answered 402. The full challenge (`accepts[]`, the `PAYMENT-REQUIRED`
-  header) comes back as `structuredContent`. With no `x_payment`, nothing was charged by that request. If
-  an authorization was presented, settlement remains `UNCONFIRMED`; inspect before signing or retrying.
-  A challenge is an answer, not a failure.
+- **`PAYMENT_REQUIRED`** — the route answered 402. Following the x402 MCP transport
+  (`specs/transports-v2/mcp.md`), the tool result has `isError: true`, `structuredContent` carries the
+  route's `PaymentRequired` object at the top level (`x402Version`, `resource`, `accepts[]`, `extensions`)
+  alongside this wrapper's fields (`status`, `settlement_state`, …), and `content[0].text` is that same
+  object as JSON; the human summary is `content[1].text`. With no `x_payment`, nothing was charged by that
+  request. If an authorization was presented, settlement remains `UNCONFIRMED`; inspect before signing or
+  retrying. `isError` marks "not delivered yet" — it is a payment challenge, not a fault. Payment is still
+  read from the `x_payment` argument; `_meta["x402/payment"]` is not read yet, so a client that sends only
+  that gets the same challenge back and is charged nothing.
 - **`DELIVERED`** — the route answered 2xx and returned a deliverable. Inspect `delivery_kind`:
   `PREVIEW_OR_FREE`, `DELIVERED_SETTLEMENT_UNCONFIRMED`, `DELIVERED_RECEIPT_GAP`, or
   `DELIVERED_WITH_ROUTE_RECEIPT`. `receipt_state: PRESENT_UNVERIFIED` means a JWS-shaped receipt was
@@ -94,6 +104,9 @@ claude mcp add gspc -- npx -y csoai-gspc-mcp
 ```
 
 From a checkout of the repo the server is `mcp/gspc-server/index.mjs` (no extra install).
+
+MCP Registry name: `ai.councilof/gspc` (canonical, domain-verified). `io.github.CSOAI-ORG/gspc` is its
+deprecated alias for the same door.
 
 ### Claude Desktop
 
@@ -145,9 +158,10 @@ newline-delimited JSON-RPC 2.0 on its stdin/stdout (stderr is logs only):
 3. send `{"jsonrpc":"2.0","id":2,"method":"tools/list"}`
 4. call tools: `{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"board_totals","arguments":{}}}`
 
-Every `tools/call` result carries both a human `content[0].text` summary and a
-machine `structuredContent` object. Protocol versions accepted: 2024-11-05,
-2025-03-26, 2025-06-18.
+Every `tools/call` result carries a human text summary and a machine
+`structuredContent` object (a payment challenge puts the challenge JSON first, see
+above). Protocol versions accepted: 2024-11-05, 2025-03-26, 2025-06-18,
+2025-11-25; an unknown requested version is answered with 2025-11-25.
 
 If you cannot spawn processes, POST the same JSON-RPC bodies to
 `https://councilof.ai/mcp` instead.
@@ -172,6 +186,8 @@ card-attestation key) even though it is perfectly self-consistent.
 
 ## One source of truth
 
+- Axis aliases: `functions/mcp/axis-aliases.json` — one table for this server, the
+  HTTP endpoint and the `csoai-gspc` Python client.
 - Tool definitions: `functions/mcp/gspc-tools.json` — shared byte-for-byte with
   the HTTP endpoint (`functions/mcp/[[path]].ts`). Neither surface defines
   these tools anywhere else.

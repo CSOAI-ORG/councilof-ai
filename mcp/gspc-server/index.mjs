@@ -79,6 +79,26 @@ const PAID_TOOLS = PAID_TOOLS_PATH ? JSON.parse(readFileSync(PAID_TOOLS_PATH, "u
 const PAID_BY_NAME = new Map(PAID_TOOLS.map((t) => [t.name, t]));
 const TOOLS = [...FREE_TOOLS, ...PAID_TOOLS];
 
+/**
+ * Axis names: ONE alias table shared with the HTTP door (functions/mcp/axis-aliases.json) and the
+ * Python client. `governance`, `GOV` and `gspc-governance` name the same axis on every surface.
+ */
+const ALIASES_PATH = firstExisting([
+  "../../functions/mcp/axis-aliases.json", // repo checkout: the canonical file
+  "./axis-aliases.json", // npm package: the byte-identical pack-time copy
+]);
+const AXIS_TABLE = ALIASES_PATH ? JSON.parse(readFileSync(ALIASES_PATH, "utf8")).axes : {};
+const AXIS_CANON = new Map();
+for (const [canonical, aliases] of Object.entries(AXIS_TABLE)) {
+  AXIS_CANON.set(canonical.toLowerCase(), canonical);
+  for (const a of aliases) AXIS_CANON.set(String(a).toLowerCase(), canonical);
+}
+function canonicalAxis(name) {
+  const k = String(name ?? "").trim().toLowerCase();
+  return AXIS_CANON.get(k) ?? k;
+}
+const sameAxis = (a, b) => canonicalAxis(a) === canonicalAxis(b);
+
 const VERIFIER_PATH = firstExisting([
   "../../public/signed/verify-card.mjs", // repo checkout: the canonical file
   "./verify-card.mjs", // npm package: the byte-identical pack-time copy
@@ -163,8 +183,9 @@ async function boardTotals() {
 }
 
 async function getAxis(args) {
-  const wanted = String(args.axis ?? "").trim().toLowerCase();
-  if (!wanted) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  const asked = String(args.axis ?? "").trim();
+  if (!asked) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  const wanted = canonicalAxis(asked);
   let d;
   try {
     d = await fetchJson("/api/gspc");
@@ -172,11 +193,11 @@ async function getAxis(args) {
     return unreachable("/api/gspc", e);
   }
   const rows = d.axes ?? [];
-  const row = rows.find((r) => String(r.axis ?? "").toLowerCase() === wanted);
+  const row = rows.find((r) => sameAxis(r.axis, wanted));
   if (!row) {
     return {
       state: "NOT_ON_BOARD",
-      axis: wanted,
+      axis: asked,
       note: "This name is not a row on the live board. That is a fact about the board, not a verdict about the subject.",
       board_carries: rows.map((r) => r.axis),
       as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
@@ -186,6 +207,7 @@ async function getAxis(args) {
   return {
     state: "LIVE",
     axis: row.axis,
+    ...(asked.toLowerCase() !== String(row.axis).toLowerCase() ? { resolved_from: asked } : {}),
     family: row.family ?? null,
     status: row.status ?? null,
     measured,
@@ -279,10 +301,20 @@ async function listCards(args) {
       packaged_at: idx.packaged_at ?? null,
       pubkey: idx.pubkey ?? null,
     };
-    const wanted = args.axis ? String(args.axis).toLowerCase() : null;
+    const wanted = args.axis ? canonicalAxis(args.axis) : null;
     const limit = Number.isInteger(args.limit) ? args.limit : 10;
+    if (wanted) {
+      const matched = [...new Set(rows.map((r) => String(r.axis ?? "")).filter((a) => sameAxis(a, wanted)))].sort();
+      out.axis_query = {
+        asked: String(args.axis),
+        canonical: wanted,
+        spellings: AXIS_TABLE[wanted] ? [wanted, ...AXIS_TABLE[wanted]] : [wanted],
+        index_names_matched: matched,
+        note: "rows whose index axis name resolves to the same axis under functions/mcp/axis-aliases.json; each row keeps the index's own spelling",
+      };
+    }
     out.rows = rows
-      .filter((r) => !wanted || String(r.axis ?? "").toLowerCase() === wanted)
+      .filter((r) => !wanted || sameAxis(r.axis, wanted))
       .slice()
       .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
       .slice(0, limit)
@@ -383,6 +415,22 @@ async function verifyInclusion(args) {
  * canonical measured artefact; this package delegates to it instead of
  * copying counts or manufacturing a trust verdict locally.
  */
+/** partial = the snapshot says so OR its enumeration did not complete (a cap is not completion). Mirrors functions/mcp/_board.ts partialOf. */
+function partialOf(d) {
+  const e = d.enumeration ?? {};
+  if (d.partial === true) return { partial: true, partial_reason: String(e.stop_reason ?? "the snapshot marks itself partial") };
+  if (e.complete === false) {
+    const seen = e.rows_with_remote ?? e.registry_rows_seen;
+    return {
+      partial: true,
+      partial_reason: `enumeration incomplete: ${String(e.stop_reason ?? "stopped early")}${
+        e.unique_hosts != null && seen != null ? ` (${e.unique_hosts} hosts probed of ${seen} registry rows with a remote)` : ""
+      }`,
+    };
+  }
+  return { partial: false, partial_reason: null };
+}
+
 async function mcpTrust() {
   const path = "/interop/mcp-trust/latest.json";
   try {
@@ -392,9 +440,11 @@ async function mcpTrust() {
       source: `${ORIGIN}${path}`,
       kind: d.kind ?? null,
       as_of: d.as_of ?? null,
-      partial: d.partial ?? false,
+      // A cap-limited read is PARTIAL — read from the enumeration, not only the flag (2026-09-26).
+      ...partialOf(d),
       enumeration: d.enumeration ?? null,
       counts: d.counts ?? null,
+      headline: d.headline ?? null,
       diff: d.diff ?? null,
       not_a_certification: true,
     };
@@ -418,6 +468,56 @@ async function x402Trust() {
     };
   } catch (e) {
     return { ...unreachable(path, e), state: "UNREACHABLE" };
+  }
+}
+
+/* ------------------------------------------------- measurement-capsule readers */
+
+/**
+ * measurement_index, verify_capsule and server_evidence are answered by the door's own /mcp
+ * (functions/_lib/measurementCapsule.ts): this package forwards the call and returns the door's
+ * structuredContent unchanged, so the two implementations cannot disagree about a capsule. The door
+ * re-derives everything it returns (capsule ids, Merkle inclusion, the index signature against the
+ * pinned key). If the door cannot be reached the answer is UNREACHABLE — never a guess, never
+ * NOT_MEASURED (which is a statement about the index, not about the connection).
+ */
+const MEASUREMENT_DOCTRINE = "measurement, not endorsement";
+
+async function doorTool(name, args) {
+  const url = `${ORIGIN}/mcp`;
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "application/json, text/event-stream",
+        "MCP-Protocol-Version": "2025-03-26",
+      },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } }),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!r.ok) throw new Error(`POST ${url} returned HTTP ${r.status}`);
+    const text = await r.text();
+    const ct = r.headers.get("content-type") || "";
+    let msg;
+    if (ct.includes("text/event-stream")) {
+      const frames = text
+        .replace(/\r\n/g, "\n")
+        .split(/\n\n/)
+        .map((e) => e.split("\n").filter((l) => l.startsWith("data:")).map((l) => l.slice(5).trim()).join("\n"))
+        .filter(Boolean);
+      msg = JSON.parse(frames[frames.length - 1]);
+    } else msg = JSON.parse(text);
+    const sc = msg?.result?.structuredContent;
+    if (!sc || typeof sc !== "object") throw new Error(msg?.error?.message || "the door returned no structuredContent");
+    return { ...sc, answered_by: url };
+  } catch (e) {
+    return {
+      state: "UNREACHABLE",
+      doctrine: MEASUREMENT_DOCTRINE,
+      reason: `the door that answers ${name} could not be reached: ${e instanceof Error ? e.message : String(e)}`,
+      source: url,
+    };
   }
 }
 
@@ -619,6 +719,23 @@ async function callPaidTool(name, args) {
         : `${tool.csoai.route} is not on ${ORIGIN}. No payment authorization was presented; nothing was charged by this request.`,
     };
   }
+  // HTTP 202 acknowledges processing, not completion of the commissioned work.
+  // Retain the route's body and settlement evidence without inventing fulfilment.
+  if (res.status === 202) {
+    const settle = res.headers.get("x-payment-response");
+    return {
+      ...base,
+      status: "ACCEPTED_NONFINAL",
+      http_status: 202,
+      body,
+      delivery_state: "NOT_ESTABLISHED",
+      response_received: true,
+      retry_payment: false,
+      ...settlementFields(paymentPresented, settle),
+      receipt_state: settle ? inspectReceipt(settle) : paymentPresented ? "ABSENT" : "NOT_REQUESTED",
+      note: "Processing remains non-final. Preserve the route response and any commission identity; reconcile before any further payment. Receipt presence is not signature verification, executed work or accepted delivery.",
+    };
+  }
   if (res.ok) {
     const settle = res.headers.get("x-payment-response");
     return {
@@ -660,11 +777,18 @@ const HANDLERS = {
   verify_inclusion: verifyInclusion,
   x402_trust: x402Trust,
   mcp_trust: mcpTrust,
+  measurement_index: (a) => doorTool("measurement_index", a),
+  verify_capsule: (a) => doorTool("verify_capsule", a),
+  server_evidence: (a) => doorTool("server_evidence", a),
 };
 
 /* ----------------------------------------------------------------- transport */
 
-const SUPPORTED_PROTOCOLS = ["2024-11-05", "2025-03-26", "2025-06-18"];
+// Oldest first; the LAST entry is the latest this server speaks. An unknown requested version is
+// answered with the latest (MCP lifecycle: "the server MUST respond with another protocol version
+// it supports. This SHOULD be the latest version supported"), not the oldest as it was until
+// 2026-09-26. README.md "stdio" lists exactly this array (tools-match-door.test.ts checks it).
+const SUPPORTED_PROTOCOLS = ["2024-11-05", "2025-03-26", "2025-06-18", "2025-11-25"];
 
 function send(msg) {
   process.stdout.write(JSON.stringify(msg) + "\n");
@@ -705,6 +829,10 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "mcp_trust":
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
+    case "measurement_index":
+    case "verify_capsule":
+    case "server_evidence":
+      return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} (${MEASUREMENT_DOCTRINE}).`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":
@@ -724,7 +852,7 @@ async function handle(msg) {
   if (method === "initialize") {
     const asked = params?.protocolVersion;
     return reply(id, {
-      protocolVersion: SUPPORTED_PROTOCOLS.includes(asked) ? asked : "2024-11-05",
+      protocolVersion: SUPPORTED_PROTOCOLS.includes(asked) ? asked : SUPPORTED_PROTOCOLS[SUPPORTED_PROTOCOLS.length - 1],
       capabilities: { tools: {} },
       serverInfo: { name: "csoai-gspc-mcp", version: VERSION },
     });
@@ -739,6 +867,24 @@ async function handle(msg) {
     if (!fn) return replyError(id, -32602, `unknown tool: ${name}`);
     try {
       const payload = await fn(params?.arguments ?? {});
+      // x402 MCP transport (x402-foundation/x402 specs/transports-v2/mcp.md): a payment challenge is
+      // a tool result with isError:true whose structuredContent IS the PaymentRequired object and
+      // whose content[0].text is that object as JSON. Same shape as the HTTP door
+      // (functions/mcp/_paid.ts). Payment is still read only from the x_payment argument.
+      if (payload?.status === "PAYMENT_REQUIRED") {
+        const pr = payload.payment_required && typeof payload.payment_required === "object" && !Array.isArray(payload.payment_required)
+          ? payload.payment_required
+          : {};
+        const sc = { ...pr, ...payload };
+        return reply(id, {
+          content: [
+            { type: "text", text: JSON.stringify(sc) },
+            { type: "text", text: summaryLine(name, payload) },
+          ],
+          structuredContent: sc,
+          isError: true,
+        });
+      }
       return reply(id, {
         content: [{ type: "text", text: `${summaryLine(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],
         structuredContent: payload,
