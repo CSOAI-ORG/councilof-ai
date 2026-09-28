@@ -1635,7 +1635,7 @@ def build013(a):
     rec["previous_record"] = {
         "record": "record.v0.1.2.json", "sha256": sha(prev_b), "as_of": prev.get("as_of"),
         "relation": ("0.1.2 is the record of the 25 Sep 2026 read (reclassified 26 Sep) and stays published unchanged. 0.1.3 is a "
-                     "new read of the endpoints 0.1.2 planned, on a new date, graded by the same comparators. It does not "
+                     "new read of the endpoints 0.1.2 planned, on a new date, compared by the same comparators. It does not "
                      "correct 0.1.2 and is not a change series: its population is the subset of those endpoints that answered "
                      "the 0.1.3 re-probe, so a difference between the two sets of figures mixes change in the services with "
                      "change in who answered."),

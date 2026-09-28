@@ -67,7 +67,7 @@ pop["registry_reread"] = False
 pop["registry_note"] = ("No registry was re-read. The same remote URL probed on the parent date is probed again (URL equal for "
                         "every third-party row); a server that moved its endpoint since is probed at the old one.")
 art["regrade"] = None
-art["regrade_note"] = "No regrade. Graded by the rules the parent run published after its P4 regrade (eb_probe.py, same bytes)."
+art["regrade_note"] = "No regrade. Verdicts come from the rules the parent run published after its P4 regrade (eb_probe.py, same bytes)."
 art["method_limitations"] = [x for x in art["method_limitations"]
                              if not x.startswith("Unsigned:") and not x.startswith("No GitHub write")] + [
     "Unsigned (SIGN_PENDING, see unsigned_reason). This is not a card in any of the three card corpora and does not alter /api/gspc.",
