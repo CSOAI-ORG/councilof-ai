@@ -880,32 +880,26 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "f90c8e82013a5125194269b29988cce4f8e6ae8dc01631db21b5c8e043029b9c",
+    id: "b4acdebab8bcecf60d2944a28decfccc1854b3ff9849739a54c788484b91df0e",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "12ab5df7b966fa36bad6232555b678012fd9bdb9ea54a14d805dabf635c36133eadaf1b1f3ea6e19de148bd10882830c3f7b5fe2d7eb7d08eec11af3d80fc90c",
+    signature: "ae5b1d1d6ba2b19696d930be601088cb20b36465470e01b64897b0b5fbab5e759741f2629430fa409b03d7269b9cf57e803aec3b6f7cb071abf5810681030e0d",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "f90c8e82013a5125194269b29988cce4f8e6ae8dc01631db21b5c8e043029b9c",
+          "content_id": "b4acdebab8bcecf60d2944a28decfccc1854b3ff9849739a54c788484b91df0e",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 65,
-          "latest_entry_id": "C-2026-0924-02",
-          "ledger_canonical_bytes": 99014,
+          "entries": 66,
+          "latest_entry_id": "C-2026-0924-03",
+          "ledger_canonical_bytes": 100971,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-24T11:21:19Z"
+          "signed_at": "2026-09-28T04:27:54Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
       "The attestation names the digest of the ledger body and the rule that produces it.",
     key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
-    note:
-      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
-      "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
-      "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
-      "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +
-      "cannot green the flag any more - id is inside the signed attestation, and the handler verifies the " +
-      "Ed25519 bytes at request time, not just a digest match.",
+    note: "RE-ISSUED 2026-09-28T04:27:54Z over the current 66-entry body through POST /api/board-sign on the pod caller token. The detached attestation pins the current ledger content_id; every later append MUST re-issue with scripts/sign-corrections-ledger.mjs. Changing an id alone cannot make the endpoint VALID because the handler verifies both the body digest and Ed25519 signature at request time.",
   },
 };
 

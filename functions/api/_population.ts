@@ -718,7 +718,7 @@ export function registryPathsFromIndex(value: unknown): string[] {
     if (!isObj(item) || typeof item.url !== "string") throw new Error("Registry URL is missing");
     if (item.schema !== undefined && !["csoai.claim-registry/0.1", "csoai.claim-registry/0.2", "csoai.claim-registry/0.3"].includes(String(item.schema))) throw new Error("Unsupported registry schema");
     const u = new URL(item.url, "https://councilof.ai");
-    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || u.pathname.length > 220 || !/^\/claims\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/.test(u.pathname))
+    if (u.origin !== "https://councilof.ai" || u.username || u.password || u.search || u.hash || u.pathname.length > 220 || !/^\/claims\/[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*\.json$/.test(u.pathname))
       throw new Error("Registry URL is outside the public claim-registry scope");
     paths.add(u.pathname);
   }
