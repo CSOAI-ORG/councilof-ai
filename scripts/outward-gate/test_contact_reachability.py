@@ -3,12 +3,13 @@ import json, os, sys, tempfile, unittest
 
 sys.path.insert(0, os.path.dirname(__file__))
 import contact_reachability as cr
+cr._real_mail_hosts = cr.mail_hosts
 
 
 def stub(hosts, answers):
     """answers: function(addr) -> (code, msg); a control address starts with csoai-probe-."""
     cr.mail_hosts = lambda d: (hosts, "MX" if hosts else None)
-    cr.rcpt = lambda h, a: answers(a)
+    cr.rcpt = lambda h, a: (*answers(a), "RCPT")
 
 
 class Verdicts(unittest.TestCase):
@@ -55,6 +56,42 @@ class Verdicts(unittest.TestCase):
         self.assertEqual(r["verdict"], "UNREACHABLE")
         self.assertNotIn(r["verdict"], cr.BLOCKING)
 
+
+class SenderRefused(unittest.TestCase):
+    """A refusal aimed at our connecting host is not a verdict on the recipient (28 Sep 2026: the pod has no rDNS)."""
+
+    def test_mail_from_refusal_is_not_rejected(self):
+        self.assertEqual(cr.verdict(500, "Invalid request, no reverse DNS for 213.173.111.73", "MAIL FROM", None), "SENDER_REFUSED")
+
+    def test_rcpt_stage_client_text_is_not_rejected(self):
+        self.assertEqual(cr.verdict(554, "Client host [1.2.3.4] blocked using zen.spamhaus.org", "RCPT", None), "SENDER_REFUSED")
+
+    def test_must_fail_unknown_mailbox_stays_rejected(self):
+        # the control this fix must not weaken: a 5xx about the address at RCPT still blocks the send
+        self.assertEqual(cr.verdict(550, "5.1.1 <nobody@example.com>: Recipient address rejected: User unknown", "RCPT", None), "REJECTED")
+        self.assertIn("REJECTED", cr.BLOCKING)
+        self.assertNotIn("SENDER_REFUSED", cr.BLOCKING)
+
+    def test_accepts_paths_unchanged(self):
+        self.assertEqual(cr.verdict(250, "OK", "RCPT", 550), "ACCEPTS")
+        self.assertEqual(cr.verdict(250, "OK", "RCPT", 250), "ACCEPT_ALL")
+        self.assertEqual(cr.verdict(250, "OK", "RCPT", None), "ACCEPTS_UNCONTROLLED")
+        self.assertEqual(cr.verdict(451, "try later", "RCPT", None), "TEMPFAIL")
+
+class MxLookup(unittest.TestCase):
+    def test_failed_lookup_is_unmeasured_not_the_a_record(self):
+        saved = cr.mx_lines, cr.mail_hosts
+        try:
+            cr.mail_hosts = cr.__dict__["_real_mail_hosts"]
+            cr.mx_lines = lambda d: None
+            self.assertEqual(cr.mail_hosts("lists.example.org"), ([], "MX_LOOKUP_FAILED"))
+            r = cr.check("wg@lists.example.org", {})
+            self.assertEqual(r["verdict"], "UNREACHABLE")
+            self.assertNotIn(r["verdict"], cr.BLOCKING)
+            cr.mx_lines = lambda d: ["10 lb02.groups.io.", "10 lb01.groups.io."]
+            self.assertEqual(cr.mail_hosts("lists.example.org"), (["lb01.groups.io", "lb02.groups.io"], "MX"))
+        finally:
+            cr.mx_lines, cr.mail_hosts = saved
 
 if __name__ == "__main__":
     unittest.main()
