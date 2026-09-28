@@ -1,17 +1,27 @@
 /**
  * GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged
  * stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's
- * balance in the bridge escrow on the origin chain, both read live from public RPC at
- * provider-reported finalized blocks, every raw result sha256'd. Sold over the existing x402
- * rail (same accepts entry / facilitator / settle path as /api/request-attestation).
+ * balance in the bridge escrow on the origin chain, both read live from public RPC at a
+ * FINALIZED block whose hash a SECOND, different RPC operator confirmed, every raw result
+ * sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as
+ * /api/request-attestation).
  *
  *   ?preview=1   free — the unsigned state: no signature, no raw-read hashes. Verify stays free.
- *   (no header)  402 — the challenge (the amount lives ONLY here).
- *   X-PAYMENT    the chain is read FIRST; an UNMEASURED read answers the 402 again with the reason
- *                and settles nothing. Otherwise the signed pack: ONE card-v0 leaf (surface public.notice, kind
- *                csoai.wrapper.parity/0.1), canonical bytes ≤3072, Ed25519 under
- *                did:web:csoai.org#board-attestation-1 when the Pages key is present, else
- *                sig_ed25519:null declared in unmeasured[].
+ *   (no header)  the chain is read FIRST. A readable pair answers 402 — the challenge (the amount
+ *                lives ONLY there). An UNMEASURED pair answers 200 PREVIEW-ONLY: nothing is
+ *                offered for sale while there is nothing to deliver.
+ *   X-PAYMENT    the chain is read FIRST; an UNMEASURED read answers 200 preview-only, the payment
+ *                is never sent to the facilitator and nothing settles. Otherwise the signed pack:
+ *                ONE card-v0 leaf (surface public.notice, kind csoai.wrapper.parity/0.1), canonical
+ *                bytes ≤3072, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key
+ *                is present, else sig_ed25519:null declared in unmeasured[].
+ *
+ * RPC (2026-09-28, plan item #19): every chain has an ORDERED list of keyless endpoints in
+ * functions/api/_evm_rpcs.json — the same file scripts/readers/wrapped-asset-parity-reader.mjs
+ * reads. Each call falls through the list on any HTTP or JSON-RPC error (rate limits included).
+ * A block is pinned only when one operator reports it under the `finalized` tag AND a different
+ * operator (registrable domain) returns the same hash at that height; a disagreement, or no
+ * second operator answering, leaves the pair UNMEASURED. There is no `latest` fallback.
  *
  * Roster: functions/api/_wrapper_roster.ts — the same pairs scripts/readers/
  * wrapped-asset-parity-reader.mjs reads (a test pins the two rosters equal). A pair is on the
@@ -26,7 +36,8 @@
  * a certificate (VERDICT_RE refuses the card rather than softening it).
  *
  * Doctrine: buyer-led; the free ledger /interop/wrapped-asset-parity-*.json stays free and this
- * endpoint reads the chain like any stranger. Never paywalls /api/gspc or /root.json.
+ * endpoint reads the chain like any stranger. Never paywalls /api/gspc or /root.json. Never
+ * charges for UNMEASURED.
  */
 import { headFromGet } from "./_head";
 import {
@@ -43,12 +54,15 @@ import { railMode } from "./_x402_config";
 import { signPayload, canonicalBytes, sha256Hex, PAYLOAD_CAP_BYTES } from "../_lib/cardSign";
 import { VERDICT_RE } from "./rwa/evidence";
 import { WRAPPER_ROSTER } from "./_wrapper_roster";
+import { WRAPPER_DESCRIPTION } from "./_x402_descriptions";
+import RPC_LIST from "./_evm_rpcs.json";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
 export const SCHEMA = "https://councilof.ai/schema/card-v0.json";
 export const KIND = "csoai.wrapper.parity/0.1";
 export const ATTESTS = "point-in-time reads at the pinned blocks named below — a ratio, not a rate, not a grade, not a reserve attestation, not a certificate";
+export const FINALITY = "RPC_FINALIZED_TAG_HASH_MATCHED_BY_SECOND_OPERATOR_NOT_INDEPENDENTLY_PROVEN_FINAL";
 
 type Side = { chain: string; symbol: string; address: string };
 export type RosterEntry = {
@@ -62,21 +76,22 @@ export type RosterEntry = {
 };
 export const ROSTER: RosterEntry[] = WRAPPER_ROSTER as unknown as RosterEntry[];
 
-export const CHAINS: Record<string, { rpc: string; chainId: number }> = {
-  // publicnode began refusing pinned-block eth_call without a personal token ("Archive requests
-  // require a personal token", seen on every escrow preview 2026-09-15). eth.drpc.org answered the
-  // same finalized-block balanceOf keyless that day, and is already the first Ethereum endpoint in
-  // scripts/adapters/evm_permission_events.py.
-  ethereum: { rpc: "https://eth.drpc.org", chainId: 1 },
-  base: { rpc: "https://mainnet.base.org", chainId: 8453 },
-  optimism: { rpc: "https://mainnet.optimism.io", chainId: 10 },
-  arbitrum: { rpc: "https://arb1.arbitrum.io/rpc", chainId: 42161 },
-  polygon: { rpc: "https://polygon-bor-rpc.publicnode.com", chainId: 137 },
-  "zksync-era": { rpc: "https://mainnet.era.zksync.io", chainId: 324 },
-  flare: { rpc: "https://flare-api.flare.network/ext/C/rpc", chainId: 14 },
-};
+export type ChainSpec = { chainId: number; rpcs: string[]; rpc: string };
+/** Ordered keyless endpoints per chain (functions/api/_evm_rpcs.json). `rpc` is the first, kept for callers that name one. */
+export const CHAINS: Record<string, ChainSpec> = Object.fromEntries(
+  Object.entries((RPC_LIST as { chains: Record<string, { chainId: number; rpcs: string[] }> }).chains).map(([name, c]) => [
+    name,
+    { chainId: c.chainId, rpcs: [...c.rpcs], rpc: c.rpcs[0] },
+  ]),
+);
+
+/** The operator behind an endpoint: its registrable domain. Two URLs on one domain are ONE operator, never a second opinion. */
+export const operatorOf = (url: string): string => new URL(url).hostname.split(".").slice(-2).join(".");
+
 const SEL = { totalSupply: "0x18160ddd", balanceOf: "0x70a08231", decimals: "0x313ce567" };
-const UA = "csoai-wrapper-parity/0.1 (+https://councilof.ai; nicholas@csoai.org)";
+const UA = "csoai-wrapper-parity/0.2 (+https://councilof.ai; nicholas@csoai.org)";
+/** Per call. A hung public endpoint must not hold the answer: it falls through to the next one. */
+export const RPC_TIMEOUT_MS = 4000;
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -84,38 +99,93 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "access-control-allow-origin": "*", ...extraHeaders },
   });
 
-const ID_RE = /^[a-z0-9.]+:[a-z]+$/;
+const ID_RE = /^[a-z0-9.]+:[a-z-]+$/;
 export const findEntry = (id: string): RosterEntry | undefined => ROSTER.find((e) => e.id === id);
+const msg = (e: unknown) => String((e as Error)?.message || e);
 
 async function rpc(url: string, method: string, params: unknown[]): Promise<string | Record<string, string>> {
   const res = await fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json", "user-agent": UA },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(RPC_TIMEOUT_MS),
   });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const d = (await res.json()) as { result?: string | Record<string, string>; error?: { message?: string } };
   if (d.error) throw new Error(`RPC error: ${d.error.message || "unknown"}`);
   if (d.result === undefined || d.result === null) throw new Error("RPC empty result");
   return d.result;
 }
 
-async function pin(url: string) {
-  try {
-    const b = (await rpc(url, "eth_getBlockByNumber", ["finalized", false])) as Record<string, string>;
-    if (b?.number && b?.hash) return { number: parseInt(b.number, 16), hex: b.number, hash: b.hash, timestamp: parseInt(b.timestamp, 16), finality: "RPC_FINALIZED_TAG_PROVIDER_REPORTED_NOT_INDEPENDENTLY_PROVEN_FINAL" };
-  } catch { /* fall through */ }
-  const hex = (await rpc(url, "eth_blockNumber", [])) as string;
-  const b = (await rpc(url, "eth_getBlockByNumber", [hex, false])) as Record<string, string>;
-  return { number: parseInt(hex, 16), hex, hash: b.hash, timestamp: parseInt(b.timestamp, 16), finality: "RPC_LATEST_NOT_INDEPENDENTLY_PROVEN_FINAL" };
+export type Pin = {
+  number: number;
+  hex: string;
+  hash: string;
+  timestamp: number;
+  finality: string;
+  /** [the operator that reported `finalized`, the different operator that returned the same hash at that height] */
+  operators: [string, string];
+  rpc: string;
+};
+
+class HashDisagreement extends Error {}
+
+/**
+ * Pin one chain: the first endpoint (in list order) that reports a `finalized` block, then the
+ * first endpoint of a DIFFERENT operator that returns the same hash at that height. Throws — and
+ * the pair goes UNMEASURED — when no operator reports a finalized block, when the second operator
+ * disagrees, or when no second operator answers. Never falls back to `latest`.
+ */
+export async function pinChain(chain: string): Promise<Pin> {
+  const spec = CHAINS[chain];
+  if (!spec) throw new Error(`${chain}: no RPC list for this chain`);
+  const tried: string[] = [];
+  let first: { b: Record<string, string>; url: string } | null = null;
+  for (const url of spec.rpcs) {
+    try {
+      const b = (await rpc(url, "eth_getBlockByNumber", ["finalized", false])) as Record<string, string>;
+      if (!b?.number || !b?.hash) throw new Error("finalized block without number/hash");
+      first = { b, url };
+      break;
+    } catch (e) {
+      tried.push(`${operatorOf(url)}: ${msg(e)}`);
+    }
+  }
+  if (!first) throw new Error(`${chain}: no operator reported a finalized block (${tried.join("; ")})`);
+  const op1 = operatorOf(first.url);
+  const height = parseInt(first.b.number, 16);
+  for (const url of spec.rpcs) {
+    if (operatorOf(url) === op1) continue;
+    try {
+      const b2 = (await rpc(url, "eth_getBlockByNumber", [first.b.number, false])) as Record<string, string>;
+      if (!b2?.hash) throw new Error("block without hash");
+      if (b2.hash.toLowerCase() !== first.b.hash.toLowerCase())
+        throw new HashDisagreement(`${chain}: block-hash disagreement at ${height} — ${op1} ${first.b.hash}, ${operatorOf(url)} ${b2.hash}`);
+      return { number: height, hex: first.b.number, hash: first.b.hash, timestamp: parseInt(first.b.timestamp, 16), finality: FINALITY, operators: [op1, operatorOf(url)], rpc: first.url };
+    } catch (e) {
+      if (e instanceof HashDisagreement) throw e;
+      tried.push(`${operatorOf(url)} (hash check): ${msg(e)}`);
+    }
+  }
+  throw new Error(`${chain}: no second operator confirmed the hash of finalized block ${height} (${tried.join("; ")})`);
 }
 
 const pad32 = (addr: string) => addr.toLowerCase().replace(/^0x/, "").padStart(64, "0");
 
-async function call(url: string, to: string, data: string, blockHex: string) {
-  const raw = (await rpc(url, "eth_call", [{ to, data }, blockHex])) as string;
-  if (!raw || raw === "0x") throw new Error(`empty eth_call result from ${to}`);
-  return { raw, value: BigInt(raw), raw_sha256: await sha256Hex(new TextEncoder().encode(raw)) };
+/** eth_call at the pinned height, starting with the endpoint that pinned it, falling through the list. */
+async function call(chain: string, pin: Pin, to: string, data: string) {
+  const order = [pin.rpc, ...CHAINS[chain].rpcs.filter((u) => u !== pin.rpc)];
+  const tried: string[] = [];
+  for (const url of order) {
+    try {
+      const raw = (await rpc(url, "eth_call", [{ to, data }, pin.hex])) as string;
+      if (!raw || raw === "0x") throw new Error(`empty eth_call result from ${to}`);
+      return { raw, value: BigInt(raw), raw_sha256: await sha256Hex(new TextEncoder().encode(raw)), operator: operatorOf(url), url };
+    } catch (e) {
+      tried.push(`${operatorOf(url)}: ${msg(e)}`);
+    }
+  }
+  throw new Error(`${chain}: eth_call to ${to} failed on every endpoint (${tried.join("; ")})`);
 }
 
 /** BigInt ratio, six places, truncated — no float anywhere in the card. */
@@ -130,8 +200,22 @@ export function normalize(atomic: bigint, decimals: number): string {
   return decimals === 0 ? atomic.toString() : `${atomic / d}.${(atomic % d).toString().padStart(decimals, "0")}`;
 }
 
+/** One request's pins, shared by every pair it reads (the per-asset doors read several pairs per chain). */
+export type PinMemo = Map<string, Promise<Pin>>;
+const pinOnce = (memo: PinMemo, chain: string) => {
+  let p = memo.get(chain);
+  if (!p) {
+    p = pinChain(chain);
+    p.catch(() => undefined); // an unobserved rejection must not escape; each caller awaits and records it
+    memo.set(chain, p);
+  }
+  return p;
+};
+
+const blockOut = (p: Pin) => ({ number: p.number, hex: p.hex, hash: p.hash, timestamp: p.timestamp, finality: p.finality, operators: p.operators });
+
 /** The whole payload: what was read, where, at which block, and what state that leaves the pair in. */
-export async function buildPayload(entry: RosterEntry) {
+export async function buildPayload(entry: RosterEntry, memo: PinMemo = new Map()) {
   const w = CHAINS[entry.wrapped.chain];
   const c = CHAINS[entry.canonical.chain] ?? null; // custodial rows name a ledger we cannot read from here
   const fetched_at = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
@@ -150,20 +234,28 @@ export async function buildPayload(entry: RosterEntry) {
     reads: {} as Record<string, unknown>,
     state: "UNMEASURED",
   };
-  const source_urls: string[] = [w.rpc];
+  const source_urls = new Set<string>();
+  const readsEscrow = entry.backing_model === "escrow" && !!entry.escrow && !!c;
   try {
-    const wp = await pin(w.rpc);
-    (payload.wrapped as Record<string, unknown>).block = wp;
-    const dec = await call(w.rpc, entry.wrapped.address, SEL.decimals, wp.hex);
+    // Both sides pin in parallel; each side's calls run in parallel once its block is pinned.
+    const [wp, cp] = await Promise.all([pinOnce(memo, entry.wrapped.chain), readsEscrow ? pinOnce(memo, entry.canonical.chain) : Promise.resolve(null)]);
+    (payload.wrapped as Record<string, unknown>).rpc = wp.rpc;
+    (payload.wrapped as Record<string, unknown>).block = blockOut(wp);
+    source_urls.add(wp.rpc);
+    const [dec, ts, eb] = await Promise.all([
+      call(entry.wrapped.chain, wp, entry.wrapped.address, SEL.decimals),
+      call(entry.wrapped.chain, wp, entry.wrapped.address, SEL.totalSupply),
+      readsEscrow && cp ? call(entry.canonical.chain, cp, entry.canonical.address, SEL.balanceOf + pad32(entry.escrow!)) : Promise.resolve(null),
+    ]);
     const decimals = Number(dec.value);
-    const ts = await call(w.rpc, entry.wrapped.address, SEL.totalSupply, wp.hex);
-    (payload.reads as Record<string, unknown>).wrapped_total_supply = { query: "totalSupply()", raw_sha256: ts.raw_sha256, atomic: ts.value.toString(), normalized: normalize(ts.value, decimals), decimals };
-    if (entry.backing_model === "escrow" && entry.escrow && c) {
-      source_urls.push(c.rpc);
-      const cp = await pin(c.rpc);
-      (payload.canonical as Record<string, unknown>).block = cp;
-      const eb = await call(c.rpc, entry.canonical.address, SEL.balanceOf + pad32(entry.escrow), cp.hex);
-      (payload.reads as Record<string, unknown>).escrow_balance = { query: `balanceOf(${entry.escrow})`, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalize(eb.value, decimals), decimals };
+    (payload.reads as Record<string, unknown>).wrapped_total_supply = { query: "totalSupply()", operator: ts.operator, raw_sha256: ts.raw_sha256, atomic: ts.value.toString(), normalized: normalize(ts.value, decimals), decimals };
+    source_urls.add(ts.url);
+    if (readsEscrow && cp && eb) {
+      (payload.canonical as Record<string, unknown>).rpc = cp.rpc;
+      (payload.canonical as Record<string, unknown>).block = blockOut(cp);
+      source_urls.add(cp.rpc);
+      source_urls.add(eb.url);
+      (payload.reads as Record<string, unknown>).escrow_balance = { query: `balanceOf(${entry.escrow})`, operator: eb.operator, raw_sha256: eb.raw_sha256, atomic: eb.value.toString(), normalized: normalize(eb.value, decimals), decimals };
       payload.escrow_over_wrapped = ratioString(eb.value, ts.value);
       payload.state = "ESCROW_PARITY_READ";
     } else if (entry.backing_model === "native") {
@@ -177,13 +269,15 @@ export async function buildPayload(entry: RosterEntry) {
     }
   } catch (e) {
     payload.state = "UNMEASURED";
-    payload.error = String((e as Error).message || e);
-    unmeasured.push("chain reads (rpc failed; nothing inferred)");
+    payload.error = msg(e);
+    payload.reads = {};
+    delete payload.escrow_over_wrapped;
+    unmeasured.push("chain reads (rpc failed or the finalized block was not confirmed by a second operator; nothing inferred)");
   }
   payload.unmeasured = unmeasured;
   const reads = payload.reads as Record<string, { raw_sha256: string }>;
   payload.inputs_sha256 = await sha256Hex(new TextEncoder().encode(Object.values(reads).map((r) => r.raw_sha256).join("\n")));
-  return { payload, fetched_at, source_urls };
+  return { payload, fetched_at, source_urls: [...source_urls].length ? [...source_urls] : [w.rpc] };
 }
 
 /** Strip signature + raw-read hashes for the free preview. */
@@ -195,25 +289,62 @@ export function toPreview(card: Record<string, unknown>): Record<string, unknown
   return { ...c, preview: true, preview_note: "unsigned preview — no signature, no raw-read hashes. The signed pack (same schema, sig_ed25519 + inputs_sha256 + per-read sha256) is the metered artefact." };
 }
 
+/** The card-v0 envelope around one pair's payload (the per-asset doors wrap each pair the same way). */
+export function envelopeFor(entry: RosterEntry, built: Awaited<ReturnType<typeof buildPayload>>) {
+  const payload = built.payload;
+  return {
+    schema: SCHEMA,
+    surface: "public.notice",
+    subject: `wrapped ${entry.wrapped.symbol} on ${entry.wrapped.chain} vs ${entry.escrow_name || "native issuance"} — ${payload.state}`,
+    as_of: built.fetched_at,
+    source_urls: built.source_urls,
+    payload,
+    tags: ["eater:wrapper-parity", "axis:distribution-integrity", `backing:${entry.backing_model}`, `state:${payload.state}`],
+    unmeasured: [...(payload.unmeasured as string[])],
+    did_intended: "did:web:csoai.org#board-attestation-1",
+  };
+}
+
+/** Sign one pair's card. Returns the card, or the reason it cannot be handed over (never settled). */
+export async function signedCardFor(entry: RosterEntry, built: Awaited<ReturnType<typeof buildPayload>>, key: string | undefined) {
+  const cardBase = envelopeFor(entry, built);
+  let leaf;
+  try {
+    leaf = await signPayload(built.payload, key);
+  } catch (e) {
+    return { ok: false as const, error: "uncheckable", reason: msg(e) };
+  }
+  const unmeasured = [...(built.payload.unmeasured as string[])];
+  if (!leaf.sig_ed25519) unmeasured.push(/absent/.test(leaf.unsigned_reason || "") ? "sig_ed25519 (no Pages key)" : "sig_ed25519 (sign failed)");
+  const { did_intended, ...base } = cardBase;
+  const card: Record<string, unknown> = { ...base, ...(leaf.did ? { did: leaf.did } : { did_intended }), sha256: leaf.sha256, sig_ed25519: leaf.sig_ed25519, unmeasured, tags: [...cardBase.tags, leaf.sig_ed25519 ? "signed" : "unsigned"] };
+  const bytes = canonicalBytes(card);
+  const text = new TextDecoder().decode(bytes);
+  if (VERDICT_RE.test(text)) return { ok: false as const, error: "refused", reason: `card carries a verdict word: ${text.match(VERDICT_RE)![0]}` };
+  if (bytes.byteLength > PAYLOAD_CAP_BYTES) return { ok: false as const, error: "uncheckable", reason: `card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap` };
+  return { ok: true as const, card, text, sha256: leaf.sha256, signed: !!leaf.sig_ed25519 };
+}
+
+export async function previewCardFor(entry: RosterEntry, built: Awaited<ReturnType<typeof buildPayload>>) {
+  const sha256 = await sha256Hex(canonicalBytes(built.payload));
+  return toPreview({ ...envelopeFor(entry, built), sha256, sig_ed25519: null });
+}
+
+export const NOT_SOLD =
+  "Nothing is sold while the state is UNMEASURED: this answer is 200, not 402, and no payment is requested. The free preview stays free; read it again later — public RPC endpoints recover on their own.";
+
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
   const id = (url.searchParams.get("id") || "").trim().toLowerCase();
   const preview = url.searchParams.get("preview") === "1";
+  const paid = hasPaymentHeader(request);
   const resourceUrl = `${origin}/api/wrapper?id=${encodeURIComponent(id || "<roster id>")}`;
   const known = ROSTER.map((e) => e.id);
   const bad = (reason: string, status: number) =>
-    json({ schema: "csoai.wrapper-parity/0.1", error: status === 404 ? "not_found" : "bad_request", reason, known_ids: known, free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`, preview: `${origin}/api/wrapper?id=<roster id>&preview=1` }, status);
+    json({ schema: "csoai.wrapper-parity/0.1", error: status === 404 ? "not_found" : "bad_request", reason, known_ids: known, free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`, preview: `${origin}/api/wrapper?id=<roster id>&preview=1`, per_asset: `${origin}/api/wrapper/asset/<asset>` }, status);
 
-  const valid = !!(id && ID_RE.test(id));
-  if (!valid && preview) return bad("pass id=<roster id> (see known_ids)", 400);
-  // Unpaid bare GET stays 402 so an indexer can discover the door. A presented payment must
-  // never settle until the id is a deliverable the roster carries.
-  if (hasPaymentHeader(request) && !valid) return bad("pass id=<roster id> before presenting payment", 400);
-  const entry = valid ? findEntry(id) : undefined;
-  if (hasPaymentHeader(request) && valid && !entry) return bad(`${id} is not on the roster. No payment was taken for a 404.`, 404);
-
-  const description = `A signed wrapped-asset parity card for ${id || "<id>"}: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain, both at pinned finalized blocks, raw reads sha256'd. A ratio — not a rate, a grade or a reserve attestation.`;
+  const description = WRAPPER_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -242,6 +373,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`,
         rail: railMode(env),
         not_paid_reason: notPaidReason,
+        never_charged_for: "UNMEASURED — an unreadable pair answers 200 preview-only, never 402",
         catalog: `${origin}/api/x402`,
         ...(extra.csoai || {}),
       },
@@ -249,65 +381,52 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return paymentRequiredResponseSigned(extra.error ? { ...pr, error: extra.error } : pr, env);
   };
 
-  if (!preview && !hasPaymentHeader(request)) {
+  // No id at all: the abstract door. Nothing is read, so the unpaid answer is the discovery 402
+  // (an indexer needs a payable resource to list); a preview or a payment needs a pair first.
+  if (!id) {
+    if (preview || paid) return bad("pass id=<roster id> (see known_ids)", 400);
     return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar })).reason);
   }
+  if (!ID_RE.test(id)) return bad(paid ? "pass id=<roster id> before presenting payment" : "pass id=<roster id> (see known_ids)", 400);
+  const entry = findEntry(id);
+  // A pair the roster does not carry is not for sale: 404, paid or not, and nothing is taken.
+  if (!entry) return bad(`${id} is not on the roster. No payment was requested or taken.`, 404);
 
-  if (!valid) return bad("pass id=<roster id> (see known_ids)", 400);
-  if (!entry) return bad(`${id} is not on the roster. No payment was taken for a 404.`, 404);
-
-  // READ BEFORE SETTLE. The chain reads, the signature and every refusal check run before the
-  // facilitator is asked to move money. A buyer is charged only for a card that is ready to hand
-  // over — never for "chain reads (rpc failed; nothing inferred)", and never for a 500.
+  // READ BEFORE ANY OFFER, AND BEFORE ANY SETTLE. The chain reads, the signature and every refusal
+  // check run before a 402 is issued or the facilitator is asked to move money.
   const built = await buildPayload(entry);
-  const envelope = (payload: Record<string, unknown>) => ({
-    schema: SCHEMA,
-    surface: "public.notice",
-    subject: `wrapped ${entry.wrapped.symbol} on ${entry.wrapped.chain} vs ${entry.escrow_name || "native issuance"} — ${payload.state}`,
-    as_of: built.fetched_at,
-    source_urls: built.source_urls,
-    payload,
-    tags: ["eater:wrapper-parity", "axis:distribution-integrity", `backing:${entry.backing_model}`, `state:${payload.state}`],
-    unmeasured: [...(payload.unmeasured as string[])],
-    did_intended: "did:web:csoai.org#board-attestation-1",
-  });
   const payload = built.payload;
-  const cardBase = envelope(payload);
-
-  if (preview) {
-    const sha256 = await sha256Hex(canonicalBytes(payload));
-    const card = toPreview({ ...cardBase, sha256, sig_ed25519: null });
-    return json({ schema: "csoai.wrapper-parity/0.1", kind: "preview", card, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402` }, rail: railMode(env) });
-  }
 
   if (payload.state === "UNMEASURED") {
-    const error = payload.error ? String(payload.error) : null;
-    return challenge(
-      `read before settle: the chain reads came back UNMEASURED${error ? ` (${error})` : ""}. The payment was not sent to the facilitator, so nothing was settled. Check the free preview before paying again.`,
-      {
-        error: "Chain reads UNMEASURED — payment not settled",
-        csoai: { read_before_settle: { state: "UNMEASURED", error, unmeasured: payload.unmeasured, fetched_at: built.fetched_at, settled: false } },
-      },
-    );
+    return json({
+      schema: "csoai.wrapper-parity/0.1",
+      kind: "preview",
+      preview_only: true,
+      id,
+      state: "UNMEASURED",
+      reason: payload.error ?? null,
+      card: await previewCardFor(entry, built),
+      not_sold: NOT_SOLD,
+      payment: { requested: false, presented: paid, sent_to_facilitator: false, settled: false },
+      rail: railMode(env),
+    });
   }
 
-  let leaf;
-  try {
-    leaf = await signPayload(payload, env.BOARD_SIGN_KEY_PKCS8_B64);
-  } catch (e) {
-    return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: (e as Error).message, settled: false }, 500);
+  if (preview) {
+    return json({ schema: "csoai.wrapper-parity/0.1", kind: "preview", id, state: payload.state, card: await previewCardFor(entry, built), buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402` }, rail: railMode(env) });
   }
-  const unmeasured = [...(payload.unmeasured as string[])];
-  if (!leaf.sig_ed25519) unmeasured.push(/absent/.test(leaf.unsigned_reason || "") ? "sig_ed25519 (no Pages key)" : "sig_ed25519 (sign failed)");
-  const { did_intended, ...base } = cardBase;
-  const card: Record<string, unknown> = { ...base, ...(leaf.did ? { did: leaf.did } : { did_intended }), sha256: leaf.sha256, sig_ed25519: leaf.sig_ed25519, unmeasured, tags: [...cardBase.tags, leaf.sig_ed25519 ? "signed" : "unsigned"] };
-  const bytes = canonicalBytes(card);
-  const text = new TextDecoder().decode(bytes);
-  if (VERDICT_RE.test(text)) return json({ schema: "csoai.wrapper-parity/0.1", error: "refused", reason: `card carries a verdict word: ${text.match(VERDICT_RE)![0]}`, settled: false }, 500);
-  if (bytes.byteLength > PAYLOAD_CAP_BYTES) return json({ schema: "csoai.wrapper-parity/0.1", error: "uncheckable", reason: `card ${bytes.byteLength}B > ${PAYLOAD_CAP_BYTES}B cap`, settled: false }, 500);
+
+  if (!paid) {
+    return challenge((await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar })).reason, {
+      csoai: { state_at_challenge: payload.state, read_at: built.fetched_at },
+    });
+  }
+
+  const signed = await signedCardFor(entry, built, env.BOARD_SIGN_KEY_PKCS8_B64);
+  if (!signed.ok) return json({ schema: "csoai.wrapper-parity/0.1", error: signed.error, reason: signed.reason, settled: false }, 500);
 
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
-  if (!payment.ok) return challenge(payment.reason);
+  if (!payment.ok) return challenge(payment.reason, { csoai: { state_at_challenge: payload.state, read_at: built.fetched_at } });
 
   if (env.REVENUE_KV) {
     try {
@@ -316,14 +435,14 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     } catch { /* never blocks a paid deliverable */ }
   }
 
-  return new Response(text, {
+  return new Response(signed.text, {
     status: 200,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
       "access-control-allow-origin": "*",
-      "x-csoai-card-sha256": leaf.sha256,
-      "x-csoai-signed": leaf.sig_ed25519 ? "true" : "false",
+      "x-csoai-card-sha256": signed.sha256,
+      "x-csoai-signed": signed.signed ? "true" : "false",
       ...(payment.ok && payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
     },
   });

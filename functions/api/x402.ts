@@ -31,7 +31,26 @@ import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
 import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
-import { PROOF_BUNDLE_DESCRIPTION, RECEIPTS_BATCH_DESCRIPTION, POPULATION_DESCRIPTIONS, RAS_MCP_PROBE_DESCRIPTION, RAS_X402_CHECK_DESCRIPTION, RAS_SUPPLY_DESCRIPTION } from "./_x402_descriptions";
+import {
+  PROOF_BUNDLE_DESCRIPTION,
+  RECEIPTS_BATCH_DESCRIPTION,
+  POPULATION_DESCRIPTIONS,
+  RAS_MCP_PROBE_DESCRIPTION,
+  RAS_X402_CHECK_DESCRIPTION,
+  RAS_SUPPLY_DESCRIPTION,
+  FREE_DOOR_DESCRIPTION,
+  REQUEST_ATTESTATION_DESCRIPTION,
+  EVIDENCE_BUNDLE_DESCRIPTION,
+  DATA_FEED_DESCRIPTION,
+  RWA_EVIDENCE_DESCRIPTION,
+  WRAPPER_DESCRIPTION,
+  WRAPPER_CHANGES_DESCRIPTION,
+  FRESH_CAPSULE_DESCRIPTION,
+  ART50_MARKING_EVIDENCE_DESCRIPTION,
+  PROVIDER_DIFF_DESCRIPTION,
+  wrapperAssetDescription,
+} from "./_x402_descriptions";
+import WRAPPER_ASSET_DOORS from "./_wrapper_asset_doors.json";
 import { POPULATIONS } from "./_population";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 
@@ -83,7 +102,7 @@ export const onRequestGet: PagesFunction<{
         name: "Free board + public-root discovery door",
         resource: u("/api/free-door"),
         free_preview: u("/api/free-door"),
-        deliverable: "The live GSPC board totals and public signed root through a genuine x402 challenge whose amount is zero.",
+        deliverable: FREE_DOOR_DESCRIPTION,
         never: ["a paid artefact", "a grade", "a rank", "a certificate"],
       },
       {
@@ -92,7 +111,7 @@ export const onRequestGet: PagesFunction<{
         resource: u("/api/request-attestation?subject=<id>&axis=<slug>"),
         free_preview: u("/api/request-attestation?subject=<id>"),
         free_preview_note: "the 402 body carries csoai.preview: signed cards already on file",
-        deliverable: "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
+        deliverable: REQUEST_ATTESTATION_DESCRIPTION,
         never: ["a score", "a rank", "a certificate", "a MEASURED cell minted by payment"],
       },
       {
@@ -106,7 +125,7 @@ export const onRequestGet: PagesFunction<{
         // own 404 body (article-50, article-53, dora, cra; eu-cra resolves as an alias, checked).
         // A placeholder that names the wrong kind of value costs a buyer their first call.
         free_preview: u("/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>"),
-        deliverable: "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
+        deliverable: EVIDENCE_BUNDLE_DESCRIPTION,
         never: ["a conformity determination", "satisfied/not-satisfied findings", "a certificate"],
       },
       {
@@ -114,7 +133,7 @@ export const onRequestGet: PagesFunction<{
         name: "Signed data feed (assembly + cadence)",
         resource: u("/api/eunomia-data?feed=1"),
         free_preview: u("/api/eunomia-data"),
-        deliverable: "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
+        deliverable: DATA_FEED_DESCRIPTION,
         never: ["scores as a product", "a ranking", "a rating"],
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },
       },
@@ -133,7 +152,7 @@ export const onRequestGet: PagesFunction<{
         resource: u("/api/rwa/evidence?asset=<symbol|issuer_address>"),
         free_preview: u("/api/rwa/evidence?asset=<symbol>&preview=1"),
         free_preview_note: "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
-        deliverable: "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
+        deliverable: RWA_EVIDENCE_DESCRIPTION,
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
       },
       {
@@ -142,7 +161,7 @@ export const onRequestGet: PagesFunction<{
         resource: u("/api/wrapper?id=<wrapped-symbol:chain>"),
         free_preview: u("/api/wrapper?id=<wrapped-symbol:chain>&preview=1"),
         free_preview_note: "unsigned state, no raw-read hashes; pair ids in /interop/wrapped-asset-parity-2026-09-13.json",
-        deliverable: "A signed wrapped-asset parity card: wrapped totalSupply on its chain and the canonical token's bridge-escrow balance on the origin chain at pinned finalized blocks, raw reads sha256'd, BigInt ratio. A read — not a rate, a grade or a reserve attestation.",
+        deliverable: WRAPPER_DESCRIPTION,
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a paywall on the free ledger or /root.json"],
       },
       {
@@ -151,16 +170,27 @@ export const onRequestGet: PagesFunction<{
         resource: u("/api/wrapper/changes?id=<wrapped-symbol:chain>"),
         free_preview: u("/api/wrapper/changes?id=<wrapped-symbol:chain>&preview=1"),
         free_preview_note: "delta of wrapped supply and escrow since the previous ledger snapshot; pair ids in /interop/wrapped-asset-parity-*.json",
-        deliverable: "Delta of wrapped supply and escrow between two ledger snapshots. A diff — not a rate, a grade or a reserve attestation.",
+        deliverable: WRAPPER_CHANGES_DESCRIPTION,
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a paywall on the free ledger or /root.json"],
       },
+      // PER-ASSET WRAPPER DOORS (functions/api/wrapper/asset/[asset].ts), one per stablecoin in
+      // functions/api/_wrapper_asset_doors.json — derived, never retyped.
+      ...(WRAPPER_ASSET_DOORS as { doors: { asset: string; symbol: string }[] }).doors.map((d) => ({
+        id: `wrapper_asset_${d.asset}`,
+        name: `Wrapped-asset parity pack (every ${d.symbol} pair)`,
+        resource: u(`/api/wrapper/asset/${d.asset}`),
+        free_preview: u(`/api/wrapper/asset/${d.asset}?preview=1`),
+        free_preview_note: "every pair's unsigned card and the counts by state; an asset whose every pair is UNMEASURED answers 200 preview-only, never 402",
+        deliverable: wrapperAssetDescription(d.symbol),
+        never: ["a rating", "a guarantee", "a verdict", "a rank", "a reserve attestation", "a charge for an UNMEASURED read"],
+      })),
       {
         id: "fresh_capsule",
         name: "Fresh measurement capsule (one MCP endpoint, one claim)",
         resource: u("/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=<TOOLS|VERSION|PROTOCOL>"),
         free_preview: u("/api/measurement/fresh-capsule?endpoint=<https-mcp-url>&dimension=TOOLS&preview=1"),
         free_preview_note: "the same measurement, unsigned and without source digests; verification (MCP verify_capsule, server_evidence) stays free",
-        deliverable: "One csoai.measurement-capsule/0.2: the endpoint's own discovery documents vs its live initialize + tools/list answer for one dimension, CONSISTENT / INCONSISTENT / UNCHECKABLE, sha256 of every read, board signature pinning the capsule id. Read before settle.",
+        deliverable: FRESH_CAPSULE_DESCRIPTION,
         never: ["a rating", "a guarantee", "a verdict", "a rank", "an endorsement", "a certificate", "a call beyond the discovery boundary"],
       },
       {
@@ -169,7 +199,7 @@ export const onRequestGet: PagesFunction<{
         resource: u("/api/art50/marking-evidence?url=<https-output-url>"),
         free_preview: u("/api/art50/marking-evidence?url=<https-output-url>&preview=1"),
         free_preview_note: "the same point-in-time detection is returned unsigned before purchase",
-        deliverable: "A signed card recording whether named methods detected a machine-readable mark in one named output at one time.",
+        deliverable: ART50_MARKING_EVIDENCE_DESCRIPTION,
         never: ["a conformity opinion", "a guarantee about the generator", "a certificate", "legal advice"],
       },
       {
@@ -181,7 +211,7 @@ export const onRequestGet: PagesFunction<{
         resource: u("/api/feeds/provider-diff?history=1"),
         free_preview: u("/api/feeds/provider-diff"),
         free_preview_note: "recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/",
-        deliverable: "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
+        deliverable: PROVIDER_DIFF_DESCRIPTION,
         never: ["a verdict on any change", "the content of any page (never captured)", "a grade"],
       },
       {

@@ -27,6 +27,7 @@ import {
 import { railMode } from "./_x402_config";
 import { onRequestGet as finesGet } from "./fines";
 import { readFeedSource, expectedFeedDigest, missingFeedSources, feedBlocks, makeFeedManifest, requestRecord, feedJson, EXPECTED_FEED_HEADER, type Reads } from "./_eunomia_delivery";
+import { DATA_FEED_DESCRIPTION } from "./_x402_descriptions";
 
 type AssetFetcher = { fetch: (request: Request | string) => Promise<Response> };
 type Env = X402Env & { REVENUE_KV?: KVNamespace; ASSETS?: AssetFetcher };
@@ -98,7 +99,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
     return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, delivery_manifest:manifest, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
-  const description = "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.";
+  const description = DATA_FEED_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client

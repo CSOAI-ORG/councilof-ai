@@ -174,7 +174,8 @@
         "state": "FROZEN_UPSTREAM_METADATA"
       },
       "symbol": "USDT",
-      "x402_door_state": "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED"
+      "x402_door": "https://councilof.ai/api/wrapper/asset/usdt",
+      "x402_door_state": "ASSET_SPECIFIC_DOOR_DECLARED_NO_ASSET_SETTLEMENT_VERIFIED"
     },
     {
       "a2a_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL",
@@ -385,7 +386,8 @@
         "state": "FROZEN_UPSTREAM_METADATA"
       },
       "symbol": "USDC",
-      "x402_door_state": "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED"
+      "x402_door": "https://councilof.ai/api/wrapper/asset/usdc",
+      "x402_door_state": "ASSET_SPECIFIC_DOOR_DECLARED_NO_ASSET_SETTLEMENT_VERIFIED"
     },
     {
       "a2a_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL",
@@ -531,7 +533,8 @@
         "state": "FROZEN_UPSTREAM_METADATA"
       },
       "symbol": "DAI",
-      "x402_door_state": "GENERIC_EXISTING_DATA_DOOR_NO_ASSET_SETTLEMENT_VERIFIED"
+      "x402_door": "https://councilof.ai/api/wrapper/asset/dai",
+      "x402_door_state": "ASSET_SPECIFIC_DOOR_DECLARED_NO_ASSET_SETTLEMENT_VERIFIED"
     },
     {
       "a2a_discovery_state": "GENERIC_CATALOG_ONLY_NO_ASSET_SKILL",
@@ -20982,7 +20985,7 @@
   "cost": {
     "metadata_index_build_usd": 0,
     "readiness_build_usd": 0,
-    "x402_campaign": "0.01 USDC only for eligible existing-data SKUs; fresh compute excluded"
+    "x402_campaign": "eligible existing-data SKUs only; fresh compute excluded; the amount lives only in each door's 402 challenge"
   },
   "coverage": {
     "asset_measurements_bitcoin_anchored_via_current_root": 0,
@@ -20991,7 +20994,7 @@
     "asset_measurements_signed": 1,
     "asset_specific_a2a_skills": 0,
     "asset_specific_mcp_tools": 0,
-    "asset_specific_x402_doors": 0,
+    "asset_specific_x402_doors": 3,
     "asset_specific_x402_settlements_verified": 0,
     "deeply_measured_assets": 1,
     "distinct_asset_reported_chains": 211,
@@ -21062,10 +21065,10 @@
       "state": "CATALOG_DISCOVERABLE"
     },
     "x402": {
-      "asset_specific_doors": 0,
+      "amount": "in the 402 challenge only \u2014 never typed on a public surface",
+      "asset_specific_door_registry": "functions/api/_wrapper_asset_doors.json",
+      "asset_specific_doors": 3,
       "asset_specific_settlements_verified": 0,
-      "campaign_amount_atomic_usdc": "10000",
-      "campaign_amount_usdc": "0.01",
       "endpoint": "https://councilof.ai/api/request-attestation",
       "fresh_compute_excluded": true,
       "sku": "request_attestation:per_request",

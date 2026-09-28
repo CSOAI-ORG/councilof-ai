@@ -36,6 +36,7 @@ import { signPayload, cardV0 } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
 import { invoiceHandoff } from "../_invoice_handoff";
+import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -295,8 +296,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         400,
       );
     }
-    const description =
-      "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
+    const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
     const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -340,8 +340,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
   const fetched_at = new Date().toISOString();
   const m = await measure(input);
   const law = await art50LawBlock();
-  const description =
-    "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
+  const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
 
   // No measurable input means no deliverable. Reject it before either the x402 facilitator or
   // invoice-reference path is entered; payment may never precede deliverability validation.
