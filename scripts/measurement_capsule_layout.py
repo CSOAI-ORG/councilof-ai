@@ -32,7 +32,10 @@ States only: this script adds no verdict, score or ranking to anything it copies
 """
 import argparse, collections, gzip, hashlib, json, pathlib, re, shutil, sys, urllib.parse
 
-INDEX_SCHEMAS = {"csoai.venturi-index/0.1": "0.1", "csoai.measurement-capsule-index/0.2": "0.2"}
+# index 0.3 = the chained daily index (0.2 plus prev_index_* / gap_days / freshness); same capsule, batch and root rules,
+# so it is laid out under v0.2 exactly like 0.2 (2026-09-28: the daily publisher, scripts/pod-loops/capsule-publish-daily.sh)
+INDEX_SCHEMAS = {"csoai.venturi-index/0.1": "0.1", "csoai.measurement-capsule-index/0.2": "0.2",
+                 "csoai.measurement-capsule-index/0.3": "0.2"}
 RECORD_SCHEMAS = {"csoai.venturi-capsule-batch/0.1": "0.1", "csoai.measurement-capsule-batch/0.2": "0.2"}
 DATA_ROOT = "/measurement-capsules"
 SHARD_HEX = 2
@@ -240,7 +243,10 @@ def main():
     versions = sorted(set(prev.get("versions", [])) | {ver}, reverse=True)
     top = max(versions)
     latest.write_text(json.dumps({"schema": "csoai.measurement-capsule-latest/0.1", "version": top, "versions": versions,
-                                  "index": f"{DATA_ROOT}/v{top}/index.json", "doctrine": DOCTRINE}, indent=1) + "\n")
+                                  "index": f"{DATA_ROOT}/v{top}/index.json", "doctrine": DOCTRINE,
+                                  # when the laid-out index was written (a reader checks freshness here without the index)
+                                  "as_of": idx.get("as_of") if ver == top else prev.get("as_of"),
+                                  "index_date": idx.get("date") if ver == top else prev.get("index_date")}, indent=1) + "\n")
     print(json.dumps({"version": ver, "batches": report, "n_capsules": len(all_ids), "index_root": idx["index_root"],
                       "endpoints_keyed": n_endpoints, "largest_shard_bytes": biggest}, indent=1))
 
