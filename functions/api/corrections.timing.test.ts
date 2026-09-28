@@ -10,6 +10,7 @@ import {
   LEDGER,
   UNRECORDED,
   correctionLatency,
+  detectionStamp,
   timeToCorrect,
   timingProblems,
   type TimingEntry,
@@ -96,5 +97,29 @@ describe("time_to_correct is derived, never stored", () => {
     expect(s.exact + s.upper_bound + s.unmeasured).toBe(entries.length);
     expect(s.per_entry.every((x) => x.kind !== "UNMEASURED")).toBe(true);
     expect(s.exact).toBeGreaterThan(0);
+  });
+});
+
+describe("producer-stamped detection (candidate_id, from 2026-09-28)", () => {
+  it("an entry without a candidate id reads UNMEASURED, whatever its detected_at says", () => {
+    expect(detectionStamp({ detected_at: "2026-09-26T08:52:00Z", detected_by: "internal audit" }).kind).toBe("UNMEASURED");
+    expect(detectionStamp({ detected_at: UNRECORDED }).kind).toBe("UNMEASURED");
+    expect(detectionStamp({ candidate_id: "  " }).kind).toBe("UNMEASURED");
+  });
+  it("an entry carrying its candidate id reads PRODUCER_STAMPED", () => {
+    const s = detectionStamp({ candidate_id: "cand-4a31dd96e79dcf1b-20260929T075000Z-PV-1" });
+    expect(s).toEqual({ kind: "PRODUCER_STAMPED", candidate_id: "cand-4a31dd96e79dcf1b-20260929T075000Z-PV-1" });
+  });
+  it("a candidate id needs a producer datetime and a named detector", () => {
+    const base = { id: "x", detected_by: "internal monitor", published_at: UNRECORDED, candidate_id: "cand-1" };
+    expect(timingProblems({ ...base, detected_at: "2026-09-29" }).join(" ")).toMatch(/must be that ISO datetime/);
+    expect(timingProblems({ ...base, detected_at: "2026-09-29T07:50:00Z", timing_evidence: ["candidate-queue"] })).toEqual([]);
+    expect(timingProblems({ ...base, detected_at: "2026-09-29T07:50:00Z", detected_by: UNRECORDED, timing_evidence: ["q"] }).join(" "))
+      .toMatch(/cannot be UNRECORDED/);
+  });
+  it("the latency block counts both", () => {
+    const c = correctionLatency([{ candidate_id: "cand-1", detected_at: "2026-09-29T07:50:00Z" }, { detected_at: UNRECORDED }]);
+    expect(c.detection_producer_stamped).toBe(1);
+    expect(c.detection_stamp_unmeasured).toBe(1);
   });
 });

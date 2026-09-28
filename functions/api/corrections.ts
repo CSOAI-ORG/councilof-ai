@@ -1682,6 +1682,9 @@ export type TimingEntry = {
   detected_by?: unknown;
   published_at?: unknown;
   timing_evidence?: unknown;
+  /** The id of the correction candidate a producer wrote when it detected the change (e.g. claim-watch
+   *  history/candidate-queue.jsonl). Present only when detected_at/detected_by were stamped by that producer. */
+  candidate_id?: unknown;
 };
 
 type Window = { not_before?: string; not_after?: string; basis?: string };
@@ -1715,7 +1718,27 @@ export function timingProblems(e: TimingEntry): string[] {
     p.push(`${id}: a recorded timing value needs timing_evidence naming where it comes from`);
   const t = timeToCorrect(e);
   if (t.kind !== "UNMEASURED" && t.seconds < 0) p.push(`${id}: published_at precedes detection`);
+  if (e.candidate_id !== undefined) {
+    if (typeof e.candidate_id !== "string" || !e.candidate_id.trim()) p.push(`${id}: candidate_id is not a non-empty string`);
+    if (!(typeof d === "string" && ISO_DATETIME.test(d)))
+      p.push(`${id}: candidate_id names a producer stamp, so detected_at must be that ISO datetime`);
+    if (e.detected_by === UNRECORDED) p.push(`${id}: candidate_id names a producer stamp, so detected_by cannot be UNRECORDED`);
+  }
   return p;
+}
+
+export type DetectionStamp = { kind: "PRODUCER_STAMPED"; candidate_id: string } | { kind: "UNMEASURED"; why: string };
+
+/**
+ * Was detection stamped by a producer at the moment it happened? Only an entry that carries the
+ * candidate_id of the correction candidate its detector wrote (detected_at/detected_by set at creation,
+ * never by hand) is PRODUCER_STAMPED. Every other entry reads UNMEASURED here, whatever its detected_at
+ * says: a hand-recorded or evidence-backfilled time is not a producer stamp, and none is ever inferred.
+ */
+export function detectionStamp(e: TimingEntry): DetectionStamp {
+  return typeof e.candidate_id === "string" && e.candidate_id.trim()
+    ? { kind: "PRODUCER_STAMPED", candidate_id: e.candidate_id }
+    : { kind: "UNMEASURED", why: "no candidate_id: detection was not stamped by a producer at creation" };
 }
 
 export type TimeToCorrect =
@@ -1769,6 +1792,11 @@ export function correctionLatency(entries: TimingEntry[]) {
     upper_bound: count("UPPER_BOUND"),
     unmeasured: count("UNMEASURED"),
     detected_at_unrecorded: entries.filter((e) => e.detected_at === UNRECORDED).length,
+    detection_producer_stamped: entries.filter((e) => detectionStamp(e).kind === "PRODUCER_STAMPED").length,
+    detection_stamp_unmeasured: entries.filter((e) => detectionStamp(e).kind === "UNMEASURED").length,
+    detection_stamp_rule:
+      "PRODUCER_STAMPED only when the entry carries the candidate_id its detector wrote at creation (from 2026-09-28); " +
+      "every earlier entry is UNMEASURED here and is never backfilled.",
     ...(exact.length ? { median_seconds_exact: exact[Math.floor(exact.length / 2)] } : {}),
     per_entry: per.filter((x) => x.kind !== "UNMEASURED"),
     note:
