@@ -11,6 +11,7 @@ Method (verbatim from the dataset): one GET per DISTINCT HOST listed in either p
 HTTP 402 AND a PAYMENT-REQUIRED response header AND x402Version 2 in the body AND an extensions.bazaar
 block. Identifiable UA, 12 s timeout, 24 concurrent. Nothing signed, nothing paid, no door settled.
 Both indexes answer keyless: CDP paginates limit=100&offset=N, PayAI limit=1000&offset=N.
+Each index is walked to an EMPTY page (ENUMERATION_RULE); its reported total is recorded, not used to stop.
 
 Two readings the 2026-09-05 snapshot forces, established by re-probing its own rows on 6 Sep:
   * "x402Version 2 in the body" is literal. Most doors carry a v2 challenge WITH the bazaar block in the
@@ -48,27 +49,93 @@ def get(url, timeout=30):
         return r.status, dict(r.headers), r.read()
 
 
-def enumerate_index(name, base, limit, log):
-    """Walk one discovery index to its stated total. A short read is recorded, never passed off as complete."""
-    items, offset, total, pages = [], 0, None, 0
+PAGE_RETRIES = 3        # attempts per page before the walk is recorded as failed
+PAGE_SLEEP_S = 0.4
+SERVED_VS_REPORTED_TOL = 0.01   # the index's count may run ahead of the list it serves by at most 1%
+ENUMERATION_RULE = (
+    "Each index is walked page by page, the offset advancing by the page size (never by the number of items a page "
+    "returned: CDP treats offset as page-aligned and re-serves the aligned page for an unaligned offset), until the index "
+    "serves an EMPTY page, which is requested twice. complete = the walk stopped on an empty page that was empty both "
+    "times, every page answered (up to 3 attempts each) at the offset requested, and the number of listings served is at "
+    "least 99% of the largest total the index reported during the walk. The reported total is recorded beside the count "
+    "served and is not the stop rule: on 2026-09-28 CDP reported 17,722 while serving 17,721 (01:09Z), 18,996 while "
+    "serving 19,004 (14:0xZ) and 19,085 while serving 19,004 (14:08Z; its count ran ahead of an unchanged served list), "
+    "so a count-equality rule marks a fully read index partial, or a short read complete by chance.")
+
+
+def enumerate_index(name, base, limit, log, sleep=PAGE_SLEEP_S, retries=PAGE_RETRIES):
+    """Walk one discovery index to an EMPTY page. A short or failed read is recorded, never passed off as complete.
+
+    Before 2026-09-28 the walk stopped at offset + limit >= reported total and was complete iff items >= total. The
+    index's total is not the count it serves (see ENUMERATION_RULE), so that rule failed a run that had read every page
+    the index served (2026-09-28, CDP 17,721 served vs 17,722 reported) and would pass a run whose count is inflated by
+    a listing served twice. The stop rule is now the index's own end of list; the reported total only bounds where that
+    end may fall."""
+    items, offset, pages, totals, n_retries = [], 0, 0, [], 0
+    stop, failed_page, empty_at = None, None, None
     while True:
         url = f"{base}?limit={limit}&offset={offset}"
-        try:
-            _, _, body = get(url)
-        except Exception as e:
-            log(f"{name}: page offset={offset} failed {type(e).__name__}; stopping with {len(items)} of {total}")
+        d, err = None, None
+        for attempt in range(retries):
+            try:
+                _, _, body = get(url)
+                d = json.loads(body)
+                if not isinstance(d, dict):
+                    raise ValueError("page is not a JSON object")
+                break
+            except Exception as e:
+                d, err = None, e
+                if attempt + 1 < retries:
+                    n_retries += 1
+                    time.sleep(sleep * (2 ** attempt))
+        if d is None:
+            stop, failed_page = "PAGE_FAILED", {"offset": offset, "error": type(err).__name__}
+            log(f"{name}: page offset={offset} failed {type(err).__name__} after {retries} attempts; stopping with {len(items)}")
             break
-        d = json.loads(body)
         page = d.get("items") or []
-        total = (d.get("pagination") or {}).get("total", total)
-        items.extend(page); pages += 1
-        if not page or (total is not None and offset + limit >= total):
+        pg = d.get("pagination") or {}
+        if isinstance(pg.get("total"), int):
+            totals.append(pg["total"])
+        served_at = pg.get("offset", offset)
+        pages += 1
+        if served_at != offset:
+            stop, failed_page = "OFFSET_NOT_HONOURED", {"offset": offset, "served_offset": served_at}
+            log(f"{name}: asked offset={offset}, index served offset={served_at}; stopping with {len(items)}")
             break
+        if not page:
+            # confirm the end of list: an empty page that is empty twice
+            try:
+                _, _, body2 = get(url)
+                again = json.loads(body2).get("items") or []
+            except Exception as e:
+                again, err = None, e
+            if again is None:
+                stop, failed_page = "PAGE_FAILED", {"offset": offset, "error": type(err).__name__, "at": "end-of-list confirmation"}
+            elif again:
+                stop, failed_page = "END_NOT_CONFIRMED", {"offset": offset, "second_read_items": len(again)}
+            else:
+                stop, empty_at = "EMPTY_PAGE", offset
+            break
+        items.extend(page)
         offset += limit
-        time.sleep(0.4)
-    complete = total is not None and len(items) >= total
-    log(f"{name}: {len(items)} resources over {pages} pages, index reports total={total}, complete={complete}")
-    return items, {"resources": len(items), "reported_total": total, "complete": complete}
+        if pages >= 10 + 3 * ((max(totals) if totals else 0) // max(1, limit) + 1):
+            stop = "PAGE_GUARD"
+            log(f"{name}: {pages} pages without an empty page; stopping with {len(items)}")
+            break
+        time.sleep(sleep)
+    reported = totals[-1] if totals else None
+    floor = int(max(totals) * (1 - SERVED_VS_REPORTED_TOL)) if totals else None
+    complete = stop == "EMPTY_PAGE" and bool(totals) and len(items) >= floor
+    distinct = len({str(it.get("resource") or "").strip() for it in items if isinstance(it, dict)})
+    meta = {"resources": len(items), "reported_total": reported, "complete": complete,
+            "walk": {"stop": stop, "page_limit": limit, "pages": pages, "empty_page_offset": empty_at,
+                     "reported_total_first": totals[0] if totals else None,
+                     "reported_total_max": max(totals) if totals else None, "reported_total_last": reported,
+                     "served_minus_reported": (len(items) - reported) if reported is not None else None,
+                     "served_floor": floor, "served_floor_rule": f"served >= (1 - {SERVED_VS_REPORTED_TOL}) x reported_total_max",
+                     "distinct_resource_urls": distinct, "page_retries": n_retries, "failed_page": failed_page}}
+    log(f"{name}: {len(items)} resources over {pages} pages (stop {stop}), index reports total={reported}, complete={complete}")
+    return items, meta
 
 
 def probe(host, url):
@@ -190,7 +257,7 @@ def main():
                    "resource that index advertises for that host. Conformant = HTTP 402 AND a PAYMENT-REQUIRED response "
                    "header AND x402Version 2 in the body AND an extensions.bazaar block. Identifiable UA, 12s timeout, "
                    "24 concurrent. Nothing signed, nothing paid, no door settled."),
-        "indexes": {"cdp": cdp_meta, "payai": payai_meta},
+        "indexes": {"cdp": cdp_meta, "payai": payai_meta}, "enumeration_rule": ENUMERATION_RULE,
         "resources_listed_without_scheme": noscheme,
         "hosts_distinct": len(hosts), "hosts_probed": len(rows), "partial": partial,
         "rule_note": ("x402_version and has_bazaar_extension are read from the BODY, as the 2026-09-05 snapshot did; "
