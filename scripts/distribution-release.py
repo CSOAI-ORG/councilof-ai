@@ -142,7 +142,7 @@ def distribution_section(doc: dict, heading: str) -> str:
     if missing:
         labels = ", ".join(f"{p['registry']} `{p['name']}` ({p.get('reason', 'no counter')})" for p in missing[:5])
         suffix = f"; {len(missing)-5} more in the artifact" if len(missing) > 5 else ""
-        lines.append(f"- Counters without a value: {labels}{suffix}. Missing means null, never zero.")
+        lines.append(f"- Counters without a value: {labels}{suffix}. Missing means null, never 0.")
     n, ratio = source.get("samples_compared"), source.get("pepy_over_pypistats_median")
     if isinstance(n, int) and n > 0 and isinstance(ratio, (int, float)):
         lines.append(f"- PyPI counter cross-check: {n} sampled packages; pepy.tech versus "

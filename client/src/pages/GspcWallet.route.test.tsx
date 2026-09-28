@@ -10,12 +10,13 @@ const root = resolve(__dirname, "../../..");
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 
 describe("GSPC wallet guard public route", () => {
-  it("is wired into App, route metadata and client-only prerender handling", () => {
-    expect(read("client/src/App.tsx")).toContain('const GspcWallet = lazy(() => import("./pages/GspcWallet"));');
-    expect(read("client/src/App.tsx")).toContain('<Route path="/wallet" component={GspcWallet} />');
+  it("uses the public guard as the single served route owner", () => {
+    expect(read("client/src/App.tsx")).not.toContain('const GspcWallet = lazy(() => import("./pages/GspcWallet"));');
+    expect(read("client/src/App.tsx")).not.toContain('<Route path="/wallet" component={GspcWallet} />');
+    expect(read("public/wallet/index.html")).toContain("Layer O Wallet Guard");
     expect(JSON.parse(read("client/src/data/seo-head.json")).routes["/wallet"]).toBeTruthy();
     expect(read("client/src/data/library-ia.ts")).toContain('"/wallet"');
-    expect(read("scripts/prerender.mjs")).toContain('"/wallet"');
+    expect(read("scripts/prerender.mjs")).toContain("static-owned public HTML preserved");
   });
   it("renders the wallet boundary without implying payment or GSPC signing", () => {
     const html = renderToStaticMarkup(

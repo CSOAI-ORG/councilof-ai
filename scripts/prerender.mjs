@@ -102,9 +102,6 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   // and /api/door-settles — all Functions.
   "/pay",
   "/pay/",
-  // /wallet reads /api/gspc and /api/corrections; keep the shell rather than baking preview fetch failures.
-  "/wallet",
-  "/wallet/",
   "/assess",
   "/assess/",
   "/assessment",
@@ -681,6 +678,22 @@ async function worker(id) {
     const route = queue.shift();
     errs.splice(0); // A failure belongs to this route, not the next one.
     const rec = { route, chars: 0, ok: false };
+    // A hand-authored public/<route>/index.html (for example "/wallet") is already the final owner of that URL.
+    // Vite copies it into dist before this step; replacing it here with either a SPA shell or a
+    // Chromium snapshot would silently erase the standalone surface. Preserve it byte-for-byte.
+    const staticSource = route === "/" || route === ""
+      ? null
+      : join("public", route.replace(/^\//, "").replace(/\/$/, ""), "index.html");
+    if (staticSource && existsSync(staticSource)) {
+      const staticHtml = readFileSync(staticSource, "utf8");
+      rec.staticOwned = true;
+      rec.title = staticHtml.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "";
+      rec.hasDesc = /<meta[^>]*name=["']description["']/i.test(staticHtml);
+      rec.ok = true;
+      results.push(rec);
+      console.log(`SKIP ${String(0).padStart(6)}ch  ${route}  static-owned public HTML preserved`);
+      continue;
+    }
     // These pages call Pages Functions (/api/assess, /api/lead, MCP /tools, x402)
     // that do not exist on the Vite preview used for prerender. The snapshot then
     // contains "Failed to fetch" / "fetch failed" and the bake-guard correctly

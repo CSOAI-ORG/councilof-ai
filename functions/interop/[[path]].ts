@@ -16,8 +16,14 @@ const INVALID_PATH = /^\/interop\/[A-Za-z0-9_./-]+\.invalid$/;
 const hex = (bytes: Uint8Array) =>
   Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  const copy = new Uint8Array(bytes.byteLength);
+  copy.set(bytes);
+  return copy.buffer;
+}
+
 async function digest(bytes: Uint8Array) {
-  return hex(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)));
+  return hex(new Uint8Array(await crypto.subtle.digest("SHA-256", toArrayBuffer(bytes))));
 }
 
 function decodeBase64(body: string) {
@@ -109,5 +115,5 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     "x-csoai-evidence-state": "RETIRED_OR_INVALID_HISTORICAL_BYTES_ONLY",
     "x-csoai-sha256": member.sha256,
   });
-  return new Response(method === "HEAD" ? null : bytes, { status: 200, headers });
+  return new Response(method === "HEAD" ? null : toArrayBuffer(bytes), { status: 200, headers });
 };

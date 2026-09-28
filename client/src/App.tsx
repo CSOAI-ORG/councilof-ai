@@ -207,7 +207,6 @@ const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
 const PayEveryDoor = lazy(() => import("./pages/PayEveryDoor"));
-const GspcWallet = lazy(() => import("./pages/GspcWallet"));
 const Launch = lazy(() => import("./pages/Launch"));
 const OwaspAgentic = lazy(() => import("./pages/OwaspAgentic"));
 const OwaspAsiMapping = lazy(() => import("./pages/OwaspAsiMapping"));
@@ -669,7 +668,6 @@ function App() {
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/doctrine" component={Doctrine} />
                   <Route path="/pay" component={PayEveryDoor} />
-                  <Route path="/wallet" component={GspcWallet} />
                   <Route path="/launch" component={Launch} />
                   <Route path="/owasp-agentic" component={OwaspAgentic} />
                   <Route path="/owasp-asi" component={OwaspAsiMapping} />
