@@ -1,8 +1,9 @@
 import {beforeEach,afterEach,describe,it,expect,vi} from 'vitest';
 import {createHash,webcrypto} from 'node:crypto';
-const h=vi.hoisted(()=>({pay:vi.fn(),offer:vi.fn(),sources:vi.fn(),mode:'ok'}));
+const h=vi.hoisted(()=>({pay:vi.fn(),offer:vi.fn(),sources:vi.fn(),fines:vi.fn(),mode:'ok'}));
 vi.mock('./_x402',()=>({verifyX402Payment:(...a:any[])=>h.pay(...a),x402Accepts:()=>[{}],buildPaymentRequiredV2:(x:unknown)=>x,declareBazaarHttpGet:(x:unknown)=>x,paymentRequiredResponseSigned:(x:unknown)=>{h.offer();return new Response(JSON.stringify(x),{status:402});},hasPaymentHeader:(r:Request)=>r.headers.has('x-payment'),CSOAI_LID:'test only'}));
 vi.mock('./_x402_config',()=>({railMode:()=>({mode:'synthetic'})}));
+vi.mock('./fines',()=>({onRequestGet:(...a:any[])=>h.fines(...a)}));
 import {onRequestGet,onRequestPost,onRequestOptions} from './eunomia-data';
 import {canonicalBytes} from '../_lib/cardSign';
 import {FEED_SOURCES,SOURCE_CAP,readFeedSource,sourceShapeIssue,safeFeedJson} from './_eunomia_delivery';
@@ -10,7 +11,7 @@ const ORIGIN='https://councilof.ai';const hash=(b:Uint8Array)=>createHash('sha25
 const source=()=>({'/signals/_index.json':{schema:'csoai.signals',as_of:'2026-09-20T00:00:00Z',signals:[{axis:'fixture'}]},'/api/fines':{schema:'csoai.enforcement-corpus/0.1',as_of:'2026-08-24',signature_absent:'fixture'},'/root.json':{as_of:'2026-09-22T00:00:00Z',card_count:1,merkle_root:'a'.repeat(64)},'/signed/card_index.json':{cards:[{id:'synthetic'}]}} as Record<string,any>);
 let data:Record<string,any>;
 const call=(query:string,headers:Record<string,string>={},method='GET')=>(onRequestGet as any)({request:new Request(ORIGIN+'/api/eunomia-data'+query,{headers,method}),env:{},params:{}}) as Promise<Response>;
-beforeEach(()=>{vi.stubGlobal('crypto',webcrypto);data=source();h.pay.mockReset().mockImplementation(async(r:Request)=>r.headers.has('x-payment')?{ok:true,settlement:{transaction:'synthetic'},paymentResponse:'test-only'}:{ok:false,reason:'no payment'});h.offer.mockClear();h.sources.mockReset().mockImplementation(async(u:string)=>new Response(JSON.stringify(data[new URL(u).pathname]),{headers:{'content-type':'application/json'}}));vi.stubGlobal('fetch',h.sources);});
+beforeEach(()=>{vi.stubGlobal('crypto',webcrypto);data=source();h.pay.mockReset().mockImplementation(async(r:Request)=>r.headers.has('x-payment')?{ok:true,settlement:{transaction:'synthetic'},paymentResponse:'test-only'}:{ok:false,reason:'no payment'});h.offer.mockClear();h.fines.mockReset().mockImplementation(async()=>new Response(JSON.stringify(data['/api/fines']),{headers:{'content-type':'application/json'}}));h.sources.mockReset().mockImplementation(async(u:string)=>new Response(JSON.stringify(data[new URL(u).pathname]),{headers:{'content-type':'application/json'}}));vi.stubGlobal('fetch',h.sources);});
 afterEach(()=>vi.unstubAllGlobals());
 describe('manifest and delivery',()=>{
  it('free manifest never settles or signs even with presented payment',async()=>{const r=await call('?manifest=1',{'x-payment':'synthetic'});const b:any=await r.json();expect(r.status).toBe(200);expect(b.free).toBe(true);expect(b.settlement_attempted).toBe(false);expect(b.coverage.required_blocks.length).toBe(4);expect(b).not.toHaveProperty('blocks');expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();});
@@ -30,7 +31,8 @@ describe('manifest and delivery',()=>{
  it('browser preflight has no source/payment work',async()=>{const r=await (onRequestOptions as any)({});expect(r.status).toBe(204);expect(r.headers.get('access-control-allow-headers')).toContain('x-csoai-expected-feed-sha256');expect(h.sources).not.toHaveBeenCalled();expect(h.pay).not.toHaveBeenCalled();});
 });
 describe('read-before-settle failure controls',()=>{
- for(const name of Object.values(FEED_SOURCES))it('missing '+name+' blocks paid request',async()=>{h.sources.mockImplementation(async(u:string)=>new URL(u).pathname===name?new Response('down',{status:503}):new Response(JSON.stringify(data[new URL(u).pathname])));expect((await call('?feed=1',{'x-payment':'x'})).status).toBe(503);expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();});
+ for(const name of [FEED_SOURCES.signals,FEED_SOURCES.root,FEED_SOURCES.card_index])it('missing '+name+' blocks paid request',async()=>{h.sources.mockImplementation(async(u:string)=>new URL(u).pathname===name?new Response('down',{status:503}):new Response(JSON.stringify(data[new URL(u).pathname])));expect((await call('?feed=1',{'x-payment':'x'})).status).toBe(503);expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();});
+ it('missing in-process /api/fines blocks paid request',async()=>{h.fines.mockResolvedValue(new Response('down',{status:503}));expect((await call('?feed=1',{'x-payment':'x'})).status).toBe(503);expect(h.pay).not.toHaveBeenCalled();expect(h.offer).not.toHaveBeenCalled();});
  it('all failures block instead of original200',async()=>{h.sources.mockImplementation(async()=>new Response('down',{status:503}));expect((await call('?feed=1',{'x-payment':'x'})).status).toBe(503);expect(h.pay).not.toHaveBeenCalled();});
  it('unavailable free manifest is503',async()=>{h.sources.mockRejectedValue(new Error('failure'));expect((await call('?manifest=1')).status).toBe(503);expect(h.pay).not.toHaveBeenCalled();});
  it('partial preview remains readable without fake complete manifest',async()=>{h.sources.mockImplementation(async()=>new Response('down',{status:503}));const b:any=await (await call('')).json();expect(b.delivery_manifest).toBeNull();expect(b.streams.root.as_of).toBeNull();});

@@ -55,7 +55,7 @@ export const LAYER0_NODES: Layer0Node[] = [
   { id: "us-fedreg", name: "US Federal Register", org: "Office of the Federal Register, Washington DC",
     lng: -77.028, lat: 38.893, cls: "LAW", status: "LIVE", verified: "2026-07-29",
     does: "Watches AI rulemaking in a fixed window; a new rule is the drift event, hashed order-stable.",
-    href: "/feed", personas: ["compliance", "regulator"] },
+    href: "/global-regulations/", personas: ["compliance", "regulator"] },
 
   // ── COMPANY / GOV ────────────────────────────────────────────────────────────
   { id: "sec-edgar", name: "SEC EDGAR", org: "US Securities and Exchange Commission, Washington DC",

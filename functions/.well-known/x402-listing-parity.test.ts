@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { offlineEvmFetch } from "../api/__fixtures__/offline-evm-fetch";
 import { onRequestGet as manifest, offerFor } from "./x402.json";
 
 /**
@@ -73,9 +74,7 @@ describe(".well-known/x402.json accepts[] = the live 402 accepts[], for every re
   });
 
   it("no payment field drifts between the listing and the door's own challenge", async () => {
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
-      new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(offlineEvmFetch);
     const failures: string[] = [];
     let compared = 0;
     try {
@@ -105,9 +104,7 @@ describe(".well-known/x402.json accepts[] = the live 402 accepts[], for every re
   // row. Those doors are held to the opposite property in the next test. Listing == challenge for
   // every payment field still applies to them (the test above).
   it("every door's challenge keeps the listed query string in resource.url and accepts[0].resource", async () => {
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
-      new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(offlineEvmFetch);
     const failures: string[] = [];
     try {
       for (const r of (await listing()).resources) {
@@ -130,9 +127,7 @@ describe(".well-known/x402.json accepts[] = the live 402 accepts[], for every re
   });
 
   it("a path-scoped door's listing and challenge carry no target: the buyer's query never becomes a catalogue row", async () => {
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
-      new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(offlineEvmFetch);
     const failures: string[] = [];
     let scoped = 0;
     try {

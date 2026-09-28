@@ -84,20 +84,49 @@ export function signerState(env: { BOARD_SIGN_KEY_PKCS8_B64?: string }) {
 }
 
 /** Signed measurement cards already on file for this subject (× axis). Read, never typed. */
-async function reserveFor(origin: string, subject: string, axis: string): Promise<{ cells: Cell[]; as_of: string | null; source: string }> {
+type Reserve = { cells: Cell[]; as_of: string | null; source: string; read: boolean };
+
+async function reserveFor(origin: string, subject: string, axis: string): Promise<Reserve> {
   const src = new URL("/signed/card-matrix.json", origin).toString();
   try {
     const r = await fetch(src);
-    if (!r.ok) return { cells: [], as_of: null, source: `${src} HTTP ${r.status}` };
+    if (!r.ok) return { cells: [], as_of: null, source: `${src} HTTP ${r.status}`, read: false };
     const m = (await r.json()) as { as_of?: string; cells?: Cell[] };
     const s = subject.toLowerCase();
     const cells = (m.cells || []).filter(
       (c) => c.signed && String(c.model || "").toLowerCase().includes(s) && (!axis || c.axis === axis),
     );
-    return { cells, as_of: m.as_of || null, source: src };
+    return { cells, as_of: m.as_of || null, source: src, read: true };
   } catch (e) {
-    return { cells: [], as_of: null, source: `${src} unreadable: ${(e as Error).message}` };
+    return { cells: [], as_of: null, source: `${src} unreadable: ${(e as Error).message}`, read: false };
   }
+}
+
+/**
+ * THE CHALLENGE IS NEVER HOSTAGE TO ITS PREVIEW (diagnosed 2026-09-28).
+ *
+ * The unpaid GET used to await three same-origin reads one after another before it could answer:
+ * /signed/card-matrix.json (~187 KB), /interop/card-root-latest.json, then the ~546 KB root it names
+ * (sha256'd). None had a timeout, so any stall on those static reads — a deploy swap, an edge hiccup,
+ * a cold isolate — stalled the 402 itself. On 28 Sep a buyer canary recorded the manifest's flagship
+ * example hanging 20–40 s on 3 of 4 probes while 24 other doors answered at once; it did not reproduce
+ * at 13:00Z (5 of 5 under 0.15 s). Three unbounded reads ahead of the challenge are a sufficient cause
+ * for that, not a proven one. A discovery probe or an agent with a 10 s budget reads it as a dead door.
+ *
+ * Now the two preview reads run side by side and the challenge waits at most PREVIEW_BUDGET_MS for
+ * each. A read that is late is reported as not read (null count, UNCHECKABLE) — never as an empty
+ * reserve. The late read is left to finish after the response (waitUntil), so the isolate's root
+ * cache still warms for the next caller. The PAID path is unchanged: a paying buyer's receipt waits
+ * for the full reserve read, because a budget there would shrink a deliverable someone paid for.
+ */
+export const PREVIEW_BUDGET_MS = 2500;
+
+function withinBudget<T>(work: Promise<T>, ms: number, late: () => T): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<T>((resolve) => {
+    timer = setTimeout(() => resolve(late()), ms);
+  });
+  return Promise.race([work, deadline]).finally(() => clearTimeout(timer));
 }
 
 
@@ -156,6 +185,29 @@ async function readBounded(response: Response, limit: number): Promise<Uint8Arra
   return bytes;
 }
 
+const INTEROP_NOTE =
+  "These are active root references whose model contains the query text, not exact subject identities, card-v1 reserve entries or new GSPC board scores. Check each card signature independently; this unsigned pointer and root-byte match do not prove Bitcoin anchoring. Payment does not include these references.";
+
+/** The interop preview when its reads did not finish inside the challenge's budget. */
+function interopNotReadInTime(origin: string): InteropAvailability {
+  return {
+    pointer_url: new URL("/interop/card-root-latest.json", origin).toString(),
+    match_basis: "CASE_INSENSITIVE_MODEL_SUBSTRING",
+    signature_verification: "NOT_PERFORMED",
+    included_in_paid_reserve: false,
+    note: INTEROP_NOTE,
+    state: "UNCHECKABLE",
+    root_url: null,
+    root_sha256: null,
+    root_as_of: null,
+    root_active_leaves: null,
+    matching_active_leaves: null,
+    sample_card_urls: [],
+    root_integrity: "UNCHECKABLE",
+    reason: `not read within ${PREVIEW_BUDGET_MS} ms; the 402 does not wait for its preview`,
+  };
+}
+
 /** Free discovery of a separate mill-card root; never silently add its leaves to paid reserve. */
 async function interopAvailabilityFor(origin: string, subject: string, axis: string): Promise<InteropAvailability> {
   const pointerUrl = new URL("/interop/card-root-latest.json", origin).toString();
@@ -164,7 +216,7 @@ async function interopAvailabilityFor(origin: string, subject: string, axis: str
     match_basis: "CASE_INSENSITIVE_MODEL_SUBSTRING" as const,
     signature_verification: "NOT_PERFORMED" as const,
     included_in_paid_reserve: false as const,
-    note: "These are active root references whose model contains the query text, not exact subject identities, card-v1 reserve entries or new GSPC board scores. Check each card signature independently; this unsigned pointer and root-byte match do not prove Bitcoin anchoring. Payment does not include these references.",
+    note: INTEROP_NOTE,
   };
   const uncheckable = (reason: string): InteropAvailability => ({
     ...base, state: "UNCHECKABLE", root_url: null, root_sha256: null, root_as_of: null,
@@ -242,7 +294,8 @@ async function interopAvailabilityFor(origin: string, subject: string, axis: str
   }
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const { request, env } = context;
   const url = new URL(request.url);
   const origin = url.origin;
   const subject = (url.searchParams.get("subject") || "").trim();
@@ -310,13 +363,36 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
 
   // The free preview is the same whether or not the caller pays: what already exists.
-  const reserve = subject ? await reserveFor(origin, subject, axis) : { cells: [], as_of: null, source: "no subject given" };
-  const interop = !payment.ok && subject ? await interopAvailabilityFor(origin, subject, axis) : null;
+  const reserveRead: Promise<Reserve> = subject
+    ? reserveFor(origin, subject, axis)
+    : Promise.resolve({ cells: [], as_of: null, source: "no subject given", read: true });
+  let reserve: Reserve;
+  let interop: InteropAvailability | null = null;
+  if (payment.ok) {
+    reserve = await reserveRead;
+  } else {
+    const interopRead = subject ? interopAvailabilityFor(origin, subject, axis) : Promise.resolve(null);
+    try {
+      context.waitUntil?.(Promise.allSettled([reserveRead, interopRead]));
+    } catch {
+      /* no execution context (tests, HEAD shim): the late read is simply dropped */
+    }
+    [reserve, interop] = await Promise.all([
+      withinBudget(reserveRead, PREVIEW_BUDGET_MS, (): Reserve => ({
+        cells: [],
+        as_of: null,
+        source: `${origin}/signed/card-matrix.json not read within ${PREVIEW_BUDGET_MS} ms; the 402 does not wait for its preview`,
+        read: false,
+      })),
+      withinBudget(interopRead, PREVIEW_BUDGET_MS, () => (subject ? interopNotReadInTime(origin) : null)),
+    ]);
+  }
   const preview = {
     subject: subject || null,
     axis: axis || null,
     axis_known: knownAxis,
-    signed_cards_on_file: reserve.cells.length,
+    // null, never 0, when the matrix was not read: an unread reserve is UNCHECKABLE, not empty.
+    signed_cards_on_file: reserve.read ? reserve.cells.length : null,
     cards: reserve.cells.slice(0, 40).map((c) => ({ axis: c.axis, card: c.card, card_url: c.card_url })),
     corpus_as_of: reserve.as_of,
     read_from: reserve.source,

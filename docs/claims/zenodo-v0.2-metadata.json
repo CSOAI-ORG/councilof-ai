@@ -1,5 +1,5 @@
 {
-  "_status": "PREPARED, NOT SUBMITTED. Nothing in this file has been sent to Zenodo. Creating the new version is an owner action (Zenodo account). Prepared 2026-09-25 under docs/claims/extractor-supersession-2026-09-25.md.",
+  "_status": "PREPARED, NOT SUBMITTED. Nothing in this file has been sent to Zenodo. Creating the new version is an owner action (Zenodo account). Prepared 2026-09-25 under docs/claims/extractor-supersession-2026-09-25.md; re-checked 2026-09-28 (lane dois-20260928): file digests re-hashed on master 982fe3f6d, the GitHub related identifier removed because the repository answers 404 to an anonymous GET, and wording kept within the outward gate's notice list. The staged copy with every file is /workspace/lanes/dois-20260928/01-claim-maintenance-v0.2/ on the build pod.",
   "_how": [
     "On https://zenodo.org/records/22901908 choose 'New version' (this keeps the concept DOI 10.5281/zenodo.22901781 and mints a new version DOI).",
     "Remove the v0.1 files from the draft and upload the files listed under 'files' with the names given in upload_as; check each sha256 after upload.",
@@ -63,12 +63,6 @@
         "relation": "isSupplementedBy",
         "resource_type": "software",
         "scheme": "url"
-      },
-      {
-        "identifier": "https://github.com/CSOAI-ORG/councilof-ai",
-        "relation": "isSupplementedBy",
-        "resource_type": "software",
-        "scheme": "url"
       }
     ]
   },
@@ -104,15 +98,15 @@
       "sha256": "abdce46aa54f913297a509397b6b76f7e1d173bb9952e2cc533f548b14fcdd04"
     },
     {
-      "upload_as": "claim-maintenance-register-2026-09-25.json",
+      "upload_as": "claim-maintenance-register-2026-09-28.json",
       "source_path": "public/spec/claim-maintenance/register.json",
-      "bytes": 39780,
-      "sha256": "4efe28906406d389a1c632255059a5254532261cb0399f279203bd9a81dc0d0e"
+      "bytes": 43594,
+      "sha256": "8b3d7fb915fd7bae0522919ba667336f9fc45ce6ccbf04be9e782fbd51657933"
     }
   ],
-  "files_note": "sha256 values are of the bytes on branch claims/extractor-decode-once-20260925 when this file was written. The register snapshot carries an as_of and changes on every regeneration; re-hash it at upload time and record what was uploaded. The document of record's sha256 is what deposit.json must carry.",
+  "files_note": "sha256 values are of the bytes on master 982fe3f6d, re-hashed 2026-09-28. Only the register differs from the 2026-09-25 preparation: it carries an as_of and changes on every regeneration, so re-hash it at upload time and record what was uploaded. The document of record's sha256 is what deposit.json must carry.",
   "does_not_prove": [
-    "that the specification is endorsed by Zenodo, CERN or anyone else; a repository deposit is storage and an identifier, not a review",
+    "that Zenodo, CERN or anyone else has reviewed or approved the specification; a repository deposit is storage and an identifier, not a review",
     "that the specification is correct; a DOI makes a document citable and permanent, not right"
   ]
 }

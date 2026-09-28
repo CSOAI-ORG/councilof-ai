@@ -61,7 +61,7 @@ export default function ToolsPage() {
   const [copied, setCopied] = useState(false);
   const [cardCopied, setCardCopied] = useState(false);
   useEffect(() => {
-    document.title = "Add gspc in your tool | councilof.ai";
+    document.title = "Add the GSPC tools to your AI client | Council of AI";
     setMetaDescription(
       `Council OS for people already in Claude, Cursor, Kimi, or Grok. ${ALL_TOOL_NAMES.length} tools at https://councilof.ai/mcp: ${FREE_TOOL_NAMES.length} free readers and ${PAID_TOOL_NAMES.length} x402-metered evidence tools. Measurement, never certification.`,
     );
@@ -248,7 +248,7 @@ export default function ToolsPage() {
       <MomentumStrip
         variant="panel"
         title="The tools, and how far they travel"
-        ids={["mcp_tools", "x402_doors", "pypi_all_time", "hf_downloads_30d"]}
+        ids={["mcp_tools", "x402_doors", "pypi_all_time", "hf_downloads_30d_other"]}
       />
       <SignedAgentTravel />
       <TwoSpeed />

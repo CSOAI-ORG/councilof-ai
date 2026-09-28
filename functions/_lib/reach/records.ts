@@ -4,6 +4,8 @@
  *   - every entry in the corrections ledger (functions/api/corrections.ts LEDGER);
  *   - every daily measurement-capsule index whose signature verifies (one daily note each);
  *   - every dated evidence note (client/src/data/evidence-notes.json, via functions/feeds/notes.xml).
+ *   - every signed measurement record with its own page (public/measurements/<kind>/<id>/record.json,
+ *     via ./measurementRecords — dated by the record's as_of, titled by the page's own head entry).
  * Each entry's date is the record's own date, never the time of the request, so an unchanged record
  * never looks new to a reader.
  */
@@ -11,8 +13,9 @@ import { type Ctx, SITE } from "./core";
 import { correctionLink, isPending, ledgerEntries } from "./corrections";
 import { verifiedDays } from "./notes";
 import { entries as evidenceNotes } from "../../feeds/notes.xml";
+import { measurementRecordEntries } from "./measurementRecords";
 
-export interface Rec { id: string; url: string; title: string; summary: string; date: string; kind: "correction" | "daily-note" | "evidence-note" }
+export interface Rec { id: string; url: string; title: string; summary: string; date: string; kind: "correction" | "daily-note" | "evidence-note" | "measurement-record" }
 
 const iso = (s: string): string | null => {
   if (!s || s === "UNRECORDED") return null;
@@ -44,13 +47,22 @@ export async function records(ctx: Ctx): Promise<Rec[]> {
     if (!when) continue;
     out.push({ id: `tag:councilof.ai,2026:evidence-note:${n.link.replace(/^.*\/notes\//, "").replace(/\/$/, "")}`, url: n.link, kind: "evidence-note", date: when, title: n.title, summary: n.body.slice(0, 1200) });
   }
+  for (const m of measurementRecordEntries()) {
+    const when = iso(m.as_of);
+    if (!when) continue;
+    out.push({
+      id: `tag:councilof.ai,2026:measurement-record:${m.route.replace(/^\/measurements\//, "")}`, url: m.url, kind: "measurement-record", date: when,
+      title: m.title,
+      summary: `${m.description}\n\nState: ${m.state}. Record: ${m.record_url} (board-signed record.signed.json and OpenTimestamps record.json.ots beside it).`,
+    });
+  }
   return out.sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id));
 }
 
 const x = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 export const FEED_TITLE = "Council of AI — new records";
-export const FEED_SUBTITLE = "Every new dated record: corrections, daily measurement notes and evidence notes. Derived from the artifacts; measurement, not certification.";
+export const FEED_SUBTITLE = "Every new dated record: corrections, daily measurement notes, evidence notes and signed measurement records. Derived from the artifacts; measurement, not certification.";
 
 export function atomFeed(recs: Rec[]): string {
   const updated = recs[0]?.date ?? "2026-01-01T00:00:00Z";

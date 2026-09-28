@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:csoai:draft:commission-v0.1",
+  "title": "Commissioned measurement record, v0.1 (DRAFT — HELD for the owner's terms)",
+  "status": "HELD_FOR_OWNER_TERMS",
+  "description": "One commissioned piece of measurement work: who commissioned it, about which subject, which of the four offering kinds, how it is paid (per delivered work — x402 door or a GBP invoice; the amount never appears in this record), and the artifact-level disclosure the claim-maintenance spec requires (§10.3). A commission buys work, never a result: payment is never contingent on what is published (§10.2), a record never asserts falsity about anyone (§10.1), and nothing here is a grade, a score, a rank or a certificate. Not published: this schema is a draft until the owner rules on the terms and on self-commissioning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kind", "commissioned_by", "subject", "payment", "conflicts", "deliverable", "states", "disclosure", "never"],
+  "properties": {
+    "schema": { "const": "csoai.commission/0.1" },
+    "kind": {
+      "enum": ["maintained_claim", "reproduction_on_request", "underwriter_evidence_pack", "disclosure_timeline"],
+      "description": "maintained_claim: a subject's public claim kept under the claim-maintenance spec for a term. reproduction_on_request: one published result re-run from its own inputs, the outcome recorded as found. underwriter_evidence_pack: already-signed cards about one subject assembled with inclusion proofs for a named reader. disclosure_timeline: the dated sequence of a subject's public statements and changes on one topic."
+    },
+    "commissioned_by": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "relationship_to_subject"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2, "description": "The legal entity that pays. Published on the artifact; a commission whose payer cannot be named is not accepted." },
+        "relationship_to_subject": {
+          "enum": ["IS_SUBJECT", "THIRD_PARTY_NO_RELATIONSHIP", "THIRD_PARTY_WITH_RELATIONSHIP"],
+          "description": "IS_SUBJECT = self-commissioning (the owner rules whether it is offered at all; until then the guard refuses it). THIRD_PARTY_WITH_RELATIONSHIP requires the relationship to be named in conflicts[]."
+        },
+        "relationship": { "type": "string", "description": "What the relationship is, when there is one (investor, customer, insurer, competitor, standards-body co-participant)." }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "identifier": { "type": "string", "description": "A stable id where one exists (model id, contract address, registry name)." }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rail", "basis", "contingent_on_content"],
+      "properties": {
+        "rail": { "enum": ["x402", "gbp_invoice"] },
+        "basis": { "const": "per_delivered_work", "description": "Paid per piece of work delivered. There is no subscription, no tier and no public price." },
+        "contingent_on_content": { "const": false, "description": "Spec §10.2: never contingent on what is published." },
+        "reference": { "type": "string", "description": "The x402 settle transaction or the CSOAI LTD invoice reference. Never an amount." }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 8 },
+      "description": "Spec §10.3, at the artifact level. Always names the commission itself (\"Commissioned and paid for by <name>\"), plus any relationship between CSOAI and the subject or the payer."
+    },
+    "deliverable": { "type": "string", "minLength": 20, "description": "What is handed over, in the words of the door or the scope letter." },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "enum": ["MEASURED", "UNMEASURED", "UNCHECKABLE", "INDEXED", "CLAIM_CAPTURED", "REPRODUCED", "NOT_REPRODUCED", "DELIVERED_AS_FOUND"] },
+      "description": "The states the delivered artifact may carry. UNMEASURED is first-class; a commission never converts it into anything else."
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commission_visible_on_artifact", "spec"],
+      "properties": {
+        "commission_visible_on_artifact": { "const": true },
+        "spec": { "const": "https://councilof.ai/spec/claim-maintenance/v0.2/#10" }
+      }
+    },
+    "never": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "What the commission can never buy.",
+      "contains": { "const": "a grade, score, rank or certificate" }
+    },
+    "owner_ruling": {
+      "type": "object",
+      "description": "Present only after the owner rules (e.g. on self-commissioning). Absent means HELD.",
+      "additionalProperties": false,
+      "required": ["ruled_at", "ruling"],
+      "properties": { "ruled_at": { "type": "string", "format": "date-time" }, "ruling": { "type": "string" } }
+    }
+  }
+}

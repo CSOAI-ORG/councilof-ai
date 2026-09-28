@@ -23,6 +23,9 @@ Verdicts:
   TEMPFAIL      4xx (greylisting, rate limit) -> UNMEASURED, retry later
   NO_MAIL_HOST  no MX and no A -> do not send
   UNREACHABLE   no MX host answered on port 25 (egress blocked?) -> UNMEASURED
+  SENDER_REFUSED  the server refused OUR connecting host before, or instead of, judging the address
+                (e.g. "500 no reverse DNS for <our IP>" at MAIL FROM) -> existence UNMEASURED; re-check from a
+                host with reverse DNS. Measured 28 Sep 2026: lists.aaif.io and lists.x402.org refuse the pod so.
 
 Only BOUNCED_BEFORE, REJECTED and NO_MAIL_HOST block a send; everything else is reported, never guessed.
 
@@ -38,15 +41,38 @@ ADDR = re.compile(r"^[A-Za-z0-9._%+'-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 BLOCKING = {"BOUNCED_BEFORE", "REJECTED", "NO_MAIL_HOST"}
 LEDGER = "/workspace/inbox/bounce-ledger.jsonl"
 _last = [0.0]
+CLIENT_REFUSAL = re.compile(r"reverse DNS|\brDNS\b|PTR record|client host|your IP|"
+                            r"spamhaus|blocklist|blacklist|relay access denied|not permitted to relay", re.I)
+
+
+def mx_lines(domain):
+    """'pref host' lines for the MX set, or None when no lookup could be made at all.
+
+    dig first; where dig is not installed (the build pod, measured 28 Sep 2026) DNS-over-HTTPS. A missing
+    resolver used to fall through silently to the A record, so the probe asked the web host instead of the MX."""
+    try:
+        return subprocess.run(["dig", "+short", "MX", domain], capture_output=True, text=True, timeout=15).stdout.splitlines()
+    except FileNotFoundError:
+        pass
+    except Exception:
+        return None
+    try:
+        req = urllib.request.Request("https://cloudflare-dns.com/dns-query?type=MX&name=" + domain,
+                                     headers={"accept": "application/dns-json", "User-Agent": "CSOAI-outward-gate/0.1"})
+        j = json.loads(urllib.request.urlopen(req, timeout=15).read())
+        if j.get("Status") not in (0, 3):
+            return None
+        return [a["data"] for a in j.get("Answer", []) if a.get("type") == 15]
+    except Exception:
+        return None
 
 
 def mail_hosts(domain):
-    try:
-        out = subprocess.run(["dig", "+short", "MX", domain], capture_output=True, text=True, timeout=15).stdout
-        mx = sorted((int(p), h.rstrip(".")) for p, h in (l.split() for l in out.splitlines() if len(l.split()) == 2))
-        hosts = [h for _, h in mx if h]
-    except Exception:
-        hosts = []
+    lines = mx_lines(domain)
+    if lines is None:
+        return [], "MX_LOOKUP_FAILED"
+    mx = sorted((int(p), h.rstrip(".")) for p, h in (l.split() for l in lines if len(l.split()) == 2))
+    hosts = [h for _, h in mx if h]
     if hosts:
         return hosts, "MX"
     try:
@@ -64,16 +90,35 @@ def rcpt(host, addr):
     s = smtplib.SMTP(timeout=20)
     s.connect(host, 25)
     try:
-        s.ehlo(HELO)
-        code, msg = s.mail(MAIL_FROM)
+        code, msg = s.ehlo(HELO)
+        stage = "EHLO"
+        if code < 400:
+            code, msg = s.mail(MAIL_FROM)
+            stage = "MAIL FROM"
         if code < 400:
             code, msg = s.rcpt(addr)
-        return code, msg.decode(errors="replace")
+            stage = "RCPT"
+        return code, msg.decode(errors="replace"), stage
     finally:
         try:
             s.quit()
         except Exception:
             s.close()
+
+
+def verdict(c1, m1, stage, c2):
+    """One address's verdict from the first session (code, text, stage reached) and the control's RCPT code.
+
+    A refusal before RCPT (EHLO or MAIL FROM), or one whose text is about the connecting client (no reverse DNS,
+    a blocklisted IP, relaying denied to our host), says nothing about the recipient: SENDER_REFUSED, never
+    REJECTED. Only a 5xx answered to RCPT itself, about the address, is a verdict on the mailbox."""
+    if 200 <= c1 < 300:
+        return "ACCEPT_ALL" if c2 and 200 <= c2 < 300 else "ACCEPTS" if c2 and 500 <= c2 < 600 else "ACCEPTS_UNCONTROLLED"
+    if stage != "RCPT" or CLIENT_REFUSAL.search(m1 or ""):
+        return "SENDER_REFUSED"
+    if 500 <= c1 < 600:
+        return "REJECTED"
+    return "TEMPFAIL"
 
 
 def load_ledger(path):
@@ -94,24 +139,21 @@ def check(addr, ledger=None):
         return {**r, "verdict": "NO_MAIL_HOST", "evidence": "not a syntactically valid address"}
     domain = addr.rsplit("@", 1)[1].lower()
     hosts, via = mail_hosts(domain)
+    if via == "MX_LOOKUP_FAILED":
+        return {**r, "verdict": "UNREACHABLE", "evidence": f"{domain}: no MX lookup could be made (no dig, DoH failed)"}
     if not hosts:
         return {**r, "verdict": "NO_MAIL_HOST", "evidence": f"{domain}: no MX and no A record"}
     control = f"csoai-probe-{secrets.token_hex(6)}@{domain}"
     errors = []
     for h in hosts[:3]:
         try:
-            c1, m1 = rcpt(h, addr)
-            c2, m2 = rcpt(h, control) if 200 <= c1 < 300 else (None, "")
+            c1, m1, st1 = rcpt(h, addr)
+            c2, m2, _ = rcpt(h, control) if 200 <= c1 < 300 else (None, "", None)
         except Exception as e:
             errors.append(f"{h}: {type(e).__name__}: {e}")
             continue
-        ev = f"{via} {h}: RCPT {addr} -> {c1} {m1[:160]}; control -> {c2} {m2[:80]}"
-        if 200 <= c1 < 300:
-            v = "ACCEPT_ALL" if c2 and 200 <= c2 < 300 else "ACCEPTS" if c2 and 500 <= c2 < 600 else "ACCEPTS_UNCONTROLLED"
-        elif 500 <= c1 < 600:
-            v = "REJECTED"
-        else:
-            v = "TEMPFAIL"
+        v = verdict(c1, m1, st1, c2)
+        ev = f"{via} {h}: {st1} for {addr} -> {c1} {m1[:160]}; control -> {c2} {m2[:80]}"
         return {**r, "verdict": v, "mail_host": h, "evidence": ev}
     return {**r, "verdict": "UNREACHABLE", "evidence": "; ".join(errors)[:400]}
 

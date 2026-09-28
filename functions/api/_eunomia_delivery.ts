@@ -5,7 +5,9 @@ export const EXPECTED_FEED_HEADER='x-csoai-expected-feed-sha256';
 export const SOURCE_CAP=2_000_000;
 export const FEED_SOURCES={signals:'/signals/_index.json',first_fine_watch:'/api/fines',root:'/root.json',card_index:'/signed/card_index.json'} as const;
 export type SourceName=keyof typeof FEED_SOURCES;
-export type SourceRead<T=Record<string,unknown>>={ok:true;body:T;response_sha256:string;response_bytes:number}|{ok:false;reason:string};
+export type SourceRead<T=Record<string,unknown>>=
+ {ok:true;body:T;response_sha256:string;response_bytes:number;reason?:never}
+ |{ok:false;reason:string;body?:never;response_sha256?:never;response_bytes?:never};
 export type Reads=Record<SourceName,SourceRead>;
 export function expectedFeedDigest(r:Request):string|null{
  const value=r.headers.get(EXPECTED_FEED_HEADER);
@@ -34,10 +36,11 @@ export function sourceShapeIssue(name:SourceName,value:unknown):string|null{
  if(name==='first_fine_watch'&&(typeof v.schema!=='string'||!v.schema))return 'Enforcement source lacks a schema identifier';
  return null;
 }
-export async function readFeedSource<T=Record<string,unknown>>(url:string,name:SourceName):Promise<SourceRead<T>>{
+export type FeedFetcher=(input:Request|string,init?:RequestInit)=>Promise<Response>;
+export async function readFeedSource<T=Record<string,unknown>>(url:string,name:SourceName,fetcher:FeedFetcher=fetch):Promise<SourceRead<T>>{
  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);
  try{
-  const r=await fetch(url,{redirect:'error',signal:controller.signal,headers:{accept:'application/json'}});
+  const r=await fetcher(url,{redirect:'error',signal:controller.signal,headers:{accept:'application/json'}});
   if(!r.ok){await r.body?.cancel();return {ok:false,reason:`HTTP ${r.status}`};}
   if(!r.body)return {ok:false,reason:'Source has no body'};
   const reader=r.body.getReader();const chunks:Uint8Array[]=[];let size=0;

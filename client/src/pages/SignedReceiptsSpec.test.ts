@@ -13,6 +13,9 @@ describe("/spec/signed-receipts — the specification text is exact", () => {
     expect(bytes("client/src/data/signed-receipts-v1-SPEC.md").equals(bytes("public/spec/signed-receipts/v1/SPEC.md"))).toBe(true);
     // sha256 of SPEC.md at huggingface.co/datasets/csoai/councilof-ai-source @ 96bf3a07 (contributions/a2a-signed-receipts/f80de2731ceb)
     expect(sha("public/spec/signed-receipts/v1/SPEC.md")).toBe("f5a7400b1963473718156d14e70df6c640ee12881e6c56dc5ecbfac0e9e43efa");
+    // Draft 0.3 (2026-09-28) is a new file beside draft 0.2, never an edit of it: these are the bytes prepared for its deposit.
+    expect(sha("public/spec/signed-receipts/v1/draft-0.3/SPEC.md")).toBe("91520cda9998c613377f1cdae2ae7a8dc5464cf3eab1f3f6a5ef269e0d938f58");
+    expect(readFileSync(root + "client/src/pages/SignedReceiptsSpec.tsx", "utf8")).toContain("${BASE}/draft-0.3/SPEC.md");
     // interceptor.py and its tests were corrected on 2026-09-28 (SCITT architecture #462: no VALID on an
     // unresolvable key; RFC 8785 astral-char and number serialisation). The mirror @ 96bf3a07 holds the
     // pre-correction pair (d908b9e723cf1525 / b487db05b60bf4bf); these pins are the served bytes.

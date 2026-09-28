@@ -412,3 +412,141 @@ def test_board_site_attestation_accepts_live_did_key_and_rejects_tamper():
     board["site_attestation"]["sig"] = None
     with pytest.raises(ValueError, match="no 64-byte signature"):
         spray.verify_board_site_attestation(board, did)
+
+
+# --------------------------------------------------------------------------- Zenodo monthly version (dois-20260928)
+
+def signed_corrections(entries=2, key=None):
+    """A corrections ledger shaped like GET /api/corrections, signed the way its signature_check describes."""
+    key = key or Ed25519PrivateKey.generate()
+    body = {
+        "schema": "csoai.corrections/0.1", "license": "CC-BY-4.0", "publisher": "test",
+        "corrections": [{"id": f"C-2026-0928-{i:02d}", "what_was_wrong": "x"} for i in range(1, entries + 1)],
+    }
+    cid = spray.sha256_hex(json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode())
+    att = {"artifact": "csoai.corrections/0.1", "content_id": cid, "entries": entries,
+           "latest_entry_id": body["corrections"][-1]["id"], "signed_at": "2026-09-28T08:32:59Z"}
+    raw_public = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    sig = key.sign(json.dumps(att, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode())
+    doc = {**body,
+           "signature": {"id": cid, "signer": raw_public.hex(), "did": "did:web:csoai.org#board-attestation-1",
+                         "signature": sig.hex(), "attestation": att},
+           "signature_state": "VALID", "signature_check": {"checked_at": "per request"}, "note": "unsigned wrapper"}
+    did = {"id": "did:web:csoai.org", "verificationMethod": [{
+        "id": "did:web:csoai.org#board-attestation-1",
+        "publicKeyJwk": {"kty": "OKP", "crv": "Ed25519", "x": base64.urlsafe_b64encode(raw_public).decode().rstrip("=")}}]}
+    return doc, did
+
+
+def test_corrections_check_accepts_the_served_shape_and_ignores_per_request_wrapper_fields():
+    doc, did = signed_corrections()
+    got = spray.check_corrections(json.dumps(doc).encode(), did)
+    assert got["state"] == "VALID" and got["entries"] == 2 and got["latest_entry_id"] == "C-2026-0928-02"
+    doc["signature_check"] = {"checked_at": "a later request"}   # outside the signed body: must not matter
+    assert spray.check_corrections(json.dumps(doc).encode(), did)["state"] == "VALID"
+
+
+def test_corrections_check_refuses_a_moved_body_a_wrong_key_and_a_miscounted_attestation():
+    doc, did = signed_corrections()
+    moved = json.loads(json.dumps(doc))
+    moved["corrections"][0]["what_was_wrong"] = "edited after signing"
+    with pytest.raises(ValueError, match="content_id"):
+        spray.check_corrections(json.dumps(moved).encode(), did)
+    _, other_did = signed_corrections()
+    with pytest.raises(ValueError):
+        spray.check_corrections(json.dumps(doc).encode(), other_did)
+    extra = json.loads(json.dumps(doc))
+    extra["corrections"].append({"id": "C-unsigned"})
+    with pytest.raises(ValueError):
+        spray.check_corrections(json.dumps(extra).encode(), did)
+
+
+def test_zenodo_licence_is_the_one_the_board_states_never_inherited():
+    assert spray.zenodo_licence_id({"totals": {"license": "CC-BY-4.0"}}) == "cc-by-4.0"
+    assert spray.zenodo_licence_id({"totals": {"license": "CC0-1.0"}}) == "cc-zero"
+    with pytest.raises(SystemExit):
+        spray.zenodo_licence_id({"totals": {}})
+
+
+def _counts(measured=23, unmeasured=0, leaders=None):
+    by_status = {"MEASURED": measured, **({"UNMEASURED": unmeasured} if unmeasured else {})}
+    return {"slots": measured + unmeasured, "by_status": by_status,
+            "by_kind": {"model-comparison": 14, "deterministic-facts": measured + unmeasured - 14},
+            "separation_over_model_comparison": {"TIE": 8, "UNTESTED": 6},
+            "public_leader_state_over_model_comparison": leaders or {"SHOWN": 9, "OWN_MODEL_EXCLUDED": 5},
+            "printed_totals": {}, "printed_agrees_with_array": True}
+
+
+def _hit(version, files=spray.ZENODO_FILES):
+    return {"id": 1, "doi": "10.5281/zenodo.1", "conceptrecid": spray.ZENODO_CONCEPT,
+            "metadata": {"version": version}, "files": [{"key": f} for f in files]}
+
+
+def test_zenodo_cadence_is_monthly_unless_the_counts_or_the_files_moved():
+    now = _counts()
+    prev = {"counts": {k: now[k] for k in spray.CADENCE_COUNT_KEYS}, "files": list(spray.ZENODO_FILES)}
+    assert spray.zenodo_cadence([_hit("2026-08-30T00:00:00Z")], "2026-09-28T07:32:07Z", prev, now)["state"] == "DUE"
+    assert spray.zenodo_cadence([_hit("2026-09-22T08:54:02Z")], "2026-09-28T07:32:07Z", prev, now)["state"] == "NOT_DUE"
+    was_22 = {"counts": {k: _counts(22, 1)[k] for k in spray.CADENCE_COUNT_KEYS}, "files": list(spray.ZENODO_FILES)}
+    moved = spray.zenodo_cadence([_hit("2026-09-15T07:13:43Z")], "2026-09-28T07:32:07Z", was_22, now)
+    assert moved["state"] == "DUE_COUNTS_CHANGED" and "by_status" in moved["changed"]
+    no_ledger = {**prev, "files": list(spray.SNAPSHOT_FILES)}
+    added = spray.zenodo_cadence([_hit("2026-09-22T08:54:02Z")], "2026-09-28T07:32:07Z", no_ledger, now)
+    assert added["state"] == "DUE_FILES_ADDED" and added["added"] == ["corrections.json"]
+    unreadable = {"counts": None, "counts_source": "UNCHECKABLE (HTTP 503)"}
+    assert spray.zenodo_cadence([_hit("2026-09-22T08:54:02Z")], "2026-09-28T07:32:07Z", unreadable, now)["state"] == "DUE_COUNTS_CHANGED"
+
+
+def _stage_truth(board_licence="CC-BY-4.0"):
+    board = {"totals": {"license": board_licence, "public_count": "23 axis · 23 measured",
+                        "separation_public_count": "0 of 14 model-comparison axes separated a leader · 8 TIE · 6 UNTESTED",
+                        "lid": "23 axes measured · TIE is TIE · not a certificate."},
+             "axes": [{"axis": "a", "status": "MEASURED"}]}
+    return {"board": board, "root": {"card_count": 310, "merkle_root": "ab" * 32}, "as_of": "2026-09-28T07:32:07Z",
+            "read_at": "2026-09-28T13:51:18Z", "fingerprint": "cd" * 32, "lid": board["totals"]["lid"]}
+
+
+def test_zenodo_deposit_text_passes_the_outward_gate_notice_list_and_drops_unreachable_links(monkeypatch):
+    monkeypatch.setattr(spray, "reachable", lambda url: "github.com" not in url)
+    corr = {"entries": 78, "latest_entry_id": "C-2026-0928-01", "content_id": "ef" * 32,
+            "signed_at": "2026-09-28T08:32:59Z", "signer": "did:web:csoai.org#board-attestation-1", "license": "CC-BY-4.0"}
+    prev = {"doi": "10.5281/zenodo.22811459", "version": "2026-09-15T07:13:43Z",
+            "counts": {"slots": 23, "by_status": {"MEASURED": 22, "UNMEASURED": 1}}}
+    meta, dropped = spray.zenodo_metadata(_stage_truth(), _counts(), corr, prev, None)
+    text = " ".join([meta["title"], meta["description"], meta["notes"], " ".join(meta["keywords"])])
+    assert "certificate" not in text          # the lid carries it; the deposit text quotes counts instead
+    assert meta["license"] == "cc-by-4.0"
+    assert "MEASURED 22, UNMEASURED 1" in meta["description"] and "23 axes" in meta["title"]
+    assert [d["identifier"] for d in dropped] == [f"https://github.com/{spray.GITHUB_REPO}"]
+    assert all("github.com" not in r["identifier"] for r in meta["related_identifiers"])
+    gate = HERE.parent / "outward-gate" / "outward_gate.py"
+    if not gate.exists():
+        pytest.skip("scripts/outward-gate is outside this checkout")
+    spec = importlib.util.spec_from_file_location("outward_gate", gate)
+    og = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(og)
+    assert [m.group(0) for m in og.NOTICE_BANNED.finditer(text)] == []
+
+
+def test_stage_zenodo_writes_exactly_the_upload_set_with_a_manifest_that_matches(monkeypatch, tmp_path):
+    doc, did = signed_corrections(entries=3)
+    served = json.dumps(doc).encode()
+    monkeypatch.setattr(spray, "fetch_ok", lambda url, timeout=60.0: served if url == spray.CORRECTIONS_URL else b"{}")
+    monkeypatch.setattr(spray, "reachable", lambda url: True)
+    snap = tmp_path / "snap"
+    snap.mkdir()
+    for name in spray.SNAPSHOT_FILES:
+        (snap / name).write_text("{}" if name.endswith(".json") else name)
+    (snap / "SNAPSHOT.json").write_text(json.dumps({"counts": _counts()}))
+    tr = {**_stage_truth(), "did": did, "board_sha256": "0" * 64, "root_sha256": "1" * 64}
+    staged = spray.stage_zenodo(tr, snap, tmp_path / "out", hits=[])
+    files = tmp_path / "out" / "files"
+    assert sorted(p.name for p in files.iterdir()) == sorted(spray.ZENODO_FILES)
+    assert (files / "corrections.json").read_bytes() == served          # bytes as served, not re-serialised
+    rows = [json.loads(line) for line in (files / "manifest.jsonl").read_text().splitlines()]
+    assert {r["file"] for r in rows} == set(spray.ZENODO_FILES) - {"manifest.jsonl"}
+    for r in rows:
+        assert spray.sha256_hex((files / r["file"]).read_bytes()) == r["sha256"]
+    assert staged["corrections_check"]["state"] == "VALID" and staged["monthly_cadence"]["state"] == "DUE"
+    assert staged["_status"].startswith("PREPARED, NOT SUBMITTED")
+    assert json.loads((tmp_path / "out" / "zenodo-metadata.json").read_text())["metadata"]["license"] == "cc-by-4.0"

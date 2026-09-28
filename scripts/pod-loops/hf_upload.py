@@ -19,6 +19,13 @@ file stays on /workspace. Nothing is ever deleted from the Hub or from /workspac
 --config-name adds a `configs:` entry to the dataset README front matter so the HF viewer shows the
 dated file as its own config (one file format per dataset: every loop output here is .jsonl).
 It is idempotent: an entry whose data_files path already exists is not added twice.
+
+Every dataset card (README.md) this script writes passes through cite_block.apply(): the How-to-cite /
+corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026). cite_block.py is
+found beside this file, in ../hf (the repo layout) or in $REPO/scripts/hf (the pod's sparse clone, lib.sh).
+When it cannot be found, a README upload is HELD and the live card is kept: a card written without the block
+would strip it from the live one. A folder's root manifest.jsonl entry for README.md is updated to the bytes
+actually uploaded, so the bundle stays self-consistent.
 """
 import argparse, json, os, sys, time
 from pathlib import Path
@@ -38,6 +45,55 @@ def queue(job):
     QUEUE.parent.mkdir(parents=True, exist_ok=True)
     with QUEUE.open("a") as q:
         q.write(json.dumps(job) + "\n")
+
+
+def carded(text, repo):
+    """`text` with the cite block for `repo` (cite_block.apply), or None when cite_block.py is not found."""
+    here = Path(__file__).resolve().parent
+    for d in (here, here.parent / "hf", Path(os.environ.get("REPO") or LANES / "councilof-ai") / "scripts" / "hf"):
+        if (d / "cite_block.py").is_file():
+            if str(d) not in sys.path:
+                sys.path.insert(0, str(d))
+            from cite_block import apply
+            return apply(text, repo)
+    return None
+
+
+def git_blob_id(data):
+    import hashlib
+    return hashlib.sha1(b"blob %d\0" % len(data) + data).hexdigest()
+
+
+def card_folder_readme(folder, repo):
+    """Pass a folder's root README.md through carded() in place, and keep a root manifest.jsonl entry for it
+    (path/file == README.md) equal to the bytes that will be uploaded. Returns "HELD", "CARDED" or "NONE"."""
+    import hashlib
+    rd = Path(folder) / "README.md"
+    if not rd.is_file():
+        return "NONE"
+    text = rd.read_text(encoding="utf-8")
+    new = carded(text, repo)
+    if new is None:
+        return "HELD"
+    if new != text:
+        rd.write_text(new, encoding="utf-8")
+    data = rd.read_bytes()
+    mf = Path(folder) / "manifest.jsonl"
+    if mf.is_file():
+        out = []
+        for line in mf.read_text(encoding="utf-8").splitlines():
+            row = json.loads(line) if line.strip() else None
+            if isinstance(row, dict) and (row.get("path") == "README.md" or row.get("file") == "README.md"):
+                if "bytes" in row:
+                    row["bytes"] = len(data)
+                if row.get("sha256") is not None:
+                    row["sha256"] = hashlib.sha256(data).hexdigest()
+                if row.get("blob_id") is not None:
+                    row["blob_id"] = git_blob_id(data)
+                line = json.dumps(row, ensure_ascii=False)
+            out.append(line)
+        mf.write_text("\n".join(out) + "\n", encoding="utf-8")
+    return "CARDED"
 
 
 def add_config(readme_text, name, path):
@@ -73,8 +129,10 @@ def do_upload_folder(job, tok):
     repo = job["repo"]
     if job.get("create"):
         api.create_repo(repo, repo_type="dataset", private=bool(job.get("private")), exist_ok=True)
+    card = card_folder_readme(job["folder"], repo)
     api.upload_folder(folder_path=job["folder"], repo_id=repo, repo_type="dataset",
-                      commit_message=job.get("commit_message") or f"publish {Path(job['folder']).name}")
+                      commit_message=job.get("commit_message") or f"publish {Path(job['folder']).name}",
+                      ignore_patterns=["README.md"] if card == "HELD" else None)
     n = sum(1 for p in Path(job["folder"]).rglob("*") if p.is_file())
     for spec in job.get("configs") or []:
         name, _, path = spec.partition("=")
@@ -84,7 +142,8 @@ def do_upload_folder(job, tok):
         if changed:
             api.upload_file(path_or_fileobj=new.encode(), path_in_repo="README.md", repo_id=repo,
                             repo_type="dataset", commit_message=f"pod loop: config {name}")
-    return f"UPLOADED {repo} <- {job['folder']} ({n} files, one commit)"
+    held = "; README HELD (cite_block.py not found; the live card is kept)" if card == "HELD" else ""
+    return f"UPLOADED {repo} <- {job['folder']} ({n} files, one commit){held}"
 
 
 def do_upload(job, tok):
@@ -94,13 +153,21 @@ def do_upload(job, tok):
     repo = job["repo"]
     if job.get("create"):
         api.create_repo(repo, repo_type="dataset", private=bool(job.get("private")), exist_ok=True)
-    api.upload_file(path_or_fileobj=job["file"], path_in_repo=job["path_in_repo"], repo_id=repo,
-                    repo_type="dataset", commit_message=f"pod loop: {job['path_in_repo']}")
+    if job["path_in_repo"] == "README.md":
+        new = carded(Path(job["file"]).read_text(encoding="utf-8"), repo)
+        if new is None:
+            return f"HELD {repo}/README.md: cite_block.py not found; the live card is kept"
+        api.upload_file(path_or_fileobj=new.encode(), path_in_repo="README.md", repo_id=repo,
+                        repo_type="dataset", commit_message="pod loop: README.md")
+    else:
+        api.upload_file(path_or_fileobj=job["file"], path_in_repo=job["path_in_repo"], repo_id=repo,
+                        repo_type="dataset", commit_message=f"pod loop: {job['path_in_repo']}")
     if job.get("readme_if_absent"):
         try:
             hf_hub_download(repo, "README.md", repo_type="dataset", token=tok)
         except HfHubHTTPError:
-            api.upload_file(path_or_fileobj=job["readme_if_absent"], path_in_repo="README.md",
+            first = Path(job["readme_if_absent"]).read_text(encoding="utf-8")
+            api.upload_file(path_or_fileobj=(carded(first, repo) or first).encode(), path_in_repo="README.md",
                             repo_id=repo, repo_type="dataset", commit_message="pod loop: initial README")
     if job.get("config_name"):
         local = hf_hub_download(repo, "README.md", repo_type="dataset", token=tok, force_download=True)

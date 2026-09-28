@@ -5,6 +5,12 @@ index.ots.json and, when present, verify.log (the output of `python3 verify.py`)
     render_evidence_index.py --out DIR
 """
 import argparse, collections, hashlib, json, pathlib
+import sys
+
+# The How-to-cite / corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026)
+# has ONE producer, scripts/hf/cite_block.py; this card passes through it so a rebuild keeps the block.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "hf"))
+from cite_block import apply as cite_apply  # noqa: E402
 
 
 
@@ -159,7 +165,7 @@ def render(out):
     R += measurement_chain_pointer()
     R.append("## Licence\n")
     R.append("Index data CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). verify.py and the build scripts Apache-2.0. Each indexed item keeps its own licence, stated per item; this index relicenses nothing.\n")
-    (out / "README.md").write_text("\n".join(R) + "\n")
+    (out / "README.md").write_text(cite_apply("\n".join(R) + "\n", "csoai/evidence-index"))
     print("rendered index.md (%d lines) README.md (%d lines)" % (len(L), len(R)))
 
 

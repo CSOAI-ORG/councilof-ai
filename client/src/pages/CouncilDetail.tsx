@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 /**
  * 33-Seat Council Detail Page
  * Comprehensive explanation of the designed multi-agent review system
@@ -11,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
 
 export default function CouncilDetail() {
-  useEffect(() => { document.title = "CouncilDetail | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}

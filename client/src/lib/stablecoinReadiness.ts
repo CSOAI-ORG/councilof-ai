@@ -129,3 +129,19 @@ export async function loadStablecoinReadiness(signal?: AbortSignal): Promise<Sta
   if (!isStablecoinReadiness(value)) throw new Error("readiness contract invalid");
   return value;
 }
+
+let sharedReadiness: Promise<StablecoinReadiness> | null = null;
+
+/**
+ * One fetch of the readiness ledger per page load, shared by every component that reads it (the
+ * catalog view and the corpus_relation block). A failed read is not cached, so a remount retries.
+ */
+export function loadStablecoinReadinessOnce(): Promise<StablecoinReadiness> {
+  if (!sharedReadiness) {
+    sharedReadiness = loadStablecoinReadiness().catch((reason: unknown) => {
+      sharedReadiness = null;
+      throw reason;
+    });
+  }
+  return sharedReadiness;
+}

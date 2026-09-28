@@ -39,6 +39,7 @@ import {
 import { railMode } from "../_x402_config";
 import { signPayload, canonicalBytes, sha256Hex } from "../../_lib/cardSign";
 import { DOCTRINE, normaliseEndpoint } from "../../_lib/measurementCapsule";
+import { FRESH_CAPSULE_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string };
 type Json = Record<string, unknown>;
@@ -62,8 +63,8 @@ const LIMITS = [
   "on-demand single read from one network location; not part of any signed batch until a later batch includes it",
   "declared surfaces read: the endpoint origin's /.well-known/mcp/server-card.json and /.well-known/mcp.json only",
 ];
-const DESCRIPTION =
-  "Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only — the endpoint's own discovery documents vs its initialize + tools/list answer. Returns CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id. Measurement, not endorsement; verification stays free.";
+// Canonical text: functions/api/x402-descriptions.json (fresh_capsule) — the one source every surface reads.
+const DESCRIPTION = FRESH_CAPSULE_DESCRIPTION;
 const READ_TIMEOUT_MS = 10_000;
 const READ_CAP_BYTES = 1 << 20;
 const PROTOCOL_REQUESTED = "2025-06-18";

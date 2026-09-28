@@ -1,10 +1,9 @@
-import {useState, useEffect } from "react";
+import {useState } from "react";
 import { ChevronDown, CheckCircle, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export default function UKAIBillCompliance() {
-  useEffect(() => { document.title = "UKAIBillCompliance | CSOAI"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const faqs = [

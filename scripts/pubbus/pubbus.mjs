@@ -7,6 +7,7 @@
  *   node scripts/pubbus/pubbus.mjs --dry-run       # everything except writing
  *   node scripts/pubbus/pubbus.mjs --index <file>  # use a local evidence index (csoai.evidence-index/0.1)
  *   node scripts/pubbus/pubbus.mjs --no-llms       # do not regenerate public/llms*.txt afterwards
+ *   node scripts/pubbus/pubbus.mjs --ld-only       # only (re)apply Dataset JSON-LD to published pages
  *
  * INPUT, in order: (1) the signed evidence index on Hugging Face, csoai/evidence-index index.json,
  * whose own signature is verified first; (2) a local index passed with --index; (3) otherwise the
@@ -26,6 +27,7 @@
  *
  * OUTPUTS (all derived; never hand-edit):
  *   public/evidence/<slug>/index.html, public/evidence/<slug>/<version>/index.html
+ *     (each carries schema.org Dataset JSON-LD + a Croissant link, scripts/pubbus/ld.mjs; --ld-only re-applies it alone)
  *   public/evidence/published-records.json             (read by scripts/llms-txt.mjs and /status)
  *   council-os/pubbus/indexnow-pending.txt              (the post-deploy step submits, then clears)
  *   council-os/pubbus/listing-updates.json              (402index / Harness X rows for NEW doors; never called here)
@@ -45,6 +47,7 @@ import {
   slugFor, foreignNumbers, parseHfResolve, hfResolve, parseJsonRaw,
 } from "./lib.mjs";
 import { renderVersionPage, renderSlugIndex, renderStateBlock } from "./render.mjs";
+import { applyLd, carryLd, datasetLicenses } from "./ld.mjs";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 export const KNOWN_DATASETS = [
@@ -285,6 +288,8 @@ export async function run(opts = {}) {
     return true;
   };
 
+  const readIf = (rel) => (fs.existsSync(P(rel)) ? fs.readFileSync(P(rel), "utf8") : null);
+
   let did = opts.didDoc;
   if (!did) {
     const d = await fetcher(DID_URL);
@@ -370,7 +375,7 @@ export async function run(opts = {}) {
       if (v?._html) {
         // Re-render with the FINAL state (a refusal above can change who is current).
         Object.assign(v, { state: mv.state, superseded_by: mv.superseded_by, superseded_by_page: entry.versions.find((x) => x.version === mv.superseded_by)?.page ?? null, superseded_reason: mv.superseded_reason });
-        if (writeIfChanged(rel, renderVersionPage(v))) changedPages.add(mv.page);
+        if (writeIfChanged(rel, carryLd(renderVersionPage(v), readIf(rel)))) changedPages.add(mv.page);
       } else if (before.get(key) !== `${mv.state}|${mv.superseded_by}`) {
         // An existing page whose state moved: replace only its state block.
         const abs = P(rel);
@@ -382,7 +387,17 @@ export async function run(opts = {}) {
         }
       }
     }
-    if (writeIfChanged(`public/evidence/${entry.slug}/index.html`, renderSlugIndex(entry))) changedPages.add(`/evidence/${entry.slug}/`);
+    const idxRel = `public/evidence/${entry.slug}/index.html`;
+    if (writeIfChanged(idxRel, carryLd(renderSlugIndex(entry), readIf(idxRel)))) changedPages.add(`/evidence/${entry.slug}/`);
+  }
+
+  // Dataset JSON-LD on every record page, every run (idempotent; a licence we could not read leaves the page as it is).
+  {
+    const entries = [...bySlug.values()];
+    const licenses = await datasetLicenses(fetcher, [...new Set(entries.map((e) => e.dataset))]);
+    const io = { exists: (rel) => fs.existsSync(P(rel)), read: (rel) => fs.readFileSync(P(rel), "utf8"), writeIfChanged };
+    for (const page of applyLd(entries, licenses, io)) changedPages.add(page);
+    report.ld_unread = [...licenses].filter(([, v]) => v === undefined).map(([k]) => k);
   }
 
   // Refusals are published too: an UNMEASURED or refused record is a first-class state.
@@ -461,10 +476,31 @@ function listingUpdates(P, writeIfChanged) {
   return pending["402index"].length + pending.harness_x.length;
 }
 
+/** Re-apply only the Dataset JSON-LD to pages already published (no resolution, no signatures, no IndexNow write). */
+export async function ldOnly(opts = {}) {
+  const repo = opts.repo ?? REPO;
+  const fetcher = opts.fetcher ?? httpFetcher;
+  const P = (rel) => path.join(repo, rel);
+  const writes = [];
+  const writeIfChanged = (rel, text) => {
+    const abs = P(rel);
+    if (fs.existsSync(abs) && fs.readFileSync(abs, "utf8") === text) return false;
+    writes.push(rel);
+    if (!opts.dryRun) fs.writeFileSync(abs, text);
+    return true;
+  };
+  const manifest = JSON.parse(fs.readFileSync(P(OUT.manifest), "utf8"));
+  const licenses = await datasetLicenses(fetcher, [...new Set(manifest.records.map((e) => e.dataset))]);
+  const changed = applyLd(manifest.records, licenses, { exists: (rel) => fs.existsSync(P(rel)), read: (rel) => fs.readFileSync(P(rel), "utf8"), writeIfChanged });
+  return { mode: "ld-only", licenses: Object.fromEntries(licenses), changed_pages: changed.map((p) => `${SITE}${p}`), writes };
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const argv = process.argv.slice(2);
   const arg = (f) => { const i = argv.indexOf(f); return i >= 0 ? argv[i + 1] : undefined; };
-  const rep = await run({ dryRun: argv.includes("--dry-run"), index: arg("--index"), noLlms: argv.includes("--no-llms") });
+  const rep = argv.includes("--ld-only")
+    ? await ldOnly({ dryRun: argv.includes("--dry-run") })
+    : await run({ dryRun: argv.includes("--dry-run"), index: arg("--index"), noLlms: argv.includes("--no-llms") });
   console.log(JSON.stringify(rep, null, 2));
   process.exit(rep.fatal ? 2 : 0);
 }

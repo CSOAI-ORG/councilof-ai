@@ -32,6 +32,7 @@ import {
   type X402Env,
 } from "./_x402";
 import { railMode } from "./_x402_config";
+import { POPULATION_DESCRIPTIONS } from "./_x402_descriptions";
 import { signPayload, canonicalBytes, sha256Hex } from "../_lib/cardSign";
 import { POPULATIONS, POPULATION_IDS, findPopulation, makeIo, toPreview, type Reading } from "./_population";
 
@@ -98,7 +99,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json(manifest, 200, { "x-csoai-rows-sha256": manifest.evidence.rows_sha256, "access-control-allow-headers": `content-type, ${EXPECTED_ROWS_HEADER}` });
   }
   const head = toPreview(reading);
-  const description = describe(entry, reading);
+  // The 402's description is the CANONICAL text (functions/api/x402-descriptions.json pop_<id>) — the
+  // bytes the manifest, llms.txt and the Bazaar extension's catalogue entry all carry (2026-09-28).
+  // The live reading (count, as_of, state) rides in csoai.reading_sentence and csoai.preview instead.
+  const liveSentence = describe(entry, reading);
+  const description = POPULATION_DESCRIPTIONS[entry.id] ?? liveSentence;
   const accepts = x402Accepts(env, resourceUrl, { ...SKU, description, productId: `csoai.product.population.${entry.id}` });
 
   const challenge = (notPaidReason: string, extra: { error?: string; csoai?: Record<string, unknown> } = {}) => {
@@ -134,6 +139,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         // Named `preview` because encodePaymentRequiredHeader drops csoai.preview from the header:
         // the 16 KiB header limit is what costs a door its listing, and a reading can be large.
         preview: head,
+        reading_sentence: liveSentence,
         never: ["a grade", "a rank", "a verdict about any row", "a paywall on the source artifact", "a certificate"],
         deliverable: `the ${entry.title} slice: ${reading.rows_unit || "the population rows verbatim from the artifact(s) in source[]"}, plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record`,
         free_preview: `${resourceUrl}?preview=1`,

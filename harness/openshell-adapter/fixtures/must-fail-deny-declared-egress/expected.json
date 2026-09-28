@@ -1,0 +1,11 @@
+{
+ "what": "Deny is declared (no rule names exfil.example or 198.51.100.7), the enforcer records a denial for exfil.example, yet a flow log outside the sandbox sees bytes leave for both. The adapter must return DIVERGENT (exit 1).",
+ "result": "DIVERGENT",
+ "exit": 1,
+ "enforcer_records_parsed": 3,
+ "rows": [
+  {"row": 1, "attempt_host": "pypi.example", "comparison": "HELD"},
+  {"row": 2, "attempt_host": "exfil.example", "comparison": "DIVERGED", "code": "ENFORCER_RECORD_CONTRADICTED_BY_WITNESS"},
+  {"row": 3, "attempt_host": "198.51.100.7", "comparison": "DIVERGED", "code": "EGRESS_WITHOUT_ENFORCER_RECORD"}
+ ]
+}

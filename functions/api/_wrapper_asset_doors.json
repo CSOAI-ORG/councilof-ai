@@ -1,0 +1,15 @@
+{
+  "schema": "csoai.wrapper-asset-doors/0.1",
+  "rule": "One x402 door per stablecoin the wrapper roster reads, at /api/wrapper/asset/<asset> (path-scoped, no query, so an index that lists only query-less URLs can list it). A door reads EVERY roster pair whose canonical symbol is `symbol`, live, and hands over one signed card per readable pair. `stablecoin_index_id` is the asset's id in the frozen stablecoin discovery index (public/interop/stablecoin-universe-2026-09/readiness.json); scripts/build_stablecoin_readiness.py reads this file to count asset-specific doors. A door is declared here only when the roster carries at least one pair of that symbol; the test pins both.",
+  "read_by": [
+    "functions/api/wrapper/asset/[asset].ts",
+    "functions/.well-known/x402.json.ts",
+    "functions/api/x402.ts",
+    "scripts/build_stablecoin_readiness.py"
+  ],
+  "doors": [
+    { "asset": "usdc", "symbol": "USDC", "stablecoin_index_id": "2" },
+    { "asset": "usdt", "symbol": "USDT", "stablecoin_index_id": "1" },
+    { "asset": "dai", "symbol": "DAI", "stablecoin_index_id": "5" }
+  ]
+}

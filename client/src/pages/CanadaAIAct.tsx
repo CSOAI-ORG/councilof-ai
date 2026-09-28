@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 /**
  * Canada AI Act Landing Page
  * Framework-specific landing page for Canadian AI regulation
@@ -7,7 +6,6 @@ import { useEffect } from "react";
 import { FrameworkLandingPage } from './FrameworkLandingPage';
 
 export default function CanadaAIActPage() {
-  useEffect(() => { document.title = "CanadaAIAct | CSOAI"; }, []);
   return (
     <FrameworkLandingPage
       frameworkId="canada-ai-act"

@@ -26,6 +26,11 @@ Doctrine: we measure; nothing here says a Space or agent is safe, good, or endor
 import argparse, base64, collections, datetime, gzip, hashlib, io, json, os, pathlib, re, subprocess, sys
 import urllib.request
 
+# The How-to-cite / corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026)
+# has ONE producer, scripts/hf/cite_block.py; the card below passes through it so a rebuild keeps the block.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "hf"))
+from cite_block import apply as cite_apply  # noqa: E402
+
 KINDS = {
     "hf": {"schema": "csoai.hf-mcp-spaces-census/0.1", "record_id": "hf-mcp-spaces-census-2026-09-25",
            "record_path": "/interop/hf-mcp-spaces-census-2026-09-25/record.json", "hf_repo": "csoai/hf-mcp-spaces-census"},
@@ -878,6 +883,7 @@ Rows in `data/cards.jsonl.gz` carry: {', '.join(A2A_PUBLIC_KEYS)}. They carry **
 
 Data: CC-BY-4.0. Cite as: Council of AI (CSOAI), *{'Hugging Face MCP Spaces census' if a.kind == 'hf' else 'A2A agent card census'}, measured read 2026-09-25*, {K['hf_repo']}.
 """
+    md = cite_apply(md, K["hf_repo"])
     (stage / "README.md").write_text(md)
     for n in ("record.json", "record.signed.json", "record.json.ots", "record.ots.json"):
         (stage / n).write_bytes((out / n).read_bytes())

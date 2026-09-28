@@ -52,14 +52,18 @@ export interface AxisScore {
   separation?: "SEPARATED" | "TIE" | "UNTESTED";
   separation_p?: number;      // McNemar exact p on discordant pairs (leader vs best base)
   separation_basis?: string;  // stated when the determination is not McNemar (e.g. Wilson-bound non-overlap)
+  separation_method?: string;
+  separation_evidence?: Record<string, unknown>;
   interval?: [number, number];   // Wilson 95% CI on the leader — present ONLY where the n is honestly independent
   fleet_mean?: number;        // mean accuracy across the measured fleet — the linear aggregator; absent where the fleet mean is not in the signed source
   fleet?: string;             // which fleet this axis was measured on, when NOT the 19-model board fleet
+  quotable_models?: string[];
+  quotable_note?: string;
   mean_harm?: number;         // (1 - item pass rate) x severity, fleet-level, mean — board-v2 axes only
   cvar05_harm?: number | null;   // mean of the WORST 5% of item harms — only where n>=100 (BV floor)
   macro_f1?: number;          // board-v2 axes only — never invented for living-stamp axes
   unparsed_rate?: number;     // board-v2 axes only
-  per_model?: Record<string, Record<string, number | null>>; // living-stamp axes: verbatim per-model rows
+  per_model?: Record<string, Record<string, number | boolean | null>>; // living-stamp axes: verbatim per-model rows
   status: "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
 
   // dataset is the frozen HF bank slug; it is resolved to dataset_url against
@@ -105,12 +109,14 @@ export interface AxisScore {
 
 // Pages nudge 2026-08-25T18:47Z — ensure measured_on.note TIE ships past sticky storm
 export const MEASURED_ON = {
-  model: "The 14 behavioural (model-comparison) axes: 19-model fleet (8 tuned council specialists + " +
-    "6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on " +
-    "the axis, never conflated with the board fleet. The 8 financial/domain axes are not a model " +
-    "comparison: they are measured as deterministic facts (issuer-account reads + public series), " +
-    "with no fleet, no leader and no accuracy.",
-  endpoint: "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
+  // model is DERIVED at serve time (gspc.ts → measuredOnModel in _gspc_power.ts) from the model ids
+  // in the published per-item rows. Until 2026-09-28 it was typed here as "19-model fleet (8 tuned
+  // council specialists + 6 base models + frontier cross-lab models)"; the rows hold 6 base models
+  // and 13 of our own fine-tunes and no other model. This placeholder is never served.
+  model: "DERIVED at serve time from the published per-item rows (see measuredOnModel in _gspc_power.ts)",
+  // "OpenRouter (cross-lab models)" removed 2026-09-28: no cross-lab model is in the 15,580 rows the
+  // behavioural axes are graded on (fleet counted by scripts/gspc_separation_from_rows.py --power).
+  endpoint: "A100 · local Ollama (board v2) · 3090 pod (jail)",
   date: "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
   grading: "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
   note: "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals " +

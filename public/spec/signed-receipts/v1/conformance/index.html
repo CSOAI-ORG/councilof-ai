@@ -5,6 +5,9 @@
 <title>Implement signed-receipts/v1 in 5 minutes — Council of AI</title>
 <meta name="description" content="Conformance vectors and a one-command runner for the signed-receipts/v1 A2A receipt format: 17 Ed25519 cases, 4 ML-DSA-65 interop cases, three result codes. PASS means your results match the vectors; it is not a certification.">
 <link rel="canonical" href="https://councilof.ai/spec/signed-receipts/v1/conformance/">
+<!--dataset-ld-->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Dataset","@id":"https://councilof.ai/spec/signed-receipts/v1/conformance/#dataset","name":"signed-receipts/v1 conformance vectors","description":"Conformance test vectors, reference results and one-command runners in Python and Node for the signed-receipts/v1 A2A receipt format, with a DID resolution fixture. PASS means an implementation's result for a case matches the expected result in vectors.json; it is not a certification, an endorsement or a conformity mark.","url":"https://councilof.ai/spec/signed-receipts/v1/conformance/","isAccessibleForFree":true,"creator":{"@type":"Organization","@id":"https://councilof.ai/#org","name":"Council of AI","url":"https://councilof.ai/"},"publisher":{"@type":"Organization","@id":"https://councilof.ai/#org","name":"Council of AI","url":"https://councilof.ai/"},"isPartOf":{"@type":"CreativeWork","name":"signed-receipts/v1 specification","url":"https://councilof.ai/spec/signed-receipts/"},"distribution":[{"@type":"DataDownload","name":"vectors.json","encodingFormat":"application/json","contentUrl":"https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json"},{"@type":"DataDownload","name":"reference-results.json","encodingFormat":"application/json","contentUrl":"https://councilof.ai/spec/signed-receipts/v1/conformance/reference-results.json"},{"@type":"DataDownload","name":"run.py","encodingFormat":"text/x-python","contentUrl":"https://councilof.ai/spec/signed-receipts/v1/conformance/run.py"},{"@type":"DataDownload","name":"run.mjs","encodingFormat":"text/javascript","contentUrl":"https://councilof.ai/spec/signed-receipts/v1/conformance/run.mjs"}],"dateModified":"2026-09-28","license":"https://www.apache.org/licenses/LICENSE-2.0"}</script>
+<!--/dataset-ld-->
 <style>
   :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e3e3e3;--acc:#0b5}
   @media (prefers-color-scheme:dark){:root{--fg:#e8e8e8;--bg:#111;--mut:#a5a5a5;--line:#2b2b2b;--acc:#4c9}}
@@ -36,7 +39,9 @@
   <h2>The steps</h2>
   <ol>
     <li>Read the receipt object and the verification rule in the <a href="/spec/signed-receipts/">specification</a>
-      (<a href="/spec/signed-receipts/v1/SPEC.md">SPEC.md</a>, draft 0.2). A receipt is JSON; its bytes are RFC 8785 (JCS);
+      (<a href="/spec/signed-receipts/v1/draft-0.3/SPEC.md">draft 0.3</a>, which withdraws the draft 0.2 erratum below and
+      makes the three results normative; draft 0.2 stays unchanged at <a href="/spec/signed-receipts/v1/SPEC.md">SPEC.md</a>).
+      A receipt is JSON; its bytes are RFC 8785 (JCS);
       <code>content_id</code> is the SHA-256 of the receipt minus <code>content_id</code> and <code>signature</code>; the
       Ed25519 signature covers the receipt minus <code>signature</code>.</li>
     <li>Download <a href="vectors.json"><code>vectors.json</code></a>. Each case gives a <code>receipt</code>, a
@@ -85,11 +90,11 @@
   0.3.1 (FractalAI, Apache-2.0); the expected results map that suite's own four checks onto the three codes. They are
   optional: a candidate that leaves them out gets SKIP, not FAIL. The runners here have no ML-DSA-65, so those cases were
   re-run with that package's own verifier (all four pass).</p>
-  <p>Not covered: time validity (draft 0.2 defines <code>issued_at</code> only, no validity window, so there are no
-  expiry cases), and issuer binding (draft 0.2 does not require <code>issuer</code> to equal the DID in
+  <p>Not covered: time validity (drafts 0.2 and 0.3 define <code>issued_at</code> only, no validity window, so there are no
+  expiry cases), and issuer binding (neither draft requires <code>issuer</code> to equal the DID in
   <code>kid</code>). One erratum in draft 0.2: its change notes say astral characters are escaped as surrogate pairs.
   RFC 8785 emits them as UTF-8, the reference now does too (corrected 28 September 2026), and case
-  <code>valid-jcs-edge</code> tests it.</p>
+  <code>valid-jcs-edge</code> tests it. Draft 0.3 withdraws that sentence (its section 0, item 1).</p>
 
   <h2>Files</h2>
   <ul>

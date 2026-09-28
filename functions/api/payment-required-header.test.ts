@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { offlineEvmFetch } from "./__fixtures__/offline-evm-fetch";
 import { onRequestGet as manifest } from "../.well-known/x402.json";
 import {
   PAYMENT_REQUIRED_HEADER_BUDGET,
@@ -85,9 +86,7 @@ describe("PAYMENT-REQUIRED header — the body's v2 requirements and extensions.
     })) as Response;
     const { resources } = (await r.json()) as { resources: { url: string }[] };
     expect(resources.length).toBeGreaterThanOrEqual(25);
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(async () =>
-      new Response(JSON.stringify({}), { status: 200, headers: { "content-type": "application/json" } }),
-    );
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockImplementation(offlineEvmFetch);
     const failures: string[] = [];
     let checked = 0;
     try {

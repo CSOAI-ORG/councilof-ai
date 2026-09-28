@@ -6,6 +6,11 @@ and stage the dataset tree (interop/... mirrors the site paths the records cite)
 """
 import json, pathlib, shutil, sys
 
+# The How-to-cite / corrections / verification block every public csoai/* card carries (lane L5, 28 Sep 2026)
+# has ONE producer, scripts/hf/cite_block.py; the card below passes through it so a rebuild keeps the block.
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1] / "hf"))
+from cite_block import apply as cite_apply  # noqa: E402
+
 HERE = pathlib.Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 INTER = REPO / "public" / "interop"
@@ -155,6 +160,7 @@ calendar attestations: a **pending calendar commitment, not a Bitcoin attestatio
 CC-BY-4.0. Cite as: Council of AI (CSOAI), *Cross-ledger supply, issuer-listed deployments, {date}*,
 csoai/cross-ledger-supply. Reader: `scripts/readers/cross_ledger_funds.py` (councilof-ai repository).
 """
+    md = cite_apply(md, "csoai/cross-ledger-supply")
     (stage / "README.md").write_text(md)
     print(f"README {len(md)} chars; staged {sum(1 for _ in stage.rglob('*') if _.is_file())} files")
 

@@ -1,0 +1,10 @@
+{
+ "what": "Control: identical policy and enforcer records to must-fail-deny-declared-egress; only the witness differs (nothing left for exfil.example). The adapter must return CONSISTENT (exit 0). If this control and the must-fail fixture ever agree, the check is vacuous.",
+ "result": "CONSISTENT",
+ "exit": 0,
+ "enforcer_records_parsed": 3,
+ "rows": [
+  {"row": 1, "attempt_host": "pypi.example", "comparison": "HELD"},
+  {"row": 2, "attempt_host": "exfil.example", "comparison": "HELD"}
+ ]
+}

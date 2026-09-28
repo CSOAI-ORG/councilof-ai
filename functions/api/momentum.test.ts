@@ -15,12 +15,13 @@ import {
   PYPI_FOOTPRINT,
   RECENT_SOURCES,
   SCHEMA,
+  SELF_READ_DATASETS,
   buildMomentum,
   floorCompact,
   type Deps,
   type Payload,
 } from "./_momentum";
-import { _resetMomentumCache, getMomentum, onRequestGet } from "./momentum";
+import { _resetMomentumCache, getMomentum, onRequestGet, onRequestHead } from "./momentum";
 
 const ORIGIN = "https://councilof.ai";
 const NOW = new Date("2026-09-27T09:00:00Z");
@@ -88,8 +89,10 @@ function upstream(): Record<string, Route> {
       }),
     "https://zenodo.org/api/records/22985467": () =>
       json({ doi: "10.5281/zenodo.22985467", metadata: { title: "Same model, same prompts, different answers", publication_date: "2026-09-27" }, stats: { unique_downloads: 0 } }),
-    "https://zenodo.org/api/records/22811459": () =>
-      json({ doi: "10.5281/zenodo.22811459", metadata: { title: "GSPC board snapshot", publication_date: "2026-09-15" }, stats: { unique_downloads: 220 } }),
+    // The concept record id: Zenodo 302s it to the newest version, which is what this mock answers with.
+    // A pin on one version (22811459, "22 axes") would not be answered here and the figure would be omitted.
+    "https://zenodo.org/api/records/22293340": () =>
+      json({ doi: "10.5281/zenodo.22987453", metadata: { title: "GSPC board snapshot", publication_date: "2026-09-22" }, stats: { unique_downloads: 223 } }),
     "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG/gspc&version=latest": () =>
       json({ servers: [{ server: { name: "io.github.CSOAI-ORG/gspc", version: "1.4.2" } }] }),
     "https://raw.githubusercontent.com/EthicalML/awesome-artificial-intelligence-regulation/master/README.md": () => text("# list\n* one\n* [Council of AI](https://councilof.ai) - measurement\n"),
@@ -106,6 +109,7 @@ function hfList(): Route {
     json([
       { id: "csoai/gspc-board", private: false, downloads: 1000, downloadsAllTime: 3000, likes: 2, tags: ["doi:10.57967/hf/10114"] },
       { id: "csoai/mcp-census", private: false, downloads: 500, downloadsAllTime: 600, likes: 1, tags: [] },
+      { id: "csoai/gspc-hub-cards", private: false, downloads: 700, downloadsAllTime: 900, likes: 0, tags: [] },
       { id: "csoai/secret", private: true, downloads: 99999, likes: 0, tags: [] },
     ]);
 }
@@ -154,7 +158,8 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
       "capsules",
       "pypi_all_time",
       "hf_datasets",
-      "hf_downloads_30d",
+      "hf_downloads_30d_self_read",
+      "hf_downloads_30d_other",
       "census_rows",
       "mcp_tools",
       "x402_doors",
@@ -178,8 +183,9 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(p.anchors.find((a) => a.id === "rekor")?.links?.[0].url).toBe("https://search.sigstore.dev/?logIndex=2968539665");
     expect(by.pypi_all_time.display).toBe("2.5M+");
     expect(by.pypi_all_time.lower_bound).toBe(true);
-    expect(by.hf_datasets.value).toBe(2); // the private dataset is not counted
-    expect(by.hf_downloads_30d.value).toBe(1500);
+    expect(by.hf_datasets.value).toBe(3); // the private dataset is not counted
+    expect(by.hf_downloads_30d_self_read.value).toBe(700);
+    expect(by.hf_downloads_30d_other.value).toBe(1500);
     expect(by.census_rows.value).toBe(1234); // one census dataset in the fake list
     expect(by.mcp_tools.value).toBe(3);
     expect(by.x402_doors.value).toBe(2);
@@ -215,7 +221,8 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(ids(p)).not.toContain("board");
     const p2 = await buildMomentum(deps({ __hf_list: () => json([]) }));
     expect(ids(p2)).not.toContain("hf_datasets");
-    expect(ids(p2)).not.toContain("hf_downloads_30d");
+    expect(ids(p2)).not.toContain("hf_downloads_30d_self_read");
+    expect(ids(p2)).not.toContain("hf_downloads_30d_other");
     expect(ids(p2)).not.toContain("census_rows");
     noZeros(p2);
   });
@@ -287,6 +294,45 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(p.recent.map((r) => r.date)).toEqual([...p.recent.map((r) => r.date)].sort().reverse());
   });
 
+  it("reports HF downloads as two figures that are never added, with our own share in 'other' UNMEASURED", async () => {
+    const p = await buildMomentum(deps());
+    const by = Object.fromEntries(p.figures.map((f) => [f.id, f]));
+    const self = by.hf_downloads_30d_self_read;
+    const other = by.hf_downloads_30d_other;
+    expect(self.value).toBe(700);
+    expect(other.value).toBe(1500);
+    // never added: no figure, detail or display anywhere carries the sum
+    expect(ids(p)).not.toContain("hf_downloads_30d");
+    expect(p.figures.map((f) => f.value)).not.toContain(2200);
+    const s = JSON.stringify(p);
+    expect(s).not.toMatch(/\b2,?200\b/);
+    // the named list travels with the payload, with its readers
+    expect(p.hf_self_read.datasets).toEqual(SELF_READ_DATASETS);
+    expect(p.hf_self_read.rule_url).toBe("https://huggingface.co/docs/hub/datasets-download-stats");
+    expect(self.detail).toMatch(/named in hf_self_read/);
+    // the self share inside "other" is UNMEASURED: a state with a reason, never a number
+    expect(other.unmeasured).toEqual([{ field: "self_share", state: "UNMEASURED", reason: expect.stringMatching(/cannot be\s+separated/) }]);
+    expect(other.detail).toMatch(/our own share inside is UNMEASURED/);
+    expect(self.unmeasured).toBeUndefined();
+    expect(p.rules.some((r) => /never added/.test(r) && /UNMEASURED/.test(r))).toBe(true);
+  });
+
+  it("omits a download group with no downloads, never shows it as 0", async () => {
+    const p = await buildMomentum(
+      deps({
+        __hf_list: () =>
+          json([
+            { id: "csoai/gspc-hub-cards", private: false, downloads: 0, downloadsAllTime: 5, likes: 0, tags: [] },
+            { id: "csoai/mcp-census", private: false, downloads: 40, downloadsAllTime: 60, likes: 0, tags: [] },
+          ]),
+      }),
+    );
+    expect(ids(p)).not.toContain("hf_downloads_30d_self_read");
+    expect(p.omitted.find((o) => o.id === "hf_downloads_30d_self_read")?.reason).toMatch(/no downloads/);
+    expect(p.figures.find((f) => f.id === "hf_downloads_30d_other")?.value).toBe(40);
+    noZeros(p);
+  });
+
   it("carries no price, no conformity wording and no membership label", async () => {
     const s = JSON.stringify(await buildMomentum(deps()));
     expect(s).not.toMatch(/[$€£]\s?\d/);
@@ -318,6 +364,22 @@ describe("GET /api/momentum handler", () => {
     expect(b.cache).toBe("HIT");
     const c = await getMomentum(d, 1_000_000 + 3_600_001);
     expect(c.cache).toBe("MISS");
+  });
+
+  it("answers HEAD with the GET's status and headers and no body (HEAD used to fall through to the /api 404)", async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = deps().fetch;
+    try {
+      for (const path of ["/api/momentum", "/api/momentum/"]) {
+        const res = await onRequestHead({ request: new Request(`${ORIGIN}${path}`, { method: "HEAD" }), waitUntil: () => {} } as any);
+        expect(res.status).toBe(200);
+        expect(res.headers.get("content-type")).toMatch(/application\/json/);
+        expect(res.headers.get("cache-control")).toMatch(/max-age=\d+/);
+        expect(res.body).toBeNull();
+      }
+    } finally {
+      globalThis.fetch = real;
+    }
   });
 
   it("answers JSON with cache-control from the Pages handler", async () => {

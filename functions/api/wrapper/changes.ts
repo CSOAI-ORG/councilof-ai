@@ -20,6 +20,7 @@ import {
   type X402Env,
 } from "../_x402";
 import { railMode } from "../_x402_config";
+import { WRAPPER_CHANGES_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string };
 
@@ -109,7 +110,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const preview = url.searchParams.get("preview") === "1";
 
   const resourceUrl = `${origin}/api/wrapper/changes?id=${encodeURIComponent(id || "<pair>")}`;
-  const description = `Delta of wrapped supply and escrow for ${id || "<pair>"} since the previous ledger snapshot. Returns per-field changes, not a rate or grade.`;
+  const description = WRAPPER_CHANGES_DESCRIPTION;
 
   // Validate ID format
   if (!id || !/^[a-z0-9.]+:[a-z]+$/.test(id)) {

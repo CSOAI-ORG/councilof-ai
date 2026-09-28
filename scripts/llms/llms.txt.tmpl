@@ -146,8 +146,18 @@ Each feed below is DERIVED from the artifact rather than appended by hand, so no
 - Newly signed measurement cards, each individually verifiable: https://councilof.ai/feeds/cards.xml
 - The public root (guid is the merkle_root, so a poll that finds the same bytes is not a change): https://councilof.ai/feeds/roots.xml
 - Evidence notes (dated, one citable page per note, each naming the artifacts behind it): https://councilof.ai/notes/ — RSS: https://councilof.ai/feeds/notes.xml
-- Every new dated record — corrections, the daily "what changed" note, evidence notes — in one feed: https://councilof.ai/feeds/records.xml (Atom) — JSON Feed: https://councilof.ai/feeds/records.json
+- Every new dated record — corrections, the daily "what changed" note, evidence notes, signed measurement records — in one feed: https://councilof.ai/feeds/records.xml (Atom) — JSON Feed: https://councilof.ai/feeds/records.json
 - Daily notes, generated from the signed daily measurement-capsule index and published only when its signature verifies: https://councilof.ai/notes/daily/
+
+## Dated measurement records and kits (one page or dataset each)
+
+Each record below is a dated account of what public sources state, with its sources hashed, signed with the board key and timestamped. None makes a claim about anyone's intent, about the causes of an incident, or about the security of any system, and none is a rating.
+
+- Disclosure lag, the Medicare statistics portal agent access: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json (board signature record.signed.json and OpenTimestamps proof record.json.ots beside it)
+- Disclosure lag, the Gemini cyber-evaluation access to outside systems: https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json (same three files)
+- signed-receipts/v1 conformance kit — test vectors, Python and Node runners, reference results; the reference verifier answers UNVERIFIABLE_KEY, never VALID, for a key it cannot resolve: https://councilof.ai/spec/signed-receipts/v1/conformance/ — vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json — specification https://councilof.ai/spec/signed-receipts/
+- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0; results against open-source decoders are held until each project's maintainers have seen them: https://huggingface.co/datasets/csoai/cobol-copybook-decoding-corpus
+- All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
 
 ## Measured entities, one page each
 
@@ -177,7 +187,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same {{MCP_TOOLS}}-tool contract as the HTTP door.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
-- Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] mirrors all {{MCP_TOOLS}} tools served by POST https://councilof.ai/mcp (exactly the {{MCP_FREE_WORD}} free tools plus {{MCP_PAID_WORD}} x402-metered evidence tools). Prefer the live POST /mcp tools/list over any stale duplicate listing (csoai/gspc).
+- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list ({{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard

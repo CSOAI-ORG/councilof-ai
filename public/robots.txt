@@ -63,6 +63,12 @@ Allow: /api/state
 Allow: /api/openapi.json
 Allow: /api/cards
 Allow: /api/root
+# The canonical RSS feed (named at the top of this file) is listed in the sitemap, but
+# `Disallow: /api/` told crawlers not to fetch it at all (found 2026-09-28).
+Allow: /api/feed.xml
+# Cloudflare rewrites every e-mail address into a /cdn-cgi/l/email-protection link that answers
+# 404 to a crawler; on 2026-09-28 that dead link sat on 303 of the 443 sitemap pages.
+Disallow: /cdn-cgi/
 Disallow: /*?*utm_
 Allow: /
 

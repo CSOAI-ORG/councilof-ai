@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link, useParams } from "wouter";
+import { setMetaDescription } from "@/lib/utils";
 import answers from "@/data/answers.json";
 
 type Answer = {
@@ -10,6 +11,27 @@ type Answer = {
 };
 
 const ITEMS = answers as Answer[];
+
+/** The explainer's own opening, cut at a sentence (else a word) boundary, at most 158 chars. */
+export function answerSnippet(body: string, max = 158): string {
+  const text = String(body || "").replace(/\s+/g, " ").trim();
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const stop = cut.lastIndexOf(". ");
+  if (stop >= 80) return cut.slice(0, stop + 1);
+  const at = cut.lastIndexOf(" ");
+  return cut.slice(0, at > 0 ? at : max).replace(/[,;:\s—–-]+$/, "") + "…";
+}
+
+/** A tab/SERP title: the headline up to its first " — " or ": " when the whole would overrun. */
+export function answerTitle(title: string, max = 60 - " | Council of AI".length): string {
+  if (title.length <= max) return title;
+  for (const sep of [" — ", ": ", " – ", " ("]) {
+    const i = title.indexOf(sep);
+    if (i >= 20 && i <= max) return title.slice(0, i);
+  }
+  return title;
+}
 
 export default function AnswersIndex() {
   useEffect(() => {
@@ -40,7 +62,11 @@ export function AnswerPage() {
   const params = useParams<{ slug: string }>();
   const a = ITEMS.find((x) => x.slug === params.slug);
   useEffect(() => {
-    document.title = a ? `${a.title} | Council of AI` : "Answer not found | Council of AI";
+    document.title = a ? `${answerTitle(a.title)} | Council of AI` : "Answer not found | Council of AI";
+    // Until 2026-09-28 every explainer shipped the route family's fallback description, built from
+    // the URL slug ("Answer: Iso42001 vs Etsi304223. A short explainer…"). The answer's own opening
+    // is the better search snippet and says nothing the page does not.
+    if (a) setMetaDescription(answerSnippet(a.body));
   }, [a]);
   if (!a) {
     return (

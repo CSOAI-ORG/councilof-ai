@@ -28,6 +28,7 @@ import {
 } from "../_x402";
 import { railMode } from "../_x402_config";
 import { SKUS } from "../_skus";
+import { PROVIDER_DIFF_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { REVENUE_KV?: KVNamespace };
 
@@ -63,7 +64,10 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
     },
   });
 
-async function getJson<T>(u: string): Promise<{ ok: true; body: T } | { ok: false; reason: string }> {
+async function getJson<T>(u: string): Promise<
+  | { ok: true; body: T; reason?: never }
+  | { ok: false; reason: string; body?: never }
+> {
   try {
     const r = await fetch(u);
     if (!r.ok) return { ok: false, reason: `HTTP ${r.status}` };
@@ -179,8 +183,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (!wantHistory) return json(free);
 
   // ── x402 door: the signed historical batch ──
-  const description =
-    "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.";
+  const description = PROVIDER_DIFF_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU_ID, tier: "history_batch", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
