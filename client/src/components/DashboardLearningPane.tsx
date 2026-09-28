@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import EvidenceFoundationsCourse from "./EvidenceFoundationsCourse";
 import { readLearningScenario, type LearningScenarioView } from "@/lib/learningScenarioReader";
 import {
   BookOpenCheck,
@@ -243,6 +244,10 @@ export default function DashboardLearningPane() {
             </span>
           </div>
         </header>
+
+        <div className="mt-8">
+          <EvidenceFoundationsCourse />
+        </div>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[minmax(15rem,0.72fr)_minmax(0,2fr)]">
           {/* Small screens: a compact selector instead of the full list, so the chosen lesson
