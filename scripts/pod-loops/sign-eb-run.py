@@ -17,7 +17,7 @@ payload={
  "n":d["n"],"n_unit":d["n_unit"],
  "as_of":d["as_of"],
  "artifact":{"path":"/interop/effect-binding-server-probe-2026-09-22.json","sha256":sha(art_b),
-             "mirror":"https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json"},
+             "mirror":"https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-22.json"},
  "raw_log":{"path":"public/interop/effect-binding-server-probe-2026-09-22.log.jsonl (HF mirror only)","sha256":sha(open(LOG,'rb').read())},
  "verdicts":{k:v[k] for k in ("BINDS","PARTIAL","DOES_NOT_BIND")},
  "tried":tp["tried"],"dropped":{k:oc[k] for k in ("UNCHECKABLE","UNREACHABLE","NO_TOOLS","NO_READONLY_TOOL")},

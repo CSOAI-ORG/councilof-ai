@@ -312,13 +312,19 @@ const EXISTING = [
   // (client/src/pages/Corrections.tsx), so no rule here — the bare→slash canonicaliser is derived.
   "/stack                  /stack/index.json        308",
   "/stack/                 /stack/index.json        308",
-  // 2026-09-22 owner decision — two trees leave the Pages upload and are served from the HF mirror
+  // 2026-09-22 owner decision — trees that leave the Pages upload are served by 302 from Hugging Face
   // (scripts/deploy-exclusions.json + scripts/drop-proofs-from-dist.mjs refuse to drop anything not
-  // listed here): proofs/ (3,993 .ots, the 20,000-file cap) and the axis-23 run artifact, whose bytes
-  // are sha256-pinned inside its signed companion and list third-party registry names the brand gate
+  // listed here): proofs/ (the 20,000-file cap) and the axis-23 run artifact, whose bytes are
+  // sha256-pinned inside its signed companion and list third-party registry names the brand gate
   // refuses on this surface. The companion (the board row's evidence_url) stays on-site.
-  "/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json  302",
-  "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat  302",
+  // 2026-09-28 owner decision — cards/ follows (the root of 28 Sep built 20,042 files), and all three
+  // move from csoai/councilof-ai-mirror (which also carried full-history bundles) to the public
+  // csoai/councilof-ai-evidence, which holds only these files. scripts/pod-loops/evidence_sync.py
+  // makes the dataset byte-equal to the build before every deploy and holds the deploy otherwise.
+  // /cards/card_index.json (above) is an exact rule, so it still wins over the /cards/* splat.
+  "/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-22.json  302",
+  "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302",
+  "/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302",
 ];
 
 const STOREFRONT = [

@@ -5,7 +5,7 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 14/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 15/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
@@ -191,7 +191,7 @@
 /coming/                /honesty/                308
 /stack                  /stack/index.json        308
 /stack/                 /stack/index.json        308
-/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json  302
+/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-22.json  302
 
 # --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---
 /honesty  /honesty/  308
@@ -707,7 +707,8 @@
 # --- static asset trees: served directly, never routed to the app ---
 /sov-space/*    /gspc-arena             308
 /widget/*               /dashboard?tab=learn         308
-/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat  302
+/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302
+/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302
 /benchmarks/*  /benchmarks/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200

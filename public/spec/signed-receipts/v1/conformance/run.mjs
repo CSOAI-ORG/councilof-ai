@@ -148,7 +148,7 @@ async function main() {
   const args = process.argv.slice(2);
   const vi = args.indexOf("--vectors");
   const vectorsSrc = vi >= 0 ? args[vi + 1] : DEFAULT_VECTORS;
-  const rest = args.filter((a, i) => i !== vi && i !== vi + 1);
+  const rest = vi >= 0 ? args.filter((_, i) => i !== vi && i !== vi + 1) : args;
   if (!rest.length) {
     console.log("usage: node run.mjs <candidate-results.json | URL> | --self | --emit  [--vectors <path | URL>]");
     process.exit(2);
