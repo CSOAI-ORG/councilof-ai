@@ -56,6 +56,7 @@ import { parseRenderRequest, validateOfflineOrigin, allowOfflineRequest, snapsho
  * routes.
  */
 import { chromium } from "playwright";
+import { prerenderBrowserOptions } from "./surface/prerender-browser.mjs";
 import http from "node:http";
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync, copyFileSync } from "node:fs";
 import { join, extname, dirname } from "node:path";
@@ -643,7 +644,7 @@ async function relaunchBrowser(seenGen) {
   relaunching = (async () => {
     relaunches++;
     try { await browser.close(); } catch {}
-    browser = await chromium.launch();
+    browser = await chromium.launch(prerenderBrowserOptions());
     browserGen++;
     const pid = findBrowserPid();
     console.log(`\n!!  browser was closed from OUTSIDE this run (someone's machine-wide kill). ` +
@@ -843,7 +844,7 @@ async function worker(id) {
   try { await page.close(); } catch {}
 }
 try {
-  browser = await chromium.launch();
+  browser = await chromium.launch(prerenderBrowserOptions());
   const browserPid = findBrowserPid();
   // Printed so a supervising wrapper can scope any kill to THIS run's own processes.
   console.log(`run: node pid ${process.pid} · browser pid ${browserPid ?? "unknown"} · ` +
