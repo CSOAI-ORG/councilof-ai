@@ -374,7 +374,7 @@ export default function MeasuredModels() {
           Measured models
         </h1>
         <p className="mt-3 max-w-3xl text-base text-gray-700">
-          Every model we have run against the signed card set, ranked by how much of it we actually
+          Every model we have run against the signed card set, listed by how much of it we actually
           measured. Each filled cell is one model on one axis on one date, recorded in a file
           stamped so that anyone can confirm offline that it has not been edited since. Most cells
           are empty, and the empty ones are shown.
