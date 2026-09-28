@@ -567,6 +567,9 @@ const MACHINE_PATHS = [
   ["/eat-flywheel.json", "daily", "0.5"],
   ["/layer0-distribution.json", "daily", "0.5"],
   ["/layer0-drive-through.json", "daily", "0.5"],
+  // signed-receipts/v1 conformance kit (28 Sep): the golden vectors a third-party verifier is run against.
+  // Its page, /spec/signed-receipts/v1/conformance/, is a static public/*.html and is collected below.
+  ["/spec/signed-receipts/v1/conformance/vectors.json", "weekly", "0.6"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
