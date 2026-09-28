@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { axisRunEvidence } from "./runEvidence";
+import { accuracyCell } from "@/lib/axisCells";
 export { axisRunEvidence } from "./runEvidence";
 
 /**
@@ -167,7 +168,7 @@ function StatusChip({ a }: { a: Axis }) {
     );
   }
   return (
-    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-slate-500">
+    <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-slate-700">
       {a.status || "UNMEASURED"}
     </span>
   );
@@ -179,6 +180,15 @@ function figure(a: Axis): string {
   if (isFacts(a)) return "facts";
   return "UNMEASURED";
 }
+
+/**
+ * A MEASURED model-comparison axis with no public leader score (the leader was our own
+ * model, or has no signed per-model card). figure() used to fall through to "UNMEASURED"
+ * here, so the row read "UNMEASURED … MEASURED" — a run exists, and the cell denied it.
+ * lib/axisCells names this fourth state; the terminal now uses the same reading.
+ */
+const isNoPublicLeader = (a: Axis): boolean =>
+  !isMeasuredModelAxis(a) && !isFacts(a) && accuracyCell(a).state === "no-public-leader";
 
 function ModelRankings({
   axis,
@@ -210,7 +220,7 @@ function ModelRankings({
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead>
-            <tr className="border-b border-slate-200 font-mono text-[9px] uppercase tracking-wider text-slate-400">
+            <tr className="border-b border-slate-200 font-mono text-[9px] uppercase tracking-wider text-slate-600">
               <th className="py-1 pr-2 font-medium">#</th>
               <th className="py-1 pr-2 font-medium">Model</th>
               <th className="py-1 pr-2 text-right font-medium">Win-rate</th>
@@ -222,7 +232,7 @@ function ModelRankings({
           <tbody className="font-mono text-[11px] tabular-nums text-slate-700">
             {top.map((m, i) => (
               <tr key={m.model} className="border-b border-slate-100 last:border-0">
-                <td className="py-1 pr-2 text-slate-400">{i + 1}</td>
+                <td className="py-1 pr-2 text-slate-600">{i + 1}</td>
                 <td className="py-1 pr-2 font-sans text-[11px] font-medium text-slate-900">
                   {m.model}
                   {i === 0 && separated && (
@@ -277,13 +287,13 @@ export function AxisDrilldown({
       <div className="mb-3 grid gap-x-6 gap-y-1 text-[11px] sm:grid-cols-2">
         {a.leader && (
           <div>
-            <span className="font-mono uppercase tracking-wide text-slate-400">Leader </span>
+            <span className="font-mono uppercase tracking-wide text-slate-600">Leader </span>
             <span className="font-medium text-slate-900">{a.leader}</span>
           </div>
         )}
         {typeof a.n === "number" && (
           <div>
-            <span className="font-mono uppercase tracking-wide text-slate-400">n </span>
+            <span className="font-mono uppercase tracking-wide text-slate-600">n </span>
             <span className="font-mono tabular-nums text-slate-700">{a.n}</span>
             {Array.isArray(a.interval) && (
               <span className="ml-2 font-mono text-slate-500">{ivText(a.interval)}</span>
@@ -292,13 +302,13 @@ export function AxisDrilldown({
         )}
         {typeof a.fleet_mean === "number" && (
           <div>
-            <span className="font-mono uppercase tracking-wide text-slate-400">Fleet mean </span>
+            <span className="font-mono uppercase tracking-wide text-slate-600">Fleet mean </span>
             <span className="font-mono tabular-nums text-slate-700">{pct(a.fleet_mean)}</span>
           </div>
         )}
         {a.separation && (
           <div>
-            <span className="font-mono uppercase tracking-wide text-slate-400">Separation </span>
+            <span className="font-mono uppercase tracking-wide text-slate-600">Separation </span>
             <span className="font-mono text-slate-700">
               {a.separation}
               {typeof a.separation_p === "number" ? ` (p=${a.separation_p})` : ""}
@@ -341,7 +351,7 @@ export function AxisDrilldown({
             <a href={runEvidence.href} className="font-mono font-semibold text-emerald-700 hover:underline">
               {runEvidence.label} →
             </a>
-            <span className="font-mono text-slate-400">{runEvidence.detail}</span>
+            <span className="font-mono text-slate-600">{runEvidence.detail}</span>
           </span>
         )}
         {isFacts(a) && !runEvidence && (
@@ -352,7 +362,7 @@ export function AxisDrilldown({
             <a href="/gspc-verify" className="font-mono font-semibold text-emerald-700 hover:underline">
               Verify signed card{cardCount === 1 ? "" : "s"} →
             </a>
-            <span className="font-mono text-slate-400">
+            <span className="font-mono text-slate-600">
               {cardCount} signed card{cardCount === 1 ? "" : "s"} for this axis
             </span>
           </span>
@@ -423,7 +433,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search axis or model — e.g. governance, mistral, qwen…"
-          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-[12px] text-slate-800 placeholder:text-slate-400 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+          className="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-[12px] text-slate-800 placeholder:text-slate-500 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
           aria-label="Search the GSPC board by axis or model"
         />
       </div>
@@ -434,18 +444,23 @@ export default function GspcTerminal({ className }: { className?: string }) {
           GET /api/gspc UNREACHABLE. One board — when it cannot be read, nothing is shown in its place.
         </div>
       ) : board.state === "loading" ? (
-        <div className="px-4 py-10 text-center font-mono text-[12px] text-slate-400">LOADING · GET /api/gspc</div>
+        <div className="px-4 py-10 text-center font-mono text-[12px] text-slate-500">LOADING · GET /api/gspc</div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="relative overflow-x-auto">
+          {/* At 390px this board read n=237 as "2/3/7" down three lines, "UNME/ASUR/ED" and
+              "governanc/e": auto table layout crushed columns to one glyph. The whole-word sizing
+              for tables inside a scroller now lives once in styles/index.css. Bench is dropped
+              below sm: it is repeated in the row's drill-down and the axis deep-dive, and the
+              columns that remain fit a phone without scrolling. */}
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="border-b border-slate-200 font-mono text-[9px] uppercase tracking-wider text-slate-400">
-                <th className="px-4 py-2 font-medium">Axis</th>
-                <th className="px-2 py-2 font-medium">Bench</th>
+              <tr className="border-b border-slate-200 font-mono text-[9px] uppercase tracking-wider text-slate-600">
+                <th className="py-2 pl-4 pr-2 font-medium">Axis</th>
+                <th className="hidden px-2 py-2 font-medium sm:table-cell">Bench</th>
                 <th className="px-2 py-2 text-right font-medium">Figure</th>
                 <th className="px-2 py-2 text-right font-medium">n</th>
                 <th className="px-2 py-2 font-medium">Status</th>
-                <th className="px-4 py-2 text-right font-medium" aria-hidden />
+                <th className="py-2 pl-1 pr-3 text-right font-medium sm:px-4" aria-hidden />
               </tr>
             </thead>
             <tbody>
@@ -458,24 +473,28 @@ export default function GspcTerminal({ className }: { className?: string }) {
                       onClick={() => setOpen(isOpen ? null : a.axis)}
                       className={`cursor-pointer border-b border-slate-100 transition-colors hover:bg-emerald-50/50 ${isOpen ? "bg-emerald-50/60" : ""}`}
                     >
-                      <td className="px-4 py-2.5 text-[12px] font-semibold text-slate-900">{a.axis}</td>
-                      <td className="px-2 py-2.5 text-[11px] text-slate-500">{a.bench || a.task || "—"}</td>
+                      <td className="py-2.5 pl-4 pr-2 text-[12px] font-semibold text-slate-900">{a.axis}</td>
+                      <td className="hidden px-2 py-2.5 text-[11px] text-slate-600 sm:table-cell">{a.bench || a.task || "—"}</td>
                       <td className="px-2 py-2.5 text-right font-mono text-[12px] tabular-nums">
                         {isMeasuredModelAxis(a) ? (
-                          <span className="font-semibold text-emerald-800">{figure(a)}</span>
+                          <span className="whitespace-nowrap font-semibold text-emerald-800">{figure(a)}</span>
                         ) : isFacts(a) ? (
                           <span className="text-sky-700">facts</span>
+                        ) : isNoPublicLeader(a) ? (
+                          <span className="font-sans text-[11px] text-slate-600" title={accuracyCell(a).title}>
+                            no public score
+                          </span>
                         ) : (
-                          <span className="text-slate-400">UNMEASURED</span>
+                          <span className="text-slate-500">UNMEASURED</span>
                         )}
                       </td>
-                      <td className="px-2 py-2.5 text-right font-mono text-[11px] tabular-nums text-slate-600">
+                      <td className="whitespace-nowrap px-2 py-2.5 text-right font-mono text-[11px] tabular-nums text-slate-600">
                         {typeof a.n === "number" && a.n > 0 ? a.n : "—"}
                       </td>
                       <td className="px-2 py-2.5">
                         <StatusChip a={a} />
                       </td>
-                      <td className="px-4 py-2.5 text-right font-mono text-[10px] text-slate-400">
+                      <td className="py-2.5 pl-1 pr-3 text-right font-mono text-[10px] text-slate-500 sm:px-4">
                         {canDrill ? (isOpen ? "▾" : "▸") : ""}
                       </td>
                     </tr>
@@ -491,7 +510,7 @@ export default function GspcTerminal({ className }: { className?: string }) {
               })}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center font-mono text-[11px] text-slate-400">
+                  <td colSpan={6} className="px-4 py-8 text-center font-mono text-[11px] text-slate-500">
                     No axis or model matches “{q}”.
                   </td>
                 </tr>
