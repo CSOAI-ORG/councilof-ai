@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 import { onRequestGet as manifest, offerFor } from "./x402.json";
+import signals from "../../public/signals/_index.json";
+import rootJson from "../../public/root.json";
+import cardIndex from "../../public/signed/card_index.json";
 
 /**
  * /.well-known/x402.json MUST AGREE WITH EVERY LIVE 402, field for field, for every resource.
@@ -41,7 +44,20 @@ export function paymentDrift(listing: Accept | undefined, challenge: Accept | un
   return out;
 }
 
-const ENV = { X402_PROMO_NOW: "2026-09-26T00:00:00Z" };
+const FEED_ASSETS: Record<string, unknown> = {
+  "/signals/_index.json": signals,
+  "/root.json": rootJson,
+  "/signed/card_index.json": cardIndex,
+};
+const ENV = {
+  X402_PROMO_NOW: "2026-09-26T00:00:00Z",
+  ASSETS: { fetch: async (request: Request) => {
+    const body = FEED_ASSETS[new URL(request.url).pathname];
+    return body === undefined
+      ? new Response("not in deterministic test assets", { status: 404 })
+      : new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } });
+  } },
+};
 const ORIGIN = "https://councilof.ai";
 const moduleFor = (pathname: string) => `../api${pathname.replace(/^\/api/, "")}`;
 

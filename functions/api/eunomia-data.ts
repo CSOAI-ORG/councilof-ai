@@ -63,11 +63,20 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
   // function directly with the same environment. The published endpoints remain
   // independently readable; these are local transport paths, not new evidence.
   const sourceFetch = async (sourceUrl: string, init?: RequestInit): Promise<Response> => {
-    if (!env.ASSETS) return fetch(sourceUrl, init);
-    if (new URL(sourceUrl).pathname === "/api/fines") {
-      return buildFinesResponse(env);
+    if (env.ASSETS) {
+      if (new URL(sourceUrl).pathname === "/api/fines") return buildFinesResponse(env);
+      return env.ASSETS.fetch(new Request(sourceUrl, init));
     }
-    return env.ASSETS.fetch(new Request(sourceUrl, init));
+    // On the production apex the Pages ASSETS binding is not guaranteed to be present.
+    // A same-origin subrequest can re-enter Functions, so read the identical public bytes
+    // through the project's production Pages alias instead. Release readback compares the
+    // alias and apex bytes; manifest sources retain both canonical and transport URLs.
+    if (origin === "https://councilof.ai") {
+      const target = new URL(sourceUrl);
+      const alias = new URL(target.pathname + target.search, "https://councilof-ai.pages.dev");
+      return fetch(alias.toString(), init);
+    }
+    return fetch(sourceUrl, init);
   };
   const [signals, fines, root, cardIndex] = await Promise.all([
     readFeedSource<{ signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`,"signals",sourceFetch),

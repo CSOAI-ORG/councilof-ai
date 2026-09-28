@@ -5,7 +5,7 @@ export const EXPECTED_FEED_HEADER='x-csoai-expected-feed-sha256';
 export const SOURCE_CAP=2_000_000;
 export const FEED_SOURCES={signals:'/signals/_index.json',first_fine_watch:'/api/fines',root:'/root.json',card_index:'/signed/card_index.json'} as const;
 export type SourceName=keyof typeof FEED_SOURCES;
-export type SourceRead<T=Record<string,unknown>>={ok:true;body:T;response_sha256:string;response_bytes:number}|{ok:false;reason:string};
+export type SourceRead<T=Record<string,unknown>>={ok:true;body:T;response_sha256:string;response_bytes:number;transport_url:string}|{ok:false;reason:string};
 export type Reads=Record<SourceName,SourceRead>;
 export function expectedFeedDigest(r:Request):string|null{
  const value=r.headers.get(EXPECTED_FEED_HEADER);
@@ -46,7 +46,7 @@ export async function readFeedSource<T=Record<string,unknown>>(url:string,name:S
   const raw=new Uint8Array(size);let at=0;for(const part of chunks){raw.set(part,at);at+=part.byteLength;}
   const body=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw));const issue=sourceShapeIssue(name,body);
   if(issue)return {ok:false,reason:issue};
-  return {ok:true,body:body as T,response_sha256:await sha256Hex(raw),response_bytes:raw.length};
+  return {ok:true,body:body as T,response_sha256:await sha256Hex(raw),response_bytes:raw.length,transport_url:r.url||url};
  }catch(e){return {ok:false,reason:e instanceof Error&&e.message==='SOURCE_BYTE_CAP'?'Source exceeds byte budget':'Source read, JSON parsing or transport was uncheckable'};}
  finally{clearTimeout(timer);}
 }
@@ -60,7 +60,7 @@ export async function makeFeedManifest(reads:Reads,origin:string){
  const blocks=feedBlocks(reads);const bytes=canonicalBytes(blocks);const digest=await sha256Hex(bytes);
  return {schema:FEED_MANIFEST_SCHEMA,resource:origin+'/api/eunomia-data?feed=1',manifest_url:origin+'/api/eunomia-data?manifest=1',free:true,settlement_attempted:false,
   coverage:{required_blocks:Object.keys(FEED_SOURCES),complete_assembly:true,source_truth_verified:false},
-  sources:await Promise.all((Object.keys(FEED_SOURCES) as SourceName[]).map(async name=>{const r=reads[name] as Extract<SourceRead,{ok:true}>;return {name,url:origin+FEED_SOURCES[name],as_of:sourceDate(r.body),response_sha256:r.response_sha256,response_bytes:r.response_bytes,block_sha256:await sha256Hex(canonicalBytes(r.body))};})),
+  sources:await Promise.all((Object.keys(FEED_SOURCES) as SourceName[]).map(async name=>{const r=reads[name] as Extract<SourceRead,{ok:true}>;return {name,url:origin+FEED_SOURCES[name],transport_url:r.transport_url,as_of:sourceDate(r.body),response_sha256:r.response_sha256,response_bytes:r.response_bytes,block_sha256:await sha256Hex(canonicalBytes(r.body))};})),
   evidence:{blocks_sha256:digest,blocks_bytes:bytes.length,digest_algorithm:'SHA-256',hash_covers:'payload.blocks',canonicalization:'csoai.card-v0.canonicalBytes/1: recursively sorted object keys, JSON.stringify, UTF-8; retain array order',signature_state:'NOT_CREATED_BY_MANIFEST'},
   pinning:{request_header:EXPECTED_FEED_HEADER,value:digest,mismatch_http_status:409,checked_before_facilitator:true,optional_for_legacy_clients:true},
   claim_boundary:{proves:['Digests identify the assembled block contents and the individual retrieved source responses.'],does_not_prove:['Source claims are true or freshly measured.','Signatures within blocks have been verified by this manifest.','The separate payment receipt signs the request query or delivered contents.','Payment, token transfer, finality or customer acceptance.']},

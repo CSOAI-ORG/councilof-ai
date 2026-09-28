@@ -37,6 +37,22 @@ describe('manifest and delivery',()=>{
  it('browser preflight has no source/payment work',async()=>{const r=await (onRequestOptions as any)({});expect(r.status).toBe(204);expect(r.headers.get('access-control-allow-headers')).toContain('x-csoai-expected-feed-sha256');expect(h.sources).not.toHaveBeenCalled();expect(h.pay).not.toHaveBeenCalled();});
 });
 describe('Pages-local source transport',()=>{
+ it('production apex falls back to the same Pages project when ASSETS is absent',async()=>{
+  h.sources.mockImplementation(async(u:string)=>{
+   const x=new URL(u);
+   expect(x.origin).toBe('https://councilof-ai.pages.dev');
+   const response=new Response(JSON.stringify(data[x.pathname]),{headers:{'content-type':'application/json'}});
+   Object.defineProperty(response,'url',{value:u});
+   return response;
+  });
+  const r=await call('?manifest=1');
+  expect(r.status).toBe(200);
+  const b:any=await r.json();
+  expect(b.coverage.complete_assembly).toBe(true);
+  expect(b.sources.every((x:any)=>x.url.startsWith(ORIGIN))).toBe(true);
+  expect(b.sources.every((x:any)=>x.transport_url.startsWith('https://councilof-ai.pages.dev/'))).toBe(true);
+  expect(h.sources).toHaveBeenCalledTimes(4);
+ });
  it('reads static files through ASSETS and fines through the free function',async()=>{
   h.sources.mockRejectedValue(new Error('public self-fetch disabled'));
   const assets={fetch:vi.fn(async(r:Request)=>new Response(JSON.stringify(data[new URL(r.url).pathname]),{headers:{'content-type':'application/json'}}))};
