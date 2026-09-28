@@ -25,9 +25,11 @@ import {
   type X402Env,
 } from "./_x402";
 import { railMode } from "./_x402_config";
+import { onRequestGet as finesGet } from "./fines";
 import { readFeedSource, expectedFeedDigest, missingFeedSources, feedBlocks, makeFeedManifest, requestRecord, feedJson, EXPECTED_FEED_HEADER, type Reads } from "./_eunomia_delivery";
 
-type Env = X402Env & { REVENUE_KV?: KVNamespace };
+type AssetFetcher = { fetch: (request: Request | string) => Promise<Response> };
+type Env = X402Env & { REVENUE_KV?: KVNamespace; ASSETS?: AssetFetcher };
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -35,7 +37,8 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "access-control-allow-origin": "*", ...extraHeaders },
   });
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const { request, env } = context;
   const url = new URL(request.url);
   const origin = url.origin;
   // `?x402=1` is the legacy probe flag (public/interop/x402-challenge); keep it as a synonym.
@@ -46,12 +49,26 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const wantFeed = url.searchParams.get("feed") === "1" || url.searchParams.get("x402") === "1";
   const resourceUrl = new URL("/api/eunomia-data?feed=1", origin).toString();
 
-  // The streams — read, never typed. A stream that cannot be read says so; it is never a 0.
+  // The streams — read, never typed. Static bytes use the Pages ASSETS binding when
+  // available, so this function does not self-fetch through the public zone. /api/fines is
+  // invoked in-process. readFeedSource still hashes the exact response bytes it consumed.
+  const staticFetch = async (input: Request | string, init?: RequestInit) =>
+    env.ASSETS ? env.ASSETS.fetch(input) : fetch(input, init);
+  const finesFetch = async (_input: Request | string, _init?: RequestInit) => {
+    const response = await finesGet({
+      ...context,
+      request: new Request(`${origin}/api/fines`, { headers: { accept: "application/json" } }),
+    } as never);
+    if (!(response instanceof Response)) {
+      return new Response("fines handler returned no response", { status: 503 });
+    }
+    return response;
+  };
   const [signals, fines, root, cardIndex] = await Promise.all([
-    readFeedSource<{ signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`,"signals"),
-    readFeedSource<Record<string, unknown>>(`${origin}/api/fines`,"first_fine_watch"),
-    readFeedSource<{ as_of?: string; card_count?: number; merkle_root?: string }>(`${origin}/root.json`,"root"),
-    readFeedSource<{ cards?: unknown[] }>(`${origin}/signed/card_index.json`,"card_index"),
+    readFeedSource<{ signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`,"signals",staticFetch),
+    readFeedSource<Record<string, unknown>>(`${origin}/api/fines`,"first_fine_watch",finesFetch),
+    readFeedSource<{ as_of?: string; card_count?: number; merkle_root?: string }>(`${origin}/root.json`,"root",staticFetch),
+    readFeedSource<{ cards?: unknown[] }>(`${origin}/signed/card_index.json`,"card_index",staticFetch),
   ]);
   const streams = {
     signals: signals.ok ? { rows: (signals.body.signals || []).length, schema: signals.body.schema || null, href: `${origin}/signals/_index.json`, each: `${origin}/signals/<axis>.signed.json` } : { rows: null, unreadable: signals.reason },

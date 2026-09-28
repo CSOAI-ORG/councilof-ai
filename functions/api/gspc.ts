@@ -719,7 +719,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         // functions/api/gspc.lid-truth.test.ts re-parses this string and asserts each
         // number against measured_axes / model_fleets / separated_leads / public_leader_count /
         // fact_runs, so a lid can never again read a count the payload contradicts.
-        lid: boardLidFromAxes(selected),
+        lid: boardLidFromAxes(selected as unknown as AxisScore[]),
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:
@@ -908,7 +908,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       };
       const livingBytes = canonical(livingPreimage);
       const livingSig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(livingBytes)));
-      measuredOn.living_stamp = {
+      (measuredOn as unknown as Record<string, unknown>).living_stamp = {
         schema: "csoai.gspc-living/0.2",
         gold_run: livingPreimage.gold_run,
         source: livingPreimage.source,
@@ -936,7 +936,7 @@ export const onRequestGet: PagesFunction = async (context) => {
           "`signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
         superseded: MEASURED_ON.living_stamp,
         tracked_as: "/api/corrections C-2026-0826-08",
-      } as typeof measuredOn.living_stamp;
+      };
 
       const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
       const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));

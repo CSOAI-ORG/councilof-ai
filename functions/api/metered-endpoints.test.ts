@@ -183,7 +183,9 @@ describe("Tier 3 — /api/eunomia-data", () => {
     const p = await (await feed(ctx("/api/eunomia-data"))).json();
     expect(p.kind).toBe("preview");
     expect(p.streams.signals.rows).toBe(2);
-    expect(p.streams.first_fine_watch.signed).toBe(true);
+    expect(p.streams.first_fine_watch.unreadable).toBeUndefined();
+    // No board signing key is bound in this unit-test environment: readable is not signed.
+    expect(p.streams.first_fine_watch.signed).toBe(false);
     expect(p.streams.root.card_count).toBe(50);
     const r = await feed(ctx("/api/eunomia-data?feed=1"));
     expect(r.status).toBe(402);

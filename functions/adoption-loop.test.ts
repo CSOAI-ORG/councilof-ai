@@ -10,7 +10,7 @@
  *     crawler and uncopyable by a reader.
  *   · no surface here may offer a "certified" badge.
  */
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as canonicalFeed } from "./api/feed.xml";
 import { onRequestGet as aliasFeed } from "./feed.xml";
 import { onRequestGet as canonicalCorrections } from "./feeds/corrections.xml";
@@ -19,7 +19,10 @@ import { onRequestGet as aliasRss } from "./rss.xml";
 import { onRequestGet as aliasAtom } from "./atom.xml";
 import { onRequestGet as badgeMd } from "./badge.md";
 
-const ctx = {} as never;
+const ctx = { request: new Request("https://councilof.ai/feed.xml") } as never;
+const offlineFeedSources = () =>
+  vi.stubGlobal("fetch", async () => new Response("not found", { status: 404 }));
+afterEach(() => vi.unstubAllGlobals());
 
 describe("/feed.xml, /rss.xml, and /atom.xml — aliases, not a second engine", () => {
   it("all conventional aliases are the very same handler as the canonical feed", () => {
@@ -30,6 +33,7 @@ describe("/feed.xml, /rss.xml, and /atom.xml — aliases, not a second engine", 
   });
 
   it("the aliases serve byte-identical RSS to the canonical route", async () => {
+    offlineFeedSources();
     const [a, b, c] = await Promise.all([
       (await aliasFeed(ctx)).text(),
       (await canonicalFeed(ctx)).text(),
@@ -43,6 +47,7 @@ describe("/feed.xml, /rss.xml, and /atom.xml — aliases, not a second engine", 
   });
 
   it("serves an RSS content type", async () => {
+    offlineFeedSources();
     const res = await aliasFeed(ctx);
     expect(res.headers.get("content-type") ?? "").toMatch(/xml/i);
   });
