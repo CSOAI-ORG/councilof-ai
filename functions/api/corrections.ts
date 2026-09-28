@@ -1683,9 +1683,26 @@ export type TimingEntry = {
   published_at?: unknown;
   timing_evidence?: unknown;
   /** The id of the correction candidate a producer wrote when it detected the change (e.g. claim-watch
-   *  history/candidate-queue.jsonl). Present only when detected_at/detected_by were stamped by that producer. */
+   *  history/candidate-queue.jsonl). Present only when detected_at/detected_by were stamped by that producer.
+   *  Copy candidate_id and detected_at from the queue line verbatim. detected_by stays a DETECTED_BY category
+   *  ("internal monitor" for claim-watch); the producer's own detected_by string goes in timing_evidence. */
   candidate_id?: unknown;
 };
+
+/**
+ * The shape a producer writes: cand-<sealed subject id, 16 hex>-<run id, YYYYMMDDTHHMMSSZ>-<claim id>
+ * (claim-watch write_candidate). A free-typed id ("cand-1", "manual") is not a producer stamp.
+ */
+export const CANDIDATE_ID = /^cand-[0-9a-f]{16}-(\d{8}T\d{6}Z)-[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+/** The run time a producer-shaped candidate id encodes (the candidate was written in that run), or null. */
+export function candidateRunAt(id: unknown): number | null {
+  const m = typeof id === "string" ? CANDIDATE_ID.exec(id) : null;
+  if (!m) return null;
+  const r = m[1];
+  const t = Date.parse(`${r.slice(0, 4)}-${r.slice(4, 6)}-${r.slice(6, 8)}T${r.slice(9, 11)}:${r.slice(11, 13)}:${r.slice(13, 15)}Z`);
+  return Number.isNaN(t) ? null : t;
+}
 
 type Window = { not_before?: string; not_after?: string; basis?: string };
 
@@ -1719,9 +1736,13 @@ export function timingProblems(e: TimingEntry): string[] {
   const t = timeToCorrect(e);
   if (t.kind !== "UNMEASURED" && t.seconds < 0) p.push(`${id}: published_at precedes detection`);
   if (e.candidate_id !== undefined) {
-    if (typeof e.candidate_id !== "string" || !e.candidate_id.trim()) p.push(`${id}: candidate_id is not a non-empty string`);
+    const runAt = candidateRunAt(e.candidate_id);
+    if (runAt === null)
+      p.push(`${id}: candidate_id ${JSON.stringify(e.candidate_id)} is not a producer-written id (cand-<16 hex>-<YYYYMMDDTHHMMSSZ>-<claim>)`);
     if (!(typeof d === "string" && ISO_DATETIME.test(d)))
       p.push(`${id}: candidate_id names a producer stamp, so detected_at must be that ISO datetime`);
+    else if (runAt !== null && Date.parse(d) > runAt)
+      p.push(`${id}: detected_at is after the run that wrote candidate ${String(e.candidate_id)}; copy it from the queue line, never by hand`);
     if (e.detected_by === UNRECORDED) p.push(`${id}: candidate_id names a producer stamp, so detected_by cannot be UNRECORDED`);
   }
   return p;
@@ -1736,9 +1757,11 @@ export type DetectionStamp = { kind: "PRODUCER_STAMPED"; candidate_id: string } 
  * says: a hand-recorded or evidence-backfilled time is not a producer stamp, and none is ever inferred.
  */
 export function detectionStamp(e: TimingEntry): DetectionStamp {
-  return typeof e.candidate_id === "string" && e.candidate_id.trim()
+  if (e.candidate_id === undefined || e.candidate_id === null || (typeof e.candidate_id === "string" && !e.candidate_id.trim()))
+    return { kind: "UNMEASURED", why: "no candidate_id: detection was not stamped by a producer at creation" };
+  return typeof e.candidate_id === "string" && candidateRunAt(e.candidate_id) !== null
     ? { kind: "PRODUCER_STAMPED", candidate_id: e.candidate_id }
-    : { kind: "UNMEASURED", why: "no candidate_id: detection was not stamped by a producer at creation" };
+    : { kind: "UNMEASURED", why: "candidate_id is not a producer-written id, so detection was not stamped by a producer" };
 }
 
 export type TimeToCorrect =
