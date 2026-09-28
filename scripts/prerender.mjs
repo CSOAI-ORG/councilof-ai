@@ -214,7 +214,7 @@ function discover() {
     "/measurements/x402-activity",
     // Disclosure-lag measurement (owner-approved 2026-09-27): figures render from the signed record.
     "/measurements/disclosure-lag/2026-09-medicare-agent",
-    // OWNER-APPROVE page (2026-09-28): prerendered with robots noindex; delisted from the sitemap.
+    // Second disclosure-lag measurement (owner-approved 2026-09-28): figures render from the signed record.
     "/measurements/disclosure-lag/2026-09-gemini-evaluation",
     // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
     "/verify-server",

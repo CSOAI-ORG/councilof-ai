@@ -3,12 +3,9 @@
  * outside organisations' systems by a Gemini model during a third-party cyber evaluation, and the whole days between its
  * dated events. Second record in the disclosure-lag series (the first: /measurements/disclosure-lag/2026-09-medicare-agent).
  *
- * OWNER-APPROVE. This page is built but NOT published: it is noindex (robots meta below, and an X-Robots-Tag rule for
- * this path in public/_headers), it is absent from the sitemap (DELISTED in scripts/generate-sitemap.mjs), and nothing
- * links to it. It shows a visible "draft" notice while OWNER_APPROVED is false.
- * To publish after the owner approves: set OWNER_APPROVED = true (drops the notice and the robots noindex), remove the
- * DELISTED line for this path in scripts/generate-sitemap.mjs and the rule in public/_headers, regenerate the sitemap,
- * and link it from wherever the owner chooses. Nothing else changes: the figures come from the signed record.
+ * Published on the owner's approval (28 Sep 2026): indexable, listed in the sitemap by scripts/generate-sitemap.mjs.
+ * It was built earlier the same day behind a draft gate (robots-excluded, delisted); that gate is removed, and the signed
+ * record is unchanged, so its `publication` field still reads PRIVATE (the page says so under "How to verify").
  *
  * Every date, quote and interval on this page is read from
  * client/src/data/measurements/disclosure-lag/2026-09-gemini-evaluation.json, byte-identical to the published
@@ -17,12 +14,9 @@
  */
 import { useEffect, type ReactNode } from "react";
 import { Link } from "wouter";
-import { Helmet } from "react-helmet-async";
 import { setMetaDescription } from "@/lib/utils";
 import PlainEmail from "@/components/PlainEmail";
 import REC from "@/data/measurements/disclosure-lag/2026-09-gemini-evaluation.json";
-
-export const OWNER_APPROVED = false;
 
 type Quote = [string, string];
 type Ev = { event: string; label: string; date: string | null; granularity: string | null; statement: string; quotes: Quote[]; note: string | null };
@@ -129,19 +123,9 @@ export default function DisclosureLagGeminiEvaluation() {
 
   return (
     <article data-testid="disclosure-lag-gemini-evaluation" className="mx-auto max-w-3xl px-4 py-12 sm:py-16">
-      {OWNER_APPROVED ? null : (
-        <Helmet>
-          <meta name="robots" content="noindex,nofollow,noarchive" />
-        </Helmet>
-      )}
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <span>Measurements</span> › <span>Disclosure lag</span>
       </nav>
-      {OWNER_APPROVED ? null : (
-        <p data-testid="owner-approve-notice" className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-amber-900">
-          Draft awaiting the owner’s approval. Not linked, not in the sitemap, and marked noindex.
-        </p>
-      )}
       <h1 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
         Disclosure lag: the Gemini cyber-evaluation access to three outside systems
       </h1>
@@ -292,6 +276,10 @@ export default function DisclosureLagGeminiEvaluation() {
           Pages change, so a later read may differ.
         </li>
         <li>Capsule id: <Code>{C.capsule_id}</Code>. {REC.capsule_id_rule}.</li>
+        <li>
+          The record’s <Code>publication</Code> field reads “{C.publication}” because the record was signed before the owner
+          approved publication. We publish the signed bytes unchanged rather than re-sign them.
+        </li>
       </UL>
 
       <H2 id="reply">Right of reply, objections and corrections</H2>

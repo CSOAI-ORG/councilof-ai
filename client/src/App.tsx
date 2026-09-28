@@ -203,7 +203,7 @@ const StateReport202609 = lazy(() => import("./pages/StateReport202609"));
 const X402Activity = lazy(() => import("./pages/X402Activity"));
 // /measurements/disclosure-lag/2026-09-medicare-agent — dated public record and the days between its events (owner-approved 2026-09-27).
 const DisclosureLagMedicareAgent = lazy(() => import("./pages/DisclosureLagMedicareAgent"));
-// OWNER-APPROVE: built, noindex, not in the sitemap, not linked, until the owner approves publication.
+// /measurements/disclosure-lag/2026-09-gemini-evaluation — second disclosure-lag record (owner-approved 2026-09-28).
 const DisclosureLagGeminiEvaluation = lazy(() => import("./pages/DisclosureLagGeminiEvaluation"));
 const VerifyServer = lazy(() => import("./pages/VerifyServer"));
 const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
