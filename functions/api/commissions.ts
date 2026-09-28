@@ -89,10 +89,14 @@ export async function listCommissions(kv: KVNamespace): Promise<{ commissions: O
           tx: typeof r.tx === "string" && r.tx ? r.tx : null,
           as_of: typeof r.as_of === "string" ? r.as_of : null,
           receipt_sha: k.name.slice("ras:".length),
+          origin:
+            r.origin === "OUTSIDE" || r.origin === "SELF_TEST" || r.origin === "ZERO_VALUE"
+              ? r.origin
+              : "UNCHECKABLE",
         });
       } catch { unreadable++; }
     }
-    cursor = page.list_complete ? undefined : page.cursor;
+    cursor = page.list_complete ? undefined : ("cursor" in page ? page.cursor : undefined);
   } while (cursor);
   out.sort((a, b) => String(a.as_of ?? "").localeCompare(String(b.as_of ?? "")));
   return { commissions: out, unreadable };

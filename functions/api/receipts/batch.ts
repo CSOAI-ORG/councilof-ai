@@ -67,7 +67,10 @@ const json = (body: unknown, status = 200, extra: Record<string, string> = {}) =
 
 const nowIso = () => new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 
-async function getJson<T>(u: string): Promise<{ ok: true; body: T } | { ok: false; reason: string }> {
+async function getJson<T>(u: string): Promise<
+  | { ok: true; body: T; reason?: never }
+  | { ok: false; reason: string; body?: never }
+> {
   try {
     const r = await fetch(u);
     if (!r.ok) return { ok: false, reason: `HTTP ${r.status}` };

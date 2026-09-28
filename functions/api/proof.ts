@@ -26,7 +26,9 @@ const json = (body: unknown, status = 200, extraHeaders: Record<string, string> 
     },
   });
 
-export const onRequestGet: PagesFunction = async ({ request, env }) => {
+type Env = X402Env & { ASSETS?: { fetch: typeof fetch } };
+
+export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
   const u = (p: string) => new URL(p, origin).toString();
@@ -51,7 +53,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   // The SAME accepts entry is advertised in the 402 and handed to the facilitator, so what the
   // client signed against is what gets verified and settled.
   const accepts = bundle
-    ? x402Accepts(env as X402Env, resourceUrl, { skuId: "issuance", tier: "reserve", description })
+    ? x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description })
     : [];
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -79,7 +81,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     },
   });
   const payment = bundle
-    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0], { bazaar })
+    ? await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar })
     : { ok: false, reason: "not a bundle request" };
   const paid = payment.ok;
 
@@ -252,7 +254,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
 // past card_count points into the duplicated region and was never signed.
   const proofRes = await fetch(u(`/proofs/${sha.slice(0, 16)}.json`));
   if (proofRes.ok) {
-    const body = await proofRes.json();
+    const body = (await proofRes.json()) as Record<string, any>;
     return json({
       schema: "csoai.public-root-proof/0.1",
       kind: "inclusion",
@@ -283,7 +285,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
       404,
     );
   }
-  const wrapped = await cardRes.json();
+  const wrapped = (await cardRes.json()) as Record<string, any>;
   return json({
     schema: "csoai.public-root-proof/0.1",
     kind: "inclusion",

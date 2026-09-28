@@ -235,7 +235,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         schema: "csoai.wrapper-parity/0.1",
         per: "pair-request",
         lid: CSOAI_LID,
-        never: ["rating", "guarantee", "verdict", "rank", "certificate", "reserve attestation"],
+        scope: "signed parity observation only",
         deliverable: "one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present",
         free_preview: `${resourceUrl}&preview=1`,
         free_ledger: `${origin}/interop/wrapped-asset-parity-2026-09-13.json`,
