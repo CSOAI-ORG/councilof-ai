@@ -33,7 +33,7 @@ export const DID_DOC = "public/.well-known/did.json";
 export const BOARD_KEY = "did:web:csoai.org#board-attestation-1";
 export const VOCAB = "https://councilof.ai/mechanism/vocab#";
 // The example the page links to. Chosen because it measures our own surface, not a third party's.
-export const EXAMPLE = { batch: "self_parity", capsule_id: "5a3699653fc5966ec973837168e2607ab3c72192eda0cb81a90161cde22fb6bd" };
+export const EXAMPLE = { batch: "self_parity", subject_id: "own:well-known:mcp-server-card:version_pin:csoai-gspc-mcp" };
 
 const fail = (m) => {
   throw new Error(`capsule-vc: ${m}`);
@@ -218,9 +218,27 @@ export function readBatch(batch, root = ROOT) {
 
 export const serialise = (o) => `${JSON.stringify(o, null, 2)}\n`;
 
-export function build(batch = EXAMPLE.batch, capsuleId = EXAMPLE.capsule_id, root = ROOT) {
+export function capsuleIdForSubject(files, subjectId) {
+  const matches = gunzipSync(files.gz)
+    .toString("utf8")
+    .split("\n")
+    .filter((l) => l.trim())
+    .map((l) => JSON.parse(l))
+    .filter((c) => c.subject_id === subjectId)
+    .map((c) => c.capsule_id);
+  if (matches.length !== 1) fail(`expected exactly one capsule for subject ${subjectId}, found ${matches.length}`);
+  return matches[0];
+}
+
+export function build(batch = EXAMPLE.batch, capsuleId, root = ROOT) {
   const didDoc = JSON.parse(readFileSync(join(root, DID_DOC), "utf8"));
-  return serialise(capsuleToVc({ batch, capsuleId, files: readBatch(batch, root), didDoc }));
+  const files = readBatch(batch, root);
+  const selected =
+    capsuleId ??
+    (batch === EXAMPLE.batch
+      ? capsuleIdForSubject(files, EXAMPLE.subject_id)
+      : fail(`--capsule is required when --batch is not ${EXAMPLE.batch}`));
+  return serialise(capsuleToVc({ batch, capsuleId: selected, files, didDoc }));
 }
 
 function main() {
