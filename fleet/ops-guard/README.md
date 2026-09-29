@@ -18,9 +18,9 @@ host. None of them sends anything, stops anything or retires anything.
 - **prod-canary**: two public reads, with no token.
   1. `POST https://councilof.ai/mcp/free` with `tools/list`, sending `Accept: application/json, text/event-stream`.
      It parses the SSE `data:` line and requires 12 tools.
-  2. `GET https://councilof.ai/root.json`, where `card_count` must be at least a floor. The floor is the live value
-     at install (310, as_of 2026-09-28T07:32:07Z). It rises to any higher value it observes and never falls by
-     itself. Lowering it is an owner edit of `~/lanes/state/prod-canary.json`.
+  2. `GET https://councilof.ai/root.json`, treating it as the rolling head it is. The historic high-water
+     `card_count` is retained, but a new root may churn by up to `MAX_ROOT_DROP_PCT` (default 5%) without a false
+     regression; a larger drop alerts. `as_of` must also be no older than `MAX_ROOT_AGE_H` (default 36h).
 
   A failed value check is logged as `REGRESSION` at once. A missing answer is logged as `ERROR` once, then as
   `REGRESSION` if it fails again on the next run. After a regression, the first passing run logs `RECOVERED`.
