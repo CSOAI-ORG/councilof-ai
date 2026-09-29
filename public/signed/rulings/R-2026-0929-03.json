@@ -1,0 +1,72 @@
+{
+  "schema": "csoai.ruling/0.1",
+  "reviewers": [],
+  "panel_state": "NOT_CONVENED",
+  "panel_n_eff": "UNMEASURED",
+  "panel_note": "panel not yet convened",
+  "binding": "OWNER",
+  "decider": "owner",
+  "supersedes": null,
+  "ruling_id": "R-2026-0929-03",
+  "class": "publication",
+  "question": "Are the four Zenodo DOIs minted (claim-maintenance v0.2, capsule companion, signed-receipts draft 0.3, board snapshot with corrections ledger)?",
+  "rule_applied": {
+    "ref": "Publication approval is a ruling-class question (proposal 4.B)",
+    "text": "Publishing an archival deposit is approved by ruling. The deposits carry what is already public; they add no measurement."
+  },
+  "evidence": [
+    {
+      "uri": "git:councilof-ai@2fe8f822cc0e4464a942262c0991c29227913b15:council-os/rulings/sources/owner-rulings-excerpt-20260929.md",
+      "sha256": "55ff6af78139035cea8c1a953b32edd93ea0e73e06744dee32d2c8699374dbee",
+      "of": "the committed byte-exact excerpt of the owner-rulings log this record quotes"
+    },
+    {
+      "uri": "git:councilof-ai@b4382609c308ee64668721e99b0af335ebf54eaa:public/spec/claim-maintenance/v0.2/deposit.json",
+      "sha256": "4db322c9e1a57a45360511b673b5eb4c63a6aef4cc29dcad7073327a0828bb1d",
+      "of": "deposit record, claim-maintenance v0.2 (10.5281/zenodo.23030504)"
+    },
+    {
+      "uri": "git:councilof-ai@b4382609c308ee64668721e99b0af335ebf54eaa:public/spec/signed-receipts/v1/draft-0.3/deposit.json",
+      "sha256": "7f1dd182793b8d84ad2d21cb2afd58cc7923c738d5a3e84ba4b91eaec2c4b08d",
+      "of": "deposit record, signed-receipts draft 0.3 (10.5281/zenodo.23030508)"
+    },
+    {
+      "uri": "git:councilof-ai@b4382609c308ee64668721e99b0af335ebf54eaa:CITATION.cff",
+      "sha256": "c946dd486105d1052eaea4844c844b44fa3760d895a42ada04846ecb1fab71ac",
+      "of": "citation file carrying all four DOIs"
+    }
+  ],
+  "rule_output": null,
+  "owner_ruling_verbatim": "yes mint all 4 DOIs",
+  "owner_ruling_source": {
+    "verbatim_status": "QUOTED",
+    "where": "owner-rulings log, entry 2026-09-29T05:20Z (LAND doi-mint-20260929); excerpt E4",
+    "entry_stamp": "2026-09-29T05:20Z"
+  },
+  "decided_at": "2026-09-29",
+  "decided_at_basis": "not after 2026-09-29T05:20Z, the log entry that records the approval",
+  "effective_from": "2026-09-29T05:20Z",
+  "correction_ref": null,
+  "effect": {
+    "writes_measured_state": false,
+    "writes_board": false,
+    "note": "Archival publication of existing material. Changes no measurement."
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "key_ed25519_hex": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    "attestation": {
+      "schema": "csoai.ruling-attestation/0.1",
+      "ruling_id": "R-2026-0929-03",
+      "class": "publication",
+      "decided_at": "2026-09-29",
+      "content_id": "0dba8f607b47c189ddb9873d54e8b1ac41042a7a5564f41feaf9198a0ea327d8",
+      "content_id_rule": "sha256(RFC 8785 JCS of the record without its 'signature' key)",
+      "record_canonical_bytes": 2212,
+      "signed_at": "2026-09-29T05:49:21Z"
+    },
+    "sig_ed25519": "b9de0be99b1fadf805762ecc2aa0ed5474a988b4a55cd06112c450455e4a06126cad55675e5a9031a4c51e387d3614d2942d93bc2c496af815ac24e36053f003",
+    "signer_auth": "pod-token",
+    "note": "Detached Ed25519 over signature.attestation (RFC 8785 JCS; identical to the board signer's sorted-key form for this ASCII object), issued through POST /api/board-sign on the pod caller token. The attestation commits to this record by content_id. The design note proposed a separate ruling key; none is minted, so this names the board key it was signed under."
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "csoai.rulings-index/0.1",
+  "read_only": true,
+  "count": 8,
+  "rulings": [
+    {
+      "ruling_id": "R-2026-0928-01",
+      "class": "other",
+      "decided_at": "2026-09-28T14:50Z",
+      "content_id": "736e13228ffa80ef87d660021a60085f93a8a94c09f8705b8fd1927c65c4fb8a",
+      "path": "/signed/rulings/R-2026-0928-01.json"
+    },
+    {
+      "ruling_id": "R-2026-0928-02",
+      "class": "naming",
+      "decided_at": "2026-09-28T15:30Z",
+      "content_id": "b1ca3c48728d6e04051a5960f41063612e320d8f95b3a763403fe49b366271aa",
+      "path": "/signed/rulings/R-2026-0928-02.json"
+    },
+    {
+      "ruling_id": "R-2026-0929-01",
+      "class": "publication",
+      "decided_at": "2026-09-29T04:00Z",
+      "content_id": "0d9be062f3b26fef48a8e42a94d1da7d929b12766e731164be967180009d6846",
+      "path": "/signed/rulings/R-2026-0929-01.json"
+    },
+    {
+      "ruling_id": "R-2026-0929-02",
+      "class": "other",
+      "decided_at": "2026-09-29",
+      "content_id": "7dc94b0de6835b83282132067c2d9751e88b1826c9fa19a4e542e4ac548436be",
+      "path": "/signed/rulings/R-2026-0929-02.json"
+    },
+    {
+      "ruling_id": "R-2026-0929-03",
+      "class": "publication",
+      "decided_at": "2026-09-29",
+      "content_id": "0dba8f607b47c189ddb9873d54e8b1ac41042a7a5564f41feaf9198a0ea327d8",
+      "path": "/signed/rulings/R-2026-0929-03.json"
+    },
+    {
+      "ruling_id": "R-2026-0929-04",
+      "class": "board-change",
+      "decided_at": "2026-09-29T06:40Z",
+      "content_id": "b3040810e17d49a9a922bd7d1672ef836462996400070f13c7e73393e590a341",
+      "path": "/signed/rulings/R-2026-0929-04.json"
+    },
+    {
+      "ruling_id": "R-2026-0929-05",
+      "class": "publication",
+      "decided_at": "UNRECORDED",
+      "content_id": "9df27ccd1429574a70612ae5686164aa1abc9182c198f4f0582ec62a7f6872fb",
+      "path": "/signed/rulings/R-2026-0929-05.json"
+    },
+    {
+      "ruling_id": "R-2026-0929-06",
+      "class": "other",
+      "decided_at": "2026-09-29",
+      "content_id": "4d1942d82f85f44c7bd2c33d91b446493f7f0b55d4d4c9345c6319fd15a39991",
+      "path": "/signed/rulings/R-2026-0929-06.json"
+    }
+  ],
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "key_ed25519_hex": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    "attestation": {
+      "schema": "csoai.rulings-index-attestation/0.1",
+      "content_id": "d928b346effc861f4900db955524c197d0540c948f163fa66eec042b669e0a16",
+      "content_id_rule": "sha256(RFC 8785 JCS of the index without its 'signature' key)",
+      "count": 8,
+      "latest_ruling_id": "R-2026-0929-06",
+      "signed_at": "2026-09-29T05:49:21Z"
+    },
+    "sig_ed25519": "9bfb1795f10b14b7fb0ece06295e8bfafdf2617f72e70f303801b86d4dabf16ed9da49476bc586baf3b4dbdbb317a23805aae42ae2b41b50094dc6f165bbb307",
+    "signer_auth": "pod-token"
+  }
+}
