@@ -1,0 +1,38 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Ledger head: withdrawals-mill-cards (served bytes, digest and count at one read)",
+ "as_of": "2026-09-29T17:09:12Z",
+ "source_urls": [
+  "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl"
+ ],
+ "payload": {
+  "kind": "csoai.ledger-head/0.1",
+  "ledger": "withdrawals-mill-cards",
+  "authority_for": "signed mill cards withdrawn from use",
+  "served_url": "https://councilof.ai/interop/mill-cards-signed/WITHDRAWN.jsonl",
+  "http_status": 200,
+  "not_a_grade": true,
+  "bytes_sha256": "6abd1c3e625a58bc6333d69750df9b7ea5234ec0984e926fb30909a1fb82322e",
+  "n_bytes": 51602,
+  "entries": 58,
+  "head_id": "e4f0e8f32085aa6bb78a828b56df789dc5a3098f5102ede048e3a8aab6645a16",
+  "by_correction": {
+   "C-2026-0914-01": 44,
+   "C-2026-0924-03": 14
+  },
+  "ids_sha256": "e2e40582542a77618176c86931f99778e9b359a1e56d9ec447488de327ead973",
+  "admitted": 0,
+  "admitted_rule": "a withdrawn card is never counted as an admitted measurement",
+  "state": "PROBED"
+ },
+ "sha256": "8d27f0476ca63d09853af800899c1c6d34cac4550ce89cdc29c9db06c9a2206d",
+ "unmeasured": [
+  "whether any entry is correct; this atom commits to the served bytes and their head only"
+ ],
+ "tags": [
+  "ledger-head",
+  "withdrawals-mill-cards",
+  "ledger-heads-2026-09"
+ ]
+}

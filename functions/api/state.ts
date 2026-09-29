@@ -79,6 +79,7 @@ import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
+import { ledgersBlock } from "./_ledgers";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -867,6 +868,10 @@ export const onRequestGet: PagesFunction = async () => {
         "DISCLOSURE, and only withheld_attested_by_published_parent is a PROOF. Four different " +
         "numbers about four different things — never substituted for one another.",
     },
+
+    // ── LEDGERS: one authority per record type, heads committed to the ONE root ──
+    // functions/api/_ledgers.ts; read by /corrections ("Ledgers and corrections").
+    ledgers: ledgersBlock(),
 
     // ── THE CLAIMS REGISTER ──────────────────────────────────────────────────
     claims_register: {

@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { latestCorrections, ledgerSignatureState, type CorrectionsDoc } from "@/lib/attestations";
+import LedgersPanel from "@/components/LedgersPanel";
 
 type Load = { state: "reading" } | { state: "ok"; doc: CorrectionsDoc } | { state: "failed"; reason: string };
 
@@ -58,6 +59,18 @@ export default function Corrections() {
         {doc?.policy ? <> · {doc.policy}</> : null}
       </p>
 
+      <nav aria-label="On this page" className="mt-4 text-sm">
+        <a className="underline underline-offset-4" href="#ledgers">Ledgers and corrections</a>{" · "}
+        <a className="underline underline-offset-4" href="#withdrawals">Withdrawals</a>{" · "}
+        <a className="underline underline-offset-4" href="#claim-maintenance">Claim-maintenance schedule</a>{" · "}
+        <a className="underline underline-offset-4" href="#verify">How to verify</a>{" · "}
+        <a className="underline underline-offset-4" href="#entries">Entries</a>
+      </nav>
+
+      <LedgersPanel />
+
+      <h2 id="entries" className="mt-12 scroll-mt-24 text-2xl font-bold tracking-tight text-slate-900">Entries, newest first</h2>
+
       {load.state === "failed" ? (
         <p className="mt-8 rounded border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900" role="status">
           The ledger could not be read on this load ({load.reason}). It is served at{" "}
@@ -65,7 +78,7 @@ export default function Corrections() {
         </p>
       ) : null}
 
-      <ol className="mt-8 space-y-4">
+      <ol className="mt-4 space-y-4" aria-label="Corrections, newest first">
         {load.state === "reading" ? <li className="text-sm text-slate-500">Reading the ledger…</li> : null}
         {load.state === "ok" && rows.length === 0 ? <li className="text-sm text-slate-500">No entries read.</li> : null}
         {rows.map((c) => (
@@ -73,6 +86,9 @@ export default function Corrections() {
             <div className="flex flex-wrap items-center gap-2">
               <code className="font-semibold">{c.id}</code>
               <time className="text-xs text-slate-500" dateTime={c.date}>{c.date}</time>
+              {/^WITHDRAWN/i.test(String(c.status ?? "")) ? (
+                <span className="rounded bg-slate-900 px-1.5 py-0.5 text-[11px] font-semibold uppercase text-white">Withdrawn</span>
+              ) : null}
               <span className="text-xs text-slate-700">{c.status}</span>
             </div>
             <dl className="mt-2 space-y-1.5 text-sm">

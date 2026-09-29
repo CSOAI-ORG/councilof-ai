@@ -43,6 +43,138 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0929-08",
+      "date": "2026-09-29",
+      "detected_at": "2026-09-29T15:47:56Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "The hub-mirror lane's zenodo/BLOCKED note (lanes pod): 'Zenodo blocked the account as spam during this bulk run (55 records published at about one every 15 s)', stamped 2026-09-29 15:47:56Z",
+        "GET https://zenodo.org/api/records/21991105 from the build pod at 2026-09-29T16:57:54Z: HTTP 410, tombstone note \"User was blocked\", removed_by system, removal_date 2026-09-29T15:48:02Z",
+        "GET https://zenodo.org/api/records/23030504 from the build pod at 2026-09-29T16:57:54Z: HTTP 410, tombstone note \"User was blocked\", removed_by system, removal_date 2026-09-29T15:47:56Z",
+        "GET https://zenodo.org/api/records/22901908 from the build pod at 2026-09-29T16:57:54Z: HTTP 410, tombstone note \"User was blocked\", removed_by system, removal_date 2026-09-29T16:05:49Z",
+        "published_at is UNRECORDED: the deploy that first serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "On 2026-09-29 a lane of ours published 55 dataset records to Zenodo at about one every 15 seconds. Zenodo's spam filter blocked the account at about 15:47Z and then removed every record on it, including records published weeks earlier that our pages, datasets and filings cite. They now answer HTTP 410 with the tombstone 'User was blocked'. Among them are 10.5281/zenodo.21991105 (the version record behind the board DOI 10.5281/zenodo.21991104 that GET /api/gspc cites), 10.5281/zenodo.23030504 and 10.5281/zenodo.22901908 (claim-maintenance specification v0.1). From that moment every page that links one of these DOIs as a place to read the record pointed a reader at a deleted record. The cause was our own conduct: a bulk run on a platform with spam heuristics.",
+      "how_caught": "The publishing lane saw the account blocked mid-run and wrote a BLOCKED lock beside its package; the record states were then read from the Zenodo API.",
+      "what_changed": "The bulk package is locked (zenodo/BLOCKED) and must not be re-run. Live citations are being relabelled as unavailable by the dead-DOI lane rather than linked as if they resolved; that relabelling is that lane's change, not this entry's. Restoration can only come from an appeal to Zenodo by the account owner. The content of the records is not lost: each was a copy of bytes we also publish on councilof.ai and the Hugging Face datasets. Rule adopted: at most 5 records per run on any scholarly or community hub, at least 120 s apart, and one record first on any new hub.",
+      "status": "IN_PROGRESS - records unavailable (HTTP 410) from 2026-09-29T15:47Z; bulk run locked; citations being relabelled; restoration needs the owner's appeal to Zenodo",
+      "reached_the_public": true,
+      "open_items": [
+        "Owner: appeal to Zenodo support (https://zenodo.org/support). Only the account owner can.",
+        "Until the records are restored, a DOI we cite for these records must be labelled unavailable, not linked as if it resolved.",
+        "Filings that cite these DOIs (for example the 26 Sep NIST comment) cannot be edited; the record of where the same bytes live is this entry."
+      ],
+      "evidence": [
+        "https://zenodo.org/api/records/21991105 (HTTP 410, tombstone 'User was blocked')",
+        "https://zenodo.org/api/records/23030504 (HTTP 410)",
+        "https://zenodo.org/api/records/22901908 (HTTP 410)",
+        "https://councilof.ai/api/gspc (cites 10.5281/zenodo.21991104)"
+      ]
+    },
+    {
+      "id": "C-2026-0929-07",
+      "date": "2026-09-29",
+      "detected_at": "2026-09-29",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "GET https://councilof.ai/api/claims/register read 2026-09-29: subjects list next_scheduled_read 2026-09-28T09:20:00Z with next_scheduled_read_state SCHEDULED and last_read no later than 2026-09-25",
+        "The 3090 pod scheduler that runs scripts/pod-loops/claim-watch-measure.sh (weekly, Mondays 09:20Z) was recorded stopped (state T) from about 2026-09-28T04:15Z in the 28 Sep machine map; no re-read receipt after 2026-09-25 is published",
+        "published_at is UNRECORDED: the deploy that first serves this entry had not happened when it was written"
+      ],
+      "what_was_wrong": "GET /api/claims/register listed subjects of the LIVE claim registries with a next scheduled read of 2026-09-28T09:20:00Z and the state SCHEDULED. The read did not happen. The only job that performed it, scripts/pod-loops/claim-watch-measure.sh on the 3090 pod's scheduler, had been stopped since about 04:15Z that morning, and no re-read after 2026-09-25 is published. A second job, the daily claim-watch on an always-on CSOAI-operated host, was running, but it watched one unpublished subject only. So the register promised a schedule that no running job kept, and two schedulers existed for one kind of work.",
+      "how_caught": "The 2026-09-29 ledgers consolidation compared each registry's scheduled dates with the jobs that actually run.",
+      "what_changed": "One scheduler now owns every claim-maintenance re-check: scripts/claims/maintenance_due.py, run inside the existing daily claim-watch job on an always-on CSOAI-operated host (cron 50 7 * * *). For every LIVE registry it schedules the read the registry's own signed bytes name, and day 7, day 30 and day 90 after the registry's created date. A date that passes with no completed run reads DUE_NOT_RUN; it is never dropped. Each re-check uses the specification's reference re-reader (scripts/claims/reread.mjs), and a moved digest counts as a change only if the same new digest is seen on a second read at least 605 s later. Every outcome is appended to a hash-linked record, published at https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json. A confirmed change writes a correction candidate with a producer-written id for review; it is never an allegation and never an entry by itself. The missed 2026-09-28 read and the day-7 check due on 2026-09-29 were run as a catch-up on 2026-09-29. The weekly 3090 loop is retired, not duplicated. /api/state and /corrections show the schedule with due, done and failed checks. The signed registries are not edited: their next_read_utc stays as signed, and the schedule states where it was missed.",
+      "status": "CORRECTED - one scheduler (the daily claim-watch job) runs every re-check, with day 7/30/90 and the registry's own dates; the missed read was run on 2026-09-29",
+      "reached_the_public": true,
+      "open_items": [
+        "GET /api/claims/register still derives next_scheduled_read from the signed registries, so it can show a passed date as SCHEDULED. The executed schedule is authoritative in /api/state ledgers.claim_maintenance."
+      ],
+      "evidence": [
+        "https://councilof.ai/api/claims/register",
+        "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json",
+        "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/outcomes.jsonl",
+        "scripts/claims/maintenance_due.py; scripts/claims/test_maintenance_due.py; scripts/pod-loops/claim-watch-measure.sh (retired)"
+      ]
+    },
+    {
+      "id": "C-2026-0929-06",
+      "date": "2026-09-29",
+      "detected_at": "2026-09-28",
+      "detected_by": "self-report",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "The corrections-watch README on its CSOAI-operated host carries a dated note 'Correction (2026-09-28)' stating the fault; the day of detection is that date and the time is UNRECORDED",
+        "published_at is UNRECORDED: the README note was uploaded with the 2026-09-28 run, but the upload commit that first carried the note was not recorded when this entry was written"
+      ],
+      "what_was_wrong": "The corrections-watch files dated 2026-09-23 and 2026-09-24, published on the Hugging Face evidence dataset, say signed: false with unsigned_reason 'The board signer runs as OIDC inside GitHub Actions, disabled account-wide.' That reason was not true when those files were written: from 2026-09-22 08:06Z the board signer also accepted the pod caller token, the path the job has used since 2026-09-28. The 2026-09-22 file, written at 06:00Z before that change, says the same and was accurate when written.",
+      "how_caught": "The lane that moved corrections-watch to an always-on CSOAI-operated host on 2026-09-28 and began signing it found the reason stale and wrote a correction note into the dataset README. The 2026-09-29 ledgers consolidation found that the note had never reached this ledger.",
+      "what_changed": "The three unsigned files stay byte-for-byte as uploaded and stay unsigned; the dataset README carries the correction. From 2026-09-28 every dated file is signed through POST /api/board-sign (did:web:csoai.org#board-attestation-1, pod caller token) and OpenTimestamps-stamped before upload. No file was uploaded for 2026-09-25, 2026-09-26 or 2026-09-27. The watch's own head is now a leaf of the daily public root (ledger corrections-watch).",
+      "status": "CORRECTED - a dated note in the dataset README; unsigned files kept as published; the job signs every file from 2026-09-28",
+      "reached_the_public": true,
+      "open_items": [
+        "corrections-watch measures other organisations' pages. It is not a record of our own corrections; only its own reporting faults, like this one, belong in this ledger."
+      ],
+      "evidence": [
+        "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/README.md",
+        "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/corrections-watch/latest.json"
+      ]
+    },
+    {
+      "id": "C-2026-0929-05",
+      "date": "2026-09-29",
+      "draft_id": "D-FIX-2026-0923-02",
+      "detected_at": "2026-09-23T05:25:00Z",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "first_observed_at 2026-09-23T05:25:00Z in council-os/corrections-drafts/D-FIX-2026-0923-02.json",
+        "Re-checked on 2026-09-29 against public/interop/receipts/receipt-chain.jsonl (35 links): the state_digest of 34 links reproduces as sha256(json.dumps(link minus state_digest, sort_keys=True)); link 0 (GENESIS) reproduces under none of the default, compact or non-ASCII compact encodings",
+        "The README sentence was introduced in commit 340b0ddb0; the exact first-served deploy is UNRECORDED"
+      ],
+      "what_was_wrong": "/interop/receipts/README.md, published beside the receipt chain, said the chain proves its entries 'have not been edited since the next one was written' and that a broken link 'means an entry was altered, removed or reordered'. The snippet it gives checks only that each link's prev_hash equals the previous link's state_digest. That catches a removed or reordered entry. It does not catch an edited entry whose state_digest was left alone: the snippet still reports 0 broken links. The rule that would catch it, how a link's own state_digest is computed, was not published on the page, and the first link's digest (GENESIS) cannot be recomputed from the published bytes under any rule we tried.",
+      "how_caught": "The fix-receipt lane noticed it on 2026-09-23 while reading the receipt chain it was asked to imitate, and drafted it (D-FIX-2026-0923-02). The draft sat unpromoted until the 2026-09-29 ledgers consolidation re-ran the check and found the page unchanged.",
+      "what_changed": "The README now says what the snippet shows: that no entry was removed or reordered after the next one was written. It no longer says entries were not edited. It publishes the rule that reproduces 34 of the 35 state_digest values, sha256 of json.dumps(link without state_digest, sort_keys=True) with Python's default separators, with a second snippet that recomputes each link's own digest, and it says that the GENESIS digest does not reproduce, so the first link is not checkable from the published bytes. The chain file and its .ots are not edited.",
+      "status": "CORRECTED - the page states what its check establishes and publishes the digest rule; the GENESIS digest stays unreproducible and is disclosed",
+      "reached_the_public": true,
+      "open_items": [
+        "The GENESIS link's state_digest is not recomputable from published bytes. The owning lane should publish how it was computed, or state that it cannot be."
+      ],
+      "evidence": [
+        "https://councilof.ai/interop/receipts/README.md",
+        "https://councilof.ai/interop/receipts/receipt-chain.jsonl",
+        "council-os/corrections-drafts/promoted/D-FIX-2026-0923-02.json"
+      ]
+    },
+    {
+      "id": "C-2026-0929-04",
+      "date": "2026-09-29",
+      "draft_id": "D-FIX-2026-0923-01",
+      "fix_receipt": "FR-2026-0923-01",
+      "detected_at": "2026-09-23T04:10:35Z",
+      "detected_by": "internal monitor",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "first_observed_at 2026-09-23T04:10:35Z in council-os/corrections-drafts/D-FIX-2026-0923-01.json: the digest gate's halt line in the engine log for slice 20260923T04",
+        "The before/after readings were published on 2026-09-23 as FR-2026-0923-01 in /interop/fix-receipts/fix-receipt-chain.jsonl; the correction itself stayed an unpromoted draft until this entry, so published_at is the deploy that first serves this entry and is UNRECORDED here"
+      ],
+      "what_was_wrong": "The frozen bank behind the jail axis reverted on the measurement machine to the 41-row placeholder file that C-2026-0922-02 had ruled out the day before (sha256 f0f31f9a556266ce6f06660440b5ff819a19ee0b7801d72e78020a1ceda3a66e). The digest gate that correction installed halted the hourly slice 20260923T04 at 04:10:35Z before a job was generated, so no wrong measurement was published. What was wrong is that the cured state did not hold for a day, and nothing in the estate said so unless someone read the log. The finding was drafted the same morning (D-FIX-2026-0923-01) and then sat unpromoted for six days, so the corrections ledger did not show it while the fix receipt that cites it was public.",
+      "how_caught": "The digest gate refused the bytes and wrote its reason to the engine log; the fix-receipt lane read the log on 2026-09-23. The six-day gap was caught on 2026-09-29 by the ledgers consolidation, which joined every fix receipt's corrections_ref to a ledger id and found this one pointing at a draft.",
+      "what_changed": "On 2026-09-23 the reverted file was moved aside as /workspace/banks-all/gspc-jail.jsonl.reverted-20260923T042152Z and the goldbank bytes were restored after checking their sha256 against the pinned digest 0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a (71 rows). Nothing was deleted and no signed byte was edited. FR-2026-0923-01 records the readings: before, slice 20260923T04 generated 0 jobs with the gate named as the reason; after, the same slice generated 14 pinned jobs at 04:57:48Z and slice 20260923T05 generated 14 more at 05:10:06Z. On 2026-09-29 the draft was promoted into this ledger unchanged in substance, and the draft file moved to council-os/corrections-drafts/promoted/. The fix-receipt chain is not edited: its corrections_ref still names the draft id, and this entry carries draft_id so the two join on an identifier.",
+      "status": "CORRECTED - bank restored under its pinned digest on 2026-09-23 (fix receipt FR-2026-0923-01, VERIFIED_FIX); promoted from draft D-FIX-2026-0923-01 on 2026-09-29; cause of the reversion not established",
+      "reached_the_public": false,
+      "open_items": [
+        "The cause of the reversion is not established, and no guard against a further recurrence was added. A gate that refuses bad bytes is not a path that cannot produce them.",
+        "As of 2026-09-23 no signed measurement card had been produced since 2026-09-23T03:24:19Z, for an unrelated reason (free space on the machine). That is a separate fault and is not this entry."
+      ],
+      "evidence": [
+        "https://councilof.ai/interop/fix-receipts/fix-receipt-chain.jsonl (receipt FR-2026-0923-01)",
+        "council-os/corrections-drafts/promoted/D-FIX-2026-0923-01.json",
+        "C-2026-0922-02 (the correction whose cured state did not hold)"
+      ]
+    },
+    {
       "id": "C-2026-0929-03",
       "date": "2026-09-29",
       "detected_at": "2026-09-29",
@@ -1572,20 +1704,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "a80fabc2e6c37534792c26296270840b80f650b479ec553fe660f92c9ce72cb7",
+    id: "1f003ed579ebb11fb2aa8ce158648446b16e9b7b436a81dac5585a4c0881f09e",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "ae5d27f346e4650df7c224d400d05d01480e684a13141ff0c4758f323ce0b29dd46339831651f7ad6cceb6b4b3ba7dfc72744eed52d69c463b5c7b2f6360b40d",
+    signature: "459a1c8bfa76e4062632070f2b57690072c5d94cf5fc42515bfbf76c1bf376ee43df70e2514e76e1d813a3de2e40eb1cce6981fb0d364df1b2e75caf1dd8350c",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "a80fabc2e6c37534792c26296270840b80f650b479ec553fe660f92c9ce72cb7",
+          "content_id": "1f003ed579ebb11fb2aa8ce158648446b16e9b7b436a81dac5585a4c0881f09e",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 80,
-          "latest_entry_id": "C-2026-0929-03",
-          "ledger_canonical_bytes": 180644,
+          "entries": 85,
+          "latest_entry_id": "C-2026-0929-08",
+          "ledger_canonical_bytes": 196260,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-29T07:46:58Z"
+          "signed_at": "2026-09-29T17:12:26Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
