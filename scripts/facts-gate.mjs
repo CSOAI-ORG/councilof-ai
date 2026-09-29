@@ -227,6 +227,15 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
     // carry X" against a 22-axis board is still a contradiction and still fails.
     if (n < liveCount && SUBSET_PREDICATE_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
+    // ENUMERATED subset (2026-09-29): "Separation on 7 axes (governance, safety, …, care)".
+    // The count names its members in the parenthesis that follows, so it is checkable on the
+    // spot: exempt only when the list holds exactly n comma-separated names and n is smaller
+    // than the board. The sentence is served live by /api/gspc and sits in the signed
+    // 2026-09-29 freeze, whose bytes are never edited to satisfy a regex.
+    if (n < liveCount) {
+      const en = /^\s*\(([^()]{1,400})\)/.exec(text.slice(COUNT_RE.lastIndex));
+      if (en && en[1].split(/\s*,\s*|\s+and\s+/).filter(Boolean).length === n) continue;
+    }
 
     // A published correction quotes the wrong number on purpose.
     if (CORRECTION_CTX.test(ctx(text, m.index, COUNT_RE.lastIndex, 300))) continue;
@@ -554,6 +563,8 @@ function selftestCases(N, M, U) {
   ["honest swept grammar", `<p>${N} axes · ${M} measured — every slot has a run behind it.</p>`, false],
   [`derived triple flattened ${N}·${M}·${U} axes · measured · unmeasured (reproduces 1804 deploy)`, `<p>Living GSPC · derived totals ${N}·${M}·${U} axes · measured · unmeasured — ${N} axis · ${M} measured</p>`, false],
   ["VIOLATION: a real 0-axes board-total claim still fails", "<p>The board currently carries 0 axes.</p>", true],
+  ["enumerated subset: the count names exactly its members", "<p>Separation on 3 axes (governance, safety, care) is computed from rows.</p>", false],
+  ["VIOLATION: enumerated list shorter than the count", "<p>Separation on 4 axes (governance, safety, care) is computed from rows.</p>", true],
   [`${M} measured is the observed measured count, not an overclaim`, `<p>The board publishes ${M} measured axes.</p>`, false],
   // "All N axes are measured" is honest only while no slot is declared-but-unmeasured.
   [`all ${N} axes are measured is ${U === 0 ? "honest" : "an OVERCLAIM"} (U = ${U})`, `<p>All ${N} axes are measured and signed.</p>`, U !== 0],
