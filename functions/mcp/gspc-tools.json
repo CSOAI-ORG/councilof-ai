@@ -149,12 +149,12 @@
     {
       "name": "verify_card",
       "title": "Verify a signed measurement card (free)",
-      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent \u2014 anyone can alter a body and sign it with a key they just generated \u2014 so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed \u2014 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+      "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent \u2014 anyone can alter a body and sign it with a key they just generated \u2014 so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed \u2014 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
       "inputSchema": {
         "type": "object",
         "properties": {
           "card": {
-            "description": "The signed card: an object, a JSON string, or a councilof.ai / csoai.org URL to one.",
+            "description": "The signed card: an object, a JSON string, a councilof.ai / csoai.org URL to one, or a 64-hex card id (resolved to https://councilof.ai/signed/cards/{id}.json).",
             "anyOf": [
               {
                 "type": "object"
@@ -243,6 +243,18 @@
           },
           "not_a_certification": {
             "type": "boolean"
+          },
+          "resolved_from": {
+            "type": "object",
+            "description": "Present when a 64-hex card id was passed: the id asked about and the URL fetched for it.",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            }
           }
         },
         "required": [
@@ -260,7 +272,7 @@
     {
       "name": "list_cards",
       "title": "List signed card index rows",
-      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to \u2014 never reconciled with \u2014 the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+      "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to \u2014 never reconciled with \u2014 the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -302,6 +314,13 @@
               "properties": {
                 "card": {
                   "type": "string"
+                },
+                "card_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The signed card body, https://councilof.ai/signed/cards/{id}.json. verify_card takes this URL or the bare card id."
                 },
                 "axis": {
                   "type": "string"
@@ -397,7 +416,7 @@
     {
       "name": "get_card",
       "title": "One public-root card-v0 leaf",
-      "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+      "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. States: VALID (fetched); NOT_IN_THIS_CORPUS (the id is in the signed card index, not the public root, so use verify_card on it); INVALID (in neither the live root nor the signed card index); UNCHECKABLE (a source could not be read). Not a GSPC measurement-card.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -416,7 +435,7 @@
         "properties": {
           "state": {
             "type": "string",
-            "description": "VALID, INVALID or UNCHECKABLE"
+            "description": "VALID, NOT_IN_THIS_CORPUS, INVALID or UNCHECKABLE"
           },
           "sha256": {
             "type": "string"
@@ -432,6 +451,21 @@
           "sig_ed25519": {},
           "not_gspc": {
             "type": "boolean"
+          },
+          "corpus": {
+            "type": "string",
+            "description": "With NOT_IN_THIS_CORPUS: the set the id belongs to (signed_card_index)."
+          },
+          "card_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "With NOT_IN_THIS_CORPUS: the signed card body to pass to verify_card."
+          },
+          "next": {
+            "type": "object",
+            "description": "With NOT_IN_THIS_CORPUS: the tool call that checks this id."
           }
         },
         "required": [

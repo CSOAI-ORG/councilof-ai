@@ -179,6 +179,22 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
   };
 }
 
+/** A 64-hex card id: the signed card index's `card` field, and a public-root leaf's sha256. */
+export const CARD_ID_RE = /^[0-9a-f]{64}$/;
+
+/** Where the signed body of a signed-card-index row is served: /signed/cards/{id}.json. */
+export function signedCardPath(id: string): string {
+  return `/signed/cards/${id}.json`;
+}
+
+/** Absolute card_url for an index row: the row's own card_url when it carries one. */
+export function signedCardUrl(origin: string, row: Record<string, unknown>): string | null {
+  const own = typeof row.card_url === "string" ? row.card_url : null;
+  if (own) return own.startsWith("/") ? `${origin}${own}` : own;
+  const id = typeof row.card === "string" ? row.card.toLowerCase() : "";
+  return CARD_ID_RE.test(id) ? `${origin}${signedCardPath(id)}` : null;
+}
+
 export async function listCardsTool(origin: string, args: Record<string, unknown>) {
   const out: Record<string, unknown> = {
     doctrine:
@@ -218,7 +234,10 @@ export async function listCardsTool(origin: string, args: Record<string, unknown
       .slice()
       .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
       .slice(0, limit)
-      .map((r) => ({ card: r.card, axis: r.axis, ts: r.ts, signed: r.signed }));
+      // card_url: the signed body, absolute, so the row can go straight into verify_card (which
+      // also takes the bare 64-hex id). Read from the row when the index carries it; otherwise
+      // the one path the index's own card_url rule uses.
+      .map((r) => ({ card: r.card, card_url: signedCardUrl(origin, r), axis: r.axis, ts: r.ts, signed: r.signed }));
   } catch (e) {
     out.index = unreachablePayload(origin, "/signed/card_index.json", e);
   }
@@ -312,11 +331,53 @@ export async function x402TrustTool(origin: string) {
   }
 }
 
+/**
+ * get_card reads ONE corpus: the public-root card-v0 leaves (corpus 2 of three in
+ * council-os/CARD-CORPORA.md). The signed card index (corpus 3) is a separate set with zero
+ * identifier overlap, and its ids are the ones the home page shows as "record id". Until
+ * 2026-09-28 a signed-index id reached the 404 branch here and was answered INVALID ("not a leaf
+ * of the live root") — a genuine, verifying card called invalid by our own tool (public audit fix
+ * #3). The corpora are never merged or reconciled here: a signed-index id is answered
+ * NOT_IN_THIS_CORPUS, a fact about which set it belongs to and not a verdict about the card, and
+ * the caller is pointed at verify_card. INVALID is kept for an id that is in neither set, and is
+ * only reached once both the signed index and the live root's inclusion endpoint have answered.
+ */
+export const NOT_IN_THIS_CORPUS_REASON = "This id is in the signed card index, not the public root. Use verify_card.";
+
+type Membership = { state: "IN" | "OUT" } | { state: "UNREACHABLE"; source: string; error: string };
+
+/** Is `id` a row of the signed card index? Reads /signed/card_index.json; never guesses. */
+export async function signedIndexMembership(origin: string, id: string): Promise<Membership & { row?: Record<string, unknown> }> {
+  try {
+    const idx = (await fetchOriginJson(origin, "/signed/card_index.json")) as Record<string, unknown>;
+    const rows = (Array.isArray(idx.cards) ? idx.cards : []) as Record<string, unknown>[];
+    const row = rows.find((r) => String(r.card ?? "").toLowerCase() === id);
+    return row ? { state: "IN", row } : { state: "OUT" };
+  } catch (e) {
+    return { state: "UNREACHABLE", source: `${origin}/signed/card_index.json`, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
+/** Is `sha` a leaf of the live public root? Reads /api/proof?sha= (the verify_inclusion source). */
+async function liveRootMembership(origin: string, sha: string): Promise<Membership> {
+  const path = `/api/proof?sha=${sha}`;
+  try {
+    const d = (await fetchOriginJson(origin, path)) as Record<string, unknown>;
+    if (d.kind === "inclusion") return { state: "IN" };
+    if (d.error === "not_found") return { state: "OUT" };
+    return { state: "UNREACHABLE", source: `${origin}${path}`, error: String(d.reason ?? "unexpected proof body") };
+  } catch (e) {
+    if (isHttp404(e)) return { state: "OUT" };
+    return { state: "UNREACHABLE", source: `${origin}${path}`, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 export async function getCardTool(origin: string, args: Record<string, unknown>) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
-  if (!/^[0-9a-f]{64}$/.test(sha)) {
+  if (!CARD_ID_RE.test(sha)) {
     return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
   }
+  const source = `${origin}/cards/${sha.slice(0, 16)}.json`;
   try {
     const d = (await fetchOriginJson(origin, `/cards/${sha.slice(0, 16)}.json`)) as Record<string, unknown>;
     const card = (d.card || d) as Record<string, unknown>;
@@ -324,7 +385,7 @@ export async function getCardTool(origin: string, args: Record<string, unknown>)
     return {
       state: match ? "VALID" : "INVALID",
       sha256: sha,
-      source: `${origin}/cards/${sha.slice(0, 16)}.json`,
+      source,
       surface: card.surface ?? null,
       unmeasured: card.unmeasured ?? [],
       sig_ed25519: card.sig_ed25519 ?? null,
@@ -332,18 +393,65 @@ export async function getCardTool(origin: string, args: Record<string, unknown>)
       not_gspc: true,
     };
   } catch (e) {
-    if (isHttp404(e)) {
-      return {
-        state: "INVALID",
-        sha256: sha,
-        reason: "not a leaf of the live root",
-        source: `${origin}/cards/${sha.slice(0, 16)}.json`,
-        not_a_certification: true,
-        not_gspc: true,
-      };
+    if (!isHttp404(e)) {
+      return { ...unreachablePayload(origin, `/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
     }
-    return { ...unreachablePayload(origin, `/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
   }
+  // No public-root wrapper under that id. Before any INVALID, ask the other corpus by name.
+  const signed = await signedIndexMembership(origin, sha);
+  if (signed.state === "IN") {
+    return {
+      state: "NOT_IN_THIS_CORPUS",
+      sha256: sha,
+      reason: NOT_IN_THIS_CORPUS_REASON,
+      corpus: "signed_card_index",
+      card_url: signedCardUrl(origin, signed.row ?? { card: sha }),
+      next: { tool: "verify_card", arguments: { card: sha } },
+      source,
+      note: "The public-root leaves and the signed card index are separate sets with no id in common. This tool reads the public-root leaves only, so this answer says which set the id belongs to, not whether the card verifies.",
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  }
+  if (signed.state === "UNREACHABLE") {
+    return {
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: `no public-root wrapper at ${source} (HTTP 404), and the signed card index could not be read to rule it out (${signed.error}). Could not check is not INVALID.`,
+      source,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  }
+  const root = await liveRootMembership(origin, sha);
+  if (root.state === "IN") {
+    return {
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: `a leaf of the live root, but its wrapper at ${source} answered HTTP 404. The leaf is included; its body could not be fetched. Use verify_inclusion for the proof.`,
+      source,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  }
+  if (root.state === "UNREACHABLE") {
+    return {
+      state: "UNCHECKABLE",
+      sha256: sha,
+      reason: `no public-root wrapper at ${source} (HTTP 404), and the live root's inclusion endpoint could not be read (${root.error}). Could not check is not INVALID.`,
+      source,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  }
+  return {
+    state: "INVALID",
+    sha256: sha,
+    reason: "not a leaf of the live root, and not in the signed card index",
+    source,
+    not_a_certification: true,
+    not_gspc: true,
+  };
 }
 
 export async function verifyInclusionTool(origin: string, args: Record<string, unknown>) {

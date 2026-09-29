@@ -233,12 +233,43 @@ async function getAxis(args) {
   };
 }
 
-/** Coerce whatever the caller passed into a card object, or say why we could not. */
+/** A 64-hex card id: a signed-card-index `card` field, and a public-root leaf's sha256. */
+const CARD_ID_RE = /^[0-9a-f]{64}$/;
+const signedCardPath = (id) => `/signed/cards/${id}.json`;
+/** Absolute card_url for a signed-card-index row: its own card_url when it carries one. */
+function signedCardUrl(row) {
+  const own = typeof row.card_url === "string" ? row.card_url : null;
+  if (own) return own.startsWith("/") ? `${ORIGIN}${own}` : own;
+  const id = typeof row.card === "string" ? row.card.toLowerCase() : "";
+  return CARD_ID_RE.test(id) ? `${ORIGIN}${signedCardPath(id)}` : null;
+}
+
+/**
+ * Coerce whatever the caller passed into a card object, or say why we could not. A bare 64-hex
+ * card id resolves to the signed body at /signed/cards/{id}.json (same rule as the HTTP door,
+ * functions/mcp/_handlers.ts).
+ */
 async function coerceCard(raw) {
   if (raw && typeof raw === "object") return { card: raw };
   if (typeof raw !== "string")
-    return { error: "pass the card as an object, a JSON string, or a councilof.ai / csoai.org URL" };
+    return { error: "pass the card as an object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id" };
   const s = raw.trim();
+  if (CARD_ID_RE.test(s.toLowerCase())) {
+    const id = s.toLowerCase();
+    const url = `${ORIGIN}${signedCardPath(id)}`;
+    try {
+      const r = await fetch(url, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+      if (r.status === 404)
+        return {
+          error: `no signed card body at ${url} (HTTP 404): this id is not in the signed card index. If it is a public-root leaf, use get_card or verify_inclusion.`,
+          resolved: { id, url },
+        };
+      if (!r.ok) return { error: `card fetch returned HTTP ${r.status} for ${url}`, resolved: { id, url } };
+      return { card: await r.json(), resolved: { id, url } };
+    } catch (e) {
+      return { error: `card fetch failed for ${url}: ${e.message}`, resolved: { id, url } };
+    }
+  }
   if (/^https?:\/\//i.test(s)) {
     if (!FETCHABLE_ORIGINS.some((o) => s.startsWith(o)))
       return {
@@ -256,26 +287,31 @@ async function coerceCard(raw) {
   try {
     return { card: JSON.parse(s) };
   } catch {
-    return { error: "the string is neither valid JSON nor a councilof.ai / csoai.org URL" };
+    return { error: "the string is neither valid JSON, a councilof.ai / csoai.org URL, nor a 64-hex card id" };
   }
 }
 
 async function verifyCardTool(args) {
-  const { card, error } = await coerceCard(args.card ?? args.record ?? args.json ?? args.url ?? args.input);
-  if (error) return { state: "UNCHECKABLE", reason: error, not_a_certification: true };
+  const { card, error, resolved } = await coerceCard(args.card ?? args.record ?? args.json ?? args.url ?? args.input);
+  if (error) return { state: "UNCHECKABLE", reason: error, ...(resolved ? { resolved_from: resolved } : {}), not_a_certification: true };
   const v = await verifyCard(card);
+  const id = v.id ?? card?.id ?? null;
+  // A card fetched by id must BE that id; otherwise nothing was judged about the id asked for.
+  const mismatch = resolved && typeof id === "string" && id !== resolved.id
+    ? `the file at ${resolved.url} carries id ${id}, not the requested ${resolved.id}` : null;
   return {
-    state: v.state, // VALID | INVALID | UNCHECKABLE — three verdicts, never two
-    id: v.id ?? card?.id ?? null,
+    state: mismatch ? "UNCHECKABLE" : v.state, // VALID | INVALID | UNCHECKABLE — three verdicts, never two
+    id,
+    ...(resolved ? { resolved_from: resolved } : {}),
     axis: v.axis ?? null,
-    reason: v.reason ?? null,
+    reason: mismatch ?? v.reason ?? null,
     rule: `${ORIGIN}/signed/HOW-TO-VERIFY.md`,
     pinned_key: "did:web:csoai.org#card-attestation-1",
     not_a_certification: true,
     note:
-      v.state === "VALID"
+      !mismatch && v.state === "VALID"
         ? "The body reproduces its own id and the signature verifies under the published card-attestation key. This is a verified measurement card — not a certification of anything."
-        : v.state === "INVALID"
+        : !mismatch && v.state === "INVALID"
           ? "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE."
           : "The check could not be completed. 'Could not check' is a different claim from 'forged'.",
   };
@@ -318,7 +354,7 @@ async function listCards(args) {
       .slice()
       .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
       .slice(0, limit)
-      .map((r) => ({ card: r.card, axis: r.axis, ts: r.ts, signed: r.signed }));
+      .map((r) => ({ card: r.card, card_url: signedCardUrl(r), axis: r.axis, ts: r.ts, signed: r.signed }));
   } catch (e) {
     out.index = unreachable("/signed/card_index.json", e);
   }
@@ -354,11 +390,20 @@ async function getRoot() {
   }
 }
 
+/**
+ * get_card reads the public-root card-v0 leaves only; the signed card index is a separate corpus
+ * with zero id overlap (council-os/CARD-CORPORA.md). A signed-index id is NOT_IN_THIS_CORPUS,
+ * never INVALID; INVALID needs both the index and the live root's inclusion endpoint to say no.
+ * Same rule as functions/mcp/_board.ts getCardTool.
+ */
+const NOT_IN_THIS_CORPUS_REASON = "This id is in the signed card index, not the public root. Use verify_card.";
+
 async function getCard(args) {
   const sha = String(args.sha256 || "").trim().toLowerCase();
-  if (!/^[0-9a-f]{64}$/.test(sha)) {
+  if (!CARD_ID_RE.test(sha)) {
     return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
   }
+  const source = `${ORIGIN}/cards/${sha.slice(0, 16)}.json`;
   try {
     const d = await fetchJson(`/cards/${sha.slice(0, 16)}.json`);
     const card = d.card || d;
@@ -366,7 +411,7 @@ async function getCard(args) {
     return {
       state: match ? "VALID" : "INVALID",
       sha256: sha,
-      source: `${ORIGIN}/cards/${sha.slice(0, 16)}.json`,
+      source,
       surface: card.surface ?? null,
       unmeasured: card.unmeasured ?? [],
       sig_ed25519: card.sig_ed25519 ?? null,
@@ -374,18 +419,41 @@ async function getCard(args) {
       not_gspc: true,
     };
   } catch (e) {
-    if (e && e.status === 404) {
-      return {
-        state: "INVALID",
-        sha256: sha,
-        reason: "not a leaf of the live root",
-        source: `${ORIGIN}/cards/${sha.slice(0, 16)}.json`,
-        not_a_certification: true,
-        not_gspc: true,
-      };
+    if (!(e && e.status === 404)) {
+      return { ...unreachable(`/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
     }
-    return { ...unreachable(`/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
   }
+  const base = { sha256: sha, source, not_a_certification: true, not_gspc: true };
+  let row;
+  try {
+    const idx = await fetchJson("/signed/card_index.json");
+    row = (Array.isArray(idx.cards) ? idx.cards : []).find((r) => String(r.card ?? "").toLowerCase() === sha);
+  } catch (e) {
+    return { ...base, state: "UNCHECKABLE", reason: `no public-root wrapper at ${source} (HTTP 404), and the signed card index could not be read to rule it out (${e.message}). Could not check is not INVALID.` };
+  }
+  if (row) {
+    return {
+      ...base,
+      state: "NOT_IN_THIS_CORPUS",
+      reason: NOT_IN_THIS_CORPUS_REASON,
+      corpus: "signed_card_index",
+      card_url: signedCardUrl(row),
+      next: { tool: "verify_card", arguments: { card: sha } },
+      note: "The public-root leaves and the signed card index are separate sets with no id in common. This tool reads the public-root leaves only, so this answer says which set the id belongs to, not whether the card verifies.",
+    };
+  }
+  let inRoot;
+  try {
+    const p = await fetchJson(`/api/proof?sha=${sha}`);
+    inRoot = p.kind === "inclusion" ? true : p.error === "not_found" ? false : null;
+  } catch (e) {
+    inRoot = e && e.status === 404 ? false : null;
+  }
+  if (inRoot === true)
+    return { ...base, state: "UNCHECKABLE", reason: `a leaf of the live root, but its wrapper at ${source} answered HTTP 404. The leaf is included; its body could not be fetched. Use verify_inclusion for the proof.` };
+  if (inRoot === null)
+    return { ...base, state: "UNCHECKABLE", reason: `no public-root wrapper at ${source} (HTTP 404), and the live root's inclusion endpoint could not be read. Could not check is not INVALID.` };
+  return { ...base, state: "INVALID", reason: "not a leaf of the live root, and not in the signed card index" };
 }
 
 async function verifyInclusion(args) {
@@ -805,7 +873,9 @@ function summaryLine(name, payload) {
     case "get_root":
       return `${payload.state ?? "?"} — public-root merkle ${(String(payload.merkle_root || "")).slice(0, 16) || "none"}. Not GSPC.`;
     case "get_card":
-      return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+      return payload.reason
+        ? `${payload.state ?? "?"} — ${payload.reason}`
+        : `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
     case "x402_trust":

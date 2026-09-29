@@ -194,8 +194,8 @@
             "normal_amount_atomic": "0",
             "offered_amount_atomic": "0",
             "pricing_basis": "STANDARD",
-            "product_id": "csoai.product.request_attestation",
-            "sku_id": "request_attestation"
+            "product_id": "csoai.product.free_door",
+            "sku_id": "free_door"
           },
           "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
           "extra": {
@@ -1543,7 +1543,7 @@
             "sku_id": "issuance",
             "starts_at": "2026-09-11T00:00:00Z"
           },
-          "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
             "decimals": 6,
             "name": "USD Coin",
@@ -1562,7 +1562,7 @@
       "accepts_v1": [
         {
           "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-          "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
             "name": "USD Coin",
             "version": "2"
@@ -1579,7 +1579,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
       "method": "GET",
       "paid_for": "assembly",

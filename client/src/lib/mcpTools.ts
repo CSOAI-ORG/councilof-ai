@@ -20,6 +20,19 @@ export const FREE_TOOL_NAMES: string[] = (freeTools as { tools: ToolDef[] }).too
 export const PAID_TOOL_NAMES: string[] = (paidTools as { tools: ToolDef[] }).tools.map((t) => t.name);
 export const ALL_TOOL_NAMES: string[] = [...FREE_TOOL_NAMES, ...PAID_TOOL_NAMES];
 
+/** The free tools with their titles, in tools/list order (functions/mcp/gspc-tools.json). */
+export const FREE_TOOLS: { name: string; title: string | null }[] = (
+  freeTools as { tools: { name: string; title?: string }[] }
+).tools.map((t) => ({ name: t.name, title: t.title ?? null }));
+
+/**
+ * The ONE sentence for tool counts (public audit fix #19, 2026-09-28). /connect-gspc/ said 7 and
+ * 13, the home page 16, /connect/claude/ 12 — each true of something, none saying of what. Every
+ * number here is an array length of the files the doors serve; functions/mcp/[[path]].ts builds the
+ * same sentence for GET /mcp (functions/mcp/tool-counts.test.ts holds the two equal).
+ */
+export const TOOL_COUNT_SENTENCE = `${FREE_TOOL_NAMES.length} free tools at /mcp/free; ${ALL_TOOL_NAMES.length} at /mcp (${FREE_TOOL_NAMES.length} free + ${PAID_TOOL_NAMES.length} metered). The npm package is versioned separately.`;
+
 /** A short line for a card: the first few names, then an honest count of the rest. */
 export function toolSummary(shown = 4): string {
   const head = FREE_TOOL_NAMES.slice(0, shown).join(" · ");

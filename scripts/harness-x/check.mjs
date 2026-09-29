@@ -367,7 +367,9 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
 
   // (c) certif: every occurrence must be negated in the same clause, or inside quoted third-party
   //     text; affirmative use fails. (d) no public price.
-  const NEG = /\b(not|never|no|nor|without|non)\b|n't|explicitly_not/i;
+  // not_a_ / not_an_: a snake_case negation key (not_a_certification), which the server card now
+  // carries in each tool output schema since it renders the full tools[] (fix #24).
+  const NEG = /\b(not|never|no|nor|without|non)\b|n't|explicitly_not|\bnot_an?_/i;
   const affirmative = [], negated = [];
   const prices = [];
   // A JSON string under a negation key (explicitly_not, does_not_establish, claim_boundary) is a

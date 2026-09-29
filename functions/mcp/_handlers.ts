@@ -7,8 +7,10 @@
 import { verifyCard, anchorsFromDid, cardState, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
 import {
+  CARD_ID_RE,
   FETCHABLE_ORIGINS,
   UPSTREAM,
+  signedCardPath,
   boardTotalsTool,
   getAxisTool,
   listCardsTool,
@@ -38,9 +40,14 @@ async function verifyCardThreeState(
   origin: string,
 ) {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
-  const { card, error } = await coerceCard(raw);
+  const { card, error, resolved } = await coerceCard(raw, origin);
   if (error) {
-    return { state: "UNCHECKABLE", reason: error, not_a_certification: true };
+    return {
+      state: "UNCHECKABLE",
+      reason: error,
+      ...(resolved ? { resolved_from: resolved } : {}),
+      not_a_certification: true,
+    };
   }
   // The deciding trust anchors are pinned inside cardVerify (PINNED_ANCHORS), so an
   // unreachable did.json no longer makes the verdict UNCHECKABLE — verification
@@ -49,13 +56,16 @@ async function verifyCardThreeState(
   const anchors = await loadAnchors(origin);
   const v = await verifyCard(card, anchors);
   const c = card as Record<string, unknown>;
-  const state = cardState(v.valid, v.reasons);
+  const mismatch = idMismatch(resolved, v.id ?? c?.id);
+  const state = mismatch ? "UNCHECKABLE" : cardState(v.valid, v.reasons);
+  const reasons = mismatch ? [...v.reasons, "id_mismatch_with_request"] : v.reasons;
   return {
     state,
     id: v.id ?? c?.id ?? null,
+    ...(resolved ? { resolved_from: resolved } : {}),
     family: v.family ?? null,
-    reason: v.valid ? null : v.reasons.join(", "),
-    reasons: v.reasons,
+    reason: mismatch ?? (v.valid ? null : v.reasons.join(", ")),
+    reasons,
     checks: v.checks.map((ch) => ({
       check: ch.label,
       ok: ch.ok,
@@ -68,7 +78,7 @@ async function verifyCardThreeState(
     // board-attestation-1 used to be labelled card-attestation-1 here (2026-09-15).
     pinned_key: v.anchor_id ?? null,
     not_a_certification: true,
-    note: v.valid
+    note: state === "VALID"
       ? "The body reproduces its own id and the signature verifies under a published key. This is a verified measurement card — not a certification of anything."
       : state === "UNCHECKABLE"
         ? "The check could not be completed for the stated reason. UNCHECKABLE is not INVALID: nothing was judged."
@@ -106,7 +116,10 @@ function sharedToolSummary(
     case "get_root":
       return `${payload.state ?? "?"} — public-root merkle ${String(payload.merkle_root || "").slice(0, 16) || "none"}. Not GSPC.`;
     case "get_card":
-      return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+      // The reason leads when there is one: NOT_IN_THIS_CORPUS has to say where the id IS.
+      return payload.reason
+        ? `${payload.state ?? "?"} — ${payload.reason}`
+        : `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
     case "x402_trust":
@@ -207,18 +220,47 @@ async function loadAnchors(origin: string): Promise<Anchor[]> {
   return [];
 }
 
-/** Coerce whatever the caller passed into a card object, or explain why we could not. */
-async function coerceCard(
+/**
+ * Coerce whatever the caller passed into a card object, or explain why we could not.
+ *
+ * A BARE 64-HEX ID is a card id (2026-09-28, public audit fix #4). It is the "record id" the home
+ * page shows and the `card` field of every signed-card-index row, so it is the first thing a
+ * person pastes — and it used to come back UNCHECKABLE ("neither valid JSON nor a URL"), with the
+ * first success only on the fourth call. It resolves to the signed body at
+ * {origin}/signed/cards/{id}.json. `resolved` names what was fetched, so the verdict can be held
+ * to the id that was asked about.
+ */
+export async function coerceCard(
   raw: unknown,
-): Promise<{ card?: unknown; error?: string }> {
+  origin = "https://councilof.ai",
+): Promise<{ card?: unknown; error?: string; resolved?: { id: string; url: string } }> {
   if (raw && typeof raw === "object") return { card: raw };
   if (typeof raw !== "string") {
     return {
       error:
-        "pass the card as an object, a JSON string, or a councilof.ai / csoai.org URL",
+        "pass the card as an object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id",
     };
   }
   const s = raw.trim();
+  if (CARD_ID_RE.test(s.toLowerCase())) {
+    const id = s.toLowerCase();
+    const url = `${origin}${signedCardPath(id)}`;
+    try {
+      const r = await fetch(url, { headers: { accept: "application/json" } });
+      if (r.status === 404) {
+        return {
+          error:
+            `no signed card body at ${url} (HTTP 404): this id is not in the signed card index. ` +
+            "If it is a public-root leaf, use get_card or verify_inclusion.",
+          resolved: { id, url },
+        };
+      }
+      if (!r.ok) return { error: `card fetch returned HTTP ${r.status} for ${url}`, resolved: { id, url } };
+      return { card: await r.json(), resolved: { id, url } };
+    } catch (e) {
+      return { error: `card fetch failed for ${url}: ${(e as Error).message}`, resolved: { id, url } };
+    }
+  }
   if (/^https?:\/\//i.test(s)) {
     if (!FETCHABLE_ORIGINS.some((o) => s.startsWith(o))) {
       return {
@@ -240,9 +282,19 @@ async function coerceCard(
   } catch {
     return {
       error:
-        "the string is neither valid JSON nor a councilof.ai / csoai.org URL",
+        "the string is neither valid JSON, a councilof.ai / csoai.org URL, nor a 64-hex card id",
     };
   }
+}
+
+/**
+ * A card fetched by id must BE that id. A file served under one id that carries another would
+ * otherwise return a VALID verdict about a card nobody asked about; that is UNCHECKABLE for the
+ * id requested (nothing was judged about it), never VALID and never INVALID.
+ */
+function idMismatch(resolved: { id: string; url: string } | undefined, verifiedId: unknown): string | null {
+  if (!resolved || typeof verifiedId !== "string" || verifiedId === resolved.id) return null;
+  return `the file at ${resolved.url} carries id ${verifiedId}, not the requested ${resolved.id}`;
 }
 
 export async function verifyToolResult(
@@ -250,13 +302,14 @@ export async function verifyToolResult(
   origin: string,
 ): Promise<McpToolResult> {
   const raw = args.card ?? args.record ?? args.json ?? args.url ?? args.input;
-  const { card, error } = await coerceCard(raw);
+  const { card, error, resolved } = await coerceCard(raw, origin);
   if (error) {
     const payload = {
       valid: false,
       state: "UNCHECKABLE",
       reason: error,
       reasons: ["input_not_a_card"],
+      ...(resolved ? { resolved_from: resolved } : {}),
     };
     return {
       content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
@@ -267,18 +320,21 @@ export async function verifyToolResult(
 
   const anchors = await loadAnchors(origin);
   const v = await verifyCard(card, anchors);
-  const state = cardState(v.valid, v.reasons);
+  const mismatch = idMismatch(resolved, v.id);
+  const state = mismatch ? "UNCHECKABLE" : cardState(v.valid, v.reasons);
+  const reasons = mismatch ? [...v.reasons, "id_mismatch_with_request"] : v.reasons;
 
   const payload = {
-    valid: v.valid,
+    valid: mismatch ? false : v.valid,
     state,
     family: v.family,
     family_label: v.family_label,
     id: v.id,
+    ...(resolved ? { resolved_from: resolved } : {}),
     // Distinct machine-readable failure codes. `preimage_mismatch` (the bytes changed)
     // and `untrusted_signer` (the key is not published) are never merged: conflating
     // them is what told an outside auditor a published key was missing.
-    reasons: v.reasons,
+    reasons,
     checks: v.checks.map((c) => ({
       check: c.label,
       ok: c.ok,
@@ -299,7 +355,7 @@ export async function verifyToolResult(
     state === "VALID"
       ? `VALID — ${v.family} ${String(v.id).slice(0, 16)}… reproduces its own id and verifies under a published key.`
       : state === "UNCHECKABLE"
-        ? `UNCHECKABLE — ${v.reasons.join(", ")} — nothing was judged; this is not a finding that the card is forged.`
+        ? `UNCHECKABLE — ${mismatch ?? reasons.join(", ")} — nothing was judged; this is not a finding that the card is forged.`
         : `INVALID — ${v.reasons.join(", ")}`;
 
   return {
