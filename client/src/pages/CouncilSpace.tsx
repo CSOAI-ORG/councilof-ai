@@ -98,7 +98,7 @@ const SS_VIEWS = [
   { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
   { id: "towns", label: "Towns · review", href: "/gspc-arena?view=towns" },
   { id: "benchmarks", label: "📊 Benchmarks", href: "/gspc-arena?view=benchmarks" },
-  { id: "training", label: "🎮 Live Training", href: "/gspc-arena?view=training" },
+  { id: "training", label: "🎮 Training demo", href: "/gspc-arena?view=training" },
 ] as const;
 
 type SovViewId = (typeof SS_VIEWS)[number]["id"];
