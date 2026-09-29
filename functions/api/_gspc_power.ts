@@ -11,7 +11,12 @@
 // _gspc_rows_power.ts, which scripts/gspc_separation_from_rows.py --power GENERATES from the
 // published per-item rows (hash-bound, the same rows the separation test reads). Where the served
 // bank has no published paired rows (jail; swarm, whose published rows are a retired bank) the
-// item count is the axis's own n, labelled as such, and the MDE is UNMEASURED with its reason.
+// MDE is UNMEASURED with its reason, and distinct_items is counted from the served bank's published
+// bytes by scripts/gspc_bank_distinct.py (_gspc_bank_distinct.ts): distinct sha256 digests of the
+// normalised prompt. Never the axis's n: n counts rows, and rows are not distinct items
+// (C-2026-0929-02 — jail served 71; its bank holds 27 distinct inputs over 71 rows).
+import { BANK_DISTINCT } from "./_gspc_bank_distinct";
+import { JAIL_PROMPT_INTERVAL } from "./_gspc_jail_prompt_interval";
 import { ROWS_POWER } from "./_gspc_rows_power";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 
@@ -48,6 +53,15 @@ type PowerAxisEntry = {
   mde_state: "MEASURED" | "NOT_REACHABLE" | "UNDEFINED";
 };
 export const POWER_AXES = ROWS_POWER.axes as unknown as Record<string, PowerAxisEntry>;
+type BankDistinctEntry = {
+  dataset: string;
+  file: string;
+  file_sha256: string;
+  prompt_field: string;
+  rows: number;
+  distinct_inputs: number;
+};
+export const BANK_DISTINCT_AXES = BANK_DISTINCT.axes as unknown as Record<string, BankDistinctEntry>;
 const SEP_AXES = ROWS_SEPARATION.axes as unknown as Record<string, { untested_reason_code?: string }>;
 
 export const MDE_STATES = ["MEASURED", "NOT_REACHABLE", "UNDEFINED", "UNMEASURED"] as const;
@@ -91,7 +105,7 @@ const rowsServeTheBank = (axis: string): boolean =>
   !!POWER_AXES[axis] && SEP_AXES[axis]?.untested_reason_code !== "ROWS_ARE_A_RETIRED_BANK";
 
 export type PowerFields = {
-  distinct_items: number;
+  distinct_items: number | null;
   distinct_items_source: string;
   mde: MdeBlock;
 };
@@ -118,13 +132,22 @@ export function powerFields(a: Axisish): PowerFields | undefined {
       },
     };
   }
-  // No published paired rows for the served bank: the item count is the axis's own n, said so.
+  // No published paired rows for the served bank: distinct inputs are counted from the bank's own
+  // published bytes. An axis with no counted bank is refused, never given its n (rows != items).
   const retired = p
     ? ` The only published per-item rows for this axis are a retired bank (${p.distinct_items} distinct items, ${p.file}); on those rows the MDE is ${p.mde_state}.`
     : "";
+  const b = BANK_DISTINCT_AXES[a.axis];
   return {
-    distinct_items: a.n,
-    distinct_items_source: "the axis's own n (the served bank's item count); its paired per-item rows are not published",
+    distinct_items: b ? b.distinct_inputs : null,
+    distinct_items_source: !b
+      ? `UNMEASURED: no published paired rows and no counted bank for this axis in _gspc_bank_distinct.ts (run ${BANK_DISTINCT.producer}); n=${a.n} counts rows and is not published as distinct items`
+      : `distinct inputs in the served bank: distinct sha256 of the normalised prompt (${b.prompt_field}) over the ` +
+      `${b.rows} rows of ${b.dataset}/${b.file} (sha256 ${b.file_sha256.slice(0, 16)}…, counted by ${BANK_DISTINCT.producer})` +
+      (b.rows !== b.distinct_inputs
+        ? `; ${b.rows - b.distinct_inputs} rows repeat an input already counted, so n=${b.rows} counts rows, not distinct items`
+        : "") +
+      "; its paired per-item rows are not published",
     mde: {
       value: null,
       state: "UNMEASURED",
@@ -136,9 +159,76 @@ export function powerFields(a: Axisish): PowerFields | undefined {
   };
 }
 
+// ── Prompt-level (cluster-aware) interval — DERIVED, UNSIGNED (owner-approved 2026-09-29) ─────────────
+// The signed jail interval is Wilson 95% over n=71 ROWS, but the 71 rows hold 27 distinct prompts, so
+// repeated rows are not independent draws. scripts/gspc_jail_prompt_interval.py GENERATES
+// _gspc_jail_prompt_interval.ts with the method PRE-REGISTERED there (and pinned by its test) before it
+// was run: per-model correctness per prompt = mean over duplicate rows, Wilson 95% over the prompts,
+// fleet mean = plain mean of prompt-level accuracies, the board's rule unchanged (TIE iff the leader
+// interval contains the fleet mean). The board run published only TP/FP/TN/FN, so the rule is evaluated
+// over every per-row assignment consistent with those counts; it reads TIE/SEPARATED only if all agree.
+// This block sits BESIDE the signed row-level numbers and never overwrites them: `separation`,
+// `interval` and `fleet_mean` stay as signed. A change of state reaches `separation` only through the
+// corrections ledger and a re-sign at land (C-2026-0929-02).
+export type PromptLevelInterval = {
+  label: string;
+  method: string;
+  preregistered: string;
+  signed: false;
+  unit: "prompt";
+  rows: number;
+  prompts: number;
+  per_row_results_published: boolean;
+  leader: string;
+  separation: string;
+  untested_reason_code?: string;
+  untested_reason?: string;
+  leader_accuracy_range: readonly number[];
+  leader_interval_envelope: readonly number[];
+  leader_interval_lo_range: readonly number[];
+  leader_interval_hi_range: readonly number[];
+  fleet_mean_range: readonly number[];
+  row_level_signed: { interval: readonly number[]; fleet_mean: number; n: number; separation: string };
+  source: string;
+  resign: string;
+};
+
+export function promptLevelInterval(a: Axisish): PromptLevelInterval | undefined {
+  const d = JAIL_PROMPT_INTERVAL;
+  if (a.axis !== d.axis || a.kind !== "model-comparison") return undefined;
+  const pl = d.prompt_level as typeof d.prompt_level & { untested_reason_code?: string; untested_reason?: string };
+  return {
+    label: d.label,
+    method: d.method,
+    preregistered: d.preregistered,
+    signed: false,
+    unit: "prompt",
+    rows: d.rows,
+    prompts: d.prompts,
+    per_row_results_published: d.per_row_results_published,
+    leader: d.leader,
+    separation: pl.separation,
+    ...(pl.untested_reason_code ? { untested_reason_code: pl.untested_reason_code } : {}),
+    ...(pl.untested_reason ? { untested_reason: pl.untested_reason } : {}),
+    leader_accuracy_range: pl.leader_accuracy_range,
+    leader_interval_envelope: pl.leader_interval_envelope,
+    leader_interval_lo_range: pl.leader_interval_lo_range,
+    leader_interval_hi_range: pl.leader_interval_hi_range,
+    fleet_mean_range: pl.fleet_mean_range,
+    row_level_signed: d.row_level_signed,
+    source:
+      `functions/api/_gspc_jail_prompt_interval.ts, generated by ${d.producer} from ${d.bank.dataset}/${d.bank.file} ` +
+      `(sha256 ${d.bank.sha256.slice(0, 16)}…) and ${d.results.file} (sha256 ${d.results.sha256.slice(0, 16)}…)`,
+    resign:
+      "PENDING RE-SIGN: the signed separation above is row-level. This prompt-level reading is recorded in " +
+      "correction C-2026-0929-02 and reaches the signed separation only through the normal landing.",
+  };
+}
+
 export const withPower = <T extends Axisish>(a: T): T | (T & PowerFields) => {
   const f = powerFields(a);
-  return f ? { ...a, ...f } : a;
+  const pl = promptLevelInterval(a);
+  return f ? { ...a, ...f, ...(pl ? { interval_prompt_level: pl } : {}) } : a;
 };
 
 /** Pure: would this axis read UNDERPOWERED under `flag`? Only a TIE can; UNTESTED keeps its own reason. */
