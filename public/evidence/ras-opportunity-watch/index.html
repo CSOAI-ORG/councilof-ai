@@ -41,6 +41,17 @@
 <p>This page publishes bounded CSOAI RAS work completed from public evidence. A listing is not a measurement. Payment, settlement, exact-byte delivery and buyer acceptance are separate states.</p>
 <p><a href="/claim-maintenance/">Claim Maintenance</a> · <a href="/evidence/">Public evidence index</a> · <a href="./ledger.json">Machine ledger</a> · <a href="./feed.atom">Atom feed</a> · <a href="./manifest.json">Integrity manifest</a></p>
 
+<h2 id="how-to-use">How to use this evidence</h2>
+<table>
+<tr><th>Reader</th><th>Start here</th><th>What you can safely conclude</th></tr>
+<tr><td>General / nontechnical reader</td><td>Read each <strong>Interpretation</strong> and <strong>State</strong> cell first.</td><td>What CSOAI actually reproduced, what remains unknown, and what was not inferred.</td></tr>
+<tr><td>Agent or developer</td><td><a href="./ledger.json">Machine ledger</a>, <a href="./feed.atom">Atom feed</a>, then <a href="./manifest.json">integrity manifest</a>.</td><td>Canonical event keys, bounded state, change feed and exact-byte hashes suitable for automated ingestion.</td></tr>
+<tr><td>Buyer or operator</td><td>Read <strong>State boundaries</strong> before treating a discovery, payment, settlement or delivery event as evidence of service quality.</td><td>Which rung of the transaction/evidence ladder has actually been observed and which downstream acceptance steps are still HOLD.</td></tr>
+<tr><td>Researcher / reproducer</td><td>Open the source-audit, causal-control and C2PA evidence JSON beside the pinned upstream source or fixture.</td><td>The exact bounded predicate, environment and result that can be independently rerun.</td></tr>
+<tr><td>Auditor / regulator / reviewer</td><td>Use the state table plus the integrity manifest and correction-aware Claim Maintenance link.</td><td>A traceable distinction between source observation, measurement, payment, exact-byte delivery and buyer acceptance, without certification or compliance inference.</td></tr>
+</table>
+<aside><strong>One evidence object, multiple views.</strong> These audience paths do not create different facts for different readers. Human summaries, agent JSON and integrity hashes point to the same bounded receipts.</aside>
+
 <h2 id="cm-bat-r18">1. CM-BAT-R18 source audit + bounded control</h2>
 <table>
 <tr><th>Item</th><th>Result</th></tr>
