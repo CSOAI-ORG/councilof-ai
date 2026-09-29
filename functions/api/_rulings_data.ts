@@ -430,12 +430,17 @@ export const RULINGS: Record<string, unknown>[] = [
     "supersedes": null,
     "ruling_id": "R-2026-0929-05",
     "class": "publication",
-    "question": "Are the SovX wrapped-asset measurements published under that name?",
+    "question": "Is the SovX wrapped-asset measurement dataset published on Kaggle, as one of the N sites it is distributed to?",
     "rule_applied": {
       "ref": "Publication approval is a ruling-class question (proposal 4.B); follows R-2026-0928-02 (the name)",
-      "text": "The name was ruled public on 28 Sep. This records the separate approval to publish the product under it. Every published state still comes from the wrapper producers."
+      "text": "The name was ruled public on 28 Sep. This records the separate approval to publish the SovX dataset on Kaggle, one of many distribution sites. Every published state still comes from the wrapper producers."
     },
     "evidence": [
+      {
+        "uri": "git:councilof-ai@40926efafcb50a3382e56804c1f6c759ae2ea0af:council-os/rulings/sources/owner-chat-publish-sovx-20260929.md",
+        "sha256": "9ce47c39cce2ff8f3cfc7aa1d083834527d118a63bc9d11a2367dd060e5c76a3",
+        "of": "the committed owner words for this ruling, relayed verbatim from chat"
+      },
       {
         "uri": "git:councilof-ai@2fe8f822cc0e4464a942262c0991c29227913b15:council-os/rulings/sources/owner-rulings-excerpt-20260929.md",
         "sha256": "55ff6af78139035cea8c1a953b32edd93ea0e73e06744dee32d2c8699374dbee",
@@ -448,19 +453,20 @@ export const RULINGS: Record<string, unknown>[] = [
       }
     ],
     "rule_output": null,
-    "owner_ruling_verbatim": "UNRECORDED",
+    "owner_ruling_verbatim": "gooo land round 3 and publish SovX dataset on Kaggle It's just one flywheel. Kaggle is one of many N sites",
     "owner_ruling_source": {
-      "verbatim_status": "UNRECORDED",
-      "where": "listed as an owner ruling in the 29 Sep ruling-records brief; no first-hand record of the words found (excerpt E6)"
+      "verbatim_status": "QUOTED",
+      "where": "owner chat 2026-09-29 ~05:40 BST, relayed verbatim by the lane coordinator; council-os/rulings/sources/owner-chat-publish-sovx-20260929.md",
+      "entry_stamp": "2026-09-29 ~04:40Z (approximate)"
     },
-    "decided_at": "UNRECORDED",
-    "decided_at_basis": "not after 2026-09-29, the date of the brief that lists it; no time recorded",
+    "decided_at": "2026-09-29",
+    "decided_at_basis": "owner chat at about 05:40 BST (about 04:40Z); the minute is approximate, so only the date is recorded",
     "effective_from": "2026-09-29",
     "correction_ref": null,
     "effect": {
       "writes_measured_state": false,
       "writes_board": false,
-      "note": "Publication under a name. Changes no measurement."
+      "note": "Publication of the SovX dataset on Kaggle. Changes no measurement."
     },
     "signature": {
       "did": "did:web:csoai.org#board-attestation-1",
@@ -469,13 +475,13 @@ export const RULINGS: Record<string, unknown>[] = [
         "schema": "csoai.ruling-attestation/0.1",
         "ruling_id": "R-2026-0929-05",
         "class": "publication",
-        "decided_at": "UNRECORDED",
-        "content_id": "9df27ccd1429574a70612ae5686164aa1abc9182c198f4f0582ec62a7f6872fb",
+        "decided_at": "2026-09-29",
+        "content_id": "beaf235aabf7267378c38d6d24d56af301eb809889012f331d5d1f6f3910a87d",
         "content_id_rule": "sha256(RFC 8785 JCS of the record without its 'signature' key)",
-        "record_canonical_bytes": 1674,
-        "signed_at": "2026-09-29T05:49:21Z"
+        "record_canonical_bytes": 2248,
+        "signed_at": "2026-09-29T05:54:37Z"
       },
-      "sig_ed25519": "6c055a485f72d8c530cfc8394ba4466b6f64c2a91e8b70045dc942ffef4a7795f8ffbdf3aa7deac779ef31fa2812bce2b34f7c14f793a8a71b8a14d4061a4704",
+      "sig_ed25519": "2be10394d5df0123296328b67dcf17539b95b38198e28ca26e35a60bf5759dd595912d659ae0b31947eeae3d1fd3fa980b2e0543fbb0d7ce62fe1b5a6e274709",
       "signer_auth": "pod-token",
       "note": "Detached Ed25519 over signature.attestation (RFC 8785 JCS; identical to the board signer's sorted-key form for this ASCII object), issued through POST /api/board-sign on the pod caller token. The attestation commits to this record by content_id. The design note proposed a separate ruling key; none is minted, so this names the board key it was signed under."
     }
@@ -595,8 +601,8 @@ export const RULINGS_INDEX: Record<string, unknown> = {
     {
       "ruling_id": "R-2026-0929-05",
       "class": "publication",
-      "decided_at": "UNRECORDED",
-      "content_id": "9df27ccd1429574a70612ae5686164aa1abc9182c198f4f0582ec62a7f6872fb",
+      "decided_at": "2026-09-29",
+      "content_id": "beaf235aabf7267378c38d6d24d56af301eb809889012f331d5d1f6f3910a87d",
       "path": "/signed/rulings/R-2026-0929-05.json"
     },
     {
@@ -612,13 +618,13 @@ export const RULINGS_INDEX: Record<string, unknown> = {
     "key_ed25519_hex": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     "attestation": {
       "schema": "csoai.rulings-index-attestation/0.1",
-      "content_id": "d928b346effc861f4900db955524c197d0540c948f163fa66eec042b669e0a16",
+      "content_id": "fd6a28f979c4f1a8254b2d7b11ed9e509703a84c4aa3367ebbc54f0927c3e010",
       "content_id_rule": "sha256(RFC 8785 JCS of the index without its 'signature' key)",
       "count": 8,
       "latest_ruling_id": "R-2026-0929-06",
-      "signed_at": "2026-09-29T05:49:21Z"
+      "signed_at": "2026-09-29T05:54:38Z"
     },
-    "sig_ed25519": "9bfb1795f10b14b7fb0ece06295e8bfafdf2617f72e70f303801b86d4dabf16ed9da49476bc586baf3b4dbdbb317a23805aae42ae2b41b50094dc6f165bbb307",
+    "sig_ed25519": "8ca472c5f70834ccee2a80452f0b8404a963efea6e25b425260475899f0bb8cddbbb6486ba34e9e341caaeb4133709d71c0e4942f938cd17babde3c0aea9480a",
     "signer_auth": "pod-token"
   }
 };
