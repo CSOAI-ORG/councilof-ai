@@ -365,3 +365,30 @@ describe("both files open with one quotable claim boundary", () => {
     });
   }
 });
+
+
+describe("llms machine discovery keeps canonical operational and delivery links", () => {
+  const urls = [
+    "https://councilof.ai/layer0-drive-through.json",
+    "https://councilof.ai/eat-flywheel.json",
+    "https://councilof.ai/layer0-distribution.json",
+    "https://councilof.ai/progress-index.json",
+    "https://councilof.ai/api/eunomia-data?manifest=1",
+  ];
+  const files = [
+    "scripts/llms/llms.txt.tmpl",
+    "scripts/llms/llms-full.txt.tmpl",
+    "public/llms.txt",
+    "public/llms-full.txt",
+  ] as const;
+  it("keeps canonical operational discovery and Eunomia manifest links", () => {
+    for (const f of files) { const out = R(f); for (const url of urls) expect(out, `${f} lost ${url}`).toContain(url); }
+  });
+  it("keeps the delivery and operational claim boundaries", () => {
+    for (const f of files) {
+      const out = R(f);
+      expect(out).toMatch(/operational\/discovery projections, not certification, endorsement, compliance or a trust score/);
+      expect(out).toMatch(/does not prove settlement, signature validity, freshness, customer acceptance or source truth/);
+    }
+  });
+});
