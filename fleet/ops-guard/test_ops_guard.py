@@ -74,6 +74,25 @@ class Canary(unittest.TestCase):
             canary.fetch = orig
         self.assertEqual(r["value"], 12)
 
+    def test_rolling_root_allows_small_churn(self):
+        now = datetime(2026, 9, 29, 17, 0, tzinfo=timezone.utc)
+        ok, min_count, age_h = canary.evaluate_root(308, "2026-09-29T05:03:20Z", 310, now)
+        self.assertTrue(ok)
+        self.assertEqual(min_count, 295)
+        self.assertLess(age_h, 12)
+
+    def test_rolling_root_rejects_material_drop(self):
+        now = datetime(2026, 9, 29, 17, 0, tzinfo=timezone.utc)
+        ok, min_count, _ = canary.evaluate_root(290, "2026-09-29T05:03:20Z", 310, now)
+        self.assertFalse(ok)
+        self.assertEqual(min_count, 295)
+
+    def test_rolling_root_rejects_stale_root(self):
+        now = datetime(2026, 9, 29, 17, 0, tzinfo=timezone.utc)
+        ok, _, age_h = canary.evaluate_root(310, "2026-09-27T05:03:20Z", 310, now)
+        self.assertFalse(ok)
+        self.assertGreater(age_h, canary.MAX_ROOT_AGE_H)
+
 
 class Alert(unittest.TestCase):
     def setUp(self):
