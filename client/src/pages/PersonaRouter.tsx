@@ -101,12 +101,12 @@ const PERSONAS: Record<string, Persona> = {
     links: [
       { href: "/dora", label: "DORA readiness", note: "Operational resilience for AI" },
       { href: "/finance-ai-act", label: "Finance + EU AI Act", note: "High-risk uses + obligations" },
-      { href: "/financial-axes", label: "The financial axis", note: "One measured, the rest published empty" },
+      { href: "/financial-axes", label: "The financial axis", note: "Facts read off public records - no model, no leader" },
       { href: "/compare", label: "Honest vs the incumbents", note: "Vanta / Drata / Credo AI" },
     ],
     axes: ["governance", "provenance-controls", "distribution-integrity", "reserve-attestation"],
     axesWhy:
-      "Two of these carry a measurement and two are declared slots with no run behind them, and a finance reader is shown all four deliberately. provenance-controls is the one financial axis with a real run — a deterministic mainnet read whose n counts issuer accounts, not bank items. The empty rows are the honest state of the financial family today.",
+      "These are two different kinds of measurement, and a finance reader is shown both on purpose. governance is a model comparison: a fleet answered a frozen bank and a rule graded every answer. The three financial axes are deterministic facts read off public ledgers and records — their n counts issuer accounts, not bank items, and they have no model, no leader and no accuracy. Each row reads its own state live from the board, so a slot with no run behind it would say so here.",
     slides: [
       { tag: "high-risk", title: "Credit and life/health insurance AI are named uses", body: "Annex III(5) names evaluating creditworthiness or establishing a credit score for natural persons, and risk assessment and pricing in relation to life and health insurance. Article 10 data governance, Article 14 human oversight and Article 11 technical documentation follow from that classification." },
       { tag: "resilience", title: "DORA sits on top - and here is exactly what we hold on it", body: "DORA (Regulation (EU) 2022/2554) governs the ICT your models run on. In our dated corpus feed it is a baseline-seeded instrument: its provisions are hashed and watched, so a change in the text is visible. It has no rows in the published crosswalk, and we do not claim one evidenced control set discharges it." },
@@ -169,7 +169,7 @@ const PERSONAS: Record<string, Persona> = {
     ],
     axes: ["governance", "art5-safeguard", "conformance", "regulatory-framework"],
     axesWhy:
-      "The row that matters most to a supervisor is the empty one. regulatory-framework is a published slot with no run behind it, and it sits here beside three measured axes rather than being left off the page. That is the whole proposition: you can see what we have not measured as plainly as what we have.",
+      "A supervisor needs every state the board can be in, not only the flattering ones. Each row below reads its state live — a measured run, a tie that is not a win, an untested separation, or a slot with no run behind it, whichever is true today — and regulatory-framework, a deterministic-facts axis with no model and no leader, sits beside three model comparisons rather than being dressed up as one. That is the whole proposition: you can see what we have not measured as plainly as what we have.",
     slides: [
       { tag: "independent", title: "No single-vendor dependency", body: "MIT-licensed core, published frozen banks, and signatures that verify against a key you fetch from our DID document rather than one we hand you. You do not have to trust us in order to check us." },
       { tag: "verifiable", title: "Publish proof, not promises", body: "Each measurement card is signed over its exact bytes, and the board snapshot carries its own site attestation naming the key that signed it. Re-verification needs no account and no CSOAI code." },
@@ -295,7 +295,7 @@ export default function PersonaRouter({ persona }: { persona: string }) {
             <a key={l.href} href={l.href} className="group rounded-2xl border border-gray-200 p-5 hover:border-emerald-400 hover:shadow-lg transition">
               <div className="font-bold text-gray-900 group-hover:text-emerald-700">{l.label}</div>
               <p className="mt-1 text-sm text-gray-500">{l.note}</p>
-              <span className="mt-3 inline-block text-sm font-semibold text-emerald-600">Open -&gt;</span>
+              <span className="mt-3 inline-block text-sm font-semibold text-emerald-700">Open -&gt;</span>
             </a>
           ))}
         </div>
@@ -310,7 +310,7 @@ export default function PersonaRouter({ persona }: { persona: string }) {
       <PersonaEvidence lead={p.evidence.lead} axes={p.evidence.axes} />
 
       <section className="max-w-6xl mx-auto px-6 py-10">
-        <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&>div>div:last-child]:!text-emerald-600/70 [&_div]:!border-emerald-200" />
+        <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&>div>div:last-child]:!text-emerald-800 [&_div]:!border-emerald-200" />
       </section>
 
       <section className="max-w-6xl mx-auto px-6 pb-8">

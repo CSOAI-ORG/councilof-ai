@@ -160,7 +160,7 @@ export default function McpTrustBoard() {
                 {snap.partial ? " · PARTIAL" : ""}
               </p>
               <p className="mt-2 text-lg font-semibold text-slate-100">{snap.headline}</p>
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-slate-400">
                 Enumeration: {snap.enumeration?.unique_hosts ?? "—"} unique hosts from{" "}
                 {snap.enumeration?.registry_rows_seen ?? "—"} registry rows (
                 {snap.enumeration?.source}).{" "}
@@ -177,7 +177,7 @@ export default function McpTrustBoard() {
             </div>
 
             <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-950/40 p-6">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">
                 Round-to-round delta — a single observation is a snapshot; the delta is the board
               </p>
               {!diff && (
@@ -194,7 +194,7 @@ export default function McpTrustBoard() {
               )}
               {diff && diff.state === "MEASURED" && diff.bucket_deltas && (
                 <>
-                  <p className="mt-3 text-xs text-slate-500">
+                  <p className="mt-3 text-xs text-slate-400">
                     vs previous round {diff.previous} ({diff.previous_as_of}). Arithmetic on the two
                     published count sets — derived, never typed.
                   </p>
@@ -213,7 +213,7 @@ export default function McpTrustBoard() {
                       <p className="text-sm text-slate-400">No bucket moved between the two rounds.</p>
                     )}
                   </div>
-                  <p className="mt-3 text-xs text-slate-500">
+                  <p className="mt-3 text-xs text-slate-400">
                     Hosts added / dropped / bucket migrations: UNCHECKABLE — per-host rows are
                     retained operator-side and never published, so a counts-only diff never invents
                     host-level claims.
@@ -225,12 +225,12 @@ export default function McpTrustBoard() {
 
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               <div className="rounded-xl border border-slate-800 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">Auth posture observed</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">Auth posture observed</p>
                 <p className="mt-2 text-2xl font-bold text-slate-50">{counts.auth_scheme_bearer_or_oauth || 0}</p>
                 <p className="text-xs text-slate-400">challenges indicating bearer/OAuth-family schemes</p>
               </div>
               <div className="rounded-xl border border-slate-800 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">Tools listed (aggregate)</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">Tools listed (aggregate)</p>
                 <p className="mt-2 text-2xl font-bold text-slate-50">{counts.tools_listed_total || 0}</p>
                 <p className="text-xs text-slate-400">
                   across {counts.servers_reporting_tools || 0} answering servers · median{" "}
@@ -238,25 +238,25 @@ export default function McpTrustBoard() {
                 </p>
               </div>
               <div className="rounded-xl border border-slate-800 p-4">
-                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">Rate-limited probes</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">Rate-limited probes</p>
                 <p className="mt-2 text-2xl font-bold text-slate-50">{counts.rate_limited || 0}</p>
                 <p className="text-xs text-slate-400">the board backs off; it never retries into a rate limit</p>
               </div>
             </div>
 
             <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-950/40 p-6 text-sm text-slate-400">
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">What this does not measure</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">What this does not measure</p>
               <p className="mt-2">{snap.not}</p>
-              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">Third-party context</p>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">Third-party context</p>
               <p className="mt-2">{snap.third_party_context}</p>
-              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">Method</p>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">Method</p>
               <p className="mt-2">{snap.method}</p>
             </div>
           </>
         )}
 
         <div className="mt-10 rounded-2xl border border-slate-800 bg-slate-950/40 p-6 text-sm text-slate-400">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500">The rules of this board</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-400">The rules of this board</p>
           <ul className="mt-3 list-disc space-y-1.5 pl-5">
             <li>Read-only by construction: one <code>initialize</code> per host per week; one{" "}
               <code>tools/list</code> only if the handshake answers. Tools are counted, never called.</li>
