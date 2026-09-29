@@ -1,0 +1,683 @@
+{
+ "schema": "csoai.layer-o-presence/0.1",
+ "as_of": "2026-09-29T05:26:26Z",
+ "subject": "councilof.ai (CSOAI Ltd, Council of AI)",
+ "note": "Where our artifacts appear, read live with GET-only adapters. A state is never set from memory: PUBLISHED/ACCEPTED need a live read that shows the artifact; UNMEASURED means we could not see, not that it is absent. Listing by a catalog is that catalog's act, not an endorsement.",
+ "surfaces_total": 65,
+ "counts_by_state": {
+  "DISCOVERED": 17,
+  "QUALIFIED": 13,
+  "READY": 0,
+  "AUTH_REQUIRED": 5,
+  "BUILDING": 0,
+  "CONNECTED": 0,
+  "PUBLISHED": 21,
+  "SUBMITTED": 2,
+  "UNDER_REVIEW": 1,
+  "ACCEPTED": 1,
+  "REJECTED": 0,
+  "BLOCKED": 0,
+  "STALE": 3,
+  "NEEDS_UPDATE": 1,
+  "UNSUPPORTED": 1
+ },
+ "measured": 30,
+ "unmeasured": 35,
+ "event_chain": {
+  "events": 114,
+  "head": "48a10951dc973ba9ba74b4ef83aa2d1033e72cbb72607946ec7f5c3dc39710ae",
+  "hash": "sha256 over canonical JSON, prev_hash chained"
+ },
+ "surfaces": [
+  {
+   "surface": "a2a_registry",
+   "name": "A2A Registry (a2aregistry.org)",
+   "class": "agent_directory",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:17Z",
+   "evidence_hash": "5ac4b2ab9aebbb3343010d96b4be0e33bc32b5b485589376f05c3732b49d27a3",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "a2a_registry_org",
+   "name": "a2a-registry.org",
+   "class": "agent_directory",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "96d81026568b2ff779d5c7252a288955a8edc2e5687e5ba574373d096caca242",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "agentverse",
+   "name": "Fetch.ai Agentverse",
+   "class": "agent_directory",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "f22239409efc2d79f84d250412e77591d211abdc0d815eb3e75709f13ceca8f3",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "agntcy_directory",
+   "name": "Cisco AI Catalog / AGNTCY Directory",
+   "class": "agent_directory",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "7e85bea945488ac4ba36b2eec90e3287c1ee463a1853116c49d117fe30f1f38d",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ai_catalog_ard",
+   "name": "Own /.well-known/ai-catalog.json (AI Catalog 1.0 / ARD)",
+   "class": "identity_discovery",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:17Z",
+   "evidence_hash": "bd2cd4bf1a0b3103a10f564108299339e4cd57d3c44cdf330f836760b9c51fbc",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ard_registries",
+   "name": "ARD registries (Neuronto, Desvela)",
+   "class": "identity_discovery",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "db7b93c65963dbdf434beced688ed48aa4634c231e5f9691a2f8bf906c6878dd",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "awesome_mcp_punkpeye",
+   "name": "awesome-mcp-servers (punkpeye)",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:15Z",
+   "evidence_hash": "86e1898becee0e0d4722787c561377b8886c58603469e2427055daa1a4a40070",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "claude_directory",
+   "name": "Claude connector directory",
+   "class": "mcp_catalog",
+   "state": "SUBMITTED",
+   "as_of": "2026-09-29T05:00:35Z",
+   "evidence_hash": "76ad24bfe58b57a0ed30daf02dc8ea456e4e535ce968b518ad2e6242a66a8505",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "cline_marketplace",
+   "name": "Cline MCP Marketplace",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:15Z",
+   "evidence_hash": "3cdc693e62929c984f910d9fccaa845f738dd06f4917d4827d256f304bb32331",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "docker_mcp",
+   "name": "Docker MCP Catalog",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:14Z",
+   "evidence_hash": "3f4c07b646a59e4f41e5682a48d0756286f7d62d0cbec551a3e6069d2d0bc394",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "erc8004",
+   "name": "ERC-8004 Identity Registry",
+   "class": "identity_discovery",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "82f6d63ad5d5c39a7f0b8f40fafb7a5a856fa448489dd31beb0269dd50e505e7",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "every_eval_ever",
+   "name": "Every Eval Ever (EEE)",
+   "class": "eval_leaderboard",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "0ed3c3e41c0797256495295fc166c846c7cb6359e9956a8fda7034fafbe1813a",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "github_mcp_registry",
+   "name": "GitHub MCP registry (github.com/mcp)",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:16Z",
+   "evidence_hash": "bfac03eced9acf451e3b85ea71e7abf5af358178e90f1d664676a886054c98e4",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "glama",
+   "name": "Glama MCP directory",
+   "class": "mcp_catalog",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:14Z",
+   "evidence_hash": "3da1c610c304e34daa8130a575c6de86e07c27d04970a23b7f87d08c0d0af147",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "godaddy_ans",
+   "name": "GoDaddy ANS registry",
+   "class": "identity_discovery",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "c4ba8a8fb5ca4c14ca6e3be9a33e295a8ae49d4d022dae2b04ab418c6e9c3e01",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "gpt_store",
+   "name": "OpenAI GPT Store / apps",
+   "class": "assistant_store",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "b811a8cc4e35777b9d2f2f817a6d95664c78c8cd23dabe354524ff04ab324173",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "hf_datasets",
+   "name": "Hugging Face datasets (csoai)",
+   "class": "model_data_hub",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:25Z",
+   "evidence_hash": "23a8dbb4b9158beab3c26a2f02c2872bea6c61224ad74ae36ed918907156d39b",
+   "presence": "MEASURED",
+   "observed": 131
+  },
+  {
+   "surface": "hf_mcp_spaces",
+   "name": "Hugging Face mcp-server tag (Spaces)",
+   "class": "mcp_catalog",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:16Z",
+   "evidence_hash": "becf394bd788f49ce19cd63b8dd1344ce1b9a14adf25ac20dd75f74e4c857001",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "hf_models",
+   "name": "Hugging Face models (csoai)",
+   "class": "model_data_hub",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:27Z",
+   "evidence_hash": "d75384106492071ff4f5784bec34eb7cf02b25f805a5289e156ba3def24ab2f1",
+   "presence": "MEASURED",
+   "observed": 2
+  },
+  {
+   "surface": "hf_spaces",
+   "name": "Hugging Face Spaces (csoai)",
+   "class": "model_data_hub",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:26Z",
+   "evidence_hash": "ebf77ca2e640f2873656f7070f4aa2471d7b3007c3ec47dff05a6fc242e6993a",
+   "presence": "MEASURED",
+   "observed": 39
+  },
+  {
+   "surface": "indexnow_bing",
+   "name": "IndexNow / Bing",
+   "class": "search_index",
+   "state": "SUBMITTED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "c1494ae1e371b3b02b1d393c46d5216fc1c18848d7981809c7de9a542fb51a46",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "internet_archive",
+   "name": "Internet Archive (Save Page Now)",
+   "class": "citation_archive",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:42Z",
+   "evidence_hash": "26487fe5baf80088699e7fe34b6b6436d70665f4563f627274cbed64cc67e970",
+   "presence": "MEASURED",
+   "observed": 9
+  },
+  {
+   "surface": "kaggle_datasets",
+   "name": "Kaggle datasets (nicktempleman)",
+   "class": "model_data_hub",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:28Z",
+   "evidence_hash": "c33c84a24b2d2f908d1be05fedeb278aba7877b209d2509d2815eaa476c98582",
+   "presence": "MEASURED",
+   "observed": 110
+  },
+  {
+   "surface": "kaggle_models",
+   "name": "Kaggle Models",
+   "class": "model_data_hub",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:00:56Z",
+   "evidence_hash": "e6402c80919ab870bb1ed4ffb622b6399c2ad931bd30c20700fbe8a4c71b2d64",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "lobehub_mcp",
+   "name": "LobeHub MCP",
+   "class": "mcp_catalog",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:15Z",
+   "evidence_hash": "77fb9220d3d3dda2c7048b9f92e0a78b0d81d696cfeddc3ad344d5c86d1063b6",
+   "presence": "MEASURED",
+   "observed": 20
+  },
+  {
+   "surface": "mcp_registry",
+   "name": "Official MCP Registry",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:14Z",
+   "evidence_hash": "48a10951dc973ba9ba74b4ef83aa2d1033e72cbb72607946ec7f5c3dc39710ae",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "mcp_so",
+   "name": "mcp.so",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:00:33Z",
+   "evidence_hash": "bdb7395b12d1caa1f55d5500fbb1bc49930fe1131ae26d8b0b9a3b5210632572",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "mcp_toplist",
+   "name": "MCP Toplist",
+   "class": "mcp_catalog",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:16Z",
+   "evidence_hash": "29494c9fcc222182ba1c38090dfa0c3abdbecd0a0d49b323aeec602c173e5e64",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "mcpizy",
+   "name": "MCPizy",
+   "class": "mcp_catalog",
+   "state": "UNDER_REVIEW",
+   "as_of": "2026-09-29T05:00:36Z",
+   "evidence_hash": "3442d366d36f4abad5b60b5d55ad6ec69a742923e200df7daf34bad5bce82e4e",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "mcpservers_org",
+   "name": "mcpservers.org (wong2)",
+   "class": "mcp_catalog",
+   "state": "STALE",
+   "as_of": "2026-09-29T05:00:33Z",
+   "evidence_hash": "165bfca8898efedaefcf7a47aaeafe69c14848eeb6453d606b51874dbe5ca80f",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "modelscope_mcp",
+   "name": "ModelScope MCP square",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:00:36Z",
+   "evidence_hash": "5f4c3f2e924d61a6330603a0c825ebacf5e5e8d3992deed3aa115974d6566bc5",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "nanda_index",
+   "name": "NANDA Index",
+   "class": "identity_discovery",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:00:37Z",
+   "evidence_hash": "897c7dda42cdbd4aee3dfbaa945bd1c0dbf98d95800e3ba83400593572572e2c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "npm",
+   "name": "npm (Harness X packages)",
+   "class": "package_registry",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:36Z",
+   "evidence_hash": "f28434fbb4bd9af9b84a479bc4bf9addbb947e960ad449d2f9cbae0d4bc377bf",
+   "presence": "MEASURED",
+   "observed": 2
+  },
+  {
+   "surface": "oecd_tools_catalogue",
+   "name": "OECD.AI catalogue of tools & metrics",
+   "class": "eval_leaderboard",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "dbcc5b5be2ce199f7a706a0d36780e56691d9f3b432df0dac814613478466c5e",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "openrouter",
+   "name": "OpenRouter",
+   "class": "model_router",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "17f64918937330454548f7fb632901a00226452c2eddcdffdd6f9dba3713f5d2",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "pulsemcp",
+   "name": "PulseMCP",
+   "class": "mcp_catalog",
+   "state": "STALE",
+   "as_of": "2026-09-29T05:00:33Z",
+   "evidence_hash": "776e9107ea68a2684a36a2dcede6e22b0127cf776e1d0dde0f4d15a0c83c2f2c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "pypi",
+   "name": "PyPI (Harness X packages)",
+   "class": "package_registry",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:34Z",
+   "evidence_hash": "e9c74cb3c915e5973c9e84d2c06af500fc1a7959dc0d6f8989be85c846e89552",
+   "presence": "MEASURED",
+   "observed": 3
+  },
+  {
+   "surface": "smithery",
+   "name": "Smithery",
+   "class": "mcp_catalog",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:14Z",
+   "evidence_hash": "c9ec0de605739f52c9f496f8032784ca581092cf74d724f98ae13df5e76653e3",
+   "presence": "MEASURED",
+   "observed": 2
+  },
+  {
+   "surface": "vendor_aws_marketplace",
+   "name": "AWS Marketplace AI Agents and Tools",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "fbac00bcbb83e1f3a1223fde7d318d5206bf02404e61c4272035fe7c5482477c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_azure_foundry",
+   "name": "Azure AI Foundry catalog",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "09b3d61c8a8e04f7e0a50095c0779ff637c2ce66959ea7b0d376981970a41e31",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_cisco_devnet",
+   "name": "Cisco DevNet Code Exchange",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "fcfec6a48f4dd5de8a9be32e0240ce51c9727a2af599750849595836c299beb2",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_databricks",
+   "name": "Databricks Marketplace",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "cb623789b3501e16bc5b92b41b77222dc6fda9ad8e857af0c178b5e079f79b4c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_google_agent_garden",
+   "name": "Google Cloud Marketplace / Agent Garden",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "d862b90423d580ed2db369d6e3b924d9cbf6ca893d26d7352d3f15cdbe4b393f",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_ibm_orchestrate",
+   "name": "IBM watsonx Orchestrate agent catalog",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "e9f65fb8dce7e3f3344d2575dcc25e4153b5e2eecf68f2c8f5f22ffb92f4a9f1",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_nvidia_ngc",
+   "name": "NVIDIA NGC",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "042bc470567d8aafd85ba7a25f553daf3849acddeb85b6ce910e744fa4584558",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_oracle_marketplace",
+   "name": "Oracle Cloud Marketplace",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "849501967b228fe1ec61cc8e8b35899f2b275361d850b1b42f3edf5234745b6f",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_palantir_community",
+   "name": "Palantir AIP community registry",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "8a4fbb1687cddff736be50db0cd11974e1ae3d0f7cc04a142768aebf3bba2111",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_redhat",
+   "name": "Red Hat Ecosystem Catalog",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "e4856c6b97036c972da3f8f57c33627a5baabb752e599bba71ba4fc602b61e18",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_salesforce",
+   "name": "Salesforce AgentExchange",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "eb3e146e42c424ab8c6c1acd1eb7bf0b5f25bfeab4d90509e71c03511ba77250",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_servicenow",
+   "name": "ServiceNow Store",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "ec2a0d076cde9253aed7a677ad89a40b1134ff4597d74606376a45b41f2a0611",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_snowflake",
+   "name": "Snowflake Marketplace",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "c67d57f260b1af616ce27d4bb55b7ee08dd8078828dc364d1d0eeb42c9af45f8",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vendor_splunkbase",
+   "name": "Splunkbase",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "6db93560f06ed30546aafa9cacbdb69a8f965a1f5fdbe11029c8bb76bbbfcd3c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "vouch_ati",
+   "name": "Vouch Agent Trust Index",
+   "class": "eval_leaderboard",
+   "state": "STALE",
+   "as_of": "2026-09-29T05:01:06Z",
+   "evidence_hash": "a8b3828a85a8e3f50770520b40d44f9ebd89174d4b338dbe771fd8cf916ca3f7",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "wikidata",
+   "name": "Wikidata",
+   "class": "citation_archive",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:26:25Z",
+   "evidence_hash": "0ac9322ec04f64f1571f49be566ee7d7a826c82ccd050e54b95ea9edd25c576c",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "x402_402index",
+   "name": "402 Index",
+   "class": "payment_index",
+   "state": "NEEDS_UPDATE",
+   "as_of": "2026-09-29T05:25:18Z",
+   "evidence_hash": "b662ff647b193b001f2ee3c7d5d9ac8b964ff588d58daf63a3a2522d7c826ae8",
+   "presence": "MEASURED",
+   "observed": 30
+  },
+  {
+   "surface": "x402_agent_tools",
+   "name": "agent-tools.cloud",
+   "class": "payment_index",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:20Z",
+   "evidence_hash": "819eb82d8b7d37aa968040941eace8bfb8f6e72477ea7f0b218be763b6d6e96f",
+   "presence": "MEASURED",
+   "observed": 23
+  },
+  {
+   "surface": "x402_agentic_market",
+   "name": "agentic.market",
+   "class": "payment_index",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:25:23Z",
+   "evidence_hash": "129d14e1c5c08bfd2807760399e04cd70149d93c2a7edb7b9dec1351b1af39fe",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "x402_cdp_bazaar",
+   "name": "Coinbase CDP Bazaar",
+   "class": "payment_index",
+   "state": "AUTH_REQUIRED",
+   "as_of": "2026-09-29T05:25:23Z",
+   "evidence_hash": "aa5599ab6e8760fdbef65495f5f2a8ef6f6f0bd0d0132ab5eeb166874ba8e878",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "x402_gold402",
+   "name": "gold-402 directory",
+   "class": "payment_index",
+   "state": "ACCEPTED",
+   "as_of": "2026-09-29T05:25:23Z",
+   "evidence_hash": "4e62d37555e225b487919189f8ba41d3573a417481da8264b0d92f2b537aaa3d",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "x402_list",
+   "name": "x402 List",
+   "class": "payment_index",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:21Z",
+   "evidence_hash": "d8d9b13a392bbbf94d10d5d6c34663f7cc33ebb9f2cceb4c233d440ff6d101f5",
+   "presence": "MEASURED",
+   "observed": 2
+  },
+  {
+   "surface": "x402_open402",
+   "name": "open-402 registry",
+   "class": "payment_index",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:25Z",
+   "evidence_hash": "d627859f0f83ef509b6fceab554b4e2b46fa55eef80a0353ff6f9cd6fbe8d0e6",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "x402_payai",
+   "name": "PayAI facilitator discovery",
+   "class": "payment_index",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:23Z",
+   "evidence_hash": "6ec39d375ac81e77548f7cd04fa2ac409d7acf0b8ae24a852f336bbdbc091c77",
+   "presence": "MEASURED",
+   "observed": 6
+  },
+  {
+   "surface": "x402_x402jp",
+   "name": "x402 Endpoint (x402jp)",
+   "class": "payment_index",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:24Z",
+   "evidence_hash": "92345ed6a031f343b4016a19e2a5bb53ec2110a578bdef0e71a571f7ba7a8738",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "x402_x402scan",
+   "name": "x402scan",
+   "class": "payment_index",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:20Z",
+   "evidence_hash": "8f0c1ef8629ddc9ff40dd829fb118d6d083609192f22a86c42064d0b5f824b3b",
+   "presence": "MEASURED",
+   "observed": 98
+  },
+  {
+   "surface": "zenodo",
+   "name": "Zenodo (DOIs)",
+   "class": "citation_archive",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:25:41Z",
+   "evidence_hash": "66b6e19451bfbbb588511690581c9d6d25f8df9541f4fb97627782391db10f2d",
+   "presence": "MEASURED",
+   "observed": 1
+  }
+ ]
+}
