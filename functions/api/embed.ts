@@ -10,6 +10,22 @@ export const onRequestGet: PagesFunction = async () => {
     verify: "https://councilof.ai/gspc-verify",
     human: "https://councilof.ai/badge",
     kit: "https://councilof.ai/embed",
+    board_embed: {
+      iframe: "https://councilof.ai/embed/board",
+      web_component: "https://councilof.ai/embed/gspc-board.js",
+      web_component_tag: "<gspc-board></gspc-board>",
+      oembed: "https://councilof.ai/oembed?url=https%3A%2F%2Fcouncilof.ai%2Fembed%2Fboard&format=json",
+      shows: "totals.public_count and measured_on.date (as_of) from GET /api/gspc, verbatim, with a link to /board/; no badge and no score",
+    },
+    feeds: {
+      board_changes_json: "https://councilof.ai/feeds/board.json",
+      board_changes_atom: "https://councilof.ai/feeds/board.atom",
+    },
+    cite: {
+      bibtex: "https://councilof.ai/cite/gspc?format=bibtex",
+      csl_json: "https://councilof.ai/cite/gspc?format=csl",
+      both: "https://councilof.ai/cite/gspc?format=json",
+    },
     grammar: "measurement, not certification",
     note: "Partner branding does not change the evidence. The script fetches /api/gspc and paints unavailable rather than a typed count.",
   };
