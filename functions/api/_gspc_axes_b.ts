@@ -82,12 +82,16 @@ export const AXES_B: AxisScore[] = [
   // of the per-model rates (recomputable from the rows below).
   {
     axis: "jail", family: "gspc", kind: "model-comparison", bench: "GoldBank-Detector",
-    task: "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN) — layer 2 of 2",
-    n: 71, n_note: "7 models × 71 gold items; TP/FP/TN/FN per model; accuracy shown is the best " +
-      "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71)",
+    task: "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2",
+    n: 71, n_note: "7 models × 71 gold-bank rows; TP/FP/TN/FN per model; accuracy shown is the best " +
+      "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71). n counts rows, not distinct " +
+      "items: the 71 rows hold 27 distinct inputs (44 rows repeat an input already counted; see " +
+      "distinct_items). The Wilson interval treats the 71 rows as independent, so it is narrower than " +
+      "27 distinct inputs support; a wider interval would still contain the fleet mean, so the TIE stands " +
+      "(C-2026-0929-02).",
     accuracy: 0.5915, leader: "qwen2.5:0.5b-instruct (base model)",
     separation: "TIE", interval: [0.475, 0.698], fleet_mean: 0.5455,
-    separation_method: "Wilson 95% interval over n=71 items tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
+    separation_method: "Wilson 95% interval over n=71 rows (27 distinct inputs) tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
     separation_evidence: {
       leader: "qwen2.5:0.5b-instruct", leader_acc: 0.5915, wilson95: [0.475, 0.698],
       fleet_mean: 0.5455, determined: "2026-08-25",
@@ -95,7 +99,7 @@ export const AXES_B: AxisScore[] = [
     },
     quotable_models: ["qwen2.5:0.5b-instruct", "council-safe", "qwen2.5:7b", "mistral:7b",
       "qwen2.5:1.5b", "qwen3:4b", "council-inhouse-ft"],
-    quotable_note: "7 models x >=30 usable gold-bank items (68-71 each); per-model n below",
+    quotable_note: "7 models x >=30 usable gold-bank rows (68-71 each, of 27 distinct inputs); per-model n below",
     fleet: "7 models (4 base + 2 council fine-tunes + 1 base variant) — NOT the 19-model board fleet",
     per_model: {
       "qwen3:4b": { n: 68, quotable: true, tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158, accuracy: 0.5294 },
@@ -122,13 +126,13 @@ export const AXES_B: AxisScore[] = [
     // is fetchable. The bank itself was always fine. The prose now lives in dataset_note.
     status: "MEASURED",
     dataset: "csoai/gspc-jail-goldbank",
-    dataset_note: "Frozen 71-cell gold bank, published on HuggingFace 2026-08-25.",
+    dataset_note: "Frozen 71-row gold bank (27 distinct inputs), published on HuggingFace 2026-08-25.",
     colour: "#64748b", hue: 215,
     null_grammar: "In per_model, null and 0.0 mean different things and are never interchanged. " +
       "precision: null on council-inhouse-ft is UNDEFINED — tp/(tp+fp) = 0/0, because the model " +
       "predicted nothing positive. recall: 0.0 on the same row is MEASURED — tp/(tp+fn) = 0/38. " +
       "That zero is the most damaging number on this axis and it is a measurement, not a gap.",
-    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank, " +
+    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-row gold bank of 27 distinct inputs, " +
       "separation determined 2026-08-25 (TIE). Best zero-FP detector: qwen2.5:0.5b-instruct " +
       "(precision 1.0, recall 0.237). Fleet mean accuracy 0.5455 (7 models, usable n 68-71). " +
       "Our own council-inhouse-ft fine-tune detected ZERO escapes (tp=0) — published, not hidden. " +

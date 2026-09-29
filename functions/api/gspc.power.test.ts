@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { onRequestGet } from "./gspc";
-import { POWER_AXES, UNDERPOWERED_STATE, applyUnderpowered, isUnderpowered } from "./_gspc_power";
+import { BANK_DISTINCT_AXES, POWER_AXES, UNDERPOWERED_STATE, applyUnderpowered, isUnderpowered, powerFields } from "./_gspc_power";
 import { ROWS_POWER } from "./_gspc_rows_power";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 
@@ -132,13 +132,36 @@ describe("GET /api/gspc: distinct_items and MDE on every model-comparison axis",
     const jail = board.axes.find((a) => a.axis === "jail")!;
     expect(jail.mde.state).toBe("UNMEASURED");
     expect(jail.mde.reason_code).toBe("NO_PAIRED_ROWS");
-    expect(jail.distinct_items).toBe(jail.n);
+    // C-2026-0929-02: n counts rows; distinct_items counts distinct inputs in the served bank's bytes
+    expect(jail.distinct_items).toBe(BANK_DISTINCT_AXES.jail.distinct_inputs);
+    expect(jail.distinct_items).toBe(27);
+    expect(jail.n).toBe(71);
+    expect(jail.distinct_items_source).toContain("sha256 of the normalised prompt");
+    expect(jail.distinct_items_source).toContain("44 rows repeat an input already counted");
+    expect(jail.distinct_items_source).not.toContain("the axis's own n");
     const swarm = board.axes.find((a) => a.axis === "swarm")!;
     expect(swarm.mde.state).toBe("UNMEASURED");
     expect(swarm.mde.reason_code).toBe("NO_PAIRED_ROWS_FOR_SERVED_BANK");
-    expect(swarm.distinct_items).toBe(swarm.n);
+    expect(swarm.distinct_items).toBe(BANK_DISTINCT_AXES.swarm.distinct_inputs);
+    expect(swarm.distinct_items_source).toContain(BANK_DISTINCT_AXES.swarm.file_sha256.slice(0, 16));
     // the retired bank's own numbers are named, not hidden
     expect(swarm.mde.reason).toContain(`${POWER_AXES.swarm.distinct_items} distinct items`);
+  });
+});
+
+describe("distinct_items never falls back to n (C-2026-0929-02)", () => {
+  it("every model-comparison axis without rows for its served bank has a counted bank, and distinct <= n", async () => {
+    const board = await served();
+    for (const a of board.axes.filter((x) => x.kind === "model-comparison")) {
+      expect(a.distinct_items, a.axis).toBeLessThanOrEqual(a.n);
+      if (a.mde.paired_items === undefined) expect(BANK_DISTINCT_AXES[a.axis], a.axis).toBeDefined();
+    }
+  });
+
+  it("failing control: an axis with neither rows nor a counted bank reads UNMEASURED (null), never its n", () => {
+    const f = powerFields({ axis: "no-such-axis", kind: "model-comparison", n: 71 })!;
+    expect(f.distinct_items).toBeNull();
+    expect(f.distinct_items_source).toMatch(/^UNMEASURED: .*not published as distinct items/);
   });
 });
 

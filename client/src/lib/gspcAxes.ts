@@ -72,7 +72,7 @@ export const AXES: Axis[] = [
   { axis: "governance", bench: "GovBench", n: 237, macro_f1: 0.705, accuracy: 0.7, unparsed_rate: 0.0386, status: "MEASURED",
     colour: "#34d399", lng: 4.37, lat: 50.84, seat: "Brussels", instrument: "EU AI Act (Reg. 2024/1689)",
     task: "EU AI Act risk-tier classification",
-    note: "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR 'Demokritos', arXiv:2603.09435, CC-BY-4.0). The tuned governance specialist leads AND the lead is separ", dataset: "csoai/gspc-gov" },
+    note: "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation Benchmark (NCSR 'Demokritos', arXiv:2603.09435, CC-BY-4.0). The other 102 are not graded here and are not a private held-out set: all 339 are public upstream. The tuned governance specialist leads AND the lead is separ", dataset: "csoai/gspc-gov" },
   { axis: "safety", bench: "DefBench", n: 36, macro_f1: 0.944, accuracy: 0.944, unparsed_rate: 0.0541, status: "MEASURED",
     colour: "#f87171", lng: -0.12, lat: 51.5, seat: "London", instrument: "UK AI Safety Institute",
     task: "calibrated refusal on paired requests",

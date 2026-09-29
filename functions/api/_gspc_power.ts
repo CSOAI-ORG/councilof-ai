@@ -11,7 +11,11 @@
 // _gspc_rows_power.ts, which scripts/gspc_separation_from_rows.py --power GENERATES from the
 // published per-item rows (hash-bound, the same rows the separation test reads). Where the served
 // bank has no published paired rows (jail; swarm, whose published rows are a retired bank) the
-// item count is the axis's own n, labelled as such, and the MDE is UNMEASURED with its reason.
+// MDE is UNMEASURED with its reason, and distinct_items is counted from the served bank's published
+// bytes by scripts/gspc_bank_distinct.py (_gspc_bank_distinct.ts): distinct sha256 digests of the
+// normalised prompt. Never the axis's n: n counts rows, and rows are not distinct items
+// (C-2026-0929-02 — jail served 71; its bank holds 27 distinct inputs over 71 rows).
+import { BANK_DISTINCT } from "./_gspc_bank_distinct";
 import { ROWS_POWER } from "./_gspc_rows_power";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 
@@ -48,6 +52,15 @@ type PowerAxisEntry = {
   mde_state: "MEASURED" | "NOT_REACHABLE" | "UNDEFINED";
 };
 export const POWER_AXES = ROWS_POWER.axes as unknown as Record<string, PowerAxisEntry>;
+type BankDistinctEntry = {
+  dataset: string;
+  file: string;
+  file_sha256: string;
+  prompt_field: string;
+  rows: number;
+  distinct_inputs: number;
+};
+export const BANK_DISTINCT_AXES = BANK_DISTINCT.axes as unknown as Record<string, BankDistinctEntry>;
 const SEP_AXES = ROWS_SEPARATION.axes as unknown as Record<string, { untested_reason_code?: string }>;
 
 export const MDE_STATES = ["MEASURED", "NOT_REACHABLE", "UNDEFINED", "UNMEASURED"] as const;
@@ -91,7 +104,7 @@ const rowsServeTheBank = (axis: string): boolean =>
   !!POWER_AXES[axis] && SEP_AXES[axis]?.untested_reason_code !== "ROWS_ARE_A_RETIRED_BANK";
 
 export type PowerFields = {
-  distinct_items: number;
+  distinct_items: number | null;
   distinct_items_source: string;
   mde: MdeBlock;
 };
@@ -118,13 +131,22 @@ export function powerFields(a: Axisish): PowerFields | undefined {
       },
     };
   }
-  // No published paired rows for the served bank: the item count is the axis's own n, said so.
+  // No published paired rows for the served bank: distinct inputs are counted from the bank's own
+  // published bytes. An axis with no counted bank is refused, never given its n (rows != items).
   const retired = p
     ? ` The only published per-item rows for this axis are a retired bank (${p.distinct_items} distinct items, ${p.file}); on those rows the MDE is ${p.mde_state}.`
     : "";
+  const b = BANK_DISTINCT_AXES[a.axis];
   return {
-    distinct_items: a.n,
-    distinct_items_source: "the axis's own n (the served bank's item count); its paired per-item rows are not published",
+    distinct_items: b ? b.distinct_inputs : null,
+    distinct_items_source: !b
+      ? `UNMEASURED: no published paired rows and no counted bank for this axis in _gspc_bank_distinct.ts (run ${BANK_DISTINCT.producer}); n=${a.n} counts rows and is not published as distinct items`
+      : `distinct inputs in the served bank: distinct sha256 of the normalised prompt (${b.prompt_field}) over the ` +
+      `${b.rows} rows of ${b.dataset}/${b.file} (sha256 ${b.file_sha256.slice(0, 16)}…, counted by ${BANK_DISTINCT.producer})` +
+      (b.rows !== b.distinct_inputs
+        ? `; ${b.rows - b.distinct_inputs} rows repeat an input already counted, so n=${b.rows} counts rows, not distinct items`
+        : "") +
+      "; its paired per-item rows are not published",
     mde: {
       value: null,
       state: "UNMEASURED",

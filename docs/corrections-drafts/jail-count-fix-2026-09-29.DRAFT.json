@@ -1,0 +1,48 @@
+{
+  "draft": true,
+  "draft_status": "HELD — NOT PUBLISHED. Not in functions/api/corrections.ts. The ledger is signed: at land time the coordinator adds this entry to the ledger in the same gated merge that serves the change (round 3), and re-signs the ledger. Every number below was read on 2026-09-29 and must be re-read live before it is published. Owner-approved fix, 29 Sep 2026: \"fix error\".",
+  "draft_lane": "lane/jail-count-fix-20260929",
+  "entry": {
+    "id": "C-2026-0929-02",
+    "date": "2026-09-29",
+    "detected_at": "2026-09-29",
+    "detected_by": "internal review (an agent drafting the Kaggle design document)",
+    "published_at": "UNRECORDED",
+    "timing_evidence": [
+      "GET https://councilof.ai/api/gspc read 2026-09-29: axes[jail].distinct_items = 71, distinct_items_source \"the axis's own n (the served bank's item count); its paired per-item rows are not published\"",
+      "distinct_items was first served by the board-honesty change (lane/board-honesty-20260928, landed 2026-09-28); the exact first-served deploy is UNRECORDED",
+      "axes[governance].historical_measurement_record.note read 2026-09-29: \"v2 bank: 237 public items (+102 held back privately)\"; the same sentence is in functions/badge/__fixtures__/gspc-2026-09-05.json, so it was served at least since 2026-09-05; when it was first served is UNRECORDED",
+      "published_at is UNRECORDED: the deploy that first serves the corrected board was not recorded when this entry was drafted"
+    ],
+    "what_was_wrong": "Two things on GET /api/gspc. (1) The jail axis published distinct_items = 71. The served bank (csoai/gspc-jail-goldbank samples.jsonl, revision df16e7855ff04b90fea19aa5f11f4b86cb466a47, sha256 0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a) has 71 rows but 27 distinct inputs. The producer (functions/api/_gspc_power.ts) had no per-item rows for this axis and fell back to the axis's n, which counts rows, and labelled it \"the served bank's item count\". 44 rows repeat an input that is already counted: the 30 red/blue attack cells esc-rb-h01..h06 × w1..w5 carry one prompt per wrapper (5 inputs over 30 rows; the harmful id is not in the prompt), the 10 red/blue benign controls ben-rb-b01..b10 are one prompt, and benign pads 20-29 repeat pads 10-19 exactly. Labels agree within every repeated group. The same 71 is behind the jail axis's Wilson 95% interval, which treats the 71 rows as independent and is therefore narrower than 27 distinct inputs support. (2) The governance axis said its v2 bank had \"237 public items (+102 held back privately)\". The 102 are scenarios of the upstream AI Act Evaluation Benchmark that this bank did not import. They are public: all 339 scenarios are in the upstream scenarios.json (github.com/davidath/ai-act-evaluation-benchmark, commit d323167f5597dfd9365b376c9afe7b0e414eb81a, CC-BY-4.0), and the 237 imported items carry source_index values that leave exactly 102 of the 339 unused. They are not a clean held-out set, and nothing was held back.",
+    "how_caught": "An agent writing the Kaggle design document compared the served jail distinct_items (71) with the published bank and saw about 27 distinct inputs, and noticed that the 102 \"privately held\" governance items come from a public file. The lane re-counted from the published bytes: the bank file was fetched at a pinned revision, checked against its sha256, and every graded row's prompt was normalised (Unicode NFC, whitespace runs collapsed to one space, trimmed, case kept) and hashed with sha256. 71 rows gave 27 distinct digests, the same count under raw bytes, whitespace-only and case-folded normalisations. The same count run over every other model-comparison bank found no other axis whose distinct_items exceeds its distinct inputs (swarm 37 of 37; the rows-backed axes count distinct item ids in the published per-item rows and their bank prompts are distinct). For governance, upstream scenarios.json was fetched and matched by source_index against csoai/gspc-gov items.jsonl: 237 used, 102 unused, all public.",
+    "what_changed": "jail distinct_items is now 27, counted and not typed. A new producer, scripts/gspc_bank_distinct.py, fetches each served bank that has no published paired rows (jail, swarm) at a pinned Hugging Face revision, refuses it if its sha256 differs from the pin, and writes functions/api/_gspc_bank_distinct.ts: rows, distinct inputs (distinct sha256 of the normalised prompt), and the groups of rows that share one input. functions/api/_gspc_power.ts reads that module and no longer falls back to n; an axis with neither rows nor a counted bank now reads distinct_items null with an UNMEASURED source, never its n. distinct_items_source on jail names the method, the file and its hash, and says that 44 rows repeat an input so n=71 counts rows. The jail axis text now says 71 rows of 27 distinct inputs, and n_note says the Wilson interval treats the rows as independent. The TIE stands: a wider interval would still contain the fleet mean. The MDE on jail stays UNMEASURED (no paired rows). swarm is unchanged at 37. The governance note now says the 237 items were imported from the benchmark's 339 public scenarios, that the other 102 are not graded here and are not a private held-out set, and that no held-out slice backs the axis. No accuracy, interval, determination or total changed. No signed bytes changed: the signed board snapshots, the signed card index and the signed rows record are untouched. Old snapshots that carry the old sentences are records of what was served and are not rewritten.",
+    "old_values": {
+      "axes[jail].distinct_items": 71,
+      "axes[jail].distinct_items_source": "the axis's own n (the served bank's item count); its paired per-item rows are not published",
+      "axes[governance] note": "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0)."
+    },
+    "new_values": {
+      "axes[jail].distinct_items": 27,
+      "axes[jail].n": 71,
+      "axes[jail].distinct_items_source": "distinct inputs in the served bank: distinct sha256 of the normalised prompt (input) over the 71 rows of csoai/gspc-jail-goldbank/samples.jsonl (sha256 0b45b620f2277c36…, counted by scripts/gspc_bank_distinct.py); 44 rows repeat an input already counted, so n=71 counts rows, not distinct items; its paired per-item rows are not published",
+      "axes[governance] note": "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The other 102 scenarios are not graded here, and they are not a private held-out set: all 339 are public in the upstream scenarios.json (github.com/davidath/ai-act-evaluation-benchmark). No held-out slice backs this axis (C-2026-0929-02)."
+    },
+    "method": "distinct inputs = the number of distinct sha256 digests of the normalised prompt over every graded row of the published bank file, canary rows excluded. Normalisation: Unicode NFC; every run of whitespace becomes one space; leading and trailing whitespace removed; case and punctuation kept. The prompt is the field the model is sent (samples.jsonl `input`). Row ids and labels play no part. The file is fetched at a pinned revision and refused if its sha256 differs from the pin. Pinned on a fixture by scripts/test_gspc_bank_distinct.py (14 rows, 7 distinct inputs: ids over one prompt, pad n / n+10 repeats, CRLF/tab/trailing-space variants and NFC/NFD are one input each; a case-only difference is a different input).",
+    "status": "CORRECTED - jail distinct_items counted from the bank bytes (27 of 71 rows); governance no longer describes public items as held back privately; no determination and no signed byte changed",
+    "reached_the_public": true,
+    "open_items": [
+      "The Hugging Face card of csoai/gspc-gov (NOTICE) still says the source was \"split into public and private held-out sets\". That file is outside this repository and needs the same correction at the next dataset card push.",
+      "The jail bank itself repeats inputs because of its generator: the red/blue harmful ids h01..h06 do not reach the prompt. That is a bank defect, recorded here and not fixed: the bank is frozen and digest-gated. A future jail bank should be de-duplicated by this method before it is graded.",
+      "The jail Wilson interval is computed over 71 rows. It is published as it was signed; a recomputation over distinct inputs needs per-model answers per input and was not done here."
+    ],
+    "evidence": [
+      "https://councilof.ai/api/gspc (axes[jail].distinct_items, axes[jail].distinct_items_source, axes[jail].n_note, axes[governance].historical_measurement_record.note)",
+      "https://huggingface.co/datasets/csoai/gspc-jail-goldbank/resolve/df16e7855ff04b90fea19aa5f11f4b86cb466a47/samples.jsonl (sha256 0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a)",
+      "https://github.com/davidath/ai-act-evaluation-benchmark/blob/d323167f5597dfd9365b376c9afe7b0e414eb81a/scenarios.json (339 scenarios)",
+      "https://huggingface.co/datasets/csoai/gspc-gov/resolve/main/items.jsonl (237 items, source_index)",
+      "scripts/gspc_bank_distinct.py; scripts/test_gspc_bank_distinct.py; fixtures/gspc-bank-distinct/mini-bank.jsonl",
+      "functions/api/_gspc_bank_distinct.ts (generated); functions/api/_gspc_power.ts; functions/api/gspc.power.test.ts"
+    ]
+  }
+}
