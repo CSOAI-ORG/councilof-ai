@@ -138,7 +138,8 @@ function HarnessDoor() {
           typeof j?.census?.n_unique_ids === "number"
             ? Number(j.census.n_unique_ids).toLocaleString("en-GB")
             : "see digest";
-        const graded = typeof j?.census?.n_measured === "number" ? String(j.census.n_measured) : "0";
+        // Absent is UNCHECKABLE, never a typed "0" (a zero here would be an invented measurement).
+        const graded = typeof j?.census?.n_measured === "number" ? String(j.census.n_measured) : "UNCHECKABLE";
         setLane({
           status: "ready",
           agui: String(j?.agui?.status || "unconfigured"),

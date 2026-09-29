@@ -450,6 +450,12 @@ function normPath(p: string) {
 
 function App() {
   const [location] = useLocation();
+  // Subscribed, not read from window: the top-level `embed=1` strip below changes ONLY the
+  // query string (the pathname stays /dashboard/), and useLocation does not re-render on a
+  // search-only navigation. Reading window.location.search left App rendering the strip's
+  // <Redirect> (null) forever — every /os?embed=1&lobby=… panel URL opened directly was a
+  // blank page (28 Sep 2026, phone viewport, live).
+  const search = useOsSearch();
   const path = normPath(location);
   const proofHost =
     typeof window !== "undefined" &&
@@ -519,7 +525,7 @@ function App() {
   // copied panel URL opened directly must converge on the canonical workspace
   // with full navigation and account controls. Genuine iframes retain the hint.
   if (path === "/dashboard" && typeof window !== "undefined") {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(search);
     let topLevel = true;
     try {
       topLevel = window.self === window.top;
