@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { useBoardCount } from "@/lib/boardCount";
+import { TOOL_COUNT_SENTENCE } from "@/lib/mcpTools";
 
 /**
  * /transparency-cop — live vs planned for the EU Transparency Code of Practice.
@@ -45,7 +46,7 @@ export default function TransparencyCop() {
           <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-gray-600">
             <li>Ed25519 measurement cards (did:web:csoai.org#card-attestation-1)</li>
             <li>Browser verify at /gspc-verify</li>
-            <li>HTTP MCP https://councilof.ai/mcp — tools/list serves 12 tools (8 free readers + 4 x402-metered); witness_hash is quarantined there. Published npm 0.2.1 also lists 12, split differently (7 free + 5 x402): it carries witness_hash and not x402_trust. Re-check: /.well-known/mcp.json → measured</li>
+            <li>MCP at https://councilof.ai/mcp and https://councilof.ai/mcp/free — {TOOL_COUNT_SENTENCE} Re-check: /.well-known/mcp.json → measured</li>
             <li>
               C2PA / CAI conformance: <strong>not live</strong> (claims register CR-012 planned)
             </li>

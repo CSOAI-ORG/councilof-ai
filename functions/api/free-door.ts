@@ -51,11 +51,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const resourceUrl = `${url.origin}/api/free-door`;
 
   // The one honest way to price this: zero, stated through the protocol. X402_AMOUNT is read by
-  // x402Accepts ahead of any SKU price, so the door advertises 0 without inventing a SKU for it.
+  // x402Accepts ahead of any SKU price, so the door advertises 0 without a priced SKU behind it.
+  // Its own product and sku id (public audit 2026-09-28, fix #29): it borrowed request_attestation's,
+  // so every 402 here said csoai.product.request_attestation and every zero-value settle on this door
+  // was recorded against the attestation product in the settlement ledger.
   const accepts = x402Accepts({ ...env, X402_AMOUNT: "0" }, resourceUrl, {
-    skuId: "request_attestation",
+    skuId: FREE_DOOR_SKU,
     tier: "per_request",
     description: DESCRIPTION,
+    productId: FREE_DOOR_PRODUCT_ID,
   });
 
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
@@ -269,3 +273,7 @@ export const onRequestPost = onRequestGet;
 
 // HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
 export const onRequestHead = headFromGet(onRequestGet);
+
+/** This door's own identity on the rail; never another product's (read inside onRequestGet). */
+export const FREE_DOOR_PRODUCT_ID = "csoai.product.free_door";
+export const FREE_DOOR_SKU = "free_door";

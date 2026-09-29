@@ -881,19 +881,29 @@ if __name__ == "__main__":
     demo.launch(mcp_server=True)
 `);
 
-// ── 10. Well-known descriptors: regenerate DERIVED fields only ──────────────────────────────
-// The rest of each document is owned by the file itself (provider, licence, DOI, discovery);
-// the fields below are the ones that drifted, so they are now rendered from source every time.
+// ── 10. Well-known descriptors: BOTH DOCUMENTS RENDERED WHOLE ───────────────────────────────
+// public/.well-known/mcp/server-card.json and public/.well-known/mcp.json are generated here in
+// full, from ONE set of sources (public audit 2026-09-28, fix #24):
+//   identity   council-os/distribution.json identity + registry_names
+//   version    mcp/gspc-server/server.json version (the MCP Registry's isLatest; check.mjs reads the
+//              registry live) — and functions/mcp/[[path]].ts MCP_HTTP_SERVER_VERSION must equal it
+//   tools      functions/mcp/gspc-tools.json + paid-tools.json, exactly what tools/list serves
+//   doctrine   docs/DOCTRINE.md, by hash
+// Until then only some fields were rendered and the rest were whatever the file last held, which
+// is how the audit found a server card with a four-name axis list, no tools[] and no version, and
+// an mcp.json with a stale registry version, an internal worker note and a fallback URL
+// (https://csoai.org/mcp) that answers POST with a 308. Nothing in either file is hand-edited now.
 //
 // THE TOOL NAMES, COUNTS AND DIGESTS COME FROM WHAT tools/list SERVES (2026-09-28), not from the
 // registry: functions/mcp/[[path]].ts lists gspc-tools.json then paid-tools.json on /mcp, and
-// gspc-tools.json alone on /mcp/free. These two files said 13 while tools/list said 16 until
-// 26 Sep, and the contract-parity instrument (scripts/census/contract-parity.py) compares exactly
-// these fields with a live tools/list. The registry must name the same fleet; if it does not, this
-// render refuses rather than publish either version. The digest is the instrument's own:
-// sha256 of the sorted tool names joined by "\n".
-const SERVED_FREE = readJson("functions/mcp/gspc-tools.json").tools.map((t) => t.name);
-const SERVED_PAID = readJson("functions/mcp/paid-tools.json").tools.map((t) => t.name);
+// gspc-tools.json alone on /mcp/free. The contract-parity instrument (scripts/census/contract-parity.py)
+// compares exactly these fields with a live tools/list. The registry must name the same fleet; if it
+// does not, this render refuses rather than publish either version. The digest is the instrument's
+// own: sha256 of the sorted tool names joined by "\n".
+const SERVED_FREE_DEFS = readJson("functions/mcp/gspc-tools.json").tools;
+const SERVED_PAID_DEFS = readJson("functions/mcp/paid-tools.json").tools;
+const SERVED_FREE = SERVED_FREE_DEFS.map((t) => t.name);
+const SERVED_PAID = SERVED_PAID_DEFS.map((t) => t.name);
 const SERVED = [...SERVED_FREE, ...SERVED_PAID];
 const namesSha = (names) => sha256([...names].sort().join("\n"));
 const NAMES_SHA_RULE = 'sha256 of the tool names from tools/list, sorted, joined by "\\n" (UTF-8)';
@@ -903,65 +913,134 @@ if (SERVED.join(",") !== toolNames.join(",") || SERVED_FREE.join(",") !== free.m
     `(functions/mcp/gspc-tools.json + paid-tools.json) name different fleets.\n  registry: ${toolNames.join(",")}\n  served:   ${SERVED.join(",")}`);
   process.exit(2);
 }
+// The HTTP runtime answers initialize with MCP_HTTP_SERVER_VERSION; the documents state REMOTE_VERSION.
+// Two numbers for one server is the drift this section exists to stop, so a mismatch refuses.
+const HTTP_VERSION = /export const MCP_HTTP_SERVER_VERSION = "([^"]+)"/.exec(read("functions/mcp/[[path]].ts"))?.[1];
+if (HTTP_VERSION !== REMOTE_VERSION) {
+  console.error(
+    `harness-x render: REFUSED — functions/mcp/[[path]].ts MCP_HTTP_SERVER_VERSION is ${HTTP_VERSION ?? "(absent)"}, ` +
+    `mcp/gspc-server/server.json version is ${REMOTE_VERSION}. initialize and the discovery documents must state one version.`);
+  process.exit(2);
+}
+const SERVER_NAME = "csoai-gspc-mcp"; // serverInfo.name, as initialize answers it
 const stdio = `npx -y ${NPM_ID}@${NPM_VERSION}`;
 const fleetProse = `${word(free.length)} free readers plus ${word(paid.length)} x402-metered evidence tools`;
-{
-  const rel = "public/.well-known/mcp/server-card.json";
-  const card = readJson(rel);
-  card.description =
-    "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). " +
-    "Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. " +
-    "Measurement only: not certification, not accreditation, no conformity assessment. " +
-    `MCP registry ${dist.registry_names.canonical} server ${REMOTE_VERSION} (${dist.registry_names.deprecated_alias} is its deprecated alias). POST /mcp lists ${fleetProse}; witness_hash is quarantined on HTTP. mill-tool \`measure\` dropped.`;
-  card.endpoints.mcp.stdio = stdio;
-  card.endpoints.mcp.note =
-    `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(tools.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. ` +
-    `Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server ${REMOTE_VERSION}. mill-tool \`measure\` dropped.`;
-  card.endpoints.mcp.free = FREE_DOOR;
-  card.endpoints.mcp.free_note =
-    `${FREE_DOOR} serves the ${word(free.length)} free readers only, from the same definitions and handlers as ${ID.door}: ` +
-    "no payment tool and no payment text. It is the address for chat clients and directories that list no payment software.";
-  card.capabilities.tools = SERVED;
-  card.capabilities.total_tools = SERVED.length;
-  card.capabilities.free_tools = SERVED_FREE.length;
-  card.capabilities.metered_tools = SERVED_PAID.length;
-  card.capabilities.tool_names_sha256 = namesSha(SERVED);
-  card.capabilities.free_door_tool_names = SERVED_FREE;
-  card.capabilities.free_door_tool_names_sha256 = namesSha(SERVED_FREE);
-  card.capabilities.tool_names_sha256_rule = NAMES_SHA_RULE;
-  card.capabilities.derived_from = `tools/list of ${ID.door} (functions/mcp/gspc-tools.json + paid-tools.json) and of ${FREE_DOOR} (gspc-tools.json)`;
-  card.doctrine = DOCTRINE;
-  card.generated_by = "scripts/harness-x/render.mjs (derived fields: description, endpoints.mcp.stdio, endpoints.mcp.note, endpoints.mcp.free, endpoints.mcp.free_note, capabilities.*, doctrine)";
-  emit(rel, j(card));
-}
-{
-  const rel = "public/.well-known/mcp.json";
-  const m = readJson(rel);
-  m.servers[0].stdio = stdio;
-  m.servers[0].free_url = FREE_DOOR;
-  m.servers[0].free_tools = SERVED_FREE;
-  m.servers[0].free_tool_names_sha256 = namesSha(SERVED_FREE);
-  m.servers[0].registry.name = dist.registry_names.canonical;
-  m.servers[0].registry.deprecated_alias = dist.registry_names.deprecated_alias;
-  m.servers[0].registry.version = REMOTE_VERSION;
-  m.measured.total_tools = SERVED.length;
-  m.measured.free_tools = SERVED_FREE.length;
-  m.measured.metered_tools = SERVED_PAID.length;
-  m.measured.tools = SERVED;
-  m.measured.tool_names_sha256 = namesSha(SERVED);
-  m.measured.tool_names_sha256_rule = NAMES_SHA_RULE;
-  m.measured.derived_from = `tools/list of ${ID.door}: functions/mcp/gspc-tools.json + paid-tools.json`;
-  m.measured.note =
-    `POST /mcp tools/list: ${fleetProse}. mill-tool \`measure\` is dropped. witness_hash remains quarantined and is not advertised. ` +
-    `MCP Registry server ${REMOTE_VERSION} points here. A listing does not prove paid settlement or delivery.`;
-  m.planted.tools = SERVED;
-  m.planted.note =
-    `The product door: ${fleetProse}. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. ` +
-    "No jail run from MCP. mill-tool `measure` dropped.";
-  m.doctrine = DOCTRINE;
-  m.generated_by = "scripts/harness-x/render.mjs (derived fields: servers[0].stdio, servers[0].free_url, servers[0].free_tools, servers[0].free_tool_names_sha256, servers[0].registry, measured.*, planted.*, doctrine)";
-  emit(rel, j(m));
-}
+// The one tool-count sentence the site, /mcp and these documents share (fix #19). Array lengths.
+const TOOL_COUNTS = `${SERVED_FREE.length} free tools at /mcp/free; ${SERVED.length} at /mcp ` +
+  `(${SERVED_FREE.length} free + ${SERVED_PAID.length} metered). The npm package is versioned separately.`;
+const WELL_KNOWN_GENERATOR =
+  "scripts/harness-x/render.mjs — the whole document, from council-os/distribution.json (identity), " +
+  "mcp/gspc-server/server.json (version), functions/mcp/gspc-tools.json + paid-tools.json (tools, as tools/list serves them) " +
+  "and docs/DOCTRINE.md (doctrine hash). Do not hand-edit; re-render.";
+const provider = { name: ID.publisher, url: ID.website, company_number: ID.company_number, jurisdiction: ID.jurisdiction };
+emit("public/.well-known/mcp/server-card.json", j({
+  schema_version: "2024-11-05",
+  name: SERVER_NAME,
+  display_name: ID.display_name,
+  version: REMOTE_VERSION,
+  serverInfo: { name: SERVER_NAME, title: ID.display_name, version: REMOTE_VERSION },
+  description:
+    "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. " +
+    "Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. " +
+    `MCP registry ${dist.registry_names.canonical} server ${REMOTE_VERSION} (${dist.registry_names.deprecated_alias} is its deprecated alias). ${TOOL_COUNTS}`,
+  icon_url: ID.icon,
+  provider,
+  transport: { type: "streamable-http", url: ID.door },
+  endpoints: {
+    mcp: {
+      primary: ID.door,
+      current: ID.door,
+      stdio,
+      note: `Live door is ${ID.door} (GET 200). HTTP tools/list is ${word(SERVED.length)}: ${fleetProse}. witness_hash is quarantined and not advertised. Registry server ${REMOTE_VERSION}.`,
+      free: FREE_DOOR,
+      free_note:
+        `${FREE_DOOR} serves the ${word(free.length)} free readers only, from the same definitions and handlers as ${ID.door}: ` +
+        "no payment tool and no payment text. It is the address for chat clients and directories that list no payment software.",
+    },
+    gspc_board: {
+      url: ID.board,
+      method: "GET",
+      description: "Live GSPC board. Per-axis n, leader, Wilson interval, separation (SEPARATED/TIE). Quote totals.public_count. Empty cells stay empty. Ties are ties. No auth required.",
+    },
+  },
+  capabilities: {
+    tools: SERVED,
+    total_tools: SERVED.length,
+    free_tools: SERVED_FREE.length,
+    metered_tools: SERVED_PAID.length,
+    tool_counts: TOOL_COUNTS,
+    streaming: false,
+    auth_required: false,
+    tool_names_sha256: namesSha(SERVED),
+    free_door_tool_names: SERVED_FREE,
+    free_door_tool_names_sha256: namesSha(SERVED_FREE),
+    tool_names_sha256_rule: NAMES_SHA_RULE,
+    derived_from: `tools/list of ${ID.door} (functions/mcp/gspc-tools.json + paid-tools.json) and of ${FREE_DOOR} (gspc-tools.json)`,
+  },
+  // The full definitions tools/list serves on /mcp, in its order: name, title, description, input and
+  // output schema, annotations. The first twelve are the /mcp/free list.
+  tools: [...SERVED_FREE_DEFS, ...SERVED_PAID_DEFS],
+  authentication: { required: false, note: "Public MCP — initialize and tools/list require no Authorization header." },
+  license: "CC-BY-4.0",
+  doi: "10.5281/zenodo.21991104",
+  explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
+  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
+  doctrine: DOCTRINE,
+  generated_by: WELL_KNOWN_GENERATOR,
+}));
+emit("public/.well-known/mcp.json", j({
+  schema_version: "2026-07-28",
+  name: "csoai",
+  description:
+    "Council of AI measurement tools exposed over MCP. Independent AI-governance measurement body — not certification, not accreditation. " +
+    "Live board: GET /api/gspc (quote totals.public_count).",
+  servers: [
+    {
+      name: SERVER_NAME,
+      display_name: "GSPC Measurement Tools",
+      url: ID.door,
+      version: REMOTE_VERSION,
+      stdio,
+      auth_required: false,
+      registry: {
+        name: dist.registry_names.canonical,
+        version: REMOTE_VERSION,
+        url: "https://registry.modelcontextprotocol.io",
+        deprecated_alias: dist.registry_names.deprecated_alias,
+      },
+      free_url: FREE_DOOR,
+      free_tools: SERVED_FREE,
+      free_tool_names_sha256: namesSha(SERVED_FREE),
+    },
+  ],
+  catalogue: ID.door,
+  gspc_board: ID.board,
+  server_card: `${ID.website}/.well-known/mcp/server-card.json`,
+  measured: {
+    total_tools: SERVED.length,
+    free_tools: SERVED_FREE.length,
+    metered_tools: SERVED_PAID.length,
+    server_count: 1,
+    tools: SERVED,
+    tool_counts: TOOL_COUNTS,
+    note:
+      `POST /mcp tools/list: ${fleetProse}. witness_hash remains quarantined and is not advertised. ` +
+      `MCP Registry server ${REMOTE_VERSION} points here. A listing does not prove paid settlement or delivery.`,
+    tool_names_sha256: namesSha(SERVED),
+    tool_names_sha256_rule: NAMES_SHA_RULE,
+    derived_from: `tools/list of ${ID.door}: functions/mcp/gspc-tools.json + paid-tools.json`,
+  },
+  planted: {
+    tools: SERVED,
+    url: ID.door,
+    note:
+      `The product door: ${fleetProse}. The public-root readers answer VALID / INVALID / NOT_IN_THIS_CORPUS / UNCHECKABLE, never a GSPC grade. ` +
+      "No jail run from MCP.",
+  },
+  provider: { name: ID.publisher, url: ID.website },
+  doctrine: DOCTRINE,
+  generated_by: WELL_KNOWN_GENERATOR,
+}));
 
 // ── 11. SUBMIT.md ───────────────────────────────────────────────────────────────────────────
 const rowsById0 = Object.fromEntries(dist.distribution.map((r) => [r.id, r]));

@@ -60,11 +60,40 @@ export function populationIdFromPath(pathname: string): string {
 
 export const resourceUrlFor = (origin: string, id: string) => `${origin}/api/pop/${id}`;
 
-/** The one sentence the 402 carries: the population, its as_of and its count — read, never typed. */
-export function describe(entry: { title: string; population: string }, r: Reading): string {
-  const count = r.n === null ? `count ${r.state} (${r.reason || "no total is published"})` : `${r.n} ${r.n_unit}`;
+/**
+ * The one live sentence the 402 carries (csoai.reading_sentence): the population, its count, as_of
+ * and state — read, never typed. SHORT by design (public audit 2026-09-28, fix #29): it used to
+ * append the population sentence and two lines of boilerplate, about 450 characters repeated in
+ * every challenge. Those stay one GET away, free, at ?preview=1 (title, population, the reading).
+ * An entry may phrase its own count (countPhrase) so the number is still the reading's.
+ */
+export function describe(entry: { title: string; population: string; countPhrase?: (n: number, unit: string) => string }, r: Reading): string {
+  const count =
+    r.n === null
+      ? `count ${r.state} (${r.reason || "no total is published"})`
+      : entry.countPhrase
+        ? entry.countPhrase(r.n, r.n_unit)
+        : `${r.n} ${r.n_unit}`;
   const asOf = r.as_of ? `as of ${r.as_of}` : `as_of unavailable at challenge time${r.reason ? ` (${r.reason})` : ""}`;
-  return `Population door: ${entry.title} — ${count}, ${asOf}, state ${r.state}. ${entry.population}. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.`;
+  return `${entry.title}: ${count}; ${asOf}, state ${r.state}.`;
+}
+
+/**
+ * What the CHALLENGE carries of the free reading: the counts, dates, state and caveats, never the
+ * head. The head is the artifact's own sample and ran to 13 KB on claim-watch, which made that
+ * 402 29.7 KB (public audit 2026-09-28, fix #29). It is free, whole, at full_reading. `source` is
+ * not repeated here: csoai.free_sources carries it once.
+ */
+export function challengePreview(head: Omit<Reading, "rows" | "rows_unit">, resourceUrl: string) {
+  return {
+    state: head.state,
+    n: head.n,
+    n_unit: head.n_unit,
+    as_of: head.as_of,
+    reason: head.reason,
+    unmeasured: head.unmeasured,
+    full_reading: `${resourceUrl}?preview=1`,
+  };
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
@@ -135,10 +164,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         per: "population-slice",
         population: entry.id,
         lid: CSOAI_LID,
-        // The free reading, in the challenge BODY, so a buyer sees what the slice is before paying.
-        // Named `preview` because encodePaymentRequiredHeader drops csoai.preview from the header:
-        // the 16 KiB header limit is what costs a door its listing, and a reading can be large.
-        preview: head,
+        // The free reading's counts, state and caveats in the challenge BODY, so a buyer sees what the
+        // slice is before paying; the head (the sample, up to 13 KB) is one free GET away at
+        // full_reading. Named `preview` because encodePaymentRequiredHeader drops csoai.preview from
+        // the header: the 16 KiB header limit is what costs a door its listing.
+        preview: challengePreview(head, resourceUrl),
         reading_sentence: liveSentence,
         never: ["a grade", "a rank", "a verdict about any row", "a paywall on the source artifact", "a certificate"],
         deliverable: `the ${entry.title} slice: ${reading.rows_unit || "the population rows verbatim from the artifact(s) in source[]"}, plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record`,
@@ -147,8 +177,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         free_sources: head.source,
         rail: railMode(env),
         not_paid_reason: notPaidReason,
+        // Every door, with its text and terms, is in the catalogue; the ten-URL all_doors list is not
+        // repeated in each challenge (it stays in the free preview's `buy` block and in 404s).
         catalog: `${origin}/api/x402`,
-        all_doors: known.map((k) => resourceUrlFor(origin, k)),
         ...(extra.csoai || {}),
       },
     });

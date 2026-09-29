@@ -42,13 +42,15 @@ import { SKU as POPULATION_SKU } from "../api/_population_door";
 import FREE_TOOLS from "../mcp/gspc-tools.json";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 import { freshCapsulePaymentRequired, PATH as FRESH_CAPSULE_PATH } from "../api/measurement/fresh-capsule";
+import { FREE_DOOR_PRODUCT_ID, FREE_DOOR_SKU } from "../api/free-door";
 
 /** The SKU tier each door passes to x402Accepts — keyed by the path the door serves. */
 // pathScoped: the door charges its PATH, not the concrete example URL, so a buyer's target never
 // becomes a catalogue row (x402-ras-doors 64e556117). The listing builds its terms the same way.
 export type ListingOffer = { skuId: string; tier: string; productId?: string; amountAtomic?: "0"; pathScoped?: true };
 export const OFFERS: Record<string, ListingOffer> = {
-  "/api/free-door": { skuId: "request_attestation", tier: "per_request", amountAtomic: "0" },
+  // The free door lists under its OWN product and sku id, as its 402 does (functions/api/free-door.ts).
+  "/api/free-door": { skuId: FREE_DOOR_SKU, tier: "per_request", productId: FREE_DOOR_PRODUCT_ID, amountAtomic: "0" },
   "/api/request-attestation": { skuId: "request_attestation", tier: "per_request" },
   "/api/evidence-bundle": { skuId: "evidence_bundle", tier: "bundle" },
   "/api/eunomia-data": { skuId: "issuance", tier: "reserve" },

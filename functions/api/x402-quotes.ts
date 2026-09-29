@@ -8,10 +8,17 @@
  * So the same unpaid GET is made here, server-side, and the page receives one 200 carrying each
  * door's answer verbatim.
  *
- * WHAT IT IS NOT. Nothing is paid, signed or cached: `cache-control: no-store`, no X-PAYMENT
- * header, and each door is asked at request time exactly as the page asked it (GET, accept JSON).
- * The terms are still each door's own live 402 body; this relays it and adds nothing. A door
- * that does not answer is reported with its error and a null status, never a substituted body.
+ * WHAT IT IS NOT. Nothing is paid or signed: no X-PAYMENT header, and each door is asked exactly as
+ * the page asked it (GET, accept JSON). The terms are still each door's own 402 body; this relays
+ * it and adds nothing. A door that does not answer is reported with its error and a null status,
+ * never a substituted body.
+ *
+ * CACHED AT THE EDGE (public audit 2026-09-28, fix #29). Every request used to fan out to all 25
+ * doors: 1.1 s to first byte and 315 KB of pretty-printed JSON, for a page that only renders the
+ * terms. The reading is now serialised compact and kept in the Cloudflare cache for
+ * QUOTES_TTL_SECONDS; `as_of` is the moment the doors were actually asked, so a cached answer
+ * says how old it is, and `max_age_seconds` says how old it may get. An UNCHECKABLE reading (the
+ * manifest could not be read) is served but never cached.
  *
  * SCOPE. Only doors on the requesting origin are asked. A manifest row on another host is
  * returned as `skipped` (the page then asks that door itself), so this is not an open relay.
@@ -21,6 +28,9 @@ export const QUOTES_SCHEMA = "csoai.x402-quotes/0.1";
 export const MANIFEST_PATH = "/.well-known/x402.json";
 const DOOR_TIMEOUT_MS = 8_000;
 const MAX_DOORS = 40;
+/** How long one reading is served from the edge cache before the doors are asked again. */
+export const QUOTES_TTL_SECONDS = 300;
+export const QUOTES_CACHE_CONTROL = `public, max-age=60, s-maxage=${QUOTES_TTL_SECONDS}, stale-while-revalidate=600`;
 
 export type DoorQuote = {
   url: string;
@@ -38,13 +48,15 @@ export type QuotesReading = {
   as_of: string;
   manifest: string;
   kind: "MEASURED" | "UNCHECKABLE";
+  /** The oldest this reading can be when served from the edge cache; as_of is when it was taken. */
+  max_age_seconds: number;
   quotes: DoorQuote[];
   reason: string | null;
   note: string;
 };
 
 const NOTE =
-  "Each row is that door's own answer to an unpaid GET, made at request time. A 402 is a challenge, not settlement, delivery or revenue. Nothing here is paid, signed or cached.";
+  `Each row is that door's own answer to an unpaid GET, made at as_of. The reading is kept in the edge cache for up to ${QUOTES_TTL_SECONDS} seconds, so as_of can be that much older than your request. A 402 is a challenge, not settlement, delivery or revenue. Nothing here is paid or signed.`;
 
 type Fetch = typeof fetch;
 
@@ -75,6 +87,7 @@ export async function readQuotes(origin: string, fetchImpl: Fetch = fetch): Prom
     as_of: new Date().toISOString(),
     manifest: MANIFEST_PATH,
     kind: "UNCHECKABLE",
+    max_age_seconds: QUOTES_TTL_SECONDS,
     quotes: [],
     reason: null,
     note: NOTE,
@@ -120,14 +133,40 @@ export async function readQuotes(origin: string, fetchImpl: Fetch = fetch): Prom
   });
 }
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
-  const reading = await readQuotes(new URL(request.url).origin, fetch);
-  return new Response(JSON.stringify(reading, null, 2), {
-    status: 200,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      "access-control-allow-origin": "*",
-    },
-  });
+/** The edge cache, where the runtime has one (Workers / Pages); undefined under Node and tests. */
+function edgeCache(): Cache | undefined {
+  return typeof caches !== "undefined" ? (caches as unknown as { default?: Cache }).default : undefined;
+}
+
+export const onRequestGet: PagesFunction = async ({ request, waitUntil }) => {
+  const origin = new URL(request.url).origin;
+  // One key per origin, whatever query string was sent: the reading takes no parameters.
+  const key = new Request(`${origin}/api/x402-quotes`, { method: "GET" });
+  const cache = edgeCache();
+  if (cache) {
+    try {
+      const hit = await cache.match(key);
+      if (hit) {
+        const headers = new Headers(hit.headers);
+        headers.set("x-csoai-cache", "HIT");
+        return new Response(hit.body, { status: hit.status, headers });
+      }
+    } catch {
+      /* a cache that cannot be read is a miss, never an error */
+    }
+  }
+  const reading = await readQuotes(origin, fetch);
+  const headers = {
+    "content-type": "application/json; charset=utf-8",
+    // Only a MEASURED reading is shareable; an UNCHECKABLE one is retried on the next request.
+    "cache-control": reading.kind === "MEASURED" ? QUOTES_CACHE_CONTROL : "no-store",
+    "access-control-allow-origin": "*",
+    "x-csoai-cache": "MISS",
+  };
+  const response = new Response(JSON.stringify(reading), { status: 200, headers });
+  if (cache && reading.kind === "MEASURED") {
+    const put = cache.put(key, response.clone()).catch(() => undefined);
+    if (typeof waitUntil === "function") waitUntil(put);
+  }
+  return response;
 };
