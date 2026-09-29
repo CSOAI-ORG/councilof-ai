@@ -477,6 +477,7 @@ function App() {
   if (
     [
       "/ag-ui",
+      "/a2ui",
       "/chat",
       "/console",
       "/council-os",
@@ -761,6 +762,7 @@ function App() {
                   <Route path="/regulator/:id" component={ContentReviewNotice} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui">{() => <Redirect to="/dashboard?tab=home" />}</Route>
+                  <Route path="/a2ui">{() => <Redirect to="/dashboard?tab=home" />}</Route>
                   <Route path="/chat">{() => <Redirect to="/dashboard?tab=home" />}</Route>
                   {/* Direct: /leaderboard itself redirects into the Dashboard, so this used to hop twice. */}
                   <Route path="/rankings">{() => <Redirect to="/dashboard?tab=board" />}</Route>

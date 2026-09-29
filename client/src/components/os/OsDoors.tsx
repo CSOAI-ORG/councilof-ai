@@ -283,6 +283,11 @@ function HarnessDoor() {
         <div className="mt-3">
           <GspcStreamCard />
         </div>
+        <p className="mt-3 text-xs text-slate-600" data-testid="a2ui-surface-note">
+          Renderer lane: <a className="font-medium underline" href="/api/a2ui">GET /api/a2ui</a> describes the
+          A2UI v1.0 Candidate projection; <a className="font-medium underline" href="/api/a2ui/gspc">GET /api/a2ui/gspc</a>
+          carries the same living GSPC source as NDJSON. Candidate protocol support, not certification.
+        </p>
         <p className="mt-3 text-xs text-slate-600" data-testid="w3c-agent-conformance-draft">
           Draft opening only:{" "}
           <a

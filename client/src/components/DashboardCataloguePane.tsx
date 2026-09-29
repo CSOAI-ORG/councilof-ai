@@ -56,6 +56,7 @@ const INTERNAL_ROUTE =
 const CANONICAL_ALIAS_PATHS = new Set([
   "/ag-ui",
   "/agui",
+  "/a2ui",
   "/arena-scoreboard",
   "/assess",
   "/assessment",
