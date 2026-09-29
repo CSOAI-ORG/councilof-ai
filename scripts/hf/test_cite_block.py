@@ -6,6 +6,9 @@ On 28 Sep 2026 lane L5 wrote the block onto every public csoai/* card, to the AR
 that rewrites a card from its own template would strip it on its next run (fix-producer-not-artifact).
 These tests hold the producer side:
 
+  * the block opens with the objections, contact and corrections section (29 Sep 2026), and the outward
+    gate's accountability checks pass on a produced card;
+
   * apply() reproduces live cards byte for byte (fixtures are anonymous reads of the live cards,
     28 Sep 2026 13:50Z), is idempotent, and keeps exactly one block, at the end;
   * the year and DOI come from cite-block-registry.json, the licence only from L5's recorded decisions;
@@ -73,7 +76,7 @@ PRODUCERS = {
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers
     "scripts/mirror_to_hf.py": "private",                    # csoai/councilof-ai-mirror
-    "scripts/pod-loops/corrections-watch.py": "private",     # csoai/councilof-ai-mirror, a sub-folder README
+    "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
     "scripts/harness-x/render.mjs": "not-a-card",            # package and Space READMEs
@@ -143,6 +146,38 @@ class TheBlock(unittest.TestCase):
             self.assertIn(s, blk)
         # the outward gate's notice list bans this word; L5 removed it from the first draft
         self.assertNotRegex(blk.lower(), r"certif")
+
+    def test_the_block_carries_the_objections_contact_and_corrections_section(self):
+        blk = cb.extract(cb.apply(CARD, "csoai/example-census"))
+        self.assertEqual(blk.count(cb.OBJ_HEADING), 1)
+        for s in ("nicholas@csoai.org", "https://councilof.ai/dispute/", "https://councilof.ai/api/corrections",
+                  "object to a row", "re-check", "request a correction", "CSOAI Ltd (company no. 16939677"):
+            self.assertIn(s, blk)
+        self.assertLess(blk.index(cb.OBJ_HEADING), blk.index("## How to cite"))
+
+    def test_the_outward_gate_accountability_checks_pass_on_a_produced_card(self):
+        # the exact checks that failed on 117 of 131 public cards on 29 Sep 2026 (05:00Z gate run)
+        og = load("outward_gate", REPO / "scripts/outward-gate/outward_gate.py")
+        for card in (CARD, "# Bare card without front matter\n\nBody.\n"):
+            md = cb.apply(card, "csoai/example-census")
+            links = re.findall(r"https?://[^\s)\]>\"'`]+", md)
+            got = {c["check"]: c["status"] for c in og.accountability_checks(md, og.md_text(md), "x", links)}
+            for chk in ("accountability.objection_route", "accountability.contact_plain_email",
+                        "accountability.corrections_link", "accountability.entity_named"):
+                self.assertEqual(got.get(chk), "PASS", (chk, got))
+            bare = {c["check"]: c["status"] for c in og.accountability_checks(card, og.md_text(card), "x", [])}
+            self.assertEqual(bare["accountability.objection_route"], "FAIL")  # the check is not vacuous
+
+    def test_a_card_with_its_own_objections_section_is_not_given_a_second(self):
+        own = CARD + "\n## Objections, contact and corrections\n\nWrite to us.\n"
+        once = cb.apply(own, "csoai/example-census")
+        self.assertEqual(once.count(cb.OBJ_HEADING), 1)
+        self.assertNotIn(cb.OBJ_HEADING, cb.extract(once))
+        self.assertEqual(cb.apply(once, "csoai/example-census"), once)
+        # the section inside the block never counts as the card's own
+        plain = cb.apply(CARD, "csoai/example-census")
+        self.assertFalse(cb.has_own_objections(plain.split("---\n", 2)[2]))
+        self.assertEqual(cb.apply(plain, "csoai/example-census"), plain)
 
     def test_year_and_doi_come_from_the_registry(self):
         reg = json.loads((HERE / "cite-block-registry.json").read_text())["datasets"]
