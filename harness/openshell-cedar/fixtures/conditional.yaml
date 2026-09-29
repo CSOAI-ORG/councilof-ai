@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: Apache-2.0
+# Translator fixture (ours): conditions. Wildcard hosts (one label and any labels), a port list,
+# an allowed_ips range that needs the resolved address, a binary directory glob, explicit
+# method + path rules, and one rule whose path glob v0 cannot express (it must not become an allow).
+version: 1
+network_policies:
+  mirrors:
+    name: mirrors
+    endpoints:
+      - host: "*.mirror.example"
+        ports: [443, 8443]
+        protocol: rest
+        enforcement: enforce
+        rules:
+          - allow: { method: GET, path: /pkgs/** }
+          - allow: { method: HEAD, path: /index.json }
+          - allow: { method: GET, path: "/pkgs/*/latest" }
+    binaries:
+      - { path: /opt/tools/** }
+  internal:
+    name: internal
+    endpoints:
+      - host: "**.corp.example"
+        port: 443
+        allowed_ips: [10.20.0.0/16]
+    binaries:
+      - { path: /usr/bin/curl }

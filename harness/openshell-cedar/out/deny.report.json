@@ -1,0 +1,78 @@
+{
+ "translator": {
+  "name": "openshell-yaml-to-cedar",
+  "version": "0.1.0"
+ },
+ "openshell_pin": {
+  "release": "v0.1.2",
+  "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+  "previous_release": "v0.1.1",
+  "previous_tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30",
+  "sandbox_policy_rego_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41"
+ },
+ "status": "TRANSLATED",
+ "counts": {
+  "policies": 26,
+  "elements": 4,
+  "uncheckable": 0
+ },
+ "elements": [
+  {
+   "source": "platform:always-blocked-addresses",
+   "status": "TRANSLATED",
+   "policies": [
+    "p001",
+    "p002",
+    "p003",
+    "p004"
+   ]
+  },
+  {
+   "source": "platform:control-plane-ports",
+   "status": "TRANSLATED",
+   "policies": [
+    "p005",
+    "p006"
+   ],
+   "note": "widened: OpenShell applies this to exact-host, IP and allowed_ips endpoints; v0 applies it to all"
+  },
+  {
+   "source": "network_policies.api_full.endpoints[0]",
+   "status": "TRANSLATED",
+   "policies": [
+    "p009",
+    "p010",
+    "p007",
+    "p008"
+   ]
+  },
+  {
+   "source": "filesystem_policy",
+   "status": "TRANSLATED",
+   "policies": [
+    "p011",
+    "p012",
+    "p013",
+    "p014",
+    "p015",
+    "p016",
+    "p017",
+    "p018",
+    "p019",
+    "p020",
+    "p021",
+    "p022",
+    "p023",
+    "p024",
+    "p025",
+    "p026"
+   ],
+   "note": "baseline paths are included as the adapter model adds them"
+  }
+ ],
+ "rule": "Nothing UNCHECKABLE contributes a permit. Forbids are never dropped, only widened.",
+ "input": {
+  "file": "deny.yaml",
+  "sha256": "1a1a03d30f7eac800d3673ec858aeefac3bd289b595dcce5a9f22df86a04009b"
+ }
+}

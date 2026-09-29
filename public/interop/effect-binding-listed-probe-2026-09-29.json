@@ -1,0 +1,47 @@
+{
+ "schema": "csoai.effect-binding.listed-probe-run/0.1",
+ "started": "2026-09-29T15:56:35Z",
+ "finished": "2026-09-29T15:56:37Z",
+ "list_sha256": "b79ea1c963130e1200d6b185ec846719cc529af0ea6ee589cc2e2ab5316daf8e",
+ "scope": "GET /robots.txt, POST initialize, POST notifications/initialized, POST tools/list, DELETE session if issued; unauthenticated; no server/discover; no tools/call",
+ "probe_code": {
+  "census_probe_sha256": "d2f61a90bb28defa8626af441f733321054d2905255ffb083b08cf7a2e5b37c6",
+  "this_sha256": "40804c089a252315a4ec257aefaa55733c0892cbd71de8c3e3c99057ce6297d5"
+ },
+ "rows": [
+  {
+   "id": "cuda-docs-remote-mcp",
+   "endpoint": "https://api.copilot.nsight.ngc.nvidia.com/mcp/cuda-docs",
+   "state": "AUTH_REQUIRED",
+   "reason": "HTTP 401",
+   "http_status": 401,
+   "transport": null,
+   "protocol_version_requested": "2025-11-25",
+   "protocol_version_negotiated": null,
+   "server_info": null,
+   "capabilities": null,
+   "session_issued": null,
+   "tools_list_status": null,
+   "tools_list_detail": null,
+   "n_tools": null,
+   "tools_complete": null,
+   "tool_names": null,
+   "tool_names_sha256": null,
+   "requests": 1,
+   "exchange": [
+    "POST /mcp/cuda-docs -> 401"
+   ],
+   "robots": "robots.txt HTTP 404: no rules (RFC 9309: 4xx = unavailable; 3xx not followed)",
+   "started": "2026-09-29T15:56:36Z",
+   "finished": "2026-09-29T15:56:37Z",
+   "effect_binding_status": "UNMEASURED",
+   "effect_binding_why": "no tools/call in this scope; a binding verdict needs one"
+  }
+ ],
+ "not_evidence_of": [
+  "adoption or use of any CSOAI artifact",
+  "any relationship with the operator",
+  "effect binding (UNMEASURED)",
+  "security or quality of the server"
+ ]
+}

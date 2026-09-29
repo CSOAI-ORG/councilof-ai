@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+# Boundary for the 2026-09-28 capture policy (ours): the same two hosts, REST, enforce mode.
+version: 1
+network_policies:
+  example_audit:
+    name: example-audit
+    endpoints:
+      - host: example.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+    binaries:
+      - { path: /usr/bin/curl }
+  example_enforce:
+    name: example-enforce
+    endpoints:
+      - host: example.net
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+    binaries:
+      - { path: /usr/bin/curl }

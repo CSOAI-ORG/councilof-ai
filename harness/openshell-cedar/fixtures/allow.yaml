@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: Apache-2.0
+# Translator fixture (ours): plain allows. curl reads one REST API (preset read-only); git reaches one
+# host with no request inspection. Everything else is default deny.
+version: 1
+filesystem_policy:
+  include_workdir: true
+  read_only: [/usr, /etc]
+  read_write: [/tmp]
+landlock:
+  compatibility: hard_requirement
+network_policies:
+  api_read:
+    name: api-read
+    endpoints:
+      - host: api.example.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+    binaries:
+      - { path: /usr/bin/curl }
+  git_plain:
+    name: git-plain
+    endpoints:
+      - host: git.example.org
+        ports: [443, 9418]
+    binaries:
+      - { path: /usr/bin/git }

@@ -1,0 +1,36 @@
+{
+ "schema": "csoai.openshell.requalify/0.1",
+ "subject": "OpenShell declared controls read by harness/openshell-adapter",
+ "repository": "https://github.com/NVIDIA/OpenShell",
+ "from": {"release": "v0.1.1", "published": "2026-09-26T03:45:16Z", "tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30"},
+ "to": {"release": "v0.1.2", "published": "2026-09-28T03:58:00Z", "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94", "marked_latest": true},
+ "read": {"at": "2026-09-29T15:10Z to 15:25Z", "how": "anonymous: GitHub REST releases endpoint and a blobless git clone of the public repository on the lanes pod"},
+ "release_notes_prs": ["#3740 docs(policy): clarify sandbox-local loopback access", "#3741 docs: refresh architecture and extensibility pages", "#3745 fix(supervisor-network): keep workload bytes read with a mediated CONNECT header", "#3752 fix(homebrew): overwrite generated gateway config during migration", "#3751 fix(ci): keep snap canary sandbox name within limit", "#3754 fix(docs): sync redirects with versioned snapshots", "#3713 docs: keep page URLs aligned with file paths", "#3757 perf(sandbox): wake orphan reaper on child exit"],
+ "files_the_adapter_reads": [
+  {"path": "crates/openshell-supervisor-network/data/sandbox-policy.rego", "v0.1.1_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41", "v0.1.2_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41", "changed": false},
+  {"path": "docs/how-it-works/policies/schema.mdx", "v0.1.1_sha256": "10adb9715e7ced89632fef24b227180cd01acc985eb9324f9a8a3f5682d6385b", "v0.1.2_sha256": "c886c43d705ef8fed8ef198015452cbf84cd6e84c9ccc2cadcbc7d7ee8d9427d", "changed": true, "what": "loopback paragraph only (PR 3740)"},
+  {"path": "docs/how-it-works/policies/network-rules.mdx", "v0.1.1_sha256": "506a36517cb5c6084c040d4b834bfc6f83e29657b3b8e9aadaf5fa545cdc6dfe", "v0.1.2_sha256": "01964b20cf9633a9524212b5ad9ced06780d5878b026bdad5a552f15e9dde527", "changed": true, "what": "loopback paragraph only (PR 3740)"},
+  {"path": "docs/observability/logging.mdx", "v0.1.1_sha256": "505efc7fdf94545972d94a961e915b6e41282679edf2181364564db52c8e9e70", "v0.1.2_sha256": "8e363df7e48b449c29f648b0374d34ee7193d75997330096bddd9d263d716b7c", "changed": true, "what": "the meaning of the `resolves to always-blocked address` reason (PR 3740)"},
+  {"path": "docs/how-it-works/policies/default-policy.mdx", "changed": false, "sha256": "ebc2494b29c0e263e233ce5a59117fb24e499fcd3429ac1ea92aeff4b3b62734"},
+  {"path": "docs/how-it-works/policies/prover.mdx", "changed": false, "sha256": "c8b1d8ebd46aa6420b68192ae30e0b8c5434acdd033316caa25c080526f56ab6"},
+  {"path": "docs/security/best-practices.mdx", "changed": false, "sha256": "c4b90de89fc0b6fece6bbca905ff10c815c9ce754f99972b37aed3eb6640871f"},
+  {"path": "docs/observability/ocsf-json-export.mdx", "changed": false, "sha256": "cb7caf2c4b22dc761fb8baf8b17bdfcd6d0ff84673b9fa57361ad4fb0dae98ae"},
+  {"path": "crates/openshell-prover-cli/README.md", "changed": false, "sha256": "4a1bd7124429a5e69f64890f2e1fe2ca732e16f92763806cb7691ecef90aee73"},
+  {"path": "crates/openshell-prover, openshell-prover-cli, openshell-ocsf, openshell-policy, openshell-policy-schema (whole crates)", "changed": false, "how": "git diff --quiet v0.1.1 v0.1.2 -- <crates>"}
+ ],
+ "declared_controls": [
+  {"control": "outbound endpoints on loopback, link-local or unspecified addresses (incl. 169.254.169.254)", "changed": "WORDING, NOT RULES", "detail": "v0.1.1: these addresses 'are always blocked'. v0.1.2: 'Network policy never authorizes an outbound endpoint whose destination is loopback, link-local, or unspecified ... This restriction does not apply to sandbox-local loopback connections'. The rego is byte-identical, so this documents behaviour that v0.1.1 already had.", "adapter_change": "adapter 0.2.0: a witnessed loopback attempt with no enforcer record is UNMODELLED (code LOOPBACK_OFF_POLICY_PATH), not DIVERGED; with an enforcer record it is still compared. Link-local and unspecified are unchanged (always DENIED on the policy path)."},
+  {"control": "mediated CONNECT data path (transparent mediation)", "changed": "ENFORCEMENT FIX, NO DECLARED CONTROL", "detail": "PR 3745: workload bytes that followed the synthesized CONNECT header in the proxy's first read could be dropped. A witness on v0.1.1 could therefore see a permitted request fail; on v0.1.2 it should not.", "adapter_change": "none; runs must state --enforcer-version, and OVERBLOCK rows on v0.1.1 captures should be read with this fix in mind"},
+  {"control": "process lifecycle (orphan reaper)", "changed": "ENFORCEMENT CHANGE, NO DECLARED CONTROL", "detail": "PR 3757: the reaper wakes on child exit instead of scanning procfs. No policy field is involved.", "adapter_change": "none"},
+  {"control": "network_policies rules, deny precedence, enforcement audit/enforce, L7 REST matching, control-plane ports, filesystem_policy, landlock, process, seccomp baseline", "changed": false, "detail": "rego and the schema text for these fields are unchanged apart from the loopback paragraph"},
+  {"control": "policy prover (openshell-prover check --output json)", "changed": false, "detail": "crates identical; schema_version 1; exit codes 0/1/2/3/130 as documented"},
+  {"control": "OCSF events (classes, shorthand, JSONL)", "changed": false, "detail": "openshell-ocsf crate identical"}
+ ],
+ "not_in_v0.1.2_but_on_main": {
+  "main_at_read": "cfcc3733",
+  "items": ["#3335 MCP request inspection with protocol profiles; rego adds mcp_method_classification (extension methods need an exact allow)", "#3753 JSON-RPC and MCP endpoints refuse Upgrade requests with 403", "schema.mdx: MCP revision 2026-07-28 (sessionless) accepted when listed in mcp.versions"],
+  "effect_on_this_harness": "none today: MCP and JSON-RPC rules are UNMODELLED in adapter.py and UNCHECKABLE in the Cedar translator. Requalify again when a release carries them."
+ },
+ "correction": "The research note of 2026-09-29 (wedge 1) says the vendored OCSF schema directory is v1.7.0 while the README says v1.8.0. At v0.1.2 both crates/openshell-ocsf/schemas/ocsf/v1.7.0 and v1.8.0 are present; the JSON export doc states v1.8.0.",
+ "baseline_note": "The adapter's committed capture (capture-2026-09-28) was already taken with the v0.1.2 supervisor (binary sha256 7185e4e5...). What had not been recorded was the v0.1.1 -> v0.1.2 delta of the declared controls; this file records it and pins the adapter to v0.1.2 (adapter.OPENSHELL_PIN)."
+}
