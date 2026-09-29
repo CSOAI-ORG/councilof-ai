@@ -30,8 +30,8 @@ its own live fields on GET /api/gspc. Read from the same fetch as the snapshot i
 
   totals.comparison_axes        14   model-comparison axes (the only ones a separation test applies to)
   totals.separated_leads        0   leads shown to be statistically real
-  totals.ties                   2   TIE — the point-estimate lead is not separated
-  totals.untested_separations   12  UNTESTED — no separation test has been run
+  totals.ties                   8   TIE — the point-estimate lead is not separated
+  totals.untested_separations   6  UNTESTED — no separation test has been run
 
 The 9 deterministic-fact axes have no fleet and no leader, so no separation test applies to
 them; they are not counted as untested and they enter no mean.
@@ -86,11 +86,11 @@ board moves, so treat this as a copy and re-fetch for current values.
     "unmeasured_axes": 0,
     "quotable_axes": 23,
     "public_count": "23 axis · 23 measured",
-    "separation_public_count": "0 of 14 model-comparison axes separated a leader · 2 TIE · 12 UNTESTED",
+    "separation_public_count": "0 of 14 model-comparison axes separated a leader · 8 TIE · 6 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axis with a RUN behind them; it is not a count of axis with a separated leader. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
     "fact_runs": 9,
-    "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 2 TIE · 12 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
+    "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 8 TIE · 6 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
     "by_family": {
       "gspc": {
         "axes": 15,
@@ -134,12 +134,12 @@ board moves, so treat this as a copy and re-fetch for current values.
     "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
     "separated_leads": 0,
-    "ties": 2,
-    "untested_separations": 12,
+    "ties": 8,
+    "untested_separations": 6,
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
-    "externally_led_axes": 3,
-    "public_leader_count": 3,
-    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "externally_led_axes": 9,
+    "public_leader_count": 9,
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "own_leaders_excluded": 8,
     "own_leaders_excluded_axes": [
       "governance",
@@ -151,7 +151,7 @@ board moves, so treat this as a copy and re-fetch for current values.
       "art5-safeguard",
       "affect"
     ],
-    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 3 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public ranking of our own model.",
+    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 9 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public ranking of our own model.",
     "uncarded_leaders_dropped": 3,
     "uncarded_leaders_dropped_axes": [
       "machinery-conformity",
@@ -160,7 +160,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     ],
     "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
     "mean_macro_f1": 0.944,
-    "mean_accuracy": 0.66,
+    "mean_accuracy": 0.6505,
     "mean_fleet_mean": 0.5447,
     "mean_harm": 0.4877,
     "mean_unparsed_rate": 0.0541,
@@ -174,8 +174,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 237,
-      "accuracy": null,
-      "separation": "UNTESTED"
+      "accuracy": 0.5865,
+      "separation": "TIE"
     },
     {
       "axis": "safety",
@@ -183,7 +183,7 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 36,
-      "accuracy": 0.944,
+      "accuracy": 0.9444,
       "separation": "TIE"
     },
     {
@@ -192,8 +192,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 32,
-      "accuracy": null,
-      "separation": "UNTESTED"
+      "accuracy": 0.7188,
+      "separation": "TIE"
     },
     {
       "axis": "continuity",
@@ -201,8 +201,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 33,
-      "accuracy": null,
-      "separation": "UNTESTED"
+      "accuracy": 0.6061,
+      "separation": "TIE"
     },
     {
       "axis": "conformance",
@@ -210,8 +210,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 35,
-      "accuracy": null,
-      "separation": "UNTESTED"
+      "accuracy": 0.7143,
+      "separation": "TIE"
     },
     {
       "axis": "openness",
@@ -219,8 +219,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 32,
-      "accuracy": null,
-      "separation": "UNTESTED"
+      "accuracy": 0.8438,
+      "separation": "TIE"
     },
     {
       "axis": "machinery-conformity",
@@ -237,8 +237,8 @@ board moves, so treat this as a copy and re-fetch for current values.
       "family": "gspc",
       "kind": "model-comparison",
       "n": 199,
-      "accuracy": null,
-      "separation": "UNTESTED"
+      "accuracy": 0.405,
+      "separation": "TIE"
     },
     {
       "axis": "cross-reality",
@@ -388,7 +388,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 237
-- separation: `UNTESTED`
+- separation: `TIE`
 - row: https://councilof.ai/api/gspc?axis=governance
 - page: https://councilof.ai/axis/governance
 - bank: https://huggingface.co/datasets/csoai/gspc-gov
@@ -408,7 +408,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 32
-- separation: `UNTESTED`
+- separation: `TIE`
 - row: https://councilof.ai/api/gspc?axis=provenance
 - page: https://councilof.ai/axis/provenance
 - bank: https://huggingface.co/datasets/csoai/gspc-prv
@@ -418,7 +418,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 33
-- separation: `UNTESTED`
+- separation: `TIE`
 - row: https://councilof.ai/api/gspc?axis=continuity
 - page: https://councilof.ai/axis/continuity
 - bank: https://huggingface.co/datasets/csoai/gspc-asi
@@ -428,7 +428,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 35
-- separation: `UNTESTED`
+- separation: `TIE`
 - row: https://councilof.ai/api/gspc?axis=conformance
 - page: https://councilof.ai/axis/conformance
 - bank: https://huggingface.co/datasets/csoai/gspc-mcp
@@ -438,7 +438,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 32
-- separation: `UNTESTED`
+- separation: `TIE`
 - row: https://councilof.ai/api/gspc?axis=openness
 - page: https://councilof.ai/axis/openness
 - bank: https://huggingface.co/datasets/csoai/gspc-oss
@@ -458,7 +458,7 @@ Every block below is rendered from the same GET /api/gspc fetch as the snapshot 
 - kind: `model-comparison`
 - status: `MEASURED`
 - n: 199
-- separation: `UNTESTED`
+- separation: `TIE`
 - row: https://councilof.ai/api/gspc?axis=care
 - page: https://councilof.ai/axis/care
 - bank: https://huggingface.co/datasets/csoai/gspc-care
