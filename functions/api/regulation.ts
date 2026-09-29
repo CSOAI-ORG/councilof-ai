@@ -44,8 +44,20 @@ export const REGULATION_FEED = {
     { date: "2027-01-18", instrument: "US GENIUS Act (Pub. L. 119-27)", what: "Default effective date under the §20 dual trigger: the Act takes effect on the EARLIER of 18 months after enactment (signed 2025-07-18 → 2027-01-18) or 120 days after final implementing rules — the 2026-07-18 rulemaking deadline passed with no final rules published and OCC is targeting November 2026 for a final rule, so the earlier trigger may move. When in force: monthly PCAOB-examined reserve disclosures and CEO/CFO certification for permitted payment stablecoin issuers", basis: "Pub. L. 119-27 §20, signed 2025-07-18", status: "UPCOMING", penalty_exposure: "federal stablecoin regulator enforcement under Pub. L. 119-27; no fixed statutory maximum published" },
     { date: "2028-07-18", instrument: "US GENIUS Act (Pub. L. 119-27)", what: "Distribution cliff — 3 years after enactment, digital asset service providers may not offer or sell non-permitted payment stablecoins to US persons", basis: "Pub. L. 119-27 §3(b)", status: "UPCOMING", penalty_exposure: "federal stablecoin regulator enforcement under Pub. L. 119-27; no fixed statutory maximum published" },
   ],
-  disputed: [
-    { item: "Council of Europe Framework Convention on AI (CETS 225) entry-into-force status", note: "sources disagree as of the verification date; stated honestly rather than guessed" },
+  disputed: [],
+  // Appended, not rewritten: an item that leaves `disputed` keeps a record here of what it said before.
+  resolved_disputes: [
+    {
+      item: "Council of Europe Framework Convention on AI (CETS 225) entry-into-force status",
+      status: "NOT_IN_FORCE",
+      statement:
+        "Not in force. The Treaty Office chart for CETS No. 225 (status as of 29/09/2026) records one ratification, by the European Union on 15 May 2026, and 21 signatories. Entry into force requires five signatories, including at least three Council of Europe member States, to have expressed their consent to be bound (Art. 30(3)). The Convention's obligations are addressed to the Parties, which give effect to them through measures in their own law.",
+      source: "https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225",
+      status_read: "2026-09-29",
+      previously:
+        "Until 29 Sep 2026 this item sat under disputed, with a note that sources did not agree. The primary source, the Treaty Office chart, is not in dispute, so the entry now states the status it records.",
+      correction: "C-2026-0929-03 at https://councilof.ai/api/corrections",
+    },
   ],
   underwriting_note:
     "Deadlines and cited penalty exposure can inform an underwriter; CSOAI does not underwrite, price risk, or determine legal compliance.",

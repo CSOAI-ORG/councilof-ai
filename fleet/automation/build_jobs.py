@@ -120,7 +120,7 @@ ORACLE_NOTES = {
     "root-daily-trigger.sh": ("daily public-root republish on build pod", "oracle trigger -> build-pod", "FAILING: preflight capacity (Pages 20k file cap)"),
     "newest_models_weekly.py": ("weekly newest-models report (not published)", "oracle", "none"),
     "claim-watch-20260928/run.sh": ("Pulse claim watch -> signed receipt", "oracle", "none"),
-    "corrections-watch-oracle-20260928/run.sh": ("corrections-watch signed+OTS -> HF mirror", "oracle", "none"),
+    "corrections-watch-oracle-20260928/run.sh": ("corrections-watch signed+OTS -> HF csoai/councilof-ai-evidence (public; copy to the mirror)", "oracle", "none"),
     "capsule-publish-20260928/trigger.sh": ("lay out day capsule index -> build pod commit/gate/land", "oracle trigger -> build-pod", "none"),
     "cf-oauth-refresh-trigger.sh": ("keep shared Wrangler OAuth on build-pod volume alive", "oracle trigger -> build-pod", "none"),
     "admit-dryrun/run.sh": ("dry-run admission over Kaggle mill slices; applies nothing", "oracle", "none"),

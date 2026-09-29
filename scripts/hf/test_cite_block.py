@@ -76,7 +76,7 @@ PRODUCERS = {
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers
     "scripts/mirror_to_hf.py": "private",                    # csoai/councilof-ai-mirror
-    "scripts/pod-loops/corrections-watch.py": "private",     # csoai/councilof-ai-mirror, a sub-folder README
+    "scripts/pod-loops/corrections-watch.py": "not-a-card",  # sub-folder README (public/interop/corrections-watch/) in csoai/councilof-ai-evidence, not a dataset card
     "scripts/pod-loops/drift-draft.py": "private",           # csoai/corrections-watch, created --private
     "scripts/sync_hf_gspc.py": "not-a-card",                 # the gspc-board Space shell
     "scripts/harness-x/render.mjs": "not-a-card",            # package and Space READMEs

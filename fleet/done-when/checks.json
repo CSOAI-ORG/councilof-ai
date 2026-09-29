@@ -1,0 +1,28 @@
+{
+  "schema": "csoai.done-when-checks/0.1",
+  "note": "Registered DONE-WHEN proof commands for the ~/fleet/done-when.log streak. One anonymous public GET each; rule fixed here before the run. Source: _alignment/MASTER-WAY-FORWARD-2026-09-28.md section 4 and NEXT-WAVE-2026-09-29-PM.md M8. Add a check by adding a row; disable with \"enabled\": false. Never edit past log lines.",
+  "base": "https://councilof.ai",
+  "checks": [
+    {
+      "goal": "mwf-4.2a-root-asof-26h",
+      "source": "MWF 4.2 7-day (a) + NEXT-WAVE M8: `curl -s $B/api/root | jq -r .as_of` under 26h old, each day",
+      "url": "/api/root",
+      "path": ["as_of"],
+      "rule": {"kind": "max_age_hours", "hours": 26}
+    },
+    {
+      "goal": "mwf-4.3-capsules-asof-today",
+      "source": "MWF 4.3 7-day: `.figures[]|select(.id==\"capsules\").as_of` from $B/api/momentum/ dated each day",
+      "url": "/api/momentum/",
+      "path": ["figures", {"id": "capsules"}, "as_of"],
+      "rule": {"kind": "dated_today"}
+    },
+    {
+      "goal": "mwf-4.9-xl-asof-today",
+      "source": "MWF 4.9 7-day: `curl -s $B/api/xl` returns 200 with today's as_of",
+      "url": "/api/xl",
+      "path": ["as_of"],
+      "rule": {"kind": "dated_today"}
+    }
+  ]
+}
