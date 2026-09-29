@@ -16,10 +16,11 @@ and publishes the result **signed** so anyone can re-verify it.
 
 ## What is measured
 
-- **Status:** MEASURED — reported honestly, never hidden.
-- **Scored items:** 40 ·
-- **Models measured:** 19 ·
-- **Majority baseline:** 0.04.
+- **Status, item count and models:** read them from the live board ([GET /api/gspc](https://councilof.ai/api/gspc)).
+  This source page does not type them; an earlier revision described a retired bank.
+- **What the bank is:** single-model questions about multi-agent coordination, keyword-graded. It is not a
+  swarm of agents, and nothing here compares swarms with human teams: no human-team data exists, so that
+  comparison is UNMEASURED.
 
 Every score carries n + a 95% confidence interval. A thin-n result is reported *"not sufficient to
 rank"* — never invented.
@@ -31,7 +32,7 @@ check the Ed25519 signature against the published key. No trust in us required.
 
 - Live board (with n + CI): [GET /api/gspc](https://councilof.ai/api/gspc)
 - Verify a card free: [the verify page](https://councilof.ai/gspc-verify)
-- Signed per-axis Elo: [the signed leaderboard](https://councilof.ai/api/arena/scoreboard)
+- Historical arena artefact (pass rates, not Elo; most axes read 0.0 from a grader defect, so it is not a measurement of the models): [/api/arena/scoreboard](https://councilof.ai/api/arena/scoreboard)
 - Audit any claim: [ClaimGuard](https://councilof.ai/claimguard)
 
 ## Why this matters

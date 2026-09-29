@@ -154,7 +154,7 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
     schema: "csoai.sandbox/0.1",
     as_of: new Date().toISOString(),
     received: body,
-    note: "Code execution sandbox. Every result is signed + attested.",
+    note: "Code execution sandbox. Planned, not running: nothing is signed or attested yet.",
   });
 };
 '''
@@ -165,7 +165,7 @@ def build_operator_endpoint() -> str:
     return '''/**
  * POST /api/operator — browser agent.
  *
- * Every action is signed + attested.
+ * Planned, not running: nothing is signed or attested yet.
  */
 
 const json = (body: unknown, status = 200) =>
@@ -184,7 +184,7 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
     schema: "csoai.operator/0.1",
     as_of: new Date().toISOString(),
     received: body,
-    note: "Browser agent. Every action is signed + attested.",
+    note: "Browser agent. Planned, not running: nothing is signed or attested yet.",
   });
 };
 '''
