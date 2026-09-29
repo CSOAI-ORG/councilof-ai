@@ -1,0 +1,6 @@
+      * CC0-1.0. Golden corpus, COBOL decoder-fidelity measurement.
+       01  C56-MF-NAT-SIGN-REC.
+           05  C56-STAR  PIC S9(3) USAGE NATIONAL SIGN LEADING SEPARATE.
+           05  C56-EBCSIGN
+                   PIC S9(3) USAGE NATIONAL SIGN TRAILING SEPARATE.
+           05  C56-OK  PIC S9(3) USAGE NATIONAL SIGN LEADING SEPARATE.

@@ -1,0 +1,176 @@
+{
+ "measured": [
+  {
+   "id": "aws_mdu",
+   "label": "aws-samples/mainframe-data-utilities",
+   "version": "git 5fc427629e51b87d4c6310860cac6f93c0eb756c (2025-08-25)",
+   "licence": "Apache-2.0",
+   "language": "Python",
+   "names": "positional",
+   "how": "copybook parsed by its core/parsecp.py (fresh interpreter per copybook); each field decoded with its core/ebcdic.unpack() exactly as core/extract.write_output() calls it; every alternate REDEFINES layout it generates is decoded and merged after the base layout. No code-page parameter: text is decoded as cp037 inside unpack().",
+   "declared": [
+    {
+     "when": "odo_dependent",
+     "quote": "README Backlog > Copybook parser: 'OCCURS DEPENDING ON copybook parsing.'"
+    },
+    {
+     "when": "elementary_redefines",
+     "quote": "README Limitations: 'The REDEFINES statement for data items, it's only supported for group items.'"
+    },
+    {
+     "when": "usage",
+     "arg": [
+      "BINARY"
+     ],
+     "quote": "README Backlog: 'Add similar packing statements (BINARY, PACKED-DECIMAL...)'"
+    }
+   ],
+   "rdw": {
+    "entry": "core/extract.read(file, 'vb', lrecl) called until it returns empty, the loop core/extract.FileProcess runs (README: 'To convert a Variable Block file you need to inform the -input-recfm vb'); each record then decoded as in the fixed-length path."
+   }
+  },
+  {
+   "id": "cobolio",
+   "label": "cobolio",
+   "version": "0.1.5 (PyPI)",
+   "licence": "MIT",
+   "language": "Python",
+   "names": "cobolio",
+   "how": "cobolio.copybook_to_layout(copybook) then cobolio.loads(record, layout, input_encoding=<declared page>).",
+   "declared": [
+    {
+     "when": "odo_dependent",
+     "quote": "README Limitations: 'No support for OCCURS DEPENDING ON clause in copybook.'"
+    }
+   ],
+   "rdw": {
+    "unmeasured": "no RDW or variable-length reader in the public API: loads() takes one record's bytes, and the bundled CLI (cobolio/cli/cob_to_csv.py, yield_records) reads fixed rec_size chunks."
+   }
+  },
+  {
+   "id": "coboljsonifier",
+   "label": "coboljsonifier",
+   "version": "1.0.8 (PyPI)",
+   "licence": "MIT per PyPI metadata; the GitHub repository (jrperin/cobol-copybook.jsonifier) declares no licence",
+   "language": "Python",
+   "names": "plain",
+   "how": "CopybookExtractor(copybook).dict_book_structure -> Parser(structure, ParseType.BINARY_EBCDIC).build().parse(record).value. No code-page parameter: text is decoded as cp500 inside the library.",
+   "declared": [],
+   "rdw": {
+    "unmeasured": "no file reader in the public API: Parser(...).build().parse(record) takes one record's bytes."
+   }
+  },
+  {
+   "id": "cobrix",
+   "label": "Cobrix (spark-cobol)",
+   "version": "2.11.1 (Maven Central, scala 2.12) on pyspark 3.4.4, Spark local[1]",
+   "licence": "Apache-2.0",
+   "language": "Scala/JVM",
+   "names": "underscore",
+   "how": "spark.read.format('cobol') with encoding=ebcdic, ebcdic_code_page=<declared page>, record_format=F, record_length=<file length>, variable_size_occurs=true, schema_retention_policy=collapse_root, pedantic=true.",
+   "declared": [],
+   "rdw": {
+    "entry": "record_format=V, is_rdw_big_endian=true, is_rdw_part_of_record_length=true, generate_record_id=true (rows ordered by Record_Id). README: 'Specifies if RDW headers are big endian. They are considered little-endian by default.' and 'By default RDW headers count only payload record in record length, not RDW headers themselves.'"
+   }
+  },
+  {
+   "id": "jrecord",
+   "label": "JRecord (COBOL builder)",
+   "version": "JRecord 0.93.3 (GitHub release jar) with cb2xml 1.01.08 on the classpath",
+   "licence": "LGPL-3.0 (JRecord), LGPL-2.1 (cb2xml)",
+   "language": "Java",
+   "names": "jrecord",
+   "how": "JRecordInterface1.COBOL.newIOBuilder(copybook).setFont(<Java charset for declared page>).setFileOrganization(IO_FIXED_LENGTH).setDialect(FMT_MAINFRAME).setSplitCopybook(SPLIT_NONE); newLine(recordBytes); getFieldValue(field).asString() for every field of record 0.",
+   "declared": [],
+   "rdw": {
+    "entry": "setFileOrganization(Constants.IO_VB) and newReader(file).read() until null, same font and dialect."
+   }
+  },
+  {
+   "id": "jrecord_cb2xml",
+   "label": "cb2xml + JRecord (XML path)",
+   "version": "cb2xml 1.01.08 (GitHub release jar) -> JRecord 0.93.3",
+   "licence": "LGPL-2.1 (cb2xml), LGPL-3.0 (JRecord)",
+   "language": "Java",
+   "names": "jrecord",
+   "how": "net.sf.cb2xml.Cb2Xml2.convertToXMLDOM(copybook, false, FMT_MAINFRAME) -> XML file -> JRecordInterface1.CB2XML.newIOBuilder(xml) with the same font/organisation settings; same field read-out as the COBOL builder.",
+   "declared": [],
+   "rdw": {
+    "entry": "setFileOrganization(Constants.IO_VB) and newReader(file).read() until null, same font."
+   }
+  },
+  {
+   "id": "wilcoyay_cbp",
+   "label": "wilcoyay/copybook-parser",
+   "version": "git 82ebbec9ba4c117a39e0ac3225cf910a576c3bdc (2026-09-21), compiled with javac (Main.java, which needs Jackson, left out)",
+   "licence": "MIT",
+   "language": "Java",
+   "names": "plain",
+   "how": "CopybookParser.parse(copybookText) then RecordDecoder.decode(schema, recordBytes); values rendered with toString().",
+   "declared": [
+    {
+     "when": "usage",
+     "arg": [
+      "COMP",
+      "COMP-4",
+      "BINARY",
+      "COMP-5",
+      "COMP-1",
+      "COMP-2"
+     ],
+     "quote": "README 'Doesn't handle': 'COMP / COMP-1 / COMP-2 (binary/float usage), only DISPLAY and COMP-3'"
+    },
+    {
+     "when": "codepage_only",
+     "arg": [
+      "cp037"
+     ],
+     "quote": "README 'Handles': 'EBCDIC text via the JDK's built-in Cp037 charset'"
+    },
+    {
+     "when": "sync_dependent",
+     "quote": "source comment, src/main/java/com/wilcoyay/copybook/CopybookParser.java lines 13-14: 'not handled: 88-level condition names, COMP/COMP-1/COMP-2, SYNC, REDEFINES chains more than one level deep, edited PICs.'"
+    }
+   ],
+   "rdw": {
+    "unmeasured": "README: 'Parses COBOL copybooks and decodes fixed-length EBCDIC records'; RecordDecoder.decode(schema, bytes) takes one record."
+   }
+  }
+ ],
+ "self": [
+  {
+   "id": "cobol_bridge_mcp",
+   "label": "cobol-bridge-mcp",
+   "version": "1.1.11 (PyPI)",
+   "label_note": "SELF (sister product; not ranked)",
+   "status": "UNMEASURED",
+   "reason_source": "work/self_check.json"
+  }
+ ],
+ "unmeasured": [
+  {
+   "name": "ebcdic-parser 3.4.0 (PyPI, MIT)",
+   "reason": "takes no copybook: it needs a hand-written JSON layout file. Translating the 41 copybooks into its layout format by hand would make the translation, not the decoder, the thing measured."
+  },
+  {
+   "name": "copybook 1.0.16 (PyPI, MIT)",
+   "reason": "copybook parser only; its Field.parse() takes an already-decoded text string, so there is no EBCDIC byte-decode path (COMP-3 is recognised in the PICTURE grammar but never unpacked)."
+  },
+  {
+   "name": "cobol-copybook-to-json 1.1.1 (PyPI, MIT)",
+   "reason": "copybook -> JSON schema converter; no record-decode function in the wheel."
+  },
+  {
+   "name": "python-cobol 0.1.4 (PyPI, GPLv3)",
+   "reason": "copybook parsing/denormalising only; no record-decode function in the wheel."
+  },
+  {
+   "name": "cobol-parser 1.8.4 (PyPI)",
+   "reason": "COBOL program-source parser (AST), not a data decoder. Licence is proprietary ('END-USER LICENSE AGREEMENT'); not installed."
+  },
+  {
+   "name": "cobol-py 0.2.1 (PyPI, MIT)",
+   "reason": "COBOL program-source parser (ANTLR port), not a data decoder; not installed."
+  }
+ ]
+}

@@ -1,0 +1,6561 @@
+{
+ "counts": {
+  "compared_fields": 329,
+  "copybooks": 66,
+  "copybooks_v1": 41,
+  "copybooks_v2": 25,
+  "decoders_measured": 7,
+  "rdw_files": 6,
+  "records": 87,
+  "rows": 2153
+ },
+ "disagreements": [
+  {
+   "expected": "-12345",
+   "field": "C01-NEG",
+   "hazard": "comp3",
+   "outcomes": {
+    "-12345": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-7",
+   "field": "C01-ONE",
+   "hazard": "comp3",
+   "outcomes": {
+    "-7": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "12345",
+   "field": "C01-POS",
+   "hazard": "comp3",
+   "outcomes": {
+    "12345": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "54321",
+   "field": "C01-UNS",
+   "hazard": "comp3",
+   "outcomes": {
+    "54321": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-1",
+   "field": "C01-NEG",
+   "hazard": "comp3",
+   "outcomes": {
+    "-1": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "9",
+   "field": "C01-ONE",
+   "hazard": "comp3",
+   "outcomes": {
+    "9": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "0",
+   "field": "C01-POS",
+   "hazard": "comp3",
+   "outcomes": {
+    "0": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "99999",
+   "field": "C01-UNS",
+   "hazard": "comp3",
+   "outcomes": {
+    "99999": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c01_pk_basic_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-1234",
+   "field": "C02-S4",
+   "hazard": "comp3",
+   "outcomes": {
+    "-1234": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c02_pk_even_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "123456",
+   "field": "C02-S6",
+   "hazard": "comp3",
+   "outcomes": {
+    "123456": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c02_pk_even_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "42",
+   "field": "C02-U2",
+   "hazard": "comp3",
+   "outcomes": {
+    "42": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c02_pk_even_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-0.12345",
+   "field": "C05-C",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "-0.12345": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "-12345": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c05_pk_scaled_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "123456789.123456789",
+   "field": "C06-A",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "123456789.123456789": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c06_pk_precision_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "999999999999999.99",
+   "field": "C06-B",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "999999999999999.99": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c06_pk_precision_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-123456789012345678901.2345678901",
+   "field": "C06-C",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "-123456789012345678901.2345679": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c06_pk_precision_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "123",
+   "field": "C07-A",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "123": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix"
+    ]
+   },
+   "record": "c07_sign_alt_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-123",
+   "field": "C07-B",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "-123": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "123": [
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix"
+    ]
+   },
+   "record": "c07_sign_alt_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "456",
+   "field": "C07-E",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "456": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix"
+    ]
+   },
+   "record": "c07_sign_alt_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "789",
+   "field": "C07-F",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "789": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c07_sign_alt_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "1234",
+   "field": "C11-A",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "1234": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c11_zd_alt_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-1234",
+   "field": "C11-B",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "-1234": [
+     "cobolio"
+    ],
+    "1234": [
+     "aws_mdu",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c11_zd_alt_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "4321",
+   "field": "C11-E",
+   "hazard": "sign_nibble",
+   "outcomes": {
+    "4321": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c11_zd_alt_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-12345",
+   "field": "C12-A",
+   "hazard": "zoned_overpunch",
+   "outcomes": {
+    "+J2345": [
+     "cobolio"
+    ],
+    "-12345": [
+     "cobrix"
+    ],
+    "12345": [
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "J2345": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c12_zd_lead_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "67890",
+   "field": "C12-B",
+   "hazard": "zoned_overpunch",
+   "outcomes": {
+    "+F7890": [
+     "cobolio"
+    ],
+    "67890": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "F7890": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c12_zd_lead_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-12345",
+   "field": "C13-A",
+   "hazard": "zoned_overpunch",
+   "outcomes": {
+    "-12345": [
+     "cobrix",
+     "jrecord"
+    ],
+    "12345": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c13_zd_trail_sep_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "678",
+   "field": "C13-B",
+   "hazard": "zoned_overpunch",
+   "outcomes": {
+    "+-0067": [
+     "cobolio"
+    ],
+    "-67": [
+     "aws_mdu"
+    ],
+    "67": [
+     "wilcoyay_cbp"
+    ],
+    "678": [
+     "cobrix",
+     "jrecord"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c13_zd_trail_sep_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-12345",
+   "field": "C14-A",
+   "hazard": "zoned_overpunch",
+   "outcomes": {
+    "+-1234": [
+     "cobolio"
+    ],
+    "-1234": [
+     "aws_mdu"
+    ],
+    "-12345": [
+     "cobrix",
+     "jrecord"
+    ],
+    "1234": [
+     "wilcoyay_cbp"
+    ],
+    "12345": [
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c14_zd_lead_sep_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "678",
+   "field": "C14-B",
+   "hazard": "zoned_overpunch",
+   "outcomes": {
+    "+5+006": [
+     "cobolio"
+    ],
+    "5+006": [
+     "aws_mdu"
+    ],
+    "514006": [
+     "wilcoyay_cbp"
+    ],
+    "678": [
+     "cobrix",
+     "jrecord"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c14_zd_lead_sep_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1.005",
+   "field": "C15-B",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "1.005": [
+     "aws_mdu",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "1005": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c15_zd_scaled_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-0.05",
+   "field": "C15-C",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "-0.05": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "-5": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c15_zd_scaled_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "12300",
+   "field": "C16-A",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "123": [
+     "cobolio"
+    ],
+    "12300": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "123cf": [
+     "aws_mdu"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c16_p_scaling_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-0.00123",
+   "field": "C16-B",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "-0.00123": [
+     "cobrix"
+    ],
+    "-123": [
+     "cobolio"
+    ],
+    "12L": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "2L45": [
+     "aws_mdu"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c16_p_scaling_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "45000",
+   "field": "C16-C",
+   "hazard": "implied_decimal",
+   "outcomes": {
+    "": [
+     "aws_mdu"
+    ],
+    "45": [
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "45000": [
+     "cobrix"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c16_p_scaling_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-9999",
+   "field": "C17-D",
+   "hazard": "binary",
+   "outcomes": {
+    "": [
+     "aws_mdu"
+    ],
+    "+Q1": [
+     "cobolio"
+    ],
+    "-9999": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c17_bin_half_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-123456789",
+   "field": "C18-A",
+   "hazard": "binary",
+   "outcomes": {
+    "-123456789": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c18_bin_full_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "999999999",
+   "field": "C18-B",
+   "hazard": "binary",
+   "outcomes": {
+    "999999999": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c18_bin_full_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-54321",
+   "field": "C18-C",
+   "hazard": "binary",
+   "outcomes": {
+    "-54321": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c18_bin_full_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-123456789012345678",
+   "field": "C19-A",
+   "hazard": "binary",
+   "outcomes": {
+    "-123456789012345678": [
+     "aws_mdu",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "-123456789012345680": [
+     "cobolio"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c19_bin_double_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "999999999999999999",
+   "field": "C19-B",
+   "hazard": "binary",
+   "outcomes": {
+    "1000000000000000000": [
+     "cobolio"
+    ],
+    "999999999999999999": [
+     "aws_mdu",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c19_bin_double_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234567890",
+   "field": "C19-C",
+   "hazard": "binary",
+   "outcomes": {
+    "1234567890": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c19_bin_double_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "32767",
+   "field": "C21-A",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "\"\u009f\u009ff": [
+     "aws_mdu"
+    ],
+    "+\"..f": [
+     "cobolio"
+    ],
+    "32767": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c21_comp5_half_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "65535",
+   "field": "C21-B",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "65535": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u00d8": [
+     "aws_mdu"
+    ],
+    "\u00d8.": [
+     "cobolio"
+    ]
+   },
+   "record": "c21_comp5_half_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-32768",
+   "field": "C21-C",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "-32768": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c21_comp5_half_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "2147483647",
+   "field": "C22-A",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "\"\u009f\u009f\u009f\u009f\u009f\u009f\u009f0": [
+     "aws_mdu"
+    ],
+    "+\".......0": [
+     "cobolio"
+    ],
+    "2147483647": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c22_comp5_wide_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "4294967295",
+   "field": "C22-B",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    ".........": [
+     "cobolio"
+    ],
+    "4294967295": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u009f\u009f": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c22_comp5_wide_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-9223372036854775808",
+   "field": "C22-C",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "+.....f": [
+     "cobolio"
+    ],
+    "-9223372036854775808": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u009f\u009f\u009f\u009f\u009ff": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c22_comp5_wide_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "18446744073709551615",
+   "field": "C22-D",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "18446744073709551615": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c22_comp5_wide_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "327.67",
+   "field": "C23-A",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "\"\u009f.\u009ff": [
+     "aws_mdu"
+    ],
+    "+\"...f": [
+     "cobolio"
+    ],
+    "327.67": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c23_comp5_scaled_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "4294967.295",
+   "field": "C23-B",
+   "hazard": "binary_truncation",
+   "outcomes": {
+    "..": [
+     "cobolio"
+    ],
+    "4294967.295": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u009f.\u009f": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c23_comp5_scaled_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A[1]!B^C|D\u00ac",
+   "field": "C24-TXT",
+   "hazard": "codepage",
+   "outcomes": {
+    "A[1]!B^C|D\u00ac": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "A\u00ac1|]B\u00a2C!D^": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c24_cp_variant_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A[1]!B^C|D\u00ac",
+   "field": "C24-TXT",
+   "hazard": "codepage",
+   "outcomes": {
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "A[1]!B^C|D\u00ac": [
+     "cobolio",
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "A\u00a21!|B\u00acC]D[": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c24_cp_variant_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A[1]!B^C|D\u00ac",
+   "field": "C24-TXT",
+   "hazard": "codepage",
+   "outcomes": {
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "A[1]!B^C|D\u00ac": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "A\u00ac1|]B\u00a2C!D^": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c24_cp_variant_r03",
+   "value_disagreement": true
+  },
+  {
+   "expected": "EUR \u20ac",
+   "field": "C25-TXT",
+   "hazard": "codepage",
+   "outcomes": {
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "EUR \u00a4": [
+     "aws_mdu",
+     "coboljsonifier"
+    ],
+    "EUR \u20ac": [
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c25_cp_euro_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "WIDGET",
+   "field": "C27-A-NAME",
+   "hazard": "redefines",
+   "outcomes": {
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "WIDGET": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c27_redef_group_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-42",
+   "field": "C27-A-QTY",
+   "hazard": "redefines",
+   "outcomes": {
+    "-42": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c27_redef_group_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "END1",
+   "field": "C27-TAIL",
+   "hazard": "redefines",
+   "outcomes": {
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "END1": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c27_redef_group_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "A",
+   "field": "C27-TYPE",
+   "hazard": "redefines",
+   "outcomes": {
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "A": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c27_redef_group_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "123456789.01",
+   "field": "C27-B-AMT",
+   "hazard": "redefines",
+   "outcomes": {
+    "123456789.01": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c27_redef_group_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "END2",
+   "field": "C27-TAIL",
+   "hazard": "redefines",
+   "outcomes": {
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "END2": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c27_redef_group_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "B",
+   "field": "C27-TYPE",
+   "hazard": "redefines",
+   "outcomes": {
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "B": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c27_redef_group_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-1044200508",
+   "field": "C29-BIN",
+   "hazard": "redefines",
+   "outcomes": {
+    "-1044200508": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "-ABCDO2": [
+     "cobolio"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "coboljsonifier",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c29_redef_bin_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "OK",
+   "field": "C29-END",
+   "hazard": "redefines",
+   "outcomes": {
+    "": [
+     "cobolio"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "OK": [
+     "aws_mdu",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c29_redef_bin_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "ABCD",
+   "field": "C29-TXT",
+   "hazard": "redefines",
+   "outcomes": {
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "coboljsonifier"
+    ],
+    "ABCD": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c29_redef_bin_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "1.11",
+   "field": "C30-AMT(1)",
+   "hazard": "odo",
+   "outcomes": {
+    "1.11": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-2.22",
+   "field": "C30-AMT(2)",
+   "hazard": "odo",
+   "outcomes": {
+    "-2.22": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "33333.33",
+   "field": "C30-AMT(3)",
+   "hazard": "odo",
+   "outcomes": {
+    "33333.33": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "AAA",
+   "field": "C30-CODE(1)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "AAA": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "BBB",
+   "field": "C30-CODE(2)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "BBB": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "CCC",
+   "field": "C30-CODE(3)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "CCC": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "TRLR01",
+   "field": "C30-TRAILER",
+   "hazard": "odo",
+   "outcomes": {
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "AAA\u0000\u0000\u0011": [
+     "coboljsonifier"
+    ],
+    "TRLR01": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1",
+   "field": "C30-AMT(1)",
+   "hazard": "odo",
+   "outcomes": {
+    "1": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "2",
+   "field": "C30-AMT(2)",
+   "hazard": "odo",
+   "outcomes": {
+    "2": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "3",
+   "field": "C30-AMT(3)",
+   "hazard": "odo",
+   "outcomes": {
+    "3": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "4",
+   "field": "C30-AMT(4)",
+   "hazard": "odo",
+   "outcomes": {
+    "4": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-5.05",
+   "field": "C30-AMT(5)",
+   "hazard": "odo",
+   "outcomes": {
+    "-5.05": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "A1",
+   "field": "C30-CODE(1)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "A1": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "A2",
+   "field": "C30-CODE(2)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "A2": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "A3",
+   "field": "C30-CODE(3)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "A3": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "A4",
+   "field": "C30-CODE(4)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "A4": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "A5",
+   "field": "C30-CODE(5)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "A5": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": false
+  },
+  {
+   "expected": "TRLR05",
+   "field": "C30-TRAILER",
+   "hazard": "odo",
+   "outcomes": {
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "A1 \u0000\u0000\u0010": [
+     "coboljsonifier"
+    ],
+    "TRLR05": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c30_odo_basic_r03",
+   "value_disagreement": true
+  },
+  {
+   "expected": "QRST",
+   "field": "C31-CODE(2)",
+   "hazard": "odo",
+   "outcomes": {
+    "<absent>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "QRST": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c31_odo_pk_counter_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "EOR",
+   "field": "C31-TRAILER",
+   "hazard": "odo",
+   "outcomes": {
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "EOR": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "QRS": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c31_odo_pk_counter_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "2",
+   "field": "C32-COUNT",
+   "hazard": "odo",
+   "outcomes": {
+    "2": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c32_odo_bin_counter_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-123.45",
+   "field": "C32-TRAILER",
+   "hazard": "odo",
+   "outcomes": {
+    "-123.45": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c32_odo_bin_counter_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "11111",
+   "field": "C32-VAL(1)",
+   "hazard": "odo",
+   "outcomes": {
+    "11111": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c32_odo_bin_counter_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-22222",
+   "field": "C32-VAL(2)",
+   "hazard": "odo",
+   "outcomes": {
+    "-22222": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "wilcoyay_cbp"
+    ],
+    "<unsupported>": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c32_odo_bin_counter_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "XYZ",
+   "field": "C33-END",
+   "hazard": "baseline",
+   "outcomes": {
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "XYZ": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "K1",
+   "field": "C33-KEY(1)",
+   "hazard": "baseline",
+   "outcomes": {
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "K1": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "K2",
+   "field": "C33-KEY(2)",
+   "hazard": "baseline",
+   "outcomes": {
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "K2": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "101",
+   "field": "C33-VAL(1,1)",
+   "hazard": "baseline",
+   "outcomes": {
+    "101": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "98",
+   "field": "C33-VAL(1,2)",
+   "hazard": "baseline",
+   "outcomes": {
+    "98": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "103",
+   "field": "C33-VAL(1,3)",
+   "hazard": "baseline",
+   "outcomes": {
+    "103": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "201",
+   "field": "C33-VAL(2,1)",
+   "hazard": "baseline",
+   "outcomes": {
+    "201": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "198",
+   "field": "C33-VAL(2,2)",
+   "hazard": "baseline",
+   "outcomes": {
+    "198": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "203",
+   "field": "C33-VAL(2,3)",
+   "hazard": "baseline",
+   "outcomes": {
+    "203": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c33_occurs_nested_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-98765432109.87",
+   "field": "C34-BAL",
+   "hazard": "baseline",
+   "outcomes": {
+    "-98765432109.87": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c34_account_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "40961",
+   "field": "C34-FLAGS",
+   "hazard": "baseline",
+   "outcomes": {
+    "40961": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u00b5\u0001": [
+     "aws_mdu"
+    ],
+    "\u00b5.": [
+     "cobolio"
+    ]
+   },
+   "record": "c34_account_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "AC00012345",
+   "field": "C34-ID",
+   "hazard": "baseline",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "AC00012345": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c34_account_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "19991231",
+   "field": "C34-OPEN",
+   "hazard": "baseline",
+   "outcomes": {
+    "19991231": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c34_account_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "0.04125",
+   "field": "C34-RATE",
+   "hazard": "baseline",
+   "outcomes": {
+    "0.04125": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "4125": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c34_account_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A",
+   "field": "C34-STATUS",
+   "hazard": "baseline",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "A": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c34_account_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-1234567890123456789.012345",
+   "field": "C36-C",
+   "hazard": "baseline",
+   "outcomes": {
+    "-1234567890123456768": [
+     "coboljsonifier"
+    ],
+    "-1234567890123456789.012345": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c36_zd_wide_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C37-BAD",
+   "hazard": "mustfail_packed",
+   "outcomes": {
+    "+12a45": [
+     "cobolio"
+    ],
+    "121045": [
+     "wilcoyay_cbp"
+    ],
+    "12a45": [
+     "aws_mdu"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c37_mf_pk_digit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "12345",
+   "field": "C37-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "12345": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c37_mf_pk_digit_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C38-BAD",
+   "hazard": "mustfail_packed",
+   "outcomes": {
+    "12345": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c38_mf_pk_sign_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-12345",
+   "field": "C38-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "-12345": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c38_mf_pk_sign_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C39-LOWVAL",
+   "hazard": "mustfail_packed",
+   "outcomes": {
+    "0": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c39_mf_pk_spaces_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "GOOD",
+   "field": "C39-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "GOOD": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c39_mf_pk_spaces_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C39-SPACES",
+   "hazard": "mustfail_packed",
+   "outcomes": {
+    "40404": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c39_mf_pk_spaces_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C40-BADDIGIT",
+   "hazard": "mustfail_zoned",
+   "outcomes": {
+    "1.3": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1113": [
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix"
+    ]
+   },
+   "record": "c40_mf_zd_zone_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C40-BADSIGN",
+   "hazard": "mustfail_zoned",
+   "outcomes": {
+    "125": [
+     "aws_mdu",
+     "cobolio",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c40_mf_zd_zone_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-12",
+   "field": "C40-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "-12": [
+     "aws_mdu",
+     "cobolio",
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c40_mf_zd_zone_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C41-AMT",
+   "hazard": "mustfail_codepage",
+   "outcomes": {
+    ".......": [
+     "cobolio"
+    ],
+    "12345.67": [
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u0091\u0016\u0093\u0094\u0095.\u0096\u0004": [
+     "aws_mdu"
+    ],
+    "\u0091\u0016\u0093\u0094\u0095\u0096": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c41_mf_ascii_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C41-QTY",
+   "hazard": "mustfail_codepage",
+   "outcomes": {
+    ".....": [
+     "cobolio"
+    ],
+    "12345": [
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u0091\u0016\u0093\u0094\u0095": [
+     "aws_mdu",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c41_mf_ascii_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1",
+   "field": "C42-A",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000005831": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-118.625",
+   "field": "C42-B",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-118.625": [
+     "cobrix"
+    ],
+    "0.000000000000000000000000000000000000014736282": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234",
+   "field": "C42-C",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.000000000000000000000000000000000000002966452": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1234": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.15625",
+   "field": "C42-D",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000014439": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "0.15625": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "16777215",
+   "field": "C42-E",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "16777215": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "NaN": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c42_hfp_short_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0",
+   "field": "C42-A",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-1234",
+   "field": "C42-B",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-1234": [
+     "cobrix"
+    ],
+    "0.000000000000000000000000000000000000002966632": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.5",
+   "field": "C42-C",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000046007": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "0.5": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "100",
+   "field": "C42-D",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000035966": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "100": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-0.0078125",
+   "field": "C42-E",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-0.0078125": [
+     "cobrix"
+    ],
+    "0.000000000000000000000000000000000000000011747": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c42_hfp_short_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234",
+   "field": "C43-A",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001045903": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1234": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-118.625",
+   "field": "C43-B",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-118.625": [
+     "cobrix"
+    ],
+    "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000051956744": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "123456789.125",
+   "field": "C43-C",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000175742167587": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "123456789.125": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.1000000000000000055511151231257827021181583404541015625",
+   "field": "C43-D",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000015423487136588129": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "0.1": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0",
+   "field": "C43-A",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-0.5",
+   "field": "C43-B",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-0.5": [
+     "cobrix"
+    ],
+    "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000162844": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1000000000000000",
+   "field": "C43-C",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000056659234224175": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1000000000000000": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-0.1000000000000000055511151231257827021181583404541015625",
+   "field": "C43-D",
+   "hazard": "hfp_float",
+   "outcomes": {
+    "-0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000015423487136588403": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "-0.1": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c43_hfp_long_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "36028797018963969",
+   "field": "C44-A",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007291122019609574": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "36028797018963970": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.33333333333333332870740406406184774823486804962158203125",
+   "field": "C44-B",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "0.3333333333333333": [
+     "cobrix"
+    ],
+    "11945305291614913000000000000000000000000000000000000000000000000000000000000000000000000000000000000000": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "7237005145973115539562949848370752848515283263408224491816939302836806615040",
+   "field": "C44-C",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "NaN": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "inf": [
+     "cobrix"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.00000000000000000000000000000000000000000000000000000000000000000000000000000053976053469340278908664699142502497319475002277726758656398146688553698769765169112321921896701801416003420587163435397481219368417699666835331273606612967341789044439792633056640625",
+   "field": "C44-D",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "0": [
+     "cobrix"
+    ],
+    "0.00000000000000000000000000000000000000000574": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1461501637330902918203684832716283019655932542976",
+   "field": "C44-E",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000005887": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "inf": [
+     "cobrix"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "7237005577332262113539558796856102019456743270279872594828411889070018396160",
+   "field": "C44-F",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "7237005577332262000000000000000000000000000000000000000000000000000000000000": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "NaN": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.00000000000000000000000000000000000000000000000000000000000000000000000000000053976053469340278908664699142502497319475002277726758656398146688553698769765169112321921896701801416003420587163435397481219368417699666835331273606612967341789044439792633056640625",
+   "field": "C44-G",
+   "hazard": "hfp_range",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020237": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "0.0000000000000000000000000000000000000000000000000000000000000000000000000000005397605346934028": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c44_hfp_range_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1",
+   "field": "C45-A",
+   "hazard": "hfp_unnormalized",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000000451": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c45_hfp_unnorm_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0",
+   "field": "C45-B",
+   "hazard": "hfp_unnormalized",
+   "outcomes": {
+    "0": [
+     "cobrix"
+    ],
+    "0.0000000000000000000000000000000000000000001794": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c45_hfp_unnorm_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0",
+   "field": "C45-C",
+   "hazard": "hfp_unnormalized",
+   "outcomes": {
+    "0": [
+     "cobrix"
+    ],
+    "0.000000000000000000000000000000000000000000104": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c45_hfp_unnorm_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.00390625",
+   "field": "C45-D",
+   "hazard": "hfp_unnormalized",
+   "outcomes": {
+    "0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000082890797": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "0.00390625": [
+     "cobrix"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c45_hfp_unnorm_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-1",
+   "field": "C45-E",
+   "hazard": "hfp_unnormalized",
+   "outcomes": {
+    "-1": [
+     "cobrix"
+    ],
+    "0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002119": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c45_hfp_unnorm_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A",
+   "field": "C46-A",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "A": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "BBB",
+   "field": "C46-B",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "BBB": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00daBB": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "C",
+   "field": "C46-C",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "C": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00f2": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-123456789012345678",
+   "field": "C46-D",
+   "hazard": "sync",
+   "outcomes": {
+    "-123456789012345678": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1568097095271729408": [
+     "cobolio"
+    ],
+    "1568097095271729508": [
+     "aws_mdu"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "ZZ",
+   "field": "C46-E",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "ZZ": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00a9\u00df": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "123456789",
+   "field": "C46-F",
+   "hazard": "sync",
+   "outcomes": {
+    "-1040185509": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "123456789": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-2",
+   "field": "C46-H",
+   "hazard": "sync",
+   "outcomes": {
+    "-2": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "255": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c46_sync_binary_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "Q",
+   "field": "C46-A",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "Q": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "XYZ",
+   "field": "C46-B",
+   "hazard": "sync",
+   "outcomes": {
+    "\u000fXY": [
+     "aws_mdu"
+    ],
+    ".XY": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "XYZ": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "D",
+   "field": "C46-C",
+   "hazard": "sync",
+   "outcomes": {
+    ".": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "D": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u009f": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "999999999999999999",
+   "field": "C46-D",
+   "hazard": "sync",
+   "outcomes": {
+    "-16817853905903434": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "999999999999999999": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "YY",
+   "field": "C46-E",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "YY": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00b7x": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-1",
+   "field": "C46-F",
+   "hazard": "sync",
+   "outcomes": {
+    "-1": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "-381616129": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "9999",
+   "field": "C46-H",
+   "hazard": "sync",
+   "outcomes": {
+    "16423": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "9999": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c46_sync_binary_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "HELLO",
+   "field": "C47-B",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "HELLO": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c47_sync_ibm_ex1_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "AB",
+   "field": "C47-D",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "AB": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c47_sync_ibm_ex1_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-654321",
+   "field": "C47-E",
+   "hazard": "sync",
+   "outcomes": {
+    "-654321": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "16774660": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c47_sync_ibm_ex1_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "EN",
+   "field": "C48-END",
+   "hazard": "sync",
+   "outcomes": {
+    "": [
+     "aws_mdu"
+    ],
+    "..": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "LA": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "40",
+   "field": "C48-HOURS(1)",
+   "hazard": "sync",
+   "outcomes": {
+    "-7616": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "40": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-7",
+   "field": "C48-HOURS(2)",
+   "hazard": "sync",
+   "outcomes": {
+    "-9999": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "0": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "999",
+   "field": "C48-HOURS(3)",
+   "hazard": "sync",
+   "outcomes": {
+    "0": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "16384": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "ANNA",
+   "field": "C48-NAME(1)",
+   "hazard": "sync",
+   "outcomes": {
+    "..ANN": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "ANNA": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u0088ANN": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "BOB",
+   "field": "C48-NAME(2)",
+   "hazard": "sync",
+   "outcomes": {
+    "..Q1.": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u009f9BOB": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u009f\u009fQ1\u009f": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "CLARA",
+   "field": "C48-NAME(3)",
+   "hazard": "sync",
+   "outcomes": {
+    "\u0000\u0001\u0003XC": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    ".C...": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "C": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234.56",
+   "field": "C48-PAY(1)",
+   "hazard": "sync",
+   "outcomes": {
+    "0.01": [
+     "cobolio"
+    ],
+    "0.1": [
+     "aws_mdu"
+    ],
+    "1234.56": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-99.99",
+   "field": "C48-PAY(2)",
+   "hazard": "sync",
+   "outcomes": {
+    "10737420.18": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "655.35": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.01",
+   "field": "C48-PAY(3)",
+   "hazard": "sync",
+   "outcomes": {
+    "-10261129.6": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "127795.2": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "B",
+   "field": "C48-TYPE(2)",
+   "hazard": "sync",
+   "outcomes": {
+    "": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "A": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "C",
+   "field": "C48-TYPE(3)",
+   "hazard": "sync",
+   "outcomes": {
+    "": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "9": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c48_sync_occurs_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "Z",
+   "field": "C49-B",
+   "hazard": "sync",
+   "outcomes": {
+    "": [
+     "aws_mdu"
+    ],
+    ".": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "Z": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c49_sync_float_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "EN",
+   "field": "C49-C",
+   "hazard": "sync",
+   "outcomes": {
+    "": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "B\u00ce": [
+     "aws_mdu",
+     "cobolio"
+    ]
+   },
+   "record": "c49_sync_float_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-118.625",
+   "field": "C49-F1",
+   "hazard": "sync",
+   "outcomes": {
+    "0.000000000000000000000000000000000000014736282": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c49_sync_float_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "1234",
+   "field": "C49-F2",
+   "hazard": "sync",
+   "outcomes": {
+    "0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004534089626513407": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<absent>": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c49_sync_float_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "K",
+   "field": "C50-A",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "K": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c50_sync_noeffect_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "-123",
+   "field": "C50-P",
+   "hazard": "sync",
+   "outcomes": {
+    "-123": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c50_sync_noeffect_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "TT",
+   "field": "C50-T",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "TT": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c50_sync_noeffect_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "X",
+   "field": "C50-X",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "X": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c50_sync_noeffect_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "456",
+   "field": "C50-Z",
+   "hazard": "sync",
+   "outcomes": {
+    "456": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ]
+   },
+   "record": "c50_sync_noeffect_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "L",
+   "field": "C51-A",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "wilcoyay_cbp"
+    ],
+    "L": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c51_sync_level01_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "M",
+   "field": "C51-B",
+   "hazard": "sync",
+   "outcomes": {
+    ".": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "\u009f": [
+     "aws_mdu",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c51_sync_level01_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "EN",
+   "field": "C51-C",
+   "hazard": "sync",
+   "outcomes": {
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "N": [
+     "aws_mdu",
+     "cobolio"
+    ],
+    "\u00d3,": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c51_sync_level01_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "4000000000",
+   "field": "C51-F",
+   "hazard": "sync",
+   "outcomes": {
+    "3556769792": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "<unsupported>": [
+     "wilcoyay_cbp"
+    ],
+    "M...\u00d3,..E": [
+     "cobolio"
+    ],
+    "M\u00d3,\u0088E": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c51_sync_level01_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "Gr\u00fc\u00dfe",
+   "field": "C52-A",
+   "hazard": "national_text",
+   "outcomes": {
+    "\u0000\u00e5\u0000\u00ca\u0000\u00dc\u0000\u00ff\u0000\u00c1\u0000\u0080\u0000\u0080\u0000\u0080": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "702": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u00e5\u00ca\u00dc\u00ff": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c52_nat_text_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "\u65e5\u672c\u8a9e",
+   "field": "C52-B",
+   "hazard": "national_text",
+   "outcomes": {
+    "-12015": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u00c1": [
+     "aws_mdu"
+    ],
+    "\u00c1V\u00c5\u008c\u00ab\u00c6": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c52_nat_text_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "\u03a9\u03bc\u03ad\u03b3\u03b1",
+   "field": "C52-C",
+   "hazard": "national_text",
+   "outcomes": {
+    "\u0003z\u0003\u00af\u0003\u00dd\u0003\u00b7\u0003\u00a3": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "500": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u0080\u0080\u0080": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c52_nat_text_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "TAIL",
+   "field": "C52-D",
+   "hazard": "national_text",
+   "outcomes": {
+    "\u0000\u0080\u0000\u0080": [
+     "wilcoyay_cbp"
+    ],
+    ".\u00e5.\u00ca": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "TAIL": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00c1V\u00c5\u008c": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c52_nat_text_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A\ud83d\ude00B",
+   "field": "C53-A",
+   "hazard": "national_surrogate",
+   "outcomes": {
+    "\u0000\u00a0Q\u0015\u00fa\u0000\u0000\u00e2": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1813": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u00a0Q\u0015": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c53_nat_surrogate_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "\ud834\udd1e",
+   "field": "C53-B",
+   "hazard": "national_surrogate",
+   "outcomes": {
+    "14002": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "Q\u0094\u00f9\u001e": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00fa": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c53_nat_surrogate_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "OK",
+   "field": "C53-C",
+   "hazard": "national_surrogate",
+   "outcomes": {
+    "..": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "OK": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "Q\u0094": [
+     "wilcoyay_cbp"
+    ],
+    "\u00e2": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c53_nat_surrogate_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234",
+   "field": "C54-A",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "....": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "\u0091": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u0091\u0016": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c54_nat_decimal_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-1234",
+   "field": "C54-B",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "\u0000\u0093\u00004": [
+     "aws_mdu"
+    ],
+    "+...4": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0093\u0000\u0094": [
+     "jrecord"
+    ]
+   },
+   "record": "c54_nat_decimal_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234",
+   "field": "C54-C",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "\u0000\u0005\u00001": [
+     "aws_mdu"
+    ],
+    "+...1": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0091": [
+     "jrecord"
+    ]
+   },
+   "record": "c54_nat_decimal_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-123.45",
+   "field": "C54-D",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "\u0000\u0016\u0000\u0093\u0000.\u00940": [
+     "aws_mdu"
+    ],
+    "+.......0": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0093\u0000\u0094": [
+     "jrecord"
+    ]
+   },
+   "record": "c54_nat_decimal_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "12.5",
+   "field": "C54-E",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "....": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "\u0091": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u0091.\u0016": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c54_nat_decimal_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0",
+   "field": "C54-A",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "....": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "\u0090\u0000\u0090": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u0090\u0090": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c54_nat_decimal_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "1234",
+   "field": "C54-B",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "\u0000\u0090\u00000": [
+     "aws_mdu"
+    ],
+    "+...0": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0090\u0000\u0090": [
+     "jrecord"
+    ]
+   },
+   "record": "c54_nat_decimal_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-1",
+   "field": "C54-C",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "\u0000\u008b\u00001": [
+     "aws_mdu"
+    ],
+    "+...1": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u008b\u0000\u0091": [
+     "jrecord"
+    ]
+   },
+   "record": "c54_nat_decimal_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "0.01",
+   "field": "C54-D",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "\u0000\u0016\u0000\u0093\u0000.\u00940": [
+     "aws_mdu"
+    ],
+    "+.......0": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0093\u0000\u0094": [
+     "jrecord"
+    ]
+   },
+   "record": "c54_nat_decimal_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "999.9",
+   "field": "C54-E",
+   "hazard": "national_decimal",
+   "outcomes": {
+    "....": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "\u0090\u0000\u0090": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u0090.\u0090": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c54_nat_decimal_r02",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C55-BAD",
+   "hazard": "mustfail_national",
+   "outcomes": {
+    "....": [
+     "cobolio"
+    ],
+    "101": [
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "cobrix"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "\u0091": [
+     "aws_mdu"
+    ],
+    "\u0091\u0000\u00a0": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c55_mf_nat_digit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C55-EBC",
+   "hazard": "mustfail_national",
+   "outcomes": {
+    "....": [
+     "cobolio"
+    ],
+    "304": [
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "cobrix"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ],
+    "\u0093\u0000\u0094": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u0093\u0094": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c55_mf_nat_digit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "42",
+   "field": "C55-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "12": [
+     "aws_mdu",
+     "cobolio",
+     "jrecord",
+     "jrecord_cb2xml",
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "cobrix"
+    ],
+    "<rejected>": [
+     "coboljsonifier"
+    ]
+   },
+   "record": "c55_mf_nat_digit_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C56-EBCSIGN",
+   "hazard": "mustfail_national",
+   "outcomes": {
+    "+..2": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0091": [
+     "jrecord"
+    ],
+    "\u0091\u00002": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c56_mf_nat_sign_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "-7",
+   "field": "C56-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "\u0000\u00930": [
+     "aws_mdu"
+    ],
+    "+..0": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u0093": [
+     "jrecord"
+    ]
+   },
+   "record": "c56_mf_nat_sign_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C56-STAR",
+   "hazard": "mustfail_national",
+   "outcomes": {
+    "\u0000\u008a0": [
+     "aws_mdu"
+    ],
+    "+..0": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix",
+     "wilcoyay_cbp"
+    ],
+    "<rejected>": [
+     "jrecord_cb2xml"
+    ],
+    "\u008a": [
+     "jrecord"
+    ]
+   },
+   "record": "c56_mf_nat_sign_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C57-HI",
+   "hazard": "mustfail_national_text",
+   "outcomes": {
+    "81301": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "Q\u0015": [
+     "aws_mdu"
+    ],
+    "Q\u0015\u0000\u00a0\u0000\u00e2": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c57_mf_nat_surrogate_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C57-LO",
+   "hazard": "mustfail_national_text",
+   "outcomes": {
+    "": [
+     "aws_mdu"
+    ],
+    "2120": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "\u00fc\u0000\u0000\u00a0": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c57_mf_nat_surrogate_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "OK",
+   "field": "C57-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "\u0000\u00a0": [
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "coboljsonifier",
+     "cobrix"
+    ],
+    "OK": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "Q.": [
+     "cobolio"
+    ],
+    "\u00e2\u00fc": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c57_mf_nat_surrogate_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "10.50",
+   "field": "C61-AMT",
+   "hazard": "rdw_mustfail_sibling",
+   "outcomes": {
+    "10.5": [
+     "aws_mdu",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "cobrix"
+    ]
+   },
+   "record": "c61_mf_rdw_len_f01_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "OK0001",
+   "field": "C61-ID",
+   "hazard": "rdw_mustfail_sibling",
+   "outcomes": {
+    "<rejected>": [
+     "cobrix"
+    ],
+    "OK0001": [
+     "aws_mdu",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c61_mf_rdw_len_f01_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "1",
+   "field": "C61-QTY",
+   "hazard": "rdw_mustfail_sibling",
+   "outcomes": {
+    "1": [
+     "aws_mdu",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "<rejected>": [
+     "cobrix"
+    ]
+   },
+   "record": "c61_mf_rdw_len_f01_r01",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "*RECORD*",
+   "hazard": "mustfail_rdw",
+   "outcomes": {
+    "<record emitted, 3 fields>": [
+     "aws_mdu"
+    ],
+    "<rejected>": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c61_mf_rdw_len_f01_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "*RECORD*",
+   "hazard": "mustfail_rdw",
+   "outcomes": {
+    "<record emitted, 3 fields>": [
+     "aws_mdu",
+     "cobrix"
+    ],
+    "<rejected>": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c62_mf_rdw_spanned_f01_r02",
+   "value_disagreement": false
+  },
+  {
+   "expected": "Gr\u00fc\u00dfe",
+   "field": "C64-A",
+   "hazard": "national_text",
+   "outcomes": {
+    "\u0000\u00e5\u0000\u00ca\u0000\u00dc\u0000\u00ff\u0000\u00c1\u0000\u0080\u0000\u0080\u0000\u0080": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "702": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "Gr\u00fc\u00dfe": [
+     "cobrix"
+    ],
+    "\u00e5\u00ca\u00dc\u00ff": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c64_nat_text_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "\u65e5\u672c\u8a9e",
+   "field": "C64-B",
+   "hazard": "national_text",
+   "outcomes": {
+    "-12015": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "\u00c1": [
+     "aws_mdu"
+    ],
+    "\u00c1V\u00c5\u008c\u00ab\u00c6": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u65e5\u672c\u8a9e": [
+     "cobrix"
+    ]
+   },
+   "record": "c64_nat_text_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "\u03a9\u03bc\u03ad\u03b3\u03b1",
+   "field": "C64-C",
+   "hazard": "national_text",
+   "outcomes": {
+    "\u0003z\u0003\u00af\u0003\u00dd\u0003\u00b7\u0003\u00a3": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "500": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "\u0080\u0080\u0080": [
+     "aws_mdu"
+    ],
+    "\u03a9\u03bc\u03ad\u03b3\u03b1": [
+     "cobrix"
+    ]
+   },
+   "record": "c64_nat_text_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "TAIL",
+   "field": "C64-D",
+   "hazard": "national_text",
+   "outcomes": {
+    "\u0000\u0080\u0000\u0080": [
+     "wilcoyay_cbp"
+    ],
+    ".\u00e5.\u00ca": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "TAIL": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00c1V\u00c5\u008c": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c64_nat_text_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "A\ud83d\ude00B",
+   "field": "C65-A",
+   "hazard": "national_surrogate",
+   "outcomes": {
+    "\u0000\u00a0Q\u0015\u00fa\u0000\u0000\u00e2": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "1813": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "A\ud83d\ude00B": [
+     "cobrix"
+    ],
+    "\u00a0Q\u0015": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c65_nat_surrogate_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "\ud834\udd1e",
+   "field": "C65-B",
+   "hazard": "national_surrogate",
+   "outcomes": {
+    "14002": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "Q\u0094\u00f9\u001e": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "\u00fa": [
+     "aws_mdu"
+    ],
+    "\ud834\udd1e": [
+     "cobrix"
+    ]
+   },
+   "record": "c65_nat_surrogate_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "OK",
+   "field": "C65-C",
+   "hazard": "national_surrogate",
+   "outcomes": {
+    "..": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "OK": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "Q\u0094": [
+     "wilcoyay_cbp"
+    ],
+    "\u00e2": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c65_nat_surrogate_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C66-HI",
+   "hazard": "mustfail_national_text",
+   "outcomes": {
+    "81301": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<flagged>": [
+     "cobrix"
+    ],
+    "Q\u0015": [
+     "aws_mdu"
+    ],
+    "Q\u0015\u0000\u00a0\u0000\u00e2": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c66_mf_nat_surr_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "REJECT_OR_FLAG",
+   "field": "C66-LO",
+   "hazard": "mustfail_national_text",
+   "outcomes": {
+    "": [
+     "aws_mdu"
+    ],
+    "2120": [
+     "wilcoyay_cbp"
+    ],
+    "<absent>": [
+     "cobolio"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "<flagged>": [
+     "cobrix"
+    ],
+    "\u00fc\u0000\u0000\u00a0": [
+     "jrecord",
+     "jrecord_cb2xml"
+    ]
+   },
+   "record": "c66_mf_nat_surr_implicit_r01",
+   "value_disagreement": true
+  },
+  {
+   "expected": "OK",
+   "field": "C66-OK",
+   "hazard": "mustfail_sibling",
+   "outcomes": {
+    "\u0000\u00a0": [
+     "wilcoyay_cbp"
+    ],
+    "<error>": [
+     "coboljsonifier"
+    ],
+    "OK": [
+     "cobrix",
+     "jrecord",
+     "jrecord_cb2xml"
+    ],
+    "Q.": [
+     "cobolio"
+    ],
+    "\u00e2\u00fc": [
+     "aws_mdu"
+    ]
+   },
+   "record": "c66_mf_nat_surr_implicit_r01",
+   "value_disagreement": true
+  }
+ ],
+ "per_decoder_hazard": {
+  "aws_mdu": {
+   "baseline": {
+    "MATCH": 21,
+    "MISMATCH": 2,
+    "n": 23,
+    "outcome_ok": 21
+   },
+   "binary": {
+    "MATCH": 10,
+    "MISMATCH": 1,
+    "UNSUPPORTED": 1,
+    "n": 12,
+    "outcome_ok": 10
+   },
+   "binary_truncation": {
+    "MISMATCH": 9,
+    "n": 9,
+    "outcome_ok": 0
+   },
+   "codepage": {
+    "MATCH": 8,
+    "MISMATCH": 2,
+    "n": 10,
+    "outcome_ok": 8
+   },
+   "comp3": {
+    "MATCH": 15,
+    "n": 15,
+    "outcome_ok": 15
+   },
+   "hfp_float": {
+    "MISMATCH": 18,
+    "n": 18,
+    "outcome_ok": 0
+   },
+   "hfp_range": {
+    "MISMATCH": 7,
+    "n": 7,
+    "outcome_ok": 0
+   },
+   "hfp_unnormalized": {
+    "MISMATCH": 5,
+    "n": 5,
+    "outcome_ok": 0
+   },
+   "implied_decimal": {
+    "MATCH": 7,
+    "MISMATCH": 5,
+    "n": 12,
+    "outcome_ok": 7
+   },
+   "mustfail_codepage": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "mustfail_national": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_national_text": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_packed": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_rdw": {
+    "MISMATCH": 3,
+    "n": 3,
+    "outcome_ok": 0
+   },
+   "mustfail_sibling": {
+    "MATCH": 4,
+    "MISMATCH": 4,
+    "n": 8,
+    "outcome_ok": 4
+   },
+   "mustfail_zoned": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "national_decimal": {
+    "MISMATCH": 10,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "MISMATCH": 6,
+    "n": 6,
+    "outcome_ok": 0
+   },
+   "national_text": {
+    "MISMATCH": 8,
+    "n": 8,
+    "outcome_ok": 0
+   },
+   "odo": {
+    "MATCH": 5,
+    "UNSUPPORTED": 25,
+    "n": 30,
+    "outcome_ok": 5
+   },
+   "rdw": {
+    "MATCH": 12,
+    "UNSUPPORTED": 17,
+    "n": 29,
+    "outcome_ok": 12
+   },
+   "rdw_mustfail_sibling": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "rdw_short_record": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "redefines": {
+    "MATCH": 15,
+    "UNSUPPORTED": 2,
+    "n": 17,
+    "outcome_ok": 15
+   },
+   "sign_nibble": {
+    "MATCH": 8,
+    "MISMATCH": 1,
+    "n": 9,
+    "outcome_ok": 8
+   },
+   "sync": {
+    "MATCH": 14,
+    "MISMATCH": 33,
+    "n": 47,
+    "outcome_ok": 14
+   },
+   "zoned_overpunch": {
+    "MATCH": 11,
+    "MISMATCH": 6,
+    "n": 17,
+    "outcome_ok": 11
+   }
+  },
+  "cobolio": {
+   "baseline": {
+    "MATCH": 21,
+    "MISMATCH": 2,
+    "n": 23,
+    "outcome_ok": 21
+   },
+   "binary": {
+    "MATCH": 9,
+    "MISMATCH": 3,
+    "n": 12,
+    "outcome_ok": 9
+   },
+   "binary_truncation": {
+    "MISMATCH": 9,
+    "n": 9,
+    "outcome_ok": 0
+   },
+   "codepage": {
+    "MATCH": 10,
+    "n": 10,
+    "outcome_ok": 10
+   },
+   "comp3": {
+    "MATCH": 15,
+    "n": 15,
+    "outcome_ok": 15
+   },
+   "hfp_float": {
+    "MISMATCH": 18,
+    "n": 18,
+    "outcome_ok": 0
+   },
+   "hfp_range": {
+    "MISMATCH": 7,
+    "n": 7,
+    "outcome_ok": 0
+   },
+   "hfp_unnormalized": {
+    "MISMATCH": 5,
+    "n": 5,
+    "outcome_ok": 0
+   },
+   "implied_decimal": {
+    "MATCH": 6,
+    "MISMATCH": 6,
+    "n": 12,
+    "outcome_ok": 6
+   },
+   "mustfail_codepage": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "mustfail_national": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_national_text": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_packed": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_sibling": {
+    "MATCH": 4,
+    "MISMATCH": 4,
+    "n": 8,
+    "outcome_ok": 4
+   },
+   "mustfail_zoned": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "national_decimal": {
+    "MISMATCH": 10,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "MISMATCH": 6,
+    "n": 6,
+    "outcome_ok": 0
+   },
+   "national_text": {
+    "MISMATCH": 8,
+    "n": 8,
+    "outcome_ok": 0
+   },
+   "odo": {
+    "MATCH": 5,
+    "UNSUPPORTED": 25,
+    "n": 30,
+    "outcome_ok": 5
+   },
+   "redefines": {
+    "MATCH": 15,
+    "MISMATCH": 2,
+    "n": 17,
+    "outcome_ok": 15
+   },
+   "sign_nibble": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "sync": {
+    "MATCH": 14,
+    "MISMATCH": 33,
+    "n": 47,
+    "outcome_ok": 14
+   },
+   "zoned_overpunch": {
+    "MATCH": 11,
+    "MISMATCH": 6,
+    "n": 17,
+    "outcome_ok": 11
+   }
+  },
+  "coboljsonifier": {
+   "baseline": {
+    "ERROR": 7,
+    "MATCH": 6,
+    "MISMATCH": 1,
+    "REJECTED": 9,
+    "n": 23,
+    "outcome_ok": 6
+   },
+   "binary": {
+    "ERROR": 4,
+    "MATCH": 2,
+    "REJECTED": 6,
+    "n": 12,
+    "outcome_ok": 2
+   },
+   "binary_truncation": {
+    "ERROR": 9,
+    "n": 9,
+    "outcome_ok": 0
+   },
+   "codepage": {
+    "MATCH": 7,
+    "MISMATCH": 3,
+    "n": 10,
+    "outcome_ok": 7
+   },
+   "comp3": {
+    "MATCH": 4,
+    "REJECTED": 11,
+    "n": 15,
+    "outcome_ok": 4
+   },
+   "hfp_float": {
+    "ERROR": 18,
+    "n": 18,
+    "outcome_ok": 0
+   },
+   "hfp_range": {
+    "ERROR": 7,
+    "n": 7,
+    "outcome_ok": 0
+   },
+   "hfp_unnormalized": {
+    "ERROR": 5,
+    "n": 5,
+    "outcome_ok": 0
+   },
+   "implied_decimal": {
+    "ERROR": 9,
+    "REJECTED": 3,
+    "n": 12,
+    "outcome_ok": 0
+   },
+   "mustfail_codepage": {
+    "REJECTED": 2,
+    "n": 2,
+    "outcome_ok": 2
+   },
+   "mustfail_national": {
+    "ERROR": 2,
+    "REJECTED": 2,
+    "n": 4,
+    "outcome_ok": 2
+   },
+   "mustfail_national_text": {
+    "ERROR": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_packed": {
+    "REJECTED": 4,
+    "n": 4,
+    "outcome_ok": 4
+   },
+   "mustfail_sibling": {
+    "ERROR": 3,
+    "REJECTED": 5,
+    "n": 8,
+    "outcome_ok": 5
+   },
+   "mustfail_zoned": {
+    "REJECTED": 2,
+    "n": 2,
+    "outcome_ok": 2
+   },
+   "national_decimal": {
+    "ERROR": 10,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "ERROR": 6,
+    "n": 6,
+    "outcome_ok": 0
+   },
+   "national_text": {
+    "ERROR": 8,
+    "n": 8,
+    "outcome_ok": 0
+   },
+   "odo": {
+    "MATCH": 6,
+    "MISMATCH": 20,
+    "REJECTED": 4,
+    "n": 30,
+    "outcome_ok": 6
+   },
+   "redefines": {
+    "UNSUPPORTED": 17,
+    "n": 17,
+    "outcome_ok": 0
+   },
+   "sign_nibble": {
+    "MATCH": 2,
+    "REJECTED": 7,
+    "n": 9,
+    "outcome_ok": 8
+   },
+   "sync": {
+    "ERROR": 47,
+    "n": 47,
+    "outcome_ok": 0
+   },
+   "zoned_overpunch": {
+    "ERROR": 6,
+    "MATCH": 11,
+    "n": 17,
+    "outcome_ok": 11
+   }
+  },
+  "cobrix": {
+   "baseline": {
+    "MATCH": 23,
+    "n": 23,
+    "outcome_ok": 23
+   },
+   "binary": {
+    "MATCH": 12,
+    "n": 12,
+    "outcome_ok": 12
+   },
+   "binary_truncation": {
+    "MATCH": 7,
+    "REJECTED": 2,
+    "n": 9,
+    "outcome_ok": 7
+   },
+   "codepage": {
+    "MATCH": 10,
+    "n": 10,
+    "outcome_ok": 10
+   },
+   "comp3": {
+    "MATCH": 15,
+    "n": 15,
+    "outcome_ok": 15
+   },
+   "hfp_float": {
+    "MATCH": 18,
+    "n": 18,
+    "outcome_ok": 18
+   },
+   "hfp_range": {
+    "MATCH": 1,
+    "MISMATCH": 6,
+    "n": 7,
+    "outcome_ok": 1
+   },
+   "hfp_unnormalized": {
+    "MATCH": 5,
+    "n": 5,
+    "outcome_ok": 5
+   },
+   "implied_decimal": {
+    "MATCH": 12,
+    "n": 12,
+    "outcome_ok": 12
+   },
+   "mustfail_codepage": {
+    "REJECTED": 2,
+    "n": 2,
+    "outcome_ok": 2
+   },
+   "mustfail_national": {
+    "ERROR": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_national_text": {
+    "ERROR": 2,
+    "FLAGGED": 2,
+    "n": 4,
+    "outcome_ok": 2
+   },
+   "mustfail_packed": {
+    "REJECTED": 4,
+    "n": 4,
+    "outcome_ok": 4
+   },
+   "mustfail_rdw": {
+    "MISMATCH": 2,
+    "REJECTED": 1,
+    "n": 3,
+    "outcome_ok": 1
+   },
+   "mustfail_sibling": {
+    "ERROR": 3,
+    "MATCH": 5,
+    "n": 8,
+    "outcome_ok": 5
+   },
+   "mustfail_zoned": {
+    "REJECTED": 2,
+    "n": 2,
+    "outcome_ok": 2
+   },
+   "national_decimal": {
+    "ERROR": 10,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "ERROR": 3,
+    "MATCH": 3,
+    "n": 6,
+    "outcome_ok": 3
+   },
+   "national_text": {
+    "ERROR": 4,
+    "MATCH": 4,
+    "n": 8,
+    "outcome_ok": 4
+   },
+   "odo": {
+    "MATCH": 30,
+    "n": 30,
+    "outcome_ok": 30
+   },
+   "rdw": {
+    "MATCH": 29,
+    "n": 29,
+    "outcome_ok": 29
+   },
+   "rdw_mustfail_sibling": {
+    "MATCH": 6,
+    "REJECTED": 3,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "rdw_short_record": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "redefines": {
+    "MATCH": 17,
+    "n": 17,
+    "outcome_ok": 17
+   },
+   "sign_nibble": {
+    "MATCH": 3,
+    "REJECTED": 6,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "sync": {
+    "ERROR": 47,
+    "n": 47,
+    "outcome_ok": 0
+   },
+   "zoned_overpunch": {
+    "MATCH": 17,
+    "n": 17,
+    "outcome_ok": 17
+   }
+  },
+  "jrecord": {
+   "baseline": {
+    "MATCH": 23,
+    "n": 23,
+    "outcome_ok": 23
+   },
+   "binary": {
+    "MATCH": 12,
+    "n": 12,
+    "outcome_ok": 12
+   },
+   "binary_truncation": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "codepage": {
+    "MATCH": 10,
+    "n": 10,
+    "outcome_ok": 10
+   },
+   "comp3": {
+    "MATCH": 15,
+    "n": 15,
+    "outcome_ok": 15
+   },
+   "hfp_float": {
+    "MATCH": 2,
+    "MISMATCH": 16,
+    "n": 18,
+    "outcome_ok": 2
+   },
+   "hfp_range": {
+    "MISMATCH": 7,
+    "n": 7,
+    "outcome_ok": 0
+   },
+   "hfp_unnormalized": {
+    "MISMATCH": 5,
+    "n": 5,
+    "outcome_ok": 0
+   },
+   "implied_decimal": {
+    "MATCH": 10,
+    "MISMATCH": 2,
+    "n": 12,
+    "outcome_ok": 10
+   },
+   "mustfail_codepage": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "mustfail_national": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_national_text": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_packed": {
+    "REJECTED": 4,
+    "n": 4,
+    "outcome_ok": 4
+   },
+   "mustfail_rdw": {
+    "MISMATCH": 1,
+    "REJECTED": 2,
+    "n": 3,
+    "outcome_ok": 2
+   },
+   "mustfail_sibling": {
+    "MATCH": 6,
+    "MISMATCH": 2,
+    "n": 8,
+    "outcome_ok": 6
+   },
+   "mustfail_zoned": {
+    "MISMATCH": 1,
+    "REJECTED": 1,
+    "n": 2,
+    "outcome_ok": 1
+   },
+   "national_decimal": {
+    "MISMATCH": 10,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "MATCH": 2,
+    "MISMATCH": 4,
+    "n": 6,
+    "outcome_ok": 2
+   },
+   "national_text": {
+    "MATCH": 2,
+    "MISMATCH": 6,
+    "n": 8,
+    "outcome_ok": 2
+   },
+   "odo": {
+    "MATCH": 30,
+    "n": 30,
+    "outcome_ok": 30
+   },
+   "rdw": {
+    "MATCH": 29,
+    "n": 29,
+    "outcome_ok": 29
+   },
+   "rdw_mustfail_sibling": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "rdw_short_record": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "redefines": {
+    "MATCH": 17,
+    "n": 17,
+    "outcome_ok": 17
+   },
+   "sign_nibble": {
+    "MATCH": 5,
+    "MISMATCH": 1,
+    "REJECTED": 3,
+    "n": 9,
+    "outcome_ok": 8
+   },
+   "sync": {
+    "MATCH": 31,
+    "MISMATCH": 16,
+    "n": 47,
+    "outcome_ok": 31
+   },
+   "zoned_overpunch": {
+    "MATCH": 16,
+    "MISMATCH": 1,
+    "n": 17,
+    "outcome_ok": 16
+   }
+  },
+  "jrecord_cb2xml": {
+   "baseline": {
+    "MATCH": 23,
+    "n": 23,
+    "outcome_ok": 23
+   },
+   "binary": {
+    "MATCH": 12,
+    "n": 12,
+    "outcome_ok": 12
+   },
+   "binary_truncation": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "codepage": {
+    "MATCH": 10,
+    "n": 10,
+    "outcome_ok": 10
+   },
+   "comp3": {
+    "MATCH": 15,
+    "n": 15,
+    "outcome_ok": 15
+   },
+   "hfp_float": {
+    "MATCH": 2,
+    "MISMATCH": 16,
+    "n": 18,
+    "outcome_ok": 2
+   },
+   "hfp_range": {
+    "MISMATCH": 7,
+    "n": 7,
+    "outcome_ok": 0
+   },
+   "hfp_unnormalized": {
+    "MISMATCH": 5,
+    "n": 5,
+    "outcome_ok": 0
+   },
+   "implied_decimal": {
+    "MATCH": 10,
+    "MISMATCH": 2,
+    "n": 12,
+    "outcome_ok": 10
+   },
+   "mustfail_codepage": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "mustfail_national": {
+    "MISMATCH": 2,
+    "REJECTED": 2,
+    "n": 4,
+    "outcome_ok": 2
+   },
+   "mustfail_national_text": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_packed": {
+    "REJECTED": 4,
+    "n": 4,
+    "outcome_ok": 4
+   },
+   "mustfail_rdw": {
+    "MISMATCH": 1,
+    "REJECTED": 2,
+    "n": 3,
+    "outcome_ok": 2
+   },
+   "mustfail_sibling": {
+    "MATCH": 6,
+    "MISMATCH": 1,
+    "REJECTED": 1,
+    "n": 8,
+    "outcome_ok": 6
+   },
+   "mustfail_zoned": {
+    "MISMATCH": 1,
+    "REJECTED": 1,
+    "n": 2,
+    "outcome_ok": 1
+   },
+   "national_decimal": {
+    "MISMATCH": 4,
+    "REJECTED": 6,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "MATCH": 2,
+    "MISMATCH": 4,
+    "n": 6,
+    "outcome_ok": 2
+   },
+   "national_text": {
+    "MATCH": 2,
+    "MISMATCH": 6,
+    "n": 8,
+    "outcome_ok": 2
+   },
+   "odo": {
+    "MATCH": 30,
+    "n": 30,
+    "outcome_ok": 30
+   },
+   "rdw": {
+    "MATCH": 29,
+    "n": 29,
+    "outcome_ok": 29
+   },
+   "rdw_mustfail_sibling": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "rdw_short_record": {
+    "MATCH": 9,
+    "n": 9,
+    "outcome_ok": 9
+   },
+   "redefines": {
+    "MATCH": 17,
+    "n": 17,
+    "outcome_ok": 17
+   },
+   "sign_nibble": {
+    "MATCH": 5,
+    "MISMATCH": 1,
+    "REJECTED": 3,
+    "n": 9,
+    "outcome_ok": 8
+   },
+   "sync": {
+    "MATCH": 31,
+    "MISMATCH": 16,
+    "n": 47,
+    "outcome_ok": 31
+   },
+   "zoned_overpunch": {
+    "MATCH": 12,
+    "MISMATCH": 2,
+    "REJECTED": 3,
+    "n": 17,
+    "outcome_ok": 12
+   }
+  },
+  "wilcoyay_cbp": {
+   "baseline": {
+    "MATCH": 16,
+    "REJECTED": 5,
+    "UNSUPPORTED": 2,
+    "n": 23,
+    "outcome_ok": 16
+   },
+   "binary": {
+    "UNSUPPORTED": 12,
+    "n": 12,
+    "outcome_ok": 0
+   },
+   "binary_truncation": {
+    "UNSUPPORTED": 9,
+    "n": 9,
+    "outcome_ok": 0
+   },
+   "codepage": {
+    "MATCH": 7,
+    "UNSUPPORTED": 3,
+    "n": 10,
+    "outcome_ok": 7
+   },
+   "comp3": {
+    "MATCH": 15,
+    "n": 15,
+    "outcome_ok": 15
+   },
+   "hfp_float": {
+    "UNSUPPORTED": 18,
+    "n": 18,
+    "outcome_ok": 0
+   },
+   "hfp_range": {
+    "UNSUPPORTED": 7,
+    "n": 7,
+    "outcome_ok": 0
+   },
+   "hfp_unnormalized": {
+    "UNSUPPORTED": 5,
+    "n": 5,
+    "outcome_ok": 0
+   },
+   "implied_decimal": {
+    "MATCH": 9,
+    "REJECTED": 3,
+    "n": 12,
+    "outcome_ok": 9
+   },
+   "mustfail_codepage": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "mustfail_national": {
+    "ERROR": 2,
+    "MISMATCH": 2,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_national_text": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_packed": {
+    "MISMATCH": 4,
+    "n": 4,
+    "outcome_ok": 0
+   },
+   "mustfail_sibling": {
+    "ERROR": 1,
+    "MATCH": 4,
+    "MISMATCH": 3,
+    "n": 8,
+    "outcome_ok": 4
+   },
+   "mustfail_zoned": {
+    "MISMATCH": 2,
+    "n": 2,
+    "outcome_ok": 0
+   },
+   "national_decimal": {
+    "ERROR": 10,
+    "n": 10,
+    "outcome_ok": 0
+   },
+   "national_surrogate": {
+    "MISMATCH": 6,
+    "n": 6,
+    "outcome_ok": 0
+   },
+   "national_text": {
+    "MISMATCH": 8,
+    "n": 8,
+    "outcome_ok": 0
+   },
+   "odo": {
+    "MATCH": 26,
+    "REJECTED": 3,
+    "UNSUPPORTED": 1,
+    "n": 30,
+    "outcome_ok": 26
+   },
+   "redefines": {
+    "MATCH": 6,
+    "REJECTED": 9,
+    "UNSUPPORTED": 2,
+    "n": 17,
+    "outcome_ok": 6
+   },
+   "sign_nibble": {
+    "MATCH": 7,
+    "MISMATCH": 2,
+    "n": 9,
+    "outcome_ok": 7
+   },
+   "sync": {
+    "ERROR": 1,
+    "MATCH": 2,
+    "REJECTED": 10,
+    "UNSUPPORTED": 34,
+    "n": 47,
+    "outcome_ok": 2
+   },
+   "zoned_overpunch": {
+    "MATCH": 12,
+    "MISMATCH": 5,
+    "n": 17,
+    "outcome_ok": 12
+   }
+  }
+ },
+ "per_decoder_total": {
+  "aws_mdu": {
+   "MATCH": 148,
+   "MISMATCH": 136,
+   "UNSUPPORTED": 45,
+   "n": 329,
+   "outcome_ok": 148
+  },
+  "cobolio": {
+   "MATCH": 119,
+   "MISMATCH": 135,
+   "UNSUPPORTED": 25,
+   "n": 279,
+   "outcome_ok": 119
+  },
+  "coboljsonifier": {
+   "ERROR": 145,
+   "MATCH": 38,
+   "MISMATCH": 24,
+   "REJECTED": 55,
+   "UNSUPPORTED": 17,
+   "n": 279,
+   "outcome_ok": 59
+  },
+  "cobrix": {
+   "ERROR": 73,
+   "FLAGGED": 2,
+   "MATCH": 226,
+   "MISMATCH": 8,
+   "REJECTED": 20,
+   "n": 329,
+   "outcome_ok": 246
+  },
+  "jrecord": {
+   "MATCH": 237,
+   "MISMATCH": 82,
+   "REJECTED": 10,
+   "n": 329,
+   "outcome_ok": 247
+  },
+  "jrecord_cb2xml": {
+   "MATCH": 233,
+   "MISMATCH": 74,
+   "REJECTED": 22,
+   "n": 329,
+   "outcome_ok": 245
+  },
+  "wilcoyay_cbp": {
+   "ERROR": 14,
+   "MATCH": 104,
+   "MISMATCH": 38,
+   "REJECTED": 30,
+   "UNSUPPORTED": 93,
+   "n": 279,
+   "outcome_ok": 104
+  }
+ },
+ "rdw_files": {
+  "aws_mdu": {
+   "c58_rdw_basic_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c59_rdw_odo_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c60_rdw_short_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c61_mf_rdw_len_f01": {
+    "emitted": 2,
+    "error": null,
+    "framed": 2
+   },
+   "c62_mf_rdw_spanned_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 2
+   },
+   "c63_mf_rdw_trunc_f01": {
+    "emitted": 2,
+    "error": null,
+    "framed": 2
+   }
+  },
+  "cobrix": {
+   "c58_rdw_basic_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c59_rdw_odo_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c60_rdw_short_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c61_mf_rdw_len_f01": {
+    "emitted": 0,
+    "error": "IllegalStateException: RDW headers should never be zero (0,3,0,0). Found zero size record at 17.",
+    "framed": 2
+   },
+   "c62_mf_rdw_spanned_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 2
+   },
+   "c63_mf_rdw_trunc_f01": {
+    "emitted": 2,
+    "error": null,
+    "framed": 2
+   }
+  },
+  "jrecord": {
+   "c58_rdw_basic_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c59_rdw_odo_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c60_rdw_short_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c61_mf_rdw_len_f01": {
+    "emitted": 1,
+    "error": "IOException: Invalid Line Length: -1 For line 2",
+    "framed": 2
+   },
+   "c62_mf_rdw_spanned_f01": {
+    "emitted": 1,
+    "error": "IOException: Invalid Record Descriptor word at line 2 6\t1 0",
+    "framed": 2
+   },
+   "c63_mf_rdw_trunc_f01": {
+    "emitted": 2,
+    "error": null,
+    "framed": 2
+   }
+  },
+  "jrecord_cb2xml": {
+   "c58_rdw_basic_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c59_rdw_odo_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c60_rdw_short_f01": {
+    "emitted": 3,
+    "error": null,
+    "framed": 3
+   },
+   "c61_mf_rdw_len_f01": {
+    "emitted": 1,
+    "error": "IOException: Invalid Line Length: -1 For line 2",
+    "framed": 2
+   },
+   "c62_mf_rdw_spanned_f01": {
+    "emitted": 1,
+    "error": "IOException: Invalid Record Descriptor word at line 2 6\t1 0",
+    "framed": 2
+   },
+   "c63_mf_rdw_trunc_f01": {
+    "emitted": 2,
+    "error": null,
+    "framed": 2
+   }
+  }
+ },
+ "rows_per_decoder": {
+  "aws_mdu": 329,
+  "cobolio": 279,
+  "coboljsonifier": 279,
+  "cobrix": 329,
+  "jrecord": 329,
+  "jrecord_cb2xml": 329,
+  "wilcoyay_cbp": 279
+ }
+}
