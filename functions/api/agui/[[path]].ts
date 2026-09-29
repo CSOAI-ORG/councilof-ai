@@ -17,6 +17,8 @@
  * /api/xrpl). Human UI is thin over those GETs — never a second source of truth.
  */
 
+import { serveAguiRun } from "../../_lib/aguiRun";
+
 interface Env {
   AGUI_WIRE_URL?: string;
 }
@@ -158,6 +160,13 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       return Response.json({ error: "method_not_allowed" }, { status: 405 });
     }
     return serveLivingGspcState(ctx);
+  }
+
+  // In-process AG-UI run (2026-09-29): POST /api/agui/run (and POST /api/agui/) streams RUN_*,
+  // TOOL_CALL_*, TEXT_MESSAGE_* from the shared router — no external wire needed. Paid tools
+  // require an explicit forwardedProps.confirm (see functions/_lib/aguiRun.ts).
+  if (sub === "" || sub === "run" || sub === "agent") {
+    return serveAguiRun(ctx.request, (p) => ctx.waitUntil(p));
   }
 
   const base = (ctx.env.AGUI_WIRE_URL || DEFAULT_WIRE).replace(/\/$/, "");

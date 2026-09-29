@@ -35,6 +35,7 @@
  */
 
 import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
+import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
 
 type Json = Record<string, unknown>;
 
@@ -74,7 +75,9 @@ export const A2A_ERROR = {
 // can read the contract before sending anything.
 export const METHODS: Record<string, string> = {
   SendMessage:
-    "answered with a Message from one explicit {skill,input} selector; every card skill routes to a fixed, free, " +
+    "answered with a Message from one explicit {skill,input} selector, or from one plain-text Part that the shared " +
+    "deterministic router (functions/_lib/talkRouter.ts, also behind POST /api/chat and POST /api/agui/run) places on a " +
+    "POST /mcp tool, quoting that tool's output with a citation; text it cannot place is refused. Every card skill routes to a fixed, free, " +
     "same-origin handler. The set is the skills array on this response - read it rather than a number: this " +
     "string once named a smaller figure than SKILL_IDS actually held, and scripts/capability-registry.mjs --check " +
     "now fails on any skill count typed into this file.",
@@ -112,6 +115,8 @@ const SKILL_ID_SET = new Set<string>(SKILL_IDS);
 
 type SkillSelection = { skill: SkillId; input: Json };
 type CapabilityHelp = { kind: "CAPABILITY_HELP" };
+/** A plain-text question the shared router places on one of the /mcp tools (2026-09-29). */
+type TalkSelection = { kind: "TALK"; text: string; plan: Plan };
 
 class SourceError extends Error {
   constructor(
@@ -298,7 +303,7 @@ export function isCapabilityGreeting(text: string): boolean {
   return false;
 }
 
-function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | string {
+function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | TalkSelection | string {
   const parts = Array.isArray(message.parts) ? message.parts : [];
   if (parts.length !== 1) {
     return "exactly one Part is required; additional semantic parts are not ignored";
@@ -318,7 +323,13 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | s
     // Until 2026-09-26 only three exact strings qualified, so a bare "hello" got
     // INVALID_SKILL_SELECTOR while the error text itself said greetings were accepted.
     if (text !== undefined && isCapabilityGreeting(text)) return { kind: "CAPABILITY_HELP" };
-    return `structured Part.data {skill,input} is required; text accepts only "board" or a greeting (${GREETING_EXAMPLES}), which returns the capability list`;
+    // Any other text goes through the SAME deterministic router as POST /api/chat: a question that
+    // names something a /mcp tool answers (the board, an axis, a card id, a server) is answered by
+    // that tool in-process. Text it cannot place is still refused — never a guessed skill.
+    const raw = str(part.text)?.trim() ?? "";
+    const plan = routeIntent(raw);
+    if (plan.kind !== "help") return { kind: "TALK", text: raw, plan };
+    return `no tool matched this text; ask about the board, a named axis, a 64-hex card id or an MCP server URL/domain, send a greeting (${GREETING_EXAMPLES}) for the capability list, or send structured Part.data {skill,input}`;
   }
   if (semanticKeys[0] !== "data") {
     return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
@@ -619,6 +630,33 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
   if (typeof selection === "string") {
     return rpcError(id, A2A_ERROR.INVALID_PARAMS, selection, "INVALID_SKILL_SELECTOR", {
       field: "params.message.parts",
+    });
+  }
+  if ("kind" in selection && selection.kind === "TALK") {
+    const t = await executePlan(selection.plan, origin);
+    return reply(id, {
+      result: {
+        message: {
+          messageId: crypto.randomUUID(),
+          contextId: str(message.contextId) ?? crypto.randomUUID(),
+          role: "ROLE_AGENT",
+          parts: [
+            { text: t.answer, mediaType: "text/plain" },
+            {
+              data: {
+                kind: t.grounded ? "GROUNDED_TOOL_ANSWER" : "NEEDS_INPUT",
+                intent: t.intent,
+                label: t.label,
+                answered_by: t.answered_by,
+                citations: t.citations,
+                tool_calls: t.tool_calls,
+                register: REGISTER,
+              },
+              mediaType: "application/json",
+            },
+          ],
+        },
+      },
     });
   }
   if ("kind" in selection) {
