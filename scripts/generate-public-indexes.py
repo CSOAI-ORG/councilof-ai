@@ -36,6 +36,23 @@ def content_id(value: Any) -> str:
     return sha256_bytes(raw)
 
 
+def nonnegative_count(value: Any) -> int | None:
+    """Accept exact public counters only; malformed values stay unknown."""
+    if type(value) is int:
+        return value if value >= 0 else None
+    if isinstance(value, str) and value.isascii() and value.isdigit():
+        return int(value)
+    return None
+
+
+def repeat_payer_gate(payers: Any, settlements: Any) -> str:
+    payer_count = nonnegative_count(payers)
+    settlement_count = nonnegative_count(settlements)
+    if payer_count is None or settlement_count is None:
+        return "HOLD"
+    return "PASS" if payer_count > 0 and settlement_count > payer_count else "HOLD"
+
+
 def fetch(url: str) -> tuple[bytes, dict[str, Any] | None, dict[str, Any]]:
     req = urllib.request.Request(
         url,
@@ -230,6 +247,25 @@ def validate_committed(
 
 def selftest() -> list[str]:
     failures=[]
+    valid_counts={0:0, 7:7, "0":0, "007":7}
+    for value,expected in valid_counts.items():
+        if nonnegative_count(value)!=expected:
+            failures.append(f"valid public counter rejected: {value!r}")
+    for value in (True, False, 1.5, float("inf"), float("nan"), "-1", "1.5", " 7", "7x", None, -1):
+        if nonnegative_count(value) is not None:
+            failures.append(f"invalid public counter accepted: {value!r}")
+    gate_cases = (
+        ((1, 1), "HOLD"),
+        ((2, 3), "PASS"),
+        ((0, 1), "HOLD"),
+        ((2, 1), "HOLD"),
+        ((1.5, 3), "HOLD"),
+        ((1, None), "HOLD"),
+    )
+    for values,expected in gate_cases:
+        if repeat_payer_gate(*values)!=expected:
+            failures.append(f"repeat-payer gate mismatch for {values!r}")
+
     with tempfile.TemporaryDirectory() as td:
         root=Path(td)
         public=root/"public"; public.mkdir()
@@ -377,6 +413,13 @@ def main() -> int:
 
     gspc_totals = gspc.get("totals") or {}
     revenue_one = revenue.get("one_number") or {}
+    distinct_nonself = nonnegative_count(revenue_one.get("all_time"))
+    distinct_nonself_30d = nonnegative_count(revenue_one.get("last_30d"))
+    nonself_settlements = nonnegative_count(revenue_one.get("settlements"))
+    settled_atomic = nonnegative_count(revenue_one.get("settled_usdc_atomic"))
+    repeat_state = repeat_payer_gate(
+        revenue_one.get("all_time"), revenue_one.get("settlements")
+    )
     flywheel = {
         "schema": "csoai.eat-flywheel-public/0.2",
         "kind": "public-observation-projection",
@@ -392,8 +435,8 @@ def main() -> int:
             "mcp_free_tools": len((x402.get("mcp") or {}).get("free_tools") or []),
             "mcp_paid_tools": len((x402.get("mcp") or {}).get("paid_tools") or []),
             "a2a_skills": len(a2a.get("skills") or []),
-            "distinct_nonself_payers": revenue_one.get("all_time"),
-            "nonself_settlements": revenue_one.get("settlements"),
+            "distinct_nonself_payers": distinct_nonself,
+            "nonself_settlements": nonself_settlements,
         },
         "private_eat_state": "NOT_INCLUDED_IN_PUBLIC_INDEX",
         "source_observations": observations,
@@ -455,10 +498,6 @@ def main() -> int:
     }
     distribution["content_id"] = content_id(distribution)
 
-    distinct_nonself = int(revenue_one.get("all_time") or 0)
-    nonself_settlements = int(revenue_one.get("settlements") or 0)
-    repeat_state = "PASS" if distinct_nonself > 0 and nonself_settlements > distinct_nonself else "HOLD"
-    settled_atomic = int(revenue_one.get("settled_usdc_atomic") or 0)
     progress = {
         "schema": "csoai.public-progress-index/0.2",
         "kind": "multi-dimensional-public-progress",
@@ -482,11 +521,11 @@ def main() -> int:
             ),
         },
         "commercial": {
-            "distinct_nonself_payers": revenue_one.get("all_time"),
-            "distinct_nonself_payers_30d": revenue_one.get("last_30d"),
-            "nonself_settlements": revenue_one.get("settlements"),
+            "distinct_nonself_payers": distinct_nonself,
+            "distinct_nonself_payers_30d": distinct_nonself_30d,
+            "nonself_settlements": nonself_settlements,
             "settled_usdc_atomic": settled_atomic,
-            "settled_usdc": settled_atomic / 1_000_000,
+            "settled_usdc": None if settled_atomic is None else settled_atomic / 1_000_000,
             "repeat_payer_gate": repeat_state,
         },
         "distribution": {
