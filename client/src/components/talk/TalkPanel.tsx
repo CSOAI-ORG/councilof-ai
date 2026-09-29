@@ -195,7 +195,7 @@ function RunView({
   onCancel: (run: TalkRun) => void;
 }) {
   return (
-    <article className="space-y-3" aria-label={`Question: ${run.question}`} data-testid="talk-run">
+    <article id={`talk-${run.id}`} className="scroll-mt-4 space-y-3" aria-label={`Question: ${run.question}`} data-testid="talk-run">
       <p className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-800 px-3 py-2 text-sm text-white [overflow-wrap:anywhere] dark:bg-emerald-700">
         {run.question}
       </p>
@@ -264,7 +264,6 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
   const [q, setQ] = useState("");
   const [announce, setAnnounce] = useState("");
   const abortRef = useRef<AbortController | null>(null);
-  const endRef = useRef<HTMLDivElement>(null);
   const seq = useRef(0);
   const busy = runs.some((r) => r.status === "streaming");
 
@@ -322,9 +321,15 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
 
   useImperativeHandle(ref, () => ({ ask: (question: string) => start(question) }), [start]);
 
+  // Bring the newest question to the top of the view when it is asked, so its tool cards and
+  // answer stream in below it instead of off-screen under the suggestions.
+  const lastId = runs[runs.length - 1]?.id;
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [runs.length]);
+    if (!lastId) return;
+    const el = document.getElementById(`talk-${lastId}`);
+    const reduce = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    el?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }, [lastId]);
 
   const confirm = (run: TalkRun) => {
     const tools = run.confirm?.tools.map((t) => t.tool) ?? [];
@@ -338,9 +343,17 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
 
   return (
     <section className={`min-w-0 ${className}`} aria-labelledby={labelledBy} aria-label={labelledBy ? undefined : "Ask in words"} data-testid="talk-panel">
-      <div>
+      {runs.length ? (
+        <div className="space-y-6" data-testid="talk-transcript">
+          {runs.map((r) => (
+            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} />
+          ))}
+        </div>
+      ) : null}
+
+      <div className={runs.length ? "mt-6" : ""}>
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground" id="talk-suggest-h">
-          Try a question
+          {runs.length ? "Try another question" : "Try a question"}
         </p>
         <ul className="mt-2 flex flex-wrap gap-2" aria-labelledby="talk-suggest-h">
           {TALK_SUGGESTIONS.map((s) => (
@@ -358,15 +371,6 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
           ))}
         </ul>
       </div>
-
-      {runs.length ? (
-        <div className="mt-5 space-y-6" data-testid="talk-transcript">
-          {runs.map((r) => (
-            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} />
-          ))}
-          <div ref={endRef} />
-        </div>
-      ) : null}
 
       <p className="sr-only" aria-live="polite" aria-atomic="true" data-testid="talk-live">
         {announce}
