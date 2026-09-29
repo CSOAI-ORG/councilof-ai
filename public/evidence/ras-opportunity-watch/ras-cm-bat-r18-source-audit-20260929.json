@@ -1,0 +1,35 @@
+{
+  "bulk_negative_electrode_particle_keys": 17,
+  "bulk_targets_all_exist": true,
+  "causal_control": "ras-cm-bat-r18-current-collector-control-20260929.json",
+  "causal_effect_on_reported_capacity": "NO_NUMERICAL_EFFECT_IN_BOUNDED_1C_CONTROL",
+  "causal_scope": "R5um, polymer25, 1C lithiation, as_measured; broader configurations remain UNMEASURED.",
+  "chen2020_sha256": "7c360a546a76492585e147231caee2f8f4fe29222b893cb12091dc4d158f62f0",
+  "explicit_concentration_handling": {
+    "Initial concentration in positive electrode [mol.m-3]": "constructed as x0 * cmax",
+    "Maximum concentration in positive electrode [mol.m-3]": "copied from Maximum concentration in negative electrode [mol.m-3]"
+  },
+  "explicit_concentration_keys": {
+    "Initial concentration in positive electrode [mol.m-3]": true,
+    "Maximum concentration in positive electrode [mol.m-3]": true
+  },
+  "missing_bulk_targets": [],
+  "negative_current_collector_keys": [
+    "Negative current collector conductivity [S.m-1]",
+    "Negative current collector density [kg.m-3]",
+    "Negative current collector specific heat capacity [J.kg-1.K-1]",
+    "Negative current collector thermal conductivity [W.m-1.K-1]",
+    "Negative current collector thickness [m]"
+  ],
+  "schema": "csoai.ras-source-audit/1.0",
+  "source_sha256": "cbd81536528b5cbd6be1720cf72008a680ac50411f4873c942458a4dd58eda7d",
+  "source_totality_verdict": "MAPPING_INCOMPLETE",
+  "subject": "CM-BAT-R18 Chen2020 graphite-to-positive-slot mapping",
+  "unmapped_current_collector_keys": [
+    "Negative current collector conductivity [S.m-1]",
+    "Negative current collector density [kg.m-3]",
+    "Negative current collector specific heat capacity [J.kg-1.K-1]",
+    "Negative current collector thermal conductivity [W.m-1.K-1]",
+    "Negative current collector thickness [m]"
+  ]
+}

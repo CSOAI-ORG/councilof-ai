@@ -1,0 +1,76 @@
+{
+  "dedupe_key": "canonical_source_or_resource + version + change_type",
+  "events": [
+    {
+      "acceptance_summary": "Official C2PA fixtures must classify correctly; provenance/trust must stay separate from real-world truth; paid service remains HOLD until separately authorized.",
+      "canonical_resources": [
+        "https://payai.agentstools.dev/provenance/inspect",
+        "https://payai.agentstools.dev/provenance/verify"
+      ],
+      "canonical_source": "https://facilitator.payai.network/discovery/resources",
+      "change_type": "new_x402_projection_conformance",
+      "event_key": "payai.agentstools.dev/provenance@2026.07.24|new_x402_projection_conformance",
+      "evidence": "ras-c2pa-provenance-conformance-20260929.json",
+      "execution_owner": [
+        "R-5 CONFORMANCE",
+        "R-4 REPRODUCE",
+        "R-6 EVIDENCE PACKS"
+      ],
+      "gspc_axes": [
+        "provenance-controls",
+        "conformance",
+        "continuity",
+        "distribution-integrity"
+      ],
+      "hive": [
+        "provenance-integrity",
+        "interop-effects"
+      ],
+      "observed_at": "2026-09-29T10:17:49.029889+00:00",
+      "state": "UNMEASURED_HOLD_THIRD_PARTY_SERVICE",
+      "version": "pack_version:2026.07.24; x402:v2"
+    },
+    {
+      "acceptance_summary": "17 bulk electrode/particle keys map; 2 concentration parameters handled explicitly; 5 current-collector properties omitted; correcting those 5 changes parameters but produces zero numerical delta in the bounded 1C control.",
+      "canonical_resources": [
+        "results/cm_bat_r18_billaud.py"
+      ],
+      "canonical_source": "https://github.com/collective-mind-org/collective-minds/blob/c6c8a990a12e23aec66a4e7b0976db5ce843a824/results/cm_bat_r18_billaud.py",
+      "change_type": "bounded_source_audit",
+      "control_evidence": "ras-cm-bat-r18-current-collector-control-20260929.json",
+      "event_key": "collective-mind-org/collective-minds@c6c8a990a12e23aec66a4e7b0976db5ce843a824:cm_bat_r18_billaud.py|bounded_source_audit",
+      "evidence": "ras-cm-bat-r18-source-audit-20260929.json",
+      "execution_owner": [
+        "R-4 REPRODUCE",
+        "R-6 EVIDENCE PACKS",
+        "R-2 CLAIM MAINTENANCE"
+      ],
+      "gspc_axes": [
+        "provenance-controls",
+        "conformance",
+        "continuity",
+        "reproducibility"
+      ],
+      "hive": [
+        "provenance-integrity"
+      ],
+      "observed_at": "2026-09-29T10:21:52.609230+00:00",
+      "state": "SOURCE_DEFECT_CONFIRMED_BOUNDED_CAUSAL_CONTROL_NO_EFFECT",
+      "version": "git:c6c8a990a12e23aec66a4e7b0976db5ce843a824; PyBaMM:26.8.0.0"
+    }
+  ],
+  "generated_at": "2026-09-29T10:21:52.609230+00:00",
+  "history_scope": "Initial ledger publication contains evidence packs actually executed in this branch; prior conversational watch history is not backfilled or claimed deduplicated.",
+  "schema": "csoai.ras-opportunity-ledger/1.0",
+  "scope": "Sole RAS Opportunity Watch execution ledger",
+  "state_model": [
+    "DISCOVERY",
+    "SOURCE_OBSERVED",
+    "MEASURED",
+    "UNMEASURED_HOLD",
+    "PAYMENT",
+    "SETTLEMENT",
+    "EXACT_BYTE_DELIVERY",
+    "BUYER_ACCEPTANCE"
+  ]
+}

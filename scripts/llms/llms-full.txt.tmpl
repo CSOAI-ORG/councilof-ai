@@ -333,3 +333,120 @@ Download https://councilof.ai/verifier/verify_receipt.py; source-parity manifest
 - Multi-dimensional public progress index: https://councilof.ai/progress-index.json
 - These are operational/discovery projections, not certification, endorsement, compliance or a trust score.
 - A generated file is not deployed; a deployed file is not independently read back until the release gate says so.
+
+## 7c. RAS OPPORTUNITY EVIDENCE — sole watch, bounded work only
+
+- Human evidence hub: https://councilof.ai/evidence/ras-opportunity-watch/
+- Machine ledger: https://councilof.ai/evidence/ras-opportunity-watch/ledger.json
+- Atom changes: https://councilof.ai/evidence/ras-opportunity-watch/feed.atom
+- Exact-byte publication manifest: https://councilof.ai/evidence/ras-opportunity-watch/manifest.json
+- Scope: newly discoverable service resources/endpoints, materially changed listings, and credible bounded work for reproduction, conformance, evidence assembly or Claim Maintenance.
+- Discovery, source observation, measurement, payment, settlement, exact-byte delivery and buyer acceptance are separate states. Missing evidence stays UNMEASURED / HOLD.
+- The publication contains bounded executed evidence; it does not transfer GSPC measurement status to third-party services and does not imply endorsement, adoption, compliance or certification.
+
+## 8. THE ACCESS SURFACES
+
+The count is not in this heading on purpose: it was "THE 5 ACCESS SURFACES" while two live
+doors — the AG-UI stream and the A2A binding — were missing from the list below, so the heading
+was a number that had stopped being true. Count the rows.
+
+1. MCP (agent to tools) — `POST https://councilof.ai/mcp`
+2. A2A (agent to agent) — `POST https://councilof.ai/api/a2a`, JSON-RPC v1.0; SendMessage answers
+   with the live lid derived from /api/gspc. The interface `/.well-known/agent-card.json` names.
+3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
+   TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
+   the board and awards nothing. Human view of the same board: https://councilof.ai/dashboard
+4. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
+5. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
+6. Hermes integration — no public install package is currently advertised
+7. REST + curl — `curl https://councilof.ai/api/gspc`
+
+The source-linked SOV World observatory is at https://councilof.ai/world/observatory/.
+It is a dated simulation archive; its source date and upstream signature-verification status are shown on the page.
+
+## 9. DISTRIBUTION, AND THE MCP REGISTRY FOOTPRINT
+
+### 9a. Distribution — measured, PARTIAL, and not adoption
+
+{{DISTRIBUTION_SECTION}}
+### 9b. MCP Registry footprint — we measure what we probe; we do not vet the registry
+
+Read the footprint live: GET https://councilof.ai/api/footprint -> `registry_listings.value`
+(distinct server names) and `registry_listings.versions` (distinct name@version rows), with that
+payload's own `as_of`, `source_url` and paging state. Every entry sits under ONE namespace,
+io.github.CSOAI-ORG. No count is frozen here: we publish into that registry, so it moves.
+
+What the footprint is: listings we published ourselves. A listing says a server is REGISTERED. It
+does not say anyone runs it, and it does not say that we, the registry, or anyone else reviewed what
+the server does. The official registry validates namespace OWNERSHIP at publish time — a check on
+who may use a name, not a review of behaviour.
+
+WE MEASURE WHAT WE PROBE; WE DO NOT VET THE REGISTRY.
+
+That sentence is defensive on purpose. The ecosystem our footprint sits inside has a vetting vacuum:
+research published 2026-04-15 submitted a benign proof-of-concept MCP server to eleven public MCP
+registries and nine accepted it without review (OX Security, "The Mother of All AI Supply Chains",
+https://www.ox.security/blog/the-mother-of-all-ai-supply-chains-critical-systemic-vulnerability-at-the-core-of-the-mcp/
+; also carried as a Cloud Security Alliance research note dated 2026-04-20). We name that finding
+because a large self-published footprint inside a vacuum invites exactly one wrong inference — that
+we are the layer doing the vetting — and that is the claim we must not make. It is not an allegation
+against any registry. We assert no falsity about anyone, and a count of our own listings is not a
+judgement on the ecosystem it sits in. If you need to know whether a server does what it says, probe
+it yourself; we did not vet it.
+
+## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
+
+{{OTS_SECTION}}
+## 11. WE HOLD NO CERTIFICATION UNDER ANY STATUTORY SCHEME
+
+A regulated category adjacent to ours now exists in US state law.
+
+- California chaptered SB 813 on 2026-09-09. It defines an "independent verification organization"
+  as an AI auditor designated by the Government Operations Agency as having demonstrated expertise
+  in assessing the risks posed by an AI system or model, and directs that agency to establish the
+  designation process on or before 1 January 2028.
+  Source (the state's own bill text):
+  https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB813
+- California chaptered AB 1405 the same day. It directs the agency to establish an AI Auditor
+  Registry no later than 1 January 2029, after which a person may not offer, sell or conduct a
+  covered AI audit unless registered.
+  Source: https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260AB1405
+- Illinois signed SB 315, the Artificial Intelligence Safety Measures Act, on 2026-07-06, effective
+  1 January 2027. The state describes it as making Illinois the first to require regular independent
+  third-party safety audits of covered AI systems.
+  Source (the Governor's own announcement):
+  https://gov-pritzker-newsroom.prezly.com/gov-pritzker-signs-nation-leading-artificial-intelligence-safety-law
+
+Because that category now exists, a reader could infer that we hold a place in it. We do not.
+
+Council of AI is an independent measurement board. WE HOLD NO CERTIFICATION, DESIGNATION,
+REGISTRATION OR ACCREDITATION UNDER ANY SUCH SCHEME — not in California, not in Illinois, not
+anywhere — AND WE HAVE NEVER APPLIED FOR ONE. Nothing we publish is an AI audit required by any
+statute, and nothing we publish should be filed as one. We measure, we sign, we publish the method
+and the bank, and anyone can recompute it. Determination stays with authorities.
+
+If that ever changes, this section changes with it and the change is recorded in the corrections
+ledger at https://councilof.ai/api/corrections rather than quietly edited into these bytes.
+
+---
+# This file is DERIVED, never hand-maintained: scripts/llms-txt.mjs renders it from
+# scripts/llms/llms-full.txt.tmpl, GET https://councilof.ai/api/gspc, and the published artifacts
+# named in each section. Every number above carries the as_of of the artifact it came from; where an
+# artifact publishes no as_of (GET /api/gspc does not), the section says so rather than inventing a
+# date for it. There is deliberately no generation timestamp on this line: a typed date here was
+# stale within days and told readers the whole file was older than it was. Verify freshness against
+# the endpoints named above, not against a date printed here.
+# Published route: https://councilof.ai/llms-full.txt
+# A signature claim applies only when the returned artefact contains verifiable signature material.
+
+## Same-site x402 offer and receipt checker
+Download https://councilof.ai/verifier/verify_receipt.py; source-parity manifest https://councilof.ai/verifier/receipt-toolkit.json; dependency and offline-replay guide https://councilof.ai/verifier/receipt-toolkit.md. It is a separate format from card-v0 and GSPC cards. Signature verification is not settlement, freshness or measurement-truth verification. Default mode reads the public DID document; retained-key replay can be offline.
+
+## Public operational indexes
+
+- Layer-0 drive-through capability/lifecycle projection: https://councilof.ai/layer0-drive-through.json
+- EAT public flywheel observation projection: https://councilof.ai/eat-flywheel.json
+- Distribution/release state: https://councilof.ai/layer0-distribution.json
+- Multi-dimensional public progress index: https://councilof.ai/progress-index.json
+- These are operational/discovery projections, not certification, endorsement, compliance or a trust score.
+- A generated file is not deployed; a deployed file is not independently read back until the release gate says so.

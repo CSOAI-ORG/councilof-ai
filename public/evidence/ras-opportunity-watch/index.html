@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSOAI RAS Opportunity Evidence — 29 Sep 2026</title>
+<meta name="description" content="Evidence-first execution results from the sole CSOAI RAS Opportunity Watch. Discovery, measurement, payment, delivery and acceptance are kept separate.">
+<link rel="canonical" href="https://councilof.ai/evidence/ras-opportunity-watch/">
+<link rel="alternate" type="application/json" href="https://councilof.ai/evidence/ras-opportunity-watch/ledger.json" title="RAS Opportunity Ledger">
+<link rel="alternate" type="application/atom+xml" href="https://councilof.ai/evidence/ras-opportunity-watch/feed.atom" title="RAS Opportunity Evidence Feed">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSOAI RAS Opportunity Evidence — 29 Sep 2026">
+<meta property="og:description" content="Bounded reproduction and conformance evidence. Discovery, measurement, payment, delivery and acceptance remain separate.">
+<meta property="og:url" content="https://councilof.ai/evidence/ras-opportunity-watch/">
+<meta property="og:site_name" content="Council of AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSOAI RAS Opportunity Evidence — 29 Sep 2026">
+<meta name="twitter:description" content="Bounded reproduction and conformance evidence with explicit HOLD/UNMEASURED states.">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Dataset",
+  "name":"CSOAI RAS Opportunity Evidence — 29 September 2026",
+  "description":"Bounded public-evidence reproduction and conformance results from the sole CSOAI RAS Opportunity Watch. Discovery, measurement, payment, exact-byte delivery and buyer acceptance are separate states.",
+  "url":"https://councilof.ai/evidence/ras-opportunity-watch/",
+  "datePublished":"2026-09-29",
+  "dateModified":"2026-09-29",
+  "creator":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai/"},
+  "license":"https://creativecommons.org/licenses/by/4.0/",
+  "keywords":["reproduction","conformance","claim maintenance","C2PA","x402","evidence"],
+  "distribution":[
+    {"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://councilof.ai/evidence/ras-opportunity-watch/ledger.json"},
+    {"@type":"DataDownload","encodingFormat":"application/atom+xml","contentUrl":"https://councilof.ai/evidence/ras-opportunity-watch/feed.atom"}
+  ]
+}
+</script>
+<style>
+:root{color-scheme:dark light}body{font-family:system-ui,-apple-system,sans-serif;max-width:980px;margin:0 auto;padding:32px 20px;line-height:1.55}h1{font-size:2rem}h2{margin-top:2.2rem}code{font-family:ui-monospace,monospace}table{border-collapse:collapse;width:100%;margin:1rem 0}th,td{border:1px solid #8886;padding:.55rem;text-align:left;vertical-align:top}.hold{font-weight:700}.ok{font-weight:700}aside{border-left:4px solid #888;padding:.2rem 1rem;margin:1rem 0}a{overflow-wrap:anywhere}
+</style></head>
+<body>
+<h1>RAS Opportunity Evidence — 29 September 2026</h1>
+<p>This page publishes bounded CSOAI RAS work completed from public evidence. A listing is not a measurement. Payment, settlement, exact-byte delivery and buyer acceptance are separate states.</p>
+<p><a href="/claim-maintenance/">Claim Maintenance</a> · <a href="/evidence/">Public evidence index</a> · <a href="./ledger.json">Machine ledger</a> · <a href="./feed.atom">Atom feed</a> · <a href="./manifest.json">Integrity manifest</a></p>
+
+<h2 id="cm-bat-r18">1. CM-BAT-R18 source audit + bounded control</h2>
+<table>
+<tr><th>Item</th><th>Result</th></tr>
+<tr><td>Source</td><td><a href="https://github.com/collective-mind-org/collective-minds/blob/c6c8a990a12e23aec66a4e7b0976db5ce843a824/results/cm_bat_r18_billaud.py">collective-mind-org/collective-minds @ c6c8a990…</a></td></tr>
+<tr><td>PyBaMM</td><td>26.8.0.0, pinned wheel SHA-256 <code>b5977b7867f7159d2a3fe84fe1669ef9ae36312cfe234daf4681569a5c960289</code></td></tr>
+<tr><td>Electrode/particle bulk mapping</td><td class="ok">17/17 negative electrode/particle keys have positive counterparts.</td></tr>
+<tr><td>Concentrations</td><td class="ok">Maximum concentration is copied explicitly; initial concentration is explicitly constructed as <code>x0 * cmax</code>.</td></tr>
+<tr><td>Current collector</td><td>Five negative-current-collector properties are not remapped into the positive working-electrode slot. Source-totality verdict: <strong>MAPPING_INCOMPLETE</strong>.</td></tr>
+<tr><td>Bounded causal control</td><td class="ok">After remapping all five collector properties, the tested R5µm / polymer25 / 1C lithiation case produced <strong>0.0 numerical delta</strong> in mAh/g, fraction of theory, end voltage and end time for aligned and reference cases.</td></tr>
+<tr><td>Interpretation</td><td>The omission is real, but this bounded control does <strong>not</strong> support it as the cause of the reported under-prediction. Broader configurations remain UNMEASURED.</td></tr>
+</table>
+<p>Machine evidence: <a href="./ledger.json">ledger</a> · <a href="./ras-cm-bat-r18-source-audit-20260929.json">source audit</a> · <a href="./ras-cm-bat-r18-current-collector-control-20260929.json">bounded numerical control</a>.</p>
+
+<h2 id="c2pa-agenttools">2. AgentTools C2PA x402 projection</h2>
+<table>
+<tr><th>Resource</th><th>Observed contract</th><th>State</th></tr>
+<tr><td><code>https://payai.agentstools.dev/provenance/inspect</code></td><td>x402 v2; raw manifest-chain / signer / assertions / ingredients / validation codes; pack_version 2026.07.24</td><td class="hold">Third-party behavior UNMEASURED / HOLD</td></tr>
+<tr><td><code>https://payai.agentstools.dev/provenance/verify</code></td><td>x402 v2; derived authentic-provenance / untrusted-signer / tampered / unsigned contract; pack_version 2026.07.24</td><td class="hold">Third-party behavior UNMEASURED / HOLD</td></tr>
+</table>
+<p>Machine evidence: <a href="./ras-c2pa-provenance-conformance-20260929.json">C2PA conformance evidence</a>. The free oracle is the official C2PA public-testfiles corpus. Five pinned fixtures cover unsigned media, a valid manifest from an unknown/test source, invalid signature, hard-binding mismatch and assertion-URI mismatch. Cryptographic provenance and signer trust are distinct from the real-world truth of depicted content.</p>
+<aside><strong>Toolchain note.</strong> The current official conformance CLI checkout was not anonymously reproducible at the pinned commit because a declared submodule URL returned “repository not found”. CSOAI preserved that setup failure and used a separately pinned local <code>c2patool</code> fallback only if its local build succeeds. This tooling state is not a finding about AgentTools.</aside>
+
+<h2>State boundaries</h2>
+<table>
+<tr><th>State</th><th>Meaning here</th></tr>
+<tr><td>DISCOVERY / SOURCE OBSERVED</td><td>Public resource or source contract was observed and pinned.</td></tr>
+<tr><td>MEASURED</td><td>A bounded predicate was actually reproduced under stated conditions.</td></tr>
+<tr><td>UNMEASURED / HOLD</td><td>Required evidence is missing, unavailable, unexecuted, or outside the authorized lane.</td></tr>
+<tr><td>PAYMENT / SETTLEMENT</td><td>Financial events; never substitutes for measurement.</td></tr>
+<tr><td>EXACT-BYTE DELIVERY</td><td>Returned bytes have an independently bound digest.</td></tr>
+<tr><td>BUYER ACCEPTANCE</td><td>Separate downstream acceptance event; not inferred.</td></tr>
+</table>
+
+<h2>Execution lanes</h2>
+<p>Work stays inside existing products: <strong>R-2 Claim Maintenance</strong>, <strong>R-4 Reproduce</strong>, <strong>R-5 Conformance</strong> and <strong>R-6 Evidence Packs</strong>. No new architecture or scheduler was created.</p>
+
+<p><small>CSOAI evidence-first publication. No endorsement, adoption, compliance or certification is inferred from discovery, membership, payment or settlement. CSOAI-generated index data on this page is CC BY 4.0; cited third-party material retains its own licence.</small></p>
+</body></html>
