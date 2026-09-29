@@ -113,7 +113,39 @@ export default function GSPCVerify() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#03110b] text-emerald-50">
+    <div className="gspc-verify-page min-h-screen bg-[#03110b] text-emerald-50">
+      <style>{`
+        @media (forced-colors: active) {
+          .gspc-verify-page {
+            color: CanvasText !important;
+            background: Canvas !important;
+          }
+          .gspc-verify-page :where(section, div, p, span, h1, h2, h3, h4, ul, li, strong, code, label, details, summary) {
+            color: CanvasText !important;
+            background-color: Canvas !important;
+            border-color: CanvasText !important;
+          }
+          .gspc-verify-page a {
+            color: LinkText !important;
+            background-color: Canvas !important;
+            border-color: LinkText !important;
+          }
+          .gspc-verify-page button {
+            color: ButtonText !important;
+            background-color: ButtonFace !important;
+            border-color: ButtonText !important;
+          }
+          .gspc-verify-page :where(textarea, input, select) {
+            color: CanvasText !important;
+            background-color: Canvas !important;
+            border-color: CanvasText !important;
+          }
+          .gspc-verify-page :where([aria-disabled="true"], :disabled) {
+            color: GrayText !important;
+            border-color: GrayText !important;
+          }
+        }
+      `}</style>
       {/* HERO */}
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
