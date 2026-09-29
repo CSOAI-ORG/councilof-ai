@@ -3256,6 +3256,22 @@
         "summary": "GET /api/owasp-report \u2014 OWASP LLM Top 10 \u2194 GSPC axis coverage report."
       }
     },
+    "/api/owm": {
+      "get": {
+        "description": "GET /api/owm \u2014 the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+        "operationId": "get__api_owm",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/owm \u2014 the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change\u2026"
+      }
+    },
     "/api/paddle-webhook": {
       "get": {
         "description": "POST /api/paddle-webhook \u2014 Paddle settlement webhook.",
@@ -9627,7 +9643,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 99,
+    "public_operations": 100,
     "quarantined": [
       {
         "buyable": false,

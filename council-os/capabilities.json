@@ -3289,6 +3289,31 @@
       "source": "functions/api/owasp-report.ts"
     },
     {
+      "id": "api-owm",
+      "kind": "http",
+      "path": "/api/owm",
+      "method": "GET",
+      "name": "Outer world model snapshot",
+      "description": "GET /api/owm — the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/owm",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/owm.ts"
+    },
+    {
       "id": "api-paddle-webhook",
       "kind": "http",
       "path": "/api/paddle-webhook",

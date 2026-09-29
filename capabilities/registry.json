@@ -1462,6 +1462,19 @@
       "payment": "free"
     },
     {
+      "id": "api-owm",
+      "protocols": [
+        "http"
+      ],
+      "title": "Outer world model snapshot",
+      "description": "GET /api/owm — the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+      "endpoint": "/api/owm",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-paddle-webhook",
       "protocols": [
         "http"
