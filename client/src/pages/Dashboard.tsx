@@ -48,7 +48,7 @@ interface DashboardStats {
     phaseDistribution: { plan: number; do: number; check: number; act: number };
   };
   loi: { total: number; count: number };
-  gspc?: { measured_axes: number; quotable_axes: number; public_count?: string; separated_leads?: number | null };
+  gspc?: { measured_axes: number; quotable_axes: number; public_count?: string; separated_leads?: number | null; last_run_at?: string | null };
   cards?: { count: number; signed: number };
 }
 
@@ -72,6 +72,18 @@ async function fetchDashboardStats(): Promise<DashboardStats> {
   const r = await fetch("/api/dashboard/stats");
   if (!r.ok) throw new Error("dashboard stats unavailable");
   return r.json();
+}
+
+function formatSnapshotDate(value?: string | null): string | null {
+  if (!value) return null;
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return null;
+  return new Date(timestamp).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
 }
 
 // Framework compliance scores are UNMEASURED for this account — no number is
@@ -117,12 +129,15 @@ export default function Dashboard() {
     {
       title: "Measured GSPC axes",
       value: gspcStats?.measured_axes?.toString() ?? "—",
-      change: gspcStats ? `${gspcStats.quotable_axes} quotable axes` : "board unavailable",
-      changeType: gspcStats ? "positive" : "neutral",
+      change: gspcStats
+        ? `Snapshot ${formatSnapshotDate(gspcStats.last_run_at) ?? "date unavailable"}`
+        : "board unavailable",
+      changeType: "neutral",
       icon: Shield,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
-      description: "Named measurements on the public GSPC board",
+      description:
+        "Measurements from the published source run. The board is fetched live; loading it does not run a new measurement.",
     },
     {
       title: "Published signed cards",

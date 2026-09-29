@@ -56,6 +56,10 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
 
   const measuredAxes = num(gspcSrc, (v) => v?.totals?.measured_axes);
   const quotableAxes = num(gspcSrc, (v) => v?.totals?.quotable_axes);
+  const lastRunAt =
+    gspcSrc.ok && typeof gspc?.measured_on?.living_stamp?.gold_run === "string"
+      ? gspc.measured_on.living_stamp.gold_run
+      : null;
   const signedCards = num(cardsSrc, (v) => v?.cards?.signed ?? v?.signed);
   const cardCount = num(cardsSrc, (v) => v?.cards?.count ?? v?.count);
 
@@ -96,6 +100,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       gspc: {
         measured_axes: measuredAxes,
         quotable_axes: quotableAxes,
+        // Source run time, not this endpoint's response time: reading the board does not re-run it.
+        last_run_at: lastRunAt,
         public_count: gspc?.totals?.public_count ?? null,
         separated_leads: gspc?.totals?.separated_leads ?? null,
       },
