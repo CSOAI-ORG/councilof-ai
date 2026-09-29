@@ -11,8 +11,15 @@
  * EXPIRED-REGULATION-CHANGED — the event is the primitive later stages consume
  * (pass issuer → Bitstring status flip). Fingerprints prefer stable metadata
  * (Last-Modified, ETag) and fall back to a content hash of the fetched body.
- * Body-only drift must repeat on two consecutive observations before it emits
- * an event; a fetch failure is reported as UNREACHABLE, never as a change.
+ * Change detection (adopted 29 Sep 2026 from the harness router, winner
+ * gated_fetchok_2fetch: false-change rate 0.000 vs 0.931 naive): a fetch counts
+ * only when fetch_ok (HTTP 2xx, non-empty body, sha256 != e3b0c442...), and a
+ * new fingerprint is a change only when the same value is seen on two fetch_ok
+ * fetches at least 10 minutes apart (reg-watch-policy.mjs). A failed fetch is
+ * FETCH_FAILED and a once-seen value is UNCONFIRMED; neither is ever a change.
+ * 21 of the 36 events in reg-watch-events/ (Aug-Sep 2026) had an empty body on
+ * one side; they are relabelled FETCH_FAILED in
+ * reg-watch-derived/relabel-fetch-failed-20260929.json (history untouched).
  *
  * Run: node scripts/reg-watch.mjs            (compare + emit)
  *      node scripts/reg-watch.mjs --init     (write initial state, no events)
@@ -21,7 +28,7 @@
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { assessFingerprint } from "./reg-watch-policy.mjs";
+import { assessFingerprint, fetchOk, EMPTY_SHA256 } from "./reg-watch-policy.mjs";
 
 // The watchlist: instrument id → { url, note }. ELI/permanent URLs only.
 const WATCH = {
@@ -59,16 +66,21 @@ async function fingerprint(url) {
     headers: { "user-agent": "csoai-reg-watch/0.1 (+https://councilof.ai; measurement body change-detector)" },
     redirect: "follow",
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const lastMod = res.headers.get("last-modified") || "";
   const etag = res.headers.get("etag") || "";
   let body = await res.text();
+  // fetch_ok gate (harness-router winner): 2xx AND a non-empty body whose sha256 is not the empty-string hash.
+  const rawSha = sha(body);
+  if (!fetchOk({ status: res.status, bodyLength: body.length, bodySha256: rawSha })) {
+    throw new Error(`FETCH_FAILED (HTTP ${res.status}, ${body.length} bytes${rawSha === EMPTY_SHA256 ? ", empty-body hash" : ""})`);
+  }
   // Strip volatile chrome: session tokens, dates-now, nonces (best-effort, conservative).
   body = body
     .replace(/name="__?[A-Za-z]*token"[^>]*>/gi, "")
     .replace(/nonce="[^"]*"/gi, "")
     .replace(/\b20\d\d-\d\d-\d\dT[\d:.]+Z?\b/g, (m) => (body.indexOf(m) < 2000 ? m : "")) // keep early dates (doc metadata), drop late ones (footers)
     .replace(/\s+/g, " ");
+  if (sha(body) === EMPTY_SHA256 || body.trim() === "") throw new Error("FETCH_FAILED (body empty after normalisation)");
   return {
     method: lastMod || etag ? "headers+body" : "body",
     last_modified: lastMod,
@@ -81,6 +93,7 @@ const state = existsSync(STATE_FILE) ? JSON.parse(readFileSync(STATE_FILE, "utf8
 const now = new Date().toISOString();
 const events = [];
 let unreachable = 0;
+let unconfirmed = 0;
 
 for (const [id, { url, note }] of Object.entries(WATCH)) {
   process.stdout.write(`checking ${id} ... `);
@@ -111,15 +124,19 @@ for (const [id, { url, note }] of Object.entries(WATCH)) {
       };
       events.push(event);
       console.log("CHANGED");
-    } else if (assessment.basis === "body-candidate-pending-confirmation") {
-      console.log("candidate pending confirmation");
+    } else if (assessment.state === "UNCONFIRMED") {
+      unconfirmed++;
+      console.log(`UNCONFIRMED (${assessment.basis}) — seen on one fetch only; needs the same value >= 10 min later`);
+    } else if (assessment.state === "FETCH_FAILED") {
+      unreachable++;
+      console.log("FETCH_FAILED — state kept, not treated as a change");
     } else {
       console.log("unchanged");
     }
     state.instruments[id] = { url, note, ...assessment.next };
   } catch (e) {
     unreachable++;
-    console.log(`UNREACHABLE (${e.message}) — state kept, not treated as a change`);
+    console.log(`FETCH_FAILED (${e.message}) — state kept, not treated as a change`);
     if (state.instruments[id]) state.instruments[id].last_error = `${now}: ${e.message}`;
   }
 }
@@ -136,4 +153,4 @@ if (events.length) {
   console.log(`\nREG-WATCH: ${events.length} provision-change event(s) detected.`);
   process.exit(2);
 }
-console.log(`\nREG-WATCH: no changes (${unreachable} unreachable).`);
+console.log(`\nREG-WATCH: no changes (${unreachable} FETCH_FAILED, ${unconfirmed} UNCONFIRMED).`);

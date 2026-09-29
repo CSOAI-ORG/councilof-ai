@@ -28,6 +28,12 @@ States - all inside the claim-event exporter's STATES_OK:
   feed source changed        object_state OBSERVED     change_state null          new_items / removed_items listed; a new
                              publication is not a finding about any claim
   unreachable                object_state UNCHECKABLE  change_state null          NEVER a change: the pin is kept
+                             (fetch_state FETCH_FAILED: not 2xx, network error, or an empty body)
+  moved, seen once           object_state OBSERVED     change_state UNCONFIRMED   NOT a change: the pin is kept and the
+                             new atoms are held as `pending`; the change stands only when the SAME atoms are seen again
+                             on a run >= 10 minutes later (then: record/feed changed, above)
+Adopted 29 Sep 2026 (harness-router-20260929 winners): atoms compare as multisets (DeepDiff ignore_order +
+report_repetition, pure fallback _ms_key), and change detection is fetch_ok-gated with two-fetch confirmation.
 Detection only. It interprets nothing, files nothing, contacts nobody and publishes nothing.
 Exit: 0 no change, 2 at least one change recorded, 1 failed.
 
@@ -45,7 +51,45 @@ SCHEMA_CA = "csoai.ca-bill-outcomes/0.1"
 MAX_BYTES = 2 * 1024 * 1024
 RAW_CAP = 512 * 1024
 FEED_KEEP = 25
-STATES_OK = {None, "OBSERVED", "UNCHECKABLE", "QUARANTINED", "CONFIRMED"}
+STATES_OK = {None, "OBSERVED", "UNCHECKABLE", "QUARANTINED", "CONFIRMED", "UNCONFIRMED"}
+EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+CONFIRM_MIN_GAP_S = 600
+
+
+def _ms_key(x):
+    """claim-diff winner: multiset canonical form (lists order-free with multiplicity, every depth; types kept apart)."""
+    if x is None:
+        return ("n",)
+    if isinstance(x, bool):
+        return ("b", x)
+    if isinstance(x, int):
+        return ("i", x)
+    if isinstance(x, float):
+        return ("f", x)
+    if isinstance(x, str):
+        return ("s", x)
+    if isinstance(x, dict):
+        return ("d", tuple(sorted((_ms_key(k), _ms_key(v)) for k, v in x.items())))
+    if isinstance(x, (list, tuple)):
+        return ("l" if isinstance(x, list) else "t", tuple(sorted(_ms_key(e) for e in x)))
+    return ("r", type(x).__name__, repr(x))
+
+
+def multiset_changed(a, b):
+    """DeepDiff(ignore_order=True, report_repetition=True) when installed; the exact pure form otherwise."""
+    try:
+        from deepdiff import DeepDiff
+    except ImportError:
+        return _ms_key(a) != _ms_key(b)
+    return bool(DeepDiff(a, b, ignore_order=True, report_repetition=True))
+
+
+def _gap_s(a, b):
+    f = lambda x: datetime.datetime.strptime(x[:19], "%Y-%m-%dT%H:%M:%S")  # noqa: E731
+    try:
+        return (f(b) - f(a)).total_seconds()
+    except (TypeError, ValueError):
+        return None
 
 
 def now():
@@ -114,6 +158,10 @@ def fetch(src, ua, method="GET", timeout=30):
             body = r.read(MAX_BYTES + 1) if method == "GET" else b""
             if len(body) > MAX_BYTES:
                 return {"status": r.status, "body": b"", "headers": {}, "fetched_at": t, "error": "TOO_LARGE (> 2 MiB)"}
+            # fetch_ok gate: 2xx and a non-empty body whose sha256 is not the empty-string hash
+            if not (200 <= (r.status or 0) < 300) or (method == "GET" and (not body or sha(body) == EMPTY_SHA256)):
+                return {"status": r.status, "body": b"", "headers": {}, "fetched_at": t,
+                        "error": f"FETCH_FAILED (HTTP {r.status}, {len(body)} bytes)"}
             return {"status": r.status, "body": body, "headers": {k.lower(): v for k, v in r.headers.items()},
                     "fetched_at": t, "error": None}
     except urllib.error.HTTPError as e:
@@ -318,9 +366,18 @@ def run(a):
         if a_pin is None:
             decisions.append((s, "FIRST_SEEN", {}))
             continue
-        changed = sorted(k for k in set(a_now) | set(a_pin) if canon(a_now.get(k)) != canon(a_pin.get(k)))
+        changed = sorted(k for k in set(a_now) | set(a_pin) if multiset_changed(a_now.get(k), a_pin.get(k)))
         rec = {"recovered_from": p["unreachable_since"]} if p.get("unreachable_since") else {}
+        pend = p.get("pending")
         if changed:
+            same = bool(pend) and not multiset_changed(pend.get("atoms"), a_now)
+            gap = _gap_s(pend.get("first_seen"), T) if same else None
+            if not (same and gap is not None and gap >= CONFIRM_MIN_GAP_S):
+                decisions.append((s, "UNCONFIRMED", dict(rec, changed=changed, gap_s=gap,
+                                                         pending={"atoms": r["atoms"], "items": r.get("items"),
+                                                                  "first_seen": pend["first_seen"] if same else T,
+                                                                  "n_seen": int(pend.get("n_seen") or 1) + 1 if same else 1})))
+                continue
             added, removed = diff_items(p.get("items"), r.get("items")) if r.get("items") is not None else ([], [])
             if s["kind"] != "sitemap_locs":
                 removed = []  # a newest-N window: an item that left the window was not deleted, so it is not reported
@@ -348,8 +405,12 @@ def run(a):
         common = {"source_id": s["id"], "family": s["family"], "source_class": s["cls"], "url": s["url"],
                   "http_status": r["status"], "bytes_sha256": sha(r["body"]) if not r["error"] else None}
         if kind in ("UNREACHABLE", "UNREACHABLE_FIRST"):
-            log.ev(s["id"], object_state="UNCHECKABLE", change_state=None, error=info["error"], **common,
+            log.ev(s["id"], object_state="UNCHECKABLE", change_state=None, fetch_state="FETCH_FAILED", error=info["error"], **common,
                    reason="the source did not answer or could not be read; this is not a change and the pin is kept")
+        elif kind == "UNCONFIRMED":
+            log.ev(s["id"], object_state="OBSERVED", change_state="UNCONFIRMED", **common, changed=info["changed"],
+                   pending_first_seen=info["pending"]["first_seen"], gap_s=info["gap_s"],
+                   reason=f"moved on one fetch only; a change needs the same atoms again >= {CONFIRM_MIN_GAP_S}s later; pin kept")
         elif kind == "FIRST_SEEN":
             log.ev(s["id"], object_state="OBSERVED", change_state=None, atoms_sha256=sha(canon(r["atoms"])), **common,
                    reason="first observation; pin created")
@@ -378,10 +439,14 @@ def run(a):
            key_mode=regs_key()[1] if any(s.get("needs_key") for s in srcs) else None,
            reason="run summary: every selected source was fetched once; unchanged sources are covered by atoms_line_sha256")
 
+    unconf = {s["id"]: info["pending"] for s, kind, info in decisions if kind == "UNCONFIRMED"}
     for s in srcs:
         r, p = obs[s["id"]], pin["sources"].get(s["id"]) or {}
         if r["error"]:
             p.setdefault("unreachable_since", T); p["last_error"] = f"{T}: {r['error']}"
+        elif s["id"] in unconf:  # the pin is kept; the once-seen atoms wait for a second fetch
+            p = dict(p, pending=unconf[s["id"]])
+            p.pop("unreachable_since", None); p.pop("last_error", None)
         else:
             p = {"atoms": r["atoms"], "observed_at": T, "bytes_sha256": sha(r["body"])}
             if r.get("items") is not None:
@@ -393,7 +458,7 @@ def run(a):
     os.replace(tmp, pin_p)
     state = "CHANGED" if n_changed else "NO_CHANGE"
     print(f"rc={2 if n_changed else 0} state={state} sources={len(srcs)} answered={len(srcs) - len(unreachable)} "
-          f"changed={n_changed} unreachable={len(unreachable)} events=+{log.n} store={store}")
+          f"changed={n_changed} unconfirmed={len(unconf)} unreachable={len(unreachable)} events=+{log.n} store={store}")
     return 2 if n_changed else 0
 
 
@@ -492,9 +557,13 @@ def selftest(_a):
             (t / "s.json").write_text(json.dumps(src))
             ns = argparse.Namespace(sources=str(t / "s.json"), data=str(t / "d"), only=None, family=None, now=None)
             rcs = []
-            for n in range(4):
+            # runs: 0 first seen; 1 t-down fails; 2 three sources move (seen once -> UNCONFIRMED);
+            # 2b the same atoms 5 minutes later (too soon -> still UNCONFIRMED); 3 a day later (confirmed -> CHANGED);
+            # 4 nothing moves
+            for n, when in ((0, "2026-09-20T00:00:00Z"), (1, "2026-09-21T00:00:00Z"), (2, "2026-09-22T00:00:00Z"),
+                            (2, "2026-09-22T00:05:00Z"), (3, "2026-09-23T00:00:00Z"), (4, "2026-09-24T00:00:00Z")):
                 state["n"] = n
-                ns.now = f"2026-09-2{n}T00:00:00Z"
+                ns.now = when
                 rcs.append(run(ns))
             store = t / "d" / "0000000000000000"
             ev = [json.loads(l) for l in (store / "history" / "events.jsonl").read_text().splitlines()]
@@ -504,21 +573,26 @@ def selftest(_a):
                 o = json.loads(l)
                 assert o["seq"] == i and o["prev_sha256"] == prev, f"chain broken at {i}"
                 prev = sha(l)
-            assert rcs == [0, 0, 2, 0], rcs
+            assert rcs == [0, 0, 0, 0, 2, 0], rcs
             first = [e for e in ev if e["run_id"] == "20260920T000000Z" and e["claim_id"] != "*"]
             assert len(first) == 4 and all(e["object_state"] == "OBSERVED" and e["change_state"] is None for e in first)
             r1 = [e for e in ev if e["run_id"] == "20260921T000000Z" and e["claim_id"] != "*"]
             assert [(e["claim_id"], e["object_state"]) for e in r1] == [("t-down", "UNCHECKABLE")], r1
             r2 = {e["claim_id"]: e for e in ev if e["run_id"] == "20260922T000000Z" and e["claim_id"] != "*"}
-            assert r2["t-json"]["change_state"] == "QUARANTINED" and r2["t-json"]["after"] == {"comments_close_on": "2026-11-02"}
-            assert r2["t-feed"]["change_state"] is None and r2["t-feed"]["new_items"] == ["https://x/2"]
-            assert r2["t-bill"]["change_state"] == "QUARANTINED" and r2["t-bill"]["after"]["governor"] == "VETOED 2026-09-29"
+            assert all(r2[k]["change_state"] == "UNCONFIRMED" for k in ("t-json", "t-feed", "t-bill")), r2
             assert r2["t-down"]["change_state"] == "CONFIRMED" and r2["t-down"]["recovered_from"] == "2026-09-21T00:00:00Z"
-            r3 = [e for e in ev if e["run_id"] == "20260923T000000Z" and e["claim_id"] != "*"]
-            assert r3 == [], r3  # nothing moved: only the run event
+            r2b = {e["claim_id"]: e for e in ev if e["run_id"] == "20260922T000500Z" and e["claim_id"] != "*"}
+            assert all(r2b[k]["change_state"] == "UNCONFIRMED" and r2b[k]["gap_s"] == 300 for k in ("t-json", "t-feed", "t-bill"))
+            r3 = {e["claim_id"]: e for e in ev if e["run_id"] == "20260923T000000Z" and e["claim_id"] != "*"}
+            assert r3["t-json"]["change_state"] == "QUARANTINED" and r3["t-json"]["after"] == {"comments_close_on": "2026-11-02"}
+            assert r3["t-feed"]["change_state"] is None and r3["t-feed"]["new_items"] == ["https://x/2"]
+            assert r3["t-bill"]["change_state"] == "QUARANTINED" and r3["t-bill"]["after"]["governor"] == "VETOED 2026-09-29"
+            r4 = [e for e in ev if e["run_id"] == "20260924T000000Z" and e["claim_id"] != "*"]
+            assert r4 == [], r4  # nothing moved: only the run event
             q = [json.loads(l) for l in (store / "history" / "review-queue.jsonl").read_text().splitlines()]
             assert sorted(x["source_id"] for x in q) == ["t-bill", "t-feed", "t-json"]
-            assert (store / "observation" / "raw" / "20260922T000000Z" / "t-json.bin").exists()
+            assert (store / "observation" / "raw" / "20260923T000000Z" / "t-json.bin").exists()
+            assert not (store / "observation" / "raw" / "20260922T000000Z").exists()  # nothing kept for an unconfirmed move
             assert all(e["object_state"] in STATES_OK and e["change_state"] in STATES_OK for e in ev)
             assert governor_action([("09/09/26", "Approved by the Governor.")]) == "APPROVED 2026-09-09"
             assert governor_action([("09/08/26", "Enrolled and presented to the Governor at 4 p.m.")]) == "ON_DESK since 2026-09-08"
@@ -530,7 +604,8 @@ def selftest(_a):
             del os.environ["REGS_GOV_API_KEY"]
     finally:
         fetch = real
-    print("selftest: PASS (chain verifies; first-seen/unreachable/recovered/record-change/feed-change/no-change; key redaction)")
+    print("selftest: PASS (chain verifies; first-seen/unreachable/recovered/unconfirmed/too-soon/confirmed record-change/"
+          "feed-change/no-change; key redaction)")
     return 0
 
 
