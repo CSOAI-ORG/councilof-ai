@@ -59,7 +59,7 @@ const MAPPING: MappingRow[] = [
     risk: "Unexpected Code Execution",
     controls:
       "Jail containment is measured as a floor, not assumed · least-privilege tools",
-    surface: "jail axis — measured, leader statistically tied (a tie is not a win)",
+    surface: "jail axis — measured, leader separation UNTESTED (a point lead is not a win)",
   },
   {
     asi: "ASI06",

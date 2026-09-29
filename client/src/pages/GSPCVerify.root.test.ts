@@ -60,7 +60,9 @@ describe("/gspc-verify two modes — estate card + signed public root", () => {
     expect(commission).toContain('fresh_run: "UNMEASURED"');
     expect(commission).toContain("corpus_as_of: reserve.as_of");
     expect(commission).toContain("signer: signerState(env)");
-    expect(page).toContain("Free verification → optional commission receipt");
+    // The paid block sits after the free verifier under its own heading (audit 2026-09-28 #22).
+    expect(page).toContain("Optional: a commission receipt");
+    expect(page.indexOf("Optional: a commission receipt")).toBeGreaterThan(page.indexOf("What this button does NOT do"));
     expect(page).toContain("Commission receipt · existing evidence");
     expect(page).toContain("it does not run a new measurement");
     expect(page).toContain("signer state, corpus date and cards available");

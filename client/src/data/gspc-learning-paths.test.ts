@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.2026-09-25.signed.json";
+import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.2026-09-29.signed.json";
 import {
   CANONICAL_AXIS_COUNT,
   GSPC_LEARNING_PATHS,

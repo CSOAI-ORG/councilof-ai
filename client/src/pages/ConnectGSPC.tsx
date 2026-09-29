@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -8,6 +9,7 @@ import {
   REGISTRIES,
   TEST_LINE,
   MCP_URL,
+  MCP_METERED_URL,
   STDIO_CMD,
   OPENAPI_URL,
   type PlatformCard,
@@ -15,6 +17,7 @@ import {
   type Gate,
 } from "@/data/gspcInstall";
 import compat from "../../../council-os/client-compatibility.json";
+import { FREE_TOOLS, TOOL_COUNT_SENTENCE } from "@/lib/mcpTools";
 
 type CompatClient = {
   id: string;
@@ -101,22 +104,17 @@ function ClientCompatibility() {
         </table>
       </div>
       <p className="mt-4 text-[11px] text-gray-400">
-        Tool counts differ by implementation: the HTTP endpoint served {compat.backend.tools_observed} tools on{" "}
-        {compat.as_of}; the npm stdio package is versioned separately. Measurement, not certification.
+        {TOOL_COUNT_SENTENCE} "Tools seen" is what each client listed on its own test date. Measurement, not
+        certification.
       </p>
     </section>
   );
 }
 
-const TOOLS = [
-  ["board_totals", "the live slot + measured counts"],
-  ["get_axis", "one axis row (n, accuracy, interval, status)"],
-  ["list_cards", "the signed-card index"],
-  ["verify_card", "recompute a card's Ed25519 signature (three-state)"],
-  ["get_root", "the public-root merkle head"],
-  ["get_card", "one signed leaf by id"],
-  ["verify_inclusion", "prove a leaf is under the root"],
-] as const;
+// The free tools, read from functions/mcp/gspc-tools.json (what tools/list serves). This list was
+// seven hand-typed rows under a heading that spelled the count out, while the door served twelve
+// (public audit 2026-09-28, fix #19); names, titles and counts are now derived, never typed.
+const TOOLS = FREE_TOOLS.map((t) => [t.name, t.title ?? ""] as const);
 
 function CopyBlock({ block }: { block: ConfigBlock }) {
   const [copied, setCopied] = useState(false);
@@ -249,10 +247,18 @@ export default function ConnectGSPC() {
               Verify a card →
             </Link>
           </div>
+          {/* The free door first (audit 2026-09-28 #10). Both parts of the /mcp count are read from
+              the manifests that door serves, never typed. */}
+          <p className="mt-4 max-w-2xl text-sm text-emerald-100/80" data-testid="connect-free-door-note">
+            Every config on this page uses the free door, <span className="font-mono">{MCP_URL}</span>:{" "}
+            {FREE_TOOL_NAMES.length} free read-only tools, no payment, no account.{" "}
+            <span className="font-mono">{MCP_METERED_URL}</span> serves {ALL_TOOL_NAMES.length} tools:
+            the same {FREE_TOOL_NAMES.length} free, plus {PAID_TOOL_NAMES.length} metered by x402.
+          </p>
         </div>
       </section>
 
-      {/* Layer-0 positioning + the 7 tools */}
+      {/* Layer-0 positioning + the free tools */}
       <section className="border-b bg-emerald-50/40">
         <div className="max-w-5xl mx-auto px-6 py-8 grid md:grid-cols-2 gap-8">
           <div>
@@ -276,7 +282,7 @@ export default function ConnectGSPC() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              Seven free read-only tools
+              {TOOLS.length} free read-only tools
             </h2>
             <ul className="space-y-1.5">
               {TOOLS.map(([name, desc]) => (
@@ -287,10 +293,7 @@ export default function ConnectGSPC() {
               ))}
             </ul>
             <p className="mt-2 text-[11px] text-gray-400">
-              These seven are a subset. On {compat.as_of} the HTTP endpoint served {compat.backend.tools_observed} tools,{" "}
-              {compat.backend.paid_tools_observed} of them x402-metered; npm{" "}
-              <code className="font-mono">csoai-gspc-mcp@0.2.2</code> served 12 (no{" "}
-              <code className="font-mono">mcp_trust</code>). Receipts are in the client test register below.
+              {TOOL_COUNT_SENTENCE} Receipts are in the client test register below.
             </p>
           </div>
         </div>
@@ -357,7 +360,7 @@ export default function ConnectGSPC() {
           <h2 className="text-2xl font-bold">Find GSPC in the registries</h2>
           <p className="text-sm text-gray-600 mt-1">
             Listed once, honestly, in each — one entry per registry, no gaming. Completeness and real installs are
-            what move ranking, so every listing documents all seven tools and links to a live verify.
+            what move ranking, so every listing documents the full tool list and links to a live verify.
           </p>
           <div className="mt-6 overflow-x-auto">
             <table className="w-full text-sm border-collapse">

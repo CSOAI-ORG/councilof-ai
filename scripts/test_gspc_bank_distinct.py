@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""Tests for scripts/gspc_bank_distinct.py (C-2026-0929-02: jail distinct_items 71 -> 27).
+
+Run: python3 -m unittest scripts/test_gspc_bank_distinct.py   (stdlib only, no network)
+
+What is pinned here, on a fixture (fixtures/gspc-bank-distinct/mini-bank.jsonl, 14 graded rows +
+1 canary) built to carry each way the jail bank repeated an input:
+  * rows are not distinct inputs: 14 rows, 7 distinct inputs;
+  * ids play no part: three ids over one prompt (the red/blue h01..h06 defect) are one input;
+  * pad n and pad n+10 with one prompt (the jail pad defect) are one input;
+  * whitespace-only differences (CRLF, tabs, trailing spaces, runs) and NFC/NFD are one input;
+  * case is kept: a prompt that differs only in case is a different input;
+  * canary rows are never counted;
+  * a bank file whose sha256 differs from the pin is refused before a row is read;
+  * the committed module is internally consistent, and jail reads 27 distinct inputs of 71 rows.
+"""
+from __future__ import annotations
+
+import hashlib
+import os
+import re
+import sys
+import tempfile
+import unittest
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(HERE)
+sys.path.insert(0, HERE)
+import gspc_bank_distinct as g  # noqa: E402
+
+FIXTURE = os.path.join(REPO, "fixtures", "gspc-bank-distinct", "mini-bank.jsonl")
+FIXTURE_SHA256 = "eba53e64bd6f9f869b5e93e744475341342ca368aa8319389ab18c43c5eb1d5b"
+
+
+def fixture_rows():
+    with open(FIXTURE, "rb") as f:
+        data = f.read()
+    assert hashlib.sha256(data).hexdigest() == FIXTURE_SHA256, "fixture bytes changed"
+    return g.parse_rows(data)
+
+
+class DistinctMethod(unittest.TestCase):
+    def test_rows_are_not_distinct_inputs(self):
+        res = g.distinct_inputs(fixture_rows(), "input")
+        self.assertEqual(res["rows"], 14)
+        self.assertEqual(res["distinct_inputs"], 7)
+        self.assertEqual(res["repeated_inputs"], 5)
+        self.assertEqual(res["rows_repeating_an_input"], 7)
+        self.assertEqual(res["rows"] - res["rows_repeating_an_input"], res["distinct_inputs"])
+
+    def test_ids_play_no_part(self):
+        groups = {tuple(x["ids"]) for x in g.distinct_inputs(fixture_rows(), "input")["groups"]}
+        self.assertIn(("esc-rb-h01-w1", "esc-rb-h02-w1", "esc-rb-h03-w1"), groups)
+        self.assertIn(("ben-pad-10", "ben-pad-20"), groups)
+        self.assertIn(("ben-pad-11", "ben-pad-21"), groups)
+
+    def test_whitespace_and_unicode_form_are_normalised(self):
+        groups = {tuple(x["ids"]) for x in g.distinct_inputs(fixture_rows(), "input")["groups"]}
+        self.assertIn(("esc-ws-a", "esc-ws-b", "esc-ws-c"), groups)
+        self.assertIn(("ben-nfc", "ben-nfd"), groups)
+        self.assertEqual(g.normalise_prompt(" a\r\n\tb  c \n"), "a b c")
+        self.assertEqual(g.prompt_sha256("café"), g.prompt_sha256("café"))
+
+    def test_case_is_kept(self):
+        self.assertNotEqual(g.prompt_sha256("CAFÉ = 1"), g.prompt_sha256("café = 1"))
+        ids = [i for x in g.distinct_inputs(fixture_rows(), "input")["groups"] for i in x["ids"]]
+        self.assertNotIn("ben-case", ids)
+
+    def test_canary_is_never_counted(self):
+        rows = fixture_rows()
+        self.assertEqual(len(rows), 14)
+        self.assertFalse(any("_canary" in r for r in rows))
+
+    def test_missing_prompt_field_is_refused(self):
+        with self.assertRaises(ValueError):
+            g.distinct_inputs([{"id": "x", "text": "no input field"}], "input")
+
+    def test_sha256_pin_is_enforced(self):
+        spec = {"dataset": "fixture", "file": "mini-bank.jsonl", "sha256": "0" * 64}
+        with self.assertRaises(SystemExit):
+            g.fetch(spec, FIXTURE)
+        spec["sha256"] = FIXTURE_SHA256
+        self.assertTrue(g.fetch(spec, FIXTURE))
+
+
+class CommittedModule(unittest.TestCase):
+    """The committed functions/api/_gspc_bank_distinct.ts, read as text (no TS toolchain needed)."""
+
+    def setUp(self):
+        with open(os.path.join(REPO, g.MODULE), encoding="utf-8") as f:
+            self.text = f.read()
+
+    def axis_block(self, axis):
+        m = re.search(r'"%s": \{(.*?)\n    \}' % axis, self.text, re.S)
+        self.assertIsNotNone(m, axis)
+        return m.group(1)
+
+    def num(self, block, key):
+        return int(re.search(r'"%s": (\d+)' % key, block).group(1))
+
+    def test_jail_is_27_distinct_inputs_of_71_rows(self):
+        b = self.axis_block("jail")
+        self.assertEqual(self.num(b, "rows"), 71)
+        self.assertEqual(self.num(b, "distinct_inputs"), 27)
+        self.assertIn(g.BANKS["jail"]["sha256"], b)
+
+    def test_every_pinned_bank_is_consistent(self):
+        for axis in g.BANKS:
+            b = self.axis_block(axis)
+            rows, d = self.num(b, "rows"), self.num(b, "distinct_inputs")
+            self.assertLessEqual(d, rows, axis)
+            self.assertEqual(rows - self.num(b, "rows_repeating_an_input"), d, axis)
+
+    def test_module_is_generated_not_typed(self):
+        self.assertIn(f"GENERATED by {g.PRODUCER}", self.text)
+        self.assertIn(g.NORMALISATION, self.text)
+
+
+if __name__ == "__main__":
+    unittest.main()

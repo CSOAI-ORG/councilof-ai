@@ -1,7 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { onRequestGet } from "./gspc";
-import { POWER_AXES, UNDERPOWERED_STATE, applyUnderpowered, isUnderpowered } from "./_gspc_power";
+import { BANK_DISTINCT_AXES, POWER_AXES, UNDERPOWERED_STATE, applyUnderpowered, isUnderpowered, powerFields } from "./_gspc_power";
 import { ROWS_POWER } from "./_gspc_rows_power";
+import { JAIL_PROMPT_INTERVAL } from "./_gspc_jail_prompt_interval";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 
 // Board honesty (2026-09-28): distinct_items and the MDE of the separation test on every
@@ -132,13 +133,36 @@ describe("GET /api/gspc: distinct_items and MDE on every model-comparison axis",
     const jail = board.axes.find((a) => a.axis === "jail")!;
     expect(jail.mde.state).toBe("UNMEASURED");
     expect(jail.mde.reason_code).toBe("NO_PAIRED_ROWS");
-    expect(jail.distinct_items).toBe(jail.n);
+    // C-2026-0929-02: n counts rows; distinct_items counts distinct inputs in the served bank's bytes
+    expect(jail.distinct_items).toBe(BANK_DISTINCT_AXES.jail.distinct_inputs);
+    expect(jail.distinct_items).toBe(27);
+    expect(jail.n).toBe(71);
+    expect(jail.distinct_items_source).toContain("sha256 of the normalised prompt");
+    expect(jail.distinct_items_source).toContain("44 rows repeat an input already counted");
+    expect(jail.distinct_items_source).not.toContain("the axis's own n");
     const swarm = board.axes.find((a) => a.axis === "swarm")!;
     expect(swarm.mde.state).toBe("UNMEASURED");
     expect(swarm.mde.reason_code).toBe("NO_PAIRED_ROWS_FOR_SERVED_BANK");
-    expect(swarm.distinct_items).toBe(swarm.n);
+    expect(swarm.distinct_items).toBe(BANK_DISTINCT_AXES.swarm.distinct_inputs);
+    expect(swarm.distinct_items_source).toContain(BANK_DISTINCT_AXES.swarm.file_sha256.slice(0, 16));
     // the retired bank's own numbers are named, not hidden
     expect(swarm.mde.reason).toContain(`${POWER_AXES.swarm.distinct_items} distinct items`);
+  });
+});
+
+describe("distinct_items never falls back to n (C-2026-0929-02)", () => {
+  it("every model-comparison axis without rows for its served bank has a counted bank, and distinct <= n", async () => {
+    const board = await served();
+    for (const a of board.axes.filter((x) => x.kind === "model-comparison")) {
+      expect(a.distinct_items, a.axis).toBeLessThanOrEqual(a.n);
+      if (a.mde.paired_items === undefined) expect(BANK_DISTINCT_AXES[a.axis], a.axis).toBeDefined();
+    }
+  });
+
+  it("failing control: an axis with neither rows nor a counted bank reads UNMEASURED (null), never its n", () => {
+    const f = powerFields({ axis: "no-such-axis", kind: "model-comparison", n: 71 })!;
+    expect(f.distinct_items).toBeNull();
+    expect(f.distinct_items_source).toMatch(/^UNMEASURED: .*not published as distinct items/);
   });
 });
 
@@ -214,5 +238,75 @@ describe("UNDERPOWERED is owner-gated: HELD and OFF by default", () => {
     expect(isUnderpowered(tie as any, { enabled: true, mde_threshold: tie.mde.value - 0.001 })).toBe(true);
     expect(isUnderpowered(tie as any, { enabled: true, mde_threshold: tie.mde.value })).toBe(false);
     expect(isUnderpowered(tie as any, { enabled: false, mde_threshold: 0 })).toBe(false);
+  });
+});
+
+describe("jail interval at the prompt level (derived, unsigned; owner-approved 2026-09-29)", () => {
+  const wilson = (p: number, n: number): [number, number] => {
+    const z = 1.959963984540054, z2 = z * z, den = 1 + z2 / n;
+    const c = (p + z2 / (2 * n)) / den, h = (z * Math.sqrt((p * (1 - p)) / n + z2 / (4 * n * n))) / den;
+    return [c - h, c + h];
+  };
+
+  it("sits beside the signed row-level numbers and never overwrites them", async () => {
+    const board = await served();
+    const jail = board.axes.find((a) => a.axis === "jail")!;
+    expect(jail.separation).toBe("UNTESTED"); // moved from TIE at the round-3 re-sign (C-2026-0929-02)
+    expect(jail.separation_untested_reason_code).toBe("NO_PER_ROW_RESULTS");
+    expect(jail.interval).toEqual([0.475, 0.698]);
+    expect(jail.fleet_mean).toBe(0.5455);
+    const pl = jail.interval_prompt_level;
+    expect(pl.signed).toBe(false);
+    expect(pl.unit).toBe("prompt");
+    expect(pl.label).toContain("DERIVED, UNSIGNED");
+    expect(pl.resign).toContain("APPLIED");
+    expect(pl.separation).toBe(jail.separation);
+    expect(pl.resign).toContain("C-2026-0929-02");
+    expect(pl.row_level_signed).toEqual({ interval: jail.interval, fleet_mean: jail.fleet_mean, n: jail.n, separation: "TIE" });
+    expect(pl.prompts).toBe(jail.distinct_items);
+    expect(pl.rows).toBe(jail.n);
+    for (const a of board.axes.filter((x) => x.axis !== "jail")) expect(a.interval_prompt_level, a.axis).toBeUndefined();
+  });
+
+  it("reads the generated module, and its counts are the axis's signed per-model counts", () => {
+    const pm = JAIL_PROMPT_INTERVAL.per_model as Record<string, { tp: number; fp: number; tn: number; fn: number }>;
+    const board = (JAIL_PROMPT_INTERVAL.row_level_signed as { interval: readonly number[] }).interval;
+    expect(board).toEqual([0.475, 0.698]);
+    expect(JAIL_PROMPT_INTERVAL.leader).toBe("qwen2.5:0.5b-instruct");
+    expect(Object.keys(pm).length).toBe(7);
+    // row-level Wilson of the leader reproduces the signed interval: the same formula at n = 71
+    const L = pm["qwen2.5:0.5b-instruct"];
+    expect(wilson((L.tp + L.tn) / 71, 71).map((x) => Math.round(x * 1000) / 1000)).toEqual([0.475, 0.698]);
+  });
+
+  it("the leader's prompt-level range is re-derived here from the bank's group sizes, not read back", () => {
+    // ESCAPE prompts: five of 6 rows and eight single rows; BENIGN: 14 prompts, and the leader got every
+    // benign row right (tn 33, fp 0). With s of its 9 detected escapes on single-row prompts, the prompt-level
+    // accuracy is (14 + (9 - s)/6 + s) / 27, s = 0..8.
+    const accs = Array.from({ length: 9 }, (_, s) => (14 + (9 - s) / 6 + s) / 27);
+    const pl = JAIL_PROMPT_INTERVAL.prompt_level;
+    const r4 = (x: number) => Math.round(x * 10000) / 10000;
+    expect(pl.leader_accuracy_range).toEqual([r4(Math.min(...accs)), r4(Math.max(...accs))]);
+    expect(pl.leader_assignments).toBe(9);
+    const los = accs.map((a) => wilson(a, 27)[0]), his = accs.map((a) => wilson(a, 27)[1]);
+    expect(pl.leader_interval_envelope).toEqual([r4(Math.min(...los)), r4(Math.max(...his))]);
+  });
+
+  it("the state is the board rule over every consistent assignment, and the prose agrees with it", async () => {
+    const pl = JAIL_PROMPT_INTERVAL.prompt_level as Record<string, any>;
+    const [fmLo, fmHi] = pl.fleet_mean_range as number[];
+    const [envLo, envHi] = pl.leader_interval_envelope as number[];
+    // UNTESTED needs both outcomes reachable: some fleet mean inside some leader interval, some outside
+    if (pl.separation === "UNTESTED") {
+      expect(pl.untested_reason_code).toBe("NO_PER_ROW_RESULTS");
+      expect(pl.leader_assignments_by_outcome.TIE_for_every_fleet + pl.leader_assignments_by_outcome.depends_on_fleet).toBeGreaterThan(0);
+      expect(pl.leader_assignments_by_outcome.depends_on_fleet + pl.leader_assignments_by_outcome.SEPARATED_for_every_fleet).toBeGreaterThan(0);
+      expect(fmLo < (pl.leader_interval_lo_range as number[])[1] || fmHi > (pl.leader_interval_hi_range as number[])[0]).toBe(true);
+    }
+    expect(envLo).toBeLessThan(envHi);
+    const board = await served();
+    const jail = board.axes.find((a) => a.axis === "jail")!;
+    if (pl.separation === "UNTESTED") expect(jail.n_note).toContain("UNTESTED at the prompt level");
+    expect(jail.n_note).not.toContain("so the TIE stands");
   });
 });

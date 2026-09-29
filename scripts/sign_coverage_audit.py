@@ -559,7 +559,7 @@ def main(argv=None) -> int:
 
     if run("board"):
         rows = []
-        for f in ("gspc-board.signed.json", "gspc-board.2026-09-25.signed.json"):
+        for f in ("gspc-board.signed.json", "gspc-board.2026-09-25.signed.json", "gspc-board.2026-09-29.signed.json"):
             _, raw = fetch(SITE + "/signed/" + f)
             p = Path(tempfile.mkstemp(suffix=".json")[1]); p.write_bytes(raw)
             rc, txt = run_cmd(["node", "scripts/gspc-board-verify.mjs", str(p), "--did", did_tmp.name])

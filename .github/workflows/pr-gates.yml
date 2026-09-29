@@ -284,6 +284,7 @@ jobs:
           # The superseding dated freeze (2026-09-25, single key #board-attestation-1). Key anchored
           # to the committed DID document, so a swapped key in the file fails here.
           node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-25.signed.json --did public/.well-known/did.json
+          node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-29.signed.json --did public/.well-known/did.json
 
       # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
       # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the

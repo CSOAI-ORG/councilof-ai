@@ -7,7 +7,11 @@ import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
 
-const MCP_URL = "https://councilof.ai/mcp";
+// The free door is the default everywhere a config is offered (audit 2026-09-28 #10): the first
+// snippet a developer copies should reach the tools that cost nothing. /mcp is still named below,
+// with what it adds, and both parts of its count are read from the manifests it serves.
+const MCP_URL = "https://councilof.ai/mcp/free";
+const MCP_METERED_URL = "https://councilof.ai/mcp";
 const MCP_SNIPPET = `{
   "mcpServers": {
     "gspc": {
@@ -63,7 +67,7 @@ export default function ToolsPage() {
   useEffect(() => {
     document.title = "Add the GSPC tools to your AI client | Council of AI";
     setMetaDescription(
-      `Council OS for people already in Claude, Cursor, Kimi, or Grok. ${ALL_TOOL_NAMES.length} tools at https://councilof.ai/mcp: ${FREE_TOOL_NAMES.length} free readers and ${PAID_TOOL_NAMES.length} x402-metered evidence tools. Measurement, never certification.`,
+      `Council OS for people already in Claude, Cursor, Kimi, or Grok. ${FREE_TOOL_NAMES.length} free tools at ${MCP_URL}; ${ALL_TOOL_NAMES.length} at ${MCP_METERED_URL} (${FREE_TOOL_NAMES.length} free + ${PAID_TOOL_NAMES.length} x402-metered evidence tools). Measurement, never certification.`,
     );
   }, []);
 
@@ -127,11 +131,22 @@ export default function ToolsPage() {
               >
                 Verify a record <ArrowRight className="h-4 w-4" />
               </a>
+              <a
+                href="/connect/claude/"
+                data-testid="tools-connect-claude"
+                className="inline-flex min-h-11 items-center gap-1 px-1 text-sm font-semibold text-emerald-200 underline decoration-emerald-300/50 underline-offset-4 hover:text-emerald-50"
+              >
+                Add to Claude or Cursor →
+              </a>
             </div>
           </div>
           <div className="min-w-0 border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection config</p>
             <p className="mt-2 break-all font-mono text-xs text-emerald-100/65">{MCP_URL}</p>
+            <p className="mt-1 text-xs leading-5 text-emerald-100/65" data-testid="tools-door-split">
+              {FREE_TOOL_NAMES.length} free tools, no payment. <span className="font-mono">{MCP_METERED_URL}</span> serves{" "}
+              {ALL_TOOL_NAMES.length}: {FREE_TOOL_NAMES.length} free + {PAID_TOOL_NAMES.length} metered.
+            </p>
             <pre tabIndex={0} className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
               <code>{MCP_SNIPPET}</code>
             </pre>

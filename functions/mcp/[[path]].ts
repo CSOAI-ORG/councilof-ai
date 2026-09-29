@@ -32,6 +32,16 @@ const SERVER_INFO = {
 // from nine free tools once mcp_trust was added (2026-09-15).
 const FREE_TOOL_COUNT = GSPC_TOOLS.tools.length;
 const PAID_TOOL_COUNT = PAID_TOOL_DEFS.length;
+/**
+ * The ONE sentence for tool counts (public audit fix #19, 2026-09-28): the estate stated 7, 12, 13
+ * and 16 on different pages for the same two doors. Every number is an array length of what
+ * tools/list serves; client/src/lib/mcpTools.ts builds the same sentence from the same files
+ * (functions/mcp/tool-counts.test.ts holds the two equal).
+ */
+export function toolCountSentence(free: number, paid: number): string {
+  return `${free} free tools at /mcp/free; ${free + paid} at /mcp (${free} free + ${paid} metered). The npm package is versioned separately.`;
+}
+export const TOOL_COUNTS = toolCountSentence(FREE_TOOL_COUNT, PAID_TOOL_COUNT);
 const INSTRUCTIONS =
   `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
@@ -264,6 +274,7 @@ export function discoveryHtml(
     board: string;
     signed_cards: string;
     how_to_verify: string;
+    tool_counts?: string;
   },
   endpoint: "/mcp" | "/mcp/free" = "/mcp",
 ): string {
@@ -315,7 +326,7 @@ footer{margin-top:3rem;color:var(--mut);font-size:.9rem;border-top:1px solid var
 <h2>Connect</h2>
 <dl>${install}</dl>
 <h2>Free tools (${FREE_TOOL_COUNT})</h2>
-<ul>${free}</ul>
+${document.tool_counts ? `<p>${escHtml(document.tool_counts)}</p>\n` : ""}<ul>${free}</ul>
 ${paidSection}<h2>Check it yourself</h2>
 <ul>
 <li>Board: <a href="${escHtml(document.board)}">${escHtml(document.board)}</a></li>
@@ -399,6 +410,7 @@ export const onRequest = async ({ request, env }: { request: Request; env?: unkn
         no_install_at_all: "curl -s https://councilof.ai/api/gspc",
         python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
       },
+      tool_counts: TOOL_COUNTS,
       stdio_alternative:
         "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. Ask each installed version for its tools/list.",
       paid_tools: {

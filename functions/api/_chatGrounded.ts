@@ -135,7 +135,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
       (canon.countGrammar ? `${canon.countGrammar}\n\n` : "") +
       `Quote both numbers or quote the smaller one — the larger counts slots, not measurements. ` +
       `A published slot exists so the gap is visible; it is not evidence of anything having been measured. ` +
-      `Jail is MEASURED; a TIE is not a separated leader.\n\n` +
+      `Jail is MEASURED; its separation is UNTESTED, and an untested lead is not a separated leader.\n\n` +
       `${canon.jailNote}\n\n` +
       `The ${mAxes.length} measured:\n` +
       mAxes.map(row).join("\n") +

@@ -41,6 +41,8 @@ const BLURB = {
   "gspc-board.2026-09-25.signed.json": "Board freeze of 2026-09-25, signed by #board-attestation-1 — a single key held as a Pages secret, not MPC. Verify with scripts/gspc-board-verify.mjs.",
   "gspc-board.2026-09-25.signed.json.ots": "OpenTimestamps proof over the 2026-09-25 freeze's file bytes. Pending until upgraded; a pending stamp is a request, not evidence.",
   "gspc-board.2026-09-25.status.json": "Status of the 2026-09-25 freeze. /api/state compares it with the live axis arrays on every request.",
+  "gspc-board.2026-09-29.signed.json": "Board freeze of 2026-09-29 (jail separation UNTESTED, C-2026-0929-02), signed by #board-attestation-1 — a single key held as a Pages secret, not MPC. Verify with scripts/gspc-board-verify.mjs.",
+  "gspc-board.2026-09-29.status.json": "Status of the 2026-09-29 freeze. /api/state compares it with the live axis arrays on every request.",
   "gspc-measurement.json": "Measurement-data bundle behind the board; inspect its own signature fields and verification state rather than assuming the whole file is signed.",
   "board_living.json": "Living-board data whose embedded historical stamp is explicitly UNVERIFIABLE; not a valid attestation.",
   "arena_scoreboard.json": "Arena scoreboard artifact.",

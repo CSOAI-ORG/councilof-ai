@@ -453,10 +453,10 @@
         "http"
       ],
       "title": "Certificate schema",
-      "description": "GET /api/certificate-schema — the schema URL the issuer and the verifier agree on.",
+      "description": "certificate-schema — withdrawn; the record is csoai.completion-record/0.1.",
       "endpoint": "/api/certificate-schema",
       "method": "GET",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1462,15 +1462,28 @@
       "payment": "free"
     },
     {
+      "id": "api-owm",
+      "protocols": [
+        "http"
+      ],
+      "title": "Outer world model snapshot",
+      "description": "GET /api/owm — the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+      "endpoint": "/api/owm",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-paddle-webhook",
       "protocols": [
         "http"
       ],
       "title": "Paddle webhook",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "endpoint": "/api/paddle-webhook",
       "method": "GET",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1480,10 +1493,10 @@
         "http"
       ],
       "title": "Paddle webhook (POST)",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "endpoint": "/api/paddle-webhook",
       "method": "POST",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -2923,7 +2936,7 @@
         "http"
       ],
       "title": "Pop corrections",
-      "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/corrections",
       "method": "GET",
       "lifecycle": "LIVE",

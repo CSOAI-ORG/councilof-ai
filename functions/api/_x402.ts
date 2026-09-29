@@ -1074,7 +1074,9 @@ export function paymentRequiredResponse(
   paymentRequired: Record<string, unknown>,
   extraHeaders: Record<string, string> = {},
 ): Response {
-  return new Response(JSON.stringify(paymentRequired, null, 2), {
+  // Compact JSON (public audit 2026-09-28, fix #29): the challenges ran 6–30 KB, a quarter of it
+  // indentation. Clients parse it; nobody reads a 402 body by eye without a formatter.
+  return new Response(JSON.stringify(paymentRequired), {
     status: 402,
     headers: {
       "content-type": "application/json; charset=utf-8",

@@ -1161,14 +1161,13 @@
       "path": "/api/certificate-schema",
       "method": "GET",
       "name": "Certificate schema",
-      "description": "GET /api/certificate-schema — the schema URL the issuer and the verifier agree on.",
+      "description": "certificate-schema — withdrawn; the record is csoai.completion-record/0.1.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
-        "csoai.certificate-schema-endpoint/0.1",
-        "csoai.certificate/0.1"
+        "csoai.retired-endpoint/0.1"
       ],
       "surfaces": [
         "openapi"
@@ -1177,7 +1176,7 @@
         "method": "GET",
         "request": "/api/certificate-schema",
         "expect_status": [
-          200
+          503
         ],
         "safe": true
       },
@@ -3289,20 +3288,43 @@
       "source": "functions/api/owasp-report.ts"
     },
     {
+      "id": "api-owm",
+      "kind": "http",
+      "path": "/api/owm",
+      "method": "GET",
+      "name": "Outer world model snapshot",
+      "description": "GET /api/owm — the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/owm",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/owm.ts"
+    },
+    {
       "id": "api-paddle-webhook",
       "kind": "http",
       "path": "/api/paddle-webhook",
       "method": "GET",
       "name": "Paddle webhook",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
-        "csoai.certificate/0.1",
-        "csoai.measurement-card.issuance",
-        "csoai.paddle-webhook-endpoint/0.1"
+        "csoai.retired-endpoint/0.1"
       ],
       "surfaces": [
         "openapi"
@@ -3311,7 +3333,7 @@
         "method": "GET",
         "request": "/api/paddle-webhook",
         "expect_status": [
-          200
+          503
         ],
         "safe": true
       },
@@ -3323,15 +3345,13 @@
       "path": "/api/paddle-webhook",
       "method": "POST",
       "name": "Paddle webhook (POST)",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "payment": "free",
       "schema_refs": [
-        "csoai.certificate/0.1",
-        "csoai.measurement-card.issuance",
-        "csoai.paddle-webhook-endpoint/0.1"
+        "csoai.retired-endpoint/0.1"
       ],
       "surfaces": [
         "openapi"
@@ -3340,7 +3360,7 @@
         "method": "POST",
         "request": "/api/paddle-webhook",
         "expect_status": [
-          200
+          503
         ],
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
@@ -6444,7 +6464,7 @@
       "path": "/api/pop/corrections",
       "method": "GET",
       "name": "Pop corrections",
-      "description": "Corrections ledger slice, full history: every published correction, with a per-entry content digest. Each entry states what was wrong, how it was caught, the fix and the date; the free /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+      "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "description_state": "DOCUMENTED",
       "audience": "agent",
       "lifecycle": "LIVE",

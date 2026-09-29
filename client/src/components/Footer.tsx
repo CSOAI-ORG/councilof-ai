@@ -7,6 +7,7 @@
 
 import { Link } from 'wouter';
 import { BookOpen, Linkedin, Mail } from 'lucide-react';
+import EmailOff from './EmailOff';
 import FooterVerifyStrip from './FooterVerifyStrip';
 import FooterStats from './momentum/FooterStats';
 import MembershipStrip from './MembershipStrip';
@@ -391,7 +392,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · contact@csoai.org
+            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text="contact@csoai.org" />
           </p>
           <p className="text-muted-foreground text-xs">
             To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href="mailto:contact@csoai.org" className="underline">contact@csoai.org</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.

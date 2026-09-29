@@ -79,7 +79,7 @@ describe("signed board freeze vs live axis arrays", () => {
 
   it("the committed newest freeze agrees with the committed axis arrays", () => {
     const r = crosscheckBoardSnapshot(live);
-    expect(r.source).toBe("public/signed/gspc-board.2026-09-25.signed.json");
+    expect(r.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
     expect(r.counts_agree).toBe(true);
     expect(r.agrees).toBe(true);
     // The 2026-09-02 freeze is kept as history, superseded — never deleted.
@@ -89,7 +89,7 @@ describe("signed board freeze vs live axis arrays", () => {
   });
 
   it("the committed freeze's signature verifies and pins the body; a tampered body does not", () => {
-    const bytes = readFileSync("public/signed/gspc-board.2026-09-25.signed.json");
+    const bytes = readFileSync("public/signed/gspc-board.2026-09-29.signed.json");
     const doc = JSON.parse(bytes.toString("utf8"));
     const { board_attestation: ba, ...body } = doc;
     const bodyId = createHash("sha256").update(canonical(body)).digest("hex");
@@ -122,7 +122,7 @@ describe("signed board freeze vs live axis arrays", () => {
     const s = await (await (stateGet as unknown as () => Promise<Response>)()).json();
     const c = await (await (countersGet as unknown as () => Promise<Response>)()).json();
     const x = s.board.live_derivation_crosscheck;
-    expect(x.signed_snapshot.source).toBe("public/signed/gspc-board.2026-09-25.signed.json");
+    expect(x.signed_snapshot.source).toBe("public/signed/gspc-board.2026-09-29.signed.json");
     expect(x.signed_snapshot_agrees).toBe(true);
     expect(x.signed_snapshot.claim_state).toBe("CURRENT");
     expect(x.history.map((h: { source: string }) => h.source)).toContain("public/signed/gspc-board.signed.json");

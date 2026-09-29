@@ -69,6 +69,8 @@ export type PopulationEntry = {
   population: string;
   /** Tags for the 402 (≤5, ≤32 chars each). */
   tags: string[];
+  /** Optional wording for the count in the 402's live sentence; `n` is always the reading's own. */
+  countPhrase?: (n: number, unit: string) => string;
   read: (io: Io, full: boolean) => Promise<Reading>;
 };
 
@@ -660,8 +662,12 @@ const layer0: PopulationEntry = {
 
 const corrections: PopulationEntry = {
   id: "corrections",
-  title: "Corrections ledger, full history",
-  population: "one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same source object the free GET /api/corrections serves",
+  // Not "full history" (public audit 2026-09-28, fix #29): the slice is exactly the entries the
+  // free GET /api/corrections serves, packaged with a per-entry digest. The count is the ledger's
+  // length at request time, never typed.
+  title: "Corrections ledger",
+  population: "one row per published correction in the estate's own ledger — what was wrong, how it was caught, the fix, dated — the same entries as free /api/corrections, packaged with per-entry digests",
+  countPhrase: (n) => `the same ${n} entries as free /api/corrections, packaged with per-entry digests`,
   tags: ["population", "corrections", "ledger", "x402"],
   read: async (_io, full) => {
     const unit = "correction entries in the source-maintained ledger";
@@ -689,7 +695,7 @@ const corrections: PopulationEntry = {
         last_date: dates.length ? dates[dates.length - 1] : null,
         reached_the_public_true: reachedPublic,
         entries_with_detected_at: withDetected,
-        free_endpoint: "/api/corrections serves the whole ledger free and stays free; this door meters the assembled full-history slice with per-entry content digests",
+        free_endpoint: "/api/corrections serves the same entries free and stays free; this door packages them with per-entry content digests",
         identification: "an entry is a fact about the estate's own history, never a claim about anyone else; ids are the ledger's own",
       },
     };

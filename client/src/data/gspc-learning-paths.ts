@@ -13,11 +13,11 @@
  * gspc-learning-paths.test.ts fails when this import stops being the CURRENT freeze.
  */
 
-import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.2026-09-25.signed.json";
+import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.2026-09-29.signed.json";
 
 /** The committed freeze imported above; its status file says whether it is still current. */
 export const LEARNING_SNAPSHOT_FILE =
-  "public/signed/gspc-board.2026-09-25.signed.json" as const;
+  "public/signed/gspc-board.2026-09-29.signed.json" as const;
 
 export const GSPC_LEARNING_PATH_SCHEMA =
   "csoai.gspc-learning-path/0.1" as const;

@@ -93,40 +93,29 @@ const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
 // stop; skipping the snapshot leaves the SPA shell, which hydrates on the
 // live host. Added 2026-09-09 after #1847 blocked every master deploy.
 const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
-  // /corrections reads GET /api/corrections, a Function absent on the prerender host. The shell
-  // carries its own title + description from client/src/data/seo-head.json.
-  "/corrections",
-  // staging/integration-20260926: the trailing-slash twin is discovered from links and was snapshotted
-  // AFTER the shell was written, baking the live ledger text back into corrections/index.html
-  // (brand-gate red: pricing_leak / gpai_code_signature / measured_index_sticker quoted in entries).
-  "/corrections/",
-  // /pay reads /.well-known/x402.json, every door's 402, /api/x402-listing, /api/x402-listing-402index
-  // and /api/door-settles — all Functions.
-  "/pay",
-  "/pay/",
-  "/assess",
-  "/assess/",
-  "/assessment",
-  "/mcp-tools",
+  // Routes that still ship the bare SPA shell. Twelve sitemap routes used to be here — /corrections,
+  // /pay, /assess, /assessment, /tool-commons, /countdown, /art50, /rlusd, /status, /receipt,
+  // /stablewatch, /health-inventory — and a reader without JavaScript, a crawler or an agent got a
+  // page that said "This page needs JavaScript" and nothing else (audit 2026-09-28 #11). Their data
+  // reads go through the proxy below (/api/* and /signed/* are fetched from DATA_ORIGIN), so they
+  // are snapshotted like every other route now; a snapshot that bakes a fetch failure is still
+  // refused by snapshotFailure(). Only routes that are not in the sitemap remain client-only, plus:
+  // /tool-commons, whose ToolRunner lists tools with a JSON-RPC POST to /mcp. The render proxy
+  // forwards only /api/, /signed/ and /.well-known/ reads, as GETs, so that call fails in the
+  // render browser and the snapshot is refused as BAKED-FETCH-FAILURE (measured 2026-09-29).
   "/tool-commons",
+  "/tool-commons/",
+  // /corrections stays client-only too (measured 2026-09-29): a snapshot bakes the live ledger's
+  // entry text, and entries that quote what they withdraw (a price, the withdrawn index sticker, a
+  // signatory claim) turn brand-gate red on dist/client/corrections/index.html. Serving those
+  // quotes to crawlers is an owner call on the ledger, not a prerender change.
+  "/corrections",
+  "/corrections/",
+  "/mcp-tools",
   "/pricing",
   "/sovereign-pricing",
-  "/countdown",
-  "/countdown/",
-  "/art50",
-  "/art50/",
-  "/rlusd",
-  "/rlusd/",
   "/proof",
   "/proof/",
-  "/status",
-  "/status/",
-  "/receipt",
-  "/receipt/",
-  "/stablewatch",
-  "/stablewatch/",
-  "/health-inventory",
-  "/health-inventory/",
 ]);
 // The origin the /api/ and /signed/ PROXY reads from, which is NOT the same question as the
 // canonical host above. Until 2026-09-05 one flag answered both, and that coupling is what made
@@ -597,7 +586,7 @@ const srv = http.createServer((q, r) => {
   // at load would snapshot with "fetch failed" baked into its static HTML (the
   // 2026-08-25 /gspc-scoreboard defect). Proxy them to production so snapshots capture
   // the real board state.
-  if (p.startsWith("/api/") || p.startsWith("/signed/")) {
+  if (parsed.dataPath) {
     fetch(parsed.target, {signal: AbortSignal.timeout(12000)}).then(async res => {
       const body = Buffer.from(await res.arrayBuffer());
       if (!res.ok) dataMiss.push(`${res.status} ${p}`);

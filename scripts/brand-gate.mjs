@@ -19,6 +19,9 @@ import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SELFTEST = process.argv.includes("--selftest");
+// A rule marked `held: true` is built and self-tested but only REPORTS until the owner rules on it.
+const ENFORCE_HELD = process.argv.includes("--enforce-held") || process.env.BRAND_GATE_ENFORCE_HELD === "1";
+const heldHits = [];
 const DIST = path.resolve(REPO, (process.argv[2] && !process.argv[2].startsWith("--")) ? process.argv[2] : "dist/client");
 
 
@@ -123,6 +126,20 @@ const RULES = [
     pattern: /\bget certified\b|\bwe certify\b|\bcertified by CSOAI\b|\bCSOAI certif/i,
     nearAllow: /we certify nothing|do not certify|does not certify|never certify|certify nothing|not certify|no such mark|issues no certif|misrepresent.{0,40}certif|certificate shop|training record/i,
     why: 'Measurement credential, never certification. Do not offer "get certified".',
+  },
+  {
+    id: "certificate_term",
+    // HELD 2026-09-28 (owner ruling pending): CSOAI issues no certificates; the Academy's record is
+    // a "completion record" (csoai.completion-record/0.1). While `held` is set this rule REPORTS and
+    // never fails the build. To enforce: delete `held: true`, or run with --enforce-held /
+    // BRAND_GATE_ENFORCE_HELD=1 to see what would fail first.
+    held: true,
+    pattern: /\bcertificates?\b/i,
+    // Negations and retirement notices are disclosure, not an offer. The technical senses of the
+    // word (PKI, TLS, X.509, C2PA signing certificates, certificate transparency) are not ours to ban.
+    nearAllow: /\bnot\s+(?:a\s+|an\s+)?certificates?\b|\bno\s+certificates?\b|\bnever\s+(?:issues?\s+)?(?:a\s+)?certificates?\b|issues?\s+no\s+certificates?|withdrawn|retired|legacy|superseded|completion record|x\.?509|\btls\b|\bssl\b|\bpki\b|signing certificate|code[\s-]signing|c2pa|certificate transparency|root certificate|leaf certificate|certificate chain|self[\s-]signed|\bmtls\b|\bacme\b|let'?s encrypt/i,
+    allowOn: /certificate-verification|verify-certificate|(^|\/)certificates(\/|\.html|$)|refutation|corrections/i,
+    why: 'CSOAI issues no certificates. The Academy issues free "completion records" (csoai.completion-record/0.1).',
   },
   {
     id: "rank_for_sale",
@@ -397,6 +414,19 @@ if (SELFTEST) {
       console.error(`\u2716 selftest: json display sweep now FAILS copy that must ship: ${JSON.stringify(obj)} -> [${h[0].rule}]`); bad++;
     }
   }
+  // The held certificate rule must catch an offer and pass a negation, a retirement notice and a
+  // technical sense of the word — exercised through the same window logic the scan uses.
+  {
+    const rule = RULES.find((r) => r.id === "certificate_term");
+    const trips = (t) => { const m = rule.pattern.exec(t); if (!m) return false; const w = t.slice(Math.max(0, m.index - 90), m.index + m[0].length + 90); return !rule.nearAllow.test(w); };
+    if (!rule || !rule.held) { console.error("\u2716 selftest: certificate_term missing or no longer held"); bad++; }
+    else {
+      for (const t of ["Get your AI governance certificate today", "Download your certificate"])
+        if (!trips(t)) { console.error(`\u2716 selftest: certificate_term no longer catches ${JSON.stringify(t)}`); bad++; }
+      for (const t of ["This is not a certificate.", "CSOAI issues no certificates.", "This legacy certificate page is withdrawn.", "signed with a C2PA signing certificate", "an X.509 certificate chain"])
+        if (trips(t)) { console.error(`\u2716 selftest: certificate_term now fails copy that must ship: ${JSON.stringify(t)}`); bad++; }
+    }
+  }
   if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
   console.log(`\u2713 brand-gate selftest: ${CASES.length}/${CASES.length} rules still catch what they exist to catch`);
   process.exit(0);
@@ -534,7 +564,7 @@ for (const file of walk(DIST)) {
       const window = text.slice(Math.max(0, idx - 90), idx + m[0].length + 90);
       if (rule.nearAllow && rule.nearAllow.test(window)) continue; // disclosure, not assertion
       const ctx = text.slice(Math.max(0, idx - 40), idx + 50).trim();
-      failures.push({ rel, rule: rule.id, why: rule.why, hit: m[0], ctx });
+      (rule.held && !ENFORCE_HELD ? heldHits : failures).push({ rel, rule: rule.id, why: rule.why, hit: m[0], ctx });
       break; // one report per rule per file is enough
     }
   }
@@ -562,10 +592,18 @@ for (const jf of walkAll(DIST)) {
   let parsed;
   try { parsed = JSON.parse(fs.readFileSync(jf, "utf8")); } catch { continue; }
   for (const h of jsonDisplayHits(parsed, jrel)) {
-    failures.push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
+    const held = RULES.find((r) => r.id === h.rule)?.held && !ENFORCE_HELD;
+    (held ? heldHits : failures).push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
   }
 }
 
+if (heldHits.length) {
+  // Reported, not failed: these rules await an owner ruling (see `held` on the rule).
+  const byRule = {};
+  for (const h of heldHits) byRule[h.rule] = (byRule[h.rule] || 0) + 1;
+  console.warn(`⚠ brand-gate HELD rules (not enforced): ${Object.entries(byRule).map(([k, v]) => `${k} ${v}`).join(", ")} — first hits:`);
+  for (const h of heldHits.slice(0, 15)) console.warn(`    ${h.rel}  [${h.rule}] "${h.hit}"  …${h.ctx}…`);
+}
 if (failures.length) {
   console.error(`\n✖ brand-gate: ${failures.length} forbidden DISPLAY string(s) in rendered output:\n`);
   for (const f of failures) {

@@ -20,6 +20,8 @@ import boardAug from "../../public/signed/gspc-board.signed.json";
 import board20260902Status from "../../public/signed/gspc-board.status.json";
 import board20260925 from "../../public/signed/gspc-board.2026-09-25.signed.json";
 import board20260925Status from "../../public/signed/gspc-board.2026-09-25.status.json";
+import board20260929 from "../../public/signed/gspc-board.2026-09-29.signed.json";
+import board20260929Status from "../../public/signed/gspc-board.2026-09-29.status.json";
 
 export interface SnapshotEntry {
   /** Repo-relative path of the signed file. */
@@ -48,6 +50,12 @@ export const SIGNED_BOARD_SNAPSHOTS: SnapshotEntry[] = [
     status_source: "public/signed/gspc-board.2026-09-25.status.json",
     doc: board20260925,
     status: board20260925Status,
+  },
+  {
+    source: "public/signed/gspc-board.2026-09-29.signed.json",
+    status_source: "public/signed/gspc-board.2026-09-29.status.json",
+    doc: board20260929,
+    status: board20260929Status,
   },
 ];
 

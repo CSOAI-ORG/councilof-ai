@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships/0.1",
-  "as_of": "2026-09-27",
+  "as_of": "2026-09-28",
   "signed": false,
   "purpose": "Where Council of AI (CSOAI Ltd, UK Companies House 16939677) takes part, and what each entry does and does not prove. One row per body. Every row names its evidence: a public URL a stranger can open, or a dated mailbox record when the only evidence is private (public_evidence: false). scripts/memberships-check.mjs re-fetches every public URL and fails when one stops answering 200 with our name. Participation is not endorsement, a listing is not adoption, a filing is not recognition. Nothing here is a score, a rank, or a mark.",
   "honesty_line": "Participation is not endorsement, and a listing is not adoption. Every entry links to its evidence.",
@@ -316,26 +316,26 @@
     },
     {
       "id": "mcp-registry",
-      "org": "MCP Registry (registry.modelcontextprotocol.io), namespace io.github.CSOAI-ORG",
+      "org": "MCP Registry (registry.modelcontextprotocol.io), ai.councilof/gspc",
       "short": "MCP Registry",
       "group": "registries",
       "kind": "listed",
-      "since": "2026-05-07",
-      "since_basis": "Earliest publishedAt among the io.github.CSOAI-ORG servers returned by the registry API on 2026-09-22.",
-      "evidence": "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG",
+      "since": "2026-09-26",
+      "since_basis": "Earliest publishedAt among the ai.councilof servers the registry API returned on 2026-09-28 (ai.councilof/gspc 1.4.2, 2026-09-26; 1.4.3 is the latest). Servers under the older io.github.CSOAI-ORG namespace have been listed since 2026-05-07, but a search for that namespace also returns servers that are not this measurement service, so it is not the evidence link.",
+      "evidence": "https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof",
       "evidence_kind": "public_url",
       "public_evidence": true,
       "check": {
         "expect": [
-          "io.github.CSOAI-ORG"
+          "ai.councilof/gspc"
         ]
       },
-      "what_it_proves": "Servers published under the io.github.CSOAI-ORG namespace are in the official MCP Registry; the API answers with them.",
-      "what_it_does_not_prove": "Registry entries are self-published under a GitHub namespace. The registry reviews nothing, ranks nothing, and a listing does not mean any client ships, installs or recommends these servers.",
+      "what_it_proves": "The domain-verified server ai.councilof/gspc is in the official MCP Registry; the API answers with it.",
+      "what_it_does_not_prove": "Registry entries are self-published by whoever controls the namespace (ai.councilof is verified by domain). The registry reviews nothing, ranks nothing, and a listing does not mean any client ships, installs or recommends the server.",
       "state": "VERIFIED",
-      "verified_on": "2026-09-22",
-      "question": "Does being in the MCP Registry mean the servers are endorsed?",
-      "answer": "No. Servers under io.github.CSOAI-ORG are in the official MCP Registry, and the registry API at https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG returns them. Entries are self-published under a GitHub namespace; the registry reviews and ranks nothing, and a listing says nothing about whether any client uses them."
+      "verified_on": "2026-09-28",
+      "question": "Does being in the MCP Registry mean the server is endorsed?",
+      "answer": "No. ai.councilof/gspc is in the official MCP Registry, and the registry API at https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof returns it. Entries are self-published by the namespace owner; the registry reviews and ranks nothing, and a listing says nothing about whether any client uses it."
     },
     {
       "id": "payai-discovery",

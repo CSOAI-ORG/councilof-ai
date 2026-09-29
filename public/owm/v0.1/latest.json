@@ -1,0 +1,789 @@
+{
+ "schema": "csoai.owm-snapshot/0.1",
+ "title": "Outer world model: every observed subject, its state and the evidence behind it",
+ "generated_at": "2026-09-28T21:50:49Z",
+ "run_id": "20260928T215049Z",
+ "cycle_schedule_utc": "19,49 * * * *",
+ "stale_after_s": 21600,
+ "state_enum": {
+  "CONSISTENT": "two or more surfaces answered and every compared field agrees",
+  "INCONSISTENT": "surfaces disagree, or a declared check on the one surface failed",
+  "SINGLE_SURFACE": "one surface by design; its value is recorded, nothing to compare it with",
+  "UNCHECKABLE": "a surface exists but could not be read or compared this cycle, or its capture failed",
+  "UNMEASURED": "nothing observed yet; a 404 means not deployed and proves nothing more"
+ },
+ "stage_status_enum": {
+  "LIVE": "a scheduled job carrying this stage produced new output within its window",
+  "STAGED": "built, but not producing: stale, host stopped, failing, or not enabled",
+  "MISSING": "nothing built for this stage"
+ },
+ "counts": {
+  "subjects": 15,
+  "by_state": {
+   "CONSISTENT": 4,
+   "INCONSISTENT": 1,
+   "SINGLE_SURFACE": 7,
+   "UNCHECKABLE": 1,
+   "UNMEASURED": 2
+  },
+  "stages": 9,
+  "by_stage_status": {
+   "LIVE": 9,
+   "STAGED": 0,
+   "MISSING": 0
+  },
+  "stale_components": 0
+ },
+ "stages": [
+  {
+   "stage": "capture",
+   "order": 1,
+   "label": "capture",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "cross-ledger supply read, daily",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T04:32:05Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "x402 endpoint census, daily",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T01:17:21Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "MCP handshake census, weekly",
+     "status": "LIVE",
+     "newest_output": "2026-09-27T03:58:08Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "MCP tool-list drift read, daily",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T07:36:52Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "public signals read, daily",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T08:04:39Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "own-surface self-parity read, daily",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T05:17:27Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "public board witness, every 15 min",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:45:05Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "production canary, every 10 min",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:43:02Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "own-surface cross-reads, every 30 min",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:50:49Z",
+     "missed_cycles": null,
+     "detail": null
+    },
+    {
+     "label": "census capture on the GPU pod",
+     "status": "OFF",
+     "newest_output": "2026-09-27T07:01:18Z",
+     "missed_cycles": null,
+     "detail": "host stopped"
+    }
+   ]
+  },
+  {
+   "stage": "observation_store",
+   "order": 2,
+   "label": "observation store",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "claim watch: six stores per sealed claim set",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T07:51:57Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "measurement capsules: per-adapter observation batches",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T12:41:18Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "outer world model: hash-linked change events per subject",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:50:49Z",
+     "missed_cycles": null,
+     "detail": null
+    }
+   ]
+  },
+  {
+   "stage": "change_detection",
+   "order": 3,
+   "label": "change detection",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "claim watch: atoms against the pin",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T07:51:57Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "output novelty: new content, not a fresh mtime",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T20:47:05Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "outer world model: evidence digest per subject against the previous cycle",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:50:49Z",
+     "missed_cycles": null,
+     "detail": null
+    }
+   ]
+  },
+  {
+   "stage": "dependency_index",
+   "order": 4,
+   "label": "dependency index (claim -> sources -> fields)",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "claim watch: substantive and derived-pointer atoms for one claim set",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T07:51:57Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "outer world model: the subjects below, each claim -> surfaces -> fields",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:50:49Z",
+     "missed_cycles": null,
+     "detail": null
+    },
+    {
+     "label": "claim-event page dependencies",
+     "status": "STAGED",
+     "newest_output": null,
+     "missed_cycles": null,
+     "detail": "claim-event feed page dependencies (claim -> pages), built and tested, not yet landed"
+    },
+    {
+     "label": "page dependency index",
+     "status": "MISSING",
+     "newest_output": null,
+     "missed_cycles": null,
+     "detail": "page dependency index driving IndexNow submissions and sitemap lastmod (reaction-loop build step 3)"
+    },
+    {
+     "label": "card admission dependency",
+     "status": "MISSING",
+     "newest_output": null,
+     "missed_cycles": null,
+     "detail": "card admission as a reaction: quarantined card -> owner rule -> admitted event -> board axis -> daily root (reaction-loop build step 4)"
+    }
+   ]
+  },
+  {
+   "stage": "recheck",
+   "order": 5,
+   "label": "recheck",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "claim watch: same instrument, fresh fetch",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T07:51:57Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "corrections watch, daily",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T08:30:54Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "outer world model: every own surface re-read each cycle",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:50:49Z",
+     "missed_cycles": null,
+     "detail": null
+    },
+    {
+     "label": "published-claim digest re-read on the GPU pod",
+     "status": "OFF",
+     "newest_output": "2026-09-23T06:54:42Z",
+     "missed_cycles": null,
+     "detail": "host stopped"
+    }
+   ]
+  },
+  {
+   "stage": "state",
+   "order": 6,
+   "label": "state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED)",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "outer world model snapshot, one per cycle",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:50:49Z",
+     "missed_cycles": null,
+     "detail": null
+    }
+   ]
+  },
+  {
+   "stage": "sign",
+   "order": 7,
+   "label": "sign (existing board-sign path, only for kinds that already sign)",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "claim-watch receipt",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T07:51:57Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "corrections-watch record",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T08:30:54Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "cross-ledger signed run",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T04:32:05Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "self-parity signed record",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T05:17:27Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "capsule batches and the chained day index",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T12:41:18Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "outer world model snapshot",
+     "status": "STAGED",
+     "newest_output": null,
+     "missed_cycles": null,
+     "detail": "the outer world model snapshot is a new kind and is published UNSIGNED; extending the signer to it is an owner decision"
+    }
+   ]
+  },
+  {
+   "stage": "capsule",
+   "order": 8,
+   "label": "capsule",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "measurement-capsule day index (chained, Rekor, OTS)",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T12:41:18Z",
+     "missed_cycles": 0,
+     "detail": null
+    }
+   ]
+  },
+  {
+   "stage": "land",
+   "order": 9,
+   "label": "land (the gated staging-mirror land path only)",
+   "status": "LIVE",
+   "components": [
+    {
+     "label": "public copy of the capsule day index",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T08:58:05Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "auto-land: deploy staging master when it moved and every gate passes",
+     "status": "LIVE",
+     "newest_output": "2026-09-28T21:20:02Z",
+     "missed_cycles": 0,
+     "detail": null
+    },
+    {
+     "label": "daily public-root republish",
+     "status": "FAILING",
+     "newest_output": "2026-09-28T13:28:47Z",
+     "missed_cycles": 0,
+     "detail": "runs, but the job registry reads its last result as FAILING"
+    },
+    {
+     "label": "outer world model snapshot publish",
+     "status": "STAGED",
+     "newest_output": null,
+     "missed_cycles": null,
+     "detail": "per-cycle publication of the outer world model snapshot: the seed snapshot is committed with the /api/owm door; a producer that lands later snapshots through the gated path is not built"
+    }
+   ]
+  }
+ ],
+ "subjects": [
+  {
+   "id": "own:public-root",
+   "label": "public Merkle root of catalogued cards (corpus 2 of 3)",
+   "kind": "own_surface",
+   "claim": "The signed root envelope, its API alias and the live-state summary carry one card_count and one as_of; the envelope and its alias carry one merkle_root.",
+   "state": "CONSISTENT",
+   "reason": "3 fields agree across 3 surfaces",
+   "last_change": null,
+   "last_change_basis": "UNMEASURED: first observation, no earlier record of a change",
+   "evidence_sha256": "eba23730ceec769f6475d0177d9cc372c63e9bc12b189a66a9ee86fa941c309b",
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "/root.json",
+     "answered": true,
+     "raw_sha256": "048a1507f9099f2eedb3ab0f60433508e001af6f8c3290e96c30ddefe3eb1963",
+     "http": 200
+    },
+    {
+     "surface": "/api/root",
+     "answered": true,
+     "raw_sha256": "048a1507f9099f2eedb3ab0f60433508e001af6f8c3290e96c30ddefe3eb1963",
+     "http": 200
+    },
+    {
+     "surface": "/api/state",
+     "answered": true,
+     "raw_sha256": "1186b60f2d5b6dfd76588eff9996cabf1f50e7343f300b8ec28966f5c3777722",
+     "http": 200
+    }
+   ],
+   "compared": {
+    "root.json": {
+     "card_count": 310,
+     "merkle_root": "c2ab6d59e530d7dd5999b790c590ca0513e3af6f6fc1514cb8a282232ea768e3",
+     "as_of": "2026-09-28T07:32:07Z"
+    },
+    "api-root": {
+     "card_count": 310,
+     "merkle_root": "c2ab6d59e530d7dd5999b790c590ca0513e3af6f6fc1514cb8a282232ea768e3",
+     "as_of": "2026-09-28T07:32:07Z"
+    },
+    "api-state": {
+     "card_count": 310,
+     "as_of": "2026-09-28T07:32:07Z"
+    }
+   }
+  },
+  {
+   "id": "own:board-totals",
+   "label": "board totals (axes on the board, axes measured)",
+   "kind": "own_surface",
+   "claim": "The board endpoint and the live-state summary carry the same axis count, measured count and public count sentence.",
+   "state": "CONSISTENT",
+   "reason": "3 fields agree across 2 surfaces",
+   "last_change": null,
+   "last_change_basis": "UNMEASURED: first observation, no earlier record of a change",
+   "evidence_sha256": "6f15326fb40258f97b1de769395db6cabe1d35d5e0a3bd88741e15f74c2c33bd",
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "/api/gspc",
+     "answered": true,
+     "raw_sha256": "def60a14987ab142af68a260b80f85fe7b66f6ab161b8f196f229b3d581434cd",
+     "http": 200
+    },
+    {
+     "surface": "/api/state",
+     "answered": true,
+     "raw_sha256": "1186b60f2d5b6dfd76588eff9996cabf1f50e7343f300b8ec28966f5c3777722",
+     "http": 200
+    }
+   ],
+   "compared": {
+    "api-gspc": {
+     "axes": 23,
+     "measured_axes": 23,
+     "public_count": "23 axis · 23 measured"
+    },
+    "api-state": {
+     "axes": 23,
+     "measured_axes": 23,
+     "public_count": "23 axis · 23 measured"
+    }
+   }
+  },
+  {
+   "id": "own:signed-card-index",
+   "label": "signed card index (corpus 3 of 3)",
+   "kind": "own_surface",
+   "claim": "The signed card index lists as many cards as the live-state summary says are published on disk.",
+   "state": "CONSISTENT",
+   "reason": "1 fields agree across 2 surfaces",
+   "last_change": null,
+   "last_change_basis": "UNMEASURED: first observation, no earlier record of a change",
+   "evidence_sha256": "4bcb3df03dbf99925c20304ffdde1a4cb3ca8ce5ffc1170095a9681e0363fd6b",
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "/signed/card_index.json",
+     "answered": true,
+     "raw_sha256": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+     "http": 200
+    },
+    {
+     "surface": "/api/state",
+     "answered": true,
+     "raw_sha256": "1186b60f2d5b6dfd76588eff9996cabf1f50e7343f300b8ec28966f5c3777722",
+     "http": 200
+    }
+   ],
+   "compared": {
+    "card-index": {
+     "n_cards": 335
+    },
+    "api-state": {
+     "n_cards": 335,
+     "verified_valid": 335
+    }
+   }
+  },
+  {
+   "id": "own:corrections-ledger",
+   "label": "public corrections ledger",
+   "kind": "own_surface",
+   "claim": "The corrections ledger's signature verifies over the served bytes (the door checks it on every request).",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": null,
+   "last_change_basis": "UNMEASURED: first observation, no earlier record of a change",
+   "evidence_sha256": "c3671467435f802cb40bb2344ef7eb5b42042e6a0691235ca3bed752a6f594c0",
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "/api/corrections",
+     "answered": true,
+     "raw_sha256": "3684f3c02c435aae5ce75e174846fd23c046d94a15eec790fc24f20ed1f60eb3",
+     "http": 200
+    }
+   ],
+   "compared": {
+    "api-corrections": {
+     "signature_state": "VALID",
+     "n_entries": 78
+    }
+   }
+  },
+  {
+   "id": "own:capsule-index-public-copy",
+   "label": "public copy of the measurement-capsule day index",
+   "kind": "own_surface",
+   "claim": "The public copy of the capsule index carries the index_root of the newest signed day index.",
+   "state": "INCONSISTENT",
+   "reason": "1 of 1 compared fields disagree: index_root",
+   "last_change": "2026-09-28T08:07:41Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "dd40bfd5d3557dc9f6ab12475d47925ad9fa62946d3c7f6af06567564f4beb66",
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "newest signed day index on the scheduler host",
+     "answered": true,
+     "raw_sha256": "ff74967cd86a5069d1bed62e5b65d91d8edaaf7e13be87ed6590fe19942de148"
+    },
+    {
+     "surface": "/measurement-capsules/v0.2/index.json",
+     "answered": true,
+     "raw_sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+     "http": 200
+    }
+   ],
+   "compared": {
+    "day-index": {
+     "index_root": "33abfb8de6129ef1ce40cdc87634e007dc044e9e53bbb5bc40d43e63030470c0",
+     "date": "2026-09-28"
+    },
+    "public-index": {
+     "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
+     "public_as_of": "2026-09-26T10:34:15Z"
+    }
+   },
+   "diffs": [
+    {
+     "field": "index_root",
+     "values": {
+      "day-index": "33abfb8de6129ef1ce40cdc87634e007dc044e9e53bbb5bc40d43e63030470c0",
+      "public-index": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d"
+     }
+    }
+   ]
+  },
+  {
+   "id": "own:mcp-free",
+   "label": "free MCP door tool list",
+   "kind": "own_surface",
+   "claim": "The free MCP door lists the expected number of tools (read by the production canary; not re-fetched here).",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": "2026-09-28T21:43:02Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "c82d8226db2a6a5893779262b7c76cc36eac9a84fb11dee94deec699beed6921",
+   "next_check": "2026-09-28T21:53:00Z",
+   "surfaces": [
+    {
+     "surface": "production canary record",
+     "answered": true,
+     "raw_sha256": "03a8dc3bf86f63ccca1141b3adf81998fb25ab9d08c7c8dc89490df418c8e9d8"
+    }
+   ],
+   "compared": {
+    "prod-canary": {
+     "tools_observed": 12,
+     "tools_expected": "== 12",
+     "canary_status": "PASS"
+    }
+   }
+  },
+  {
+   "id": "own:owm",
+   "label": "this snapshot's public door",
+   "kind": "own_surface",
+   "claim": "The outer world model door serves a snapshot that validates.",
+   "state": "UNMEASURED",
+   "reason": "HTTP 404 (not deployed)",
+   "last_change": null,
+   "last_change_basis": null,
+   "evidence_sha256": null,
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "/api/owm",
+     "answered": false,
+     "raw_sha256": null,
+     "http": 404
+    }
+   ],
+   "compared": {}
+  },
+  {
+   "id": "own:claim-events",
+   "label": "claim-event feed head",
+   "kind": "own_surface",
+   "claim": "The claim-event feed's signed daily head verifies against the committed feed bytes.",
+   "state": "UNMEASURED",
+   "reason": "HTTP 404 (not deployed)",
+   "last_change": null,
+   "last_change_basis": null,
+   "evidence_sha256": null,
+   "next_check": "2026-09-28T22:19:00Z",
+   "surfaces": [
+    {
+     "surface": "/api/claims/events/head",
+     "answered": false,
+     "raw_sha256": null,
+     "http": 404
+    }
+   ],
+   "compared": {}
+  },
+  {
+   "id": "obs:cross-ledger-supply",
+   "label": "cross-ledger supply of tokenised assets (daily signed run)",
+   "kind": "capture",
+   "claim": "The newest daily cross-ledger run exists and is signed.",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": "2026-09-28T04:31:39Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "2dc43a18ca6b473ecc3d6ddb90e481e6073f5b75f4cc734e11c0ab8b01f6674c",
+   "next_check": "2026-09-29T04:20:00Z",
+   "surfaces": [
+    {
+     "surface": "newest signed daily run",
+     "answered": true,
+     "raw_sha256": "89cc2aaf64efed1a2bcbda5af14310fbeafe902aea1445278423d6e0ea9e4ba7"
+    }
+   ]
+  },
+  {
+   "id": "obs:x402-endpoints",
+   "label": "x402 endpoint census (daily)",
+   "kind": "capture",
+   "claim": "The newest daily x402 census completed its enumeration gates.",
+   "state": "UNCHECKABLE",
+   "reason": "declared check failed: rc=1 (result=FAILED_G2_PARTIAL_ENUMERATION)",
+   "last_change": "2026-09-28T01:17:23Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "cb5fae2900b1636c5ca31057192e40752ecc51b1698ed035a72733e4dfd73845",
+   "next_check": "2026-09-29T01:05:00Z",
+   "surfaces": [
+    {
+     "surface": "newest census result",
+     "answered": true,
+     "raw_sha256": "f777ad1d85f8c107211f529cf947c117460d02a9c8a03976c13772f2ebcce878"
+    }
+   ]
+  },
+  {
+   "id": "obs:mcp-handshake-census",
+   "label": "MCP server handshake census (weekly)",
+   "kind": "capture",
+   "claim": "The newest weekly MCP handshake census completed.",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": "2026-09-27T03:58:09Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "d78bed60e96eb165766164e6f80ac948ac03ea1fe92113bd5b24be632e457429",
+   "next_check": "2026-10-04T02:00:00Z",
+   "surfaces": [
+    {
+     "surface": "newest census result",
+     "answered": true,
+     "raw_sha256": "5807ea694a6e4df9efb833ab7e0e8d9b33c7df7c55da89f886c7e47af20e27c9"
+    }
+   ]
+  },
+  {
+   "id": "obs:mcp-tool-drift",
+   "label": "MCP tool-list drift (daily, planned endpoints)",
+   "kind": "capture",
+   "claim": "The newest daily drift run attempted every planned endpoint.",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": "2026-09-28T07:36:52Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "e54856c7ad78de32a4bb4d11629bcbb7bac62be0ee1aef63cc52cea5d71f4f96",
+   "next_check": "2026-09-29T07:30:00Z",
+   "surfaces": [
+    {
+     "surface": "newest drift run status",
+     "answered": true,
+     "raw_sha256": "0af2289ddbe512b5f2269fe8b82898fef32e643040ca91a03f438f3364ab4454"
+    },
+    {
+     "surface": "newest drift run summary",
+     "answered": true,
+     "raw_sha256": "c6fdc1504afd4650ae799c54354a6dd617431f23d8f500d0ca7b81896ef88673"
+    }
+   ]
+  },
+  {
+   "id": "obs:public-signals",
+   "label": "public signals (daily signed record)",
+   "kind": "capture",
+   "claim": "The newest daily public-signals record exists and is signed.",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": "2026-09-28T05:52:14Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "0c5bb5dc761608938b2d95c0ade3c663a42932566308f50a79cfe2d6fdc95458",
+   "next_check": "2026-09-29T05:50:00Z",
+   "surfaces": [
+    {
+     "surface": "newest signed daily record",
+     "answered": true,
+     "raw_sha256": "0c1432af37da00f5aed02908894925f202c6171bee7e53bf01cf0fc9b2e45fe5"
+    }
+   ]
+  },
+  {
+   "id": "obs:self-parity",
+   "label": "own-surface self-parity (daily signed record)",
+   "kind": "capture",
+   "claim": "The newest self-parity record is signed.",
+   "state": "SINGLE_SURFACE",
+   "reason": "one surface by design; value recorded, nothing to compare it with",
+   "last_change": "2026-09-28T05:17:25Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "90929780dc11800cd76fce025638020da9fc439259541ac3f25af22ac34377a7",
+   "next_check": "2026-09-29T05:10:00Z",
+   "surfaces": [
+    {
+     "surface": "newest self-parity status",
+     "answered": true,
+     "raw_sha256": "9a1e92975ace0b47af17f5d979b9616d7fcc5925c49d5347342f48c535adb1e1"
+    }
+   ]
+  },
+  {
+   "id": "claim:sealed:4a31dd96e79dcf1b",
+   "label": "sealed claim set (unpublished until owner review; digests only)",
+   "kind": "claim",
+   "claim": "Every claim in the set reproduces on fresh prints read by the same instrument on the same host (not an independent-runtime reproduction).",
+   "state": "CONSISTENT",
+   "reason": "last run: 4 claims reproduced on fresh prints, same instrument and host (not an independent-runtime reproduction); receipt signed",
+   "last_change": "2026-09-28T07:51:57Z",
+   "last_change_basis": "record time at first observation",
+   "evidence_sha256": "0ebeeb7d9fb7f9c5028d0a844f5ab7e6c3096cb6fc3a18e66a913b10bdad3225",
+   "next_check": "2026-09-29T07:50:00Z",
+   "surfaces": [
+    {
+     "surface": "claim-watch event log (sealed)",
+     "answered": true,
+     "raw_sha256": "dd2d235aa1e0f6adb6ff223d81b7c4bf13ace880b5349f65e775dda4c9c19bde"
+    }
+   ]
+  }
+ ],
+ "excluded": [
+  {
+   "what": "sandbox predictions",
+   "why": "Predictions live in the sandbox (proofof.ai) and never mix into measurement surfaces (owner ruling)."
+  },
+  {
+   "what": "per-company subjects",
+   "why": "Naming a company in a new published record needs a per-company owner OK; subjects here are populations, own surfaces and sealed sets."
+  }
+ ],
+ "signature": {
+  "state": "UNSIGNED",
+  "reason": "csoai.owm-snapshot is a new kind. The board signer is used only for kinds that already sign; this snapshot carries sha256 digests of the signed evidence it read, and is itself unsigned."
+ },
+ "doctrine": "Measurement, not certification. States describe whether surfaces agree; they are not a grade or ranking of anything. UNMEASURED is a state, never a zero.",
+ "events_head": {
+  "seq": 14,
+  "sha256": "ba41f5b3ced60bd59faf7eacf53d3fecade25e04c38dc844f21d6c2541e2f4f0",
+  "appended_this_cycle": 15
+ }
+}

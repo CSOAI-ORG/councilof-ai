@@ -111,7 +111,7 @@ describe("GET /api/gspc: separation from the published per-item rows", () => {
     }
     const jail = board.axes.find((a) => a.axis === "jail")!;
     expect(jail.leader_source).toBeUndefined();
-    expect(jail.separation).toBe("TIE");
+    expect(jail.separation).toBe("UNTESTED"); // C-2026-0929-02
   });
 
   it("totals are derived from the axes: separated + ties + untested = comparison axes", () => {

@@ -43,6 +43,109 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0929-02",
+      "date": "2026-09-29",
+      "detected_at": "2026-09-29",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "GET https://councilof.ai/api/gspc read 2026-09-29: axes[jail].distinct_items = 71, distinct_items_source \"the axis's own n (the served bank's item count); its paired per-item rows are not published\"",
+        "distinct_items was first served by the board-honesty change (lane/board-honesty-20260928, landed 2026-09-28); the exact first-served deploy is UNRECORDED",
+        "axes[governance].historical_measurement_record.note read 2026-09-29: \"v2 bank: 237 public items (+102 held back privately)\"; the same sentence is in functions/badge/__fixtures__/gspc-2026-09-05.json, so it was served at least since 2026-09-05; when it was first served is UNRECORDED",
+        "published_at is UNRECORDED: the deploy that first serves the corrected board was not recorded when this entry was drafted"
+      ],
+      "what_was_wrong": "Two things on GET /api/gspc. (1) The jail axis published distinct_items = 71. The served bank (csoai/gspc-jail-goldbank samples.jsonl, revision df16e7855ff04b90fea19aa5f11f4b86cb466a47, sha256 0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a) has 71 rows but 27 distinct inputs. The producer (functions/api/_gspc_power.ts) had no per-item rows for this axis and fell back to the axis's n, which counts rows, and labelled it \"the served bank's item count\". 44 rows repeat an input that is already counted: the 30 red/blue attack cells esc-rb-h01..h06 × w1..w5 carry one prompt per wrapper (5 inputs over 30 rows; the harmful id is not in the prompt), the 10 red/blue benign controls ben-rb-b01..b10 are one prompt, and benign pads 20-29 repeat pads 10-19 exactly. Labels agree within every repeated group. The same 71 is behind the jail axis's Wilson 95% interval, which treats the 71 rows as independent and is therefore narrower than 27 distinct inputs support. (2) The governance axis said its v2 bank had \"237 public items (+102 held back privately)\". The 102 are scenarios of the upstream AI Act Evaluation Benchmark that this bank did not import. They are public: all 339 scenarios are in the upstream scenarios.json (github.com/davidath/ai-act-evaluation-benchmark, commit d323167f5597dfd9365b376c9afe7b0e414eb81a, CC-BY-4.0), and the 237 imported items carry source_index values that leave exactly 102 of the 339 unused. They are not a clean held-out set, and nothing was held back. (3) The cross-reality axis said its bank was \"32 scored (public + held-out split per the bank card)\". The bank card (csoai/gspc-xr) lists one public split; all 32 scored items are in the public items.jsonl (33 rows: 32 items and 1 canary). There is no held-out split. (4) The first draft of this correction said the jail TIE would stand under a wider interval. That was asserted, not computed. Computed at the prompt level it is not decided (see what_changed).",
+      "how_caught": "An agent writing the Kaggle design document compared the served jail distinct_items (71) with the published bank and saw about 27 distinct inputs, and noticed that the 102 \"privately held\" governance items come from a public file. The lane re-counted from the published bytes: the bank file was fetched at a pinned revision, checked against its sha256, and every graded row's prompt was normalised (Unicode NFC, whitespace runs collapsed to one space, trimmed, case kept) and hashed with sha256. 71 rows gave 27 distinct digests, the same count under raw bytes, whitespace-only and case-folded normalisations. The same count run over every other model-comparison bank found no other axis whose distinct_items exceeds its distinct inputs (swarm 37 of 37; the rows-backed axes count distinct item ids in the published per-item rows and their bank prompts are distinct). For governance, upstream scenarios.json was fetched and matched by source_index against csoai/gspc-gov items.jsonl: 237 used, 102 unused, all public.",
+      "what_changed": "jail distinct_items is now 27, counted and not typed. A new producer, scripts/gspc_bank_distinct.py, fetches each served bank that has no published paired rows (jail, swarm) at a pinned Hugging Face revision, refuses it if its sha256 differs from the pin, and writes functions/api/_gspc_bank_distinct.ts: rows, distinct inputs (distinct sha256 of the normalised prompt), and the groups of rows that share one input. functions/api/_gspc_power.ts reads that module and no longer falls back to n; an axis with neither rows nor a counted bank now reads distinct_items null with an UNMEASURED source, never its n. distinct_items_source on jail names the method, the file and its hash, and says that 44 rows repeat an input so n=71 counts rows. The jail axis text now says 71 rows of 27 distinct inputs, and n_note says the Wilson interval treats the rows as independent. The MDE on jail stays UNMEASURED (no paired rows). swarm is unchanged at 37. The governance note now says the 237 items were imported from the benchmark's 339 public scenarios, that the other 102 are not graded here and are not a private held-out set, and that no held-out slice backs the axis. No signed accuracy, interval, determination or total changed. No signed bytes changed: the signed board snapshots, the signed card index and the signed rows record are untouched. Old snapshots that carry the old sentences are records of what was served and are not rewritten. JAIL PROMPT-LEVEL INTERVAL (owner-approved 2026-09-29): scripts/gspc_jail_prompt_interval.py, with its method pre-registered in the script and pinned by scripts/test_gspc_jail_prompt_interval.py (committed before the producer was run on the bank), recomputes the jail interval with the prompt as the unit: per-model correctness per prompt is the mean over its duplicate rows, Wilson 95% over the 27 prompts, fleet mean = plain mean of the 7 models' prompt-level accuracies, and the board rule unchanged (TIE iff the leader's interval contains the fleet mean). The board run (gold_run2, 2026-08-17) published only TP/FP/TN/FN per model, so the rule was evaluated over every per-row assignment consistent with those counts. Result: UNTESTED (NO_PER_ROW_RESULTS). The leader's prompt-level accuracy lies in [0.5741, 0.821] depending on which of its 38 escape rows it caught; its interval spans [0.3901, 0.9221] across those assignments; the fleet mean lies in [0.5247, 0.7547]. In 6 of 9 leader assignments the rule gives TIE whatever the fleet's rows; in 3 it gives TIE or SEPARATED depending on the other models' rows. The published counts cannot decide it. This is served as axes[jail].interval_prompt_level (DERIVED, UNSIGNED, labelled PENDING RE-SIGN) beside the signed row-level numbers, which are unchanged; the n_note no longer says the TIE stands. The cross-reality note now says all 32 items are public and there is no held-out split. The csoai/gspc-gov NOTICE was corrected on Hugging Face (https://huggingface.co/datasets/csoai/gspc-gov/commit/fd2e278d58d3f4ea6d7f927f8aa9b1f2251e65de) after the outward gate scored it 100%. OWNER RULING 2026-09-29 APPLIED at the round-3 landing: the served jail separation moved from TIE (row level, determined 2026-08-25) to UNTESTED (untested_reason_code NO_PER_ROW_RESULTS) on the prompt-level reading; interval [0.475, 0.698] and fleet_mean 0.5455 stay published as the record of the superseded row-level TIE. The change was made in the producer (functions/api/_gspc_axes_b.ts) and put under #board-attestation-1 through POST /api/board-sign (pod caller token): this ledger is re-signed, and a new dated board freeze supersedes the 2026-09-25 freeze. No earlier signed bytes were edited.",
+      "old_values": {
+        "axes[jail].distinct_items": 71,
+        "axes[jail].distinct_items_source": "the axis's own n (the served bank's item count); its paired per-item rows are not published",
+        "axes[governance] note": "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0).",
+        "axes[jail].n_note (tail)": "The Wilson interval treats the 71 rows as independent, so it is narrower than 27 distinct inputs support; a wider interval would still contain the fleet mean, so the TIE stands (C-2026-0929-02).",
+        "axes[cross-reality].note (tail)": "Bank: 32 scored (public + held-out split per the bank card).",
+        "hf csoai/gspc-gov NOTICE (tail)": "split into public and private held-out sets.",
+        "axes[jail].separation": "TIE"
+      },
+      "new_values": {
+        "axes[jail].distinct_items": 27,
+        "axes[jail].n": 71,
+        "axes[jail].distinct_items_source": "distinct inputs in the served bank: distinct sha256 of the normalised prompt (input) over the 71 rows of csoai/gspc-jail-goldbank/samples.jsonl (sha256 0b45b620f2277c36…, counted by scripts/gspc_bank_distinct.py); 44 rows repeat an input already counted, so n=71 counts rows, not distinct items; its paired per-item rows are not published",
+        "axes[governance] note": "v2 bank: 237 items, imported 2026-08-05 from the 339 scenarios of the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The other 102 scenarios are not graded here, and they are not a private held-out set: all 339 are public in the upstream scenarios.json (github.com/davidath/ai-act-evaluation-benchmark). No held-out slice backs this axis (C-2026-0929-02).",
+        "axes[jail].interval_prompt_level": "added: DERIVED, UNSIGNED; separation UNTESTED (NO_PER_ROW_RESULTS); resign APPLIED 2026-09-29",
+        "axes[jail].n_note (tail)": "The Wilson interval treats the 71 rows as independent, so it is narrower than 27 distinct inputs support. Recomputed with the prompt as the unit (interval_prompt_level: derived, unsigned, method pre-registered 2026-09-29), the published TP/FP/TN/FN do not decide the TIE: it holds for some row assignments consistent with those counts and fails for others, so it is UNTESTED at the prompt level. The signed separation below stays TIE until it is re-signed (C-2026-0929-02).",
+        "axes[cross-reality].note (tail)": "Bank: 32 scored items, all public in csoai/gspc-xr items.jsonl (33 rows: the 32 items and 1 canary). The bank card lists one public split; there is no held-out split (C-2026-0929-02).",
+        "hf csoai/gspc-gov NOTICE (tail)": "237 of the source's 339 scenarios imported. There is no private held-out set: every item comes from the public source, and the other 102 scenarios are public upstream and are not graded here.",
+        "axes[jail].separation": "UNTESTED (separation_untested_reason_code NO_PER_ROW_RESULTS)"
+      },
+      "method": "distinct inputs = the number of distinct sha256 digests of the normalised prompt over every graded row of the published bank file, canary rows excluded. Normalisation: Unicode NFC; every run of whitespace becomes one space; leading and trailing whitespace removed; case and punctuation kept. The prompt is the field the model is sent (samples.jsonl `input`). Row ids and labels play no part. The file is fetched at a pinned revision and refused if its sha256 differs from the pin. Pinned on a fixture by scripts/test_gspc_bank_distinct.py (14 rows, 7 distinct inputs: ids over one prompt, pad n / n+10 repeats, CRLF/tab/trailing-space variants and NFC/NFD are one input each; a case-only difference is a different input). Prompt-level jail interval: Unit = prompt (distinct sha256 of the normalised input; 27 in the served bank). Per model, the correctness of each prompt is the mean over its usable duplicate rows; accuracy = mean over prompts; Wilson 95% (z=1.96) with n = number of prompts. Fleet mean = plain mean of the 7 models' prompt-level accuracies. Board rule unchanged: TIE if the leader's interval contains the fleet mean, else SEPARATED. The board run published only TP/FP/TN/FN per model, so the rule is evaluated over every per-row assignment consistent with those counts: TIE or SEPARATED only if every assignment agrees, else UNTESTED. Pre-registered 2026-09-29 in scripts/gspc_jail_prompt_interval.py and pinned by its test before it was run on the bank.",
+      "status": "CORRECTED - jail distinct_items counted from the bank bytes (27 of 71 rows); governance and cross-reality no longer describe public items as held out; jail separation moved from TIE to UNTESTED by owner ruling 2026-09-29 on the prompt-level interval, and re-signed",
+      "reached_the_public": true,
+      "open_items": [
+        "DONE 2026-09-29: the csoai/gspc-gov NOTICE on Hugging Face no longer says \"private held-out sets\" (https://huggingface.co/datasets/csoai/gspc-gov/commit/fd2e278d58d3f4ea6d7f927f8aa9b1f2251e65de; outward gate 100%).",
+        "The jail bank itself repeats inputs because of its generator: the red/blue harmful ids h01..h06 do not reach the prompt. That is a bank defect, recorded here and not fixed: the bank is frozen and digest-gated. A future jail bank should be de-duplicated by this method before it is graded.",
+        "DONE 2026-09-29: owner ruling (2026-09-29T06:40Z) moved the jail separation from TIE to UNTESTED; applied in the producer and re-signed at the round-3 landing (ledger re-signature and a dated board freeze via POST /api/board-sign).",
+        "public/interop/canonical-23-axis-index-v0.1.json and the signed board snapshots still carry the old cross-reality sentence. They are records of what was served and are not rewritten; the next generated index carries the new note."
+      ],
+      "evidence": [
+        "https://councilof.ai/api/gspc (axes[jail].distinct_items, axes[jail].distinct_items_source, axes[jail].n_note, axes[governance].historical_measurement_record.note)",
+        "https://huggingface.co/datasets/csoai/gspc-jail-goldbank/resolve/df16e7855ff04b90fea19aa5f11f4b86cb466a47/samples.jsonl (sha256 0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a)",
+        "https://github.com/davidath/ai-act-evaluation-benchmark/blob/d323167f5597dfd9365b376c9afe7b0e414eb81a/scenarios.json (339 scenarios)",
+        "https://huggingface.co/datasets/csoai/gspc-gov/resolve/main/items.jsonl (237 items, source_index)",
+        "scripts/gspc_bank_distinct.py; scripts/test_gspc_bank_distinct.py; fixtures/gspc-bank-distinct/mini-bank.jsonl",
+        "functions/api/_gspc_bank_distinct.ts (generated); functions/api/_gspc_power.ts; functions/api/gspc.power.test.ts",
+        "https://huggingface.co/datasets/csoai/gspc-gov/commit/fd2e278d58d3f4ea6d7f927f8aa9b1f2251e65de",
+        "https://huggingface.co/datasets/csoai/gspc-jail-goldbank/resolve/df16e7855ff04b90fea19aa5f11f4b86cb466a47/gold_results.json (sha256 199781285d5a7056b981874bb7b7ffcd5dd85283b16d19b4f7d7cc601a3512b2; TP/FP/TN/FN only, no per-row answers)",
+        "https://huggingface.co/datasets/csoai/gspc-xr/resolve/2fa3bbceb9aa87ac601c925d2604acf74d96f9c0/items.jsonl (sha256 9877a2b2f9752f37e00bcc400732ade99ec9f4f8d4f9b066907c588f142fc446; 33 rows = 32 items + 1 canary)",
+        "scripts/gspc_jail_prompt_interval.py; scripts/test_gspc_jail_prompt_interval.py; fixtures/gspc-jail-prompt-interval/",
+        "functions/api/_gspc_jail_prompt_interval.ts (generated); functions/api/_gspc_power.ts (promptLevelInterval)"
+      ],
+      "board_change": {
+        "status": "APPLIED 2026-09-29 by owner ruling (2026-09-29T06:40Z); served as axes[jail].separation from the round-3 landing",
+        "axis": "jail",
+        "field": "separation",
+        "old": {
+          "separation": "TIE",
+          "unit": "row",
+          "n": 71,
+          "interval": [
+            0.475,
+            0.698
+          ],
+          "fleet_mean": 0.5455,
+          "method": "Wilson 95% over 71 rows vs the fleet mean (stat_suite.separated_leaders)"
+        },
+        "new": {
+          "separation": "UNTESTED",
+          "untested_reason_code": "NO_PER_ROW_RESULTS",
+          "unit": "prompt",
+          "prompts": 27,
+          "leader_accuracy_range": [
+            0.5741,
+            0.821
+          ],
+          "leader_interval_envelope": [
+            0.3901,
+            0.9221
+          ],
+          "leader_interval_lo_range": [
+            0.3901,
+            0.6399
+          ],
+          "leader_interval_hi_range": [
+            0.7396,
+            0.9221
+          ],
+          "fleet_mean_range": [
+            0.5247,
+            0.7547
+          ],
+          "method": "pre-registered 2026-09-29 in scripts/gspc_jail_prompt_interval.py"
+        },
+        "how_to_decide_it": "Publish per-row answers for the board run (or re-run the 7 models on the frozen bank with per-row output); the same producer then computes one interval, not an envelope. jail-peritem-v3.json (2026-08-26) is a different run (leader tp 17, not 9) and is not substituted for the board run.",
+        "owner_ruling": "2026-09-29T06:40Z: jail axis moves from TIE to UNTESTED at the next re-sign"
+      }
+    },
+    {
       "id": "C-2026-0928-01",
       "date": "2026-09-28",
       "detected_at": "2026-09-28",
@@ -1425,20 +1528,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "818484c177b919e998ac9eaf94e818dd67986fc944fb6725fdb859424477af55",
+    id: "e67c1d57c63d3b344a90db795eed8f27fc682ad911fa31212c8864ecc0e1ad80",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "46b4cc6592fe10fb8b877607b1c974a2f0cc9374f91031375b2e4348a362308ef0032c03bf1d99c997c066910bb468beb91412813d6148125ad0c29b55406c0b",
+    signature: "bd5a81810869656182dcde9b42c713f7918845fb4d501a7a13a51fe2ec99af0dca4f76a1a44673956de08fd0df31920c5e2e11d35fae0cf63883349c5482e60a",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "818484c177b919e998ac9eaf94e818dd67986fc944fb6725fdb859424477af55",
+          "content_id": "e67c1d57c63d3b344a90db795eed8f27fc682ad911fa31212c8864ecc0e1ad80",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 78,
-          "latest_entry_id": "C-2026-0928-01",
-          "ledger_canonical_bytes": 157077,
+          "entries": 79,
+          "latest_entry_id": "C-2026-0929-02",
+          "ledger_canonical_bytes": 173077,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-28T08:32:59Z"
+          "signed_at": "2026-09-29T05:35:32Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +

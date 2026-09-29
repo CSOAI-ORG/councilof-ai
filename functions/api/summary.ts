@@ -72,7 +72,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
       registration: "Companies House 16939677",
       site: "https://councilof.ai",
       president: "Nicholas Templeman",
-      contact: "press@councilof.ai",
+      // councilof.ai publishes no MX record, so no @councilof.ai address can receive mail
+      // (audit 2026-09-28 #2). contact@csoai.org is the address the site footer uses.
+      contact: "contact@csoai.org",
       aidisclosure: "Drafting assistance disclosed per CSOAI ethics: all publicity text authored with Claude (Anthropic). Numbers and URLs verified programmatically before publication.",
     },
 
@@ -98,7 +100,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
       root: "https://councilof.ai/root.json",
       mcp_trust: "https://councilof.ai/interop/mcp-trust/latest.json",
       x402_trust: "https://councilof.ai/interop/x402-trust/latest.json",
-      corrections_ledger: "https://councilof.ai/refutation-ledger",
+      // /corrections/ is the ledger (GET /api/corrections, rendered); /refutation-ledger is a page of
+      // experiments, not the corrections ledger (audit 2026-09-28 #12).
+      corrections_ledger: "https://councilof.ai/corrections/",
       verification_cli: "python3 tools/verify/csoai_verify.py <card-url>",
       free_verify_endpoint: "https://councilof.ai/gspc-verify",
       coverage_truth: "https://councilof.ai/api/coverage-truth",
@@ -111,12 +115,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
       certification: "Never. CSOAI measures, never certifies.",
       grades: "Never sold.",
       verification: "Free, loginless, public key pinned at did:web:csoai.org#board-attestation-1.",
-      corrections: "Append-only. First entry is our own error. https://councilof.ai/refutation-ledger",
+      corrections: "Append-only. First entry is our own error. https://councilof.ai/corrections/",
     },
 
     contact_for_reply: {
-      press: "press@councilof.ai",
-      disputes: "disputes@councilof.ai",
+      press: "contact@csoai.org",
+      disputes: "contact@csoai.org",
       partnership: "nicholas@csoai.org",
       approval_review: "PRIORITY-GATED — owner approval required for outbound.",
     },

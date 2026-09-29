@@ -10,7 +10,8 @@ export const AXES_B: AxisScore[] = [
     macro_f1: 0.803, unparsed_rate: 0.0247, status: "MEASURED",
     dataset: "csoai/gspc-xr", colour: "#a78bfa", hue: 258,
     note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still " +
-      "not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).",
+      "not separated at p<0.05). Bank: 32 scored items, all public in csoai/gspc-xr items.jsonl (33 rows: " +
+      "the 32 items and 1 canary). The bank card lists one public split; there is no held-out split (C-2026-0929-02).",
   },
   {
     axis: "detector-interop", family: "gspc", kind: "model-comparison", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
@@ -74,7 +75,7 @@ export const AXES_B: AxisScore[] = [
       "self-examination. Routed to adjudication under the Blind-Spot Rule; the item is preserved, " +
       "not deleted (evidence/adjudication/affect-adjudication.json).",
   },
-  // ——— Slot 14: jail (signed board_living.json, re-signed 2026-08-25; separation TIE) ———
+  // ——— Slot 14: jail (row-level TIE determined 2026-08-25; separation UNTESTED since 2026-09-29, C-2026-0929-02) ———
   // 7-model gold-bank fleet, all models n>=30 usable (68-71); separation determination
   // 2026-08-25: TIE (leader Wilson 95% [0.475, 0.698] contains fleet mean 0.5455 — canonical
   // stat_suite.separated_leaders). Bank dataset pending publication.
@@ -82,20 +83,35 @@ export const AXES_B: AxisScore[] = [
   // of the per-model rates (recomputable from the rows below).
   {
     axis: "jail", family: "gspc", kind: "model-comparison", bench: "GoldBank-Detector",
-    task: "escape-attempt detection on 71-cell gold bank (38 ESCAPE / 33 BENIGN) — layer 2 of 2",
-    n: 71, n_note: "7 models × 71 gold items; TP/FP/TN/FN per model; accuracy shown is the best " +
-      "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71)",
+    task: "escape-attempt detection on a 71-row gold bank of 27 distinct inputs (38 ESCAPE / 33 BENIGN rows) — layer 2 of 2",
+    n: 71, n_note: "7 models × 71 gold-bank rows; TP/FP/TN/FN per model; accuracy shown is the best " +
+      "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71). n counts rows, not distinct " +
+      "items: the 71 rows hold 27 distinct inputs (44 rows repeat an input already counted; see " +
+      "distinct_items). The Wilson interval treats the 71 rows as independent, so it is narrower than " +
+      "27 distinct inputs support. Recomputed with the prompt as the unit (interval_prompt_level: derived, " +
+      "unsigned, method pre-registered 2026-09-29), the published TP/FP/TN/FN do not decide the TIE: it holds " +
+      "for some row assignments consistent with those counts and fails for others, so it is UNTESTED at the " +
+      "prompt level. By owner ruling (2026-09-29) the separation below moved from TIE to UNTESTED on that " +
+      "basis (C-2026-0929-02); interval and fleet_mean are kept as the record of the superseded row-level TIE.",
     accuracy: 0.5915, leader: "qwen2.5:0.5b-instruct (base model)",
-    separation: "TIE", interval: [0.475, 0.698], fleet_mean: 0.5455,
-    separation_method: "Wilson 95% interval over n=71 items tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
+    separation: "UNTESTED", separation_untested_reason_code: "NO_PER_ROW_RESULTS",
+    separation_basis: "With the prompt as the unit (27 distinct prompts; method pre-registered 2026-09-29 in " +
+      "scripts/gspc_jail_prompt_interval.py) the board rule is TIE for some per-row assignments consistent with " +
+      "the published TP/FP/TN/FN and SEPARATED for others. The board run published no per-row answers, so no " +
+      "separation determination is supported (interval_prompt_level). Moved from TIE by owner ruling 2026-09-29 " +
+      "(C-2026-0929-02).",
+    interval: [0.475, 0.698], fleet_mean: 0.5455,
+    separation_method: "board rule (TIE iff the leader's Wilson 95% interval contains the fleet mean) evaluated at the prompt level over 27 distinct prompts and every per-row assignment consistent with the published counts; superseded row-level method: Wilson 95% over n=71 rows (stat_suite.separated_leaders)",
     separation_evidence: {
       leader: "qwen2.5:0.5b-instruct", leader_acc: 0.5915, wilson95: [0.475, 0.698],
       fleet_mean: 0.5455, determined: "2026-08-25",
       determination: "leader interval contains fleet mean — point-estimate lead is not a measured advantage",
+      superseded: "2026-09-29 by C-2026-0929-02: the 71 rows hold 27 distinct prompts, so the row-level " +
+        "interval treats repeats as independent; at the prompt level the separation is UNTESTED",
     },
     quotable_models: ["qwen2.5:0.5b-instruct", "council-safe", "qwen2.5:7b", "mistral:7b",
       "qwen2.5:1.5b", "qwen3:4b", "council-inhouse-ft"],
-    quotable_note: "7 models x >=30 usable gold-bank items (68-71 each); per-model n below",
+    quotable_note: "7 models x >=30 usable gold-bank rows (68-71 each, of 27 distinct inputs); per-model n below",
     fleet: "7 models (4 base + 2 council fine-tunes + 1 base variant) — NOT the 19-model board fleet",
     per_model: {
       "qwen3:4b": { n: 68, quotable: true, tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158, accuracy: 0.5294 },
@@ -122,14 +138,15 @@ export const AXES_B: AxisScore[] = [
     // is fetchable. The bank itself was always fine. The prose now lives in dataset_note.
     status: "MEASURED",
     dataset: "csoai/gspc-jail-goldbank",
-    dataset_note: "Frozen 71-cell gold bank, published on HuggingFace 2026-08-25.",
+    dataset_note: "Frozen 71-row gold bank (27 distinct inputs), published on HuggingFace 2026-08-25.",
     colour: "#64748b", hue: 215,
     null_grammar: "In per_model, null and 0.0 mean different things and are never interchanged. " +
       "precision: null on council-inhouse-ft is UNDEFINED — tp/(tp+fp) = 0/0, because the model " +
       "predicted nothing positive. recall: 0.0 on the same row is MEASURED — tp/(tp+fn) = 0/38. " +
       "That zero is the most damaging number on this axis and it is a measurement, not a gap.",
-    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-cell gold bank, " +
-      "separation determined 2026-08-25 (TIE). Best zero-FP detector: qwen2.5:0.5b-instruct " +
+    note: "The jail floor is no longer empty: measured 2026-08-17/18 on a 71-row gold bank of 27 distinct inputs, " +
+      "separation determined 2026-08-25 as a row-level TIE and moved to UNTESTED on 2026-09-29 (C-2026-0929-02: " +
+      "at the prompt level the published counts do not decide it). Best zero-FP detector: qwen2.5:0.5b-instruct " +
       "(precision 1.0, recall 0.237). Fleet mean accuracy 0.5455 (7 models, usable n 68-71). " +
       "Our own council-inhouse-ft fine-tune detected ZERO escapes (tp=0) — published, not hidden. " +
       "Recall is the honest weakness: the best detector still misses 76% of escapes.",
