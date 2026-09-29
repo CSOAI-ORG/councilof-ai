@@ -74,6 +74,8 @@ def check(pack=PACK):
         errors.append(f"feed:parse:{type(exc).__name__}")
 
     manifest = json.loads((pack / "manifest.json").read_text())
+    if any(row.get("path") == "index.html" for row in manifest.get("files", [])):
+        errors.append("manifest:mutable_wrapper_must_not_be_pinned:index.html")
     for row in manifest.get("files", []):
         p = pack / row["path"]
         if not p.is_file():
@@ -95,16 +97,29 @@ def selftest():
         p.write_text(json.dumps(d))
         errs = check(test)
         assert any("battery:nonzero_delta" in e for e in errs), errs
-    print('{"state":"PASS","selftest":"RAS evidence guard goes red on causal-control drift"}')
+
+        deploy = Path(td) / "dist" / "evidence" / "ras-opportunity-watch"
+        shutil.copytree(PACK, deploy)
+        html = deploy / "index.html"
+        html.write_text(html.read_text() + "\n<!-- intentional deploy-time wrapper transform -->\n")
+        assert not check(deploy), "mutable human wrapper transform must remain valid"
+        ledger = deploy / "ledger.json"
+        ledger.write_bytes(ledger.read_bytes() + b"\n")
+        errs = check(deploy)
+        assert any("manifest:sha256:ledger.json" in e for e in errs), errs
+    print('{"state":"PASS","selftest":"RAS guard rejects causal or immutable-byte drift and permits wrapper transforms"}')
 
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--dist-root", help="check the built/deploy tree instead of source public/")
     a=ap.parse_args()
     if a.selftest:
         selftest(); return 0
-    errors=check()
-    print(json.dumps({"state":"PASS" if not errors else "FAIL","checked":"public/evidence/ras-opportunity-watch","errors":errors},indent=2))
+    pack = (Path(a.dist_root) / "evidence" / "ras-opportunity-watch") if a.dist_root else PACK
+    errors=check(pack)
+    checked=str(pack.relative_to(ROOT)) if pack.is_relative_to(ROOT) else str(pack)
+    print(json.dumps({"state":"PASS" if not errors else "FAIL","checked":checked,"errors":errors},indent=2))
     return 0 if not errors else 1
 
 if __name__ == "__main__":
