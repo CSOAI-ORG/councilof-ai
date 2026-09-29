@@ -14,6 +14,10 @@ import FREE_TOOLS from "../../../functions/mcp/gspc-tools.json";
 
 export const FREE_DOOR = "https://councilof.ai/mcp/free";
 export const CLAUDE_CODE_CMD = `claude mcp add --transport http council-of-ai ${FREE_DOOR}`;
+// Cursor reads ~/.cursor/mcp.json (or .cursor/mcp.json in a project) and detects Streamable HTTP
+// from a bare url (https://cursor.com/docs/context/mcp). The home hero and /tools link here as
+// "Add to Claude or Cursor", so the Cursor line has to be on this page.
+export const CURSOR_JSON = `{"mcpServers":{"council-of-ai":{"url":"${FREE_DOOR}"}}}`;
 const SUPPORT = "contact@csoai.org";
 
 type ToolDef = { name: string; title?: string };
@@ -147,6 +151,12 @@ export default function ConnectClaude() {
           </ol>
           <h3 className="pt-3 text-lg font-semibold text-slate-950">Claude Code</h3>
           <Code text={CLAUDE_CODE_CMD} label="Claude Code command" />
+          <h3 className="pt-3 text-lg font-semibold text-slate-950">Cursor</h3>
+          <p>
+            Add this to <code className="font-mono">~/.cursor/mcp.json</code>, or to{" "}
+            <code className="font-mono">.cursor/mcp.json</code> in a project, then reload Cursor.
+          </p>
+          <Code text={CURSOR_JSON} label="Cursor mcp.json" />
           <h3 className="pt-3 text-lg font-semibold text-slate-950">Any other MCP client</h3>
           <p>
             Add <code className="font-mono">{FREE_DOOR}</code> as a Streamable HTTP server with no authentication.

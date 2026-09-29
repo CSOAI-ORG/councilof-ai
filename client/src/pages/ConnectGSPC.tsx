@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import EmailOff from "@/components/EmailOff";
+import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -8,6 +10,7 @@ import {
   REGISTRIES,
   TEST_LINE,
   MCP_URL,
+  MCP_METERED_URL,
   STDIO_CMD,
   OPENAPI_URL,
   type PlatformCard,
@@ -249,6 +252,14 @@ export default function ConnectGSPC() {
               Verify a card →
             </Link>
           </div>
+          {/* The free door first (audit 2026-09-28 #10). Both parts of the /mcp count are read from
+              the manifests that door serves, never typed. */}
+          <p className="mt-4 max-w-2xl text-sm text-emerald-100/80" data-testid="connect-free-door-note">
+            Every config on this page uses the free door, <span className="font-mono">{MCP_URL}</span>:{" "}
+            {FREE_TOOL_NAMES.length} free read-only tools, no payment, no account.{" "}
+            <span className="font-mono">{MCP_METERED_URL}</span> serves {ALL_TOOL_NAMES.length} tools:
+            the same {FREE_TOOL_NAMES.length} free, plus {PAID_TOOL_NAMES.length} metered by x402.
+          </p>
         </div>
       </section>
 
@@ -289,7 +300,7 @@ export default function ConnectGSPC() {
             <p className="mt-2 text-[11px] text-gray-400">
               These seven are a subset. On {compat.as_of} the HTTP endpoint served {compat.backend.tools_observed} tools,{" "}
               {compat.backend.paid_tools_observed} of them x402-metered; npm{" "}
-              <code className="font-mono">csoai-gspc-mcp@0.2.2</code> served 12 (no{" "}
+              <code className="font-mono"><EmailOff text="csoai-gspc-mcp@0.2.2" /></code> served 12 (no{" "}
               <code className="font-mono">mcp_trust</code>). Receipts are in the client test register below.
             </p>
           </div>

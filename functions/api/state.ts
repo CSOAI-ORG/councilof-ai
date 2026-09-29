@@ -107,6 +107,16 @@ const fact = (
 // ── sources, named once ──────────────────────────────────────────────────────
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
+// The three bodies.* facts are counted and verified by that script's run, so they are dated by the
+// run (bodies.verified_at), not by card_index.json's creation date, which is what chain-facts.as_of
+// names. Before 2026-09-28 "335 signed cards, every one verifies" carried 19 Aug, the index date
+// (audit #17). Older facts files without verified_at fall back to as_of and say so.
+const CHAIN_VERIFIED_AT: string | null =
+  typeof (chainFacts as any).bodies?.verified_at === "string" ? (chainFacts as any).bodies.verified_at : (chainFacts as any).as_of ?? null;
+const CHAIN_VERIFIED_AT_FIELD: string | null =
+  typeof (chainFacts as any).bodies?.verified_at === "string"
+    ? "chain-facts.json → bodies.verified_at (last verification run of scripts/derive-chain-facts.mjs)"
+    : (chainFacts as any).as_of_field ?? null;
 const SRC_CLAIMS = "public/claims-register.json";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
@@ -772,16 +782,16 @@ export const onRequestGet: PagesFunction = async () => {
         (chainFacts as any).bodies.published,
         "catalogued",
         SRC_CHAIN + " → bodies.published",
-        (chainFacts as any).as_of,
-        (chainFacts as any).as_of_field,
+        CHAIN_VERIFIED_AT,
+        CHAIN_VERIFIED_AT_FIELD,
         "Card bodies present in public/signed/cards/, counted from the directory.",
       ),
       bodies_verified_valid: fact(
         (chainFacts as any).bodies.verified_valid,
         "measured",
         SRC_CHAIN + " → bodies.verified_valid",
-        (chainFacts as any).as_of,
-        (chainFacts as any).as_of_field,
+        CHAIN_VERIFIED_AT,
+        CHAIN_VERIFIED_AT_FIELD,
         "Bodies that VERIFY: id recomputed from the canonical body and the Ed25519 signature " +
           "checked against the pinned card-attestation key, by the same verifier we publish. " +
           "This is a measurement, not a catalogue entry — the check was run.",
@@ -790,8 +800,8 @@ export const onRequestGet: PagesFunction = async () => {
         (chainFacts as any).bodies.distinct_pubkeys,
         "measured",
         SRC_CHAIN + " → bodies.distinct_pubkeys",
-        (chainFacts as any).as_of,
-        (chainFacts as any).as_of_field,
+        CHAIN_VERIFIED_AT,
+        CHAIN_VERIFIED_AT_FIELD,
         "Distinct pubkey values across the published bodies.",
       ),
       chain_positions: fact(

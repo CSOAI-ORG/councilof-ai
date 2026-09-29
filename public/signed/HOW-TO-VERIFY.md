@@ -5,6 +5,28 @@ against the published bytes.
 
 **Cards published:** 335 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
 
+## 0. The fast path — one command
+
+```bash
+curl -O https://councilof.ai/signed/verify-card.mjs && node verify-card.mjs --all
+```
+
+This needs Node 19 or later and nothing else: no install, no account, no key. The script is
+10 KB with no dependencies, so read it before you run it. It fetches `/signed/card_index.json`
+and every card that index lists, recomputes each id from the card's body, and checks each
+Ed25519 signature under the key pinned in the file (`did:web:csoai.org#card-attestation-1`,
+`d4cb0eaa…`). It exits 0 only when every card is VALID. Run from an empty directory on
+2026-09-28, it printed:
+
+```
+fetching 335 cards…
+VALID 335 · INVALID 0 · UNCHECKABLE 0
+```
+
+The key pinned inside the script is our claim about our own key. Step 1 below shows how to read
+the key out of the DID document yourself and compare the two. Do that before you rely on a pass.
+Sections 1 to 6 are the same check done by hand, for anyone implementing it themselves.
+
 ## 1. Pin the key first — this step is not optional
 
 A card carries its own `pubkey`. Verifying a card against the key it ships with proves only
@@ -43,8 +65,9 @@ card and breaking every id, which are hashes of these exact bytes. So it is spec
 instead, and a correct JavaScript implementation is given below.
 
 ```js
-// REFERENCE IMPLEMENTATION: scripts/verify-estate.mjs — 335/335 in Node, no dependencies.
-//   node scripts/verify-estate.mjs
+// A SKETCH of the approach that needs no field list. It is not the published verifier:
+// /signed/verify-card.mjs (section 0) takes a different route, a declared FLOAT_FIELDS list,
+// and says so in its own header.
 //
 // Do NOT try to detect integral floats at runtime. An earlier revision of this file
 // published a heuristic that did, and it was MEASURED WRONG on 2026-09-05:
@@ -100,7 +123,13 @@ cannot distinguish `0` from `0.0` at runtime — a JS verifier therefore needs t
 it which fields are floats."* The first sentence is true and the conclusion does not follow. A
 verifier that never parses the number into a JavaScript number needs no schema, no field list,
 and no knowledge of which fields are floats — the distinction survives in the bytes, and reading
-the bytes preserves it. `scripts/verify-estate.mjs` does this and verifies 335/335.
+the bytes preserves it. The sketch above does this.
+
+The published verifier, `/signed/verify-card.mjs`, does not. It carries a declared list of
+float fields (`FLOAT_FIELDS`), which is the kind of list the next paragraph warns about. It
+verifies 335 of 335 on this set because every integral float here sits in a field on that
+list. A card with an integral float in any other field would fail it falsely. If you write
+your own verifier, use the no-list approach.
 
 Keeping the old advice would have been worse than having none: it named `accuracy`,
 `_ci_low` and `_ci_high` as the float fields to special-case, so a reimplementer would have
@@ -147,9 +176,9 @@ binary64**. After JSON parse there is no memory that a field was a Python float.
 
   **Applying the wrong rule fails loudly and misleadingly.** `canon.py` against a Rule A card fails
   every card carrying an integral float — **117 of 335** — and a plain `JSON.stringify` verifier
-  fails the same 117. Both report a broken chain that is intact. There is a reference JavaScript
-  implementation of Rule A at `scripts/verify-estate.mjs` (335/335); `canon.py` is the reference
-  Python implementation of Rule B.
+  fails the same 117. Both report a broken chain that is intact. The published JavaScript
+  implementation of Rule A is `/signed/verify-card.mjs` (section 0: VALID 335 of 335 on
+  2026-09-28); `canon.py` is the reference Python implementation of Rule B.
 
   ### The Rule B signature recipe — established by trial, published so nobody repeats it
 
@@ -171,7 +200,9 @@ binary64**. After JSON parse there is no memory that a field was a Python float.
   **In JavaScript, Rule B needs no special machinery.** Sorted keys, no `\u` escaping, and integral
   floats rendered as integers is exactly what `JSON.stringify` does natively — so `JSON.stringify`
   over recursively sorted keys *is* Rule B. Rule A is the one that needs the raw numeric literals
-  preserved. `scripts/verify-estate.mjs` implements both and checks these two artefacts on every run.
+  preserved. No verifier published on this site checks these two artefacts yet:
+  `/signed/verify-card.mjs` reads card-shaped files (`id` + `body`) and reports these two as
+  UNCHECKABLE. The recipe above is the whole rule.
 
   **`gspc-board.signed.json` is different again** and does not need this: it publishes its own
   `verify` field naming `scripts/gspc-board-verify.mjs`, and that script is now gated in `pr-gates`.

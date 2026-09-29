@@ -378,7 +378,7 @@ describe("Settle all is the monthly heartbeat, on one page", () => {
 });
 
 describe("/pay is wired like every other current page", () => {
-  it("has the route, the PRIMARY_PATHS entry, the manifest row, the head entry and the prerender skip", () => {
+  it("has the route, the PRIMARY_PATHS entry, the manifest row, the head entry and a prerendered snapshot", () => {
     expect(appSource).toContain('<Route path="/pay" component={PayEveryDoor} />');
     expect(PRIMARY_PATHS.has("/pay")).toBe(true);
     expect(ROUTE_MANIFEST.some((r) => r.path === "/pay" && r.comp === "PayEveryDoor")).toBe(true);
@@ -388,7 +388,9 @@ describe("/pay is wired like every other current page", () => {
     expect(head.description.length).toBeGreaterThanOrEqual(DESCRIPTION_MIN);
     expect(head.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
     for (const re of BANNED) expect(`${head.title} ${head.description}`).not.toMatch(re);
-    expect(prerenderSource).toMatch(/CLIENT_ONLY_FUNCTION_ROUTES = new Set\(\[[\s\S]*?"\/pay",/);
+    // /pay is prerendered now (audit 2026-09-28 #11): its data reads go through the prerender proxy,
+    // so a reader without JavaScript gets the page, not a shell.
+    expect(prerenderSource).not.toMatch(/CLIENT_ONLY_FUNCTION_ROUTES = new Set\(\[[^\]]*?"\/pay",/);
   });
 
   it("deep-links one door with ?door= and explains a door the manifest does not declare", () => {

@@ -14,6 +14,7 @@
 // NO number. `quotable()` is the structural guard — panels ask it rather than
 // deciding for themselves, so a surface cannot render a score an axis has not earned.
 
+import { boardRunDates } from "./boardRunDates";
 import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 export type AxisStatus = "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
@@ -405,7 +406,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
     return {
       axes: merged,
       source: "wire",
-      measuredOn: j?.measured_on?.date ?? j?.measured_on ?? MEASURED_ON.date,
+      measuredOn: (j?.measured_on && typeof j.measured_on === "object" ? boardRunDates(j) : null) ?? j?.measured_on?.date ?? j?.measured_on ?? MEASURED_ON.date,
       issuer: j?.issuer,
       doi: j?.doi,
       publicCount: publicCount || undefined,
