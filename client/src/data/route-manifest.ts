@@ -309,8 +309,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/charter",
-  "comp": "Charter",
-  "title": "Charter"
+  "comp": "OperationalCharter",
+  "title": "Operational Charter"
  },
  {
   "path": "/chat",

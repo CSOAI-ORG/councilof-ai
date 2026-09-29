@@ -1,7 +1,7 @@
 {
   "schema": "csoai.well-known-index/0.1",
   "as_of": "20260905T123626Z",
-  "total_doors": 304,
+  "total_doors": 307,
   "doors": [
     {
       "slug": "agent",
@@ -104,6 +104,12 @@
       "name": "APRA CPS 234",
       "description": "Australian Prudential Regulation Authority CPS 234",
       "url": "https://councilof.ai/.well-known/apra-cps234.json"
+    },
+    {
+      "slug": "ard",
+      "name": "ard",
+      "description": "",
+      "url": "https://councilof.ai/.well-known/ard.json"
     },
     {
       "slug": "asis-spc1",
@@ -258,8 +264,14 @@
     {
       "slug": "charter",
       "name": "Charter",
-      "description": "Build a charter for a fictional AI system, get signed",
+      "description": "Pointer to the current operational charter: machine and human URLs, sha256, and the amendment log",
       "url": "https://councilof.ai/.well-known/charter.json"
+    },
+    {
+      "slug": "charter-amendments",
+      "name": "Charter amendment log",
+      "description": "Append-only log of published charter versions: sha256, date, what each replaced, signature state",
+      "url": "https://councilof.ai/.well-known/charter-amendments.json"
     },
     {
       "slug": "cis-ai",
@@ -314,6 +326,12 @@
       "name": "Compliance",
       "description": "Work through a SOC 2 / ISO 42001 / HIPAA scenario",
       "url": "https://councilof.ai/.well-known/compliance.json"
+    },
+    {
+      "slug": "constitutional-harness",
+      "name": "Operational Constitutional Harness Charter",
+      "description": "The operational charter itself (machine-readable): articles, precedence, source pins, evidence and publication state",
+      "url": "https://councilof.ai/.well-known/constitutional-harness.json"
     },
     {
       "slug": "council-eu-ai",

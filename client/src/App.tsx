@@ -275,7 +275,8 @@ const SOAIPDCAFramework = lazy(() => import("./pages/SOAIPDCAFramework"));
 const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
-const Charter = lazy(() => import("./pages/Charter"));
+// /charter renders a pointer to the operational charter; pages/Charter.tsx (52-Article, historical) is unrouted.
+const OperationalCharter = lazy(() => import("./pages/OperationalCharter"));
 const PublicWatchdog = lazy(() => import("./pages/PublicWatchdog"));
 const GovernmentDashboard = lazy(() => import("./pages/GovernmentDashboard"));
 const MaternalCovenant = lazy(() => import("./pages/MaternalCovenant"));
@@ -802,7 +803,7 @@ function App() {
                   <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
                   <Route path="/eunomia-indices" component={EunomiaIndices} />
                   <Route path="/careers" component={Careers} />
-                  <Route path="/charter" component={Charter} />
+                  <Route path="/charter" component={OperationalCharter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />
                   <Route path="/covenant" component={MaternalCovenant} />
                   <Route path="/why-csoai" component={WhyCSOAI} />
