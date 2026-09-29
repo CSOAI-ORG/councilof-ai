@@ -1,6 +1,6 @@
 {
   "canonical_origin": "https://councilof.ai",
-  "content_id": "7fa04367e4850d43a7038857382222e73edac9abb29a2e094c29ac8eeca843b7",
+  "content_id": "af4b872d9823a9d307b48c0b7f9b1e79117ce186ac6ce2199818da4f12a8866d",
   "existing_live_surfaces": [
     {
       "path": "/.well-known/x402.json",
@@ -28,63 +28,86 @@
     "listing or discovery is not measurement, certification, endorsement, or compliance",
     "public capability declaration does not prove runtime behavior",
     "payment does not create a GSPC measurement",
-    "generated is not deployed; deployed is not independently read back",
-    "live/source contract drift blocks a full-site release but is not itself a measurement failure"
+    "generated is not deployed; deployed is not independently read back"
   ],
-  "release_candidate_static_changes": [],
-  "release_candidate_surfaces": [
-    {
-      "candidate_bytes_state": "GENERATED_RELEASE_CANDIDATE",
-      "path": "/layer0-drive-through.json",
-      "publication_state": "NOT_SELF_ASSERTED_REQUIRES_INDEPENDENT_READBACK"
+  "machine_access_baseline": {
+    "claim_boundary": "Reachability observation only; not a security finding and not a claim about vendor intent.",
+    "counts": {
+      "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE": 5
     },
-    {
-      "candidate_bytes_state": "GENERATED_RELEASE_CANDIDATE",
-      "path": "/eat-flywheel.json",
-      "publication_state": "NOT_SELF_ASSERTED_REQUIRES_INDEPENDENT_READBACK"
-    },
-    {
-      "candidate_bytes_state": "GENERATED_RELEASE_CANDIDATE",
-      "path": "/layer0-distribution.json",
-      "publication_state": "NOT_SELF_ASSERTED_REQUIRES_INDEPENDENT_READBACK"
-    },
-    {
-      "candidate_bytes_state": "GENERATED_RELEASE_CANDIDATE",
-      "path": "/progress-index.json",
-      "publication_state": "NOT_SELF_ASSERTED_REQUIRES_INDEPENDENT_READBACK"
-    }
-  ],
+    "method": "One default Python urllib request plus curl, explicit agent and browser User-Agent requests per existing live reference surface from the release-builder network.",
+    "rows": [
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/.well-known/x402.json",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/.well-known/agent-card.json",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/api/revenue",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/quickstart.json",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      },
+      {
+        "agent_ua_status": 200,
+        "browser_ua_status": 200,
+        "curl_ua_status": 200,
+        "path": "/verifier/verify_receipt.py",
+        "plain_python_status": 403,
+        "state": "PYTHON_URLLIB_SIGNATURE_BLOCKED_AGENT_CLIENTS_REACHABLE"
+      }
+    ]
+  },
   "release_gate": {
-    "pass_condition": "source/live contract parity is CONSISTENT; all nine surfaces return 200 from both witnesses; matching body hashes; no previously-live surface regresses",
-    "required_independent_witnesses": 2,
-    "source_surface_parity_state": "CONSISTENT"
+    "pass_condition": "all nine surfaces return 200 from both witnesses; matching body hashes; no previously-live surface regresses",
+    "required_independent_witnesses": 2
   },
   "schema": "csoai.layer0-distribution/0.2",
-  "source_commit": "fccf15a70767b8406effbc38a4b28a8273f486c9",
-  "source_commit_semantics": "last Git commit modifying council-os/capabilities.json",
+  "source_commit": "02ebe0cdcbc7828b92adb6988ad0c943f085e807",
   "source_observations": {
     "a2a": {
-      "bytes": 15608,
+      "bytes": 15872,
       "content_type": "application/a2a+json",
-      "sha256": "f7e56ce023a3584f6855a723a714c0fabfbe2bf7a8d7cd77c0e76c44d4e3359a",
+      "sha256": "fd9d2e84d3a03142123384564ebc0edc4c0e4fb30c79d12c49f995b04d3abfe7",
       "status": 200,
       "url": "https://councilof.ai/.well-known/agent-card.json"
     },
     "corrections": {
-      "bytes": 142498,
+      "bytes": 172004,
       "content_type": "application/json",
       "excluded_volatile_fields": [
         "signature_check.checked_at"
       ],
       "semantic_hash_scope": "JSON body excluding signature_check.checked_at only",
-      "semantic_sha256": "30295952537e1db1dbb2d58f718e2d05a0456db2e938f3271203ae5af8069406",
+      "semantic_sha256": "8cd55a501bbf63c914b08498ee0bdf0cba1c42dfd47004c3b30f8ea7236e9e09",
       "status": 200,
       "url": "https://councilof.ai/api/corrections"
     },
     "gspc": {
-      "bytes": 72873,
+      "bytes": 114446,
       "content_type": "application/json; charset=utf-8",
-      "sha256": "f348582bf39320e8d002e96575707843d0ae9a7c9416bdc64e5838fa42d50c5f",
+      "sha256": "ee58f584a6b1241e88ea0b6e0c4ad82583e7b5bd4c87a9462ab7bd153a6de0c2",
       "status": 200,
       "url": "https://councilof.ai/api/gspc"
     },
@@ -112,50 +135,34 @@
     "state": {
       "bytes": 43465,
       "content_type": "application/json; charset=utf-8",
-      "sha256": "d658ebe0ece63fcf46de8d4354de160489a0c791e28bd3e748cf56fdb6b5814a",
+      "sha256": "1186b60f2d5b6dfd76588eff9996cabf1f50e7343f300b8ec28966f5c3777722",
       "status": 200,
       "url": "https://councilof.ai/api/state"
     },
     "x402": {
-      "bytes": 114570,
+      "bytes": 136020,
       "content_type": "application/json; charset=utf-8",
-      "sha256": "ba6586d610eca73c4cf93b140103cd802bf934d631fb17f480e8b1a017e3166d",
+      "sha256": "8f8347b812156b2264868d1f0f6ee09ac4fd10eec57c9cbb336d69296176b2f1",
       "status": 200,
       "url": "https://councilof.ai/.well-known/x402.json"
     }
   },
-  "surface_parity": {
-    "a2a": {
-      "boundary": "Compares the canonical repository declaration with the live public Agent Card only. A mismatch is release/source drift, not a GSPC measurement failure, endorsement, or certification result.",
-      "declared_live_skill_count": 10,
-      "declared_live_skill_ids": [
-        "article50-detect",
-        "benchmark-quality-register",
-        "east-west-crosswalk",
-        "estate-index",
-        "eu-ai-act-screen",
-        "gspc-board",
-        "measured-badge",
-        "measurement-capsules",
-        "server-evidence",
-        "x402-discovery"
-      ],
-      "declared_only": [],
-      "observed_live_skill_count": 10,
-      "observed_live_skill_ids": [
-        "article50-detect",
-        "benchmark-quality-register",
-        "east-west-crosswalk",
-        "estate-index",
-        "eu-ai-act-screen",
-        "gspc-board",
-        "measured-badge",
-        "measurement-capsules",
-        "server-evidence",
-        "x402-discovery"
-      ],
-      "observed_only": [],
-      "state": "CONSISTENT"
+  "staged_surfaces": [
+    {
+      "path": "/layer0-drive-through.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/eat-flywheel.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/layer0-distribution.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
+    },
+    {
+      "path": "/progress-index.json",
+      "state": "STAGED_RELEASE_CANDIDATE_NOT_DEPLOYED"
     }
-  }
+  ]
 }

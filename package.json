@@ -81,7 +81,9 @@
     "verifier:publish": "node scripts/build-public-receipt-toolkit.mjs",
     "verifier:check": "node scripts/build-public-receipt-toolkit.mjs --check",
     "test:receipt-chain": "python3 scripts/test_receipt_chain_result.py",
-    "test:feed-delivery": "vitest run functions/api/eunomia-data.delivery.test.ts && node --test scripts/feed-delivery-kit.test.mjs"
+    "test:feed-delivery": "vitest run functions/api/eunomia-data.delivery.test.ts && node --test scripts/feed-delivery-kit.test.mjs",
+    "guard:public-indexes": "python3 scripts/generate-public-indexes.py --selftest && python3 scripts/generate-public-indexes.py --check",
+    "verify:public-index-release": "python3 scripts/verify-public-index-release.py --selftest && python3 scripts/verify-public-index-release.py"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
