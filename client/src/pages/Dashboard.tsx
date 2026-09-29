@@ -52,20 +52,20 @@ interface DashboardStats {
   cards?: { count: number; signed: number };
 }
 
-/** The estate census, read live. It is deliberately a SEPARATE query from the dashboard stats:
- *  the census is not a dashboard statistic, it is an inventory, and conflating the two is how a
- *  reader comes to believe an inventory count is a measurement count. */
-async function fetchEstateIndex(): Promise<{
-  merkle_root: string;
-  entries: { value: number | null };
-  bytes_leaves: { value: number | null };
-  record_leaves: { value: number | null };
-  signed: boolean;
-} | null> {
+type StateFact<T = unknown> = { value?: T; kind?: string; source?: string; as_of?: string | null; note?: string };
+type LiveState = {
+  public_count?: StateFact<string>;
+  estate_index?: { merkle_root: string; entries: StateFact<number | null>; bytes_leaves: StateFact<number | null>; record_leaves: StateFact<number | null>; signed: boolean };
+  claim_maintenance?: { claims?: StateFact<number>; subjects?: StateFact<number>; claims_by_state?: StateFact<Record<string, number>>; subjects_with_scheduled_next_read?: StateFact<number> };
+  claims_register?: { rows_total?: StateFact<number> };
+  corrections_ledger?: { rows_total?: StateFact<number>; latest_entry_id?: string | null; timing?: { exact?: number; upper_bound?: number; unmeasured?: number; median_seconds_exact?: number } };
+};
+
+/** One derived state read for the operator view. The underlying registries and ledgers remain their own authorities. */
+async function fetchLiveState(): Promise<LiveState | null> {
   const r = await fetch("/api/state");
   if (!r.ok) return null;
-  const s = await r.json();
-  return s?.estate_index ?? null;
+  return r.json();
 }
 
 async function fetchDashboardStats(): Promise<DashboardStats> {
@@ -88,6 +88,8 @@ const quickActions = [
   { label: "Request measurement", href: "/assess", icon: FileCheck },
   { label: "Open Council chat", href: "/dashboard?tab=home", icon: Users },
   { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
+  { label: "Claim Maintenance", href: "/claim-maintenance/", icon: RefreshCw },
+  { label: "Claims register", href: "/claims-register", icon: FileCheck },
 ];
 
 export default function Dashboard() {
@@ -99,9 +101,9 @@ export default function Dashboard() {
     staleTime: 30_000,
   });
 
-  const { data: estateIndex } = useQuery({
-    queryKey: ["estate-index"],
-    queryFn: fetchEstateIndex,
+  const { data: liveState, refetch: refetchLiveState } = useQuery({
+    queryKey: ["live-state"],
+    queryFn: fetchLiveState,
     staleTime: 60_000,
   });
 
@@ -111,6 +113,10 @@ export default function Dashboard() {
   const pdcaStats = stats?.pdca;
   const gspcStats = stats?.gspc;
   const cardStats = stats?.cards;
+  const estateIndex = liveState?.estate_index;
+  const claimMaintenance = liveState?.claim_maintenance;
+  const correctionsLedger = liveState?.corrections_ledger;
+  const publicClaims = liveState?.claims_register;
 
   // Calculate real metrics
   const metrics = [
@@ -146,6 +152,28 @@ export default function Dashboard() {
       bgColor: "bg-slate-50",
       description:
         "Every artefact we hold, under one unsigned Merkle root. Finding an artefact is not measuring it, and the two leaf counts are never added together.",
+    },
+    {
+      title: "Claims under maintenance",
+      value: claimMaintenance?.claims?.value?.toString() ?? "—",
+      change: claimMaintenance?.subjects_with_scheduled_next_read?.value != null
+        ? `${claimMaintenance.subjects_with_scheduled_next_read.value} subjects scheduled for re-read`
+        : "register unavailable",
+      changeType: "neutral",
+      icon: RefreshCw,
+      color: "text-emerald-700",
+      bgColor: "bg-emerald-50",
+      description: "Claim Maintenance evidence states; never a score or verdict",
+    },
+    {
+      title: "Published corrections",
+      value: correctionsLedger?.rows_total?.value?.toString() ?? "—",
+      change: correctionsLedger?.latest_entry_id ? `latest ${correctionsLedger.latest_entry_id}` : "ledger unavailable",
+      changeType: "neutral",
+      icon: AlertTriangle,
+      color: "text-amber-700",
+      bgColor: "bg-amber-50",
+      description: "Append history of CSOAI defects and fixes",
     },
     {
       title: "Watchdog Reports",
@@ -201,7 +229,7 @@ export default function Dashboard() {
               variant="outline"
               size="sm"
               aria-label="Refresh dashboard"
-              onClick={() => refetch()}
+              onClick={() => { refetch(); refetchLiveState(); }}
               disabled={isLoading}
             >
               {isLoading ? (
@@ -249,9 +277,9 @@ export default function Dashboard() {
               note: "Indexed is not measured",
             },
             {
-              label: "Operating rule",
-              value: "Measure · sign · verify",
-              note: "Never certification",
+              label: "Maintained claims",
+              value: claimMaintenance?.claims?.value != null ? `${claimMaintenance.claims.value} claim rows` : "—",
+              note: correctionsLedger?.rows_total?.value != null ? `${correctionsLedger.rows_total.value} corrections published` : "Corrections ledger unavailable",
             },
           ].map((signal) => (
             <div key={signal.label} className="border-white/10 p-4 sm:border-r sm:p-5 xl:last:border-r-0">
@@ -260,6 +288,30 @@ export default function Dashboard() {
               <p className="mt-1 text-xs text-emerald-100/55">{signal.note}</p>
             </div>
           ))}
+        </section>
+
+        <section aria-labelledby="evidence-flywheel" className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-700">Single-source evidence flywheel</p>
+              <h3 id="evidence-flywheel" className="mt-1 text-xl font-bold text-slate-950">Capture → measure → correct → quote</h3>
+            </div>
+            <Link href="/claim-maintenance/" className="text-sm font-semibold text-emerald-800 underline underline-offset-4">Open Claim Maintenance</Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {[
+              ["Capture", "/api/claims/register", claimMaintenance?.claims?.value != null ? `${claimMaintenance.claims.value} maintained claims` : "Claim register unavailable"],
+              ["Measure", "/api/gspc", liveState?.public_count?.value ?? "Board unavailable"],
+              ["Correct", "/api/corrections", correctionsLedger?.rows_total?.value != null ? `${correctionsLedger.rows_total.value} ledger entries` : "Ledger unavailable"],
+              ["Quote", "/api/state", publicClaims?.rows_total?.value != null ? `${publicClaims.rows_total.value} public self-claims tracked` : "Live state"],
+            ].map(([stage, href, note]) => (
+              <a key={stage} href={href} className="rounded-xl border border-slate-200 bg-slate-50 p-4 hover:border-emerald-300 hover:bg-emerald-50/50">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">{stage}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">{note}</p>
+              </a>
+            ))}
+          </div>
+          <p className="mt-4 text-xs leading-5 text-slate-600">Each card links to the authority for that fact family. The dashboard is a derived view; it is not a second registry, ledger or measurement engine.</p>
         </section>
 
         {/* Metrics Grid */}

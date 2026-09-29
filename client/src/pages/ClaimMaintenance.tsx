@@ -23,6 +23,8 @@ const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
+const LIVE_STATE = "/api/state";
+const PUBLIC_CLAIMS = "/claims-register";
 /** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
 const DOI = "10.5281/zenodo.22901908";
 const DOI_URL = "https://doi.org/10.5281/zenodo.22901908";
@@ -92,9 +94,21 @@ type SubjectRow = {
 };
 type Register = {
   as_of?: string;
-  totals?: { subjects: number; claims: number; registries: number; by_state: Record<string, number> };
+  totals?: { subjects: number; claims: number; registries: number; by_state: Record<string, number>; subjects_with_a_scheduled_next_read?: number };
   subjects?: SubjectRow[];
   disclosures?: Array<{ registry_id: string; quoted: string; disclosure: string }>;
+};
+type FactValue<T = unknown> = { value?: T; as_of?: string | null; source?: string; kind?: string; note?: string };
+type LiveState = {
+  public_count?: FactValue<string>;
+  claim_maintenance?: {
+    subjects?: FactValue<number>;
+    claims?: FactValue<number>;
+    claims_by_state?: FactValue<Record<string, number>>;
+    subjects_with_scheduled_next_read?: FactValue<number>;
+  };
+  claims_register?: { rows_total?: FactValue<number> };
+  corrections_ledger?: { rows_total?: FactValue<number>; latest_entry_id?: string | null };
 };
 
 const day = (iso: string | null | undefined) => (iso ? String(iso).slice(0, 10) : null);
@@ -109,6 +123,7 @@ function Code({ children }: { children: string }) {
 
 export default function ClaimMaintenance() {
   const [reg, setReg] = useState<Register | null | undefined>(undefined);
+  const [liveState, setLiveState] = useState<LiveState | null>(null);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -124,11 +139,18 @@ export default function ClaimMaintenance() {
       .catch(() => read(REGISTER_STATIC))
       .then((j) => setReg(j as Register))
       .catch(() => setReg(null));
+    read(LIVE_STATE)
+      .then((j) => setLiveState(j as LiveState))
+      .catch(() => setLiveState(null));
     return () => ac.abort();
   }, []);
 
   const subjects = reg?.subjects ?? [];
   const asOf = day(reg?.as_of);
+  const maintenance = liveState?.claim_maintenance;
+  const correctionCount = liveState?.corrections_ledger?.rows_total?.value;
+  const publicClaimCount = liveState?.claims_register?.rows_total?.value;
+  const measuredCount = maintenance?.claims_by_state?.value?.CLAIM_MEASURED ?? reg?.totals?.by_state?.CLAIM_MEASURED;
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -169,10 +191,10 @@ export default function ClaimMaintenance() {
           </p>
           <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Live claim register summary">
             {[
-              ["Subjects", reg?.totals?.subjects],
-              ["Claims", reg?.totals?.claims],
-              ["Measured", reg?.totals?.by_state?.CLAIM_MEASURED],
-              ["Unmeasured", reg?.totals?.by_state?.UNMEASURED],
+              ["Subjects", maintenance?.subjects?.value ?? reg?.totals?.subjects],
+              ["Claims", maintenance?.claims?.value ?? reg?.totals?.claims],
+              ["Measured", measuredCount],
+              ["Corrections", correctionCount],
             ].map(([label, value]) => (
               <div key={String(label)} className="rounded-xl border border-slate-700 bg-white/[0.035] px-3.5 py-3">
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{label}</p>
@@ -182,6 +204,32 @@ export default function ClaimMaintenance() {
           </div>
         </div>
       </header>
+
+      <section aria-labelledby="flywheel" className="mx-auto max-w-4xl px-5 py-12">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-800">One flywheel · existing authorities</p>
+          <h2 id="flywheel" className="mt-2 text-2xl font-bold">Capture → measure → correct → quote</h2>
+          <p className="mt-3 max-w-3xl leading-7 text-slate-700">
+            No second ledger lives on this page. Claim Maintenance serves the committed register bytes; GSPC owns measurements; the corrections ledger appends our own defects; and <code className="font-mono text-[12px]">/api/state</code> derives the current quotable view.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["1 · Capture", REGISTER, `${maintenance?.claims?.value ?? reg?.totals?.claims ?? "—"} maintained claims`],
+              ["2 · Measure", "/api/gspc", liveState?.public_count?.value ?? "live board"],
+              ["3 · Correct", CORRECTIONS, `${correctionCount ?? "—"} published corrections`],
+              ["4 · Quote", LIVE_STATE, "derived state by field name"],
+            ].map(([label, href, note]) => (
+              <a key={String(label)} href={String(href)} className="rounded-xl border border-emerald-200 bg-white p-4 hover:border-emerald-400">
+                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-800">{label}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">{note}</p>
+              </a>
+            ))}
+          </div>
+          <p className="mt-4 text-sm text-slate-600">
+            We maintain claims about others separately from the {publicClaimCount ?? "—"} material public claims we make about ourselves. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
+          </p>
+        </div>
+      </section>
 
       <section aria-labelledby="not" className="mx-auto max-w-4xl px-5 py-12">
         <h2 id="not" className="text-2xl font-bold">What this does not do</h2>

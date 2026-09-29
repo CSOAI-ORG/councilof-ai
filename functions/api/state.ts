@@ -64,6 +64,7 @@
 import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
+import claimMaintenanceRegister from "../../public/spec/claim-maintenance/register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
 import councilMcpDoor from "../../evidence/council-mcp-door.json";
@@ -79,6 +80,7 @@ import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
+import { LEDGER as correctionsLedger, correctionLatency, type TimingEntry } from "./corrections";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -108,6 +110,8 @@ const fact = (
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
 const SRC_CLAIMS = "public/claims-register.json";
+const SRC_CLAIM_MAINTENANCE = "public/spec/claim-maintenance/register.json";
+const SRC_CORRECTIONS = "functions/api/corrections.ts → LEDGER";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
 const SRC_CENSUS = "public/signed/hub-census-baseline.json";
@@ -271,6 +275,19 @@ for (const row of claimRows) {
   claimsByStatus[s] += 1;
 }
 
+// ── Claim Maintenance + corrections: derive, never duplicate ────────────────
+// The Claim Maintenance endpoint serves the exact committed register bytes. The corrections
+// endpoint serves LEDGER plus derived signature/latency fields. /api/state does not become a
+// second registry or ledger: it exposes a bounded summary and points back to both authorities.
+const maintenanceTotals = (claimMaintenanceRegister as any).totals ?? {};
+const maintenanceStates = (claimMaintenanceRegister as any).states ?? {};
+const maintenanceAsOf: string | null = (claimMaintenanceRegister as any).as_of ?? null;
+const correctionRows = (((correctionsLedger as any).corrections ?? []) as TimingEntry[]);
+const correctionLatencyBlock = correctionLatency(correctionRows);
+const latestCorrection = correctionRows[0] as (TimingEntry & { id?: unknown; date?: unknown }) | undefined;
+const latestCorrectionId = typeof latestCorrection?.id === "string" ? latestCorrection.id : null;
+const latestCorrectionDate = typeof latestCorrection?.date === "string" ? latestCorrection.date : null;
+
 // ── MCP fleet: the probe's own counts, never summed across kinds ─────────────
 const mcpCounts = (mcpRegistry as any).counts ?? {};
 const mcpFinished: string | null = mcpCounts.finished ?? null;
@@ -327,6 +344,21 @@ export const onRequestGet: PagesFunction = async () => {
       freshness_self_test:
         "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/a; sleep 5; " +
         "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/b; diff /tmp/a /tmp/b && echo IDENTICAL",
+      authorities: {
+        live_state: "/api/state",
+        public_claims: "/claims-register.json",
+        claim_maintenance: "/api/claims/register",
+        corrections: "/api/corrections",
+        measurement_board: "/api/gspc",
+        note:
+          "One authority per fact family. /api/state derives summaries and links; it does not replace the underlying claim registers, correction ledger or measurement board.",
+      },
+      flywheel: [
+        { stage: "CAPTURE", authority: "/api/claims/register", meaning: "record the public claim and its evidence state" },
+        { stage: "MEASURE", authority: "/api/gspc", meaning: "measure only where the declared instrument and evidence support it" },
+        { stage: "CORRECT", authority: "/api/corrections", meaning: "append defects and supersessions; never erase history" },
+        { stage: "QUOTE", authority: "/api/state", meaning: "derive the current quotable state from committed authorities" },
+      ],
       kinds: {
         measured: "A run happened against a frozen bank or source and was graded.",
         probed: "Something was contacted and answered, at as_of.",
@@ -886,6 +918,79 @@ export const onRequestGet: PagesFunction = async () => {
         "Non-empty means a row uses a status the register never declared — an artifact defect, not a " +
         "new category. Fix the artifact; do not invent a meaning for it here.",
       how_to_challenge: (claimsRegister as any).how_to_challenge ?? null,
+    },
+
+    // ── CLAIM MAINTENANCE ───────────────────────────────────────────────────
+    // Authority remains the generated register bytes. These are evidence states, not a score.
+    claim_maintenance: {
+      authority: SRC_CLAIM_MAINTENANCE,
+      endpoint: "/api/claims/register",
+      page: "/claim-maintenance/",
+      specification: (claimMaintenanceRegister as any).specification ?? null,
+      corrections_feed: "/api/corrections",
+      public_claims_register: "/claims-register.json",
+      subjects: fact(
+        maintenanceTotals.subjects ?? null,
+        "declared",
+        SRC_CLAIM_MAINTENANCE + " → totals.subjects",
+        maintenanceAsOf,
+        "as_of",
+        "Subjects present in the generated Claim Maintenance register. Presence is neither endorsement nor accusation.",
+      ),
+      claims: fact(
+        maintenanceTotals.claims ?? null,
+        "declared",
+        SRC_CLAIM_MAINTENANCE + " → totals.claims",
+        maintenanceAsOf,
+        "as_of",
+        "Captured claim rows. A claim row is not a finding and state counts must not be collapsed into a score.",
+      ),
+      claims_by_state: fact(
+        maintenanceTotals.by_state ?? {},
+        "declared",
+        SRC_CLAIM_MAINTENANCE + " → totals.by_state",
+        maintenanceAsOf,
+        "as_of",
+        "CLAIM_CAPTURED, CLAIM_MEASURED, UNMEASURED and UNCHECKABLE remain distinct evidence states.",
+      ),
+      registries: fact(
+        maintenanceTotals.registries ?? null,
+        "catalogued",
+        SRC_CLAIM_MAINTENANCE + " → totals.registries",
+        maintenanceAsOf,
+        "as_of",
+        "Current non-superseded registry files counted by the Claim Maintenance producer.",
+      ),
+      subjects_with_scheduled_next_read: fact(
+        maintenanceTotals.subjects_with_a_scheduled_next_read ?? null,
+        "declared",
+        SRC_CLAIM_MAINTENANCE + " → totals.subjects_with_a_scheduled_next_read",
+        maintenanceAsOf,
+        "as_of",
+        "A scheduled re-read is a monitoring commitment, not evidence that the future read has happened.",
+      ),
+      state_vocabulary: maintenanceStates,
+      rule:
+        "The register is the authority. /api/state only derives this summary. No score, rank, certification or verdict is produced from these counts.",
+    },
+
+    // ── CORRECTIONS LEDGER ──────────────────────────────────────────────────
+    corrections_ledger: {
+      authority: SRC_CORRECTIONS,
+      endpoint: "/api/corrections",
+      rows_total: fact(
+        correctionRows.length,
+        "declared",
+        SRC_CORRECTIONS + " → corrections.length",
+        latestCorrectionDate,
+        latestCorrectionDate ? "corrections[0].date" : null,
+        "Append history. A correction records our own defect and fix; it is not a measurement of another party.",
+      ),
+      latest_entry_id: latestCorrectionId,
+      timing: correctionLatencyBlock,
+      signature_state_source: "/api/corrections → signature_state",
+      rule:
+        "Signature state is checked and published by /api/corrections itself. /api/state never upgrades or guesses that cryptographic state.",
     },
 
     // ── RWA INSTRUMENTS ──────────────────────────────────────────────────────

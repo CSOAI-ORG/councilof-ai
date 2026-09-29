@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import publicRoot from "../../public/root.json";
 import cardIndex from "../../public/signed/card_index.json";
+import claimMaintenanceRegister from "../../public/spec/claim-maintenance/register.json";
+import { LEDGER as correctionsLedger } from "./corrections";
 import { deriveCorpusRelation, onRequestGet } from "./state";
 import MCP_FREE from "../mcp/gspc-tools.json";
 import MCP_PAID from "../mcp/paid-tools.json";
@@ -140,5 +142,29 @@ describe("GET /api/state council_http_mcp — derived from the registry the /mcp
     const body = await (await (onRequestGet as unknown as () => Promise<Response>)()).json();
     expect(body.council_http_mcp.last_probe.tools_count).toBe((councilMcpDoor as { tools_count: number }).tools_count);
     expect(body.council_http_mcp.last_probe.note).toMatch(/historical/);
+  });
+});
+
+
+describe("GET /api/state contract convergence", () => {
+  it("derives Claim Maintenance and corrections from their existing authorities", async () => {
+    const body = await (await (onRequestGet as unknown as () => Promise<Response>)()).json();
+    expect(body.contract.authorities).toMatchObject({
+      live_state: "/api/state",
+      public_claims: "/claims-register.json",
+      claim_maintenance: "/api/claims/register",
+      corrections: "/api/corrections",
+      measurement_board: "/api/gspc",
+    });
+    expect(body.contract.flywheel.map((x: { stage: string }) => x.stage)).toEqual(["CAPTURE", "MEASURE", "CORRECT", "QUOTE"]);
+    expect(body.claim_maintenance.claims.value).toBe(claimMaintenanceRegister.totals.claims);
+    expect(body.claim_maintenance.subjects.value).toBe(claimMaintenanceRegister.totals.subjects);
+    expect(body.claim_maintenance.claims_by_state.value).toEqual(claimMaintenanceRegister.totals.by_state);
+    expect(body.claim_maintenance.subjects_with_scheduled_next_read.value).toBe(
+      claimMaintenanceRegister.totals.subjects_with_a_scheduled_next_read,
+    );
+    expect(body.corrections_ledger.rows_total.value).toBe(correctionsLedger.corrections.length);
+    expect(body.corrections_ledger.latest_entry_id).toBe(correctionsLedger.corrections[0].id);
+    expect(body.corrections_ledger.signature_state_source).toBe("/api/corrections → signature_state");
   });
 });

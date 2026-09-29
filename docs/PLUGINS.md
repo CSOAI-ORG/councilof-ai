@@ -1,16 +1,16 @@
 # Plugins and extensions — one verify surface, one lid, per platform
 
-The estate has ONE board authority (`GET https://councilof.ai/api/gspc`) and ONE
-card-verification rule (`/signed/HOW-TO-VERIFY.md`, implemented once in
-`functions/_lib/cardVerify.ts`). Every plugin below is a *printer* of that GET and a
-*caller* of that rule. None is a second engine; none certifies; none sells a rank.
-Verify is free everywhere.
+The estate has ONE board authority (`GET https://councilof.ai/api/gspc`), ONE live-state
+contract (`GET https://councilof.ai/api/state`) and ONE card-verification rule
+(`/signed/HOW-TO-VERIFY.md`, implemented once in `functions/_lib/cardVerify.ts`). Claim Maintenance
+comes from `GET /api/claims/register`; append history comes from `GET /api/corrections`. Every
+plugin below is a *reader* of those public authorities and a *caller* of the verifier. None is a
+second engine; none certifies; none sells a rank. Verify is free everywhere.
 
 The two things every platform surface must be able to show:
 
-1. **The lid** — `totals.lid` from `/api/gspc`, printed verbatim (live today:
-   "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is
-   TIE · not a certificate" — do not copy this line into code; fetch it).
+1. **The lid** — `totals.lid` from `/api/gspc`, printed verbatim at request time. This
+   document deliberately freezes no example count; the live payload is the authority.
 2. **A three-state verify** — VALID / INVALID / UNCHECKABLE for a pasted card, with the
    signing key pinned to `did:web:csoai.org` and "could not check" never rendered as
    "forged".
@@ -19,8 +19,8 @@ The two things every platform surface must be able to show:
 
 | Surface | State | Where | Notes |
 |---|---|---|---|
-| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/` (7 tools: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion) | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
-| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`, tool catalogue `functions/mcp/gspc-tools.json` (same 7 names) | shares `functions/_lib/cardVerify.ts` |
+| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/`; its own tool catalogue/README is the authority for the package version being used | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
+| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`; live tool catalogues are `functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json` | shares `functions/_lib/cardVerify.ts`; do not copy a tool count into docs |
 | Claude Code / Grok plugin | REAL (separate repo) | marketplace `CSOAI-ORG/council-of-ai-grok`: `plugin.json`, `.claude-plugin/marketplace.json`, skills `council` `gspc` `pack` `sign-artifact` `verify-card`, commands, agent `measurement-auditor`, `verifier/gspc-verify.mjs` | in this repo only the pointer: `plugins/gspc/{plugin.json,.mcp.json,README.md}` (→ `https://councilof.ai/mcp`) and `.grok-plugin/marketplace.json` |
 | Offline verifier package | REAL | `packages/gspc-card-verifier/` (37/37 under `node --test`), bundled to `public/verifier/gspc-verify.mjs` | profile-driven; refuses out-of-domain numbers |
 | Browser verify page | REAL | `/gspc-verify` → `client/src/lib/recordVerify.ts` → `functions/_lib/cardVerify.ts` | `client/src/lib/cardVerify.ts` is an older twin kept in step by `cardVerifyTwin.test.ts` |
@@ -67,18 +67,20 @@ then install `council-of-ai`). Skills `/council-of-ai:gspc` (board) and
 
 ### Chrome extension
 
-`extensions/chrome-gspc-verify/` — load unpacked (README). Popup = lid + 22-row board +
+`extensions/chrome-gspc-verify/` — load unpacked (README). Popup = live lid + live board rows +
 verify box; badge on `huggingface.co/<org>/<model>`. Web Store publication is an owner
 action; the exact steps are in that README.
 
 ### ChatGPT / Custom GPT Actions
 
 Create a GPT → Configure → Actions → **Import from URL** →
-`https://councilof.ai/api/openapi.json`. Authentication: none. The spec exposes only
-what exists: `getBoard` (`/api/gspc`), `getProof` (`/api/proof?sha=`), `getRoot`
-(`/root.json`), `getDid` (`/.well-known/did.json`), `getCardIndex`
-(`/signed/card_index.json`), `getCard` (`/signed/cards/{id}.json`). Instruct the GPT to
-quote `totals.lid` and `totals.public_count` verbatim and never to compose a count.
+`https://councilof.ai/api/openapi.json`. Authentication: none. The canonical spec exposes only
+what exists, including `getBoard` (`/api/gspc`), `getLiveState` (`/api/state`),
+`getClaimMaintenanceRegister` (`/api/claims/register`), `getCorrections` (`/api/corrections`),
+`getProof` (`/api/proof?sha=`), `getRoot` (`/root.json`), `getDid` (`/.well-known/did.json`),
+`getCardIndex` (`/signed/card_index.json`) and `getCard` (`/signed/cards/{id}.json`). Instruct the
+GPT to quote fields from their authority verbatim and never compose a count or turn evidence states
+into a score.
 Signature verification is NOT an Action — Actions cannot run Ed25519; the GPT should
 hand the user the card URL and the recipe at `/signed/HOW-TO-VERIFY.md`, or the
 extension.

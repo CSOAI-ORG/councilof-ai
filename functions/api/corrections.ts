@@ -43,6 +43,30 @@ export const LEDGER = {
   },
   corrections: [
     {
+      id: "C-2026-0929-01",
+      date: "2026-09-29",
+      detected_at: "2026-09-29T16:34Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: [
+        "Live GET https://councilof.ai/api/state during the 29 September contract-convergence audit returned public_count.value = '23 axis · 23 measured'.",
+        "Live GET https://councilof.ai/interop/chatgpt-plugin.json during the same audit still described the service as '22-axis GSPC'.",
+        "Source inspection of the production-equivalent release tree found no dedicated or catch-all source route backing the legacy manifest's /api/measure or /api/anchor operations."
+      ],
+      what_was_wrong: "The live legacy ChatGPT compatibility manifest froze the board at '22-axis GSPC' while the live state contract reported '23 axis · 23 measured'. It also advertised /api/measure and /api/anchor operations that were not represented by a dedicated or catch-all source route in the production-equivalent tree, while omitting the existing Claim Maintenance and corrections read contracts. That made the plugin surface a second, stale description of the estate instead of a pointer to the canonical contracts.",
+      how_caught: "A single-source-of-truth convergence audit compared the live plugin bytes, live /api/state, canonical /api/openapi.json and the production-equivalent source tree before changing any public surface.",
+      what_changed: "The compatibility manifest no longer types an axis count, points explicitly to /api/openapi.json as the canonical Actions schema, removes the two unbacked measure/anchor declarations, and adds the existing /api/claims/register and /api/corrections GETs. The canonical Actions schema now exposes /api/state, Claim Maintenance and corrections as existing read surfaces. Plugin copy and the dashboard point to the same authorities; no new protocol, ledger or measurement engine was created.",
+      status: "CORRECTED IN SOURCE; PRODUCTION DEPLOY/READBACK PENDING",
+      reached_the_public: true,
+      evidence: [
+        "/interop/chatgpt-plugin.json",
+        "/api/openapi.json",
+        "/api/state",
+        "/api/claims/register",
+        "/api/corrections"
+      ],
+    },
+    {
       "id": "C-2026-0928-01",
       "date": "2026-09-28",
       "detected_at": "2026-09-28",
@@ -1423,27 +1447,27 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "dee2b444bea5f21d8dfed381fcd5439c305fd48cd982d58727f73767d5bc6a4f",
+    id: "8c36ff0633dfa5808d72106e37689393da5488d1888020b1b98bcccbf6e0e363",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "d1f8a0b15cde83452a69e33878cd7ff5cc17931d7ff287d76ddbc56fa9ce2338e9b7d29e33afefead3f327a823571463997934d0b3002f6913a4b67eeeb47f0f",
+    signature: "c70540d7fb73577d8bd1b373229748d3a71ec637ebdfc057de951572b4edeeca882f10e43882bc9f1af2185b19a0b29d40527680c30c46bcc68d7d616c40f603",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "dee2b444bea5f21d8dfed381fcd5439c305fd48cd982d58727f73767d5bc6a4f",
+          "content_id": "8c36ff0633dfa5808d72106e37689393da5488d1888020b1b98bcccbf6e0e363",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 78,
-          "latest_entry_id": "C-2026-0928-01",
-          "ledger_canonical_bytes": 155487,
+          "entries": 79,
+          "latest_entry_id": "C-2026-0929-01",
+          "ledger_canonical_bytes": 157561,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-28T04:58:38Z"
+          "signed_at": "2026-09-29T17:01:34Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
       "The attestation names the digest of the ledger body and the rule that produces it.",
     key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
     note:
-      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
+      "RE-ISSUED over the current body through POST /api/board-sign; signature.attestation.signed_at records the issuance time. " +
       "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
       "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
       "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +
