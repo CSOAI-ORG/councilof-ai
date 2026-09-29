@@ -86,6 +86,16 @@ function upstream(): Record<string, Route> {
         last_7d: 40829,
         last_7d_window: "2026-09-20..2026-09-26",
         last_30d_is_lower_bound: true,
+        packages: [
+          { name: "csoai-gspc", entity: "csoai", all_time: 4025, last_30d: 4025, last_7d: 528 },
+          { name: "council-signal-mcp", entity: "csoai", all_time: 2705, last_30d: 1348, last_7d: 145 },
+          { name: "csoai-new", entity: "csoai", all_time: 300, last_30d: 300, last_7d: 300 },
+          { name: "meok-a", entity: "meok", all_time: 2400000, last_30d: 250000, last_7d: 38000 },
+          { name: "meok-b", entity: "meok", all_time: 90000, last_30d: 20000, last_7d: 1500 },
+          { name: "joint-a", entity: "joint", all_time: 10000, last_30d: 5000, last_7d: 300 },
+          { name: "langchain-csoai", entity: "unattributed", all_time: 353, last_30d: 353, last_7d: 353 },
+          { name: "list1", entity: "unattributed", all_time: null, last_30d: null, last_7d: null },
+        ],
       }),
     "https://zenodo.org/api/records/22985467": () =>
       json({ doi: "10.5281/zenodo.22985467", metadata: { title: "Same model, same prompts, different answers", publication_date: "2026-09-27" }, stats: { unique_downloads: 0 } }),
@@ -156,7 +166,8 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
       "signed_cards",
       "corrections",
       "capsules",
-      "pypi_all_time",
+      "pypi_csoai_all_time",
+      "pypi_meok_all_time",
       "hf_datasets",
       "hf_downloads_30d_self_read",
       "hf_downloads_30d_other",
@@ -179,10 +190,21 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(by.corrections.trend?.text).toBe("+2 this week");
     expect(by.capsules.value).toBe(13184);
     expect(by.capsules.detail).toContain("Bitcoin block 968674");
-    expect(by.pypi_all_time.detail).toContain("399 of 400 packages answered");
+    // 29 Sep 2026 (growth gaps A6): CSOAI's labelled packages and MEOK AI Labs' are separate figures.
+    expect(by.pypi_csoai_all_time.value).toBe(4025 + 2705 + 300);
+    expect(by.pypi_csoai_all_time.label).toBe("PyPI downloads, CSOAI packages, all-time");
+    expect(by.pypi_csoai_all_time.detail).toContain("3 packages labelled CSOAI");
+    expect(by.pypi_csoai_all_time.detail).toContain("1 package had every download in the last 7 days");
+    expect(by.pypi_csoai_all_time.detail).toContain("1 package labelled joint and 2 packages unattributed are in neither figure");
+    expect(by.pypi_csoai_all_time.trend?.delta).toBe(528 + 145 + 300);
+    expect(by.pypi_meok_all_time.value).toBe(2490000);
+    expect(by.pypi_meok_all_time.label).toContain("MEOK AI Labs");
+    expect(by.pypi_meok_all_time.label).toContain("not CSOAI");
     expect(p.anchors.find((a) => a.id === "rekor")?.links?.[0].url).toBe("https://search.sigstore.dev/?logIndex=2968539665");
-    expect(by.pypi_all_time.display).toBe("2.5M+");
-    expect(by.pypi_all_time.lower_bound).toBe(true);
+    expect(by.pypi_csoai_all_time.display).toBe("7,030");
+    expect(by.pypi_csoai_all_time.lower_bound).toBe(true); // the record is PARTIAL
+    // The combined figure is gone: no figure carries the estate total.
+    expect(p.figures.some((f) => f.value === 2510807)).toBe(false);
     expect(by.hf_datasets.value).toBe(3); // the private dataset is not counted
     expect(by.hf_downloads_30d_self_read.value).toBe(700);
     expect(by.hf_downloads_30d_other.value).toBe(1500);
@@ -211,8 +233,8 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
 
   it("OMITS a figure whose source times out", async () => {
     const p = await buildMomentum(deps({ [PYPI_FOOTPRINT]: () => "hang" }, 50));
-    expect(ids(p)).not.toContain("pypi_all_time");
-    expect(p.omitted.find((x) => x.id === "pypi_all_time")?.reason).toMatch(/timeout/);
+    expect(ids(p)).not.toContain("pypi_csoai_all_time");
+    expect(p.omitted.find((x) => x.id === "pypi_csoai_all_time")?.reason).toMatch(/timeout/);
     noZeros(p);
   });
 
@@ -231,8 +253,24 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     const stale = () =>
       json({ schema: "csoai.pypi-footprint/0.1", as_of: "2026-09-24T03:00:00Z", state: "READ", n_packages: 400, n_counted: 400, all_time_total: 2400000 });
     const p = await buildMomentum(deps({ [PYPI_FOOTPRINT]: stale }));
-    expect(ids(p)).not.toContain("pypi_all_time");
-    expect(p.omitted.find((x) => x.id === "pypi_all_time")?.reason).toMatch(/h old/);
+    expect(ids(p)).not.toContain("pypi_csoai_all_time");
+    expect(p.omitted.find((x) => x.id === "pypi_csoai_all_time")?.reason).toMatch(/h old/);
+  });
+
+  it("never shows the combined CSOAI + MEOK figure as CSOAI's: a record with no entity split is omitted", async () => {
+    const combined = () =>
+      json({ schema: "csoai.pypi-footprint/0.1", as_of: "2026-09-27T03:14:21Z", state: "READ", n_packages: 400, n_counted: 400, all_time_total: 2400000 });
+    const p = await buildMomentum(deps({ [PYPI_FOOTPRINT]: combined }));
+    expect(ids(p).filter((i) => i.startsWith("pypi"))).toEqual([]);
+    expect(p.omitted.find((x) => x.id === "pypi_csoai_all_time")?.reason).toMatch(/no per-entity split/);
+    // by_entity alone is enough (no 7-day trend then).
+    const byEntity = () =>
+      json({ schema: "csoai.pypi-footprint/0.1", as_of: "2026-09-27T03:14:21Z", state: "READ", n_packages: 400, n_counted: 400, all_time_total: 2400000,
+        by_entity: { csoai: { n_packages: 24, all_time: 96427, last_30d: 19780 }, meok: { n_packages: 318, all_time: 2358846, last_30d: 232524 } } });
+    const q = await buildMomentum(deps({ [PYPI_FOOTPRINT]: byEntity }));
+    const f = q.figures.find((x) => x.id === "pypi_csoai_all_time");
+    expect(f?.value).toBe(96427);
+    expect(f?.trend).toBeUndefined();
   });
 
   it("prints 'every one verifies' only when the source says every published card verifies", async () => {

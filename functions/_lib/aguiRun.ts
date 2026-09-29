@@ -103,7 +103,12 @@ export function aguiDescriptor(origin: string): Json {
   };
 }
 
-export async function serveAguiRun(request: Request, waitUntil?: (p: Promise<unknown>) => void): Promise<Response> {
+export async function serveAguiRun(
+  request: Request,
+  waitUntil?: (p: Promise<unknown>) => void,
+  /** Aggregate usage hook: called once per run with its end state (no text). */
+  onState?: (state: "grounded" | "unknown" | "needs_input" | "confirm_required" | "error") => void,
+): Promise<Response> {
   const origin = new URL(request.url).origin;
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
   if (request.method === "GET" || request.method === "HEAD")
@@ -138,6 +143,7 @@ export async function serveAguiRun(request: Request, waitUntil?: (p: Promise<unk
       await emit({ type: "RUN_STARTED", threadId, runId });
       if (!question.trim()) {
         await emit({ type: "RUN_ERROR", message: "no user message: send messages:[{role:'user', content:'...'}]", code: "NO_MESSAGE" });
+        onState?.("error");
         return;
       }
       const plan = routeIntent(question);
@@ -158,6 +164,7 @@ export async function serveAguiRun(request: Request, waitUntil?: (p: Promise<unk
             `payment, if you choose to make it, comes from your own wallet — this assistant never pays.`,
         );
         await emit({ type: "RUN_FINISHED", threadId, runId, result: { awaiting_confirmation: true, tools: paid } });
+        onState?.("confirm_required");
         return;
       }
       const parentMessageId = crypto.randomUUID();
@@ -192,8 +199,10 @@ export async function serveAguiRun(request: Request, waitUntil?: (p: Promise<unk
         runId,
         result: { grounded: answer.grounded, intent: answer.intent, label: answer.label, answered_by: answer.answered_by, citations: answer.citations },
       });
+      onState?.(answer.grounded ? "grounded" : answer.kind === "needs_input" ? "needs_input" : "unknown");
     } catch (e) {
       await emit({ type: "RUN_ERROR", message: e instanceof Error ? e.message : String(e), code: "RUN_FAILED" }).catch(() => undefined);
+      onState?.("error");
     } finally {
       await writer.close().catch(() => undefined);
     }

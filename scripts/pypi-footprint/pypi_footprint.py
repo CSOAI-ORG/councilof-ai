@@ -198,9 +198,16 @@ def main() -> int:
     complete = not failed and len(counted30) == len(rows)
     lb30 = any(r.get("window_lower_bound") for r in counted30)
     ents = sorted({r["entity"] for r in rows})
+    # Per-entity windows (29 Sep 2026, growth gaps A6): /api/momentum shows CSOAI's labelled packages and
+    # MEOK AI Labs' as separate figures and never adds them, so each entity carries its own 7-day window and
+    # the names whose every download fell in the last 7 days (the first-week pattern of registry mirrors).
     by_entity = {e: {"n_packages": sum(1 for r in rows if r["entity"] == e),
                      "all_time": sum(r["all_time"] for r in counted if r["entity"] == e),
-                     "last_30d": sum(r["last_30d"] for r in counted30 if r["entity"] == e)} for e in ents}
+                     "last_30d": sum(r["last_30d"] for r in counted30 if r["entity"] == e),
+                     "last_7d": sum(r["last_7d"] for r in counted30 if r["entity"] == e),
+                     "prev_7d": sum(r["prev_7d"] for r in counted30 if r["entity"] == e),
+                     "day_one_pattern": sorted(r["name"] for r in counted30 if r["entity"] == e
+                                               and r["all_time"] and r["last_7d"] == r["all_time"])} for e in ents}
     finished = utcnow()
     rec = {
         "schema": SCHEMA,
@@ -224,7 +231,8 @@ def main() -> int:
         "prev_7d_window": f"{wprev7[0]}..{wprev7[1]}",
         "windows_rule": "all_time, last_30d, last_7d and prev_7d are separate windows over the same packages. They are never added to each other.",
         "what_this_counts": "Registry download events as reported by pepy.tech, including mirrors, CI and automated traffic. Not people, installs, users or customers.",
-        "entity_rule": "CSOAI Ltd and MEOK AI Labs publish from one PyPI account. Every row is counted and labelled; by_entity prints each share beside the total.",
+        "entity_rule": "CSOAI Ltd and MEOK AI Labs publish from one PyPI account. Every row is counted and labelled; by_entity prints each share beside the total. all_time_total is the whole account and is not CSOAI's figure; quote by_entity.csoai for CSOAI.",
+        "day_one_pattern_rule": "by_entity.<e>.day_one_pattern names packages whose every download so far fell in the last 7 days: the first-week pattern of registry mirrors and bots, not users.",
         "by_entity": by_entity,
         "package_list": source,
         "packages": [{k: v for k, v in r.items() if k != "reason"} for r in rows],

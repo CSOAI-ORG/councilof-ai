@@ -865,7 +865,7 @@
     },
     "/api/chat": {
       "post": {
-        "description": "",
+        "description": "The reply's state, reduced to the words /api/usage counts (grounded / unknown / needs_input / ...).",
         "operationId": "post__api_chat",
         "responses": {
           "200": {
@@ -876,7 +876,7 @@
           }
         },
         "security": [],
-        "summary": ""
+        "summary": "The reply's state, reduced to the words /api/usage counts (grounded / unknown / needs_input / ...)."
       }
     },
     "/api/checkout": {
@@ -8379,6 +8379,22 @@
         "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
       }
     },
+    "/api/usage": {
+      "get": {
+        "description": "GET /api/usage \u2014 daily counts of what callers did at the agent doors (MCP, A2A, chat, AG-UI).",
+        "operationId": "get__api_usage",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/usage \u2014 daily counts of what callers did at the agent doors (MCP, A2A, chat, AG-UI)."
+      }
+    },
     "/api/verify": {
       "get": {
         "description": "POST /api/verify \u2014 verify a posted measurement card. GET explains how.",
@@ -9667,7 +9683,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 97,
+    "public_operations": 98,
     "quarantined": [
       {
         "buyable": false,

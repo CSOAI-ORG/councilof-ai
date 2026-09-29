@@ -137,10 +137,13 @@ describe("POST /api/a2a — SendMessage", () => {
         message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "measure all models" }] },
       },
     });
-    expect(json.error.message).toContain(GREETING_EXAMPLES);
+    // 2026-09-29: unplaced text is a RESULT that says no tool matched (a2aregistry.org recorded the
+    // old -32602 as "Returning errors when contacted by users"), not a capability greeting.
+    expect(json.error).toBeUndefined();
+    expect(json.result.message.parts[1].data.kind).toBe("NO_TOOL_MATCHED");
   });
 
-  it("does not turn unrelated free text into a measurement or task", async () => {
+  it("does not turn unrelated free text into a measurement or task — it answers that no tool matched", async () => {
     const sourceFetch = vi.fn();
     vi.stubGlobal("fetch", sourceFetch);
     const { json } = await rpc({
@@ -148,7 +151,10 @@ describe("POST /api/a2a — SendMessage", () => {
         message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "measure all models" }] },
       },
     });
-    expect(json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
+    expect(json.error).toBeUndefined();
+    expect(json.result.message.role).toBe("ROLE_AGENT");
+    expect(json.result.message.parts[0].text).toContain("could not match that question to a tool");
+    expect(json.result.message.parts[1].data).toMatchObject({ kind: "NO_TOOL_MATCHED", state: "unknown", tool_calls: [], citations: [] });
     expect(sourceFetch).not.toHaveBeenCalled();
   });
 
@@ -232,8 +238,74 @@ describe("POST /api/a2a — SendMessage", () => {
       method: "SendMessage",
       params: { message: { messageId: "m-other", role: "ROLE_USER", parts: [{ text: "please assess this" }] } },
     });
-    expect(ambiguous.json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
-    expect(ambiguous.json.error.data[0].reason).toBe("INVALID_SKILL_SELECTOR");
+    expect(ambiguous.json.error).toBeUndefined();
+    expect(ambiguous.json.result.message.parts[1].data.kind).toBe("NO_TOOL_MATCHED");
+  });
+});
+
+// 2026-09-29 (growth gaps A1): most A2A SDK clients in the wild send the 0.3 shape — method
+// message/send, no A2A-Version header, parts carrying {kind}. Every one of them got -32009.
+describe("POST /api/a2a — the A2A 0.3 wire shape is served through the 1.0 handler", () => {
+  const send03 = (parts: unknown[], headers: Record<string, string> = {}, extra: Record<string, unknown> = {}) =>
+    rpc(
+      {
+        jsonrpc: "2.0",
+        id: "v03",
+        method: "message/send",
+        params: { message: { kind: "message", messageId: "m-03", role: "user", parts, ...extra } },
+      },
+      headers,
+    );
+
+  it("answers message/send with no version header as a 0.3 Message", async () => {
+    stubBoard();
+    const { status, headers, json } = await send03([{ kind: "text", text: "board" }]);
+    expect(status).toBe(200);
+    expect(json.error).toBeUndefined();
+    expect(headers.get("a2a-version")).toBe("0.3");
+    expect(json.result).toMatchObject({ kind: "message", role: "agent" });
+    expect(json.result.parts[0]).toMatchObject({ kind: "text" });
+    expect(json.result.parts[0].text).toContain(`Lid: ${LID}`);
+    expect(json.result.parts[1]).toMatchObject({ kind: "data" });
+    expect(json.result.parts[1].data.skill).toBe("gspc-board");
+  });
+
+  it("serves an explicit 0.x header the same way, and keeps the caller's contextId", async () => {
+    stubBoard();
+    const { json } = await send03([{ kind: "text", text: "board" }], { "a2a-version": "0.3" }, { contextId: "ctx-03" });
+    expect(json.error).toBeUndefined();
+    expect(json.result.contextId).toBe("ctx-03");
+  });
+
+  it("maps a 0.3 data part onto the structured selector", async () => {
+    stubBoard();
+    const { json } = await send03([{ kind: "data", data: { skill: "gspc-board", input: {} } }]);
+    expect(json.error).toBeUndefined();
+    expect(json.result.parts[1].data.skill).toBe("gspc-board");
+  });
+
+  it("answers free text it cannot place with a result, never an error", async () => {
+    const sourceFetch = vi.fn();
+    vi.stubGlobal("fetch", sourceFetch);
+    const { json } = await send03([{ kind: "text", text: "please assess this" }]);
+    expect(json.error).toBeUndefined();
+    expect(json.result.kind).toBe("message");
+    expect(json.result.parts[1].data.kind).toBe("NO_TOOL_MATCHED");
+    expect(sourceFetch).not.toHaveBeenCalled();
+  });
+
+  it("keeps 0.3 task methods on the same error codes as 1.0", async () => {
+    const got = await rpc({ jsonrpc: "2.0", id: 9, method: "tasks/get", params: { id: "t-1" } }, {});
+    expect(got.json.error.code).toBe(A2A_ERROR.TASK_NOT_FOUND);
+    const stream = await rpc({ jsonrpc: "2.0", id: 9, method: "message/stream", params: {} }, {});
+    expect(stream.json.error.code).toBe(A2A_ERROR.UNSUPPORTED_OPERATION);
+  });
+
+  it("still refuses a 0.3 method name under a declared 1.0 header, and an unknown slash method", async () => {
+    const mixed = await send03([{ kind: "text", text: "board" }], V1_HEADERS);
+    expect(mixed.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    const unknown = await rpc({ jsonrpc: "2.0", id: 9, method: "tasks/frobnicate", params: {} }, {});
+    expect(unknown.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
   });
 });
 

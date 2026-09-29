@@ -24,8 +24,11 @@
  *   *PushNotificationConfig -> PushNotificationNotSupportedError (-32003).
  *   GetExtendedAgentCard    -> UnsupportedOperationError (-32004): extendedAgentCard is false.
  *   anything else           -> -32601.
- *   A2A-Version other than 1.0 -> VersionNotSupportedError (-32009). The 0.3 method names
- *   (`message/send`) get the same error with the fix named, not a bare -32601.
+ *   A2A-Version other than 1.0 -> VersionNotSupportedError (-32009), EXCEPT the 0.3 wire shape:
+ *   a 0.3 method name (`message/send`, `tasks/get`, ...) with no A2A-Version header or a 0.x one
+ *   is served through a compatibility shim (2026-09-29) — 0.3 parts ({kind:"text"|"data"}) are
+ *   mapped onto the v1.0 handler and the answer comes back as a 0.3 Message ({kind:"message",
+ *   role:"agent"}). Most A2A SDK clients in the wild still speak 0.3, and they were all refused.
  *
  * WHAT IT IS NOT
  *   Not a task runner, not streaming, not signed-receipts/v1: no receipt is attached until a
@@ -36,6 +39,7 @@
 
 import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
 import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
+import { recordUsage } from "../_lib/usage";
 
 type Json = Record<string, unknown>;
 
@@ -92,6 +96,58 @@ export const METHODS: Record<string, string> = {
   DeleteTaskPushNotificationConfig: "PushNotificationNotSupportedError -32003",
   GetExtendedAgentCard: "UnsupportedOperationError -32004 (extendedAgentCard is false)",
 };
+
+/**
+ * The A2A 0.3 method names and the v1.0 method each is served as. Used only when the request has
+ * no A2A-Version header or a 0.x one (the 0.3 wire shape); a request that declares 1.0 must use
+ * the 1.0 names.
+ */
+export const V03_METHODS: Record<string, string> = {
+  "message/send": "SendMessage",
+  "message/stream": "SendStreamingMessage",
+  "tasks/get": "GetTask",
+  "tasks/cancel": "CancelTask",
+  "tasks/resubscribe": "SubscribeToTask",
+  "tasks/pushNotificationConfig/set": "CreateTaskPushNotificationConfig",
+  "tasks/pushNotificationConfig/get": "GetTaskPushNotificationConfig",
+  "tasks/pushNotificationConfig/list": "ListTaskPushNotificationConfigs",
+  "tasks/pushNotificationConfig/delete": "DeleteTaskPushNotificationConfig",
+  "agent/getAuthenticatedExtendedCard": "GetExtendedAgentCard",
+};
+const isLegacyVersionHeader = (v: string): boolean => v === "" || /^0\.[23](\.\d+)*$/.test(v);
+
+/** 0.3 Message -> v1.0 Message: parts {kind:"text",text} -> {text}, {kind:"data",data} -> {data}. */
+export function v03MessageToV1(m: Json): Json {
+  const parts = Array.isArray(m.parts)
+    ? m.parts.map((raw) => {
+        const p = record(raw);
+        if (!p) return raw;
+        const { kind, metadata: _metadata, ...rest } = p;
+        if (kind === "text") return { text: rest.text };
+        if (kind === "data") return { data: rest.data };
+        if (kind === "file") {
+          const f = record(rest.file);
+          return str(f?.uri) ? { url: f?.uri } : { raw: f?.bytes ?? null };
+        }
+        return rest;
+      })
+    : m.parts;
+  const { kind: _kind, role, ...rest } = m;
+  return { ...rest, role: role === "user" ? "ROLE_USER" : role === "agent" ? "ROLE_AGENT" : role, parts };
+}
+
+/** v1.0 Message -> 0.3 Message, so a 0.3 client can read the answer it asked for. */
+export function v1MessageTo03(m: Json): Json {
+  const parts = Array.isArray(m.parts)
+    ? m.parts.map((raw) => {
+        const p = record(raw) ?? {};
+        if ("text" in p) return { kind: "text", text: p.text };
+        if ("data" in p) return { kind: "data", data: p.data };
+        return { kind: "data", data: p };
+      })
+    : [];
+  return { kind: "message", messageId: m.messageId, contextId: m.contextId, role: "agent", parts };
+}
 
 const record = (v: unknown): Json | null =>
   v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : null;
@@ -323,13 +379,14 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | T
     // Until 2026-09-26 only three exact strings qualified, so a bare "hello" got
     // INVALID_SKILL_SELECTOR while the error text itself said greetings were accepted.
     if (text !== undefined && isCapabilityGreeting(text)) return { kind: "CAPABILITY_HELP" };
-    // Any other text goes through the SAME deterministic router as POST /api/chat: a question that
+    // ALL other text goes through the SAME deterministic router as POST /api/chat: a question that
     // names something a /mcp tool answers (the board, an axis, a card id, a server) is answered by
-    // that tool in-process. Text it cannot place is still refused — never a guessed skill.
+    // that tool in-process. Text it cannot place is answered with a result that says so and lists
+    // what it can answer (state NO_TOOL_MATCHED) — never a guessed skill, never a measurement.
+    // Until 2026-09-29 that case was a -32602 error, which a2aregistry.org recorded against this
+    // agent as "Returning errors when contacted by users".
     const raw = str(part.text)?.trim() ?? "";
-    const plan = routeIntent(raw);
-    if (plan.kind !== "help") return { kind: "TALK", text: raw, plan };
-    return `no tool matched this text; ask about the board, a named axis, a 64-hex card id or an MCP server URL/domain, send a greeting (${GREETING_EXAMPLES}) for the capability list, or send structured Part.data {skill,input}`;
+    return { kind: "TALK", text: raw, plan: routeIntent(raw) };
   }
   if (semanticKeys[0] !== "data") {
     return `Part.${semanticKeys[0]} is not supported; use structured Part.data {skill,input}`;
@@ -644,7 +701,8 @@ async function sendMessage(id: unknown, params: unknown, origin: string): Promis
             { text: t.answer, mediaType: "text/plain" },
             {
               data: {
-                kind: t.grounded ? "GROUNDED_TOOL_ANSWER" : "NEEDS_INPUT",
+                kind: t.grounded ? "GROUNDED_TOOL_ANSWER" : t.kind === "needs_input" ? "NEEDS_INPUT" : "NO_TOOL_MATCHED",
+                state: t.grounded ? "grounded" : t.kind === "needs_input" ? "needs_input" : "unknown",
                 intent: t.intent,
                 label: t.label,
                 answered_by: t.answered_by,
@@ -747,7 +805,8 @@ export const onRequestGet: PagesFunction = async (context) => {
     // sentence on this endpoint states how many there are.
     skills: [...SKILL_IDS],
     version_rule:
-      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3, which this interface does not serve; it returns VersionNotSupportedError -32009. The 0.3 method names such as message/send are also unsupported.",
+      "Send `A2A-Version: 1.0`. Per A2A v1.0, an absent or empty header means 0.3. A v1.0 method name sent as 0.3 returns VersionNotSupportedError -32009. The 0.3 wire shape itself is served: a 0.3 method name (message/send, tasks/get, ...) with no header or a 0.x one is mapped onto the 1.0 handler and answered as a 0.3 Message; a request that declares 1.0 must use the 1.0 names.",
+    compat_0_3: Object.keys(V03_METHODS),
     tasks: "none kept — every SendMessage answers with a Message, so GetTask can only ever say TaskNotFound",
     register: REGISTER,
     example: {
@@ -766,8 +825,7 @@ export const onRequestGet: PagesFunction = async (context) => {
   return new Response(JSON.stringify(body, null, 2), { status: 200, headers: HEADERS });
 };
 
-export const onRequestPost: PagesFunction = async (context) => {
-  const { request } = context;
+export async function handlePost(request: Request): Promise<Response> {
   const origin = new URL(request.url).origin;
 
   let parsed: unknown;
@@ -796,6 +854,10 @@ export const onRequestPost: PagesFunction = async (context) => {
   }
 
   const requested = (request.headers.get("a2a-version") ?? "").trim();
+  // The 0.3 wire shape: a 0.3 method name with no version header (or a 0.x one).
+  if (isLegacyVersionHeader(requested) && Object.prototype.hasOwnProperty.call(V03_METHODS, method)) {
+    return serveV03(id, method, req.params, origin);
+  }
   if (!requested) {
     return rpcError(
       id,
@@ -824,12 +886,16 @@ export const onRequestPost: PagesFunction = async (context) => {
     );
   }
 
+  return dispatchV1(id, method, req.params, origin);
+}
+
+async function dispatchV1(id: unknown, method: string, params: unknown, origin: string): Promise<Response> {
   switch (method) {
     case "SendMessage":
-      return sendMessage(id, req.params, origin);
+      return sendMessage(id, params, origin);
     case "GetTask":
     case "CancelTask": {
-      const taskId = str(record(req.params)?.id) ?? null;
+      const taskId = str(record(params)?.id) ?? null;
       return rpcError(id, A2A_ERROR.TASK_NOT_FOUND, "task not found: this agent keeps no task store; every SendMessage answers with a Message", "TASK_NOT_FOUND", { taskId });
     }
     case "ListTasks":
@@ -845,4 +911,46 @@ export const onRequestPost: PagesFunction = async (context) => {
       }
       return rpcError(id, A2A_ERROR.METHOD_NOT_FOUND, `method not found: ${method}`, "METHOD_NOT_FOUND", { method, known: Object.keys(METHODS) });
   }
+}
+
+/**
+ * Serve a 0.3-shaped request through the v1.0 handler. The request message is mapped to v1.0,
+ * the SAME dispatch answers it, and a Message result is mapped back to the 0.3 shape (the 0.3
+ * `result` of message/send is the Message itself). Errors keep their JSON-RPC codes, which 0.3
+ * and 1.0 share.
+ */
+async function serveV03(id: unknown, method: string, params: unknown, origin: string): Promise<Response> {
+  const p = record(params);
+  let v1Params: unknown = params;
+  if (method === "message/send" || method === "message/stream") {
+    const m = record(p?.message);
+    v1Params = m ? { message: v03MessageToV1(m) } : {};
+  }
+  const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin);
+  const body = record(await res.json()) ?? {};
+  const result = record(body.result);
+  const message = record(result?.message);
+  const out = message ? { ...body, result: v1MessageTo03(message) } : body;
+  return new Response(JSON.stringify(out, null, 2), {
+    status: res.status,
+    headers: { ...HEADERS, "a2a-version": "0.3", "x-a2a-compat": "0.3 request served by the 1.0 handler" },
+  });
+}
+
+export const onRequestPost: PagesFunction = async (context) => {
+  const res = await handlePost(context.request);
+  // Aggregate usage (functions/_lib/usage.ts): wire shape + ok / error code. No text, no caller id.
+  const ctx = context as unknown as { request: Request; env?: unknown; waitUntil?: (p: Promise<unknown>) => void };
+  if (ctx.env && ctx.waitUntil) {
+    const shape = res.headers.get("a2a-version") === "0.3" ? "v0.3" : "v1.0";
+    ctx.waitUntil(
+      res.clone().json()
+        .then((j) => {
+          const code = (record(record(j)?.error) ?? {}).code;
+          recordUsage(ctx, "a2a_outcome", `${shape}_${typeof code === "number" ? `error${code}` : "ok"}`);
+        })
+        .catch(() => undefined),
+    );
+  }
+  return res;
 };

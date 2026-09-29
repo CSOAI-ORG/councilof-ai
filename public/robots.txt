@@ -91,19 +91,11 @@ Allow: /
 # Each appears exactly once. No agent below is repeated anywhere in this file.
 # ---------------------------------------------------------------------------
 
-User-agent: ClaudeBot
-Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
-Allow: /
-
 User-agent: Claude-SearchBot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
 User-agent: Claude-User
-Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
-Allow: /
-
-User-agent: GPTBot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Allow: /
 
@@ -142,6 +134,23 @@ Allow: /
 # about this site. Refusing them is consistent with `ai-train=no` and costs no discovery,
 # because nothing here is cited back to a reader.
 # ---------------------------------------------------------------------------
+
+# TRAINING CRAWLERS — DISALLOWED, AS THE EDGE ALREADY REFUSES THEM (29 September 2026).
+# Until this date the file said `Allow: /` to GPTBot and ClaudeBot while the edge answered
+# them 403 on /, /llms.txt and /api/gspc (UA matrix, 29 Sep 10:04Z; CCBot, Bytespider and
+# Amazonbot also 403). A file that states one policy while the site enforces another is the
+# declared-versus-observed mismatch this estate measures in others. The file now states what
+# the edge does. Their user-initiated and search agents (Claude-User, Claude-SearchBot,
+# ChatGPT-User, OAI-SearchBot) are separate agents, are answered 200, and stay allowed above.
+# functions/api/robots-agent-paths.test.ts holds the observed matrix and fails on a mismatch.
+
+User-agent: GPTBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Disallow: /
+
+User-agent: ClaudeBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
+Disallow: /
 
 User-agent: CCBot
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference

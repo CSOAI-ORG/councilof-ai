@@ -557,7 +557,52 @@ export async function censusRowsFigure(deps: Deps, ids: string[]): Promise<Got<F
   };
 }
 
-export async function pypiFigure(deps: Deps): Promise<Got<Figure>> {
+/** One entity's share of the PyPI record, summed from the record's own per-package rows. */
+export type PypiEntity = { n_packages: number; n_counted: number; all_time: number; last_30d: number; last_7d: number | null; day_one: number };
+
+/**
+ * Per-entity sums from the footprint record. The per-package rows (`packages[]`, each labelled with
+ * `entity`) are preferred because they carry the 7-day window; the record's own `by_entity` is the
+ * fallback (no 7-day figure). Null when the record carries neither: then no PyPI figure is shown,
+ * because the combined figure is mostly MEOK AI Labs packages and must never be shown as CSOAI's.
+ */
+export function pypiEntities(r: Record<string, any>): Record<string, PypiEntity> | null {
+  if (Array.isArray(r.packages) && r.packages.length) {
+    const out: Record<string, PypiEntity> = {};
+    for (const p of r.packages) {
+      const e = typeof p?.entity === "string" && p.entity ? p.entity : "unattributed";
+      const a = (out[e] ??= { n_packages: 0, n_counted: 0, all_time: 0, last_30d: 0, last_7d: 0, day_one: 0 });
+      a.n_packages++;
+      if (typeof p.all_time !== "number" || !Number.isFinite(p.all_time)) continue;
+      a.n_counted++;
+      a.all_time += p.all_time;
+      if (typeof p.last_30d === "number") a.last_30d += p.last_30d;
+      if (typeof p.last_7d === "number" && a.last_7d !== null) a.last_7d += p.last_7d;
+      // Every download so far fell inside the last 7 days: the first-week pattern of registry mirrors.
+      if (p.all_time > 0 && p.last_7d === p.all_time) a.day_one++;
+    }
+    return out;
+  }
+  const by = r.by_entity;
+  if (by && typeof by === "object") {
+    const out: Record<string, PypiEntity> = {};
+    for (const [e, v] of Object.entries(by as Record<string, any>)) {
+      if (!isPositive(v?.n_packages) || typeof v?.all_time !== "number") continue;
+      out[e] = { n_packages: v.n_packages, n_counted: v.n_packages, all_time: v.all_time, last_30d: Number(v.last_30d) || 0, last_7d: null, day_one: 0 };
+    }
+    return Object.keys(out).length ? out : null;
+  }
+  return null;
+}
+
+/**
+ * PyPI downloads, split by publisher (29 Sep 2026, growth gaps A6). CSOAI Ltd and MEOK AI Labs publish
+ * from one PyPI account; until this date the strip showed the combined figure (about 2.5M, of which
+ * MEOK packages were most), which a reader takes as CSOAI's reach. Now CSOAI's labelled packages are
+ * one figure and MEOK AI Labs' are a separate, separately labelled figure. They are never added.
+ * Labels come from the record (entity, per package, from /interop/footprint-packages.json).
+ */
+export async function pypiFigures(deps: Deps): Promise<Got<{ figs: Figure[]; omitted: Omitted[] }>> {
   const p = await read(deps, PYPI_FOOTPRINT);
   if (!p.ok) return p;
   const r = p.value;
@@ -568,31 +613,59 @@ export async function pypiFigure(deps: Deps): Promise<Got<Figure>> {
   if (!isIsoDate(r.as_of)) return { ok: false, reason: "distribution-footprint latest.json: as_of unreadable" };
   const ageH = (deps.now().getTime() - Date.parse(r.as_of)) / 3600_000;
   if (ageH > PYPI_MAX_AGE_HOURS) return { ok: false, reason: `distribution-footprint record is ${Math.floor(ageH)} h old (> ${PYPI_MAX_AGE_HOURS} h); not shown as today's figure` };
-  const partial = r.state !== "READ" || r.n_counted < r.n_packages;
-  const f = floorCompact(r.all_time_total);
-  const d30 = isPositive(r.last_30d) ? floorCompact(r.last_30d).display : null;
-  const d7 = isPositive(r.last_7d) ? r.last_7d : null;
-  return {
-    ok: true,
-    value: {
-      id: "pypi_all_time",
+  const ents = pypiEntities(r);
+  if (!ents) {
+    return { ok: false, reason: "distribution-footprint latest.json carries no per-entity split; the combined CSOAI + MEOK AI Labs figure is not shown as CSOAI's" };
+  }
+  const recordPartial = r.state !== "READ" || r.n_counted < r.n_packages;
+  const pkgs = (n: number) => `${nf.format(n)} package${n === 1 ? "" : "s"}`;
+  const figs: Figure[] = [];
+  const omitted: Omitted[] = [];
+  const make = (id: string, entity: string, label: string, detailTail: string): void => {
+    const e = ents[entity];
+    if (!e || !isPositive(e.all_time)) {
+      omitted.push({ id, reason: `no ${entity}-labelled package answered in the distribution-footprint record` });
+      return;
+    }
+    const partial = recordPartial || e.n_counted < e.n_packages;
+    const f = floorCompact(e.all_time);
+    const d30 = isPositive(e.last_30d) ? floorCompact(e.last_30d).display : null;
+    const counted = e.n_counted < e.n_packages ? `${nf.format(e.n_counted)} of ${pkgs(e.n_packages)} answered` : pkgs(e.n_packages);
+    const mirror = e.day_one > 0
+      ? ` · ${pkgs(e.day_one)} had every download in the last 7 days, the first-week pattern of registry mirrors`
+      : "";
+    figs.push({
+      id,
       group: "reach",
-      // The "+" on the rounded figure already says "at least"; a partial read also says how many answered.
-      label: "PyPI downloads, all-time",
-      value: r.all_time_total,
+      label,
+      value: e.all_time,
       display: f.display,
       display_sr: f.sr,
       unit: "downloads",
       as_of: r.as_of,
       as_of_basis: "source",
       source_url: PYPI_FOOTPRINT_PAGE,
-      source_label: "pepy.tech per package, daily record on Hugging Face csoai/distribution-footprint",
-      detail: `${d30 ? `${d30} in the last 30 days · ` : ""}${partial ? `${nf.format(r.n_counted)} of ${nf.format(r.n_packages)} packages answered` : `${nf.format(r.n_packages)} packages`} · CSOAI and MEOK AI Labs · counted by pepy.tech`,
+      source_label: "pepy.tech per package, daily record on Hugging Face csoai/distribution-footprint (entity label per package)",
+      detail: `${d30 ? `${d30} in the last 30 days · ` : ""}${counted}${detailTail}${mirror} · counted by pepy.tech`,
       detail_url: "https://pepy.tech",
-      ...(d7 ? { trend: { delta: d7, window: String(r.last_7d_window ?? "last 7 complete UTC days"), text: `+${floorCompact(d7).display} this week` } } : {}),
+      ...(isPositive(e.last_7d) ? { trend: { delta: e.last_7d as number, window: String(r.last_7d_window ?? "last 7 complete UTC days"), text: `+${floorCompact(e.last_7d as number).display} this week` } } : {}),
       ...(partial ? { lower_bound: true } : {}),
-    },
+    });
   };
+  const n = (e: string) => ents[e]?.n_packages ?? 0;
+  make(
+    "pypi_csoai_all_time",
+    "csoai",
+    "PyPI downloads, CSOAI packages, all-time",
+    ` labelled CSOAI · MEOK AI Labs packages are a separate figure${n("joint") || n("unattributed") ? ` · ${pkgs(n("joint"))} labelled joint and ${pkgs(n("unattributed"))} unattributed are in neither figure` : ""}`,
+  );
+  make(
+    "pypi_meok_all_time",
+    "meok",
+    "PyPI downloads, MEOK AI Labs packages (a separate entity, not CSOAI), all-time",
+    " labelled MEOK AI Labs · published from the same PyPI account; never added to the CSOAI figure",
+  );
+  return { ok: true, value: { figs, omitted } };
 }
 
 /** The live tool list served at POST /mcp. The response may be JSON or one SSE `data:` frame. */
@@ -842,6 +915,7 @@ export const RULES = [
   "Rounded figures round down and carry '+'. A partial read says 'at least' and names what answered.",
   "All-time, 30-day and 7-day windows are separate fields and are never added.",
   "Download counts include mirrors and automated traffic; they are not people, users or customers.",
+  "PyPI downloads are two figures that are never added: packages labelled CSOAI, and packages labelled MEOK AI Labs (a separate entity publishing from the same account). Joint and unattributed packages are in neither.",
   "Hugging Face downloads are two figures that are never added: the datasets our own services read (named in hf_self_read) and our other public datasets. Our own share inside the second is UNMEASURED.",
   "A third-party listing is shown only if it names us on this read. A listing is not an endorsement.",
 ];
@@ -854,7 +928,7 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
     correctionsFigure(deps),
     capsulesFigure(deps),
     huggingFaceFigures(deps),
-    pypiFigure(deps),
+    pypiFigures(deps),
     mcpToolsFigure(deps),
     x402DoorsFigure(deps),
     zenodo(deps, ZENODO_PAPER),
@@ -872,7 +946,10 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
   else omitted.push({ id: "corrections", reason: corr.reason });
   if (caps.ok) figures.push(caps.value.fig);
   else omitted.push({ id: "capsules", reason: caps.reason });
-  take("pypi_all_time", pypi);
+  if (pypi.ok) {
+    figures.push(...pypi.value.figs);
+    omitted.push(...pypi.value.omitted);
+  } else omitted.push({ id: "pypi_csoai_all_time", reason: pypi.reason });
   if (hf.ok) {
     figures.push(...hf.value.figs);
     omitted.push(...hf.value.omitted);

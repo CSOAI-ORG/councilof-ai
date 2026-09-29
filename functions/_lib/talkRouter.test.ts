@@ -57,6 +57,7 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
   const cases: [string, string[]][] = [
     ["what does the board say", ["board_totals"]],
     ["How many axes are measured?", ["board_totals"]],
+    ["What does Council of AI measure?", ["board_totals"]],
     ["is cityalert.live trustworthy", ["server_evidence", "mcp_trust"]],
     ["check whether the mcp server at https://tapeperp.com/mcp is trustworthy", ["server_evidence", "mcp_trust"]],
     [`verify ${HEX}`, ["verify_card"]],
@@ -280,9 +281,14 @@ describe("the doors use the router: POST /api/chat and A2A plain text", () => {
     expect(j.result.message.parts[0].text).toContain("23 axis · 23 measured");
   });
 
-  it("A2A text the router cannot place is still refused, never guessed", async () => {
-    stubOrigin();
+  // 29 Sep 2026: unplaced text is answered with a RESULT saying no tool matched (never guessed, never a
+  // measurement). The old -32602 was recorded by a2aregistry.org as "Returning errors when contacted".
+  it("A2A text the router cannot place is answered as unmatched, never guessed", async () => {
+    const seen = stubOrigin();
     const j = (await (await a2aText("measure all models")).json()) as Record<string, any>;
-    expect(j.error.data[0].reason).toBe("INVALID_SKILL_SELECTOR");
+    expect(j.error).toBeUndefined();
+    const data = j.result.message.parts[1].data;
+    expect(data).toMatchObject({ kind: "NO_TOOL_MATCHED", state: "unknown", tool_calls: [], citations: [] });
+    expect(seen).toHaveLength(0);
   });
 });
