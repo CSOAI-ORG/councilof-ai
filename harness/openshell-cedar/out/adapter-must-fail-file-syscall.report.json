@@ -1,0 +1,58 @@
+{
+ "translator": {
+  "name": "openshell-yaml-to-cedar",
+  "version": "0.1.0"
+ },
+ "openshell_pin": {
+  "release": "v0.1.2",
+  "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+  "previous_release": "v0.1.1",
+  "previous_tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30",
+  "sandbox_policy_rego_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41"
+ },
+ "status": "TRANSLATED",
+ "counts": {
+  "policies": 12,
+  "elements": 3,
+  "uncheckable": 0
+ },
+ "elements": [
+  {
+   "source": "platform:always-blocked-addresses",
+   "status": "TRANSLATED",
+   "policies": [
+    "p001",
+    "p002",
+    "p003",
+    "p004"
+   ]
+  },
+  {
+   "source": "platform:control-plane-ports",
+   "status": "TRANSLATED",
+   "policies": [
+    "p005",
+    "p006"
+   ],
+   "note": "widened: OpenShell applies this to exact-host, IP and allowed_ips endpoints; v0 applies it to all"
+  },
+  {
+   "source": "filesystem_policy",
+   "status": "TRANSLATED",
+   "policies": [
+    "p007",
+    "p008",
+    "p009",
+    "p010",
+    "p011",
+    "p012"
+   ],
+   "note": "baseline paths are included as the adapter model adds them"
+  }
+ ],
+ "rule": "Nothing UNCHECKABLE contributes a permit. Forbids are never dropped, only widened.",
+ "input": {
+  "file": "policy.yaml",
+  "sha256": "00050fd8714212cf2f861eee1a128fbe900b456053275452587e29e408d74e82"
+ }
+}

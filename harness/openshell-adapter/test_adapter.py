@@ -242,6 +242,34 @@ class Codes(unittest.TestCase):
                          ("net", "DENIED", "httpbin.org", 443, "no matching policy"))
 
 
+class Requalify012(unittest.TestCase):
+    """v0.1.2 docs (PR 3740): outbound policy never authorizes loopback, but sandbox-local loopback is
+    off the policy path. A loopback attempt with no enforcer record is not compared; with a record it is."""
+
+    def test_pin(self):
+        self.assertEqual(A.OPENSHELL_PIN["release"], "v0.1.2")
+        self.assertTrue(A.OPENSHELL_PIN["tag_commit"].startswith("6648bd0"))
+
+    def test_loopback_without_record_is_unmodelled(self):
+        w = [{"kind": "egress", "host": "127.0.0.1", "port": 8080, "left": True, "_line": 1, "_sha256": "0" * 64}]
+        rows = A.compare({"version": 1}, [], w)
+        self.assertEqual([(r["comparison"], r.get("code")) for r in rows], [("UNMODELLED", "LOOPBACK_OFF_POLICY_PATH")])
+        self.assertEqual(A.summarise(rows)["result"], "UNMEASURED")
+
+    def test_loopback_with_proxy_record_is_still_compared(self):
+        line = "2026-09-28T12:00:00.000Z OCSF NET:OPEN [INFO] ALLOWED /usr/bin/curl(7) -> 127.0.0.1:8080 [policy:x engine:opa]"
+        rec = A.parse_shorthand(line, "x.log", 1)
+        w = [{"kind": "egress", "t": "2026-09-28T12:00:00.100Z", "host": "127.0.0.1", "port": 8080, "left": True,
+              "_line": 1, "_sha256": "0" * 64}]
+        rows = A.compare({"version": 1}, [rec], w)
+        self.assertEqual(rows[0]["comparison"], "DIVERGED")
+
+    def test_link_local_metadata_is_never_off_path(self):
+        w = [{"kind": "egress", "host": "169.254.169.254", "port": 80, "left": True, "_line": 1, "_sha256": "0" * 64}]
+        rows = A.compare({"version": 1}, [], w)
+        self.assertEqual((rows[0]["comparison"], rows[0].get("code")), ("DIVERGED", "EGRESS_WITHOUT_ENFORCER_RECORD"))
+
+
 class Hygiene(unittest.TestCase):
     ALLOWED = re.compile(r"github\.com/NVIDIA/OpenShell|repos/NVIDIA/OpenShell|NVIDIA/OpenShell|"
                          r"published by NVIDIA|not an NVIDIA integration", re.I)

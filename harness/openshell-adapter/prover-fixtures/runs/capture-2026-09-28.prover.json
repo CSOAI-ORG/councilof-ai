@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "prover_version": "0.1.2",
+  "check": "boundary",
+  "coverage": {
+    "domains": [
+      "filesystem",
+      "network_l4",
+      "network_rest",
+      "process",
+      "landlock"
+    ]
+  },
+  "result": "unsupported",
+  "exit_code": 3,
+  "inputs": {
+    "candidate": "capture-2026-09-28/policy.yaml",
+    "boundary": "prover-fixtures/boundary-capture.yaml"
+  },
+  "counterexample": null,
+  "reason_code": "unsupported_policy_shape",
+  "reason": "candidate policy rule 'example_audit' uses REST without enforced inspection"
+}

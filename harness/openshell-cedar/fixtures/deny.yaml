@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: Apache-2.0
+# Translator fixture (ours): declared denies. Full access to one API except deletes and the admin tree;
+# deny beats allow. A read-only path inside a read-write path must refuse writes.
+version: 1
+filesystem_policy:
+  include_workdir: false
+  read_only: [/usr, /data/reference]
+  read_write: [/data]
+landlock:
+  compatibility: hard_requirement
+network_policies:
+  api_full:
+    name: api-full
+    endpoints:
+      - host: api.example.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: full
+        deny_rules:
+          - method: DELETE
+            path: /**
+          - method: "*"
+            path: /admin/**
+    binaries:
+      - { path: /usr/bin/curl }

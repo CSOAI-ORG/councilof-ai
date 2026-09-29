@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0
+# Must-catch fixture (ours): an unknown top-level field. OpenShell rejects this policy outright; the
+# translator emits no permit at all and marks the policy UNCHECKABLE.
+version: 1
+sandbox_overrides:
+  open_everything: true
+network_policies:
+  ordinary:
+    name: ordinary
+    endpoints:
+      - host: ok.example.com
+        port: 443
+    binaries:
+      - { path: /usr/bin/curl }

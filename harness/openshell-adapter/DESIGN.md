@@ -1,6 +1,7 @@
 # OpenShell declared-vs-observed adapter: design note
 
-Lane `openshell-adapter-20260928`, backlog item #25. Written 2026-09-28.
+Lane `openshell-adapter-20260928`, backlog item #25. Written 2026-09-28; requalified against v0.1.2
+and given the prover-backed declared side on 2026-09-29 (lane `nv-openshell-20260929`).
 Licence of this folder: Apache-2.0 (SPDX headers on every source file).
 
 This is our example code. It reads OpenShell's published policy and log formats. OpenShell is an
@@ -169,7 +170,9 @@ same result, the check would have stopped comparing anything, and `test_adapter.
 - Our Python model re-implements the rego. Where they disagree, the adapter can be wrong. On the
   capture (n = 3) the model gave the same connection-level result as the enforcer for all three
   hosts, and found the same deny rule the enforcer applied to both GET requests (refused under
-  `enforce`, let through under `audit`). A cross-check with `openshell-prover` has not been done.
+  `enforce`, let through under `audit`). The prover is now wired in as the declared side
+  (`declared_observed.py`, 2026-09-29), but it answers a different question (containment in a
+  boundary), so it is not a cross-check of this model's per-request decisions.
 - No binary identity in the network-proxy role (`-(0)`). Rows say "endpoint-only match".
 - The OCSF JSONL parser is tested only on records built from the documented shapes, not on a
   captured JSONL file.
@@ -182,9 +185,9 @@ same result, the check would have stopped comparing anything, and `test_adapter.
 
 ## 10. Owner-gated (HELD)
 
-- Publishing this folder outside the repo (a public page, a package, or any note to OpenShell's
-  maintainers about the audit-mode record) is **HELD**. Owner ask: approve or decline making
-  `harness/openshell-adapter` a public example, and say whether the audit-mode observation in section 2
-  may be raised with OpenShell's maintainers.
+- Publishing this folder as an open package: **authorised** by the owner's brief of 2026-09-29
+  ("publish the translator and adapter as an open package"), as an independent open example with no
+  affiliation claim. See `harness/openshell-cedar/package/`.
+- Any note to OpenShell's maintainers about the audit-mode record stays **HELD** (no outbound contact).
 - A full-sandbox capture (file and syscall attempts under real Landlock and seccomp, with OCSF JSONL
   switched on) needs a credential-free VM with Docker 28+ or KVM. Owner ask: provision one, or say no.
