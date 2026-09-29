@@ -1,6 +1,6 @@
 # Council of AI GSPC
 
-Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or OAuth). Server 1.4.2.
+Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or OAuth). Server 1.4.3.
 
 ## Tools
 
