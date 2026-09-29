@@ -15,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 CAPABILITY_SOURCE = ROOT / "council-os" / "capabilities.json"
+MAX_PUBLIC_COUNT = (1 << 256) - 1
 
 SOURCES = {
     "gspc": "https://councilof.ai/api/gspc",
@@ -39,9 +40,17 @@ def content_id(value: Any) -> str:
 def nonnegative_count(value: Any) -> int | None:
     """Accept exact public counters only; malformed values stay unknown."""
     if type(value) is int:
-        return value if value >= 0 else None
+        return value if 0 <= value <= MAX_PUBLIC_COUNT else None
     if isinstance(value, str) and value.isascii() and value.isdigit():
-        return int(value)
+        if len(value) > 78:
+            return None
+        normalized = value.lstrip("0") or "0"
+        maximum = str(MAX_PUBLIC_COUNT)
+        if len(normalized) > len(maximum) or (
+            len(normalized) == len(maximum) and normalized > maximum
+        ):
+            return None
+        return int(normalized)
     return None
 
 
@@ -247,11 +256,14 @@ def validate_committed(
 
 def selftest() -> list[str]:
     failures=[]
-    valid_counts={0:0, 7:7, "0":0, "007":7}
+    valid_counts={0:0, 7:7, "0":0, "007":7, str(MAX_PUBLIC_COUNT):MAX_PUBLIC_COUNT}
     for value,expected in valid_counts.items():
         if nonnegative_count(value)!=expected:
             failures.append(f"valid public counter rejected: {value!r}")
-    for value in (True, False, 1.5, float("inf"), float("nan"), "-1", "1.5", " 7", "7x", None, -1):
+    for value in (
+        True, False, 1.5, float("inf"), float("nan"), "-1", "1.5", " 7", "7x",
+        "9" * 78, "9" * 79, "9" * 4301, None, -1, MAX_PUBLIC_COUNT + 1,
+    ):
         if nonnegative_count(value) is not None:
             failures.append(f"invalid public counter accepted: {value!r}")
     gate_cases = (
