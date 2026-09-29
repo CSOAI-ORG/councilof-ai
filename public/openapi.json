@@ -307,6 +307,22 @@
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
+    "/api/arena/scoreboard": {
+      "get": {
+        "description": "HEAD must not 404 when GET is 200 \u2014 probes and MCP hosts send HEAD first.",
+        "operationId": "get__api_arena_scoreboard",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "HEAD must not 404 when GET is 200 \u2014 probes and MCP hosts send HEAD first."
+      }
+    },
     "/api/art50/marking-evidence": {
       "get": {
         "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion. preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
@@ -917,6 +933,22 @@
         "summary": "POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper."
       }
     },
+    "/api/assess/key": {
+      "get": {
+        "description": "GET /api/assess/key \u2014 the verification half of the signed assessment. AssessTool's copy tells readers to fetch the public key from here and check the signature themselves; until now the path didn't exist. Returns the Ed25519 public key derived from the same secret the signer uses \u2014 or an honest 404 when no key is provisioned, never a made-up key.",
+        "operationId": "get__api_assess_key",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/assess/key \u2014 the verification half of the signed assessment. AssessTool's copy tells readers to fetch the public key from here and check the signature themselves; until now the path\u2026"
+      }
+    },
     "/api/atlas": {
       "get": {
         "description": "atlas \u2014 retired until its response can be derived from current evidence.",
@@ -1158,6 +1190,22 @@
         "summary": "POST /api/checkout \u2014 public door is closed."
       }
     },
+    "/api/claims/register": {
+      "get": {
+        "description": "GET /api/claims/register \u2014 the register of every subject we maintain public claims on.",
+        "operationId": "get__api_claims_register",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/claims/register \u2014 the register of every subject we maintain public claims on."
+      }
+    },
     "/api/clarity": {
       "get": {
         "description": "",
@@ -1302,6 +1350,22 @@
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
+    "/api/corpus-watch/status": {
+      "get": {
+        "description": "GET /api/corpus-watch/status \u2014 serves the watcher heartbeat JSON with register-honest semantics.",
+        "operationId": "get__api_corpus-watch_status",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/corpus-watch/status \u2014 serves the watcher heartbeat JSON with register-honest semantics."
+      }
+    },
     "/api/corrections": {
       "get": {
         "description": "did:web:csoai.org#board-attestation-1, mirrored from https://csoai.org/.well-known/did.json.",
@@ -1428,6 +1492,22 @@
         },
         "summary": "",
         "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/dashboard/stats": {
+      "get": {
+        "description": "GET /api/dashboard/stats \u2014 DSH board metrics from live public APIs on apex.",
+        "operationId": "get__api_dashboard_stats",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/dashboard/stats \u2014 DSH board metrics from live public APIs on apex."
       }
     },
     "/api/decide": {
@@ -2755,6 +2835,22 @@
         },
         "security": [],
         "summary": ""
+      }
+    },
+    "/api/evidence/github": {
+      "get": {
+        "description": "GET /api/evidence/github?owner=X&repo=Y \u2014 proxy to GitHub API for repo evidence. Returns: { evidence: [{sha, date, message, author}], error?, rateLimit? }",
+        "operationId": "get__api_evidence_github",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/evidence/github?owner=X&repo=Y \u2014 proxy to GitHub API for repo evidence. Returns: { evidence: [{sha, date, message, author}], error?, rateLimit? }"
       }
     },
     "/api/fabric": {
@@ -9979,6 +10075,22 @@
         "summary": "GET /api/receipt-status \u2014 current receipt issuance status."
       }
     },
+    "/api/receipts": {
+      "get": {
+        "description": "GET /api/receipts?payer=0x\u2026 \u2014 settlement receipts for one payer.",
+        "operationId": "get__api_receipts",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/receipts?payer=0x\u2026 \u2014 settlement receipts for one payer."
+      }
+    },
     "/api/receipts/batch": {
       "get": {
         "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts. preview=1 is free digest. Paid leaves require from (HTTP 402).",
@@ -10571,6 +10683,52 @@
             "x402"
           ]
         }
+      }
+    },
+    "/api/receipts/latest": {
+      "get": {
+        "description": "GET /api/receipts/latest \u2014 aggregate state of the signed x402 receipt store.",
+        "operationId": "get__api_receipts_latest",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/receipts/latest \u2014 aggregate state of the signed x402 receipt store."
+      }
+    },
+    "/api/receipts/verify": {
+      "get": {
+        "description": "POST /api/receipts/verify \u2014 hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
+        "operationId": "get__api_receipts_verify",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/receipts/verify \u2014 hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate."
+      },
+      "post": {
+        "description": "POST /api/receipts/verify \u2014 hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate.",
+        "operationId": "post__api_receipts_verify",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "POST /api/receipts/verify \u2014 hand it an x402 offer-receipt artefact, get VALID or INVALID and the reason. Free forever, like every verification surface in this estate."
       }
     },
     "/api/refund": {
@@ -11902,6 +12060,22 @@
         "summary": ""
       }
     },
+    "/api/sov-town/state.jsonl": {
+      "get": {
+        "description": "GET /api/sov-town/state.jsonl \u2014 live SOV Town sim state (STAGING, DESIGN-labelled).",
+        "operationId": "get__api_sov-town_state.jsonl",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "GET /api/sov-town/state.jsonl \u2014 live SOV Town sim state (STAGING, DESIGN-labelled).",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
     "/api/specialists": {
       "get": {
         "description": "GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through.",
@@ -12281,6 +12455,22 @@
         },
         "summary": "/api/witness \u2014 quarantined paid witness surface.",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/witness/status": {
+      "get": {
+        "description": "GET /api/witness/status?sha256=<64hex> \u2014 free, always. The state of one witnessed digest:",
+        "operationId": "get__api_witness_status",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/witness/status?sha256=<64hex> \u2014 free, always. The state of one witnessed digest:"
       }
     },
     "/api/worker": {
@@ -13288,7 +13478,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 108,
+    "public_operations": 148,
     "quarantined": [
       {
         "buyable": false,
