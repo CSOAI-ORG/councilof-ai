@@ -2,9 +2,9 @@
 title: "Where Council of AI takes part, and what each listing does not mean"
 slug: where-council-of-ai-takes-part-and-what-it-does-not-mean
 date: 2026-09-22
-updated: 2026-09-26
+updated: 2026-09-29
 canonical: https://councilof.ai/memberships
-source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-09-26, signed: false)
+source: public/interop/memberships.json (schema csoai.memberships/0.1, as_of 2026-09-29, signed: false)
 generated_by: scripts/memberships-post.mjs — do not hand-edit; edit the manifest and re-run
 description: "Every standards body, registry, scholarly identifier and regulator filing Council of AI takes part in, each with its evidence link, its date, what it proves and what it does not. Participation is not endorsement; a listing is not adoption."
 ---
@@ -37,13 +37,13 @@ Yes. The Alliance's participation agreement was completed by all parties via Doc
 
 Yes. The European Commission's AI Office wrote on 2026-08-20 thanking Council of AI for having joined the AI Pact and invited us to its community. The evidence is that correspondence rather than a public page, because the Commission's AI Pact page did not name us when checked on 2026-09-22. We have not signed the AI Pact's voluntary pledges, so this is participation in the community and not a signatory claim, and it says nothing about whether any AI system complies with the AI Act.
 
-## Does being in the MCP Registry mean the servers are endorsed?
+## Does being in the MCP Registry mean the server is endorsed?
 
-No. Servers under io.github.CSOAI-ORG are in the official MCP Registry, and the registry API at https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG returns them. Entries are self-published under a GitHub namespace; the registry reviews and ranks nothing, and a listing says nothing about whether any client uses them.
+No. ai.councilof/gspc is in the official MCP Registry, and the registry API at https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof returns it. Entries are self-published by the namespace owner; the registry reviews and ranks nothing, and a listing says nothing about whether any client uses it.
 
 ## Do the ORCID, DOI and Wikidata entries mean the work is peer reviewed?
 
-No. They are identifiers: an ORCID iD for the founder (https://orcid.org/0009-0001-3869-1068), a Zenodo DOI for a published methodology record (https://doi.org/10.5281/zenodo.21991104), and a Wikidata item for the organisation (https://www.wikidata.org/wiki/Q141128616). Each makes the thing citable and findable; none of them is peer review, notability, or endorsement.
+No. They are identifiers: an ORCID iD for the founder (https://orcid.org/0009-0001-3869-1068), a Zenodo DOI for a published methodology record (10.5281/zenodo.21991104; Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending), and a Wikidata item for the organisation (https://www.wikidata.org/wiki/Q141128616). Each makes the thing citable and findable; none of them is peer review, notability, or endorsement.
 
 ## Has NIST or the Bank of England endorsed Council of AI?
 
@@ -96,10 +96,10 @@ Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named o
   - Date basis: Earliest archived post by Nicholas Templeman that this check retrieved (2026-09-05 04:32 +0100, 'Control-delivery evidence as an input to audit semantics').
   - What it proves: A message from Nicholas Templeman is in the public IETF mail archive for the audit list.
   - What it does not prove: Open-list participation only. The audit effort is a proposed charter, not a working group we belong to; no adoption, no consensus, no standing.
-- **C2PA — Coalition for Content Provenance and Authenticity** — a contributor to this body, since 2026-08-06; state VERIFIED.
+- **C2PA — Coalition for Content Provenance and Authenticity (a Linux Foundation project)** — a member of this body, since 2026-08-06; state VERIFIED.
   - Evidence: <https://c2pa.org/membership/>
-  - Date basis: Membership contract completed 2026-08-06; welcome 2026-08-17; logo supplied for the roster 2026-09-18 (INBOX 8835, 8885). The public roster now carries the entry.
-  - What it proves: CSOAI LTD appears on the public C2PA membership page under Contributor Members.
+  - Date basis: Membership contract completed via the Linux Foundation DocuSign on 2026-08-06; welcome 2026-08-17; logo supplied for the roster 2026-09-18 (INBOX 8835, 8885). The public roster lists CSOAI LTD under Contributor Members, the tier of that membership.
+  - What it proves: CSOAI LTD is a C2PA member at the Contributor tier: the membership contract was completed on 2026-08-06 and the public C2PA membership page lists CSOAI LTD under Contributor Members.
   - What it does not prove: Contributor is the entry tier: no steering role, no vote on the specification. Membership does not mean C2PA has reviewed or approved any Council of AI implementation, and no Council of AI product has passed the C2PA conformance program.
 - **Decentralized Identity Foundation (DIF)** — a member of this body, since 2026-08-18; state VERIFIED.
   - Evidence: private evidence (private email): INBOX 8945 (DIF Membership, 2026-09-21) and Sent 487 (2026-09-21)
@@ -124,11 +124,11 @@ Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named o
   - Date basis: mcpservers.org wrote on 2026-09-05 that the submission "has been approved and is now live", naming the listing URL https://mcpservers.org/servers/csoai-org/councilof-ai (INBOX 7848).
   - What it proves: A Council of AI MCP server was accepted into the mcpservers.org directory.
   - What it does not prove: The listing is self-submitted and the directory reviewed the submission, not the measurements. The row is private evidence because mcpservers.org answers HTTP 403 to every automated client: the only place our name appears in that response is the URL we ourselves requested, echoed back in the challenge, which proves nothing about the page.
-- **MCP Registry (registry.modelcontextprotocol.io), namespace io.github.CSOAI-ORG** — listed in this body, since 2026-05-07; state VERIFIED.
-  - Evidence: <https://registry.modelcontextprotocol.io/v0/servers?search=io.github.CSOAI-ORG>
-  - Date basis: Earliest publishedAt among the io.github.CSOAI-ORG servers returned by the registry API on 2026-09-22.
-  - What it proves: Servers published under the io.github.CSOAI-ORG namespace are in the official MCP Registry; the API answers with them.
-  - What it does not prove: Registry entries are self-published under a GitHub namespace. The registry reviews nothing, ranks nothing, and a listing does not mean any client ships, installs or recommends these servers.
+- **MCP Registry (registry.modelcontextprotocol.io), ai.councilof/gspc** — listed in this body, since 2026-09-26; state VERIFIED.
+  - Evidence: <https://registry.modelcontextprotocol.io/v0/servers?search=ai.councilof>
+  - Date basis: Earliest publishedAt among the ai.councilof servers the registry API returned on 2026-09-28 (ai.councilof/gspc 1.4.2, 2026-09-26; 1.4.3 is the latest). Servers under the older io.github.CSOAI-ORG namespace have been listed since 2026-05-07, but a search for that namespace also returns servers that are not this measurement service, so it is not the evidence link.
+  - What it proves: The domain-verified server ai.councilof/gspc is in the official MCP Registry; the API answers with it.
+  - What it does not prove: Registry entries are self-published by whoever controls the namespace (ai.councilof is verified by domain). The registry reviews nothing, ranks nothing, and a listing does not mean any client ships, installs or recommends the server.
 - **PayAI x402 discovery index** — listed in this body, since 2026-09-22; state VERIFIED.
   - Evidence: <https://facilitator.payai.network/discovery/resources>
   - Date basis: The index carries no listing date; the date given is when this check first walked the index and found councilof.ai doors in it.
@@ -172,16 +172,16 @@ Yes. CSOAI LTD signed the OIN 2.0 License Agreement on 2026-08-15 and is named o
   - Date basis: Record created 2026-08-22.
   - What it proves: A public ORCID record exists for the founder, naming Council of AI (CSOAI Ltd).
   - What it does not prove: An ORCID iD is an identifier. It is not a credential, an affiliation check, or a review of any work attached to it.
-- **Zenodo record with DataCite DOI 10.5281/zenodo.21991104** — registered with this body, since 2026-08-18; state VERIFIED.
-  - Evidence: <https://doi.org/10.5281/zenodo.21991104>
+- **Zenodo record with DataCite DOI 10.5281/zenodo.21991104** — registered with this body, since 2026-08-18; state UNVERIFIED.
+  - Evidence: https://doi.org/10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.)
   - Date basis: Version 1 published 2026-08-18 (author Templeman, Nicholas; CSOAI Ltd).
-  - What it proves: A methodology record by Council of AI is published on Zenodo with a resolving DOI.
+  - What it proves: A methodology record by Council of AI was published on Zenodo (version 1, 2026-08-18) under this DOI. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. The DOI is kept as the record's permanent name; it does not resolve while the account is blocked.
   - What it does not prove: Zenodo hosts; it does not referee. A DOI is a persistent identifier, not peer review and not an endorsement of the method.
 - **OpenAIRE Explore — research product record harvested from Zenodo** — listed in this body, since 2026-09-22; state VERIFIED.
   - Evidence: <https://explore.openaire.eu/search/publication?pid=10.5281%2Fzenodo.21991105>
   - Date basis: OpenAIRE carries no date we can cite for when the record was harvested; the date given is when this check first queried OpenAIRE for the DOI and found the record naming us. The OpenAIRE record's own status field read UNDER_CURATION on that day.
   - What it proves: The Zenodo deposit 10.5281/zenodo.21991105 has been harvested into OpenAIRE, the European open-science aggregator, and the record names Council of AI. It means the deposit is discoverable through OpenAIRE and through the services that consume it.
-  - What it does not prove: Harvesting is automatic. OpenAIRE aggregates from Zenodo without reviewing, refereeing or endorsing anything, and the record's own status field read UNDER_CURATION when checked. This is indexing, not peer review, not publication in a journal, and not a statement by OpenAIRE about the work.
+  - What it does not prove: Harvesting is automatic. OpenAIRE aggregates from Zenodo without reviewing, refereeing or endorsing anything, and the record's own status field read UNDER_CURATION when checked. This is indexing, not peer review, not publication in a journal, and not a statement by OpenAIRE about the work. The Zenodo deposit it harvested, 10.5281/zenodo.21991105: Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. OpenAIRE's copy of the metadata is not the deposit.
 - **Wikidata item Q141128616 (Council of AI)** — registered with this body, since 2026-08-19; state VERIFIED.
   - Evidence: <https://www.wikidata.org/wiki/Q141128616>
   - Date basis: Item created 2026-08-19 (first revision timestamp from the Wikidata API).

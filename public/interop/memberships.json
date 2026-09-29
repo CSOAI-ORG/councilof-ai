@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships/0.1",
-  "as_of": "2026-09-28",
+  "as_of": "2026-09-29",
   "signed": false,
   "purpose": "Where Council of AI (CSOAI Ltd, UK Companies House 16939677) takes part, and what each entry does and does not prove. One row per body. Every row names its evidence: a public URL a stranger can open, or a dated mailbox record when the only evidence is private (public_evidence: false). scripts/memberships-check.mjs re-fetches every public URL and fails when one stops answering 200 with our name. Participation is not endorsement, a listing is not adoption, a filing is not recognition. Nothing here is a score, a rank, or a mark.",
   "honesty_line": "Participation is not endorsement, and a listing is not adoption. Every entry links to its evidence.",
@@ -513,7 +513,7 @@
       "state": "VERIFIED",
       "verified_on": "2026-09-22",
       "question": "Do the ORCID, DOI and Wikidata entries mean the work is peer reviewed?",
-      "answer": "No. They are identifiers: an ORCID iD for the founder (https://orcid.org/0009-0001-3869-1068), a Zenodo DOI for a published methodology record (https://doi.org/10.5281/zenodo.21991104), and a Wikidata item for the organisation (https://www.wikidata.org/wiki/Q141128616). Each makes the thing citable and findable; none of them is peer review, notability, or endorsement."
+      "answer": "No. They are identifiers: an ORCID iD for the founder (https://orcid.org/0009-0001-3869-1068), a Zenodo DOI for a published methodology record (10.5281/zenodo.21991104; Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending), and a Wikidata item for the organisation (https://www.wikidata.org/wiki/Q141128616). Each makes the thing citable and findable; none of them is peer review, notability, or endorsement."
     },
     {
       "id": "zenodo-doi",
@@ -532,10 +532,13 @@
           "CSOAI"
         ]
       },
-      "what_it_proves": "A methodology record by Council of AI is published on Zenodo with a resolving DOI.",
+      "what_it_proves": "A methodology record by Council of AI was published on Zenodo (version 1, 2026-08-18) under this DOI. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. The DOI is kept as the record's permanent name; it does not resolve while the account is blocked.",
       "what_it_does_not_prove": "Zenodo hosts; it does not referee. A DOI is a persistent identifier, not peer review and not an endorsement of the method.",
-      "state": "VERIFIED",
-      "verified_on": "2026-09-22"
+      "state": "UNVERIFIED",
+      "verified_on": "2026-09-22",
+      "status_note": "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+      "status_since": "2026-09-29",
+      "status_url": "https://councilof.ai/interop/zenodo-status.json"
     },
     {
       "id": "openaire",
@@ -556,7 +559,7 @@
         ]
       },
       "what_it_proves": "The Zenodo deposit 10.5281/zenodo.21991105 has been harvested into OpenAIRE, the European open-science aggregator, and the record names Council of AI. It means the deposit is discoverable through OpenAIRE and through the services that consume it.",
-      "what_it_does_not_prove": "Harvesting is automatic. OpenAIRE aggregates from Zenodo without reviewing, refereeing or endorsing anything, and the record's own status field read UNDER_CURATION when checked. This is indexing, not peer review, not publication in a journal, and not a statement by OpenAIRE about the work.",
+      "what_it_does_not_prove": "Harvesting is automatic. OpenAIRE aggregates from Zenodo without reviewing, refereeing or endorsing anything, and the record's own status field read UNDER_CURATION when checked. This is indexing, not peer review, not publication in a journal, and not a statement by OpenAIRE about the work. The Zenodo deposit it harvested, 10.5281/zenodo.21991105: Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. OpenAIRE's copy of the metadata is not the deposit.",
       "state": "VERIFIED",
       "verified_on": "2026-09-22"
     },

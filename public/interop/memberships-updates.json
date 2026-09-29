@@ -1,6 +1,6 @@
 {
   "schema": "csoai.memberships-updates/0.1",
-  "as_of": "2026-09-27",
+  "as_of": "2026-09-29",
   "signed": false,
   "purpose": "The dated record of what changed in public/interop/memberships.json and why. One entry per change, newest first. Every entry names the manifest row it touches (or null when it touches the manifest as a whole) and carries the same kind of evidence the rows do: a public URL a stranger can open, or a dated mailbox record when the only evidence is private. This file exists so a reader can see that a row moved, when, and on what basis — a table that only ever shows its current state cannot be audited. scripts/memberships-check.mjs validates it and fails when an entry names a row that does not exist.",
   "honesty_line": "An update is a record of a change, not an announcement of an achievement. Nothing here upgrades a row; the rows say what they prove.",
@@ -193,6 +193,15 @@
       "detail": "The row said contributor. The membership contract was completed via the Linux Foundation DocuSign on 2026-08-06, and the public roster lists CSOAI LTD under Contributor Members: Contributor is the tier of a membership, not a separate standing. The row now says member, tier Contributor. No other field changed its meaning.",
       "evidence": "https://c2pa.org/membership/",
       "evidence_kind": "public_url"
+    },
+    {
+      "date": "2026-09-29",
+      "kind": "corrected",
+      "row": "zenodo-doi",
+      "headline": "Zenodo DOI row: VERIFIED -> UNVERIFIED; the record answers HTTP 410",
+      "detail": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held the deposit, after a bulk publish by one of our own automated lanes, and every record on it began answering HTTP 410 ('User was blocked'), including 10.5281/zenodo.21991104 (record 21991105). The row no longer says the record resolves. The DOI is kept as its permanent name. The owner is appealing; the outcome is unknown. Corrections ledger: C-2026-0929-09.",
+      "evidence": "curl -sIL https://doi.org/10.5281/zenodo.21991104  # final hop: HTTP 410 (read 2026-09-29)",
+      "evidence_kind": "command"
     }
   ]
 }

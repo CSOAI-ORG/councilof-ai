@@ -983,6 +983,13 @@ emit("public/.well-known/mcp/server-card.json", j({
   authentication: { required: false, note: "Public MCP — initialize and tools/list require no Authorization header." },
   license: "CC-BY-4.0",
   doi: "10.5281/zenodo.21991104",
+  // 29 Sep 2026: the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending).
+  // The identifier stays; this says it does not resolve. Same block GET /api/gspc serves.
+  doi_status: "UNAVAILABLE",
+  doi_status_note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+  doi_status_since: "2026-09-29T15:47Z",
+  doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
+  doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
   explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
   discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
   doctrine: DOCTRINE,

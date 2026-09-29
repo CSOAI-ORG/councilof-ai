@@ -47,6 +47,15 @@ export function boardNote(read: BoardRead, accessed: string): string {
   );
 }
 
+/** True when the board says its DOI does not currently resolve (29 Sep 2026: Zenodo answers 410). */
+const unavailable = (f: { doi_status: string | null }) => f.doi_status === "UNAVAILABLE";
+
+/** The methodology reference's note: what it is, and, while the record is down, the board's own notice. */
+export function methodologyNote(f: { doi_status: string | null; doi_status_note: string | null }): string {
+  const base = "The methodology record the GSPC board names; it is not the live numbers";
+  return unavailable(f) ? `${base}. ${(f.doi_status_note ?? "Record unavailable").replace(/\.$/, "")}` : base;
+}
+
 export function bibtex(read: BoardRead, now: Date): string {
   const accessed = ymd(now);
   let out =
@@ -61,14 +70,16 @@ export function bibtex(read: BoardRead, now: Date): string {
     `}\n`;
   if ("facts" in read && read.facts.doi) {
     const t = methodologyTitle(read.facts) ?? "GSPC methodology record";
+    const off = unavailable(read.facts);
     out +=
       `\n@misc{csoai_gspc_methodology,\n` +
       `  author    = {{${AUTHOR}}},\n` +
       `  title     = {{${bibEsc(t)}}},\n` +
       `  publisher = {Zenodo},\n` +
       `  doi       = {${read.facts.doi}},\n` +
-      `  url       = {https://doi.org/${read.facts.doi}},\n` +
-      `  note      = {The methodology record the GSPC board names; it is not the live numbers}\n` +
+      // No url while the record does not resolve: a link that answers 410 is not a way to read it.
+      (off ? "" : `  url       = {https://doi.org/${read.facts.doi}},\n`) +
+      `  note      = {${bibEsc(methodologyNote(read.facts))}}\n` +
       `}\n`;
   }
   return out;
@@ -98,8 +109,8 @@ export function csl(read: BoardRead, now: Date): Array<Record<string, unknown>> 
       author: [{ literal: AUTHOR }],
       publisher: "Zenodo",
       DOI: read.facts.doi,
-      URL: `https://doi.org/${read.facts.doi}`,
-      note: "The methodology record the GSPC board names; it is not the live numbers.",
+      ...(unavailable(read.facts) ? {} : { URL: `https://doi.org/${read.facts.doi}` }),
+      note: methodologyNote(read.facts) + ".",
     });
   }
   return items;

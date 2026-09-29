@@ -11,8 +11,12 @@
 //     assert a bank that is not in the single source of truth. Only axes that
 //     publish a Hugging Face dataset slug get a node — no constructed slugs.
 //   • Every asserted field is verifiable: the HF datasets exist under the csoai
-//     org and are licensed CC-BY-4.0; the concept DOI resolves and is the same
-//     DOI GET /api/gspc publishes as the board's citable identifier.
+//     org and are licensed CC-BY-4.0; the concept DOI is the same DOI GET
+//     /api/gspc publishes as the board's citable identifier.
+//   • 29 Sep 2026: every Zenodo record behind these DOIs answers HTTP 410 (Zenodo
+//     blocked the account; appeal pending). The DOIs stay as `identifier` (they are
+//     the permanent names) but no `citation` URL points at doi.org while they do not
+//     resolve. See ZENODO_DOIS_RESOLVE and /interop/zenodo-status.json.
 //   • The concept DOI is attached to the BOARD only. Per-axis DOIs are attached
 //     where a bank's DOI has been minted and the axis is in the single source of
 //     truth (AXES). Axes minted but not yet in AXES await registry inclusion —
@@ -22,9 +26,13 @@ import { AXES } from "./gspcAxes";
 
 const BASE = "https://councilof.ai";
 
-/** The board's citable identifier. Resolves, and is the DOI GET /api/gspc
- *  publishes for the board. Concept DOI (all-versions) of the GSPC corpus. */
+/** The board's citable identifier, the DOI GET /api/gspc publishes for the board.
+ *  Concept DOI (all-versions) of the GSPC corpus. Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. */
 export const GSPC_DOI = "10.5281/zenodo.21991104";
+
+/** False while Zenodo answers 410 for CSOAI's records (since 29 Sep 2026). Flip only after an
+ *  anonymous doi.org resolve returns 200 again. Gates every doi.org `citation` below. */
+export const ZENODO_DOIS_RESOLVE = false;
 
 /** CC-BY-4.0 — the license carried by every csoai/gspc-* dataset on HF and
  *  reported in the /api/gspc license field. */
@@ -94,7 +102,7 @@ export function gspcAxisDatasets(): Record<string, unknown>[] {
     // A minted DOI makes the bank citable; it is only asserted when real.
     if (doi) {
       node.identifier = doi;
-      node.citation = `https://doi.org/${doi}`;
+      if (ZENODO_DOIS_RESOLVE) node.citation = `https://doi.org/${doi}`;
     }
     return node;
   });
@@ -112,7 +120,7 @@ export function gspcBoardDataset(withParts = true): Record<string, unknown> {
       "Deterministic per-axis AI-governance measurement banks and their live results: per-item counts, leader accuracy, Wilson 95% intervals where n≥30, and McNemar-primary separation verdicts (ties stated as ties). Empty cells stay empty. The live count and stamps come from GET /api/gspc.",
     url: `${BASE}/gspc-scoreboard`,
     identifier: GSPC_DOI,
-    citation: `https://doi.org/${GSPC_DOI}`,
+    ...(ZENODO_DOIS_RESOLVE ? { citation: `https://doi.org/${GSPC_DOI}` } : {}),
     license: GSPC_LICENSE,
     isAccessibleForFree: true,
     creator: GSPC_CREATOR,

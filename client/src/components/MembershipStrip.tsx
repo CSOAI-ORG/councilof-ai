@@ -48,6 +48,10 @@ export interface MembershipRow {
   tier?: string;
   featured?: number;
   evidence_label?: string;
+  /** Set when the evidence URL stopped resolving (e.g. the Zenodo 410 of 29 Sep 2026); printed beside the link. */
+  status_note?: string;
+  status_since?: string;
+  status_url?: string;
 }
 
 export interface MembershipsManifest {
@@ -79,6 +83,9 @@ export const KIND_LABEL: Record<MembershipKind, string> = {
 
 /** Where a pill sends the reader: the public evidence, or the manifest row that names the private record. */
 export function evidenceHref(row: MembershipRow): string {
+  // A row whose evidence no longer resolves (status_note, e.g. the Zenodo 410 of 29 Sep 2026) never
+  // links the dead URL: it sends the reader to its own row, which prints the URL and the reason.
+  if (row.status_note) return `/memberships#${row.id}`;
   return row.evidence_kind === "public_url" ? row.evidence : `/memberships#${row.id}`;
 }
 
@@ -185,7 +192,7 @@ export function groupedRows(m: MembershipsManifest = MEMBERSHIPS): { id: string;
 
 function Pill({ row }: { row: MembershipRow }) {
   const href = evidenceHref(row);
-  const external = row.evidence_kind === "public_url";
+  const external = isExternalHref(href);
   const cls =
     "inline-flex flex-wrap items-center gap-x-1.5 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-slate-800 transition hover:border-emerald-600/50 hover:bg-emerald-50";
   const body = (
@@ -368,16 +375,17 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
               {g.rows.map((r, ri) => (
                 <span key={r.id}>
                   {ri > 0 && ", "}
-                  {r.evidence_kind === "public_url" ? (
+                  {r.evidence_kind === "public_url" && !r.status_note ? (
                     <a href={r.evidence} rel="noopener noreferrer" className="hover:text-primary hover:underline" title={`${r.org} — ${KIND_LABEL[r.kind]}${r.since ? ` since ${r.since}` : ""}`}>
                       {r.short}
                     </a>
                   ) : (
-                    <Link href={`/memberships#${r.id}`} className="hover:text-primary hover:underline" title={`${r.org} — ${KIND_LABEL[r.kind]}${r.since ? ` since ${r.since}` : ""} (private evidence)`}>
+                    <Link href={`/memberships#${r.id}`} className="hover:text-primary hover:underline" title={`${r.org} — ${KIND_LABEL[r.kind]}${r.since ? ` since ${r.since}` : ""}${r.status_note ? `. ${r.status_note}` : " (private evidence)"}`}>
                       {r.short}
                     </Link>
                   )}
                   {r.state === "PENDING" ? " (pending)" : ""}
+                  {r.status_note ? " (unavailable)" : ""}
                 </span>
               ))}
             </span>

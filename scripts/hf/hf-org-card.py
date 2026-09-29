@@ -44,6 +44,14 @@ HUB_OPEN, HUB_CLOSE = "<!-- csoai-hubcard-v2 -->", "<!-- /csoai-hubcard-v2 -->"
 LIVE_ROW_OPEN, LIVE_ROW_CLOSE = "<!-- csoai-live-row -->", "<!-- /csoai-live-row -->"
 DOI = "10.5281/zenodo.21991104"
 SNAPSHOT_DOI = "10.5281/zenodo.22293341"
+# 29 Sep 2026: Zenodo blocked the account holding these deposits; every record answers HTTP 410.
+# The DOIs stay as identifiers; no card links them as available. The cards on the Hub were
+# relabelled with exactly these strings, so a producer run and the hand pass land the same bytes.
+ZENODO_NOTICE = "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending."
+METHODOLOGY_LIVE = "https://councilof.ai/methodology/"
+BOARD_DATASET_URL = "https://huggingface.co/datasets/csoai/gspc-board"
+DOI_TEXT = f"{DOI} ({ZENODO_NOTICE} Live methodology page (not the deposit's bytes): <{METHODOLOGY_LIVE}>)"
+SNAPSHOT_TEXT = f"{SNAPSHOT_DOI} ({ZENODO_NOTICE} Live board dataset (not the deposit's bytes): <{BOARD_DATASET_URL}>)"
 LINKS = {
     "Live board (authority)": API,
     "Verify a card, free": "https://councilof.ai/gspc-verify",
@@ -53,7 +61,6 @@ LINKS = {
     "A2A agent card": "https://councilof.ai/.well-known/agent-card.json",
     "AG-UI stream (living board as events)": "https://councilof.ai/api/agui/gspc-state",
     "Council OS (the board, for people)": "https://councilof.ai/dashboard",
-    "Methodology DOI": f"https://doi.org/{DOI}",
 }
 # A stale string counts only in a sentence with no negation: "never print 2410 measured" is a guardrail.
 STALE = [r"13 measured of 14", r"mint after final name", r"14-slot", r"14 slot", r"2410 measured", r"22·15·7"]
@@ -171,6 +178,7 @@ def render(d: dict) -> str:
         ]
     out += ["", "[![GSPC](https://councilof.ai/api/badge)](https://councilof.ai/gspc-verify) — live SVG, derived at request time.", "", "| | |", "|---|---|"]
     out += [f"| {k} | <{v}> |" for k, v in LINKS.items()]
+    out += [f"| Methodology DOI | {DOI_TEXT} |"]
     out += ["", "Measurement, not certification. Signed means Ed25519 under `did:web:csoai.org`; nothing here is a certificate, a rank for sale, or a conformity mark.", CLOSE]
     return "\n".join(out) + "\n"
 
@@ -567,7 +575,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "",
         "[![GSPC](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC%20board&color=0B1F33)](https://councilof.ai/api/gspc)",
         "[![verify](https://img.shields.io/badge/verify%20a%20card-free%2C%20no%20account-0B1F33)](https://councilof.ai/gspc-verify)",
-        f"[![DOI](https://img.shields.io/badge/DOI-{DOI.replace('/', '%2F')}-0B1F33)](https://doi.org/{DOI})",
+        f"[![DOI {DOI}: Zenodo record unavailable](https://img.shields.io/badge/DOI%20{DOI.replace('/', '%2F')}-Zenodo%20record%20unavailable-8A6D00)]({METHODOLOGY_LIVE})",
         "",
         f"`GET {API}` — quote `totals.public_count`. This Hub card is a **printer** of that GET, never a second",
         "engine. If the fetch fails the honest answer is `UNCHECKABLE` — never a fabricated `0.000`.",
@@ -586,7 +594,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "| DID document | <https://csoai.org/.well-known/did.json> |",
         "| A2A agent card | <https://councilof.ai/.well-known/agent-card.json> |",
         "| Every CSOAI repo on the Hub | <https://huggingface.co/csoai> |",
-        f"| Methodology DOI | <https://doi.org/{DOI}> |",
+        f"| Methodology DOI | {DOI_TEXT} |",
     ]
     if mcp_n is not None:
         lines.append(f"| MCP endpoint — {mcp_n} tools, verified {as_of} | `POST {MCP}` |")
@@ -594,7 +602,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "| MCP Registry | `io.github.CSOAI-ORG/gspc` — version not pinned here; the registry is the authority |",
         "| npm — MCP server | [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) — `npx -y csoai-gspc-mcp`. No version is pinned here: ask the registry for the current one rather than trusting a number written on a card. |",
         "| Python reader + card verifier | `pip install \"csoai-gspc[verify]\"` then `csoai-gspc check` — re-derives the board totals from the axis array and exits non-zero if they disagree |",
-        f"| The board as a dated, citable snapshot | <https://doi.org/{SNAPSHOT_DOI}> |",
+        f"| The board as a dated, citable snapshot | {SNAPSHOT_TEXT} |",
         "",
         "## What is in this repository",
         "",
@@ -825,7 +833,7 @@ def dataset_board(d: dict, push: bool, out: Path) -> None:
         "",
         f"If `GET {API}` and this card ever disagree, the API is right and this card is stale. "
         "Verify a card free at <https://councilof.ai/gspc-verify>; the signed Merkle root is <https://councilof.ai/root.json>; "
-        f"every CSOAI repo is at <https://huggingface.co/csoai>; the methodology DOI is <https://doi.org/{DOI}>.",
+        f"every CSOAI repo is at <https://huggingface.co/csoai>; the methodology DOI is {DOI_TEXT}.",
         "",
         f"**Lid:** this dated export records {len(rows)} axis rows. "
         "For current measured counts and separated leaders, read the live board; "
