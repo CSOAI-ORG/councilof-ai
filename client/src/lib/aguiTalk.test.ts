@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { argsOf, challengeOf, newRun, parseSse, reduceRun, streamRun, TALK_SUGGESTIONS, toneOf, type TalkRun } from "./aguiTalk";
-import { labelOf, routeIntent } from "../../../functions/_lib/talkRouter";
+import { citationOf, labelOf, routeIntent } from "../../../functions/_lib/talkRouter";
 
 const sse = (type: string, extra: Record<string, unknown> = {}) =>
   `event: ${type}\ndata: ${JSON.stringify({ type, ...extra })}\n\n`;
@@ -120,6 +120,12 @@ describe("suggested questions are ones the router answers", () => {
   it("list_cards is labelled from its own state field, not ANSWERED", () => {
     expect(labelOf("list_cards", { state: "LIVE" }, false)).toBe("LIVE");
     expect(labelOf("list_cards", { state: "UNREACHABLE" }, false)).toBe("UNREACHABLE");
+  });
+
+  it("list_cards cites the signed card index it read (head + URL), not the /mcp door", () => {
+    const p = { state: "LIVE", index: { source: "https://councilof.ai/signed/card_index.json", head: "ab".repeat(32) } };
+    expect(citationOf("list_cards", p, "https://councilof.ai")).toEqual({ tool: "list_cards", record_id: "ab".repeat(32), url: "https://councilof.ai/signed/card_index.json" });
+    expect(citationOf("list_cards", { state: "UNREACHABLE", index: { state: "UNREACHABLE", source: "x" } }, "https://o").url).toBe("https://o/mcp");
   });
 });
 
