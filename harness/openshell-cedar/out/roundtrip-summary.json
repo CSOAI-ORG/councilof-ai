@@ -1,0 +1,91 @@
+{
+ "cedar": "cedar-policy-cli 4.13.0",
+ "policies": {
+  "allow": {
+   "policy_sha256": "81b26be4dc083df0b0d30cf618ae612e49a7115201267eec7c1ddc150d6a98f6",
+   "cedar_validate": true,
+   "translation_status": "TRANSLATED",
+   "requests": 636,
+   "counts": {
+    "AGREE": 636
+   }
+  },
+  "deny": {
+   "policy_sha256": "1a1a03d30f7eac800d3673ec858aeefac3bd289b595dcce5a9f22df86a04009b",
+   "cedar_validate": true,
+   "translation_status": "TRANSLATED",
+   "requests": 200,
+   "counts": {
+    "AGREE": 200
+   }
+  },
+  "conditional": {
+   "policy_sha256": "5fe017910d9385c25b84455dedf94d12320122fbfa222e30a81d27de1d1601a5",
+   "cedar_validate": true,
+   "translation_status": "UNCHECKABLE",
+   "requests": 1605,
+   "counts": {
+    "AGREE": 1545,
+    "FAIL_CLOSED": 60
+   }
+  },
+  "unknown-field": {
+   "policy_sha256": "331c3b453ccbb2852dc94cf490111e59b4ad9410c35271d1d7faea03ca838cce",
+   "cedar_validate": true,
+   "translation_status": "UNCHECKABLE",
+   "requests": 536,
+   "counts": {
+    "AGREE": 473,
+    "FAIL_CLOSED": 63
+   }
+  },
+  "unknown-top-level": {
+   "policy_sha256": "ae9430b2444dd32e6a801314d1bc63b5012bfac9f0b8f5994f654f98aa3d611c",
+   "cedar_validate": true,
+   "translation_status": "UNCHECKABLE",
+   "requests": 188,
+   "counts": {
+    "AGREE": 148,
+    "FAIL_CLOSED": 40
+   }
+  },
+  "adapter-capture-2026-09-28": {
+   "policy_sha256": "56f099d115b4acf5a73aa41e85339623386c006624328d5b5c18dce130de2ee1",
+   "cedar_validate": true,
+   "translation_status": "UNCHECKABLE",
+   "requests": 304,
+   "counts": {
+    "AGREE": 297,
+    "FAIL_CLOSED": 7
+   }
+  },
+  "adapter-must-fail-deny-declared-egress": {
+   "policy_sha256": "3c230de80a86db55d8ab2d2d54e7262536bdfe772eada111ee273f640c507712",
+   "cedar_validate": true,
+   "translation_status": "TRANSLATED",
+   "requests": 200,
+   "counts": {
+    "AGREE": 200
+   }
+  },
+  "adapter-must-fail-file-syscall": {
+   "policy_sha256": "00050fd8714212cf2f861eee1a128fbe900b456053275452587e29e408d74e82",
+   "cedar_validate": true,
+   "translation_status": "TRANSLATED",
+   "requests": 52,
+   "counts": {
+    "AGREE": 52
+   }
+  },
+  "adapter-must-fail-landlock-degraded": {
+   "policy_sha256": "4a611ff82daa57ba4cf07b4712499ed184bab92fa2369138fb642e59978c7193",
+   "cedar_validate": true,
+   "translation_status": "UNCHECKABLE",
+   "requests": 46,
+   "counts": {
+    "AGREE": 46
+   }
+  }
+ },
+ "result": "no OVER_ALLOW, no UNDER_ALLOW, every policy validates"
+}

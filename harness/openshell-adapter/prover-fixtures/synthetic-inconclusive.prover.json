@@ -1,0 +1,13 @@
+{
+  "_synthetic": "Built by hand from the documented JSON shape (docs/how-it-works/policies/prover.mdx, v0.1.2): result inconclusive, reason_code solver_timeout. Not a prover output.",
+  "schema_version": 1,
+  "prover_version": "0.1.2",
+  "check": "boundary",
+  "coverage": {"domains": ["filesystem", "network_l4", "network_rest", "process", "landlock"]},
+  "result": "inconclusive",
+  "exit_code": 3,
+  "inputs": {"candidate": "fixtures/control-deny-held/policy.yaml", "boundary": "prover-fixtures/boundary-pkg-index.yaml"},
+  "counterexample": null,
+  "reason_code": "solver_timeout",
+  "reason": "solver time budget exhausted"
+}

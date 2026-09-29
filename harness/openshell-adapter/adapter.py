@@ -50,11 +50,20 @@ import urllib.parse
 from typing import Any
 
 ADAPTER_NAME = "openshell-declared-vs-observed"
-ADAPTER_VERSION = "0.1.0"
+ADAPTER_VERSION = "0.2.0"
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 # --------------------------------------------------------------------------- declared: documented constants
-# Sources (OpenShell repo, tag v0.1.2 = 6648bd0c, identical on main eef8bec for these files):
+# The release these constants were requalified against (requalify/v0.1.2/). A later release is not
+# assumed to match: rerun the requalification diff before changing this pin.
+OPENSHELL_PIN = {
+    "release": "v0.1.2",
+    "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+    "previous_release": "v0.1.1",
+    "previous_tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30",
+    "sandbox_policy_rego_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41",
+}
+# Sources (OpenShell repo, tag v0.1.2 = 6648bd0c):
 #   docs/how-it-works/policies/schema.mdx, default-policy.mdx, network-rules.mdx,
 #   docs/security/best-practices.mdx, docs/observability/logging.mdx, ocsf-json-export.mdx.
 TOP_LEVEL_FIELDS = {"version", "filesystem_policy", "landlock", "process", "network_policies", "network_middlewares"}
@@ -299,8 +308,19 @@ class Declared:
 
     def network(self, host: str, port: int, binary: str | None = None, ip: str | None = None) -> dict:
         literal = _is_ip(host)
-        if _always_blocked_ip(literal) or _always_blocked_ip(_is_ip(ip) if ip else None):
-            return {"effect": DENIED, "layer": "l4", "rule": None, "reason": "always-blocked address (loopback, link-local or unspecified)"}
+        resolved = _is_ip(ip) if ip else None
+        if _always_blocked_ip(literal) or _always_blocked_ip(resolved):
+            out = {"effect": DENIED, "layer": "l4", "rule": None,
+                   "reason": "always-blocked address (loopback, link-local or unspecified)"}
+            if any(a is not None and a.is_loopback for a in (literal, resolved)) or host.lower() == "localhost":
+                # v0.1.2 docs (PR 3740): policy never authorizes an OUTBOUND endpoint on loopback, but a
+                # sandbox-local loopback connection does not use the policy path at all. compare() uses
+                # this flag to keep a loopback attempt with no enforcer record out of the DIVERGED column.
+                out["loopback"] = True
+            return out
+        if host.lower() == "localhost":
+            return {"effect": DENIED, "layer": "l4", "rule": None, "loopback": True,
+                    "reason": "localhost resolves to loopback (always blocked on the outbound policy path)"}
         matches, unmodelled = self._endpoints(host, port, binary, ip)
         if not matches:
             if unmodelled:
@@ -644,6 +664,14 @@ def compare(doc: dict, enforcer: list[dict], witness: list[dict], window_s: floa
         decl = D.http(host, port, method, path or "/", w.get("binary"), w.get("ip")) if method else \
             D.network(host, port, w.get("binary"), w.get("ip"))
         decl.pop("_matches", None)
+        if decl.get("loopback") and not recs:
+            # No proxy record: the connection may be sandbox-local loopback, which is off the policy path
+            # (v0.1.2 docs). The adapter cannot tell a local service from an escape, so it does not compare.
+            decl = {**decl, "effect": UNMODELLED,
+                    "reason": "loopback target with no enforcer record: sandbox-local loopback is not on the policy path"}
+            rows.append(_row("egress", {"host": host, "port": port, **({"method": method, "path": path} if method else {})},
+                             decl, recs, w, ROW_UNMODELLED, "LOOPBACK_OFF_POLICY_PATH"))
+            continue
         comp, code = _compare_egress(decl, _enforcer_claim(recs, bool(method)), w.get("left"),
                                      any(r.get("enforcer_marked_audit") for r in recs), _provider(recs))
         rows.append(_row("egress", {"host": host, "port": port, **({"method": method, "path": path} if method else {})},

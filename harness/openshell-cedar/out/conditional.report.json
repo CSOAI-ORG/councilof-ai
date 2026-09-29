@@ -1,0 +1,82 @@
+{
+ "translator": {
+  "name": "openshell-yaml-to-cedar",
+  "version": "0.1.0"
+ },
+ "openshell_pin": {
+  "release": "v0.1.2",
+  "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+  "previous_release": "v0.1.1",
+  "previous_tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30",
+  "sandbox_policy_rego_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41"
+ },
+ "status": "UNCHECKABLE",
+ "counts": {
+  "policies": 22,
+  "elements": 5,
+  "uncheckable": 2
+ },
+ "elements": [
+  {
+   "source": "platform:always-blocked-addresses",
+   "status": "TRANSLATED",
+   "policies": [
+    "p001",
+    "p002",
+    "p003",
+    "p004"
+   ]
+  },
+  {
+   "source": "platform:control-plane-ports",
+   "status": "TRANSLATED",
+   "policies": [
+    "p005",
+    "p006"
+   ],
+   "note": "widened: OpenShell applies this to exact-host, IP and allowed_ips endpoints; v0 applies it to all"
+  },
+  {
+   "source": "network_policies.mirrors.endpoints[0]",
+   "status": "UNCHECKABLE",
+   "reason": "HOST_PORT_ALSO_UNINSPECTED: request permits are not emitted",
+   "policies": [
+    "p007"
+   ]
+  },
+  {
+   "source": "network_policies.internal.endpoints[0]",
+   "status": "UNCHECKABLE",
+   "reason": "HOST_PORT_ALSO_INSPECTED: an uninspected endpoint shares a host and port with a REST endpoint; request permits are not emitted",
+   "policies": [
+    "p008"
+   ]
+  },
+  {
+   "source": "filesystem_policy",
+   "status": "TRANSLATED",
+   "policies": [
+    "p009",
+    "p010",
+    "p011",
+    "p012",
+    "p013",
+    "p014",
+    "p015",
+    "p016",
+    "p017",
+    "p018",
+    "p019",
+    "p020",
+    "p021",
+    "p022"
+   ],
+   "note": "baseline paths are included as the adapter model adds them"
+  }
+ ],
+ "rule": "Nothing UNCHECKABLE contributes a permit. Forbids are never dropped, only widened.",
+ "input": {
+  "file": "conditional.yaml",
+  "sha256": "5fe017910d9385c25b84455dedf94d12320122fbfa222e30a81d27de1d1601a5"
+ }
+}

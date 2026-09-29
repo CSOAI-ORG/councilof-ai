@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "prover_version": "0.1.2",
+  "check": "boundary",
+  "coverage": {
+    "domains": [
+      "filesystem",
+      "network_l4",
+      "network_rest",
+      "process",
+      "landlock"
+    ]
+  },
+  "result": "exceeds_boundary",
+  "exit_code": 1,
+  "inputs": {
+    "candidate": "prover-fixtures/candidate-exceeds.yaml",
+    "boundary": "prover-fixtures/boundary-pkg-index.yaml"
+  },
+  "counterexample": {
+    "domain": "network",
+    "binary": null,
+    "ancestor_binary": null,
+    "binary_identity_required": false,
+    "host": "exfil.example",
+    "destination_ip": "8.8.8.8",
+    "trusted_gateway": false,
+    "port": 443,
+    "protocol": "l4",
+    "method": null,
+    "path": null
+  },
+  "reason_code": null,
+  "reason": null
+}
