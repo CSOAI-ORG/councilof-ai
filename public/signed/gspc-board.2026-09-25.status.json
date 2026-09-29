@@ -1,12 +1,12 @@
 {
   "schema": "csoai.signed-artifact-status/1",
   "artifact": "/signed/gspc-board.2026-09-25.signed.json",
-  "state": "CURRENT",
-  "current": true,
+  "state": "SUPERSEDED_BY",
+  "current": false,
   "frozen_at": "2026-09-25T11:08:00Z",
   "current_authority": "/api/gspc",
   "current_meaning": "At frozen_at the counts in this file equalled the live derivation from the committed axis arrays (source_commit). CURRENT is withdrawn automatically on /api/state and /api/counters the moment the live arrays change: they compare this file's totals with the live counts on every request and report signed_snapshot_agrees false on any drift. It is not a statement that every sentence inside is true.",
-  "relying_party_action": "Quote GET /api/gspc; quote this file only while /api/state board.live_derivation_crosscheck.signed_snapshot_agrees is true.",
+  "relying_party_action": "DO_NOT_USE_AS_CURRENT_BOARD; read the superseding freeze or GET /api/gspc",
   "supersedes": "/signed/gspc-board.signed.json",
   "integrity": {
     "state": "VERIFIED",
@@ -26,5 +26,9 @@
   },
   "producer": "node scripts/gspc-board-snapshot.mjs <snap>; node scripts/gspc-board-attest.mjs <snap> <out> --commit <sha> --supersedes <previous>",
   "known_claim_defects": [],
-  "known_claim_defects_note": "None identified at freeze. The two defects recorded against the 2026-09-02 MPC freeze are corrected in the live board this file snapshots. measured_on.living_stamp in this file is the unkeyed fallback (the snapshot runs with an empty env, as its producer intends); the served /api/gspc re-signs that block at the edge, so that one block differs from a live fetch by design."
+  "known_claim_defects_note": "None identified at freeze. The two defects recorded against the 2026-09-02 MPC freeze are corrected in the live board this file snapshots. measured_on.living_stamp in this file is the unkeyed fallback (the snapshot runs with an empty env, as its producer intends); the served /api/gspc re-signs that block at the edge, so that one block differs from a live fetch by design.",
+  "superseded_by": "/signed/gspc-board.2026-09-29.signed.json",
+  "superseded_by_status": "/signed/gspc-board.2026-09-29.status.json",
+  "superseded_on": "2026-09-29",
+  "superseded_reason": "C-2026-0929-02: the jail separation in this file's signed bytes is the row-level TIE; by owner ruling 2026-09-29 the board serves UNTESTED. Counts still agree (23 · 23 · 0). The bytes stay as a record of the board on 2026-09-25."
 }

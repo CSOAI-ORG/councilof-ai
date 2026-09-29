@@ -87,7 +87,13 @@
 # The dated freeze. Its bytes never change; whether it is still current is decided per
 # request by /api/state (board.live_derivation_crosscheck.signed_snapshot_agrees).
 /signed/gspc-board.2026-09-25.signed.json
-  Link: </signed/gspc-board.2026-09-25.status.json>; rel="status", </signed/gspc-board.signed.json>; rel="predecessor-version", </api/gspc>; rel="current"
+  X-CSOAI-Artifact-State: SUPERSEDED_BY
+  Link: </signed/gspc-board.2026-09-25.status.json>; rel="status", </signed/gspc-board.signed.json>; rel="predecessor-version", </signed/gspc-board.2026-09-29.signed.json>; rel="successor-version", </api/gspc>; rel="current"
+  Cache-Control: no-cache, must-revalidate
+
+# The dated freeze of 2026-09-29 (jail separation UNTESTED, C-2026-0929-02).
+/signed/gspc-board.2026-09-29.signed.json
+  Link: </signed/gspc-board.2026-09-29.status.json>; rel="status", </signed/gspc-board.2026-09-25.signed.json>; rel="predecessor-version", </api/gspc>; rel="current"
   Cache-Control: no-cache, must-revalidate
 
 # The generated human indexes for the evidence tree (scripts/generate-signed-index.mjs).

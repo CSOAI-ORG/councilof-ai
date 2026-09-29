@@ -1,0 +1,31 @@
+{
+  "schema": "csoai.signed-artifact-status/1",
+  "artifact": "/signed/gspc-board.2026-09-29.signed.json",
+  "state": "CURRENT",
+  "current": true,
+  "frozen_at": "2026-09-29T05:39:29Z",
+  "current_authority": "/api/gspc",
+  "current_meaning": "At frozen_at the counts in this file equalled the live derivation from the committed axis arrays (source_commit). CURRENT is withdrawn automatically on /api/state and /api/counters the moment the live arrays change: they compare this file's totals with the live counts on every request and report signed_snapshot_agrees false on any drift. It is not a statement that every sentence inside is true.",
+  "relying_party_action": "Quote GET /api/gspc; quote this file only while /api/state board.live_derivation_crosscheck.signed_snapshot_agrees is true.",
+  "supersedes": "/signed/gspc-board.2026-09-25.signed.json",
+  "integrity": {
+    "state": "VERIFIED",
+    "sha256_file_bytes": "c5b07ae48410ea72fef954808bfde177a8868c914107f51033b6188ec487d6eb",
+    "snapshot_content_id": "778c705d0fed1d9f677549876dbd0ff26e86e0ab2ffed1bd1a2c7cfedfdd108c",
+    "payload_sha256": "4e41d8ae7f4b1664809579f2b020f8411b7a3c5cd29ecccb26571bd9cbc20041",
+    "signer": "did:web:csoai.org#board-attestation-1",
+    "verification_command": "node scripts/gspc-board-verify.mjs public/signed/gspc-board.2026-09-29.signed.json --did did.json",
+    "ots": "Not stamped at freeze: no OpenTimestamps client on the landing hosts on 2026-09-29. Until a stamp exists, time rests on signed_at from the signer alone."
+  },
+  "custody": {
+    "key": "did:web:csoai.org#board-attestation-1",
+    "where": "Cloudflare Pages secret BOARD_SIGN_KEY_PKCS8_B64, project councilof-ai; used only inside POST /api/board-sign",
+    "shape": "single Ed25519 key — not MPC, not threshold",
+    "caller_authentication": "bearer pod token (Pages secret BOARD_SIGN_POD_TOKEN; copy at ~/.secrets/board-sign-pod-token on oracle-micro-2 and on the pod), or GitHub OIDC from an allow-listed workflow",
+    "what_that_means": "Anyone holding the pod token, or able to change the Pages secrets, can obtain a signature from this key. The signature proves the file came through the board signer; it does not prove who asked."
+  },
+  "producer": "node scripts/gspc-board-snapshot.mjs <snap>; node scripts/gspc-board-attest.mjs <snap> <out> --commit <sha> --supersedes <previous>",
+  "known_claim_defects": [],
+  "known_claim_defects_note": "None identified at freeze. measured_on.living_stamp in this file is the unkeyed fallback (the snapshot runs with an empty env, as its producer intends); the served /api/gspc re-signs that block at the edge, so that one block differs from a live fetch by design.",
+  "why_this_freeze": "Owner ruling 2026-09-29T06:40Z: the jail separation moves from the row-level TIE to UNTESTED on the prompt-level interval (C-2026-0929-02). The counts (23 axes, 23 measured, 0 unmeasured) are unchanged; the separation tallies move from 8 TIE / 6 UNTESTED to 7 TIE / 7 UNTESTED. This freeze puts that state under #board-attestation-1 through POST /api/board-sign."
+}
