@@ -8,6 +8,7 @@
   "scripts": {
     "guard:evidence-integrity": "node scripts/evidence-integrity-gate.mjs --selftest && node scripts/evidence-integrity-gate.mjs",
     "guard:ras-opportunity-evidence": "python3 scripts/ras_opportunity_evidence_guard.py --selftest && python3 scripts/ras_opportunity_evidence_guard.py",
+    "verify:ras-public": "python3 scripts/ras_public_readback.py",
     "guard:regulatory-inventory": "node scripts/regulatory-inventory-gate.mjs --selftest && node scripts/regulatory-inventory-gate.mjs",
     "guard:sitemap-truth": "node --test scripts/sitemap-withdrawal.node-test.mjs && node scripts/sitemap-truth-gate.mjs --selftest && node scripts/sitemap-truth-gate.mjs && node scripts/reach/entity-sitemap-gate.mjs --selftest && node scripts/reach/entity-sitemap-gate.mjs",
     "guard:stablecoin-readiness": "PYTHONPATH=scripts python3 -m unittest scripts/test_stablecoin_readiness.py && python3 scripts/readers/stablecoin-cohort-integrity.test.py && python3 scripts/check_stablecoin_readiness.py && python3 scripts/build_regulatory_register_baseline.py --check",
