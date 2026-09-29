@@ -43,6 +43,44 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0929-09",
+      "date": "2026-09-29",
+      "detected_at": "2026-09-29T15:55Z",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "Zenodo blocked the account at 15:47Z on 2026-09-29, after one of our automated lanes published 54 datasets there at roughly 15-second intervals; the block was observed at 15:55Z",
+        "doi.org resolves for every CSOAI Zenodo DOI were read on 2026-09-29 between 15:57Z and the landing of this entry; each final hop answered HTTP 410. Several records (22901908, 22901781, 22293341) still answered 200 at the first read and 410 within the hour",
+        "published_at is UNRECORDED: the deploy that first serves the corrected surfaces had not happened when this entry was written"
+      ],
+      "what_was_wrong": "From 15:47Z on 29 Sep 2026, live surfaces presented Zenodo DOIs as working links to available records when every Zenodo record held by CSOAI's account answered HTTP 410 ('User was blocked'). Zenodo blocked the account as spam after one of our own automated lanes bulk-published 54 datasets there in quick succession; the block removed the older records too, not only the new ones. Affected: the board DOI 10.5281/zenodo.21991104 (record 21991105), which GET /api/gspc names as its methodology record, the footer verify strip and the footer membership line on every page, the reach strip, the memberships page (row marked VERIFIED, 'with a resolving DOI'), the /claim-maintenance page (deposit link and 'cite as' URL), the Dataset JSON-LD citation URLs (board and two axis banks), /cite/gspc (BibTeX and CSL url), the MCP server card, CITATION.cff (five identifiers), the claim-maintenance specification pages v0.1 and v0.2 and their version index, the signed-receipts draft 0.3 deposit sidecar, the Hugging Face Space and about 140 csoai Hugging Face cards (a DOI badge and table rows linking doi.org), and the csoai-gspc PyPI README. The DOI identifiers themselves were not wrong; presenting them as resolving was.",
+      "how_caught": "This is the relabelling that C-2026-0929-08 (the block itself) names as the dead-DOI lane's change. The owner saw the block notice; the lane then resolved every CSOAI Zenodo DOI through doi.org, followed redirects to the final hop, and searched the canonical mirror, the live API outputs and the Hugging Face cards for each one.",
+      "what_changed": "The DOIs are kept as identifiers everywhere. No served surface links one as available: each now prints the identifier with the notice 'Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.' and points to the artifact's other live copy. Where the bytes exist the copy was checked by sha256 against the deposit's own recorded digest: claim-maintenance v0.1 (3296bf8f…) and v0.2 (d649ba0f…), signed-receipts draft 0.3 SPEC.md (91520cda…), draft 0.2 SPEC.md, vectors.json, run.mjs and run.py all match and answer 200 anonymously. The methodology record (21991104/21991105) has no byte-identical served copy; it points to /methodology/ and says it is not the deposit's bytes. GET /api/gspc and the MCP server card carry doi_status UNAVAILABLE, doi_status_note, doi_status_since, doi_status_url and doi_alternative beside the unchanged doi. /cite/gspc keeps the DOI field and drops the doi.org url while doi_status is UNAVAILABLE. The memberships row moved from VERIFIED to UNVERIFIED with the notice, and memberships-check now goes red if that evidence answers 200 again. The signed A2A agent card and agent.json are JWS-signed over every field, so their bytes were not edited; the status travels in an X-CSOAI-DOI-Status response header and a describedby Link to /interop/zenodo-status.json. Signed boards and the signed value ledger that embed a DOI are unchanged; /interop/zenodo-status.json is the dated superseding note that lists them. Membership pills and the footer line send a row whose evidence no longer resolves to its own /memberships row, marked unavailable, instead of the dead URL. Producers were fixed with the artifacts: harness-x render.mjs (server card), claim-maintenance-spec.mjs (spec pages, JSON-LD and index), hf-org-card.py (Hub cards), memberships-post.mjs.",
+      "old_values": {
+        "FooterVerifyStrip Zenodo entry (quoted, not claimed)": "Zenodo DOI 10.5281/zenodo.21991104 -> https://doi.org/10.5281/zenodo.21991104",
+        "memberships.json zenodo-doi.what_it_proves (quoted, not claimed)": "A methodology record by Council of AI is published on Zenodo with a resolving DOI.",
+        "memberships.json zenodo-doi.state": "VERIFIED"
+      },
+      "new_values": {
+        "FooterVerifyStrip Zenodo entry": "DOI 10.5281/zenodo.21991104 · Zenodo record unavailable -> /interop/zenodo-status.json",
+        "memberships.json zenodo-doi.state": "UNVERIFIED, with status_note",
+        "GET /api/gspc": "doi unchanged; doi_status UNAVAILABLE with note and alternative"
+      },
+      "status": "CORRECTED - availability stated; DOIs kept; alternatives named and checked. Zenodo appeal pending (owner).",
+      "reached_the_public": true,
+      "open_items": [
+        "The owner is appealing to Zenodo. If the account is restored, each surface flips back only after an anonymous doi.org resolve returns 200 (ZENODO_ACCOUNT_STATE in functions/_lib/zenodoStatus.ts, ZENODO_DOIS_RESOLVE in client/src/lib/datasetSchema.ts, availability in each deposit.json, status_note on the memberships row).",
+        "llms.txt and llms-full.txt still link three of these DOIs (llms.txt lines 111 and 327, llms-full.txt line 727, and their templates). Those files have a single owner whose release is on hold; the lines were handed to that writer, not edited here.",
+        "The csoai-gspc release already on PyPI carries the old README; the source README is corrected and the next release carries it. PyPI releases are immutable.",
+        "Filings and emails already sent cite these DOIs; they are dated records and are not rewritten."
+      ],
+      "evidence": [
+        "curl -sIL https://doi.org/10.5281/zenodo.21991104 (final hop https://zenodo.org/records/21991105: HTTP 410, read 2026-09-29)",
+        "https://councilof.ai/interop/zenodo-status.json (every CSOAI Zenodo DOI with its observed status, where it was cited, and each alternative's check)",
+        "functions/_lib/zenodoStatus.ts; functions/api/gspc.ts; functions/cite/gspc.ts; scripts/harness-x/render.mjs; scripts/claim-maintenance-spec.mjs; scripts/hf/hf-org-card.py; public/interop/memberships.json; public/_headers"
+      ]
+    },
+    {
       "id": "C-2026-0929-08",
       "date": "2026-09-29",
       "detected_at": "2026-09-29T15:47:56Z",
@@ -1704,20 +1742,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "1f003ed579ebb11fb2aa8ce158648446b16e9b7b436a81dac5585a4c0881f09e",
+    id: "ed83db2b8b361a85be2b5a57a1e1c0174e58e4ee68511c992976afa6740f67fd",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "459a1c8bfa76e4062632070f2b57690072c5d94cf5fc42515bfbf76c1bf376ee43df70e2514e76e1d813a3de2e40eb1cce6981fb0d364df1b2e75caf1dd8350c",
+    signature: "af2cdb6ed9d795a7720ef6d0311dca46baac513a310f7ac075f4dd0585bd966ac5a1835f3fc8962a6abc74954ae304ebd30a2e4446c9351677d6b7f1dc32690b",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "1f003ed579ebb11fb2aa8ce158648446b16e9b7b436a81dac5585a4c0881f09e",
+          "content_id": "ed83db2b8b361a85be2b5a57a1e1c0174e58e4ee68511c992976afa6740f67fd",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 85,
-          "latest_entry_id": "C-2026-0929-08",
-          "ledger_canonical_bytes": 196260,
+          "entries": 86,
+          "latest_entry_id": "C-2026-0929-09",
+          "ledger_canonical_bytes": 202547,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-29T17:12:26Z"
+          "signed_at": "2026-09-29T20:59:15Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +

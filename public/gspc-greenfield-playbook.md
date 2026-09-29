@@ -64,7 +64,7 @@ Greenfield is not 22 of 22 measured tomorrow. Greenfield is not emptying the boa
 
   Ed25519 signed cards          axis, subject, figure, issuer, timestamp, previous-hash, signature against did:web:csoai.org#board-attestation-1                   Unsigned cell
 
-  SHA-256 canonical JSON        Card body + 417-provision corpus anchor Zenodo 10.5281/zenodo.21991105. Methodology record 10.5281/zenodo.21991104 (HB.0).         Unsorted keys / swapped DOIs
+  SHA-256 canonical JSON        Card body + 417-provision corpus anchor Zenodo 10.5281/zenodo.21991105 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending). Methodology record 10.5281/zenodo.21991104 (HB.0, same status).         Unsorted keys / swapped DOIs
   -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Why this is stricter than Hugging Face capability boards: public capability boards still promote point-estimate leads. Independent work on paired LLM evaluation (arXiv 2605.30315) found 11 of 40 Open LLM Leaderboard v1 pairs and 4 of 9 adjacent MMLU-Pro top-10 pairs unresolved at conventional power. GSPC already refuses that pattern: most of the 14 model-comparison axes are TIEs. That is the product, not a defect.
@@ -467,7 +467,7 @@ Open CSOAI_GSPC_GREENFIELD_PLAYBOOK_31Aug2026.xlsx. Sheet 20_GROKBOT first, then
 
 # **13. Sources used in this playbook**
 
-Living board and method: GET https://councilof.ai/api/gspc ; https://councilof.ai/gspc-scoreboard ; https://councilof.ai/os ; https://councilof.ai/mcp ; https://councilof.ai/api/xrpl ; GitHub CSOAI-ORG/councilof-ai ; Zenodo 10.5281/zenodo.21991104 and 10.5281/zenodo.21991105.
+Living board and method: GET https://councilof.ai/api/gspc ; https://councilof.ai/gspc-scoreboard ; https://councilof.ai/os ; https://councilof.ai/mcp ; https://councilof.ai/api/xrpl ; GitHub CSOAI-ORG/councilof-ai ; Zenodo 10.5281/zenodo.21991104 and 10.5281/zenodo.21991105 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending).
 
 Hub record: https://huggingface.co/csoai and the gspc-\* dataset / Space family. Capability context: BenchAlign, Artificial Analysis, archived HF Open LLM Leaderboard methodology, ARC Prize results, AnotherWrapper ARC-AGI board (31 Aug 2026). Economy and agents: Anthropic Economic Index (June 2026 Cadences); ERC-8004 scans; hidorado/dorado; ERC-3643 Association. Humanoids: Counterpoint H1 2026; China MIIT 29-character ID; NVIDIA Isaac Sim / Isaac Lab / GR00T; \$10-\$25/hr pilots. Statistics: Wilson interval already in GSPC; McNemar paired test; arXiv 2605.30315. RWA public page: app.rwa.xyz/networks as_of 2026-08-30, Distributed \$38.40B / Represented \$380.88B, never summed. Companions: MASTER_ALL, HF_GSPC_2000, SCALE_3M_FACTORY, GSPC_22_READY_FIN7, BLACK_SWAN, Completion Review. Do not fork doctrine.
 

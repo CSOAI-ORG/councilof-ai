@@ -17,9 +17,9 @@ describe("reach strip — distribution, not authority", () => {
     expect(REACH_SURFACES.find((s) => s.id === "kaggle")?.href).toContain(
       "csoai-gspc-living-board",
     );
-    expect(REACH_SURFACES.find((s) => s.id === "zenodo")?.href).toBe(
-      "https://doi.org/10.5281/zenodo.21991104",
-    );
+    // 29 Sep 2026: the Zenodo record answers 410; the strip links the status record, never the dead DOI.
+    expect(REACH_SURFACES.find((s) => s.id === "zenodo")?.href).toBe("/interop/zenodo-status.json");
+    expect(REACH_SURFACES.find((s) => s.id === "zenodo")?.note).toContain("appeal pending");
   });
 
   it("frames printers + lid, never certification or invented counters in static copy", () => {

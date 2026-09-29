@@ -61,9 +61,18 @@
   Cache-Control: public, max-age=3600
 
 # A2A v1.0 agent card (RFC 8615, N5-13)
+# 29 Sep 2026: the card's signed "doi" field names a Zenodo record that answers HTTP 410 (account
+# blocked by Zenodo; appeal pending). The card is JWS-signed over every field, so its bytes are not
+# edited; the status travels here, in the serving layer, and in /interop/zenodo-status.json.
 /.well-known/agent-card.json
   Content-Type: application/a2a+json
   Cache-Control: public, max-age=3600
+  X-CSOAI-DOI-Status: 10.5281/zenodo.21991104 UNAVAILABLE - Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.
+  Link: <https://councilof.ai/interop/zenodo-status.json>; rel="describedby"; type="application/json"
+
+/.well-known/agent.json
+  X-CSOAI-DOI-Status: 10.5281/zenodo.21991104 UNAVAILABLE - Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.
+  Link: <https://councilof.ai/interop/zenodo-status.json>; rel="describedby"; type="application/json"
 
 # The 12 per-tool A2A cards (merged #1883) — same media type as the org card.
 # Verified 2026-09-12: all 12 served application/json before this rule.

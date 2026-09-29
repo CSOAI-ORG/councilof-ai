@@ -123,7 +123,21 @@ export default function Memberships() {
                         {r.since_basis && <div className="mt-1 max-w-[16rem] whitespace-normal text-xs text-slate-500">{r.since_basis}</div>}
                       </td>
                       <td className="px-3 py-3">
-                        {r.evidence_kind === "public_url" ? (
+                        {r.evidence_kind === "public_url" && r.status_note ? (
+                          // The evidence URL no longer resolves: print it as text, never as a working link.
+                          <span>
+                            <span className="break-all text-slate-700">{r.evidence}</span>
+                            <div className="mt-1 text-xs font-semibold text-amber-900">
+                              {r.status_note}
+                              {r.status_url && (
+                                <>
+                                  {" "}
+                                  <a href={r.status_url} className="underline underline-offset-4">Status</a>
+                                </>
+                              )}
+                            </div>
+                          </span>
+                        ) : r.evidence_kind === "public_url" ? (
                           <a href={r.evidence} rel="noopener noreferrer" className="break-all text-emerald-800 underline underline-offset-4">{r.evidence}</a>
                         ) : (
                           <span>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { ZENODO_NOTICE, ZENODO_STATUS_PATH } from "@/lib/zenodoStatus";
 import { Link } from "wouter";
 import seoHead from "../data/seo-head.json";
 
@@ -23,10 +24,13 @@ const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
-/** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
+/** The archival deposit. A DOI makes a document citable; it does not make it right. Since 29 Sep 2026
+ *  the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending), so the DOI is
+ *  printed as an identifier and the served document of record (the same bytes) is linked instead. */
 const DOI = "10.5281/zenodo.22901908";
-const DOI_URL = "https://doi.org/10.5281/zenodo.22901908";
-const CONCEPT_DOI_URL = "https://doi.org/10.5281/zenodo.22901781";
+const CONCEPT_DOI = "10.5281/zenodo.22901781";
+const V01_URL = "https://councilof.ai/spec/claim-maintenance/v0.1/";
+const V01_DOC = "/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md";
 
 const PAGE_DESCRIPTION = seoHead.routes["/claim-maintenance"].description;
 
@@ -72,7 +76,7 @@ const PAGE_LD = {
   citation: {
     "@type": "CreativeWork",
     name: "Claim Maintenance, version 0.1",
-    identifier: "https://doi.org/10.5281/zenodo.22901908",
+    identifier: DOI,
     url: "https://councilof.ai/spec/claim-maintenance/v0.1/",
   },
 };
@@ -159,13 +163,14 @@ export default function ClaimMaintenance() {
           <p className="mt-5 text-sm text-slate-400">
             The specification is dedicated to the public domain under CC0 1.0 — adopt it, fork it or translate it
             without asking us. The reference implementation is MIT. Archived with a persistent identifier we do not
-            control: <a className="underline" href={DOI_URL}>{DOI}</a> (
-            <a className="underline" href={CONCEPT_DOI_URL}>all versions</a>). A DOI makes a document citable and
-            permanent; it does not make it right.
+            control: {DOI} (all versions: {CONCEPT_DOI}). {ZENODO_NOTICE} The deposited document of record is served
+            here byte for byte: <a className="underline" href={V01_DOC}>claim-maintenance-v0.1.md</a> (
+            <a className="underline" href={ZENODO_STATUS_PATH}>status</a>). A DOI makes a document citable; it does not make
+            it right.
           </p>
           <p className="mt-3 text-sm text-slate-400">
             Cite as: Council of AI. <em>Claim Maintenance, version 0.1.</em> CSOAI Ltd, 2026-09-22.{" "}
-            <a className="underline" href={DOI_URL}>{DOI_URL}</a>
+            <a className="underline" href={V01_URL}>{V01_URL}</a> (DOI {DOI}; {ZENODO_NOTICE})
           </p>
           <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Live claim register summary">
             {[

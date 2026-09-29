@@ -257,9 +257,9 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     title: "Methodology DOI",
     status: "planted",
     kind: "discovery",
-    href: "https://doi.org/10.5281/zenodo.21991104",
+    href: "https://councilof.ai/interop/zenodo-status.json",
     plant: "Papers, notebooks and grant packs that must cite the instrument.",
-    note: "Citation snapshot. Not a mutable working board.",
+    note: "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. The identifier is kept; live methodology: https://councilof.ai/methodology/.",
     snippet: "10.5281/zenodo.21991104",
   },
   {
@@ -425,9 +425,9 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     title: "Zenodo cohort snapshot",
     status: "next",
     kind: "discovery",
-    href: "https://doi.org/10.5281/zenodo.21991104",
+    href: "https://councilof.ai/interop/zenodo-status.json",
     plant: "Dated eligibility manifest + methods once the census is signed.",
-    note: "Methodology DOI is already planted. The 2,200-subject snapshot is not.",
+    note: "The methodology DOI's Zenodo record is unavailable since 29 Sep 2026 (account blocked by Zenodo; appeal pending). The 2,200-subject snapshot is not deposited.",
   },
   {
     id: "ghcr-harness",

@@ -13,6 +13,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Not Found"
  },
  {
+  "path": "/a2ui",
+  "comp": "Redirect",
+  "title": "A2ui"
+ },
+ {
   "path": "/ab-testing",
   "comp": "ABTesting",
   "title": "ABTesting"

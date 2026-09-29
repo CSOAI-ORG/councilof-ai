@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   MANIFEST_PATH,
+  checkRow,
   evaluateFetch,
   runChecks,
   selftest,
@@ -38,7 +39,14 @@ describe("memberships-check: the committed manifest", () => {
   });
 
   it("never includes a row the evidence cannot carry (UNVERIFIED with no evidence)", () => {
-    for (const r of manifest.rows) expect(r.state, r.id).not.toBe("UNVERIFIED");
+    // The one sanctioned UNVERIFIED row is a RECORDED unavailability (e.g. the Zenodo 410 of
+    // 29 Sep 2026): it keeps its evidence URL, says why it no longer resolves, and dates it.
+    for (const r of manifest.rows) {
+      if (r.state !== "UNVERIFIED") continue;
+      expect(typeof r.status_note === "string" && r.status_note.length > 20, r.id).toBe(true);
+      expect(r.status_since, r.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(r.what_it_proves, r.id).toContain(r.status_note);
+    }
   });
 });
 
@@ -79,13 +87,28 @@ describe("memberships-check: it can fail", () => {
       ],
     };
     // Every real public row answers 200 with our name in this fake; only the bogus one does not.
+    // Rows recorded as unavailable (status_note) answer 410 here, as they do live.
+    const recordedGone = new Set(manifest.rows.filter((r: { status_note?: string }) => r.status_note).map((r: { evidence: string }) => r.evidence));
     const fetcher = async (url: string) =>
-      url === "https://example.test/roster"
+      recordedGone.has(url)
+        ? { status: 410, body: "User was blocked" }
+        : url === "https://example.test/roster"
         ? { status: 200, body: "Members: Somebody Else" }
         : { status: 200, body: JSON.stringify({ pagination: { total: 1 }, items: ["Council of AI CSOAI Templeman councilof.ai io.github.CSOAI-ORG csoai-gspc-mcp CSOAI LTD"] }) };
     const out = await runChecks(planted, fetcher);
     expect(out.failures.map((f) => f.id)).toEqual(["bogus-roster"]);
     expect(out.exitCode).toBe(1);
+  });
+
+  it("a recorded-unavailable row passes while it stays down and goes RED when it answers 200 again", async () => {
+    const row = manifest.rows.find((r: { status_note?: string }) => r.status_note);
+    expect(row, "the manifest carries the Zenodo row recorded unavailable").toBeTruthy();
+    const down = await checkRow(row, async () => ({ status: 410, body: "User was blocked" }));
+    expect(down.ok).toBe(true);
+    expect(down.reason).toContain("recorded unavailable (HTTP 410)");
+    const back = await checkRow(row, async () => ({ status: 200, body: "Council of AI" }));
+    expect(back.ok).toBe(false);
+    expect(back.reason).toContain("re-verify");
   });
 
   it("a network error is a failure, not a pass", () => {

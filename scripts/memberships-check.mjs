@@ -196,6 +196,18 @@ export async function checkRow(row, fetcher = defaultFetcher) {
   }
   const url = row.check?.url ?? row.evidence;
   const res = await fetcher(url);
+  // A row already recorded as not resolving (state UNVERIFIED with a status_note, e.g. the Zenodo
+  // 410 of 29 Sep 2026) is expected to fail its fetch. It goes RED the other way: if the evidence
+  // answers 200 again, the row is stale in the opposite direction and must be re-verified.
+  if (row.state === "UNVERIFIED" && typeof row.status_note === "string" && row.status_note.trim()) {
+    const back = res && res.status === 200;
+    return {
+      id: row.id,
+      ok: !back,
+      reason: back ? "recorded unavailable, but the evidence answers 200 again: re-verify and clear status_note" : `recorded unavailable (HTTP ${res?.status ?? "none"}): ${row.status_note}`,
+      url,
+    };
+  }
   const v = evaluateFetch(row, res);
   return { id: row.id, ok: v.ok, reason: res?.error ? `${v.reason} (${res.error})` : v.reason, url };
 }

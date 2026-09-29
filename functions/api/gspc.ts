@@ -3,6 +3,7 @@
 // Scores are verbatim — nothing invented. Split into private modules for deploy only.
 
 import type { AxisScore } from "./_gspc_types";
+import { METHODOLOGY_LIVE_URL, zenodoDoiStatus } from "../_lib/zenodoStatus";
 import { MEASURED_ON } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
@@ -550,6 +551,12 @@ export const onRequestGet: PagesFunction = async (context) => {
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
     doi: "10.5281/zenodo.21991104",
     doi_note: "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
+    // 29 Sep 2026: the Zenodo record behind this DOI answers HTTP 410 (account blocked by Zenodo;
+    // appeal pending). The identifier stays; this block says it does not currently resolve.
+    ...zenodoDoiStatus({
+      url: METHODOLOGY_LIVE_URL,
+      relation: "the live methodology page; not the deposit's bytes (no byte-identical copy of the deposited files is served)",
+    }),
     measured_on: measuredOn,
     note:
       "Measurement, not certification. Every score is a measured run on a published, " +

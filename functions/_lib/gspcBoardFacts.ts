@@ -43,6 +43,9 @@ export interface BoardFacts {
   unmeasured_axes: number | null;
   doi: string | null;
   doi_note: string | null;
+  /** "UNAVAILABLE" when the board says its DOI does not currently resolve (29 Sep 2026: Zenodo 410). */
+  doi_status: string | null;
+  doi_status_note: string | null;
 }
 
 export type BoardRead = { facts: BoardFacts } | { unread: string };
@@ -68,6 +71,8 @@ export function factsFromPayload(d: unknown): BoardRead {
       unmeasured_axes: num(totals.unmeasured_axes),
       doi: str(o.doi),
       doi_note: str(o.doi_note),
+      doi_status: str(o.doi_status),
+      doi_status_note: str(o.doi_status_note),
     },
   };
 }

@@ -6,7 +6,7 @@ Read the live **GSPC** AI-governance board and verify its Ed25519-signed measure
 [![PyPI downloads](https://img.shields.io/pypi/dm/csoai-gspc?color=0B1F33)](https://pypi.org/project/csoai-gspc/)
 [![License](https://img.shields.io/pypi/l/csoai-gspc?color=0B1F33)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/spray/pypi/csoai-gspc/LICENSE)
 [![board](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC%20board&color=0B1F33)](https://councilof.ai/api/gspc)
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.21991104-0B1F33)](https://doi.org/10.5281/zenodo.21991104)
+[![DOI 10.5281/zenodo.21991104: Zenodo record unavailable](https://img.shields.io/badge/DOI%2010.5281%2Fzenodo.21991104-Zenodo%20record%20unavailable-8A6D00)](https://councilof.ai/methodology/)
 
 `GET https://councilof.ai/api/gspc` is the authority. This package is a **reader**: it never caches a
 verdict, never prints a number the board did not return, and reports three states and only three.
@@ -108,7 +108,7 @@ specific bytes scored on a frozen bank at a specific time. No slot is for sale.
 - How to verify by hand: <https://councilof.ai/signed/HOW-TO-VERIFY.md>
 - Every frozen bank as its own repository: <https://huggingface.co/csoai>
 - Board mirror and `check-board.sh`: <https://github.com/CSOAI-ORG/gspc-board>
-- Methodology DOI: <https://doi.org/10.5281/zenodo.21991104>
+- Methodology DOI: 10.5281/zenodo.21991104 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. Live methodology page (not the deposit's bytes): <https://councilof.ai/methodology/>)
 
 Issued by CSOAI Ltd (England & Wales, Companies House 16939677), 3rd Floor, 86–90 Paul Street,
 London EC2A 4NE. Apache-2.0.
