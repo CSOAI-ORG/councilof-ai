@@ -28,6 +28,7 @@ export default function LobbyComposer({
   onClose,
   tools = [],
   onTool,
+  onAsk,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -45,6 +46,9 @@ export default function LobbyComposer({
   tools?: ComposerTool[];
   /** Opens the usable dashboard pane behind a selected runtime tool. */
   onTool?: (tool: ComposerTool) => void;
+  /** Offered every free-text question first. Returning true means the host answered it (the
+   *  dashboard home hands questions to the AG-UI TalkPanel); false falls through to chat.send. */
+  onAsk?: (text: string) => boolean;
 }) {
   const [q, setQ] = useState("");
   const [audience, setAudience] = useState<string>(() => {
@@ -148,6 +152,7 @@ export default function LobbyComposer({
     setQ("");
     setSeeded(false);
     setAsksOpen(false);
+    if (onAsk?.(text)) return;
     void chat.send(text, onNavigate, onOpenRoute);
   }
 

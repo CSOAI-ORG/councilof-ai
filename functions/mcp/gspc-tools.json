@@ -292,6 +292,17 @@
       "outputSchema": {
         "type": "object",
         "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "LIVE",
+              "UNREACHABLE"
+            ],
+            "description": "Read state of the signed card index on this call: LIVE (read now) or UNREACHABLE. Listing is not verification; verify_card checks a row."
+          },
+          "state_basis": {
+            "type": "string"
+          },
           "index": {
             "type": [
               "object",

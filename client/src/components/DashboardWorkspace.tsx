@@ -15,7 +15,14 @@ import LobbyComposer, {
   type ComposerTool,
 } from "@/components/lobby/LobbyComposer";
 import LobbyThread from "@/components/lobby/LobbyThread";
-import { LOBBY_TABS, type LobbyTab } from "@/components/lobby/tabs";
+import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
+import {
+  isExplicitNavigationCommand,
+  LOBBY_TABS,
+  matchRoute,
+  matchTab,
+  type LobbyTab,
+} from "@/components/lobby/tabs";
 import { useLobbyChat } from "@/components/lobby/useLobbyChat";
 import { recordActivity, useActivity } from "@/components/lobby/workspace";
 import { dashboardViewHref } from "@/lib/dashboardView";
@@ -195,6 +202,18 @@ export default function DashboardWorkspace({
   );
 
   const hasConversation = Boolean(chat.active?.turns.length);
+  const talkRef = useRef<TalkPanelHandle>(null);
+  // On the home surface a typed question goes to the AG-UI TalkPanel (tool cards + citations).
+  // An explicit pane command ("show the board") still navigates through the lobby chat.
+  const askTalk = useCallback(
+    (text: string) => {
+      if (activePane || hasConversation || !talkRef.current) return false;
+      if (isExplicitNavigationCommand(text) && (matchTab(text) || matchRoute(text))) return false;
+      talkRef.current.ask(text);
+      return true;
+    },
+    [activePane, hasConversation],
+  );
   const activity = useActivity();
   // The side rail only exists when it has something to hold: a conversation that
   // continues beside a tool pane. An empty "Open a pane or start a task" column cost
@@ -266,13 +285,21 @@ export default function DashboardWorkspace({
                     Ask the Council
                   </h1>
                   <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-700">
-                    Ask about an AI model&apos;s scores, or paste a signed record to
-                    check it. Answers come only from published measurements &mdash;
-                    if there is no evidence, the Council says so.
+                    Ask in plain words. Each answer shows the tool it came from, the
+                    record it cites and the state that tool returned &mdash; if there
+                    is no evidence, the answer says so.
                   </p>
                 </div>
 
-                <ul className="mt-8 grid gap-3 text-left sm:grid-cols-2">
+                <TalkPanel
+                  ref={talkRef}
+                  variant="dock"
+                  className="mt-6 rounded-2xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
+                />
+
+                <h2 className="mt-10 text-sm font-semibold text-slate-800">Or open a workspace</h2>
+
+                <ul className="mt-3 grid gap-3 text-left sm:grid-cols-2">
                   {STARTERS.map(({ href, icon: Icon, title, body }) => (
                     <li key={title}>
                       <Link
@@ -335,6 +362,7 @@ export default function DashboardWorkspace({
           onTool={selectTool}
           seedPrompt={seedPrompt}
           seedNonce={search.length}
+          onAsk={askTalk}
         />
       </section>
       {railHasContent ? (
