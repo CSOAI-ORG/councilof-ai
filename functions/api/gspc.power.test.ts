@@ -251,16 +251,18 @@ describe("jail interval at the prompt level (derived, unsigned; owner-approved 2
   it("sits beside the signed row-level numbers and never overwrites them", async () => {
     const board = await served();
     const jail = board.axes.find((a) => a.axis === "jail")!;
-    expect(jail.separation).toBe("TIE"); // signed; changes only through a re-sign at land
+    expect(jail.separation).toBe("UNTESTED"); // moved from TIE at the round-3 re-sign (C-2026-0929-02)
+    expect(jail.separation_untested_reason_code).toBe("NO_PER_ROW_RESULTS");
     expect(jail.interval).toEqual([0.475, 0.698]);
     expect(jail.fleet_mean).toBe(0.5455);
     const pl = jail.interval_prompt_level;
     expect(pl.signed).toBe(false);
     expect(pl.unit).toBe("prompt");
     expect(pl.label).toContain("DERIVED, UNSIGNED");
-    expect(pl.resign).toContain("PENDING RE-SIGN");
+    expect(pl.resign).toContain("APPLIED");
+    expect(pl.separation).toBe(jail.separation);
     expect(pl.resign).toContain("C-2026-0929-02");
-    expect(pl.row_level_signed).toEqual({ interval: jail.interval, fleet_mean: jail.fleet_mean, n: jail.n, separation: jail.separation });
+    expect(pl.row_level_signed).toEqual({ interval: jail.interval, fleet_mean: jail.fleet_mean, n: jail.n, separation: "TIE" });
     expect(pl.prompts).toBe(jail.distinct_items);
     expect(pl.rows).toBe(jail.n);
     for (const a of board.axes.filter((x) => x.axis !== "jail")) expect(a.interval_prompt_level, a.axis).toBeUndefined();
