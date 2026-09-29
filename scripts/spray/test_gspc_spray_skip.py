@@ -122,6 +122,16 @@ def test_kaggle_surface_match_rejects_a_root_that_advanced_during_upload():
     assert reason == "Kaggle root.json no longer matches the current live transparency root"
 
 
+def test_adopt_read_at_uses_matching_selected_kaggle_when_hf_is_stale(monkeypatch):
+    captured = {"fingerprint": "f" * 64, "as_of": "2026-09-28T07:32:07Z", "read_at": "2026-09-28T23:41:32Z"}
+    stale_hf = {"fingerprint": "f" * 64, "as_of": "2026-09-22T08:54:02Z", "read_at": "2026-09-28T10:23:33Z"}
+    monkeypatch.setattr(spray, "remote_snapshot", lambda *_args, **_kwargs: stale_hf)
+    monkeypatch.setattr(spray, "kaggle_public_files", lambda: {"SNAPSHOT.json": json.dumps(captured).encode()})
+    truth = {"fingerprint": captured["fingerprint"], "as_of": captured["as_of"], "read_at": "now"}
+    assert spray.adopt_remote_read_at(truth, surfaces=["hf", "kaggle"])
+    assert truth["read_at"] == captured["read_at"]
+
+
 def test_built_files_reads_the_snapshot_dir(tmp_path):
     (tmp_path / "x.json").write_bytes(b"xx")
     (tmp_path / "y.json").write_bytes(b"yy")
