@@ -761,6 +761,20 @@ def byte_parity_reason(built: dict[str, bytes], remote: dict[str, bytes]) -> str
     return None
 
 
+def kaggle_surface_match(built: dict[str, bytes], remote: dict[str, bytes], live_root: bytes) -> str | None:
+    """Confirm this Kaggle surface alone matches the build and current transparency root.
+
+    Cross-surface Hugging Face parity is reported separately; it must not downgrade an exact,
+    current Kaggle delivery when another mirror is stale or unavailable.
+    """
+    reason = byte_parity_reason(built, remote)
+    if reason:
+        return reason
+    if remote.get("root.json") != live_root:
+        return "Kaggle root.json no longer matches the current live transparency root"
+    return None
+
+
 VIEWER_COLUMNS = ("axis", "family", "kind", "status", "n", "separation", "leader", "dataset")
 
 
@@ -1155,8 +1169,8 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
             "description": description, "keywords": keywords, "licenses": licenses,
         }
         # A Kaggle version upload also edits the public page. Keep the already-visible metadata
-        # during the byte upload; the current-root claim is applied only after the downloadable
-        # archive and the Hugging Face twin pass exact parity verification below.
+        # during the byte upload; the current-root claim is applied only after this Kaggle archive
+        # matches the captured files and current live root. Hugging Face parity is checked separately.
         staged_metadata = {
             "id": KAGGLE_ID,
             "title": info.get("title") or "GSPC living board",
@@ -1181,10 +1195,13 @@ def spray_kaggle(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[di
         if not seen:
             return [result("kaggle", "PUBLISHED-UNCONFIRMED", page,
                            detail="version pushed; downloadable SNAPSHOT.json did not show the captured as_of; visible metadata was not advanced")]
-        parity = run([sys.executable, str(HERE / "verify-gspc-parity.py")], check=False)
-        if parity.returncode != 0:
+        live_root = fetch_ok(ROOT_URL, timeout=60)
+        surface_issue = kaggle_surface_match(built, kaggle_public_files(), live_root)
+        if surface_issue:
             return [result("kaggle", "PUBLISHED-UNCONFIRMED", page, seen,
-                           detail=f"downloaded HF/Kaggle parity failed; visible metadata was not advanced: {parity.stderr[-500:]}")]
+                           detail=f"Kaggle surface verification failed; visible metadata was not advanced: {surface_issue}")]
+        # This site's exact bytes and current root are verified. Cross-surface mirror parity is
+        # independent and must not block honest Kaggle metadata for this verified release.
         metadata_path.write_text(json.dumps(desired_metadata, ensure_ascii=False, indent=1))
         updated = run([kaggle, "datasets", "metadata", "--update", KAGGLE_ID, "-p", d], check=False)
         if updated.returncode != 0:

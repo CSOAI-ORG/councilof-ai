@@ -109,6 +109,19 @@ def test_byte_parity_catches_missing_file():
     assert reason is not None and "remote lacks" in reason
 
 
+def test_kaggle_surface_match_is_independent_of_other_mirror_lag():
+    built = {"root.json": b"current-root", "board.json": b"board", "SNAPSHOT.json": b"snapshot"}
+    remote = dict(built)
+    assert spray.kaggle_surface_match(built, remote, b"current-root") is None
+
+
+def test_kaggle_surface_match_rejects_a_root_that_advanced_during_upload():
+    built = {"root.json": b"captured-root", "board.json": b"board", "SNAPSHOT.json": b"snapshot"}
+    remote = dict(built)
+    reason = spray.kaggle_surface_match(built, remote, b"newer-live-root")
+    assert reason == "Kaggle root.json no longer matches the current live transparency root"
+
+
 def test_built_files_reads_the_snapshot_dir(tmp_path):
     (tmp_path / "x.json").write_bytes(b"xx")
     (tmp_path / "y.json").write_bytes(b"yy")
