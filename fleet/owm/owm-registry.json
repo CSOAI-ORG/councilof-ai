@@ -1,0 +1,305 @@
+{
+ "schema": "csoai.owm-registry/0.1",
+ "what_this_is": "The one schedule/registry of the reaction loop: every stage (capture -> observation store -> change detection -> dependency index -> recheck -> state -> sign -> capsule -> land), the scheduled jobs that carry it, and every observed subject with the claim it checks, the surfaces it reads and the fields it compares (the dependency index: claim -> sources -> fields). Job ids are the ids of the estate job registry (fleet/automation/JOBS.json, deployed as ~/fleet/jobs_registry.json); job status is read live from the output-novelty reader (~/fleet/output_novelty.json), never typed here.",
+ "what_this_is_not": "Not a grade, ranking or approval of anything. Stage status (LIVE / STAGED / MISSING) is derived each cycle from job evidence; this file only declares which jobs carry which stage.",
+ "cycle": {
+  "id": "owm-cycle",
+  "schedule": "19,49 * * * *",
+  "stale_after_cycles": 2,
+  "grace_s": 3900,
+  "grace_note": "The novelty reader runs hourly (:47), so a job's newest output is known to within an hour. A stage is STALE when its newest output is older than stale_after_cycles x its period + grace_s.",
+  "novelty_max_age_s": 7200,
+  "publish_stale_after_s": 21600
+ },
+ "sources": {
+  "jobs_registry": "~/fleet/jobs_registry.json",
+  "novelty": "~/fleet/output_novelty.json",
+  "flywheel_status": "~/fleet/flywheel_status.json",
+  "base_url": "https://councilof.ai"
+ },
+ "outputs": {
+  "log": "~/lanes/logs/owm.log",
+  "heartbeat": "~/fleet/owm_heartbeat.json",
+  "snapshot_internal": "~/fleet/owm_snapshot.json",
+  "snapshot_public": "~/lanes/state/owm/public/latest.json",
+  "state": "~/lanes/state/owm/state.json",
+  "events": "~/lanes/state/owm/events.jsonl"
+ },
+ "stages": [
+  {
+   "stage": "capture",
+   "order": 1,
+   "label": "capture",
+   "components": [
+    {"job": "xl-daily", "label": "cross-ledger supply read, daily"},
+    {"job": "flywheel-x402-daily", "label": "x402 endpoint census, daily"},
+    {"job": "flywheel-census-weekly", "label": "MCP handshake census, weekly"},
+    {"job": "tool-drift", "label": "MCP tool-list drift read, daily"},
+    {"job": "lanes-public-signals-20260926-run.sh", "label": "public signals read, daily"},
+    {"job": "self-parity", "label": "own-surface self-parity read, daily"},
+    {"job": "gspc-public-witness", "label": "public board witness, every 15 min"},
+    {"job": "lanes-ops-guard-20260928-bin-prod-canary.py", "label": "production canary, every 10 min"},
+    {"job": "owm-cycle", "label": "own-surface cross-reads, every 30 min"},
+    {"job": "pod-census-capture", "label": "census capture on the GPU pod"}
+   ]
+  },
+  {
+   "stage": "observation_store",
+   "order": 2,
+   "label": "observation store",
+   "components": [
+    {"job": "claim-watch", "label": "claim watch: six stores per sealed claim set"},
+    {"job": "capsule-daily", "label": "measurement capsules: per-adapter observation batches"},
+    {"job": "owm-cycle", "label": "outer world model: hash-linked change events per subject"}
+   ]
+  },
+  {
+   "stage": "change_detection",
+   "order": 3,
+   "label": "change detection",
+   "components": [
+    {"job": "claim-watch", "label": "claim watch: atoms against the pin"},
+    {"job": "lanes-ops-guard-20260928-bin-output-novelty.py", "label": "output novelty: new content, not a fresh mtime"},
+    {"job": "owm-cycle", "label": "outer world model: evidence digest per subject against the previous cycle"}
+   ]
+  },
+  {
+   "stage": "dependency_index",
+   "order": 4,
+   "label": "dependency index (claim -> sources -> fields)",
+   "components": [
+    {"job": "claim-watch", "label": "claim watch: substantive and derived-pointer atoms for one claim set"},
+    {"job": "owm-cycle", "label": "outer world model: the subjects below, each claim -> surfaces -> fields"},
+    {"staged": "claim-event feed page dependencies (claim -> pages), built and tested, not yet landed", "label": "claim-event page dependencies"},
+    {"missing": "page dependency index driving IndexNow submissions and sitemap lastmod (reaction-loop build step 3)", "label": "page dependency index"},
+    {"missing": "card admission as a reaction: quarantined card -> owner rule -> admitted event -> board axis -> daily root (reaction-loop build step 4)", "label": "card admission dependency"}
+   ]
+  },
+  {
+   "stage": "recheck",
+   "order": 5,
+   "label": "recheck",
+   "components": [
+    {"job": "claim-watch", "label": "claim watch: same instrument, fresh fetch"},
+    {"job": "corrections-watch-oracle", "label": "corrections watch, daily"},
+    {"job": "owm-cycle", "label": "outer world model: every own surface re-read each cycle"},
+    {"job": "pod-claim-watch-measure", "label": "published-claim digest re-read on the GPU pod"}
+   ]
+  },
+  {
+   "stage": "state",
+   "order": 6,
+   "label": "state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED)",
+   "components": [
+    {"job": "owm-cycle", "label": "outer world model snapshot, one per cycle"}
+   ]
+  },
+  {
+   "stage": "sign",
+   "order": 7,
+   "label": "sign (existing board-sign path, only for kinds that already sign)",
+   "components": [
+    {"job": "claim-watch", "label": "claim-watch receipt"},
+    {"job": "corrections-watch-oracle", "label": "corrections-watch record"},
+    {"job": "xl-daily", "label": "cross-ledger signed run"},
+    {"job": "self-parity", "label": "self-parity signed record"},
+    {"job": "capsule-daily", "label": "capsule batches and the chained day index"},
+    {"staged": "the outer world model snapshot is a new kind and is published UNSIGNED; extending the signer to it is an owner decision", "label": "outer world model snapshot"}
+   ]
+  },
+  {
+   "stage": "capsule",
+   "order": 8,
+   "label": "capsule",
+   "components": [
+    {"job": "capsule-daily", "label": "measurement-capsule day index (chained, Rekor, OTS)"}
+   ]
+  },
+  {
+   "stage": "land",
+   "order": 9,
+   "label": "land (the gated staging-mirror land path only)",
+   "components": [
+    {"job": "capsule-publish", "label": "public copy of the capsule day index"},
+    {"job": "lanes-bin-auto-land-trigger.sh", "label": "auto-land: deploy staging master when it moved and every gate passes"},
+    {"job": "lanes-bin-root-daily-trigger.sh", "label": "daily public-root republish"},
+    {"staged": "per-cycle publication of the outer world model snapshot: the seed snapshot is committed with the /api/owm door; a producer that lands later snapshots through the gated path is not built", "label": "outer world model snapshot publish"}
+   ]
+  }
+ ],
+ "subjects": [
+  {
+   "id": "own:public-root",
+   "label": "public Merkle root of catalogued cards (corpus 2 of 3)",
+   "kind": "own_surface",
+   "claim": "The signed root envelope, its API alias and the live-state summary carry one card_count and one as_of; the envelope and its alias carry one merkle_root.",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "root.json", "type": "http", "url": "/root.json", "fields": {"card_count": "card_count", "merkle_root": "merkle_root", "as_of": "as_of"}},
+    {"id": "api-root", "type": "http", "url": "/api/root", "fields": {"card_count": "card_count", "merkle_root": "merkle_root", "as_of": "as_of"}},
+    {"id": "api-state", "type": "http", "url": "/api/state", "fields": {"card_count": "public_root.card_count.value", "as_of": "public_root.card_count.as_of"}}
+   ]
+  },
+  {
+   "id": "own:board-totals",
+   "label": "board totals (axes on the board, axes measured)",
+   "kind": "own_surface",
+   "claim": "The board endpoint and the live-state summary carry the same axis count, measured count and public count sentence.",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "api-gspc", "type": "http", "url": "/api/gspc", "fields": {"axes": "totals.axes", "measured_axes": "totals.measured_axes", "public_count": "totals.public_count"}},
+    {"id": "api-state", "type": "http", "url": "/api/state", "fields": {"axes": "board.axis_slots.value", "measured_axes": "board.measured_axes.value", "public_count": "public_count.value"}}
+   ]
+  },
+  {
+   "id": "own:signed-card-index",
+   "label": "signed card index (corpus 3 of 3)",
+   "kind": "own_surface",
+   "claim": "The signed card index lists as many cards as the live-state summary says are published on disk.",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "card-index", "type": "http", "url": "/signed/card_index.json", "fields": {"n_cards": "n_cards"}},
+    {"id": "api-state", "type": "http", "url": "/api/state", "fields": {"n_cards": "card_chain.bodies_published.value", "verified_valid": "card_chain.bodies_verified_valid.value"}}
+   ]
+  },
+  {
+   "id": "own:corrections-ledger",
+   "label": "public corrections ledger",
+   "kind": "own_surface",
+   "claim": "The corrections ledger's signature verifies over the served bytes (the door checks it on every request).",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "api-corrections", "type": "http", "url": "/api/corrections", "fields": {"signature_state": "signature_state", "n_entries": "corrections#len"}}
+   ],
+   "ok_if": {"signature_state": ["VALID"]},
+   "on_fail": "INCONSISTENT"
+  },
+  {
+   "id": "own:capsule-index-public-copy",
+   "label": "public copy of the measurement-capsule day index",
+   "kind": "own_surface",
+   "claim": "The public copy of the capsule index carries the index_root of the newest signed day index.",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "day-index", "type": "local_json", "label": "newest signed day index on the scheduler host", "path": "/evac-bulk/measurement-index-v0.2-????-??-??.json", "fields": {"index_root": "index_root", "date": "date"}},
+    {"id": "public-index", "type": "http", "url": "/measurement-capsules/v0.2/index.json", "fields": {"index_root": "index_root", "public_as_of": "as_of"}}
+   ]
+  },
+  {
+   "id": "own:mcp-free",
+   "label": "free MCP door tool list",
+   "kind": "own_surface",
+   "claim": "The free MCP door lists the expected number of tools (read by the production canary; not re-fetched here).",
+   "schedule_job": "lanes-ops-guard-20260928-bin-prod-canary.py",
+   "sources": [
+    {"id": "prod-canary", "type": "local_json", "label": "production canary record", "path": "~/fleet/prod_canary.json", "max_age_s": 3600, "fields": {"tools_observed": "checks.mcp_tools.observed", "tools_expected": "checks.mcp_tools.expected", "canary_status": "status"}}
+   ],
+   "ok_if": {"canary_status": ["PASS"]},
+   "on_fail": "INCONSISTENT"
+  },
+  {
+   "id": "own:owm",
+   "label": "this snapshot's public door",
+   "kind": "own_surface",
+   "claim": "The outer world model door serves a snapshot that validates.",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "api-owm", "type": "http", "url": "/api/owm", "fields": {"schema": "schema", "served_state": "served.state"}}
+   ]
+  },
+  {
+   "id": "own:claim-events",
+   "label": "claim-event feed head",
+   "kind": "own_surface",
+   "claim": "The claim-event feed's signed daily head verifies against the committed feed bytes.",
+   "schedule_job": "owm-cycle",
+   "sources": [
+    {"id": "api-claim-events-head", "type": "http", "url": "/api/claims/events/head", "fields": {"verification": "verification.state"}}
+   ],
+   "ok_if": {"verification": ["VERIFIES"]},
+   "on_fail": "INCONSISTENT"
+  },
+  {
+   "id": "obs:cross-ledger-supply",
+   "label": "cross-ledger supply of tokenised assets (daily signed run)",
+   "kind": "capture",
+   "claim": "The newest daily cross-ledger run exists and is signed.",
+   "schedule_job": "xl-daily",
+   "sources": [
+    {"id": "xl-signed", "type": "local_file", "label": "newest signed daily run", "path": "/evac-bulk/xl-daily/????-??-??/xl-daily-????-??-??.signed.json"}
+   ]
+  },
+  {
+   "id": "obs:x402-endpoints",
+   "label": "x402 endpoint census (daily)",
+   "kind": "capture",
+   "claim": "The newest daily x402 census completed its enumeration gates.",
+   "schedule_job": "flywheel-x402-daily",
+   "sources": [
+    {"id": "x402-daily", "type": "flywheel_job", "label": "newest census result", "job": "x402-daily"}
+   ],
+   "ok_if": {"rc": [0]},
+   "on_fail": "UNCHECKABLE"
+  },
+  {
+   "id": "obs:mcp-handshake-census",
+   "label": "MCP server handshake census (weekly)",
+   "kind": "capture",
+   "claim": "The newest weekly MCP handshake census completed.",
+   "schedule_job": "flywheel-census-weekly",
+   "sources": [
+    {"id": "census-weekly", "type": "flywheel_job", "label": "newest census result", "job": "census-weekly"}
+   ],
+   "ok_if": {"rc": [0]},
+   "on_fail": "UNCHECKABLE"
+  },
+  {
+   "id": "obs:mcp-tool-drift",
+   "label": "MCP tool-list drift (daily, planned endpoints)",
+   "kind": "capture",
+   "claim": "The newest daily drift run attempted every planned endpoint.",
+   "schedule_job": "tool-drift",
+   "sources": [
+    {"id": "tool-drift", "type": "local_json", "label": "newest drift run status", "path": "~/fleet/tool_drift.json", "fields": {"n_planned": "n_planned", "n_attempted": "n_attempted", "last_success": "last_success"}},
+    {"id": "tool-drift-summary", "type": "local_file", "label": "newest drift run summary", "path": "/evac-bulk/tool-drift/runs/????-??-??/summary.json"}
+   ],
+   "mode": "single_surface"
+  },
+  {
+   "id": "obs:public-signals",
+   "label": "public signals (daily signed record)",
+   "kind": "capture",
+   "claim": "The newest daily public-signals record exists and is signed.",
+   "schedule_job": "lanes-public-signals-20260926-run.sh",
+   "sources": [
+    {"id": "public-signals", "type": "local_file", "label": "newest signed daily record", "path": "/evac-bulk/public-signals/????-??-??/record.signed.json"}
+   ]
+  },
+  {
+   "id": "obs:self-parity",
+   "label": "own-surface self-parity (daily signed record)",
+   "kind": "capture",
+   "claim": "The newest self-parity record is signed.",
+   "schedule_job": "self-parity",
+   "sources": [
+    {"id": "self-parity", "type": "local_json", "label": "newest self-parity status", "path": "~/fleet/self_parity.json", "fields": {"result": "result", "record_sha256": "record_sha256", "date": "date"}}
+   ],
+   "ok_if": {"result": ["SIGNED+OTS_PENDING", "SIGNED+OTS_STAMPED", "SIGNED+OTS_CONFIRMED", "SIGNED"]},
+   "on_fail": "UNCHECKABLE"
+  },
+  {
+   "id": "claim:sealed:4a31dd96e79dcf1b",
+   "label": "sealed claim set (unpublished until owner review; digests only)",
+   "kind": "claim",
+   "claim": "Every claim in the set reproduces on fresh prints read by the same instrument on the same host (not an independent-runtime reproduction).",
+   "schedule_job": "claim-watch",
+   "sources": [
+    {"id": "claim-watch", "type": "claim_watch", "label": "claim-watch event log (sealed)", "dir": "/evac-bulk/claim-watch/4a31dd96e79dcf1b"}
+   ]
+  }
+ ],
+ "excluded": [
+  {"what": "sandbox predictions", "why": "Predictions live in the sandbox (proofof.ai) and never mix into measurement surfaces (owner ruling)."},
+  {"what": "per-company subjects", "why": "Naming a company in a new published record needs a per-company owner OK; subjects here are populations, own surfaces and sealed sets."}
+ ]
+}

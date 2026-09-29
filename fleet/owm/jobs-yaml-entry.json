@@ -1,0 +1,16 @@
+{
+ "id": "owm-cycle",
+ "host": "oracle-micro-2",
+ "schedule": "19,49 * * * *",
+ "command": "flock -n /tmp/owm-cycle.lock env FLOOR_ROOT_M=512 FLOOR_BULK_M=0 $HOME/lanes/bin/disk-floor.sh owm-cycle $HOME/lanes/logs/owm.log nice -n 15 timeout 300 /usr/bin/python3 $HOME/lanes/reaction-orchestrator-20260928/owm.py",
+ "health": {"type": "log_last_line", "path": "~/lanes/logs/owm.log", "max_age_s": 4500, "must_contain": "rc=0"},
+ "supervise": "observe",
+ "cron_match": "reaction-orchestrator-20260928/owm.py",
+ "max_runtime_s": 300,
+ "not_before": "2026-09-28T22:30:00Z",
+ "outputs": ["~/lanes/logs/owm.log", "~/fleet/owm_heartbeat.json", "~/fleet/owm_snapshot.json", "~/lanes/state/owm/events.jsonl", "~/lanes/state/owm/public/latest.json"],
+ "failover": [],
+ "owner_lane": "reaction-orchestrator-20260928",
+ "note": "reaction orchestrator (outer world model). Every 30 min: stage status LIVE/STAGED/MISSING from job evidence, one STALE line per job that missed 2 cycles (dead-man's switch), subject states from own-surface cross-reads and local records. Last log line ends rc=0 (nothing stale) or rc=3 (STALE jobs=...): must_contain rc=0 turns a stale stage red here; max_age 4500s turns a dead orchestrator red. Read-only; writes nothing to canon.",
+ "class": "measurement"
+}
