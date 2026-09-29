@@ -9,6 +9,8 @@ Remote server version: 1.4.3 (from `mcp/gspc-server/server.json`; `scripts/harne
 Fleet: 16 tools (12 free, 4 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
 
 Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs`.
+After any step: `python3 scripts/harness-x/parity_live.py` reads every live channel in `published_channels` and says
+CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily: `scripts/pod-loops/harness-x-parity.sh`).
 
 | id | format | licence | channel | approver |
 |---|---|---|---|---|
@@ -26,7 +28,7 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 | `npm-ai-sdk-gspc` | npm package (ESM) — Vercel AI SDK tool() over the /mcp door; optional @csoai/layer0 governed wrapper | Apache-2.0 | npm (@csoai scope) | Nick — npm Bypass-2FA granular token (account is WebAuthn, not TOTP) |
 | `npm-mastra-gspc` | npm package (ESM) — Mastra createTool() over the /mcp door; optional @csoai/layer0 governed wrapper | Apache-2.0 | npm (@csoai scope) | Nick — npm Bypass-2FA granular token |
 | `docker-mcp-catalog` | docker/mcp-registry servers/<name>/{server.yaml,tools.json,readme.md}, type remote | n/a (catalog metadata) | GitHub PR to docker/mcp-registry | Nick — PR from a public, unflagged GitHub account |
-| `hf-space` | Hugging Face Space (Gradio, mcp_server=True) over csoai-gspc | Apache-2.0 | huggingface.co/spaces/csoai/gspc-mcp (git push or huggingface_hub upload) | Nick — HF write token for the csoai org |
+| `hf-space` | Hugging Face Space (Gradio, mcp_server=True) over csoai-gspc | Apache-2.0 | huggingface.co/spaces/csoai/csoai-gspc-mcp (huggingface_hub upload). NOT csoai/gspc-mcp: that id is the static GSPC-MCP axis printer Space, and uploading there would overwrite it. | Nick — HF write token for the csoai org |
 | `well-known-server-card` | councilof.ai /.well-known/mcp/server-card.json + /.well-known/mcp.json (derived fields only) | CC-BY-4.0 (as the card states) | this repo → deploy to councilof.ai | Nick — merge; ships with the next deploy |
 
 ## `mcp-registry-github`
@@ -48,6 +50,7 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 1. `mcp-publisher login http --domain councilof.ai --private-key <64-hex Ed25519 seed>` — the key whose public half is served at /.well-known/mcp-registry-auth.
 2. `mcp-publisher publish distribution/mcp-registry/ai.councilof-gspc/server.json`.
 3. CANONICAL NAME (owner ruling 2026-09-26). The live entry is remote-only; add the npm package to it only after an npm release that carries `mcpName: ai.councilof/gspc`.
+4. The remote is `https://councilof.ai/mcp/` (the door plus one slash): the bare door is registered under the io.github name and the registry refuses one remote URL under two names. Publish a version above the registry's current isLatest; registry versions are immutable.
 
 ## `claude-plugin`
 
@@ -110,8 +113,9 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 - Version source: `council-os/distribution.json#/adapter_version`
 - Flagged-org impact: Trusted publishing via GitHub Actions is blocked while the org is flagged; token upload is not.
 
-1. `cd distribution/python/langchain-csoai && python -m build && twine upload dist/*` with an owner PyPI API token.
-2. Name is unclaimed on PyPI as of 2026-09-25.
+1. Publish csoai-gspc 0.2.20260928.1 to PyPI first: this package requires csoai-gspc>=0.2.20260928.1, and `scripts/harness-x/parity_live.py` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)
+2. `cd distribution/python/langchain-csoai && python -m build && twine upload dist/*` with an owner PyPI API token.
+3. The source version is 0.1.1. PyPI and npm refuse to re-upload a version, so any content change moves adapter_version; parity_live.py flags a live version whose bytes the source no longer produces.
 
 ## `pypi-llama-index-tools-csoai`
 
@@ -119,8 +123,9 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 - Version source: `council-os/distribution.json#/adapter_version`
 - Flagged-org impact: LlamaHub PR must come from an unflagged account.
 
-1. `cd distribution/python/llama-index-tools-csoai && python -m build && twine upload dist/*` (owner token).
-2. Optional LlamaHub: PR to run-llama/llama_index from an unflagged account.
+1. Publish csoai-gspc 0.2.20260928.1 to PyPI first: this package requires csoai-gspc>=0.2.20260928.1, and `scripts/harness-x/parity_live.py` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)
+2. `cd distribution/python/llama-index-tools-csoai && python -m build && twine upload dist/*` (owner token).
+3. Optional LlamaHub: PR to run-llama/llama_index from an unflagged account.
 
 ## `pypi-crewai-csoai`
 
@@ -128,7 +133,9 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 - Version source: `council-os/distribution.json#/adapter_version`
 - Flagged-org impact: As pypi-langchain-csoai.
 
-1. `cd distribution/python/crewai-csoai && python -m build && twine upload dist/*` (owner token).
+1. Publish csoai-gspc 0.2.20260928.1 to PyPI first: this package requires csoai-gspc>=0.2.20260928.1, and `scripts/harness-x/parity_live.py` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)
+2. `cd distribution/python/crewai-csoai && python -m build && twine upload dist/*` (owner token).
+3. The source version is 0.1.1. PyPI and npm refuse to re-upload a version, so any content change moves adapter_version; parity_live.py flags a live version whose bytes the source no longer produces.
 
 ## `npm-ai-sdk-gspc`
 
@@ -162,7 +169,8 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 - Version source: `scripts/spray/pypi/csoai-gspc/pyproject.toml#project.version`
 - Flagged-org impact: None.
 
-1. `huggingface-cli upload csoai/gspc-mcp distribution/hf-space/csoai-gspc-mcp . --repo-type space` with an owner HF write token (creates the Space if absent).
+1. Publish csoai-gspc 0.2.20260928.1 to PyPI first: the Space's requirements.txt requires csoai-gspc>=0.2.20260928.1, and `scripts/harness-x/parity_live.py` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)
+2. `huggingface-cli upload csoai/csoai-gspc-mcp distribution/hf-space/csoai-gspc-mcp . --repo-type space` with an owner HF write token. The live Space is csoai/csoai-gspc-mcp; never upload to csoai/gspc-mcp, which is the static GSPC-MCP axis printer.
 
 ## `well-known-server-card`
 

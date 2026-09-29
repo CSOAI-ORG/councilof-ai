@@ -35,4 +35,6 @@ returns the challenge, which is not settlement, delivery or revenue):
 measurement is correct, current or complete. UNMEASURED, UNREACHABLE and UNCHECKABLE are first-class states.
 Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free. No tool determines legal compliance.
 
+Data: https://councilof.ai/api/gspc · Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections) · Verify a card, free: https://councilof.ai/gspc-verify/
+
 Operator: CSOAI Ltd, UK Companies House 16939677. Doctrine: `docs/DOCTRINE.md` sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a` (human page https://councilof.ai/doctrine/).
