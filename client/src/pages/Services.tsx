@@ -35,6 +35,7 @@ type Load =
 
 export default function Services() {
   const [load, setLoad] = useState<Load>({ state: "loading" });
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     document.title = "Supported feeds and evidence doors — Council of AI";
@@ -54,7 +55,7 @@ export default function Services() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [attempt]);
 
   const cat = load.state === "live" ? load.catalogue : null;
 
@@ -102,10 +103,11 @@ export default function Services() {
 
       <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
-          <p className="text-slate-400">Reading the manifest…</p>
+          <p role="status" className="text-slate-400">Reading the manifest…</p>
         ) : load.state === "unread" ? (
           <div
             data-testid="services-unread"
+            role="status"
             className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-6"
           >
             <p className="font-mono text-xs uppercase tracking-widest text-amber-300">Unread</p>
@@ -125,6 +127,7 @@ export default function Services() {
                 rail is down.
               </p>
             )}
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-4 min-h-11 rounded border border-amber-300 px-4 py-2 font-semibold focus-visible:outline focus-visible:outline-2">Retry manifest read</button>
           </div>
         ) : (
           <div className="space-y-12">

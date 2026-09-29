@@ -129,7 +129,9 @@ export function paneLabel(id: string): string | null {
   const r = resolvePaneId(id);
   const tab = LOBBY_TABS.find((t) => t.id === r);
   if (tab) return tab.label;
-  return EXTRA_LABELS[r] ?? null;
+  return Object.prototype.hasOwnProperty.call(EXTRA_LABELS, r)
+    ? EXTRA_LABELS[r]
+    : null;
 }
 
 /** Every tab id this shell renders natively — the door `/dashboard?tab=<id>` works for each. */
@@ -144,7 +146,7 @@ export const PANE_IDS: readonly string[] = [
 
 export default function DashboardPane({ id }: { id: string }) {
   const r = resolvePaneId(id);
-  const C = PANES[r];
+  const C = Object.prototype.hasOwnProperty.call(PANES, r) ? PANES[r] : undefined;
   const tab = LOBBY_TABS.find((candidate) => candidate.id === r);
   if (!C && tab?.path) {
     return (
@@ -173,12 +175,11 @@ export default function DashboardPane({ id }: { id: string }) {
           Nothing else was substituted. Use the master catalogue to choose a
           published workflow or page.
         </p>
-        <Link
-          href="/dashboard?tab=explore"
-          className="mt-5 inline-flex rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
-        >
-          Open all tools
-        </Link>
+        <nav aria-label="Available workspace destinations" className="mt-5 flex flex-wrap justify-center gap-3">
+          <Link href="/dashboard?tab=explore" className="inline-flex min-h-11 items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Open all tools</Link>
+          <Link href="/dashboard?tab=board" className="inline-flex min-h-11 items-center rounded-lg border border-current px-4 py-2 text-sm font-semibold underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">GSPC board</Link>
+          <Link href="/dashboard?tab=learn" className="inline-flex min-h-11 items-center rounded-lg border border-current px-4 py-2 text-sm font-semibold underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2">Learning arena</Link>
+        </nav>
       </div>
     );
   }
