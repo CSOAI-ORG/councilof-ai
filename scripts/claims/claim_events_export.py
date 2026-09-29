@@ -42,8 +42,32 @@ KIND_RANK = {"event": 0, "atoms": 1}
 BANNED = re.compile(r"venturi|laputa|pontius|\bSOV-|sov3|sov34|oracle-micro|/evac-bulk|~/lanes|/workspace/", re.I)
 # Structured fields copied from a source event. Free text (reason, why, notes) is never copied.
 EVENT_FIELDS_STATE = ("object_state", "change_state", "recorded_state")
+# FETCH_FAILED / UNCONFIRMED: claim_watch.py's change-detection states since 29 Sep 2026 (harness-router-20260929 winner):
+# a failed fetch and a change seen on one fetch only are recorded as such, never as a change.
 STATES_OK = {None, "OBSERVED", "MEASURED", "REPRODUCED", "SIGNED", "ROOTED", "WITNESSED", "CONFIRMED", "CORRECTED",
-             "QUARANTINED", "SUPERSEDED", "CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE"}
+             "QUARANTINED", "SUPERSEDED", "CLAIM_CAPTURED", "CLAIM_MEASURED", "UNMEASURED", "UNCHECKABLE",
+             "FETCH_FAILED", "UNCONFIRMED"}
+
+
+def _ms_key(x):
+    """claim-diff winner (harness-router-20260929): multiset canonical form - lists order-free with multiplicity at every
+    depth, types kept apart. Same function as claim_watch.py, whose selftest proves it equals DeepDiff(ignore_order=True,
+    report_repetition=True) on the router's 26 fixtures."""
+    if x is None:
+        return ("n",)
+    if isinstance(x, bool):
+        return ("b", x)
+    if isinstance(x, int):
+        return ("i", x)
+    if isinstance(x, float):
+        return ("f", x)
+    if isinstance(x, str):
+        return ("s", x)
+    if isinstance(x, dict):
+        return ("d", tuple(sorted((_ms_key(k), _ms_key(v)) for k, v in x.items())))
+    if isinstance(x, (list, tuple)):
+        return ("l" if isinstance(x, list) else "t", tuple(sorted(_ms_key(e) for e in x)))
+    return ("r", type(x).__name__, repr(x))
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -166,7 +190,8 @@ def project(kind, idx, b, sid, meta, disclosed, refs, prev_atoms):
             rec["fixed"] = True
     else:
         atoms = o.get("atoms") or {}
-        digests = {k: sha(line_bytes(v)) for k, v in atoms.items()}
+        # multiset digest: a reordered list is not an atom change (was sha(line_bytes(v)), list-order sensitive)
+        digests = {k: sha(repr(_ms_key(v)).encode()) for k, v in atoms.items()}
         if prev_atoms is None:
             changed, rec["baseline"] = sorted(digests), True
         else:
