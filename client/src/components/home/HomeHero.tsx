@@ -19,6 +19,7 @@
  */
 import { Link } from "wouter";
 import { useGspcBoard, type GspcPayload } from "../board/useGspcBoard";
+import { boardRunDates } from "@/lib/boardRunDates";
 
 export interface HeroStat {
   /** What the number is, in the reader's words. */
@@ -95,10 +96,13 @@ export function separationRead(data: GspcPayload | null): SeparationRead | null 
   return { comparison, separated, ties, untested };
 }
 
-/** The stamp line: when the runs behind the board were made, verbatim from measured_on.date. */
+/**
+ * The stamp line: when the runs behind the board were made. measured_on.date verbatim, completed
+ * with any run it does not name (effect-binding, 2026-09-22) read from that axis's own data —
+ * see client/src/lib/boardRunDates.ts. Nothing typed.
+ */
 export function heroStamp(data: GspcPayload | null): string | null {
-  const d = (data?.measured_on as { date?: unknown } | undefined)?.date;
-  return typeof d === "string" && d.trim() !== "" ? d : null;
+  return boardRunDates(data as Parameters<typeof boardRunDates>[0]);
 }
 
 function Stat({ stat }: { stat: HeroStat }) {
@@ -210,6 +214,15 @@ export default function HomeHero({
             data-testid="hero-cta-verify"
           >
             Check a record yourself
+          </Link>
+          {/* The connector guide, one click from the first screen (audit 2026-09-28 #10): the free
+              door at /mcp/free was linked from none of home, /tools or /connect. */}
+          <Link
+            href="/connect/claude/"
+            className="inline-flex min-h-12 items-center px-1 text-[15px] font-semibold text-emerald-200 underline decoration-emerald-300/50 underline-offset-4 hover:text-emerald-50"
+            data-testid="hero-cta-connect"
+          >
+            Add to Claude or Cursor →
           </Link>
           {/*
             CROSS-PAGE, NOT AN IN-PAGE HOP. HomeMachineSurface moved to /how-we-work on

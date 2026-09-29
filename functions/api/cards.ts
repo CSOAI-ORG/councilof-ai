@@ -122,7 +122,9 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     .slice()
     .sort((a, b) => (b.ts || "").localeCompare(a.ts || ""));
   const count = cards.length;
-  const chainAsOf = (chainFacts as any)?.as_of ?? "unknown";
+  // The date of the verification run (derive-chain-facts bodies.verified_at), not card_index.json's
+  // creation date, which is what chain-facts.as_of names (audit 2026-09-28 #17).
+  const chainAsOf = (chainFacts as any)?.bodies?.verified_at ?? (chainFacts as any)?.as_of ?? "unknown";
   const signed = cards.filter((c) => c.signed).length;
   const signedUnderDidKey = cards.filter((c) => c.signed && pinnedKid(c.pubkey)).length;
 

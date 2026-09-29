@@ -4,7 +4,8 @@
  */
 import HomeUnderstand from "./HomeUnderstand";
 
-const URL = "https://councilof.ai/mcp";
+// The free door by default (audit 2026-09-28 #10).
+const URL = "https://councilof.ai/mcp/free";
 const MCP_SNIPPET = `{ "mcpServers": { "gspc": { "url": "${URL}" } } }`;
 
 const HOSTS = [

@@ -92,7 +92,8 @@ describe("/api/cards note", () => {
     expect(n).toMatch(/signed card index/i);
     expect(n).toMatch(/corpus 3/i);
     expect(n).toContain("card_chain.bodies_verified_valid");
-    expect(n).toContain(`as_of ${facts.as_of}`);
+    // Dated by the verification run, not the index creation date (audit 2026-09-28 #17).
+    expect(n).toContain(`as_of ${(facts as { bodies: { verified_at: string } }).bodies.verified_at}`);
     expect(n).not.toMatch(/has not been re-?run across the whole index/i);
   });
 });

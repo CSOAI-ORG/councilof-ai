@@ -79,7 +79,7 @@ export const EMBED_SNIPPET = `<script src="https://councilof.ai/embed.js"
 export const MCP_SNIPPET = `{
   "mcpServers": {
     "gspc": {
-      "url": "https://councilof.ai/mcp"
+      "url": "https://councilof.ai/mcp/free"
     }
   }
 }`;
