@@ -30,6 +30,51 @@ const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 const isOwnCouncilModel = (name?: string | null): boolean =>
   typeof name === "string" && (/^council\b/i.test(name.trim()) || /\(council specialist\)/i.test(name));
 
+const isOwnModelIdentifier = (value: string): boolean => {
+  const s = value.trim();
+  return (
+    (/^council\b/i.test(s) && /^[\w.:/@+-]+(?:\s+\(council specialist\))?$/i.test(s)) ||
+    /^[\w.:/@+-]+\s+\(council specialist\)$/i.test(s)
+  );
+};
+
+export const collectOwnModelIdentifiers = (value: unknown, found = new Set<string>()): Set<string> => {
+  if (Array.isArray(value)) {
+    for (const item of value) collectOwnModelIdentifiers(item, found);
+  } else if (value && typeof value === "object") {
+    for (const [key, item] of Object.entries(value)) {
+      if (isOwnModelIdentifier(key)) found.add(key);
+      collectOwnModelIdentifiers(item, found);
+    }
+  } else if (typeof value === "string" && isOwnModelIdentifier(value)) {
+    found.add(value);
+  }
+  return found;
+};
+
+export const redactOwnModelIdentifiers = (value: unknown, identifiers: Set<string>): unknown => {
+  const ordered = [...identifiers].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  const aliases = new Map(ordered.map((identifier, i) => [identifier, `CSOAI-owned specialist ${i + 1}`]));
+  const replacementOrder = [...aliases.entries()].sort(
+    ([a], [b]) => b.length - a.length || (a < b ? -1 : a > b ? 1 : 0),
+  );
+  const replace = (text: string): string => {
+    let result = text;
+    for (const [identifier, alias] of replacementOrder) {
+      result = result.replace(new RegExp(identifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi"), alias);
+    }
+    return result;
+  };
+  const visit = (item: unknown): unknown => {
+    if (Array.isArray(item)) return item.map(visit);
+    if (item && typeof item === "object") {
+      return Object.fromEntries(Object.entries(item).map(([key, child]) => [aliases.get(key) ?? replace(key), visit(child)]));
+    }
+    return typeof item === "string" ? replace(item) : item;
+  };
+  return visit(value);
+};
+
 // Remove our own model from an axis's PUBLIC leader slot. Only touches model-comparison
 // axes our own model led; every external-led axis (and every fact axis) passes through
 // unchanged. The leader-specific numbers (the leader's accuracy, its Wilson interval, its
@@ -77,7 +122,6 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
     // removed. UNTESTED (not SEPARATED/TIE) keeps this axis out of the separated/tie/mean
     // tallies below, which is the honest count of what the public board can still assert.
     separation: "UNTESTED",
-    excluded_leader: a.leader,
     public_leader_state: "EXCLUDED_OWN_MODEL",
     // The primary note is neutral — the original note narrated our own model leading, which
     // is exactly the self-preference being removed, so it must not be the public sentence.
@@ -638,6 +682,13 @@ export const onRequestGet: PagesFunction = async (context) => {
     ],
   };
 
+  // Remove CSOAI-owned model identifiers from every public field, including nested
+  // per-model summaries and historical notes. Source cards and measurements remain intact.
+  const ownModelIdentifiers = collectOwnModelIdentifiers([AXES, MEASURED_ON, MEASURED_IN_LANE, body]);
+  const publicBody = redactOwnModelIdentifiers(body, ownModelIdentifiers) as Record<string, unknown>;
+  publicBody.public_model_identifier_policy =
+    "CSOAI-owned model names use stable numbered aliases within this response; source measurement cards and signed records are unchanged.";
+
   // ── site attestation ────────────────────────────────────────
   // Sign the served board snapshot at the edge with the dedicated board key
   // (#board-attestation-1, provisioned as a Cloudflare secret; its public half
@@ -713,9 +764,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         tracked_as: "/api/corrections C-2026-0826-08",
       };
 
-      const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
+      const signedBytes = canonical(publicBody); // served projection WITHOUT site_attestation — reconstructable by anyone
       const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
-      (body as Record<string, unknown>).site_attestation = {
+      publicBody.site_attestation = {
         attests: "integrity of this board snapshot as published by the site (NOT a re-measurement)",
         signer: "did:web:csoai.org#board-attestation-1",
         alg: "Ed25519",
@@ -757,11 +808,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     } catch {
       // A provisioned-but-broken key must not degrade to a fake pass: omit the
       // field and surface the operational fault in the payload instead.
-      (body as Record<string, unknown>).site_attestation = { error: "board signing key present but unusable — operations must fix; no signature emitted" };
+      publicBody.site_attestation = { error: "board signing key present but unusable — operations must fix; no signature emitted" };
     }
   }
 
-  const response = new Response(JSON.stringify(body, null, 2), {
+  const response = new Response(JSON.stringify(publicBody, null, 2), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "public, max-age=300",
