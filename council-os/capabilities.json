@@ -89,6 +89,12 @@
       "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
     },
     {
+      "id": "api-wrapper-index-json",
+      "path": "/api/wrapper/index.json",
+      "method": "GET",
+      "reason": "functions/api subdirectory route; scripts/badger/csoai-openapi-gen.py walks functions/api/*.ts at the top level only, and this route is not an x402 door either"
+    },
+    {
       "id": "well-known-api-catalog",
       "path": "/.well-known/api-catalog",
       "method": "GET",
@@ -5267,6 +5273,29 @@
       "source": "functions/api/wrapper/changes.ts",
       "free_preview": "/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
       "paid_for": "assembly"
+    },
+    {
+      "id": "api-wrapper-index-json",
+      "kind": "http",
+      "path": "/api/wrapper/index.json",
+      "method": "GET",
+      "name": "Wrapper index",
+      "description": "GET /api/wrapper/index.json — every asset on the wrapped-asset roster and in the per-deployment archives, keyed by CAIP-19, with the lookup URL for each. The sides that have no CAIP-19 id (a fund register, bank deposits) are listed separately with the reason, never dropped.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/wrapper/index.json",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/wrapper/index.json.ts"
     },
     {
       "id": "api-wrapper-post",
