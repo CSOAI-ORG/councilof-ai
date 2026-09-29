@@ -15,6 +15,11 @@ card states no licence at all (none of the 127 did after L5); and a card that al
 BibTeX key, and its year and DOI when the dataset is not in the registry, so the three cards other producers made
 after L5 (measurement-capsules, state-of-the-agent-internet, x402-activity) are reproduced too.
 
+OBJECTIONS SECTION (29 Sep 2026). The block now opens with "## Objections, contact and corrections": a plain
+email address and an objection / re-check / correction route, which the outward gate requires on every public
+card (accountability.objection_route, accountability.contact_plain_email). It is omitted when the card's own
+body already carries that heading. The fixtures are re-read from the live cards after the 29 Sep write.
+
 WHAT IT NEVER DOES. It reads no network, invents no number and chooses no licence except the eight decisions
 L5 recorded with their sources. Year and DOI come from cite-block-registry.json (read from the HF API by L5:
 created_at.year and the repo's doi: tag); a dataset not in the registry takes the year passed in, else the
@@ -100,7 +105,26 @@ def title_of(fm, body, name):
     return m.group(1).strip() if m else name
 
 
-def block(name, title, year, lic, doi, key=None):
+# The objections, contact and corrections section (added 29 Sep 2026, lane card-objections-block-20260929).
+# The outward gate's accountability.objection_route and accountability.contact_plain_email checks
+# (scripts/outward-gate/outward_gate.py accountability_checks) need objection wording AND a plain email
+# address on the card itself; the block above carried neither, so 117 of 131 public cards failed on it.
+# A card whose own body already carries this heading (outside the block) keeps its own text; the block then
+# omits the section, so no card shows it twice.
+OBJ_HEADING = "## Objections, contact and corrections"
+OBJ_TEXT = ("To object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, "
+            "email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. "
+            "Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what "
+            "changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.")
+
+
+def has_own_objections(body: str) -> bool:
+    """True when the card's own text (outside the block) already carries the objections section."""
+    outside = re.sub(re.escape(START) + r".*?" + re.escape(END) + r"\n?", "", body, flags=re.S)
+    return OBJ_HEADING in outside
+
+
+def block(name, title, year, lic, doi, key=None, objections=True):
     url = f"https://huggingface.co/datasets/csoai/{name}"
     cite = f"CSOAI Ltd (Council of AI). *{title}*. {year}. Hugging Face dataset `csoai/{name}`. {url}"
     if doi:
@@ -115,8 +139,9 @@ def block(name, title, year, lic, doi, key=None):
     lic_line = {"cc-by-4.0": "Licence: CC-BY-4.0. Attribute Council of AI, CSOAI Ltd (16939677), https://councilof.ai.",
                 "cc0-1.0": "Licence: CC0-1.0. Attribution is appreciated, not required.",
                 "other": "Licence: mixed. See the Licence note in this card."}.get(lic, f"Licence: {LIC_LABEL.get(lic, lic)}.")
+    obj = [OBJ_HEADING, "", OBJ_TEXT, ""] if objections else []
     return "\n".join([
-        START, "## How to cite", "", cite, "", "```bibtex", *bib, "```", "", lic_line, "",
+        START, *obj, "## How to cite", "", cite, "", "```bibtex", *bib, "```", "", lic_line, "",
         "## Corrections and verification", "",
         "- Corrections ledger (signed): https://councilof.ai/api/corrections. Corrections to CSOAI's published records are logged there with what changed and when.",
         "- Verify a signed record yourself, free and without an account: https://councilof.ai/gspc-verify/ (step by step: https://councilof.ai/signed/HOW-TO-VERIFY.md).",
@@ -176,7 +201,7 @@ def apply(readme: str, repo_id: str, *, year: int | None = None, doi: str | None
     if doi is None:
         doi = reg.get("doi") if name in registry() else prev_doi
     title = title_of(fm, body, name).replace("{", "(").replace("}", ")")
-    blk = block(name, title, year, lic, doi, key=prev_key)
+    blk = block(name, title, year, lic, doi, key=prev_key, objections=not has_own_objections(body))
     if START in body:
         body = re.sub(re.escape(START) + r".*?" + re.escape(END) + r"\n?", "", body, flags=re.S)
     if name in LIC_NOTE and "## Licence note" not in body:

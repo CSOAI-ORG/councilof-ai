@@ -91,6 +91,10 @@ is never worked around.
 _Last run in this README's generation: 2026-09-23._
 
 <!-- csoai-cite-v1:start -->
+## Objections, contact and corrections
+
+To object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.
+
 ## How to cite
 
 CSOAI Ltd (Council of AI). *Claim-capture census*. 2026. Hugging Face dataset `csoai/claim-capture-census`. https://huggingface.co/datasets/csoai/claim-capture-census

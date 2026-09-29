@@ -60,6 +60,10 @@ Published 28 September 2026 by CSOAI Ltd (Council of AI, councilof.ai), which me
 Licence: CC0 1.0. Use it for anything.
 
 <!-- csoai-cite-v1:start -->
+## Objections, contact and corrections
+
+To object to a row, ask for a re-check, request a correction or ask for a record to be withdrawn, email **nicholas@csoai.org** or use the appeals and dispute route at https://councilof.ai/dispute/. Corrections are listed in the corrections ledger at https://councilof.ai/api/corrections, with what changed and when. CSOAI Ltd (company no. 16939677, England and Wales) is the accountable publisher.
+
 ## How to cite
 
 CSOAI Ltd (Council of AI). *COBOL copybook decoding test corpus*. 2026. Hugging Face dataset `csoai/cobol-copybook-decoding-corpus`. https://huggingface.co/datasets/csoai/cobol-copybook-decoding-corpus
