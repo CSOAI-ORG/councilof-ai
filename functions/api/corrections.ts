@@ -43,6 +43,50 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0929-03",
+      "date": "2026-09-29",
+      "detected_at": "2026-09-29",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "The Treaty Office chart for CETS No. 225 was read on 2026-09-29 (retrieved 06:58Z for the adjudication and re-read before landing); it shows \"Status as of 29/09/2026\", 1 ratification and 20 signatures not followed by ratification",
+        "The answers.json sentence was introduced in commit 64c32e8ff (2026-06-23); the exact first-served deploy is UNRECORDED",
+        "The frameworks-content.ts line was introduced in commit faf04cb38 (2026-07-06)",
+        "published_at is UNRECORDED: the deploy that first serves the corrected pages had not happened when this entry was written"
+      ],
+      "what_was_wrong": "Four statements about the Council of Europe Framework Convention on AI (CETS No. 225) were wrong. (1) The answer page /answers/council-of-europe-ai-treaty-framework-convention/ stated that by August 2026 the treaty had crossed the five-ratification threshold and was in force. That was false then and is false now: the Convention is not in force. The Treaty Office chart (status as of 29/09/2026) records one ratification, by the European Union on 15 May 2026, and 20 further signatures. Entry into force requires five signatories, including at least three Council of Europe member States (Art. 30(3)). (2) The same page stated that the treaty mandated information-sharing on serious AI incidents and required incident reporting. The treaty text does not contain the word 'incident'. Its reporting obligation (Art. 24) is a report by each Party to the Conference of the Parties. (3) The same page described duties as falling on deployers and cited the wrong articles, and tied the treaty to CSOAI's own records. Art. 12 is Reliability, Art. 13 is Safe innovation and Art. 15 is Procedural safeguards. The treaty's obligations fall on the Parties, which adopt or maintain measures in their own law (for example Arts. 14 and 16); it does not require any organisation to use CSOAI records. (4) public/regulatory-clock.json listed a 2026-09-01 event saying the treaty entered into force for the EU following its ratification on 15 May 2026. Art. 30(4) applies only once the Convention itself is in force, so that event was wrong and is withdrawn. Also corrected in source: client/src/data/frameworks-content.ts (its route returns 404) said the UK had ratified in 2025 and carried a 'Binding' badge. The United Kingdom signed on 5 September 2024 and has not ratified. The withdrawn blog post council-of-europe-ai-framework-convention said the treaty had entered into force after five ratifications, counted 30+ member-State signatories (the chart lists 15), and numbered its articles wrongly.",
+      "how_caught": "An external synthesis stated the correct status. We checked it against the Treaty Office chart and the treaty PDF (rm.coe.int/1680afae3c), then searched our live pages and the canonical mirror for every copy of the claim.",
+      "what_changed": "answers.json (slug council-of-europe-ai-treaty-framework-convention): title no longer says 'August 2026 Ratification Status'; the status sentence now reads: 'Not in force. Opened for signature 5 September 2024; one ratification (European Union, 15 May 2026) as of the Treaty Office status read on 29 September 2026 (chart \"Status as of 29/09/2026\"); entry into force requires five signatories including at least three Council of Europe member States (Art. 30(3)).' The incident-reporting, deployer-duty and article-numbering sentences are removed, obligations are attributed to the Parties (Arts. 14, 16, 24; Art. 3 for private actors), and the page says the Convention does not require any organisation to use CSOAI or any other provider's records. Its references now cite the Treaty Office chart, the treaty text and the Explanatory Report instead of CSOAI artifacts. regulatory-clock.json: the 2026-09-01 CETS 225 event (with its 'requires' and 'sell' fields) is removed from events and the treaty is listed under no_dated_obligation with its status only. frameworks-content.ts: the 'UK ratified in 2025' sentence is removed and the 'Binding' badge now reads 'Not in force'. blog-content.ts: the withdrawn post's body and FAQ markup state the status and name this entry. The CETS 225 row in client/src/data/frameworks.ts already said 'NOT yet in force' and was not changed.",
+      "old_values": {
+        "answers[council-of-europe-ai-treaty-framework-convention].title (tail)": "Compliance Obligations and August 2026 Ratification Status",
+        "answers[council-of-europe-ai-treaty-framework-convention].body (status sentence, quoted, not claimed)": "By August 2026 the treaty has crossed the 5-ratification threshold and is in force.",
+        "regulatory-clock.json events[CETS 225].requires (quoted, not claimed)": "Enters into force for the EU following ratification on 15 May 2026.",
+        "frameworks-content.ts council-of-europe-ai-convention alert (quoted, not claimed)": "UK ratified in 2025; ratification race is on through 2026."
+      },
+      "new_values": {
+        "answers[council-of-europe-ai-treaty-framework-convention].title (tail)": "Ratification Status and What It Asks of Parties",
+        "answers[council-of-europe-ai-treaty-framework-convention].body (status sentence)": "Not in force. Opened for signature 5 September 2024; one ratification (European Union, 15 May 2026) as of the Treaty Office status read on 29 September 2026 (chart \"Status as of 29/09/2026\"); entry into force requires five signatories including at least three Council of Europe member States (Art. 30(3)).",
+        "regulatory-clock.json": "event removed; no_dated_obligation[\"CoE Framework Convention on AI (CETS 225)\"] states the status only",
+        "frameworks-content.ts council-of-europe-ai-convention alert": "The United Kingdom signed on 5 Sept 2024 and has not ratified."
+      },
+      "status": "CORRECTED - status stated from the Treaty Office chart (not in force; one ratification, EU 15 May 2026); incident, deployer and article-numbering claims removed; the regulatory-clock event withdrawn",
+      "reached_the_public": true,
+      "open_items": [
+        "Search engines and AI assistants may still hold copies of the old answer page until they re-crawl it.",
+        "_quarantine/public-legacy/frameworks/council-of-europe-ai-convention.html still carries the old 'UK ratified' sentence. It is a quarantined legacy file outside the served tree and is kept as a record, not rewritten.",
+        "The status changes when any signatory ratifies. Re-read the Treaty Office chart before quoting a count."
+      ],
+      "evidence": [
+        "https://www.coe.int/en/web/conventions/full-list?module=signatures-by-treaty&treatynum=225 (Status as of 29/09/2026: ratifications 1, signatures not followed by ratification 20)",
+        "https://rm.coe.int/1680afae3c (treaty text; Art. 30(3) entry into force, Art. 24 reporting obligation; sha256 1ac6c8a85f55446cdb53697b57c6be3ce8757068043992955eda571e7fe52f23 as fetched 2026-09-29)",
+        "https://rm.coe.int/1680afae67 (Explanatory Report)",
+        "https://www.coe.int/en/web/artificial-intelligence/-/new-committee-established-cdnet-1 (CDNET custodian until the Conference of the Parties is established on entry into force)",
+        "https://councilof.ai/answers/council-of-europe-ai-treaty-framework-convention/ (live bytes before the fix: sha256 67e0ba7582dab5ef449bd8f87daab58301227ffc830f5602c4b7ca13f14c2b35, 2026-09-29T07:07Z)",
+        "https://councilof.ai/regulatory-clock.json (live bytes before the fix: sha256 c07bfdf6a2f79eec4dc71875032f9cd55e6e0022cf58e3a88e44dfa52ff4a47f, 2026-09-29T07:07Z)",
+        "client/src/data/answers.json; public/regulatory-clock.json; client/src/data/frameworks-content.ts; client/src/data/blog-content.ts"
+      ]
+    },
+    {
       "id": "C-2026-0929-02",
       "date": "2026-09-29",
       "detected_at": "2026-09-29",
@@ -1528,20 +1572,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "e67c1d57c63d3b344a90db795eed8f27fc682ad911fa31212c8864ecc0e1ad80",
+    id: "a80fabc2e6c37534792c26296270840b80f650b479ec553fe660f92c9ce72cb7",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "bd5a81810869656182dcde9b42c713f7918845fb4d501a7a13a51fe2ec99af0dca4f76a1a44673956de08fd0df31920c5e2e11d35fae0cf63883349c5482e60a",
+    signature: "ae5d27f346e4650df7c224d400d05d01480e684a13141ff0c4758f323ce0b29dd46339831651f7ad6cceb6b4b3ba7dfc72744eed52d69c463b5c7b2f6360b40d",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "e67c1d57c63d3b344a90db795eed8f27fc682ad911fa31212c8864ecc0e1ad80",
+          "content_id": "a80fabc2e6c37534792c26296270840b80f650b479ec553fe660f92c9ce72cb7",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 79,
-          "latest_entry_id": "C-2026-0929-02",
-          "ledger_canonical_bytes": 173077,
+          "entries": 80,
+          "latest_entry_id": "C-2026-0929-03",
+          "ledger_canonical_bytes": 180644,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-29T05:35:32Z"
+          "signed_at": "2026-09-29T07:46:58Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
