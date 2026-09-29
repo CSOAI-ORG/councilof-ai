@@ -204,10 +204,17 @@ export default function DashboardCataloguePane() {
   if (embeddedPath)
     return <DashboardEmbeddedView path={embeddedPath} label={embeddedLabel} />;
 
-  const counts = KIND_FILTERS.slice(1).map((filter) => ({
-    ...filter,
-    count: catalogue.filter((entry) => entry.kind === filter.id).length,
-  }));
+  // A kind with no entries is not shown as a "0" tile or an empty filter chip: the catalogue
+  // builder emits no industry entries today, and "Industries 0" read as a measured absence.
+  const counts = KIND_FILTERS.slice(1)
+    .map((filter) => ({
+      ...filter,
+      count: catalogue.filter((entry) => entry.kind === filter.id).length,
+    }))
+    .filter((filter) => filter.count > 0);
+  const filters = KIND_FILTERS.filter(
+    (filter) => filter.id === "all" || counts.some((c) => c.id === filter.id),
+  );
 
   return (
     <section
@@ -277,7 +284,7 @@ export default function DashboardCataloguePane() {
           className="mt-2 flex flex-wrap gap-1.5"
           aria-label="Filter catalogue"
         >
-          {KIND_FILTERS.map((filter) => (
+          {filters.map((filter) => (
             <button
               key={filter.id}
               type="button"

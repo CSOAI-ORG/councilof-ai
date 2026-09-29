@@ -139,6 +139,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/xrpl-attest", "/claims-register",
   // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/verify-certificate", "/accreditation",
+  // /charter: in-app pointer to the operational charter (a direct request 308s to /constitutional-harness/).
+  "/charter",
   // Company
   "/about", "/library", "/contact", "/disclaimers",
   // These three routes serve the operative Terms v1.1 and are indexed. Calling

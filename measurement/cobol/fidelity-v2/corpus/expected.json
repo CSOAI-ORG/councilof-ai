@@ -1,0 +1,4973 @@
+{
+ "copybooks": [
+  {
+   "copybook": "copybooks/c01_pk_basic.cpy",
+   "framing": "fixed",
+   "id": "c01_pk_basic",
+   "max_record_length": 10,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C01-NEG": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-12345"
+      },
+      "C01-ONE": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 1,
+       "offset": 9,
+       "pic": "PIC S9(1) COMP-3",
+       "usage": "COMP-3",
+       "value": "-7"
+      },
+      "C01-POS": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "12345"
+      },
+      "C01-UNS": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 6,
+       "pic": "PIC 9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "54321"
+      }
+     },
+     "file": "records/c01_pk_basic_r01.bin",
+     "hex": "12345c12345d54321f7d",
+     "id": "c01_pk_basic_r01",
+     "length": 10,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C01-NEG": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-1"
+      },
+      "C01-ONE": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 1,
+       "offset": 9,
+       "pic": "PIC S9(1) COMP-3",
+       "usage": "COMP-3",
+       "value": "9"
+      },
+      "C01-POS": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "0"
+      },
+      "C01-UNS": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 6,
+       "pic": "PIC 9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "99999"
+      }
+     },
+     "file": "records/c01_pk_basic_r02.bin",
+     "hex": "00000c00001d99999f9c",
+     "id": "c01_pk_basic_r02",
+     "length": 10,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 odd digit counts, C/D/F signs"
+  },
+  {
+   "copybook": "copybooks/c02_pk_even.cpy",
+   "framing": "fixed",
+   "id": "c02_pk_even",
+   "max_record_length": 9,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C02-S4": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(4) COMP-3",
+       "usage": "COMP-3",
+       "value": "-1234"
+      },
+      "C02-S6": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 4,
+       "offset": 3,
+       "pic": "PIC S9(6) COMP-3",
+       "usage": "COMP-3",
+       "value": "123456"
+      },
+      "C02-U2": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 2,
+       "offset": 7,
+       "pic": "PIC 9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "42"
+      }
+     },
+     "file": "records/c02_pk_even_r01.bin",
+     "hex": "01234d0123456c042f",
+     "id": "c02_pk_even_r01",
+     "length": 9,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 even digit counts (zero pad nibble)"
+  },
+  {
+   "copybook": "copybooks/c03_pk_18.cpy",
+   "framing": "fixed",
+   "id": "c03_pk_18",
+   "max_record_length": 20,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C03-A": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 10,
+       "offset": 0,
+       "pic": "PIC S9(18) COMP-3",
+       "usage": "COMP-3",
+       "value": "999999999999999999"
+      },
+      "C03-B": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 10,
+       "offset": 10,
+       "pic": "PIC S9(18) COMP-3",
+       "usage": "COMP-3",
+       "value": "-123456789012345678"
+      }
+     },
+     "file": "records/c03_pk_18_r01.bin",
+     "hex": "0999999999999999999c0123456789012345678d",
+     "id": "c03_pk_18_r01",
+     "length": 20,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 18 digits (at the signed 64-bit edge)"
+  },
+  {
+   "copybook": "copybooks/c04_pk_31.cpy",
+   "framing": "fixed",
+   "id": "c04_pk_31",
+   "max_record_length": 32,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C04-A": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 16,
+       "offset": 0,
+       "pic": "PIC S9(31) COMP-3",
+       "usage": "COMP-3",
+       "value": "9999999999999999999999999999999"
+      },
+      "C04-B": {
+       "expect": "NUMBER",
+       "hazard": "comp3",
+       "length": 16,
+       "offset": 16,
+       "pic": "PIC S9(31) COMP-3",
+       "usage": "COMP-3",
+       "value": "-1234567890123456789012345678901"
+      }
+     },
+     "file": "records/c04_pk_31_r01.bin",
+     "hex": "9999999999999999999999999999999c1234567890123456789012345678901d",
+     "id": "c04_pk_31_r01",
+     "length": 32,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 31 digits (ARITH(EXTEND) maximum, beyond 64-bit)"
+  },
+  {
+   "copybook": "copybooks/c05_pk_scaled.cpy",
+   "framing": "fixed",
+   "id": "c05_pk_scaled",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C05-A": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 5,
+       "offset": 0,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "-1234567.89"
+      },
+      "C05-B": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 4,
+       "offset": 5,
+       "pic": "PIC S9(3)V9(4) COMP-3",
+       "usage": "COMP-3",
+       "value": "123.4567"
+      },
+      "C05-C": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 3,
+       "offset": 9,
+       "pic": "PIC SV9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-0.12345"
+      }
+     },
+     "file": "records/c05_pk_scaled_r01.bin",
+     "hex": "123456789d1234567c12345d",
+     "id": "c05_pk_scaled_r01",
+     "length": 12,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 with implied decimals"
+  },
+  {
+   "copybook": "copybooks/c06_pk_precision.cpy",
+   "framing": "fixed",
+   "id": "c06_pk_precision",
+   "max_record_length": 35,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C06-A": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 10,
+       "offset": 0,
+       "pic": "PIC S9(9)V9(9) COMP-3",
+       "usage": "COMP-3",
+       "value": "123456789.123456789"
+      },
+      "C06-B": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 9,
+       "offset": 10,
+       "pic": "PIC S9(15)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "999999999999999.99"
+      },
+      "C06-C": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 16,
+       "offset": 19,
+       "pic": "PIC S9(21)V9(10) COMP-3",
+       "usage": "COMP-3",
+       "value": "-123456789012345678901.2345678901"
+      }
+     },
+     "file": "records/c06_pk_precision_r01.bin",
+     "hex": "0123456789123456789c99999999999999999c1234567890123456789012345678901d",
+     "id": "c06_pk_precision_r01",
+     "length": 35,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 decimals beyond binary floating-point precision"
+  },
+  {
+   "copybook": "copybooks/c07_sign_alt.cpy",
+   "framing": "fixed",
+   "id": "c07_sign_alt",
+   "max_record_length": 8,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C07-A": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(3) COMP-3",
+       "reject_acceptable": true,
+       "usage": "COMP-3",
+       "value": "123"
+      },
+      "C07-B": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC S9(3) COMP-3",
+       "reject_acceptable": true,
+       "usage": "COMP-3",
+       "value": "-123"
+      },
+      "C07-E": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC S9(3) COMP-3",
+       "reject_acceptable": true,
+       "usage": "COMP-3",
+       "value": "456"
+      },
+      "C07-F": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 2,
+       "offset": 6,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "789"
+      }
+     },
+     "file": "records/c07_sign_alt_r01.bin",
+     "hex": "123a123b456e789f",
+     "id": "c07_sign_alt_r01",
+     "length": 8,
+     "must_fail": false,
+     "note": "A/B/E are valid sign codes (POP) but fail NUMERIC under NUMCLS(PRIM); rejection is also an acceptable outcome"
+    }
+   ],
+   "title": "COMP-3 alternate sign nibbles A/B/E and F in a signed item"
+  },
+  {
+   "copybook": "copybooks/c08_negzero_pk.cpy",
+   "framing": "fixed",
+   "id": "c08_negzero_pk",
+   "max_record_length": 5,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C08-A": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "0"
+      },
+      "C08-B": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 3,
+       "offset": 2,
+       "pic": "PIC S9(3)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "0.00"
+      }
+     },
+     "file": "records/c08_negzero_pk_r01.bin",
+     "hex": "000d00000d",
+     "id": "c08_negzero_pk_r01",
+     "length": 5,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-3 negative zero"
+  },
+  {
+   "copybook": "copybooks/c09_zd_basic.cpy",
+   "framing": "fixed",
+   "id": "c09_zd_basic",
+   "max_record_length": 20,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C09-FPOS": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 15,
+       "pic": "PIC S9(5)",
+       "usage": "DISPLAY",
+       "value": "777"
+      },
+      "C09-NEG": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 5,
+       "pic": "PIC S9(5)",
+       "usage": "DISPLAY",
+       "value": "-12345"
+      },
+      "C09-POS": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 0,
+       "pic": "PIC S9(5)",
+       "usage": "DISPLAY",
+       "value": "12345"
+      },
+      "C09-UNS": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 10,
+       "pic": "PIC 9(5)",
+       "usage": "DISPLAY",
+       "value": "42"
+      }
+     },
+     "file": "records/c09_zd_basic_r01.bin",
+     "hex": "f1f2f3f4c5f1f2f3f4d5f0f0f0f4f2f0f0f7f7f7",
+     "id": "c09_zd_basic_r01",
+     "length": 20,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C09-FPOS": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 15,
+       "pic": "PIC S9(5)",
+       "usage": "DISPLAY",
+       "value": "0"
+      },
+      "C09-NEG": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 5,
+       "pic": "PIC S9(5)",
+       "usage": "DISPLAY",
+       "value": "-99999"
+      },
+      "C09-POS": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 0,
+       "pic": "PIC S9(5)",
+       "usage": "DISPLAY",
+       "value": "1"
+      },
+      "C09-UNS": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 10,
+       "pic": "PIC 9(5)",
+       "usage": "DISPLAY",
+       "value": "0"
+      }
+     },
+     "file": "records/c09_zd_basic_r02.bin",
+     "hex": "f0f0f0f0c1f9f9f9f9d9f0f0f0f0f0f0f0f0f0c0",
+     "id": "c09_zd_basic_r02",
+     "length": 20,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "zoned decimal, trailing overpunch C/D, unsigned F, signed F"
+  },
+  {
+   "copybook": "copybooks/c10_zd_zero.cpy",
+   "framing": "fixed",
+   "id": "c10_zd_zero",
+   "max_record_length": 9,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C10-A": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(3)",
+       "usage": "DISPLAY",
+       "value": "-100"
+      },
+      "C10-B": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC S9(3)",
+       "usage": "DISPLAY",
+       "value": "0"
+      },
+      "C10-C": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 3,
+       "offset": 6,
+       "pic": "PIC S9(3)",
+       "usage": "DISPLAY",
+       "value": "0"
+      }
+     },
+     "file": "records/c10_zd_zero_r01.bin",
+     "hex": "f1f0d0f0f0c0f0f0d0",
+     "id": "c10_zd_zero_r01",
+     "length": 9,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "zoned overpunch on a zero digit ({ and }) and negative zero"
+  },
+  {
+   "copybook": "copybooks/c11_zd_alt.cpy",
+   "framing": "fixed",
+   "id": "c11_zd_alt",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C11-A": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC S9(4)",
+       "reject_acceptable": true,
+       "usage": "DISPLAY",
+       "value": "1234"
+      },
+      "C11-B": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 4,
+       "offset": 4,
+       "pic": "PIC S9(4)",
+       "reject_acceptable": true,
+       "usage": "DISPLAY",
+       "value": "-1234"
+      },
+      "C11-E": {
+       "expect": "NUMBER",
+       "hazard": "sign_nibble",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC S9(4)",
+       "reject_acceptable": true,
+       "usage": "DISPLAY",
+       "value": "4321"
+      }
+     },
+     "file": "records/c11_zd_alt_r01.bin",
+     "hex": "f1f2f3a4f1f2f3b4f4f3f2e1",
+     "id": "c11_zd_alt_r01",
+     "length": 12,
+     "must_fail": false,
+     "note": "A/B/E are valid sign codes (POP) but fail NUMERIC under NUMCLS(PRIM); rejection is also an acceptable outcome"
+    }
+   ],
+   "title": "zoned alternate sign zones A/B/E"
+  },
+  {
+   "copybook": "copybooks/c12_zd_lead.cpy",
+   "framing": "fixed",
+   "id": "c12_zd_lead",
+   "max_record_length": 10,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C12-A": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 0,
+       "pic": "PIC S9(5) SIGN LEADING",
+       "usage": "DISPLAY",
+       "value": "-12345"
+      },
+      "C12-B": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 5,
+       "offset": 5,
+       "pic": "PIC S9(5) SIGN LEADING",
+       "usage": "DISPLAY",
+       "value": "67890"
+      }
+     },
+     "file": "records/c12_zd_lead_r01.bin",
+     "hex": "d1f2f3f4f5c6f7f8f9f0",
+     "id": "c12_zd_lead_r01",
+     "length": 10,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "SIGN LEADING (overpunch on first byte)"
+  },
+  {
+   "copybook": "copybooks/c13_zd_trail_sep.cpy",
+   "framing": "fixed",
+   "id": "c13_zd_trail_sep",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C13-A": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC S9(5) SIGN TRAILING SEPARATE",
+       "usage": "DISPLAY",
+       "value": "-12345"
+      },
+      "C13-B": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 6,
+       "offset": 6,
+       "pic": "PIC S9(5) SIGN TRAILING SEPARATE",
+       "usage": "DISPLAY",
+       "value": "678"
+      }
+     },
+     "file": "records/c13_zd_trail_sep_r01.bin",
+     "hex": "f1f2f3f4f560f0f0f6f7f84e",
+     "id": "c13_zd_trail_sep_r01",
+     "length": 12,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "SIGN TRAILING SEPARATE"
+  },
+  {
+   "copybook": "copybooks/c14_zd_lead_sep.cpy",
+   "framing": "fixed",
+   "id": "c14_zd_lead_sep",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C14-A": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC S9(5) SIGN LEADING SEPARATE",
+       "usage": "DISPLAY",
+       "value": "-12345"
+      },
+      "C14-B": {
+       "expect": "NUMBER",
+       "hazard": "zoned_overpunch",
+       "length": 6,
+       "offset": 6,
+       "pic": "PIC S9(5) SIGN LEADING SEPARATE",
+       "usage": "DISPLAY",
+       "value": "678"
+      }
+     },
+     "file": "records/c14_zd_lead_sep_r01.bin",
+     "hex": "60f1f2f3f4f54ef0f0f6f7f8",
+     "id": "c14_zd_lead_sep_r01",
+     "length": 12,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "SIGN LEADING SEPARATE"
+  },
+  {
+   "copybook": "copybooks/c15_zd_scaled.cpy",
+   "framing": "fixed",
+   "id": "c15_zd_scaled",
+   "max_record_length": 15,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C15-A": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 7,
+       "offset": 0,
+       "pic": "PIC S9(5)V9(2)",
+       "usage": "DISPLAY",
+       "value": "-12345.67"
+      },
+      "C15-B": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 6,
+       "offset": 7,
+       "pic": "PIC 9(3)V9(3)",
+       "usage": "DISPLAY",
+       "value": "1.005"
+      },
+      "C15-C": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 2,
+       "offset": 13,
+       "pic": "PIC SV9(2)",
+       "usage": "DISPLAY",
+       "value": "-0.05"
+      }
+     },
+     "file": "records/c15_zd_scaled_r01.bin",
+     "hex": "f1f2f3f4f5f6d7f0f0f1f0f0f5f0d5",
+     "id": "c15_zd_scaled_r01",
+     "length": 15,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "zoned with implied decimals"
+  },
+  {
+   "copybook": "copybooks/c16_p_scaling.cpy",
+   "framing": "fixed",
+   "id": "c16_p_scaling",
+   "max_record_length": 7,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C16-A": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S999PP COMP-3",
+       "usage": "COMP-3",
+       "value": "12300"
+      },
+      "C16-B": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 3,
+       "offset": 2,
+       "pic": "PIC SVPP999",
+       "usage": "DISPLAY",
+       "value": "-0.00123"
+      },
+      "C16-C": {
+       "expect": "NUMBER",
+       "hazard": "implied_decimal",
+       "length": 2,
+       "offset": 5,
+       "pic": "PIC 99PPP",
+       "usage": "DISPLAY",
+       "value": "45000"
+      }
+     },
+     "file": "records/c16_p_scaling_r01.bin",
+     "hex": "123cf1f2d3f4f5",
+     "id": "c16_p_scaling_r01",
+     "length": 7,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "PICTURE P scaling positions"
+  },
+  {
+   "copybook": "copybooks/c17_bin_half.cpy",
+   "framing": "fixed",
+   "id": "c17_bin_half",
+   "max_record_length": 8,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C17-A": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "-2"
+      },
+      "C17-B": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC 9(4) COMP",
+       "usage": "COMP",
+       "value": "9999"
+      },
+      "C17-C": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC S9(4) BINARY",
+       "usage": "BINARY",
+       "value": "258"
+      },
+      "C17-D": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 2,
+       "offset": 6,
+       "pic": "PIC S9(4) COMP-4",
+       "usage": "COMP-4",
+       "value": "-9999"
+      }
+     },
+     "file": "records/c17_bin_half_r01.bin",
+     "hex": "fffe270f0102d8f1",
+     "id": "c17_bin_half_r01",
+     "length": 8,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "binary halfword COMP/BINARY/COMP-4, big-endian"
+  },
+  {
+   "copybook": "copybooks/c18_bin_full.cpy",
+   "framing": "fixed",
+   "id": "c18_bin_full",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C18-A": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC S9(9) COMP",
+       "usage": "COMP",
+       "value": "-123456789"
+      },
+      "C18-B": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 4,
+       "offset": 4,
+       "pic": "PIC 9(9) COMP",
+       "usage": "COMP",
+       "value": "999999999"
+      },
+      "C18-C": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC S9(5) COMP",
+       "usage": "COMP",
+       "value": "-54321"
+      }
+     },
+     "file": "records/c18_bin_full_r01.bin",
+     "hex": "f8a432eb3b9ac9ffffff2bcf",
+     "id": "c18_bin_full_r01",
+     "length": 12,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "binary fullword"
+  },
+  {
+   "copybook": "copybooks/c19_bin_double.cpy",
+   "framing": "fixed",
+   "id": "c19_bin_double",
+   "max_record_length": 24,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C19-A": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC S9(18) COMP",
+       "usage": "COMP",
+       "value": "-123456789012345678"
+      },
+      "C19-B": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 8,
+       "offset": 8,
+       "pic": "PIC 9(18) COMP",
+       "usage": "COMP",
+       "value": "999999999999999999"
+      },
+      "C19-C": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 8,
+       "offset": 16,
+       "pic": "PIC S9(10) COMP",
+       "usage": "COMP",
+       "value": "1234567890"
+      }
+     },
+     "file": "records/c19_bin_double_r01.bin",
+     "hex": "fe4964b459cf0cb20de0b6b3a763ffff00000000499602d2",
+     "id": "c19_bin_double_r01",
+     "length": 24,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "binary doubleword"
+  },
+  {
+   "copybook": "copybooks/c20_bin_scaled.cpy",
+   "framing": "fixed",
+   "id": "c20_bin_scaled",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C20-A": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC S9(5)V9(2) COMP",
+       "usage": "COMP",
+       "value": "-12345.67"
+      },
+      "C20-B": {
+       "expect": "NUMBER",
+       "hazard": "binary",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC S9(2)V9(2) COMP",
+       "usage": "COMP",
+       "value": "12.34"
+      }
+     },
+     "file": "records/c20_bin_scaled_r01.bin",
+     "hex": "ffed297904d2",
+     "id": "c20_bin_scaled_r01",
+     "length": 6,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "binary with implied decimals"
+  },
+  {
+   "copybook": "copybooks/c21_comp5_half.cpy",
+   "framing": "fixed",
+   "id": "c21_comp5_half",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C21-A": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(4) COMP-5",
+       "usage": "COMP-5",
+       "value": "32767"
+      },
+      "C21-B": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC 9(4) COMP-5",
+       "usage": "COMP-5",
+       "value": "65535"
+      },
+      "C21-C": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC S9(4) COMP-5",
+       "usage": "COMP-5",
+       "value": "-32768"
+      }
+     },
+     "file": "records/c21_comp5_half_r01.bin",
+     "hex": "7fffffff8000",
+     "id": "c21_comp5_half_r01",
+     "length": 6,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-5 halfword beyond PICTURE digits"
+  },
+  {
+   "copybook": "copybooks/c22_comp5_wide.cpy",
+   "framing": "fixed",
+   "id": "c22_comp5_wide",
+   "max_record_length": 24,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C22-A": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC S9(9) COMP-5",
+       "usage": "COMP-5",
+       "value": "2147483647"
+      },
+      "C22-B": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 4,
+       "offset": 4,
+       "pic": "PIC 9(9) COMP-5",
+       "usage": "COMP-5",
+       "value": "4294967295"
+      },
+      "C22-C": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 8,
+       "offset": 8,
+       "pic": "PIC S9(18) COMP-5",
+       "usage": "COMP-5",
+       "value": "-9223372036854775808"
+      },
+      "C22-D": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 8,
+       "offset": 16,
+       "pic": "PIC 9(18) COMP-5",
+       "usage": "COMP-5",
+       "value": "18446744073709551615"
+      }
+     },
+     "file": "records/c22_comp5_wide_r01.bin",
+     "hex": "7fffffffffffffff8000000000000000ffffffffffffffff",
+     "id": "c22_comp5_wide_r01",
+     "length": 24,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-5 fullword/doubleword full range, unsigned high bit"
+  },
+  {
+   "copybook": "copybooks/c23_comp5_scaled.cpy",
+   "framing": "fixed",
+   "id": "c23_comp5_scaled",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C23-A": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(2)V9(2) COMP-5",
+       "usage": "COMP-5",
+       "value": "327.67"
+      },
+      "C23-B": {
+       "expect": "NUMBER",
+       "hazard": "binary_truncation",
+       "length": 4,
+       "offset": 2,
+       "pic": "PIC 9(6)V9(3) COMP-5",
+       "usage": "COMP-5",
+       "value": "4294967.295"
+      }
+     },
+     "file": "records/c23_comp5_scaled_r01.bin",
+     "hex": "7fffffffffff",
+     "id": "c23_comp5_scaled_r01",
+     "length": 6,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-5 with implied decimals beyond PICTURE digits"
+  },
+  {
+   "copybook": "copybooks/c24_cp_variant.cpy",
+   "framing": "fixed",
+   "id": "c24_cp_variant",
+   "max_record_length": 15,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C24-NUM": {
+       "expect": "NUMBER",
+       "hazard": "codepage",
+       "length": 3,
+       "offset": 12,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "314"
+      },
+      "C24-TXT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 12,
+       "offset": 0,
+       "pic": "PIC X(12)",
+       "usage": "TEXT",
+       "value": "A[1]!B^C|D¬"
+      }
+     },
+     "file": "records/c24_cp_variant_r01.bin",
+     "hex": "c1baf1bb5ac2b0c34fc45f4000314c",
+     "id": "c24_cp_variant_r01",
+     "length": 15,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp500",
+     "encoded_with": "cp500",
+     "fields": {
+      "C24-NUM": {
+       "expect": "NUMBER",
+       "hazard": "codepage",
+       "length": 3,
+       "offset": 12,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "314"
+      },
+      "C24-TXT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 12,
+       "offset": 0,
+       "pic": "PIC X(12)",
+       "usage": "TEXT",
+       "value": "A[1]!B^C|D¬"
+      }
+     },
+     "file": "records/c24_cp_variant_r02.bin",
+     "hex": "c14af15a4fc25fc3bbc4ba4000314c",
+     "id": "c24_cp_variant_r02",
+     "length": 15,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp1140",
+     "encoded_with": "cp1140",
+     "fields": {
+      "C24-NUM": {
+       "expect": "NUMBER",
+       "hazard": "codepage",
+       "length": 3,
+       "offset": 12,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "314"
+      },
+      "C24-TXT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 12,
+       "offset": 0,
+       "pic": "PIC X(12)",
+       "usage": "TEXT",
+       "value": "A[1]!B^C|D¬"
+      }
+     },
+     "file": "records/c24_cp_variant_r03.bin",
+     "hex": "c1baf1bb5ac2b0c34fc45f4000314c",
+     "id": "c24_cp_variant_r03",
+     "length": 15,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "code-page variant characters [ ] ! ^ | ¬"
+  },
+  {
+   "copybook": "copybooks/c25_cp_euro.cpy",
+   "framing": "fixed",
+   "id": "c25_cp_euro",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp1140",
+     "encoded_with": "cp1140",
+     "fields": {
+      "C25-TXT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "EUR €"
+      }
+     },
+     "file": "records/c25_cp_euro_r01.bin",
+     "hex": "c5e4d9409f40",
+     "id": "c25_cp_euro_r01",
+     "length": 6,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C25-TXT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "CUR ¤"
+      }
+     },
+     "file": "records/c25_cp_euro_r02.bin",
+     "hex": "c3e4d9409f40",
+     "id": "c25_cp_euro_r02",
+     "length": 6,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "byte X'9F': euro sign in CCSID 1140, currency sign in CCSID 37"
+  },
+  {
+   "copybook": "copybooks/c26_cp_text.cpy",
+   "framing": "fixed",
+   "id": "c26_cp_text",
+   "max_record_length": 40,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C26-PUNCT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 16,
+       "offset": 24,
+       "pic": "PIC X(16)",
+       "usage": "TEXT",
+       "value": "$1,234.50 (@#%)"
+      },
+      "C26-TXT": {
+       "expect": "TEXT",
+       "hazard": "codepage",
+       "length": 24,
+       "offset": 0,
+       "pic": "PIC X(24)",
+       "usage": "TEXT",
+       "value": "Senor cafe ñ é abc xyz"
+      }
+     },
+     "file": "records/c26_cp_text_r01.bin",
+     "hex": "e2859596994083818685404940514081828340a7a8a940405bf16bf2f3f44bf5f0404d7c7b6c5d40",
+     "id": "c26_cp_text_r01",
+     "length": 40,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "mixed-case and accented text"
+  },
+  {
+   "copybook": "copybooks/c27_redef_group.cpy",
+   "framing": "fixed",
+   "id": "c27_redef_group",
+   "max_record_length": 17,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C27-A-NAME": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 8,
+       "offset": 1,
+       "pic": "PIC X(8)",
+       "usage": "TEXT",
+       "value": "WIDGET"
+      },
+      "C27-A-QTY": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 9,
+       "pic": "PIC S9(7) COMP-3",
+       "usage": "COMP-3",
+       "value": "-42"
+      },
+      "C27-TAIL": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 13,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "END1"
+      },
+      "C27-TYPE": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "A"
+      }
+     },
+     "file": "records/c27_redef_group_r01.bin",
+     "hex": "c1e6c9c4c7c5e340400000042dc5d5c4f1",
+     "id": "c27_redef_group_r01",
+     "length": 17,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C27-B-AMT": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 6,
+       "offset": 1,
+       "pic": "PIC S9(9)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "123456789.01"
+      },
+      "C27-B-CNT": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 7,
+       "pic": "PIC S9(9) COMP",
+       "usage": "COMP",
+       "value": "7"
+      },
+      "C27-TAIL": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 13,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "END2"
+      },
+      "C27-TYPE": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "B"
+      }
+     },
+     "file": "records/c27_redef_group_r02.bin",
+     "hex": "c212345678901c000000074040c5d5c4f2",
+     "id": "c27_redef_group_r02",
+     "length": 17,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "group REDEFINES selected by a type code"
+  },
+  {
+   "copybook": "copybooks/c28_redef_elem.cpy",
+   "framing": "fixed",
+   "id": "c28_redef_elem",
+   "max_record_length": 14,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C28-AMT-P": {
+       "elementary_redefines": true,
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC S9(7) COMP-3",
+       "usage": "COMP-3",
+       "value": "-1234567"
+      },
+      "C28-DATE": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC 9(8)",
+       "usage": "DISPLAY",
+       "value": "20260928"
+      },
+      "C28-DD": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 2,
+       "offset": 6,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "28"
+      },
+      "C28-END": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 2,
+       "offset": 12,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "ZZ"
+      },
+      "C28-MM": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "9"
+      },
+      "C28-YYYY": {
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC 9(4)",
+       "usage": "DISPLAY",
+       "value": "2026"
+      }
+     },
+     "file": "records/c28_redef_elem_r01.bin",
+     "hex": "f2f0f2f6f0f9f2f81234567de9e9",
+     "id": "c28_redef_elem_r01",
+     "length": 14,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "elementary REDEFINES (date view, packed view of text)"
+  },
+  {
+   "copybook": "copybooks/c29_redef_bin.cpy",
+   "framing": "fixed",
+   "id": "c29_redef_bin",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C29-BIN": {
+       "elementary_redefines": true,
+       "expect": "NUMBER",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC S9(9) COMP-5",
+       "usage": "COMP-5",
+       "value": "-1044200508"
+      },
+      "C29-END": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "OK"
+      },
+      "C29-TXT": {
+       "expect": "TEXT",
+       "hazard": "redefines",
+       "length": 4,
+       "offset": 0,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "ABCD"
+      }
+     },
+     "file": "records/c29_redef_bin_r01.bin",
+     "hex": "c1c2c3c4d6d2",
+     "id": "c29_redef_bin_r01",
+     "length": 6,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "text redefined as COMP-5 (both views valid)"
+  },
+  {
+   "copybook": "copybooks/c30_odo_basic.cpy",
+   "framing": "fixed",
+   "id": "c30_odo_basic",
+   "max_record_length": 43,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C30-AMT(1)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 5,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "1.11"
+      },
+      "C30-AMT(2)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 12,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "-2.22"
+      },
+      "C30-AMT(3)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 19,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "33333.33"
+      },
+      "C30-CODE(1)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "AAA"
+      },
+      "C30-CODE(2)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 9,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "BBB"
+      },
+      "C30-CODE(3)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 16,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "CCC"
+      },
+      "C30-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "3"
+      },
+      "C30-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 6,
+       "odo_dependent": true,
+       "offset": 23,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "TRLR01"
+      }
+     },
+     "file": "records/c30_odo_basic_r01.bin",
+     "hex": "f0f3c1c1c10000111cc2c2c20000222dc3c3c33333333ce3d9d3d9f0f1",
+     "id": "c30_odo_basic_r01",
+     "length": 29,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C30-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "0"
+      },
+      "C30-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 6,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "TRLR00"
+      }
+     },
+     "file": "records/c30_odo_basic_r02.bin",
+     "hex": "f0f0e3d9d3d9f0f0",
+     "id": "c30_odo_basic_r02",
+     "length": 8,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C30-AMT(1)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 5,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "1"
+      },
+      "C30-AMT(2)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 12,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "2"
+      },
+      "C30-AMT(3)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 19,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "3"
+      },
+      "C30-AMT(4)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 26,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "4"
+      },
+      "C30-AMT(5)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 33,
+       "pic": "PIC S9(5)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "-5.05"
+      },
+      "C30-CODE(1)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "A1"
+      },
+      "C30-CODE(2)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 9,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "A2"
+      },
+      "C30-CODE(3)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 16,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "A3"
+      },
+      "C30-CODE(4)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 23,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "A4"
+      },
+      "C30-CODE(5)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 30,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "A5"
+      },
+      "C30-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "5"
+      },
+      "C30-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 6,
+       "odo_dependent": true,
+       "offset": 37,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "TRLR05"
+      }
+     },
+     "file": "records/c30_odo_basic_r03.bin",
+     "hex": "f0f5c1f1400000100cc1f2400000200cc1f3400000300cc1f4400000400cc1f5400000505de3d9d3d9f0f5",
+     "id": "c30_odo_basic_r03",
+     "length": 43,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "OCCURS 0 TO 5 DEPENDING ON, item after the table"
+  },
+  {
+   "copybook": "copybooks/c31_odo_pk_counter.cpy",
+   "framing": "fixed",
+   "id": "c31_odo_pk_counter",
+   "max_record_length": 21,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C31-CODE(1)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "WXYZ"
+      },
+      "C31-CODE(2)": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 6,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "QRST"
+      },
+      "C31-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "2"
+      },
+      "C31-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 10,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "EOR"
+      }
+     },
+     "file": "records/c31_odo_pk_counter_r01.bin",
+     "hex": "002ce6e7e8e9d8d9e2e3c5d6d9",
+     "id": "c31_odo_pk_counter_r01",
+     "length": 13,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "ODO with a COMP-3 counter"
+  },
+  {
+   "copybook": "copybooks/c32_odo_bin_counter.cpy",
+   "framing": "fixed",
+   "id": "c32_odo_bin_counter",
+   "max_record_length": 27,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C32-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "2"
+      },
+      "C32-TRAILER": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 7,
+       "odo_dependent": true,
+       "offset": 8,
+       "pic": "PIC S9(5)V9(2)",
+       "usage": "DISPLAY",
+       "value": "-123.45"
+      },
+      "C32-VAL(1)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "11111"
+      },
+      "C32-VAL(2)": {
+       "expect": "NUMBER",
+       "hazard": "odo",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 5,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-22222"
+      }
+     },
+     "file": "records/c32_odo_bin_counter_r01.bin",
+     "hex": "000211111c22222df0f0f1f2f3f4d5",
+     "id": "c32_odo_bin_counter_r01",
+     "length": 15,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "ODO with a binary counter and a zoned trailer"
+  },
+  {
+   "copybook": "copybooks/c33_occurs_nested.cpy",
+   "framing": "fixed",
+   "id": "c33_occurs_nested",
+   "max_record_length": 19,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C33-END": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 3,
+       "offset": 16,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "XYZ"
+      },
+      "C33-KEY(1)": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "K1"
+      },
+      "C33-KEY(2)": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 8,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "K2"
+      },
+      "C33-VAL(1,1)": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "101"
+      },
+      "C33-VAL(1,2)": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 4,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "98"
+      },
+      "C33-VAL(1,3)": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 6,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "103"
+      },
+      "C33-VAL(2,1)": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 10,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "201"
+      },
+      "C33-VAL(2,2)": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 12,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "198"
+      },
+      "C33-VAL(2,3)": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 14,
+       "pic": "PIC S9(3) COMP-3",
+       "usage": "COMP-3",
+       "value": "203"
+      }
+     },
+     "file": "records/c33_occurs_nested_r01.bin",
+     "hex": "d2f1101c098c103cd2f2201c198c203ce7e8e9",
+     "id": "c33_occurs_nested_r01",
+     "length": 19,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "nested fixed OCCURS"
+  },
+  {
+   "copybook": "copybooks/c34_account.cpy",
+   "framing": "fixed",
+   "id": "c34_account",
+   "max_record_length": 35,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C34-BAL": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 7,
+       "offset": 10,
+       "pic": "PIC S9(11)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "-98765432109.87"
+      },
+      "C34-FLAGS": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 33,
+       "pic": "PIC 9(4) COMP-5",
+       "usage": "COMP-5",
+       "value": "40961"
+      },
+      "C34-ID": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 10,
+       "offset": 0,
+       "pic": "PIC X(10)",
+       "usage": "TEXT",
+       "value": "AC00012345"
+      },
+      "C34-LIMIT": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 4,
+       "offset": 17,
+       "pic": "PIC S9(7) COMP",
+       "usage": "COMP",
+       "value": "2500000"
+      },
+      "C34-OPEN": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 8,
+       "offset": 21,
+       "pic": "PIC 9(8)",
+       "usage": "DISPLAY",
+       "value": "19991231"
+      },
+      "C34-RATE": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 3,
+       "offset": 29,
+       "pic": "PIC SV9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "0.04125"
+      },
+      "C34-STATUS": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 1,
+       "offset": 32,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "A"
+      }
+     },
+     "file": "records/c34_account_r01.bin",
+     "hex": "c1c3f0f0f0f1f2f3f4f59876543210987d002625a0f1f9f9f9f1f2f3f104125cc1a001",
+     "id": "c34_account_r01",
+     "length": 35,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "mixed realistic account record"
+  },
+  {
+   "copybook": "copybooks/c35_levels_filler.cpy",
+   "framing": "fixed",
+   "id": "c35_levels_filler",
+   "max_record_length": 15,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C35-A": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "ABC"
+      },
+      "C35-B": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 3,
+       "offset": 5,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-321"
+      },
+      "C35-C": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 4,
+       "offset": 9,
+       "pic": "PIC S9(4)",
+       "usage": "DISPLAY",
+       "value": "4321"
+      },
+      "C35-D": {
+       "expect": "TEXT",
+       "hazard": "baseline",
+       "length": 2,
+       "offset": 13,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "ZZ"
+      }
+     },
+     "file": "records/c35_levels_filler_r01.bin",
+     "hex": "c1c2c3404000321d40f4f3f2c1e9e9",
+     "id": "c35_levels_filler_r01",
+     "length": 15,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "deep levels with FILLER"
+  },
+  {
+   "copybook": "copybooks/c36_zd_wide.cpy",
+   "framing": "fixed",
+   "id": "c36_zd_wide",
+   "max_record_length": 74,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C36-A": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 18,
+       "offset": 0,
+       "pic": "PIC 9(18)",
+       "usage": "DISPLAY",
+       "value": "999999999999999999"
+      },
+      "C36-B": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 31,
+       "offset": 18,
+       "pic": "PIC 9(31)",
+       "usage": "DISPLAY",
+       "value": "1234567890123456789012345678901"
+      },
+      "C36-C": {
+       "expect": "NUMBER",
+       "hazard": "baseline",
+       "length": 25,
+       "offset": 49,
+       "pic": "PIC S9(19)V9(6)",
+       "usage": "DISPLAY",
+       "value": "-1234567890123456789.012345"
+      }
+     },
+     "file": "records/c36_zd_wide_r01.bin",
+     "hex": "f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f1f2f3f4f5f6f7f8f9f0f1f2f3f4f5f6f7f8f9f0f1f2f3f4f5f6f7f8f9f0f1f1f2f3f4f5f6f7f8f9f0f1f2f3f4f5f6f7f8f9f0f1f2f3f4d5",
+     "id": "c36_zd_wide_r01",
+     "length": 74,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "wide unsigned zoned (beyond 64-bit)"
+  },
+  {
+   "copybook": "copybooks/c37_mf_pk_digit.cpy",
+   "framing": "fixed",
+   "id": "c37_mf_pk_digit",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C37-BAD": {
+       "expect": "REJECT",
+       "hazard": "mustfail_packed",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3"
+      },
+      "C37-OK": {
+       "expect": "NUMBER",
+       "hazard": "mustfail_sibling",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "12345"
+      }
+     },
+     "file": "records/c37_mf_pk_digit_r01.bin",
+     "hex": "12a45c12345c",
+     "id": "c37_mf_pk_digit_r01",
+     "length": 6,
+     "must_fail": true,
+     "note": ""
+    }
+   ],
+   "title": "must-fail: packed digit nibble X'A'"
+  },
+  {
+   "copybook": "copybooks/c38_mf_pk_sign.cpy",
+   "framing": "fixed",
+   "id": "c38_mf_pk_sign",
+   "max_record_length": 6,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C38-BAD": {
+       "expect": "REJECT",
+       "hazard": "mustfail_packed",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3"
+      },
+      "C38-OK": {
+       "expect": "NUMBER",
+       "hazard": "mustfail_sibling",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-12345"
+      }
+     },
+     "file": "records/c38_mf_pk_sign_r01.bin",
+     "hex": "12345512345d",
+     "id": "c38_mf_pk_sign_r01",
+     "length": 6,
+     "must_fail": true,
+     "note": ""
+    }
+   ],
+   "title": "must-fail: packed sign nibble X'5'"
+  },
+  {
+   "copybook": "copybooks/c39_mf_pk_spaces.cpy",
+   "framing": "fixed",
+   "id": "c39_mf_pk_spaces",
+   "max_record_length": 10,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C39-LOWVAL": {
+       "expect": "REJECT",
+       "hazard": "mustfail_packed",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3"
+      },
+      "C39-OK": {
+       "expect": "TEXT",
+       "hazard": "mustfail_sibling",
+       "length": 4,
+       "offset": 6,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "GOOD"
+      },
+      "C39-SPACES": {
+       "expect": "REJECT",
+       "hazard": "mustfail_packed",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3"
+      }
+     },
+     "file": "records/c39_mf_pk_spaces_r01.bin",
+     "hex": "404040000000c7d6d6c4",
+     "id": "c39_mf_pk_spaces_r01",
+     "length": 10,
+     "must_fail": true,
+     "note": ""
+    }
+   ],
+   "title": "must-fail: packed field holding spaces / low-values"
+  },
+  {
+   "copybook": "copybooks/c40_mf_zd_zone.cpy",
+   "framing": "fixed",
+   "id": "c40_mf_zd_zone",
+   "max_record_length": 9,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C40-BADDIGIT": {
+       "expect": "REJECT",
+       "hazard": "mustfail_zoned",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC 9(3)",
+       "usage": "DISPLAY"
+      },
+      "C40-BADSIGN": {
+       "expect": "REJECT",
+       "hazard": "mustfail_zoned",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC S9(3)",
+       "usage": "DISPLAY"
+      },
+      "C40-OK": {
+       "expect": "NUMBER",
+       "hazard": "mustfail_sibling",
+       "length": 3,
+       "offset": 6,
+       "pic": "PIC S9(3)",
+       "usage": "DISPLAY",
+       "value": "-12"
+      }
+     },
+     "file": "records/c40_mf_zd_zone_r01.bin",
+     "hex": "f1f255f14bf3f0f1d2",
+     "id": "c40_mf_zd_zone_r01",
+     "length": 9,
+     "must_fail": true,
+     "note": ""
+    }
+   ],
+   "title": "must-fail: zoned invalid sign zone / invalid digit"
+  },
+  {
+   "copybook": "copybooks/c41_mf_ascii.cpy",
+   "framing": "fixed",
+   "id": "c41_mf_ascii",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "ascii",
+     "fields": {
+      "C41-AMT": {
+       "expect": "REJECT",
+       "hazard": "mustfail_codepage",
+       "length": 7,
+       "offset": 5,
+       "pic": "PIC 9(5)V9(2)",
+       "usage": "DISPLAY"
+      },
+      "C41-QTY": {
+       "expect": "REJECT",
+       "hazard": "mustfail_codepage",
+       "length": 5,
+       "offset": 0,
+       "pic": "PIC 9(5)",
+       "usage": "DISPLAY"
+      }
+     },
+     "file": "records/c41_mf_ascii_r01.bin",
+     "hex": "313233343531323334353637",
+     "id": "c41_mf_ascii_r01",
+     "length": 12,
+     "must_fail": true,
+     "note": "bytes written in ASCII; decoders are told the page is cp037"
+    }
+   ],
+   "title": "must-fail: ASCII-encoded record read as EBCDIC (wrong code page)"
+  },
+  {
+   "copybook": "copybooks/c42_hfp_short.cpy",
+   "framing": "fixed",
+   "id": "c42_hfp_short",
+   "max_record_length": 20,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C42-A": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 0,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "1"
+      },
+      "C42-B": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 4,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "-118.625"
+      },
+      "C42-C": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 8,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "1234"
+      },
+      "C42-D": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 12,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "0.15625"
+      },
+      "C42-E": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 16,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "16777215"
+      }
+     },
+     "file": "records/c42_hfp_short_r01.bin",
+     "hex": "41100000c276a000434d20004028000046ffffff",
+     "id": "c42_hfp_short_r01",
+     "length": 20,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C42-A": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 0,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "0"
+      },
+      "C42-B": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 4,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "-1234"
+      },
+      "C42-C": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 8,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "0.5"
+      },
+      "C42-D": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 12,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "100"
+      },
+      "C42-E": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 16,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "-0.0078125"
+      }
+     },
+     "file": "records/c42_hfp_short_r02.bin",
+     "hex": "00000000c34d20004080000042640000bf200000",
+     "id": "c42_hfp_short_r02",
+     "length": 20,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-1 short HFP: published vector 1234, -118.625, powers of 16, 24-bit fraction"
+  },
+  {
+   "copybook": "copybooks/c43_hfp_long.cpy",
+   "framing": "fixed",
+   "id": "c43_hfp_long",
+   "max_record_length": 32,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C43-A": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 0,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "1234"
+      },
+      "C43-B": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 8,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "-118.625"
+      },
+      "C43-C": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 16,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "123456789.125"
+      },
+      "C43-D": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 24,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "0.1000000000000000055511151231257827021181583404541015625"
+      }
+     },
+     "file": "records/c43_hfp_long_r01.bin",
+     "hex": "434d200000000000c276a000000000004775bcd152000000401999999999999a",
+     "id": "c43_hfp_long_r01",
+     "length": 32,
+     "must_fail": false,
+     "note": "C43-D holds 0.1 rounded to nearest in 14 hex digits; the expected value is the exact value of those bytes"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C43-A": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 0,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "0"
+      },
+      "C43-B": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 8,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "-0.5"
+      },
+      "C43-C": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 16,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "1000000000000000"
+      },
+      "C43-D": {
+       "expect": "NUMBER",
+       "hazard": "hfp_float",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 24,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "-0.1000000000000000055511151231257827021181583404541015625"
+      }
+     },
+     "file": "records/c43_hfp_long_r02.bin",
+     "hex": "0000000000000000c0800000000000004d38d7ea4c680000c01999999999999a",
+     "id": "c43_hfp_long_r02",
+     "length": 32,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "COMP-2 long HFP: published vector 1234, fractions, 0.1 rounded to 14 hex digits"
+  },
+  {
+   "copybook": "copybooks/c44_hfp_range.cpy",
+   "framing": "fixed",
+   "id": "c44_hfp_range",
+   "max_record_length": 44,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C44-A": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": false,
+       "length": 8,
+       "offset": 0,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "36028797018963969"
+      },
+      "C44-B": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": false,
+       "length": 8,
+       "offset": 8,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "0.33333333333333332870740406406184774823486804962158203125"
+      },
+      "C44-C": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 16,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "7237005145973115539562949848370752848515283263408224491816939302836806615040"
+      },
+      "C44-D": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 20,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "0.00000000000000000000000000000000000000000000000000000000000000000000000000000053976053469340278908664699142502497319475002277726758656398146688553698769765169112321921896701801416003420587163435397481219368417699666835331273606612967341789044439792633056640625"
+      },
+      "C44-E": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 24,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "1461501637330902918203684832716283019655932542976"
+      },
+      "C44-F": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": false,
+       "length": 8,
+       "offset": 28,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "7237005577332262113539558796856102019456743270279872594828411889070018396160"
+      },
+      "C44-G": {
+       "expect": "NUMBER",
+       "hazard": "hfp_range",
+       "ieee_binary32_exact": false,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 36,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "0.00000000000000000000000000000000000000000000000000000000000000000000000000000053976053469340278908664699142502497319475002277726758656398146688553698769765169112321921896701801416003420587163435397481219368417699666835331273606612967341789044439792633056640625"
+      }
+     },
+     "file": "records/c44_hfp_range_r01.bin",
+     "hex": "4e8000000000000140555555555555557fffffff00100000691000007fffffffffffffff0010000000000000",
+     "id": "c44_hfp_range_r01",
+     "length": 44,
+     "must_fail": false,
+     "note": "A and B need 56 and 55 significant bits (binary64 holds 53); C, D, E lie outside binary32's range"
+    }
+   ],
+   "title": "HFP beyond IEEE-754: exponent range beyond binary32, 55/56-bit fractions beyond binary64"
+  },
+  {
+   "copybook": "copybooks/c45_hfp_unnorm.cpy",
+   "framing": "fixed",
+   "id": "c45_hfp_unnorm",
+   "max_record_length": 28,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C45-A": {
+       "expect": "NUMBER",
+       "hazard": "hfp_unnormalized",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 0,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "1"
+      },
+      "C45-B": {
+       "expect": "NUMBER",
+       "hazard": "hfp_unnormalized",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 4,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "0"
+      },
+      "C45-C": {
+       "expect": "NUMBER",
+       "hazard": "hfp_unnormalized",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 8,
+       "pic": "COMP-1",
+       "usage": "COMP-1",
+       "value": "0"
+      },
+      "C45-D": {
+       "expect": "NUMBER",
+       "hazard": "hfp_unnormalized",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 12,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "0.00390625"
+      },
+      "C45-E": {
+       "expect": "NUMBER",
+       "hazard": "hfp_unnormalized",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 20,
+       "pic": "COMP-2",
+       "usage": "COMP-2",
+       "value": "-1"
+      }
+     },
+     "file": "records/c45_hfp_unnorm_r01.bin",
+     "hex": "42010000800000004a0000004400000100000000c110000000000000",
+     "id": "c45_hfp_unnorm_r01",
+     "length": 28,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "HFP unnormalized fraction, negative zero, zero fraction with non-zero characteristic"
+  },
+  {
+   "copybook": "copybooks/c46_sync_binary.cpy",
+   "framing": "fixed",
+   "id": "c46_sync_binary",
+   "max_record_length": 26,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C46-A": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "A"
+      },
+      "C46-B": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 3,
+       "offset": 4,
+       "pic": "PIC X(3)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "BBB"
+      },
+      "C46-C": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 12,
+       "pic": "PIC X(1)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "C"
+      },
+      "C46-D": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 8,
+       "offset": 16,
+       "pic": "PIC S9(18) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-123456789012345678"
+      },
+      "C46-E": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 24,
+       "pic": "PIC X(2)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "ZZ"
+      },
+      "C46-F": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC S9(9) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "123456789"
+      },
+      "C46-H": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC S9(4) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-2"
+      }
+     },
+     "file": "records/c46_sync_binary_r01.bin",
+     "hex": "c100fffec2c2c200075bcd15c3000000fe4964b459cf0cb2e9e9",
+     "id": "c46_sync_binary_r01",
+     "length": 26,
+     "must_fail": false,
+     "note": "slack bytes X'00'",
+     "slack_fill": "00"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C46-A": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "Q"
+      },
+      "C46-B": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 3,
+       "offset": 4,
+       "pic": "PIC X(3)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "XYZ"
+      },
+      "C46-C": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 12,
+       "pic": "PIC X(1)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "D"
+      },
+      "C46-D": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 8,
+       "offset": 16,
+       "pic": "PIC S9(18) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "999999999999999999"
+      },
+      "C46-E": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 24,
+       "pic": "PIC X(2)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "YY"
+      },
+      "C46-F": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC S9(9) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-1"
+      },
+      "C46-H": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC S9(4) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "9999"
+      }
+     },
+     "file": "records/c46_sync_binary_r02.bin",
+     "hex": "d840270fe7e8e940ffffffffc44040400de0b6b3a763ffffe8e8",
+     "id": "c46_sync_binary_r02",
+     "length": 26,
+     "must_fail": false,
+     "note": "slack bytes X'40'",
+     "slack_fill": "40"
+    }
+   ],
+   "title": "SYNC halfword/fullword/doubleword binary: slack bytes before each item"
+  },
+  {
+   "copybook": "copybooks/c47_sync_ibm_ex1.cpy",
+   "framing": "fixed",
+   "id": "c47_sync_ibm_ex1",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C47-B": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 5,
+       "offset": 0,
+       "pic": "PIC X(5)",
+       "usage": "TEXT",
+       "value": "HELLO"
+      },
+      "C47-D": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 5,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "AB"
+      },
+      "C47-E": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC S9(6) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-654321"
+      }
+     },
+     "file": "records/c47_sync_ibm_ex1_r01.bin",
+     "hex": "c8c5d3d3d6c1c200fff6040f",
+     "id": "c47_sync_ibm_ex1_r01",
+     "length": 12,
+     "must_fail": false,
+     "note": "",
+     "slack_fill": "00"
+    }
+   ],
+   "title": "SYNC in a subgroup (IBM LR 'Slack bytes within records', first example)"
+  },
+  {
+   "copybook": "copybooks/c48_sync_occurs.cpy",
+   "framing": "fixed",
+   "id": "c48_sync_occurs",
+   "max_record_length": 51,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C48-CODE": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "W"
+      },
+      "C48-END": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 49,
+       "pic": "PIC X(2)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "EN"
+      },
+      "C48-HOURS(1)": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 8,
+       "pic": "PIC S9(3) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "40"
+      },
+      "C48-HOURS(2)": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 24,
+       "pic": "PIC S9(3) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-7"
+      },
+      "C48-HOURS(3)": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 40,
+       "pic": "PIC S9(3) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "999"
+      },
+      "C48-NAME(1)": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 5,
+       "offset": 10,
+       "pic": "PIC X(5)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "ANNA"
+      },
+      "C48-NAME(2)": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 5,
+       "offset": 26,
+       "pic": "PIC X(5)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "BOB"
+      },
+      "C48-NAME(3)": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 5,
+       "offset": 42,
+       "pic": "PIC X(5)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "CLARA"
+      },
+      "C48-PAY(1)": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 4,
+       "pic": "PIC S9(4)V9(2) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "1234.56"
+      },
+      "C48-PAY(2)": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 20,
+       "pic": "PIC S9(4)V9(2) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-99.99"
+      },
+      "C48-PAY(3)": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 36,
+       "pic": "PIC S9(4)V9(2) COMP SYNC",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "0.01"
+      },
+      "C48-TYPE(1)": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 1,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "A"
+      },
+      "C48-TYPE(2)": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 17,
+       "pic": "PIC X(1)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "B"
+      },
+      "C48-TYPE(3)": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 33,
+       "pic": "PIC X(1)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "C"
+      }
+     },
+     "file": "records/c48_sync_occurs_r01.bin",
+     "hex": "e6c100000001e2400028c1d5d5c1400000c20000ffffd8f1fff9c2d6c240400000c300000000000103e7c3d3c1d9c10000c5d5",
+     "id": "c48_sync_occurs_r01",
+     "length": 51,
+     "must_fail": false,
+     "note": "",
+     "slack_fill": "00"
+    }
+   ],
+   "title": "SYNC inside OCCURS: slack before COMP-PAY and at the end of every occurrence (IBM LR second example)"
+  },
+  {
+   "copybook": "copybooks/c49_sync_float.cpy",
+   "framing": "fixed",
+   "id": "c49_sync_float",
+   "max_record_length": 26,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C49-A": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 3,
+       "offset": 0,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "ABC"
+      },
+      "C49-B": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 8,
+       "pic": "PIC X(1)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "Z"
+      },
+      "C49-C": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 24,
+       "pic": "PIC X(2)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "EN"
+      },
+      "C49-F1": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 4,
+       "offset": 4,
+       "pic": "COMP-1 SYNC",
+       "sync_dependent": true,
+       "usage": "COMP-1",
+       "value": "-118.625"
+      },
+      "C49-F2": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "ieee_binary32_exact": true,
+       "ieee_binary64_exact": true,
+       "length": 8,
+       "offset": 16,
+       "pic": "COMP-2 SYNC",
+       "sync_dependent": true,
+       "usage": "COMP-2",
+       "value": "1234"
+      }
+     },
+     "file": "records/c49_sync_float_r01.bin",
+     "hex": "c1c2c300c276a000e900000000000000434d200000000000c5d5",
+     "id": "c49_sync_float_r01",
+     "length": 26,
+     "must_fail": false,
+     "note": "",
+     "slack_fill": "00"
+    }
+   ],
+   "title": "SYNC COMP-1 (fullword) and COMP-2 (doubleword, 7 slack bytes)"
+  },
+  {
+   "copybook": "copybooks/c50_sync_noeffect.cpy",
+   "framing": "fixed",
+   "id": "c50_sync_noeffect",
+   "max_record_length": 11,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C50-A": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "K"
+      },
+      "C50-H": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 9,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "-300"
+      },
+      "C50-P": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 1,
+       "pic": "PIC S9(3) COMP-3 SYNC",
+       "usage": "COMP-3",
+       "value": "-123"
+      },
+      "C50-T": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 6,
+       "pic": "PIC X(2) SYNC",
+       "usage": "TEXT",
+       "value": "TT"
+      },
+      "C50-X": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 8,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "X"
+      },
+      "C50-Z": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 3,
+       "offset": 3,
+       "pic": "PIC 9(3) SYNC",
+       "usage": "DISPLAY",
+       "value": "456"
+      }
+     },
+     "file": "records/c50_sync_noeffect_r01.bin",
+     "hex": "d2123df4f5f6e3e3e7fed4",
+     "id": "c50_sync_noeffect_r01",
+     "length": 11,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "SYNC on COMP-3, zoned and PIC X items has no effect; an unsynchronized binary at an odd offset"
+  },
+  {
+   "copybook": "copybooks/c51_sync_level01.cpy",
+   "framing": "fixed",
+   "id": "c51_sync_level01",
+   "max_record_length": 14,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C51-A": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "L"
+      },
+      "C51-B": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 1,
+       "offset": 4,
+       "pic": "PIC X(1)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "M"
+      },
+      "C51-C": {
+       "expect": "TEXT",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 12,
+       "pic": "PIC X(2)",
+       "sync_dependent": true,
+       "usage": "TEXT",
+       "value": "EN"
+      },
+      "C51-F": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC 9(9) COMP-5",
+       "sync_dependent": true,
+       "usage": "COMP-5",
+       "value": "4000000000"
+      },
+      "C51-H": {
+       "expect": "NUMBER",
+       "hazard": "sync",
+       "length": 2,
+       "offset": 2,
+       "pic": "PIC S9(4) COMP",
+       "sync_dependent": true,
+       "usage": "COMP",
+       "value": "-1"
+      }
+     },
+     "file": "records/c51_sync_level01_r01.bin",
+     "hex": "d300ffffd4000000ee6b2800c5d5",
+     "id": "c51_sync_level01_r01",
+     "length": 14,
+     "must_fail": false,
+     "note": "",
+     "slack_fill": "00"
+    }
+   ],
+   "title": "SYNC on the level-01 group applies to every elementary binary item"
+  },
+  {
+   "copybook": "copybooks/c52_nat_text.cpy",
+   "framing": "fixed",
+   "id": "c52_nat_text",
+   "max_record_length": 36,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C52-A": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 16,
+       "offset": 0,
+       "pic": "PIC N(8) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "Grüße"
+      },
+      "C52-B": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 6,
+       "offset": 16,
+       "pic": "PIC N(3) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "日本語"
+      },
+      "C52-C": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 10,
+       "offset": 22,
+       "pic": "PIC N(5) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "Ωμέγα"
+      },
+      "C52-D": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 4,
+       "offset": 32,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "TAIL"
+      }
+     },
+     "file": "records/c52_nat_text_r01.bin",
+     "hex": "0047007200fc00df006500200020002065e5672c8a9e03a903bc03ad03b303b1e3c1c9d3",
+     "id": "c52_nat_text_r01",
+     "length": 36,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "PIC N USAGE NATIONAL: Latin, CJK and Greek text, followed by an EBCDIC field"
+  },
+  {
+   "copybook": "copybooks/c53_nat_surrogate.cpy",
+   "framing": "fixed",
+   "id": "c53_nat_surrogate",
+   "max_record_length": 14,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C53-A": {
+       "expect": "TEXT",
+       "hazard": "national_surrogate",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC N(4) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "A😀B"
+      },
+      "C53-B": {
+       "expect": "TEXT",
+       "hazard": "national_surrogate",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC N(2) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "𝄞"
+      },
+      "C53-C": {
+       "expect": "TEXT",
+       "hazard": "national_surrogate",
+       "length": 2,
+       "offset": 12,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "OK"
+      }
+     },
+     "file": "records/c53_nat_surrogate_r01.bin",
+     "hex": "0041d83dde000042d834dd1ed6d2",
+     "id": "c53_nat_surrogate_r01",
+     "length": 14,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "PIC N with supplementary characters (surrogate pairs occupy two positions)"
+  },
+  {
+   "copybook": "copybooks/c54_nat_decimal.cpy",
+   "framing": "fixed",
+   "id": "c54_nat_decimal",
+   "max_record_length": 52,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C54-A": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC 9(4) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "1234"
+      },
+      "C54-B": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 10,
+       "offset": 8,
+       "pic": "PIC S9(4) USAGE NATIONAL SIGN LEADING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "-1234"
+      },
+      "C54-C": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 10,
+       "offset": 18,
+       "pic": "PIC S9(4) USAGE NATIONAL SIGN TRAILING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "1234"
+      },
+      "C54-D": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 16,
+       "offset": 28,
+       "pic": "PIC S9(5)V9(2) USAGE NATIONAL SIGN TRAILING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "-123.45"
+      },
+      "C54-E": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 8,
+       "offset": 44,
+       "pic": "PIC 9(3)V9(1) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "12.5"
+      }
+     },
+     "file": "records/c54_nat_decimal_r01.bin",
+     "hex": "0031003200330034002d00310032003300340031003200330034002b0030003000310032003300340035002d0030003100320035",
+     "id": "c54_nat_decimal_r01",
+     "length": 52,
+     "must_fail": false,
+     "note": ""
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C54-A": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC 9(4) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "0"
+      },
+      "C54-B": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 10,
+       "offset": 8,
+       "pic": "PIC S9(4) USAGE NATIONAL SIGN LEADING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "1234"
+      },
+      "C54-C": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 10,
+       "offset": 18,
+       "pic": "PIC S9(4) USAGE NATIONAL SIGN TRAILING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "-1"
+      },
+      "C54-D": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 16,
+       "offset": 28,
+       "pic": "PIC S9(5)V9(2) USAGE NATIONAL SIGN TRAILING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "0.01"
+      },
+      "C54-E": {
+       "expect": "NUMBER",
+       "hazard": "national_decimal",
+       "length": 8,
+       "offset": 44,
+       "pic": "PIC 9(3)V9(1) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "999.9"
+      }
+     },
+     "file": "records/c54_nat_decimal_r02.bin",
+     "hex": "0030003000300030002b00310032003300340030003000300031002d0030003000300030003000300031002b0039003900390039",
+     "id": "c54_nat_decimal_r02",
+     "length": 52,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "national decimal: unsigned, SIGN LEADING/TRAILING SEPARATE, implied decimals"
+  },
+  {
+   "copybook": "copybooks/c55_mf_nat_digit.cpy",
+   "framing": "fixed",
+   "id": "c55_mf_nat_digit",
+   "max_record_length": 20,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C55-BAD": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC 9(4) USAGE NATIONAL",
+       "usage": "NATIONAL"
+      },
+      "C55-EBC": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national",
+       "length": 8,
+       "offset": 8,
+       "pic": "PIC 9(4) USAGE NATIONAL",
+       "usage": "NATIONAL"
+      },
+      "C55-OK": {
+       "expect": "NUMBER",
+       "hazard": "mustfail_sibling",
+       "length": 4,
+       "offset": 16,
+       "pic": "PIC 9(2) USAGE NATIONAL",
+       "usage": "NATIONAL",
+       "value": "42"
+      }
+     },
+     "file": "records/c55_mf_nat_digit_r01.bin",
+     "hex": "0031004100330034f1f2f3f4f5f6f7f800340032",
+     "id": "c55_mf_nat_digit_r01",
+     "length": 20,
+     "must_fail": true,
+     "note": ""
+    }
+   ],
+   "title": "must-fail: national decimal holding 'A', and EBCDIC zoned bytes in a national field"
+  },
+  {
+   "copybook": "copybooks/c56_mf_nat_sign.cpy",
+   "framing": "fixed",
+   "id": "c56_mf_nat_sign",
+   "max_record_length": 24,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C56-EBCSIGN": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national",
+       "length": 8,
+       "offset": 8,
+       "pic": "PIC S9(3) USAGE NATIONAL SIGN TRAILING SEPARATE",
+       "usage": "NATIONAL"
+      },
+      "C56-OK": {
+       "expect": "NUMBER",
+       "hazard": "mustfail_sibling",
+       "length": 8,
+       "offset": 16,
+       "pic": "PIC S9(3) USAGE NATIONAL SIGN LEADING SEPARATE",
+       "usage": "NATIONAL",
+       "value": "-7"
+      },
+      "C56-STAR": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC S9(3) USAGE NATIONAL SIGN LEADING SEPARATE",
+       "usage": "NATIONAL"
+      }
+     },
+     "file": "records/c56_mf_nat_sign_r01.bin",
+     "hex": "002a0031003200330031003200330060002d003000300037",
+     "id": "c56_mf_nat_sign_r01",
+     "length": 24,
+     "must_fail": true,
+     "note": ""
+    }
+   ],
+   "title": "must-fail: national decimal with '*' as separate sign, and an EBCDIC minus byte as the sign"
+  },
+  {
+   "copybook": "copybooks/c57_mf_nat_surrogate.cpy",
+   "framing": "fixed",
+   "id": "c57_mf_nat_surrogate",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C57-HI": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national_text",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC N(3) USAGE NATIONAL",
+       "usage": "NATIONAL"
+      },
+      "C57-LO": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national_text",
+       "length": 4,
+       "offset": 6,
+       "pic": "PIC N(2) USAGE NATIONAL",
+       "usage": "NATIONAL"
+      },
+      "C57-OK": {
+       "expect": "TEXT",
+       "hazard": "mustfail_sibling",
+       "length": 2,
+       "offset": 10,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "OK"
+      }
+     },
+     "file": "records/c57_mf_nat_surrogate_r01.bin",
+     "hex": "d83d00410042dc000041d6d2",
+     "id": "c57_mf_nat_surrogate_r01",
+     "length": 12,
+     "must_fail": true,
+     "note": "U+FFFD in place of the ill-formed unit counts as a flag"
+    }
+   ],
+   "title": "must-fail: PIC N holding an unpaired high surrogate and an unpaired low surrogate"
+  },
+  {
+   "copybook": "copybooks/c58_rdw_basic.cpy",
+   "files": [
+    {
+     "declared_codepage": "cp037",
+     "file": "records/c58_rdw_basic_f01.bin",
+     "hex": "00110000c1c3c3f0f0f1123456789c000700110000c1c3c3f0f0f2000000001dffe000110000c1c3c3f0f0f3000000000c270f",
+     "id": "c58_rdw_basic_f01",
+     "length": 51,
+     "must_fail": false,
+     "n_records": 3
+    }
+   ],
+   "framing": "rdw",
+   "id": "c58_rdw_basic",
+   "max_record_length": 13,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C58-AMT": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 5,
+       "offset": 6,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "1234567.89"
+      },
+      "C58-ID": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "ACC001"
+      },
+      "C58-QTY": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 2,
+       "offset": 11,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "7"
+      }
+     },
+     "file": "records/c58_rdw_basic_f01.bin",
+     "file_id": "c58_rdw_basic_f01",
+     "hex": "c1c3c3f0f0f1123456789c0007",
+     "id": "c58_rdw_basic_f01_r01",
+     "index": 1,
+     "length": 13,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00110000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C58-AMT": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 5,
+       "offset": 6,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "-0.01"
+      },
+      "C58-ID": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "ACC002"
+      },
+      "C58-QTY": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 2,
+       "offset": 11,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "-32"
+      }
+     },
+     "file": "records/c58_rdw_basic_f01.bin",
+     "file_id": "c58_rdw_basic_f01",
+     "hex": "c1c3c3f0f0f2000000001dffe0",
+     "id": "c58_rdw_basic_f01_r02",
+     "index": 2,
+     "length": 13,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00110000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C58-AMT": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 5,
+       "offset": 6,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "0"
+      },
+      "C58-ID": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "ACC003"
+      },
+      "C58-QTY": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 2,
+       "offset": 11,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "9999"
+      }
+     },
+     "file": "records/c58_rdw_basic_f01.bin",
+     "file_id": "c58_rdw_basic_f01",
+     "hex": "c1c3c3f0f0f3000000000c270f",
+     "id": "c58_rdw_basic_f01_r03",
+     "index": 3,
+     "length": 13,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00110000"
+    }
+   ],
+   "title": "RDW file: three records of one layout"
+  },
+  {
+   "copybook": "copybooks/c59_rdw_odo.cpy",
+   "files": [
+    {
+     "declared_codepage": "cp037",
+     "file": "records/c59_rdw_odo_f01.bin",
+     "hex": "00160000f0f2c1c1c100011cc2c2c200022de3f0f0f2000a0000f0f0e3f0f0f000280000f0f5c3f14000001cc3f24000002cc3f34000003cc3f44000004cc3f54099999de3f0f0f5",
+     "id": "c59_rdw_odo_f01",
+     "length": 72,
+     "must_fail": false,
+     "n_records": 3
+    }
+   ],
+   "framing": "rdw",
+   "id": "c59_rdw_odo",
+   "max_record_length": 36,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C59-AMT(1)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 5,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "11"
+      },
+      "C59-AMT(2)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 11,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-22"
+      },
+      "C59-CODE(1)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "AAA"
+      },
+      "C59-CODE(2)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 8,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "BBB"
+      },
+      "C59-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "2"
+      },
+      "C59-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 14,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "T002"
+      }
+     },
+     "file": "records/c59_rdw_odo_f01.bin",
+     "file_id": "c59_rdw_odo_f01",
+     "hex": "f0f2c1c1c100011cc2c2c200022de3f0f0f2",
+     "id": "c59_rdw_odo_f01_r01",
+     "index": 1,
+     "length": 18,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00160000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C59-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "0"
+      },
+      "C59-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "T000"
+      }
+     },
+     "file": "records/c59_rdw_odo_f01.bin",
+     "file_id": "c59_rdw_odo_f01",
+     "hex": "f0f0e3f0f0f0",
+     "id": "c59_rdw_odo_f01_r02",
+     "index": 2,
+     "length": 6,
+     "must_fail": false,
+     "note": "",
+     "rdw": "000a0000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C59-AMT(1)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 5,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "1"
+      },
+      "C59-AMT(2)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 11,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "2"
+      },
+      "C59-AMT(3)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 17,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "3"
+      },
+      "C59-AMT(4)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 23,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "4"
+      },
+      "C59-AMT(5)": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 29,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-99999"
+      },
+      "C59-CODE(1)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 2,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "C1"
+      },
+      "C59-CODE(2)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 8,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "C2"
+      },
+      "C59-CODE(3)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 14,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "C3"
+      },
+      "C59-CODE(4)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 20,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "C4"
+      },
+      "C59-CODE(5)": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 3,
+       "odo_dependent": true,
+       "offset": 26,
+       "pic": "PIC X(3)",
+       "usage": "TEXT",
+       "value": "C5"
+      },
+      "C59-COUNT": {
+       "expect": "NUMBER",
+       "hazard": "rdw",
+       "length": 2,
+       "offset": 0,
+       "pic": "PIC 9(2)",
+       "usage": "DISPLAY",
+       "value": "5"
+      },
+      "C59-TRAILER": {
+       "expect": "TEXT",
+       "hazard": "rdw",
+       "length": 4,
+       "odo_dependent": true,
+       "offset": 32,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "T005"
+      }
+     },
+     "file": "records/c59_rdw_odo_f01.bin",
+     "file_id": "c59_rdw_odo_f01",
+     "hex": "f0f5c3f14000001cc3f24000002cc3f34000003cc3f44000004cc3f54099999de3f0f0f5",
+     "id": "c59_rdw_odo_f01_r03",
+     "index": 3,
+     "length": 36,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00280000"
+    }
+   ],
+   "title": "RDW file: OCCURS DEPENDING ON sets each record's length (2, 0 and 5 entries)"
+  },
+  {
+   "copybook": "copybooks/c60_rdw_short.cpy",
+   "files": [
+    {
+     "declared_codepage": "cp037",
+     "file": "records/c60_rdw_short_f01.bin",
+     "hex": "000c0000c1c3d6c4c512345d001d0000c2d3d6d5c740e5c1d9c9c1d5e340d5c1d4c5404040075bcd15000c0000c1e7e8404000007c",
+     "id": "c60_rdw_short_f01",
+     "length": 53,
+     "must_fail": false,
+     "n_records": 3
+    }
+   ],
+   "framing": "rdw",
+   "id": "c60_rdw_short",
+   "max_record_length": 25,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C60-A-AMT": {
+       "expect": "NUMBER",
+       "hazard": "rdw_short_record",
+       "length": 3,
+       "offset": 5,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "-12345"
+      },
+      "C60-A-CODE": {
+       "expect": "TEXT",
+       "hazard": "rdw_short_record",
+       "length": 4,
+       "offset": 1,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "CODE"
+      },
+      "C60-TYPE": {
+       "expect": "TEXT",
+       "hazard": "rdw_short_record",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "A"
+      }
+     },
+     "file": "records/c60_rdw_short_f01.bin",
+     "file_id": "c60_rdw_short_f01",
+     "hex": "c1c3d6c4c512345d",
+     "id": "c60_rdw_short_f01_r01",
+     "index": 1,
+     "length": 8,
+     "must_fail": false,
+     "note": "8 data bytes: the record ends after the 7-byte variant A",
+     "rdw": "000c0000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C60-B-CNT": {
+       "expect": "NUMBER",
+       "hazard": "rdw_short_record",
+       "length": 4,
+       "offset": 21,
+       "pic": "PIC S9(9) COMP",
+       "usage": "COMP",
+       "value": "123456789"
+      },
+      "C60-B-NAME": {
+       "expect": "TEXT",
+       "hazard": "rdw_short_record",
+       "length": 20,
+       "offset": 1,
+       "pic": "PIC X(20)",
+       "usage": "TEXT",
+       "value": "LONG VARIANT NAME"
+      },
+      "C60-TYPE": {
+       "expect": "TEXT",
+       "hazard": "rdw_short_record",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "B"
+      }
+     },
+     "file": "records/c60_rdw_short_f01.bin",
+     "file_id": "c60_rdw_short_f01",
+     "hex": "c2d3d6d5c740e5c1d9c9c1d5e340d5c1d4c5404040075bcd15",
+     "id": "c60_rdw_short_f01_r02",
+     "index": 2,
+     "length": 25,
+     "must_fail": false,
+     "note": "",
+     "rdw": "001d0000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C60-A-AMT": {
+       "expect": "NUMBER",
+       "hazard": "rdw_short_record",
+       "length": 3,
+       "offset": 5,
+       "pic": "PIC S9(5) COMP-3",
+       "usage": "COMP-3",
+       "value": "7"
+      },
+      "C60-A-CODE": {
+       "expect": "TEXT",
+       "hazard": "rdw_short_record",
+       "length": 4,
+       "offset": 1,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "XY"
+      },
+      "C60-TYPE": {
+       "expect": "TEXT",
+       "hazard": "rdw_short_record",
+       "length": 1,
+       "offset": 0,
+       "pic": "PIC X(1)",
+       "usage": "TEXT",
+       "value": "A"
+      }
+     },
+     "file": "records/c60_rdw_short_f01.bin",
+     "file_id": "c60_rdw_short_f01",
+     "hex": "c1e7e8404000007c",
+     "id": "c60_rdw_short_f01_r03",
+     "index": 3,
+     "length": 8,
+     "must_fail": false,
+     "note": "",
+     "rdw": "000c0000"
+    }
+   ],
+   "title": "RDW file: short records that end after the active REDEFINES variant"
+  },
+  {
+   "copybook": "copybooks/c61_mf_rdw_len.cpy",
+   "files": [
+    {
+     "declared_codepage": "cp037",
+     "file": "records/c61_mf_rdw_len_f01.bin",
+     "hex": "00110000d6d2f0f0f0f1000001050c000100030000c2c1c4f0f0f2000002000c0002",
+     "id": "c61_mf_rdw_len_f01",
+     "length": 34,
+     "must_fail": true,
+     "n_records": 2
+    }
+   ],
+   "framing": "rdw",
+   "id": "c61_mf_rdw_len",
+   "max_record_length": 13,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C61-AMT": {
+       "expect": "NUMBER",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 5,
+       "offset": 6,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "10.50"
+      },
+      "C61-ID": {
+       "expect": "TEXT",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "OK0001"
+      },
+      "C61-QTY": {
+       "expect": "NUMBER",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 2,
+       "offset": 11,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "1"
+      }
+     },
+     "file": "records/c61_mf_rdw_len_f01.bin",
+     "file_id": "c61_mf_rdw_len_f01",
+     "hex": "d6d2f0f0f0f1000001050c0001",
+     "id": "c61_mf_rdw_len_f01_r01",
+     "index": 1,
+     "length": 13,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00110000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "*RECORD*": {
+       "expect": "REJECT",
+       "hazard": "mustfail_rdw",
+       "length": 17,
+       "offset": 17,
+       "pic": "RDW 00030000",
+       "record_level": true,
+       "usage": "RDW"
+      }
+     },
+     "file": "records/c61_mf_rdw_len_f01.bin",
+     "file_id": "c61_mf_rdw_len_f01",
+     "hex": "c2c1c4f0f0f2000002000c0002",
+     "id": "c61_mf_rdw_len_f01_r02",
+     "index": 2,
+     "length": 13,
+     "must_fail": true,
+     "note": "RDW X'00030000' followed by the 13 data bytes of a record",
+     "rdw": "00030000"
+    }
+   ],
+   "title": "must-fail RDW: a record length of 3 (below the 4-byte minimum)"
+  },
+  {
+   "copybook": "copybooks/c62_mf_rdw_spanned.cpy",
+   "files": [
+    {
+     "declared_codepage": "cp037",
+     "file": "records/c62_mf_rdw_spanned_f01.bin",
+     "hex": "00110000d6d2f0f0f0f1000001050c0001000a0100e2d7c1d5f0f2000b0200000003025d0003",
+     "id": "c62_mf_rdw_spanned_f01",
+     "length": 38,
+     "must_fail": true,
+     "n_records": 2
+    }
+   ],
+   "framing": "rdw",
+   "id": "c62_mf_rdw_spanned",
+   "max_record_length": 13,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C62-AMT": {
+       "expect": "NUMBER",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 5,
+       "offset": 6,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "10.50"
+      },
+      "C62-ID": {
+       "expect": "TEXT",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "OK0001"
+      },
+      "C62-QTY": {
+       "expect": "NUMBER",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 2,
+       "offset": 11,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "1"
+      }
+     },
+     "file": "records/c62_mf_rdw_spanned_f01.bin",
+     "file_id": "c62_mf_rdw_spanned_f01",
+     "hex": "d6d2f0f0f0f1000001050c0001",
+     "id": "c62_mf_rdw_spanned_f01_r01",
+     "index": 1,
+     "length": 13,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00110000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "*RECORD*": {
+       "expect": "REJECT",
+       "hazard": "mustfail_rdw",
+       "length": 21,
+       "offset": 17,
+       "pic": "RDW 000A0100",
+       "record_level": true,
+       "usage": "RDW"
+      }
+     },
+     "file": "records/c62_mf_rdw_spanned_f01.bin",
+     "file_id": "c62_mf_rdw_spanned_f01",
+     "hex": "e2d7c1d5f0f2000003025d0003",
+     "id": "c62_mf_rdw_spanned_f01_r02",
+     "index": 2,
+     "length": 13,
+     "must_fail": true,
+     "note": "one logical record written as two segments: 6 data bytes with X'0100', then 7 with X'0200'",
+     "rdw": "000a0100"
+    }
+   ],
+   "title": "must-fail RDW: a record split into two spanned segments (third byte X'01', then X'02') in a non-spanned file"
+  },
+  {
+   "copybook": "copybooks/c63_mf_rdw_trunc.cpy",
+   "files": [
+    {
+     "declared_codepage": "cp037",
+     "file": "records/c63_mf_rdw_trunc_f01.bin",
+     "hex": "00110000d6d2f0f0f0f1000001050c000100110000e3d9e4d5c3",
+     "id": "c63_mf_rdw_trunc_f01",
+     "length": 26,
+     "must_fail": true,
+     "n_records": 2
+    }
+   ],
+   "framing": "rdw",
+   "id": "c63_mf_rdw_trunc",
+   "max_record_length": 13,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C63-AMT": {
+       "expect": "NUMBER",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 5,
+       "offset": 6,
+       "pic": "PIC S9(7)V9(2) COMP-3",
+       "usage": "COMP-3",
+       "value": "10.50"
+      },
+      "C63-ID": {
+       "expect": "TEXT",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC X(6)",
+       "usage": "TEXT",
+       "value": "OK0001"
+      },
+      "C63-QTY": {
+       "expect": "NUMBER",
+       "file_must_fail": true,
+       "hazard": "rdw_mustfail_sibling",
+       "length": 2,
+       "offset": 11,
+       "pic": "PIC S9(4) COMP",
+       "usage": "COMP",
+       "value": "1"
+      }
+     },
+     "file": "records/c63_mf_rdw_trunc_f01.bin",
+     "file_id": "c63_mf_rdw_trunc_f01",
+     "hex": "d6d2f0f0f0f1000001050c0001",
+     "id": "c63_mf_rdw_trunc_f01_r01",
+     "index": 1,
+     "length": 13,
+     "must_fail": false,
+     "note": "",
+     "rdw": "00110000"
+    },
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "*RECORD*": {
+       "expect": "REJECT",
+       "hazard": "mustfail_rdw",
+       "length": 9,
+       "offset": 17,
+       "pic": "RDW 00110000",
+       "record_level": true,
+       "usage": "RDW"
+      }
+     },
+     "file": "records/c63_mf_rdw_trunc_f01.bin",
+     "file_id": "c63_mf_rdw_trunc_f01",
+     "hex": "e3d9e4d5c3f2000004000c0004",
+     "id": "c63_mf_rdw_trunc_f01_r02",
+     "index": 2,
+     "length": 13,
+     "must_fail": true,
+     "note": "RDW X'00110000' then only 5 data bytes before end of file",
+     "rdw": "00110000"
+    }
+   ],
+   "title": "must-fail RDW: the last RDW promises 13 data bytes, the file ends after 5"
+  },
+  {
+   "copybook": "copybooks/c64_nat_text_implicit.cpy",
+   "framing": "fixed",
+   "id": "c64_nat_text_implicit",
+   "max_record_length": 36,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C64-A": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 16,
+       "offset": 0,
+       "pic": "PIC N(8)",
+       "usage": "NATIONAL",
+       "value": "Grüße"
+      },
+      "C64-B": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 6,
+       "offset": 16,
+       "pic": "PIC N(3)",
+       "usage": "NATIONAL",
+       "value": "日本語"
+      },
+      "C64-C": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 10,
+       "offset": 22,
+       "pic": "PIC N(5)",
+       "usage": "NATIONAL",
+       "value": "Ωμέγα"
+      },
+      "C64-D": {
+       "expect": "TEXT",
+       "hazard": "national_text",
+       "length": 4,
+       "offset": 32,
+       "pic": "PIC X(4)",
+       "usage": "TEXT",
+       "value": "TAIL"
+      }
+     },
+     "file": "records/c64_nat_text_implicit_r01.bin",
+     "hex": "0047007200fc00df006500200020002065e5672c8a9e03a903bc03ad03b303b1e3c1c9d3",
+     "id": "c64_nat_text_implicit_r01",
+     "length": 36,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "PIC N(n) with no USAGE clause: the c52 values"
+  },
+  {
+   "copybook": "copybooks/c65_nat_surrogate_implicit.cpy",
+   "framing": "fixed",
+   "id": "c65_nat_surrogate_implicit",
+   "max_record_length": 14,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C65-A": {
+       "expect": "TEXT",
+       "hazard": "national_surrogate",
+       "length": 8,
+       "offset": 0,
+       "pic": "PIC N(4)",
+       "usage": "NATIONAL",
+       "value": "A😀B"
+      },
+      "C65-B": {
+       "expect": "TEXT",
+       "hazard": "national_surrogate",
+       "length": 4,
+       "offset": 8,
+       "pic": "PIC N(2)",
+       "usage": "NATIONAL",
+       "value": "𝄞"
+      },
+      "C65-C": {
+       "expect": "TEXT",
+       "hazard": "national_surrogate",
+       "length": 2,
+       "offset": 12,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "OK"
+      }
+     },
+     "file": "records/c65_nat_surrogate_implicit_r01.bin",
+     "hex": "0041d83dde000042d834dd1ed6d2",
+     "id": "c65_nat_surrogate_implicit_r01",
+     "length": 14,
+     "must_fail": false,
+     "note": ""
+    }
+   ],
+   "title": "PIC N(n) with no USAGE clause: the c53 surrogate pairs"
+  },
+  {
+   "copybook": "copybooks/c66_mf_nat_surr_implicit.cpy",
+   "framing": "fixed",
+   "id": "c66_mf_nat_surr_implicit",
+   "max_record_length": 12,
+   "records": [
+    {
+     "declared_codepage": "cp037",
+     "encoded_with": "cp037",
+     "fields": {
+      "C66-HI": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national_text",
+       "length": 6,
+       "offset": 0,
+       "pic": "PIC N(3)",
+       "usage": "NATIONAL"
+      },
+      "C66-LO": {
+       "expect": "REJECT",
+       "hazard": "mustfail_national_text",
+       "length": 4,
+       "offset": 6,
+       "pic": "PIC N(2)",
+       "usage": "NATIONAL"
+      },
+      "C66-OK": {
+       "expect": "TEXT",
+       "hazard": "mustfail_sibling",
+       "length": 2,
+       "offset": 10,
+       "pic": "PIC X(2)",
+       "usage": "TEXT",
+       "value": "OK"
+      }
+     },
+     "file": "records/c66_mf_nat_surr_implicit_r01.bin",
+     "hex": "d83d00410042dc000041d6d2",
+     "id": "c66_mf_nat_surr_implicit_r01",
+     "length": 12,
+     "must_fail": true,
+     "note": "U+FFFD in place of the ill-formed unit counts as a flag"
+    }
+   ],
+   "title": "must-fail: the c57 unpaired surrogates, PIC N(n) with no USAGE clause"
+  }
+ ],
+ "corpus_version": 2,
+ "counts": {
+  "compared_fields": 329,
+  "copybooks": 66,
+  "copybooks_v1": 41,
+  "copybooks_v2": 25,
+  "rdw_files": 6,
+  "records": 87
+ },
+ "encoding_rules": [
+  {
+   "field_type": "PIC X(n) DISPLAY",
+   "rule": "n bytes, one EBCDIC code point per character, in the code page of the record.",
+   "source": "LR, PICTURE clause (symbol X) and USAGE DISPLAY; IBM CDRA code page charts CCSID 37/500/1140"
+  },
+  {
+   "field_type": "PIC 9(n) / S9(n) DISPLAY (zoned decimal)",
+   "rule": "n bytes; each byte = zone nibble X'F' + digit nibble. Signed items carry the sign in the zone nibble of the rightmost byte (default SIGN TRAILING): X'C' positive, X'D' negative; unsigned items keep X'F'. SIGN LEADING moves the sign zone to the leftmost byte. SIGN ... SEPARATE CHARACTER adds one byte holding '+' (X'4E') or '-' (X'60') and leaves all digit zones X'F'.",
+   "source": "LR, USAGE DISPLAY and SIGN clause; PG, 'Examples: numeric data and internal representation'"
+  },
+  {
+   "field_type": "PIC S9(n) COMP-3 / PACKED-DECIMAL",
+   "rule": "floor(n/2)+1 bytes; two digit nibbles per byte, most significant first, left-padded with a zero nibble when n is even; the rightmost nibble is the sign: X'C' positive, X'D' negative, X'F' for unsigned items.",
+   "source": "LR, USAGE PACKED-DECIMAL; PG, 'Examples: numeric data and internal representation'"
+  },
+  {
+   "field_type": "Sign nibble codes",
+   "rule": "X'A', X'C', X'E', X'F' are valid plus signs and X'B', X'D' valid minus signs; X'0'-X'9' are invalid as a sign and X'A'-X'F' are invalid as a digit (data exception). A negative zero (digits 0, minus sign) has the numeric value zero.",
+   "source": "POP, 'Decimal-number formats' (sign and digit codes); PG, 'Sign representation of zoned and packed-decimal data' (NUMPROC)"
+  },
+  {
+   "field_type": "PIC S9(n) COMP / COMP-4 / BINARY",
+   "rule": "two's-complement big-endian binary: 2 bytes for n=1-4, 4 bytes for n=5-9, 8 bytes for n=10-18. Values in this corpus stay within the PICTURE digit range, so TRUNC(STD) and TRUNC(BIN) agree on them.",
+   "source": "LR, USAGE BINARY/COMPUTATIONAL/COMPUTATIONAL-4; POP, fixed-point binary representation (big-endian)"
+  },
+  {
+   "field_type": "PIC S9(n) COMP-5",
+   "rule": "same storage size as COMP, but the value may use the full binary capacity of the 2/4/8 bytes regardless of the PICTURE digit count (e.g. PIC 9(4) COMP-5 holds 0-65535). Unsigned items are unsigned binary.",
+   "source": "LR, USAGE COMPUTATIONAL-5 ('native binary')"
+  },
+  {
+   "field_type": "V (implied decimal point)",
+   "rule": "V marks an assumed decimal point and occupies no storage; the stored digits are value x 10^scale.",
+   "source": "LR, PICTURE clause, symbol V"
+  },
+  {
+   "field_type": "P (decimal scaling position)",
+   "rule": "each P is an assumed digit position that occupies no storage. 999PP stores d and means d x 100; VPP999 stores d and means d x 10^-5.",
+   "source": "LR, PICTURE clause, symbol P"
+  },
+  {
+   "field_type": "REDEFINES",
+   "rule": "the redefining entry describes the same storage as the redefined entry; it does not advance the offset of the next item.",
+   "source": "LR, REDEFINES clause"
+  },
+  {
+   "field_type": "OCCURS n TIMES",
+   "rule": "the entry is repeated n times contiguously.",
+   "source": "LR, OCCURS clause"
+  },
+  {
+   "field_type": "OCCURS m TO n TIMES DEPENDING ON c",
+   "rule": "only the current value of c occurrences are present in the record; items that follow the table start immediately after the last present occurrence (variably located items, 'complex ODO').",
+   "source": "LR, OCCURS DEPENDING ON; PG, 'Complex OCCURS DEPENDING ON'"
+  },
+  {
+   "field_type": "Must-fail criterion",
+   "rule": "a control field is not NUMERIC under the COBOL class test (invalid digit nibble, invalid sign nibble, or zoned byte whose zone is not X'F' before the sign position). A correct decoder rejects or flags it instead of emitting a number.",
+   "source": "LR, 'Class condition' (NUMERIC); POP, data exception on invalid digit/sign codes"
+  },
+  {
+   "field_type": "COMP-1 / COMP-2 (hexadecimal floating point)",
+   "rule": "COMP-1 = 4 bytes (short HFP), COMP-2 = 8 bytes (long HFP): bit 0 sign, bits 1-7 characteristic (exponent + 64, base 16), then a 24-bit (short) or 56-bit (long) fraction; value = (-1)^sign x 0.fraction(hex) x 16^(characteristic-64). Normalized values have a non-zero leading hex digit; unnormalized fractions are still values; a zero fraction is zero whatever the sign and characteristic. Published vectors: COMP-1 +1234 = X'434D2000', -1234 = X'C34D2000'; COMP-2 +1234 = X'434D200000000000'.",
+   "source": "PG, 'Examples: numeric data and internal representation' (COMP-1/COMP-2 rows); POP, 'Hexadecimal-floating-point number representation'"
+  },
+  {
+   "field_type": "SYNCHRONIZED (slack bytes within records)",
+   "rule": "A SYNC binary item with PICTURE S9-S9(4) is placed at an offset that is a multiple of 2 from the start of the record, S9(5)-S9(18) a multiple of 4; COMP-1 a multiple of 4; COMP-2 a multiple of 8. The compiler inserts m-r slack bytes immediately before the item, where r is the preceding byte count mod m. SYNC on a level-01 group applies to every elementary item in it. SYNC on DISPLAY, NATIONAL or PACKED-DECIMAL items has no effect. Slack bytes hold no data; this corpus fills them with X'00' or X'40' (stated per record) and never scores them.",
+   "source": "LR 6.4, SYNCHRONIZED clause; LR, 'Slack bytes within records' (worked examples reproduced as c47 and c48)"
+  },
+  {
+   "field_type": "SYNCHRONIZED inside OCCURS (inter-occurrence slack)",
+   "rule": "For a group with an OCCURS clause, the size of one occurrence (including slack bytes within it) is divided by the largest m of any elementary item in the group; if the remainder r is not zero, m-r slack bytes are added at the end of each occurrence, so every occurrence starts at the same relative alignment as the first.",
+   "source": "LR, 'Slack bytes within records' (OCCURS example: 1 + 2 + 4 + 2 + 5 = 14 bytes, + 2 slack = 16 per occurrence)"
+  },
+  {
+   "field_type": "PIC N(n) USAGE NATIONAL",
+   "rule": "n national character positions of 2 bytes each, UTF-16 big-endian (CCSID 1200). A supplementary character (above U+FFFF) is a surrogate pair and occupies two positions. Padding is the national space U+0020. A PICTURE of only N with no USAGE clause is national under the default compiler option NSYMBOL(NATIONAL) (c64-c66 repeat c52, c53 and c57 in that form).",
+   "source": "PG, 'Unicode and the encoding of language characters' (Enterprise COBOL for z/OS: UTF-16 big-endian national data; one encoding unit = 2 bytes); Unicode Standard, section 3.9 (UTF-16 surrogate pairs); Enterprise COBOL 6.4, NSYMBOL compiler option (default NSYMBOL(NATIONAL): 'treated as if the USAGE NATIONAL clause is specified')"
+  },
+  {
+   "field_type": "PIC 9(n) / S9(n) USAGE NATIONAL (national decimal)",
+   "rule": "one national character (2 bytes, U+0030-U+0039) per digit; a signed item must have SIGN SEPARATE, the sign being national '+' (U+002B) or '-' (U+002D) before or after the digits. Published vectors: PIC 9999 NATIONAL 1234 = X'0031003200330034'; SIGN LEADING SEPARATE -1234 = X'002D0031003200330034'; SIGN TRAILING SEPARATE +1234 = X'0031003200330034002B'.",
+   "source": "PG, 'Defining national numeric data items' (S requires SIGN IS SEPARATE); PG, 'Examples: numeric data and internal representation'"
+  },
+  {
+   "field_type": "Must-fail criterion (national)",
+   "rule": "a national decimal control holds a character that is not a national digit or sign (e.g. 'A', or EBCDIC zoned bytes read as UTF-16), so it is not NUMERIC under the class test; a PIC N control holds an unpaired surrogate, which is ill-formed UTF-16. A correct decoder rejects the field or flags it (for text: emits U+FFFD in place of the ill-formed unit) instead of emitting a plausible value.",
+   "source": "LR, 'Class condition' (NUMERIC, national); Unicode Standard, conformance clause C10 (ill-formed code unit sequences are an error condition and are not interpreted as characters)"
+  },
+  {
+   "field_type": "RDW-prefixed variable-length records (RECFM=V)",
+   "rule": "each logical record is preceded by a 4-byte record descriptor word: bytes 1-2 = record length LL including the 4-byte RDW (big-endian halfword, 4 to 32,760), bytes 3-4 = X'0000' for non-spanned records. The data after the RDW is the COBOL record; it may be shorter than the copybook (ODO tables, short REDEFINES variants). No block descriptor words (BDW) are present in this corpus.",
+   "source": "DFSMS, 'Record descriptor word (RDW)'; POP, halfword binary integers are big-endian"
+  },
+  {
+   "field_type": "Must-fail criterion (RDW)",
+   "rule": "an RDW with LL below 4; an RDW whose bytes 3-4 are not zero (they 'are used for spanned records'; here a record split into two segments marked X'01' and X'02'); a last RDW whose LL runs past the end of the file. A correct reader reports the framing error instead of emitting, dropping or padding a record without notice.",
+   "source": "DFSMS, 'Record descriptor word (RDW)': 'The length can be from 4 to 32,760' and 'All bits of the third and fourth bytes must be 0, because other values are used for spanned records'"
+  }
+ ],
+ "generator": "gen_corpus.py",
+ "licence": "CC0-1.0"
+}

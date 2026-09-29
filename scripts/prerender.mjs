@@ -272,6 +272,11 @@ function discover() {
     "/gspc/provenance-controls", "/gspc/reserve-attestation", "/gspc/regulatory-framework",
     "/gspc/distribution-integrity", "/gspc/custody-disclosure", "/gspc/ai-economy-index",
     "/gspc/human-labour-index", "/gspc/humanoid-labour-index",
+    // Axes the live board serves that this list never caught up with (2026-09-28): the axis
+    // table on every /gspc/<axis> page links all 23 rows, and these three answered HTTP 404 —
+    // effect-binding (slot 23, ADR-002) and the two index slots renamed to their component-fact
+    // ids (C-2026-0826-05). The retired ids above stay listed so inbound links keep resolving.
+    "/gspc/effect-binding", "/gspc/ai-adoption-components", "/gspc/labour-components",
     // Sitemap-listed routes that fell through to the homepage shell (E2E RETEST #2):
     // both have real pages in App.tsx but were never in the snapshot queue.
     "/badge",

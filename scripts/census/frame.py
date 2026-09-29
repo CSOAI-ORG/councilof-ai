@@ -70,6 +70,12 @@ A2A_REGISTRY = "https://a2aregistry.org/api/agents"
 DOCKER_API = "https://api.github.com/repos/docker/mcp-registry"
 DOCKER_CODELOAD = "https://codeload.github.com/docker/mcp-registry/tar.gz/"
 SMITHERY = "https://registry.smithery.ai/servers"
+# An AGNTCY Directory Service catalogue (OASF records: MCP server cards, A2A agent cards, agent
+# skills). Opt-in: it is not in DEFAULT_SOURCES, so the standing frame run is unchanged.
+AGENT_DIRECTORY = "https://ai-catalog.outshift.io/v1/agents"
+# A page cut mid-JSON (the proxy truncates large bodies: page_size=100 arrived cut at ~786 KB on
+# 2026-09-28) is re-requested at the SAME page_token with a smaller page_size before the walk stops.
+AGENT_DIRECTORY_PAGE_SIZES = (25, 10, 5, 1)
 NPM_DOWNLOADS = "https://api.npmjs.org/downloads/point/last-week/"
 
 MAX_PAGES = 5000  # a runaway guard; hitting it is PARTIAL, never EXHAUSTED
@@ -483,13 +489,108 @@ def read_smithery(f, log, em, base=SMITHERY, page_size=100):
                            f"endpoint URL. Reading further needs an API key."), declared)
 
 
+def _agent_directory_endpoints(rec):
+    """Endpoint URLs an OASF record DECLARES. Skills records declare none."""
+    mt = str(rec.get("mediaType") or rec.get("type") or "")
+    d = rec.get("data") if isinstance(rec.get("data"), dict) else {}
+    eps = []
+    if "mcp-server-card" in mt:
+        for c in d.get("connections") or []:
+            if isinstance(c, dict):
+                eps.append((c.get("url"), c.get("type") or "mcp"))
+        md = d.get("mcp_data") if isinstance(d.get("mcp_data"), dict) else {}
+        for r in md.get("remotes") or []:
+            if isinstance(r, dict):
+                eps.append((r.get("url"), r.get("type") or "mcp"))
+    elif "a2a-agent-card" in mt:
+        eps.append((d.get("url"), d.get("preferredTransport") or "a2a"))
+        for alt in list(d.get("additionalInterfaces") or []) + list(d.get("supportedInterfaces") or []):
+            if isinstance(alt, dict):
+                eps.append((alt.get("url"), alt.get("transport") or alt.get("protocolBinding") or "a2a"))
+    out, seen = [], set()
+    for u, t in eps:
+        if u and (u, t) not in seen:
+            seen.add((u, t))
+            out.append((u, t))
+    return out
+
+
+def read_agent_directory(f, log, em, base=AGENT_DIRECTORY, sizes=AGENT_DIRECTORY_PAGE_SIZES):
+    """GET {base}?page_size=N[&page_token=T] -> {results[], nextPageToken, totalCount}.
+
+    The listing's own trust/scan fields are carried as listing_* meta: they are the catalogue's
+    claims about a record, never a measurement of ours.
+    """
+    token, declared, first_declared, seen = "", None, None, set()
+    while True:
+        if len(log.pages) >= MAX_PAGES:
+            return _stop(log, em, f"page guard {MAX_PAGES} hit", declared)
+        d, errs = None, []
+        for size in sizes:
+            q = {"page_size": str(size)}
+            if token:
+                q["page_token"] = token
+            d, _h, err = _get_json(f, log, base + "?" + urllib.parse.urlencode(q))
+            if err is None:
+                break
+            errs.append(err)
+            d = None
+            if "not complete JSON" not in err:
+                break  # only a cut body is retried smaller; an HTTP error stops the walk
+        if d is None:
+            return _stop(log, em, "; ".join(errs), declared)
+        results = d.get("results") if isinstance(d, dict) else None
+        if not isinstance(results, list) or "totalCount" not in d:
+            return _stop(log, em, f"page {len(log.pages)}: JSON without results[] and totalCount "
+                                  f"- an error object, not a page and not an end", declared)
+        log.valid_pages += 1
+        declared = int(d["totalCount"])
+        if first_declared is None:
+            first_declared = declared
+        for r in results:
+            md = r.get("metadata") if isinstance(r.get("metadata"), dict) else {}
+            trust = md.get("agntcy.dir.trust.v1.Status") or {}
+            scan = md.get("agntcy.dir.security.v1.ScanResult") or {}
+            data = r.get("data") if isinstance(r.get("data"), dict) else {}
+            em(r.get("identifier"), endpoints=_agent_directory_endpoints(r),
+               meta={"media_type": r.get("mediaType"), "display_name": r.get("displayName"),
+                     "name": data.get("name"), "version": r.get("version"),
+                     "updated_at": r.get("updatedAt"),
+                     "identity_type": (r.get("trustManifest") or {}).get("identityType"),
+                     "listing_trusted": trust.get("trusted"),
+                     "listing_verified": trust.get("verified"),
+                     "listing_scan_is_safe": scan.get("isSafe"),
+                     "listing_scan_max_severity": scan.get("maxSeverity")})
+        nxt = str(d.get("nextPageToken") or "")
+        if not nxt:
+            break
+        if not results:
+            return _stop(log, em, f"page {len(log.pages)}: empty page carrying a page token", declared)
+        if nxt in seen:
+            return _stop(log, em, f"page {len(log.pages)}: page token repeated - pagination loop",
+                         declared)
+        seen.add(nxt)
+        token = nxt
+    if declared != first_declared:
+        return _stop(log, em, f"totalCount moved during the walk ({first_declared} -> {declared})",
+                     declared)
+    if len(em.ids) != declared:
+        return _stop(log, em, f"declared totalCount {declared} but {len(em.ids)} distinct identifiers "
+                              f"read", declared)
+    return _result(EXHAUSTED, f"nextPageToken empty on page {len(log.pages)}; {len(em.ids)} distinct "
+                              f"identifiers == declared totalCount {declared}", log, em, declared)
+
+
 READERS = {
     "mcp-registry": read_mcp_registry,
     "hf-spaces": read_hf_spaces,
     "a2aregistry": read_a2aregistry,
     "docker-mcp-registry": read_docker_mcp_registry,
     "smithery": read_smithery,
+    "agent-directory": read_agent_directory,
 }
+# The standing run. agent-directory is opt-in (--sources agent-directory).
+DEFAULT_SOURCES = ("mcp-registry", "hf-spaces", "a2aregistry", "docker-mcp-registry", "smithery")
 
 
 # ---------------------------------------------------------------- collect
@@ -518,7 +619,7 @@ def overlap_stats(index):
 
 def collect(out, sources=None, fetcher=None, readers=None):
     readers = readers or READERS
-    sources = sources or list(readers)
+    sources = sources or [n for n in DEFAULT_SOURCES if n in readers] or list(readers)
     fetcher = fetcher or Fetcher()
     os.makedirs(out, exist_ok=True)
     started = utcnow()
@@ -842,17 +943,50 @@ def self_test():
     return 0 if ok else 1
 
 
+def self_test_agent_directory():
+    """A cut page is retried smaller at the same token; ids == totalCount -> EXHAUSTED;
+    one id short of totalCount -> PARTIAL with a null population."""
+    rec = lambda i, mt="application/mcp-server-card+json": {
+        "identifier": f"urn:x:{i}", "mediaType": mt, "displayName": f"r{i}",
+        "data": {"name": f"n{i}", "connections": [{"type": "streamable-http", "url": f"https://h{i}.example/mcp/"}]},
+        "metadata": {"agntcy.dir.trust.v1.Status": {"trusted": True, "verified": False}}}
+    p1 = json.dumps({"results": [rec(1), rec(2, "application/agent-skills+md")], "nextPageToken": "2",
+                     "totalCount": 3}).encode()
+    p2 = json.dumps({"results": [rec(3)], "nextPageToken": "", "totalCount": 3}).encode()
+    base = AGENT_DIRECTORY
+    ok = True
+    for declared_last, want in ((3, EXHAUSTED), (4, PARTIAL)):
+        p2x = p2 if declared_last == 3 else p2.replace(b'"totalCount": 3', b'"totalCount": 4')
+        p1x = p1 if declared_last == 3 else p1.replace(b'"totalCount": 3', b'"totalCount": 4')
+        t = FakeTransport({base + "?page_size=25": [(200, {}, p1x)],
+                           base + "?page_size=25&page_token=2": [(200, {}, p2x[:30])],
+                           base + "?page_size=10&page_token=2": [(200, {}, p2x)]})
+        f = Fetcher(transport=t, sleep=lambda s: None, min_interval=0)
+        with tempfile.TemporaryDirectory() as d:
+            s = collect(d, ["agent-directory"], f)
+        src = s["sources"]["agent-directory"]
+        good = (src["read_state"] == want and src["distinct_ids"] == 3
+                and (src["population_total"] == 3) == (want == EXHAUSTED)
+                and src["entries_without_endpoint"] == 1 and src["distinct_endpoints"] == 2)
+        ok = ok and good
+        print(json.dumps({"self_test_agent_directory": "PASS" if good else "FAIL", "want": want,
+                          "read_state": src["read_state"], "population_total": src["population_total"],
+                          "reason": src["reason"]}))
+    return 0 if ok else 1
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", help="collect into this directory")
-    ap.add_argument("--sources", default=",".join(READERS))
+    ap.add_argument("--sources", default=",".join(DEFAULT_SOURCES),
+                    help="comma list; also available: " + ",".join(n for n in READERS if n not in DEFAULT_SOURCES))
     ap.add_argument("--top20", action="store_true", help="plan the top-20%% slice of a frame")
     ap.add_argument("--frame", help="frame directory for --top20")
     ap.add_argument("--fraction", type=float, default=0.2)
     ap.add_argument("--self-test", action="store_true")
     a = ap.parse_args(argv)
     if a.self_test:
-        return self_test()
+        return self_test() or self_test_agent_directory()
     if a.top20:
         if not a.frame:
             ap.error("--top20 needs --frame DIR")

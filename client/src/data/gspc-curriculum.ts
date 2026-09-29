@@ -1,11 +1,15 @@
 /**
- * GSPC-Tagged Curriculum — Living Training aligned with the 4 axes
+ * GSPC-tagged curriculum — UNROUTED ARCHIVE.
  *
- * Every module tagged by GSPC axis (G=governance, S=safety, P=provenance, C=continuity).
- * Every quiz feeds an axis score. The Sov Space galaxy shows personal progress.
- * Living certifications auto-update when GSPC detects regulation changes.
+ * No page or component imports this module (scripts/academy/module-inventory.mjs lists its
+ * consumers: none). It is kept for reference and is not course content. The live learning
+ * surfaces are /learn, /academy, the dashboard learning arena and the reproducible exercises
+ * at /academy/exercises/.
  *
- * Architecture: courses → modules → scenarios → quiz → axis score → certification
+ * Removed 2026-09-28: the certification-tier table with per-exam fees, and the per-course
+ * certification tier. CSOAI publishes no prices, sells no grade and issues no certificates;
+ * the Academy's only record is a free completion record for a reproduced measurement. Board
+ * counts are never typed here: read them from GET /api/gspc.
  */
 
 export type GSPCAxis = "G" | "S" | "P" | "C";
@@ -16,7 +20,7 @@ export interface GSPCScenario {
   description: string;
   axis: GSPCAxis;
   difficulty: 1 | 2 | 3; // 1=beginner, 2=intermediate, 3=advanced
-  provisions: number; // how many of the 417 provisions this covers
+  provisions: number; // how many provisions this scenario covers
   role: string; // which persona this serves
   scenario: string; // the Sov Space scenario prompt
   expectedOutcome: string; // what the Council assistant should conclude
@@ -46,7 +50,6 @@ export interface GSPCCourse {
   totalXP: number;
   level: "fundamentals" | "advanced" | "specialist";
   isFree: boolean;
-  certificationTier: 1 | 2 | 3 | 4; // which CSOAI cert tier this feeds
 }
 
 // Axis metadata
@@ -57,13 +60,6 @@ export const AXIS_META: Record<GSPCAxis, { name: string; icon: string; color: st
   C: { name: "Continuity", icon: "🔗", color: "#3b82f6", description: "Will the signature still verify?" },
 };
 
-// Certification tier thresholds
-export const CERT_TIERS = {
-  1: { name: "AI Safety Analyst", xpRequired: 500, provisionsRequired: 50, examFee: 49 },
-  2: { name: "Senior AI Safety Analyst", xpRequired: 2000, provisionsRequired: 150, examFee: 99 },
-  3: { name: "AI Safety Specialist", xpRequired: 5000, provisionsRequired: 300, examFee: 149 },
-  4: { name: "AI Safety Expert", xpRequired: 10000, provisionsRequired: 417, examFee: 199 },
-} as const;
 
 // GSPC-tagged curriculum — maps existing courses to axes
 export const GSPC_CURRICULUM: GSPCCourse[] = [
@@ -76,7 +72,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 113,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       {
@@ -149,7 +144,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 42,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       {
@@ -198,7 +192,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 28,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       { id: "uk-m1", title: "UK AI Regulation Landscape", axis: "G", courseId: 100003, moduleIndex: 0, provisions: 5, quizQuestions: 10, xpReward: 100, scenarios: [] },
@@ -219,7 +212,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 18,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       { id: "ca-m1", title: "AIDA Overview", axis: "G", courseId: 100004, moduleIndex: 0, provisions: 3, quizQuestions: 10, xpReward: 100, scenarios: [] },
@@ -240,7 +232,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 15,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       { id: "au-m1", title: "AI Ethics Principles", axis: "G", courseId: 100005, moduleIndex: 0, provisions: 3, quizQuestions: 10, xpReward: 100, scenarios: [] },
@@ -261,7 +252,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 38,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       { id: "iso-m1", title: "AIMS Overview", axis: "G", courseId: 100006, moduleIndex: 0, provisions: 6, quizQuestions: 10, xpReward: 100, scenarios: [] },
@@ -282,7 +272,6 @@ export const GSPC_CURRICULUM: GSPCCourse[] = [
     totalProvisions: 45,
     level: "fundamentals",
     isFree: true,
-    certificationTier: 1,
     totalXP: 700,
     modules: [
       { id: "cn-m1", title: "TC260 Standards Overview", axis: "G", courseId: 100007, moduleIndex: 0, provisions: 7, quizQuestions: 10, xpReward: 100, scenarios: [] },

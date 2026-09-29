@@ -2398,6 +2398,19 @@
       "payment": "free_preview_then_x402"
     },
     {
+      "id": "api-wrapper-index-json",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper index",
+      "description": "GET /api/wrapper/index.json — every asset on the wrapped-asset roster and in the per-deployment archives, keyed by CAIP-19, with the lookup URL for each. The sides that have no CAIP-19 id (a fund register, bank deposits) are listed separately with the reason, never dropped.",
+      "endpoint": "/api/wrapper/index.json",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-wrapper-post",
       "protocols": [
         "http"

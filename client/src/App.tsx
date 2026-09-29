@@ -275,7 +275,8 @@ const SOAIPDCAFramework = lazy(() => import("./pages/SOAIPDCAFramework"));
 const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
-const Charter = lazy(() => import("./pages/Charter"));
+// /charter renders a pointer to the operational charter; pages/Charter.tsx (52-Article, historical) is unrouted.
+const OperationalCharter = lazy(() => import("./pages/OperationalCharter"));
 const PublicWatchdog = lazy(() => import("./pages/PublicWatchdog"));
 const GovernmentDashboard = lazy(() => import("./pages/GovernmentDashboard"));
 const MaternalCovenant = lazy(() => import("./pages/MaternalCovenant"));
@@ -322,7 +323,7 @@ const RelevanceMap = lazy(() => import("./pages/RelevanceMap"));
 const Temples = lazy(() => import("./pages/Temples"));
 const Playbooks = lazy(() => import("./pages/Playbooks"));
 const Dragonfly = lazy(() => import("./pages/Dragonfly"));
-const MeokLaw = lazy(() => import("./pages/MeokLaw"));
+const JurisdictionEngine = lazy(() => import("./pages/JurisdictionEngine"));
 const HiveModel = lazy(() => import("./pages/HiveModel"));
 const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
@@ -449,6 +450,12 @@ function normPath(p: string) {
 
 function App() {
   const [location] = useLocation();
+  // Subscribed, not read from window: the top-level `embed=1` strip below changes ONLY the
+  // query string (the pathname stays /dashboard/), and useLocation does not re-render on a
+  // search-only navigation. Reading window.location.search left App rendering the strip's
+  // <Redirect> (null) forever — every /os?embed=1&lobby=… panel URL opened directly was a
+  // blank page (28 Sep 2026, phone viewport, live).
+  const search = useOsSearch();
   const path = normPath(location);
   const proofHost =
     typeof window !== "undefined" &&
@@ -518,7 +525,7 @@ function App() {
   // copied panel URL opened directly must converge on the canonical workspace
   // with full navigation and account controls. Genuine iframes retain the hint.
   if (path === "/dashboard" && typeof window !== "undefined") {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(search);
     let topLevel = true;
     try {
       topLevel = window.self === window.top;
@@ -802,7 +809,7 @@ function App() {
                   <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
                   <Route path="/eunomia-indices" component={EunomiaIndices} />
                   <Route path="/careers" component={Careers} />
-                  <Route path="/charter" component={Charter} />
+                  <Route path="/charter" component={OperationalCharter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />
                   <Route path="/covenant" component={MaternalCovenant} />
                   <Route path="/why-csoai" component={WhyCSOAI} />
@@ -861,9 +868,9 @@ function App() {
                   <Route path="/temples" component={Temples} />
                   <Route path="/playbooks" component={Playbooks} />
                   <Route path="/dragonfly" component={Dragonfly} />
-                  <Route path="/csoai-law" component={MeokLaw} />
-                  <Route path="/meok-law" component={MeokLaw} />
-                  <Route path="/law" component={MeokLaw} />
+                  <Route path="/csoai-law" component={JurisdictionEngine} />
+                  <Route path="/meok-law" component={JurisdictionEngine} />
+                  <Route path="/law" component={JurisdictionEngine} />
                   <Route path="/hive-model" component={HiveModel} />
                   <Route path="/services" component={Services} />
                   <Route path="/how" component={HowItWorks} />

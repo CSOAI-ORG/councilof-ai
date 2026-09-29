@@ -1,0 +1,1701 @@
+{
+  "schema": "csoai.academy-module-inventory/0.1",
+  "what": "Every learning module in the councilof-ai client, where it is served, which reproducible exercise realises it, and flags in its copy. Generated from source; flags are for a human to act on, never automatic edits.",
+  "generator": "scripts/academy/module-inventory.mjs",
+  "exercises_source": "public/academy/exercises/run-exercises.mjs",
+  "completion_rule": "A module is complete only through an exercise whose state is REPRODUCED (your result's sha256 equals the published result's sha256 and the negative control fails). Modules with no exercise are reading or practice; finishing them completes nothing.",
+  "totals": {
+    "surfaces": 5,
+    "modules": 63,
+    "modules_with_exercise": 10,
+    "exercises": 9,
+    "findings": {
+      "boundary": 1,
+      "typed_count": 3,
+      "certificate_negated": 7,
+      "price": 22,
+      "certificate": 52
+    },
+    "served_modules": 10,
+    "served_modules_without_exercise": [],
+    "findings_in_served_copy": {
+      "boundary": 1,
+      "typed_count": 1,
+      "certificate_negated": 2
+    }
+  },
+  "exercises": [
+    {
+      "id": "board-totals",
+      "title": "Read the living board and count it yourself",
+      "realises": [
+        "learn/board",
+        "dashboard/learn"
+      ]
+    },
+    {
+      "id": "verify-card",
+      "title": "Verify one signed measurement card with your own code",
+      "realises": [
+        "learn/board",
+        "academy/attest",
+        "learn/build"
+      ]
+    },
+    {
+      "id": "card-chain",
+      "title": "Re-measure the whole signed card chain",
+      "realises": [
+        "academy/attest"
+      ]
+    },
+    {
+      "id": "inclusion",
+      "title": "Prove a leaf is inside the public root",
+      "realises": [
+        "academy/foundations",
+        "learn/build"
+      ]
+    },
+    {
+      "id": "root-signature",
+      "title": "Check who signed the public root",
+      "realises": [
+        "academy/foundations"
+      ]
+    },
+    {
+      "id": "charter-hash",
+      "title": "Reproduce the charter hash",
+      "realises": [
+        "academy/foundations",
+        "learn/found"
+      ]
+    },
+    {
+      "id": "three-corpora",
+      "title": "Keep the three card corpora apart",
+      "realises": [
+        "learn/board"
+      ]
+    },
+    {
+      "id": "board-stamp",
+      "title": "Verify the board snapshot stamp",
+      "realises": [
+        "learn/board",
+        "academy/foundations"
+      ]
+    },
+    {
+      "id": "article-50-marking",
+      "title": "Reproduce an Article 50 marking measurement, then apply it to your own output",
+      "realises": [
+        "learn/law",
+        "learn/sector",
+        "academy/your-jurisdiction",
+        "academy/apply"
+      ]
+    }
+  ],
+  "surfaces": [
+    {
+      "surface": "learn-tracks",
+      "file": "client/src/pages/Academy.tsx",
+      "routes": [
+        "/learn",
+        "/tracks"
+      ],
+      "component": "Academy",
+      "served": true,
+      "modules": [
+        {
+          "id": "learn/board",
+          "title": "Read the living board",
+          "level": "Beginner",
+          "stated_minutes": 15,
+          "steps": [
+            {
+              "title": "Open Council OS",
+              "href": "\"/dashboard?tab=home\""
+            },
+            {
+              "title": "The living board — empty cells stay empty",
+              "href": "\"/gspc-scoreboard\""
+            },
+            {
+              "title": "Verify a card in your browser",
+              "href": "\"/gspc-verify\""
+            },
+            {
+              "title": "Ask as the reader you are",
+              "href": "\"/dashboard?ask=&tab=home\" + encodeURIComponent(\"In plain words, what does the Council of AI actually measure?\")"
+            }
+          ],
+          "exercises": [
+            "board-totals",
+            "verify-card",
+            "three-corpora",
+            "board-stamp"
+          ],
+          "findings": []
+        },
+        {
+          "id": "learn/found",
+          "title": "Foundations of AI Governance",
+          "level": "Beginner",
+          "stated_minutes": 20,
+          "steps": [
+            {
+              "title": "Rediscovered, Not Invented - 4,000 years",
+              "href": "\"/lineage\""
+            },
+            {
+              "title": "The Hive - how consensus works",
+              "href": "\"/hive\""
+            },
+            {
+              "title": "The 4-Wing Model",
+              "href": "\"/dragonfly\""
+            },
+            {
+              "title": "Try the Council yourself",
+              "href": "\"/try\""
+            }
+          ],
+          "exercises": [
+            "charter-hash"
+          ],
+          "findings": []
+        },
+        {
+          "id": "learn/law",
+          "title": "Know Your Jurisdiction",
+          "level": "Beginner",
+          "stated_minutes": 15,
+          "steps": [
+            {
+              "title": "MEOK Law by jurisdiction",
+              "href": "\"/meok-law\""
+            },
+            {
+              "title": "Framework Temples",
+              "href": "\"/temples\""
+            },
+            {
+              "title": "Relevance Map",
+              "href": "\"/map\""
+            }
+          ],
+          "exercises": [
+            "article-50-marking"
+          ],
+          "findings": [
+            {
+              "kind": "boundary",
+              "line": 20,
+              "match": "MEOK",
+              "context": "{ t: \"MEOK Law by jurisdiction\", href: \"/meok-law\" },"
+            }
+          ]
+        },
+        {
+          "id": "learn/sector",
+          "title": "Govern Your Sector",
+          "level": "Practitioner",
+          "stated_minutes": 25,
+          "steps": [
+            {
+              "title": "Sector Atlas - find your sector",
+              "href": "\"/sectors\""
+            },
+            {
+              "title": "Industry Playbooks",
+              "href": "\"/playbooks\""
+            },
+            {
+              "title": "Ask the Council about your system",
+              "href": "\"/try\""
+            }
+          ],
+          "exercises": [
+            "article-50-marking"
+          ],
+          "findings": []
+        },
+        {
+          "id": "learn/build",
+          "title": "Build on the OS",
+          "level": "Advanced",
+          "stated_minutes": 30,
+          "steps": [
+            {
+              "title": "Legacy Bridge",
+              "href": "\"/legacy\""
+            },
+            {
+              "title": "Council Towns - the multiplication engine",
+              "href": "\"/towns\""
+            },
+            {
+              "title": "Services - the whole OS",
+              "href": "\"/services\""
+            }
+          ],
+          "exercises": [
+            "verify-card",
+            "inclusion"
+          ],
+          "findings": []
+        }
+      ]
+    },
+    {
+      "surface": "academy-paths",
+      "file": "client/src/pages/CouncilAcademy.tsx",
+      "routes": [
+        "/academy"
+      ],
+      "component": "CouncilAcademy",
+      "served": true,
+      "modules": [
+        {
+          "id": "academy/foundations",
+          "title": "Foundations",
+          "position": 1,
+          "steps": [
+            {
+              "title": "Layer 0 — the 8 trust controls",
+              "href": "/layer0"
+            },
+            {
+              "title": "The 52-Article Charter",
+              "href": "/charter"
+            },
+            {
+              "title": "SOAI-PDCA methodology",
+              "href": "/soai-pdca"
+            }
+          ],
+          "exercises": [
+            "inclusion",
+            "root-signature",
+            "charter-hash",
+            "board-stamp"
+          ],
+          "findings": [
+            {
+              "kind": "typed_count",
+              "line": 13,
+              "match": "8 trust controls",
+              "context": "{ name: \"Layer 0 — the 8 trust controls\", href: \"/layer0\" },"
+            }
+          ]
+        },
+        {
+          "id": "academy/your-jurisdiction",
+          "title": "Your jurisdiction",
+          "position": 2,
+          "steps": [
+            {
+              "title": "EU AI Act",
+              "href": "/eu-ai-act"
+            },
+            {
+              "title": "NIST AI RMF",
+              "href": "/nist-ai-rmf"
+            },
+            {
+              "title": "ISO/IEC 42001",
+              "href": "/iso-42001"
+            },
+            {
+              "title": "TC260 (China)",
+              "href": "/tc260"
+            }
+          ],
+          "exercises": [
+            "article-50-marking"
+          ],
+          "findings": []
+        },
+        {
+          "id": "academy/apply",
+          "title": "Apply",
+          "position": 3,
+          "steps": [
+            {
+              "title": "Framework Crosswalks",
+              "href": "/crosswalks"
+            },
+            {
+              "title": "Readiness Assessment (free)",
+              "href": "/assess"
+            },
+            {
+              "title": "Policy Generator",
+              "href": "/policy-generator"
+            }
+          ],
+          "exercises": [
+            "article-50-marking"
+          ],
+          "findings": []
+        },
+        {
+          "id": "academy/attest",
+          "title": "Attest",
+          "position": 4,
+          "steps": [
+            {
+              "title": "Training records — how they work",
+              "href": "/courses"
+            },
+            {
+              "title": "Full course catalog",
+              "href": "/courses"
+            }
+          ],
+          "exercises": [
+            "verify-card",
+            "card-chain"
+          ],
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 28,
+              "match": "certify",
+              "context": "{ n: 4, title: \"Attest\", blurb: \"Finish a course and get a signed training record. It attests training, not conformity — we certify nothing.\", ring: \"border-…",
+              "negated": true
+            }
+          ]
+        }
+      ],
+      "page_findings": [
+        {
+          "kind": "certificate",
+          "line": 6,
+          "match": "certifies",
+          "context": "// NB: the fourth path attests TRAINING, never conformity — Council of AI certifies nothing.",
+          "negated": true
+        }
+      ]
+    },
+    {
+      "surface": "dashboard-learning-arena",
+      "file": "client/src/data/gspc-learning-paths.ts",
+      "routes": [
+        "/dashboard?tab=learn",
+        "/widget"
+      ],
+      "component": "DashboardLearningPane",
+      "served": true,
+      "snapshot": {
+        "file": "public/signed/gspc-board.2026-09-25.signed.json",
+        "axes": 23,
+        "status_file": "public/signed/gspc-board.2026-09-25.status.json",
+        "status_state": "CURRENT",
+        "current": true
+      },
+      "live_roster": "the pane reads GET /api/gspc and builds one path per live axis; the snapshot is the fallback",
+      "modules": [
+        {
+          "id": "dashboard/learn",
+          "title": "One practice path per board axis (learn · play · explain · propose fix · human review)",
+          "exercises": [
+            "board-totals"
+          ],
+          "findings": []
+        }
+      ]
+    },
+    {
+      "surface": "regulatory-course-modules",
+      "file": "client/src/data/modules",
+      "routes": [
+        "/courses/:id/learn",
+        "/free-course/:courseId"
+      ],
+      "component": "ContentReviewNotice / ContentReviewNotice",
+      "served": false,
+      "reachability": "Imported only through client/src/data/quizzes (consumers: client/src/components/Quiz.tsx, client/src/pages/CoursePlayer.tsx); both player routes render ContentReviewNotice, so no module copy is served.",
+      "modules": [
+        {
+          "id": "regulatory/australia-ai-ethics-module-1",
+          "framework": "australia-ai-ethics",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/australia-ai-ethics-module-2",
+          "framework": "australia-ai-ethics",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/australia-ai-ethics-module-3",
+          "framework": "australia-ai-ethics",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/australia-ai-ethics-module-4",
+          "framework": "australia-ai-ethics",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/australia-ai-ethics-module-5",
+          "framework": "australia-ai-ethics",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "price",
+              "line": 70,
+              "match": "pricing",
+              "context": "'Only handles AI pricing',"
+            }
+          ]
+        },
+        {
+          "id": "regulatory/australia-ai-ethics-module-6",
+          "framework": "australia-ai-ethics",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/australia-ai-ethics-module-7",
+          "framework": "australia-ai-ethics",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-1",
+          "framework": "canada-aida",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-2",
+          "framework": "canada-aida",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-3",
+          "framework": "canada-aida",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-4",
+          "framework": "canada-aida",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-5",
+          "framework": "canada-aida",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-6",
+          "framework": "canada-aida",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/canada-aida-module-7",
+          "framework": "canada-aida",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/china-tc260-module-1",
+          "framework": "china-tc260",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/china-tc260-module-2",
+          "framework": "china-tc260",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/china-tc260-module-3",
+          "framework": "china-tc260",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "price",
+              "line": 82,
+              "match": "pricing",
+              "context": "'Only pricing disclosure',"
+            }
+          ]
+        },
+        {
+          "id": "regulatory/china-tc260-module-4",
+          "framework": "china-tc260",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/china-tc260-module-5",
+          "framework": "china-tc260",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "price",
+              "line": 81,
+              "match": "pricing",
+              "context": "'Specific requirements for recommendation algorithms, pricing, and consumer protection',"
+            },
+            {
+              "kind": "price",
+              "line": 86,
+              "match": "pricing",
+              "context": "explanation: 'China has specific requirements for AI in e-commerce, including rules for recommendation algorithms, dynamic pricing, and consumer protection m…"
+            }
+          ]
+        },
+        {
+          "id": "regulatory/china-tc260-module-6",
+          "framework": "china-tc260",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/china-tc260-module-7",
+          "framework": "china-tc260",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-1",
+          "framework": "eu-ai-act",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 106,
+              "match": "certify",
+              "context": "'To certify all high-risk AI systems before market deployment',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 110,
+              "match": "certify",
+              "context": "explanation: 'The European AI Office (within the European Commission) coordinates the implementation of the AI Act, monitors GPAI models, maintains the EU da…",
+              "negated": true
+            }
+          ]
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-2",
+          "framework": "eu-ai-act",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-3",
+          "framework": "eu-ai-act",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 122,
+              "match": "certification",
+              "context": "explanation: 'The EU AI Act allows two pathways: assessment by notified bodies (independent third-party certification bodies designated by member states) or …",
+              "negated": false
+            }
+          ]
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-4",
+          "framework": "eu-ai-act",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-5",
+          "framework": "eu-ai-act",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-6",
+          "framework": "eu-ai-act",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/eu-ai-act-module-7",
+          "framework": "eu-ai-act",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/iso-42001-module-1",
+          "framework": "iso-42001",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/iso-42001-module-2",
+          "framework": "iso-42001",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/iso-42001-module-3",
+          "framework": "iso-42001",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/iso-42001-module-4",
+          "framework": "iso-42001",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/iso-42001-module-5",
+          "framework": "iso-42001",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/iso-42001-module-6",
+          "framework": "iso-42001",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 6,
+              "match": "certification",
+              "context": "question: 'What is the primary purpose of the Stage 1 audit in ISO/IEC 42001 certification?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 8,
+              "match": "certify",
+              "context": "'To immediately certify the organization',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 11,
+              "match": "certification",
+              "context": "'Stage 1 audits are not part of the ISO 42001 certification process',",
+              "negated": true
+            },
+            {
+              "kind": "certificate",
+              "line": 18,
+              "match": "certification",
+              "context": "question: 'What occurs during the Stage 2 audit in ISO/IEC 42001 certification?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 23,
+              "match": "certification",
+              "context": "'Stage 2 audits are performed every month after certification',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 30,
+              "match": "certification",
+              "context": "question: 'How often must surveillance audits be conducted after ISO/IEC 42001 certification is awarded?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 33,
+              "match": "certification",
+              "context": "explanation: 'After certification, surveillance audits must be conducted at least annually to verify that the AIMS continues to be implemented effectively an…",
+              "negated": true
+            },
+            {
+              "kind": "certificate",
+              "line": 37,
+              "match": "certification",
+              "context": "question: 'What is the certification validity period for ISO/IEC 42001?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 40,
+              "match": "certification",
+              "context": "explanation: 'ISO/IEC 42001 certification is valid for 3 years. During this period, annual surveillance audits verify continued conformance, and a recertific…",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 44,
+              "match": "certification",
+              "context": "question: 'How should an organization select an accredited certification body for ISO/IEC 42001?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 46,
+              "match": "certify",
+              "context": "'Any consultant can certify an AIMS',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 48,
+              "match": "certification",
+              "context": "'Select a certification body accredited by a national accreditation organisation (UKAS, ANAB, or equivalent) with credentials in ISO 42001',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 49,
+              "match": "Certification",
+              "context": "'Certification body selection is not important',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 52,
+              "match": "certification",
+              "context": "explanation: 'Organizations should select a certification body that is accredited by a recognized national accreditation organisation (such as UKAS in the UK…",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 72,
+              "match": "certification",
+              "context": "'Major nonconformities automatically mean certification is denied with no opportunity for remediation',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 80,
+              "match": "certification",
+              "context": "question: 'What is the relationship between ISO/IEC 42001 and ISO 27001 in terms of certification?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 83,
+              "match": "certification",
+              "context": "'ISO 27001 is required before ISO 42001 certification',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 84,
+              "match": "certified",
+              "context": "'Both standards can be certified separately or integrated based on organizational needs, with potential alignment of audit processes',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 88,
+              "match": "certified",
+              "context": "explanation: 'While ISO 27001 (information security) and ISO/IEC 42001 (AI management) can be certified separately, many organizations integrate them due to …",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 96,
+              "match": "certification",
+              "context": "'Within a timeframe agreed between the organization and certification body, typically 30-90 days depending on severity',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 104,
+              "match": "certification",
+              "context": "question: 'What should be done to prepare for a recertification audit at the end of the 3-year certification period?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 106,
+              "match": "certification",
+              "context": "'Recertification audits are the same as initial certification and require no special preparation',",
+              "negated": false
+            }
+          ]
+        },
+        {
+          "id": "regulatory/iso-42001-module-7",
+          "framework": "iso-42001",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-1",
+          "framework": "nist-ai-rmf",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-2",
+          "framework": "nist-ai-rmf",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-3",
+          "framework": "nist-ai-rmf",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-4",
+          "framework": "nist-ai-rmf",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-5",
+          "framework": "nist-ai-rmf",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-6",
+          "framework": "nist-ai-rmf",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/nist-ai-rmf-module-7",
+          "framework": "nist-ai-rmf",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-1",
+          "framework": "uk-ai-safety",
+          "module": 1,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-2",
+          "framework": "uk-ai-safety",
+          "module": 2,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-3",
+          "framework": "uk-ai-safety",
+          "module": 3,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-4",
+          "framework": "uk-ai-safety",
+          "module": 4,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-5",
+          "framework": "uk-ai-safety",
+          "module": 5,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-6",
+          "framework": "uk-ai-safety",
+          "module": 6,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": []
+        },
+        {
+          "id": "regulatory/uk-ai-safety-module-7",
+          "framework": "uk-ai-safety",
+          "module": 7,
+          "questions": 10,
+          "exercises": [],
+          "state": "CONTENT_REVIEW — quiz bank, not served; a quiz is not a reproduced measurement",
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 6,
+              "match": "certification",
+              "context": "question: 'What is the UK\\'s approach to AI certification?',",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 7,
+              "match": "certification",
+              "context": "options: ['Mandatory for all AI', 'Voluntary certification schemes with sector-specific requirements', 'No certification available', 'Only government AI'],",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 7,
+              "match": "certification",
+              "context": "options: ['Mandatory for all AI', 'Voluntary certification schemes with sector-specific requirements', 'No certification available', 'Only government AI'],",
+              "negated": true
+            },
+            {
+              "kind": "certificate",
+              "line": 9,
+              "match": "certification",
+              "context": "explanation: 'The UK has voluntary certification schemes with sector-specific requirements for AI systems.'",
+              "negated": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "surface": "course-data",
+      "file": "client/src/data",
+      "routes": [],
+      "component": null,
+      "served": "SEE_CONSUMERS",
+      "modules": [
+        {
+          "id": "data/courses",
+          "file": "client/src/data/courses.ts",
+          "consumers": [
+            "client/src/pages/Courses.tsx"
+          ],
+          "routed_consumer_pages": [],
+          "exercises": [],
+          "findings": [
+            {
+              "kind": "price",
+              "line": 20,
+              "match": "pricing",
+              "context": "pricing: {"
+            },
+            {
+              "kind": "price",
+              "line": 21,
+              "match": "oneTime",
+              "context": "oneTime: number;"
+            },
+            {
+              "kind": "price",
+              "line": 22,
+              "match": "threeMonth",
+              "context": "threeMonth?: number;"
+            },
+            {
+              "kind": "typed_count",
+              "line": 51,
+              "match": "113 articles",
+              "context": "description: 'Master the requirements of the EU AI Act (Regulation 2024/1689) and prepare your organization for compliance. This comprehensive course covers …"
+            },
+            {
+              "kind": "price",
+              "line": 66,
+              "match": "pricing",
+              "context": "pricing: {"
+            },
+            {
+              "kind": "price",
+              "line": 67,
+              "match": "oneTime",
+              "context": "oneTime: 19900,"
+            },
+            {
+              "kind": "price",
+              "line": 68,
+              "match": "threeMonth",
+              "context": "threeMonth: 22900,"
+            },
+            {
+              "kind": "price",
+              "line": 91,
+              "match": "pricing",
+              "context": "pricing: {"
+            },
+            {
+              "kind": "price",
+              "line": 92,
+              "match": "oneTime",
+              "context": "oneTime: 24900,"
+            },
+            {
+              "kind": "price",
+              "line": 93,
+              "match": "threeMonth",
+              "context": "threeMonth: 28900,"
+            },
+            {
+              "kind": "certificate",
+              "line": 101,
+              "match": "certification",
+              "context": "description: 'Complete guide to ISO 42001 certification, covering the AI Management System (AIMS) structure, context and leadership requirements, planning an…",
+              "negated": false
+            },
+            {
+              "kind": "price",
+              "line": 116,
+              "match": "pricing",
+              "context": "pricing: {"
+            },
+            {
+              "kind": "price",
+              "line": 117,
+              "match": "oneTime",
+              "context": "oneTime: 29900,"
+            },
+            {
+              "kind": "price",
+              "line": 118,
+              "match": "threeMonth",
+              "context": "threeMonth: 34900,"
+            },
+            {
+              "kind": "price",
+              "line": 132,
+              "match": "pricing",
+              "context": "pricing: {"
+            },
+            {
+              "kind": "price",
+              "line": 133,
+              "match": "oneTime",
+              "context": "oneTime: number;"
+            },
+            {
+              "kind": "price",
+              "line": 134,
+              "match": "threeMonth",
+              "context": "threeMonth?: number;"
+            },
+            {
+              "kind": "price",
+              "line": 146,
+              "match": "pricing",
+              "context": "pricing: {"
+            },
+            {
+              "kind": "price",
+              "line": 147,
+              "match": "oneTime",
+              "context": "oneTime: 59900,"
+            },
+            {
+              "kind": "price",
+              "line": 148,
+              "match": "threeMonth",
+              "context": "threeMonth: 69900,"
+            }
+          ]
+        },
+        {
+          "id": "data/gspc-curriculum",
+          "file": "client/src/data/gspc-curriculum.ts",
+          "consumers": [],
+          "routed_consumer_pages": [],
+          "exercises": [],
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 9,
+              "match": "certification",
+              "context": "* Removed 2026-09-28: the certification-tier table with per-exam fees, and the per-course",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 10,
+              "match": "certification",
+              "context": "* certification tier. CSOAI publishes no prices, sells no grade and issues no certificates;",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 10,
+              "match": "certificates",
+              "context": "* certification tier. CSOAI publishes no prices, sells no grade and issues no certificates;",
+              "negated": true
+            },
+            {
+              "kind": "certificate",
+              "line": 261,
+              "match": "Certification",
+              "context": "{ id: \"iso-m5\", title: \"Audit & Certification\", axis: \"G\", courseId: 100006, moduleIndex: 4, provisions: 5, quizQuestions: 10, xpReward: 100, scenarios: [] },",
+              "negated": false
+            }
+          ]
+        },
+        {
+          "id": "data/widget-courses",
+          "file": "client/src/data/widget-courses.ts",
+          "consumers": [
+            "client/src/components/widget/WidgetCoursePlayer.tsx",
+            "client/src/components/widget/WidgetCourses.tsx",
+            "client/src/pages/FreeCoursePlayer.tsx"
+          ],
+          "routed_consumer_pages": [],
+          "exercises": [],
+          "findings": [
+            {
+              "kind": "typed_count",
+              "line": 3,
+              "match": "7 courses",
+              "context": "* Contains all 7 courses with their module data for direct consumption by the widget"
+            },
+            {
+              "kind": "certificate",
+              "line": 121,
+              "match": "Certification",
+              "context": "title: \"Certification Exam Preparation\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 123,
+              "match": "Certification",
+              "context": "content: `# Certification Exam Preparation",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 131,
+              "match": "certification",
+              "context": "Prepare for the certification exam with comprehensive review materials, practice questions, and key concepts summary covering all aspects of the EU AI Act.`,",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 231,
+              "match": "Certification",
+              "context": "title: \"Certification Exam Preparation\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 233,
+              "match": "Certification",
+              "context": "content: `# Certification Exam Preparation",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 241,
+              "match": "certification",
+              "context": "Prepare for the certification exam with comprehensive review materials, practice questions, and key concepts summary covering all aspects of the NIST AI RMF.`,",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 341,
+              "match": "Certification",
+              "context": "title: \"Certification Exam Preparation\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 343,
+              "match": "Certification",
+              "context": "content: `# Certification Exam Preparation",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 351,
+              "match": "certification",
+              "context": "Prepare for the certification exam with comprehensive review materials, practice questions, and key concepts summary covering all aspects of UK AI safety.`,",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 451,
+              "match": "Certification",
+              "context": "title: \"Certification Exam Preparation\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 453,
+              "match": "Certification",
+              "context": "content: `# Certification Exam Preparation",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 461,
+              "match": "certification",
+              "context": "Prepare for the certification exam with comprehensive review materials, practice questions, and key concepts summary covering all aspects of AIDA compliance.`,",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 561,
+              "match": "Certification",
+              "context": "title: \"Certification Exam Preparation\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 563,
+              "match": "Certification",
+              "context": "content: `# Certification Exam Preparation",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 571,
+              "match": "certification",
+              "context": "Prepare for the certification exam with comprehensive review materials, practice questions, and key concepts summary covering all aspects of Australian AI et…",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 657,
+              "match": "Certification",
+              "context": "title: \"ISO 42001 Certification\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 659,
+              "match": "Certification",
+              "context": "content: `# ISO 42001 Certification",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 667,
+              "match": "certification",
+              "context": "Understand the certification process for ISO 42001, including preparation, audit stages, and maintaining certification over time.`,",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 667,
+              "match": "certification",
+              "context": "Understand the certification process for ISO 42001, including preparation, audit stages, and maintaining certification over time.`,",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 781,
+              "match": "Certification",
+              "context": "title: \"Certification Exam Preparation\",",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 783,
+              "match": "Certification",
+              "context": "content: `# Certification Exam Preparation",
+              "negated": false
+            },
+            {
+              "kind": "certificate",
+              "line": 791,
+              "match": "certification",
+              "context": "Prepare for the certification exam with comprehensive review materials, practice questions, and key concepts summary covering all aspects of China's TC260 fr…",
+              "negated": false
+            }
+          ]
+        },
+        {
+          "id": "data/quizzes",
+          "file": "client/src/data/quizzes.ts",
+          "consumers": [
+            "client/src/components/Quiz.tsx",
+            "client/src/pages/CoursePlayer.tsx"
+          ],
+          "routed_consumer_pages": [],
+          "exercises": [],
+          "findings": [
+            {
+              "kind": "certificate",
+              "line": 54,
+              "match": "certification",
+              "context": "\"They require annual certification\",",
+              "negated": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "client/src/components/DashboardLearningPane.tsx",
+      "sha256": "e6927231c49849172c2a883effb137d2cc3cc0be2c69e6ae435c09a6c61e850c"
+    },
+    {
+      "path": "client/src/data/courses.ts",
+      "sha256": "caae6476ba4c4a23b7b74816df66119403185f3b5b982da032cfe8dc840156e2"
+    },
+    {
+      "path": "client/src/data/gspc-curriculum.ts",
+      "sha256": "58b54c103e64cb8d63263225cf39d2f9dd16297c2a0ce6ba6a17a3d412f04a01"
+    },
+    {
+      "path": "client/src/data/gspc-learning-paths.ts",
+      "sha256": "7cd352d4407d606f3751768eaa7c576a37a36dda8623cba3e2f581295025b6f3"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-1.ts",
+      "sha256": "985af30461acd2018e15fb2c144f018561f14316ff87229bea2eb531b3c80515"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-2.ts",
+      "sha256": "7e25025f5e625c62e1826f8ab848d94432254d267d52457eaca6011a9f6501d1"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-3.ts",
+      "sha256": "c8049afadc3d9a4b729e7418c7fc2703a7c63680e7e07e0dbbb6b5a2525c5497"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-4.ts",
+      "sha256": "3e9b348e38a2c19b286be204a2ec2117d74a888b845911814a341ed89f1cb093"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-5.ts",
+      "sha256": "479fb94773cc95822f1eed5c8367c7460ec8200aac48a663cd7200704de51016"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-6.ts",
+      "sha256": "fc7d7909cd1e93f19d8ee276dbe9279f43c04fdd5cb5c44f63464d8a6563898e"
+    },
+    {
+      "path": "client/src/data/modules/australia-ai-ethics-module-7.ts",
+      "sha256": "ddaeb3b6fb598afd9d799b387d11d557ef5b50502e011808782b27fa0a89a3b6"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-1.ts",
+      "sha256": "a2efdd37b95c7b90c291c19d943a5125ecb14d09c68c0da3f34cd127c36677e4"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-2.ts",
+      "sha256": "57e4ae8192b97e9ed7ef3be1ceac25d680c4bf92b32e7561d6016b6e0978e9f1"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-3.ts",
+      "sha256": "85816b1b482add4849f26c1d3f164f87497bdecefdd346e0fb7cc66f2ec1c8a6"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-4.ts",
+      "sha256": "d97c69c0517521d4bb87620e8c983d6dd49f4181355f73e2e881634a30961c0d"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-5.ts",
+      "sha256": "a8df8f9c99a81a9df1f488d4ac1b0ef00bef612413c416ee4078249df0c9b4db"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-6.ts",
+      "sha256": "e5dcf6f090c330a327fc285ffc53ce8405b6df09f26c11ecad4f8688d3d4e9bd"
+    },
+    {
+      "path": "client/src/data/modules/canada-aida-module-7.ts",
+      "sha256": "df96b269afbb1776b3bdfdfd6e3613eb063d588ba9845c4f56d2514bd08313eb"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-1.ts",
+      "sha256": "ff342de9ebb4d5003a36a329e96e4f69d9bf42e57fc3637013cbd132f13d3bab"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-2.ts",
+      "sha256": "cf940c113d946c9c45bba07facc28aa3eee4d769b760a0fc435f54fcf37548aa"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-3.ts",
+      "sha256": "bee49e54567713a7a4b5a71227a5b2d2b44f52607e527ba42ca795d8e2a6dee7"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-4.ts",
+      "sha256": "92b1f4a9ace79cd08d08f7b03209eb4c135e136d07f0d6403632ccde6d8eb2d9"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-5.ts",
+      "sha256": "96a2102c13e2b1878136490769f2755044acebc8175666cabff549ff1ff1d32f"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-6.ts",
+      "sha256": "650f86badd5525f842e7abb3cab965b6a40befe4759434f3257331b90cd5bc15"
+    },
+    {
+      "path": "client/src/data/modules/china-tc260-module-7.ts",
+      "sha256": "ff55b51685d705b357c9e6cba1085d3f9b0ecf072407d923ced6125bdda0d8f3"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-1.ts",
+      "sha256": "6c872c80ce0bd83f4a1d5daea9e6576e149bec94ec9d1cb956dc62c7f01af6fd"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-2.ts",
+      "sha256": "6d46a2d6601a380e3dca8eb93cc040547be7e55c0f43831bf7cb490601d7c426"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-3.ts",
+      "sha256": "c32d3c8214aa49cd80362a7656ccf3c1478c31b51141d4f61494994f7fc8cd78"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-4.ts",
+      "sha256": "b0793e5dbbab03224e08470cd0085a793d5f0668f5ae2bc1e4e8ac9b97ff6d10"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-5.ts",
+      "sha256": "c0dc17859ed1ad84f794a18a9b9fe1fec945bf7d2a3212c82a8100101a5c4d28"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-6.ts",
+      "sha256": "ca3151d306c06f26d6f0d26f39441b7d022c787604250f597e961d03a3d5613a"
+    },
+    {
+      "path": "client/src/data/modules/eu-ai-act-module-7.ts",
+      "sha256": "6d18685e95021e2219376ff57beaf45949d9a1af7bd10ec70065081196dde539"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-1.ts",
+      "sha256": "b634a22569651a22a24b06052ffa4408349f9c42d488d5e092692c53132a781c"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-2.ts",
+      "sha256": "1ba1b18a53b026e3fc612ae863ffb1ba42efbe5be23eb0f4b46e923c0ea71a4c"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-3.ts",
+      "sha256": "366d6619ba99e95f14c20878c43c50c9960a441ae5693d6f9606c684d29ef4ac"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-4.ts",
+      "sha256": "d9325b872e0c329c87dee41a7e3bc49500b3c9a0d48ec1b8e331baa15d37fc03"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-5.ts",
+      "sha256": "41caa049512ede15199bb08cb8c68951c556541b3a1ffc248029dee9688920a3"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-6.ts",
+      "sha256": "ad6f7dcf524e2f28ec45a60cb718615a25af71b7eccbc52a074cc512682c535f"
+    },
+    {
+      "path": "client/src/data/modules/iso-42001-module-7.ts",
+      "sha256": "6f91fbd4efd4d0f1ca2ba5d80ad1f2696ebb0838855a475ae63f8d791a1c8077"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-1.ts",
+      "sha256": "25d16499c46b0e87332be801a7c004653cc50107c6d7f9c60c76b3e1cd24d1e9"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-2.ts",
+      "sha256": "3f3df737bf1361108904215510d775ae507ea31aa5233067c6d73d87997d2d95"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-3.ts",
+      "sha256": "cea3ce9a020a46e9abcb3444f4b4f85fc06276fb06935d718e29a2d36b71803a"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-4.ts",
+      "sha256": "0206c0739536a0735af2866b2de11fd47846a1c4b8a09a0d3eeae9ef82ec0ba9"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-5.ts",
+      "sha256": "249b87c4cbb2eace248e26b3930b33589e0ec267473502dfe1a907a99417d761"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-6.ts",
+      "sha256": "333c5caec56a8fc217a8760615ee8668809c4087ddb9ffe6dd27ad827bd570a7"
+    },
+    {
+      "path": "client/src/data/modules/nist-ai-rmf-module-7.ts",
+      "sha256": "201dd143f9827b2efb2d7213693a78fefc36ade79f66671e8148c973fe54d87f"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-1.ts",
+      "sha256": "7daf0b75c098c4a3e57235c502ee3b1f04ce2b09f9ff2786561f12fae30dd392"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-2.ts",
+      "sha256": "9e4039f0ed4c8ebb8f890559eb97a278366bebf051f1915ed31531bd2c5e4376"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-3.ts",
+      "sha256": "b240b7c6881786ef683625b554905d57ac7378e50371953ed2ab4cd1f6967a49"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-4.ts",
+      "sha256": "5579c85c237bccea983af8d144d19c562655a384ede6975ec2728fbed9555cfc"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-5.ts",
+      "sha256": "2b93935610b50a39b8e8eba8929a6f4a6c481e2b1592ba8beea8a7d63c227fb3"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-6.ts",
+      "sha256": "1563d413db372db79da8e261f33801db335922957ff9f58719181401904d33e0"
+    },
+    {
+      "path": "client/src/data/modules/uk-ai-safety-module-7.ts",
+      "sha256": "16fdecacde80034622b9cc88deaeed2686879d3bc261f647a3bb153c92be931f"
+    },
+    {
+      "path": "client/src/data/quizzes.ts",
+      "sha256": "3769396e73df9b8bd9ae3b9b393e68a03286dce55150229820da7a44bca13aa7"
+    },
+    {
+      "path": "client/src/data/widget-courses.ts",
+      "sha256": "79b9fd497b4c4fda33ad86bfb3f2c2bc5eed6cf7b39704fff24055bf9f7265af"
+    },
+    {
+      "path": "client/src/pages/Academy.tsx",
+      "sha256": "becf265c005ba89cfa249d20b1b96bd3d41fffe5a66f0f6b6a6316fefcf06c58"
+    },
+    {
+      "path": "client/src/pages/CouncilAcademy.tsx",
+      "sha256": "f89c145990316cde679533d990d2c688ff32db123d1a9539b3a27c100aff2a2a"
+    }
+  ]
+}

@@ -85,7 +85,7 @@ export default function SovereignSpot({
             </button>
           )}
         </div>
-        <p className="text-[10px] text-emerald-300/40">
+        <p className="text-[10px] text-emerald-300/70">
           Deterministic pane commands · grounded /api/chat lane · consent checkpoint on consequential steps
         </p>
       </div>

@@ -27,6 +27,8 @@ type AgentsDoc = {
 type Wire =
   | { state: "loading" }
   | { state: "unreachable"; detail: string }
+  // 404 is an answer, not an outage: this deployment publishes no agents census door.
+  | { state: "unpublished" }
   | { state: "ready"; doc: AgentsDoc };
 
 export default function AgentsReaderRail({
@@ -45,6 +47,10 @@ export default function AgentsReaderRail({
       headers: { accept: "application/json" },
     })
       .then(async (response) => {
+        if (response.status === 404) {
+          setWire({ state: "unpublished" });
+          return;
+        }
         if (!response.ok)
           throw new Error(`GET /api/agents HTTP ${response.status}`);
         const doc = (await response.json()) as AgentsDoc;
@@ -71,6 +77,30 @@ export default function AgentsReaderRail({
         <h3 className="text-sm font-semibold text-slate-800">{heading}</h3>
         <p className="mt-1 text-xs text-slate-500">
           LOADING — fetching GET /api/agents…
+        </p>
+      </section>
+    );
+  }
+
+  if (wire.state === "unpublished") {
+    return (
+      <section
+        className={`rounded-lg border border-slate-200 bg-slate-50 p-4 ${className}`}
+        data-testid="rail-agents"
+      >
+        <h3 className="text-sm font-semibold text-slate-800">{heading}</h3>
+        <p
+          className="mt-1 text-xs text-slate-700"
+          data-testid="rail-agents-unpublished"
+        >
+          NOT PUBLISHED — <a className="underline" href="/api/agents">GET /api/agents</a>{" "}
+          answered HTTP 404 on this load: this deployment serves no agents census
+          door, so there is no census to read and no agent count is shown.
+          UNMEASURED, not zero.
+        </p>
+        <p className="mt-2 text-[11px] text-slate-600">
+          <code>csoai/erc8004-reader</code> is a separate catalogue mirror; it
+          does not stand in for GET /api/agents.
         </p>
       </section>
     );

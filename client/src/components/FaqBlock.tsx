@@ -58,7 +58,7 @@ export default function FaqBlock({
       />
       <div className="section-shell-narrow">
         <div className="mb-9 text-center sm:mb-10">
-          <span className="t-kicker inline-flex items-center rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-primary">
+          <span className="t-kicker inline-flex items-center rounded-full border border-primary/30 bg-primary/5 px-3 py-1 text-primary">
             FAQ
           </span>
           <h2 className="t-section mt-4 text-foreground">{title}</h2>

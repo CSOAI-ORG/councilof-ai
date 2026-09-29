@@ -13,6 +13,7 @@ existing verifiers rather than replacing them:
 | **`tools/verify/card_v01_validate.py`** | card-v0.1 schema + id recomputed by the card's own `preimage_rule` | optional |
 | **`tools/verify/csoai_verify.py`** | DID signature (the library above) + root inclusion + OTS proof presence | yes |
 | **`actions/csoai-verify`** (composite Action) | `csoai_verify.py` in CI | yes |
+| **`tools/verify/completion_record_verify.py`** | a `csoai.completion-record/0.1` (Open Badges 3.0 / VC 2.0): profile schema, eddsa-jcs-2022 proof, reproduced == published, pseudonymous subject, Bitstring Status List. `csoai_verify.py` hands any `OpenBadgeCredential` to it | only for a did:web issuer or a status list URL |
 
 Nothing here is published to npm or PyPI. Run from a checkout.
 
@@ -106,6 +107,7 @@ and recomputes `id` using the rule the card declares:
 
 ```sh
 python3 tools/verify/test_verify_tools.py     # offline: throwaway key, synthetic DID and roots
+python3 -m pytest tools/verify/test_completion_record.py   # offline: an independent Python signer
 ```
 
 Each positive case has a control that must fail: tampered body, wrong key, a root whose

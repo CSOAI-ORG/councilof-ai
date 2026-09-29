@@ -550,3 +550,29 @@ def test_stage_zenodo_writes_exactly_the_upload_set_with_a_manifest_that_matches
     assert staged["corrections_check"]["state"] == "VALID" and staged["monthly_cadence"]["state"] == "DUE"
     assert staged["_status"].startswith("PREPARED, NOT SUBMITTED")
     assert json.loads((tmp_path / "out" / "zenodo-metadata.json").read_text())["metadata"]["license"] == "cc-by-4.0"
+
+
+def _proj(latest, description=""):
+    return {"info": {"version": latest, "description": description}, "releases": {latest: [{}]}}
+
+
+def test_pypi_refuses_a_stale_package_source_the_2026_09_28_case():
+    # 0.2.20260928 went out from a source still declaring 0.2.20260912 while PyPI served 0.2.20260922
+    why = spray.pypi_stale_source_refusal("0.2.20260912", "0.2.20260928", _proj("0.2.20260922"))
+    assert why and "older than the source PyPI already serves (0.2.20260922" in why
+
+
+def test_pypi_accepts_the_current_source_over_a_marker_less_release():
+    assert spray.pypi_stale_source_refusal("0.2.20260928.1", "0.2.20260929", _proj("0.2.20260928")) is None
+
+
+def test_pypi_reads_the_source_version_a_spray_release_names():
+    served = _proj("0.2.20260929", "spray-fingerprint: ab\n\nspray-source-version: 0.2.20260928.1 (the package source")
+    assert spray.pypi_stale_source_refusal("0.2.20260928.1", "0.2.20260930", served) is None
+    assert "older" in spray.pypi_stale_source_refusal("0.2.20260926", "0.2.20260930", served)
+
+
+def test_pypi_refuses_a_snapshot_version_below_its_own_source():
+    why = spray.pypi_stale_source_refusal("0.2.20260928.1", "0.2.20260928", _proj("0.2.20260922"))
+    assert why and "sorts below" in why
+    assert spray.pypi_stale_source_refusal(None, "0.2.20260929", _proj("0.2.20260922"))

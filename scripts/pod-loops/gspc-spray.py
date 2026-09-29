@@ -1642,6 +1642,35 @@ def pypi_version_for(as_of: str) -> str:
     return "0.2." + re.sub(r"\D", "", as_of[:10])
 
 
+def _vt(v) -> tuple:
+    return tuple(int(p) for p in re.findall(r"\d+", str(v or "")))
+
+
+def pypi_stale_source_refusal(declared: str | None, version: str, proj: dict) -> str | None:
+    """Why this package source must NOT be published over what PyPI serves, or None.
+
+    2026-09-28: csoai-gspc 0.2.20260928 went out from a checkout whose package source still declared
+    0.2.20260912 (code from before 2026-09-26): a NEWER version number over OLDER code, which dropped
+    the axis aliases and the full-id check that the adapters' floor (>=0.2.20260926) exists for. The
+    version a snapshot release gets is a date; the code it carries is whatever sits beside this script.
+    So the source's own declared version must not be older than the source PyPI already serves: a spray
+    release names it on a `spray-source-version:` line; a release without that line counts as its own
+    version (the conservative reading)."""
+    if not declared:
+        return "the package source's pyproject.toml declares no version"
+    latest = proj["info"]["version"]
+    m = re.search(r"spray-source-version: (\S+)", proj["info"].get("description") or "")
+    floor = m.group(1) if m else latest
+    if _vt(declared) < _vt(floor):
+        return (f"package source declares {declared}, older than the source PyPI already serves ({floor}; latest "
+                f"release {latest}): publishing would put a newer version number over older code. Update the "
+                f"checkout this script runs from.")
+    if _vt(version) < _vt(declared):
+        return (f"the snapshot version {version} sorts below the package source's own {declared}: pip would never "
+                f"pick it. The source release goes out first (distribution/SUBMIT.md).")
+    return None
+
+
 def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict]:
     page = f"https://pypi.org/project/{PYPI_PROJECT}/"
     src = HERE / "pypi" / "csoai-gspc"
@@ -1662,6 +1691,11 @@ def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict
     if not force and tr["fingerprint"] in (proj["info"].get("description") or ""):
         return [result("pypi", "UNCHANGED", f"{page}{proj['info']['version']}/", None,
                        f"latest release {proj['info']['version']} already bundles fingerprint {tr['fingerprint'][:16]}… — use --force")]
+    dm = re.search(r'^version = "([^"]+)"$', (src / "pyproject.toml").read_text(), re.M)
+    declared = dm.group(1) if dm else None
+    why = pypi_stale_source_refusal(declared, version, proj)
+    if why:   # --force never overrides this: it is about WHICH code, not whether the board changed
+        return [result("pypi", "REFUSED", page, detail=why)]
     if dry_run:
         return [result("pypi", "DRY-RUN", f"{page}{version}/", detail=f"would build and upload {PYPI_PROJECT}=={version}")]
 
@@ -1683,7 +1717,8 @@ def spray_pypi(tr: dict, snap: Path, *, dry_run: bool, force: bool) -> list[dict
             f"This release ships a dated snapshot of the board at `csoai_gspc/snapshot/` (board.json, root.json, SNAPSHOT.json), "
             f"read at {tr['read_at']}. `csoai-gspc snapshot` prints it. Every other command still reads the live GET at request "
             f"time; the live GET is the authority and this bundle is only what it said on that day. "
-            f"spray-fingerprint: {tr['fingerprint']}\n"
+            f"spray-fingerprint: {tr['fingerprint']}\n\n"
+            f"spray-source-version: {declared} (the package source this release's code was built from)\n"
         )
         (pkg / "README.md").write_text(readme.rstrip() + "\n" + block)
         if BANNED.search((pkg / "README.md").read_text()):
@@ -1768,7 +1803,7 @@ def main(argv: list[str] | None = None) -> int:
     log("|---|---|---|---|")
     for r in results:
         log(f"| {r['surface']} | {r['status']} | {r['url'] or '—'} | {r['as_of_seen'] or '—'} |")
-    bad = [r for r in results if r["status"] == "FAILED"]
+    bad = [r for r in results if r["status"] in ("FAILED", "REFUSED")]
     return 1 if bad else 0
 
 

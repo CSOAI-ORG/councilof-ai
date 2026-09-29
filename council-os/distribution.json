@@ -6,7 +6,8 @@
     "No hand-typed server version. The remote version is read from mcp/gspc-server/server.json and scripts/harness-x/check.mjs requires it to equal the live serverInfo.version.",
     "The doctrine is pinned by sha256. render refuses to run when docs/DOCTRINE.md no longer hashes to doctrine.sha256; re-pin deliberately with `node scripts/harness-x/render.mjs --pin-doctrine`.",
     "Every artifact carries doctrine.sha256 in its declared carrier file(s). The doctrine TEXT stays here and in docs/DOCTRINE.md; outputs carry the hash and the source path, never a copy that can go stale.",
-    "Measurement only. No affirmative certification wording, no public price, verification free. check.mjs enforces all three over every output."
+    "Measurement only. No affirmative certification wording, no public price, verification free. check.mjs enforces all three over every output.",
+    "Every live channel is declared in published_channels[]. scripts/harness-x/parity_live.py reads each one live and states CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE; a version number that already names published bytes is never reused for different bytes (PyPI and npm both refuse the re-upload)."
   ],
   "doctrine": {
     "source": "docs/DOCTRINE.md",
@@ -23,6 +24,8 @@
     "door": "https://councilof.ai/mcp",
     "board": "https://councilof.ai/api/gspc",
     "verify_page": "https://councilof.ai/gspc-verify/",
+    "corrections": "https://councilof.ai/corrections/",
+    "corrections_api": "https://councilof.ai/api/corrections",
     "privacy": "https://councilof.ai/privacy/",
     "terms": "https://councilof.ai/terms/",
     "support": "https://councilof.ai/contact/",
@@ -41,7 +44,7 @@
     "layer0_js": "packages/layer0-js/package.json#/version",
     "adapters": "council-os/distribution.json#/adapter_version"
   },
-  "adapter_version": "0.1.0",
+  "adapter_version": "0.1.1",
   "plugin_name": "gspc",
   "registry_names": {
     "canonical": "ai.councilof/gspc",
@@ -71,6 +74,8 @@
     {
       "id": "mcp-registry-domain",
       "format": "MCP Registry server.json (schema 2025-12-11), domain namespace, remote-only",
+      "remote_url": "https://councilof.ai/mcp/",
+      "remote_url_why": "The door with a trailing slash. The bare https://councilof.ai/mcp is registered under io.github.CSOAI-ORG/gspc and the registry refuses one remote URL under two names, so both published ai.councilof/gspc versions (1.4.2 on 2026-09-26, 1.4.3 on 2026-09-28) carry /mcp/; a descriptor naming the bare URL could not be published. Both forms answer the same MCP initialize (read 2026-09-28). check.mjs pins this to identity.door modulo the one slash.",
       "output": [
         "distribution/mcp-registry/ai.councilof-gspc/server.json"
       ],
@@ -342,11 +347,12 @@
       ],
       "licence": "Apache-2.0",
       "version_source": "python_client",
-      "listing_channel": "huggingface.co/spaces/csoai/gspc-mcp (git push or huggingface_hub upload)",
+      "listing_channel": "huggingface.co/spaces/csoai/csoai-gspc-mcp (huggingface_hub upload). NOT csoai/gspc-mcp: that id is the static GSPC-MCP axis printer Space, and uploading there would overwrite it.",
       "owner_approval_needed": true,
       "approver": "Nick — HF write token for the csoai org",
       "flagged_org_impact": "None.",
-      "flagged_org_affected": false
+      "flagged_org_affected": false,
+      "space_id": "csoai/csoai-gspc-mcp"
     },
     {
       "id": "well-known-server-card",
@@ -366,6 +372,229 @@
       "approver": "Nick — merge; ships with the next deploy",
       "flagged_org_impact": "None beyond the normal merge path.",
       "flagged_org_affected": false
+    }
+  ],
+  "published_channels_note": "Every place a Layer 0 artifact is, or is declared to be, live. scripts/harness-x/parity_live.py reads each one (daily, scripts/pod-loops/harness-x-parity.sh). kind rendered-only = rendered here and not yet listed: reported UNCHECKABLE, never CONSISTENT. kinds smithery / a2a-registry = third-party directories that copy the door or the agent card (compared, never edited from here); listing-unreadable = a directory that lists us but cannot be read without a key we do not hold: UNCHECKABLE.",
+  "published_channels": [
+    {
+      "id": "site-mcp-door",
+      "kind": "site-mcp",
+      "url": "https://councilof.ai/mcp",
+      "version_source": "remote"
+    },
+    {
+      "id": "site-mcp-free-door",
+      "kind": "site-mcp",
+      "url": "https://councilof.ai/mcp/free",
+      "version_source": "remote",
+      "free_only": true
+    },
+    {
+      "id": "site-well-known-server-card",
+      "kind": "site-file",
+      "row": "well-known-server-card",
+      "url": "https://councilof.ai/.well-known/mcp/server-card.json",
+      "path": "public/.well-known/mcp/server-card.json"
+    },
+    {
+      "id": "site-well-known-mcp-json",
+      "kind": "site-file",
+      "row": "well-known-server-card",
+      "url": "https://councilof.ai/.well-known/mcp.json",
+      "path": "public/.well-known/mcp.json"
+    },
+    {
+      "id": "registry-ai.councilof-gspc",
+      "kind": "mcp-registry",
+      "row": "mcp-registry-domain",
+      "name": "ai.councilof/gspc",
+      "version_source": "remote",
+      "rendered": "distribution/mcp-registry/ai.councilof-gspc/server.json"
+    },
+    {
+      "id": "registry-io.github.CSOAI-ORG-gspc",
+      "kind": "mcp-registry",
+      "row": "mcp-registry-github",
+      "name": "io.github.CSOAI-ORG/gspc",
+      "version_source": "remote",
+      "expect_status": "deprecated"
+    },
+    {
+      "id": "pypi-langchain-csoai",
+      "kind": "pypi",
+      "row": "pypi-langchain-csoai",
+      "name": "langchain-csoai",
+      "version_source": "adapters",
+      "source_dir": "distribution/python/langchain-csoai",
+      "pyproject": "distribution/python/langchain-csoai/pyproject.toml",
+      "source_readme": "distribution/python/langchain-csoai/README.md",
+      "floor_packages": [
+        "csoai-gspc"
+      ],
+      "smoke": "import langchain_csoai; from langchain_csoai._board import read_board; r = read_board(); print(r['state'], r['totals']['public_count'])"
+    },
+    {
+      "id": "pypi-llama-index-tools-csoai",
+      "kind": "pypi",
+      "row": "pypi-llama-index-tools-csoai",
+      "name": "llama-index-tools-csoai",
+      "version_source": "adapters",
+      "source_dir": "distribution/python/llama-index-tools-csoai",
+      "pyproject": "distribution/python/llama-index-tools-csoai/pyproject.toml",
+      "source_readme": "distribution/python/llama-index-tools-csoai/README.md",
+      "floor_packages": [
+        "csoai-gspc"
+      ],
+      "smoke": "import llama_index.tools.csoai; from llama_index.tools.csoai._board import read_board; r = read_board(); print(r['state'], r['totals']['public_count'])"
+    },
+    {
+      "id": "pypi-crewai-csoai",
+      "kind": "pypi",
+      "row": "pypi-crewai-csoai",
+      "name": "crewai-csoai",
+      "version_source": "adapters",
+      "source_dir": "distribution/python/crewai-csoai",
+      "pyproject": "distribution/python/crewai-csoai/pyproject.toml",
+      "source_readme": "distribution/python/crewai-csoai/README.md",
+      "floor_packages": [
+        "csoai-gspc"
+      ],
+      "smoke": "import crewai_csoai; from crewai_csoai._board import read_board; r = read_board(); print(r['state'], r['totals']['public_count'])"
+    },
+    {
+      "id": "pypi-csoai-gspc",
+      "kind": "pypi",
+      "name": "csoai-gspc",
+      "version_source": "python_client",
+      "source_dir": "scripts/spray/pypi/csoai-gspc",
+      "pyproject": "scripts/spray/pypi/csoai-gspc/pyproject.toml",
+      "source_readme": "scripts/spray/pypi/csoai-gspc/README.md",
+      "smoke": "from csoai_gspc import fetch_board, totals; t = totals(fetch_board()); print('LIVE', t['public_count'])"
+    },
+    {
+      "id": "npm-csoai-gspc-mcp",
+      "kind": "npm",
+      "name": "csoai-gspc-mcp",
+      "version_source": "npm_stdio_package_json",
+      "source_dir": "mcp/gspc-server",
+      "package_json": "mcp/gspc-server/package.json",
+      "source_readme": "mcp/gspc-server/README.md",
+      "pack_map": {
+        "gspc-tools.json": "functions/mcp/gspc-tools.json",
+        "paid-tools.json": "functions/mcp/paid-tools.json",
+        "axis-aliases.json": "functions/mcp/axis-aliases.json",
+        "verify-card.mjs": "public/signed/verify-card.mjs"
+      },
+      "stdio_smoke": true
+    },
+    {
+      "id": "npm-layer0",
+      "kind": "npm",
+      "name": "@csoai/layer0",
+      "version_source": "layer0_js",
+      "source_dir": "packages/layer0-js",
+      "package_json": "packages/layer0-js/package.json"
+    },
+    {
+      "id": "npm-ai-sdk-gspc",
+      "kind": "npm",
+      "row": "npm-ai-sdk-gspc",
+      "name": "@csoai/ai-sdk-gspc",
+      "version_source": "adapters",
+      "source_dir": "distribution/npm/ai-sdk-gspc",
+      "package_json": "distribution/npm/ai-sdk-gspc/package.json",
+      "source_readme": "distribution/npm/ai-sdk-gspc/README.md"
+    },
+    {
+      "id": "npm-mastra-gspc",
+      "kind": "npm",
+      "row": "npm-mastra-gspc",
+      "name": "@csoai/mastra-gspc",
+      "version_source": "adapters",
+      "source_dir": "distribution/npm/mastra-gspc",
+      "package_json": "distribution/npm/mastra-gspc/package.json",
+      "source_readme": "distribution/npm/mastra-gspc/README.md"
+    },
+    {
+      "id": "hf-space-csoai-gspc-mcp",
+      "kind": "hf-space",
+      "row": "hf-space",
+      "space_id": "csoai/csoai-gspc-mcp",
+      "mcp_url": "https://csoai-csoai-gspc-mcp.hf.space/gradio_api/mcp/",
+      "source_dir": "distribution/hf-space/csoai-gspc-mcp",
+      "files": [
+        "README.md",
+        "app.py",
+        "requirements.txt"
+      ]
+    },
+    {
+      "id": "claude-plugin",
+      "kind": "rendered-only",
+      "row": "claude-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "cursor-plugin",
+      "kind": "rendered-only",
+      "row": "cursor-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "grok-plugin",
+      "kind": "rendered-only",
+      "row": "grok-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "claude-connector",
+      "kind": "rendered-only",
+      "row": "claude-connector",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "gemini-extension",
+      "kind": "rendered-only",
+      "row": "gemini-extension",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "openai-app",
+      "kind": "rendered-only",
+      "row": "openai-app",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "docker-mcp-catalog",
+      "kind": "rendered-only",
+      "row": "docker-mcp-catalog",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "smithery-csoai-gspc",
+      "kind": "smithery",
+      "name": "csoai/gspc",
+      "listing": "https://smithery.ai/server/csoai/gspc",
+      "why_listed": "a third-party directory's copy of the door (found 2026-09-28 by search); its tool list is Smithery's own scan, refreshed only from the listing's settings (owner account)"
+    },
+    {
+      "id": "a2a-registry-agent-card",
+      "kind": "a2a-registry",
+      "well_known": "https://councilof.ai/.well-known/agent-card.json",
+      "search": "councilof",
+      "why_listed": "a2aregistry.org copy of the agent card (submitted per mcp/gspc-server/REGISTRY-SUBMISSIONS.md); compared with the card served now"
+    },
+    {
+      "id": "glama-listing",
+      "kind": "listing-unreadable",
+      "name": "glama.ai",
+      "why": "glama.ai lists the server (HTML search, 2026-09-28) but its API answers 401 without a key and we hold none; the HTML is not a stable contract, so nothing is compared"
+    },
+    {
+      "id": "pulsemcp-listing",
+      "kind": "listing-unreadable",
+      "name": "pulsemcp.com",
+      "why": "PulseMCP's v0beta API is sunset (410) and v0.1 needs an X-API-Key we do not hold; whether and how it lists the server is unread"
     }
   ]
 }

@@ -8,10 +8,10 @@ type Cat = "Regulation" | "Standard" | "Protocol" | "Council";
 type Item = { name: string; cat: Cat; seat: string; region: string; status: string; href: string };
 const ITEMS: Item[] = [
   { name: "EU AI Act", cat: "Regulation", seat: "European Commission - Berlaymont, Brussels", region: "EU", status: "Phasing (Aug 2026 / Dec 2027)", href: "/readiness" },
-  { name: "GDPR", cat: "Regulation", seat: "European Commission, Brussels", region: "EU", status: "In force", href: "/meok-law" },
+  { name: "GDPR", cat: "Regulation", seat: "European Commission, Brussels", region: "EU", status: "In force", href: "/law" },
   { name: "Digital Services Act", cat: "Regulation", seat: "European Commission, Brussels", region: "EU", status: "In force", href: "/regions" },
   { name: "Cyber Resilience Act / NIS2", cat: "Regulation", seat: "European Commission, Brussels", region: "EU", status: "Phasing", href: "/regions" },
-  { name: "Council of Europe AI Treaty", cat: "Regulation", seat: "Palais de l'Europe, Strasbourg", region: "EU", status: "Proposed", href: "/meok-law" },
+  { name: "Council of Europe AI Treaty", cat: "Regulation", seat: "Palais de l'Europe, Strasbourg", region: "EU", status: "Proposed", href: "/law" },
   { name: "US EO on Safe, Secure AI", cat: "Regulation", seat: "The White House, Washington DC", region: "US", status: "Guidance", href: "/regions" },
   { name: "FedRAMP / OSCAL (RFC-0024)", cat: "Regulation", seat: "GSA, Washington DC", region: "US", status: "Phasing (30 Sep 2026)", href: "/fedramp" },
   { name: "CCPA / CPRA", cat: "Regulation", seat: "California State Capitol, Sacramento", region: "US", status: "In force", href: "/regions" },
@@ -20,7 +20,7 @@ const ITEMS: Item[] = [
   { name: "NYC LL144 (AEDT bias audit)", cat: "Regulation", seat: "New York City Hall", region: "US", status: "In force", href: "/sectors" },
   { name: "UK pro-innovation AI", cat: "Regulation", seat: "Palace of Westminster, London", region: "UK", status: "Guidance", href: "/regions" },
   { name: "Canada AIDA (Bill C-27)", cat: "Regulation", seat: "Parliament Hill, Ottawa", region: "Canada", status: "Proposed", href: "/regions" },
-  { name: "China PIPL", cat: "Regulation", seat: "Great Hall of the People, Beijing", region: "APAC", status: "In force", href: "/meok-law" },
+  { name: "China PIPL", cat: "Regulation", seat: "Great Hall of the People, Beijing", region: "APAC", status: "In force", href: "/law" },
   { name: "Singapore Model AI Governance", cat: "Regulation", seat: "Parliament House, Singapore", region: "APAC", status: "Guidance", href: "/regions" },
   { name: "NIST AI RMF 1.0", cat: "Standard", seat: "NIST HQ, Gaithersburg", region: "US", status: "Guidance", href: "/fedramp" },
   { name: "ISO/IEC 42001", cat: "Standard", seat: "ISO Central Secretariat, Geneva", region: "Global", status: "In force", href: "/temples" },
@@ -32,7 +32,7 @@ const ITEMS: Item[] = [
   { name: "Ed25519 signed verdicts", cat: "Protocol", seat: "Open cryptographic standard", region: "Global", status: "In force", href: "/agents" },
   { name: "A2A governance bridge", cat: "Protocol", seat: "CSOAI - open at openpatent.ai", region: "Global", status: "Live", href: "/agents" },
   { name: "MCP (Model Context Protocol)", cat: "Protocol", seat: "Open spec", region: "Global", status: "In force", href: "/agents" },
-  { name: "MEOK Law cross-layer engine", cat: "Protocol", seat: "CSOAI", region: "Global", status: "Live", href: "/meok-law" },
+  { name: "Jurisdiction engine (cross-layer AI law)", cat: "Protocol", seat: "CSOAI", region: "Global", status: "Live", href: "/law" },
   { name: "Council Compliance Passport", cat: "Protocol", seat: "CSOAI - Ed25519 attestation", region: "Global", status: "Live", href: "/readiness" },
   { name: "Multi-Agent Council (configurable)", cat: "Council", seat: "CSOAI design", region: "Global", status: "Design — not live", href: "/bft" },
   { name: "The 4-Wing Council", cat: "Council", seat: "CSOAI", region: "Global", status: "Live", href: "/dragonfly" },
@@ -84,7 +84,7 @@ export default function RegistryAll() {
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/globe" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See them on the globe -&gt;</a>
-          <a href="/meok-law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Your jurisdiction stack -&gt;</a>
+          <a href="/law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Your jurisdiction stack -&gt;</a>
           <a href="/try" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Ask the Council -&gt;</a>
         </div>
       </section>

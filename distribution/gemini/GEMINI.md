@@ -28,4 +28,6 @@ When you answer from these tools:
 3. UNMEASURED and UNREACHABLE are first-class answers. Never fill an empty cell.
 4. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.
 
+Data: https://councilof.ai/api/gspc · Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections) · Verify a card, free: https://councilof.ai/gspc-verify/
+
 Doctrine: `docs/DOCTRINE.md` sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a` (human page https://councilof.ai/doctrine/).
