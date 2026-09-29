@@ -197,6 +197,12 @@ export function signedCardUrl(origin: string, row: Record<string, unknown>): str
 
 export async function listCardsTool(origin: string, args: Record<string, unknown>) {
   const out: Record<string, unknown> = {
+    // The read state of the signed card index, set below from whether it was fetched: LIVE (read
+    // now) or UNREACHABLE. It says the listing is current, NOT that any row's signature was checked
+    // here — verify_card does that, one card at a time.
+    state: "UNREACHABLE",
+    state_basis:
+      "LIVE = /signed/card_index.json was read on this call; UNREACHABLE = it could not be. Listing is not verification: run verify_card on a row to check its signature.",
     doctrine:
       "Two labelled numbers from two surfaces, reported separately and never reconciled by this tool. If they disagree, the disagreement is the finding.",
     index: null,
@@ -238,6 +244,7 @@ export async function listCardsTool(origin: string, args: Record<string, unknown
       // also takes the bare 64-hex id). Read from the row when the index carries it; otherwise
       // the one path the index's own card_url rule uses.
       .map((r) => ({ card: r.card, card_url: signedCardUrl(origin, r), axis: r.axis, ts: r.ts, signed: r.signed }));
+    out.state = "LIVE";
   } catch (e) {
     out.index = unreachablePayload(origin, "/signed/card_index.json", e);
   }

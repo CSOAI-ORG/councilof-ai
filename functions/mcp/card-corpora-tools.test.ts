@@ -229,3 +229,24 @@ describe("list_cards rows carry card_url (#4)", () => {
     expect(tool.description).toContain("card_url");
   });
 });
+
+describe("list_cards carries its own state (talk UI label, 2026-09-29)", () => {
+  it("LIVE when the signed card index was read on this call", async () => {
+    network();
+    const out = (await listCardsTool(ORIGIN, { limit: 3 })) as { state: string; state_basis: string };
+    expect(out.state).toBe("LIVE");
+    expect(out.state_basis).toMatch(/not verification/i);
+  });
+
+  it("UNREACHABLE when the index cannot be fetched, with no row invented", async () => {
+    network([(url) => (url.pathname === "/signed/card_index.json" ? json(503, { error: "down" }) : undefined)]);
+    const out = (await listCardsTool(ORIGIN, { limit: 3 })) as { state: string; rows: unknown };
+    expect(out.state).toBe("UNREACHABLE");
+    expect(out.rows).toBeNull();
+  });
+
+  it("the state is declared in the output schema", () => {
+    const tool = (GSPC_TOOLS as { tools: any[] }).tools.find((t) => t.name === "list_cards");
+    expect(tool.outputSchema.properties.state.enum).toEqual(["LIVE", "UNREACHABLE"]);
+  });
+});

@@ -54,6 +54,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import MembershipStrip from "@/components/MembershipStrip";
 import HomeComposer from "@/components/home/HomeComposer";
+import TalkPanel from "@/components/talk/TalkPanel";
 import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeHero from "@/components/home/HomeHero";
 import HomeCredibility from "@/components/home/HomeCredibility";
@@ -204,6 +205,23 @@ export default function HomeVerify() {
               here. Nothing leaves this device either way.
             </p>
             <HomeComposer onAskAxis={setAxis} />
+          </div>
+
+          {/* Ask in words: the same tools as POST /mcp, streamed over AG-UI from /api/agui/run.
+              Unlike the box above, this one does send the question to the site's tools. */}
+          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-9" data-testid="home-talk">
+            <h3 id="home-talk-h" className="text-2xl font-black tracking-tight text-foreground">
+              Or ask it in words.
+            </h3>
+            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
+              This box sends your question to the site&apos;s own tools and shows which tool answered, the record it cites and
+              the state it returned. The full workspace is on the{" "}
+              <Link href="/dashboard" className="font-semibold text-emerald-800 underline underline-offset-2 dark:text-emerald-300">
+                dashboard
+              </Link>
+              .
+            </p>
+            <TalkPanel labelledBy="home-talk-h" className="mt-5" />
           </div>
         </div>
       </section>

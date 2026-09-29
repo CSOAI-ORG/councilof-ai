@@ -243,6 +243,11 @@ export function labelOf(tool: string, p: Json, isError: boolean): string {
 export function citationOf(tool: string, p: Json, origin: string): Citation {
   const res = rec(p.resource);
   const capsuleId = rec(p.capsule_id);
+  // list_cards: the signed card index it read is the record (its head id and its URL), both fields of the output.
+  if (tool === "list_cards") {
+    const idx = rec(p.index);
+    if (idx && str(idx.source) && idx.state !== "UNREACHABLE") return { tool, record_id: str(idx.head), url: str(idx.source) };
+  }
   const recordId =
     str(p.id) ?? str(capsuleId?.recomputed) ?? str(p.key) ?? str(p.merkle_root) ?? str(p.index_root) ??
     str(p.sha256) ?? str(p.card_sha256) ?? (tool === "get_axis" && str(p.axis) ? `axis:${p.axis}` : null) ??
