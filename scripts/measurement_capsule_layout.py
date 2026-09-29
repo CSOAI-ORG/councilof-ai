@@ -32,7 +32,9 @@ States only: this script adds no verdict, score or ranking to anything it copies
 """
 import argparse, collections, gzip, hashlib, json, pathlib, re, shutil, sys, urllib.parse
 
-INDEX_SCHEMAS = {"csoai.venturi-index/0.1": "0.1", "csoai.measurement-capsule-index/0.2": "0.2"}
+# Index 0.3 adds daily-chain metadata but preserves the 0.2 capsule/batch/Merkle layout.
+INDEX_SCHEMAS = {"csoai.venturi-index/0.1": "0.1", "csoai.measurement-capsule-index/0.2": "0.2",
+                 "csoai.measurement-capsule-index/0.3": "0.2"}
 RECORD_SCHEMAS = {"csoai.venturi-capsule-batch/0.1": "0.1", "csoai.measurement-capsule-batch/0.2": "0.2"}
 DATA_ROOT = "/measurement-capsules"
 SHARD_HEX = 2

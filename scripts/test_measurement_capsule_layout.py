@@ -24,6 +24,9 @@ class Vectors(unittest.TestCase):
         shards = [k for k in files if "/endpoints/" in k]
         self.assertEqual(len(shards), 256)
 
+    def test_index_03_uses_02_layout_rules(self):
+        self.assertEqual(layout.INDEX_SCHEMAS["csoai.measurement-capsule-index/0.3"], "0.2")
+
 
 if __name__ == "__main__":
     unittest.main()
