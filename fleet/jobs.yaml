@@ -1410,12 +1410,12 @@
    "schedule": "every 5 min",
    "command": "ai.csoai.watchdog-audit",
    "health": {
-    "type": "none",
-    "why": "the Mac sleeps and is never in the critical path"
+    "type": "disabled",
+    "why": "moved to Oracle 2026-09-28 by lane automation-runpod-20260928 (Mac plist bootout + moved to ~/Library/LaunchAgents/_disabled_automation_runpod_20260928/, .bak kept); see job watchdog-audit"
    },
    "supervise": "observe",
    "failover": [],
-   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "note": "MIGRATED -> watchdog-audit",
    "class": "legacy"
   },
   {
@@ -1438,12 +1438,12 @@
    "schedule": "hourly",
    "command": "com.csoai.nsite-spray",
    "health": {
-    "type": "none",
-    "why": "the Mac sleeps and is never in the critical path"
+    "type": "disabled",
+    "why": "moved to Oracle 2026-09-28 by lane automation-runpod-20260928 (Mac plist bootout + moved to ~/Library/LaunchAgents/_disabled_automation_runpod_20260928/, .bak kept); see job nsite-spray"
    },
    "supervise": "observe",
    "failover": [],
-   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "note": "MIGRATED -> nsite-spray",
    "class": "legacy"
   },
   {
@@ -1733,6 +1733,52 @@
    "owner_lane": "venturi-capsule-20260926",
    "note": "gap alarm for the hash-chained daily measurement index (index schema 0.3): yesterday's /evac-bulk/measurement-index-v0.2-<date>.json must exist by 09:00Z, else MISSING (BAD). Observe only: a re-run cannot back-fill a day once a later day is chained (capsule-daily refuses), so the day stays a declared gap. The chain itself is verified by capsule-daily step 5 (venturi_capsule.py verify-chain).",
    "class": "measurement"
+  },
+  {
+   "id": "nsite-spray",
+   "host": "oracle-micro-2",
+   "schedule": "28 * * * *",
+   "command": "flock -n /tmp/nsite-spray.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh nsite-spray $HOME/lanes/logs/nsite-spray.log bash $HOME/lanes/automation-runpod-20260928/nsite-spray/run.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/nsite-spray.log",
+    "max_age_s": 10800,
+    "must_contain": "rc=0"
+   },
+   "supervise": "observe",
+   "cron_match": "automation-runpod-20260928/nsite-spray/run.sh",
+   "max_runtime_s": 900,
+   "outputs": [
+    "~/lanes/automation-runpod-20260928/nsite-spray/latest.json",
+    "~/lanes/automation-runpod-20260928/nsite-spray/status.json",
+    "~/lanes/automation-runpod-20260928/nsite-spray/claim-watch.json",
+    "~/lanes/logs/nsite-spray.log"
+   ],
+   "failover": [],
+   "class": "measurement",
+   "note": "was Mac com.csoai.nsite-spray (hourly). Read-only GETs: canonical board/DID/governance + 8 estate apexes spray report, prohibited-claim watch. Publishes nothing."
+  },
+  {
+   "id": "watchdog-audit",
+   "host": "oracle-micro-2",
+   "schedule": "13,43 * * * *",
+   "command": "flock -n /tmp/watchdog-audit.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh watchdog-audit $HOME/lanes/logs/watchdog-audit.log bash $HOME/lanes/automation-runpod-20260928/watchdog-audit/run.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/watchdog-audit.log",
+    "max_age_s": 7200,
+    "must_contain": "rc=0"
+   },
+   "supervise": "observe",
+   "cron_match": "automation-runpod-20260928/watchdog-audit/run.sh",
+   "max_runtime_s": 300,
+   "outputs": [
+    "~/lanes/automation-runpod-20260928/watchdog-audit/state/latest.json",
+    "~/lanes/logs/watchdog-audit.log"
+   ],
+   "failover": [],
+   "class": "measurement",
+   "note": "was Mac ai.csoai.watchdog-audit (every 5 min; 30 min here, Oracle / is 93%). 4 unauthenticated GETs + read-only runpodctl pod get; receipts accumulate ~110 KB/day under state/ (retention = owner call)."
   }
  ]
 }
