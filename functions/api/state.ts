@@ -1051,7 +1051,7 @@ export const onRequestGet: PagesFunction = async () => {
           where: "Only after a result is promoted into a signed artifact in this repo.",
         },
         {
-          subject: "MEOK / SOVOS / sov34 model figures",
+          subject: "MEOK model figures",
           why_not:
             "A different estate with a different boundary. CSOAI measures; it does not host that model. " +
             "Its numbers never belong in a CSOAI count.",

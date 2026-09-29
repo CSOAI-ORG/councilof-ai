@@ -15,6 +15,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { onRequestGet } from "./corrections";
+import { onRequestGet as stateGet } from "./state";
 
 // RULES are read out of scripts/brand-gate.mjs itself (the same slice-and-evaluate the outward gate uses),
 // so there is one list and no copy of it.
@@ -85,5 +86,23 @@ describe("GET /api/corrections serves no internal identifier", () => {
     expect(sup?.supersedes_text?.id).toBe("C-2026-0925-01");
     expect(sup?.supersedes_text?.original_sha256).toMatch(/^[0-9a-f]{64}$/);
     expect(old?.text_superseded_by).toBe("C-2026-0926-01");
+  });
+});
+
+// /api/state is served JSON too, and brand-gate never reads it. On 2026-09-28 its not_covered list named
+// two internal codenames in a boundary disclaimer ("MEOK / SOVOS / sov34 model figures"); lane
+// codename-hygiene-20260928 replaced them with the neutral name. Same rule class, same walk.
+describe("GET /api/state serves no internal identifier", () => {
+  it("every served string is clean of the identifier class", async () => {
+    const body = await (await (stateGet as unknown as () => Promise<Response>)()).json();
+    expect(strings(body).length).toBeGreaterThan(200); // the walk has its subject
+    expect(identifierHits(body, rules)).toEqual([]);
+  });
+
+  it("can go red: the pre-fix disclaimer and a capsule engine name are caught", () => {
+    const hits = identifierHits({ not_covered: { items: [{ subject: "MEOK / SOVOS / sov34 model figures" }, { note: "the Venturi throat" }] } }, rules).join("\n");
+    expect(hits).toContain('"SOVOS"');
+    expect(hits).toContain('"sov34"');
+    expect(hits).toContain('"Venturi"');
   });
 });

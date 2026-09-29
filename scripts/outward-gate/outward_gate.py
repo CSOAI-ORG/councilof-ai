@@ -1586,6 +1586,54 @@ def venturi_index_artifact(ctx, p):
     return {"id": "venturi:index", "kind": "venturi_index", "url": p, "checks": c}
 
 
+# The daily capsule index under both of the names capsule-daily has written. 0.1 (to 26 Sep 2026):
+# venturi-index-D.json + venturi-capsules-D*/. 0.2 (from 27 Sep 2026): measurement-index-v0.2-D.json +
+# measurement-capsules-v0.2-D-<adapter>/. The run block used to look for the 0.1 names only, so from 27 Sep the
+# gate scored no capsule at all and said nothing: the 26 Sep scorecard held venturi_index 1 + venturi_batch 5, the
+# 27 and 28 Sep scorecards held neither. The gate also runs (06:40Z) before capsule-daily (08:05Z), so the day's
+# index is normally not there yet: score the newest index dated D or D-1, and FAIL, never skip, when none is that recent.
+CAPSULE_INDEX_RE = re.compile(r"^(measurement-index-v0\.2|venturi-index)-(\d{4}-\d{2}-\d{2})\.json$")
+
+
+def newest_capsule_index(vdir, date):
+    """(date, filename) of the newest daily capsule index dated <= date; the 0.2 name wins a same-day tie."""
+    best = None
+    for x in os.listdir(vdir):
+        m = CAPSULE_INDEX_RE.match(x)
+        if not m or m.group(2) > date:
+            continue
+        key = (m.group(2), m.group(1).startswith("measurement"))
+        if best is None or key > best[0]:
+            best = (key, x)
+    return (best[0][0], best[1]) if best else None
+
+
+def capsule_artifacts(ctx, vdir, date):
+    owner = OWN_VENTURI
+    try:
+        found = newest_capsule_index(vdir, date)
+    except OSError as e:
+        return [{"id": "venturi:index", "kind": "venturi_index", "url": vdir, "checks": [R("hygiene.resolves", FAIL, f"{vdir}: {e}", owner)]}]
+    floor = (datetime.date.fromisoformat(date) - datetime.timedelta(days=1)).isoformat()
+    if found is None or found[0] < floor:
+        why = f"newest capsule index is {found[1]}" if found else "no capsule index at all"
+        return [{"id": "venturi:index", "kind": "venturi_index", "url": vdir, "checks": [R(
+            "hygiene.resolves", FAIL,
+            f"{why}; expected measurement-index-v0.2-{date}.json or -{floor}.json (or the 0.1 venturi-index-* name) under {vdir}",
+            owner)]}]
+    d0, name = found
+    idx = os.path.join(vdir, name)
+    arts = [venturi_index_artifact(ctx, idx)]
+    try:
+        entries = {os.path.basename(b.get("dir", "").rstrip("/")): b for b in read_json(idx).get("batches", [])}
+    except Exception:
+        entries = {}
+    prefixes = (f"measurement-capsules-v0.2-{d0}-", f"venturi-capsules-{d0}")
+    for d in sorted(x for x in os.listdir(vdir) if x.startswith(prefixes) and os.path.isdir(os.path.join(vdir, x))):
+        arts.append(venturi_batch_artifact(ctx, os.path.join(vdir, d), entries.get(d)))
+    return arts
+
+
 # ------------------------------------------------------------------------------------- PACKAGES
 def package_artifact(ctx, eco, name):
     h, c, owner = ctx.http, [], OWN_DEV
@@ -1986,17 +2034,7 @@ def run(args):
             arts.append(package_artifact(ctx, "npm", n))
         log("packages done")
     if "venturi" in want:
-        vdir = args.venturi_dir
-        idx = os.path.join(vdir, f"venturi-index-{args.date}.json")
-        entries = {}
-        if os.path.exists(idx):
-            arts.append(venturi_index_artifact(ctx, idx))
-            try:
-                entries = {os.path.basename(b.get("dir", "").rstrip("/")): b for b in read_json(idx).get("batches", [])}
-            except Exception:
-                pass
-        for d in sorted(x for x in os.listdir(vdir) if x.startswith(f"venturi-capsules-{args.date}")):
-            arts.append(venturi_batch_artifact(ctx, os.path.join(vdir, d), entries.get(d)))
+        arts += capsule_artifacts(ctx, args.venturi_dir, args.date)
         log("venturi done")
     if "datasets" in want:
         ids = args.datasets.split(",") if args.datasets else discover_datasets(ctx)
