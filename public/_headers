@@ -54,6 +54,12 @@
   Content-Type: application/json
   Access-Control-Allow-Origin: *
 
+# AI Catalog (ai-catalog.io, spec 1.0, Level 2): typed index of our MCP, A2A, AG-UI, chat and dataset doors.
+/.well-known/ai-catalog.json
+  Content-Type: application/ai-catalog+json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
 # A2A v1.0 agent card (RFC 8615, N5-13)
 /.well-known/agent-card.json
   Content-Type: application/a2a+json
