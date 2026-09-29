@@ -19,6 +19,7 @@
 import { headFromGet } from "../../_head";
 import { ROSTER, CHAINS, buildPayload, previewCardFor, type PinMemo, type RosterEntry } from "../../wrapper";
 import LEDGER from "../../../../public/interop/wrapped-asset-parity-latest.json";
+import { lookupGet } from "../_caip19_lookup";
 
 export const SCHEMA = "csoai.wrapper-caip19/0.1";
 export const PATH_PREFIX = "/api/wrapper/caip19/";
@@ -46,16 +47,23 @@ const json = (body: unknown, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=60", "access-control-allow-origin": "*" },
   });
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
+export const onRequestGet: PagesFunction = async ({ request, env, params }) => {
+  // The roster lookup by standard asset id (functions/api/wrapper/_caip19_lookup.ts) shares this path: it answers
+  // every id this preview does not (canonical sides, per-deployment archives, ?id=), and adds its fields here.
+  const lookup = () => lookupGet({ request, env: env as never, params: { id: (params as { caip?: string | string[] })?.caip } } as never);
   const url = new URL(request.url);
   const origin = url.origin;
   const raw = decodeURIComponent(url.pathname.slice(PATH_PREFIX.length)).replace(/\/+$/, "");
   const parsed = parseCaip19(raw);
   if (!parsed) {
+    const alt = await lookup();
+    if (alt.status === 200) return alt;
     return json({ schema: SCHEMA, error: "bad_request", reason: "expected a CAIP-19 of the form eip155:<chainId>/erc20:<0x address>", example: `${origin}${PATH_PREFIX}eip155:42161/erc20:0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8`, payment: { requested: false } }, 400);
   }
   const entries = recordsFor(parsed.chainId, parsed.address);
   if (!entries.length) {
+    const alt = await lookup();
+    if (alt.status === 200) return alt;
     return json({
       schema: SCHEMA,
       error: "not_on_roster",
@@ -82,6 +90,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     }),
   );
   const states = [...new Set(records.map((r) => r.state))];
+  const lk = await lookup();
+  const roster = lk.status === 200 ? ((await lk.json()) as Record<string, unknown>) : null;
   return json({
     schema: SCHEMA,
     kind: "preview",
@@ -92,6 +102,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     states,
     as_of: records.map((r) => r.as_of).sort().at(-1),
     records,
+    found: true,
+    ...(roster ? { caip2: roster.caip2, pairs: roster.pairs, archive: roster.archive, candidate_batch: roster.candidate_batch, method: roster.method } : {}),
     note: "A state names what was read at a pinned block. It is not a rating, a recommendation or an endorsement.",
     token_list: `${origin}/wallet/measured-wrappers.tokenlist.json`,
     signed_card: `${origin}/api/wrapper?id=<record id>`,

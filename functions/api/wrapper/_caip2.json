@@ -1,0 +1,22 @@
+{
+  "schema": "csoai.wrapper-caip2/0.1",
+  "rule": "Roster chain name -> CAIP-2 chain id, and the SLIP-44 asset reference of the chain's native asset (CAIP-19 slip44 namespace). One file read by functions/api/wrapper/_caip19.ts (the /api/wrapper/caip19 lookup and /api/wrapper/index.json) and scripts/readers/wrapper-caip-ledger.mjs (the candidate ledger), so the two can never key an asset differently. ERC-20 asset ids use the CAIP-19 erc20 namespace with the contract address lower-cased. A side with no chain (fund register, bank deposits, custody not on a ledger) has no CAIP-19 id and says why.",
+  "sources": [
+    "https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md",
+    "https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-19.md",
+    "https://github.com/ChainAgnostic/namespaces (eip155, bip122, xrpl)",
+    "https://github.com/satoshilabs/slips/blob/master/slip-0044.md"
+  ],
+  "chains": {
+    "ethereum":   { "caip2": "eip155:1",     "native": "slip44:60",  "native_symbol": "ETH" },
+    "arbitrum":   { "caip2": "eip155:42161", "native": "slip44:60",  "native_symbol": "ETH" },
+    "optimism":   { "caip2": "eip155:10",    "native": "slip44:60",  "native_symbol": "ETH" },
+    "base":       { "caip2": "eip155:8453",  "native": "slip44:60",  "native_symbol": "ETH" },
+    "zksync-era": { "caip2": "eip155:324",   "native": "slip44:60",  "native_symbol": "ETH" },
+    "polygon":    { "caip2": "eip155:137",   "native": "slip44:966", "native_symbol": "POL" },
+    "flare":      { "caip2": "eip155:14",    "native": "slip44:554", "native_symbol": "FLR" },
+    "bitcoin":    { "caip2": "bip122:000000000019d6689c085ae165831e93", "native": "slip44:0", "native_symbol": "BTC" },
+    "xrpl":       { "caip2": "xrpl:0",       "native": "slip44:144", "native_symbol": "XRP" },
+    "offchain":   { "caip2": null, "native": null, "native_symbol": null, "why_null": "the asset is a register entry off any public ledger (fund shares at a transfer agent, bank deposits); CAIP-19 has no id for it" }
+  }
+}
