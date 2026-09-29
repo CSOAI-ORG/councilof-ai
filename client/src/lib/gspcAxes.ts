@@ -104,7 +104,7 @@ export const AXES: Axis[] = [
   { axis: "cross-reality", bench: "XRAIV", n: 32, macro_f1: 0.803, accuracy: 0.812, unparsed_rate: 0.0247, status: "MEASURED",
     colour: "#a78bfa", lng: -1.26, lat: 51.75, seat: "Oxford", instrument: "EU AI Act, applied to agent conduct",
     task: "autonomous agent action authority (PROCEED / CONFIRM / REFUSE)",
-    note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).", dataset: "csoai/gspc-xr" },
+    note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored items, all public in csoai/gspc-xr items.jsonl (33 rows: the 32 items and 1 canary). The bank card lists one public split; there is no held-out split (C-2026-0929-02).", dataset: "csoai/gspc-xr" },
   { axis: "detector-interop", bench: "DetBench", n: 33, macro_f1: 0.855, accuracy: 0.879, unparsed_rate: 0.1754, status: "MEASURED",
     colour: "#38bdf8", lng: 4.9, lat: 50.85, seat: "Brussels", instrument: "EU Code of Practice — interoperability due 2 Feb 2027",
     task: "cross-detector watermark interoperability matrix",

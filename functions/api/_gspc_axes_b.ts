@@ -10,7 +10,8 @@ export const AXES_B: AxisScore[] = [
     macro_f1: 0.803, unparsed_rate: 0.0247, status: "MEASURED",
     dataset: "csoai/gspc-xr", colour: "#a78bfa", hue: 258,
     note: "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still " +
-      "not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).",
+      "not separated at p<0.05). Bank: 32 scored items, all public in csoai/gspc-xr items.jsonl (33 rows: " +
+      "the 32 items and 1 canary). The bank card lists one public split; there is no held-out split (C-2026-0929-02).",
   },
   {
     axis: "detector-interop", family: "gspc", kind: "model-comparison", bench: "DetBench", task: "cross-detector watermark interoperability matrix",
@@ -87,8 +88,10 @@ export const AXES_B: AxisScore[] = [
       "zero-false-positive detector's (qwen2.5:0.5b-instruct, (tp+tn)/71). n counts rows, not distinct " +
       "items: the 71 rows hold 27 distinct inputs (44 rows repeat an input already counted; see " +
       "distinct_items). The Wilson interval treats the 71 rows as independent, so it is narrower than " +
-      "27 distinct inputs support; a wider interval would still contain the fleet mean, so the TIE stands " +
-      "(C-2026-0929-02).",
+      "27 distinct inputs support. Recomputed with the prompt as the unit (interval_prompt_level: derived, " +
+      "unsigned, method pre-registered 2026-09-29), the published TP/FP/TN/FN do not decide the TIE: it holds " +
+      "for some row assignments consistent with those counts and fails for others, so it is UNTESTED at the " +
+      "prompt level. The signed separation below stays TIE until it is re-signed (C-2026-0929-02).",
     accuracy: 0.5915, leader: "qwen2.5:0.5b-instruct (base model)",
     separation: "TIE", interval: [0.475, 0.698], fleet_mean: 0.5455,
     separation_method: "Wilson 95% interval over n=71 rows (27 distinct inputs) tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
