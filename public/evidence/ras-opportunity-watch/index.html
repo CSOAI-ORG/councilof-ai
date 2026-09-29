@@ -24,8 +24,13 @@
   "url":"https://councilof.ai/evidence/ras-opportunity-watch/",
   "datePublished":"2026-09-29",
   "dateModified":"2026-09-29",
+  "version":"2026-09-29",
+  "identifier":"https://councilof.ai/evidence/ras-opportunity-watch/manifest.json",
+  "isAccessibleForFree":true,
   "creator":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai/"},
+  "publisher":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai/"},
   "license":"https://creativecommons.org/licenses/by/4.0/",
+  "measurementTechnique":"Bounded independent reproduction and conformance checks with explicit SOURCE_OBSERVED, MEASURED, UNMEASURED/HOLD, payment, settlement, exact-byte delivery and buyer-acceptance states.",
   "keywords":["reproduction","conformance","claim maintenance","C2PA","x402","evidence"],
   "distribution":[
     {"@type":"DataDownload","encodingFormat":"application/json","contentUrl":"https://councilof.ai/evidence/ras-opportunity-watch/ledger.json"},
@@ -47,6 +52,9 @@
 <tr><td>General / nontechnical reader</td><td>Read each <strong>Interpretation</strong> and <strong>State</strong> cell first.</td><td>What CSOAI actually reproduced, what remains unknown, and what was not inferred.</td></tr>
 <tr><td>Agent or developer</td><td><a href="./ledger.json">Machine ledger</a>, <a href="./feed.atom">Atom feed</a>, then <a href="./manifest.json">integrity manifest</a>.</td><td>Canonical event keys, bounded state, change feed and exact-byte hashes suitable for automated ingestion.</td></tr>
 <tr><td>Buyer or operator</td><td>Read <strong>State boundaries</strong> before treating a discovery, payment, settlement or delivery event as evidence of service quality.</td><td>Which rung of the transaction/evidence ladder has actually been observed and which downstream acceptance steps are still HOLD.</td></tr>
+<tr><td>Service provider / seller</td><td>Use the evidence JSON and acceptance criteria to reproduce or challenge a finding against the same bounded predicate.</td><td>Exactly what was observed about your public surface, what was not tested, and what evidence would change the state.</td></tr>
+<tr><td>Procurement / compliance / risk</td><td>Start with the state table, then follow the immutable evidence files and Claim Maintenance link.</td><td>A reviewable evidence trail without turning a discovery, score, payment or listing into a compliance conclusion.</td></tr>
+<tr><td>Press / analyst / standards maintainer</td><td>Use the canonical page, manifest and source links; quote the state labels with the claim.</td><td>What changed and what was reproduced, with the limitations needed to avoid overstating the result.</td></tr>
 <tr><td>Researcher / reproducer</td><td>Open the source-audit, causal-control and C2PA evidence JSON beside the pinned upstream source or fixture.</td><td>The exact bounded predicate, environment and result that can be independently rerun.</td></tr>
 <tr><td>Auditor / regulator / reviewer</td><td>Use the state table plus the integrity manifest and correction-aware Claim Maintenance link.</td><td>A traceable distinction between source observation, measurement, payment, exact-byte delivery and buyer acceptance, without certification or compliance inference.</td></tr>
 </table>
