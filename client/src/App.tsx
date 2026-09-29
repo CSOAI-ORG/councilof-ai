@@ -323,7 +323,7 @@ const RelevanceMap = lazy(() => import("./pages/RelevanceMap"));
 const Temples = lazy(() => import("./pages/Temples"));
 const Playbooks = lazy(() => import("./pages/Playbooks"));
 const Dragonfly = lazy(() => import("./pages/Dragonfly"));
-const MeokLaw = lazy(() => import("./pages/MeokLaw"));
+const JurisdictionEngine = lazy(() => import("./pages/JurisdictionEngine"));
 const HiveModel = lazy(() => import("./pages/HiveModel"));
 const Services = lazy(() => import("./pages/Services"));
 const HowItWorks = lazy(() => import("./pages/HowItWorks"));
@@ -862,9 +862,9 @@ function App() {
                   <Route path="/temples" component={Temples} />
                   <Route path="/playbooks" component={Playbooks} />
                   <Route path="/dragonfly" component={Dragonfly} />
-                  <Route path="/csoai-law" component={MeokLaw} />
-                  <Route path="/meok-law" component={MeokLaw} />
-                  <Route path="/law" component={MeokLaw} />
+                  <Route path="/csoai-law" component={JurisdictionEngine} />
+                  <Route path="/meok-law" component={JurisdictionEngine} />
+                  <Route path="/law" component={JurisdictionEngine} />
                   <Route path="/hive-model" component={HiveModel} />
                   <Route path="/services" component={Services} />
                   <Route path="/how" component={HowItWorks} />

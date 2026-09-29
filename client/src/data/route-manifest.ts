@@ -539,8 +539,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/csoai-law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "JurisdictionEngine",
+  "title": "Jurisdiction Engine"
  },
  {
   "path": "/custody",
@@ -1229,8 +1229,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "JurisdictionEngine",
+  "title": "Jurisdiction Engine"
  },
  {
   "path": "/layer0",
@@ -1389,8 +1389,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/meok-law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "JurisdictionEngine",
+  "title": "Jurisdiction Engine"
  },
  {
   "path": "/methodology",

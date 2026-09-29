@@ -108,7 +108,7 @@ export default function HiveModel() {
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/dragonfly" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See the 4-Wing architecture -&gt;</a>
           <a href="/try" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Watch a hive decide -&gt;</a>
-          <a href="/meok-law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">What governs you here -&gt;</a>
+          <a href="/law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">What governs you here -&gt;</a>
         </div>
       </section>
     </div>

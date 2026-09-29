@@ -19,7 +19,7 @@ const TRACKS: Track[] = [
     { t: "Try the Council yourself", href: "/try" },
   ]},
   { id: "law", name: "Know Your Jurisdiction", level: "Beginner", mins: 15, blurb: "Read the cross-layer law stack for any place.", steps: [
-    { t: "Jurisdiction engine — cross-layer AI law", href: "/meok-law/" },
+    { t: "Law by jurisdiction", href: "/law" },
     { t: "Framework Temples", href: "/temples" },
     { t: "Relevance Map", href: "/map" },
   ]},

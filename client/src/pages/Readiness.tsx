@@ -38,7 +38,7 @@ export default function Readiness() {
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Scope my obligations -&gt;</a>
-          <a href="/meok-law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Law by jurisdiction -&gt;</a>
+          <a href="/law" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">Law by jurisdiction -&gt;</a>
         </div>
       </section>
     </div>
