@@ -201,6 +201,10 @@ export function routeIntent(raw: string): Plan {
   if (axis) return { kind: "tools", intent: `board axis ${axis}`, calls: [{ tool: "get_axis", args: { axis } }] };
   if (/\b(board|scoreboard|totals?|gspc|how many (axes|axis|slots)|measured of|what('s| is) measured|leaderboard)\b/.test(t))
     return { kind: "tools", intent: "board totals", calls: [{ tool: "board_totals", args: {} }] };
+  // "What does Council of AI measure?" — the question directory probes and first-contact agents
+  // actually send (2026-09-29, growth gaps A1). The board is the answer to what is measured.
+  if (/\bwhat (does|do) [a-z0-9 .'-]{0,40}\bmeasure\b/.test(t))
+    return { kind: "tools", intent: "board totals", calls: [{ tool: "board_totals", args: {} }] };
 
   if (/^(hi|hey|hello|help|menu|start)\b|what can (you|i)|capabilit|which tools|what tools/.test(t)) return { kind: "help", intent: "help" };
   return { kind: "help", intent: "unknown" };

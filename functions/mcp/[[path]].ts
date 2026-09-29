@@ -21,6 +21,7 @@ import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { toolSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
+import { recordUsage } from "../_lib/usage";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
 export const MCP_HTTP_SERVER_VERSION = "1.4.3";
@@ -338,7 +339,9 @@ ${paidSection}<h2>Check it yourself</h2>
 </main></body></html>`;
 }
 
-export const onRequest = async ({ request, env }: { request: Request; env?: unknown }) => {
+const KNOWN_TOOL_NAMES = new Set(DEFINITIONS.map((d) => d.name));
+
+export const onRequest = async ({ request, env, waitUntil }: { request: Request; env?: unknown; waitUntil?: (p: Promise<unknown>) => void }) => {
   const url = new URL(request.url);
   const hosts = [...HOSTS];
   // Only this deployment's configured preview is allowed, not all pages.dev hosts.
@@ -507,6 +510,14 @@ export const onRequest = async ({ request, env }: { request: Request; env?: unkn
       "MCP-Protocol-Version header is required for modern requests.",
       id,
     );
+  }
+  // Aggregate usage (functions/_lib/usage.ts): the name a client declares in initialize and the
+  // name of each tool called. No arguments, no text, no caller identifier; self traffic by name.
+  if (call.method === "initialize") {
+    recordUsage({ request, env, waitUntil }, "mcp_client", object(params.clientInfo) ? String(params.clientInfo.name ?? "") : "");
+  } else if (call.method === "tools/call") {
+    const tool = typeof params.name === "string" && KNOWN_TOOL_NAMES.has(params.name) ? params.name : "not-a-tool";
+    recordUsage({ request, env, waitUntil }, "mcp_tool", tool);
   }
   const traceId =
     call.method === "tools/call" && typeof params.name === "string"

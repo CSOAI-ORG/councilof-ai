@@ -7,11 +7,11 @@
 import { LiveDot } from "./MomentumStrip";
 import { fmtStamp, isExternal, pick, useMomentum, type MomentumRead } from "./momentum";
 
-export const FOOTER_IDS = ["pypi_all_time", "hf_downloads_30d_other", "capsules", "signed_cards", "corrections"];
+export const FOOTER_IDS = ["pypi_csoai_all_time", "hf_downloads_30d_other", "capsules", "signed_cards", "corrections"];
 
 /** Short labels for a narrow row; the full label travels in the link title and the screen-reader text. */
 const SHORT: Record<string, string> = {
-  pypi_all_time: "PyPI downloads, all-time",
+  pypi_csoai_all_time: "PyPI downloads, CSOAI packages",
   hf_downloads_30d_other: "other dataset downloads, 30 days",
   capsules: "signed measurement capsules",
   signed_cards: "signed cards, all verify",

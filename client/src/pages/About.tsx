@@ -189,7 +189,7 @@ export default function About() {
         <MomentumStrip
           variant="panel"
           title="What the work adds up to, counted live"
-          ids={["pypi_all_time", "hf_downloads_30d_other", "hf_downloads_30d_self_read", "capsules", "census_rows", "signed_cards", "corrections", "board", "hf_datasets"]}
+          ids={["pypi_csoai_all_time", "pypi_meok_all_time", "hf_downloads_30d_other", "hf_downloads_30d_self_read", "capsules", "census_rows", "signed_cards", "corrections", "board", "hf_datasets"]}
         />
       </div>
 

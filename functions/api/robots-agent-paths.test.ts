@@ -90,10 +90,10 @@ describe("robots.txt states the content signal in every group", () => {
   });
 
   it("the signal changes no access decision: answer engines allowed, bulk corpora refused", () => {
-    for (const ua of ["GPTBot", "ClaudeBot", "OAI-SearchBot", "PerplexityBot", "Google-Extended"]) {
+    for (const ua of ["OAI-SearchBot", "PerplexityBot", "Google-Extended"]) {
       expect(robotsAllows(ROBOTS, ua, "/about")).toMatchObject({ allowed: true });
     }
-    for (const ua of ["CCBot", "Bytespider", "Amazonbot"]) {
+    for (const ua of ["GPTBot", "ClaudeBot", "CCBot", "Bytespider", "Amazonbot"]) {
       expect(robotsAllows(ROBOTS, ua, "/about")).toMatchObject({ allowed: false });
     }
     const without = ROBOTS.replace(/^Content-Signal: [^\n]*\n/gm, "");
@@ -102,5 +102,27 @@ describe("robots.txt states the content signal in every group", () => {
         expect(robotsAllows(ROBOTS, ua, path).allowed).toBe(robotsAllows(without, ua, path).allowed);
       }
     }
+  });
+});
+
+/**
+ * Declared = observed (29 Sep 2026, growth gaps A5). The UA matrix below was measured live at
+ * 10:04Z and again at 10:2xZ on 29 Sep: training crawlers get 403 from the edge on /, /llms.txt
+ * and /api/gspc; search and user agents get 200. Until then robots.txt said `Allow: /` to GPTBot
+ * and ClaudeBot. If the edge policy changes, re-measure and change this table and the file together.
+ */
+describe("robots.txt states what the edge does", () => {
+  const OBSERVED: Array<[string, 200 | 403]> = [
+    ["GPTBot", 403], ["ClaudeBot", 403], ["CCBot", 403], ["Bytespider", 403], ["Amazonbot", 403],
+    ["OAI-SearchBot", 200], ["ChatGPT-User", 200], ["Claude-User", 200], ["Claude-SearchBot", 200],
+    ["PerplexityBot", 200], ["Perplexity-User", 200], ["meta-externalagent", 200],
+  ];
+  it.each(OBSERVED)("%s: robots.txt verdict on / matches the observed %i", (ua, status) => {
+    expect(robotsAllows(ROBOTS, ua, "/").allowed).toBe(status === 200);
+  });
+  it("control: the file as it stood before 29 Sep fails this table", () => {
+    const before = ROBOTS.replace(/(User-agent: (GPTBot|ClaudeBot)\nContent-Signal: [^\n]*\n)Disallow: \//g, "$1Allow: /");
+    expect(robotsAllows(before, "GPTBot", "/").allowed).toBe(true);
+    expect(robotsAllows(before, "ClaudeBot", "/").allowed).toBe(true);
   });
 });

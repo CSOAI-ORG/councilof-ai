@@ -18,6 +18,7 @@
  */
 
 import { serveAguiRun } from "../../_lib/aguiRun";
+import { recordUsage } from "../../_lib/usage";
 
 interface Env {
   AGUI_WIRE_URL?: string;
@@ -166,7 +167,10 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
   // TOOL_CALL_*, TEXT_MESSAGE_* from the shared router — no external wire needed. Paid tools
   // require an explicit forwardedProps.confirm (see functions/_lib/aguiRun.ts).
   if (sub === "" || sub === "run" || sub === "agent") {
-    return serveAguiRun(ctx.request, (p) => ctx.waitUntil(p));
+    // Aggregate usage (functions/_lib/usage.ts): each run's end state only, no text.
+    return serveAguiRun(ctx.request, (p) => ctx.waitUntil(p), (state) => {
+      recordUsage({ request: ctx.request, env: ctx.env, waitUntil: (p) => ctx.waitUntil(p) }, "agui_state", state);
+    });
   }
 
   const base = (ctx.env.AGUI_WIRE_URL || DEFAULT_WIRE).replace(/\/$/, "");

@@ -1371,6 +1371,19 @@
       "payment": "free"
     },
     {
+      "id": "api-usage",
+      "protocols": [
+        "http"
+      ],
+      "title": "Usage",
+      "description": "GET /api/usage — daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
+      "endpoint": "/api/usage",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-observability",
       "protocols": [
         "http"

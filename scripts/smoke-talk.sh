@@ -19,11 +19,13 @@ BASE="${BASE%/}"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 PASS=0; FAIL=0
+# Our own traffic, identified BY NAME so GET /api/usage excludes it (functions/_lib/usage.ts SELF_TOOLS).
+SELF=(-A "csoai-smoke-talk/1 (+https://councilof.ai/api/usage)" -H "x-csoai-self: smoke-talk")
 ok()   { PASS=$((PASS+1)); echo "PASS  $*"; }
 bad()  { FAIL=$((FAIL+1)); echo "FAIL  $*"; }
 
 # A real signed-card id, read from the live index (never typed here).
-CARD_ID="$(curl -fsS --max-time 30 "$BASE/signed/card_index.json" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["cards"][0]["card"])' 2>/dev/null || true)"
+CARD_ID="$(curl "${SELF[@]}" -fsS --max-time 30 "$BASE/signed/card_index.json" | python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["cards"][0]["card"])' 2>/dev/null || true)"
 # A real measured MCP endpoint's host, read from the live capsule index (never typed here).
 HOST="$(python3 - "$BASE" <<'PY' 2>/dev/null || true
 import json, sys, urllib.request
@@ -64,7 +66,7 @@ for qa in "${QUESTIONS[@]}"; do
   i=$((i+1))
   q="${qa%|*}"; want="${qa##*|}"
   body="$(python3 -c 'import json,sys; print(json.dumps({"message": sys.argv[1]}))' "$q")"
-  if ! curl -fsS --max-time 60 -X POST "$BASE/api/chat" -H 'content-type: application/json' -d "$body" -o "$TMP/c$i.json"; then
+  if ! curl "${SELF[@]}" -fsS --max-time 60 -X POST "$BASE/api/chat" -H 'content-type: application/json' -d "$body" -o "$TMP/c$i.json"; then
     bad "chat[$i] HTTP error: $q"; continue
   fi
   verdict="$(python3 - "$TMP/c$i.json" "$want" <<'PY'
@@ -87,7 +89,7 @@ done
 [ "$UNGROUNDED" -eq 0 ] && ok "chat: 0 ungrounded answers" || bad "chat: $UNGROUNDED ungrounded answers"
 
 # A2A plain text
-curl -fsS --max-time 60 -X POST "$BASE/api/a2a" -H 'content-type: application/json' -H 'A2A-Version: 1.0' \
+curl "${SELF[@]}" -fsS --max-time 60 -X POST "$BASE/api/a2a" -H 'content-type: application/json' -H 'A2A-Version: 1.0' \
   -d '{"jsonrpc":"2.0","id":1,"method":"SendMessage","params":{"message":{"messageId":"smoke-1","role":"ROLE_USER","parts":[{"text":"what does the board say"}]}}}' \
   -o "$TMP/a2a.json" || true
 v="$(python3 - "$TMP/a2a.json" <<'PY'
@@ -104,7 +106,7 @@ PY
 case "$v" in OK*) ok "a2a text: ${v#OK }";; *) bad "a2a text: ${v#BAD }";; esac
 
 # AG-UI stream
-curl -fsS -N --max-time 60 -X POST "$BASE/api/agui/run" -H 'content-type: application/json' -H 'accept: text/event-stream' \
+curl "${SELF[@]}" -fsS -N --max-time 60 -X POST "$BASE/api/agui/run" -H 'content-type: application/json' -H 'accept: text/event-stream' \
   -d '{"threadId":"smoke","runId":"smoke-1","messages":[{"id":"u1","role":"user","content":"what does the board say"}]}' \
   -o "$TMP/agui.txt" || true
 missing=""
@@ -113,7 +115,7 @@ for ev in RUN_STARTED TOOL_CALL_START TOOL_CALL_RESULT TEXT_MESSAGE_CONTENT RUN_
 done
 [ -z "$missing" ] && ok "agui run: RUN_STARTED..RUN_FINISHED streamed ($(grep -c '^data: ' "$TMP/agui.txt") events)" || bad "agui run: missing$missing"
 
-curl -fsS -N --max-time 60 -X POST "$BASE/api/agui/run" -H 'content-type: application/json' \
+curl "${SELF[@]}" -fsS -N --max-time 60 -X POST "$BASE/api/agui/run" -H 'content-type: application/json' \
   -d '{"messages":[{"role":"user","content":"commission a card for https://example.com/mcp"}]}' -o "$TMP/agui-paid.txt" || true
 if grep -q '"name":"confirm_required"' "$TMP/agui-paid.txt" && ! grep -q '"type":"TOOL_CALL_START"' "$TMP/agui-paid.txt"; then
   ok "agui paid ask: confirm_required, no tool call without confirm"

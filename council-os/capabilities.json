@@ -3102,6 +3102,33 @@
       "source": "functions/api/momentum.ts"
     },
     {
+      "id": "api-usage",
+      "kind": "http",
+      "path": "/api/usage",
+      "method": "GET",
+      "name": "Usage",
+      "description": "GET /api/usage \u2014 daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.usage/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/usage",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/usage.ts"
+    },
+    {
       "id": "api-observability",
       "kind": "http",
       "path": "/api/observability",
