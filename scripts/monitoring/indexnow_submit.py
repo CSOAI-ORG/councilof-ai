@@ -16,7 +16,8 @@ it did not have:
      listed them as content.
 
 Dead URLs are not a failure of this script, they are its output: they are
-reported so the sitemap can be fixed.
+reported so the sitemap can be fixed. For a small release, --only-extra limits
+the candidate set to explicitly supplied URLs and never expands the full sitemap.
 """
 import argparse, json, sys, urllib.request, urllib.error, xml.etree.ElementTree as ET
 import concurrent.futures as cf
@@ -79,7 +80,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true", help="probe and report, submit nothing")
     ap.add_argument("--extra", action="append", default=[], help="additional URL to consider")
+    ap.add_argument("--only-extra", action="store_true", help="consider only --extra URLs; do not expand the sitemap")
     a = ap.parse_args()
+    if a.only_extra and not a.extra:
+        ap.error("--only-extra requires at least one --extra URL")
 
     # the key file must itself be reachable or every submission is rejected
     try:
@@ -93,8 +97,9 @@ def main():
               "would be rejected, and a 'submitted N URLs' line would be a false success.")
         return 2
 
-    cands = sitemap_urls() + a.extra
-    print(f"[sitemap] {len(cands)} candidate URLs")
+    cands = sorted(set(a.extra if a.only_extra else sitemap_urls() + a.extra))
+    source = "extra-only" if a.only_extra else "sitemap+extra"
+    print(f"[candidates] source={source} count={len(cands)}")
 
     live, dead = [], []
     with cf.ThreadPoolExecutor(12) as ex:
