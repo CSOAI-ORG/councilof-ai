@@ -70,7 +70,7 @@
     "counts": {
       "ATTESTATION_ENVELOPE": 1,
       "DEPENDENCY_GRAPH": 1,
-      "EVIDENCE_INPUT": 24,
+      "EVIDENCE_INPUT": 29,
       "IDENTITY_ATTESTATION": 1,
       "OBSERVABILITY": 1,
       "POLICY_RUNTIME": 4,
@@ -241,6 +241,47 @@
         "open_spec_schema_reference_impl"
       ],
       "url": "https://github.com/prassanna-ravishankar/a2a-registry"
+    },
+    {
+      "capabilities": [
+        "run_reconstruction",
+        "ground_truth_resolution",
+        "expected_vs_observed_outcome",
+        "guardrail_evaluation",
+        "evidence_preservation"
+      ],
+      "id": "acpt-continuous-agent-assurance-2026",
+      "kind": "commercial",
+      "layer_o_route": "EVIDENCE_INPUT",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "layer_o_route_policy": "Treat as a bounded public evidence source or market signal pending a more specific adapter.",
+      "name": "ACPT continuous assurance for enterprise AI agents",
+      "overlap": [
+        "source_and_observation_binding",
+        "dependency_graph",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "reaction": "ADJACENT_VALIDATES_DEMAND",
+      "reaction_hint": "ADJACENT_VALIDATES_DEMAND",
+      "response": "Do not pivot. Track vocabulary and buyer expectations; preserve the claim-level dependency/correction distinction.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "bounded_reverification",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://www.acpt.cloud/"
     },
     {
       "capabilities": [
@@ -438,6 +479,47 @@
         "open_spec_schema_reference_impl"
       ],
       "url": "https://github.com/agentkitai/agentlens"
+    },
+    {
+      "capabilities": [
+        "ai_asset_discovery",
+        "code_provenance",
+        "model_dependency_recheck",
+        "deployment_assurance",
+        "agent_behavior_trace"
+      ],
+      "id": "aicap-continuous-ai-assurance-2026",
+      "kind": "commercial",
+      "layer_o_route": "EVIDENCE_INPUT",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "layer_o_route_policy": "Treat as a bounded public evidence source or market signal pending a more specific adapter.",
+      "name": "AICAP continuous AI assurance lifecycle",
+      "overlap": [
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "dependency_graph",
+        "bounded_reverification"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "reaction": "ADJACENT_VALIDATES_DEMAND",
+      "reaction_hint": "ADJACENT_VALIDATES_DEMAND",
+      "response": "Do not pivot. Track vocabulary and buyer expectations; preserve the claim-level dependency/correction distinction.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "change_without_motive_inference",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://aicap.uk/"
     },
     {
       "capabilities": [
@@ -642,6 +724,48 @@
         "self_correction_ledger"
       ],
       "url": "https://arxiv.org/abs/2609.01992"
+    },
+    {
+      "capabilities": [
+        "dependency_mapping",
+        "readiness_contracts",
+        "scheduled_checks",
+        "diagnostics",
+        "lifecycle_governance"
+      ],
+      "id": "continuous-assurance-agent-creation-2607.21495",
+      "kind": "research",
+      "layer_o_route": "EVIDENCE_INPUT",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "layer_o_route_policy": "Treat as a bounded public evidence source or market signal pending a more specific adapter.",
+      "name": "Toward Continuous Assurance for the Democratization of AI Agent Creation in Industry",
+      "overlap": [
+        "scheduled_reread",
+        "dependency_graph",
+        "bounded_reverification",
+        "explicit_evidence_state"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-07-23",
+      "reaction": "RESEARCH_VALIDATES_PRIMITIVES",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "response": "Compare methods and cite useful primitives. Keep CSOAI measurements independently reproducible.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "source_and_observation_binding",
+        "change_without_motive_inference",
+        "declared_vs_observed_differential",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://arxiv.org/abs/2607.21495"
     },
     {
       "capabilities": [
@@ -967,6 +1091,91 @@
         "self_correction_ledger"
       ],
       "url": "https://github.com/in-toto/attestation"
+    },
+    {
+      "capabilities": [
+        "claim_to_evidence_trace_graph",
+        "evidence_nodes",
+        "workflow_nodes",
+        "typed_semantic_edges",
+        "evidence_anchors",
+        "claim_support_paths"
+      ],
+      "id": "ledger-claim-evidence-2608.18398",
+      "kind": "research",
+      "layer_o_route": "EVIDENCE_INPUT",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "layer_o_route_policy": "Treat as a bounded public evidence source or market signal pending a more specific adapter.",
+      "name": "LEDGER: Claim-to-Evidence Trace Graphs for Auditing LLM Agents",
+      "overlap": [
+        "source_and_observation_binding",
+        "dependency_graph",
+        "explicit_evidence_state"
+      ],
+      "overlap_count": 3,
+      "overlap_fraction": "3/16",
+      "published": "2026-08-19",
+      "reaction": "RESEARCH_VALIDATES_PRIMITIVES",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "response": "Compare methods and cite useful primitives. Keep CSOAI measurements independently reproducible.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://arxiv.org/abs/2608.18398"
+    },
+    {
+      "capabilities": [
+        "mcp_server_registry",
+        "scheduled_scan",
+        "fail_closed_freshness",
+        "immutable_scan_snapshots",
+        "portable_scan_receipts",
+        "grade_change_history"
+      ],
+      "id": "mcp-trust-registry-2026-09",
+      "kind": "open_source",
+      "layer_o_route": "EVIDENCE_INPUT",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "layer_o_route_policy": "Treat as a bounded public evidence source or market signal pending a more specific adapter.",
+      "name": "MCP Trust neutral registry and fail-closed scan history",
+      "overlap": [
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "explicit_evidence_state",
+        "supersession_and_correction_history"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "reaction": "INTEGRATION_CANDIDATE",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "response": "Evaluate as an adapter or witness rail. Do not collapse its trust claim into Claim Maintenance.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "change_without_motive_inference",
+        "dependency_graph",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://github.com/saagpatel/mcp-trust"
     },
     {
       "capabilities": [
@@ -1780,6 +1989,6 @@
   "source_snapshot": {
     "claim_boundary": "Public-source research snapshot. Inclusion means adjacent relevance, not endorsement, adoption, equivalence, certification, legal ownership, trademark status, or a claim that a source implements CSOAI Claim Maintenance. The words 'claim maintenance' have prior public uses; this snapshot tracks both phrase collisions and technical overlap.",
     "path": "/spec/claim-maintenance/market-signals-2026-09-30.json",
-    "sha256": "8ce379eb9bfd684d8e11a907d9b024cfcc24aecfe863b4ac5dc43926fa1e3f96"
+    "sha256": "340f471991fd06824af0c49542acbeb2dba624226dbf44e99cea20ab682a6854"
   }
 }

@@ -76,6 +76,27 @@
     },
     {
       "capabilities": [
+        "run_reconstruction",
+        "ground_truth_resolution",
+        "expected_vs_observed_outcome",
+        "guardrail_evaluation",
+        "evidence_preservation"
+      ],
+      "id": "acpt-continuous-agent-assurance-2026",
+      "kind": "commercial",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "name": "ACPT continuous assurance for enterprise AI agents",
+      "overlap": [
+        "source_and_observation_binding",
+        "dependency_graph",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state"
+      ],
+      "reaction_hint": "ADJACENT_VALIDATES_DEMAND",
+      "url": "https://www.acpt.cloud/"
+    },
+    {
+      "capabilities": [
         "signed_agent_records",
         "hash_chained_ledger",
         "rfc3161_timestamp",
@@ -162,6 +183,27 @@
       ],
       "reaction_hint": "INTEGRATION_CANDIDATE",
       "url": "https://github.com/agentkitai/agentlens"
+    },
+    {
+      "capabilities": [
+        "ai_asset_discovery",
+        "code_provenance",
+        "model_dependency_recheck",
+        "deployment_assurance",
+        "agent_behavior_trace"
+      ],
+      "id": "aicap-continuous-ai-assurance-2026",
+      "kind": "commercial",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "name": "AICAP continuous AI assurance lifecycle",
+      "overlap": [
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "dependency_graph",
+        "bounded_reverification"
+      ],
+      "reaction_hint": "ADJACENT_VALIDATES_DEMAND",
+      "url": "https://aicap.uk/"
     },
     {
       "capabilities": [
@@ -262,6 +304,28 @@
       "published": "2026-09-02",
       "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
       "url": "https://arxiv.org/abs/2609.01992"
+    },
+    {
+      "capabilities": [
+        "dependency_mapping",
+        "readiness_contracts",
+        "scheduled_checks",
+        "diagnostics",
+        "lifecycle_governance"
+      ],
+      "id": "continuous-assurance-agent-creation-2607.21495",
+      "kind": "research",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "name": "Toward Continuous Assurance for the Democratization of AI Agent Creation in Industry",
+      "overlap": [
+        "scheduled_reread",
+        "dependency_graph",
+        "bounded_reverification",
+        "explicit_evidence_state"
+      ],
+      "published": "2026-07-23",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "url": "https://arxiv.org/abs/2607.21495"
     },
     {
       "capabilities": [
@@ -415,6 +479,50 @@
       ],
       "reaction_hint": "INTEGRATION_CANDIDATE",
       "url": "https://github.com/in-toto/attestation"
+    },
+    {
+      "capabilities": [
+        "claim_to_evidence_trace_graph",
+        "evidence_nodes",
+        "workflow_nodes",
+        "typed_semantic_edges",
+        "evidence_anchors",
+        "claim_support_paths"
+      ],
+      "id": "ledger-claim-evidence-2608.18398",
+      "kind": "research",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "name": "LEDGER: Claim-to-Evidence Trace Graphs for Auditing LLM Agents",
+      "overlap": [
+        "source_and_observation_binding",
+        "dependency_graph",
+        "explicit_evidence_state"
+      ],
+      "published": "2026-08-19",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "url": "https://arxiv.org/abs/2608.18398"
+    },
+    {
+      "capabilities": [
+        "mcp_server_registry",
+        "scheduled_scan",
+        "fail_closed_freshness",
+        "immutable_scan_snapshots",
+        "portable_scan_receipts",
+        "grade_change_history"
+      ],
+      "id": "mcp-trust-registry-2026-09",
+      "kind": "open_source",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "name": "MCP Trust neutral registry and fail-closed scan history",
+      "overlap": [
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "explicit_evidence_state",
+        "supersession_and_correction_history"
+      ],
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "url": "https://github.com/saagpatel/mcp-trust"
     },
     {
       "capabilities": [
