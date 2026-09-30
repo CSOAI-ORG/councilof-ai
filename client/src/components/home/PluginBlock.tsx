@@ -9,10 +9,9 @@ const URL = "https://councilof.ai/mcp/free";
 const MCP_SNIPPET = `{ "mcpServers": { "gspc": { "url": "${URL}" } } }`;
 
 const HOSTS = [
-  { name: "Claude", how: `Add gspc → ${URL}` },
+  { name: "Remote MCP clients", how: `Add the server URL → ${URL}` },
   { name: "Cursor", how: `~/.cursor/mcp.json → paste the JSON` },
-  { name: "Kimi", how: `MCP settings → ${URL}` },
-  { name: "Grok", how: `plugin install CSOAI-ORG/council-of-ai-grok → ${URL}` },
+  { name: "Other MCP hosts", how: `Use the host's remote-MCP connection flow with ${URL}` },
 ] as const;
 
 export default function PluginBlock() {
@@ -46,6 +45,14 @@ export default function PluginBlock() {
         {" · "}
         <a href="/tools" className="font-medium text-emerald-800 hover:underline">
           /tools
+        </a>
+        {" · "}
+        <a href="/claim-maintenance/" className="font-medium text-emerald-800 hover:underline">
+          claim maintenance
+        </a>
+        {" · "}
+        <a href="/.well-known/ai-catalog.json" className="font-medium text-emerald-800 hover:underline">
+          AI Catalog
         </a>
       </p>
     </div>

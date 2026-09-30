@@ -24,6 +24,22 @@ const STATE_STYLE: Record<FabricState, string> = {
   UNCHECKABLE: "border-amber-700/25 bg-amber-50 text-amber-950",
 };
 
+type LayerOPresence = {
+  schema: string;
+  as_of: string;
+  surfaces_total: number;
+  counts_by_state: Record<string, number>;
+};
+
+async function fetchLayerOPresence(signal: AbortSignal): Promise<LayerOPresence> {
+  const response = await fetch("/.well-known/layer-o-presence.json", {
+    cache: "no-store",
+    signal,
+  });
+  if (!response.ok) throw new Error(`Layer O presence HTTP ${response.status}`);
+  return response.json();
+}
+
 const PROTOCOLS = [
   {
     name: "MCP",
@@ -71,7 +87,9 @@ function age(seconds: number | null): string | null {
 
 export default function DashboardFabricPane() {
   const [fabric, setFabric] = useState<CapabilityFabric | null>(null);
+  const [presence, setPresence] = useState<LayerOPresence | null>(null);
   const [error, setError] = useState("");
+  const [presenceError, setPresenceError] = useState("");
   const [reload, setReload] = useState(0);
 
   useEffect(() => {
@@ -83,6 +101,20 @@ export default function DashboardFabricPane() {
         if (!controller.signal.aborted) {
           setFabric(null);
           setError(caught instanceof Error ? caught.message : String(caught));
+        }
+      });
+    return () => controller.abort();
+  }, [reload]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setPresenceError("");
+    fetchLayerOPresence(controller.signal)
+      .then(setPresence)
+      .catch((caught) => {
+        if (!controller.signal.aborted) {
+          setPresence(null);
+          setPresenceError(caught instanceof Error ? caught.message : String(caught));
         }
       });
     return () => controller.abort();
@@ -166,6 +198,46 @@ export default function DashboardFabricPane() {
           </p>
         </article>
       </div>
+
+      <section className="mt-6 rounded-2xl border border-emerald-800/15 bg-white p-4 shadow-sm" aria-labelledby="layer-o-title">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">
+              Public distribution presence
+            </p>
+            <h2 id="layer-o-title" className="mt-1 text-base font-semibold text-slate-950">
+              Layer O outward state
+            </h2>
+          </div>
+          {presence ? (
+            <p className="font-mono text-[10px] text-muted-foreground">{presence.as_of}</p>
+          ) : null}
+        </div>
+        {presence ? (
+          <>
+            <p className="mt-3 text-sm text-slate-700">
+              {presence.surfaces_total} catalogued surfaces · {presence.counts_by_state.PUBLISHED ?? 0} published · {presence.counts_by_state.SUBMITTED ?? 0} submitted · {presence.counts_by_state.UNDER_REVIEW ?? 0} under review · {presence.counts_by_state.AUTH_REQUIRED ?? 0} auth required.
+            </p>
+            <p className="mt-2 text-xs leading-relaxed text-slate-600">
+              These are presence states, not adoption claims. A published listing does not prove installation, calls, payment, or acceptance.
+            </p>
+            <a
+              href="/.well-known/layer-o-presence.json"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 hover:underline"
+            >
+              Read the machine-readable presence rollup <ExternalLink className="h-3 w-3" />
+            </a>
+          </>
+        ) : presenceError ? (
+          <p className="mt-3 text-sm text-amber-900">
+            Layer O presence UNREACHABLE: {presenceError}. No prior count is substituted.
+          </p>
+        ) : (
+          <p className="mt-3 text-sm text-muted-foreground">Reading the public presence rollup…</p>
+        )}
+      </section>
 
       <section className="mt-8" aria-labelledby="fabric-live-title">
         <div className="flex flex-wrap items-end justify-between gap-3">

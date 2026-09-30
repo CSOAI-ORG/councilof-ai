@@ -48,6 +48,7 @@ export type LobbyTabId =
   | "swift"
   | "verify"
   | "cards"
+  | "claims"
   | "state"
   | "archive"
   | "attestations"
@@ -219,6 +220,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(signed cards?|card index|published cards?|browse cards?|measurement cards?)\b/i,
+  },
+  {
+    id: "claims",
+    label: "Claim maintenance",
+    blurb:
+      "Public claim registers, dependency-aware re-checks, correction history, and the live maintenance schedule.",
+    path: "/claim-maintenance",
+    cues: /\b(claim maintenance|maintain (?:a )?claim|claim dependencies|what changed|recheck claim|re-check claim)\b/i,
   },
   {
     id: "state",
@@ -828,6 +837,7 @@ const DASHBOARD_NAV_DEFINITION: {
       "Check a signed record yourself, and see the evidence behind every score.",
     tabs: [
       { id: "verify", label: "Check a record" },
+      { id: "claims", label: "Claim maintenance" },
       { id: "evidence", label: "Evidence pack" },
       { id: "evidence-index", label: "Evidence index" },
     ],
