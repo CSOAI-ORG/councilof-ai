@@ -168,7 +168,16 @@ export default function ModelsMeasured() {
                 {nf.format(read.doc.sources.signed_card_index.cards_read)} cards read.
               </li>
               <li>
-                The signed mill cards (<a className="font-mono underline" href={read.doc.sources.mill_cards_signed.path}>{read.doc.sources.mill_cards_signed.path}</a>):{" "}
+                The signed mill cards (
+                {read.doc.sources.mill_cards_signed.path.endsWith("/") ? (
+                  <>
+                    <code className="font-mono">{read.doc.sources.mill_cards_signed.path}</code>, one file per card;{" "}
+                    <a className="underline" href={`${read.doc.sources.mill_cards_signed.path}README.md`}>what the folder holds</a>
+                  </>
+                ) : (
+                  <a className="font-mono underline" href={read.doc.sources.mill_cards_signed.path}>{read.doc.sources.mill_cards_signed.path}</a>
+                )}
+                ):{" "}
                 {nf.format(read.doc.sources.mill_cards_signed.files_read)} files read, {nf.format(read.doc.sources.mill_cards_signed.cards_counted)} counted. Rule:{" "}
                 {read.doc.sources.mill_cards_signed.rule}.
               </li>

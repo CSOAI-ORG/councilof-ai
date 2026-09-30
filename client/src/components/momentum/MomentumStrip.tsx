@@ -112,7 +112,7 @@ export default function MomentumStrip({
 
   if (variant === "panel") {
     if (read.kind !== "ready") {
-      return <div className="my-8 h-56 rounded-3xl bg-[var(--ink)] opacity-90" aria-busy="true" aria-label="Loading live figures" />;
+      return <div role="status" className="my-8 h-56 rounded-3xl bg-[var(--ink)] opacity-90" aria-busy="true" aria-label="Loading live figures" />;
     }
     const figs = pick(read.payload, ids);
     if (!figs.length) return null;

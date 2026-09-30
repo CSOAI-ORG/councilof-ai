@@ -202,20 +202,15 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     await expectShell(page, id);
     const pane = page.locator(`[data-testid="dashboard-pane-${id}"]`);
     if (id === "home") {
-      // Home is the conversational operating surface. The former metrics dashboard
-      // remains available below it in the Account overview disclosure.
+      // Home is the GSPC workspace: Ask (the AG-UI talk panel) beside the live board.
+      // The retired metrics page is gone (30 Sep 2026); its figures each have one place here.
+      await expect(page.getByTestId("gspc-workspace-home"), "home: the GSPC workspace").toBeVisible();
       await expect(
-        page.getByRole("heading", {
-          name: "Ask the Council",
-          exact: true,
-        }),
+        page.getByRole("heading", { name: "Ask in plain words", exact: true }),
         "home: conversation first",
       ).toBeVisible();
-      await expect(
-        page.getByText("Account overview and recent measurements", {
-          exact: true,
-        }),
-      ).toHaveCount(1);
+      await expect(page.getByTestId("ws-board")).toHaveCount(1);
+      await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(0);
     } else {
       await expect(pane, `${id}: its own pane is mounted`).toHaveCount(1);
     }

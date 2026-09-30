@@ -1,12 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowRight,
-  BookOpenCheck,
-  Gauge,
-  History,
-  ShieldCheck,
-  Swords,
-} from "lucide-react";
+import { History } from "lucide-react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useSearch } from "wouter";
 import DashboardRightRail from "@/components/DashboardRightRail";
@@ -16,6 +9,7 @@ import LobbyComposer, {
 } from "@/components/lobby/LobbyComposer";
 import LobbyThread from "@/components/lobby/LobbyThread";
 import TalkPanel, { type TalkPanelHandle } from "@/components/talk/TalkPanel";
+import GspcWorkspaceHome from "@/components/gspc/GspcWorkspaceHome";
 import {
   isExplicitNavigationCommand,
   LOBBY_TABS,
@@ -57,34 +51,6 @@ function shortDescription(description: string): string {
 
 /** DashboardLayout's section bar exposes this slot for workspace-level actions. */
 export const SECTION_ACTIONS_ID = "coai-section-actions";
-
-/** Four plain starting points. Each opens a real pane; none sends anything. */
-const STARTERS = [
-  {
-    href: "/dashboard?tab=board",
-    icon: Gauge,
-    title: "See the scores",
-    body: "How each measured AI model did on every published test.",
-  },
-  {
-    href: "/dashboard?tab=verify",
-    icon: ShieldCheck,
-    title: "Check a signed record",
-    body: "Recompute its fingerprint and signature in your own browser. Free.",
-  },
-  {
-    href: "/dashboard?tab=space",
-    icon: Swords,
-    title: "Replay a model arena",
-    body: "Recorded rounds between models, graded by fixed rules.",
-  },
-  {
-    href: "/dashboard?tab=learn",
-    icon: BookOpenCheck,
-    title: "Learn how the tests work",
-    body: "Walk through a test step by step, then try it yourself.",
-  },
-] as const;
 
 export default function DashboardWorkspace({
   activePane,
@@ -278,72 +244,17 @@ export default function DashboardWorkspace({
           ) : hasConversation ? (
             <LobbyThread chat={chat} endRef={threadEndRef} />
           ) : (
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-8 sm:px-8 sm:py-12 lg:px-12">
-              <div className="mx-auto w-full min-w-0 max-w-3xl">
-                <div className="text-center">
-                  <h1 className="text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-                    Ask the Council
-                  </h1>
-                  <p className="mx-auto mt-3 max-w-xl text-base leading-relaxed text-slate-700">
-                    Ask in plain words. Each answer shows the tool it came from, the
-                    record it cites and the state that tool returned &mdash; if there
-                    is no evidence, the answer says so.
-                  </p>
-                </div>
-
+            <GspcWorkspaceHome
+              toolCount={toolPhase === "ready" ? tools.length : null}
+              toolState={toolPhase}
+              talk={
                 <TalkPanel
                   ref={talkRef}
                   variant="dock"
-                  className="mt-6 rounded-2xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
+                  className="mt-4 rounded-3xl border border-emerald-950/10 bg-card p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] sm:p-5"
                 />
-
-                <h2 className="mt-10 text-sm font-semibold text-slate-800">Or open a workspace</h2>
-
-                <ul className="mt-3 grid gap-3 text-left sm:grid-cols-2">
-                  {STARTERS.map(({ href, icon: Icon, title, body }) => (
-                    <li key={title}>
-                      <Link
-                        href={href}
-                        className="group flex h-full items-start gap-3 rounded-2xl border border-emerald-950/10 bg-white p-4 shadow-[0_1px_2px_rgba(6,21,15,0.04)] transition hover:border-emerald-700/40 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
-                      >
-                        <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-800">
-                          <Icon className="h-4 w-4" aria-hidden="true" />
-                        </span>
-                        <span className="min-w-0">
-                          <span className="flex items-center gap-1 text-sm font-semibold text-slate-950">
-                            {title}
-                            <ArrowRight className="h-3.5 w-3.5 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-emerald-700 motion-reduce:transition-none" aria-hidden="true" />
-                          </span>
-                          <span className="mt-1 block text-sm leading-relaxed text-slate-600">
-                            {body}
-                          </span>
-                        </span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-
-                <p className="mt-6 text-center text-sm text-slate-600">
-                  Connect your own AI tool instead?{" "}
-                  <Link
-                    href="/dashboard?tab=tools"
-                    title="Tools declared by tools/list. A tool is runtime-observed only after its own tools/call completes."
-                    className="font-semibold text-emerald-800 underline underline-offset-2 hover:text-emerald-900"
-                  >
-                    {toolPhase === "ready"
-                      ? `See the ${tools.length} MCP tools`
-                      : "See the MCP tools"}
-                  </Link>
-                </p>
-
-                <details className="mt-10 rounded-xl border border-border bg-white">
-                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-slate-800">
-                    Account overview and recent measurements
-                  </summary>
-                  <div className="border-t border-border">{children}</div>
-                </details>
-              </div>
-            </div>
+              }
+            />
           )}
         </div>
         {candidate ? (
