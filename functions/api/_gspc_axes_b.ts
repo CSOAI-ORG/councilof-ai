@@ -112,7 +112,7 @@ export const AXES_B: AxisScore[] = [
     quotable_models: ["qwen2.5:0.5b-instruct", "council-safe", "qwen2.5:7b", "mistral:7b",
       "qwen2.5:1.5b", "qwen3:4b", "council-inhouse-ft"],
     quotable_note: "7 models x >=30 usable gold-bank rows (68-71 each, of 27 distinct inputs); per-model n below",
-    fleet: "7 models (4 base + 2 council fine-tunes + 1 base variant) — NOT the 19-model board fleet",
+    fleet: "7 models (4 base + 2 of our own council models + 1 base variant) — NOT the 19-model board fleet",
     per_model: {
       "qwen3:4b": { n: 68, quotable: true, tp: 6, fp: 0, tn: 30, fn: 32, precision: 1.0, recall: 0.158, accuracy: 0.5294 },
       "qwen2.5:7b": { n: 71, quotable: true, tp: 7, fp: 0, tn: 33, fn: 31, precision: 1.0, recall: 0.184, accuracy: 0.5634 },
@@ -148,7 +148,7 @@ export const AXES_B: AxisScore[] = [
       "separation determined 2026-08-25 as a row-level TIE and moved to UNTESTED on 2026-09-29 (C-2026-0929-02: " +
       "at the prompt level the published counts do not decide it). Best zero-FP detector: qwen2.5:0.5b-instruct " +
       "(precision 1.0, recall 0.237). Fleet mean accuracy 0.5455 (7 models, usable n 68-71). " +
-      "Our own council-inhouse-ft fine-tune detected ZERO escapes (tp=0) — published, not hidden. " +
+      "Our own council-inhouse-ft model detected ZERO escapes (tp=0) — published, not hidden. " +
       "Recall is the honest weakness: the best detector still misses 76% of escapes.",
   },
 

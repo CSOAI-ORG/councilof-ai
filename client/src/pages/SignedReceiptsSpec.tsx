@@ -34,8 +34,6 @@ const FILES = [
   { href: `${BASE}/test_interceptor.py`, name: "test_interceptor.py", what: "its regression suite (python3 test_interceptor.py)" },
   { href: `${BASE}/conformance/`, name: "conformance/", what: "golden vectors and a one-command runner: implement it in 5 minutes" },
 ];
-const PINNED =
-  "https://huggingface.co/datasets/csoai/councilof-ai-source/tree/96bf3a07d4f944e9a9ed577e329ef10e20d38dfc/contributions/a2a-signed-receipts/f80de2731ceb";
 
 const A = ({ href, children }: { href: string; children: ReactNode }) => (
   <a href={href} className="font-medium text-slate-900 underline underline-offset-4">
@@ -71,7 +69,8 @@ export default function SignedReceiptsSpec() {
           ))}
         </ul>
         <p className="mt-3 text-sm leading-relaxed text-slate-700">
-          SPEC.md is pinned byte for byte in our source mirror at <A href={PINNED}>councilof-ai-source @ 96bf3a07</A>. The
+          SPEC.md is pinned byte for byte in our source mirror at councilof-ai-source @ 96bf3a07; that mirror has been private
+          since 28 Sep 2026, so the files listed above are the public copies. The
           mirror's interceptor.py is the version before 28 September 2026, which returned VALID when it could not resolve the
           signing key; the copy here returns UNVERIFIABLE_KEY instead. Earlier
           references to the GitHub repository <code className="rounded bg-white px-1">CSOAI-ORG/a2a-signed-receipts</code> do not

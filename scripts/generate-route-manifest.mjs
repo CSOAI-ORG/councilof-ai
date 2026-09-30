@@ -27,7 +27,10 @@ try {
   const reRender = /<Route\s+path="([^"]+)"\s*>\s*\{\s*\(\)\s*=>\s*<([A-Za-z0-9_]+)/g;
   const seen = new Set();
   const rows = [];
-  let m;
+  // A component name is not a public title. Where the derived title says something the page is not
+// (X402Leaderboard is a door board of 402 challenge fields, not a leaderboard), name it here.
+const TITLE_OVERRIDES = { X402Leaderboard: "x402 door board" };
+let m;
   while ((m = reRender.exec(src)) !== null) {
     const [, p, comp] = m;
     if (!p.startsWith("/") || p.includes(":") || seen.has(p) || comp === "ContentReviewNotice") continue;
@@ -41,7 +44,7 @@ try {
     const [, p, comp] = m;
     if (!p.startsWith("/") || p.includes(":") || seen.has(p) || comp === "ContentReviewNotice") continue;
     seen.add(p);
-    const title = comp
+    const title = TITLE_OVERRIDES[comp] ?? comp
       .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
       .replace(/\bV2\b|\bV3\b/g, "")
       .replace(/\s+/g, " ")

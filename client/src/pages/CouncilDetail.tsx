@@ -80,7 +80,7 @@ export default function CouncilDetail() {
               <div>
                 <h3 className="text-2xl font-bold mb-4">Analyst Submits Report</h3>
                 <p className="text-gray-600 text-lg">
-                  A certified Watchdog Analyst reviews an AI system and submits a compliance report with their recommendation (Compliant, Conditionally Compliant, or Non-Compliant). The report includes detailed findings, evidence, and remediation steps.
+                  A Watchdog Analyst who holds an Academy completion record reviews an AI system and submits a report with findings, evidence and remediation steps. It is a recorded opinion, not a certification or a compliance determination.
                 </p>
               </div>
             </div>

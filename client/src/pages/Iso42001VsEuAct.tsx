@@ -54,7 +54,7 @@ export default function Iso42001VsEuAct() {
           ))}
         </div>
         <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-sm text-emerald-900">
-          <b>The CSOAI bridge:</b> run one AI management system, certify to ISO 42001, and crosswalk the same evidence onto the EU AI Act - certification and compliance from a single source of truth.
+          <b>The CSOAI bridge:</b> run one AI management system, keep one evidence set, and crosswalk it onto both ISO 42001 and the EU AI Act. ISO 42001 certification is issued by an accredited certification body, not by us; we measure and do not certify.
         </div>
         <div className="mt-6 flex flex-wrap gap-3">
           <a href="/crosswalks" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See the crosswalk -&gt;</a>

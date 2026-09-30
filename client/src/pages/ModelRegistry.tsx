@@ -221,7 +221,8 @@ export default function ModelRegistry() {
                     )}
                     {a.leader && (
                       <div className="text-[11px] text-slate-400">
-                        best: <span className="font-medium text-emerald-300">{a.leader}</span>
+                        {a.separation === "SEPARATED" ? "separated leader" : "top observed (not separated)"}:{" "}
+                        <span className="font-medium text-emerald-300">{a.leader}</span>
                       </div>
                     )}
                     {a.separation === "SEPARATED" && a.separation_p != null && (

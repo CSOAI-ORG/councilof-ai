@@ -43,6 +43,45 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0930-12",
+      "date": "2026-09-30",
+      "detected_at": "2026-09-30T13:30Z",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "An end-user crawl on 2026-09-30 (604 councilof.ai URLs, 3,126 unique links, 135 Hugging Face dataset cards, at most one request per second per host) finished at about 13:30Z; each defect below was read from the live bytes",
+        "published_at is UNRECORDED: the deploy that first serves the corrected surfaces had not happened when this entry was written"
+      ],
+      "what_was_wrong": "Public surfaces sent readers to places they could not reach, and some sentences said more than the record behind them. (1) Every page's footer and about 30 other links pointed at the Hugging Face source mirror csoai/councilof-ai-source, which has been private since 28 Sep 2026 and answers 401, and about 30 links on pages, API bodies and static pages pointed at the GitHub organisation CSOAI-ORG, which is unavailable; the verify-yourself door named a verifier script readers could not download. (2) llms.txt and llms-full.txt still linked Zenodo DOIs that answer 410 (the open item of C-2026-0929-09). (3) Some pages offered or implied certification or compliance determinations ('Re-certify on every model update', 'certify to ISO 42001 ... certification and compliance', 'certified Watchdog Analyst ... Compliant / Non-Compliant', 'We sell this'), GET /api/regulator-findings annotated rates as 'measured compliant' or 'non-compliance risk', and /models labelled the top row of tied and untested axes 'best'. (4) The GET /api/gspc note said per-axis numbers show 'the board LEADER' and that jail's separation is TIE; it is UNTESTED since C-2026-0929-02. (5) The x402 door board was titled a leaderboard. (6) Four high-traffic Hugging Face dataset cards carried agent-to-agent instructions ('Printer only — no axis mine on ZeroGPU. A100 COLD.'), a typed lid of 22 axes, typed MCP tool counts of 11 to 16, and an unlabelled BibTeX DOI.",
+      "how_caught": "An end-user audit asked to check every public surface as a reader would: follow every link, compare every number with its live source, and read every sentence against the doctrine.",
+      "what_changed": "Source links go to the Software Heritage archive of the repository (full snapshots of 2 and 15 Sep 2026), to PyPI package pages, or to the on-site copy (/corpus-watch/status.json, /spec/signed-receipts, /extension/, /.claude-plugin/plugin.json); documents that exist only in the private source are named as not publicly hosted instead of linked. The verifier is served at /verify-yourself/verify-estate.mjs (a byte copy of scripts/verify-estate.mjs). llms*.txt label the DOIs UNAVAILABLE at their template. The certification and compliance sentences were reworded to what we do: measure. /api/regulator-findings notes now read 'measured rate ... a measurement, not a compliance determination' (grade field names unchanged). /models prints 'top observed (not separated)' unless separation is SEPARATED. The /api/gspc note describes the top observed row and jail as UNTESTED. The board is titled 'x402 door board'. The four Hugging Face cards were rewritten by the card producer's new --scrub mode with live values (gspc-hub-cards 4cd11f0b, gspc-boards bd3d2c58, hub-queue 449405c2, x402-bazaar-conformance 7b72de3c).",
+      "old_values": {
+        "footer source link (quoted, not claimed)": "https://huggingface.co/datasets/csoai/councilof-ai-source -> HTTP 401",
+        "llms.txt Zenodo line (quoted, not claimed)": "Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104",
+        "/api/regulator-findings note (quoted, not claimed)": "measured compliant on this axis",
+        "Hugging Face card line (quoted, not claimed)": "Measurement, never certification. Printer only — no axis mine on ZeroGPU. A100 COLD."
+      },
+      "new_values": {
+        "footer source link": "Software Heritage archive of github.com/CSOAI-ORG/councilof-ai (snapshots 2 and 15 Sep 2026)",
+        "llms.txt Zenodo line": "10.5281/zenodo.21991104 — UNAVAILABLE since 29 Sep 2026 ... Do not follow it as a working link.",
+        "/api/regulator-findings note": "measured rate at or above 0.75 on this axis; a measurement, not a compliance determination"
+      },
+      "status": "CORRECTED - at the producers; about 130 further Hugging Face cards carry the same legacy lines and are listed for the next --scrub run",
+      "reached_the_public": true,
+      "open_items": [
+        "About 130 more csoai Hugging Face cards carry the same legacy directive lines, typed lids or MCP counts; hf-org-card.py --scrub fixes each one and this run was limited to five repositories.",
+        "PyPI csoai-gspc and npm csoai-gspc-mcp descriptions and the MCP Registry entries still link the unavailable GitHub organisation or a 410 DOI; they change only with a new release.",
+        "csoai.org /.well-known/mcp/server-card.json, mcp.json, api-catalog and ai-plugin.json list tools that do not exist, a dead fallback and dead links; they are served by the csoai.org site, not this repository."
+      ],
+      "evidence": [
+        "https://councilof.ai/api/regulator-findings",
+        "https://councilof.ai/llms.txt",
+        "https://councilof.ai/.well-known/verify-yourself.json",
+        "https://huggingface.co/datasets/csoai/gspc-hub-cards/commit/4cd11f0b585dd3610fb99b6d0eca9fff8b96ed1d",
+        "https://huggingface.co/datasets/csoai/x402-bazaar-conformance/commit/7b72de3c03b2ff383c6217e95c88c0a3969d6e60"
+      ]
+    },
+    {
       "id": "C-2026-0930-11",
       "date": "2026-09-30",
       "detected_at": "2026-09-28",
@@ -1803,20 +1842,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "c9e00682adeac89c7fd55ad3a87f7b02e3f5f9ce3132f8d26acf136070dc3908",
+    id: "a64b355c3a84cfebd23e8b796d91c221670864b2eff2bf70ddfe7c5b14828e25",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "df8e454cfc5ad2a65987527f1656e2eb2689b287050f2d948e1a7a8e88c6b8a3e9cf2f794e03d34a8fa6a234eaa2d3988cf334628c67e15d5bc6ad8fd8669504",
+    signature: "270e267e893e2c330e8c4c8d11ca98e12ae5ef4d614cdc66c0b5896b59434d7b33fdc3def7bfd002ab313748a416078a326a53cf33349f58aa7541cb9f86a403",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "c9e00682adeac89c7fd55ad3a87f7b02e3f5f9ce3132f8d26acf136070dc3908",
+          "content_id": "a64b355c3a84cfebd23e8b796d91c221670864b2eff2bf70ddfe7c5b14828e25",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 88,
-          "latest_entry_id": "C-2026-0930-11",
-          "ledger_canonical_bytes": 209791,
+          "entries": 89,
+          "latest_entry_id": "C-2026-0930-12",
+          "ledger_canonical_bytes": 215090,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-30T07:17:43Z"
+          "signed_at": "2026-09-30T14:00:26Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +

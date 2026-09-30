@@ -145,15 +145,6 @@ export default function PostmortemX402() {
             >
               Read the corrections ledger
             </a>
-            <a
-              href="https://github.com/CSOAI-ORG/councilof-ai/pull/1321"
-              rel="noreferrer"
-              target="_blank"
-              className="rounded-full border border-slate-300 px-4 py-2 text-slate-800 hover:border-emerald-700 hover:text-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2"
-            >
-              Inspect PR #1321
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
           </div>
         </section>
 

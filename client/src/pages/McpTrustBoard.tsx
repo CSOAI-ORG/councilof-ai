@@ -271,10 +271,9 @@ export default function McpTrustBoard() {
             <a href="/interop/mcp-trust/latest.json" className="text-emerald-300 underline-offset-2 hover:underline">
               Machine artefact (JSON)
             </a>
-            <a href="https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/product/MCP-TRUST-BOARD-SPEC.md"
-               className="text-emerald-300 underline-offset-2 hover:underline">
-              Methodology spec
-            </a>
+            <span className="text-emerald-300/70" title="not publicly hosted: the GitHub organisation is unavailable and the source mirror is private">
+              Methodology spec (not publicly hosted)
+            </span>
             <Link href="/attestation" className="text-emerald-300 underline-offset-2 hover:underline">
               How signing works
             </Link>
