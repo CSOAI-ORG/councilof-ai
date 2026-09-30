@@ -1,36 +1,37 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-09-26T08:33:34Z",
+ "as_of": "2026-09-30T08:16:39Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "cross_ledger",
  "kind": "measurement.cross_ledger_supply",
- "n_capsules": 353,
+ "n_capsules": 383,
  "states": {
-  "CONSISTENT": 101,
-  "INCONSISTENT": 4,
+  "CONSISTENT": 124,
+  "INCONSISTENT": 1,
   "ISSUER_LIST_UNAVAILABLE": 2,
-  "LISTED_NOT_READ": 34,
-  "OPERATOR_API": 77,
+  "LISTED_NOT_READ": 36,
+  "NOT_A_SUPPLY_CLAIM": 3,
+  "OPERATOR_API": 89,
   "PERMISSIONED_NOT_READABLE": 6,
-  "STATE_PROOF_RECORDED": 10,
-  "STATE_PROOF_VERIFIED": 49,
-  "TOTAL_COMPLETE": 10,
-  "TOTAL_PARTIAL": 8,
-  "UNCHECKABLE": 52
+  "STATE_PROOF_RECORDED": 12,
+  "STATE_PROOF_VERIFIED": 58,
+  "TOTAL_COMPLETE": 15,
+  "TOTAL_PARTIAL": 5,
+  "UNCHECKABLE": 32
  },
- "merkle_root": "a6e3fd14b1cc68072d919bfc59565161e59c492f97c775bbebefd48705770bf9",
+ "merkle_root": "4d1a955e12833786393c04473064299ad54464c0a0dd1ba4e5794a62f52de892",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
-  "jcs_byte_equal": "353/353",
+  "jcs_byte_equal": "383/383",
   "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "af25aa3413d97f3d14406d51b8bf0013198ba26b6359eaadf12370081e5830b1",
-  "bytes": 111954,
-  "uncompressed_sha256": "e60393af1adc14d337a784ea801c01fbc3ae934e20cb94cea07a84561e77555f",
-  "uncompressed_bytes": 791290,
+  "sha256": "5cc54486e76fef55d1d9b14eed095434b8dcc7521f9b388997b93578179c76cd",
+  "bytes": 123288,
+  "uncompressed_sha256": "7321c608d111d78303bcf6025ab7e76e26aaa466dda39f2835c1cebbd4d23a01",
+  "uncompressed_bytes": 862272,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
@@ -102,18 +103,18 @@
     "issuer_list_state": "READ"
    },
    {
-    "file": "/evac-bulk/xl-daily/2026-09-26/xl-daily-2026-09-26.json",
+    "file": "/evac-bulk/xl-daily/2026-09-30/xl-daily-2026-09-30.json",
     "asset": "xl-daily",
     "schema": "csoai.cross-ledger-xl-daily/0.1",
-    "sha256": "b02851fcbc8ea5ad6460c6c847e8af9eaec74d36a09121989590dc180a5d700d",
+    "sha256": "4b135ecbfcebb5324462e6dda3870d8f3b625c900ac08f6e4753a25803fbe33c",
     "signature": "VERIFIES",
-    "signature_payload_sha256": "0649bb1c47ce3888b9f0b501e57fc7af0819036d63362fd5f78d12380d3ec2f1",
-    "date": "2026-09-26",
-    "assets": 21
+    "signature_payload_sha256": "6b5d7c930fbacae874391917c8edc65f730f37ab8ab75b5ad3c011dd1ab9b126",
+    "date": "2026-09-30",
+    "assets": 23
    }
   ],
   "skipped_files": [
-   "institutional-evidence-links-2026-09-26.json"
+   "institutional-evidence-links-2026-09-30.json"
   ]
  },
  "capsules_by_asset_state": {
@@ -142,121 +143,132 @@
    "OPERATOR_API": 16,
    "LISTED_NOT_READ": 20
   },
-  "BENJI (xl-daily 2026-09-26)": {
+  "BENJI (xl-daily 2026-09-30)": {
    "OPERATOR_API": 6,
-   "STATE_PROOF_VERIFIED": 5,
-   "UNCHECKABLE": 2,
+   "STATE_PROOF_VERIFIED": 6,
    "STATE_PROOF_RECORDED": 1,
-   "CONSISTENT": 12,
-   "TOTAL_PARTIAL": 1,
-   "TOTAL_COMPLETE": 4
+   "CONSISTENT": 13,
+   "TOTAL_COMPLETE": 5
   },
-  "BNY digital cash / tokenized deposits (xl-daily 2026-09-26)": {
+  "BNY digital cash / tokenized deposits (xl-daily 2026-09-30)": {
    "PERMISSIONED_NOT_READABLE": 1
   },
-  "BUIDL (xl-daily 2026-09-26)": {
+  "BUIDL (xl-daily 2026-09-30)": {
    "ISSUER_LIST_UNAVAILABLE": 1
   },
-  "Citi Token Services (tokenized deposits) (xl-daily 2026-09-26)": {
+  "Citi Token Services (tokenized deposits) (xl-daily 2026-09-30)": {
    "PERMISSIONED_NOT_READABLE": 1
   },
-  "DAI (xl-daily 2026-09-26)": {
+  "DAI (xl-daily 2026-09-30)": {
    "UNCHECKABLE": 1
   },
-  "EURC (xl-daily 2026-09-26)": {
-   "UNCHECKABLE": 7,
+  "EURAU (xl-daily 2026-09-30)": {
+   "STATE_PROOF_VERIFIED": 3,
+   "OPERATOR_API": 4,
    "STATE_PROOF_RECORDED": 1,
-   "STATE_PROOF_VERIFIED": 1,
-   "OPERATOR_API": 3,
-   "LISTED_NOT_READ": 1,
-   "CONSISTENT": 5,
-   "TOTAL_PARTIAL": 1
-  },
-  "HSBC Tokenised Deposit Service (xl-daily 2026-09-26)": {
-   "PERMISSIONED_NOT_READABLE": 1
-  },
-  "JPMD (xl-daily 2026-09-26)": {
+   "LISTED_NOT_READ": 2,
+   "CONSISTENT": 8,
    "UNCHECKABLE": 2,
    "TOTAL_PARTIAL": 1
   },
-  "OUSG (xl-daily 2026-09-26)": {
+  "EURC (xl-daily 2026-09-30)": {
+   "STATE_PROOF_RECORDED": 2,
+   "STATE_PROOF_VERIFIED": 3,
+   "OPERATOR_API": 3,
+   "LISTED_NOT_READ": 1,
+   "CONSISTENT": 8,
+   "UNCHECKABLE": 1,
+   "TOTAL_PARTIAL": 1
+  },
+  "EURCV (xl-daily 2026-09-30)": {
    "OPERATOR_API": 4,
    "CONSISTENT": 4,
    "TOTAL_COMPLETE": 1
   },
-  "PYUSD (xl-daily 2026-09-26)": {
-   "UNCHECKABLE": 2,
-   "STATE_PROOF_VERIFIED": 2,
-   "OPERATOR_API": 2,
-   "CONSISTENT": 4,
-   "TOTAL_PARTIAL": 1
+  "HSBC Tokenised Deposit Service (xl-daily 2026-09-30)": {
+   "PERMISSIONED_NOT_READABLE": 1
   },
-  "RLUSD (xl-daily 2026-09-26)": {
+  "JPMD (xl-daily 2026-09-30)": {
+   "STATE_PROOF_VERIFIED": 1,
+   "CONSISTENT": 1,
+   "TOTAL_COMPLETE": 1
+  },
+  "OUSG (xl-daily 2026-09-30)": {
+   "OPERATOR_API": 4,
+   "CONSISTENT": 4,
+   "TOTAL_COMPLETE": 1
+  },
+  "PYUSD (xl-daily 2026-09-30)": {
+   "STATE_PROOF_VERIFIED": 3,
+   "OPERATOR_API": 2,
+   "CONSISTENT": 5,
+   "TOTAL_COMPLETE": 1
+  },
+  "RLUSD (xl-daily 2026-09-30)": {
    "OPERATOR_API": 2,
    "STATE_PROOF_VERIFIED": 4,
    "STATE_PROOF_RECORDED": 1,
    "CONSISTENT": 7,
    "TOTAL_COMPLETE": 1
   },
-  "Swift shared ledger (tokenised deposits) (xl-daily 2026-09-26)": {
+  "Swift shared ledger (tokenised deposits) (xl-daily 2026-09-30)": {
    "UNCHECKABLE": 1
   },
-  "USD1 (xl-daily 2026-09-26)": {
+  "USD1 (xl-daily 2026-09-30)": {
    "STATE_PROOF_VERIFIED": 5,
    "OPERATOR_API": 6,
    "CONSISTENT": 11,
    "INCONSISTENT": 1,
    "TOTAL_COMPLETE": 1
   },
-  "USDC (xl-daily 2026-09-26)": {
-   "OPERATOR_API": 13,
-   "STATE_PROOF_VERIFIED": 11,
+  "USDC (xl-daily 2026-09-30)": {
+   "OPERATOR_API": 14,
+   "STATE_PROOF_VERIFIED": 12,
    "STATE_PROOF_RECORDED": 2,
-   "UNCHECKABLE": 15,
+   "UNCHECKABLE": 11,
    "LISTED_NOT_READ": 9,
-   "CONSISTENT": 26,
+   "CONSISTENT": 28,
    "TOTAL_PARTIAL": 1
   },
-  "USDe (xl-daily 2026-09-26)": {
+  "USDe (xl-daily 2026-09-30)": {
    "STATE_PROOF_VERIFIED": 1,
    "CONSISTENT": 1,
    "UNCHECKABLE": 1,
    "TOTAL_COMPLETE": 1
   },
-  "USDG (xl-daily 2026-09-26)": {
+  "USDG (xl-daily 2026-09-30)": {
    "STATE_PROOF_VERIFIED": 5,
    "OPERATOR_API": 2,
    "CONSISTENT": 7,
    "TOTAL_COMPLETE": 1
   },
-  "USDS (xl-daily 2026-09-26)": {
+  "USDS (xl-daily 2026-09-30)": {
    "UNCHECKABLE": 1
   },
-  "USDT (xl-daily 2026-09-26)": {
+  "USDT (xl-daily 2026-09-30)": {
    "STATE_PROOF_VERIFIED": 2,
    "STATE_PROOF_RECORDED": 3,
-   "OPERATOR_API": 7,
-   "UNCHECKABLE": 15,
-   "LISTED_NOT_READ": 3,
-   "CONSISTENT": 9,
-   "INCONSISTENT": 3,
-   "TOTAL_PARTIAL": 1
-  },
-  "USDY (xl-daily 2026-09-26)": {
    "OPERATOR_API": 8,
-   "STATE_PROOF_VERIFIED": 1,
-   "UNCHECKABLE": 4,
-   "STATE_PROOF_RECORDED": 1,
+   "UNCHECKABLE": 13,
+   "LISTED_NOT_READ": 3,
    "CONSISTENT": 10,
+   "NOT_A_SUPPLY_CLAIM": 3,
    "TOTAL_PARTIAL": 1
   },
-  "USTB (xl-daily 2026-09-26)": {
+  "USDY (xl-daily 2026-09-30)": {
+   "OPERATOR_API": 10,
+   "STATE_PROOF_VERIFIED": 1,
+   "STATE_PROOF_RECORDED": 1,
+   "CONSISTENT": 12,
+   "TOTAL_COMPLETE": 1
+  },
+  "USTB (xl-daily 2026-09-30)": {
    "STATE_PROOF_VERIFIED": 1,
    "OPERATOR_API": 1,
    "CONSISTENT": 2,
    "TOTAL_COMPLETE": 1
   },
-  "USYC (xl-daily 2026-09-26)": {
+  "USYC (xl-daily 2026-09-30)": {
    "STATE_PROOF_VERIFIED": 2,
    "OPERATOR_API": 1,
    "LISTED_NOT_READ": 1,
@@ -267,33 +279,35 @@
  },
  "label_rule": "measurement_state = the source's evidence label verbatim; STATE_PROOF_VERIFIED only with a proof marked verified in the row (else the build refuses); never upgraded",
  "daily_loop": {
-  "record": "/evac-bulk/xl-daily/2026-09-26/xl-daily-2026-09-26.json",
-  "date": "2026-09-26",
-  "sha256": "b02851fcbc8ea5ad6460c6c847e8af9eaec74d36a09121989590dc180a5d700d",
-  "unmeasured_selected_not_capsuled": 41,
+  "record": "/evac-bulk/xl-daily/2026-09-30/xl-daily-2026-09-30.json",
+  "date": "2026-09-30",
+  "sha256": "4b135ecbfcebb5324462e6dda3870d8f3b625c900ac08f6e4753a25803fbe33c",
+  "unmeasured_selected_not_capsuled": 39,
   "totals_rule": "per product: COMPLETE only if every listed deployment was read with a supply; PARTIAL products carry no total",
   "asset_files": {
-   "benji": "bc530cdd1c1b9603140df1ab549c402b6f61aa758f348812f0b8d8be81b46f61",
-   "bny-digital-cash": "f228ba04b37d2647db4ac08b712b82106c1fbd87a2040e24c91d2d6f2bbfc093",
-   "buidl": "1bf32f67650164ec3e91f753a07a535459136792a6b772c49359bfef922c70c8",
-   "citi-token-services": "998635ec23c812cd014c7b00b619e036e5a05f724238476eafc3765739b61d56",
-   "dai": "1d84de2a9222acd8a5184d76ab13de4796ae2b1104ec067cbdfb192f83905e62",
-   "eurc": "458724976518cc0c38069054206ea50f8cc6e0de192d316633ad126806ee9b82",
-   "hsbc-tokenised-deposit-service": "dd41df7174bd2aace96f5aac05b47741e0f056322b9ee44185a52308d22e9dc5",
-   "jpmd": "f7ae65961871b920d83983cb71cc7507d561bd5880ed542e71152fa808fa8288",
-   "ousg": "7bee0c39651f154647985cb0c9040479e1efdba198199bbd06da117f5b58780b",
-   "pyusd": "48ce047b34ae9381d6cdf88f2deb0d3065bb2a8f474b5e3dfac46eae6d40112b",
-   "rlusd": "23c2caca04d214c40dd67faab4bec2db01209d4d2402944f8d846eb540d28b46",
-   "swift-ledger": "ddae7dc9c11e720e70b62e2b0969c0bcbde99237e7c69970cf120aa14301a5ae",
-   "usd1": "f99b06a3b5379c566d0311b66722428fcb3118b4a10620aad7cee0e21c0c9319",
-   "usdc": "2114f779a61eebb30257a647a8b773421bbc35c3cc46a43a172f6c1099a9743a",
-   "usde": "3a07e3cac3c9cc90dcfea08324692e86f3fc9809884e766f49a76060fb3f8b28",
-   "usdg": "8b504bdfa344948c3895dea4203edced187575a539b082f8e529befb471867e2",
-   "usds": "440daa1f8a1e30b6c5ba381581a1a9cf271953fa84675d262e486b9dd9d167e5",
-   "usdt": "711e8f885e4fe4b599dda54dd1836303b0b2228f12e796c041c4742829f075c0",
-   "usdy": "cd974e91fab834c8594104ce6979a7c1fcbbec3a4ac84091a00addd194b24d6d",
-   "ustb": "ae3d49ab12b26bd633bf1af77f7c36e3b4c4b28a2227a9947f5991d554e1d55a",
-   "usyc": "00d663cb5da3d38f3643e4a30ca763a8b85c2aa622cf820f063bd14c9d721952"
+   "benji": "df9598f70af69a626c2606c5b227c290c2deb6eb4ac4823a063b5d4f4b8082df",
+   "bny-digital-cash": "376fd545ac303cd70f7993229d7a224eb88734d44231f79c37ecfad7e5a0b4b8",
+   "buidl": "6c02385ff3130ab678a17ce959992659fe90dcbf553d83776f4d74f076fa0229",
+   "citi-token-services": "981c825f0f2d5a03554d1b6b33f78417f8c6952afd0f3bd533b5e611cfbc55e5",
+   "dai": "07e4c72e453b2977d7db13f1a58b22ed5b6ed28fb9e24fcdf8a8892b831e8f39",
+   "eurau": "93c31c2b011de8444ea31a4c5a1d2f9e910c8cea12a5ad51b8045f6459bc4e74",
+   "eurc": "d3ef3b2c35247da7b628e1046b14fdd4aac81381432120f90014fa5d1bca7b01",
+   "eurcv": "79632324edadbd660c9423ad6372959ca9936a10fdf9e6a5c89a1098644a62bd",
+   "hsbc-tokenised-deposit-service": "d4e8783f717ebde6c78c57d9d26f011da8583e9fa5315573dfe7b0a5d83ef476",
+   "jpmd": "43681512b0bbe66f76a6be5886721c3d09aad76a722e7d5558e65eec1041693e",
+   "ousg": "8a6237fd57ee40a21aeb5745b496c59334f5d3c74ace60bb626377caa06596fe",
+   "pyusd": "d6bd7898cc25db9a7ca57a84495151092f362de4fb87126fe61082fc06c71697",
+   "rlusd": "03db4b2363d2d81abde6559ca419aa7ba9c80182012bbe0e736b8a3b96b59009",
+   "swift-ledger": "8ebbab6a9b3aeac50ad3b4c5eda9a74907a11a2d0e2b3686cae037cd0796a1d1",
+   "usd1": "afcf1ee6d4bcee5f6f1df4687456de70f4a88048f1bac9a8a92f634799719b75",
+   "usdc": "d4082f98ef4865e2a59b652a6b6eebbf60a458af9e2568433e3083908827be27",
+   "usde": "a1bab229636361426940c8e5e99dec21a77b39dbb07b2bfb52ac85ded862fb6d",
+   "usdg": "53e4aa488e9761482951090dc53aacbc67034e0c29aae110965b1c9c11323f65",
+   "usds": "11bbd716713baabf76d70535d245db23602b0fc45af2f524614567a2aa7d5911",
+   "usdt": "794ee760b2e4983623b0131b06fd62ad0ac3609ad313ee8fc23978d0b0aa5f46",
+   "usdy": "f13911ae3b34806062190d22e5f0226ead78e4f9f4b108826ec634fb8887d3a4",
+   "ustb": "1aaef7af3582a30da93e0f264fb8fb56446758707189e3ce0139c6861da08483",
+   "usyc": "d243c8f4c3179f8f6e021b2549f7e076a1a9d185d1fb65d8ccf72d42477379fa"
   }
  },
  "claim_types": {
@@ -302,5 +316,9 @@
   "product_total": "TOTAL_COMPLETE carries per-evidence-kind sums only; TOTAL_PARTIAL carries none"
  },
  "observed_at_rule": "the row's own read time (else the record's as_of)",
- "private_until": "owner approves publication"
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ }
 }

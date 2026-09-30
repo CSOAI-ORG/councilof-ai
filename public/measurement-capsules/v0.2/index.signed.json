@@ -5,21 +5,27 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/index.json",
-   "sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
-   "schema": "csoai.measurement-capsule-index/0.2",
-   "as_of": "2026-09-26T10:34:15Z"
+   "path": "measurement-capsules/v0.2/index/2026-09-30.json",
+   "sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
+   "schema": "csoai.measurement-capsule-index/0.3",
+   "as_of": "2026-09-30T08:18:22Z"
   },
-  "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
-  "root_over_batch_merkle_roots": "aba3b220f3fc7cc6b056e1620b8cc5f40d282b1841af39856e2152c8349cf5ef",
-  "n_batches": 8,
-  "n_capsules_total": 13184,
+  "index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
+  "root_over_batch_merkle_roots": "195eae7926bead60969a2838a75a9e5b1c780cbd3330d781e8f9332520abd37c",
+  "n_batches": 10,
+  "n_capsules_total": 10979,
   "batches": [
    [
     "a2a_card",
     33,
     "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
     "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
+   ],
+   [
+    "claim_watch",
+    1,
+    "44ec4b9730196fc357c7e20f7a330027cbfa0a9ad38077015b8f13cc67b76869",
+    "3fdbf6cc820fa40f7606792fc0db7492c227b5e5f5152d88fece3a0cbcedf4a9"
    ],
    [
     "contract_parity",
@@ -29,9 +35,9 @@
    ],
    [
     "cross_ledger",
-    353,
-    "a6e3fd14b1cc68072d919bfc59565161e59c492f97c775bbebefd48705770bf9",
-    "ace6cbe3697ed1f6715ea2f921eaad07c82cab795fb86609a3d16b3c956465df"
+    383,
+    "4d1a955e12833786393c04473064299ad54464c0a0dd1ba4e5794a62f52de892",
+    "67107098348dd2e1568fc3198c042969a455e854a669d9bd43c70dd1c24fa682"
    ],
    [
     "mill_cross_runtime",
@@ -46,38 +52,54 @@
     "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff"
    ],
    [
+    "operations",
+    479,
+    "63d1e261f6d2e384823e2563ecf89377496f02cfd9426d669dc0dba97eaf6b51",
+    "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d"
+   ],
+   [
     "public_signals",
     118,
-    "ef67f71508192f08f1aedb00276592ee81e85661e7c3421bec036d4e7b9adb42",
-    "abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690"
+    "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
+    "8767d3d5f402e429dccce4ad96d056dcecc2d28a8e171f2ed3850ca8469a41e9"
    ],
    [
     "self_parity",
-    138,
-    "53d5c6b23a13c464546d31ab18abcf1fae3990961019fc2443748d62922acf3a",
-    "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337"
+    166,
+    "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
+    "df18985070be64a74df767b5356b76aa67f9277baa8c485ee3166de65369f51a"
    ],
    [
     "tool_drift",
-    3240,
-    "fd0f514e03dd825698a3eab57d33431b09e62e442f85c7592db50f2371e9d2df",
-    "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473"
+    497,
+    "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
+    "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0"
    ]
-  ]
+  ],
+  "chain": {
+   "date": "2026-09-30",
+   "chain_seq": 4,
+   "prev_date": "2026-09-29",
+   "prev_index_sha256": "fb56321561f16362c83d8eaaf9320083bb2ac96fa466f4d560625639cc08b332",
+   "prev_index_root": "5ce9511e9554cef6d92d166af08f9bae0b5149655fa555e2025a505ed9af06df",
+   "gap_days": 0,
+   "supersedes_sha256": null
+  }
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "40840b89426534ad93350988312f7e348901712a9189c295016541554e3beecb8e50912db6b2f5871c038cadea8a30782b9abfd3eca89ea6b22732ccb92cf306",
-  "payload_sha256": "9f60d6365a335128425570deca35a91e6e6ce929077a6e4baa56b0a982e13800",
-  "signed_at": "2026-09-26T10:34:15.836Z"
+  "sig_ed25519": "61da95c1dcb341412421261e4fd875a78e11196f4639cb6636d513b65bbca65f73818abd52b594ec3926296b802443a3798c3c851a6f3e9fcb7cf6dea3cc7105",
+  "payload_sha256": "7f955626118fee533f3cea960ec66fe30b9cce8dda8b3f2aac3d01ad29df7add",
+  "signed_at": "2026-09-30T08:18:27.746Z"
  },
  "local_verification": {
   "result": "VERIFIES",
   "altered_preimage_controls": {
    "trailing byte": "rejected (control holds)",
    "record sha altered": "rejected (control holds)",
-   "index root altered": "rejected (control holds)"
+   "index root altered": "rejected (control holds)",
+   "prev index sha altered": "rejected (control holds)"
   }
  }
 }
