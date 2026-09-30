@@ -1,0 +1,89 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "gspc-board",
+      "type": "skill-md",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "url": "/.well-known/agent-skills/gspc-board/SKILL.md",
+      "digest": "sha256:d9c90472b7fbeeee4d1502c147f8a16430fec0f816a85f7ac238558bf8f52b4e"
+    },
+    {
+      "name": "east-west-crosswalk",
+      "type": "skill-md",
+      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
+      "url": "/.well-known/agent-skills/east-west-crosswalk/SKILL.md",
+      "digest": "sha256:fc7985aa70d49214102d4518f45a7dace29ade49d1ea9b0af594133c04cf9614"
+    },
+    {
+      "name": "card-status-link",
+      "type": "skill-md",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
+      "url": "/.well-known/agent-skills/card-status-link/SKILL.md",
+      "digest": "sha256:ea38a10ca5e40a210df392bdea51b47c9c609d9c16e17e20848f4fbc5caa6ca6"
+    },
+    {
+      "name": "benchmark-quality-register",
+      "type": "skill-md",
+      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "url": "/.well-known/agent-skills/benchmark-quality-register/SKILL.md",
+      "digest": "sha256:aadb20667776f93c05353d32a295f8f4ac66b334e761040a0d8fae71fa9c3ff4"
+    },
+    {
+      "name": "article50-detect",
+      "type": "skill-md",
+      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
+      "url": "/.well-known/agent-skills/article50-detect/SKILL.md",
+      "digest": "sha256:320355d8921b230c5ac6b3b4ca100be2322248d6f2c8e32d09cfbf656f31cb73"
+    },
+    {
+      "name": "eu-ai-act-screen",
+      "type": "skill-md",
+      "description": "POST https://councilof.ai/api/assess with a system description. Keyword matches name the Annex III categories and Article 5 patterns a human should inspect; no model is consulted. It does not establish legal tier, applicability, exceptions or compliance, and an empty description is UNMEASURED, not a low-risk finding. When no signing key is provisioned the report says UNSIGNED out loud.",
+      "url": "/.well-known/agent-skills/eu-ai-act-screen/SKILL.md",
+      "digest": "sha256:4fcd905658f19e2b9f9cef603f8c030b8819c9aca2775b937a60fbf25f902525"
+    },
+    {
+      "name": "x402-discovery",
+      "type": "skill-md",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
+      "url": "/.well-known/agent-skills/x402-discovery/SKILL.md",
+      "digest": "sha256:6a36efd83a77eb316537b8cbb3ea92bd73fb3b98110eb5b12cca061601c7ce9a"
+    },
+    {
+      "name": "estate-index",
+      "type": "skill-md",
+      "description": "SendMessage answers with the estate census summary from GET /api/state -> estate_index, and the full index is GET /interop/master-consolidation-2026-09-16.json with its OpenTimestamps proof beside it. Every artefact CSOAI holds across this repository, Hugging Face, GitHub, Kaggle and Oracle Object Storage, committed to one Merkle root. Read it as a census, never as evidence: INDEXED means we found the artefact and measured nothing against it, and UNSIGNED means a card body exists carrying signature: null awaiting a signing decision. Two leaf classes sit under the root and are never added together: a bytes leaf is the sha256 of an artefact we read, a record leaf is the sha256 of our own note about a remote artefact we did not download and proves nothing about the remote bytes. The root is UNSIGNED, so it records when the set existed and not who assembled it, and it is therefore not Rekor-witnessable the way public/root.json is. It does not replace root.json or the signed card index, each of which commits to its own separate corpus with zero identifier overlap. Some identifiers are withheld because they carry internal names; those entries are kept and their digests untouched, so inclusion can still be proved by a holder of the real identifier. Measurement, never certification.",
+      "url": "/.well-known/agent-skills/estate-index/SKILL.md",
+      "digest": "sha256:54e61f03e264b10b19f690003a0b89a0479842613860a9367142c46000d7b1b3"
+    },
+    {
+      "name": "measurement-capsules",
+      "type": "skill-md",
+      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
+      "url": "/.well-known/agent-skills/measurement-capsules/SKILL.md",
+      "digest": "sha256:a31766d60afe007017b923581bcd9b259496a02214465073d6103328c9d0152f"
+    },
+    {
+      "name": "server-evidence",
+      "type": "skill-md",
+      "description": "Trust per server, not totals. Every published measurement capsule about ONE endpoint URL across all batches: MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A agent-card signature state, self-parity cells for CSOAI's own doors, and later adapters such as tool drift. Each capsule comes with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer; measurement-capsules {op: verify} re-derives inclusion. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule is NOT_MEASURED with an empty list, never an error and never a clean bill. The same module as the MCP tool server_evidence. Measurement, not endorsement.",
+      "url": "/.well-known/agent-skills/server-evidence/SKILL.md",
+      "digest": "sha256:ebe4d5e7cd07196c7acce81a3adea81457321b14ed972aa93139dcb1051de17f"
+    },
+    {
+      "name": "evidence-bundle",
+      "type": "skill-md",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it, read from GET /api/evidence-bundle. The same module as the free MCP tool evidence_bundle_preview. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY. Article 53 output is evidence for review, not a legal determination. The assembled OSCAL bundle is the x402 MCP tool evidence_bundle on https://councilof.ai/mcp; this skill never charges. Not a conformity assessment, certification, audit opinion or compliance determination; grants no status.",
+      "url": "/.well-known/agent-skills/evidence-bundle/SKILL.md",
+      "digest": "sha256:316f028549585b76196fc5de496936fbfa502468e74898439e477dfb1ea0c632"
+    },
+    {
+      "name": "gspc-route",
+      "type": "skill-md",
+      "description": "GSPC Route (free, decide-only): applies the caller's Cedar policy (presets read-only, local-only, eu-only, no-unmeasured; forbid_providers; allow_kinds) and the fixed GSPC floor to candidates the caller declares, or to the GSPC MCP tools, reads the live board for the named quality axis, and returns the chosen candidate with an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). The same module as the free MCP tool route. Routing is not ranking: TIE and UNTESTED are stated as they are, and a caller tie_break decides an unseparated comparison. Nothing is executed or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+      "url": "/.well-known/agent-skills/gspc-route/SKILL.md",
+      "digest": "sha256:f45e0106de736c8f3d965c98e9f3c4cc5238e23bd78b7e1a16035b619a26616b"
+    }
+  ]
+}
