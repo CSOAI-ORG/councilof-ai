@@ -114,6 +114,25 @@ type LiveState = {
     claims?: FactValue<number>;
     claims_by_state?: FactValue<Record<string, number>>;
     subjects_with_scheduled_next_read?: FactValue<number>;
+    provenance?: {
+      canonical_name?: string;
+      publisher?: string;
+      first_public_version?: { version?: string; date?: string; doi?: string; url?: string };
+      current_version?: { version?: string; date?: string; url?: string; document_sha256?: string };
+      licence?: string;
+      boundary?: string;
+    };
+    metrics?: {
+      scheduled_subject_coverage_pct?: FactValue<number | null>;
+      measured_claim_coverage_pct?: FactValue<number | null>;
+      schema_conformance_coverage_pct?: FactValue<number | null>;
+      correction_latency?: { exact?: number; upper_bound?: number; unmeasured?: number; median_seconds_exact?: number };
+      detection_latency?: { state?: string; reason?: string };
+      reverification_latency?: { state?: string; reason?: string };
+      event_chain_sample_run_span_seconds?: number | null;
+      event_chain_sample_note?: string;
+      rule?: string;
+    };
   };
   claims_register?: { rows_total?: FactValue<number> };
   corrections_ledger?: { rows_total?: FactValue<number>; latest_entry_id?: string | null };
@@ -161,6 +180,8 @@ export default function ClaimMaintenance() {
   const eventCount = liveState?.claim_events?.lines?.value;
   const publicClaimCount = liveState?.claims_register?.rows_total?.value;
   const measuredCount = maintenance?.claims_by_state?.value?.CLAIM_MEASURED ?? reg?.totals?.by_state?.CLAIM_MEASURED;
+  const maintenanceMetrics = maintenance?.metrics;
+  const maintenanceProvenance = maintenance?.provenance;
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -240,6 +261,42 @@ export default function ClaimMaintenance() {
           <p className="mt-4 text-sm text-slate-600">
             Chain verification: <a className="font-semibold text-emerald-800 underline underline-offset-4" href={CLAIM_EVENTS_HEAD}>signed event head</a>. We maintain claims about others separately from the {publicClaimCount ?? "—"} material public claims we make about ourselves. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
           </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="maintenance-metrics" className="mx-auto max-w-4xl px-5 py-12">
+        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Category provenance · operational maintenance metrics</p>
+        <h2 id="maintenance-metrics" className="mt-2 text-2xl font-bold">Open category, measurable maintenance</h2>
+        <p className="mt-3 max-w-3xl leading-7 text-slate-700">
+          Council of AI publishes the Claim Maintenance specification and its version history openly. The specification is CC0: this records publication lineage and category authorship, not exclusive legal ownership of independent implementations. Operational metrics stay separate dimensions — never a score, badge or certification.
+        </p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            ["Scheduled subject coverage", maintenanceMetrics?.scheduled_subject_coverage_pct?.value, "%", "Registered subjects with a scheduled next read."],
+            ["Measured claim coverage", maintenanceMetrics?.measured_claim_coverage_pct?.value, "%", "Maintained claims with a bounded public-evidence measurement."],
+            ["Schema conformance coverage", maintenanceMetrics?.schema_conformance_coverage_pct?.value, "%", "Claim rows conforming to the published artifact schema."],
+          ].map(([label, value, suffix, note]) => (
+            <div key={String(label)} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">{label}</p>
+              <p className="mt-2 text-3xl font-black tabular-nums text-slate-950">{value == null ? "—" : `${value}${suffix}`}</p>
+              <p className="mt-2 text-xs leading-5 text-slate-600">{note}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-amber-800">Detection latency</p>
+            <p className="mt-2 font-bold text-amber-950">{maintenanceMetrics?.detection_latency?.state ?? "UNMEASURED"}</p>
+            <p className="mt-2 text-sm leading-6 text-amber-900">{maintenanceMetrics?.detection_latency?.reason ?? "No population-wide detection latency is claimed."}</p>
+          </div>
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-amber-800">Reverification latency</p>
+            <p className="mt-2 font-bold text-amber-950">{maintenanceMetrics?.reverification_latency?.state ?? "UNMEASURED"}</p>
+            <p className="mt-2 text-sm leading-6 text-amber-900">{maintenanceMetrics?.reverification_latency?.reason ?? "No population-wide reverification latency is claimed."}</p>
+          </div>
+        </div>
+        <div className="mt-4 rounded-xl border border-slate-200 p-4 text-sm leading-6 text-slate-700">
+          <strong>Publication lineage:</strong> {maintenanceProvenance?.publisher ?? "Council of AI (CSOAI Ltd)"}. First public version {maintenanceProvenance?.first_public_version?.version ?? "0.1"} ({maintenanceProvenance?.first_public_version?.date ?? "2026-09-22"}) · current {maintenanceProvenance?.current_version?.version ?? "0.2"}. {maintenanceProvenance?.boundary}
         </div>
       </section>
 

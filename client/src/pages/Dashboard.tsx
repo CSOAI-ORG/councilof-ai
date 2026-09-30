@@ -56,7 +56,7 @@ type StateFact<T = unknown> = { value?: T; kind?: string; source?: string; as_of
 type LiveState = {
   public_count?: StateFact<string>;
   estate_index?: { merkle_root: string; entries: StateFact<number | null>; bytes_leaves: StateFact<number | null>; record_leaves: StateFact<number | null>; signed: boolean };
-  claim_maintenance?: { claims?: StateFact<number>; subjects?: StateFact<number>; claims_by_state?: StateFact<Record<string, number>>; subjects_with_scheduled_next_read?: StateFact<number> };
+  claim_maintenance?: { claims?: StateFact<number>; subjects?: StateFact<number>; claims_by_state?: StateFact<Record<string, number>>; subjects_with_scheduled_next_read?: StateFact<number>; metrics?: { scheduled_subject_coverage_pct?: StateFact<number | null>; measured_claim_coverage_pct?: StateFact<number | null>; schema_conformance_coverage_pct?: StateFact<number | null> } };
   claims_register?: { rows_total?: StateFact<number> };
   corrections_ledger?: { rows_total?: StateFact<number>; latest_entry_id?: string | null; timing?: { exact?: number; upper_bound?: number; unmeasured?: number; median_seconds_exact?: number } };
   claim_events?: { lines?: StateFact<number>; head_seq?: StateFact<number>; subjects?: StateFact<number>; disclosed?: StateFact<number>; sealed?: StateFact<number>; last_at?: string | null; head_endpoint?: string };
@@ -159,9 +159,11 @@ export default function Dashboard() {
     {
       title: "Claims under maintenance",
       value: claimMaintenance?.claims?.value?.toString() ?? "—",
-      change: claimMaintenance?.subjects_with_scheduled_next_read?.value != null
-        ? `${claimMaintenance.subjects_with_scheduled_next_read.value} subjects scheduled for re-read`
-        : "register unavailable",
+      change: claimMaintenance?.metrics?.scheduled_subject_coverage_pct?.value != null
+        ? `${claimMaintenance.metrics.scheduled_subject_coverage_pct.value}% subjects scheduled for re-read`
+        : claimMaintenance?.subjects_with_scheduled_next_read?.value != null
+          ? `${claimMaintenance.subjects_with_scheduled_next_read.value} subjects scheduled for re-read`
+          : "register unavailable",
       changeType: "neutral",
       icon: RefreshCw,
       color: "text-emerald-700",

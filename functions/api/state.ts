@@ -65,6 +65,7 @@ import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import claimMaintenanceRegister from "../../public/spec/claim-maintenance/register.json";
+import claimMaintenanceSpecIndex from "../../public/spec/claim-maintenance/index.json";
 import claimEventsHead from "../../public/claims/events/v0.1/head.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
@@ -287,6 +288,13 @@ for (const row of claimRows) {
 const maintenanceTotals = (claimMaintenanceRegister as any).totals ?? {};
 const maintenanceStates = (claimMaintenanceRegister as any).states ?? {};
 const maintenanceAsOf: string | null = (claimMaintenanceRegister as any).as_of ?? null;
+const maintenanceSpecProvenance = (claimMaintenanceSpecIndex as any).provenance ?? null;
+const maintenanceSubjectCount = Number(maintenanceTotals.subjects ?? 0);
+const maintenanceClaimCount = Number(maintenanceTotals.claims ?? 0);
+const maintenanceMeasuredCount = Number((maintenanceTotals.by_state ?? {}).CLAIM_MEASURED ?? 0);
+const maintenanceScheduledSubjects = Number(maintenanceTotals.subjects_with_a_scheduled_next_read ?? 0);
+const maintenanceSchemaConformingClaims = Number(maintenanceTotals.claims_conforming_to_artifact_schema ?? 0);
+const percentage = (n: number, d: number) => (d > 0 ? Number(((n / d) * 100).toFixed(2)) : null);
 const correctionRows = (((correctionsLedger as any).corrections ?? []) as TimingEntry[]);
 const correctionLatencyBlock = correctionLatency(correctionRows);
 const latestCorrection = correctionRows[0] as (TimingEntry & { id?: unknown; date?: unknown }) | undefined;
@@ -989,6 +997,49 @@ export const onRequestGet: PagesFunction = async () => {
         "as_of",
         "A scheduled re-read is a monitoring commitment, not evidence that the future read has happened.",
       ),
+      provenance: maintenanceSpecProvenance,
+      metrics: {
+        scheduled_subject_coverage_pct: fact(
+          percentage(maintenanceScheduledSubjects, maintenanceSubjectCount),
+          "measured",
+          SRC_CLAIM_MAINTENANCE + " → totals.subjects_with_a_scheduled_next_read / totals.subjects",
+          maintenanceAsOf,
+          "as_of",
+          "Share of registered subjects with a scheduled next read. This measures maintenance coverage, not quality, compliance or reputation.",
+        ),
+        measured_claim_coverage_pct: fact(
+          percentage(maintenanceMeasuredCount, maintenanceClaimCount),
+          "measured",
+          SRC_CLAIM_MAINTENANCE + " → totals.by_state.CLAIM_MEASURED / totals.claims",
+          maintenanceAsOf,
+          "as_of",
+          "Share of maintained claim rows with a bounded public-evidence measurement. UNMEASURED and UNCHECKABLE remain first-class states.",
+        ),
+        schema_conformance_coverage_pct: fact(
+          percentage(maintenanceSchemaConformingClaims, maintenanceClaimCount),
+          "measured",
+          SRC_CLAIM_MAINTENANCE + " → totals.claims_conforming_to_artifact_schema / totals.claims",
+          maintenanceAsOf,
+          "as_of",
+          "Share of claim rows conforming to the Claim Maintenance artifact schema. This is schema conformance only, not certification.",
+        ),
+        correction_latency: correctionLatencyBlock,
+        detection_latency: {
+          state: "UNMEASURED",
+          reason: "The committed event chain records observation time but not an independently established source-change occurrence time for the maintained population. Observation time minus unknown change time would be fabricated precision.",
+        },
+        reverification_latency: {
+          state: "UNMEASURED",
+          reason: "The current public event corpus does not yet expose enough paired change-detected and reverification-completed timestamps across the maintained population to publish a representative latency statistic.",
+        },
+        event_chain_sample_run_span_seconds: (() => {
+          const a = claimEventsFeed.first_at ? Date.parse(String(claimEventsFeed.first_at)) : NaN;
+          const b = claimEventsFeed.last_at ? Date.parse(String(claimEventsFeed.last_at)) : NaN;
+          return Number.isFinite(a) && Number.isFinite(b) && b >= a ? Math.round((b - a) / 1000) : null;
+        })(),
+        event_chain_sample_note: "Duration between first_at and last_at in the committed event-head sample. It is a run-span observation, not detection latency or fleet-wide performance.",
+        rule: "Metrics are separate dimensions and must not be collapsed into a score, rank, badge or certification claim.",
+      },
       state_vocabulary: maintenanceStates,
       rule:
         "The register is the authority. /api/state only derives this summary. No score, rank, certification or verdict is produced from these counts.",

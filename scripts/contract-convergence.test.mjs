@@ -98,3 +98,19 @@ test("Claim Maintenance conformance corpus is pinned and explicitly non-certifyi
   assert.ok(m.cases.every((c) => /^[0-9a-f]{64}$/.test(c.sha256)));
   assert.match(m.what_this_is_not.join(" "), /Not certification/i);
 });
+
+
+test("category provenance and maintenance metrics stay public without becoming ownership or a score", () => {
+  const state = read("functions/api/state.ts");
+  const page = read("client/src/pages/ClaimMaintenance.tsx");
+  const index = json("public/spec/claim-maintenance/index.json");
+  assert.equal(index.provenance.canonical_name, "Claim Maintenance");
+  assert.equal(index.provenance.first_public_version.version, "0.1");
+  assert.equal(index.provenance.current_version.version, "0.2");
+  assert.match(index.provenance.boundary, /does not assert exclusive legal ownership/i);
+  assert.match(state, /detection_latency/);
+  assert.match(state, /reverification_latency/);
+  assert.match(state, /must not be collapsed into a score/);
+  assert.match(page, /Open category, measurable maintenance/);
+  assert.match(page, /UNMEASURED/);
+});

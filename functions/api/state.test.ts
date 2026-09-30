@@ -169,6 +169,21 @@ describe("GET /api/state contract convergence", () => {
     expect(body.claim_maintenance.subjects_with_scheduled_next_read.value).toBe(
       claimMaintenanceRegister.totals.subjects_with_a_scheduled_next_read,
     );
+    expect(body.claim_maintenance.provenance).toMatchObject({
+      canonical_name: "Claim Maintenance",
+      publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+      first_public_version: { version: "0.1", date: "2026-09-22", doi: "10.5281/zenodo.22901908" },
+      current_version: { version: "0.2", date: "2026-09-25" },
+      licence: "CC0-1.0",
+    });
+    expect(body.claim_maintenance.provenance.boundary).toMatch(/does not assert exclusive legal ownership/i);
+    expect(body.claim_maintenance.metrics.scheduled_subject_coverage_pct.value).toBe(92.86);
+    expect(body.claim_maintenance.metrics.measured_claim_coverage_pct.value).toBe(33.33);
+    expect(body.claim_maintenance.metrics.schema_conformance_coverage_pct.value).toBe(91.92);
+    expect(body.claim_maintenance.metrics.detection_latency.state).toBe("UNMEASURED");
+    expect(body.claim_maintenance.metrics.reverification_latency.state).toBe("UNMEASURED");
+    expect(body.claim_maintenance.metrics.event_chain_sample_run_span_seconds).toBe(5);
+    expect(body.claim_maintenance.metrics.rule).toMatch(/must not be collapsed into a score/i);
     expect(body.claim_events.lines.value).toBe(claimEventsHead.feed.n_lines);
     expect(body.claim_events.head_seq.value).toBe(claimEventsHead.feed.head_seq);
     expect(body.claim_events.subjects.value).toBe(claimEventsHead.totals.subjects);
