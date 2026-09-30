@@ -54,6 +54,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/connect/claude",
   // /connect — the connector hub (2026-09-30): free MCP door, full MCP, A2A card, HTTP, offline verify.
   "/connect",
+  // /agents — how an agent uses GSPC, rendered from the machine files (2026-09-30, gspc-product-ui).
+  "/agents",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",

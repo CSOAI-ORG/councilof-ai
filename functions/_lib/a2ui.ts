@@ -5,6 +5,7 @@
 import { executePlan, routeIntent, type TalkAnswer } from "./talkRouter";
 import { isConfirmed, lastUserText, paidToolsIn } from "./aguiRun";
 import { axisCountLine } from "../api/_boardCounts";
+import { A2UI_DEFAULT_VERSION, A2UI_SPECS } from "./a2uiSurfaces";
 
 type Json = Record<string, unknown>;
 
@@ -41,7 +42,17 @@ export function a2uiDescriptor(origin: string): Json {
     surfaces: {
       gspc: origin + "/api/a2ui/gspc",
       run: origin + "/api/a2ui/run",
+      board: origin + "/api/a2ui/board",
+      verify: origin + "/api/a2ui/verify?card={64-hex card id or councilof.ai card URL}",
     },
+    versions: {
+      default_for_board_and_verify: A2UI_DEFAULT_VERSION,
+      supported: Object.values(A2UI_SPECS),
+      select: "?version=v0.9.1 (default for /board and /verify) or ?version=v1.0 (Candidate; the default for /run and /gspc, kept for existing renderers)",
+      checked: "2026-09-30 against https://a2ui.org/ (v0.9.1 Current production release; v1.0 Release candidate)",
+      catalog_id_note: "The v0.9.1 spec examples use catalogId https://a2ui.org/specification/v0_9_1/catalogs/basic/catalog.json; the catalog document served there declares .../v0_9/catalogs/basic/catalog.json. We emit the spec example id.",
+    },
+    ag_ui: "POST /api/agui/run emits a CUSTOM event named a2ui (A2UI v0.9.1 messages) after the TOOL_CALL_RESULT of board_totals and verify_card.",
     source_of_truth: {
       measurements: origin + "/api/gspc",
       mcp: origin + "/mcp",
@@ -65,7 +76,7 @@ export function answerSurface(
   );
   const components: Json[] = [
     { id: "root", component: "Column", children },
-    text("title", "Council OS answer", "headline"),
+    text("title", "Council OS answer", "body"),
     text(
       "state",
       answer.grounded
@@ -122,7 +133,7 @@ export function messageSurface(
           component: "Column",
           children: ["title", "state", "message"],
         },
-        text("title", title, "headline"),
+        text("title", title, "body"),
         text("state", state, "caption"),
         { id: "message", component: "Text", text: { path: "/message" } },
       ],
@@ -157,7 +168,7 @@ export function gspcSurface(raw: unknown, surfaceId?: string): Json {
           component: "Column",
           children: ["title", "summary", "empty_title", "empty", "source"],
         },
-        text("title", "Living GSPC state", "headline"),
+        text("title", "Living GSPC state", "body"),
         { id: "summary", component: "Text", text: { path: "/summary" } },
         text("empty_title", "Unmeasured stays visible", "caption"),
         { id: "empty", component: "Text", text: { path: "/empty" } },

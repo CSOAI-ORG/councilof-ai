@@ -17,6 +17,7 @@
  * Even when confirmed the router strips x_payment, so the call can only return the tool's 402
  * challenge: payment always comes from the caller's own wallet, never from this server.
  */
+import { a2uiForTool } from "./a2uiSurfaces";
 import { executePlan, routeIntent, ROUTABLE_TOOLS, type Plan } from "./talkRouter";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 
@@ -190,6 +191,10 @@ export async function serveAguiRun(
               output: e.outcome.output,
             }),
           });
+          // A2UI v0.9.1 rendering of the same output (board card, verify result). CUSTOM is the AG-UI
+          // extension event; clients that do not render A2UI ignore it.
+          const a2ui = a2uiForTool(e.outcome.tool, e.outcome.output);
+          if (a2ui) await emit({ type: "CUSTOM", name: "a2ui", value: a2ui });
         }
       });
       await say(answer.answer);

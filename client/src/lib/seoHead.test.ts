@@ -183,9 +183,9 @@ describe("applyHead writes title, description, OG and canonical into a document"
   it("creates the tags when the shell lacks them and overwrites them when it has them", () => {
     const doc = stubDocument();
     applyHead(resolveHead("/methodology"), doc);
-    expect(doc.title).toBe("Methodology | CSOAI");
+    expect(doc.title).toBe("Methodology | Council of AI");
     expect(doc.nodes["name=description"]?.get("content")).toMatch(/deterministic predicates/);
-    expect(doc.nodes["property=og:title"]?.get("content")).toBe("Methodology | CSOAI");
+    expect(doc.nodes["property=og:title"]?.get("content")).toBe("Methodology | Council of AI");
     expect(doc.nodes["rel=canonical"]?.get("href")).toBe("https://councilof.ai/methodology/");
     applyHead(resolveHead("/about"), doc);
     expect(doc.title).toBe("About | Council of AI");

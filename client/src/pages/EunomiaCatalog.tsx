@@ -2,7 +2,7 @@ import { EUNOMIA_AXES } from "@/data/eunomia";
 import { FFW } from "@/data/enforcement";
 
 /**
- * EUNOMIA catalog — the measurement ecosystem, catalogued and linked.
+ * Financial-axis catalogue — the measurement ecosystem, catalogued and linked.
  * Every live surface, public API, HF mirror, A2A card, MCP tool and evidence
  * doc, with an honest status. Measurement, not certification.
  */
@@ -11,9 +11,9 @@ export default function EunomiaCatalog() {
   const unmeasured = EUNOMIA_AXES.length - measured;
 
   const surfaces = [
-    { name: "EUNOMIA board", href: "/eunomia", desc: "Financial-verification axis, signed, two-tier fleet" },
+    { name: "Financial-verification board", href: "/eunomia", desc: "Financial-verification axis, signed, two-tier fleet" },
     { name: "First-Fine Watch", href: "/first-fine-watch", desc: "Signed enforcement record + the deadlines behind it (R8 free)" },
-    { name: "EUNOMIA data (commercial)", href: "/eunomia-data", desc: "x402 data-only lane — enforcement record + deadline calendar" },
+    { name: "Financial-axis data feed", href: "/eunomia-data", desc: "x402 data-only lane — enforcement record + deadline calendar" },
     { name: "Sectors", href: "/sectors", desc: "White-label tooling per sector" },
     { name: "Signed registers", href: "/registers", desc: "Every axis row Ed25519-signed, stranger re-derivable" },
   ];
@@ -39,7 +39,7 @@ export default function EunomiaCatalog() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">EUNOMIA — the measurement ecosystem, catalogued</h1>
+      <h1 className="text-2xl font-bold">Financial-axis catalogue: every surface, linked</h1>
       <p className="mt-1 text-sm text-emerald-300/80">
         {measured} of {EUNOMIA_AXES.length} axes measured · {unmeasured} declared UNMEASURED (honest) · every surface linked
       </p>
