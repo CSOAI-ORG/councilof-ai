@@ -723,7 +723,7 @@ export default function About() {
                 where a slot with no run behind it is published UNMEASURED and never counted as a
                 measurement — over frozen benchmarks, open on Hugging Face and Kaggle with the
                 scoring code, so anyone can recompute what we claim or dispute an answer key. And we
-                publish the results that go against us: our own fine-tunes sit below the base models
+                publish the results that go against us: our own models sit below the base models
                 they were built on in our own signed arena reference. That is on{" "}
                 <Link href="/honesty" className="text-emerald-700 underline">the honesty gate</Link>,
                 read live from the artifact rather than typed.

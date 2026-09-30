@@ -108,7 +108,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           // so a buyer reading the challenge could not tell what they were paying for.
           free_preview: "/api/proof?sha=<64-hex>",
           deliverable: "Available inclusion proofs for the last published signed public root: leaf hashes, indexes, paths, Merkle root and card count. The full root signature envelope is free at /root.json, and a single inclusion proof is free at /api/proof?sha=<64-hex>.",
-          settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+          settle_mcp: null,
+          settle_mcp_note: "The estate x402 receipt MCP is not publicly hosted while the GitHub organisation is unavailable. Any x402 client can settle against the challenge terms.",
           verification:
             "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
           not_paid_reason: payment.reason,

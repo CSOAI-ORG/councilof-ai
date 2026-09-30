@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useSearch } from "wouter";
 import { Search, ExternalLink, ShieldCheck, Boxes, Layers, ArrowRight, Github, Terminal, Plug } from "lucide-react";
+import { publicSourceUrl, DARK_SOURCE_NOTE } from "@/lib/darkSource";
 import registry from "@/data/mcpRegistry.json";
 
 type Server = {
@@ -190,14 +191,18 @@ export default function MCPRegistry() {
                 ))}
               </div>
               <div className="mt-4 flex items-center justify-between">
-                <a
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
-                >
-                  <Github className="h-3.5 w-3.5" /> source
-                </a>
+                {publicSourceUrl(s.url) ? (
+                  <a
+                    href={publicSourceUrl(s.url)!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600"
+                  >
+                    <Github className="h-3.5 w-3.5" /> source
+                  </a>
+                ) : (
+                  <span className="text-xs text-gray-400" title={DARK_SOURCE_NOTE}>source not publicly hosted</span>
+                )}
               </div>
             </Card>
           ))}

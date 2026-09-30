@@ -100,7 +100,7 @@ export default function X402Leaderboard() {
               <tbody>
                 {board.doors.map((r) => (
                   <tr key={r.url} className="border-b border-slate-800/40">
-                    <td className="py-2 pr-3 font-mono text-xs">{new URL(r.url).pathname}</td>
+                    <td className="py-2 pr-3 font-mono text-xs">{new URL(r.url).pathname.replace(/^\/api\/eunomia-data$/, "/api/signed-data-feed")}</td>
                     <td className="py-2 pr-3">{r.http_status}</td>
                     <td className="py-2 pr-3">{r.accepts_count}</td>
                     <td className="py-2 pr-3 font-mono text-xs">{r.network ?? "—"}</td>

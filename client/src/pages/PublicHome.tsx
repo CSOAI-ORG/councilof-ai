@@ -274,7 +274,7 @@ export default function PublicHome() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Training & Certification</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  5 training modules, 51 test questions. Become a certified Watchdog Analyst 
+                  5 training modules, 51 test questions. Earn an Academy completion record as a Watchdog Analyst 
                   and earn while protecting AI safety.
                 </p>
                 <Link href="/training" className="text-sm text-primary flex items-center gap-1 hover:underline">
@@ -309,8 +309,8 @@ export default function PublicHome() {
                   Fully transparent, MIT licensed. Audit our code, contribute improvements, 
                   build trust through openness.
                 </p>
-                <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" title="Source mirror on Hugging Face. The GitHub org CSOAI-ORG is temporarily unavailable." target="_blank" rel="noopener noreferrer" className="text-sm text-primary flex items-center gap-1 hover:underline">
-                  View the source (Hugging Face mirror) <ChevronRight className="w-4 h-4" />
+                <a href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai" title="Archived source snapshot (Software Heritage, 15 Sep 2026). The GitHub organisation is unavailable and the Hugging Face source mirror has been private since 28 Sep 2026." target="_blank" rel="noopener noreferrer" className="text-sm text-primary flex items-center gap-1 hover:underline">
+                  View the archived source (Software Heritage) <ChevronRight className="w-4 h-4" />
                 </a>
               </CardContent>
             </Card>
@@ -453,13 +453,13 @@ export default function PublicHome() {
               Together, we're building the safety infrastructure that AI companies need and humanity deserves.
             </p>
             <a 
-              href="https://huggingface.co/datasets/csoai/councilof-ai-source"
-              title="Source mirror on Hugging Face. The GitHub org CSOAI-ORG is temporarily unavailable."
+              href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai"
+              title="Archived source snapshot (Software Heritage, 15 Sep 2026). The GitHub organisation is unavailable and the Hugging Face source mirror has been private since 28 Sep 2026."
               target="_blank" 
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-primary hover:underline"
             >
-              View our code (Hugging Face mirror; GitHub is temporarily unavailable) <ChevronRight className="w-4 h-4" />
+              View our code (archived snapshot; GitHub is unavailable) <ChevronRight className="w-4 h-4" />
             </a>
           </div>
         </div>
@@ -585,9 +585,9 @@ export default function PublicHome() {
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="https://huggingface.co/datasets/csoai/councilof-ai-source" title="Source mirror on Hugging Face. The GitHub org CSOAI-ORG is temporarily unavailable." target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Source (HF mirror)</a></li>
+                <li><a href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai" title="Archived source snapshot (Software Heritage, 15 Sep 2026). The GitHub organisation is unavailable and the Hugging Face source mirror has been private since 28 Sep 2026." target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Source (archived snapshot)</a></li>
                 <li><Link href="/landing" className="hover:text-foreground">About</Link></li>
-                <li><a href="mailto:contact@coai.org" className="hover:text-foreground">Contact</a></li>
+                <li><a href="mailto:contact@csoai.org" className="hover:text-foreground">Contact</a></li>
               </ul>
             </div>
           </div>

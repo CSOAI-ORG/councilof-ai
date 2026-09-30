@@ -110,3 +110,23 @@ The signature proves that these bytes were signed by `did:web:csoai.org#board-at
 | `maintain.py`, `ops/maintain-cron.sh` | Plan, detect and run the day-7, day-30 and day-90 re-reads of each signed batch, then sign, anchor and store each one privately. |
 
 All probes send read-only GET requests, or `initialize` plus `tools/list`. They send no credentials and never call a tool. Anything that needs an account is reported as UNMEASURED, with the reason.
+
+### W3C Agent Conformance Reporting Format v0.1 (`render/w3c_acr01.py`)
+
+Re-expresses events, GSPC board axes and signed-card states in the v0.1 per-check record of the W3C Agent Conformance and Benchmarking Community Group (text of 30 September 2026, list message [0087](https://lists.w3.org/Archives/Public/public-agent-conformance/2026Sep/0087.html); a Community Group text, not a W3C Standard). JSON key names are ours; v0.1 fixes fields and values, not a wire format.
+
+```sh
+python3 render/w3c_acr01.py EVENTS.jsonl --causes CAUSES.json > report.json
+python3 render/w3c_acr01.py --validate report.json      # rows 1-14, run level, 5.4; exit 1 on any rejection
+```
+
+| event state | v0.1 state | cause |
+|---|---|---|
+| CONSISTENT | pass | none |
+| DIVERGENT | fail | none |
+| PARTIAL | inconclusive | declared by the producer (sidecar), else `unavailable`, labelled as a default |
+| UNCHECKABLE | inconclusive | declared, else `unavailable` |
+| UNMEASURED | not-exercised | declared, else `unavailable` |
+| NOT_DISCRIMINATING | void | `evidence-does-not-hold` |
+
+UNMEASURED and UNCHECKABLE never become pass or fail, on events, axes or cards. `other-verdict` and `discrimination` stay `unknown` (or `possible-not-demonstrated`) unless the renderer ran both sides of a delta-related pair itself. Our `negative_control {expected, got}` is a declaration, not a pair. Section 5.4 is answered with shown-by-run, control, prior-run or nothing, never with silence. The golden `tests/golden/w3c_acr01.safe-signature.json` is a real control-run fail: the board signature over the SAFE pack's FREEZE.json passes on the signed bytes, and each of three altered-preimage controls returns fail with its own rule, under the same checker revision and configuration digest.

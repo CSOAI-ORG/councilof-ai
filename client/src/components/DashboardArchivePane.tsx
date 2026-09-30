@@ -52,8 +52,7 @@ type Wire =
   | { state: "unreachable"; detail: string }
   | { state: "live"; doc: ArchiveIndex };
 
-const METHOD_URL =
-  "https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/PROVABLE-ARCHIVE-METHOD.md";
+const METHOD_NOTE = "not publicly hosted: the GitHub organisation is unavailable and the source mirror is private";
 
 function short(h?: string | null, n = 10): string {
   // A null hash in the record prints as "none" — the record says there is none; a dash reads as blank.
@@ -98,9 +97,7 @@ export default function DashboardArchivePane() {
           Each entry names its root (merkle, sha256, signature) and the third-party witnesses (Rekor
           log index, OpenTimestamps path) so a stranger can recompute it. Point-in-time facts. Not a
           rate, not a grade, not a certificate.{" "}
-          <a className="underline" href={METHOD_URL} target="_blank" rel="noreferrer">
-            Method
-          </a>
+          <span title={METHOD_NOTE}>Method: docs/PROVABLE-ARCHIVE-METHOD.md ({METHOD_NOTE})</span>
           {" · "}
           <a className="underline" href="/archive/index.json" target="_blank" rel="noreferrer">
             /archive/index.json

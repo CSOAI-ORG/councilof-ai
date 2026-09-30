@@ -300,16 +300,8 @@ export default function AttestationNetwork() {
             Catalogs index resources — we attest the recording
           </h2>
           <p className="mt-3 text-slate-300 leading-relaxed">
-            The first leaf of the x402 Trust Report (Hermes{" "}
-            <a
-              className="underline decoration-emerald-400/50"
-              href="https://github.com/CSOAI-ORG/councilof-ai/pull/1763"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              #1763
-            </a>
-            ) is a DRY probe of facilitator catalog rows: challenge terms only — nothing signed,
+            The first leaf of the x402 Trust Report (change #1763, not publicly reachable while the
+            GitHub organisation is unavailable) is a DRY probe of facilitator catalog rows: challenge terms only — nothing signed,
             nothing sent. Report counts stay free forever. Per-resource attestation/verification
             cards ride the paid <code className="text-emerald-300">commission_card</code> /{" "}
             <code className="text-emerald-300">receipts</code> doors. Catalogs list self-reported

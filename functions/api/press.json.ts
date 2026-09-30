@@ -169,7 +169,7 @@ export async function build(env: RevenueEnv = {}) {
         q: "What is the most recent thing you got wrong?",
         a: (() => {
           const newest = corrections.slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0];
-          return newest ? `${newest.id} (${newest.date}). ${newest.what_was_wrong} It was caught: ${newest.how_caught} The fix: ${newest.fix}` : "The ledger is empty, which is a fact about the ledger and not a claim that nothing was wrong.";
+          return newest ? `${newest.id} (${newest.date}). ${newest.what_was_wrong} It was caught: ${newest.how_caught} The fix: ${newest.what_changed ?? newest.fix ?? "see the entry at /api/corrections"}` : "The ledger is empty, which is a fact about the ledger and not a claim that nothing was wrong.";
         })(),
       },
       {

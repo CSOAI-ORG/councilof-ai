@@ -96,7 +96,7 @@ function envelope(live: WatchStatus | null): Record<string, unknown> {
     baseline_seed: FALLBACK,
     heartbeat: {
       ...chosen,
-      artifact_uri: 'https://github.com/CSOAI-ORG/corpus-watch/blob/main/reports/status.json',
+      artifact_uri: 'https://councilof.ai/corpus-watch/status.json',
     },
   };
 }

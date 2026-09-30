@@ -27,7 +27,7 @@ Do not freeze numbers in this file. Read the living board:
 GET https://councilof.ai/api/gspc
 
 Public lock (language only — every count lives on the API, none is frozen here):
-Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
+Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable.
 
 Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
 {{LID}}
@@ -77,7 +77,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Register of every subject we maintain claims on (generated from the registries on disk, never hand-listed): GET https://councilof.ai/api/claims/register — read `totals` and `as_of` live; filter with `?subject=` or `?state=`. Never freeze a subject count or a claim count in this file.
 - Reference implementation anyone can run, including against us (MIT): https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs (same-site source copy) — captures a claim, hashes it, writes a conforming artifact, and REJECTS a tampered one.
 - Human page: https://councilof.ai/claim-maintenance/
-- Citable archival deposit with a persistent identifier we do not control: DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0. A DOI makes a document citable and permanent; it does not make it right.
+- Archival deposit, DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0: UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Cite the served document of record above until the record is restored. A DOI makes a document citable; it does not make it right.
 - States, and there are exactly four: CLAIM_CAPTURED · CLAIM_MEASURED · UNMEASURED · UNCHECKABLE. UNMEASURED and UNCHECKABLE are first-class and are published as prominently as the others.
 - What it is NOT: not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism. No mark, badge, score, rank or index may be derived from any state. Nothing published asserts falsity about anyone. An observed change is never an allegation. A listing is not an endorsement and not an accusation.
 
@@ -226,7 +226,7 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 - npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
-- Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/{{DOI}}
+- Zenodo DOI (from live GET /api/gspc `doi`): {{DOI}} — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Do not follow it as a working link.
 - Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
 Lid (quote live `totals.lid`): {{LID}}

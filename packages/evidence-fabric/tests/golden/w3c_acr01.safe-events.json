@@ -1,0 +1,407 @@
+{
+ "checks": [
+  {
+   "check_id": "safe-rv@signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents | dce6927119a8#https://councilof.ai/spec/signed-receipts/v1/interceptor.py~60b6e86089cf",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:60b6e86089cf71ee9140e81d22f6988d543f58e933279f01636158a5f368fa89",
+    "sha256": "60b6e86089cf71ee9140e81d22f6988d543f58e933279f01636158a5f368fa89"
+   },
+   "other_verdict": "possible-not-demonstrated",
+   "state": "pass",
+   "x-csoai": {
+    "event_id": "sha256:60b6e86089cf71ee9140e81d22f6988d543f58e933279f01636158a5f368fa89",
+    "event_state": "CONSISTENT",
+    "limits": [
+     "The served URL is not immutable; the digest identifies the bytes tested.",
+     "A verified signature shows these bytes were signed by the named key. It does not show the content is true.",
+     "The GitHub copy the ledger names was not reachable and was not tested."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents | dce6927119a8"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:C-2026-0928-01:post-fix",
+     "kind": "signed_record",
+     "locator": "https://councilof.ai/spec/signed-receipts/v1/interceptor.py"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents | dce6927119a8#sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb~bbc894afc99e",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:bbc894afc99e583ec420f8068ef0c74a54d83332c7147d6b0e07fab227a88fbe",
+    "sha256": "bbc894afc99e583ec420f8068ef0c74a54d83332c7147d6b0e07fab227a88fbe"
+   },
+   "other_verdict": "unknown",
+   "state": "fail",
+   "x-csoai": {
+    "event_id": "sha256:bbc894afc99e583ec420f8068ef0c74a54d83332c7147d6b0e07fab227a88fbe",
+    "event_state": "DIVERGENT",
+    "limits": [
+     "This re-test ran the pre-fix bytes supplied from the issuer's git history at the digest the ledger cites; the public copy the ledger names answered 401, so a stranger cannot fetch these bytes today.",
+     "It says nothing about receipts issued with the verifier, only about how the verifier classified the vectors."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents | dce6927119a8"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:C-2026-0928-01:pre-fix",
+     "kind": "signed_record",
+     "locator": "sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@scalar canonicalisation vs node JSON.stringify | 2014 values, seed 20260928#sha256:b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216~39b7f495688f",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:39b7f495688ff992fbd0c0474ba47b8f59b3a656fa9651fba086b9f073692488",
+    "sha256": "39b7f495688ff992fbd0c0474ba47b8f59b3a656fa9651fba086b9f073692488"
+   },
+   "other_verdict": "possible-not-demonstrated",
+   "state": "pass",
+   "x-csoai": {
+    "event_id": "sha256:39b7f495688ff992fbd0c0474ba47b8f59b3a656fa9651fba086b9f073692488",
+    "event_state": "CONSISTENT",
+    "limits": [
+     "Wrong canonicalisation causes wrong rejection across implementations, not false acceptance (per the ledger entry).",
+     "Scalars only; see declared_failure_modes."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "scalar canonicalisation vs node JSON.stringify | 2014 values, seed 20260928"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:C-2026-0928-02:post-fix",
+     "kind": "signed_record",
+     "locator": "sha256:b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@scalar canonicalisation vs node JSON.stringify | 2014 values, seed 20260928#sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb~d13ac90e7b94",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:d13ac90e7b947247dbab389441ac332bc56e29eaccf5fda739f1a2dbef3f195d",
+    "sha256": "d13ac90e7b947247dbab389441ac332bc56e29eaccf5fda739f1a2dbef3f195d"
+   },
+   "other_verdict": "unknown",
+   "state": "fail",
+   "x-csoai": {
+    "event_id": "sha256:d13ac90e7b947247dbab389441ac332bc56e29eaccf5fda739f1a2dbef3f195d",
+    "event_state": "DIVERGENT",
+    "limits": [
+     "Wrong canonicalisation causes wrong rejection across implementations, not false acceptance (per the ledger entry).",
+     "Scalars only; see declared_failure_modes."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "scalar canonicalisation vs node JSON.stringify | 2014 values, seed 20260928"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:C-2026-0928-02:pre-fix",
+     "kind": "signed_record",
+     "locator": "sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@ledger signature_check.how, re-implemented | csoai.corrections/0.1#https://councilof.ai/api/corrections~ddf8a9c3a816",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:ddf8a9c3a8167684be85f913e4ed066f7040a2b948d92b4bd1e2b93bb7d9511b",
+    "sha256": "ddf8a9c3a8167684be85f913e4ed066f7040a2b948d92b4bd1e2b93bb7d9511b"
+   },
+   "other_verdict": "possible-not-demonstrated",
+   "state": "pass",
+   "x-csoai": {
+    "event_id": "sha256:ddf8a9c3a8167684be85f913e4ed066f7040a2b948d92b4bd1e2b93bb7d9511b",
+    "event_state": "CONSISTENT",
+    "limits": [
+     "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
+     "A verified signature shows these bytes were signed by the named key. It does not show the content is true.",
+     "The ledger is re-signed as it grows; an older signature over an older body is not kept at a stable URL."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "ledger signature_check.how, re-implemented | csoai.corrections/0.1"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:corrections-ledger:integrity",
+     "kind": "signed_record",
+     "locator": "https://councilof.ai/api/corrections"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@count correction_latency.per_entry kinds | 2026-09-26#https://councilof.ai/api/corrections~fdac8c15026a",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:fdac8c15026a9f9711012c917c29509950ea01e200fc71ccf71efcdb0e6cff4a",
+    "sha256": "fdac8c15026a9f9711012c917c29509950ea01e200fc71ccf71efcdb0e6cff4a"
+   },
+   "other_verdict": "unknown",
+   "state": "fail",
+   "x-csoai": {
+    "event_id": "sha256:fdac8c15026a9f9711012c917c29509950ea01e200fc71ccf71efcdb0e6cff4a",
+    "event_state": "DIVERGENT",
+    "limits": [
+     "UNMEASURED entries carry no estimate; that is why most are UNMEASURED.",
+     "Says nothing about whether any correction was right, only whether its timing is recorded."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "count correction_latency.per_entry kinds | 2026-09-26"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "observed_negatives"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:corrections-ledger:time-to-correct",
+     "kind": "signed_record",
+     "locator": "https://councilof.ai/api/corrections"
+    }
+   }
+  },
+  {
+   "cause": "unavailable",
+   "check_id": "safe-rv@quote re-read | csoai.measurement-capsule/0.2#incident.2026-06.au-medicare-statistics-portal.agent-access~c85b51f1cc02",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:c85b51f1cc02a00f774f83b8e6ea32a54ef8a3eb6201c50f5ed358d99552c8f7",
+    "sha256": "c85b51f1cc02a00f774f83b8e6ea32a54ef8a3eb6201c50f5ed358d99552c8f7"
+   },
+   "other_verdict": "unknown",
+   "state": "not-exercised",
+   "x-csoai": {
+    "cause_basis": "declared by the producer (sidecar), classified from the record's own reason text",
+    "event_id": "sha256:c85b51f1cc02a00f774f83b8e6ea32a54ef8a3eb6201c50f5ed358d99552c8f7",
+    "event_state": "UNMEASURED",
+    "limits": [
+     "Measurement, not accusation: dates and whole days as the public record gives them; no intent, diligence or compliance is characterised.",
+     "The signed record.json still carries publication = 'PRIVATE: OWNER-APPROVE required'; it is served publicly, so that field is stale inside signed bytes and needs a superseding record, not an edit."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "quote re-read | csoai.measurement-capsule/0.2"
+    },
+    "negative_control": {
+     "expected": null,
+     "got": "NOT_RUN",
+     "id": "none"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped",
+     "kind": "web_page",
+     "locator": "incident.2026-06.au-medicare-statistics-portal.agent-access"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@quote re-read + calendar arithmetic | csoai.measurement-capsule/0.2#incident.2026-06.au-medicare-statistics-portal.agent-access~5f01f24f5a4a",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:5f01f24f5a4ad4e0113e609e2166c5c6b2432aad5aa0289e9b4bf3fc1310e67c",
+    "sha256": "5f01f24f5a4ad4e0113e609e2166c5c6b2432aad5aa0289e9b4bf3fc1310e67c"
+   },
+   "other_verdict": "possible-not-demonstrated",
+   "state": "pass",
+   "x-csoai": {
+    "event_id": "sha256:5f01f24f5a4ad4e0113e609e2166c5c6b2432aad5aa0289e9b4bf3fc1310e67c",
+    "event_state": "CONSISTENT",
+    "limits": [
+     "Measurement, not accusation: dates and whole days as the public record gives them; no intent, diligence or compliance is characterised.",
+     "The signed record.json still carries publication = 'PRIVATE: OWNER-APPROVE required'; it is served publicly, so that field is stale inside signed bytes and needs a superseding record, not an edit.",
+     "A verified signature shows these bytes were signed by the named key. It does not show the content is true."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "quote re-read + calendar arithmetic | csoai.measurement-capsule/0.2"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified",
+     "kind": "web_page",
+     "locator": "incident.2026-06.au-medicare-statistics-portal.agent-access"
+    }
+   }
+  },
+  {
+   "check_id": "safe-rv@signed-run check + supersedes chain digests | csoai.signed-run/0.1#https://huggingface.co/datasets/csoai/mcp-contract-parity@557ca3376194917ddc42e2e8dc301e6503fa2c03~c320ff481da7",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:c320ff481da797f74043962b8a21203b36967729424b06622d24904b18b46f5d",
+    "sha256": "c320ff481da797f74043962b8a21203b36967729424b06622d24904b18b46f5d"
+   },
+   "other_verdict": "possible-not-demonstrated",
+   "state": "pass",
+   "x-csoai": {
+    "event_id": "sha256:c320ff481da797f74043962b8a21203b36967729424b06622d24904b18b46f5d",
+    "event_state": "CONSISTENT",
+    "limits": [
+     "runtime auth enforcement beyond the discovery boundary (initialize + tools/list); tools/call is never sent",
+     "backend behaviour, tool correctness, safety, or quality of any service or vendor",
+     "which surface is right: an INCONSISTENT row says two public statements disagree, not which one is true",
+     "A verified signature shows these bytes were signed by the named key. It does not show the content is true."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "signed-run check + supersedes chain digests | csoai.signed-run/0.1"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:mcp-contract-parity:v0.1.2",
+     "kind": "dataset",
+     "locator": "https://huggingface.co/datasets/csoai/mcp-contract-parity@557ca3376194917ddc42e2e8dc301e6503fa2c03"
+    }
+   }
+  },
+  {
+   "cause": "withheld",
+   "check_id": "safe-rv@signed-run check | csoai.signed-run/0.1#https://councilof.ai/measurement-capsules/v0.2/index.json~10f9db66aa79",
+   "discrimination": "unknown",
+   "evidence": {
+    "ref": "urn:csoai:evidence-event:sha256:10f9db66aa7996a329fb3d4c79e956991600cc68546bb378c24c6dee0ffea811",
+    "sha256": "10f9db66aa7996a329fb3d4c79e956991600cc68546bb378c24c6dee0ffea811"
+   },
+   "other_verdict": "unknown",
+   "state": "inconclusive",
+   "x-csoai": {
+    "cause_basis": "declared by the producer (sidecar), classified from the record's own reason text",
+    "event_id": "sha256:10f9db66aa7996a329fb3d4c79e956991600cc68546bb378c24c6dee0ffea811",
+    "event_state": "PARTIAL",
+    "limits": [
+     "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
+     "A verified signature shows these bytes were signed by the named key. It does not show the content is true."
+    ],
+    "method": {
+     "holder": "csoai",
+     "id": "safe-rv",
+     "version": "signed-run check | csoai.signed-run/0.1"
+    },
+    "negative_control": {
+     "expected": "DIVERGENT",
+     "got": "DIVERGENT",
+     "id": "designed_to_fail"
+    },
+    "subject": {
+     "declared_by": "csoai:safe-rv:measurement-capsules:v0.2:index",
+     "kind": "signed_record",
+     "locator": "https://councilof.ai/measurement-capsules/v0.2/index.json"
+    }
+   }
+  }
+ ],
+ "control_fixtures": [],
+ "domain": {
+  "description": "every event in the source file; the count is bound with the file digest",
+  "id": "dom:evidence-events",
+  "population": 10
+ },
+ "evidence_objects": [],
+ "format": "w3c-agent-conformance-reporting/0.1",
+ "note": "Measurement records re-expressed in the v0.1 per-check shape. Not a certification, grade or ranking. pass on a gspc measurement check means a run exists; it says nothing about any model.",
+ "producer": {
+  "name": "GSPC evidence fabric",
+  "renderer": "render/w3c_acr01.py",
+  "version": "0.1.0"
+ },
+ "rollup": {
+  "aggregate": {
+   "denominator": 9,
+   "note": "inconclusive and void are in the denominator and cannot improve it (5.1)",
+   "over": "declared, exercised checks",
+   "pass": 5
+  },
+  "by_state": {
+   "fail": 3,
+   "inconclusive": 1,
+   "not-exercised": 1,
+   "pass": 5,
+   "void": 0
+  },
+  "completeness": {
+   "accounting": {
+    "population": 10,
+    "state": "satisfied"
+   },
+   "evidence": {
+    "population": 8,
+    "state": "satisfied"
+   },
+   "execution": {
+    "population": 10,
+    "state": "not-satisfied"
+   },
+   "no_declared_check_void": {
+    "population": 10,
+    "state": "satisfied"
+   }
+  },
+  "declared": 10,
+  "discriminating_power": {
+   "basis": "shown-by-run",
+   "fail_count": 3
+  },
+  "evidence_counter": {
+   "carried": 0,
+   "referenced": 8
+  }
+ },
+ "source": {
+  "count": 10,
+  "ref": "docs/standards/osaia-safe-evidence-pack/events/events.jsonl",
+  "sha256": "83ea161bcc791f95b267045394a53aa5de6540a1551f4f464f9e27f1d0fc3a6e",
+  "tree_note": "sha256 over the JSONL bytes; the signed batch or freeze record binds this count (3.1)",
+  "tree_shape": "flat"
+ },
+ "spec": "https://lists.w3.org/Archives/Public/public-agent-conformance/2026Sep/0087.html"
+}

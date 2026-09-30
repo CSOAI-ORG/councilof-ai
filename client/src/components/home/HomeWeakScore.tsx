@@ -142,7 +142,7 @@ export default function HomeWeakScore({ read: injected }: { read?: CardRead }) {
             Here is one of our own models, scoring single digits.
           </h2>
           <p className="t-lede measure mt-6 ink-muted">
-            We trained it. It has been on the board since the day it was measured, issued as a
+            We built it. It has been on the board since the day it was measured, issued as a
             signed card under our published key, and it is not going anywhere. It is not even the
             bottom: the signed set runs all the way down to zero. A score that only ever goes up
             is not a measurement — it is marketing with a chart.

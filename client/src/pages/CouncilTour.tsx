@@ -31,8 +31,8 @@ const STEPS: StepConfig[] = [
     narration:
       "Five legal instruments are under continuous hash watch. When a provision changes, we know the same morning — with a signed delta.",
     dataType: "real",
-    verifyHref: "https://github.com/CSOAI-ORG/corpus-watch/blob/main/corpus_state.json",
-    verifyLabel: "View corpus_state.json on GitHub",
+    verifyHref: "/corpus-watch/status.json",
+    verifyLabel: "View corpus-watch status.json",
     globeCommand: { cmd: "home", duration: 1.5 },
   },
   {
