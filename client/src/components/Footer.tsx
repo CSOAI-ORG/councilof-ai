@@ -163,14 +163,15 @@ export function Footer() {
           <p className="text-muted-foreground text-sm max-w-md">
             Independent measurement body. Signed attestation and transparent measurement — never certification.
           </p>
-          <div className="flex space-x-4 sm:ml-auto">
+          <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
               <a
                 key={social.name}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                // 44x44 hit area around a 20px glyph (audit 2026-09-30 #8: the bare icon was 20x20).
+                className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
                 aria-label={social.name}
               >
                 <social.icon className="h-5 w-5" />

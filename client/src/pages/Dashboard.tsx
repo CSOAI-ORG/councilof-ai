@@ -120,7 +120,7 @@ export default function Dashboard() {
       change: gspcStats ? `${gspcStats.quotable_axes} quotable axes` : "board unavailable",
       changeType: gspcStats ? "positive" : "neutral",
       icon: Shield,
-      color: "text-emerald-600",
+      color: "text-emerald-700",
       bgColor: "bg-emerald-50",
       description: "Named measurements on the public GSPC board",
     },
@@ -285,14 +285,14 @@ export default function Dashboard() {
                         </p>
                         <div className="flex items-center gap-1 mt-2">
                           {metric.changeType === "positive" ? (
-                            <ArrowUpRight className="h-3 w-3 text-emerald-600" />
+                            <ArrowUpRight className="h-3 w-3 text-emerald-700" />
                           ) : metric.changeType === "negative" ? (
                             <ArrowDownRight className="h-3 w-3 text-red-600" />
                           ) : null}
                           <p
                             className={`text-xs ${
                               metric.changeType === "positive"
-                                ? "text-emerald-600"
+                                ? "text-emerald-700"
                                 : metric.changeType === "negative"
                                 ? "text-red-600"
                                 : "text-muted-foreground"
@@ -401,7 +401,7 @@ export default function Dashboard() {
                     const Icon = item.icon;
                     const colorClasses = {
                       blue: { bg: "bg-blue-500", light: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
-                      emerald: { bg: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
+                      emerald: { bg: "bg-emerald-500", light: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" },
                       amber: { bg: "bg-amber-500", light: "bg-amber-50", text: "text-amber-600", border: "border-amber-200" },
                       purple: { bg: "bg-purple-500", light: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
                     }[item.color];
@@ -471,7 +471,7 @@ export default function Dashboard() {
                   {pdcaStats && (
                     <div className="flex items-center gap-4 text-xs">
                       <span className="text-blue-600 font-medium">{pdcaStats.activeCycles} active</span>
-                      <span className="text-emerald-600 font-medium">{pdcaStats.completedCycles} completed</span>
+                      <span className="text-emerald-700 font-medium">{pdcaStats.completedCycles} completed</span>
                       <span className="text-muted-foreground">{pdcaStats.totalCycles} total cycles</span>
                     </div>
                   )}
@@ -534,7 +534,7 @@ export default function Dashboard() {
               Charts appear once your AI systems have real measurements behind them —
               we don&apos;t plot example data as if it were yours.
             </p>
-            <a href="/assess" className="mt-4 inline-block text-sm font-medium text-emerald-600 hover:text-emerald-700">
+            <a href="/assess" className="mt-4 inline-block text-sm font-medium text-emerald-700 hover:text-emerald-800">
               Request a measurement →
             </a>
           </div>
@@ -630,7 +630,7 @@ export default function Dashboard() {
                         <div
                           className={`mt-0.5 p-1.5 rounded-full ${
                             activity.status === "success"
-                              ? "bg-emerald-100 text-emerald-600"
+                              ? "bg-emerald-100 text-emerald-700"
                               : activity.status === "warning"
                               ? "bg-amber-100 text-amber-600"
                               : "bg-red-100 text-red-600"
