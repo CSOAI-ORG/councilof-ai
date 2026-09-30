@@ -1,0 +1,72 @@
+{
+ "_note": "GSPC Route golden cases, shared by functions/_lib/route/route.test.ts (writes/compares <name>.record.json) and services/gspc-router/test_route_service.py (validates every record with packages/evidence-fabric/verify.py --structure and re-runs its Cedar with `cedar authorize`). board: 'recorded' = board-2026-09-30.json as read; 'planted-separated' = the same file with governance.separation set to SEPARATED, a state no live axis had on 2026-09-30, planted so the separated branch is exercised; 'unreachable' = the board fetch throws.",
+ "uuid": "00000000-0000-4000-8000-000000000001",
+ "read_at": "2026-09-30T12:00:00.000Z",
+ "cases": [
+  {
+   "name": "tie-governance-local-models",
+   "board": "recorded",
+   "args": {
+    "task": "Summarise this public policy paragraph in two sentences.",
+    "objective": {"quality_axis": "governance", "tie_break": ["local_first", "cheapest_declared"]},
+    "candidates": [
+     {"id": "local:mistral-7b", "kind": "local_gpu", "provider": "ollama", "model": "mistral:7b", "endpoint": "local:ollama/mistral:7b", "read_only": true},
+     {"id": "byok:deepseek-r1-8b", "kind": "model", "provider": "caller-openrouter", "model": "deepseek-r1:8b", "endpoint": "https://openrouter.ai/api/v1", "cost_declared": 0.2, "read_only": true},
+     {"id": "local:llama3.2-3b", "kind": "local_gpu", "provider": "ollama", "model": "llama3.2:3b", "endpoint": "local:ollama/llama3.2:3b", "read_only": true, "cost_declared": 0}
+    ]
+   }
+  },
+  {
+   "name": "separated-governance-planted",
+   "board": "planted-separated",
+   "args": {
+    "task": "Classify this clause.",
+    "objective": {"quality_axis": "governance"},
+    "candidates": [
+     {"id": "byok:deepseek-r1-8b", "kind": "model", "provider": "caller-openrouter", "model": "deepseek-r1:8b", "endpoint": "https://openrouter.ai/api/v1", "cost_declared": 0.1, "read_only": true},
+     {"id": "local:mistral-7b", "kind": "local_gpu", "provider": "ollama", "model": "mistral:7b", "endpoint": "local:ollama/mistral:7b", "read_only": true}
+    ]
+   }
+  },
+  {
+   "name": "read-only-fleet-tools",
+   "board": null,
+   "args": {
+    "task": "Check whether this signed card verifies.",
+    "policy": {"presets": ["read-only"]}
+   }
+  },
+  {
+   "name": "uncheckable-policy-grants-nothing",
+   "board": null,
+   "args": {
+    "task": "Translate a public notice.",
+    "policy": {"presets": ["read-only", "trusted-vendors"]},
+    "candidates": [
+     {"id": "local:qwen2.5-0.5b", "kind": "local_gpu", "provider": "ollama", "model": "qwen2.5:0.5b-instruct", "endpoint": "local:ollama/qwen2.5:0.5b-instruct", "read_only": true}
+    ]
+   }
+  },
+  {
+   "name": "floor-forbids-paid-destructive-and-unknown",
+   "board": "unreachable",
+   "args": {
+    "task_sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+    "data_class": "internal",
+    "objective": {"quality_axis": "provenance", "tie_break": "cheapest_declared"},
+    "policy": {"presets": ["eu-only"], "forbid_providers": ["vendor-x"]},
+    "candidates": [
+     {"id": "x402:weather", "kind": "x402_resource", "provider": "vendor-y", "region": "eu-west-1", "endpoint": "https://api.example.com/weather", "data_class_allowed": ["public", "internal"], "read_only": true},
+     {"id": "mcp:deleter", "kind": "mcp_tool", "provider": "vendor-y", "region": "eu-west-1", "endpoint": "https://mcp.example.com/mcp", "destructive": true, "data_class_allowed": ["internal"]},
+     {"id": "model:vendor-x", "kind": "model", "provider": "vendor-x", "region": "eu-central-1", "data_class_allowed": ["internal"], "cost_declared": 0.01},
+     {"id": "model:us-only", "kind": "model", "provider": "vendor-z", "region": "us-east-1", "data_class_allowed": ["internal"], "cost_declared": 0.001},
+     {"id": "model:eu-a", "kind": "model", "provider": "vendor-z", "region": "eu-north-1", "data_class_allowed": ["internal"], "cost_declared": 0.02},
+     {"id": "model:eu-b", "kind": "model", "provider": "vendor-w", "region": "eu-west-3", "data_class_allowed": ["internal"], "cost_declared": 0.015},
+     {"id": "model:public-only", "kind": "model", "provider": "vendor-w", "region": "eu-west-3", "cost_declared": 0.0001},
+     {"id": "model:odd", "kind": "model", "provider": "vendor-w", "region": "eu-west-3", "data_class_allowed": ["internal"], "trust_me": true},
+     {"id": "model:sponsored", "kind": "model", "provider": "vendor-v", "region": "eu-west-3", "data_class_allowed": ["internal"], "cost_declared": 0.5, "sponsor": "vendor-v", "bid": 1000}
+    ]
+   }
+  }
+ ]
+}

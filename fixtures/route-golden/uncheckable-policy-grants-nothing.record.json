@@ -1,0 +1,129 @@
+{
+ "schema": "csoai.evidence-event/0.1",
+ "profile": "csoai.route-evidence/0.1",
+ "subject": {
+  "kind": "route",
+  "locator": "urn:gspc:route:00000000-0000-4000-8000-000000000001",
+  "declared_by": "caller:anon"
+ },
+ "claim": {
+  "text": "Route chosen for task sha256:71c5795a55ed17fcbc0832d025f2698a2a7d04012e32f4fe7573f1aefc1a6b7d under caller policy sha256:4c9b6ec2e9398cf8e33e11193d1000405b31144e635561ebdf04307b1a27cb38",
+  "source_url": null,
+  "source_sha256": null,
+  "read_at": "2026-09-30T12:00:00.000Z"
+ },
+ "method": {
+  "id": "gspc-route",
+  "version": "0.1.0",
+  "code_sha256": null,
+  "holder": "csoai"
+ },
+ "declared": {
+  "task": {
+   "sha256": "71c5795a55ed17fcbc0832d025f2698a2a7d04012e32f4fe7573f1aefc1a6b7d",
+   "data_class": "public",
+   "needs_write": false,
+   "content_retained": false
+  },
+  "policy": {
+   "caller_sha256": "4c9b6ec2e9398cf8e33e11193d1000405b31144e635561ebdf04307b1a27cb38",
+   "floor_sha256": "764368cd4d88cc88b894dccf2cab6c6a5953bc7755a70340cdd263afc3d4bb1f",
+   "cedar_schema_sha256": "ac74fb074ddb933f20037f82ec30e5e8bf3f75c14522445136db99116b12060d",
+   "presets": [
+    "read-only"
+   ],
+   "rules": [
+    "caller:preset:read-only"
+   ],
+   "uncheckable": [
+    "unknown preset \"trusted-vendors\""
+   ],
+   "confirm_destructive": false,
+   "caller_wallet": false
+  },
+  "objective": {
+   "quality_axis": null,
+   "weights": {
+    "quality": 0,
+    "cost": 0,
+    "latency": 0
+   },
+   "tie_break": [
+    "cheapest_declared",
+    "local_first",
+    "lexical_id"
+   ]
+  },
+  "candidates_sha256": "de87aba34c55e06898a23d580bb3dc49d6a6c710fa5edd4d64689720e8a0223f"
+ },
+ "observed": {
+  "considered": [
+   {
+    "id": "local:qwen2.5-0.5b",
+    "kind": "local_gpu",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "no-permit:caller-policy-uncheckable (unknown preset \"trusted-vendors\")",
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   }
+  ],
+  "permitted": [],
+  "chosen": null,
+  "separation": "UNTESTED",
+  "label": null,
+  "board": {
+   "state": "NOT_REQUESTED",
+   "source": null,
+   "board_separation": null
+  },
+  "execution": {
+   "mode": "decide_only",
+   "status": "n/a",
+   "provider_observed": null,
+   "model_observed": null,
+   "latency_ms": null,
+   "usage": null,
+   "cost_declared": null,
+   "receipt_schema": "csoai.route-receipt/0.1",
+   "receipt": null
+  },
+  "heal": [],
+  "payment": {
+   "x402": "none",
+   "tx": null,
+   "payer_is_self": false
+  }
+ },
+ "state": "UNMEASURED",
+ "value": null,
+ "negative_control": {
+  "id": null,
+  "expected": null,
+  "got": "NOT_RUN"
+ },
+ "limits": [
+  "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
+  "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
+  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
+  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
+  "The task text is carried as its sha256 only; no prompt or response bytes are stored."
+ ],
+ "supersedes": null,
+ "signature": null,
+ "anchors": {
+  "ots": "none",
+  "rekor": {
+   "log_index": null,
+   "uuid": null
+  }
+ },
+ "maintenance": null,
+ "event_id": "sha256:39e50db98017f6632f0c9745ff9f8959870f6d973383fcabfeaf69368b352d7c"
+}

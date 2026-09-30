@@ -1,0 +1,366 @@
+{
+ "schema": "csoai.evidence-event/0.1",
+ "profile": "csoai.route-evidence/0.1",
+ "subject": {
+  "kind": "route",
+  "locator": "urn:gspc:route:00000000-0000-4000-8000-000000000001",
+  "declared_by": "caller:anon"
+ },
+ "claim": {
+  "text": "Route chosen for task sha256:f521329a2317e27f1482d6b64749b1a16d072704bdd80f1b99508d4f17a9ce64 under caller policy sha256:4af7c509fc31c65223fe91115d2ac4bd066cd620d7a8c52d5b9d74b7bc6d993c",
+  "source_url": null,
+  "source_sha256": null,
+  "read_at": "2026-09-30T12:00:00.000Z"
+ },
+ "method": {
+  "id": "gspc-route",
+  "version": "0.1.0",
+  "code_sha256": null,
+  "holder": "csoai"
+ },
+ "declared": {
+  "task": {
+   "sha256": "f521329a2317e27f1482d6b64749b1a16d072704bdd80f1b99508d4f17a9ce64",
+   "data_class": "public",
+   "needs_write": false,
+   "content_retained": false
+  },
+  "policy": {
+   "caller_sha256": "4af7c509fc31c65223fe91115d2ac4bd066cd620d7a8c52d5b9d74b7bc6d993c",
+   "floor_sha256": "764368cd4d88cc88b894dccf2cab6c6a5953bc7755a70340cdd263afc3d4bb1f",
+   "cedar_schema_sha256": "ac74fb074ddb933f20037f82ec30e5e8bf3f75c14522445136db99116b12060d",
+   "presets": [
+    "read-only"
+   ],
+   "rules": [
+    "caller:permit",
+    "caller:preset:read-only"
+   ],
+   "uncheckable": [],
+   "confirm_destructive": false,
+   "caller_wallet": false
+  },
+  "objective": {
+   "quality_axis": null,
+   "weights": {
+    "quality": 0,
+    "cost": 0,
+    "latency": 0
+   },
+   "tie_break": [
+    "cheapest_declared",
+    "local_first",
+    "lexical_id"
+   ]
+  },
+  "candidates_sha256": "0a23babeba0b14c33d13b65350dacf750b2cb463a13b7a53baeb78b5a34557b4"
+ },
+ "observed": {
+  "considered": [
+   {
+    "id": "mcp:board_totals",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:get_axis",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:verify_card",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:list_cards",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:get_root",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:get_card",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:verify_inclusion",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:x402_trust",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:mcp_trust",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:measurement_index",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:verify_capsule",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:server_evidence",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:commission_card",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": false,
+    "forbid_policy": "floor:paid-needs-caller-wallet",
+    "forbids_matched": [
+     "floor:paid-needs-caller-wallet",
+     "caller:preset:read-only"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:art50_marking_evidence",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": false,
+    "forbid_policy": "floor:paid-needs-caller-wallet",
+    "forbids_matched": [
+     "floor:paid-needs-caller-wallet",
+     "caller:preset:read-only"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:rwa_evidence",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": false,
+    "forbid_policy": "floor:paid-needs-caller-wallet",
+    "forbids_matched": [
+     "floor:paid-needs-caller-wallet",
+     "caller:preset:read-only"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:receipts_batch",
+    "kind": "mcp_tool",
+    "source": "gspc_fleet",
+    "permit": false,
+    "forbid_policy": "floor:paid-needs-caller-wallet",
+    "forbids_matched": [
+     "floor:paid-needs-caller-wallet",
+     "caller:preset:read-only"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   }
+  ],
+  "permitted": [
+   "mcp:board_totals",
+   "mcp:get_axis",
+   "mcp:verify_card",
+   "mcp:list_cards",
+   "mcp:get_root",
+   "mcp:get_card",
+   "mcp:verify_inclusion",
+   "mcp:x402_trust",
+   "mcp:mcp_trust",
+   "mcp:measurement_index",
+   "mcp:verify_capsule",
+   "mcp:server_evidence"
+  ],
+  "chosen": {
+   "id": "mcp:board_totals",
+   "choice_basis": "tie_break:cheapest_declared>local_first>lexical_id"
+  },
+  "separation": "UNTESTED",
+  "label": null,
+  "board": {
+   "state": "NOT_REQUESTED",
+   "source": null,
+   "board_separation": null
+  },
+  "execution": {
+   "mode": "decide_only",
+   "status": "n/a",
+   "provider_observed": null,
+   "model_observed": null,
+   "latency_ms": null,
+   "usage": null,
+   "cost_declared": null,
+   "receipt_schema": "csoai.route-receipt/0.1",
+   "receipt": null
+  },
+  "heal": [],
+  "payment": {
+   "x402": "none",
+   "tx": null,
+   "payer_is_self": false
+  }
+ },
+ "state": "UNMEASURED",
+ "value": null,
+ "negative_control": {
+  "id": null,
+  "expected": null,
+  "got": "NOT_RUN"
+ },
+ "limits": [
+  "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
+  "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
+  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
+  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
+  "The task text is carried as its sha256 only; no prompt or response bytes are stored."
+ ],
+ "supersedes": null,
+ "signature": null,
+ "anchors": {
+  "ots": "none",
+  "rekor": {
+   "log_index": null,
+   "uuid": null
+  }
+ },
+ "maintenance": null,
+ "event_id": "sha256:5f4791d93a0daa083c44cb4c6e7342fd3f029021aae6c2586118734df67a7c22"
+}
