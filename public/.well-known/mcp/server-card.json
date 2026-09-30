@@ -8,7 +8,7 @@
     "title": "Council of AI — GSPC Measurement Tools",
     "version": "1.4.3"
   },
-  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.3 (io.github.CSOAI-ORG/gspc is its deprecated alias). 12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC measurement board: quote totals.public_count from GET /api/gspc, never a typed count. Frozen item banks and published scoring code. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.3 (io.github.CSOAI-ORG/gspc is its deprecated alias). 13 free tools at /mcp/free; 18 at /mcp (13 free + 5 metered). The npm package is versioned separately.",
   "icon_url": "https://councilof.ai/csoai-icon.svg",
   "provider": {
     "name": "CSOAI Ltd",
@@ -25,9 +25,9 @@
       "primary": "https://councilof.ai/mcp",
       "current": "https://councilof.ai/mcp",
       "stdio": "npx -y csoai-gspc-mcp@0.2.2",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is sixteen: twelve free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.3.",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is eighteen: thirteen free readers plus five x402-metered evidence tools. witness_hash is quarantined and not advertised. Registry server 1.4.3.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the twelve free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the thirteen free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -49,18 +49,20 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
+      "evidence_bundle_preview",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
-      "receipts_batch"
+      "receipts_batch",
+      "evidence_bundle"
     ],
-    "total_tools": 16,
-    "free_tools": 12,
-    "metered_tools": 4,
-    "tool_counts": "12 free tools at /mcp/free; 16 at /mcp (12 free + 4 metered). The npm package is versioned separately.",
+    "total_tools": 18,
+    "free_tools": 13,
+    "metered_tools": 5,
+    "tool_counts": "13 free tools at /mcp/free; 18 at /mcp (13 free + 5 metered). The npm package is versioned separately.",
     "streaming": false,
     "auth_required": false,
-    "tool_names_sha256": "4d5671a50bf129615aaa82ef56a0382c1fd85c2781d41cef1b65f3e48a7b0134",
+    "tool_names_sha256": "734f0feb6f4cb5a69ba408c7d0144adb75438663fc8e3455fe794aaa08a3db01",
     "free_door_tool_names": [
       "board_totals",
       "get_axis",
@@ -73,9 +75,10 @@
       "mcp_trust",
       "measurement_index",
       "verify_capsule",
-      "server_evidence"
+      "server_evidence",
+      "evidence_bundle_preview"
     ],
-    "free_door_tool_names_sha256": "64fcfc150e8164eeb2ffadcd8378d10cd72e305efce52f1dfd317c43763c0974",
+    "free_door_tool_names_sha256": "14a0b60ff4894a3b38143fdf4d77092c328c56cdc1a93e557c01ba891665e567",
     "tool_names_sha256_rule": "sha256 of the tool names from tools/list, sorted, joined by \"\\n\" (UTF-8)",
     "derived_from": "tools/list of https://councilof.ai/mcp (functions/mcp/gspc-tools.json + paid-tools.json) and of https://councilof.ai/mcp/free (gspc-tools.json)"
   },
@@ -938,6 +941,101 @@
       }
     },
     {
+      "name": "evidence_bundle_preview",
+      "title": "Signed cards relevant to one obligation (free)",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "annotations": {
+        "title": "Signed cards relevant to one obligation (free)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "obligation": {
+            "type": "string",
+            "enum": [
+              "article-50",
+              "article-53",
+              "dora",
+              "cra"
+            ],
+            "description": "article-50 (AI-generated content marking), article-53 (GPAI provider documentation), dora (ICT third-party oversight) or cra (Cyber Resilience Act)."
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "Optional: a model id, vendor or instrument the cards must name. Omit for the obligation-wide selection."
+          }
+        },
+        "required": [
+          "obligation"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "RELEVANT_CARDS_FOUND",
+              "EMPTY",
+              "UNKNOWN_OBLIGATION",
+              "BAD_ARGUMENTS",
+              "UNREACHABLE"
+            ]
+          },
+          "obligation": {
+            "type": "object"
+          },
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "relevant_signed_cards": {
+            "type": "integer"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "corpus": {},
+          "relation": {
+            "type": "string"
+          },
+          "counsel_confirmed": {
+            "type": "boolean"
+          },
+          "review_note": {
+            "type": "string"
+          },
+          "determination": {
+            "type": "string",
+            "const": "NONE"
+          },
+          "source": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      }
+    },
+    {
       "name": "commission_card",
       "title": "Commission a measurement card (paid, x402)",
       "annotations": {
@@ -1286,6 +1384,103 @@
         "sku": "receipts_batch",
         "free_preview": "preview=true",
         "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)"
+      }
+    },
+    {
+      "name": "evidence_bundle",
+      "title": "Evidence bundle for one obligation (paid, x402; preview free)",
+      "annotations": {
+        "title": "Evidence bundle for one obligation (paid, x402; preview free)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "payment_presented": {
+            "type": "boolean"
+          },
+          "delivery_state": {
+            "type": "string"
+          },
+          "settlement_state": {
+            "type": "string"
+          },
+          "x402Version": {
+            "type": "integer"
+          },
+          "accepts": {
+            "type": "array"
+          },
+          "resource": {
+            "type": "object"
+          },
+          "deliverable": {},
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "obligation": {
+            "type": "string",
+            "enum": [
+              "article-50",
+              "article-53",
+              "dora",
+              "cra"
+            ],
+            "description": "article-50, article-53, dora or cra."
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "Optional: a model id, vendor or instrument the cards must name."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "true = the free preview (relevant-card count and first cards); nothing is charged."
+          },
+          "x_payment": {
+            "type": "string",
+            "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          }
+        },
+        "required": [
+          "obligation"
+        ],
+        "additionalProperties": false
+      },
+      "csoai": {
+        "paid": true,
+        "rail": "x402",
+        "route": "/api/evidence-bundle",
+        "sku": "evidence_bundle",
+        "free_preview": "preview=true, or the free tool evidence_bundle_preview",
+        "deliverable": "OSCAL 1.1.0 assessment-results over already-signed cards (with inclusion proofs) plus one manifest card-v0, surface evidence.bundle",
+        "deployed_by": "live on councilof.ai (402 on ?obligation=article-53&bundle=1, read 2026-09-30)"
       }
     }
   ],

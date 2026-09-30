@@ -1,0 +1,314 @@
+{
+  "schema": "csoai.connect-matrix/1",
+  "generated_by": "scripts/harness-x/render.mjs from council-os/distribution.json#/connect_matrix — do not hand-edit",
+  "what": "Copy-paste setup for every client that accepts a pasted remote MCP URL. Rendered to distribution/connect/connect-matrix.json and shown on /connect/. {free} and {full} are replaced by the two doors at render time; no other URL may appear. scripts/harness-x/connect-live.mjs checks every block against the live doors (initialize + tools/list for each URL; JSON blocks must parse; the curl block is executed) and writes distribution/connect/connect-live-check.json. Client UIs and CLIs are not driven by that check: those steps are copied from each vendor's documentation, linked per row.",
+  "doors": {
+    "free": {
+      "url": "https://councilof.ai/mcp/free",
+      "what": "read-only tools, no sign-in, nothing on it moves money"
+    },
+    "full": {
+      "url": "https://councilof.ai/mcp",
+      "what": "the free tools plus x402-metered evidence tools; a metered tool answers with a payment challenge until the caller's own wallet signs one"
+    }
+  },
+  "tool_counts": {
+    "free": 13,
+    "full": 18,
+    "note": "array lengths of functions/mcp/gspc-tools.json and paid-tools.json at render time"
+  },
+  "live_check": "distribution/connect/connect-live-check.json (scripts/harness-x/connect-live.mjs)",
+  "doctrine": {
+    "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "source": "docs/DOCTRINE.md",
+    "human_page": "https://councilof.ai/doctrine/"
+  },
+  "clients": [
+    {
+      "id": "claude-code",
+      "platform": "Claude Code",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "Terminal",
+      "kind": "shell",
+      "snippet": "claude mcp add --transport http gspc https://councilof.ai/mcp/free",
+      "docs": "https://docs.claude.com/en/docs/claude-code/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "claude-app",
+      "platform": "Claude (claude.ai, Desktop)",
+      "group": "Chat apps",
+      "door": "free",
+      "where": "Settings → Connectors → Add custom connector",
+      "kind": "text",
+      "snippet": "Name: GSPC\nRemote MCP server URL: https://councilof.ai/mcp/free\nAuthentication: none",
+      "docs": "https://support.anthropic.com/en/articles/11175166-getting-started-with-custom-connectors-using-remote-mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "chatgpt",
+      "platform": "ChatGPT (developer mode)",
+      "group": "Chat apps",
+      "door": "free",
+      "where": "Settings → Apps & Connectors → Advanced settings → Developer mode → Create",
+      "kind": "text",
+      "snippet": "Name: GSPC\nMCP server URL: https://councilof.ai/mcp/free\nAuthentication: No authentication",
+      "docs": "https://platform.openai.com/docs/guides/developer-mode",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "le-chat",
+      "platform": "Mistral Le Chat",
+      "group": "Chat apps",
+      "door": "free",
+      "where": "Intelligence → Connectors → Add connector → Custom MCP Connector",
+      "kind": "text",
+      "snippet": "Connector name: GSPC\nConnection server: https://councilof.ai/mcp/free\nAuthentication: none",
+      "docs": "https://docs.mistral.ai/le-chat/knowledge-integrations/connectors/mcp-connectors",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "perplexity",
+      "platform": "Perplexity (Pro, Max, Enterprise)",
+      "group": "Chat apps",
+      "door": "free",
+      "where": "Settings → Connectors → Add connector → Custom → Remote",
+      "kind": "text",
+      "snippet": "Name: GSPC\nServer URL: https://councilof.ai/mcp/free\nTransport: Streamable HTTP\nAuthentication: none",
+      "docs": "https://docs.perplexity.ai/docs/agent-api/tools/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "cursor",
+      "platform": "Cursor",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.cursor/mcp.json (or .cursor/mcp.json in a project)",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://cursor.com/docs/context/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "vscode",
+      "platform": "VS Code (GitHub Copilot agent mode)",
+      "group": "Coding agents",
+      "door": "free",
+      "where": ".vscode/mcp.json",
+      "kind": "json",
+      "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "windsurf",
+      "platform": "Windsurf",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.codeium/windsurf/mcp_config.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"serverUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://docs.windsurf.com/windsurf/cascade/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "gemini-cli",
+      "platform": "Gemini CLI",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.gemini/settings.json",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://geminicli.com/docs/tools/mcp-server/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "codex",
+      "platform": "OpenAI Codex CLI",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "~/.codex/config.toml",
+      "kind": "toml",
+      "snippet": "[mcp_servers.gspc]\nurl = \"https://councilof.ai/mcp/free\"",
+      "docs": "https://developers.openai.com/codex/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "zed",
+      "platform": "Zed",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "settings.json (Agent Panel → Add Custom Server)",
+      "kind": "json",
+      "snippet": "{\n  \"context_servers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://zed.dev/docs/ai/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "jetbrains",
+      "platform": "JetBrains AI Assistant",
+      "group": "Coding agents",
+      "door": "free",
+      "where": "Settings → Tools → AI Assistant → Model Context Protocol (MCP) → Add → As JSON",
+      "kind": "json",
+      "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"https://councilof.ai/mcp/free\" }\n  }\n}",
+      "docs": "https://www.jetbrains.com/help/ai-assistant/mcp.html",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "openai-responses",
+      "platform": "OpenAI Responses API",
+      "group": "Agent frameworks and APIs",
+      "door": "full",
+      "where": "tools[] of a Responses API request",
+      "kind": "json",
+      "snippet": "{\n  \"type\": \"mcp\",\n  \"server_label\": \"gspc\",\n  \"server_url\": \"https://councilof.ai/mcp\",\n  \"require_approval\": \"always\"\n}",
+      "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp",
+      "url": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "xai-grok",
+      "platform": "Grok (xAI API, Python SDK)",
+      "group": "Agent frameworks and APIs",
+      "door": "free",
+      "where": "xai_sdk remote MCP tool",
+      "kind": "python",
+      "snippet": "from xai_sdk.tools import mcp\n\ntools = [mcp(server_url=\"https://councilof.ai/mcp/free\", server_label=\"gspc\")]",
+      "docs": "https://docs.x.ai/docs/guides/tools/remote-mcp-tools",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "google-adk",
+      "platform": "Google ADK (Vertex AI Agent Builder)",
+      "group": "Agent frameworks and APIs",
+      "door": "full",
+      "where": "your ADK agent's tools",
+      "kind": "python",
+      "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"https://councilof.ai/mcp\"))",
+      "docs": "https://google.github.io/adk-docs/tools/mcp-tools/",
+      "url": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "langchain",
+      "platform": "LangChain / LangGraph",
+      "group": "Agent frameworks and APIs",
+      "door": "full",
+      "where": "pip install langchain-mcp-adapters",
+      "kind": "python",
+      "snippet": "from langchain_mcp_adapters.client import MultiServerMCPClient\n\nclient = MultiServerMCPClient({\"gspc\": {\"transport\": \"streamable_http\", \"url\": \"https://councilof.ai/mcp\"}})\ntools = await client.get_tools()",
+      "docs": "https://github.com/langchain-ai/langchain-mcp-adapters",
+      "url": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "gemini-enterprise",
+      "platform": "Gemini Enterprise",
+      "group": "Enterprise platforms",
+      "door": "free",
+      "where": "Admin console → Connectors → Add data store → Custom MCP server (tenant admin)",
+      "kind": "text",
+      "snippet": "Server URL: https://councilof.ai/mcp/free\nAuthentication: none",
+      "docs": "https://docs.cloud.google.com/gemini/enterprise/docs/connectors/custom-mcp-server/set-up-custom-mcp-server",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "copilot-studio",
+      "platform": "Microsoft Copilot Studio",
+      "group": "Enterprise platforms",
+      "door": "free",
+      "where": "Agent → Tools → Add a tool → New tool → Model Context Protocol",
+      "kind": "text",
+      "snippet": "Server name: GSPC\nServer URL: https://councilof.ai/mcp/free\nAuthentication: None",
+      "docs": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "azure-foundry",
+      "platform": "Azure AI Foundry Agent Service",
+      "group": "Enterprise platforms",
+      "door": "free",
+      "where": "Agent → Tools → Add → Custom → Model Context Protocol",
+      "kind": "text",
+      "snippet": "Name: gspc\nRemote MCP server endpoint: https://councilof.ai/mcp/free\nAuthentication: none",
+      "docs": "https://learn.microsoft.com/en-us/azure/ai-foundry/agents/how-to/tools/model-context-protocol",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "watsonx",
+      "platform": "IBM watsonx Orchestrate",
+      "group": "Enterprise platforms",
+      "door": "free",
+      "where": "ADK CLI (orchestrate)",
+      "kind": "shell",
+      "snippet": "orchestrate toolkits add --kind mcp --name gspc --description \"GSPC measurement records\" --url https://councilof.ai/mcp/free --transport streamable_http --tools \"*\"",
+      "docs": "https://developer.watson-orchestrate.ibm.com/tools/toolkits/remote_mcp_toolkits",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "servicenow",
+      "platform": "ServiceNow (AI Agent Fabric)",
+      "group": "Enterprise platforms",
+      "door": "free",
+      "where": "AI Agent Studio → MCP servers → New",
+      "kind": "text",
+      "snippet": "Name: GSPC\nServer URL: https://councilof.ai/mcp/free\nAuthentication: none",
+      "docs": "https://www.servicenow.com/community/servicenow-otto-articles/action-fabric-mcp-server-mcp-client-and-a2a-explained/ta-p/3557794",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "n8n",
+      "platform": "n8n",
+      "group": "Automation",
+      "door": "free",
+      "where": "AI Agent → Tool → MCP Client Tool",
+      "kind": "text",
+      "snippet": "Endpoint: https://councilof.ai/mcp/free\nServer Transport: HTTP Streamable\nAuthentication: None\nTools to Include: All",
+      "docs": "https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolmcp/",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "zapier",
+      "platform": "Zapier",
+      "group": "Automation",
+      "door": "free",
+      "where": "MCP Client (beta) → Connect → new connection",
+      "kind": "text",
+      "snippet": "Server URL: https://councilof.ai/mcp/free\nTransport: Streamable HTTP\nAuthentication: none",
+      "docs": "https://help.zapier.com/hc/en-us/articles/38777069364109",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "make",
+      "platform": "Make",
+      "group": "Automation",
+      "door": "free",
+      "where": "MCP Client module → Create a connection",
+      "kind": "text",
+      "snippet": "URL: https://councilof.ai/mcp/free\nAPI key / Access token: leave empty",
+      "docs": "https://apps.make.com/mcp-client",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "dify",
+      "platform": "Dify",
+      "group": "Automation",
+      "door": "free",
+      "where": "Tools → MCP → Add MCP Server (HTTP)",
+      "kind": "text",
+      "snippet": "Server URL: https://councilof.ai/mcp/free\nName: GSPC\nServer Identifier: gspc",
+      "docs": "https://docs.dify.ai/en/guides/tools/mcp",
+      "url": "https://councilof.ai/mcp/free"
+    },
+    {
+      "id": "curl",
+      "platform": "Any HTTP client (check it yourself)",
+      "group": "No client needed",
+      "door": "free",
+      "where": "Terminal",
+      "kind": "curl",
+      "snippet": "curl -s https://councilof.ai/mcp/free -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}'",
+      "docs": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports",
+      "url": "https://councilof.ai/mcp/free"
+    }
+  ]
+}

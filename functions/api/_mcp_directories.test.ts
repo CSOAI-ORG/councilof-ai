@@ -192,13 +192,12 @@ describe("Glama's recorded tool truth is derived, not asserted", () => {
     }
   });
 
-  it("the paid tools are part of what makes Glama's listing complete", () => {
-    // The distinguishing claim in the row's own text. If the paid tools ever stop being
-    // part of the served set, that sentence stops being true and must be rewritten.
-    for (const p of paid) {
-      expect(row.tool_counts.names, `${p} is cited as advertised by Glama but is no longer served`)
-        .toContain(p);
-    }
+  it("the paid tools Glama's last probe saw are still served, and a paid tool it has not seen is named in the row", () => {
+    // The row's claim is about the LAST PROBE. Every paid name Glama recorded must still be served; a paid tool the
+    // door added after that probe (evidence_bundle, 2026-09-30) is absent from names[] and must be said so in detail.
+    const seen = paid.filter((p) => (row.tool_counts.names as string[]).includes(p));
+    expect(seen.length).toBeGreaterThan(0);
+    for (const p of paid.filter((x) => !seen.includes(x))) expect(row.tool_counts.detail, p).toContain(p);
   });
 
   it("the health verdict accounts for every connector page it counted", () => {

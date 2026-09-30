@@ -3,8 +3,7 @@
  *
  * Definitions: ./paid-tools.json. Payment is the `x_payment` ARGUMENT and this module sets the
  * X-PAYMENT header itself, so nothing here is HTTP-only in principle — the stdio server reads the
- * same file and carries the same four. The eight free tools in
- * ./gspc-tools.json are untouched.
+ * same file and carries the same tools. The free tools in ./gspc-tools.json are untouched.
  *
  * MECHANISM: a paid tool forwards to its route on the SAME origin with the caller's `x_payment`
  * argument as the X-PAYMENT header (verbatim; this module never authenticates, signs or invents a
@@ -162,6 +161,15 @@ export function buildPaidRequest(
       u.searchParams.set("from", str("from"));
       if (str("to")) u.searchParams.set("to", str("to"));
       if (flag("preview")) u.searchParams.set("preview", "1");
+      break;
+    }
+    case "evidence_bundle": {
+      // GET /api/evidence-bundle?obligation=<id>[&subject=<s>]&bundle=1 — the paid, assembled OSCAL bundle.
+      // preview=true drops bundle=1, which is the route's own free preview (nothing is charged).
+      if (!str("obligation")) return { error: "obligation is required (article-50, article-53, dora or cra)" };
+      u.searchParams.set("obligation", str("obligation"));
+      if (str("subject")) u.searchParams.set("subject", str("subject").slice(0, 120));
+      if (!flag("preview")) u.searchParams.set("bundle", "1");
       break;
     }
     default:

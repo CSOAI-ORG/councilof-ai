@@ -71,7 +71,7 @@ const p = (...a) => path.join(REPO, ...a);
 const readJSON = (f) => JSON.parse(fs.readFileSync(p(f), "utf8"));
 
 // The door's own tool definitions — the same two files functions/mcp/[[path]].ts serves from.
-const WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+const WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
 const numWord = (n) => WORDS[n] ?? String(n);
 const mcpCounts = () => {
   const free = readJSON("functions/mcp/gspc-tools.json").tools.length;

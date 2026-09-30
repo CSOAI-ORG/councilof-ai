@@ -10,7 +10,7 @@
  * csoai.x402/0.2, mode challenge-only, payTo configured, resources on councilof.ai.
  * pack.councilof.ai still serves the old mock and is owner-gated to retire.
  * is 404. A2A agent-card is live; task service is not. npm csoai-gspc-mcp
- * HTTP /mcp lists twelve tools: eight free and four x402-metered; witness_hash is
+ * HTTP /mcp lists free tools and x402-metered ones (tools/list is the count); witness_hash is
  * quarantined and is not advertised. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
  * csoai.insurability-evidence-pack/0.1 is 200. 100 free calls/day is the
  * typed allowance. Machine-access pricing is pending a published ruling.

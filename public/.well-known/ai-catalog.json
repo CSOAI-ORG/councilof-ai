@@ -13,10 +13,38 @@
       "tags": ["mcp", "measurement", "verification"],
       "extensions": {
         "ai.councilof.catalog-note": {
-          "card_format": "MCP Registry server.json (schema 2025-12-11). The MCP Server Card (SEP-2127) is an open proposal; this document is the registry-shaped card for the same server.",
+          "card_format": "MCP Registry server.json (schema 2025-12-11). The MCP Server Card (SEP-2127, draft) for the same server is served at https://councilof.ai/mcp/server-card; this document is the registry-shaped card.",
           "remote": "https://councilof.ai/mcp",
           "free_tools_only": "https://councilof.ai/mcp/free",
           "extended_card": "https://councilof.ai/.well-known/mcp/server-card.json"
+        }
+      }
+    },
+    {
+      "identifier": "urn:air:councilof.ai:mcp:gspc:server-card",
+      "displayName": "GSPC MCP Server Card (full door)",
+      "type": "application/mcp-server-card+json",
+      "url": "https://councilof.ai/mcp/server-card",
+      "description": "MCP Server Card at the location SEP-2127 reserves (<streamable-http-url>/server-card) for https://councilof.ai/mcp: identity, remote endpoint and protocol revisions. SEP-2127 is a draft in no released MCP spec version; the card says so.",
+      "tags": ["mcp", "server-card", "sep-2127-draft"],
+      "extensions": {
+        "ai.councilof.catalog-note": {
+          "spec_status": "draft SEP-2127, unreleased",
+          "remote": "https://councilof.ai/mcp"
+        }
+      }
+    },
+    {
+      "identifier": "urn:air:councilof.ai:mcp:gspc-free:server-card",
+      "displayName": "GSPC MCP Server Card (free door)",
+      "type": "application/mcp-server-card+json",
+      "url": "https://councilof.ai/mcp/free/server-card",
+      "description": "MCP Server Card for https://councilof.ai/mcp/free, the read-only door with no sign-in. SEP-2127 is a draft in no released MCP spec version; the card says so.",
+      "tags": ["mcp", "server-card", "sep-2127-draft", "read-only"],
+      "extensions": {
+        "ai.councilof.catalog-note": {
+          "spec_status": "draft SEP-2127, unreleased",
+          "remote": "https://councilof.ai/mcp/free"
         }
       }
     },

@@ -1,0 +1,28 @@
+version: 1.4.3
+type: plugin
+author: csoai
+name: gspc
+label:
+  en_US: GSPC
+description:
+  en_US: "GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. Measurement, not certification."
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/gspc.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-09-30T00:00:00Z
+privacy: PRIVACY.md

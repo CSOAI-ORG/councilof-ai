@@ -858,6 +858,101 @@
           "state"
         ]
       }
+    },
+    {
+      "name": "evidence_bundle_preview",
+      "title": "Signed cards relevant to one obligation (free)",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work \u2014 not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "annotations": {
+        "title": "Signed cards relevant to one obligation (free)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "obligation": {
+            "type": "string",
+            "enum": [
+              "article-50",
+              "article-53",
+              "dora",
+              "cra"
+            ],
+            "description": "article-50 (AI-generated content marking), article-53 (GPAI provider documentation), dora (ICT third-party oversight) or cra (Cyber Resilience Act)."
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "Optional: a model id, vendor or instrument the cards must name. Omit for the obligation-wide selection."
+          }
+        },
+        "required": [
+          "obligation"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "RELEVANT_CARDS_FOUND",
+              "EMPTY",
+              "UNKNOWN_OBLIGATION",
+              "BAD_ARGUMENTS",
+              "UNREACHABLE"
+            ]
+          },
+          "obligation": {
+            "type": "object"
+          },
+          "subject": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "relevant_signed_cards": {
+            "type": "integer"
+          },
+          "cards": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "corpus": {},
+          "relation": {
+            "type": "string"
+          },
+          "counsel_confirmed": {
+            "type": "boolean"
+          },
+          "review_note": {
+            "type": "string"
+          },
+          "determination": {
+            "type": "string",
+            "const": "NONE"
+          },
+          "source": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      }
     }
   ]
 }

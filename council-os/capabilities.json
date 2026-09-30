@@ -482,6 +482,43 @@
       ]
     },
     {
+      "id": "evidence-bundle",
+      "kind": "a2a_skill",
+      "name": "Evidence bundle preview: signed cards relevant to one obligation (free)",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it, read from GET /api/evidence-bundle. The same module as the free MCP tool evidence_bundle_preview. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY. Article 53 output is evidence for review, not a legal determination. The assembled OSCAL bundle is the x402 MCP tool evidence_bundle on https://councilof.ai/mcp; this skill never charges. Not a conformity assessment, certification, audit opinion or compliance determination; grants no status.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.evidence-bundle/0.1"
+      ],
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "tags": [
+        "evidence",
+        "oscal",
+        "eu-ai-act",
+        "dora",
+        "cra"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"evidence-bundle\",\"input\":{\"obligation\":\"article-50\"}}",
+        "SendMessage with Part.data {\"skill\":\"evidence-bundle\",\"input\":{\"obligation\":\"article-53\",\"subject\":\"gpt\"}}"
+      ]
+    },
+    {
       "id": "api-a2a",
       "kind": "http",
       "path": "/api/a2a",
@@ -6108,7 +6145,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 13
+      "order": 14
     },
     {
       "id": "board_totals",
@@ -6163,7 +6200,7 @@
       "required_args": [
         "subject"
       ],
-      "order": 12
+      "order": 13
     },
     {
       "id": "get_axis",
@@ -6416,7 +6453,7 @@
       "required_args": [
         "from"
       ],
-      "order": 15
+      "order": 16
     },
     {
       "id": "rwa_evidence",
@@ -6445,7 +6482,7 @@
       "required_args": [
         "asset"
       ],
-      "order": 14
+      "order": 15
     },
     {
       "id": "verify_card",
@@ -6528,6 +6565,67 @@
       },
       "required_args": [],
       "order": 7
+    },
+    {
+      "id": "evidence_bundle_preview",
+      "kind": "mcp_tool",
+      "name": "evidence_bundle_preview",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.evidence-bundle/0.1"
+      ],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [
+        "obligation"
+      ],
+      "order": 12
+    },
+    {
+      "id": "evidence_bundle",
+      "kind": "mcp_tool",
+      "name": "evidence_bundle",
+      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "x402",
+      "schema_refs": [
+        "csoai.evidence-bundle/0.1"
+      ],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200,
+          402
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [
+        "obligation"
+      ],
+      "order": 17
     },
     {
       "id": "api-pop-a2a",

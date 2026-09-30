@@ -1,0 +1,29 @@
+identity:
+  name: board_totals
+  author: csoai
+  label:
+    en_US: "Live GSPC board totals"
+description:
+  human:
+    en_US: "Live GSPC board totals from https://councilof.ai/api/gspc."
+  llm: "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live."
+parameters:
+  - name: detail
+    type: select
+    required: false
+    label:
+      en_US: "detail"
+    human_description:
+      en_US: "summary (default): counts, public_count, the separation line, dates and source. full: also count_grammar, by_family and the board's measured_on block."
+    llm_description: "summary (default): counts, public_count, the separation line, dates and source. full: also count_grammar, by_family and the board's measured_on block."
+    form: llm
+    options:
+      - value: "summary"
+        label:
+          en_US: "summary"
+      - value: "full"
+        label:
+          en_US: "full"
+extra:
+  python:
+    source: tools/board_totals.py

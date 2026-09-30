@@ -125,6 +125,15 @@
       }
     },
     {
+      "name": "evidence_bundle_preview",
+      "payment": "free",
+      "suggested_annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
+    },
+    {
       "name": "commission_card",
       "payment": "x402",
       "suggested_annotations": {
@@ -159,10 +168,19 @@
         "openWorldHint": true,
         "destructiveHint": false
       }
+    },
+    {
+      "name": "evidence_bundle",
+      "payment": "x402",
+      "suggested_annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      }
     }
   ],
-  "tool_count": 16,
-  "live_tools_carry_annotations": false,
+  "tool_count": 18,
+  "live_tools_carry_annotations": true,
   "test_prompts": [
     {
       "prompt": "What does the GSPC board say right now?",

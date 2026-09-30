@@ -1,0 +1,44 @@
+identity:
+  name: evidence_bundle_preview
+  author: csoai
+  label:
+    en_US: "Signed cards relevant to one obligation (free)"
+description:
+  human:
+    en_US: "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle."
+  llm: "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify."
+parameters:
+  - name: obligation
+    type: select
+    required: true
+    label:
+      en_US: "obligation"
+    human_description:
+      en_US: "article-50 (AI-generated content marking), article-53 (GPAI provider documentation), dora (ICT third-party oversight) or cra (Cyber Resilience Act)."
+    llm_description: "article-50 (AI-generated content marking), article-53 (GPAI provider documentation), dora (ICT third-party oversight) or cra (Cyber Resilience Act)."
+    form: llm
+    options:
+      - value: "article-50"
+        label:
+          en_US: "article-50"
+      - value: "article-53"
+        label:
+          en_US: "article-53"
+      - value: "dora"
+        label:
+          en_US: "dora"
+      - value: "cra"
+        label:
+          en_US: "cra"
+  - name: subject
+    type: string
+    required: false
+    label:
+      en_US: "subject"
+    human_description:
+      en_US: "Optional: a model id, vendor or instrument the cards must name. Omit for the obligation-wide selection."
+    llm_description: "Optional: a model id, vendor or instrument the cards must name. Omit for the obligation-wide selection."
+    form: llm
+extra:
+  python:
+    source: tools/evidence_bundle_preview.py

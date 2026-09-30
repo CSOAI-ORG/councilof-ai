@@ -1,0 +1,104 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "gspc",
+  "version": "1.4.3",
+  "description": "GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. Measurement, not certification.",
+  "author": {
+    "name": "CSOAI Ltd",
+    "email": "nicholas@csoai.org",
+    "url": "https://councilof.ai"
+  },
+  "homepage": "https://councilof.ai/connect/",
+  "license": "Apache-2.0",
+  "keywords": [
+    "gspc",
+    "measurement",
+    "verification",
+    "evidence",
+    "mcp"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "GSPC",
+        "shortDescription": "Read the GSPC board and verify signed cards",
+        "longDescription": "GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. 13 read-only tools over the free door (https://councilof.ai/mcp/free); no sign-in, nothing on it moves money. Every answer states what was measured and what was not. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+        "developerName": "CSOAI Ltd",
+        "category": "Research",
+        "capabilities": [
+          "Read the live measurement board",
+          "Verify signed measurement cards",
+          "List evidence relevant to an obligation"
+        ],
+        "websiteURL": "https://councilof.ai/connect/",
+        "supportURL": "https://councilof.ai/contact/",
+        "privacyPolicyURL": "https://councilof.ai/privacy/",
+        "termsOfServiceURL": "https://councilof.ai/terms/",
+        "defaultPrompt": [
+          "What does the GSPC board show right now?",
+          "Verify the newest card in the GSPC signed card index.",
+          "Which signed GSPC cards are relevant to EU AI Act Article 50?"
+        ],
+        "brandColor": "#047857",
+        "brandColorDark": "#6EE7B7",
+        "logo": "./assets/logo.png"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Board totals",
+              "prompt": "What does the GSPC board show right now?",
+              "tools_triggered": "board_totals",
+              "expected_behavior": "Quote the live slot and measured counts as two labelled numbers with the board's dates; never sum them."
+            },
+            {
+              "description": "One axis",
+              "prompt": "Show the GSPC provenance axis.",
+              "tools_triggered": "get_axis",
+              "expected_behavior": "Return the axis status and its run, or UNMEASURED; never invent a number."
+            },
+            {
+              "description": "Verify a card",
+              "prompt": "Verify the first card in https://councilof.ai/signed/card_index.json.",
+              "tools_triggered": "list_cards, verify_card",
+              "expected_behavior": "Return VALID, INVALID with the failed check, or UNCHECKABLE with the reason."
+            },
+            {
+              "description": "Evidence relevant to an obligation",
+              "prompt": "Which signed GSPC cards are relevant to EU AI Act Article 50?",
+              "tools_triggered": "evidence_bundle_preview",
+              "expected_behavior": "Return the count and first cards, labelled relevant-to and never a determination."
+            },
+            {
+              "description": "Endpoint with no measurement",
+              "prompt": "What has GSPC published about https://example.com/mcp?",
+              "tools_triggered": "server_evidence",
+              "expected_behavior": "Answer NOT_MEASURED with an empty list; never a clean bill."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Status request",
+              "prompt": "Give my model an official EU AI Act status."
+            },
+            {
+              "description": "Payment request",
+              "prompt": "Pay for an evidence bundle from my card."
+            },
+            {
+              "description": "Legal advice",
+              "prompt": "Tell me whether my company meets its Article 53 legal obligations."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "This plugin connects the free read-only door only; it sells nothing and processes no payments."
+      },
+      "publication": {
+        "release_notes": "GSPC 1.4.3: 13 read-only tools over https://councilof.ai/mcp/free."
+      }
+    }
+  }
+}

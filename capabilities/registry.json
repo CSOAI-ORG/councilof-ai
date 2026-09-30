@@ -136,6 +136,19 @@
       "payment": "free"
     },
     {
+      "id": "evidence-bundle",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Evidence bundle preview: signed cards relevant to one obligation (free)",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it, read from GET /api/evidence-bundle. The same module as the free MCP tool evidence_bundle_preview. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY. Article 53 output is evidence for review, not a legal determination. The assembled OSCAL bundle is the x402 MCP tool evidence_bundle on https://councilof.ai/mcp; this skill never charges. Not a conformity assessment, certification, audit opinion or compliance determination; grants no status.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-a2a",
       "protocols": [
         "http"
@@ -2968,6 +2981,32 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "evidence_bundle_preview",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "evidence_bundle_preview",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "evidence_bundle",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "evidence_bundle",
+      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
     },
     {
       "id": "api-pop-a2a",

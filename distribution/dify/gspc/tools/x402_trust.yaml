@@ -1,0 +1,13 @@
+identity:
+  name: x402_trust
+  author: csoai
+  label:
+    en_US: "x402 catalog trust snapshot"
+description:
+  human:
+    en_US: "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire."
+  llm: "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification."
+parameters: []
+extra:
+  python:
+    source: tools/x402_trust.py
