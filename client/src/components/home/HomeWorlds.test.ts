@@ -31,11 +31,12 @@ describe("HomeWorlds — named OS doors, not leftover tiles", () => {
     expect(src).not.toMatch(/OpenTelemetry|otel/i);
   });
 
-  it("links four public OSS tools, not lifestyle MCPs", () => {
-    expect(src).toContain("github.com/CSOAI-ORG/inspect-receipts");
-    expect(src).toContain("github.com/CSOAI-ORG/claimguard");
-    expect(src).toContain("github.com/CSOAI-ORG/corpus-watch");
-    expect(src).toContain("github.com/CSOAI-ORG/signed-receipts");
+  it("links four public OSS tools, not lifestyle MCPs, and no dead GitHub org", () => {
+    expect(src).toContain("pypi.org/project/inspect-signed-receipt/");
+    expect(src).toContain("pypi.org/project/claimguard/");
+    expect(src).toContain("/corpus-watch/status.json");
+    expect(src).toContain("/spec/signed-receipts");
+    expect(src).not.toMatch(/github\.com\/CSOAI-ORG/);
     expect(src).not.toMatch(/fishkeeper|qidi-printer|habit/i);
   });
 

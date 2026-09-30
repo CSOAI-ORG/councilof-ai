@@ -268,7 +268,7 @@ export default function Wrappers() {
           A ratio above 1 means more sat in the escrow than the wrapped supply at those two heights; heights on two chains are never
           simultaneous, so every record names both blocks. The roster grows only with a wrapped contract, a canonical contract and a
           named, sourced escrow — or a native or custodial note. Corrections: <a className="underline" href="/api/corrections">/api/corrections</a>.
-          Method: <a className="underline" href="https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/measurement/wrapped-asset-ledger-spec.md">wrapped-asset-ledger-spec.md</a>.
+          Method: <code>measurement/wrapped-asset-ledger-spec.md</code> (not publicly hosted; the ledger itself is public at <a className="underline" href="/interop/wrapped-asset-parity-2026-09-14.json">/interop/wrapped-asset-parity-2026-09-14.json</a>).
         </p>
       </section>
     </section>

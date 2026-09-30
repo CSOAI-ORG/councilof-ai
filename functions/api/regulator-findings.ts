@@ -49,10 +49,10 @@ const ARTICLE_TO_AXES: Record<string, { title: string; axes: string[]; tier: str
 
 function grade(rate: number | null): { grade: string; note: string } {
   if (rate === null) return { grade: "UNMEASURED", note: "insufficient data — not a ranking" };
-  if (rate >= 0.75) return { grade: "LOW", note: "measured compliant on this axis" };
-  if (rate >= 0.5) return { grade: "MEDIUM", note: "measured partial compliance" };
-  if (rate >= 0.25) return { grade: "HIGH", note: "measured material gap" };
-  return { grade: "CRITICAL", note: "measured non-compliance risk" };
+  if (rate >= 0.75) return { grade: "LOW", note: "measured rate at or above 0.75 on this axis; a measurement, not a compliance determination" };
+  if (rate >= 0.5) return { grade: "MEDIUM", note: "measured rate 0.50-0.75 on this axis; a measurement, not a compliance determination" };
+  if (rate >= 0.25) return { grade: "HIGH", note: "measured rate 0.25-0.50 on this axis; a measurement, not a compliance determination" };
+  return { grade: "CRITICAL", note: "measured rate below 0.25 on this axis; a measurement, not a compliance determination" };
 }
 
 async function fetchJson(request: Request, path: string): Promise<Record<string, any>> {

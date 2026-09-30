@@ -144,10 +144,10 @@ export const PUBLIC_RECORDS: readonly PublicRecord[] = [
   {
     name: "Open infrastructure",
     category: "Public hosting",
-    status: "Source and datasets public",
-    detail: "The site source is mirrored on Hugging Face while the GitHub org is temporarily unavailable. The frozen banks and hub cards are on Hugging Face under the csoai organisation too.",
-    href: "https://huggingface.co/datasets/csoai/councilof-ai-source",
-    linkLabel: "Source mirror on Hugging Face (MIT)",
+    status: "Datasets public; source archived",
+    detail: "The GitHub organisation is unavailable and the Hugging Face source mirror has been private since 28 Sep 2026. Source snapshots of 2 and 15 Sep 2026 are archived by Software Heritage. The frozen banks and hub cards are public on Hugging Face under the csoai organisation.",
+    href: "https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai",
+    linkLabel: "Archived source snapshot (Software Heritage)",
     proof: { kind: "public", note: "Hosting is public; hosting is not adoption, review or endorsement." },
   },
 ] as const;

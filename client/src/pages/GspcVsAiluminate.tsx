@@ -171,10 +171,9 @@ export default function GspcVsAiluminate() {
             <li>Only the GHA publisher signs; the importer emits unsigned queue artefacts.</li>
           </ul>
           <div className="mt-5 flex flex-wrap gap-4">
-            <a href="https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/docs/interop/AILUMINATE-IMPORTER-SPEC.md"
-               className="text-emerald-300 underline-offset-2 hover:underline">
-              Importer spec v0.2
-            </a>
+            <span className="text-emerald-300/70" title="not publicly hosted: the GitHub organisation is unavailable and the source mirror is private">
+              Importer spec v0.2 (not publicly hosted)
+            </span>
             <a href="/api/gspc" className="text-emerald-300 underline-offset-2 hover:underline">
               GET /api/gspc — the living board
             </a>

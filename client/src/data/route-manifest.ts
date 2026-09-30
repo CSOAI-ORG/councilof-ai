@@ -2295,12 +2295,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/x402-board",
   "comp": "X402Leaderboard",
-  "title": "X402 Leaderboard"
+  "title": "x402 door board"
  },
  {
   "path": "/x402-leaderboard",
   "comp": "X402Leaderboard",
-  "title": "X402 Leaderboard"
+  "title": "x402 door board"
  },
  {
   "path": "/xrpl-attest",

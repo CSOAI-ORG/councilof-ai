@@ -46,7 +46,8 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
           amount: 0.02,
           per: "bulk-fetch",
           instruction: "Settle via the estate x402 receipt MCP (or provider:'meta' on /api/checkout), then retry with the x-payment header + invoice id.",
-          settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+          settle_mcp: null,
+          settle_mcp_note: "The estate x402 receipt MCP is not publicly hosted while the GitHub organisation is unavailable. Any x402 client can settle against the challenge terms.",
         },
       },
       { status: 402 }

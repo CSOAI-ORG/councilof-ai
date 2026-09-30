@@ -378,10 +378,10 @@ console.log({
                   How it is measured
                 </Button>
               </Link>
-              <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" target="_blank" rel="noopener noreferrer">
+              <a href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai" target="_blank" rel="noopener noreferrer">
                 <Button size="lg" variant="outline" className="gap-2">
                   <Globe className="w-4 h-4" />
-                  Source snapshot
+                  Source snapshot (archived)
                 </Button>
               </a>
             </div>

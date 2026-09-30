@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Github, ExternalLink, Terminal, Plug, ShieldCheck, ArrowRight } from "lucide-react";
+import { publicSourceUrl, DARK_SOURCE_NOTE } from "@/lib/darkSource";
 import registry from "@/data/mcpRegistry.json";
 
 type Server = {
@@ -98,9 +99,13 @@ export default function MCPDetail() {
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
-          <a href={server.url} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline"><Github className="h-4 w-4 mr-2" /> View source <ExternalLink className="h-3 w-3 ml-1.5" /></Button>
-          </a>
+          {publicSourceUrl(server.url) ? (
+            <a href={publicSourceUrl(server.url)!} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline"><Github className="h-4 w-4 mr-2" /> View source <ExternalLink className="h-3 w-3 ml-1.5" /></Button>
+            </a>
+          ) : (
+            <span className="self-center text-sm text-gray-500">{DARK_SOURCE_NOTE}</span>
+          )}
           <Link href="/gspc-verify/">
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">Verify a signed record <ArrowRight className="h-4 w-4 ml-2" /></Button>
           </Link>

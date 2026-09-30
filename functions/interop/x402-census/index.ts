@@ -21,7 +21,6 @@ import index from "../../../public/interop/x402-census/index.json";
 
 const SITE = "https://councilof.ai";
 const HF = "https://huggingface.co/datasets/csoai/x402-settlement-census";
-const GH = "https://huggingface.co/datasets/csoai/councilof-ai-source";
 
 const esc = (s: unknown) =>
   String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -180,11 +179,8 @@ ${deltaBlock}
 <pre><code>curl -s ${SITE}/interop/x402-census/index.json | jq .
 curl -s ${SITE}/interop/x402-census/rounds/${esc(rounds[0]?.round_id ?? "&lt;round&gt;")}.json | jq .outcome
 
-# recompute every number from the committed rows
-git clone ${GH} &amp;&amp; cd councilof-ai-source/source   # source mirror; the GitHub org is temporarily unavailable
-python3 scripts/grants/x402_census_round.py --check
-python3 scripts/grants/x402_census_delta.py --check
-python3 harness/x402-census/build_cards.py --check</code></pre>
+# the recompute scripts (scripts/grants/x402_census_round.py --check and friends) are not publicly hosted
+# at present: the GitHub organisation is unavailable and the source mirror is private. The rows above are.</code></pre>
 <p class="mut">The rows also live on Hugging Face at <a href="${HF}">csoai/x402-settlement-census</a>. Subscribe to changes: <a href="/feeds/x402-census.xml">/feeds/x402-census.xml</a>. Verify a signed leaf without trusting us: <a href="/signed/HOW-TO-VERIFY-ROOT.md">HOW-TO-VERIFY-ROOT.md</a>. Machine-readable: this page with <code>accept: application/json</code>.</p>
 </main></body></html>`;
 

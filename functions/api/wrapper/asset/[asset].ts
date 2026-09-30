@@ -201,7 +201,7 @@ export const onRequestGet: PagesFunction<Env> = async (context) => {
       buildPaymentRequiredV2({
         resourceUrl,
         description,
-        serviceName: "CSOAI Wrapped-Asset Parity",
+        serviceName: "SovX Wrapped-Asset Read",
         tags: ["stablecoin", "bridge", "wrapped", "parity", door.asset],
         accepts,
         bazaar,

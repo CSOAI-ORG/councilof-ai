@@ -342,7 +342,7 @@ export default function PDCAFrameworkFeature() {
               </Link>
               <Link href="/features/training-certification">
                 <Button size="lg" variant="outline">
-                  View Certifications
+                  View training
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>

@@ -197,7 +197,7 @@ translated without our permission: https://councilof.ai/spec/claim-maintenance/v
   · version index (a published version is never edited; v0.2 supersedes by existing):
     https://councilof.ai/spec/claim-maintenance/
   · cite as: Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22.
-    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 · https://zenodo.org/records/22901782
+    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json).
     The deposited bytes and the served bytes are identical (same SHA-256), which is why the DOI is
     recorded in a sidecar rather than written into the document of record.
 
@@ -246,8 +246,8 @@ was a number that had stopped being true. Count the rows.
 3. AG-UI (agent to user) — `GET https://councilof.ai/api/agui/gspc-state`, SSE STATE_DELTA +
    TEXT_MESSAGE_CONTENT derived from /api/gspc per request. Presentation transport: it renders
    the board and awards nothing. Human view of the same board: https://councilof.ai/dashboard
-4. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
-5. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
+4. Chrome MV3 extension — `https://councilof.ai/extension/` (zip + SHA256SUMS, load unpacked; no store install claimed)
+5. Grok plugin — source not publicly hosted while the GitHub organisation is unavailable
 6. Hermes integration — no public install package is currently advertised
 7. REST + curl — `curl https://councilof.ai/api/gspc`
 

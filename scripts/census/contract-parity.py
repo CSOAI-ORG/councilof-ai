@@ -2569,6 +2569,37 @@ def _front(configs_yaml, extra=""):
             "tags: [mcp, model-context-protocol, measurement, interoperability, x402, a2a]\n" + configs_yaml + extra + "---\n")
 
 
+# Dated re-reads that close (or confirm) a published finding. Rendered next to the original row and at the top of
+# Corrections, so a re-render of the card can never drop a correction that was published by hand. The signed records
+# are not edited; the evidence (raw responses + sha256) lives under rereads/<date>/ in the dataset.
+VERSION_REREADS = {
+    "https://mcp.zensched.com/mcp": [{
+        "date": "30 September 2026", "read_at": "2026-09-30T13:20:14Z", "registry_id": "com.zensched/zensched", "vendor": "ZenSched",
+        "registry": "1.0.0", "initialize": "1.0.0", "card": "1.0.0", "state": "CONSISTENT",
+        "was": "live initialize serverInfo.version 1.27.0 against registry server.version 1.0.0",
+        "evidence": "rereads/2026-09-30/zensched.reread.json", "hf_commit": "4a5c6d3bf0b23565a50bb314fab25a92a7f91996"}],
+}
+
+
+def _reread_line(r):
+    return (f"- **Correction, {r['date']} — fixed by the vendor.** re-read at {r['read_at']}: registry {r['registry_id']} "
+            f"server.version = {r['registry']}, live initialize serverInfo.version = {r['initialize']}, server card version = "
+            f"{r['card']}. VERSION is now **{r['state']}**; the 25 Sep finding in the line above is closed. The line above is kept "
+            f"as what was read on 25 Sep. Evidence: `{r['evidence']}` (raw responses and sha256 beside it).")
+
+
+def _reread_sections():
+    out = []
+    for ep, rs in VERSION_REREADS.items():
+        for r in rs:
+            out.append(f"### {r['date']} — {r['vendor']} VERSION finding closed (vendor fixed)\n\n"
+                       f"The 25 Sep read recorded `{ep}` ({r['registry_id']}) as VERSION INCONSISTENT: {r['was']}. Re-read at "
+                       f"{r['read_at']}, all three surfaces state **{r['registry']}** (registry, initialize serverInfo, server card), "
+                       f"so the dimension is now **{r['state']}**. {r['vendor']} fixed it. The original row is kept below and in the "
+                       f"records as what was read then; the signed records are not edited. Evidence: `{r['evidence']}`.\n")
+    return "\n".join(out)
+
+
 def readme012(out, old_readme, file_shas, configs_yaml, ots_state, probe_rec):
     rec = json.loads((out / "record.v0.1.2.json").read_text())
     signed = json.loads((out / "record.v0.1.2.signed.json").read_text())
@@ -2587,7 +2618,9 @@ def readme012(out, old_readme, file_shas, configs_yaml, ots_state, probe_rec):
                     for x in c["rows_changed"]["rows"])
     dfs = "\n".join(f"- **{k}** ({v['dimension']}). 0.1.1: {v['rule_0_1_1']}. Why wrong: {v['why_wrong']} 0.1.2: {v['rule_0_1_2']}."
                     for k, v in c["what_was_wrong"].items())
-    vf = "\n".join(f"- `{ep}`: VERSION {v['VERSION']} ({'; '.join(v['conflict'])}) — unchanged from 0.1.1" for ep, v in c["version_findings_unaffected"].items())
+    vf = "\n".join(f"- `{ep}`: VERSION {v['VERSION']} ({'; '.join(v['conflict'])}) — unchanged from 0.1.1"
+                   + "".join("\n" + _reread_line(r) for r in VERSION_REREADS.get(ep, []))
+                   for ep, v in c["version_findings_unaffected"].items())
     gaps = run["read_gaps"]
     role = lambda f: ("current" if "v0.1.2" in f or f.startswith("probe/") or f in ("ots-bitcoin-check-2026-09-26.json",) else
                       "0.1.1 (superseded)" if "v0.1.1" in f else "HOLD watcher" if f == "hold.jsonl.gz" else
@@ -2733,6 +2766,7 @@ CC-BY-4.0. Cite as: Council of AI (CSOAI), *MCP contract parity, measured read 2
 
 ## Corrections
 
+{_reread_sections()}
 ### 0.1.2 — 26 September 2026 (supersedes `record.v0.1.1.json`; the 0.1 and 0.1.1 files stay published unchanged)
 
 **Scope:** {c['scope']}. **Why.** {c['trigger']}
