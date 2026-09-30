@@ -6,7 +6,13 @@
   "homepage_url": "https://councilof.ai",
   "action": {
     "default_title": "GSPC — live board · verify a card",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
   },
   "background": {
     "service_worker": "bg.js",
@@ -14,23 +20,39 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://huggingface.co/*"],
-      "js": ["content/hf-badge.js"],
+      "matches": [
+        "https://huggingface.co/*"
+      ],
+      "js": [
+        "content/hf-badge.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["lib/*.mjs"],
-      "matches": ["https://huggingface.co/*"]
+      "resources": [
+        "lib/*.mjs"
+      ],
+      "matches": [
+        "https://huggingface.co/*"
+      ]
     }
   ],
   "host_permissions": [
     "https://councilof.ai/*",
     "https://huggingface.co/*"
   ],
-  "permissions": ["storage"],
+  "permissions": [
+    "storage"
+  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
   }
 }

@@ -76,7 +76,7 @@ This lane does not publish. The steps, for whoever holds the developer account:
 5. Store listing: title "GSPC Verify — Council of AI"; description copied from
    `manifest.json` (no certification or compliance language, no council-size claim); category
    *Developer Tools*; at least one 1280×800 screenshot of the popup; a 128×128 icon
-   (none is shipped in this folder — add `icons/` and the `icons` key before upload).
+   Icons are shipped under icons/ and bound by manifest.json at 16/32/48/128 px.
 6. Privacy tab: single purpose = "display and verify Council of AI measurement cards";
    permission justifications — `storage`: caches the public hub-cards index for one hour;
    host `councilof.ai`: reads the public board, proof and card endpoints; host
