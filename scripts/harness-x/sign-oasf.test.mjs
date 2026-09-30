@@ -1,5 +1,5 @@
-// node --test scripts/harness-x/sign-oasf.test.mjs — the OASF attestation verifier is not vacuous.
-import { test } from "node:test";
+// npx vitest run scripts/harness-x/sign-oasf.test.mjs — the OASF attestation verifier is not vacuous.
+import { test } from "vitest";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
