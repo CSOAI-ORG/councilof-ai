@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSPC evidence on OpenShift</title>
+<link rel="stylesheet" href="standalone.css">
+<script type="module" src="gspc-panel.js"></script>
+<script type="module" src="standalone.js"></script>
+</head>
+<body>
+<main>
+<h1>GSPC evidence</h1>
+<p>Served from this OpenShift namespace by the same container as the console plugin. The panel reads councilof.ai only. Measurement, not certification.</p>
+<form id="f">
+<label for="s">Subject: MCP server URL, agent card URL, model id, card id or claim id</label>
+<input id="s" name="subject" value="https://councilof.ai/mcp" autocomplete="off">
+<button type="submit">Read evidence</button>
+</form>
+<div id="panels">
+<gspc-evidence-panel subject="https://councilof.ai/mcp"></gspc-evidence-panel>
+<gspc-evidence-panel subject="https://tandem.ac/mcp"></gspc-evidence-panel>
+<gspc-evidence-panel subject="94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1"></gspc-evidence-panel>
+</div>
+</main>
+</body>
+</html>

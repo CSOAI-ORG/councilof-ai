@@ -1,0 +1,645 @@
+{
+ "schema": "csoai.measurement-capsule-index/0.3",
+ "as_of": "2026-09-30T08:18:22Z",
+ "what_this_is": "One index over every signed measurement-capsule batch: each batch's own Merkle root, record sha256, signature and OTS state, and one root over all of them.",
+ "what_this_is_not": "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "batches": [
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-a2a_card",
+   "adapter": "a2a_card",
+   "kind": "measurement.a2a_card_signature",
+   "n_capsules": 33,
+   "states": {
+    "FAILED": 8,
+    "UNCHECKABLE": 12,
+    "VERIFIED": 13
+   },
+   "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+   "record_sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6",
+   "capsules_sha256": "ba413e8160120205d8b9ec87fec95fa9e0f3ac2e6c858d4e6e807851882cd661",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:23:31.420Z",
+   "ots_state": "BITCOIN_ATTESTED",
+   "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/cp-fix-20260926/a2a-corr/out/record.v0.1.1.json",
+    "record_version": "0.1.1",
+    "record_sha256": "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "fa6e4386a9b9d9e97521e1d7bb7c66ef69ee6cc2ff62988882eca6f574260900",
+    "rows_file": "/evac-bulk/cp-fix-20260926/a2a-corr/out/data/cards.v0.1.1.jsonl.gz",
+    "rows_sha256": "93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2791c",
+    "card_bodies_file": "/evac-bulk/census-a2a-2026-09-25/cards.jsonl.gz",
+    "card_bodies_sha256": "8e20340fd46354d13dee99b026854ed367ce2a6f1be4e3fa9b7ca53a9a591b4b",
+    "hf_dataset": "https://huggingface.co/datasets/csoai/a2a-card-census",
+    "hf_commit_of_v0_1_1": "4b6789fa20cfa256e62c8db59d03e62f026c4cc9"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-claim_watch",
+   "adapter": "claim_watch",
+   "kind": "measurement.claim_watch",
+   "n_capsules": 1,
+   "states": {
+    "CONFIRMED": 1
+   },
+   "merkle_root": "44ec4b9730196fc357c7e20f7a330027cbfa0a9ad38077015b8f13cc67b76869",
+   "record_sha256": "3fdbf6cc820fa40f7606792fc0db7492c227b5e5f5152d88fece3a0cbcedf4a9",
+   "capsules_sha256": "c2090011b2aace79cbbc50b25efb436a97e2b6b0e65480786ba758701e752a27",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-30T08:17:27.249Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "receipts": [
+     {
+      "sealed_id": "4a31dd96e79dcf1b",
+      "date": "2026-09-30",
+      "receipt_sha256": "0780def9b06038c18f46c709789886294dc7b9618c45e1848e5b888ebcd6751e",
+      "receipt_signature_payload_sha256": "661f5f434d831470c0e0803e768f917df3d9393439038665edc24b89aa505f63",
+      "run_change_state": "CONFIRMED"
+     }
+    ],
+    "n_receipts": 1
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-contract_parity.r2",
+   "adapter": "contract_parity",
+   "kind": "measurement.contract_parity",
+   "n_capsules": 9148,
+   "states": {
+    "CONSISTENT": 5570,
+    "INCONSISTENT": 2905,
+    "UNCHECKABLE": 673
+   },
+   "merkle_root": "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+   "record_sha256": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357",
+   "capsules_sha256": "7b24218a5616d4deb2461ddca0ff97dc7eafc5f094be77ca1f772f05ac862d6d",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T07:55:29.898Z",
+   "ots_state": "BITCOIN_ATTESTED",
+   "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/cp-fix-20260926/v012/rec/record.v0.1.2.json",
+    "record_version": "0.1.2",
+    "record_schema": "csoai.mcp-contract-parity/0.1.2",
+    "record_sha256": "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "54af1df09502faa849335d41a77a0f10ecaa48c109544f97bfc390fc0103a458",
+    "rows_file": "/evac-bulk/cp-fix-20260926/v012/rec/rows.v0.1.2.jsonl.gz",
+    "rows_sha256": "8fb15bcbb83db1ae6a61945c2f870a16d27adcc751c059439e63d8e910730492",
+    "rows_pinned_by_record": true,
+    "hf_dataset": "https://huggingface.co/datasets/csoai/mcp-contract-parity",
+    "v0_1_2": "used"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-cross_ledger",
+   "adapter": "cross_ledger",
+   "kind": "measurement.cross_ledger_supply",
+   "n_capsules": 383,
+   "states": {
+    "CONSISTENT": 124,
+    "INCONSISTENT": 1,
+    "ISSUER_LIST_UNAVAILABLE": 2,
+    "LISTED_NOT_READ": 36,
+    "NOT_A_SUPPLY_CLAIM": 3,
+    "OPERATOR_API": 89,
+    "PERMISSIONED_NOT_READABLE": 6,
+    "STATE_PROOF_RECORDED": 12,
+    "STATE_PROOF_VERIFIED": 58,
+    "TOTAL_COMPLETE": 15,
+    "TOTAL_PARTIAL": 5,
+    "UNCHECKABLE": 32
+   },
+   "merkle_root": "4d1a955e12833786393c04473064299ad54464c0a0dd1ba4e5794a62f52de892",
+   "record_sha256": "67107098348dd2e1568fc3198c042969a455e854a669d9bd43c70dd1c24fa682",
+   "capsules_sha256": "5cc54486e76fef55d1d9b14eed095434b8dcc7521f9b388997b93578179c76cd",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-30T08:16:47.143Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "records": [
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-benji-2026-09-25.json",
+      "asset": "BENJI",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "b7563a47a5f3e635cf40e2aa6e6ffbe06c3aaccebf35814a4b3ce624bed56215",
+      "issuer_list_state": "READ"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-bny-digital-cash-2026-09-25.json",
+      "asset": "BNY digital cash / tokenized deposits",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "ec9bf90130e449a01c4814a697dac351a02abc832cd2c426db3255ef1bbf03c9",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "e2c1832f29ea1352fa2c98e26fcd199106075dd3217c5044323722f488c9b464",
+      "issuer_list_state": "PERMISSIONED_NOT_READABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-buidl-2026-09-25.json",
+      "asset": "BUIDL",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "f5954652c6586c3fc09a3a0e40fb5af7b6544b42c8773ea6af7149db64f1bb57",
+      "issuer_list_state": "ISSUER_LIST_UNAVAILABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-citi-token-services-2026-09-25.json",
+      "asset": "Citi Token Services (tokenized deposits)",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "7d2ff0540df989ade4cc2bc05465c06c3b0ff592b62dfe329b3c7aec1f1bc92d",
+      "issuer_list_state": "PERMISSIONED_NOT_READABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json",
+      "asset": "HSBC Tokenised Deposit Service",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "48dd4f9722bd1d27836fa65cfc4081b45c41eee51fea7d686b3483fd7ac364e3",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "0eefd5cdfd0c1e26e91a7ed4b52ea38aacb4d7d470ed61bb3c11524ee3881d2e",
+      "issuer_list_state": "PERMISSIONED_NOT_READABLE"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-jpmd-2026-09-25.json",
+      "asset": "JPMD",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "sha256": "ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "827b040f485e7f293b3a6c772f0c2e628a35b4b4a27b22aad704b863aa260aaa",
+      "issuer_list_state": "READ"
+     },
+     {
+      "file": "/home/ubuntu/lanes/cross-ledger-funds/public/interop/cross-ledger-usdc-2026-09-25.json",
+      "asset": "USDC",
+      "schema": "csoai.cross-ledger-supply/0.1",
+      "sha256": "1a1009dc98a6a459d00e9f34a1581c295a0f803d832111b04531513ad642b63a",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "2fdef0860a5404bed1a7025ad5cca60334414a5df5c0c64d878cab2be3e87236",
+      "issuer_list_state": "READ"
+     },
+     {
+      "file": "/evac-bulk/xl-daily/2026-09-30/xl-daily-2026-09-30.json",
+      "asset": "xl-daily",
+      "schema": "csoai.cross-ledger-xl-daily/0.1",
+      "sha256": "4b135ecbfcebb5324462e6dda3870d8f3b625c900ac08f6e4753a25803fbe33c",
+      "signature": "VERIFIES",
+      "signature_payload_sha256": "6b5d7c930fbacae874391917c8edc65f730f37ab8ab75b5ad3c011dd1ab9b126",
+      "date": "2026-09-30",
+      "assets": 23
+     }
+    ],
+    "skipped_files": [
+     "institutional-evidence-links-2026-09-30.json"
+    ]
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-mill_cross_runtime",
+   "adapter": "mill_cross_runtime",
+   "kind": "measurement.cross_runtime_reproduction",
+   "n_capsules": 14,
+   "states": {
+    "NOT_REPRODUCED": 7,
+    "REPRODUCED_AGGREGATE_ONLY": 2,
+    "REPRODUCED_ITEMWISE": 5
+   },
+   "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+   "record_sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+   "capsules_sha256": "a8dc6d18a2835c8bead883b17c5a71257da40faf63381bce2f0f98e6ab366c8d",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T06:20:12.622Z",
+   "ots_state": "BITCOIN_ATTESTED",
+   "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
+   },
+   "source": {
+    "declarations_dir": "/evac-bulk/mill-kaggle-nemo-2026-09-26/decl",
+    "declarations": 14,
+    "declarations_sha256": {
+     "runtime-declaration-affect.json": "ff07c6fd37df1ab0dbe6dda926be8265b96711b8c66fccf7aa28999547eee199",
+     "runtime-declaration-art5-safeguard.json": "adad38a4a6ca59542ed9ab73d62123ce9ea5c911fdc6e38f6e92a9dae9106c76",
+     "runtime-declaration-care.json": "bc0e67cf15bbf7bfd16d9f6b822a5e6399fc386be1b5aec81eef8f5af8c11f9c",
+     "runtime-declaration-conformance.json": "39e1f5f825da1f0ac9033b8b3542d6bf471d876d28eedf5c116888134d6eeaf2",
+     "runtime-declaration-continuity.json": "6aa7a57890d8870cf496ecd01518127aa6c9c4dcf6592da9c9cad24319a75fb2",
+     "runtime-declaration-cross-reality.json": "30b04d0f63d49a1acfc253c950838c986505e5e0aee09c392a422a908bddb4eb",
+     "runtime-declaration-detector-interop.json": "3de85cad100ce89381e0d4f04092d47a73603e2d3aa36a80293fc9fe50ece829",
+     "runtime-declaration-governance.json": "a3f9b0a897714679277d41f313221c370796ddfbb06048cd348ee17032fda4f6",
+     "runtime-declaration-jail.json": "b884fffdc8713beb0be28ff9bee1e867b84f51150c58883b11d84ede3e451f0b",
+     "runtime-declaration-machinery-conformity.json": "03b9f444afc405bb2b7445ab2096a6b9f093c16def017a2f6ea201bef86dd183",
+     "runtime-declaration-openness.json": "7fe30789eca5fb6937fab12c34328b6bee85466f3e86f71e3b5660613c82b3be",
+     "runtime-declaration-provenance.json": "12cd2e663a36c07867c0202dd4274729d331a9b15660cd8561fd504e80985b2c",
+     "runtime-declaration-safety.json": "d18580a942dbe3933139613b8db181b4fece83313231edbde9808645ea167b91",
+     "runtime-declaration-swarm.json": "c868b3070cb9d8325be18bd27407ca1a621b8a6c74bafd65202917fb403050d7"
+    }
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-26-mill_cross_runtime-batch2",
+   "adapter": "mill_cross_runtime",
+   "kind": "measurement.cross_runtime_reproduction",
+   "n_capsules": 140,
+   "states": {
+    "NOT_REPRODUCED": 82,
+    "REPRODUCED_AGGREGATE_ONLY": 9,
+    "REPRODUCED_ITEMWISE": 49
+   },
+   "merkle_root": "78226433e9e433b311e067ee56fcbaf415f6dc57301254f3bb4922a0b8053cf6",
+   "record_sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+   "capsules_sha256": "cf7d3db1cf664b99ad89593dd44109263d14b28c2026c8c53b5c65cb949673f8",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-26T10:33:45.092Z",
+   "ots_state": "BITCOIN_ATTESTED",
+   "ots_attestations": {
+    "BitcoinBlockHeaderAttestation": 1,
+    "PendingAttestation": 3
+   },
+   "source": {
+    "declarations_dir": "/evac-bulk/mill-kaggle-batch2-2026-09-26/decl",
+    "declarations": 140,
+    "declarations_sha256": {
+     "runtime-declaration-gemma3-12b--affect.json": "f2f7964db17617a0f42a54806a10542f3200ca04d6927c522c7557ebaeefe83f",
+     "runtime-declaration-gemma3-12b--art5-safeguard.json": "c03ba7ab46ff49bae11b373a72b4e7e5fa40879f1469f6842403a844af0ab391",
+     "runtime-declaration-gemma3-12b--care.json": "bd5c38441876b95f0aad2024270c4d07071a0ff139c98c22b90f7a2bc2042bce",
+     "runtime-declaration-gemma3-12b--conformance.json": "579e979bd38586f81492e4f6bdb4bdd8db0cc4bde68effea5d514406dcbc9a5a",
+     "runtime-declaration-gemma3-12b--continuity.json": "061f2d7daff93884b2a11b9c17d574cb79eec8c7364e3db4f4c2609ce569bfb7",
+     "runtime-declaration-gemma3-12b--cross-reality.json": "70d9e03d4eb1a91fc229c9966038090e09a272bbd02fe93a2a1190a2e49eb36c",
+     "runtime-declaration-gemma3-12b--detector-interop.json": "61c11c89fa61cfc613443d8f0910d9d40974babf0089c7957eb25baa81005d49",
+     "runtime-declaration-gemma3-12b--governance.json": "795ea7f34cbcec0cec256006eb14b3877cdf394f89c47363514c9334c2ced22d",
+     "runtime-declaration-gemma3-12b--jail.json": "1b2b061fc2c23b6b5419213a51ec8b424c25a6ab408cb118f2652bab7eada7c4",
+     "runtime-declaration-gemma3-12b--machinery-conformity.json": "540f0091d5bd8cfb619b3759171caf21234072dcaaa5c444dd869b1b837a4b52",
+     "runtime-declaration-gemma3-12b--openness.json": "283b6e2a5f753b161f8461d331e393cbf1d2b273647febecfbb7a9ba5785bf86",
+     "runtime-declaration-gemma3-12b--provenance.json": "85d8289138c14ff5c024831477040578a02b3cedc6ddb82f66a93182ef1fabb1",
+     "runtime-declaration-gemma3-12b--safety.json": "dde807b3c5bb2f2d58d4a5a67b5b46712361a857fae289312fcba378ab1f289c",
+     "runtime-declaration-gemma3-12b--swarm.json": "af0fc3ed86a82b5b63bd7565cedcdd49da0867b59421b2c602e2a81dae9bdf5a",
+     "runtime-declaration-gemma3-4b--affect.json": "8ed9be0b43c016b00608ceb66c7ddd8292fcfe433ce66aad435ae137a3a1f46d",
+     "runtime-declaration-gemma3-4b--art5-safeguard.json": "4d85b80ea05dc35dd4e137a2929cf77bfab1abc46ad7ac4efee17a0a057f4bdc",
+     "runtime-declaration-gemma3-4b--care.json": "5327e79e858ae5daa319b63066b3f956374bb41a8cedb9cebffe52ca09299069",
+     "runtime-declaration-gemma3-4b--conformance.json": "3a6735e46e55627f22639ffa06974d2962ca09e27a898f510ce871b8ac029a92",
+     "runtime-declaration-gemma3-4b--continuity.json": "2c2aa290a8da223947b048dc72f3b4d764ab6b39f4e2163a274c3c2315114d12",
+     "runtime-declaration-gemma3-4b--cross-reality.json": "050bc3360064a60a8e7caf07969fbed40c57b8abc2b67686d4abcd7b398fe020",
+     "runtime-declaration-gemma3-4b--detector-interop.json": "7c0ee7649e3f0d44c2de9474c6b20a91cda740e862ebae93dc14b346eb5a940d",
+     "runtime-declaration-gemma3-4b--governance.json": "9c8e02d4e9f1400ff3eed8521fce869cc048d9369d03cd56a3dd957c3208750e",
+     "runtime-declaration-gemma3-4b--jail.json": "3250cc1c4c34298ad9fa273e1367e4c34f5d4aae8a0eed0807b2488d9db65279",
+     "runtime-declaration-gemma3-4b--machinery-conformity.json": "6785462f95c52a13cc3d516071b3f1fc96acadcc9b5bbc454d8f7799a663ed1c",
+     "runtime-declaration-gemma3-4b--openness.json": "d46424a15fe549572a10b15cc8a7619081c48701982d860125873d709518ae29",
+     "runtime-declaration-gemma3-4b--provenance.json": "6afcd72bc55a50cf3517bd341dc571ca43fc24315402436d150ebba9af00356e",
+     "runtime-declaration-gemma3-4b--safety.json": "eff3968b3c11edbf8af0367e7205abd18e8e73a49c9ec42475ecdfbf9d829223",
+     "runtime-declaration-gemma3-4b--swarm.json": "0c50abd27e43640f0e06f5daf6ec4d2e2501998931935fe678b555f0dc8dc2eb",
+     "runtime-declaration-llama3.1-8b--affect.json": "4c540085f3e777849ffe71d3caeada31f7460937cbad1eb90ded284dbb2a908c",
+     "runtime-declaration-llama3.1-8b--art5-safeguard.json": "7523efa9ef27bdd7e3c0bb42d67a43d277e791cd083e85702b51b5e3c11471f6",
+     "runtime-declaration-llama3.1-8b--care.json": "186800c20c832a00b8180af8b9f08d43f9fb4bc01241fd905325ec87ee7d602b",
+     "runtime-declaration-llama3.1-8b--conformance.json": "0c127a79adee9b02da0e4b5c3007524d7e0ae66f17da79320fd4f19751753035",
+     "runtime-declaration-llama3.1-8b--continuity.json": "3d4ade2b379a518d51ad67a625d8616796066eee24b5b220c5901b4baecf64a5",
+     "runtime-declaration-llama3.1-8b--cross-reality.json": "a6850e676cb08a15fa10375c9756da2b42c7cd77c73004f83e38d3b9fc101ad1",
+     "runtime-declaration-llama3.1-8b--detector-interop.json": "f8c4279a339a865d6afe056716261b349657a85fa1bf7e891b0172c41f9a1086",
+     "runtime-declaration-llama3.1-8b--governance.json": "48af53e6d28d38d1aa358612c37ee2ae07663b9058554c5f098c78692a78d02d",
+     "runtime-declaration-llama3.1-8b--jail.json": "f71a8082a44c991edbd64a30f10f46ae2a43504ec885dd9f9383c369378fb9b7",
+     "runtime-declaration-llama3.1-8b--machinery-conformity.json": "b9036ee43d81b2dba7e360170300b9ab67b0f78492b8e8eb83872377802ad47f",
+     "runtime-declaration-llama3.1-8b--openness.json": "e121ba601b7f6aecefcda9d2d78ce422a36a778106af062197bcb63c7b97d058",
+     "runtime-declaration-llama3.1-8b--provenance.json": "627b083dcef9db923cc87e58aa2aa7e1139e853cfed5a2e33553eaf1faa88d68",
+     "runtime-declaration-llama3.1-8b--safety.json": "43587bc4dcb5d76f279b2b7055efb6f28bf929d787fed1e4871a04499ce6c7b2",
+     "runtime-declaration-llama3.1-8b--swarm.json": "eb4bbda2cc1c084ade369829d1333c3e5ee69dff49395d3461a2dcbf84217d8e",
+     "runtime-declaration-llama3.2-3b--affect.json": "6e6126c0beff3c26fb726b0028781c9026532bd968f9cf04856ece20265c9f32",
+     "runtime-declaration-llama3.2-3b--art5-safeguard.json": "9c14890b1531f8749eb6c9c0f78279c69bf5adacbd6a4523df21326eb0f2e832",
+     "runtime-declaration-llama3.2-3b--care.json": "5b96c5d1ca4cf0dbacfc27037a82ec6c2d69a4376e070f3b66fca27e1a0882f3",
+     "runtime-declaration-llama3.2-3b--conformance.json": "bfba754820ed566e80d5fe799823e8c7cd83c04c1b26f93497b2d0458fc7ba34",
+     "runtime-declaration-llama3.2-3b--continuity.json": "ef2291a52a9dcb5901c177160b0b33af07abaf82277d3c5418def4bf5ca8cf7b",
+     "runtime-declaration-llama3.2-3b--cross-reality.json": "8c664d022d2d273dcf464479e60b32395283a4084907923fc63287789419c662",
+     "runtime-declaration-llama3.2-3b--detector-interop.json": "510f93910f5e46371e1b07d115a263be70b10dc821f0f017e8f8c6299b5a5bc1",
+     "runtime-declaration-llama3.2-3b--governance.json": "ed0f6ec6f2ea2bf4fd0d7670b66362ab6b3aa31772e2177763bce32fae005f49",
+     "runtime-declaration-llama3.2-3b--jail.json": "a94a5570b3ea8392b981c7627e3d1fb3b37ab8bf046501dae6fd0b0aecb93047",
+     "runtime-declaration-llama3.2-3b--machinery-conformity.json": "d1f4dcf39e8e470e6852b3eb45c02775617e52bd2bd84abe27e91fefb69b5e65",
+     "runtime-declaration-llama3.2-3b--openness.json": "5263c35a657456f6006f3f48dc25919c46476b0d82838f6c4ad84dee08938a3a",
+     "runtime-declaration-llama3.2-3b--provenance.json": "75505df4336a498a457e8f0c8d719a8bcb658f97182523a8fdc1ac8ad925a021",
+     "runtime-declaration-llama3.2-3b--safety.json": "7bc18c735d3748182dcd6f2d18ad67f96d6c7c0fad8e1d5b612240a5cbbe21dc",
+     "runtime-declaration-llama3.2-3b--swarm.json": "150719bf8777d460ac24e8b7ea7997c01fe01febf32e0a74b061d4df3b978126",
+     "runtime-declaration-mistral-7b--affect.json": "51cf3643b8640ae6d5018270493668a4dc0285a809c674cdef6071230ce19225",
+     "runtime-declaration-mistral-7b--art5-safeguard.json": "79e82c4b549d3508aec498606537d4357fc0503d2df321d0621383b8feca12b8",
+     "runtime-declaration-mistral-7b--care.json": "8ddfd27b8ae65e88a87c15bda5d0d19464dd1cabfba2304ff85d58cc45d74d6b",
+     "runtime-declaration-mistral-7b--conformance.json": "299ef0227beb2c3c8ad9b07bf1df046fd096906471f1e909a67929afa2fb9aed",
+     "runtime-declaration-mistral-7b--continuity.json": "3335742b6b563f6f5a1e2df9f18c1a5687885c07faf9983ade4978bcfe1ace96",
+     "runtime-declaration-mistral-7b--cross-reality.json": "b3f74d9ca8fd50116b8b32369c86a6366c5814d8590d998550b8715f4191f8e7",
+     "runtime-declaration-mistral-7b--detector-interop.json": "d4d5582ce276ddec601c78e7d41138b02f9fc3736c3cbfbcdbf174fbdac52a22",
+     "runtime-declaration-mistral-7b--governance.json": "41d55d60ee09819d060f2b27750804e1239383d66f2951e58b26038a7d899908",
+     "runtime-declaration-mistral-7b--jail.json": "cbd30cd3871335e7f114f71eb332d8a47370b9ec94aae0c62ece51a70cd68c3f",
+     "runtime-declaration-mistral-7b--machinery-conformity.json": "bc17029f7c497df29132212033c5fe415cfa8c430ec345b92decba575706ab0c",
+     "runtime-declaration-mistral-7b--openness.json": "27fe0838f58be84fb72b1056b0210421b45a2984ebca4bdf9b0cc843dc971fec",
+     "runtime-declaration-mistral-7b--provenance.json": "dd104fdc686f69a4210265fc3f89cbe31c5b9f74df553a8ed78147c7fc42a10d",
+     "runtime-declaration-mistral-7b--safety.json": "4644d0d80148e74a260b891c64bb0b9f1b79befdc95fccb9475099812fa6cd40",
+     "runtime-declaration-mistral-7b--swarm.json": "53e4b41d79b8f3c32b9a50cfe522cd1114293dd86c2071531302dc83a53e67ac",
+     "runtime-declaration-phi3.5-3.8b--affect.json": "ccd36da189705e16f8db591185cced9a8ac8216085f0c059f7221517a7824f71",
+     "runtime-declaration-phi3.5-3.8b--art5-safeguard.json": "a1a684769f8ae55e7a4258db6a5ea5da327f0c6ff8bcfed71aea356f122849f8",
+     "runtime-declaration-phi3.5-3.8b--care.json": "5e7a3c67421513d10f8136085da13d6627dba31c5c819c4e9b571b143664457e",
+     "runtime-declaration-phi3.5-3.8b--conformance.json": "fc9105c326950164a4911ea914420aa7ec13865d276aaee0486975ab1a018a36",
+     "runtime-declaration-phi3.5-3.8b--continuity.json": "1ac110b68d1ca00116d4237334b70c1b172c49859e2d48dfb3637b5fb1c81eb5",
+     "runtime-declaration-phi3.5-3.8b--cross-reality.json": "b1b18d4997b3c5efa012d24210e784b27f54cc4e19651940ba9503ffe7ad2bb2",
+     "runtime-declaration-phi3.5-3.8b--detector-interop.json": "71b2ee9f63dd82acc43d276f15a2794bda216f51c4041e47189aeecb4bf41fc8",
+     "runtime-declaration-phi3.5-3.8b--governance.json": "b1a7643f63efc2ceba76a6ccdb0b5df51baf82b0e19286f0d82cac0a680def10",
+     "runtime-declaration-phi3.5-3.8b--jail.json": "79f0506b8a8f062964152522d6322a9b6780ce6cd8e0964daa65f119387dda90",
+     "runtime-declaration-phi3.5-3.8b--machinery-conformity.json": "f20070621001cb039c9a5b5e485a36188f01cdc021c7c51fb5940f917a039648",
+     "runtime-declaration-phi3.5-3.8b--openness.json": "9e5c1da274292c40a8b08a1d642b94eba7565fd85faa2de6bafde1a4b0a36d75",
+     "runtime-declaration-phi3.5-3.8b--provenance.json": "f1cd52ac0cdf0fdc1836c04f3051a88949ee21811effc4c9eeac056b94ea1526",
+     "runtime-declaration-phi3.5-3.8b--safety.json": "201fe758cba9feb24c92ec8c34424e2c93ac1427d348fd42d28e4b0b235078ec",
+     "runtime-declaration-phi3.5-3.8b--swarm.json": "9fdb89b78d3bb02de1f904202875cbc69e711bce7e1852df8b266e3033c4ad3b",
+     "runtime-declaration-qwen2.5-0.5b-instruct--affect.json": "a9640dad276a6870f29afea5caae84c79765bb2ce6193721fb352cf4798d3dec",
+     "runtime-declaration-qwen2.5-0.5b-instruct--art5-safeguard.json": "a85c50118682abefc593a032dc6e3379ac7d84ffab1e84d2ae2b8abadbfff895",
+     "runtime-declaration-qwen2.5-0.5b-instruct--care.json": "84e0cdb2822ee70e8d9628007c17d4242c678d2b3f661febec2df0faa1d64fdb",
+     "runtime-declaration-qwen2.5-0.5b-instruct--conformance.json": "020a23b8e7ad62c89c7da61372d7425ab1ae0d776e843dcda1b8a0aa17d6facb",
+     "runtime-declaration-qwen2.5-0.5b-instruct--continuity.json": "e848d9a79ff02c9389e41a998ab0e2edef28603c1530ed981e9d4a0b5731f588",
+     "runtime-declaration-qwen2.5-0.5b-instruct--cross-reality.json": "ff1cd320290f694d5865e866b2f643a77e6608f0f471896e07491fcf0eb4b6bc",
+     "runtime-declaration-qwen2.5-0.5b-instruct--detector-interop.json": "3c20fb178dc483aa15d85ea563f9440274a33732521673f97bae22d6f3956703",
+     "runtime-declaration-qwen2.5-0.5b-instruct--governance.json": "e3d86475fd6b5b80de349023d4a821fe21a138160f26784627b44850c655296a",
+     "runtime-declaration-qwen2.5-0.5b-instruct--jail.json": "85a7cc523690a4979e1e11d1ef7f91182ec29a463a28ed8af1c4c2742ff509d9",
+     "runtime-declaration-qwen2.5-0.5b-instruct--machinery-conformity.json": "d66f868c258b1e4cc0fefdd15b995a49ef849d042ef6deeaeb467a7452b8c063",
+     "runtime-declaration-qwen2.5-0.5b-instruct--openness.json": "aa4ac88bd04cd84b9ef85f29a71c98d7126e6cab7bb6c472c528079a870f074e",
+     "runtime-declaration-qwen2.5-0.5b-instruct--provenance.json": "2bf315fe0d3753d0ad5ea1d9ef8619b873351afca612c0a6cab52f0dcd784598",
+     "runtime-declaration-qwen2.5-0.5b-instruct--safety.json": "ca9af4028821559fb343151a1b1861d27e0c1efce6c04f7fa95778a7e905bcfd",
+     "runtime-declaration-qwen2.5-0.5b-instruct--swarm.json": "b8dba4c578615b5a54a097ff2c1d7b78b089fe427e91d3882f6bda8fd0327c3c",
+     "runtime-declaration-qwen2.5-1.5b--affect.json": "b6c728830cd4322177560022499352798d39940e75124c2081d3e8020c911116",
+     "runtime-declaration-qwen2.5-1.5b--art5-safeguard.json": "d97488130da555bcd8c094ebeaf9c105ae255d276ea17dd9f1147ca1550975a3",
+     "runtime-declaration-qwen2.5-1.5b--care.json": "f62fb1aa69c8e20778f53763fe46b71c3b40d5357ae38d78e57e5c24c9c7973f",
+     "runtime-declaration-qwen2.5-1.5b--conformance.json": "0c46379da130879b8e1865ac3d6a9e91e644ca21f4f255fd444573ccaab5cdee",
+     "runtime-declaration-qwen2.5-1.5b--continuity.json": "05b1b7bdcf6465e6d90c49fc03991f15bb480143ca35ef065a462a46490f8689",
+     "runtime-declaration-qwen2.5-1.5b--cross-reality.json": "f977fef6955d38e7bb888408607d605f809e2a0630c9b48a96fd6faa5101213f",
+     "runtime-declaration-qwen2.5-1.5b--detector-interop.json": "97bdf74bd6a64402f07e276521e29bbd42292aa5802f0814cf1b584c7da8d662",
+     "runtime-declaration-qwen2.5-1.5b--governance.json": "de78dfa2ade0efce516f178d0c462085c73c0731cef881443acdd5dd219da6b9",
+     "runtime-declaration-qwen2.5-1.5b--jail.json": "f3e818c5167f34e067e5870c1ac92c5e976f71f6b2826fb57181d13ff60f08d9",
+     "runtime-declaration-qwen2.5-1.5b--machinery-conformity.json": "38bd73db777ae18903899e26d5eea7d871ed66e309be20d83c95ac8da5d7a209",
+     "runtime-declaration-qwen2.5-1.5b--openness.json": "2b2347fc13dc00e221559e6fef33906db4d5f224271115a22d597521c01da474",
+     "runtime-declaration-qwen2.5-1.5b--provenance.json": "754b7014fd4df4236a256d1d75738f600193246433f2ea7009043b881a06747d",
+     "runtime-declaration-qwen2.5-1.5b--safety.json": "1a22226f17dafe6a995396d4458cd363f26a35b101e21b7bb01e427232d6b063",
+     "runtime-declaration-qwen2.5-1.5b--swarm.json": "5f164a3b699fa26008cb3f85d130476ab7cc9d9a3cb37833f79b92de8a93d572",
+     "runtime-declaration-qwen2.5-7b--affect.json": "7bb48bf144979b0d7de0fd7b26301747aa6b21a35a3e3abfcda525d242d16c19",
+     "runtime-declaration-qwen2.5-7b--art5-safeguard.json": "0efc166f646c8b320aceed61aafb11039e1e6a0450cb986bbcc1f164b3c6cc3c",
+     "runtime-declaration-qwen2.5-7b--care.json": "a62633d7d8d2d3142702632390b4fd709a103324631e3aea2dc911d50e53dab3",
+     "runtime-declaration-qwen2.5-7b--conformance.json": "ba5f2778b2e6e20387548546678991d132c08edb072dab005047e363f0c1ab58",
+     "runtime-declaration-qwen2.5-7b--continuity.json": "c99974affad03821ef63a2edc644cb2efe25d90bba27a4733939c80fead19588",
+     "runtime-declaration-qwen2.5-7b--cross-reality.json": "511401c2941a5d026ebef1fb7e5008610d92746b6e1e2bcf1b8c727341f81d20",
+     "runtime-declaration-qwen2.5-7b--detector-interop.json": "94dd6ea2792b395bcde1bac77ab57878c881e0c099d8f28ef78fffbb8d83d0d0",
+     "runtime-declaration-qwen2.5-7b--governance.json": "47818843f320b33303d49085b4eef31fe50fcf50353f1d42e80fcc984b3f505f",
+     "runtime-declaration-qwen2.5-7b--jail.json": "caa6ee3b93e55049748c40bebc273bfbd8482a1db5130d6e4d4bbe9ab0e4dcdf",
+     "runtime-declaration-qwen2.5-7b--machinery-conformity.json": "40ceb6106ef5f4cc738b8b505d43dd8a48218f1f415f90a46b81d03d800aa75a",
+     "runtime-declaration-qwen2.5-7b--openness.json": "833e48106ebf361a629642bf2dd2676123565079f18e867d03a691a3fa457435",
+     "runtime-declaration-qwen2.5-7b--provenance.json": "60f6ef48f4d1b791d2060553d61198a7430e9c2718801ba87a3bb9be25aa2b83",
+     "runtime-declaration-qwen2.5-7b--safety.json": "422d7dfb70ca0288d346253fcfe5a69f5121cf5cac4844fc85f40f092979f0da",
+     "runtime-declaration-qwen2.5-7b--swarm.json": "2b01ca3abe23b9934d09d645744c91d865e071e428f469d5c5af3d54a40954df",
+     "runtime-declaration-qwen3-8b--affect.json": "4309fbcb99e213ef5cb1fec65193eb6f172f39f81d470b85f660e2c25e9ade60",
+     "runtime-declaration-qwen3-8b--art5-safeguard.json": "0a1ff5379b9baeeab9b7988bb0be68d2525e8902117988b4c2c1ff343811005e",
+     "runtime-declaration-qwen3-8b--care.json": "159303b52a1670c4f1a3a30faae3894c8213f143387b5138832f992787dc4c6f",
+     "runtime-declaration-qwen3-8b--conformance.json": "a25a50a15176ab958714d9120190373f337d4dcbf768d1300a771d385d25cb6a",
+     "runtime-declaration-qwen3-8b--continuity.json": "1f4f5eabf6b13abe559270136122c66f1d10edd6217268cd7930646016b95ff6",
+     "runtime-declaration-qwen3-8b--cross-reality.json": "b3d71f94f91f69546a518b22ff4c87670e068ca432b70a386585ad5b70528047",
+     "runtime-declaration-qwen3-8b--detector-interop.json": "417cc91371e14b4c7a6ddb2e44d28187b3a650a5a94779d1a2118dd34e20134d",
+     "runtime-declaration-qwen3-8b--governance.json": "7cc2055b738927bf590ac76cc42ea508d1bddda02bc075cb60b558e23d3784c6",
+     "runtime-declaration-qwen3-8b--jail.json": "064dfa97e760df959addb9f5d1670b9f0e544c122d59cbbde5fe9c902d4c95a6",
+     "runtime-declaration-qwen3-8b--machinery-conformity.json": "3c91028fcd438ee72425975b364fc8a6e848273faefdba16fa3c079144b5b8e9",
+     "runtime-declaration-qwen3-8b--openness.json": "18a00efcb9057c9d386091455795c1698cbf6a7d0a7d74d423be499eb489b0d7",
+     "runtime-declaration-qwen3-8b--provenance.json": "d9b3e473c618a54895444c73c734ea629bd38152491a6d74d424e38be1764dbe",
+     "runtime-declaration-qwen3-8b--safety.json": "4621fb20a7b317965abd136bb26808c6821c9b894b6fbc3be55129661ab84946",
+     "runtime-declaration-qwen3-8b--swarm.json": "ed367fe19ff5042ddf77164070c1d3d939ee1a4b9629c2f7c18a6afd2167a459"
+    }
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-operations",
+   "adapter": "operations",
+   "kind": "operations",
+   "n_capsules": 479,
+   "states": {
+    "BITCOIN_ATTESTED": 6,
+    "INCLUDED_PROOF_VERIFIES": 1,
+    "LANDED_NOT_SHIPPED": 74,
+    "PENDING_CALENDAR_COMMITMENT": 1,
+    "PRESENT_SHA256_UNRECORDED": 389,
+    "TIME_TO_CORRECT_UNMEASURED": 7,
+    "UNCHECKABLE": 1
+   },
+   "merkle_root": "63d1e261f6d2e384823e2563ecf89377496f02cfd9426d669dc0dba97eaf6b51",
+   "record_sha256": "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d",
+   "capsules_sha256": "df7403eb19e22deb39a44d6fcd23f424cfab46cf377ef70316a07a84fc678597",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-30T08:17:09.310Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "harvest_dir": "/evac-bulk/operations/2026-09-30/20260930T080505Z",
+    "harvest_sha256": "9124db4986b39c4018cc6a5092a7f3745ae982cd65c86d62af86fe16e3fdaeaf",
+    "date": "2026-09-30",
+    "schema": "csoai.operations-harvest/0.1",
+    "harvested_at": "2026-09-30T08:05:05Z",
+    "source_states": {
+     "anchor": "READ",
+     "correction": "READ",
+     "deploy": "UNCHECKABLE",
+     "landing": "READ",
+     "notice": "READ",
+     "publication": "READ"
+    },
+    "files_sha256": {
+     "anchors.json": "eba7e7389cef4acb05f9dd7bb415ea6d4f63a42eb7ab8d56c8e6b5700d8a7ee4",
+     "corrections.json": "13c3c49a77b4fd4a1a544fabc2e54d4e383815b385126f4e7bd42ced0c7b3b11",
+     "corrections.previous.json": "8f642a04014adc923f21dad6137183a3102e30282fdc50acb1ada634f3ce4ad4",
+     "hf-commits.json": "c879ece3b12ddd611e96ecf2e95a5afc673293f84b52cc2f2bf95e817ee938be",
+     "landings.json": "ebffb8d9e123fd2582ee9d2b0bbe0678bec983bbb20400c6bcba4af3253f5e0d",
+     "notices.json": "5083afdc16b6c6e5c05854feec19f20d3569880ee91d7197d98609e2ab3d7863"
+    }
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-public_signals",
+   "adapter": "public_signals",
+   "kind": "measurement.public_signal",
+   "n_capsules": 118,
+   "states": {
+    "MEASURED": 104,
+    "PARTIAL": 1,
+    "UNCHECKABLE": 13
+   },
+   "merkle_root": "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
+   "record_sha256": "8767d3d5f402e429dccce4ad96d056dcecc2d28a8e171f2ed3850ca8469a41e9",
+   "capsules_sha256": "bfbb06fcae6d8d898182879855845d60037c56215de48451fa2d75f674ac5b6c",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-30T06:28:51.736Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/public-signals/2026-09-30/record.json",
+    "record_sha256": "8300a830699d520fd94daebfeff556467bb1f056ba00dc0e1bbc17c2b6132378",
+    "date": "2026-09-30",
+    "schema": "csoai.public-signals/0.1",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "a9e5423cca3a06081f453e1233d8610900289d17a50e8931cf55576de6afcc05",
+    "n_signals": 118,
+    "previous_record_sha256": "30426d23c40bc823e845454643d70021003a9b97ca2d81ce6e08f3ff5c226326",
+    "changes_sha256": "309c9a88d0b854b4b847a23dd502e229b49bfb64c3fdf6a4daf17814f5e85016"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-self_parity",
+   "adapter": "self_parity",
+   "kind": "measurement.self_parity",
+   "n_capsules": 166,
+   "states": {
+    "CONSISTENT": 45,
+    "INCONSISTENT": 8,
+    "NOT_DECLARED": 1,
+    "NOT_LISTED": 64,
+    "UNCHECKABLE": 48
+   },
+   "merkle_root": "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
+   "record_sha256": "df18985070be64a74df767b5356b76aa67f9277baa8c485ee3166de65369f51a",
+   "capsules_sha256": "9d40ada0c53bd3504c16da4142db26bcde8d40c325e9844f4b5bac93d2154b99",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-30T08:15:30.863Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "record": "/evac-bulk/self-parity/2026-09-30/record.json",
+    "record_sha256": "41fc8df30eab09fd3157958da009788c5df271a08d46c04f729ee0c5f352554c",
+    "record_signature": "VERIFIES",
+    "record_signature_payload_sha256": "8a79cd613d9dde4b16b53f0566ee7b7def6c547ce7a5a38e39be5fe4237fa604",
+    "date": "2026-09-30",
+    "schema": "csoai.self-parity/0.1"
+   }
+  },
+  {
+   "dir": "/evac-bulk/measurement-capsules-v0.2-2026-09-30-tool_drift",
+   "adapter": "tool_drift",
+   "kind": "measurement.tool_drift",
+   "n_capsules": 497,
+   "states": {
+    "TOOLS_ADDED": 17,
+    "TOOLS_ADDED+TOOLS_REMOVED": 3,
+    "TOOLS_REMOVED": 2,
+    "UNCHANGED_AT_NAME_GRANULARITY": 418,
+    "UNCHECKABLE": 57
+   },
+   "merkle_root": "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
+   "record_sha256": "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0",
+   "capsules_sha256": "d11db3e6b89d98c9577aff5c41c1aeb8674f94b37f34a95406fb7454a082e35a",
+   "signature_state": "VERIFIES",
+   "signed_at": "2026-09-30T08:16:26.359Z",
+   "ots_state": "PENDING_CALENDAR_COMMITMENT",
+   "ots_attestations": {
+    "PendingAttestation": 3
+   },
+   "source": {
+    "t1_files_sha256": {
+     "/evac-bulk/census-firstparty-2026-09-25/results.jsonl.gz": "ab1678d2db39999d5b390e0ac6a87f18bd242af86bb4554cdfffb1594d08c6db",
+     "/evac-bulk/census-probe-2026-09-25/results.jsonl.gz": "038a2598981e8f0e48fc03261a5a6ef44770bd0cfbc4b8aa1d6917737df67dad",
+     "/evac-bulk/census-v0.2-2026-09-26/probe/results.jsonl.gz": "df65b18ee0d4d1ceae76f1c4818c2510056bdb3a42e387f897bea7beedcb9ec5",
+     "/evac-bulk/tool-drift/runs/2026-09-26/results.jsonl.gz": "b0aff3fd6a66707a2d41d048a1f9e0043ce116a2455bcca879881205386d2a92",
+     "/evac-bulk/tool-drift/runs/2026-09-27/results.jsonl.gz": "a06f03fa4028cec4b264238fce926b494fc777ce7d18bb454c21cf6418ad0c0a",
+     "/evac-bulk/tool-drift/runs/2026-09-28/results.jsonl.gz": "22891ab82c3314ed0d0e77c28177c12d876d9a6fc124619ba321f2c62fc23b0f",
+     "/evac-bulk/tool-drift/runs/2026-09-29/results.jsonl.gz": "384cb21b8993c45ffdd0879afc6c7857aebc5e722a46f7ac4af92f3bb4cab626"
+    },
+    "t2_files_sha256": {
+     "/evac-bulk/tool-drift/runs/2026-09-30/results.jsonl.gz": "3e95f46adddd937a68c007bca894b4abf03ef07daffc4e875ff08de9f0af7189"
+    },
+    "n_t1_endpoints": 21130,
+    "n_t2_endpoints": 497,
+    "n_join": 497,
+    "n_t1_only": 20633,
+    "n_t2_only": 0,
+    "t1_responded_absent_at_t2": 12520,
+    "absent_at_t2_rule": "not capsuled and never counted as REMOVED: absence from an observation is UNCHECKABLE"
+   }
+  }
+ ],
+ "n_capsules_total": 10979,
+ "index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
+ "index_root_rule": "the batch rule (merkle) over the sorted capsule_id leaves of ALL batches together",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "batch_schema": "csoai.measurement-capsule-batch/0.2",
+ "root_over_batch_merkle_roots": "195eae7926bead60969a2838a75a9e5b1c780cbd3330d781e8f9332520abd37c",
+ "pending_source": [],
+ "verify": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
+ "date": "2026-09-30",
+ "chain_rule": "each day's index names the FINAL version of the previous day's index on disk (measurement-index-v0.2-<prev_date>.json): prev_index_sha256 = sha256 of its bytes, prev_index_root = its index_root; gap_days = calendar days strictly between prev_date and date that have no index (0 = consecutive); a re-issue of a day names the version it replaces in supersedes; the first day (genesis) has prev = null",
+ "chain_seq": 4,
+ "prev_date": "2026-09-29",
+ "prev_index_sha256": "fb56321561f16362c83d8eaaf9320083bb2ac96fa466f4d560625639cc08b332",
+ "prev_index_root": "5ce9511e9554cef6d92d166af08f9bae0b5149655fa555e2025a505ed9af06df",
+ "gap_days": 0,
+ "missing_dates": [],
+ "genesis": null,
+ "supersedes": null,
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ },
+ "freshness": {
+  "rule": "per adapter: FRESH = a batch dated this index's date; NOT_UPDATED = a daily adapter (self_parity, tool_drift, cross_ledger, public_signals, claim_watch) whose newest batch is older (last_good_date = that batch's date; the older batch is carried); CARRIED = a weekly/static adapter or sibling batch included by reference; ABSENT = named in pending_source with no batch",
+  "adapters": {
+   "a2a_card": {
+    "state": "CARRIED",
+    "last_good_date": "2026-09-26"
+   },
+   "claim_watch": {
+    "state": "FRESH",
+    "last_good_date": "2026-09-30"
+   },
+   "contract_parity": {
+    "state": "CARRIED",
+    "last_good_date": "2026-09-26"
+   },
+   "cross_ledger": {
+    "state": "FRESH",
+    "last_good_date": "2026-09-30"
+   },
+   "mill_cross_runtime": {
+    "state": "CARRIED",
+    "last_good_date": "2026-09-26"
+   },
+   "mill_cross_runtime-batch2": {
+    "state": "CARRIED",
+    "last_good_date": "2026-09-26"
+   },
+   "operations": {
+    "state": "FRESH",
+    "last_good_date": "2026-09-30"
+   },
+   "public_signals": {
+    "state": "FRESH",
+    "last_good_date": "2026-09-30"
+   },
+   "self_parity": {
+    "state": "FRESH",
+    "last_good_date": "2026-09-30"
+   },
+   "tool_drift": {
+    "state": "FRESH",
+    "last_good_date": "2026-09-30"
+   }
+  },
+  "not_updated": []
+ }
+}

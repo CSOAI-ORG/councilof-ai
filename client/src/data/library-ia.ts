@@ -54,11 +54,14 @@ export const PRIMARY_PATHS = new Set<string>([
   "/connect/claude",
   // /connect — the connector hub (2026-09-30): free MCP door, full MCP, A2A card, HTTP, offline verify.
   "/connect",
+  // /helm — the Helm chart repository index (2026-09-30, lane ecosystem-install): a static public/helm/index.html,
+  // listed here so a shell render of the path would never wear the archive banner.
+  "/helm",
   // /agents — how an agent uses GSPC, rendered from the machine files (2026-09-30, gspc-product-ui).
   "/agents",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
-  "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
+  "/financial-catalog", "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
   // Census opt-in funnel — "You are listed. You are not graded." (TRACK C3.4).
   // A current page the badge block and census READMEs link to; unregistered it
   // would ship flagged "archived" under a link we actively promote.
@@ -182,6 +185,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/measurements/disclosure-completeness",
   // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
   "/verify-server",
+  // /panel — the embeddable GSPC evidence panel (2026-09-30).
+  "/panel",
   // /measurement-capsules — the human page over the capsule index: kinds, chain, anchors, how to verify (2026-09-26).
   "/measurement-capsules",
   // /research/cross-hardware-reproducibility — preprint + open dataset on item-level cross-runtime reproducibility (2026-09-27).

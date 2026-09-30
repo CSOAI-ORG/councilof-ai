@@ -1,0 +1,11 @@
+# Red Hat Developer Sandbox: namespace-scoped objects only, and no image build. The stock UBI 9
+# nginx image serves the standalone page (index.html + the published gspc-panel.js) from a ConfigMap.
+plugin:
+  image: registry.access.redhat.com/ubi9/nginx-120:latest
+  imagePullPolicy: IfNotPresent
+consolePlugin:
+  enabled: false
+standalone:
+  configMap: true
+route:
+  enabled: true

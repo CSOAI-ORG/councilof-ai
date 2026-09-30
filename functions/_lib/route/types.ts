@@ -30,7 +30,9 @@ export type Candidate = {
   data_class_allowed: DataClass[];
   cost_declared: number | null;
   latency_declared_ms: number | null;
-  source: "gspc_fleet" | "caller_declared";
+  source: "gspc_fleet" | "caller_declared" | "directory";
+  /** Only on source "directory": where it was LISTED. Discovery data; no rule reads it (discovery.ts). */
+  directory?: DirectoryRef;
   /** effect_binding only, until a census lookup ran; then also the run's raw outcome and why (census.ts). */
   census: { effect_binding: CensusState; outcome?: string | null; basis?: string; tool?: ToolCensus };
   /** Non-empty => the candidate is UNCHECKABLE and is never permitted (fail closed). */
@@ -47,6 +49,18 @@ export type Candidate = {
 export type ToolCensus = {
   listed_read_only: boolean | null;
   p2: "REJECTS" | "ACCEPTS_SILENTLY" | "INDETERMINATE" | "NOT_PROBED" | null;
+};
+
+/** A discovered candidate's listing: LISTED only. The directory's own claims ride along verbatim, unread by rules. */
+export type DirectoryRef = {
+  listing: string;
+  identifier: string;
+  display_name: string | null;
+  type: string | null;
+  record_sha256: string;
+  listing_state: "LISTED";
+  directory_claims: Record<string, unknown> | null;
+  declared_by: "directory";
 };
 
 export type Separation = "SEPARATED" | "TIE" | "UNTESTED";

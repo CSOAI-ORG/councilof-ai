@@ -104,8 +104,9 @@ function ClientCompatibility() {
         </table>
       </div>
       <p className="mt-4 text-[11px] text-gray-400">
-        {TOOL_COUNT_SENTENCE} "Tools seen" is what each client listed on its own test date. Measurement, not
-        certification.
+        {TOOL_COUNT_SENTENCE} Tool catalogues are versioned observations, not a permanent count. Query{" "}
+        <code className="font-mono">tools/list</code> on the implementation you connect to; HTTP and npm/stdio{" "}
+        releases are versioned separately. Measurement, not certification.
       </p>
     </section>
   );
@@ -293,7 +294,8 @@ export default function ConnectGSPC() {
               ))}
             </ul>
             <p className="mt-2 text-[11px] text-gray-400">
-              {TOOL_COUNT_SENTENCE} Receipts are in the client test register below.
+              {TOOL_COUNT_SENTENCE} Query <code className="font-mono">tools/list</code> on the implementation you{" "}
+              connect to for its current tool names and version. The client test register below records the dated surfaces we observed.
             </p>
           </div>
         </div>

@@ -405,7 +405,14 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   // the doctrine lint below; its chain id "eip155:8453, USDC" is not a price.
   const SERVED_COPIES = new Set(["distribution/gcp-marketplace/agent-card.json"]);
   for (const p of allOutputs.filter((x) => !SERVED_COPIES.has(x))) {
-    const t = read(p);
+    let t = read(p);
+    // The OASF A2A record embeds the served card as modules[integration/a2a].data.card_data; that copy is checked
+    // above to equal the served card byte-for-byte, so it is scanned as the served card is (not here).
+    if (p === "public/oasf/ai.councilof.measurement-agent.oasf.json") {
+      const d = JSON.parse(t);
+      for (const m of d.modules || []) if (m.data && "card_data" in m.data) m.data.card_data = "(served card: /.well-known/agent-card.json)";
+      t = JSON.stringify(d, null, 2);
+    }
     if (p.endsWith(".json")) walkJson(p, JSON.parse(t), false); else scanText(p, t, false);
     for (const m of t.matchAll(/(?:[$£€]\s?\d[\d,.]*|\b(?:USD|GBP|EUR)\s?\d[\d,.]*|\d[\d,.]*\s?(?:USD|GBP|EUR|USDC)\b)/g)) prices.push(`${p}: ${m[0]}`);
   }
@@ -577,6 +584,41 @@ print(len(fs), len(p["tools"]))`);
   const v = files.flatMap((f) => fileViolations(f, REPO));
   rec("*", "doctrine lint: no compliance-status claim in any rendered description", v.length === 0,
     v.length ? v.slice(0, 3).map((x) => `${x.where} [${x.word}] …${x.context}…`).join(" | ") : `${files.length} files`);
+}
+
+// ── agntcy-oasf: OASF 1.1.0 records (ADS face of the same inventory as /ard/v1/ and ai-catalog.json) ─────
+{
+  const id = "agntcy-oasf";
+  const vendored = "packages/evidence-fabric/oasf/oasf-record-1.1.0.schema.json";
+  const schemaUrl = "https://schema.oasf.outshift.com/schema/1.1.0/objects/record";
+  if (!OFFLINE) {
+    try {
+      const r = await fetch(schemaUrl, { signal: AbortSignal.timeout(20000) });
+      rec(id, "vendored OASF record schema == fetched", r.ok && sha256(await r.text()) === sha256(read(vendored)), schemaUrl);
+    } catch (e) { rec(id, "vendored OASF record schema == fetched", false, `unreachable: ${e.message}`); }
+  } else rec(id, "vendored OASF record schema == fetched", null, "offline");
+  const recs = ["public/oasf/ai.councilof.gspc.oasf.json", "public/oasf/ai.councilof.measurement-agent.oasf.json"];
+  for (const p of recs) {
+    if (JSONSCHEMA) {
+      const r = py(`import json,jsonschema,sys
+s=json.load(open("${join(REPO, vendored)}")); d=json.load(open("${join(REPO, p)}"))
+errs=[e.message for e in jsonschema.validators.validator_for(s)(s).iter_errors(d)]
+print(len(errs)); [print(e[:200]) for e in errs[:5]]; sys.exit(1 if errs else 0)`);
+      rec(id, `schema-valid OASF 1.1.0 record (${p.split("/").pop()})`, r.status === 0, r.stdout.trim().split("\n").slice(1).join(" | ") || "0 errors");
+    } else rec(id, `schema-valid OASF 1.1.0 record (${p.split("/").pop()})`, null, "python jsonschema unavailable");
+    const doc = readJson(p);
+    const ev = (doc.modules || []).filter((m) => m.name === "core/evaluation");
+    rec(id, `no grade in core/evaluation (${p.split("/").pop()})`, ev.length === 1 && !("overall_rating" in ev[0].data) && !("overall_scores" in ev[0].data) && ev[0].data.referred_evaluations.every((r) => !("overall_scores" in (r.evaluation_report || {}))), `${ev.length} evaluation module(s)`);
+    rec(id, `attribution carried (${p.split("/").pop()})`, (doc.authors || []).includes("Council of AI") && /did:web:csoai\.org/.test(doc.annotations?.attribution || ""), doc.annotations?.attribution || "missing");
+  }
+  const g = readJson(recs[0]);
+  rec(id, "GSPC record version == live serverInfo.version", g.version === WANT_VERSION, `${g.version} vs ${WANT_VERSION}`);
+  const a = readJson(recs[1]);
+  const card = readJson("public/.well-known/agent-card.json");
+  rec(id, "A2A record carries the served, signed card byte-equivalent", JSON.stringify(a.modules.find((m) => m.name === "integration/a2a")?.data?.card_data) === JSON.stringify(card), "card_data vs public/.well-known/agent-card.json");
+  const { verifyAttestation } = await import(pathToFileURL(join(REPO, "scripts/harness-x/sign-oasf.mjs")).href);
+  const v = verifyAttestation(REPO);
+  rec(id, "Ed25519 attestation over sha256(JCS(record)) VALID under did:web:csoai.org#board-attestation-1", v.state === "VALID", `${v.state}: ${v.detail}`);
 }
 
 // ── report ──────────────────────────────────────────────────────────────────────────────────

@@ -8,6 +8,7 @@
 import { isSeparated } from "../leaderLabel";
 import { buildCandidates } from "./candidates";
 import { applyCensus } from "./census";
+import { ARD_LISTINGS, MAX_DISCOVERED, type CandidateSource, type DiscoveryResult } from "./discovery";
 import { decide, type Decision } from "./decide";
 import type { CensusRead } from "./census";
 import type { CallerPolicy } from "./policy";
@@ -44,6 +45,8 @@ export type RouteDeps = {
   fetchBoard: () => Promise<unknown>;
   /** Reads the effect-binding census index (census.ts). Absent => every candidate stays UNMEASURED (NOT_WIRED). */
   fetchCensus?: () => Promise<unknown>;
+  /** Discovery sources by listing name (discovery.ts). Absent => `discover` is refused on this surface. */
+  discovery?: Partial<Record<keyof typeof ARD_LISTINGS, CandidateSource>>;
   now?: () => Date;
   uuid?: () => string;
 };
@@ -147,9 +150,30 @@ export async function routeCore(
     errors.push(`data_class must be one of ${DATA_CLASSES.join(", ")}`);
   if (args.needs_write !== undefined && typeof args.needs_write !== "boolean") errors.push("needs_write must be true or false");
   const objective = objectiveOf(args.objective, errors);
-  const { candidates, errors: candErrors } = buildCandidates(args.candidates);
+  const { candidates: declared, errors: candErrors } = buildCandidates(args.discover !== undefined && args.candidates === undefined ? [] : args.candidates);
   errors.push(...candErrors);
+  let source: CandidateSource | null = null;
+  let discoverMax = 8;
+  if (args.discover !== undefined) {
+    const d = (args.discover && typeof args.discover === "object" && !Array.isArray(args.discover) ? args.discover : {}) as Record<string, unknown>;
+    const name = typeof d.listing === "string" ? d.listing : "";
+    if (d.max !== undefined) discoverMax = typeof d.max === "number" && Number.isInteger(d.max) ? d.max : -1;
+    if (!Object.prototype.hasOwnProperty.call(ARD_LISTINGS, name)) errors.push(`discover.listing must be one of ${Object.keys(ARD_LISTINGS).join(", ")}`);
+    else if (discoverMax < 1 || discoverMax > MAX_DISCOVERED) errors.push(`discover.max must be an integer from 1 to ${MAX_DISCOVERED}`);
+    else if (!deps.discovery?.[name as keyof typeof ARD_LISTINGS]) errors.push("discover is not wired on this surface");
+    else source = deps.discovery[name as keyof typeof ARD_LISTINGS] as CandidateSource;
+  }
   if (errors.length) return { result: { state: "BAD_ARGUMENTS", errors }, internals: null };
+  let discovered: DiscoveryResult | null = null;
+  if (source) discovered = await source.discover(discoverMax);
+  const candidates = discovered ? [...declared, ...discovered.candidates] : declared;
+  if (discovered) {
+    const seen = new Set<string>();
+    for (const c of candidates) {
+      if (seen.has(c.id) && !c.uncheckable.includes("duplicate id")) c.uncheckable.push("duplicate id");
+      seen.add(c.id);
+    }
+  }
 
   const taskSha = taskShaIn ?? (await sha256Hex(taskText as string));
   const policy = callerPolicy(args.policy);
@@ -189,6 +213,7 @@ export async function routeCore(
     decision,
     board: boardSummary,
     census,
+    ...(discovered ? { discovery: discovered.read } : {}),
     locator,
     readAt,
   });

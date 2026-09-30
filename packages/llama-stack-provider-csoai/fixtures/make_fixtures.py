@@ -49,7 +49,9 @@ def main():
     evs = [ev(1, "CONSISTENT", ok), ev(2, "DIVERGENT", ok), ev(3, "UNMEASURED", {"id": None, "expected": None, "got": "NOT_RUN"})]
     write(os.path.join(HERE, "fx-valid"), evs, sk, KID)
     t = os.path.join(HERE, "fx-tampered"); shutil.rmtree(t, ignore_errors=True); shutil.copytree(os.path.join(HERE, "fx-valid"), t)
-    p = os.path.join(t, "events.jsonl"); open(p, "w").write(open(p).read().replace("FIXTURE 2: declared 3 tools.", "FIXTURE 2: declared 4 tools."))
+    p = os.path.join(t, "events.jsonl"); txt = open(p).read()  # read BEFORE open(p, "w") truncates it
+    assert "FIXTURE 2: declared 3 tools." in txt
+    open(p, "w").write(txt.replace("FIXTURE 2: declared 3 tools.", "FIXTURE 2: declared 4 tools."))
     write(os.path.join(HERE, "fx-unknown-key"), evs, sk, "did:web:test.invalid#not-pinned")
     json.dump({"benchmark_id": "csoai-evidence", "dataset_id": "csoai-evidence", "scoring_functions": ["csoai::state"], "provider_id": "csoai",
                "metadata": {"bundles": [os.path.join("fixtures", n) for n in ("fx-valid", "fx-tampered", "fx-unknown-key")]}},

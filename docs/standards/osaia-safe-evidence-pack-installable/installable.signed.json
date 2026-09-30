@@ -1,0 +1,35 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "docs/standards/osaia-safe-evidence-pack-installable/installable.json",
+   "sha256": "e317302e5c8c4a22474c9454bdcf140e2fdd9deb904c42e146d560611a6c215a",
+   "schema": "csoai.safe-pack-appendix/0.1",
+   "as_of": "2026-09-30T17:00:00Z"
+  },
+  "purpose": "SAFE evidence pack appendix: installable artefacts and their sha256 (lane ecosystem-install-20260930)"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "97da8b4b78a8c49f7023e7ab4c07df6b8e2ca0133404feaa88c32889950a4b72edf7f9e90d8f1f1a0cf476a5a13c5c0b3dd5c0512d1f15ee347c8cea4810dc04",
+  "payload_sha256": "ab0b3692238f5a546f7f38b3f82c8fdbfd2c9d7291e73946a8060f3a47be9fa0",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-30T16:51:33.833Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

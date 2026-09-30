@@ -1467,6 +1467,33 @@
       "surfaces_note": "Named in llms.txt and llms-full.txt, which is where it is actually published today. NOT declared for the openapi surface, because it is not in the OpenAPI document yet and scripts/build_openapi.py composes that document from the x402 catalogue rather than from this registry. Declaring a surface the door does not appear on is the kind of claim this registry exists to stop."
     },
     {
+      "id": "api-claims-watch-request-post",
+      "kind": "http",
+      "path": "/api/claims/watch-request",
+      "method": "POST",
+      "name": "Claim watch request (POST)",
+      "description": "POST /api/claims/watch-request — a person asks for a subject to be re-checked monthly. A request for review, not a schedule: stored verbatim in KV (LEADS) for a person to accept into the claim-maintenance register or decline; answered NOT_RECORDED (503) when no store is bound, never a pretend success. Requires confirmed: true (the GSPC evidence panel sends it only after a Confirm click). Nothing is measured, scheduled, charged, signed or published by it.",
+      "description_state": "DOCUMENTED",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.watch-request/0.1"
+      ],
+      "surfaces": [],
+      "probe": {
+        "method": "POST",
+        "request": "/api/claims/watch-request",
+        "expect_status": [
+          202
+        ],
+        "safe": false,
+        "unsafe_reason": "POST would write; the daily loop reads only"
+      },
+      "source": "functions/api/claims/watch-request.ts",
+      "surfaces_note": "Called by the GSPC evidence panel (packages/gspc-panel). Not yet in the OpenAPI document or llms.txt; declaring a surface the door does not appear on is the claim this registry exists to stop."
+    },
+    {
       "id": "api-clarity",
       "kind": "http",
       "path": "/api/clarity",

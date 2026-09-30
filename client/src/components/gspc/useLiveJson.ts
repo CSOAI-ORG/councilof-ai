@@ -34,8 +34,9 @@ export function resetLiveJsonCache(): void {
   cache.clear();
 }
 
-export function useLiveJson<T = unknown>(url: string | null): LiveRead<T> {
+export function useLiveJson<T = unknown>(url: string | null): LiveRead<T> & { retry: () => void } {
   const [read, setRead] = useState<LiveRead<T>>({ state: "loading", data: null, error: null });
+  const [nonce, setNonce] = useState(0);
   useEffect(() => {
     if (!url) return;
     let alive = true;
@@ -46,8 +47,15 @@ export function useLiveJson<T = unknown>(url: string | null): LiveRead<T> {
     return () => {
       alive = false;
     };
-  }, [url]);
-  return read;
+  }, [url, nonce]);
+  return {
+    ...read,
+    retry: () => {
+      if (url) cache.delete(url);
+      setRead({ state: "loading", data: null, error: null });
+      setNonce((n) => n + 1);
+    },
+  } as LiveRead<T> & { retry: () => void };
 }
 
 type Obj = Record<string, unknown>;

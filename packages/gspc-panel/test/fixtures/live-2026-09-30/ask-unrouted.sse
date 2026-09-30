@@ -1,0 +1,24 @@
+event: RUN_STARTED
+data: {"type":"RUN_STARTED","threadId":"t-fx","runId":"r-fx","timestamp":1790787622977}
+
+event: TEXT_MESSAGE_START
+data: {"type":"TEXT_MESSAGE_START","messageId":"406e6af6-3fd3-436c-86a5-ce0901aa07da","role":"assistant","timestamp":1790787622977}
+
+event: TEXT_MESSAGE_CONTENT
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"406e6af6-3fd3-436c-86a5-ce0901aa07da","delta":"I could not match that question to a tool, so I have no grounded answer for it.\n\nI answer by calling the same tools as POST /mcp and quoting their output. I can:\n- **board totals** — \"what does the board say\" (board_totals)\n- **one axis** —","timestamp":1790787622977}
+
+event: TEXT_MESSAGE_CONTENT
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"406e6af6-3fd3-436c-86a5-ce0901aa07da","delta":" \"how did safety measure\" (get_axis)\n- **a server** — \"is example.com/mcp trustworthy\" → what is measured about it (server_evidence) and the MCP census (mcp_trust)\n- **a signed card** — paste a 64-hex card id (verify_card); \"is <hex> includ","timestamp":1790787622977}
+
+event: TEXT_MESSAGE_CONTENT
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"406e6af6-3fd3-436c-86a5-ce0901aa07da","delta":"ed in the root\" (verify_inclusion)\n- **the public root** — \"show the public root\" (get_root); **signed cards** — \"list signed cards\" (list_cards)\n- **x402 doors** — \"x402 census\" (x402_trust); **capsules** — \"measurement index\" (measurement","timestamp":1790787622977}
+
+event: TEXT_MESSAGE_CONTENT
+data: {"type":"TEXT_MESSAGE_CONTENT","messageId":"406e6af6-3fd3-436c-86a5-ce0901aa07da","delta":"_index)\n- **paid tools** — commission_card, art50_marking_evidence, rwa_evidence, receipts_batch: I return the 402 challenge; payment comes from your own wallet, never from me.\n\nI do not invent numbers, grade trust, or pay for anything.","timestamp":1790787622977}
+
+event: TEXT_MESSAGE_END
+data: {"type":"TEXT_MESSAGE_END","messageId":"406e6af6-3fd3-436c-86a5-ce0901aa07da","timestamp":1790787622977}
+
+event: RUN_FINISHED
+data: {"type":"RUN_FINISHED","threadId":"t-fx","runId":"r-fx","result":{"grounded":false,"intent":"unknown","label":null,"answered_by":"deterministic router (no tool matched)","citations":[]},"timestamp":1790787622977}
+

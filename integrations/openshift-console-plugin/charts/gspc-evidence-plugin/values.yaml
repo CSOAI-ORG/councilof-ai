@@ -1,0 +1,36 @@
+# Two modes.
+#   cluster (default): a console dynamic plugin. Creates the cluster-scoped ConsolePlugin; a
+#     cluster-admin then enables it on the console operator (README). Needs cluster-admin.
+#   sandbox: values-sandbox.yaml. Namespace-scoped objects only (Deployment, Service, ConfigMap,
+#     Route). No ConsolePlugin — the Developer Sandbox forbids cluster-scoped objects — so the
+#     panel is served as a page on its own Route instead of inside the console.
+plugin:
+  name: gspc-evidence-plugin
+  image: ""          # e.g. image-registry.openshift-image-registry.svc:5000/<namespace>/gspc-evidence-plugin:latest
+  imagePullPolicy: Always
+  replicas: 1
+  port: 9443         # TLS, serving cert (cluster mode)
+  httpPort: 8080     # plain HTTP behind an edge Route (sandbox mode)
+  basePath: /
+  resources:
+    requests: { cpu: 10m, memory: 50Mi }
+    limits: { cpu: 100m, memory: 128Mi }
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile: { type: RuntimeDefault }
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities: { drop: [ALL] }
+
+consolePlugin:
+  enabled: true
+  # The panel fetches councilof.ai from the browser; the console CSP must allow it (OCP 4.18+).
+  connectSrc: ["https://councilof.ai"]
+
+# Serve the standalone page from a ConfigMap on the stock UBI nginx image: no image build at all.
+standalone:
+  configMap: false
+
+route:
+  enabled: false
+  host: ""           # empty = the cluster assigns one

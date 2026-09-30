@@ -1,0 +1,71 @@
+# Falcon Foundry app manifest for the GSPC evidence panel. Shape follows CrowdStrike's public
+# foundry-sample-* apps (manifest_version 2023-05-09, read 30 Sep 2026). NOT deployed: deploying
+# needs the Foundry CLI with its own API scopes (README, owner steps). Evidence by GSPC · Council of AI.
+app_id: ""
+name: GSPC evidence
+description: Signed, re-checkable GSPC evidence about MCP servers, agent cards, models and claims, read from councilof.ai inside Falcon. Measurement, not certification. No verdict, score or ranking.
+logo: app_docs/logo.svg
+vendor: ""
+vendor_products: []
+use_case: Cloud security
+manifest_version: "2023-05-09"
+ignored: []
+ui:
+  homepage: pages.gspc_evidence
+  extensions:
+    - name: GSPC evidence
+      description: The GSPC evidence panel beside a detection or host. Reads councilof.ai only; nothing from the tenant is sent there except the subject you choose.
+      path: ui/extensions/gspc-evidence/dist
+      entrypoint: ui/extensions/gspc-evidence/dist/index.html
+      sockets:
+        - activity.detections.details
+        - hosts.host.panel
+        - xdr.cases.panel
+      content_security_policy:
+        connect-src:
+          - https://councilof.ai
+        style-src: []
+        style-src-elem: []
+        script-src: []
+        form-action: []
+        img-src: []
+        media-src: []
+        object-src: []
+      permissions: []
+  pages:
+    gspc_evidence:
+      name: GSPC evidence
+      description: Look up any MCP server, agent card, model, signed card or claim and see its GSPC evidence.
+      path: ui/extensions/gspc-evidence/dist
+      entrypoint: ui/extensions/gspc-evidence/dist/index.html
+      content_security_policy:
+        connect-src:
+          - https://councilof.ai
+        style-src: []
+        style-src-elem: []
+        script-src: []
+        form-action: []
+        img-src: []
+        media-src: []
+        object-src: []
+      permissions: []
+  dashboards: {}
+  navigation:
+    links:
+      - path: /
+        name: GSPC evidence
+        permissions: []
+        ref: pages.gspc_evidence
+api_integrations: []
+rtr_scripts: []
+collections: []
+auth:
+  scopes: []
+  permissions: {}
+  roles: []
+functions: []
+workflows: []
+parsers: []
+logscale:
+  saved_searches: []
+lookup_files: []

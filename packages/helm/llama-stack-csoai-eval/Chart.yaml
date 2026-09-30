@@ -1,0 +1,13 @@
+apiVersion: v2
+name: llama-stack-csoai-eval
+description: A Llama Stack server with the remote::csoai eval provider. It verifies CSOAI signed evidence batches offline and returns each event's state, never a score.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+home: https://councilof.ai/connect/
+sources:
+  - https://pypi.org/project/llama-stack-provider-csoai/
+keywords: [llama-stack, eval, evidence, ed25519, openshift-ai]
+annotations:
+  licenses: Apache-2.0
+  councilof.ai/not-measured: "Rendered and linted; not installed on a live cluster."

@@ -207,6 +207,8 @@ function discover() {
     "/measurements/disclosure-completeness",
     // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
     "/verify-server",
+    // /panel — the embeddable evidence panel (2026-09-30); the shell carries the doctrine and the embed code.
+    "/panel",
     // /measurement-capsules — the human page for the capsule index (2026-09-26); the folder holds only data.
     "/measurement-capsules",
     // /research/cross-hardware-reproducibility — the preprint + dataset page (2026-09-27); figures read from the dataset.

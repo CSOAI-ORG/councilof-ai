@@ -1,0 +1,8 @@
+The remote::csoai eval provider is starting (it installs {{ .Values.provider.requirement }} from PyPI first).
+
+  kubectl port-forward svc/{{ include "csoai.fullname" . }} 8321:{{ .Values.service.port }}
+  curl -X POST localhost:8321/v1alpha/eval/benchmarks -H 'content-type: application/json' \
+    -d '{"benchmark_id":"csoai-evidence","dataset_id":"csoai-evidence","scoring_functions":["csoai::state"],"provider_id":"csoai","metadata":{"bundles":["/data/bundles/<batch-dir>"]}}'
+
+Each job row carries a state word (CONSISTENT, DIVERGENT, UNMEASURED, ...) or INVALID / UNVERIFIABLE_KEY.
+There is no score. A VALID batch shows who signed the bytes, not that any claim inside is true.

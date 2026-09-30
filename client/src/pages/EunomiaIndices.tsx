@@ -71,7 +71,7 @@ export default function EunomiaIndices() {
 
       <p className="mt-6 text-xs text-slate-400">
         Register: <a href="/registers" className="text-emerald-300 underline">/registers</a> · catalog:{" "}
-        <a href="/eunomia-catalog" className="text-emerald-300 underline">/eunomia-catalog</a> · verify any signed
+        <a href="/financial-catalog/" className="text-emerald-300 underline">/financial-catalog/</a> · verify any signed
         card free at <a href="/gspc-verify" className="text-emerald-300 underline">/gspc-verify</a>
       </p>
     </div>
