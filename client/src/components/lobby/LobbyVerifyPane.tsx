@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
+import VerificationPath from "@/components/verify/VerificationPath";
+import type { RecordVerdict } from "@/lib/recordVerify";
 import { markQuest } from "@/components/os/quests";
 import { FOCUS, SP, TYPE } from "./glass";
 
@@ -114,6 +116,9 @@ export default function LobbyVerifyPane() {
   const [nonce, setNonce] = useState(0);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loadedId, setLoadedId] = useState<string | null>(null);
+  const [verdict, setVerdict] = useState<RecordVerdict | null>(null);
+  const [checkedAt, setCheckedAt] = useState<string | null>(null);
+  const [auto, setAuto] = useState(false);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -152,6 +157,29 @@ export default function LobbyVerifyPane() {
   };
 
   const ready = state.phase === "ready" ? state : null;
+
+  // A card id in the URL (?card=<64 hex>, e.g. from Ask GSPC or a shared link) is loaded and checked.
+  const openById = (id: string) => {
+    if (!/^[0-9a-f]{64}$/i.test(id)) return;
+    setAuto(true);
+    setVerdict(null);
+    void load({ id: id.toLowerCase(), url: `/signed/cards/${id.toLowerCase()}.json` });
+  };
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("card");
+    if (id) openById(id);
+    // Watch mode: runVerify {kind:"card", id} loads and checks that card here.
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ tool: string; args: Record<string, unknown>; handled?: boolean }>).detail;
+      if (d?.tool === "runVerify" && d.args?.kind === "card" && typeof d.args.id === "string") {
+        d.handled = true;
+        openById(d.args.id);
+      }
+    };
+    window.addEventListener("council:ui", on);
+    return () => window.removeEventListener("council:ui", on);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
@@ -197,9 +225,9 @@ export default function LobbyVerifyPane() {
             ) : (
               <p className="text-[13px] text-slate-700">
                 <strong className="tabular-nums">{ready.source.listed}</strong> cards in the published
-                index (<code className="font-mono text-[11.5px]">/signed/card_index.json</code>), counted
+                index (<code className="font-mono text-xs">/signed/card_index.json</code>), counted
                 from its array rather than read off its header. The fuller chain manifest,{" "}
-                <code className="font-mono text-[11.5px]">/signed/chain.json</code>, is not being served,
+                <code className="font-mono text-xs">/signed/chain.json</code>, is not being served,
                 so this pane is drawing from the index instead and is not quoting chain totals it cannot
                 read.
               </p>
@@ -237,7 +265,7 @@ export default function LobbyVerifyPane() {
               </a>
             </div>
             {loadedId && !loadError && (
-              <p className="mt-2 font-mono text-[11px] text-slate-600">
+              <p className="mt-2 font-mono text-xs text-slate-600">
                 loaded {loadedId.slice(0, 16)}… — press Verify to check it
               </p>
             )}
@@ -255,10 +283,23 @@ export default function LobbyVerifyPane() {
           variant="light"
           seed={seed}
           seedNonce={nonce}
+          autoVerify={auto}
           // The /os ladder's "verify a published card" quest is marked HERE, on a real
           // pass — not on the click of a link, which is what used to award it.
-          onVerdict={(v) => { if (v.valid) markQuest("verify"); }}
+          onVerdict={(v) => {
+            if (v.valid) markQuest("verify");
+            setVerdict(v);
+            setCheckedAt(new Date().toISOString());
+          }}
         />
+        <div data-ui-subject={loadedId ?? undefined} data-ui-subject-kind={loadedId ? "card" : undefined}>
+          <VerificationPath
+            verdict={verdict}
+            cardId={loadedId}
+            indexIds={ready ? new Set(ready.cards.map((c) => c.id)) : null}
+            checkedAt={checkedAt}
+          />
+        </div>
       </div>
 
       {/* ── what a pass means, and what it does not ── */}

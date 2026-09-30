@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ROUTABLE_TOOLS, callTool, executePlan, extractAxis, extractEndpoint, routeIntent, talk } from "./talkRouter";
 import { isConfirmed, lastUserText, serveAguiRun } from "./aguiRun";
+import { ROUTER_READ_TOOLS } from "./talkReads";
 import { onRequestPost as chatPost } from "../api/chat";
 import { onRequestPost as a2aPost } from "../api/a2a";
 import GSPC_TOOLS from "../mcp/gspc-tools.json";
@@ -30,12 +31,31 @@ const MCP_TRUST = {
   headline: "257 of 500 enumerated hosts answered a correct MCP initialize.",
 };
 
+const CORRECTIONS = {
+  schema: "csoai.corrections/0.1", signature_state: "VALID",
+  correction_latency: { exact: 1, upper_bound: 5, unmeasured: 80 },
+  corrections: [
+    { id: "C-1", date: "2026-09-28", status: "CORRECTED", reached_the_public: true, what_was_wrong: "old count", what_changed: "count corrected" },
+    { id: "C-2", date: "2026-09-29", status: "OPEN", reached_the_public: false, what_was_wrong: "stale copy", what_changed: "review queued" },
+  ],
+};
+const CLAIM_REGISTER = {
+  schema: "csoai.claim-maintenance.register/0.1", as_of: "2026-09-25T11:08:49Z",
+  totals: { subjects: 23, claims: 70 },
+  states: { CURRENT: "maintained", SUPERSEDED: "retained history" },
+  subjects: [{ id: "s1" }, { id: "s2" }], registries: [{ id: "r1" }],
+  right_of_reply: { contact: "https://councilof.ai/contact/" },
+  does_not_prove: ["truth", "compliance"],
+};
+
 /** A fetch stub that answers by path, records every request, and 404s anything else. */
 function stubOrigin(extra: Record<string, (req: Request) => Response> = {}) {
   const seen: Request[] = [];
   const routes: Record<string, (req: Request) => Response> = {
     "/api/gspc": () => Response.json(BOARD),
     "/interop/mcp-trust/latest.json": () => Response.json(MCP_TRUST),
+    "/api/corrections": () => Response.json(CORRECTIONS),
+    "/api/claims/register": () => Response.json(CLAIM_REGISTER),
     ...extra,
   };
   const fn = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -68,6 +88,8 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     ["x402 census please", ["x402_trust"]],
     ["how many mcp servers answered", ["mcp_trust"]],
     ["show the measurement index", ["measurement_index"]],
+    ["show corrections", ["corrections_summary"]],
+    ["claim maintenance status", ["claim_maintenance_register"]],
     ["show the public root", ["get_root"]],
     ["list signed cards", ["list_cards"]],
     ["commission a card for https://example.com/mcp", ["commission_card"]],
@@ -78,12 +100,14 @@ describe("routeIntent — deterministic keyword/entity routing onto the /mcp too
     if (plan.kind === "tools") expect(plan.calls.map((c) => c.tool)).toEqual(tools);
   });
 
-  it("routes only to tools POST /mcp lists (derived from gspc-tools.json + paid-tools.json)", () => {
+  it("routes only to tools POST /mcp lists (derived from gspc-tools.json + paid-tools.json), or to the two router reads", () => {
     const listed = new Set([...GSPC_TOOLS.tools, ...PAID_TOOLS.tools].map((t) => t.name));
     expect(ROUTABLE_TOOLS).toEqual(listed);
+    // The router reads stay out of the /mcp fleet (K-1 lock): never listed, never a tool name there.
+    for (const r of ROUTER_READ_TOOLS) expect(listed.has(r)).toBe(false);
     for (const [q] of cases) {
       const plan = routeIntent(q);
-      if (plan.kind === "tools") for (const c of plan.calls) expect(listed.has(c.tool)).toBe(true);
+      if (plan.kind === "tools") for (const c of plan.calls) expect(listed.has(c.tool) || ROUTER_READ_TOOLS.has(c.tool)).toBe(true);
     }
   });
 
@@ -140,6 +164,31 @@ describe("executePlan — answers carry the tool output, a citation and the stat
     expect(a.citations.map((c) => c.tool)).toEqual(["server_evidence", "mcp_trust"]);
     expect(a.answer).toContain("257 of 500 enumerated hosts");
     expect(a.answer).not.toMatch(/\b(is|are) (trustworthy|safe|untrustworthy)\b/i);
+  });
+
+  it("corrections are bounded, cited, and source signature is not reverified here", async () => {
+    stubOrigin();
+    const a = await talk("show corrections", ORIGIN);
+    expect(a.grounded).toBe(true);
+    expect(a.answered_by).toBe("tool:corrections_summary");
+    expect(a.label).toBe("LIVE");
+    expect(a.citations[0]).toMatchObject({ tool: "corrections_summary", url: `${ORIGIN}/api/corrections` });
+    expect(a.answer).toContain("- count: 2");
+    expect(a.answer).toContain("- signature_state_reported: VALID");
+    expect(a.answer).toContain("- signature_verification: NOT_RUN");
+    expect(a.answer).toContain("C-2");
+  });
+
+  it("Claim Maintenance is the public register summary, not a fresh measurement", async () => {
+    stubOrigin();
+    const a = await talk("claim maintenance status", ORIGIN);
+    expect(a.grounded).toBe(true);
+    expect(a.answered_by).toBe("tool:claim_maintenance_register");
+    expect(a.label).toBe("LIVE");
+    expect(a.citations[0]).toMatchObject({ tool: "claim_maintenance_register", url: `${ORIGIN}/api/claims/register` });
+    expect(a.answer).toContain("2026-09-25T11:08:49Z");
+    expect(a.answer).toContain("- subject_count: 2");
+    expect(a.answer).toContain("- registry_count: 1");
   });
 
   it("help is not grounded and calls nothing", async () => {
@@ -209,6 +258,13 @@ describe("AG-UI run — streams RUN / TOOL_CALL / TEXT_MESSAGE events from the s
     const result = JSON.parse(String(ev[4].content));
     expect(result.citation).toMatchObject({ tool: "board_totals" });
     expect(ev.at(-1)).toMatchObject({ type: "RUN_FINISHED", result: { grounded: true, answered_by: "tool:board_totals" } });
+  });
+
+  it("streams a corrections query through the same AG-UI tool events", async () => {
+    stubOrigin();
+    const ev = await readEvents(await aguiPost({ messages: [{ role: "user", content: "show corrections" }] }));
+    expect(ev.find((e) => e.type === "TOOL_CALL_START")).toMatchObject({ toolCallName: "corrections_summary" });
+    expect(ev.at(-1)).toMatchObject({ type: "RUN_FINISHED", result: { grounded: true, answered_by: "tool:corrections_summary" } });
   });
 
   it("a paid tool is NOT called without an explicit confirm event", async () => {
@@ -283,6 +339,15 @@ describe("the doors use the router: POST /api/chat and A2A plain text", () => {
     expect(data.kind).toBe("GROUNDED_TOOL_ANSWER");
     expect(data.answered_by).toBe("tool:board_totals");
     expect(j.result.message.parts[0].text).toContain("23 axis · 23 measured");
+  });
+
+  it("A2A plain text reaches the Claim Maintenance register through the same router", async () => {
+    stubOrigin();
+    const j = (await (await a2aText("claim maintenance status")).json()) as Record<string, any>;
+    const data = j.result.message.parts[1].data;
+    expect(data.kind).toBe("GROUNDED_TOOL_ANSWER");
+    expect(data.answered_by).toBe("tool:claim_maintenance_register");
+    expect(j.result.message.parts[0].text).toContain("2026-09-25T11:08:49Z");
   });
 
   // 29 Sep 2026: unplaced text is answered with a RESULT saying no tool matched (never guessed, never a

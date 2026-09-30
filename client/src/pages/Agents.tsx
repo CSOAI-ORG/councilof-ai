@@ -21,6 +21,7 @@ import { Link } from "wouter";
 import { TOOLS, ONE_LINE } from "./ConnectClaude";
 import { useLiveJson, type LiveRead } from "@/components/gspc/useLiveJson";
 import { setMetaDescription } from "@/lib/utils";
+import DocMeta from "@/components/docs/DocMeta";
 
 type Json = Record<string, unknown>;
 
@@ -176,6 +177,7 @@ export default function Agents() {
           <h1 id="agents-h" className="mt-4 max-w-2xl font-black tracking-[-0.03em] text-white" style={{ fontSize: "clamp(1.9rem, 1rem + 3vw, 3.2rem)", lineHeight: 1.05 }}>
             How an agent uses GSPC
           </h1>
+          <div className="max-w-3xl"><DocMeta updated="2026-09-30" slug="agents" /></div>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-emerald-50/90 sm:text-lg">
             The same answers people get, over the protocol your agent speaks. This page is rendered from the machine files, so it
             says exactly what they say.

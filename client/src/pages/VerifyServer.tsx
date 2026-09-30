@@ -12,6 +12,7 @@ import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
+import FixQueue from "@/components/verify/FixQueue";
 import {
   DOCTRINE,
   LOOKUP_MEANING,
@@ -92,6 +93,21 @@ export default function VerifyServer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Ask GSPC watch mode: runVerify {kind:"server", id} looks up that URL here (FixQueue re-checks its rows).
+  useEffect(() => {
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ tool: string; args: Record<string, unknown>; handled?: boolean }>).detail;
+      if (d?.tool !== "runVerify" || d.args?.kind !== "server" || typeof d.args.id !== "string") return;
+      if (d.args.id !== looked || !result) {
+        d.handled = true;
+        void run(d.args.id);
+      }
+    };
+    window.addEventListener("council:ui", on);
+    return () => window.removeEventListener("council:ui", on);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [looked, result]);
+
   function onSubmit(e: FormEvent) {
     e.preventDefault();
     void run(input);
@@ -100,7 +116,12 @@ export default function VerifyServer() {
   const preview = input.trim() ? normaliseEndpoint(input) : null;
 
   return (
-    <div data-testid="verify-server-page" className="mx-auto max-w-3xl px-4 py-10 sm:py-14">
+    <div
+      data-testid="verify-server-page"
+      className="mx-auto max-w-3xl px-4 py-10 sm:py-14"
+      data-ui-subject={result?.endpoint ?? undefined}
+      data-ui-subject-kind={result?.endpoint ? "server" : undefined}
+    >
       <nav aria-label="Breadcrumb" className="text-sm text-slate-600">
         <Link href="/">Home</Link> › <span>Verify a server</span>
       </nav>
@@ -255,6 +276,8 @@ export function EvidenceView({ result, onLookup }: { result: Lookup; onLookup?: 
           </>
         ) : null}
       </dl>
+
+      {result.endpoint && (result.state === "MEASURED" || result.state === "NOT_MEASURED") ? <FixQueue result={result} onRelookup={onLookup} /> : null}
 
       {[...groups.entries()].map(([adapter, caps]) => (
         <section key={adapter} className="mt-8" aria-label={ADAPTER_LABEL[adapter] ?? adapter}>
