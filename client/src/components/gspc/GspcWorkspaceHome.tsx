@@ -411,7 +411,7 @@ export default function GspcWorkspaceHome({
         </section>
 
         <p className="mt-8 border-t border-border pt-5 text-xs leading-relaxed text-muted-foreground">
-          Council of AI measures; it does not certify, rank for sale or grade. Agents get the same answers over{" "}
+          Council of AI measures. It does not certify, and a rank is never sold. Agents get the same answers over{" "}
           <Link href="/agents/" className="font-semibold text-emerald-800 underline underline-offset-2">MCP, A2A, AG-UI and A2UI</Link>.
         </p>
       </div>
