@@ -91,6 +91,24 @@ class PublishCandidateTests(unittest.TestCase):
         self.assertTrue(d["publish"])
         self.assertEqual(d["reason"], "semantic_change")
 
+    def test_reordering_is_not_change(self):
+        old = snapshot("2026-09-30T00:00:00Z")
+        old["subjects"].append(dict(old["subjects"][0], id="b", evidence_sha256="d" * 64))
+        old["stages"][0]["components"].append({"label": "y", "status": "LIVE", "newest_output": "x", "missed_cycles": 0})
+        old["counts"]["subjects"] = 2
+        old["counts"]["by_state"]["CONSISTENT"] = 2
+        new = copy.deepcopy(old)
+        new["generated_at"] = new["run_id"] = "2026-09-30T00:30:00Z"
+        new["subjects"].reverse()
+        new["stages"][0]["components"].reverse()
+        self.assertEqual(p.validate(new), [])
+        d = p.decide(new, old, max_interval_s=14400)
+        self.assertFalse(d["publish"])
+        self.assertEqual(d["reason"], "cadence_only")
+        # a real edit hidden in a re-ordered list is still a change
+        new["subjects"][0]["evidence_sha256"] = "e" * 64
+        self.assertEqual(p.decide(new, old, max_interval_s=14400)["reason"], "semantic_change")
+
     def test_older_candidate_is_held(self):
         old = snapshot("2026-09-30T01:00:00Z")
         new = snapshot("2026-09-30T00:30:00Z")
