@@ -40,9 +40,9 @@ def anchors(ev):
 def measured_value(ev):
     """The number, or None. Only ever non-None for a measured state (check_renderable guarantees it)."""
     v = ev.get("value")
-    return v  # PRE-GUARD (fail-first stage)
+    return None if ev["state"] in E.NO_NUMBER_STATES else v
 
 
 def guard(ev):
     """The single doctrine gate every renderer passes through."""
-    return ev  # PRE-GUARD (fail-first stage): no doctrine check yet
+    return E.check_renderable(ev)
