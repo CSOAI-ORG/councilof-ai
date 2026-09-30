@@ -81,7 +81,7 @@ describe("grounded answers (recorded POST /api/agui/run)", () => {
     expect(codes).toContain("https://councilof.ai/mcp/free");
     expect(codes).toContain("npx -y csoai-gspc-mcp");
     expect(codes).toContain("helm upgrade -i gspc-evidence");
-    expect(codes).toContain("pip install -e packages/llama-stack-provider-csoai");
+    expect(codes).toContain("pip install llama-stack-provider-csoai"); // on PyPI since 30 Sep (0.1.0)
   });
 
   it("declares the frontend tools in RunAgentInput.tools without changing anything else", async () => {

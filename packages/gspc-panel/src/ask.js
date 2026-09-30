@@ -51,7 +51,7 @@ export function connectAnswer(subject) {
       { label: "REST (OpenAPI 3.1)", code: OPENAPI_URL },
       { label: "This panel in your own page", code: '<script type="module" src="https://councilof.ai/panel/gspc-panel.js"></script>\n<gspc-evidence-panel subject="' + (subject || "https://example.com/mcp") + '"></gspc-evidence-panel>' },
       { label: "OpenShift (namespace only, from the councilof-ai source tree)", code: "helm upgrade -i gspc-evidence integrations/openshift-console-plugin/charts/gspc-evidence-plugin -f integrations/openshift-console-plugin/charts/gspc-evidence-plugin/values-sandbox.yaml -n <your-namespace>" },
-      { label: "Llama Stack eval provider remote::csoai (from source)", code: "pip install -e packages/llama-stack-provider-csoai   # Python >= 3.12; see its README" },
+      { label: "Llama Stack eval provider remote::csoai (PyPI, Python >= 3.12)", code: "pip install llama-stack-provider-csoai" },
     ],
     citations: [{ tool: "install", url: "https://councilof.ai/connect-gspc" }],
   };

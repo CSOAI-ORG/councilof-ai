@@ -67,7 +67,7 @@ The Ask box sends the question to councilof.ai's `POST /api/agui/run`, the same 
   record answered and shows the router's text as guidance.
 - "Is this safe to use?" gets no verdict: the reply opens by saying GSPC does not rate safety.
 - "Connect GSPC to my project" answers with exact steps (MCP URL, stdio command, OpenAPI, embed, Helm,
-  pip for the Llama Stack provider).
+  pip install llama-stack-provider-csoai for the Llama Stack provider).
 - "Watch it monthly" fills a request form and **pauses at Confirm**. Only the click sends
   `POST /api/claims/watch-request` (recorded for a person to accept or decline; nothing is
   scheduled, measured, charged or published by it).
