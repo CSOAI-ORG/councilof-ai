@@ -161,3 +161,15 @@
 # index them under this domain. Added 2026-09-24; the sitemap leaves them out by the same pattern.
 /interop/:report/mirrors/*
   X-Robots-Tag: noindex, nofollow
+
+# Install surfaces (lane ecosystem-install-20260930): the verifier ES module is imported cross-origin by
+# browsers and evaluators, and helm clients read the chart repository from anywhere.
+/lib/*.mjs
+  Content-Type: text/javascript; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/helm/*
+  Access-Control-Allow-Origin: *
+
+/helm/index.yaml
+  Content-Type: application/yaml; charset=utf-8

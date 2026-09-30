@@ -13,6 +13,8 @@
  *   - the per-platform setup blocks come from distribution/connect/connect-matrix.json, rendered by
  *     scripts/harness-x/render.mjs from council-os/distribution.json; every block names only the two doors,
  *     and scripts/harness-x/connect-live.mjs checks each one against them (connect-live-check.json).
+ *   - the #stacks blocks (pip, helm, the /lib/ verifier module) come from client/src/data/stackInstall.ts; each says
+ *     what was not measured and that no official marketplace lists it yet (stackInstall.test.ts).
  * No price, no certification claim, no ranking.
  */
 import { useEffect, useState, type ReactNode } from "react";
@@ -20,6 +22,7 @@ import { Link } from "wouter";
 import { CLAUDE_CODE_CMD, CURSOR_JSON, FREE_DOOR, ONE_LINE, TOOLS } from "./ConnectClaude";
 import { setMetaDescription } from "@/lib/utils";
 import CONNECT_MATRIX from "../../../distribution/connect/connect-matrix.json";
+import { CUSTOMER_CONFIGURED, FREE_MCP, HELM_REPO, PAID_MCP, PYPI, STACKS } from "@/data/stackInstall";
 
 type ConnectClient = {
   id: string;
@@ -132,6 +135,7 @@ export default function ConnectHub() {
             {[
               ["#free", "Free MCP door"],
               ["#platforms", "GSPC in your platform"],
+              ["#stacks", "Install into your stack"],
               ["#full", "Full MCP endpoint"],
               ["#a2a", "A2A agent card"],
               ["#http", "Plain HTTP"],
@@ -213,6 +217,71 @@ export default function ConnectHub() {
                 </div>
               </div>
             ))}
+          </Door>
+        </div>
+
+        <div id="stacks" className="scroll-mt-24">
+          <Door id="stacks-h" kicker="pip · helm · one ES module" title="Install into your stack">
+            <p className="t-body mt-3 max-w-3xl text-muted-foreground">
+              Your platform&apos;s own assistant keeps doing the work; GSPC is one more tool it can call. Where the
+              vendor documents adding an external MCP server, each block gives the setup for{" "}
+              <code className="font-mono text-foreground">{FREE_MCP}</code> (free, read-only) — use{" "}
+              <code className="font-mono text-foreground">{PAID_MCP}</code> for the metered tools — and where it does
+              not, it says so. Below that are our packages (Apache-2.0), each installed and run against the real
+              upstream package, with what was not measured and whether any official marketplace lists it.
+            </p>
+            <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-2">
+              {STACKS.map((s) => (
+                <details
+                  key={s.id}
+                  id={`stack-${s.id}`}
+                  className="group min-w-0 rounded-xl border border-border bg-background px-3.5 py-2.5"
+                  data-testid={`connect-stack-${s.id}`}
+                >
+                  <summary className="flex min-h-9 cursor-pointer list-none items-center justify-between gap-3 font-semibold text-foreground">
+                    <span className="min-w-0">GSPC for {s.platform}</span>
+                    <span className="shrink-0 text-xs font-medium text-muted-foreground">listing: not yet</span>
+                  </summary>
+                  {s.assistants.map((a) => (
+                    <div key={a.product} className="mt-3 rounded-lg border border-border px-3 py-2.5" data-testid={`connect-assistant-${s.id}`}>
+                      <p className="text-[13px] font-semibold leading-snug text-foreground">
+                        {a.product}: {a.status === "supported" ? "can call GSPC as a tool" : "not supported yet"}
+                      </p>
+                      <p className="mt-1 text-[13px] leading-snug text-muted-foreground">{a.detail}</p>
+                      {a.steps.map((st) => (
+                        <Code key={st.label} label={st.label} text={st.text} />
+                      ))}
+                      <p className="mt-2 text-[13px] leading-snug text-muted-foreground">{a.tested}</p>
+                      {a.sources.length ? (
+                        <p className="mt-1 text-[13px] leading-snug text-muted-foreground [overflow-wrap:anywhere]">
+                          Vendor documentation:{" "}
+                          {a.sources.map((src, i) => (
+                            <span key={src.url}>
+                              {i ? "; " : ""}
+                              <A href={src.url}>{src.label}</A>
+                            </span>
+                          ))}
+                        </p>
+                      ) : null}
+                      <p className="mt-1 text-[12px] font-semibold leading-snug text-foreground">{CUSTOMER_CONFIGURED}</p>
+                    </div>
+                  ))}
+                  <p className="mt-4 text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Install the packages</p>
+                  <p className="mt-1 text-[13px] leading-snug text-muted-foreground [overflow-wrap:anywhere]">{s.what}</p>
+                  {s.steps.map((st) => (
+                    <Code key={st.label} label={st.label} text={st.text} />
+                  ))}
+                  <p className="mt-3 text-[13px] font-semibold leading-snug text-foreground">{s.listing}</p>
+                  <p className="mt-1 text-[13px] leading-snug text-muted-foreground">{s.notMeasured}</p>
+                </details>
+              ))}
+            </div>
+            <p className="t-body mt-4 text-muted-foreground">
+              Helm repository: <A href={HELM_REPO}>{HELM_REPO}</A>. PyPI:{" "}
+              <A href={`https://pypi.org/project/${PYPI.fabric}/`}>{PYPI.fabric}</A>,{" "}
+              <A href={`https://pypi.org/project/${PYPI.llamaStack}/`}>{PYPI.llamaStack}</A>,{" "}
+              <A href={`https://pypi.org/project/${PYPI.nat}/`}>{PYPI.nat}</A>.
+            </p>
           </Door>
         </div>
 

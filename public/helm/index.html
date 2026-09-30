@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helm chart repository | Council of AI</title>
+<meta name="description" content="The Council of AI Helm chart repository: helm repo add csoai https://councilof.ai/helm/ . Charts for running GSPC evidence verification in Kubernetes and OpenShift.">
+<link rel="canonical" href="https://councilof.ai/helm/">
+<style>
+:root{--bg:#fbfbf9;--fg:#15171a;--muted:#555b63;--line:#dcdfe3;--code:#0f1720;--codefg:#e7edf3;--link:#0f6b4f}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1013;--fg:#e8eaed;--muted:#a3a9b1;--line:#2a2e34;--code:#171b21;--codefg:#e7edf3;--link:#5fd3a6}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:46rem;margin:0 auto;padding:2.5rem 1rem 4rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}h2{font-size:1.15rem;margin:2rem 0 .5rem}
+p,li{color:var(--muted)}a{color:var(--link);font-weight:600}
+pre{background:var(--code);color:var(--codefg);padding:.9rem 1rem;border-radius:10px;overflow-x:auto;font-size:14px}
+table{border-collapse:collapse;width:100%;font-size:15px}td,th{border-bottom:1px solid var(--line);padding:.5rem .4rem;text-align:left;vertical-align:top}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+</style>
+</head>
+<body>
+<main>
+<p><a href="/">Council of AI</a> / <a href="/connect/">Connect</a></p>
+<h1>Helm chart repository</h1>
+<p>Charts for running GSPC evidence verification in Kubernetes and OpenShift. Apache-2.0. The machine-readable index is <a href="/helm/index.yaml">index.yaml</a>; each chart's sha256 digest is recorded there.</p>
+<pre><code>helm repo add csoai https://councilof.ai/helm/
+helm repo update
+helm search repo csoai</code></pre>
+<h2>Charts</h2>
+<table>
+<thead><tr><th>Chart</th><th>What it runs</th></tr></thead>
+<tbody>
+<tr><td><code>llama-stack-csoai-eval</code> 0.1.0</td><td>A Llama Stack server with the <code>remote::csoai</code> eval provider (<a href="https://pypi.org/project/llama-stack-provider-csoai/">llama-stack-provider-csoai</a>). It verifies signed evidence batches offline against a pinned DID document and returns each event's state, never a score.</td></tr>
+</tbody>
+</table>
+<pre><code>helm install csoai-evidence csoai/llama-stack-csoai-eval --set bundles.existingClaim=&lt;pvc&gt;
+# OpenShift restricted SCC: add --set podSecurityContext.runAsUser=null</code></pre>
+<h2>What has and has not been checked</h2>
+<p>Each chart is linted with <code>helm lint --strict</code> and rendered before it is published, and its container start command was run outside Kubernetes. No chart has been installed on a live cluster by us yet; that install is unmeasured. Charts are not signed with Helm provenance files yet. No official marketplace lists these charts.</p>
+<p>More install routes, per stack: <a href="/connect/#stacks">Install into your stack</a>.</p>
+</main>
+</body>
+</html>

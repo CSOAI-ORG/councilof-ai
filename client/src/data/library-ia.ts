@@ -54,6 +54,9 @@ export const PRIMARY_PATHS = new Set<string>([
   "/connect/claude",
   // /connect — the connector hub (2026-09-30): free MCP door, full MCP, A2A card, HTTP, offline verify.
   "/connect",
+  // /helm — the Helm chart repository index (2026-09-30, lane ecosystem-install): a static public/helm/index.html,
+  // listed here so a shell render of the path would never wear the archive banner.
+  "/helm",
   // /agents — how an agent uses GSPC, rendered from the machine files (2026-09-30, gspc-product-ui).
   "/agents",
   // Specialist boards + signed registers (all live in Measure)
