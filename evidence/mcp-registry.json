@@ -4,6 +4,7 @@
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
   "probe_host": "pod",
   "targets_file": "scripts/mcp-targets.json",
+  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by https://f7e10e8a.councilof-ai.pages.dev (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
     "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -16,7 +17,7 @@
     "reachable_distinct_servers": 2,
     "unreachable_endpoints": 0,
     "catalogued_not_probed": 6,
-    "tools_probed": 32,
+    "tools_probed": 36,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -27,8 +28,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-09-26T13:10:33.291Z",
-    "finished": "2026-09-26T13:10:35.264Z"
+    "started": "2026-09-30T10:45:27.273Z",
+    "finished": "2026-09-30T10:45:28.903Z"
   },
   "servers": [
     {
@@ -39,15 +40,15 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-26T13:10:33.810Z",
+      "last_probed": "2026-09-30T10:45:28.202Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
-      "server_version": "1.4.2",
-      "tools_count": 16,
+      "server_version": "1.4.3",
+      "tools_count": 18,
       "tools": [
         {
           "name": "board_totals",
-          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
           "required_args": []
         },
         {
@@ -59,14 +60,14 @@
         },
         {
           "name": "verify_card",
-          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
           "required_args": [
             "card"
           ]
         },
         {
           "name": "list_cards",
-          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
           "required_args": []
         },
         {
@@ -76,7 +77,7 @@
         },
         {
           "name": "get_card",
-          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. States: VALID (fetched); NOT_IN_THIS_CORPUS (the id is in the signed card index, not the public root, so use verify_card on it); INVALID (in neither the live root nor the signed card index); UNCHECKABLE (a source could not be read). Not a GSPC measurement-card.",
           "required_args": [
             "sha256"
           ]
@@ -118,6 +119,13 @@
           ]
         },
         {
+          "name": "evidence_bundle_preview",
+          "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -142,12 +150,21 @@
           "required_args": [
             "from"
           ]
+        },
+        {
+          "name": "evidence_bundle",
+          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
         }
       ],
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary",
       "catalogue_source": null,
-      "catalogue_claim": null
+      "catalogue_claim": null,
+      "contacted": "https://f7e10e8a.councilof-ai.pages.dev/mcp",
+      "stand_in_for": "https://councilof.ai/mcp"
     },
     {
       "id": "csoai-gspc-mcp-fallback",
@@ -157,15 +174,15 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-26T13:10:34.054Z",
+      "last_probed": "2026-09-30T10:45:28.657Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
-      "server_version": "1.4.2",
+      "server_version": "1.4.3",
       "tools_count": 16,
       "tools": [
         {
           "name": "board_totals",
-          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
           "required_args": []
         },
         {
@@ -177,14 +194,14 @@
         },
         {
           "name": "verify_card",
-          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
           "required_args": [
             "card"
           ]
         },
         {
           "name": "list_cards",
-          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
           "required_args": []
         },
         {
@@ -194,7 +211,7 @@
         },
         {
           "name": "get_card",
-          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. States: VALID (fetched); NOT_IN_THIS_CORPUS (the id is in the signed card index, not the public root, so use verify_card on it); INVALID (in neither the live root nor the signed card index); UNCHECKABLE (a source could not be read). Not a GSPC measurement-card.",
           "required_args": [
             "sha256"
           ]
@@ -275,15 +292,15 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-26T13:10:34.111Z",
+      "last_probed": "2026-09-30T10:45:28.771Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
-      "server_version": "1.4.2",
-      "tools_count": 16,
+      "server_version": "1.4.3",
+      "tools_count": 18,
       "tools": [
         {
           "name": "board_totals",
-          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
           "required_args": []
         },
         {
@@ -295,14 +312,14 @@
         },
         {
           "name": "verify_card",
-          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
           "required_args": [
             "card"
           ]
         },
         {
           "name": "list_cards",
-          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
           "required_args": []
         },
         {
@@ -312,7 +329,7 @@
         },
         {
           "name": "get_card",
-          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. States: VALID (fetched); NOT_IN_THIS_CORPUS (the id is in the signed card index, not the public root, so use verify_card on it); INVALID (in neither the live root nor the signed card index); UNCHECKABLE (a source could not be read). Not a GSPC measurement-card.",
           "required_args": [
             "sha256"
           ]
@@ -354,6 +371,13 @@
           ]
         },
         {
+          "name": "evidence_bundle_preview",
+          "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -378,12 +402,21 @@
           "required_args": [
             "from"
           ]
+        },
+        {
+          "name": "evidence_bundle",
+          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
         }
       ],
       "error": null,
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
-      "catalogue_claim": null
+      "catalogue_claim": null,
+      "contacted": "https://f7e10e8a.councilof-ai.pages.dev/mcp",
+      "stand_in_for": "https://councilof.ai/mcp"
     },
     {
       "id": "csoai-gspc-mcp-stdio",
@@ -393,15 +426,15 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-26T13:10:35.263Z",
+      "last_probed": "2026-09-30T10:45:28.902Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
       "server_version": "0.2.2",
-      "tools_count": 16,
+      "tools_count": 18,
       "tools": [
         {
           "name": "board_totals",
-          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+          "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
           "required_args": []
         },
         {
@@ -413,14 +446,14 @@
         },
         {
           "name": "verify_card",
-          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under the PINNED key published at did:web:csoai.org#card-attestation-1. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so a signer other than the published key is reported INVALID. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, or a councilof.ai / csoai.org URL. Never a certification.",
+          "description": "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification.",
           "required_args": [
             "card"
           ]
         },
         {
           "name": "list_cards",
-          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit.",
+          "description": "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card.",
           "required_args": []
         },
         {
@@ -430,7 +463,7 @@
         },
         {
           "name": "get_card",
-          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+          "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. States: VALID (fetched); NOT_IN_THIS_CORPUS (the id is in the signed card index, not the public root, so use verify_card on it); INVALID (in neither the live root nor the signed card index); UNCHECKABLE (a source could not be read). Not a GSPC measurement-card.",
           "required_args": [
             "sha256"
           ]
@@ -472,6 +505,13 @@
           ]
         },
         {
+          "name": "evidence_bundle_preview",
+          "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY, never as an error and never as a clean bill. Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
+          ]
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -495,6 +535,13 @@
           "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
           "required_args": [
             "from"
+          ]
+        },
+        {
+          "name": "evidence_bundle",
+          "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work — not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+          "required_args": [
+            "obligation"
           ]
         }
       ],
