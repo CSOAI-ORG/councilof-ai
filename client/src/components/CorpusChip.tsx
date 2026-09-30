@@ -57,7 +57,7 @@ function countOf(v: unknown): Count {
   return r && typeof r.value === "number" ? { value: r.value, kind: String(r.kind ?? ""), as_of: typeof r.as_of === "string" ? r.as_of : null } : null;
 }
 
-export default function CorpusChip({ className = "hidden lg:inline-flex" }: { className?: string }) {
+export default function CorpusChip({ className = "hidden 2xl:inline-flex" }: { className?: string }) {
   const [corpus, setCorpus] = useState<CorpusId>("signed-index");
   const [open, setOpen] = useState(false);
   const [counts, setCounts] = useState<Counts>(null);
@@ -111,15 +111,15 @@ export default function CorpusChip({ className = "hidden lg:inline-flex" }: { cl
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={panelId}
-        className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-slate-300 px-2.5 text-xs font-semibold text-slate-800 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+        className="inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-slate-300 px-2.5 text-xs font-semibold text-slate-800 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
         data-testid="corpus-chip"
       >
         <Layers className="h-3.5 w-3.5" aria-hidden="true" />
         <span>
           <span className="sr-only">Card corpus in view: </span>
-          {cur.name}
+          <span className="sr-only">{cur.name}, </span>
         </span>
-        <span className="rounded bg-slate-100 px-1 font-mono text-xs text-slate-700">corpus {cur.n}</span>
+        <span className="font-mono text-xs text-slate-800" title={cur.name}>Corpus {cur.n}</span>
         <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
       {open ? (

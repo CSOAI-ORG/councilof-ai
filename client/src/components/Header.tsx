@@ -217,15 +217,16 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
             <button
               type="button"
               onClick={() => openAsk()}
-              className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-800/25 px-3 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-50"
+              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-emerald-800/25 px-2.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-50"
               aria-label="Ask GSPC"
+              title="Ask GSPC"
               data-testid="ask-launcher"
             >
-              <MessageSquareText className="h-4 w-4" aria-hidden="true" /> Ask
+              <MessageSquareText className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden 2xl:inline">Ask</span>
             </button>
-            <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 items-center gap-1 rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
+            <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 shrink-0 items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" title="Search pages and ask (Ctrl K / ⌘K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
               <Search className="h-5 w-5" aria-hidden="true" />
-              <kbd className="hidden rounded border border-slate-300 px-1 font-mono text-xs text-slate-600 xl:inline">⌘K</kbd>
             </button>
             {user ? (
               <>

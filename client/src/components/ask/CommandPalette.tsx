@@ -113,7 +113,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
         </div>
-        <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2 lg:hidden">
+        <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2 2xl:hidden">
           <span className="text-xs text-muted-foreground">Corpus in view</span>
           <CorpusChip className="inline-flex" />
         </div>

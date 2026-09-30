@@ -20,12 +20,24 @@ const RULES: { key: string; label: string; re: RegExp }[] = [
   { key: "bytes", label: "Record bytes reproduce the id", re: /hash|content_id|preimage|\bid\b|canonical|framing|integral|envelope/i },
   { key: "sig", label: "Signature verifies", re: /signature|ed25519|unsigned/i },
   { key: "key", label: "Signing key is a pinned anchor", re: /anchor|key|signer|family/i },
-  { key: "did", label: "Key is published in did:web:csoai.org", re: /did|live/i },
+  { key: "did", label: "Key is published in did:web:csoai.org", re: /did\.json|did:web|live/i },
 ];
+
+// Claim lines in this order (the DID line also mentions a key); show them in RULES order.
+const CLAIM_ORDER = ["did", "sig", "bytes", "key"];
 
 export function hopsFrom(v: RecordVerdict | null): Hop[] {
   const used = new Set<number>();
-  return RULES.map((r) => {
+  const byKey = new Map<string, Hop>();
+  for (const k of CLAIM_ORDER) {
+    const r = RULES.find((x) => x.key === k)!;
+    byKey.set(k, hopFor(r, v, used));
+  }
+  return RULES.map((r) => byKey.get(r.key)!);
+}
+
+function hopFor(r: (typeof RULES)[number], v: RecordVerdict | null, used: Set<number>): Hop {
+  {
     if (!v) return { key: r.key, label: r.label, mark: "not_run" as Mark, detail: "No check has run in this tab yet." };
     const lines = v.lines.filter((l, i) => {
       if (used.has(i) || l.code === "parse_ok") return false;
@@ -42,7 +54,7 @@ export function hopsFrom(v: RecordVerdict | null): Hop[] {
       mark: (fail ? "fail" : ran.length ? "pass" : "not_run") as Mark,
       detail: (fail ?? ran[0] ?? lines[0]).detail,
     };
-  });
+  }
 }
 
 const MARK: Record<Mark, { sym: string; word: string; cls: string }> = {

@@ -27,6 +27,7 @@ import {
 import DashboardPane, { paneLabel } from "@/components/DashboardPane";
 import DashboardWorkspace, { SECTION_ACTIONS_ID } from "@/components/DashboardWorkspace";
 import DashboardAccountMenu from "@/components/DashboardAccountMenu";
+import CorpusChip from "@/components/CorpusChip";
 import { Header } from "@/components/Header";
 import {
   dashboardViewFromSearch,
@@ -427,6 +428,8 @@ export default function DashboardLayout({
                 </p>
               ) : null}
               <div className="ml-auto flex shrink-0 items-center gap-2">
+                {/* The card corpus in view, named in the Council OS chrome (the site header shows it from 2xl). */}
+                {!embeddedView ? <CorpusChip className="hidden md:inline-flex 2xl:hidden" /> : null}
                 {!embeddedView ? <StartPageButton activeTab={activeTab} /> : null}
                 <div id={SECTION_ACTIONS_ID} className="flex shrink-0 items-center gap-2" />
               </div>
