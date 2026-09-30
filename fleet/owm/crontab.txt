@@ -1,3 +1,6 @@
 # owm:begin - lane reaction-orchestrator-20260928: outer world model cycle. Reads job evidence (output-novelty, job registry), local records read-only and public own surfaces (GET, no token); writes only ~/lanes/logs/owm.log, ~/fleet/owm_{snapshot,heartbeat}.json, ~/lanes/state/owm/. Signs nothing, lands nothing. Source of truth: councilof-ai fleet/owm/ (branch lane/reaction-orchestrator-20260928)
 19,49 * * * * flock -n /tmp/owm-cycle.lock env FLOOR_ROOT_M=512 FLOOR_BULK_M=0 $HOME/lanes/bin/disk-floor.sh owm-cycle $HOME/lanes/logs/owm.log nice -n 15 timeout 300 /usr/bin/python3 $HOME/lanes/reaction-orchestrator-20260928/owm.py >/dev/null 2>&1   # OWM snapshot per cycle + dead-man's switch: STALE lines, then a summary ending rc=0 / rc=3 (supervisor: must_contain rc=0, max_age 4500s)
 # owm:end
+# owm-publish:begin - lane owm-autopublish-20260930: stream the cycle's public snapshot to the build pod's owm-publish.sh (publish_candidate decides; test, gate, one land: merge); auto-land (20 */3) deploys. Keeps /api/owm under stale_after_s. Log ~/lanes/logs/owm-publish.log, pod:/workspace/staging/logs/owm-publish.log
+55 2-23/3 * * * flock -n /tmp/owm-publish.lock env FLOOR_ROOT_M=256 $HOME/lanes/bin/disk-floor.sh owm-publish $HOME/lanes/logs/owm-publish.log timeout 600 bash $HOME/lanes/owm-publish-20260930/publish-trigger.sh >/dev/null 2>&1
+# owm-publish:end

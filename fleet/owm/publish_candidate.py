@@ -104,8 +104,22 @@ def validate(snapshot):
     return sorted(set(errors))
 
 
+def as_multiset(value):
+    """Every list compares as a multiset: re-ordering rows is not a change.
+
+    The cycle builds subjects, stages and components from dict and registry iteration, so their order can move
+    between runs while their contents do not. An order-sensitive comparison would land a "semantic_change" (and
+    a deploy) for a pure re-ordering. Nothing here is order-sensitive; a field that ever is must opt in by name.
+    """
+    if isinstance(value, dict):
+        return {k: as_multiset(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return sorted((as_multiset(v) for v in value), key=canonical)
+    return value
+
+
 def semantic_projection(snapshot):
-    """Remove cadence-only fields; retain evidence, states, claims and dependencies."""
+    """Remove cadence-only fields; retain evidence, states, claims and dependencies (lists as multisets)."""
     x = copy.deepcopy(snapshot)
     x.pop("generated_at", None)
     x.pop("run_id", None)
@@ -118,7 +132,7 @@ def semantic_projection(snapshot):
     head = x.get("events_head")
     if isinstance(head, dict):
         head.pop("appended_this_cycle", None)
-    return x
+    return as_multiset(x)
 
 
 def decide(source, target=None, max_interval_s=DEFAULT_MAX_INTERVAL_S):
