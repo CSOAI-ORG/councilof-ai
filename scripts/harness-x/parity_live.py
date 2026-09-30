@@ -225,6 +225,52 @@ def check_site_mcp(net, src, spec):
     names = [t.get("name") for t in tl.get("tools", [])]
     ch.check("tools/list names == fleet lock (order)", names == want_tools,
              f"{len(want_tools)}: {','.join(want_tools)}", f"{len(names)}: {','.join(names)}")
+    # Directory reviews (Claude, OpenAI) read MCP annotations; every served tool must carry all five, and a
+    # free-door tool must declare itself read-only.
+    fields = ("title", "readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint")
+    bare = [t.get("name") for t in tl.get("tools", []) if not all(f in (t.get("annotations") or {}) for f in fields)]
+    ch.check("every tool carries MCP annotations (title, readOnly/destructive/idempotent/openWorld hints)", not bare,
+             "all", "missing on: " + ", ".join(map(str, bare)) if bare else "all")
+    if spec.get("free_only"):
+        rw = [t.get("name") for t in tl.get("tools", []) if (t.get("annotations") or {}).get("readOnlyHint") is not True]
+        ch.check("free door: every tool readOnlyHint true", not rw, "all", ", ".join(map(str, rw)) or "all")
+    return ch
+
+
+def names_sha256(names):
+    return hashlib.sha256("\n".join(sorted(names)).encode("utf-8")).hexdigest()
+
+
+def check_site_server_card(net, src, spec):
+    """SEP-2127 (draft) Server Card at <streamable-http-url>/server-card: identity == source, remote == its door,
+    and the advisory tool snapshot == that door's live tools/list (the card is built from the same definitions)."""
+    ch = Channel(spec["id"], "site-server-card", spec["url"])
+    st, h, b = net.get(spec["url"], accept="application/mcp-server-card+json")
+    if st != 200:
+        ch.check("GET server card answers 200", False, "200", str(st))
+        return ch
+    ch.check("content-type application/mcp-server-card+json", (h.get("content-type") or "").startswith("application/mcp-server-card+json"),
+             "application/mcp-server-card+json", h.get("content-type"))
+    try:
+        card = json.loads(b)
+        tl = net.rpc(spec["door"], "tools/list")
+    except Exception as e:
+        ch.cannot(f"{type(e).__name__}: {e}")
+        return ch
+    ch.check("$schema == server-card v1", card.get("$schema") == "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json",
+             "…/schemas/v1/server-card.schema.json", card.get("$schema"))
+    want_v = src.resolve(spec["version_source"])
+    ch.check("version == source", card.get("version") == want_v, want_v, card.get("version"))
+    remote = ((card.get("remotes") or [{}])[0]).get("url")
+    ch.check("remotes[0].url == its door", remote == spec["door"], spec["door"], remote)
+    meta = ((card.get("_meta") or {}).get("ai.councilof/server-card") or {})
+    ch.check("labelled draft SEP-2127", "SEP-2127" in str(meta.get("spec_status")), "draft SEP-2127, unreleased", meta.get("spec_status"))
+    snap = meta.get("tools_snapshot") or {}
+    live = [t.get("name") for t in tl.get("tools", [])]
+    ch.check("tools_snapshot.names == live tools/list of the same door", snap.get("names") == live,
+             f"{len(live)} live", f"{len(snap.get('names') or [])} in card")
+    ch.check("names_sha256 re-derived", snap.get("names_sha256") == names_sha256(snap.get("names") or []),
+             names_sha256(snap.get("names") or [])[:16], str(snap.get("names_sha256"))[:16])
     return ch
 
 
@@ -380,6 +426,11 @@ def check_pypi(net, src, spec, cache):
 def check_npm(net, src, spec):
     ch = Channel(spec["id"], "npm", spec["name"])
     st, _h, b = net.get("https://registry.npmjs.org/" + spec["name"].replace("/", "%2f"))
+    if st == 404 and spec.get("expect_absent"):
+        # Rendered and not yet published (owner step: npm Bypass-2FA token). Absence is the expected state and
+        # is reported as such; publication turns this row into an ordinary version comparison.
+        ch.check("absent from npm, as expected (not yet published)", True, "absent", "npm 404", note=spec["expect_absent"])
+        return ch
     if st == 404:
         ch.cannot("NOT PUBLISHED (npm 404)")
         return ch
@@ -658,6 +709,8 @@ def run(repo, net, install_root=None, install_python=None):
                 ch = check_site_mcp(net, src, spec)
             elif k == "site-file":
                 ch = check_site_file(net, src, spec)
+            elif k == "site-server-card":
+                ch = check_site_server_card(net, src, spec)
             elif k == "mcp-registry":
                 ch = check_registry(net, src, spec)
             elif k == "pypi":
@@ -769,7 +822,8 @@ def self_test():
     def transport(method, url, headers, body, timeout):
         if url == ident["door"]:
             m = json.loads(body)["method"]
-            res = {"serverInfo": {"version": "1.4.3"}} if m == "initialize" else {"tools": [{"name": "a"}, {"name": "b"}]}
+            ann = {"title": "t", "readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True}
+            res = {"serverInfo": {"version": "1.4.3"}} if m == "initialize" else {"tools": [{"name": "a", "annotations": ann}, {"name": "b", "annotations": ann}]}
             return 200, {}, ("event: message\ndata: " + json.dumps({"jsonrpc": "2.0", "id": 1, "result": res})).encode()
         if url.endswith("/pkg-old/json"):
             return 200, {}, json.dumps({"info": {"version": "0.1.0", "description": links}, "releases": {"0.1.0": [{}]}, "urls": []}).encode()

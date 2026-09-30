@@ -302,7 +302,9 @@ emit("distribution/openai/app.json", j({
   server_version: REMOTE_VERSION,
   tools: tools.map((t) => ({ name: t.id, payment: t.payment, suggested_annotations: { readOnlyHint: t.payment === "free", openWorldHint: true, destructiveHint: false } })),
   tool_count: tools.length,
-  live_tools_carry_annotations: false,
+  // Read from the served definitions: every tool on both doors carries MCP annotations since 2026-09-27.
+  live_tools_carry_annotations: [...readJson("functions/mcp/gspc-tools.json").tools, ...readJson("functions/mcp/paid-tools.json").tools]
+    .every((t) => t.annotations && typeof t.annotations.readOnlyHint === "boolean" && typeof t.annotations.destructiveHint === "boolean"),
   test_prompts: [
     { prompt: "What does the GSPC board say right now?", expected_tool: "board_totals" },
     { prompt: "Verify this measurement card: <card JSON>", expected_tool: "verify_card" },
@@ -1049,6 +1051,425 @@ emit("public/.well-known/mcp.json", j({
   generated_by: WELL_KNOWN_GENERATOR,
 }));
 
+// ── 10b. Master plugin formats (2026-09-30): ChatGPT plugin ZIP, Copilot Studio connector, GCP A2A kit,
+//         Dify plugin, connect-page matrix. RENDERED ONLY — nothing here is submitted. Public name: GSPC.
+// A ZIP is rendered deterministically (stored entries, fixed 1980-01-01 timestamps, sorted names), so
+// render --check can compare its bytes like any other output.
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+const crc32 = (buf) => {
+  let c = 0xffffffff;
+  for (const b of buf) c = CRC_TABLE[(c ^ b) & 0xff] ^ (c >>> 8);
+  return (c ^ 0xffffffff) >>> 0;
+};
+function zipStore(entries /* [name, Buffer|string][] */) {
+  const files = entries.map(([name, data]) => [name, Buffer.isBuffer(data) ? data : Buffer.from(data, "utf8")])
+    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+  const locals = [], centrals = [];
+  let offset = 0;
+  for (const [name, data] of files) {
+    const n = Buffer.from(name, "utf8");
+    const crc = crc32(data);
+    const lh = Buffer.alloc(30);
+    lh.writeUInt32LE(0x04034b50, 0); lh.writeUInt16LE(20, 4); lh.writeUInt16LE(0x0800, 6); lh.writeUInt16LE(0, 8);
+    lh.writeUInt16LE(0, 10); lh.writeUInt16LE(0x21, 12); lh.writeUInt32LE(crc, 14);
+    lh.writeUInt32LE(data.length, 18); lh.writeUInt32LE(data.length, 22); lh.writeUInt16LE(n.length, 26); lh.writeUInt16LE(0, 28);
+    locals.push(lh, n, data);
+    const ch = Buffer.alloc(46);
+    ch.writeUInt32LE(0x02014b50, 0); ch.writeUInt16LE(20, 4); ch.writeUInt16LE(20, 6); ch.writeUInt16LE(0x0800, 8);
+    ch.writeUInt16LE(0, 10); ch.writeUInt16LE(0, 12); ch.writeUInt16LE(0x21, 14); ch.writeUInt32LE(crc, 16);
+    ch.writeUInt32LE(data.length, 20); ch.writeUInt32LE(data.length, 24); ch.writeUInt16LE(n.length, 28);
+    ch.writeUInt32LE(0, 30); ch.writeUInt32LE(0, 34); ch.writeUInt32LE(0, 38); ch.writeUInt32LE(offset, 42);
+    centrals.push(ch, n);
+    offset += 30 + n.length + data.length;
+  }
+  const cd = Buffer.concat(centrals);
+  const end = Buffer.alloc(22);
+  end.writeUInt32LE(0x06054b50, 0); end.writeUInt16LE(files.length, 8); end.writeUInt16LE(files.length, 10);
+  end.writeUInt32LE(cd.length, 12); end.writeUInt32LE(offset, 16);
+  return Buffer.concat([...locals, cd, end]);
+}
+const rowById = (id) => dist.distribution.find((r) => r.id === id);
+const FREE_URL = `${ID.door}/free`;
+const freeDefs = readJson("functions/mcp/gspc-tools.json").tools;
+const paidDefs = readJson("functions/mcp/paid-tools.json").tools;
+const GSPC_ONE_LINE = "GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation.";
+const DOCTRINE_LINE = `Measurement, not certification: every answer is evidence with its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE), never a grade, mark or status. Doctrine sha256 ${DOCTRINE.sha256} (${DOCTRINE.human_page}).`;
+const PNG_LOGO = readFileSync(join(REPO, "public/apple-touch-icon.png"));
+const SVG_ICON = read("public/csoai-icon.svg");
+
+// H1 — ChatGPT / OpenAI plugin, Agent Plugins format (developers.openai.com/plugins/deploy/submission, read
+// 2026-09-30): plugin.json at the root, mcp.json with EXACTLY one remote MCP server, an onboarding skill.
+// Free door only: paid x402 tools stay out until the owner has read OpenAI's commerce policy.
+{
+  const OP = "distribution/openai-plugin";
+  const pluginJson = j({
+    $schema: "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+    name: PLUGIN,
+    version: REMOTE_VERSION,
+    description: `${GSPC_ONE_LINE} Measurement, not certification.`,
+    author: { name: ID.publisher, email: ID.email, url: ID.website },
+    homepage: `${ID.website}/connect/`,
+    license: "Apache-2.0",
+    keywords: ["gspc", "measurement", "verification", "evidence", "mcp"],
+    extensions: {
+      "com.openai": {
+        interface: {
+          displayName: "GSPC",
+          shortDescription: "Read the GSPC board and verify signed cards",
+          longDescription: `${GSPC_ONE_LINE} ${freeDefs.length} read-only tools over the free door (${FREE_URL}); no sign-in, nothing on it moves money. Every answer states what was measured and what was not. ${STANCE}`,
+          developerName: ID.publisher,
+          category: "Research",
+          capabilities: ["Read the live measurement board", "Verify signed measurement cards", "List evidence relevant to an obligation"],
+          websiteURL: `${ID.website}/connect/`,
+          supportURL: ID.support,
+          privacyPolicyURL: ID.privacy,
+          termsOfServiceURL: ID.terms,
+          defaultPrompt: [
+            "What does the GSPC board show right now?",
+            "Verify the newest card in the GSPC signed card index.",
+            "Which signed GSPC cards are relevant to EU AI Act Article 50?",
+          ],
+          brandColor: "#047857",
+          brandColorDark: "#6EE7B7",
+          logo: "./assets/logo.png",
+        },
+        onboardingSkill: "./skills/get-started/SKILL.md",
+        review: {
+          test_cases: {
+            positive: [
+              { description: "Board totals", prompt: "What does the GSPC board show right now?", tools_triggered: "board_totals", expected_behavior: "Quote the live slot and measured counts as two labelled numbers with the board's dates; never sum them." },
+              { description: "One axis", prompt: "Show the GSPC provenance axis.", tools_triggered: "get_axis", expected_behavior: "Return the axis status and its run, or UNMEASURED; never invent a number." },
+              { description: "Verify a card", prompt: "Verify the first card in https://councilof.ai/signed/card_index.json.", tools_triggered: "list_cards, verify_card", expected_behavior: "Return VALID, INVALID with the failed check, or UNCHECKABLE with the reason." },
+              { description: "Evidence relevant to an obligation", prompt: "Which signed GSPC cards are relevant to EU AI Act Article 50?", tools_triggered: "evidence_bundle_preview", expected_behavior: "Return the count and first cards, labelled relevant-to and never a determination." },
+              { description: "Endpoint with no measurement", prompt: "What has GSPC published about https://example.com/mcp?", tools_triggered: "server_evidence", expected_behavior: "Answer NOT_MEASURED with an empty list; never a clean bill." },
+            ],
+            negative: [
+              { description: "Status request", prompt: "Give my model an official EU AI Act status." },
+              { description: "Payment request", prompt: "Pay for an evidence bundle from my card." },
+              { description: "Legal advice", prompt: "Tell me whether my company meets its Article 53 legal obligations." },
+            ],
+          },
+          commerce: false,
+          commerce_description: "This plugin connects the free read-only door only; it sells nothing and processes no payments.",
+        },
+        publication: { release_notes: `GSPC ${REMOTE_VERSION}: ${freeDefs.length} read-only tools over ${FREE_URL}.` },
+      },
+    },
+  });
+  const mcpJson = j({ $schema: "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json", mcpServers: { [PLUGIN]: { type: "streamable-http", url: FREE_URL } } });
+  const skill = `---
+name: get-started
+description: Start with GSPC — read the live measurement board, verify a signed card, and list the signed cards relevant to one obligation. Measurement, not certification.
+---
+
+# Get started with GSPC
+
+GSPC is the measurement board published by ${ID.publisher} at ${ID.website}. This plugin connects its free MCP door,
+${FREE_URL}: ${freeDefs.length} read-only tools, no sign-in, nothing on it moves money.
+
+1. Ask for the board: \`board_totals\` returns the slot count and the measured count as two labelled numbers. Quote both; never add them.
+2. Ask about one axis: \`get_axis\` returns its status and run, or UNMEASURED. UNMEASURED is an answer, not a zero.
+3. Verify a card: \`verify_card\` returns VALID, INVALID (with the failed check) or UNCHECKABLE (with the reason).
+4. Evidence for one obligation: \`evidence_bundle_preview\` lists the already-signed cards relevant to article-50, article-53, dora or cra. Relevant-to is never a determination; Article 53 output is evidence for review, not a legal determination.
+
+Tools on this door:
+${freeDefs.map((t) => `- \`${t.name}\` — ${firstSentence(t.description)}`).join("\n")}
+
+${DOCTRINE_LINE}
+
+${LINKS}
+`;
+  emit(`${OP}/plugin.json`, pluginJson);
+  emit(`${OP}/mcp.json`, mcpJson);
+  emit(`${OP}/skills/get-started/SKILL.md`, skill);
+  emit(`${OP}/assets/logo.png`, PNG_LOGO);
+  emit("distribution/packages/gspc-openai-plugin.zip", zipStore([
+    ["plugin.json", pluginJson], ["mcp.json", mcpJson], ["skills/get-started/SKILL.md", skill], ["assets/logo.png", PNG_LOGO],
+  ]));
+}
+
+// H4 — Copilot Studio / Power Platform MCP connector (learn.microsoft.com/…/mcp-server-certification, read 2026-09-30):
+// the connector's OpenAPI 2.0 definition marks ONE operation with x-ms-agentic-protocol: mcp-streamable-1.0.
+{
+  const CS = "distribution/copilot-studio";
+  const swagger = {
+    swagger: "2.0",
+    info: {
+      title: "GSPC",
+      description: `${GSPC_ONE_LINE} Measurement, not certification.`,
+      version: REMOTE_VERSION,
+      contact: { name: ID.publisher, url: ID.website, email: ID.email },
+    },
+    host: new URL(ID.website).host,
+    basePath: "/",
+    schemes: ["https"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+    paths: {
+      "/mcp/free": {
+        post: {
+          summary: "GSPC measurement records (free, read-only MCP)",
+          description: `Streamable HTTP MCP server with ${freeDefs.length} read-only tools. Tool definitions and annotations are read from tools/list at run time.`,
+          "x-ms-agentic-protocol": "mcp-streamable-1.0",
+          operationId: "InvokeGSPC",
+          responses: { 200: { description: "Success" } },
+        },
+      },
+    },
+    securityDefinitions: {},
+    security: [],
+    "x-ms-connector-metadata": [
+      { propertyName: "Website", propertyValue: `${ID.website}/connect/` },
+      { propertyName: "Privacy policy", propertyValue: ID.privacy },
+      { propertyName: "Categories", propertyValue: "AI;Data" },
+    ],
+  };
+  emit(`${CS}/apiDefinition.swagger.json`, j(swagger));
+  emit(`${CS}/apiProperties.json`, j({
+    properties: {
+      connectionParameters: {},
+      iconBrandColor: "#047857",
+      capabilities: [],
+      publisher: ID.publisher,
+      stackOwner: ID.publisher,
+      policyTemplateInstances: [],
+    },
+  }));
+  emit(`${CS}/icon.png`, PNG_LOGO);
+  emit(`${CS}/intro.md`, `# GSPC
+
+${GSPC_ONE_LINE}
+
+## Publisher: ${ID.publisher}
+
+## Prerequisites
+
+None. The server is ${FREE_URL}; it needs no account and no key, and nothing on it moves money.
+
+## Supported operations
+
+One MCP operation, \`InvokeGSPC\` (Streamable HTTP). Copilot Studio reads the tools from the server's tools/list:
+
+${freeDefs.map((t) => `- \`${t.name}\` — ${firstSentence(t.description)}`).join("\n")}
+
+Every tool is read-only (\`readOnlyHint: true\`, \`destructiveHint: false\`).
+
+## Obtaining credentials
+
+No credentials are needed. **Known gap for Microsoft's connector review:** its MCP publishing process asks for an authentication
+method (OAuth 2.0, API key or Basic); this server is no-auth today, so this package is RENDERED, NOT SUBMITTED. A tenant can
+add the same URL itself: Agent → Tools → Add a tool → New tool → Model Context Protocol.
+
+## Known issues and limitations
+
+- Answers are point-in-time reads of published records. An unreachable source is answered UNREACHABLE; no cached number is substituted.
+- Evidence relevant to an obligation is never a determination. Article 53 output is evidence for review, not a legal determination.
+
+${DOCTRINE_LINE}
+
+${LINKS}
+`);
+}
+
+// H5 — Google Cloud Marketplace AI-agent listing kit (A2A only). The card is the SERVED card, byte for byte.
+{
+  const GC = "distribution/gcp-marketplace";
+  const card = read("public/.well-known/agent-card.json");
+  const cardDoc = JSON.parse(card);
+  emit(`${GC}/agent-card.json`, card);
+  emit(`${GC}/LISTING.md`, `# GSPC — Google Cloud Marketplace AI agent listing kit (A2A)
+
+RENDERED, NOT SUBMITTED. Owner steps: GCP vendor onboarding, then the Producer Portal AI-agent offer.
+
+- Agent Card: \`agent-card.json\` in this folder is byte-identical to ${ID.website}/.well-known/agent-card.json (check.mjs holds them equal).
+  Upload it to the Cloud Storage bucket the Producer Portal names.
+- A2A interface: ${(cardDoc.supportedInterfaces || []).map((i) => `${i.url} (${i.protocolBinding}, A2A ${i.protocolVersion})`).join("; ")}.
+- Skills (${(cardDoc.skills || []).length}): ${(cardDoc.skills || []).map((s) => `\`${s.id}\``).join(", ")}.
+- Signature: ${(cardDoc.signatures || []).length ? `${cardDoc.signatures.length} AgentCardSignature(s) (JWS over the A2A §8.4 signing input); verify with scripts/verify_agent_card_jws.py.` : "UNSIGNED."}
+- Pricing: free listing. Paid evidence stays on x402 per delivered work, outside the Marketplace; no price appears in the listing.
+- Name: GSPC. Category: AI agents (A2A). Support: ${ID.support}. Privacy: ${ID.privacy}.
+
+${DOCTRINE_LINE}
+
+${LINKS}
+`);
+}
+
+// H7 — Dify tool plugin: one Dify tool per free MCP tool, each a thin JSON-RPC call to the free door.
+{
+  const DF = "distribution/dify/gspc";
+  const yq = (s) => JSON.stringify(s);
+  const cls = (n) => n.split("_").map(cap).join("") + "Tool";
+  const pyDoor = (name) => `"""GSPC ${name} for Dify. Generated by scripts/harness-x/render.mjs — do not hand-edit."""
+import json
+import urllib.request
+from collections.abc import Generator
+from typing import Any
+
+from dify_plugin import Tool
+from dify_plugin.entities.tool import ToolInvokeMessage
+
+DOOR = ${yq(FREE_URL)}
+
+
+class ${cls(name)}(Tool):
+    def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage, None, None]:
+        args = {k: v for k, v in tool_parameters.items() if v not in (None, "")}
+        body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call", "params": {"name": ${yq(name)}, "arguments": args}}).encode()
+        req = urllib.request.Request(DOOR, data=body, headers={"content-type": "application/json", "accept": "application/json, text/event-stream"})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            text = r.read().decode("utf-8")
+        frames = [line[5:].strip() for line in text.splitlines() if line.startswith("data:")]
+        msg = json.loads(frames[-1] if frames else text)
+        result = msg.get("result") or {}
+        yield self.create_json_message(result.get("structuredContent") or {"error": msg.get("error")})
+`;
+  const paramType = (s) => (s.enum ? "select" : s.type === "boolean" ? "boolean" : s.type === "integer" || s.type === "number" ? "number" : "string");
+  const toolYaml = (t) => {
+    const props = t.inputSchema?.properties || {};
+    const req = new Set(t.inputSchema?.required || []);
+    const params = Object.entries(props).map(([k, s]) => `  - name: ${k}
+    type: ${paramType(s)}
+    required: ${req.has(k)}
+    label:
+      en_US: ${yq(k)}
+    human_description:
+      en_US: ${yq(s.description || k)}
+    llm_description: ${yq(s.description || k)}
+    form: llm${s.enum ? `
+    options:
+${s.enum.map((v) => `      - value: ${yq(v)}
+        label:
+          en_US: ${yq(v)}`).join("\n")}` : ""}`).join("\n");
+    return `identity:
+  name: ${t.name}
+  author: csoai
+  label:
+    en_US: ${yq(t.title || t.name)}
+description:
+  human:
+    en_US: ${yq(firstSentence(t.description))}
+  llm: ${yq(t.description)}
+parameters:${params ? `\n${params}` : " []"}
+extra:
+  python:
+    source: tools/${t.name}.py
+`;
+  };
+  const files = [];
+  const add = (rel, text) => { emit(`${DF}/${rel}`, text); files.push([rel, text]); };
+  add("manifest.yaml", `version: ${REMOTE_VERSION}
+type: plugin
+author: csoai
+name: ${PLUGIN}
+label:
+  en_US: GSPC
+description:
+  en_US: ${yq(`${GSPC_ONE_LINE} Measurement, not certification.`)}
+icon: icon.svg
+resource:
+  memory: 268435456
+  permission:
+    tool:
+      enabled: true
+plugins:
+  tools:
+    - provider/gspc.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+created_at: 2026-09-30T00:00:00Z
+privacy: PRIVACY.md
+`);
+  add("main.py", `"""GSPC Dify plugin entrypoint. Generated by scripts/harness-x/render.mjs — do not hand-edit."""
+from dify_plugin import DifyPluginEnv, Plugin
+
+plugin = Plugin(DifyPluginEnv(MAX_REQUEST_TIMEOUT=120))
+
+if __name__ == "__main__":
+    plugin.run()
+`);
+  add("requirements.txt", "dify_plugin>=0.4.0,<0.7.0\n");
+  add("PRIVACY.md", `# Privacy
+
+The plugin sends each tool call's arguments to ${FREE_URL} and returns the answer. ${ID.publisher} stores no account data for it;
+the site's privacy policy is ${ID.privacy}. Nothing on the free door moves money.
+`);
+  add("README.md", `# GSPC for Dify
+
+${GSPC_ONE_LINE} ${freeDefs.length} read-only tools, each a direct call to the free MCP door ${FREE_URL} (no sign-in).
+Dify can also add the same door with no plugin at all: Tools → MCP → Add MCP Server (HTTP) → ${FREE_URL}.
+
+${freeDefs.map((t) => `- \`${t.name}\` — ${firstSentence(t.description)}`).join("\n")}
+
+RENDERED, NOT SUBMITTED: the Marketplace route is a PR of \`gspc.difypkg\` to langgenius/dify-plugins from a public account (owner step).
+
+${DOCTRINE_LINE}
+
+${LINKS}
+`);
+  add("_assets/icon.svg", SVG_ICON);
+  add("provider/gspc.yaml", `identity:
+  author: csoai
+  name: ${PLUGIN}
+  label:
+    en_US: GSPC
+  description:
+    en_US: ${yq(GSPC_ONE_LINE)}
+  icon: icon.svg
+tools:
+${freeDefs.map((t) => `  - tools/${t.name}.yaml`).join("\n")}
+extra:
+  python:
+    source: provider/gspc.py
+`);
+  add("provider/gspc.py", `"""GSPC tool provider for Dify. No credentials: the free door needs none. Generated by scripts/harness-x/render.mjs."""
+from typing import Any
+
+from dify_plugin import ToolProvider
+
+
+class GspcProvider(ToolProvider):
+    def _validate_credentials(self, credentials: dict[str, Any]) -> None:
+        return None
+`);
+  for (const t of freeDefs) {
+    add(`tools/${t.name}.yaml`, toolYaml(t));
+    add(`tools/${t.name}.py`, pyDoor(t.name));
+  }
+  emit("distribution/packages/gspc.difypkg", zipStore(files));
+}
+
+// H3 — connect-page matrix (C6 consumes it): exact copy-paste per client; the two doors are the only URLs.
+{
+  const cm = dist.connect_matrix;
+  const fill = (s) => s.replaceAll("{free}", FREE_URL).replaceAll("{full}", ID.door);
+  emit("distribution/connect/connect-matrix.json", j({
+    schema: "csoai.connect-matrix/1",
+    generated_by: "scripts/harness-x/render.mjs from council-os/distribution.json#/connect_matrix — do not hand-edit",
+    what: cm.what,
+    doors: { free: { url: FREE_URL, what: cm.doors.free }, full: { url: ID.door, what: cm.doors.full } },
+    tool_counts: { free: freeDefs.length, full: freeDefs.length + paidDefs.length, note: "array lengths of functions/mcp/gspc-tools.json and paid-tools.json at render time" },
+    live_check: "distribution/connect/connect-live-check.json (scripts/harness-x/connect-live.mjs)",
+    doctrine: DOCTRINE,
+    clients: cm.clients.map((c) => ({ ...c, url: c.door === "full" ? ID.door : FREE_URL, snippet: fill(c.snippet) })),
+  }));
+}
+
 // ── 11. SUBMIT.md ───────────────────────────────────────────────────────────────────────────
 const rowsById0 = Object.fromEntries(dist.distribution.map((r) => [r.id, r]));
 const PY_ORDER = `Publish csoai-gspc ${pyClientVersion} to PyPI first: this package requires csoai-gspc>=${pyClientVersion}, and \`scripts/harness-x/parity_live.py\` reports that floor uninstallable until it is there. (The floor also keeps out 0.2.20260928, a snapshot release cut on 2026-09-28 from pre-2026-09-26 client code; gspc-spray.py now refuses a package source older than the one PyPI serves.)`;
@@ -1073,8 +1494,8 @@ const STEPS = {
   "cursor-plugin": ["Same repo as claude-plugin; submit it through Cursor's marketplace publisher flow (Cursor account login)."],
   "grok-plugin": ["Same repo as claude-plugin; the marketplace file sits at .grok-plugin/marketplace.json with source `./`."],
   "claude-connector": [
-    "Fill Anthropic's connectors-directory submission form from distribution/claude/connector.json (every field is there).",
-    "Blocker to clear first: the live tools/list carries no MCP tool annotations (readOnlyHint etc.); directory review expects them. Add them in functions/mcp/gspc-tools.json + paid-tools.json (another lane).",
+    "SUBMITTED 2026-09-28 (the free door, /mcp/free); review pending in the directory portal. Nothing further to submit.",
+    "Every tool on both doors carries MCP annotations (title, readOnlyHint, destructiveHint, idempotentHint, openWorldHint); check.mjs holds that. The directory listing names the free door only (Software Directory Policy 4.A).",
   ],
   "gemini-extension": [
     "Put distribution/gemini/ at the root of a public repo on CouncilofAI-CSOAI; add the GitHub topic `gemini-cli-extension` so the gallery indexes it.",
@@ -1083,7 +1504,8 @@ const STEPS = {
   "openai-app": [
     "OpenAI organisation verification must be complete on the submitting org (owner login).",
     "Submit in the OpenAI platform dashboard using distribution/openai/app.json; use test_prompts verbatim.",
-    "Blockers: (1) live tools carry no readOnlyHint/destructiveHint annotations — suggested values are in app.json; (2) owner decision whether the four x402 tools may appear in a ChatGPT app at all.",
+    "Superseded for ChatGPT by the plugin ZIP (openai-plugin row): OpenAI now takes plugins as a ZIP upload. Annotations are live on every tool (check.mjs holds it).",
+    `Owner decision still open: whether the ${word(paid.length)} x402 tools may appear in a ChatGPT app at all (the plugin ZIP connects the free door only).`,
     "Custom GPT Actions need no review: Import from URL → the openapi_actions URL.",
   ],
   "pypi-langchain-csoai": [
@@ -1111,6 +1533,28 @@ const STEPS = {
     `\`huggingface-cli upload ${rowsById0["hf-space"].space_id} distribution/hf-space/csoai-gspc-mcp . --repo-type space\` with an owner HF write token. The live Space is ${rowsById0["hf-space"].space_id}; never upload to csoai/gspc-mcp, which is the static GSPC-MCP axis printer.`,
   ],
   "well-known-server-card": ["Merge this lane; the next deploy serves the regenerated files."],
+  "openai-plugin": [
+    "Owner: OpenAI organisation or business verification and domain verification on the submitting org (https://platform.openai.com/plugins).",
+    "Upload distribution/packages/gspc-openai-plugin.zip (the folder distribution/openai-plugin/ is the same bytes, unzipped). It connects exactly one MCP server, the free door; commerce is false.",
+    "Before review: record the demo video (demo_recording_url is not in the ZIP; the review needs one) and, optionally, add screenshots and dark icons under assets/. Then submit for review.",
+  ],
+  "copilot-studio-connector": [
+    "Owner: verified publisher with a business-verified Partner Center account, enrolled in the Microsoft 365 and Copilot program.",
+    "BLOCKER: certification requires OAuth 2.0, API key or Basic authentication; both doors are no-auth. Decide whether to add a token endpoint before submitting.",
+    "Partner Center → New offer → Connectors and Agents for Microsoft Copilot Studio; upload distribution/copilot-studio/ (apiDefinition.swagger.json, apiProperties.json, intro.md, icon.png).",
+    "Without certification a tenant can add the free door itself (Copilot Studio → Tools → Add a tool → Model Context Protocol); that path is on /connect/.",
+  ],
+  "gcp-marketplace-a2a": [
+    "Owner: Google Cloud Marketplace vendor onboarding (https://docs.cloud.google.com/marketplace/docs/partners/offer-products#initiate-onboarding) and Google sign-in integration.",
+    "Producer Portal → AI agent offer; upload distribution/gcp-marketplace/agent-card.json to the named Cloud Storage bucket and fill the listing from LISTING.md. Free listing.",
+  ],
+  "dify-plugin": [
+    "Owner: fork langgenius/dify-plugins from a public, unflagged account; add distribution/packages/gspc.difypkg under the csoai author folder; open the PR.",
+    "Test first in a Dify instance: Plugins → Install from local package file → gspc.difypkg (the folder distribution/dify/gspc/ is the same bytes).",
+  ],
+  "connect-matrix": [
+    "Nothing to submit: /connect/ renders it. After a deploy, run `node scripts/harness-x/connect-live.mjs` and commit distribution/connect/connect-live-check.json.",
+  ],
 };
 const rows = dist.distribution;
 const missingSteps = rows.filter((r) => !STEPS[r.id]).map((r) => r.id);
@@ -1151,8 +1595,8 @@ ${STEPS[r.id].map((s, i) => `${i + 1}. ${s}`).join("\n")}
 3. **Doctrine text.** \`docs/DOCTRINE.md\` rule 4 types a board grammar ("22 · 15 · 7") that the live board no longer prints.
    Outputs carry only the hash, so nothing stale is copied; fix the text, then \`render.mjs --pin-doctrine\`.
 4. **Second registry name** (\`${dist.registry_names.domain}\`) — keep both names or one.
-5. **A2A agent card signature.** \`/.well-known/agent-card.json\` has no \`signatures\` block. \`scripts/adapters/agent_card_jws.py\`
-   emits the signing input; signing needs the card-attestation-1 key holder (K3 lane). Not done here.
+5. **A2A agent card signature.** The card is signed under \`did:web:csoai.org#card-attestation-2\` (key on oracle-micro-2 only);
+   any change to its skills is re-signed on that host with \`scripts/adapters/agent_card_jws.py --sign\`.
 6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all ${tools.length} tools, or wait.
 `);
 
@@ -1182,8 +1626,9 @@ let bad = 0;
 for (const [rel, text] of outputs) {
   const abs = join(REPO, rel);
   if (CHECK) {
-    const cur = existsSync(abs) ? readFileSync(abs, "utf8") : null;
-    if (cur !== text) { bad++; console.error(`DRIFT ${rel}: ${cur === null ? "missing" : `${cur.length} B committed vs ${text.length} B rendered`}`); }
+    const bin = Buffer.isBuffer(text);
+    const cur = existsSync(abs) ? readFileSync(abs, bin ? undefined : "utf8") : null;
+    if (bin ? !(cur && cur.equals(text)) : cur !== text) { bad++; console.error(`DRIFT ${rel}: ${cur === null ? "missing" : `${cur.length} B committed vs ${text.length} B rendered`}`); }
   } else {
     mkdirSync(dirname(abs), { recursive: true });
     writeFileSync(abs, text);

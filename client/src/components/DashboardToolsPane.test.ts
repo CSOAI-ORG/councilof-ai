@@ -8,7 +8,7 @@ import {
 } from "./DashboardToolsPane";
 
 describe("dashboard MCP inventory", () => {
-  it("matches the runtime's twelve free and four paid tools", () => {
+  it("matches the runtime's free and paid tools, by name", () => {
     expect(FREE_TOOLS).toEqual([
       "board_totals",
       "get_axis",
@@ -22,14 +22,16 @@ describe("dashboard MCP inventory", () => {
       "measurement_index",
       "verify_capsule",
       "server_evidence",
+      "evidence_bundle_preview",
     ]);
     expect(METERED_TOOLS).toEqual([
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch",
+      "evidence_bundle",
     ]);
-    expect(PUBLISHED_TOOL_COUNT).toBe(16);
+    expect(PUBLISHED_TOOL_COUNT).toBe(18);
   });
 
   it("does not advertise the quarantined witness SKU", () => {

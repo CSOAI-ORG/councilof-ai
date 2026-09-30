@@ -11,6 +11,8 @@
  * from the files the site serves, never typed.
  */
 import { createHash } from "node:crypto";
+import FLEET_LOCK_FOR_COUNT from "./tool-fleet.lock.json";
+const LOCK_FREE: string[] = FLEET_LOCK_FOR_COUNT.free;
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -163,9 +165,9 @@ describe("/api/proof carries the same note (one producer)", () => {
 });
 
 describe("the MCP surface: tool count unchanged, and the first line leads with the note", () => {
-  it("tools/list still lists 12 free tools; verify_inclusion's definition is untouched", () => {
+  it("tools/list still lists the locked free tools; verify_inclusion's definition is untouched", () => {
     const tools = (GSPC_TOOLS as { tools: { name: string }[] }).tools;
-    expect(tools.length).toBe(12);
+    expect(tools.map((t) => t.name)).toEqual(LOCK_FREE);
     expect(tools.map((t) => t.name)).toContain("verify_inclusion");
   });
 

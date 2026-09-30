@@ -10,12 +10,30 @@
  *     tools/list serves (via ConnectClaude's TOOLS), so no count or name is typed here;
  *   - the A2A endpoint and protocol version are the ones /.well-known/agent.json declares;
  *   - paid tools are described as returning an x402 challenge, never as "buying" a result.
+ *   - the per-platform setup blocks come from distribution/connect/connect-matrix.json, rendered by
+ *     scripts/harness-x/render.mjs from council-os/distribution.json; every block names only the two doors,
+ *     and scripts/harness-x/connect-live.mjs checks each one against them (connect-live-check.json).
  * No price, no certification claim, no ranking.
  */
 import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import { CLAUDE_CODE_CMD, CURSOR_JSON, FREE_DOOR, ONE_LINE, TOOLS } from "./ConnectClaude";
 import { setMetaDescription } from "@/lib/utils";
+import CONNECT_MATRIX from "../../../distribution/connect/connect-matrix.json";
+
+type ConnectClient = {
+  id: string;
+  platform: string;
+  group: string;
+  door: "free" | "full";
+  where: string;
+  kind: string;
+  snippet: string;
+  docs: string;
+  url: string;
+};
+export const PLATFORMS = (CONNECT_MATRIX as { clients: ConnectClient[] }).clients;
+const GROUPS = [...new Set(PLATFORMS.map((c) => c.group))];
 
 export const FULL_DOOR = "https://councilof.ai/mcp";
 export const AGENT_CARD = "https://councilof.ai/.well-known/agent.json";
@@ -90,7 +108,7 @@ export default function ConnectHub() {
   useEffect(() => {
     document.title = "Connect an agent | Council of AI";
     setMetaDescription(
-      "Connect Claude, Cursor or any MCP or A2A client: the free read-only MCP door, the full MCP endpoint, the A2A agent card and an offline verifier.",
+      "Connect Claude, ChatGPT, Cursor, VS Code, Copilot Studio, Gemini and other MCP or A2A clients to GSPC: copy-paste setup, the free read-only door, the full endpoint, the A2A agent card and an offline verifier.",
     );
   }, []);
 
@@ -113,6 +131,7 @@ export default function ConnectHub() {
           <ul className="mt-6 flex list-none flex-wrap gap-2 p-0 text-sm font-semibold">
             {[
               ["#free", "Free MCP door"],
+              ["#platforms", "GSPC in your platform"],
               ["#full", "Full MCP endpoint"],
               ["#a2a", "A2A agent card"],
               ["#http", "Plain HTTP"],
@@ -155,6 +174,45 @@ export default function ConnectHub() {
                 the Claude and Cursor guide →
               </Link>
             </p>
+          </Door>
+        </div>
+
+        <div id="platforms" className="scroll-mt-24">
+          <Door id="platforms-h" kicker="Paste one address" title="GSPC in your platform">
+            <p className="t-body mt-3 max-w-3xl text-muted-foreground">
+              {PLATFORMS.length} clients take a pasted MCP address. Each block below is the exact text to paste; it names
+              only <code className="font-mono text-foreground">{FREE_DOOR}</code> (read-only, no key) or{" "}
+              <code className="font-mono text-foreground">{FULL_DOOR}</code> (the same tools plus metered evidence
+              tools). Every address in these blocks was checked against the live server; the menus named in each
+              block follow the vendor&apos;s own documentation, linked below it.
+            </p>
+            {GROUPS.map((group) => (
+              <div key={group} className="mt-6">
+                <h3 className="text-sm font-bold uppercase tracking-[0.14em] text-muted-foreground">{group}</h3>
+                <div className="mt-2 grid grid-cols-[minmax(0,1fr)] gap-2">
+                  {PLATFORMS.filter((c) => c.group === group).map((c) => (
+                    <details
+                      key={c.id}
+                      id={`connect-${c.id}`}
+                      className="group min-w-0 rounded-xl border border-border bg-background px-3.5 py-2.5"
+                      data-testid={`connect-platform-${c.id}`}
+                    >
+                      <summary className="flex min-h-9 cursor-pointer list-none items-center justify-between gap-3 font-semibold text-foreground">
+                        <span className="min-w-0">GSPC for {c.platform}</span>
+                        <span className="shrink-0 text-xs font-medium text-muted-foreground">
+                          {c.door === "free" ? "free door" : "full door"}
+                        </span>
+                      </summary>
+                      <p className="mt-2 text-[13px] leading-snug text-muted-foreground">{c.where}</p>
+                      <Code label={c.platform} text={c.snippet} />
+                      <p className="mt-2 text-[13px] leading-snug text-muted-foreground">
+                        Vendor documentation: <A href={c.docs}>{new URL(c.docs).host}</A>
+                      </p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            ))}
           </Door>
         </div>
 

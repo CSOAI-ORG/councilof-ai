@@ -1,0 +1,25 @@
+identity:
+  author: csoai
+  name: gspc
+  label:
+    en_US: GSPC
+  description:
+    en_US: "GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation."
+  icon: icon.svg
+tools:
+  - tools/board_totals.yaml
+  - tools/get_axis.yaml
+  - tools/verify_card.yaml
+  - tools/list_cards.yaml
+  - tools/get_root.yaml
+  - tools/get_card.yaml
+  - tools/verify_inclusion.yaml
+  - tools/x402_trust.yaml
+  - tools/mcp_trust.yaml
+  - tools/measurement_index.yaml
+  - tools/verify_capsule.yaml
+  - tools/server_evidence.yaml
+  - tools/evidence_bundle_preview.yaml
+extra:
+  python:
+    source: provider/gspc.py

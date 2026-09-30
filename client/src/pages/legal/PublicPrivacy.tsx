@@ -98,7 +98,7 @@ export default function PublicPrivacy() {
             <p className="mt-3 leading-7 text-slate-700">
               https://councilof.ai/mcp and https://councilof.ai/mcp/free are Model Context Protocol
               servers that AI clients such as Claude call on your behalf. /mcp/free carries only the
-              free read-only tools. /mcp carries those plus four x402-metered tools. Both are handled by
+              free read-only tools. /mcp carries those plus the x402-metered tools its tools/list names. Both are handled by
               functions/mcp/[[path]].ts. No account, sign-in, key or cookie is used on either.
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-6 leading-7 text-slate-700">

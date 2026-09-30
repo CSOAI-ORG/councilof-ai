@@ -40,6 +40,7 @@
 import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_lib/measurementCapsule";
 import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
 import { recordUsage } from "../_lib/usage";
+import { evidenceBundlePreview } from "../mcp/_evidence";
 
 type Json = Record<string, unknown>;
 
@@ -165,6 +166,7 @@ export const SKILL_IDS = [
   "estate-index",
   "measurement-capsules",
   "server-evidence",
+  "evidence-bundle",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -451,6 +453,15 @@ function validateSkillInput(selection: SkillSelection): string | null {
     if (!u || u.length > 2_048) return "server-evidence endpoint_url must be a non-empty string of at most 2048 characters";
     return null;
   }
+  // The free evidence-bundle preview: the same module (functions/mcp/_evidence.ts) as the MCP tool
+  // evidence_bundle_preview, so the two doors cannot disagree about which cards are relevant.
+  if (skill === "evidence-bundle") {
+    if (!exactKeys(input, ["obligation"], ["subject"])) return "evidence-bundle input requires obligation, with optional subject";
+    const ob = str(input.obligation);
+    if (!ob || !["article-50", "article-53", "dora", "cra"].includes(ob)) return "evidence-bundle obligation must be article-50, article-53, dora or cra";
+    if (input.subject !== undefined && (typeof input.subject !== "string" || input.subject.length > 120)) return "evidence-bundle subject must be a string of at most 120 characters";
+    return null;
+  }
   return "unsupported skill";
 }
 
@@ -591,6 +602,18 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
       text: [
         `${skill}: ${String(payload.state)} — re-derived by this router from the static measurement-capsule files on ${origin}/measurement-capsules/ (ids, Merkle inclusion and the index signature are recomputed, not relayed).`,
         `Doctrine: ${DOCTRINE}. States only; no verdict, score or ranking.`,
+        REGISTER,
+      ].join("\n"),
+      data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
+    };
+  }
+  if (skill === "evidence-bundle") {
+    const payload = await evidenceBundlePreview(origin, input);
+    return {
+      text: [
+        `evidence-bundle: ${String(payload.state)} — ${String(payload.relevant_signed_cards ?? 0)} already-signed card(s) relevant-to ${String((payload.obligation as Json | undefined)?.id ?? input.obligation)}, read from ${origin}/api/evidence-bundle (the same module as the MCP tool evidence_bundle_preview).`,
+        payload.review_note ? String(payload.review_note) : "Observations only; relevant-to is never a determination.",
+        `Doctrine: ${DOCTRINE}. This skill never charges; the assembled bundle is the x402 MCP tool evidence_bundle.`,
         REGISTER,
       ].join("\n"),
       data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },

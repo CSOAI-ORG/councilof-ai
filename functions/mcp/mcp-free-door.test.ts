@@ -10,8 +10,8 @@ import PAID from "./paid-tools.json";
  *
  * Anthropic Software Directory Policy 4.A: "Unless otherwise expressly permitted by us in writing,
  * we do not allow … Software that transfers money, cryptocurrency, or other financial assets".
- * /mcp carries four x402 tools that settle USDC, so the directory gets a door on which no payment
- * can happen: the twelve free readers, the same definitions and handlers as /mcp, filtered.
+ * /mcp carries x402 tools that settle USDC, so the directory gets a door on which no payment
+ * can happen: the free readers, the same definitions and handlers as /mcp, filtered.
  * /mcp itself is unchanged for agents that pay; the last block here pins that too.
  */
 const ORIGIN = "https://councilof.ai";
@@ -68,7 +68,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp/free serves exactly the twelve free tools", () => {
+describe("/mcp/free serves exactly the free tools", () => {
   it("routes /mcp and /mcp/free (with or without a trailing slash) and nothing else", () => {
     expect(doorFor("/mcp")).toBe("full");
     expect(doorFor("/mcp/")).toBe("full");
@@ -78,11 +78,11 @@ describe("/mcp/free serves exactly the twelve free tools", () => {
     expect(doorFor("/mcp/free/x")).toBeNull();
   });
 
-  it("tools/list returns the twelve free definitions, by name and in order, with their titles and annotations", async () => {
+  it("tools/list returns the free definitions, by name and in order, with their titles and annotations", async () => {
     const { response, message } = await rpc("/mcp/free", "tools/list");
     expect(response.status).toBe(200);
     const tools = message.result!.tools!;
-    expect(FREE_NAMES).toHaveLength(12);
+    expect(FREE_NAMES).toHaveLength(13);
     expect(tools.map((t) => t.name)).toEqual(FREE_NAMES);
     expect(tools).toEqual((FREE as { tools: Tool[] }).tools);
     for (const t of tools) {
@@ -148,7 +148,7 @@ describe("/mcp/free serves exactly the twelve free tools", () => {
     expect(((await r.json()) as { error: { message: string } }).error.message).toMatch(/\/mcp and \/mcp\/free/);
   });
 
-  it("an official SDK client connects to /mcp/free, lists twelve tools, calls a free one, and is refused a paid one", async () => {
+  it("an official SDK client connects to /mcp/free, lists the free tools, calls a free one, and is refused a paid one", async () => {
     network.mockImplementation(async (input, init) => {
       const request = input instanceof Request ? input : new Request(input, init);
       expect(request.url).toBe(`${ORIGIN}/root.json`);
@@ -173,7 +173,7 @@ describe("/mcp/free serves exactly the twelve free tools", () => {
 });
 
 describe("/mcp is unchanged for agents that pay", () => {
-  it("still lists sixteen tools and still answers an unpaid paid call with the x402 challenge", async () => {
+  it("still lists every tool and still answers an unpaid paid call with the x402 challenge", async () => {
     const listed = (await rpc("/mcp", "tools/list")).message.result!.tools!;
     expect(listed).toHaveLength(FREE_NAMES.length + PAID_NAMES.length);
     network.mockImplementation(async (input, init) => {

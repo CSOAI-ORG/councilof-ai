@@ -19,10 +19,15 @@ import { spawnSync, execFileSync } from "node:child_process";
 import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileViolations, distributionFiles } from "./doctrine-lint.mjs";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OFFLINE = process.argv.includes("--offline");
 const read = (rel) => readFileSync(join(REPO, rel), "utf8");
+const readBytes = (rel) => readFileSync(join(REPO, rel));
+// Binary outputs (the plugin ZIP, the .difypkg, icons) are hashed as bytes and kept out of the text scans below;
+// every text file inside a ZIP is also rendered as its own output, so the scans still read it.
+const BINARY = /\.(png|zip|difypkg)$/;
 const readJson = (rel) => JSON.parse(read(rel));
 const sha256 = (s) => createHash("sha256").update(s).digest("hex");
 
@@ -56,7 +61,7 @@ const LOCKED = lock ? [...lock.free, ...lock.paid] : null;
   rec("*", "render --check (committed outputs == rendered)", r.status === 0, (r.stdout + r.stderr).trim().split("\n").pop());
   const live = sha256(read(dist.doctrine.source));
   rec("*", "doctrine pin", live === DOCTRINE_SHA && manifest.doctrine.sha256 === DOCTRINE_SHA, `${dist.doctrine.source} ${live.slice(0, 16)}… pinned ${DOCTRINE_SHA.slice(0, 16)}…`);
-  const mf = manifest.files.filter((f) => sha256(read(f.path)) !== f.sha256).map((f) => f.path);
+  const mf = manifest.files.filter((f) => sha256(readBytes(f.path)) !== f.sha256).map((f) => f.path);
   rec("*", "MANIFEST sha256 of every file", mf.length === 0, mf.length ? mf.join(", ") : `${manifest.files.length} files`);
 }
 
@@ -64,8 +69,8 @@ const LOCKED = lock ? [...lock.free, ...lock.paid] : null;
 rec("*", "fleet lock == capabilities.json", LOCKED !== null && sameList(LOCKED, capNames),
   LOCKED ? `${LOCKED.length} locked / ${capNames.length} declared` : "tool-fleet.lock.json unreadable");
 
-async function rpc(method, params) {
-  const res = await fetch(DOOR, {
+async function rpc(method, params, door = DOOR) {
+  const res = await fetch(door, {
     method: "POST",
     headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
     body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, ...(params ? { params } : {}) }),
@@ -76,13 +81,14 @@ async function rpc(method, params) {
   const d = t.split("\n").filter((l) => l.startsWith("data:"));
   return JSON.parse(d[d.length - 1].slice(5));
 }
-let LIVE_VERSION = null, LIVE_TOOLS = null, liveWhy = "";
+let LIVE_VERSION = null, LIVE_TOOLS = null, LIVE_DEFS = null, liveWhy = "";
 if (!OFFLINE) {
   try {
     const init = await rpc("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "harness-x-check", version: "1" } });
     LIVE_VERSION = init.result.serverInfo.version;
     const tl = await rpc("tools/list");
     LIVE_TOOLS = tl.result.tools.map((t) => t.name);
+    LIVE_DEFS = tl.result.tools;
   } catch (e) { liveWhy = `UNREACHABLE (${e.name}: ${e.message})`; }
 }
 const liveOk = (v) => (OFFLINE ? null : v);
@@ -349,7 +355,7 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
 }
 
 // ── 11. brand-gate, certif, price — over EVERY output ───────────────────────────────────────
-const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIFEST.json"]);
+const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIFEST.json"]).filter((p) => !BINARY.test(p));
 {
   // (a) brand-gate on the distribution dir as-is
   const a = spawnSync(process.execPath, [join(REPO, "scripts/brand-gate.mjs"), join(REPO, "distribution")], { encoding: "utf8" });
@@ -410,6 +416,127 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   const noLinks = readmes.filter((p) => { const t = read(p); return ![I.board, I.corrections, I.verify_page].every((u) => t.includes(u)); });
   rec("*", "every README carries data + corrections ledger + verify links", readmes.length > 0 && noLinks.length === 0,
     noLinks.join(", ") || `${readmes.length} README-like files`);
+}
+
+// ── 12. MCP annotations: served definitions, live tools/list, rendered tool lists ──────────────
+const FIELDS = ["title", "readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint"];
+const SERVED_FREE = readJson("functions/mcp/gspc-tools.json").tools;
+const SERVED_PAID = readJson("functions/mcp/paid-tools.json").tools;
+{
+  const bare = [...SERVED_FREE, ...SERVED_PAID].filter((t) => !FIELDS.every((f) => f in (t.annotations || {}))).map((t) => t.name);
+  rec("*", "annotations: every served definition carries all five fields", bare.length === 0, bare.join(", ") || `${SERVED_FREE.length + SERVED_PAID.length} tools`);
+  const wrong = [...SERVED_FREE.filter((t) => t.annotations?.readOnlyHint !== true || t.annotations?.destructiveHint !== false),
+    ...SERVED_PAID.filter((t) => t.annotations?.readOnlyHint !== false || t.annotations?.destructiveHint !== false)].map((t) => t.name);
+  rec("*", "annotations: free = readOnly, paid = not readOnly, none destructive", wrong.length === 0, wrong.join(", ") || "consistent");
+  const liveBare = LIVE_DEFS ? LIVE_DEFS.filter((t) => !FIELDS.every((f) => f in (t.annotations || {}))).map((t) => t.name) : null;
+  rec("*", "annotations: live tools/list carries them on every tool", liveOk(!!liveBare && liveBare.length === 0),
+    OFFLINE ? "offline" : liveBare ? (liveBare.join(", ") || `${LIVE_DEFS.length} tools`) : liveWhy);
+  const app = readJson("distribution/openai/app.json");
+  const served = Object.fromEntries([...SERVED_FREE, ...SERVED_PAID].map((t) => [t.name, t.annotations]));
+  const off = app.tools.filter((t) => t.suggested_annotations.readOnlyHint !== served[t.name]?.readOnlyHint).map((t) => t.name);
+  rec("openai-app", "suggested annotations == served readOnlyHint; live_tools_carry_annotations true", off.length === 0 && app.live_tools_carry_annotations === true, off.join(", ") || "consistent");
+  const dify = SERVED_FREE.filter((t) => !existsSync(join(REPO, `distribution/dify/gspc/tools/${t.name}.yaml`))).map((t) => t.name);
+  rec("dify-plugin", "one Dify tool per free MCP tool", dify.length === 0, dify.join(", ") || `${SERVED_FREE.length} tools`);
+}
+
+// ── 13. server cards (SEP-2127 draft): live cards == live tools/list of the same door ────────────
+{
+  const FREE_DOOR = `${DOOR}/free`;
+  for (const [id, door] of [["server-card", DOOR], ["free-server-card", FREE_DOOR]]) {
+    if (OFFLINE) { rec(id, "live server card parity", null, "offline"); continue; }
+    try {
+      const r = await fetch(`${door}/server-card`, { headers: { accept: "application/mcp-server-card+json" }, signal: AbortSignal.timeout(30000) });
+      const card = r.ok ? await r.json() : null;
+      rec(id, `GET ${door}/server-card → 200 application/mcp-server-card+json`, r.status === 200 && (r.headers.get("content-type") || "").startsWith("application/mcp-server-card+json"), `${r.status} ${r.headers.get("content-type")}`);
+      if (!card) continue;
+      const tl = await rpc("tools/list", undefined, door);
+      const live = tl.result.tools.map((t) => t.name);
+      const snap = card._meta?.["ai.councilof/server-card"]?.tools_snapshot ?? {};
+      rec(id, "card tools_snapshot.names == live tools/list (same door)", sameList(snap.names ?? [], live), `${(snap.names ?? []).length} card / ${live.length} live`);
+      rec(id, "names_sha256 re-derived from the names", snap.names_sha256 === sha256([...(snap.names ?? [])].sort().join("\n")), String(snap.names_sha256).slice(0, 16));
+      rec(id, "version == source; remotes[0].url == door; labelled draft SEP-2127",
+        card.version === WANT_VERSION && card.remotes?.[0]?.url === door && /SEP-2127/.test(card._meta?.["ai.councilof/server-card"]?.spec_status ?? ""),
+        `${card.version} ${card.remotes?.[0]?.url}`);
+      rec(id, "SEP-2127 identity: $schema v1, reverse-DNS name, description <= 100",
+        card.$schema === "https://static.modelcontextprotocol.io/schemas/v1/server-card.schema.json" && /^[a-zA-Z0-9.-]+\/[a-zA-Z0-9._-]+$/.test(card.name) && card.description.length <= 100, card.name);
+    } catch (e) { rec(id, "live server card parity", false, `UNREACHABLE (${e.name}: ${e.message})`); }
+  }
+  // the registry's deprecated alias: recorded, never silently green (parity_live.py reports INCONSISTENT until the owner acts)
+  if (OFFLINE) rec("mcp-registry-github", "alias status recorded", null, "offline");
+  else {
+    try {
+      const r = await fetch(`https://registry.modelcontextprotocol.io/v0/servers/${encodeURIComponent(dist.registry_names.github)}/versions`, { signal: AbortSignal.timeout(30000) });
+      const d = await r.json();
+      const hit = (d.servers || []).find((x) => x._meta?.["io.modelcontextprotocol.registry/official"]?.isLatest);
+      const status = hit?._meta?.["io.modelcontextprotocol.registry/official"]?.status ?? "ABSENT";
+      rec("mcp-registry-github", "alias status recorded (expected deprecated — owner step; parity_live.py flags it until then)", true, `registry status: ${status}`);
+    } catch (e) { rec("mcp-registry-github", "alias status recorded", false, `UNREACHABLE (${e.name})`); }
+  }
+}
+
+// ── 14. the new master-plugin formats ───────────────────────────────────────────────────────
+{
+  const zipNames = (rel) => {
+    const r = py(`import zipfile,json,sys;z=zipfile.ZipFile("${join(REPO, rel)}");assert z.testzip() is None;print(json.dumps(sorted(z.namelist())))`);
+    return r.status === 0 ? JSON.parse(r.stdout) : null;
+  };
+  const zipMember = (rel, name) => py(`import zipfile,sys;sys.stdout.buffer.write(zipfile.ZipFile("${join(REPO, rel)}").read(${JSON.stringify(name)}))`, {}).stdout;
+  // openai plugin
+  const OP = "distribution/openai-plugin";
+  const pj = readJson(`${OP}/plugin.json`), mj = readJson(`${OP}/mcp.json`);
+  const servers = Object.values(mj.mcpServers || {});
+  rec("openai-plugin", "exactly one MCP server, the free door (streamable-http)", servers.length === 1 && servers[0].url === `${DOOR}/free` && servers[0].type === "streamable-http", servers.map((x) => x.url).join(", "));
+  const oa = pj.extensions?.["com.openai"] ?? {};
+  rec("openai-plugin", "manifest: name, version == live, onboarding skill + logo resolve, commerce false, displayName GSPC",
+    pj.name === dist.plugin_name && pj.version === WANT_VERSION && existsSync(join(REPO, OP, oa.onboardingSkill ?? "-")) && existsSync(join(REPO, OP, oa.interface?.logo ?? "-")) && oa.review?.commerce === false && oa.interface?.displayName === "GSPC",
+    `${pj.name}@${pj.version}`);
+  const opZip = zipNames("distribution/packages/gspc-openai-plugin.zip");
+  rec("openai-plugin", "ZIP members == the rendered folder, byte for byte",
+    !!opZip && sameList(opZip, ["assets/logo.png", "mcp.json", "plugin.json", "skills/get-started/SKILL.md"]) && opZip.every((n) => n.endsWith(".png") || zipMember("distribution/packages/gspc-openai-plugin.zip", n) === read(`${OP}/${n}`)),
+    opZip ? opZip.join(", ") : "unreadable ZIP");
+  // copilot studio
+  const sw = readJson("distribution/copilot-studio/apiDefinition.swagger.json");
+  const ops = Object.entries(sw.paths || {}).flatMap(([p, m]) => Object.values(m).filter((o) => o["x-ms-agentic-protocol"]).map(() => p));
+  rec("copilot-studio-connector", "swagger 2.0, one mcp-streamable-1.0 operation on /mcp/free, host == site",
+    sw.swagger === "2.0" && sameList(ops, ["/mcp/free"]) && sw.host === new URL(DOOR).host && sw.paths["/mcp/free"].post["x-ms-agentic-protocol"] === "mcp-streamable-1.0", ops.join(", "));
+  // gcp kit
+  rec("gcp-marketplace-a2a", "agent-card.json byte-identical to the served card", read("distribution/gcp-marketplace/agent-card.json") === read("public/.well-known/agent-card.json"), "public/.well-known/agent-card.json");
+  // dify
+  const DF = "distribution/dify/gspc";
+  const pyFiles = readdirSync(join(REPO, DF, "tools")).filter((f) => f.endsWith(".py")).map((f) => join(REPO, DF, "tools", f)).concat([join(REPO, DF, "main.py"), join(REPO, DF, "provider/gspc.py")]);
+  const pc = spawnSync("python3", ["-m", "py_compile", ...pyFiles], { encoding: "utf8" });
+  rec("dify-plugin", "py_compile every module", pc.status === 0, pc.stderr.trim() || `${pyFiles.length} module(s)`);
+  if (YAML) {
+    const r = py(`import yaml,glob,sys
+fs=glob.glob("${join(REPO, DF)}/**/*.yaml",recursive=True)
+[yaml.safe_load(open(f)) for f in fs]
+m=yaml.safe_load(open("${join(REPO, DF, "manifest.yaml")}"));p=yaml.safe_load(open("${join(REPO, DF, "provider/gspc.yaml")}"))
+assert m["plugins"]["tools"]==["provider/gspc.yaml"] and m["meta"]["runner"]["entrypoint"]=="main"
+print(len(fs), len(p["tools"]))`);
+    rec("dify-plugin", "every YAML parses; manifest → provider → one tool file per free tool", r.status === 0 && r.stdout.trim().split(" ")[1] === String(SERVED_FREE.length), r.stdout.trim() || r.stderr.trim().split("\n").pop());
+  } else rec("dify-plugin", "YAML parses", null, "PyYAML unavailable");
+  const dz = zipNames("distribution/packages/gspc.difypkg");
+  rec("dify-plugin", ".difypkg members == the rendered folder", !!dz && sameList(dz, distributionFiles(join(REPO, DF)).map((f) => f.slice(join(REPO, DF).length + 1)).concat(["_assets/icon.svg"]).filter((v, i, a) => a.indexOf(v) === i).sort()),
+    dz ? `${dz.length} member(s)` : "unreadable");
+  // connect matrix
+  const cm = readJson("distribution/connect/connect-matrix.json");
+  const doors = new Set([DOOR, `${DOOR}/free`]);
+  const strayUrls = cm.clients.flatMap((c) => [...c.snippet.matchAll(/https:\/\/councilof\.ai[^\s"')]*/g)].map((m) => m[0]).filter((u) => !doors.has(u)).map((u) => `${c.id}: ${u}`));
+  rec("connect-matrix", "every snippet names only the two doors", strayUrls.length === 0 && cm.clients.every((c) => c.snippet.includes(c.url)), strayUrls.join(", ") || `${cm.clients.length} clients`);
+  const badJson = cm.clients.filter((c) => c.kind === "json").filter((c) => { try { JSON.parse(c.snippet); return false; } catch { return true; } }).map((c) => c.id);
+  rec("connect-matrix", "every JSON snippet parses", badJson.length === 0, badJson.join(", ") || `${cm.clients.filter((c) => c.kind === "json").length} JSON block(s)`);
+  rec("connect-matrix", "ids unique; at least 15 clients", new Set(cm.clients.map((c) => c.id)).size === cm.clients.length && cm.clients.length >= 15, `${cm.clients.length}`);
+  const liveCheck = existsSync(join(REPO, "distribution/connect/connect-live-check.json")) ? readJson("distribution/connect/connect-live-check.json") : null;
+  rec("connect-matrix", "connect-live-check.json covers every client and every block passed", !!liveCheck && sameSet(liveCheck.clients.map((c) => c.id), cm.clients.map((c) => c.id)) && liveCheck.clients.every((c) => c.state === "PASS"),
+    liveCheck ? `${liveCheck.clients.filter((c) => c.state === "PASS").length}/${liveCheck.clients.length} PASS at ${liveCheck.checked_at}` : "not run: node scripts/harness-x/connect-live.mjs");
+}
+
+// ── 15. doctrine lint over every rendered distribution/** file (the scanner the vitest uses) ────
+{
+  const files = distributionFiles(join(REPO, "distribution"));
+  const v = files.flatMap((f) => fileViolations(f, REPO));
+  rec("*", "doctrine lint: no compliance-status claim in any rendered description", v.length === 0,
+    v.length ? v.slice(0, 3).map((x) => `${x.where} [${x.word}] …${x.context}…`).join(" | ") : `${files.length} files`);
 }
 
 // ── report ──────────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,22 @@
+identity:
+  name: get_axis
+  author: csoai
+  label:
+    en_US: "One GSPC board axis"
+description:
+  human:
+    en_US: "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates."
+  llm: "One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates. An unmeasured axis is a first-class answer — a declared slot with no run behind it, published so the gap is visible — never an error and never a zero. Never a certification."
+parameters:
+  - name: axis
+    type: string
+    required: true
+    label:
+      en_US: "axis"
+    human_description:
+      en_US: "The axis name as it appears on the board, e.g. governance, safety, jail, provenance-controls. Case-insensitive. An unknown name returns the list of names the board actually carries."
+    llm_description: "The axis name as it appears on the board, e.g. governance, safety, jail, provenance-controls. Case-insensitive. An unknown name returns the list of names the board actually carries."
+    form: llm
+extra:
+  python:
+    source: tools/get_axis.py

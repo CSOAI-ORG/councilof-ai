@@ -30,7 +30,7 @@ Public lock (language only — every count lives on the API, none is frozen here
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
 
 Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
-23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
+23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.
 Also quote `totals.public_leader_count` beside any "23 measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (UNTESTED for separation). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
 What MEASURED means on this board, said plainly, because it is narrower than it sounds: a slot is
@@ -38,8 +38,8 @@ MEASURED when a real run exists behind it and that run's artifact is published. 
 axis has been shown to distinguish one model from another. Whether a leader's lead over the fleet is
 statistically real is a SEPARATE determination, it has its own live fields, and today not one axis
 carries a separated lead: across `totals.comparison_axes` = 14 model-comparison axes,
-`totals.separated_leads` = 0, `totals.ties` = 8, and
-`totals.untested_separations` = 6. (The 9 deterministic-fact axes have no
+`totals.separated_leads` = 0, `totals.ties` = 7, and
+`totals.untested_separations` = 7. (The 9 deterministic-fact axes have no
 fleet and no leader, so no separation test applies to them and they are not counted as untested.)
 So "23 measured of 23" is a statement that a run exists behind every slot. It is not a
 statement that any axis can tell two models apart, and it must never be written so that a reader
@@ -277,15 +277,15 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 16 tools: twelve free readers plus four x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
-- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the twelve free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 18 tools: thirteen free readers plus five x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the thirteen free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
-- Dated immutable mill-card root (as of 2026-09-24T16:23:03Z, 1423 leaves): https://councilof.ai/interop/card-root-2026-09-24-d9195149ce5e.json (SHA-256 0d3be673ff22448fccaf6ada6454fab9bf54f0acdd26115ce3170a5c9f3ac29e). Its .ots sidecar (SHA-256 92204e735d1cce3acc0c4e51a4908e1423c5c218140c69cd087b3c40e755b622) carries a BitcoinBlockHeaderAttestation, as parsed from the proof bytes into https://councilof.ai/interop/ots/manifest.json. No public-header audit is published for this root, so the block header is not independently corroborated here; this is not local Bitcoin full-node chain validation or verification of individual card measurements.
-- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 16-tool contract as the HTTP door.
+- Dated immutable mill-card root (as of 2026-09-29T16:50:03Z, 1431 leaves): https://councilof.ai/interop/card-root-2026-09-29.json (SHA-256 6bc280fccbd7911bd5e46be0bb147b2aabc7c051ddc87541e74860e4ead01842). Its .ots sidecar (SHA-256 32ffa809cd728920aceb7096576bb601867178926978b6203db4b89aef573d7a) is calendar-pending: a submitted request, not evidence of a time, until a Bitcoin attestation is added. This is not local Bitcoin full-node chain validation.
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same 18-tool contract as the HTTP door.
 - Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
 - MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
-- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list (16 tools: twelve free readers plus four x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
+- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list (18 tools: thirteen free readers plus five x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
@@ -327,7 +327,7 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 - Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104
 - Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
-Lid (quote live `totals.lid`): 23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.
+Lid (quote live `totals.lid`): 23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.
 
 ## Distribution — measured, PARTIAL, and not adoption
 
@@ -373,16 +373,16 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-28T21:15:46Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-30T09:47:00Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 644. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 652. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 643.
-- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 640.
+- Still calendar-pending: 12. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
-- Proofs whose subject is not served beside them: 61 — an anchor a reader cannot check
+- Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.
 - This producer does not check block headers against a Bitcoin node. `ots verify` against your own
   node does that, and an .ots is not a proof because of its file extension.
@@ -418,7 +418,7 @@ Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 23 measured beside 9 public leader scores. Lid: 23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify — live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 23 measured beside 9 public leader scores. Lid: 23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 

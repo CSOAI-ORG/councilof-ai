@@ -21,6 +21,8 @@ import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { toolSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
+import { EVIDENCE_TOOL_NAMES, evidenceToolResult } from "./_evidence";
+import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_server_card";
 import { recordUsage } from "../_lib/usage";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
@@ -48,7 +50,7 @@ const INSTRUCTIONS =
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
 // payment text (packet CR-6). The count is derived from the file, like the one above.
 export const FREE_INSTRUCTIONS =
-  `Council of AI public measurement records. ${FREE_TOOL_COUNT} free read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, and read census snapshots. Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE). Measurement, not certification.`;
+  `Council of AI public measurement records. ${FREE_TOOL_COUNT} free read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, and read census snapshots, and list the already-signed cards relevant to one obligation (observations, never a determination). Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED, NOT_MEASURED, UNREACHABLE). Measurement, not certification.`;
 const CORS = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, HEAD, POST, OPTIONS",
@@ -129,7 +131,9 @@ function buildMcp(
             ? paidToolResult(definition.name, args, origin)
             : MEASUREMENT_TOOL_NAMES.has(definition.name)
               ? measurementToolResult(definition.name, args, origin)
-              : sharedToolResult(definition.name, args, origin),
+              : EVIDENCE_TOOL_NAMES.has(definition.name)
+                ? evidenceToolResult(definition.name, args, origin)
+                : sharedToolResult(definition.name, args, origin),
       );
     }
     // Historical unlisted alias; it is not in tools/list and does not inflate the canonical count.
@@ -364,9 +368,31 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
     hostHeaderValidationResponse(guardRequest, hosts) ??
     originValidationResponse(request, [...BROWSER_ORIGINS, ...hosts]);
   if (rejected) return withHeaders(rejected);
+  // SEP-2127 (draft) Server Card at <streamable-http-url>/server-card, one per door (functions/mcp/_server_card.ts).
+  // Built per request from the same definitions arrays tools/list returns, so its tool snapshot cannot drift.
+  const cardDoor = serverCardDoor(url.pathname);
+  if (cardDoor) {
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+    if (request.method !== "GET" && request.method !== "HEAD")
+      return new Response(null, { status: 405, headers: { ...CORS, allow: "GET, HEAD, OPTIONS" } });
+    const defs = cardDoor === "free" ? FREE_DEFINITIONS : DEFINITIONS;
+    const card = await buildServerCard(cardDoor, url.origin, {
+      version: MCP_HTTP_SERVER_VERSION,
+      toolNames: defs.map((d) => d.name),
+      toolCounts: cardDoor === "free" ? `${FREE_TOOL_COUNT} read-only tools at /mcp/free.` : TOOL_COUNTS,
+    });
+    return new Response(request.method === "HEAD" ? null : JSON.stringify(card, null, 2), {
+      headers: {
+        ...CORS,
+        "content-type": SERVER_CARD_MEDIA_TYPE,
+        "cache-control": "public, max-age=300",
+        vary: "Accept",
+      },
+    });
+  }
   const door = doorFor(url.pathname);
   if (!door)
-    return jsonError(404, -32601, "MCP endpoints are /mcp and /mcp/free.");
+    return jsonError(404, -32601, "MCP endpoints are /mcp and /mcp/free; their server cards are /mcp/server-card and /mcp/free/server-card.");
   if (request.method === "OPTIONS")
     return new Response(null, { status: 204, headers: CORS });
   if (
