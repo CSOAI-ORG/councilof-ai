@@ -88,7 +88,7 @@ def test_live_board_not_rewritten() -> None:
     assert totals.get("axes") == 23
     assert totals.get("measured_axes") == 23
     assert totals.get("unmeasured_axes") == 0
-    assert totals.get("public_count") == "23 axis · 23 measured"
+    assert totals.get("public_count") == "23 axes · 23 measured"
     assert axes["effect-binding"]["status"] == "MEASURED"
     assert axes["effect-binding"]["kind"] == "deterministic-facts"
     assert (axes["effect-binding"].get("n") or 0) >= 30
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     test_eval_yaml_22_ready()
     test_seven_signed_unmeasured_coverage()
     test_live_board_not_rewritten()
-    print("PASS gspc 22 READY (LIVE 22·22·0; fin7 skeletons stay UNMEASURED coverage; Art.5 not collapsed)")
+    print("PASS gspc 23 READY (LIVE 23·23·0; effect-binding measured; Art.5 not collapsed)")
