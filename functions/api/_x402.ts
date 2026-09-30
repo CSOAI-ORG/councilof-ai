@@ -1,5 +1,5 @@
 // functions/api/_x402.ts — FAIL-CLOSED x402 receipt verification, shared by every metered
-// endpoint (currently /api/proof?bundle=1, /api/request-attestation, and /api/eunomia-data).
+// endpoint (currently /api/proof?bundle=1, /api/request-attestation, and /api/signed-data-feed).
 //
 // WHY THIS EXISTS: both metered endpoints shipped the same money-integrity bug —
 //   const paid = request.headers.get("x-payment") != null;

@@ -36,7 +36,7 @@ async function fetchLayerOPresence(signal: AbortSignal): Promise<LayerOPresence>
     cache: "no-store",
     signal,
   });
-  if (!response.ok) throw new Error(`Layer O presence HTTP ${response.status}`);
+  if (!response.ok) throw new Error(`distribution presence HTTP ${response.status}`);
   return response.json();
 }
 
@@ -199,14 +199,14 @@ export default function DashboardFabricPane() {
         </article>
       </div>
 
-      <section className="mt-6 rounded-2xl border border-emerald-800/15 bg-white p-4 shadow-sm" aria-labelledby="layer-o-title">
+      <section className="mt-6 rounded-2xl border border-emerald-800/15 bg-white p-4 shadow-sm" aria-labelledby="distribution-presence-title">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-800">
-              Public distribution presence
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-800">
+              Where our tools are listed
             </p>
-            <h2 id="layer-o-title" className="mt-1 text-base font-semibold text-slate-950">
-              Layer O outward state
+            <h2 id="distribution-presence-title" className="mt-1 text-base font-semibold text-slate-950">
+              Distribution presence
             </h2>
           </div>
           {presence ? (
@@ -232,7 +232,7 @@ export default function DashboardFabricPane() {
           </>
         ) : presenceError ? (
           <p className="mt-3 text-sm text-amber-900">
-            Layer O presence UNREACHABLE: {presenceError}. No prior count is substituted.
+            Distribution presence UNREACHABLE: {presenceError}. No prior count is substituted.
           </p>
         ) : (
           <p className="mt-3 text-sm text-muted-foreground">Reading the public presence rollup…</p>

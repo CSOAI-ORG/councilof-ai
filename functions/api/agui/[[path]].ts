@@ -19,6 +19,7 @@
 
 import { serveAguiRun } from "../../_lib/aguiRun";
 import { recordUsage } from "../../_lib/usage";
+import { axisCountLine } from "../_boardCounts";
 
 interface Env {
   AGUI_WIRE_URL?: string;
@@ -63,7 +64,7 @@ function livingGspcSse(j: any, endpoint: string): string {
   const public_count =
     typeof totals.public_count === "string" && totals.public_count.trim()
       ? totals.public_count.trim()
-      : `${axes.length} axis · ${measured.length} measured`;
+      : axisCountLine(axes.length, measured.length);
   const snapshot = {
     schema: "csoai.agui-gspc-snapshot/0.1",
     source: "wire",

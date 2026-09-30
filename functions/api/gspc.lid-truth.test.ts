@@ -34,20 +34,27 @@ type Totals = {
   lid: string;
 };
 
-/** The five numbers the lid states, by the noun each one is attached to. */
+/**
+ * The six numbers the lid states, by the noun each one is attached to. Since 30 Sep 2026 the
+ * lid uses comparison wording ("14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED") and
+ * carries no count of "leaders"; model comparisons publishes the same quantity as model_fleets.
+ */
 export function lidNumbers(lid: string): Record<string, number | null> {
   const read = (re: RegExp) => {
     const m = lid.match(re);
     return m ? Number(m[1]) : null;
   };
   return {
-    measured_axes: read(/(\d+)\s+axes?\s+measured\b/i),
-    model_fleets: read(/(\d+)\s+model\s+fleets?\b/i),
-    separated_leads: read(/(\d+)\s+separated\s+leaders?\b/i),
-    public_leader_count: read(/(\d+)\s+public\s+leader\s+scores?\b/i),
+    measured_axes: read(/(\d+)\s+ax(?:is|es)\s+measured\b/i),
+    model_fleets: read(/(\d+)\s+model\s+comparisons?\b/i),
+    separated_leads: read(/(\d+)\s+separated\b/i),
+    ties: read(/(\d+)\s+TIE\b/),
+    untested_separations: read(/(\d+)\s+UNTESTED\b/),
     fact_runs: read(/(\d+)\s+fact\s+runs?\b/i),
   };
 }
+
+const LID_FIELDS = ["measured_axes", "model_fleets", "separated_leads", "ties", "untested_separations", "fact_runs"] as const;
 
 async function servedTotals(): Promise<Totals> {
   (globalThis as unknown as { caches: unknown }).caches = {
@@ -70,7 +77,7 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
   it("serves a lid and the four counts this guard reads (not a vacuous pass)", () => {
     expect(typeof totals.lid).toBe("string");
     expect(totals.lid.length).toBeGreaterThan(20);
-    for (const field of ["measured_axes", "model_fleets", "separated_leads", "public_leader_count", "fact_runs"] as const) {
+    for (const field of LID_FIELDS) {
       expect(typeof totals[field], `totals.${field} must be a number`).toBe("number");
     }
   });
@@ -84,19 +91,19 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
 
   it("the parser is not vacuous — it reads the numbers it is given", () => {
     expect(
-      lidNumbers("7 axes measured · 2 model fleets · 1 separated leaders · 5 public leader scores · 4 fact runs · TIE is TIE."),
-    ).toEqual({ measured_axes: 7, model_fleets: 2, separated_leads: 1, public_leader_count: 5, fact_runs: 4 });
+      lidNumbers("7 axes measured · 2 model comparisons: 1 separated · 0 TIE · 1 UNTESTED · 4 fact runs · TIE is TIE."),
+    ).toEqual({ measured_axes: 7, model_fleets: 2, separated_leads: 1, ties: 0, untested_separations: 1, fact_runs: 4 });
   });
 
   it("catches the exact 2026-09-22 defect: lid says 8 fact runs, totals says 9", () => {
     const drifted = lidNumbers(
-      "23 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+      "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 8 fact runs · TIE is TIE · not a certificate.",
     );
     expect(drifted.fact_runs).toBe(8);
     expect(drifted.fact_runs).not.toBe(9);
   });
 
-  for (const field of ["measured_axes", "model_fleets", "separated_leads", "public_leader_count", "fact_runs"] as const) {
+  for (const field of LID_FIELDS) {
     it(`lid's ${field} equals totals.${field}`, () => {
       expect(lidNumbers(totals.lid)[field]).toBe(totals[field]);
     });
@@ -105,6 +112,12 @@ describe("GET /api/gspc: every number in totals.lid equals the totals field besi
   it("the lid keeps its non-numeric promises", () => {
     expect(totals.lid).toContain("TIE is TIE");
     expect(totals.lid).toContain("not a certificate");
+  });
+
+  it("the lid uses comparison wording: no 'leader' and no 'fleets' (30 Sep 2026)", () => {
+    expect(totals.lid).not.toMatch(/leader/i);
+    expect(totals.lid).not.toMatch(/model fleets/i);
+    expect(totals.lid).toMatch(/model comparisons:/);
   });
 });
 

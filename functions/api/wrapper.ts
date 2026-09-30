@@ -47,7 +47,6 @@ import {
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
   hasPaymentHeader,
-  CSOAI_LID,
   type X402Env,
 } from "./_x402";
 import { railMode } from "./_x402_config";
@@ -62,6 +61,14 @@ type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespa
 export const SCHEMA = "https://councilof.ai/schema/card-v0.json";
 export const KIND = "csoai.wrapper.parity/0.1";
 export const ATTESTS = "point-in-time reads at the pinned blocks named below — a ratio, not a rate, not a grade, not a reserve attestation, not a certificate";
+/**
+ * The lid on every wrapper door's 402 (per pair, per asset, change feed). Before 30 Sep 2026 these
+ * doors carried the model board's lid ("23 axes measured · 14 model fleets · … public leader scores"),
+ * which says nothing about the pair being sold and put board counts on a chain read. One lid, here.
+ */
+export const WRAPPER_LID =
+  "SovX wrapped-asset read · public chain state at pinned blocks · a read, not a measurement · " +
+  "UNMEASURED is never charged · not a rating, a reserve attestation or a certificate.";
 export const FINALITY = "RPC_FINALIZED_TAG_HASH_MATCHED_BY_SECOND_OPERATOR_NOT_INDEPENDENTLY_PROVEN_FINAL";
 
 type Side = { chain: string; symbol: string; address: string };
@@ -366,7 +373,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       csoai: {
         schema: "csoai.wrapper-parity/0.1",
         per: "pair-request",
-        lid: CSOAI_LID,
+        lid: WRAPPER_LID,
         scope: "signed parity observation only",
         deliverable: "one card-v0 leaf (public.notice / csoai.wrapper.parity/0.1), canonical ≤3072 bytes, signed when the Pages key is present",
         free_preview: `${resourceUrl}&preview=1`,

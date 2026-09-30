@@ -43,6 +43,41 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0930-11",
+      "date": "2026-09-30",
+      "detected_at": "2026-09-28",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "The SOV model inventory of 2026-09-28 (internal audit) read the 13 committed Modelfiles for the sov6-*-v3-light fleet (CSOAI-ORG/csoai-static-deploy2, branch jv-wave8-production, commit c755d9f) and found each is FROM a public base model plus a system prompt; only the day is recorded",
+        "published_at is UNRECORDED: the deploy that first serves the corrected sentences had not happened when this entry was written"
+      ],
+      "what_was_wrong": "GET /api/gspc described our own models in the board's comparison rows as fine-tunes. measured_on.model said the rows hold '13 CSOAI own fine-tunes, excluded before comparison'; peritem_rows.own_model_exclusion said 'CSOAI's own fine-tunes (sov6-*-v3-light in the rows; council-*-v3-light on the board) are removed before ranking'; and every row-derived axis carried separation_evidence.fleet '6 base models; CSOAI's own fine-tunes removed before ranking'. These models are not fine-tunes. Each sov6-*-v3-light model is an Ollama Modelfile: a public base model with a system prompt, a short refusal list and a few examples. No weights were trained. Calling them fine-tunes overstated what we built, on the one subject where a measurement body has least excuse. The same payload also said the models were removed 'before ranking'; we compare, we do not rank. The exclusion itself was and is correct: the 13 models are removed before any comparison and are never counted in one.",
+      "how_caught": "An internal inventory of the SOV model estate on 2026-09-28 read the committed Modelfiles and found system-prompt overlays on stock bases, not trained weights. The one-product plan of 2026-09-30 listed the /api/gspc sentence as needing a correction entry, and this lane found the three places GET /api/gspc served it.",
+      "what_changed": "GET /api/gspc now says prompt overlays on stock base models (system prompts, not trained weights), removed before comparison, in measured_on.model, peritem_rows.own_model_exclusion and each separation_evidence.fleet. The signed per-item rows record (/interop/gspc-peritem-rows-2026-08-12.signed.json) keeps its bytes and its signature, so its own_model_exclusion string still says fine-tunes; the served payload names this entry beside it (peritem_rows.own_model_exclusion_correction) instead of editing signed bytes. Producers were fixed with the served text: functions/api/_gspc_power.ts, functions/api/gspc.ts, and the unsigned power file and its generator (functions/api/_gspc_rows_power.ts, scripts/gspc_separation_from_rows.py --power). The generator's signed-record strings are left as signed so the record still reproduces byte for byte. A test (functions/api/gspc.power.test.ts) now fails if the served fleet sentence contains the word fine-tune.",
+      "old_values": {
+        "GET /api/gspc measured_on.model (quoted, not claimed)": "... and 13 CSOAI own fine-tunes, excluded before comparison and never counted in a comparison ...",
+        "GET /api/gspc peritem_rows.own_model_exclusion (quoted, not claimed)": "CSOAI's own fine-tunes (sov6-*-v3-light in the rows; council-*-v3-light on the board) are removed before ranking. Base fleet of 6.",
+        "GET /api/gspc axes[*].separation_evidence.fleet (quoted, not claimed)": "6 base models; CSOAI's own fine-tunes removed before ranking"
+      },
+      "new_values": {
+        "GET /api/gspc measured_on.model": "... and 13 of our own models — prompt overlays on stock base models (system prompts, not trained weights; C-2026-0930-11) — excluded before comparison and never counted in a comparison ...",
+        "GET /api/gspc peritem_rows.own_model_exclusion": "Our own models (sov6-*-v3-light in the rows; council-*-v3-light on the board) are prompt overlays on stock base models (system prompts, not trained weights). They are removed before comparison. Base fleet of 6.",
+        "GET /api/gspc axes[*].separation_evidence.fleet": "6 base models; our own prompt overlays on stock base models removed before comparison"
+      },
+      "status": "CORRECTED - served wording fixed at its producers; signed record unchanged and annotated",
+      "reached_the_public": true,
+      "open_items": [
+        "Hugging Face model cards under csoai that describe sov models as fine-tuned are a separate set of statements; they are listed in the 2026-09-28 inventory and are not changed by this entry.",
+        "The signed per-item rows record keeps the word fine-tunes in its own_model_exclusion string until a new record is signed; this entry is the superseding note."
+      ],
+      "evidence": [
+        "https://councilof.ai/api/gspc (measured_on.model, peritem_rows.own_model_exclusion, peritem_rows.own_model_exclusion_correction, axes[*].separation_evidence.fleet)",
+        "https://councilof.ai/interop/gspc-peritem-rows-2026-08-12.signed.json (signed bytes unchanged)",
+        "functions/api/_gspc_power.ts; functions/api/gspc.ts; functions/api/_gspc_rows_power.ts; scripts/gspc_separation_from_rows.py; functions/api/gspc.power.test.ts"
+      ]
+    },
+    {
       "id": "C-2026-0929-09",
       "date": "2026-09-29",
       "detected_at": "2026-09-29T15:55Z",
@@ -1742,20 +1777,20 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "ed83db2b8b361a85be2b5a57a1e1c0174e58e4ee68511c992976afa6740f67fd",
+    id: "66965584ae200310d30a20c87c989255ca4dd43fc291bba560ff6e609ac2d0e2",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "af2cdb6ed9d795a7720ef6d0311dca46baac513a310f7ac075f4dd0585bd966ac5a1835f3fc8962a6abc74954ae304ebd30a2e4446c9351677d6b7f1dc32690b",
+    signature: "5120eec4504e659acba191f7c9f42269a70b431a81e8e3b027b79010508240fed0d3e7bd405d447fdd85c973a25e31cd1deb2e5ce48c67a53c5efaaf8002f108",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "ed83db2b8b361a85be2b5a57a1e1c0174e58e4ee68511c992976afa6740f67fd",
+          "content_id": "66965584ae200310d30a20c87c989255ca4dd43fc291bba560ff6e609ac2d0e2",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 86,
-          "latest_entry_id": "C-2026-0929-09",
-          "ledger_canonical_bytes": 202547,
+          "entries": 87,
+          "latest_entry_id": "C-2026-0930-11",
+          "ledger_canonical_bytes": 207502,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-29T20:59:15Z"
+          "signed_at": "2026-09-30T05:35:40Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +

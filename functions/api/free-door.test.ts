@@ -41,7 +41,7 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
     const raw = JSON.stringify(await (await call()).json());
     expect(raw).toMatch(/free forever/i);
     expect(raw).toMatch(/api\/gspc|root\.json/);
-    expect(raw).not.toMatch(/request-attestation|evidence-bundle|eunomia-data\?feed/);
+    expect(raw).not.toMatch(/request-attestation|evidence-bundle|signed-data-feed\?feed/);
   });
 
   it("carries the bazaar metadata an indexer reads", async () => {

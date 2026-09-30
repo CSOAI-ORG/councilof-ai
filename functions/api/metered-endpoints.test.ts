@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestGet as ras } from "./request-attestation";
 import { onRequestGet as bundle } from "./evidence-bundle";
-import { onRequestGet as feed, onRequestPost as feedPost } from "./eunomia-data";
+import { onRequestGet as feed, onRequestPost as feedPost } from "./signed-data-feed";
 import { onRequestGet as catalog } from "./x402";
 import { onRequestGet as wellKnown } from "../.well-known/x402.json";
 import { ESTATE_PAY_TO } from "./_x402_config";
@@ -177,17 +177,17 @@ describe("Tier 2 — /api/evidence-bundle", () => {
   });
 });
 
-describe("Tier 3 — /api/eunomia-data", () => {
+describe("Tier 3 — /api/signed-data-feed", () => {
   it("free preview reads stream inventory from the signed files; ?feed=1 is a 402", async () => {
     stubStatic();
-    const p = await (await feed(ctx("/api/eunomia-data"))).json();
+    const p = await (await feed(ctx("/api/signed-data-feed"))).json();
     expect(p.kind).toBe("preview");
     expect(p.streams.signals.rows).toBe(2);
     expect(p.streams.first_fine_watch.unreadable).toBeUndefined();
     // No board signing key is bound in this unit-test environment: readable is not signed.
     expect(p.streams.first_fine_watch.signed).toBe(false);
     expect(p.streams.root.card_count).toBe(50);
-    const r = await feed(ctx("/api/eunomia-data?feed=1"));
+    const r = await feed(ctx("/api/signed-data-feed?feed=1"));
     expect(r.status).toBe(402);
     expect(JSON.stringify(await r.json())).not.toMatch(/price_usd|amount_usd/);
   });
@@ -195,7 +195,7 @@ describe("Tier 3 — /api/eunomia-data", () => {
   it("POST ?feed=1 also 402s — gold-402's gate POSTs {}", async () => {
     stubStatic();
     const r = await feedPost({
-      request: new Request(ORIGIN + "/api/eunomia-data?feed=1", {
+      request: new Request(ORIGIN + "/api/signed-data-feed?feed=1", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: "{}",

@@ -89,7 +89,7 @@ DESCRIPTION_PATHS = {
     "/api/request-attestation": "request_attestation",
     "/api/receipts/batch": "receipts_batch",
     "/api/evidence-bundle": "evidence_bundle",
-    "/api/eunomia-data": "data_feed",
+    "/api/signed-data-feed": "data_feed",
     "/api/rwa/evidence": "rwa_evidence",
     "/api/wrapper": "wrapper",
     "/api/wrapper/changes": "wrapper_changes",
@@ -172,7 +172,7 @@ PARAM_GATE_DESC: dict[str, str] = {
 # Operation-level free vs paid note (appended when missing from challenge prose).
 FREE_TIER_OP_NOTE: dict[str, str] = {
     "/api/proof": "Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
-    "/api/eunomia-data": "Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
+    "/api/signed-data-feed": "Bare path is the free preview (HTTP200). manifest=1 returns a free pre-payment blocks digest. feed=1 selects the assembled feed (HTTP402 without payment). Optional x-csoai-expected-feed-sha256 pins its content; mismatch409 and unavailable sources503 occur before settlement. Separate signatures and payment are not verified by the digest.",
     "/api/feeds/provider-diff": "Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
     "/api/evidence-bundle": "Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
     "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
@@ -492,7 +492,7 @@ def compose(fix: Path = FIX) -> dict:
             })
             seen.add("sha")
 
-        if path == "/api/eunomia-data":
+        if path == "/api/signed-data-feed":
             parameters.extend([
                 {"name": "manifest", "in": "query", "required": False, "schema": {"type": "string", "enum": ["1"]}, "description": "Free manifest; takes priority over feed=1 and never settles a payment."},
                 {"name": "x-csoai-expected-feed-sha256", "in": "header", "required": False, "schema": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "description": "Digest retained from the pre-payment manifest. A changed assembled feed is rejected with409 before the facilitator is called."},
@@ -564,10 +564,10 @@ def compose(fix: Path = FIX) -> dict:
                               **({"payment_required_header_bytes": entry["payment_required_header_bytes"]} if entry.get("payment_required_header_bytes") else {})},
             },
         }
-        if path == "/api/eunomia-data":
+        if path == "/api/signed-data-feed":
             op["responses"]["409"] = {"description": "Retained feed digest differs; no payment settled."}
             op["responses"]["503"] = {"description": "Required source unavailable or invalid; no payment settled."}
-            op["x-csoai"]["free_manifest"] = BASE + "/api/eunomia-data?manifest=1"
+            op["x-csoai"]["free_manifest"] = BASE + "/api/signed-data-feed?manifest=1"
             op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
         # `indexed_in` is deliberately NOT carried (2026-09-26): /.well-known/x402.json no longer
         # types third-party index membership, which only a read of the index can establish.

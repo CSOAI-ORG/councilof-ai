@@ -33,6 +33,8 @@ export function visibleText(html) {
 }
 
 const LID_RE = /(\d+) axes measured · (\d+) model fleets · (\d+) separated leaders · (\d+) public leader scores · (\d+) fact runs/;
+// Comparison wording, served from 30 Sep 2026 (no count of "leaders"): the lid states the comparison states.
+const LID2_RE = /(\d+) ax(?:is|es) measured · (\d+) model comparisons: (\d+) separated · (\d+) TIE · (\d+) UNTESTED · (\d+) fact runs/;
 
 /** What the payload says, from totals only. Null fields are not checked. */
 export function expectedFromBoard(raw) {
@@ -40,12 +42,14 @@ export function expectedFromBoard(raw) {
   const t = d?.totals ?? {};
   const n = (v) => (Number.isSafeInteger(v) ? v : null);
   const lid = typeof t.lid === "string" ? t.lid.match(LID_RE) : null;
+  const lid2 = typeof t.lid === "string" ? t.lid.match(LID2_RE) : null;
   return {
     separated: n(t.separated_leads),
     comparison: n(t.comparison_axes),
     ties: n(t.ties),
     untested: n(t.untested_separations),
     lid: lid ? lid.slice(1, 6).map(Number) : null,
+    lid2: lid2 ? lid2.slice(1, 7).map(Number) : null,
   };
 }
 
@@ -62,6 +66,7 @@ const RULES = [
   },
   { id: "tie-untested", re: /\b(\d+) TIE · (\d+) UNTESTED\b/g, fields: ["ties", "untested"] },
   { id: "lid", re: new RegExp(LID_RE.source, "g"), fields: ["lid0", "lid1", "lid2", "lid3", "lid4"] },
+  { id: "lid-comparison", re: new RegExp(LID2_RE.source, "g"), fields: ["lidb0", "lidb1", "lidb2", "lidb3", "lidb4", "lidb5"] },
 ];
 
 /** Violations of `expected` in one page's visible text. */
@@ -69,13 +74,14 @@ export function checkText(text, expected) {
   const want = {
     ...expected,
     ...(expected.lid ? Object.fromEntries(expected.lid.map((v, i) => [`lid${i}`, v])) : {}),
+    ...(expected.lid2 ? Object.fromEntries(expected.lid2.map((v, i) => [`lidb${i}`, v])) : {}),
   };
   const out = [];
   for (const rule of RULES) {
     for (const m of text.matchAll(rule.re)) {
       const got = m.slice(1).map(Number);
       const bad = rule.fields
-        .map((f, i) => (want[f] === null || want[f] === undefined || want[f] === got[i] ? null : `${f.replace(/^lid\d$/, "lid")} ${got[i]}≠${want[f]}`))
+        .map((f, i) => (want[f] === null || want[f] === undefined || want[f] === got[i] ? null : `${f.replace(/^lidb?\d$/, "lid")} ${got[i]}≠${want[f]}`))
         .filter(Boolean);
       if (bad.length) out.push({ rule: rule.id, found: m[0], mismatch: bad.join(", ") });
     }

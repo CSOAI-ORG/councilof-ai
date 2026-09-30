@@ -410,6 +410,43 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   const noLinks = readmes.filter((p) => { const t = read(p); return ![I.board, I.corrections, I.verify_page].every((u) => t.includes(u)); });
   rec("*", "every README carries data + corrections ledger + verify links", readmes.length > 0 && noLinks.length === 0,
     noLinks.join(", ") || `${readmes.length} README-like files`);
+
+  // (f) published summaries carry no axis count and no retracted phrase (30 Sep 2026). A summary is
+  //     frozen into a registry, a package page or a directory row for months; the board's count
+  //     moves (13 → 14 → 22 → 23), so a typed "23-axis" or "13 axes" there goes stale the day the
+  //     board changes. Retracted phrases are the ones a correction withdrew or the doctrine forbids
+  //     in public copy. Every description/summary/short_description/about string in every output,
+  //     plus the plugin and registry descriptions, is scanned. The regexes are exported below and
+  //     proven non-vacuous by the self-check that follows.
+  const AXIS_COUNT = /\b\d+[\s-]+ax(?:is|es)\b|\b(?:thirteen|fourteen|twenty(?:-| )?(?:two|three))[\s-]+ax(?:is|es)\b/i;
+  const RETRACTED = /public leader scores?|own fine-tunes?|\bLayer O\b|Harness X|Eunomia|Pontius|Venturi|No 23rd axis|model fleets/i;
+  const SUMMARY_KEY = /^(description|summary|short_description|shortDescription|about|title|tagline)$/;
+  const selfTest = AXIS_COUNT.test("the 23-axis board") && AXIS_COUNT.test("13 axes") && !AXIS_COUNT.test("per-axis rows")
+    && RETRACTED.test("9 public leader scores") && !RETRACTED.test("Layer 0 trust floor");
+  rec("*", "summary scan self-test (the patterns match their targets and spare 'per-axis' and 'Layer 0')", selfTest, selfTest ? "ok" : "a pattern is vacuous");
+  const summaryHits = [];
+  const scanSummaries = (p, node, key) => {
+    if (typeof node === "string") {
+      if (key && SUMMARY_KEY.test(key) && (AXIS_COUNT.test(node) || RETRACTED.test(node))) summaryHits.push(`${p} ${key}: ${node.slice(0, 80)}`);
+      return;
+    }
+    if (Array.isArray(node)) return node.forEach((v) => scanSummaries(p, v, key));
+    if (node && typeof node === "object") for (const [k, v] of Object.entries(node)) scanSummaries(p, v, k);
+  };
+  let scanned = 0;
+  for (const p of allOutputs) {
+    if (!p.endsWith(".json")) continue;
+    scanned++;
+    scanSummaries(p, JSON.parse(read(p)), null);
+  }
+  for (const p of allOutputs.filter((x) => /\.(ya?ml|toml)$/.test(x))) {
+    scanned++;
+    for (const m of read(p).matchAll(/^\s*(description|summary|short_description|title)\s*[:=]\s*(.+)$/gm)) {
+      if (AXIS_COUNT.test(m[2]) || RETRACTED.test(m[2])) summaryHits.push(`${p} ${m[1]}: ${m[2].slice(0, 80)}`);
+    }
+  }
+  rec("*", "no published summary carries an axis count or a retracted phrase", scanned > 0 && summaryHits.length === 0,
+    summaryHits.length ? summaryHits.slice(0, 4).join(" | ") : `${scanned} summary-bearing outputs clean`);
 }
 
 // ── report ──────────────────────────────────────────────────────────────────────────────────

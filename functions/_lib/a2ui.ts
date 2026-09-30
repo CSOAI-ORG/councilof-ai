@@ -4,6 +4,7 @@
  */
 import { executePlan, routeIntent, type TalkAnswer } from "./talkRouter";
 import { isConfirmed, lastUserText, paidToolsIn } from "./aguiRun";
+import { axisCountLine } from "../api/_boardCounts";
 
 type Json = Record<string, unknown>;
 
@@ -140,10 +141,7 @@ export function gspcSurface(raw: unknown, surfaceId?: string): Json {
   const publicCount =
     typeof totals.public_count === "string" && totals.public_count.trim()
       ? totals.public_count.trim()
-      : String(axes.length) +
-        " axis · " +
-        String(measured.length) +
-        " measured";
+      : axisCountLine(axes.length, measured.length);
   const emptyNames = unmeasured
     .map((x: any) => String(x?.axis || ""))
     .filter(Boolean);

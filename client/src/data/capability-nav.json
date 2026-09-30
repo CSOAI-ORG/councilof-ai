@@ -10,7 +10,7 @@
       "api-art50-marking-evidence-post",
       "api-board-sign-post",
       "api-commissions",
-      "api-eunomia-data-post",
+      "api-signed-data-feed-post",
       "api-evidence-bundle-post",
       "api-feeds-provider-diff-post",
       "api-free-door-post",
@@ -99,14 +99,14 @@
       "method": "GET"
     },
     {
-      "id": "api-eunomia-data-post",
+      "id": "api-signed-data-feed-post",
       "kind": "http",
-      "name": "Eunomia data (POST)",
+      "name": "Signed data feed (POST)",
       "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
       "audience": "both",
       "lifecycle": "LIVE",
       "payment": "free",
-      "path": "/api/eunomia-data",
+      "path": "/api/signed-data-feed",
       "method": "POST"
     },
     {

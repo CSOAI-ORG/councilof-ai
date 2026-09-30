@@ -1,6 +1,6 @@
 /** Integrity of the existing assembled feed. Not a signature, payment proof or freshness claim. */
 import {canonicalBytes,sha256Hex} from '../_lib/cardSign';
-export const FEED_MANIFEST_SCHEMA='csoai.eunomia-feed-manifest/1.0';
+export const FEED_MANIFEST_SCHEMA='csoai.signed-data-feed-manifest/1.0';
 export const EXPECTED_FEED_HEADER='x-csoai-expected-feed-sha256';
 export const SOURCE_CAP=2_000_000;
 export const FEED_SOURCES={signals:'/signals/_index.json',first_fine_watch:'/api/fines',root:'/root.json',card_index:'/signed/card_index.json'} as const;
@@ -61,7 +61,7 @@ export function feedBlocks(reads:Reads):Record<SourceName,Record<string,unknown>
 function sourceDate(body:Record<string,unknown>):string|null{return typeof body.as_of==='string'?body.as_of:null;}
 export async function makeFeedManifest(reads:Reads,origin:string){
  const blocks=feedBlocks(reads);const bytes=canonicalBytes(blocks);const digest=await sha256Hex(bytes);
- return {schema:FEED_MANIFEST_SCHEMA,resource:origin+'/api/eunomia-data?feed=1',manifest_url:origin+'/api/eunomia-data?manifest=1',free:true,settlement_attempted:false,
+ return {schema:FEED_MANIFEST_SCHEMA,resource:origin+'/api/signed-data-feed?feed=1',manifest_url:origin+'/api/signed-data-feed?manifest=1',free:true,settlement_attempted:false,
   coverage:{required_blocks:Object.keys(FEED_SOURCES),complete_assembly:true,source_truth_verified:false},
   sources:await Promise.all((Object.keys(FEED_SOURCES) as SourceName[]).map(async name=>{const r=reads[name] as Extract<SourceRead,{ok:true}>;return {name,url:origin+FEED_SOURCES[name],as_of:sourceDate(r.body),response_sha256:r.response_sha256,response_bytes:r.response_bytes,block_sha256:await sha256Hex(canonicalBytes(r.body))};})),
   evidence:{blocks_sha256:digest,blocks_bytes:bytes.length,digest_algorithm:'SHA-256',hash_covers:'payload.blocks',canonicalization:'csoai.card-v0.canonicalBytes/1: recursively sorted object keys, JSON.stringify, UTF-8; retain array order',signature_state:'NOT_CREATED_BY_MANIFEST'},

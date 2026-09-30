@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
  * paying: where to look for free, and exactly what settling buys.
  *
  * Audited live on 2026-09-06: only 4 of 9 doors carried both. free-door had no `csoai` block at
- * all; eunomia-data and proof each had their own vocabulary (`free_for`/`sold`, `free`/
+ * all; signed-data-feed and proof each had their own vocabulary (`free_for`/`sold`, `free`/
  * `verification`) that a reader would have to reverse-engineer. A buyer reading such a challenge
  * cannot tell what they are about to buy, which is the one question a 402 exists to answer.
  *
@@ -19,7 +19,7 @@ import { join, resolve } from "node:path";
  * 2026-09-06 10:00 BST this file was green while nine GETs against councilof.ai found 2 of 9 doors
  * carrying both fields: /api/rwa/evidence and /api/receipts/batch. /api/free-door served a 402
  * with no `csoai` block at all. The doors agree with origin/master, where only one of
- * free-door, evidence-bundle, eunomia-data, request-attestation, proof and witness names a
+ * free-door, evidence-bundle, signed-data-feed, request-attestation, proof and witness names a
  * free_preview at all — the contract lives on unmerged branches. Source-green and edge-green are
  * two readings, and this file is only ever the first one. Re-take the second with nine GETs
  * (~half of G5's hourly 20) after the carrying PRs merge and Pages redeploys.

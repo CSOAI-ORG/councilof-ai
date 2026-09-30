@@ -286,7 +286,8 @@ export function measuredOnModel(axes: readonly Axisish[]): string {
   return (
     `Behavioural (model-comparison) axis with published per-item rows: ${rowAxes.length} of ${cmp.length} ` +
     `(${ROWS_POWER.dataset}). The rows hold a ${f.models_in_rows}-model fleet: ${f.base_count} base models, compared ` +
-    `(${f.base_models.join(", ")}), and ${f.own_count} CSOAI own fine-tunes, excluded before comparison and never ` +
+    `(${f.base_models.join(", ")}), and ${f.own_count} of our own models — prompt overlays on stock base models ` +
+    `(system prompts, not trained weights; C-2026-0930-11) — excluded before comparison and never ` +
     `counted in a comparison${others}. Counted from the rows, not typed. ` +
     (retired.length
       ? `${retired.join(", ")}: the published rows are a retired bank; the served row states its own fleet on the axis. `

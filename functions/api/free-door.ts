@@ -264,7 +264,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // in the body alone. x402 v2 carries the challenge in that header — it is where a v2 client and
   // the Bazaar indexer look — so a door built specifically to be indexed was advertising a price
   // that nothing machine-readable could find. Measured 2026-09-05: free-door header=False, while
-  // /api/proof, /api/eunomia-data and /api/rwa/evidence all answered header=True.
+  // /api/proof, /api/signed-data-feed (then /api/eunomia-data) and /api/rwa/evidence all answered header=True.
   return paymentRequiredResponseSigned(answer, env);
 };
 

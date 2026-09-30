@@ -314,7 +314,7 @@ def mcnemar_mde(n, psi, alpha=ALPHA, power=POWER, tol=1e-5):
 
 def fleet_roster(models):
     """Count the fleet from the model ids that actually appear in the rows. Names only for base
-    models (third-party); our own fine-tunes are counted, never listed or ranked."""
+    models (third-party); our own prompt overlays are counted, never listed or compared."""
     models = set(models)
     own = sorted(m for m in models if is_own(m))
     base = sorted(m for m in models if m in BASES)
@@ -370,12 +370,13 @@ def write_power_module(repo, rows_dir, revision):
                   "probability, given the axis's paired items and its observed discordance rate (the share of "
                   "paired items on which exactly one of the two models is right). Exact binomial enumeration "
                   "with the same test body, not a normal approximation; rounded up to 0.001. Our own models are "
-                  "removed before ranking, as for separation. NOT_REACHABLE means no difference up to the "
+                  "removed before comparison, as for separation. NOT_REACHABLE means no difference up to the "
                   "observed discordance reaches 80% power, so there is no MDE to state; UNDEFINED means no "
                   "paired item is discordant, so the test has nothing to count.",
         "fleet": {**fleet,
-                  "rule": "Counted from the model ids present in the published rows. Base models are ranked; "
-                          "CSOAI's own fine-tunes are excluded before ranking and never counted in a comparison."},
+                  "rule": "Counted from the model ids present in the published rows. Base models are compared; "
+                          "our own models (system-prompt overlays on stock base models, not trained weights) "
+                          "are excluded before comparison and never counted in a comparison."},
         "producer": "scripts/gspc_separation_from_rows.py --power",
         "signed": False,
         "signed_note": "Not a signed artifact. It adds power figures beside the signed rows record "

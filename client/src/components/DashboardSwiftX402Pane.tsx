@@ -65,7 +65,7 @@ export default function DashboardSwiftX402Pane() {
             {" "}· assembly · amount at 402
           </li>
           <li>
-            <a className="font-semibold text-emerald-800 underline" href="/api/eunomia-data?feed=1">/api/eunomia-data?feed=1</a>
+            <a className="font-semibold text-emerald-800 underline" href="/api/signed-data-feed?feed=1">/api/signed-data-feed?feed=1</a>
             {" "}· assembly · amount at 402
           </li>
           <li>
