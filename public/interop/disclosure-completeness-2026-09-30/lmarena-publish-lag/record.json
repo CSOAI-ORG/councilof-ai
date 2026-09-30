@@ -1,0 +1,829 @@
+{
+ "answer": "22 configs; 29394 of 29394 rows state n. Lag from the stated as-of date to the push of each config's latest file: between 3.03 and 27.10 hours. The as-of is a calendar date, so each lag is a 24-hour band, not a point; lag is measured on 22 of 22 configs.",
+ "as_of": "2026-09-29T15:38:33Z",
+ "as_of_meaning": "the newest fetch time among the pinned inputs; the measurement reads those bytes and nothing later",
+ "computed_at": "2026-09-30T02:48:51Z",
+ "doctrine": "A disclosure-completeness or lag measurement of a public artifact. It counts what the artifact states about itself. It does not rank, grade or compare the models or platforms listed inside it, and it is not a certification. UNMEASURED stays UNMEASURED.",
+ "headline": {
+  "configs": 22,
+  "configs_with_lag_measured": 22,
+  "dataset_revision": "4c39810eebe1cb20145d0a81756a95b8f057cd03",
+  "lag_hours_lower_max": 3.1,
+  "lag_hours_lower_min": 3.03,
+  "lag_hours_upper_max": 27.1,
+  "lag_hours_upper_min": 27.03,
+  "rows": 29394,
+  "rows_stating_n": 29394
+ },
+ "kind": "measurement.publication_lag",
+ "licence": {
+  "attribution_required": "LMArena, Hugging Face dataset lmarena-ai/leaderboard-dataset, CC BY 4.0",
+  "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+  "upstream": {
+   "attribution": "LMArena, Hugging Face dataset lmarena-ai/leaderboard-dataset, CC BY 4.0",
+   "basis": "dataset cardData.license (checked each run; drift fails closed)",
+   "id": "CC-BY-4.0"
+  }
+ },
+ "measurement": {
+  "candidate_id": "lmarena.publish_lag_and_n-2d6359bea91d9a21",
+  "inputs": [
+   {
+    "bytes": 21587,
+    "fetched_at": "2026-09-29T15:11:35Z",
+    "sha256": "338925590ebfb98387f99ead4960ec0218ac66752fc386eef82ef68aeb7aea31",
+    "source_id": "lmarena-dataset-api"
+   },
+   {
+    "bytes": 7800,
+    "fetched_at": "2026-09-29T15:21:04Z",
+    "sha256": "99f110c5d984ba52b51e5c4db4a59b264b72a92bccbeb5b5f519e9c693b50ba9",
+    "source_id": "lmarena-latest:agent"
+   },
+   {
+    "bytes": 7378,
+    "fetched_at": "2026-09-29T15:21:06Z",
+    "sha256": "e489a66ef6ca3ef30b60e3a7205bb7e08688971e3b56c0598a4ddca2e34b38a4",
+    "source_id": "lmarena-latest:agent_bash_recovery_steps"
+   },
+   {
+    "bytes": 7360,
+    "fetched_at": "2026-09-29T15:21:08Z",
+    "sha256": "9b09f6a983c1b5baf5e5d982173a2c9204a3477c831a8427be0c70459aa65047",
+    "source_id": "lmarena-latest:agent_praise_complaint"
+   },
+   {
+    "bytes": 7387,
+    "fetched_at": "2026-09-29T15:21:10Z",
+    "sha256": "16bcb89d152fd9169662680bcc19181dd9a48c65595544c0162bffe7eca0f451",
+    "source_id": "lmarena-latest:agent_steerability"
+   },
+   {
+    "bytes": 7372,
+    "fetched_at": "2026-09-29T15:21:12Z",
+    "sha256": "3828e7dc9291daf3e00bdac7c9fcede490b2cde67fc093c26467828a15e5c054",
+    "source_id": "lmarena-latest:agent_task_outcome_explicit"
+   },
+   {
+    "bytes": 7306,
+    "fetched_at": "2026-09-29T15:21:14Z",
+    "sha256": "60a33a5e491a75839dfc8d888df1d1ff1d219f292e212ae548ffde143d25f350",
+    "source_id": "lmarena-latest:agent_tool_hallucination"
+   },
+   {
+    "bytes": 7503,
+    "fetched_at": "2026-09-29T15:21:16Z",
+    "sha256": "5fddd9f56aa810f58b49a4463d2d400129c814bd7d76e908120956f86ae5540d",
+    "source_id": "lmarena-latest:document"
+   },
+   {
+    "bytes": 7490,
+    "fetched_at": "2026-09-29T15:21:18Z",
+    "sha256": "c3e72313c0436cb60e3619ad805805f55b333fab36047355a81d6e3e624502c1",
+    "source_id": "lmarena-latest:document_style_control"
+   },
+   {
+    "bytes": 10409,
+    "fetched_at": "2026-09-29T15:21:20Z",
+    "sha256": "a99cc8996a58cff1b70c1327ef692a5ffb7a062885ccd0fcce95a25fd3b3b074",
+    "source_id": "lmarena-latest:image_edit"
+   },
+   {
+    "bytes": 7877,
+    "fetched_at": "2026-09-29T15:21:22Z",
+    "sha256": "55fd7438208d72ff4838978c4dc626060750918edda5c2a6f91fce193241090d",
+    "source_id": "lmarena-latest:image_to_video"
+   },
+   {
+    "bytes": 6921,
+    "fetched_at": "2026-09-29T15:21:24Z",
+    "sha256": "948bfaca789487e80931ff8cfd48609c0d730c606123cd149db5480181182585",
+    "source_id": "lmarena-latest:search"
+   },
+   {
+    "bytes": 6704,
+    "fetched_at": "2026-09-29T15:21:26Z",
+    "sha256": "a002178666b41e272e1c821fd6c67708610435002496e2653f79622c1b98a780",
+    "source_id": "lmarena-latest:search_factuality"
+   },
+   {
+    "bytes": 6919,
+    "fetched_at": "2026-09-29T15:21:28Z",
+    "sha256": "5118cea1324decc62c5e89beaad54b2b21012410b750414c098fb8c9b646c19d",
+    "source_id": "lmarena-latest:search_style_control"
+   },
+   {
+    "bytes": 599825,
+    "fetched_at": "2026-09-29T15:21:30Z",
+    "sha256": "e354a561677daab35d8239ddc7b4c26418395bcf9b6d4b4240a63c9023ed3631",
+    "source_id": "lmarena-latest:text"
+   },
+   {
+    "bytes": 190710,
+    "fetched_at": "2026-09-29T15:21:32Z",
+    "sha256": "f594dc3fff0d8c481a7d62efa5740d5fef7fc2dd58c757d7f1caa31ff5a85aa9",
+    "source_id": "lmarena-latest:text_factuality"
+   },
+   {
+    "bytes": 600270,
+    "fetched_at": "2026-09-29T15:21:34Z",
+    "sha256": "f27faadaf9b014f214f1ff613d46e1bc101c0ad6e6369c06f2d572979f2bd1a1",
+    "source_id": "lmarena-latest:text_style_control"
+   },
+   {
+    "bytes": 36565,
+    "fetched_at": "2026-09-29T15:21:36Z",
+    "sha256": "49d5f40e3ee4ffd0be028435d2c348dab4edb853c20b39e017eabd0dc7c6ad11",
+    "source_id": "lmarena-latest:text_to_image"
+   },
+   {
+    "bytes": 7889,
+    "fetched_at": "2026-09-29T15:21:38Z",
+    "sha256": "4cbc25e6f3099699723dfb739bb7561978335d2cbf2cc8038d7c091259bb5fc4",
+    "source_id": "lmarena-latest:text_to_video"
+   },
+   {
+    "bytes": 5583,
+    "fetched_at": "2026-09-29T15:21:40Z",
+    "sha256": "bb11fb01061cbb81214ac0e82182aa88b8764381f332eb133ebea780fdc5eb1c",
+    "source_id": "lmarena-latest:video_edit"
+   },
+   {
+    "bytes": 58508,
+    "fetched_at": "2026-09-29T15:21:42Z",
+    "sha256": "5de6b6ef4815dfb61aa8664e504702e6f11e7ffdfb0fa8c98a0d69306c835006",
+    "source_id": "lmarena-latest:vision"
+   },
+   {
+    "bytes": 58496,
+    "fetched_at": "2026-09-29T15:21:44Z",
+    "sha256": "08228267bd74115b15fc95620aa7cb7d24df7b37af88caa9322c0fc225c34bee",
+    "source_id": "lmarena-latest:vision_style_control"
+   },
+   {
+    "bytes": 26614,
+    "fetched_at": "2026-09-29T15:21:46Z",
+    "sha256": "d08ff29d3dd61ccb43b67e8a6eb40a2d69f99f100fa3157d5c2823ea6edc8528",
+    "source_id": "lmarena-latest:webdev"
+   },
+   {
+    "bytes": 1949,
+    "fetched_at": "2026-09-29T15:37:51Z",
+    "sha256": "99ac804c4a21fefaffe5dd167f66f22734a761fec2a5d5b74e16b9d672ca7ba6",
+    "source_id": "lmarena-tree:agent"
+   },
+   {
+    "bytes": 2029,
+    "fetched_at": "2026-09-29T15:37:53Z",
+    "sha256": "f546cfc7751136b2ebcd2fd1d90a9f1d32a4ee70c8ad20e29bd9a7d042133558",
+    "source_id": "lmarena-tree:agent_bash_recovery_steps"
+   },
+   {
+    "bytes": 1845,
+    "fetched_at": "2026-09-29T15:37:55Z",
+    "sha256": "e5c92e5523931f52c2475fa7cbef2477fa798b02d8d256d1e0af91f6f4840e8d",
+    "source_id": "lmarena-tree:agent_praise_complaint"
+   },
+   {
+    "bytes": 2001,
+    "fetched_at": "2026-09-29T15:37:57Z",
+    "sha256": "98d96cabc45361f5bf57d6f725a2a1139fbef93e4293f48b73b3067226ad7ae1",
+    "source_id": "lmarena-tree:agent_steerability"
+   },
+   {
+    "bytes": 1865,
+    "fetched_at": "2026-09-29T15:37:59Z",
+    "sha256": "b1f19e190cf1d0d9a8fba4a9e43ead2dc38c1efb0bdb09111e230ed09a4edd2d",
+    "source_id": "lmarena-tree:agent_task_outcome_explicit"
+   },
+   {
+    "bytes": 2025,
+    "fetched_at": "2026-09-29T15:38:01Z",
+    "sha256": "8a2a88ad5017690e0cf8b18e00523e34ca2086407a31058b97df61875a9be16f",
+    "source_id": "lmarena-tree:agent_tool_hallucination"
+   },
+   {
+    "bytes": 1961,
+    "fetched_at": "2026-09-29T15:38:03Z",
+    "sha256": "8bcc56d4d8c0e4ea7ec855de865cf1c630d0aa8e5c5a754a3a649ead8442cbfd",
+    "source_id": "lmarena-tree:document"
+   },
+   {
+    "bytes": 2017,
+    "fetched_at": "2026-09-29T15:38:05Z",
+    "sha256": "f24f2fa45963b5ea16d332ead22844c56b86ad3521f6535008925280c476f353",
+    "source_id": "lmarena-tree:document_style_control"
+   },
+   {
+    "bytes": 1973,
+    "fetched_at": "2026-09-29T15:38:07Z",
+    "sha256": "674279766a0138e89f9c81fd5691d59e487ee42ea9f4875e58f125173fb79035",
+    "source_id": "lmarena-tree:image_edit"
+   },
+   {
+    "bytes": 1985,
+    "fetched_at": "2026-09-29T15:38:09Z",
+    "sha256": "373c23eab5f0c32302e3e5aa60ed0def0332480a0b363e3f357c9b0a0e370055",
+    "source_id": "lmarena-tree:image_to_video"
+   },
+   {
+    "bytes": 1953,
+    "fetched_at": "2026-09-29T15:38:11Z",
+    "sha256": "72563902e4c5497825a959eeb39ae8804f4fd0994b485760c3e0d0fc2a037613",
+    "source_id": "lmarena-tree:search"
+   },
+   {
+    "bytes": 1995,
+    "fetched_at": "2026-09-29T15:38:13Z",
+    "sha256": "7bc14a253eedd3e7dab9b505772dab87314346c45a999fdc13da4d1b08913392",
+    "source_id": "lmarena-tree:search_factuality"
+   },
+   {
+    "bytes": 2009,
+    "fetched_at": "2026-09-29T15:38:15Z",
+    "sha256": "6ccc0d5894bcdae4a00f76bfa5231d920f1be4730009597f3cbc34180072db3e",
+    "source_id": "lmarena-tree:search_style_control"
+   },
+   {
+    "bytes": 1955,
+    "fetched_at": "2026-09-29T15:38:17Z",
+    "sha256": "f09208de6211e226bd64bc1cbbac6b23633bd731562e82112417f1bda3f4e0ca",
+    "source_id": "lmarena-tree:text"
+   },
+   {
+    "bytes": 1997,
+    "fetched_at": "2026-09-29T15:38:19Z",
+    "sha256": "eef579c0482d39e7b0af6f1892743a16246dff619e2a7fef03b37f4afab156f6",
+    "source_id": "lmarena-tree:text_factuality"
+   },
+   {
+    "bytes": 2011,
+    "fetched_at": "2026-09-29T15:38:21Z",
+    "sha256": "9d3cd8ab2dd26108d59efca541750a5213cd08730daacac3d03779b98a28f975",
+    "source_id": "lmarena-tree:text_style_control"
+   },
+   {
+    "bytes": 1985,
+    "fetched_at": "2026-09-29T15:38:23Z",
+    "sha256": "58e41b3063f7cb0d96c200cf6a026c86ec4735a0e5195f037842a613271ecc01",
+    "source_id": "lmarena-tree:text_to_image"
+   },
+   {
+    "bytes": 1981,
+    "fetched_at": "2026-09-29T15:38:25Z",
+    "sha256": "80a2a68cc6fd97df87edb6ddf1c6f19abac447874d73fdd46fd556446279a862",
+    "source_id": "lmarena-tree:text_to_video"
+   },
+   {
+    "bytes": 1967,
+    "fetched_at": "2026-09-29T15:38:27Z",
+    "sha256": "a384a0661ac55ccbbb5cad6afa0b00e2578f3cb209ae26235621a92ad8db7879",
+    "source_id": "lmarena-tree:video_edit"
+   },
+   {
+    "bytes": 1959,
+    "fetched_at": "2026-09-29T15:38:29Z",
+    "sha256": "879104560158d517604a0979aa80f7f159c8863e1b2ca4baeeba94ea9dace999",
+    "source_id": "lmarena-tree:vision"
+   },
+   {
+    "bytes": 2015,
+    "fetched_at": "2026-09-29T15:38:31Z",
+    "sha256": "908ca499c9e4cf099e7a706874afc4dd48f899c98439640c70972b425de8b3a7",
+    "source_id": "lmarena-tree:vision_style_control"
+   },
+   {
+    "bytes": 1959,
+    "fetched_at": "2026-09-29T15:38:33Z",
+    "sha256": "18b41a978a4684cef3d71200857e389ba966b73d1dfb2f5443753e83df7bebd0",
+    "source_id": "lmarena-tree:webdev"
+   }
+  ],
+  "inputs_digest_sha256": "ce1dc648269384732c19402e5948ec4393a0e4693d3496d19f6fbcd9e7fe750b",
+  "measure": "lmarena.publish_lag_and_n",
+  "method": {
+   "code": "adapters.py",
+   "code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+   "description": "Per config 'latest' split: lag between the push (Hub lastCommit) of that config's latest parquet and the newest leaderboard_publish_date stated in its rows; rows whose sample-size column (first of vote_count/observation_count/session_count) is a positive number (n stated)."
+  },
+  "result": {
+   "dataset_pushed_at": "2026-09-29T03:04:24.000Z",
+   "dataset_revision": "4c39810eebe1cb20145d0a81756a95b8f057cd03",
+   "not_reported": "ratings and ranks are deliberately not read into this record (no ranking)",
+   "per_config": [
+    {
+     "config": "agent",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:04:07.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "observation_count",
+     "rows": 46,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 46,
+      "numerator": 46,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "agent_bash_recovery_steps",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:04:10.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "observation_count",
+     "rows": 46,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 46,
+      "numerator": 46,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "agent_praise_complaint",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:04:14.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "observation_count",
+     "rows": 46,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 46,
+      "numerator": 46,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "agent_steerability",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:04:17.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "observation_count",
+     "rows": 46,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 46,
+      "numerator": 46,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "agent_task_outcome_explicit",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:04:21.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "observation_count",
+     "rows": 46,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 46,
+      "numerator": 46,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "agent_tool_hallucination",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:04:24.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "observation_count",
+     "rows": 46,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 46,
+      "numerator": 46,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "document",
+     "lag": {
+      "file_pushed_at": "2026-09-14T03:04:13.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-13"
+     },
+     "n_column": "vote_count",
+     "rows": 44,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 44,
+      "numerator": 44,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-13"
+     ]
+    },
+    {
+     "config": "document_style_control",
+     "lag": {
+      "file_pushed_at": "2026-09-14T03:04:16.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-13"
+     },
+     "n_column": "vote_count",
+     "rows": 44,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 44,
+      "numerator": 44,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-13"
+     ]
+    },
+    {
+     "config": "image_edit",
+     "lag": {
+      "file_pushed_at": "2026-09-23T03:02:54.000Z",
+      "lag_hours_lower": 3.05,
+      "lag_hours_upper": 27.05,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-22"
+     },
+     "n_column": "vote_count",
+     "rows": 98,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 98,
+      "numerator": 98,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-22"
+     ]
+    },
+    {
+     "config": "image_to_video",
+     "lag": {
+      "file_pushed_at": "2026-09-23T03:02:58.000Z",
+      "lag_hours_lower": 3.05,
+      "lag_hours_upper": 27.05,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-22"
+     },
+     "n_column": "vote_count",
+     "rows": 48,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 48,
+      "numerator": 48,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-22"
+     ]
+    },
+    {
+     "config": "search",
+     "lag": {
+      "file_pushed_at": "2026-08-25T03:02:00.000Z",
+      "lag_hours_lower": 3.03,
+      "lag_hours_upper": 27.03,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-08-24"
+     },
+     "n_column": "vote_count",
+     "rows": 34,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 34,
+      "numerator": 34,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-08-24"
+     ]
+    },
+    {
+     "config": "search_factuality",
+     "lag": {
+      "file_pushed_at": "2026-08-25T03:02:02.000Z",
+      "lag_hours_lower": 3.03,
+      "lag_hours_upper": 27.03,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-08-24"
+     },
+     "n_column": "vote_count",
+     "rows": 32,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 32,
+      "numerator": 32,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-08-24"
+     ]
+    },
+    {
+     "config": "search_style_control",
+     "lag": {
+      "file_pushed_at": "2026-08-25T03:02:05.000Z",
+      "lag_hours_lower": 3.03,
+      "lag_hours_upper": 27.03,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-08-24"
+     },
+     "n_column": "vote_count",
+     "rows": 34,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 34,
+      "numerator": 34,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-08-24"
+     ]
+    },
+    {
+     "config": "text",
+     "lag": {
+      "file_pushed_at": "2026-09-26T03:05:27.000Z",
+      "lag_hours_lower": 3.09,
+      "lag_hours_upper": 27.09,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-25"
+     },
+     "n_column": "vote_count",
+     "rows": 10821,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 10821,
+      "numerator": 10821,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-25"
+     ]
+    },
+    {
+     "config": "text_factuality",
+     "lag": {
+      "file_pushed_at": "2026-09-26T03:05:32.000Z",
+      "lag_hours_lower": 3.09,
+      "lag_hours_upper": 27.09,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-25"
+     },
+     "n_column": "vote_count",
+     "rows": 3722,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 3722,
+      "numerator": 3722,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-25"
+     ]
+    },
+    {
+     "config": "text_style_control",
+     "lag": {
+      "file_pushed_at": "2026-09-26T03:05:43.000Z",
+      "lag_hours_lower": 3.1,
+      "lag_hours_upper": 27.1,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-25"
+     },
+     "n_column": "vote_count",
+     "rows": 10821,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 10821,
+      "numerator": 10821,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-25"
+     ]
+    },
+    {
+     "config": "text_to_image",
+     "lag": {
+      "file_pushed_at": "2026-09-25T03:02:34.000Z",
+      "lag_hours_lower": 3.04,
+      "lag_hours_upper": 27.04,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-24"
+     },
+     "n_column": "vote_count",
+     "rows": 664,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 664,
+      "numerator": 664,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2025-01-24",
+      "2025-02-11",
+      "2026-09-24"
+     ]
+    },
+    {
+     "config": "text_to_video",
+     "lag": {
+      "file_pushed_at": "2026-09-23T03:03:05.000Z",
+      "lag_hours_lower": 3.05,
+      "lag_hours_upper": 27.05,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-22"
+     },
+     "n_column": "vote_count",
+     "rows": 48,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 48,
+      "numerator": 48,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-22"
+     ]
+    },
+    {
+     "config": "video_edit",
+     "lag": {
+      "file_pushed_at": "2026-08-28T03:05:21.000Z",
+      "lag_hours_lower": 3.09,
+      "lag_hours_upper": 27.09,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-08-27"
+     },
+     "n_column": "vote_count",
+     "rows": 10,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 10,
+      "numerator": 10,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-08-27"
+     ]
+    },
+    {
+     "config": "vision",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:03:51.000Z",
+      "lag_hours_lower": 3.06,
+      "lag_hours_upper": 27.06,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "vote_count",
+     "rows": 1065,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 1065,
+      "numerator": 1065,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-01-09",
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "vision_style_control",
+     "lag": {
+      "file_pushed_at": "2026-09-29T03:03:55.000Z",
+      "lag_hours_lower": 3.07,
+      "lag_hours_upper": 27.07,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-28"
+     },
+     "n_column": "vote_count",
+     "rows": 1065,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 1065,
+      "numerator": 1065,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-01-09",
+      "2026-09-28"
+     ]
+    },
+    {
+     "config": "webdev",
+     "lag": {
+      "file_pushed_at": "2026-09-26T03:05:47.000Z",
+      "lag_hours_lower": 3.1,
+      "lag_hours_upper": 27.1,
+      "resolution": "as_of is a calendar date (UTC day), so the true lag lies in [upper - 24h, upper]; push time is the lastCommit of that config's latest parquet in the Hub's file listing",
+      "stated_as_of": "2026-09-25"
+     },
+     "n_column": "vote_count",
+     "rows": 568,
+     "rows_not_stating_n": [],
+     "rows_not_stating_n_capped_at": 100,
+     "rows_stating_n": {
+      "denominator": 568,
+      "numerator": 568,
+      "value": 1.0
+     },
+     "stated_as_of_values": [
+      "2026-09-13",
+      "2026-09-25"
+     ]
+    }
+   ]
+  },
+  "unmeasured": []
+ },
+ "publication": "PUBLISHED on councilof.ai; signed by did:web:csoai.org#board-attestation-1 (record.signed.json beside this file)",
+ "question": "For each config of the LMArena dataset on Hugging Face, how long after the stated as-of date was the latest file pushed, and how many rows state a sample size (n)?",
+ "recompute": {
+  "code": "../method/adapters.py",
+  "code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+  "inputs_availability": "The input bytes are not republished here (upstream licences differ). The upstream URLs are named in source.urls; if the upstream has changed since as_of, its bytes will no longer match the pinned sha256 and the recompute cannot be run from the live URL.",
+  "rule": "Fetch or supply the input bytes whose sha256 values are pinned in measurement.inputs; run verify.py --recompute <dir of blobs named by sha256>; it re-runs the named measure in method/adapters.py and compares with measurement.result field for field.",
+  "verify_script": "../verify.py"
+ },
+ "record_id": "lmarena-publish-lag-2026-09-30",
+ "republished": "Per-config row counts, stated as-of dates, push times and lag bounds. Ratings and ranks are not read into the record.",
+ "schema": "csoai.disclosure-completeness-record/0.1",
+ "set": "disclosure-completeness-2026-09-30",
+ "source": {
+  "name": "LMArena, Hugging Face dataset lmarena-ai/leaderboard-dataset",
+  "publisher": "LMArena",
+  "urls": [
+   "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset"
+  ]
+ },
+ "title": "LMArena leaderboard dataset: publication lag and stated sample size",
+ "unmeasured": []
+}

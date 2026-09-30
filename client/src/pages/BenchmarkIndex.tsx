@@ -409,6 +409,12 @@ export default function BenchmarkIndex() {
             >
               Our benchmark estate →
             </Link>
+            <Link
+              href="/measurements/disclosure-completeness"
+              className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"
+            >
+              What these sources state about themselves →
+            </Link>
             <a
               href="/api/gspc"
               className="rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200"

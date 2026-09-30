@@ -205,6 +205,8 @@ function discover() {
     "/measurements/disclosure-lag/2026-09-medicare-agent",
     // Second disclosure-lag measurement (owner-approved 2026-09-28): figures render from the signed record.
     "/measurements/disclosure-lag/2026-09-gemini-evaluation",
+    // Disclosure completeness of public benchmark artifacts (2026-09-30): figures render from the newest signed set.
+    "/measurements/disclosure-completeness",
     // /verify-server — per-server evidence lookup (2026-09-26); the shell carries the doctrine and form.
     "/verify-server",
     // /measurement-capsules — the human page for the capsule index (2026-09-26); the folder holds only data.

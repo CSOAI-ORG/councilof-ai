@@ -1,0 +1,1130 @@
+{
+ "answer": "Of 11112 result rows in 87 files, 6189 state a result date and 330 state a sample size (n); 33 state both.",
+ "as_of": "2026-09-29T15:10:19Z",
+ "as_of_meaning": "the newest fetch time among the pinned inputs; the measurement reads those bytes and nothing later",
+ "computed_at": "2026-09-30T02:48:46Z",
+ "doctrine": "A disclosure-completeness or lag measurement of a public artifact. It counts what the artifact states about itself. It does not rank, grade or compare the models or platforms listed inside it, and it is not a certification. UNMEASURED stays UNMEASURED.",
+ "headline": {
+  "files": 87,
+  "files_with_no_date_column": 60,
+  "files_with_no_n_column": 81,
+  "rows": 11112,
+  "rows_stating_both": {
+   "denominator": 11112,
+   "numerator": 33,
+   "value": 0.00297
+  },
+  "rows_stating_date": {
+   "denominator": 11112,
+   "numerator": 6189,
+   "value": 0.556965
+  },
+  "rows_stating_n": {
+   "denominator": 11112,
+   "numerator": 330,
+   "value": 0.029698
+  }
+ },
+ "kind": "measurement.disclosure_completeness",
+ "licence": {
+  "attribution_required": "Epoch AI, 'Capabilities & benchmarking'. Published online at epoch.ai. Retrieved from https://epoch.ai/benchmarks",
+  "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+  "upstream": {
+   "attribution": "Epoch AI, 'Capabilities & benchmarking'. Published online at epoch.ai. Retrieved from https://epoch.ai/benchmarks",
+   "basis": "README.md inside the zip",
+   "id": "CC-BY-4.0"
+  }
+ },
+ "measurement": {
+  "candidate_id": "epoch.date_and_n_stated-ea9ae5475078a58c",
+  "inputs": [
+   {
+    "bytes": 2321952,
+    "fetched_at": "2026-09-29T15:10:19Z",
+    "sha256": "18359b677ea97b03677a0bcb41aafd64d579bfb420f2c60d838109da77577f35",
+    "source_id": "epoch-ai--leaderboard"
+   }
+  ],
+  "inputs_digest_sha256": "69bb279093ee7e13ab79ea6a9c9a0ce4bfd6b73ffd243d1c292fd7dcaf729d8d",
+  "measure": "epoch.date_and_n_stated",
+  "method": {
+   "code": "adapters.py",
+   "code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+   "description": "Per CSV in benchmark_data.zip: rows with a non-empty value in any listed result-date column, and in any listed sample-size column. Column lists are fixed and published in result.column_rule."
+  },
+  "result": {
+   "all_files": {
+    "files": 87,
+    "files_with_no_date_column": [
+     "adversarial_nli_external.csv",
+     "ale_bench_external.csv",
+     "algotune_external.csv",
+     "apex_agents_external.csv",
+     "arc_agi_2_external.csv",
+     "arc_agi_external.csv",
+     "arc_ai2_external.csv",
+     "bbh_external.csv",
+     "benchmark_metadata.csv",
+     "blueprint_bench_2_external.csv",
+     "bool_q_external.csv",
+     "btf3_external.csv",
+     "cad_eval_external.csv",
+     "cl_bench_external.csv",
+     "cl_bench_life_external.csv",
+     "common_sense_qa_2_external.csv",
+     "critpt_external.csv",
+     "cursorbench_external.csv",
+     "cybench_external.csv",
+     "deepresearchbench_external.csv",
+     "deepswe_external.csv",
+     "dtbench_external.csv",
+     "enigma_eval_external.csv",
+     "epoch_capabilities_index/edi_scores.csv",
+     "exploitbench_external.csv",
+     "fictionlivebench_external.csv",
+     "forecastbench_external.csv",
+     "frontiercode_external.csv",
+     "frontierswe_external.csv",
+     "gdpval_external.csv",
+     "geobench_external.csv",
+     "gsm8k_external.csv",
+     "hella_swag_external.csv",
+     "hle_external.csv",
+     "lambada_external.csv",
+     "lech_mazur_writing_external.csv",
+     "live_bench_external.csv",
+     "lmca_external.csv",
+     "metr_time_horizons_external.csv",
+     "mindcube_external.csv",
+     "mmlu_external.csv",
+     "open_book_qa_external.csv",
+     "osworld_2_external.csv",
+     "piqa_external.csv",
+     "posttrainbench_external.csv",
+     "proofbench_external.csv",
+     "rli_external.csv",
+     "scicode_external.csv",
+     "science_qa_external.csv",
+     "simplebench_external.csv",
+     "spatialviz_bench_external.csv",
+     "superglue_external.csv",
+     "surface_evolver_bench_external.csv",
+     "trivia_qa_external.csv",
+     "vending_bench_2_external.csv",
+     "video_mme_external.csv",
+     "vpct_external.csv",
+     "weirdml_external.csv",
+     "weirdml_v3_external.csv",
+     "wino_grande_external.csv"
+    ],
+    "files_with_no_n_column": [
+     "adversarial_nli_external.csv",
+     "aider_polyglot_external.csv",
+     "ale_bench_external.csv",
+     "algotune_external.csv",
+     "apex_agents_external.csv",
+     "arc_agi_2_external.csv",
+     "arc_agi_external.csv",
+     "arc_ai2_external.csv",
+     "balrog_external.csv",
+     "bbh_external.csv",
+     "benchmark_metadata.csv",
+     "blueprint_bench_2_external.csv",
+     "bool_q_external.csv",
+     "btf3_external.csv",
+     "chess_puzzles.csv",
+     "cl_bench_external.csv",
+     "cl_bench_life_external.csv",
+     "common_sense_qa_2_external.csv",
+     "critpt_external.csv",
+     "cursorbench_external.csv",
+     "cybench_external.csv",
+     "deepresearchbench_external.csv",
+     "dtbench_external.csv",
+     "ebr_bench.csv",
+     "enigma_eval_external.csv",
+     "epoch_capabilities_index/eci_scores.csv",
+     "epoch_capabilities_index/edi_scores.csv",
+     "epoch_capabilities_index/processed_data_for_eci.csv",
+     "fictionlivebench_external.csv",
+     "frontiercode_external.csv",
+     "frontiermath.csv",
+     "frontiermath_erdos.csv",
+     "frontiermath_tier_4.csv",
+     "frontiermath_tier_4_v2.csv",
+     "frontiermath_tiers_1_3_v2.csv",
+     "frontierswe_external.csv",
+     "furniture_assembly.csv",
+     "gbaeval_external.csv",
+     "gdp_pdf_external.csv",
+     "gdpval_external.csv",
+     "geobench_external.csv",
+     "gpqa_diamond.csv",
+     "gsm8k_external.csv",
+     "gso_external.csv",
+     "hella_swag_external.csv",
+     "hle_external.csv",
+     "lambada_external.csv",
+     "lech_mazur_writing_external.csv",
+     "live_bench_external.csv",
+     "lmca_external.csv",
+     "math_level_5.csv",
+     "metr_time_horizons_external.csv",
+     "mindcube_external.csv",
+     "mirrorcode.csv",
+     "mmlu_external.csv",
+     "model_metadata.csv",
+     "mystery_game_puzzles.csv",
+     "open_book_qa_external.csv",
+     "os_world_external.csv",
+     "osworld_2_external.csv",
+     "otis_mock_aime_2024_2025.csv",
+     "piqa_external.csv",
+     "posttrainbench_external.csv",
+     "proofbench_external.csv",
+     "rli_external.csv",
+     "scicode_external.csv",
+     "science_qa_external.csv",
+     "simplebench_external.csv",
+     "simpleqa_verified.csv",
+     "spatialviz_bench_external.csv",
+     "superglue_external.csv",
+     "surface_evolver_bench_external.csv",
+     "swe_bench_verified.csv",
+     "terminalbench_external.csv",
+     "the_agent_company_external.csv",
+     "trivia_qa_external.csv",
+     "vending_bench_2_external.csv",
+     "video_mme_external.csv",
+     "vpct_external.csv",
+     "weirdml_external.csv",
+     "wino_grande_external.csv"
+    ],
+    "rows": 11112,
+    "rows_stating_both": {
+     "denominator": 11112,
+     "numerator": 33,
+     "value": 0.00297
+    },
+    "rows_stating_date": {
+     "denominator": 11112,
+     "numerator": 6189,
+     "value": 0.556965
+    },
+    "rows_stating_n": {
+     "denominator": 11112,
+     "numerator": 330,
+     "value": 0.029698
+    }
+   },
+   "column_rule": {
+    "date_columns": [
+     "Started at",
+     "Date",
+     "date",
+     "Run date",
+     "Evaluation date",
+     "Date of evaluation",
+     "Graded at",
+     "Date added",
+     "Created",
+     "Last updated"
+    ],
+    "excluded": {
+     "Release date": "model release date, not the result's date",
+     "stderr / CI columns": "uncertainty, not a sample size"
+    },
+    "n_columns": [
+     "Total tasks",
+     "Runs",
+     "Episodes",
+     "Overall number of predictions",
+     "Dataset number of predictions",
+     "Market number of predictions",
+     "Votes",
+     "Checks Run"
+    ]
+   },
+   "licence_statement_sha256": "2999fcc0fe8b354dbb1aa264832bb456bcb48228468dcedd890b149c85416b8c",
+   "per_file": [
+    {
+     "date_columns": [],
+     "file": "adversarial_nli_external.csv",
+     "n_columns": [],
+     "rows": 19,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Date of evaluation"
+     ],
+     "file": "aider_polyglot_external.csv",
+     "n_columns": [],
+     "rows": 77,
+     "rows_stating_both": 0,
+     "rows_stating_date": 61,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "ale_bench_external.csv",
+     "n_columns": [],
+     "rows": 118,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "algotune_external.csv",
+     "n_columns": [],
+     "rows": 18,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "apex_agents_external.csv",
+     "n_columns": [],
+     "rows": 38,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "arc_agi_2_external.csv",
+     "n_columns": [],
+     "rows": 233,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "arc_agi_external.csv",
+     "n_columns": [],
+     "rows": 253,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "arc_ai2_external.csv",
+     "n_columns": [],
+     "rows": 145,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Date added"
+     ],
+     "file": "balrog_external.csv",
+     "n_columns": [],
+     "rows": 41,
+     "rows_stating_both": 0,
+     "rows_stating_date": 41,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "bbh_external.csv",
+     "n_columns": [],
+     "rows": 92,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "benchmark_metadata.csv",
+     "n_columns": [],
+     "rows": 88,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "blueprint_bench_2_external.csv",
+     "n_columns": [],
+     "rows": 26,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "bool_q_external.csv",
+     "n_columns": [],
+     "rows": 206,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "btf3_external.csv",
+     "n_columns": [],
+     "rows": 15,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "cad_eval_external.csv",
+     "n_columns": [
+      "Total tasks",
+      "Checks Run"
+     ],
+     "rows": 15,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 15
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "chess_puzzles.csv",
+     "n_columns": [],
+     "rows": 224,
+     "rows_stating_both": 0,
+     "rows_stating_date": 224,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "cl_bench_external.csv",
+     "n_columns": [],
+     "rows": 23,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "cl_bench_life_external.csv",
+     "n_columns": [],
+     "rows": 17,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "common_sense_qa_2_external.csv",
+     "n_columns": [],
+     "rows": 10,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "critpt_external.csv",
+     "n_columns": [],
+     "rows": 193,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "cursorbench_external.csv",
+     "n_columns": [],
+     "rows": 54,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "cybench_external.csv",
+     "n_columns": [],
+     "rows": 22,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "deepresearchbench_external.csv",
+     "n_columns": [],
+     "rows": 41,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "deepswe_external.csv",
+     "n_columns": [
+      "Runs"
+     ],
+     "rows": 69,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 69
+    },
+    {
+     "date_columns": [],
+     "file": "dtbench_external.csv",
+     "n_columns": [],
+     "rows": 213,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "ebr_bench.csv",
+     "n_columns": [],
+     "rows": 23,
+     "rows_stating_both": 0,
+     "rows_stating_date": 23,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "enigma_eval_external.csv",
+     "n_columns": [],
+     "rows": 46,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "date"
+     ],
+     "file": "epoch_capabilities_index/eci_scores.csv",
+     "n_columns": [],
+     "rows": 268,
+     "rows_stating_both": 0,
+     "rows_stating_date": 268,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "epoch_capabilities_index/edi_scores.csv",
+     "n_columns": [],
+     "rows": 58,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "date"
+     ],
+     "file": "epoch_capabilities_index/processed_data_for_eci.csv",
+     "n_columns": [],
+     "rows": 2780,
+     "rows_stating_both": 0,
+     "rows_stating_date": 2780,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "exploitbench_external.csv",
+     "n_columns": [
+      "Episodes"
+     ],
+     "rows": 20,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 20
+    },
+    {
+     "date_columns": [],
+     "file": "fictionlivebench_external.csv",
+     "n_columns": [],
+     "rows": 62,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "forecastbench_external.csv",
+     "n_columns": [
+      "Overall number of predictions",
+      "Dataset number of predictions",
+      "Market number of predictions"
+     ],
+     "rows": 82,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 82
+    },
+    {
+     "date_columns": [],
+     "file": "frontiercode_external.csv",
+     "n_columns": [],
+     "rows": 44,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "frontiermath.csv",
+     "n_columns": [],
+     "rows": 101,
+     "rows_stating_both": 0,
+     "rows_stating_date": 100,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "frontiermath_erdos.csv",
+     "n_columns": [],
+     "rows": 5,
+     "rows_stating_both": 0,
+     "rows_stating_date": 5,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "frontiermath_tier_4.csv",
+     "n_columns": [],
+     "rows": 72,
+     "rows_stating_both": 0,
+     "rows_stating_date": 71,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "frontiermath_tier_4_v2.csv",
+     "n_columns": [],
+     "rows": 65,
+     "rows_stating_both": 0,
+     "rows_stating_date": 65,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "frontiermath_tiers_1_3_v2.csv",
+     "n_columns": [],
+     "rows": 109,
+     "rows_stating_both": 0,
+     "rows_stating_date": 109,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "frontierswe_external.csv",
+     "n_columns": [],
+     "rows": 16,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "furniture_assembly.csv",
+     "n_columns": [],
+     "rows": 27,
+     "rows_stating_both": 0,
+     "rows_stating_date": 27,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Graded at"
+     ],
+     "file": "gbaeval_external.csv",
+     "n_columns": [],
+     "rows": 23,
+     "rows_stating_both": 0,
+     "rows_stating_date": 21,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Last updated"
+     ],
+     "file": "gdp_pdf_external.csv",
+     "n_columns": [],
+     "rows": 52,
+     "rows_stating_both": 0,
+     "rows_stating_date": 12,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "gdpval_external.csv",
+     "n_columns": [],
+     "rows": 11,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "geobench_external.csv",
+     "n_columns": [],
+     "rows": 32,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "gpqa_diamond.csv",
+     "n_columns": [],
+     "rows": 314,
+     "rows_stating_both": 0,
+     "rows_stating_date": 313,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "gsm8k_external.csv",
+     "n_columns": [],
+     "rows": 235,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Evaluation date"
+     ],
+     "file": "gso_external.csv",
+     "n_columns": [],
+     "rows": 38,
+     "rows_stating_both": 0,
+     "rows_stating_date": 27,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "hella_swag_external.csv",
+     "n_columns": [],
+     "rows": 135,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "hle_external.csv",
+     "n_columns": [],
+     "rows": 54,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "lambada_external.csv",
+     "n_columns": [],
+     "rows": 80,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "lech_mazur_writing_external.csv",
+     "n_columns": [],
+     "rows": 49,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "live_bench_external.csv",
+     "n_columns": [],
+     "rows": 64,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "lmca_external.csv",
+     "n_columns": [],
+     "rows": 175,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "math_level_5.csv",
+     "n_columns": [],
+     "rows": 108,
+     "rows_stating_both": 0,
+     "rows_stating_date": 108,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "metr_time_horizons_external.csv",
+     "n_columns": [],
+     "rows": 50,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "mindcube_external.csv",
+     "n_columns": [],
+     "rows": 5,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "mirrorcode.csv",
+     "n_columns": [],
+     "rows": 9,
+     "rows_stating_both": 0,
+     "rows_stating_date": 9,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "mmlu_external.csv",
+     "n_columns": [],
+     "rows": 249,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "date"
+     ],
+     "file": "model_metadata.csv",
+     "n_columns": [],
+     "rows": 1095,
+     "rows_stating_both": 0,
+     "rows_stating_date": 1080,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "mystery_game_puzzles.csv",
+     "n_columns": [],
+     "rows": 129,
+     "rows_stating_both": 0,
+     "rows_stating_date": 129,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "open_book_qa_external.csv",
+     "n_columns": [],
+     "rows": 71,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Date added"
+     ],
+     "file": "os_world_external.csv",
+     "n_columns": [],
+     "rows": 58,
+     "rows_stating_both": 0,
+     "rows_stating_date": 56,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "osworld_2_external.csv",
+     "n_columns": [],
+     "rows": 16,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "otis_mock_aime_2024_2025.csv",
+     "n_columns": [],
+     "rows": 292,
+     "rows_stating_both": 0,
+     "rows_stating_date": 291,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "piqa_external.csv",
+     "n_columns": [],
+     "rows": 140,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "posttrainbench_external.csv",
+     "n_columns": [],
+     "rows": 12,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "proofbench_external.csv",
+     "n_columns": [],
+     "rows": 70,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "rli_external.csv",
+     "n_columns": [],
+     "rows": 15,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "scicode_external.csv",
+     "n_columns": [],
+     "rows": 185,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "science_qa_external.csv",
+     "n_columns": [],
+     "rows": 104,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "simplebench_external.csv",
+     "n_columns": [],
+     "rows": 104,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "simpleqa_verified.csv",
+     "n_columns": [],
+     "rows": 81,
+     "rows_stating_both": 0,
+     "rows_stating_date": 81,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "spatialviz_bench_external.csv",
+     "n_columns": [],
+     "rows": 8,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "superglue_external.csv",
+     "n_columns": [],
+     "rows": 11,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "surface_evolver_bench_external.csv",
+     "n_columns": [],
+     "rows": 28,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Started at"
+     ],
+     "file": "swe_bench_verified.csv",
+     "n_columns": [],
+     "rows": 35,
+     "rows_stating_both": 0,
+     "rows_stating_date": 35,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Run date",
+      "Created"
+     ],
+     "file": "terminalbench_external.csv",
+     "n_columns": [],
+     "rows": 204,
+     "rows_stating_both": 0,
+     "rows_stating_date": 204,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Date"
+     ],
+     "file": "the_agent_company_external.csv",
+     "n_columns": [],
+     "rows": 16,
+     "rows_stating_both": 0,
+     "rows_stating_date": 16,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "trivia_qa_external.csv",
+     "n_columns": [],
+     "rows": 115,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "vending_bench_2_external.csv",
+     "n_columns": [],
+     "rows": 62,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "video_mme_external.csv",
+     "n_columns": [],
+     "rows": 50,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "vpct_external.csv",
+     "n_columns": [],
+     "rows": 38,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [
+      "Last updated"
+     ],
+     "file": "webdev_arena_external.csv",
+     "n_columns": [
+      "Votes"
+     ],
+     "rows": 131,
+     "rows_stating_both": 33,
+     "rows_stating_date": 33,
+     "rows_stating_n": 131
+    },
+    {
+     "date_columns": [],
+     "file": "weirdml_external.csv",
+     "n_columns": [],
+     "rows": 173,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    },
+    {
+     "date_columns": [],
+     "file": "weirdml_v3_external.csv",
+     "n_columns": [
+      "Runs"
+     ],
+     "rows": 13,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 13
+    },
+    {
+     "date_columns": [],
+     "file": "wino_grande_external.csv",
+     "n_columns": [],
+     "rows": 145,
+     "rows_stating_both": 0,
+     "rows_stating_date": 0,
+     "rows_stating_n": 0
+    }
+   ]
+  },
+  "unmeasured": []
+ },
+ "publication": "PUBLISHED on councilof.ai; signed by did:web:csoai.org#board-attestation-1 (record.signed.json beside this file)",
+ "question": "Of the result rows in Epoch AI's benchmark_data.zip, how many state the date the result was produced, and how many state a sample size (n)?",
+ "recompute": {
+  "code": "../method/adapters.py",
+  "code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+  "inputs_availability": "The input bytes are not republished here (upstream licences differ). The upstream URLs are named in source.urls; if the upstream has changed since as_of, its bytes will no longer match the pinned sha256 and the recompute cannot be run from the live URL.",
+  "rule": "Fetch or supply the input bytes whose sha256 values are pinned in measurement.inputs; run verify.py --recompute <dir of blobs named by sha256>; it re-runs the named measure in method/adapters.py and compares with measurement.result field for field.",
+  "verify_script": "../verify.py"
+ },
+ "record_id": "epoch-date-and-n-2026-09-30",
+ "republished": "Per-file row counts and column names. No scores are republished.",
+ "schema": "csoai.disclosure-completeness-record/0.1",
+ "set": "disclosure-completeness-2026-09-30",
+ "source": {
+  "name": "Epoch AI, Capabilities & benchmarking (benchmark_data.zip)",
+  "publisher": "Epoch AI",
+  "urls": [
+   "https://epoch.ai/data/benchmark_data.zip",
+   "https://epoch.ai/benchmarks"
+  ]
+ },
+ "title": "Epoch AI benchmark data: how many result rows state a date and a sample size",
+ "unmeasured": []
+}

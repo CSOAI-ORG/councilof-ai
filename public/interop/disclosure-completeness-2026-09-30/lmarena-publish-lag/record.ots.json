@@ -1,0 +1,23 @@
+{
+ "schema": "csoai.ots-state/0.1",
+ "file": "record.json",
+ "sha256": "edc427fe7abe41e5a89e518935114255c68d4c843b2115d521ded65e3e3b7caa",
+ "ots_file": "record.json.ots",
+ "ots_sha256": "ac7b06a17e96c26d610ee6689884427bdf0b5574d7280df658ae169c78116e73",
+ "stamped_utc": "2026-09-30T03:12:36Z",
+ "calendars_accepted": [
+  "https://alice.btc.calendar.opentimestamps.org",
+  "https://bob.btc.calendar.opentimestamps.org",
+  "https://finney.calendar.eternitywall.com"
+ ],
+ "calendars_failed": {},
+ "proof_parses": true,
+ "proof_binds_to_file_digest": true,
+ "attestations": [
+  "PendingAttestation",
+  "PendingAttestation",
+  "PendingAttestation"
+ ],
+ "state": "PENDING_CALENDAR_COMMITMENT",
+ "state_meaning": "Calendars accepted this digest and promised future Bitcoin inclusion. This is NOT a Bitcoin attestation and is not described as one. The flywheel's daily ots-upgrade job re-reads it and publishes the upgraded proof as a new file once a BitcoinBlockHeaderAttestation is returned and checked against a block header."
+}
