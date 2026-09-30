@@ -1,0 +1,143 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "$id": "https://councilof.ai/spec/route-evidence/v0.1/schema.json",
+ "title": "csoai.route-evidence/0.1",
+ "description": "A profile of csoai.evidence-event/0.1 for one GSPC Route decision. A record must validate against the base schema AND this one; the profile only narrows. It absorbs csoai.route-receipt/0.1 as observed.execution. Routing is not ranking: choice_basis is separated_leader:<axis> only when observed.separation is SEPARATED. CC0-1.0.",
+ "type": "object",
+ "required": ["schema", "profile", "event_id", "subject", "claim", "method", "declared", "observed", "state", "value", "limits"],
+ "properties": {
+  "schema": {"const": "csoai.evidence-event/0.1"},
+  "profile": {"const": "csoai.route-evidence/0.1"},
+  "subject": {
+   "type": "object",
+   "required": ["kind", "locator"],
+   "properties": {
+    "kind": {"const": "route"},
+    "locator": {"type": "string", "pattern": "^urn:gspc:route:[0-9a-f-]{36}$"}
+   }
+  },
+  "method": {
+   "type": "object",
+   "required": ["id", "version", "holder"],
+   "properties": {"id": {"const": "gspc-route"}, "holder": {"const": "csoai"}}
+  },
+  "declared": {
+   "type": "object",
+   "required": ["task", "policy", "objective", "candidates_sha256"],
+   "properties": {
+    "task": {
+     "type": "object",
+     "required": ["sha256", "data_class", "content_retained"],
+     "additionalProperties": false,
+     "properties": {
+      "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+      "data_class": {"enum": ["public", "internal", "confidential", "pii"]},
+      "needs_write": {"type": "boolean"},
+      "content_retained": {"const": false}
+     }
+    },
+    "policy": {
+     "type": "object",
+     "required": ["caller_sha256", "floor_sha256", "cedar_schema_sha256", "presets", "rules", "uncheckable"],
+     "properties": {
+      "caller_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+      "floor_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+      "cedar_schema_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+      "presets": {"type": "array", "items": {"enum": ["read-only", "local-only", "eu-only", "no-unmeasured"]}},
+      "rules": {"type": "array", "items": {"type": "string"}},
+      "uncheckable": {"type": "array", "items": {"type": "string"}}
+     }
+    },
+    "objective": {
+     "type": "object",
+     "required": ["quality_axis", "weights", "tie_break"],
+     "properties": {
+      "quality_axis": {"type": ["string", "null"]},
+      "tie_break": {"type": "array", "minItems": 1, "items": {"enum": ["cheapest_declared", "local_first", "lexical_id"]}}
+     }
+    },
+    "candidates_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+   }
+  },
+  "observed": {
+   "type": "object",
+   "required": ["considered", "chosen", "separation", "execution", "heal", "payment"],
+   "properties": {
+    "considered": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": ["id", "kind", "permit", "forbid_policy", "measurements", "census"],
+      "properties": {
+       "permit": {"type": "boolean"},
+       "forbid_policy": {"type": ["string", "null"]},
+       "measurements": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": ["axis", "state", "value"],
+         "properties": {"state": {"enum": ["MEASURED", "UNTESTED"]}},
+         "if": {"properties": {"state": {"const": "UNTESTED"}}},
+         "then": {"properties": {"value": {"type": "null"}}}
+        }
+       },
+       "census": {
+        "type": "object",
+        "required": ["effect_binding"],
+        "properties": {"effect_binding": {"enum": ["CONSISTENT", "DIVERGENT", "UNMEASURED"]}}
+       }
+      }
+     }
+    },
+    "chosen": {
+     "oneOf": [
+      {"type": "null"},
+      {
+       "type": "object",
+       "required": ["id", "choice_basis"],
+       "properties": {
+        "id": {"type": "string"},
+        "choice_basis": {"type": "string", "pattern": "^(separated_leader:[a-z0-9-]+|tie_break:[a-z_>]+|only_permitted)$"}
+       }
+      }
+     ]
+    },
+    "separation": {"enum": ["SEPARATED", "TIE", "UNTESTED"]},
+    "execution": {
+     "type": "object",
+     "required": ["mode", "status"],
+     "properties": {"mode": {"enum": ["decide_only", "executed"]}}
+    },
+    "heal": {"type": "array", "maxItems": 2},
+    "payment": {
+     "type": "object",
+     "required": ["x402"],
+     "properties": {"x402": {"enum": ["none", "challenge", "settled"]}}
+    }
+   }
+  }
+ },
+ "allOf": [
+  {
+   "if": {"properties": {"observed": {"properties": {"execution": {"properties": {"mode": {"const": "decide_only"}}}}}}},
+   "then": {"properties": {"state": {"const": "UNMEASURED"}, "value": {"type": "null"}}}
+  },
+  {
+   "if": {"properties": {"observed": {"properties": {"separation": {"not": {"const": "SEPARATED"}}}}}},
+   "then": {
+    "properties": {
+     "observed": {
+      "properties": {
+       "chosen": {
+        "oneOf": [
+         {"type": "null"},
+         {"type": "object", "properties": {"choice_basis": {"not": {"pattern": "^separated_leader:"}}}}
+        ]
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}
