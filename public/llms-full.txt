@@ -715,22 +715,29 @@ date, hashed and timestamped so the record cannot be quietly rewritten, re-read 
 observed change recorded without alleging anything, and measured against public evidence where — and
 only where — public evidence can settle it.
 
-Specification v0.1, dedicated to the public domain under CC0 1.0 so it can be adopted, forked or
-translated without our permission: https://councilof.ai/spec/claim-maintenance/v0.1/
+Specification v0.2, dedicated to the public domain under CC0 1.0 so it can be adopted, forked or
+translated without our permission: https://councilof.ai/spec/claim-maintenance/v0.2/
   · document of record (Markdown, digest published in spec.json):
-    https://councilof.ai/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md
+    https://councilof.ai/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md
   · artifact JSON Schema:
-    https://councilof.ai/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json
-  · version index (a published version is never edited; v0.2 supersedes by existing):
+    https://councilof.ai/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json
+  · version index (a published version is never edited; v0.2 supersedes v0.1 by existing):
     https://councilof.ai/spec/claim-maintenance/
-  · cite as: Council of AI. Claim Maintenance, version 0.1. CSOAI Ltd, 2026-09-22.
-    DOI 10.5281/zenodo.22901908 · all versions 10.5281/zenodo.22901781 · https://zenodo.org/records/22901782
-    The deposited bytes and the served bytes are identical (same SHA-256), which is why the DOI is
-    recorded in a sidecar rather than written into the document of record.
+  · cite as: Council of AI. Claim Maintenance, version 0.2. CSOAI Ltd, 2026-09-25.
+    https://councilof.ai/spec/claim-maintenance/v0.2/
+  · v0.1 remains archived under DOI 10.5281/zenodo.22901908 (concept record 10.5281/zenodo.22901781).
+    Do not invent a version DOI for v0.2; its current identity is the stable URL + published document SHA-256.
+  · deterministic v0.2 conformance corpus: https://councilof.ai/spec/claim-maintenance/conformance/v0.2/
+    (interop fixtures only — never a badge, score, certification or mark of approval)
+  · informative interoperability map: https://councilof.ai/spec/claim-maintenance/interop/
+    (SCITT RFC 9943, in-toto, Gemara, OpenTimestamps, x402; no external conformance claimed)
 
 Register of every subject we maintain claims on — GENERATED from the registry files on disk, never
 hand-listed, carrying its own `as_of`:
   GET https://councilof.ai/api/claims/register        (same bytes: /spec/claim-maintenance/register.json)
+  GET https://councilof.ai/api/claims/events          (append-only implementation event chain)
+  GET https://councilof.ai/api/claims/events/head     (signed/verified chain head)
+Events are implementation evidence around the loop; they do not create additional v0.2 states and are not corrections by themselves.
 Read `totals.subjects`, `totals.claims` and `totals.by_state` LIVE. Do not freeze any of them here:
 this register's whole discipline is that it counts what exists, and a number typed into a file is a
 number nothing retires.
@@ -760,6 +767,10 @@ been run and its attestation path verified.
 
 Human page: https://councilof.ai/claim-maintenance/
 Right of reply: nicholas@csoai.org; corrections published at https://councilof.ai/api/corrections
+
+### x402 exact-delivery evidence boundary
+
+The standard x402 Offer & Receipt JWS remains unchanged. Where a paid door already has an exact pre-payment content commitment, CSOAI may additionally issue `csoai.x402.delivery-binding/0.1`, a separately signed JWS binding the standard receipt SHA-256 to the named request digest and delivery digest. Eunomia binds `method + LF + Request.url` to the pre-payment `payload.blocks` SHA-256. This does not hash HTTP headers or the response wrapper and does not prove buyer acceptance or repeat use. Verify the binding with POST `/api/receipts/verify` and optionally supply the bound standard receipt so its SHA-256 is recomputed.
 
 ## 8. THE ACCESS SURFACES
 

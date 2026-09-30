@@ -1,0 +1,95 @@
+{
+  "schema": "csoai.claim-maintenance.conformance-corpus/0.1",
+  "spec_version": "0.2",
+  "spec_url": "https://councilof.ai/spec/claim-maintenance/v0.2/",
+  "spec_document_sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e",
+  "reference_implementation": {
+    "url": "https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+    "sha256": "10432c76c61b34ff9b726d2341844833b3e9a7fef19e5b77e5e545c45483559d"
+  },
+  "what_this_is": "Deterministic interoperability fixtures for testing the public v0.2 verifier rules.",
+  "what_this_is_not": [
+    "Not certification.",
+    "Not a badge, score, ranking or mark of approval.",
+    "Not proof that an implementation is correct beyond these fixtures."
+  ],
+  "cases": [
+    {
+      "id": "valid-captured",
+      "file": "fixtures/valid-captured.json",
+      "sha256": "00ab2050673e58255653a0a583b092ef96b7879b16fa24824e60d01dfd3b7658",
+      "expected": "PASS",
+      "reason": "baseline captured state"
+    },
+    {
+      "id": "valid-unmeasured",
+      "file": "fixtures/valid-unmeasured.json",
+      "sha256": "aa0983ee95f002670afb4399f42c7b5f64288291b5e8295a959e31e6fd171a77",
+      "expected": "PASS",
+      "reason": "first-class unmeasured state"
+    },
+    {
+      "id": "valid-uncheckable",
+      "file": "fixtures/valid-uncheckable.json",
+      "sha256": "0b93359224a16097e6e6ce210d4040bd2d5d810b7384bc94aeaf438d3bef6543",
+      "expected": "PASS",
+      "reason": "evidence boundary is stated"
+    },
+    {
+      "id": "valid-measured",
+      "file": "fixtures/valid-measured.json",
+      "sha256": "a37f389587ebf27613f795a1655718ebca0ef57d04c1f4de4d0487700181bedb",
+      "expected": "PASS",
+      "reason": "bounded measurement with public evidence"
+    },
+    {
+      "id": "invalid-fifth-state",
+      "file": "fixtures/invalid-fifth-state.json",
+      "sha256": "8b35f54ef645927dcc9142564772e9fc9cd485104ef14ef92b4fe19d28df9735",
+      "expected": "FAIL",
+      "reason": "there is no fifth state"
+    },
+    {
+      "id": "invalid-empty-does-not-prove",
+      "file": "fixtures/invalid-empty-does-not-prove.json",
+      "sha256": "a96fc3ac9688cbb0226eec217a5371e63ea0ee9ef95d28e788a9b838fdcd510c",
+      "expected": "FAIL",
+      "reason": "does_not_prove must be non-empty"
+    },
+    {
+      "id": "invalid-measured-no-denominator",
+      "file": "fixtures/invalid-measured-no-denominator.json",
+      "sha256": "1b8ca74c4ff4eb1f94613dc12a081a7b975775e1675784bb0d536b6410f9098c",
+      "expected": "FAIL",
+      "reason": "rate/share measurements require denominator"
+    },
+    {
+      "id": "invalid-numeric-result-value",
+      "file": "fixtures/invalid-numeric-result-value.json",
+      "sha256": "4de8a81724459ff2b8ff743257d673b5526c9b3b2645d52be8ddacab7b064694",
+      "expected": "FAIL",
+      "reason": "numeric result values are not reproducible"
+    },
+    {
+      "id": "invalid-identical-change-digests",
+      "file": "fixtures/invalid-identical-change-digests.json",
+      "sha256": "4eacce59f3829edb4aff490af9f80fe04ac9272b3d065c26d3be48444cb2861b",
+      "expected": "FAIL",
+      "reason": "identical digests are not a change"
+    },
+    {
+      "id": "invalid-allegation-change-note",
+      "file": "fixtures/invalid-allegation-change-note.json",
+      "sha256": "b4a6cb03f7a37b091f022398600563e5cfb6a8f06331ef2a29b69ff81db7a5b9",
+      "expected": "FAIL",
+      "reason": "observed changes cannot imply motive or verdict"
+    },
+    {
+      "id": "invalid-plan-as-measurement",
+      "file": "fixtures/invalid-plan-as-measurement.json",
+      "sha256": "243c84d0d6b6f0fd0f53ea3fe210d8650f4f2168f4cbedc3e5914fc3ac281e2b",
+      "expected": "FAIL",
+      "reason": "a plan/result cannot masquerade as a measurement"
+    }
+  ]
+}

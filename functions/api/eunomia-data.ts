@@ -95,7 +95,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({schema:"csoai.eunomia-data/0.2",error:"feed_revision_changed",expected_blocks_sha256:expected,current_blocks_sha256:manifest.evidence.blocks_sha256,manifest_url:manifest.manifest_url,settled:false,signing_attempted:false},409);
   }
   const targetRecord = await requestRecord(request);
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], {
+    bazaar,
+    receiptRecordBinding: {
+      request: { alg: "sha256", value: targetRecord.target_sha256, preimage: targetRecord.preimage },
+      delivery: { alg: "sha256", value: manifest!.evidence.blocks_sha256, scope: "payload.blocks" },
+    },
+  });
 
   if (!payment.ok) {
     const paymentRequired = buildPaymentRequiredV2({
@@ -136,7 +142,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       blocks: feedBlocks(reads),
       delivery_manifest: manifest,
       request_record: targetRecord,
-      receipt_binding: "Separate x402 receipt remains path-scoped; this unsigned integrity record does not extend that signature.",
+      receipt_binding: {
+        standard_x402_receipt: payment.receipt || null,
+        csoai_delivery_binding: payment.deliveryBinding || null,
+        csoai_delivery_binding_gap: payment.deliveryBindingGap || null,
+        scope: "The standard x402 receipt is unchanged. The separate CSOAI JWS, when present, binds the standard receipt hash to request_record.target_sha256 and delivery_manifest.evidence.blocks_sha256 (payload.blocks). It does not hash HTTP headers or the surrounding response wrapper.",
+      },
       settle: payment.settlement || null,
       verify: `${origin}/gspc-verify`,
     },

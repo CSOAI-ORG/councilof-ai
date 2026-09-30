@@ -51,6 +51,7 @@ import {
   receiptExtension,
   receiptPayload,
   signReceipt,
+  signDeliveryBinding,
   storeReceipt,
 } from "./_x402_receipt";
 
@@ -155,6 +156,10 @@ export type X402Result = {
   receipt?: { format: "jws"; signature: string };
   /** Why there is no receipt on an otherwise successful settle. Absent when there is one. */
   receiptGap?: string;
+  /** Optional CSOAI JWS binding the standard receipt hash to an exact request/delivery commitment. Not part of x402. */
+  deliveryBinding?: { format: "jws"; signature: string };
+  /** Why a requested CSOAI delivery binding could not be produced. */
+  deliveryBindingGap?: string;
 };
 
 /** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
@@ -487,6 +492,10 @@ export async function verifyX402Payment(
   opts?: {
     allowZeroAmount?: boolean;
     bazaar?: { info: Record<string, unknown>; schema: Record<string, unknown> };
+    receiptRecordBinding?: {
+      request?: { alg: "sha256"; value: string; preimage: string };
+      delivery: { alg: "sha256"; value: string; scope: string };
+    };
   },
 ): Promise<X402Result> {
   const header =
@@ -733,6 +742,9 @@ export async function verifyX402Payment(
     // artefact — a receipt is evidence, never a gate.
     let receipt: { format: "jws"; signature: string } | undefined;
     let receiptGap: string | undefined;
+    let deliveryBinding: { format: "jws"; signature: string } | undefined;
+    let deliveryBindingPayload: import("./_x402_receipt").DeliveryBindingPayload | undefined;
+    let deliveryBindingGap: string | undefined;
     const pkcs8 = (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim();
     if (!settlement.payer) {
       receiptGap =
@@ -764,6 +776,22 @@ export async function verifyX402Payment(
           transaction: settlement.transaction,
         });
         receipt = await signReceipt(rp, pkcs8);
+        if (opts?.receiptRecordBinding) {
+          try {
+            const b = await signDeliveryBinding({
+              receipt,
+              resource: resourceUrl,
+              transaction: settlement.transaction,
+              issuedAt: rp.issuedAt,
+              request: opts.receiptRecordBinding.request,
+              delivery: opts.receiptRecordBinding.delivery,
+            }, pkcs8);
+            deliveryBinding = b.binding;
+            deliveryBindingPayload = b.payload;
+          } catch (e) {
+            deliveryBindingGap = `CSOAI delivery binding failed: ${(e as Error).message}`;
+          }
+        }
         // The CSOAI envelope beside settled:tx:* — a NAMED extension of ours, not the spec
         // artefact. `self` and `zero_value` are copied from the settlement record rather than
         // recomputed, so the receipt ledger and the One Number cannot disagree about the same
@@ -778,6 +806,8 @@ export async function verifyX402Payment(
             asset: accept?.asset || null,
             self: recorded.record ? recorded.record.self : null,
             settlement_recorded: recorded.stored,
+            ...(deliveryBinding ? { delivery_binding: deliveryBinding } : {}),
+            ...(deliveryBindingPayload ? { delivery_binding_payload: deliveryBindingPayload } : {}),
           }),
         );
         if (!stored.stored)
@@ -810,6 +840,8 @@ export async function verifyX402Payment(
       settlement,
       ...(receipt ? { receipt } : {}),
       ...(receiptGap ? { receiptGap } : {}),
+      ...(deliveryBinding ? { deliveryBinding } : {}),
+      ...(deliveryBindingGap ? { deliveryBindingGap } : {}),
     };
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };

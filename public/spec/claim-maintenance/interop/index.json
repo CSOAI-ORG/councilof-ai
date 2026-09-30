@@ -1,0 +1,74 @@
+{
+  "schema": "csoai.claim-maintenance.interop-map/0.1",
+  "as_of": "2026-09-30",
+  "claim_maintenance_version": "0.2",
+  "claim_maintenance_url": "https://councilof.ai/spec/claim-maintenance/v0.2/",
+  "rule": "These are informative transport/provenance mappings. They do not add Claim Maintenance states, alter v0.2, or assert conformance to another standard.",
+  "mappings": [
+    {
+      "target": "IETF SCITT",
+      "canonical_source": "https://www.rfc-editor.org/rfc/rfc9943",
+      "source_state": "RFC 9943, Proposed Standard, June 2026",
+      "mapping": "A Claim Maintenance artifact or registry digest can be the content committed by a signed statement. Registration with a SCITT Transparency Service may yield a transparency receipt.",
+      "boundary": [
+        "CSOAI does not call an unsigned construction a SCITT receipt.",
+        "A SCITT receipt proves registration/inclusion under the service policy, not the truth of a maintained claim."
+      ],
+      "existing_csoai_surface": "/interop/scitt-root-signed-statement.json"
+    },
+    {
+      "target": "in-toto Attestation",
+      "canonical_source": "https://github.com/in-toto/attestation/blob/main/spec/v1/statement.md",
+      "source_state": "v1 core statement model; AI-specific predicate proposals remain upstream proposals unless merged",
+      "mapping": "The Claim Maintenance artifact digest can be an in-toto Statement subject digest. The artifact may be carried in an implementation-specific predicate identified by a TypeURI.",
+      "boundary": [
+        "No upstream in-toto Claim Maintenance predicate is claimed.",
+        "Open AI-agent/eval predicate pull requests are watched but are not treated as released standards.",
+        "An attestation binds a statement; it does not turn the maintained claim into a verdict."
+      ]
+    },
+    {
+      "target": "OpenSSF Gemara",
+      "canonical_source": "https://gemara.openssf.org/model/",
+      "source_state": "Published stable logical model for GRC engineering",
+      "mapping": "Claim Maintenance supplies time-versioned public evidence observations and bounded measurements that can feed automated governance/evaluation/audit workflows.",
+      "boundary": [
+        "Claim Maintenance does not replace Gemara.",
+        "This map is not a Gemara conformance statement.",
+        "No Claim Maintenance state is converted into a compliance score."
+      ]
+    },
+    {
+      "target": "OpenTimestamps",
+      "canonical_source": "https://opentimestamps.org/",
+      "source_state": "Existing timestamp protocol used by the v0.2 timestamp discipline",
+      "mapping": "An artifact or registry digest may be submitted and later upgraded/verified to an independent Bitcoin-backed timestamp proof.",
+      "boundary": [
+        "Submitted/pending is not anchored.",
+        "A verified timestamp proves byte existence no later than the attested time, not claim truth."
+      ]
+    },
+    {
+      "target": "x402 Offer & Receipt",
+      "canonical_source": "https://github.com/x402-foundation/x402/blob/main/specs/extensions/extension-offer-and-receipt.md",
+      "source_state": "Optional extension; wire shape may evolve",
+      "mapping": "A commercial delivery may carry the standard server-signed x402 offer/receipt while CSOAI stores a separately named receipt-record envelope for operational evidence.",
+      "boundary": [
+        "The standard receipt is not silently extended with CSOAI-only fields.",
+        "Exact request/delivery commitments, where available, live in the named CSOAI envelope and are labelled by scope.",
+        "Payment, delivered bytes, buyer acceptance and repeat work remain separate states."
+      ]
+    },
+    {
+      "target": "CSOAI Claim Event Chain",
+      "canonical_source": "https://councilof.ai/api/claims/events",
+      "source_state": "CSOAI implementation evidence surface",
+      "mapping": "Append-only hash-chained observations record scheduling, read and workflow events around maintained claims; the signed head verifies feed integrity.",
+      "boundary": [
+        "Event states are not additional v0.2 Claim Maintenance states.",
+        "An event is not automatically a correction, finding or verdict.",
+        "/api/corrections remains the current CSOAI corrections ledger."
+      ]
+    }
+  ]
+}

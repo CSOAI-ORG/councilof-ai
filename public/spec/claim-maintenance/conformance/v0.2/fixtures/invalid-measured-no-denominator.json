@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.claim-maintenance.artifact/0.2",
+  "claim_id": "T-1",
+  "subject": {
+    "name": "Example Corp",
+    "identifier": "https://example.com/",
+    "identifier_kind": "url"
+  },
+  "claim_verbatim": "Example Corp publishes 60 percent coverage",
+  "source_url": "https://example.com/",
+  "access_date": "2026-09-30T00:00:00Z",
+  "source_content_hash": {
+    "alg": "sha256",
+    "value": "1111111111111111111111111111111111111111111111111111111111111111",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+  },
+  "claim_hash": "401b3f1f8fa410ecec06ae6a59454aea422cd5e0daa11bc0702e8a03d3f92ffa",
+  "state": "CLAIM_MEASURED",
+  "window": {
+    "start": "2026-09-01T00:00:00Z",
+    "end": "2026-09-30T00:00:00Z"
+  },
+  "method": {
+    "description": "count matching rows in the public example dataset",
+    "evidence": [
+      {
+        "url": "https://example.com/data.json",
+        "access_date": "2026-09-30T00:00:00Z",
+        "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+    ]
+  },
+  "result": {
+    "value": "60",
+    "unit": "percent",
+    "n": 100
+  },
+  "does_not_prove": [
+    "that the claim is true beyond this bounded public dataset"
+  ],
+  "observed_changes": [],
+  "conflicts": [],
+  "first_captured_utc": "2026-09-30T00:00:00Z",
+  "next_read_utc": "2026-10-07T00:00:00Z",
+  "artifact_sha256": "549c005b873cbc6347ab619df4c39fd0153b0f5ee315a57cac5e2d01265e6b75"
+}

@@ -21,5 +21,34 @@
       "document_sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e"
     }
   ],
-  "licence": "CC0-1.0"
+  "licence": "CC0-1.0",
+  "companions": {
+    "conformance_corpus": {
+      "version": "0.2",
+      "url": "https://councilof.ai/spec/claim-maintenance/conformance/v0.2/",
+      "manifest": "https://councilof.ai/spec/claim-maintenance/conformance/v0.2/manifest.json",
+      "state": "INTEROPERABILITY_FIXTURES",
+      "boundary": "No certification, badge, score, ranking or mark of approval."
+    },
+    "interoperability_map": {
+      "url": "https://councilof.ai/spec/claim-maintenance/interop/",
+      "json": "https://councilof.ai/spec/claim-maintenance/interop/index.json",
+      "state": "INFORMATIVE",
+      "boundary": "Does not change v0.2 or assert conformance to external standards."
+    },
+    "live_register": {
+      "url": "https://councilof.ai/api/claims/register",
+      "state": "PUBLIC_REGISTER"
+    },
+    "event_chain": {
+      "url": "https://councilof.ai/api/claims/events",
+      "head": "https://councilof.ai/api/claims/events/head",
+      "state": "IMPLEMENTATION_EVIDENCE",
+      "boundary": "Events are not extra v0.2 claim states or corrections by themselves."
+    },
+    "corrections_ledger": {
+      "url": "https://councilof.ai/api/corrections",
+      "state": "CURRENT_CSOAI_CORRECTIONS_LEDGER"
+    }
+  }
 }

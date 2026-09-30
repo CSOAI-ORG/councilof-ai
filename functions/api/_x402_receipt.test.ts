@@ -8,6 +8,7 @@ import { b64url, b64urlDecode, jcs, parseJws, signJws } from "./_x402_jws";
 import {
   receiptPayload,
   signReceipt,
+  signDeliveryBinding,
   verifyReceipt,
   receiptExtension,
   buildReceiptRecord,
@@ -18,6 +19,7 @@ import {
   receiptPayerKey,
   RECEIPT_JWS_SCHEMA,
   RECEIPT_RECORD_SCHEMA,
+  DELIVERY_BINDING_SCHEMA,
 } from "./_x402_receipt";
 import { OFFER_RECEIPT_EXTENSION } from "./_x402_offer";
 
@@ -156,7 +158,7 @@ describe("receiptExtension — the wire block (spec §6.7)", () => {
 describe("the CSOAI record envelope — ours, versioned, never the spec artefact", () => {
   it("is schema-tagged so a reader can tell it from the spec receipt it wraps", () => {
     expect(record().schema).toBe(RECEIPT_RECORD_SCHEMA);
-    expect(RECEIPT_RECORD_SCHEMA).toBe("csoai.x402.receipt-record/0.1");
+    expect(RECEIPT_RECORD_SCHEMA).toBe("csoai.x402.receipt-record/0.2");
   });
   it("keeps the full requested URL beside the spec payload's bare one", () => {
     const r = record();
@@ -176,8 +178,30 @@ describe("the CSOAI record envelope — ours, versioned, never the spec artefact
   it("points at the settlement record it belongs beside", () => {
     expect(record().settled_tx_key).toBe(`settled:tx:${TX}`);
   });
-  it("never places a signature over its own envelope — only the wrapped receipt is signed", () => {
+  it("never places a signature over its own envelope — only named signed sub-artifacts are signed", () => {
     expect(Object.keys(record())).not.toContain("sig_ed25519");
+  });
+
+  it("can carry a separately signed CSOAI delivery binding without changing the x402 receipt payload", async () => {
+    const receipt = { format: "jws" as const, signature: GOLDEN_RECEIPT_JWS };
+    const signed = await signDeliveryBinding({
+      receipt,
+      resource: `${RESOURCE}?feed=1`,
+      transaction: TX,
+      issuedAt: ISSUED,
+      request: { alg: "sha256", value: "3".repeat(64), preimage: "UTF-8(method + LF + Request.url)" },
+      delivery: { alg: "sha256", value: "4".repeat(64), scope: "payload.blocks" },
+    }, TEST_PKCS8, KID);
+    expect(signed.payload.schema).toBe(DELIVERY_BINDING_SCHEMA);
+    expect(signed.payload.delivery).toEqual({ alg: "sha256", value: "4".repeat(64), scope: "payload.blocks" });
+    expect(signed.payload.request?.value).toBe("3".repeat(64));
+    const parsed = parseJws(signed.binding.signature);
+    expect(parsed.payload).toEqual(signed.payload);
+    expect(await verifyReceipt(GOLDEN_RECEIPT_JWS, resolveTestKey, ISSUED + 10)).toMatchObject({ ok: true });
+    expect(Object.keys(parseJws(GOLDEN_RECEIPT_JWS).payload).sort()).toEqual(["issuedAt", "network", "payer", "resourceUrl", "transaction", "version"]);
+    const rec = record({ delivery_binding: signed.binding, delivery_binding_payload: signed.payload });
+    expect(rec.delivery_binding?.signature).toBe(signed.binding.signature);
+    expect(rec.delivery_binding_payload?.receipt_sha256).toBe(signed.payload.receipt_sha256);
   });
 });
 

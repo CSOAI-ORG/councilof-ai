@@ -1,0 +1,39 @@
+{
+  "schema": "csoai.claim-maintenance.artifact/0.2",
+  "claim_id": "T-1",
+  "subject": {
+    "name": "Example Corp",
+    "identifier": "https://example.com/",
+    "identifier_kind": "url"
+  },
+  "claim_verbatim": "Example Corp publishes 60 percent coverage",
+  "source_url": "https://example.com/",
+  "access_date": "2026-09-30T00:00:00Z",
+  "source_content_hash": {
+    "alg": "sha256",
+    "value": "1111111111111111111111111111111111111111111111111111111111111111",
+    "covers": "visible-text",
+    "extractor": "csoai-visible-text/2"
+  },
+  "claim_hash": "401b3f1f8fa410ecec06ae6a59454aea422cd5e0daa11bc0702e8a03d3f92ffa",
+  "state": "CLAIM_CAPTURED",
+  "measurement_plan": "measure against the public example dataset",
+  "window": null,
+  "denominator": null,
+  "does_not_prove": [
+    "this record does not indicate the claim is false"
+  ],
+  "observed_changes": [
+    {
+      "observed_utc": "2026-09-30T01:00:00Z",
+      "previous_hash": "2222222222222222222222222222222222222222222222222222222222222222",
+      "current_hash": "3333333333333333333333333333333333333333333333333333333333333333",
+      "extractor": "csoai-visible-text/2",
+      "note": "the subject quietly scrubbed the page"
+    }
+  ],
+  "conflicts": [],
+  "first_captured_utc": "2026-09-30T00:00:00Z",
+  "next_read_utc": "2026-10-07T00:00:00Z",
+  "artifact_sha256": "e067ac9ec24f86ebd59329df5675042544bbe3dc8e1dd4c05553e1cb99f7006c"
+}

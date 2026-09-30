@@ -16,7 +16,7 @@
  * TWO ARTEFACTS, NEVER CONFUSED:
  *   1. the spec receipt   — {format:"jws", signature} — what the buyer takes away; verifies with
  *      did.json alone (kid did:web:csoai.org#board-attestation-1).
- *   2. the CSOAI record   — schema csoai.x402.receipt-record/0.1 — a NAMED CSOAI ENVELOPE written
+ *   2. the CSOAI record   — schema csoai.x402.receipt-record/0.2 — a NAMED CSOAI ENVELOPE written
  *      to REVENUE_KV beside settled:tx:*; it wraps (1) and adds what the spec deliberately leaves
  *      out (amount_atomic, asset, zero_value, self). It is ours, it is versioned, it is not the
  *      spec artefact, and nothing in it is signed except the receipt it wraps.
@@ -29,7 +29,8 @@ import { toCaip2Network } from "./_x402_config";
 import { parseJws, signJws, verifyJwsSignature, JWS_ALG } from "./_x402_jws";
 import { X402_SIGNER_KID, OFFER_RECEIPT_EXTENSION } from "./_x402_offer";
 
-export const RECEIPT_RECORD_SCHEMA = "csoai.x402.receipt-record/0.1";
+export const RECEIPT_RECORD_SCHEMA = "csoai.x402.receipt-record/0.2";
+export const DELIVERY_BINDING_SCHEMA = "csoai.x402.delivery-binding/0.1";
 export const RECEIPT_KEY_PREFIX = "receipt:tx:";
 export const RECEIPT_PAYER_PREFIX = "receipt:payer:";
 
@@ -43,6 +44,44 @@ export type ReceiptPayload = {
 };
 
 export type SignedReceipt = { format: "jws"; signature: string };
+
+export type DigestCommitment = { alg: "sha256"; value: string; scope: string };
+export type RequestCommitment = { alg: "sha256"; value: string; preimage: string };
+export type DeliveryBindingPayload = {
+  schema: typeof DELIVERY_BINDING_SCHEMA;
+  receipt_sha256: string;
+  resource: string;
+  transaction: string | null;
+  issued_at: string;
+  request?: RequestCommitment;
+  delivery: DigestCommitment;
+};
+export type SignedDeliveryBinding = { format: "jws"; signature: string };
+
+async function sha256Text(s: string): Promise<string> {
+  const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
+  return [...d].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+export async function signDeliveryBinding(opts: {
+  receipt: SignedReceipt;
+  resource: string;
+  transaction?: string | null;
+  issuedAt: number;
+  request?: RequestCommitment;
+  delivery: DigestCommitment;
+}, pkcs8b64: string, kid = X402_SIGNER_KID): Promise<{ binding: SignedDeliveryBinding; payload: DeliveryBindingPayload }> {
+  const payload: DeliveryBindingPayload = {
+    schema: DELIVERY_BINDING_SCHEMA,
+    receipt_sha256: await sha256Text(opts.receipt.signature),
+    resource: opts.resource,
+    transaction: opts.transaction || null,
+    issued_at: new Date(Math.floor(opts.issuedAt) * 1000).toISOString(),
+    ...(opts.request ? { request: opts.request } : {}),
+    delivery: opts.delivery,
+  };
+  return { binding: { format: "jws", signature: await signJws(payload, pkcs8b64, kid) }, payload };
+}
 
 export function receiptPayload(opts: {
   network: string;
@@ -102,6 +141,8 @@ export type ReceiptRecord = {
   self: boolean | null; // null when no settlement record could be written (no KV) and self could not be judged
   settled_tx_key: string;
   settlement_recorded: boolean;
+  delivery_binding?: SignedDeliveryBinding;
+  delivery_binding_payload?: DeliveryBindingPayload; // decoded convenience copy; signed bytes are inside delivery_binding.signature
   issued_at: string; // ISO of payload.issuedAt
 };
 
@@ -114,6 +155,8 @@ export function buildReceiptRecord(opts: {
   asset: string | null;
   self: boolean | null;
   settlement_recorded: boolean;
+  delivery_binding?: SignedDeliveryBinding;
+  delivery_binding_payload?: DeliveryBindingPayload;
 }): ReceiptRecord {
   const zero_value = !opts.amount_atomic || !/^[1-9]\d*$/.test(opts.amount_atomic);
   return {
@@ -129,6 +172,8 @@ export function buildReceiptRecord(opts: {
     self: opts.self,
     settled_tx_key: `settled:tx:${opts.payload.transaction || "unknown"}`,
     settlement_recorded: opts.settlement_recorded,
+    ...(opts.delivery_binding ? { delivery_binding: opts.delivery_binding } : {}),
+    ...(opts.delivery_binding_payload ? { delivery_binding_payload: opts.delivery_binding_payload } : {}),
     issued_at: new Date(opts.payload.issuedAt * 1000).toISOString(),
   };
 }
@@ -219,6 +264,52 @@ export type ReceiptVerdict = {
   payload: ReceiptPayload | null;
   checks: Record<string, boolean | null>;
 };
+
+export type DeliveryBindingVerdict = {
+  ok: boolean;
+  reason: string;
+  kid: string | null;
+  payload: DeliveryBindingPayload | null;
+  checks: Record<string, boolean | null>;
+};
+
+export async function verifyDeliveryBinding(
+  compact: string,
+  resolveKey: (kid: string, resourceUrl: string) => Promise<Uint8Array | null>,
+  boundReceipt?: string | null,
+  nowSeconds = Math.floor(Date.now() / 1000),
+  maxSkewSeconds = 300,
+): Promise<DeliveryBindingVerdict> {
+  const checks: Record<string, boolean | null> = { parsed: null, alg: null, schema: null, fields: null, receipt_hash_match: null, kid_resolved: null, signature: null, issued_at_plausible: null };
+  let parsed;
+  try { parsed = parseJws(compact); checks.parsed = true; }
+  catch (e) { checks.parsed = false; return { ok: false, reason: (e as Error).message, kid: null, payload: null, checks }; }
+  const kid = parsed.header.kid;
+  checks.alg = parsed.header.alg === JWS_ALG;
+  if (!checks.alg) return { ok: false, reason: `alg ${parsed.header.alg} is not ${JWS_ALG}`, kid, payload: null, checks };
+  const p = parsed.payload as Partial<DeliveryBindingPayload>;
+  checks.schema = p.schema === DELIVERY_BINDING_SCHEMA;
+  if (!checks.schema) return { ok: false, reason: `delivery binding schema ${String(p.schema)} is not ${DELIVERY_BINDING_SCHEMA}`, kid, payload: null, checks };
+  const hex64 = (v: unknown) => typeof v === "string" && /^[0-9a-f]{64}$/.test(v);
+  const delivery = p.delivery as DigestCommitment | undefined;
+  const request = p.request as RequestCommitment | undefined;
+  checks.fields = !!(
+    hex64(p.receipt_sha256) && typeof p.resource === "string" && /^https?:\/\//.test(p.resource) &&
+    typeof p.issued_at === "string" && delivery?.alg === "sha256" && hex64(delivery?.value) && typeof delivery?.scope === "string" && delivery.scope &&
+    (!request || (request.alg === "sha256" && hex64(request.value) && typeof request.preimage === "string" && !!request.preimage))
+  );
+  if (!checks.fields) return { ok: false, reason: "delivery binding payload is missing or has invalid digest/resource fields", kid, payload: p as DeliveryBindingPayload, checks };
+  if (boundReceipt) { checks.receipt_hash_match = (await sha256Text(boundReceipt)) === p.receipt_sha256; if (!checks.receipt_hash_match) return { ok: false, reason: "bound receipt sha256 does not match delivery binding", kid, payload: p as DeliveryBindingPayload, checks }; }
+  const key = await resolveKey(kid, String(p.resource));
+  checks.kid_resolved = !!key;
+  if (!key) return { ok: false, reason: `kid ${kid} did not resolve to a key authorised for ${p.resource}`, kid, payload: p as DeliveryBindingPayload, checks };
+  checks.signature = await verifyJwsSignature(parsed, key);
+  if (!checks.signature) return { ok: false, reason: "delivery binding signature does not verify under the resolved key", kid, payload: p as DeliveryBindingPayload, checks };
+  const issued = Math.floor(Date.parse(String(p.issued_at)) / 1000);
+  checks.issued_at_plausible = Number.isFinite(issued) && issued <= nowSeconds + maxSkewSeconds;
+  if (!checks.issued_at_plausible) return { ok: false, reason: `issued_at ${String(p.issued_at)} is invalid or in the future`, kid, payload: p as DeliveryBindingPayload, checks };
+  return { ok: true, reason: "delivery binding verifies under the resolved key", kid, payload: p as DeliveryBindingPayload, checks };
+}
 
 const REQUIRED: (keyof ReceiptPayload)[] = ["version", "network", "resourceUrl", "payer", "issuedAt"];
 

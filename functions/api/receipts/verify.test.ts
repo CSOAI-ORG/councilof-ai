@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { handle, resolveKidFromDid, extractJws, sniffKind, DID_DOC_URL } from "./verify";
 import { b64url, b64urlDecode, jcs, signJws } from "../_x402_jws";
-import { receiptPayload } from "../_x402_receipt";
+import { receiptPayload, signDeliveryBinding, DELIVERY_BINDING_SCHEMA } from "../_x402_receipt";
 import { offerPayload } from "../_x402_offer";
 
 const TEST_PKCS8 = "MC4CAQAwBQYDK2VwBCIEIAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8g";
@@ -28,6 +28,18 @@ const post = (body: unknown) =>
 
 const goodReceipt = () =>
   signJws(receiptPayload({ network: "base", resourceUrl: RESOURCE, payer: PAYER, issuedAt: ISSUED }), TEST_PKCS8, KID);
+
+const goodDeliveryBinding = async () => {
+  const receipt = await goodReceipt();
+  const signed = await signDeliveryBinding({
+    receipt: { format: "jws", signature: receipt },
+    resource: RESOURCE,
+    issuedAt: ISSUED,
+    request: { alg: "sha256", value: "3".repeat(64), preimage: "UTF-8(method + LF + Request.url)" },
+    delivery: { alg: "sha256", value: "4".repeat(64), scope: "payload.blocks" },
+  }, TEST_PKCS8, KID);
+  return { receipt, signed };
+};
 
 describe("resolveKidFromDid — authorization, kept apart from cryptography (spec §4.5.1)", () => {
   it("returns the key for a kid listed in the document, for a host it governs", async () => {
@@ -65,6 +77,7 @@ describe("extractJws / sniffKind", () => {
   it("reads the artefact kind from the payload, not from the caller's label", () => {
     expect(sniffKind({ payer: "0x1", issuedAt: 1 })).toBe("receipt");
     expect(sniffKind({ amount: "1", scheme: "exact" })).toBe("offer");
+    expect(sniffKind({ schema: DELIVERY_BINDING_SCHEMA, resource: RESOURCE })).toBe("delivery-binding");
     expect(sniffKind({ hello: "world" })).toBeNull();
   });
 });
@@ -78,6 +91,23 @@ describe("POST /api/receipts/verify", () => {
     expect(b.signature_valid).toBe(true);
     expect(b.signer_authorised).toBe(true);
     expect(b.kid).toBe(KID);
+  });
+
+  it("VALID for a CSOAI delivery binding and checks the bound standard receipt hash", async () => {
+    const { receipt, signed } = await goodDeliveryBinding();
+    const b = (await (await handle(post({ delivery_binding: signed.binding, bound_receipt: receipt }), didDoc, ISSUED + 5)).json()) as Record<string, unknown>;
+    expect(b.verdict).toBe("VALID");
+    expect(b.kind).toBe("delivery-binding");
+    expect((b.checks as Record<string, unknown>).receipt_hash_match).toBe(true);
+    expect((b.payload as Record<string, unknown>).schema).toBe(DELIVERY_BINDING_SCHEMA);
+  });
+
+  it("INVALID when a delivery binding is paired with the wrong standard receipt", async () => {
+    const { signed } = await goodDeliveryBinding();
+    const other = await signJws(receiptPayload({ network: "base", resourceUrl: RESOURCE, payer: "0x0000000000000000000000000000000000000009", issuedAt: ISSUED }), TEST_PKCS8, KID);
+    const b = (await (await handle(post({ delivery_binding: signed.binding, bound_receipt: other }), didDoc, ISSUED + 5)).json()) as Record<string, unknown>;
+    expect(b.verdict).toBe("INVALID");
+    expect(String(b.reason)).toMatch(/bound receipt sha256 does not match/);
   });
 
   it("VALID for a signed offer too — the same door, both artefacts", async () => {

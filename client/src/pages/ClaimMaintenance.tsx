@@ -15,10 +15,12 @@ import seoHead from "../data/seo-head.json";
  * possible place to start freezing one.
  */
 const CANONICAL = "https://councilof.ai/claim-maintenance/";
-const SPEC = "/spec/claim-maintenance/v0.1/";
-const SPEC_MD = "/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md";
+const SPEC = "/spec/claim-maintenance/v0.2/";
+const SPEC_MD = "/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md";
 const SPEC_INDEX = "/spec/claim-maintenance/";
-const SPEC_SCHEMA = "/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json";
+const SPEC_SCHEMA = "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json";
+const CONFORMANCE = "/spec/claim-maintenance/conformance/v0.2/";
+const INTEROP = "/spec/claim-maintenance/interop/";
 const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs";
@@ -61,7 +63,7 @@ const PAGE_LD = {
       "The continuous, independent observation of the public claims an organisation makes about itself or its products: capturing each claim verbatim with its source and date, hashing and timestamping it so the record cannot be quietly rewritten, re-reading it on a schedule, recording every observed change without alleging anything, and measuring the claim against public evidence where and only where public evidence can settle it.",
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
-      name: "Claim Maintenance, version 0.1",
+      name: "Claim Maintenance, version 0.2",
       url: "https://councilof.ai" + SPEC,
     },
     url: CANONICAL,
@@ -73,13 +75,15 @@ const PAGE_LD = {
     "https://councilof.ai" + CORRECTIONS,
     "https://councilof.ai" + CLAIM_EVENTS,
     "https://councilof.ai" + CLAIM_EVENTS_HEAD,
+    "https://councilof.ai" + CONFORMANCE,
+    "https://councilof.ai" + INTEROP,
   ],
   license: "https://creativecommons.org/publicdomain/zero/1.0/",
   citation: {
     "@type": "CreativeWork",
-    name: "Claim Maintenance, version 0.1",
-    identifier: "https://doi.org/10.5281/zenodo.22901908",
-    url: "https://councilof.ai/spec/claim-maintenance/v0.1/",
+    name: "Claim Maintenance, version 0.2",
+    version: "0.2",
+    url: "https://councilof.ai/spec/claim-maintenance/v0.2/",
   },
 };
 
@@ -176,8 +180,10 @@ export default function ClaimMaintenance() {
             evidence can settle it.
           </p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold">
-            <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.1)</a>
+            <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.2)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>The register (JSON)</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={CONFORMANCE}>Conformance corpus</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={INTEROP}>Interop map</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>Run the code</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
           </div>
@@ -185,15 +191,13 @@ export default function ClaimMaintenance() {
             Tell us which public claim and source you want to follow. A monitoring scope and cadence would be agreed separately; being listed in this public register does not mean a service has been commissioned.
           </p>
           <p className="mt-5 text-sm text-slate-400">
-            The specification is dedicated to the public domain under CC0 1.0 — adopt it, fork it or translate it
-            without asking us. The reference implementation is MIT. Archived with a persistent identifier we do not
-            control: <a className="underline" href={DOI_URL}>{DOI}</a> (
-            <a className="underline" href={CONCEPT_DOI_URL}>all versions</a>). A DOI makes a document citable and
-            permanent; it does not make it right.
+            The current specification is v0.2 and is dedicated to the public domain under CC0 1.0 — adopt it, fork it or translate it
+            without asking us. The reference implementation is MIT. Version 0.1 remains archived under <a className="underline" href={DOI_URL}>{DOI}</a> (
+            <a className="underline" href={CONCEPT_DOI_URL}>concept record</a>); v0.2 is identified by its stable URL and published document SHA-256 in the version index. A persistent identifier or digest makes bytes citable; it does not make them right.
           </p>
           <p className="mt-3 text-sm text-slate-400">
-            Cite as: Council of AI. <em>Claim Maintenance, version 0.1.</em> CSOAI Ltd, 2026-09-22.{" "}
-            <a className="underline" href={DOI_URL}>{DOI_URL}</a>
+            Cite as: Council of AI. <em>Claim Maintenance, version 0.2.</em> CSOAI Ltd, 2026-09-25.{" "}
+            <a className="underline" href={SPEC}>https://councilof.ai{SPEC}</a>
           </p>
           <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-5" aria-label="Live claim register summary">
             {[
@@ -378,8 +382,8 @@ node claim-capture.mjs --verify artifact.json`}</Code>
             sound signature over a wrong number.
           </p>
           <p className="mt-4 text-sm text-slate-600">
-            Artifact schema: <a className="underline" href={SPEC_SCHEMA}>claim-artifact-v0.1.schema.json</a> ·
-            Specification as Markdown: <a className="underline" href={SPEC_MD}>claim-maintenance-v0.1.md</a> ·
+            Artifact schema: <a className="underline" href={SPEC_SCHEMA}>claim-artifact-v0.2.schema.json</a> ·
+            Specification as Markdown: <a className="underline" href={SPEC_MD}>claim-maintenance-v0.2.md</a> ·
             All versions: <a className="underline" href={SPEC_INDEX}>{SPEC_INDEX}</a>
           </p>
         </div>

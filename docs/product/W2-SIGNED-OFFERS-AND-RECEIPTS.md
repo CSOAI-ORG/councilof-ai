@@ -62,7 +62,8 @@ faked. A format we cannot produce is better published as missing.
 
 | artefact | schema | what it is |
 |---|---|---|
-| the storage envelope beside `settled:tx:*` | `csoai.x402.receipt-record/0.1` | wraps the spec receipt and adds `amount_atomic`, `asset`, `self`, `zero_value` — things the spec deliberately omits. Nothing in it is signed except the receipt it wraps. |
+| the storage envelope beside `settled:tx:*` | `csoai.x402.receipt-record/0.2` | wraps the spec receipt and adds `amount_atomic`, `asset`, `self`, `zero_value`; historical `/0.1` rows remain readable. It may also carry a separately signed `csoai.x402.delivery-binding/0.1` JWS. |
+| exact-delivery binding (CSOAI, not x402) | `csoai.x402.delivery-binding/0.1` | separate Ed25519/JWS binding the standard receipt SHA-256 to a named request digest and delivery digest/scope. It does not alter the standard x402 receipt and does not prove buyer acceptance. |
 | `GET /api/receipts?payer=` | `csoai.receipts.by-payer/0.1` | our read door |
 | `POST /api/receipts/verify` | `csoai.x402.receipt-verdict/0.1` | our convenience verifier |
 | the public-root leaf | `csoai.x402.receipt/0.1` on surface `receipts.v1` | our Merkle commitment |

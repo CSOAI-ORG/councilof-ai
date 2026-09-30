@@ -161,6 +161,9 @@ describe("GET /api/state contract convergence", () => {
     });
     expect(body.contract.flywheel.map((x: { stage: string }) => x.stage)).toEqual(["CAPTURE", "OBSERVE", "MEASURE", "CORRECT", "QUOTE"]);
     expect(body.claim_maintenance.claims.value).toBe(claimMaintenanceRegister.totals.claims);
+    expect(body.claim_maintenance.version_index).toBe("/spec/claim-maintenance/");
+    expect(body.claim_maintenance.conformance_corpus).toMatchObject({ version: "0.2", url: "/spec/claim-maintenance/conformance/v0.2/" });
+    expect(body.claim_maintenance.interoperability_map).toMatchObject({ url: "/spec/claim-maintenance/interop/" });
     expect(body.claim_maintenance.subjects.value).toBe(claimMaintenanceRegister.totals.subjects);
     expect(body.claim_maintenance.claims_by_state.value).toEqual(claimMaintenanceRegister.totals.by_state);
     expect(body.claim_maintenance.subjects_with_scheduled_next_read.value).toBe(

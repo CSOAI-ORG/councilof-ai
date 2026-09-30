@@ -26,7 +26,7 @@
 
 import { parseJws, publicKeyFromVerificationMethod, b64urlDecode } from "../_x402_jws";
 import { verifyOffer, OFFER_RECEIPT_SPEC_SHA, OFFER_RECEIPT_SPEC_URL } from "../_x402_offer";
-import { verifyReceipt } from "../_x402_receipt";
+import { verifyReceipt, verifyDeliveryBinding, DELIVERY_BINDING_SCHEMA } from "../_x402_receipt";
 
 /** The one DID document that speaks for this estate. */
 export const DID_DOC_URL = "https://csoai.org/.well-known/did.json";
@@ -93,12 +93,14 @@ export type VerifyBody = {
   /** A compact JWS, or the wire object {format:"jws", signature}. Either is accepted. */
   receipt?: unknown;
   offer?: unknown;
+  delivery_binding?: unknown;
+  bound_receipt?: unknown;
   jws?: string;
-  kind?: "receipt" | "offer";
+  kind?: "receipt" | "offer" | "delivery-binding";
 };
 
 /** Pull the compact JWS out of whatever shape the caller sent. */
-export function extractJws(body: VerifyBody): { jws: string | null; kind: "receipt" | "offer" | null; reason: string } {
+export function extractJws(body: VerifyBody): { jws: string | null; kind: "receipt" | "offer" | "delivery-binding" | null; reason: string } {
   const pick = (v: unknown): string | null => {
     if (typeof v === "string") return v;
     if (v && typeof v === "object") {
@@ -122,10 +124,16 @@ export function extractJws(body: VerifyBody): { jws: string | null; kind: "recei
       ? { jws: j, kind: "offer", reason: "" }
       : { jws: null, kind: "offer", reason: "offer is neither a compact JWS string nor {format:'jws', signature} without a payload (spec §3.1.1)" };
   }
+  if (body.delivery_binding !== undefined) {
+    const j = pick(body.delivery_binding);
+    return j
+      ? { jws: j, kind: "delivery-binding", reason: "" }
+      : { jws: null, kind: "delivery-binding", reason: "delivery_binding is neither a compact JWS string nor {format:'jws', signature} without a payload" };
+  }
   if (typeof body.jws === "string") {
     return { jws: body.jws, kind: body.kind || null, reason: "" };
   }
-  return { jws: null, kind: null, reason: "send {\"receipt\": <compact jws or wire object>} or {\"offer\": …}" };
+  return { jws: null, kind: null, reason: "send {\"receipt\": …}, {\"offer\": …}, or {\"delivery_binding\": …}" };
 }
 
 /**
@@ -133,7 +141,8 @@ export function extractJws(body: VerifyBody): { jws: string | null; kind: "recei
  * delivery (it has `payer` and `issuedAt`). We read the payload rather than trusting the caller's
  * label, and we say which one we decided it was.
  */
-export function sniffKind(payload: Record<string, unknown>): "receipt" | "offer" | null {
+export function sniffKind(payload: Record<string, unknown>): "receipt" | "offer" | "delivery-binding" | null {
+  if (payload.schema === DELIVERY_BINDING_SCHEMA) return "delivery-binding";
   if (typeof payload.payer === "string" && typeof payload.issuedAt === "number") return "receipt";
   if (typeof payload.amount === "string" && typeof payload.scheme === "string") return "offer";
   return null;
@@ -145,7 +154,7 @@ export async function handle(
   nowSeconds: number = Math.floor(Date.now() / 1000),
 ): Promise<Response> {
   const base = {
-    schema: "csoai.x402.receipt-verdict/0.1",
+    schema: "csoai.x402.receipt-verdict/0.2",
     as_of: new Date().toISOString(),
     spec: OFFER_RECEIPT_SPEC_URL,
     spec_commit: OFFER_RECEIPT_SPEC_SHA,
@@ -177,17 +186,25 @@ export async function handle(
 
   const kind = sniffKind(parsed.payload) || claimed;
   if (!kind) {
-    return bad("payload is neither an offer (amount+scheme) nor a receipt (payer+issuedAt) — spec §4.2 / §5.2");
+    return bad("payload is neither an offer, a standard receipt, nor a CSOAI delivery binding");
   }
 
-  const resourceUrl = String(parsed.payload.resourceUrl ?? "");
+  const resourceUrl = String(parsed.payload.resourceUrl ?? parsed.payload.resource ?? "");
   const authNote: { reason?: string } = {};
   const resolve = (kid: string, ru: string) => resolveKidFromDid(kid, ru, fetchDoc, authNote);
 
+  const boundReceipt = (() => {
+    const v = body.bound_receipt;
+    if (typeof v === "string") return v;
+    if (v && typeof v === "object" && typeof (v as { signature?: unknown }).signature === "string") return (v as { signature: string }).signature;
+    return null;
+  })();
   const verdict =
     kind === "receipt"
       ? await verifyReceipt(jws, resolve, nowSeconds)
-      : await verifyOffer(jws, resolve, nowSeconds);
+      : kind === "delivery-binding"
+        ? await verifyDeliveryBinding(jws, resolve, boundReceipt, nowSeconds)
+        : await verifyOffer(jws, resolve, nowSeconds);
 
   return Response.json(
     {
@@ -202,9 +219,9 @@ export async function handle(
       // Said out loud because the spec says a verifier MUST distinguish them (§4.5.1).
       signature_valid: verdict.checks.signature === true,
       signer_authorised: verdict.checks.kid_resolved === true,
-      recompute:
-        "python3 verify_receipt.py --jws <the string you sent> — it fetches the DID document " +
-        "itself and never contacts this endpoint.",
+      recompute: kind === "delivery-binding"
+        ? "Verify the JWS under the published DID key, recompute payload.receipt_sha256 from the bound standard receipt, and recompute the request/delivery digests from the named preimages/scopes."
+        : "python3 verify_receipt.py --jws <the string you sent> — it fetches the DID document itself and never contacts this endpoint.",
     },
     { status: 200, headers: { "cache-control": "no-store", "access-control-allow-origin": "*" } },
   );
@@ -226,10 +243,10 @@ export const onRequestOptions: PagesFunction = async () =>
 export const onRequestGet: PagesFunction = async ({ request }) =>
   Response.json(
     {
-      schema: "csoai.x402.receipt-verdict/0.1",
+      schema: "csoai.x402.receipt-verdict/0.2",
       method: "POST",
       body: { receipt: "<compact JWS string, or {format:'jws', signature}>" },
-      also_accepts: { offer: "<the same, for a signed offer from a 402>" },
+      also_accepts: { offer: "<the same, for a signed offer from a 402>", delivery_binding: "<CSOAI delivery-binding JWS>", bound_receipt: "<optional standard receipt JWS to verify receipt_sha256>" },
       spec: OFFER_RECEIPT_SPEC_URL,
       did_document: DID_DOC_URL,
       offline: "https://councilof.ai/verifier/verify_receipt.py; guide https://councilof.ai/verifier/receipt-toolkit.md. Saved-DID replay can be offline; signature verification is not settlement verification.",

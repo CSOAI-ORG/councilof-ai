@@ -1,7 +1,7 @@
 """Signed x402 receipts -> public-root leaves (Cloudflare KV REST reader; never raises).
 
 Every settled payment writes a `receipt:tx:*` record to REVENUE_KV (functions/api/_x402_receipt.ts,
-schema csoai.x402.receipt-record/0.1) wrapping the x402 Offer & Receipt extension's signed receipt.
+schemas csoai.x402.receipt-record/0.1 and /0.2) wrapping the x402 Offer & Receipt extension's signed receipt.
 This adapter runs inside publish_public_root.py (GHA public-root.yml, hourly) and turns each record
 into ONE canonical leaf on the `receipts.v1` surface, kind csoai.x402.receipt/0.1.
 
@@ -47,7 +47,8 @@ from pathlib import Path
 from typing import Any, Callable
 
 KIND = "csoai.x402.receipt/0.1"
-RECORD_SCHEMA = "csoai.x402.receipt-record/0.1"
+RECORD_SCHEMAS = {"csoai.x402.receipt-record/0.1", "csoai.x402.receipt-record/0.2"}
+DELIVERY_BINDING_SCHEMA = "csoai.x402.delivery-binding/0.1"
 MIRROR_SCHEMA = "csoai.x402-receipt-mirror/0.1"
 SURFACE = "receipts.v1"
 STATE = "PROBED"
@@ -167,8 +168,8 @@ def leaf_from_record(rec: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
     """One receipt record -> one canonical leaf, or (None, why not). Never raises."""
     if not isinstance(rec, dict):
         return None, "not an object"
-    if rec.get("schema") != RECORD_SCHEMA:
-        return None, f"schema {rec.get('schema')!r} is not {RECORD_SCHEMA}"
+    if rec.get("schema") not in RECORD_SCHEMAS:
+        return None, f"schema {rec.get('schema')!r} is not one of {sorted(RECORD_SCHEMAS)!r}"
     receipt = rec.get("receipt") or {}
     sig = receipt.get("signature")
     if receipt.get("format") != "jws" or not isinstance(sig, str) or not JWS_RE.match(sig):
@@ -213,6 +214,33 @@ def leaf_from_record(rec: dict[str, Any]) -> tuple[dict[str, Any] | None, str]:
     }
     if tx:
         body["transaction"] = str(tx)
+
+    # v0.2 may carry a separately signed CSOAI delivery binding. Publish commitments only: never
+    # the compact binding JWS itself and never the payer. This lets the existing public-root/OTS
+    # pipeline commit to exact-delivery evidence without turning the root into a buyer directory.
+    binding = rec.get("delivery_binding") or {}
+    bp = rec.get("delivery_binding_payload") or {}
+    if binding or bp:
+        bsig = binding.get("signature") if isinstance(binding, dict) else None
+        if binding.get("format") != "jws" or not isinstance(bsig, str) or not JWS_RE.match(bsig):
+            return None, "delivery_binding is present but is not a compact JWS wire object"
+        if not isinstance(bp, dict) or bp.get("schema") != DELIVERY_BINDING_SCHEMA:
+            return None, f"delivery_binding_payload is present but schema is not {DELIVERY_BINDING_SCHEMA}"
+        if bp.get("receipt_sha256") != sha256_hex(sig):
+            return None, "delivery_binding_payload.receipt_sha256 does not bind the wrapped standard receipt"
+        delivery = bp.get("delivery") or {}
+        if delivery.get("alg") != "sha256" or not SHA_RE.match(str(delivery.get("value") or "")) or not delivery.get("scope"):
+            return None, "delivery_binding_payload.delivery is not a named sha256 commitment"
+        body["delivery_binding_schema"] = DELIVERY_BINDING_SCHEMA
+        body["delivery_binding_jws_sha256"] = sha256_hex(bsig)
+        body["delivery_sha256"] = str(delivery["value"])
+        body["delivery_scope"] = str(delivery["scope"])
+        request = bp.get("request") or {}
+        if request:
+            if request.get("alg") != "sha256" or not SHA_RE.match(str(request.get("value") or "")):
+                return None, "delivery_binding_payload.request is present but is not a sha256 commitment"
+            body["request_target_sha256"] = str(request["value"])
+        body["not_attested"].append("that the bound delivery digest proves buyer acceptance, usefulness or repeat work")
 
     payload_obj = {
         "surface": SURFACE,

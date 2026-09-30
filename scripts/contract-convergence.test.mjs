@@ -69,3 +69,32 @@ test("plugin descriptor carries no frozen tool or axis count", () => {
   const p = json("plugins/gspc/plugin.json");
   assert.doesNotMatch(p.description, /\b\d+ (?:tools?|axes?|axis)\b/i);
 });
+
+
+test("Claim Maintenance discovery stays on current immutable v0.2 and exposes its companions", () => {
+  const page = read("client/src/pages/ClaimMaintenance.tsx");
+  const short = read("scripts/llms/llms.txt.tmpl");
+  const full = read("scripts/llms/llms-full.txt.tmpl");
+  const idx = json("public/spec/claim-maintenance/index.json");
+  for (const s of [page, short, full]) {
+    assert.ok(s.includes("/spec/claim-maintenance/v0.2/"));
+    assert.ok(s.includes("/spec/claim-maintenance/conformance/v0.2/"));
+    assert.ok(s.includes("/spec/claim-maintenance/interop/"));
+  }
+  assert.doesNotMatch(short, /Specification v0\.1 \(CC0/);
+  assert.doesNotMatch(full, /Specification v0\.1, dedicated/);
+  assert.equal(idx.latest, "0.2");
+  assert.equal(idx.companions.conformance_corpus.version, "0.2");
+  assert.equal(idx.companions.event_chain.url, "https://councilof.ai/api/claims/events");
+  assert.equal(idx.companions.corrections_ledger.url, "https://councilof.ai/api/corrections");
+});
+
+test("Claim Maintenance conformance corpus is pinned and explicitly non-certifying", () => {
+  const m = json("public/spec/claim-maintenance/conformance/v0.2/manifest.json");
+  assert.equal(m.spec_version, "0.2");
+  assert.match(m.spec_document_sha256, /^[0-9a-f]{64}$/);
+  assert.match(m.reference_implementation.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(m.cases.length, 11);
+  assert.ok(m.cases.every((c) => /^[0-9a-f]{64}$/.test(c.sha256)));
+  assert.match(m.what_this_is_not.join(" "), /Not certification/i);
+});

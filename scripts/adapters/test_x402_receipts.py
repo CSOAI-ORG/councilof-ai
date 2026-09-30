@@ -148,3 +148,54 @@ def test_collect_reads_mirrors_when_kv_is_dark(tmp_path):
     assert out["sidecar"]["n_mirrors"] == 1
     assert len(out["leaves"]) == 1
     assert out["sidecar"]["n_self"] == 1
+
+
+def test_v02_delivery_binding_becomes_privacy_safe_root_commitments():
+    delivery_jws = "a.b.c"
+    r = record(
+        schema="csoai.x402.receipt-record/0.2",
+        delivery_binding={"format": "jws", "signature": delivery_jws},
+        delivery_binding_payload={
+            "schema": "csoai.x402.delivery-binding/0.1",
+            "receipt_sha256": sha256_hex(GOLDEN_JWS),
+            "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+            "transaction": TX,
+            "issued_at": "2026-09-30T00:00:00.000Z",
+            "request": {"alg": "sha256", "value": "3" * 64, "preimage": "UTF-8(method + LF + Request.url)"},
+            "delivery": {"alg": "sha256", "value": "4" * 64, "scope": "payload.blocks"},
+        },
+    )
+    leaf, why = leaf_from_record(r)
+    assert leaf is not None, why
+    body = leaf["payload"]
+    assert body["delivery_binding_jws_sha256"] == sha256_hex(delivery_jws)
+    assert body["request_target_sha256"] == "3" * 64
+    assert body["delivery_sha256"] == "4" * 64
+    assert body["delivery_scope"] == "payload.blocks"
+    blob = json.dumps(leaf)
+    assert PAYER.lower() not in blob.lower()
+    assert delivery_jws not in blob
+
+
+def test_v01_records_remain_valid_after_v02_arrives():
+    leaf, why = leaf_from_record(record(schema="csoai.x402.receipt-record/0.1"))
+    assert leaf is not None, why
+    assert "delivery_binding_jws_sha256" not in leaf["payload"]
+
+
+def test_v02_refuses_a_delivery_binding_that_does_not_bind_the_wrapped_receipt():
+    r = record(
+        schema="csoai.x402.receipt-record/0.2",
+        delivery_binding={"format": "jws", "signature": "a.b.c"},
+        delivery_binding_payload={
+            "schema": "csoai.x402.delivery-binding/0.1",
+            "receipt_sha256": "0" * 64,
+            "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+            "transaction": TX,
+            "issued_at": "2026-09-30T00:00:00.000Z",
+            "delivery": {"alg": "sha256", "value": "4" * 64, "scope": "payload.blocks"},
+        },
+    )
+    leaf, why = leaf_from_record(r)
+    assert leaf is None
+    assert "does not bind" in why

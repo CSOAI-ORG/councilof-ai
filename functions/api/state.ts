@@ -935,6 +935,18 @@ export const onRequestGet: PagesFunction = async () => {
       endpoint: "/api/claims/register",
       page: "/claim-maintenance/",
       specification: (claimMaintenanceRegister as any).specification ?? null,
+      version_index: "/spec/claim-maintenance/",
+      conformance_corpus: {
+        version: "0.2",
+        url: "/spec/claim-maintenance/conformance/v0.2/",
+        manifest: "/spec/claim-maintenance/conformance/v0.2/manifest.json",
+        boundary: "Deterministic interoperability fixtures only — not certification, a badge, score, ranking or mark of approval.",
+      },
+      interoperability_map: {
+        url: "/spec/claim-maintenance/interop/",
+        json: "/spec/claim-maintenance/interop/index.json",
+        boundary: "Informative mappings only; they do not change Claim Maintenance v0.2 or assert conformance to external standards.",
+      },
       corrections_feed: "/api/corrections",
       public_claims_register: "/claims-register.json",
       subjects: fact(
