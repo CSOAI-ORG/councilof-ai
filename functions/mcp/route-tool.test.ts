@@ -8,8 +8,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequest } from "./[[path]]";
 import { computeEventId } from "../_lib/route/evidence";
 import { BANNED_ROUTE_WORDS } from "../_lib/route/route";
+import { CENSUS_PATH } from "../_lib/route/census";
 
 const BOARD = JSON.parse(readFileSync(join(__dirname, "..", "..", "fixtures", "route-golden", "board-2026-09-30.json"), "utf8"));
+const CENSUS = JSON.parse(readFileSync(join(__dirname, "..", "..", "public", "interop", "effect-binding-census-index.json"), "utf8"));
 const HEADERS = { "content-type": "application/json", accept: "application/json, text/event-stream", "MCP-Protocol-Version": "2025-03-26" };
 
 async function rpc(path: string, method: string, params: unknown) {
@@ -37,9 +39,12 @@ describe("MCP tool route (free, decide-only)", () => {
     });
 
     it(`${door}: tools/call route returns a decide-only record whose event_id recomputes`, async () => {
+      const seen: string[] = [];
       vi.stubGlobal("fetch", vi.fn(async (u: string) => {
-        expect(String(u)).toBe("https://councilof.ai/api/gspc");
-        return new Response(JSON.stringify(BOARD), { status: 200, headers: { "content-type": "application/json" } });
+        seen.push(String(u));
+        const body = String(u) === "https://councilof.ai/api/gspc" ? BOARD : String(u) === `https://councilof.ai${CENSUS_PATH}` ? CENSUS : null;
+        expect(body, String(u)).not.toBeNull();
+        return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
       }));
       const d = await rpc(door, "tools/call", {
         name: "route",
@@ -58,6 +63,9 @@ describe("MCP tool route (free, decide-only)", () => {
       expect(sc.chosen.choice_basis).toMatch(/^tie_break:/);
       expect(sc.record.profile).toBe("csoai.route-evidence/0.1");
       expect(sc.record.event_id).toBe(await computeEventId(sc.record));
+      // the door reads the signed effect-binding census for the floor (functions/_lib/route/census.ts)
+      expect(seen).toContain(`https://councilof.ai${CENSUS_PATH}`);
+      expect(sc.record.observed.census).toMatchObject({ state: "LIVE", artifact_sha256: CENSUS.source.artifact_sha256 });
       const text = d.result.content[0].text as string;
       expect(text.split("\n")[0]).not.toMatch(BANNED_ROUTE_WORDS);
       expect(text.split("\n")[0].toLowerCase()).not.toContain("leader");

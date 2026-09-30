@@ -29,7 +29,8 @@ export type Candidate = {
   cost_declared: number | null;
   latency_declared_ms: number | null;
   source: "gspc_fleet" | "caller_declared";
-  census: { effect_binding: CensusState };
+  /** effect_binding only, until a census lookup ran; then also the run's raw outcome and why (census.ts). */
+  census: { effect_binding: CensusState; outcome?: string | null; basis?: string };
   /** Non-empty => the candidate is UNCHECKABLE and is never permitted (fail closed). */
   uncheckable: string[];
   /** Commercial fields (sponsor, bid, ...) that were present and dropped before any rule saw them. */

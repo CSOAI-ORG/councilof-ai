@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "csoai-gspc"
-version = "0.2.20260928.1"
+version = "0.2.20260930.1"
 description = "Read the live GSPC AI-governance board and verify its Ed25519-signed measurement cards. Three states only: VALID, INVALID, UNCHECKABLE."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,8 +31,10 @@ verify = ["cryptography>=42"]
 
 [project.urls]
 Homepage = "https://councilof.ai/api/gspc"
-Source = "https://github.com/CSOAI-ORG/councilof-ai/tree/master/scripts/spray/pypi/csoai-gspc"
-"Board mirror" = "https://github.com/CSOAI-ORG/gspc-board"
+Source = "https://huggingface.co/datasets/csoai/councilof-ai-mirror"
+"Board mirror" = "https://huggingface.co/datasets/csoai/gspc-board"
+Methodology = "https://councilof.ai/methodology/"
+Corrections = "https://councilof.ai/corrections/"
 "Verify a card" = "https://councilof.ai/gspc-verify"
 "How to verify" = "https://councilof.ai/signed/HOW-TO-VERIFY.md"
 "Frozen banks" = "https://huggingface.co/csoai"

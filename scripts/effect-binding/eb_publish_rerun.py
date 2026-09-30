@@ -2,6 +2,11 @@
 """Effect-binding server probe: build the artifact for a DATED RE-RUN over the servers of an earlier signed run.
 
     eb_publish_rerun.py <run_dir> <code_dir> <parent_artifact.json> <parent_signed.json> <date YYYY-MM-DD>
+                        [--lane NAME] [--companion]
+
+--companion (the monthly re-probe, scripts/effect-binding/eb-monthly-pod.sh + the Oracle trigger): the artifact
+says it is signed, if at all, by <name>.signed.json, whose payload pins its sha256; the staged-only wording goes.
+A bank holding the parent's whole 600-server frozen slice (eb_monthly_bank.py) is described as that slice.
 
 Same method: the counts, rows, instrument text and controls block are produced by the PUBLISHED eb_publish.py
 (<code_dir>/eb_publish.py, executed unmodified up to the point where it names and writes its file). This script then
@@ -15,6 +20,9 @@ probe on one day; it is recorded, not interpreted as a trend.
 import collections, hashlib, json, os, platform, subprocess, sys
 
 RUN, CODE, PARENT, PARENT_SIGNED, DATE = sys.argv[1:6]
+_opt = sys.argv[6:]
+LANE = _opt[_opt.index("--lane") + 1] if "--lane" in _opt else "measure-refresh-20260928"
+COMPANION = "--companion" in _opt
 NAME = f"effect-binding-server-probe-{DATE}"
 CODE_FILES = ("eb_harvest.py", "eb_mcp.py", "eb_probe.py", "eb_controls.py", "eb_run.py", "eb_publish.py")
 
@@ -55,13 +63,22 @@ art["unsigned_reason"] = ("SIGN_PENDING. The signing path used for the parent ru
                           "token) needs a token file that is not present on the rebuilt build pod outside the deploy-host "
                           "directories, which this lane may not read. Signing is left to integration; until then this file "
                           "is unsigned and is not evidence for the board.")
+if COMPANION:
+    art.pop("unsigned_reason", None)
+    art["signature_state"] = "SIGNED_BY_COMPANION_IF_PRESENT"
+    art["signature_note"] = (f"This file is not signed in place. It is signed, if at all, by {NAME}.signed.json beside it, whose "
+                             "payload pins this file's sha256 (did:web:csoai.org#board-attestation-1 via POST /api/board-sign; "
+                             "the PKCS8 never leaves Cloudflare). Without that companion this file is unsigned and is not evidence.")
 pop = art["population"]
 pop["bank_kind"] = bank["kind"]
 pop["bank_rows_third_party"], pop["bank_rows_self"] = bank["rows_third_party"], bank["rows_self"]
 pop["parent_bank_sha256"] = bank["parent_bank_sha256"]
 pop["parent_artifact_sha256"] = bank["parent_artifact_sha256"]
 pop["selection_rule"] = bank["selection_rule"]
-pop["frozen_slice"] = {"rule": "no reshuffle: every third-party row of the bank (the parent run's servers with a verdict), in the parent's slice order",
+FULL_SLICE = bank["rows_third_party"] == parent["population"]["frozen_slice"]["slice_n"]
+pop["frozen_slice"] = {"rule": ("the parent's whole frozen slice: the same 600 third-party servers (seed 20260922), tried again whatever "
+                                "their parent outcome; the run's own seeded shuffle only orders the work queue" if FULL_SLICE else
+                                "no reshuffle: every third-party row of the bank (the parent run's servers with a verdict), in the parent's slice order"),
                        "seed": sl["seed"], "slice_n": sl["slice_n"], "chosen_names": sl["chosen"]}
 pop["registry_reread"] = False
 pop["registry_note"] = ("No registry was re-read. The same remote URL probed on the parent date is probed again (URL equal for "
@@ -70,21 +87,27 @@ art["regrade"] = None
 art["regrade_note"] = "No regrade. Verdicts come from the rules the parent run published after its P4 regrade (eb_probe.py, same bytes)."
 art["method_limitations"] = [x for x in art["method_limitations"]
                              if not x.startswith("Unsigned:") and not x.startswith("No GitHub write")] + [
+] + ([
+    "Signed only through the companion named in signature_note. This is not a card in any of the three card corpora and does not alter /api/gspc.",
+    "No board write: board slot 23 rests on the signed parent run; a monthly re-run neither replaces nor re-flips it.",
+] if COMPANION else [
     "Unsigned (SIGN_PENDING, see unsigned_reason). This is not a card in any of the three card corpora and does not alter /api/gspc.",
     "Staged only: no board write, no deploy, no upload. Publication, if any, happens at integration.",
+]) + ([] if FULL_SLICE else [
     "Population is the parent run's verdict set, so servers that were UNCHECKABLE / UNREACHABLE / without a read-only tool on the "
     "parent date are not re-tried; this run says nothing about them.",
-]
+])
 art["board_consequence"] = {
     "board_status_after_this_run": "unchanged by this run",
-    "note": ("Board slot 23 rests on the signed parent run (see rerun_of). This dated re-run is staged unsigned; it neither "
-             "replaces nor confirms the parent on the board, and no board write was attempted."),
+    "note": ("Board slot 23 rests on the signed parent run (see rerun_of). This dated re-run " +
+             ("is signed only through its companion (signature_note)" if COMPANION else "is staged unsigned") +
+             "; it neither replaces nor confirms the parent on the board, and no board write was attempted."),
     "adr_002_gate": {"n_unit": "tool-call servers probed", "minimum_third_party_servers_with_verdict": 30,
                      "third_party_servers_with_verdict": n_ok, "n_gate_reached": n_ok >= 30, "frozen_bank": True,
                      "run_signed": False, "signed_run_published": False, "flipped": False},
 }
 art["produced_by"] = (f"the parent run's published code (git blob ids in code_executed) plus eb_publish_rerun.py, on the build pod "
-                      f"(RunPod, host {platform.node()}), lane measure-refresh-20260928; no GitHub write, no board write, no upload")
+                      f"(RunPod, host {platform.node()}), lane {LANE}; no GitHub write, no board write" + ("" if COMPANION else ", no upload"))
 art["code_executed"] = code
 art["raw_log"] = f"{NAME}.log.jsonl beside this file (every request and response, verbatim; no credentials were ever sent)"
 
@@ -102,14 +125,16 @@ art["rerun_of"] = {
     "parent_counts": {"n": parent["n"], "verdicts": psigned["payload"]["verdicts"], "tried": psigned["payload"]["tried"]},
 }
 art["comparison_with_parent"] = {
-    "method": "same servers (the parent's third-party verdict set), same remote URLs, same code bytes, same safety rules and verdict rule",
+    "method": ("same servers (the parent's 600-server frozen slice)" if FULL_SLICE else "same servers (the parent's third-party verdict set)") +
+              ", same remote URLs, same code bytes, same safety rules and verdict rule",
     "servers_compared": len(new),
     "same_outcome": sum(1 for k in new if old[k]["outcome"] == new[k]["outcome"]),
     "outcome_transitions": dict(sorted(trans.items())),
     "changed": changed,
-    "reading": ("A transition is recorded, not interpreted: it mixes a change in the service with the variance of one probe on "
-                "one day (timeouts, rate limits). n is not comparable to the parent's n as a trend: the parent's n came from 600 "
-                "tried servers, this run's from the parent's 261 verdict servers."),
+    "reading": ("A transition is recorded, not interpreted: it mixes a change in the service with the variance of one probe on " +
+                ("one day (timeouts, rate limits). " + ("n is comparable in population with the parent's n: both come from the same 600 tried "
+                "servers; it is still one probe per server per date, not a trend." if FULL_SLICE else "n is not comparable to the parent's n as a trend: the parent's n came from 600 "
+                "tried servers, this run's from the parent's 261 verdict servers."))),
     "self_rows": {"parent": dict(collections.Counter(s["outcome"] for s in parent["self"]["servers"])),
                   "rerun": dict(collections.Counter(s["outcome"] for s in art["self"]["servers"])),
                   "note": "SELF rows are never in n and never added to third-party counts."},

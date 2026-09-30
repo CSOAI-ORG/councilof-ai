@@ -72,6 +72,7 @@ PRODUCERS = {
     "scripts/census/dataset-card-hygiene.py": "edits-live",
     "scripts/hf/fix-card-link.py": "edits-live",
     "scripts/hf/hf_live_row.py": "edits-live",
+    "scripts/hf/hf-scrub-daily.py": "edits-live",        # hf-org-card.py scrub_legacy line-edits, commit against the revision read
     "scripts/spray/gspc-spray.py": "edits-live",             # hf_dataset_companions() line-edits the live card
     "scripts/pod-loops/gspc-spray.py": "edits-live",
     "scripts/pod-loops/durability_hf_publish.py": "private",  # csoai/councilof-ai-source; additive markers

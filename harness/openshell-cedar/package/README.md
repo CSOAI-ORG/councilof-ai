@@ -42,5 +42,6 @@ Maintained by CSOAI Ltd. Questions, objections, re-check requests and correction
 Published corrections: https://councilof.ai/corrections/. An operator who objects to a probe or a
 record can ask for it to be re-checked or withdrawn at the same address.
 
-Source, fixtures, tests and the v0.1.1 to v0.1.2 requalification record: `harness/openshell-adapter/` and
-`harness/openshell-cedar/` in the councilof.ai repository.
+Source: the sdist of this package on PyPI carries every module it installs. The fixtures, tests and the
+v0.1.1 to v0.1.2 requalification record live in the councilof.ai repository, which has no public browsable
+copy at present (its GitHub organisation is unavailable); they are sent on request from nicholas@csoai.org.

@@ -1,6 +1,6 @@
 # langchain-csoai
 
-LangChain tool for the Council of AI GSPC board — a thin wrapper over [`csoai-gspc`](https://pypi.org/project/csoai-gspc/) (0.2.20260928.1+), the
+LangChain tool for the Council of AI GSPC board — a thin wrapper over [`csoai-gspc`](https://pypi.org/project/csoai-gspc/) (0.2.20260930.1+), the
 reader for Council of AI's live GSPC board (https://councilof.ai/api/gspc). Two tools: `gspc_board` (the live board) and
 `verify_card` (free signed-card verification — VALID / INVALID / UNCHECKABLE).
 
