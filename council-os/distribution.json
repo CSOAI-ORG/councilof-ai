@@ -507,6 +507,32 @@
       "approver": "Nick — merge; ships with the next deploy",
       "flagged_org_impact": "None.",
       "flagged_org_affected": false
+    },
+    {
+      "licence": "n/a (listing metadata)",
+      "version_source": "remote",
+      "owner_approval_needed": true,
+      "id": "agntcy-oasf",
+      "format": "OASF 1.1.0 records (AGNTCY Agent Directory / ADS) for the GSPC MCP server and the A2A agent: integration/mcp or integration/a2a + core/evaluation pointing at signed evidence; each covered by a detached Ed25519 attestation under did:web:csoai.org#board-attestation-1",
+      "output": [
+        "public/oasf/ai.councilof.gspc.oasf.json",
+        "public/oasf/ai.councilof.measurement-agent.oasf.json",
+        "distribution/agntcy/README.md"
+      ],
+      "doctrine_carriers": [
+        "public/oasf/ai.councilof.gspc.oasf.json",
+        "public/oasf/ai.councilof.measurement-agent.oasf.json",
+        "distribution/agntcy/README.md"
+      ],
+      "oasf": {
+        "schema_version": "1.1.0",
+        "created_at": "2026-09-30T17:00:00Z",
+        "extends": "AGNTCY lane draft proposals/ai.councilof.gspc.oasf.draft.json (lane agntcy-catalog-20260928, HELD); read, never edited"
+      },
+      "listing_channel": "AGNTCY Directory (ADS): dirctl push + dirctl sign (sigstore) + dirctl routing publish from a directory identity, or the agntcy/dir import-records PR; ARD/AI Catalog consumers read the same records from /oasf/ and /ard/v1/",
+      "approver": "Nick - directory identity (federation needs a merged agntcy/dir-staging PR) and the push itself",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false
     }
   ],
   "published_channels_note": "Every place a Layer 0 artifact is, or is declared to be, live. scripts/harness-x/parity_live.py reads each one (daily, scripts/pod-loops/harness-x-parity.sh). kind rendered-only = rendered here and not yet listed: reported UNCHECKABLE, never CONSISTENT. kinds smithery / a2a-registry = third-party directories that copy the door or the agent card (compared, never edited from here); listing-unreadable = a directory that lists us but cannot be read without a key we do not hold: UNCHECKABLE.",

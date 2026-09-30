@@ -19,3 +19,13 @@ describe("/layer0 — the floor reads itself", () => {
     expect(page).toMatch(/33-seat council (remains|is) a design/);
   });
 });
+
+describe("Layer 0 discovery faces", () => {
+  it("links the AI Catalog, the ARD registry and the OASF records, and claims exactly Level 2", () => {
+    expect(page).toContain('href="/.well-known/ai-catalog.json"');
+    expect(page).toContain('href="/ard/v1/agents"');
+    expect(page).toContain('href="/oasf/ai.councilof.gspc.oasf.json"');
+    expect(page).toContain("conformance Level 2, Discoverable, exactly");
+    expect(page).not.toMatch(/Layer O|Harness X/);
+  });
+});

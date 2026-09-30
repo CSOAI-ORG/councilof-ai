@@ -11,7 +11,7 @@
 // Binds 127.0.0.1 only. No prompt or response bytes are stored: the task is hashed by the core.
 import http from "node:http";
 import fs from "node:fs";
-import { route, routeSummary, NOT_ENABLED } from "./dist/route-core.mjs";
+import { route, routeSummary, NOT_ENABLED, ardListingSource, ARD_LISTINGS } from "./dist/route-core.mjs";
 
 const PORT = Number(process.env.ROUTE_PORT || 8790);
 const OLLAMA = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
@@ -36,6 +36,15 @@ async function fetchCensus() {
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 }
+
+/** ARD listings as a discovery source (functions/_lib/route/discovery.ts). DISCOVERY_OFF=1 disables it. */
+async function fetchListing(url) {
+  const r = await fetch(url, { headers: { accept: "application/json", "user-agent": "councilof.ai gspc-route (+https://councilof.ai/ard/)" }, signal: AbortSignal.timeout(15000) });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+export const discovery = process.env.DISCOVERY_OFF === "1" ? undefined
+  : Object.fromEntries(Object.entries(ARD_LISTINGS).map(([k, u]) => [k, ardListingSource(u, fetchListing)]));
 
 /** Local Ollama models as caller-owned candidates. Cost is the caller's own GPU: declared 0. */
 export async function ollamaCandidates() {
@@ -99,7 +108,7 @@ export const server = http.createServer(async (req, res) => {
         return send(res, 503, { state: "UNREACHABLE", source: `${OLLAMA}/api/tags`, error: String(e.message || e) });
       }
     }
-    const out = await route(args, { fetchBoard, fetchCensus });
+    const out = await route(args, { fetchBoard, fetchCensus, discovery });
     if (out.state === "NOT_ENABLED") return send(res, 501, out);
     if (out.state === "BAD_ARGUMENTS") return send(res, 400, out);
     if (RECORDS && out.record) fs.appendFileSync(RECORDS, JSON.stringify(out.record) + "\n");
