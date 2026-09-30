@@ -1,0 +1,173 @@
+{
+ "schema": "csoai.evidence-event/0.1",
+ "profile": "csoai.route-evidence/0.1",
+ "subject": {
+  "kind": "route",
+  "locator": "urn:gspc:route:00000000-0000-4000-8000-000000000001",
+  "declared_by": "caller:anon"
+ },
+ "claim": {
+  "text": "Route chosen for task sha256:cb0de8a075ee9272cf42bcdad63e82b2cb9a6847c0c8ab874fa9db8bceb2c844 under caller policy sha256:bdf52b3912489185cee5130f57907fe4c45ea72b5edbaf12ec4458df15a49879",
+  "source_url": null,
+  "source_sha256": null,
+  "read_at": "2026-09-30T12:00:00.000Z"
+ },
+ "method": {
+  "id": "gspc-route",
+  "version": "0.1.0",
+  "code_sha256": null,
+  "holder": "csoai"
+ },
+ "declared": {
+  "task": {
+   "sha256": "cb0de8a075ee9272cf42bcdad63e82b2cb9a6847c0c8ab874fa9db8bceb2c844",
+   "data_class": "public",
+   "needs_write": false,
+   "content_retained": false
+  },
+  "policy": {
+   "caller_sha256": "bdf52b3912489185cee5130f57907fe4c45ea72b5edbaf12ec4458df15a49879",
+   "floor_sha256": "764368cd4d88cc88b894dccf2cab6c6a5953bc7755a70340cdd263afc3d4bb1f",
+   "cedar_schema_sha256": "ac74fb074ddb933f20037f82ec30e5e8bf3f75c14522445136db99116b12060d",
+   "presets": [],
+   "rules": [
+    "caller:permit"
+   ],
+   "uncheckable": [],
+   "confirm_destructive": false,
+   "caller_wallet": false
+  },
+  "objective": {
+   "quality_axis": "governance",
+   "weights": {
+    "quality": 1,
+    "cost": 0,
+    "latency": 0
+   },
+   "tie_break": [
+    "cheapest_declared",
+    "local_first",
+    "lexical_id"
+   ]
+  },
+  "candidates_sha256": "d6ec9e912567d1750d28fba6769658774ca6b54a84274cc959530d9ed6acd731"
+ },
+ "observed": {
+  "considered": [
+   {
+    "id": "byok:deepseek-r1-8b",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "governance",
+      "state": "MEASURED",
+      "value": 0.5401,
+      "interval": [
+       0.476,
+       0.602
+      ],
+      "n": 237,
+      "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+      "source_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "local:mistral-7b",
+    "kind": "local_gpu",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "governance",
+      "state": "MEASURED",
+      "value": 0.5865,
+      "interval": [
+       0.523,
+       0.647
+      ],
+      "n": 237,
+      "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+      "source_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+      "label": "separated leader"
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   }
+  ],
+  "permitted": [
+   "byok:deepseek-r1-8b",
+   "local:mistral-7b"
+  ],
+  "chosen": {
+   "id": "local:mistral-7b",
+   "choice_basis": "separated_leader:governance"
+  },
+  "separation": "SEPARATED",
+  "label": "separated leader",
+  "board": {
+   "state": "LIVE",
+   "source": "/api/gspc",
+   "board_separation": "SEPARATED"
+  },
+  "execution": {
+   "mode": "decide_only",
+   "status": "n/a",
+   "provider_observed": null,
+   "model_observed": null,
+   "latency_ms": null,
+   "usage": null,
+   "cost_declared": null,
+   "receipt_schema": "csoai.route-receipt/0.1",
+   "receipt": null
+  },
+  "heal": [],
+  "payment": {
+   "x402": "none",
+   "tx": null,
+   "payer_is_self": false
+  }
+ },
+ "state": "UNMEASURED",
+ "value": null,
+ "negative_control": {
+  "id": null,
+  "expected": null,
+  "got": "NOT_RUN"
+ },
+ "limits": [
+  "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
+  "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
+  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
+  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
+  "The task text is carried as its sha256 only; no prompt or response bytes are stored."
+ ],
+ "supersedes": null,
+ "signature": null,
+ "anchors": {
+  "ots": "none",
+  "rekor": {
+   "log_index": null,
+   "uuid": null
+  }
+ },
+ "maintenance": null,
+ "event_id": "sha256:8522242c47cab6c0c5c9008f1ad7b05721d4a8b2b59923e4012e302985d69146"
+}

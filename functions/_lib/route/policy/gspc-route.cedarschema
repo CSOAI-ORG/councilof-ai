@@ -1,0 +1,23 @@
+// GSPC Route policy schema (csoai.route-evidence/0.1). Rendered by functions/_lib/route/policy.ts.
+entity Caller;
+entity Candidate = {
+  "kind": String,
+  "provider": String,
+  "region": String,
+  "local": Bool,
+  "read_only": Bool,
+  "destructive": Bool,
+  "paid": Bool,
+  "census_effect_binding": String,
+  "measured_on_axis": Bool,
+  "data_class_allowed": Set<String>,
+};
+action "route" appliesTo {
+  principal: [Caller],
+  resource: [Candidate],
+  context: {
+    "confirm": Bool,
+    "caller_wallet": Bool,
+    "data_class": String,
+  },
+};
