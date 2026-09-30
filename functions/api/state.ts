@@ -303,6 +303,7 @@ const rwaHeaderAgrees =
   rwaHeader.not_located === rwaNotLocated;
 
 export const onRequestGet: PagesFunction = async () => {
+  const ledgerState = ledgersBlock();
   const body = {
     schema: "csoai.live-state/1",
     title: "CSOAI live state — the numbers a lane may quote",
@@ -339,6 +340,27 @@ export const onRequestGet: PagesFunction = async () => {
       freshness_self_test:
         "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/a; sleep 5; " +
         "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/b; diff /tmp/a /tmp/b && echo IDENTICAL",
+      authorities: {
+        live_state: "/api/state",
+        measurement_board: "/api/gspc",
+        public_self_claims: "/claims-register.json",
+        maintained_claim_state: "/api/claims/register",
+        executed_rechecks: "/api/state → ledgers.claim_maintenance",
+        claim_events: "/api/claims/events",
+        claim_events_head: "/api/claims/events/head",
+        corrections: "/api/corrections",
+        ledger_heads: "/api/state → ledgers.ledgers",
+        public_root: "/root.json",
+        rule:
+          "One authority per record type. /api/state is the derived join; it does not replace the board, claim register, correction ledger, recheck ledger, claim-event feed or public root.",
+      },
+      flywheel: [
+        { stage: "CAPTURE", authority: "/api/claims/register", meaning: "capture maintained public claims in the existing register" },
+        { stage: "RECHECK", authority: "/api/state → ledgers.claim_maintenance", meaning: "record whether scheduled reads ran; event_chain links the append-only /api/claims/events history and signed head" },
+        { stage: "MEASURE", authority: "/api/gspc", meaning: "measure only where the declared instrument and evidence support it" },
+        { stage: "CORRECT", authority: "/api/corrections", meaning: "append our own defects and fixes; never erase history" },
+        { stage: "QUOTE", authority: "/api/state", meaning: "derive the current quotable view by field name" },
+      ],
       kinds: {
         measured: "A run happened against a frozen bank or source and was graded.",
         probed: "Something was contacted and answered, at as_of.",
@@ -872,7 +894,7 @@ export const onRequestGet: PagesFunction = async () => {
 
     // ── LEDGERS: one authority per record type, heads committed to the ONE root ──
     // functions/api/_ledgers.ts; read by /corrections ("Ledgers and corrections").
-    ledgers: ledgersBlock(),
+    ledgers: ledgerState,
 
     // ── THE CLAIMS REGISTER ──────────────────────────────────────────────────
     claims_register: {

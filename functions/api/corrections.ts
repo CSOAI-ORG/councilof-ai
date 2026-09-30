@@ -78,6 +78,32 @@ export const LEDGER = {
       ]
     },
     {
+      id: "C-2026-0930-01",
+      date: "2026-09-30",
+      detected_at: "2026-09-29T16:34Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: [
+        "Live GET https://councilof.ai/api/state during the 29 September contract-convergence audit returned public_count.value = '23 axis · 23 measured'.",
+        "Live GET https://councilof.ai/interop/chatgpt-plugin.json during the same audit still described the service as '22-axis GSPC' and advertised /measure and /anchor.",
+        "Current canonical source inspection before this correction found no dedicated functions/api/measure.ts or functions/api/anchor.ts and no catch-all source route implementing those two legacy declarations.",
+        "published_at remains UNRECORDED until the guarded production deploy and anonymous readback serve the corrected manifest and this ledger entry."
+      ],
+      what_was_wrong: "The live legacy ChatGPT compatibility manifest had become a second, stale description of the estate. It froze the board at '22-axis GSPC' while the live board/state contract reported 23 axis and 23 measured. It also advertised /measure and /anchor operations that were not backed by a dedicated or catch-all source route in the canonical release tree, while omitting the existing Claim Maintenance and corrections read contracts.",
+      how_caught: "A single-source-of-truth convergence audit compared the live plugin bytes, live /api/state, canonical /api/openapi.json and the current canonical staging mirror before changing any public surface.",
+      what_changed: "The compatibility manifest no longer types an axis count, points explicitly to /api/openapi.json as the canonical Actions schema, removes the two unbacked measure/anchor declarations, and adds the existing /api/claims/register and /api/corrections GETs. The canonical Actions schema exposes /api/state, Claim Maintenance and corrections as existing read surfaces. Claim Maintenance, Dashboard and plugin copy now point to the already-landed ledger authorities in /api/state; no new ledger, scheduler, protocol or measurement engine was created.",
+      status: "CORRECTED IN SOURCE; PRODUCTION DEPLOY/READBACK PENDING",
+      reached_the_public: true,
+      evidence: [
+        "/interop/chatgpt-plugin.json",
+        "/api/openapi.json",
+        "/api/state",
+        "/api/claims/register",
+        "/api/corrections",
+        "functions/api/_ledgers.ts"
+      ]
+    },
+    {
       "id": "C-2026-0929-09",
       "date": "2026-09-29",
       "detected_at": "2026-09-29T15:55Z",
@@ -1797,7 +1823,7 @@ export const LEDGER = {
       "The attestation names the digest of the ledger body and the rule that produces it.",
     key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
     note:
-      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
+      "RE-ISSUED over the current body through POST /api/board-sign; signature.attestation.signed_at records the issuance time. " +
       "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
       "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
       "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +

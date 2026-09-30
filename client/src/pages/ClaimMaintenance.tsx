@@ -24,6 +24,10 @@ const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
+const CLAIM_EVENTS = "/api/claims/events";
+const CLAIM_EVENTS_HEAD = "/api/claims/events/head";
+const LIVE_STATE = "/api/state";
+const PUBLIC_CLAIMS = "/claims-register";
 /** The archival deposit. A DOI makes a document citable; it does not make it right. Since 29 Sep 2026
  *  the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending), so the DOI is
  *  printed as an identifier and the served document of record (the same bytes) is linked instead. */
@@ -71,6 +75,8 @@ const PAGE_LD = {
     "https://councilof.ai" + REGISTER,
     IMPL,
     "https://councilof.ai" + CORRECTIONS,
+    "https://councilof.ai" + CLAIM_EVENTS,
+    "https://councilof.ai" + CLAIM_EVENTS_HEAD,
   ],
   license: "https://creativecommons.org/publicdomain/zero/1.0/",
   citation: {
@@ -100,6 +106,33 @@ type Register = {
   subjects?: SubjectRow[];
   disclosures?: Array<{ registry_id: string; quoted: string; disclosure: string }>;
 };
+type StateFact<T = unknown> = { value?: T; source?: string; kind?: string; as_of?: string | null; note?: string };
+type LedgerRow = { key?: string; count?: number | null; detail?: Record<string, unknown>; state?: string; last_update?: string | null };
+type LiveState = {
+  public_count?: StateFact<string>;
+  claims_register?: { rows_total?: StateFact<number> };
+  ledgers?: {
+    corrections_in_this_deploy?: { count?: number; head_id?: string | null };
+    claim_maintenance?: {
+      state?: string;
+      run_at?: string | null;
+      counts?: Record<string, number> | null;
+      checks?: Array<{ registry_id: string; check: string; due: string; outcome: string }>;
+      source?: string;
+      event_chain?: {
+        authority?: string;
+        verify?: string;
+        as_of?: string | null;
+        lines?: number | null;
+        head_seq?: number | null;
+        last_at?: string | null;
+        bytes_sha256?: string | null;
+        subjects?: number | null;
+      };
+    };
+    ledgers?: LedgerRow[];
+  };
+};
 
 const day = (iso: string | null | undefined) => (iso ? String(iso).slice(0, 10) : null);
 
@@ -113,6 +146,7 @@ function Code({ children }: { children: string }) {
 
 export default function ClaimMaintenance() {
   const [reg, setReg] = useState<Register | null | undefined>(undefined);
+  const [liveState, setLiveState] = useState<LiveState | null>(null);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -128,11 +162,22 @@ export default function ClaimMaintenance() {
       .catch(() => read(REGISTER_STATIC))
       .then((j) => setReg(j as Register))
       .catch(() => setReg(null));
+    read(LIVE_STATE)
+      .then((j) => setLiveState(j as LiveState))
+      .catch(() => setLiveState(null));
     return () => ac.abort();
   }, []);
 
   const subjects = reg?.subjects ?? [];
   const asOf = day(reg?.as_of);
+  const ledgerState = liveState?.ledgers;
+  const correctionCount = ledgerState?.corrections_in_this_deploy?.count;
+  const recheckCounts = ledgerState?.claim_maintenance?.counts ?? {};
+  const eventChain = ledgerState?.claim_maintenance?.event_chain;
+  const eventCount = eventChain?.lines;
+  const registerHead = ledgerState?.ledgers?.find((row) => row.key === "claim-maintenance-register");
+  const maintainedSubjects =
+    typeof registerHead?.detail?.subjects === "number" ? registerHead.detail.subjects : reg?.totals?.subjects;
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -172,12 +217,13 @@ export default function ClaimMaintenance() {
             Cite as: Council of AI. <em>Claim Maintenance, version 0.1.</em> CSOAI Ltd, 2026-09-22.{" "}
             <a className="underline" href={V01_URL}>{V01_URL}</a> (DOI {DOI}; {ZENODO_NOTICE})
           </p>
-          <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Live claim register summary">
+          <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-5" aria-label="Live claim register summary">
             {[
-              ["Subjects", reg?.totals?.subjects],
+              ["Subjects", maintainedSubjects],
               ["Claims", reg?.totals?.claims],
               ["Measured", reg?.totals?.by_state?.CLAIM_MEASURED],
-              ["Unmeasured", reg?.totals?.by_state?.UNMEASURED],
+              ["Events", eventCount],
+              ["Corrections", correctionCount],
             ].map(([label, value]) => (
               <div key={String(label)} className="rounded-xl border border-slate-700 bg-white/[0.035] px-3.5 py-3">
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">{label}</p>
@@ -187,6 +233,33 @@ export default function ClaimMaintenance() {
           </div>
         </div>
       </header>
+
+      <section aria-labelledby="flywheel" className="mx-auto max-w-4xl px-5 py-12">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 sm:p-6">
+          <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-800">One flywheel · existing authorities</p>
+          <h2 id="flywheel" className="mt-2 text-2xl font-bold">Capture → recheck → measure → correct → quote</h2>
+          <p className="mt-3 max-w-3xl leading-7 text-slate-700">
+            No second ledger lives on this page. The Claim Maintenance register owns maintained-claim state; the existing recheck ledger records whether scheduled reads ran; its <code className="font-mono text-[12px]">event_chain</code> points to the append-only claim-event history; GSPC owns measurements; corrections append our own defects; and <code className="font-mono text-[12px]">/api/state</code> joins those authorities without replacing them.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            {[
+              ["1 · Capture", REGISTER, `${reg?.totals?.claims ?? "—"} claim rows`],
+              ["2 · Recheck", CLAIM_EVENTS, `${recheckCounts.CHANGED_CONFIRMED ?? 0} changed · ${recheckCounts.FETCH_FAILED ?? 0} fetch failed · ${eventCount ?? "—"} chained events`],
+              ["3 · Measure", "/api/gspc", liveState?.public_count?.value ?? "live board"],
+              ["4 · Correct", CORRECTIONS, `${correctionCount ?? "—"} corrections`],
+              ["5 · Quote", LIVE_STATE, "derived state by field name"],
+            ].map(([label, href, note]) => (
+              <a key={String(label)} href={String(href)} className="rounded-xl border border-emerald-200 bg-white p-4 hover:border-emerald-400">
+                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-800">{label}</p>
+                <p className="mt-2 text-sm font-semibold text-slate-900">{note}</p>
+              </a>
+            ))}
+          </div>
+          <p className="mt-4 text-sm text-slate-600">
+            Verify the event chain at <a className="font-semibold text-emerald-800 underline underline-offset-4" href={CLAIM_EVENTS_HEAD}>the signed head</a>. Our own material public capability claims remain a separate record type. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
+          </p>
+        </div>
+      </section>
 
       <section aria-labelledby="not" className="mx-auto max-w-4xl px-5 py-12">
         <h2 id="not" className="text-2xl font-bold">What this does not do</h2>
