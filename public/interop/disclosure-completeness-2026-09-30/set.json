@@ -1,0 +1,206 @@
+{
+ "date": "2026-09-30",
+ "doctrine": "A disclosure-completeness or lag measurement of a public artifact. It counts what the artifact states about itself. It does not rank, grade or compare the models or platforms listed inside it, and it is not a certification. UNMEASURED stays UNMEASURED.",
+ "method_code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+ "note": "This list is not itself signed; each record is, and each record's sha256 is listed here and inside its signed payload.",
+ "records": [
+  {
+   "answer": "Of 11112 result rows in 87 files, 6189 state a result date and 330 state a sample size (n); 33 state both.",
+   "as_of": "2026-09-29T15:10:19Z",
+   "headline": {
+    "files": 87,
+    "files_with_no_date_column": 60,
+    "files_with_no_n_column": 81,
+    "rows": 11112,
+    "rows_stating_both": {
+     "denominator": 11112,
+     "numerator": 33,
+     "value": 0.00297
+    },
+    "rows_stating_date": {
+     "denominator": 11112,
+     "numerator": 6189,
+     "value": 0.556965
+    },
+    "rows_stating_n": {
+     "denominator": 11112,
+     "numerator": 330,
+     "value": 0.029698
+    }
+   },
+   "kind": "measurement.disclosure_completeness",
+   "licence": {
+    "attribution_required": "Epoch AI, 'Capabilities & benchmarking'. Published online at epoch.ai. Retrieved from https://epoch.ai/benchmarks",
+    "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+    "upstream": {
+     "attribution": "Epoch AI, 'Capabilities & benchmarking'. Published online at epoch.ai. Retrieved from https://epoch.ai/benchmarks",
+     "basis": "README.md inside the zip",
+     "id": "CC-BY-4.0"
+    }
+   },
+   "measure": "epoch.date_and_n_stated",
+   "path": "epoch-date-and-n/record.json",
+   "record_id": "epoch-date-and-n-2026-09-30",
+   "sha256": "55c9345fa517c67991ba76e71144bb18111730d445a764d5a20cc1d6a1f5fedc",
+   "signed": "epoch-date-and-n/record.signed.json",
+   "source": {
+    "name": "Epoch AI, Capabilities & benchmarking (benchmark_data.zip)",
+    "publisher": "Epoch AI",
+    "urls": [
+     "https://epoch.ai/data/benchmark_data.zip",
+     "https://epoch.ai/benchmarks"
+    ]
+   },
+   "title": "Epoch AI benchmark data: how many result rows state a date and a sample size",
+   "unmeasured_count": 0
+  },
+  {
+   "answer": "22 configs; 29394 of 29394 rows state n. Lag from the stated as-of date to the push of each config's latest file: between 3.03 and 27.10 hours. The as-of is a calendar date, so each lag is a 24-hour band, not a point; lag is measured on 22 of 22 configs.",
+   "as_of": "2026-09-29T15:38:33Z",
+   "headline": {
+    "configs": 22,
+    "configs_with_lag_measured": 22,
+    "dataset_revision": "4c39810eebe1cb20145d0a81756a95b8f057cd03",
+    "lag_hours_lower_max": 3.1,
+    "lag_hours_lower_min": 3.03,
+    "lag_hours_upper_max": 27.1,
+    "lag_hours_upper_min": 27.03,
+    "rows": 29394,
+    "rows_stating_n": 29394
+   },
+   "kind": "measurement.publication_lag",
+   "licence": {
+    "attribution_required": "LMArena, Hugging Face dataset lmarena-ai/leaderboard-dataset, CC BY 4.0",
+    "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+    "upstream": {
+     "attribution": "LMArena, Hugging Face dataset lmarena-ai/leaderboard-dataset, CC BY 4.0",
+     "basis": "dataset cardData.license (checked each run; drift fails closed)",
+     "id": "CC-BY-4.0"
+    }
+   },
+   "measure": "lmarena.publish_lag_and_n",
+   "path": "lmarena-publish-lag/record.json",
+   "record_id": "lmarena-publish-lag-2026-09-30",
+   "sha256": "edc427fe7abe41e5a89e518935114255c68d4c843b2115d521ded65e3e3b7caa",
+   "signed": "lmarena-publish-lag/record.signed.json",
+   "source": {
+    "name": "LMArena, Hugging Face dataset lmarena-ai/leaderboard-dataset",
+    "publisher": "LMArena",
+    "urls": [
+     "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset"
+    ]
+   },
+   "title": "LMArena leaderboard dataset: publication lag and stated sample size",
+   "unmeasured_count": 0
+  },
+  {
+   "answer": "Of 178 OpenRouter models naming a Hugging Face repository, the declared context length agrees on 105, differs on 56 (both values named) and is UNMEASURED on 17. Licence agreement is UNMEASURED on 178: OpenRouter's model list declares no licence field.",
+   "as_of": "2026-09-29T15:32:22Z",
+   "headline": {
+    "context_length": {
+     "AGREE": 105,
+     "MISMATCH": 56,
+     "UNMEASURED": 17
+    },
+    "licence": {
+     "AGREE": 0,
+     "MISMATCH": 0,
+     "UNMEASURED": 178
+    },
+    "models_naming_a_hf_repo": 178
+   },
+   "kind": "measurement.declared_field_agreement",
+   "licence": {
+    "note": "OpenRouter's model list is served under its API terms, not a data licence. Only declared context-length numbers and repository ids are published, as facts about what each catalogue states.",
+    "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+    "upstream": {
+     "huggingface": "per-model licence as declared on each card",
+     "id": "mixed",
+     "openrouter": "API terms (not a data licence; not re-read by this lane)"
+    }
+   },
+   "measure": "openrouter_hf.declared_field_agreement",
+   "path": "openrouter-hf-declared-fields/record.json",
+   "record_id": "openrouter-hf-declared-fields-2026-09-30",
+   "sha256": "a84a16101ef288863053044517472bde4205b7104bd66affa3468c9574dc10d3",
+   "signed": "openrouter-hf-declared-fields/record.signed.json",
+   "source": {
+    "name": "OpenRouter /api/v1/models, and each named Hugging Face repository's config.json and model info",
+    "publisher": "OpenRouter; the Hugging Face repository owners",
+    "urls": [
+     "https://openrouter.ai/api/v1/models",
+     "https://huggingface.co/api/models/{repo}",
+     "https://huggingface.co/{repo}/resolve/main/config.json"
+    ]
+   },
+   "title": "OpenRouter and Hugging Face: do the two catalogues declare the same context length?",
+   "unmeasured_count": 0
+  },
+  {
+   "answer": "287 of 323 entries state a logs pointer. Whether those pointers resolve is UNMEASURED: no pointer was requested.",
+   "as_of": "2026-09-29T15:37:50Z",
+   "headline": {
+    "entries": 323,
+    "logs_pointer_resolves": "UNMEASURED",
+    "logs_pointer_stated": 287,
+    "per_leaderboard": {
+     "Lite": {
+      "entries": 84,
+      "logs_pointer_stated": 81
+     },
+     "Multilingual": {
+      "entries": 13,
+      "logs_pointer_stated": 13
+     },
+     "Multimodal": {
+      "entries": 22,
+      "logs_pointer_stated": 0
+     },
+     "Test": {
+      "entries": 24,
+      "logs_pointer_stated": 24
+     },
+     "Verified": {
+      "entries": 180,
+      "logs_pointer_stated": 169
+     }
+    },
+    "share_logs_stated": {
+     "denominator": 323,
+     "numerator": 287,
+     "value": 0.888545
+    }
+   },
+   "kind": "measurement.disclosure_completeness",
+   "licence": {
+    "note": "The upstream licence is stated by a catalogue as CC-BY-NC-4.0 and the GitHub licence field reads NOASSERTION. Only our counts and the upstream's own entry identifiers are published here.",
+    "our_record": "CC-BY-4.0 (Council of AI, CSOAI Ltd)",
+    "upstream": {
+     "basis": "catalog claim; GitHub licence field below",
+     "github_license_field": "NOASSERTION",
+     "id": "CC-BY-NC-4.0 (claimed)",
+     "note": "NC: only our measurement and a pointer are published, never their rows"
+    }
+   },
+   "measure": "swebench.logs_pointer_share",
+   "path": "swebench-logs-pointer/record.json",
+   "record_id": "swebench-logs-pointer-2026-09-30",
+   "sha256": "0c662e719dae86eda972026cac7ee7bc272a096da0b6f2185d429c806bdece45",
+   "signed": "swebench-logs-pointer/record.signed.json",
+   "source": {
+    "name": "SWE-bench leaderboards (leaderboards.json)",
+    "publisher": "SWE-bench",
+    "urls": [
+     "https://raw.githubusercontent.com/SWE-bench/swe-bench.github.io/master/data/leaderboards.json",
+     "https://www.swebench.com/"
+    ]
+   },
+   "title": "SWE-bench leaderboard entries: how many state a logs pointer",
+   "unmeasured_count": 1
+  }
+ ],
+ "schema": "csoai.disclosure-completeness-set/0.1",
+ "set": "disclosure-completeness-2026-09-30",
+ "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign",
+ "verify": "python3 verify.py (signatures) · python3 verify.py --recompute BLOBDIR (results)"
+}

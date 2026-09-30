@@ -70,7 +70,7 @@ export function RowsAxisDetermination({ a }: { a: RowsAxisView }) {
     <div className="mt-2 text-sm text-gray-800" data-testid={`rows-determination-${a.axis}`}>
       {a.separation_sentence && <p className="font-semibold">{a.separation_sentence}</p>}
       <p className="mt-1">
-        Leader {side(e.leader)} vs next best {side(e.next_best)}
+        {a.separation === "SEPARATED" ? "Separated leader" : "Top observed (not separated)"} {side(e.leader)} vs next best {side(e.next_best)}
         {typeof e.paired_items === "number" && <> · {e.paired_items} paired items</>}
         {typeof e.mcnemar_p === "number" && (
           <>

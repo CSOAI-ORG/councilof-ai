@@ -1363,6 +1363,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Measurement Capsules"
  },
  {
+  "path": "/measurements/disclosure-completeness",
+  "comp": "DisclosureCompleteness",
+  "title": "Disclosure Completeness"
+ },
+ {
   "path": "/measurements/disclosure-lag/2026-09-gemini-evaluation",
   "comp": "DisclosureLagGeminiEvaluation",
   "title": "Disclosure Lag Gemini Evaluation"

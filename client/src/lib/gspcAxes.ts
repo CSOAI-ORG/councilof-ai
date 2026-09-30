@@ -15,6 +15,7 @@
 // deciding for themselves, so a surface cannot render a score an axis has not earned.
 
 import { boardRunDates } from "./boardRunDates";
+import { leaderLabel } from "../../../functions/_lib/leaderLabel";
 import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
 export type AxisStatus = "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
@@ -260,11 +261,13 @@ export function inLaneFacts(row: InLaneAxis): {
     typeof row.fleet_mean === "number" && Number.isFinite(row.fleet_mean)
       ? `fleet mean ${row.fleet_mean}`
       : null;
+  // Tracker row 10: "leader" only when separation SEPARATED the row; otherwise "top observed (not separated)".
+  const label = leaderLabel(row.separation);
   const leaderLine =
     typeof row.accuracy === "number" && Number.isFinite(row.accuracy) && row.leader
-      ? `leader ${row.leader} ${row.accuracy}`
+      ? `${label} ${row.leader} ${row.accuracy}`
       : typeof row.accuracy === "number" && Number.isFinite(row.accuracy)
-        ? `leader ${row.accuracy}`
+        ? `${label} ${row.accuracy}`
         : null;
   return {
     separation: sep,

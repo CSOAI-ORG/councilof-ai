@@ -174,6 +174,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/measurements/disclosure-lag/2026-09-medicare-agent",
   // /measurements/disclosure-lag/2026-09-gemini-evaluation — second disclosure-lag measurement (owner-approved 2026-09-28).
   "/measurements/disclosure-lag/2026-09-gemini-evaluation",
+  // /measurements/disclosure-completeness — disclosure completeness and lag of public benchmark artifacts, signed dated sets (2026-09-30).
+  "/measurements/disclosure-completeness",
   // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
   "/verify-server",
   // /measurement-capsules — the human page over the capsule index: kinds, chain, anchors, how to verify (2026-09-26).
