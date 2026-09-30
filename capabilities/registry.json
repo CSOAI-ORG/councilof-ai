@@ -487,6 +487,45 @@
       "payment": "free"
     },
     {
+      "id": "api-claims-events",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims events",
+      "description": "GET /api/claims/events — the claim-event feed: append-only, hash-chained JSONL.",
+      "endpoint": "/api/claims/events",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events-head",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims events head",
+      "description": "GET /api/claims/events/head — the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
+      "endpoint": "/api/claims/events/head",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-chat",
+      "protocols": [
+        "http"
+      ],
+      "title": "Chat (descriptor)",
+      "description": "GET /api/chat: a descriptor, not a 404. It names the one grounded answerer (Ask the Council) and every skin it is served through (chat, MCP, A2A, AG-UI, A2UI), each with its method and address. POST /api/chat asks the question.",
+      "endpoint": "/api/chat",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-chat-post",
       "protocols": [
         "http"
