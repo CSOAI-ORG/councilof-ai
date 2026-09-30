@@ -1,56 +1,74 @@
 {
  "schema": "csoai.measurement-capsule-batch/0.2",
- "as_of": "2026-09-26T06:43:21Z",
+ "as_of": "2026-09-30T08:16:18Z",
  "capsule_schema": "csoai.measurement-capsule/0.2",
  "adapter": "tool_drift",
  "kind": "measurement.tool_drift",
- "n_capsules": 3240,
+ "n_capsules": 497,
  "states": {
-  "UNCHANGED_AT_NAME_GRANULARITY": 1485,
-  "UNCHECKABLE": 1755
+  "TOOLS_ADDED": 17,
+  "TOOLS_ADDED+TOOLS_REMOVED": 3,
+  "TOOLS_REMOVED": 2,
+  "UNCHANGED_AT_NAME_GRANULARITY": 418,
+  "UNCHECKABLE": 57
  },
- "merkle_root": "fd0f514e03dd825698a3eab57d33431b09e62e442f85c7592db50f2371e9d2df",
+ "merkle_root": "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
  "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
  "canonicalisation": {
   "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
-  "jcs_byte_equal": "3240/3240",
+  "jcs_byte_equal": "497/497",
   "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
  },
  "capsules_file": {
   "path": "capsules.jsonl.gz",
-  "sha256": "febe9aed6140c3cc12a0c256fb0ffa9e76bc66a19342f086af03ee60c7baa7aa",
-  "bytes": 646582,
-  "uncompressed_sha256": "5b30e6e8da77f8e181f0c8494dd3980837265776cc881b3846e49e2d68768297",
-  "uncompressed_bytes": 7855013,
+  "sha256": "d11db3e6b89d98c9577aff5c41c1aeb8674f94b37f34a95406fb7454a082e35a",
+  "bytes": 637158,
+  "uncompressed_sha256": "210861b791f91fc796896f9df101c554e8276e5d680ea5befcf648ff1a16913a",
+  "uncompressed_bytes": 3482570,
   "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
  },
  "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
  "what_this_is": "Tool drift: for each MCP endpoint observed at two independent times, whether the tools it advertised (names; descriptions and input schemas where recorded) are the same. One capsule per endpoint in the exact-URL join of the two observations.",
  "what_this_is_not": "Not a finding of malice, poisoning or a rug-pull, and not a grade of any server. A change is a recorded difference between two observations; a version change beside it is recorded, not treated as an excuse.",
  "granularity_available": {
-  "names->names": 1484,
-  "names_hash->names_hash": 1
+  "names->per_tool_hashes": 440
  },
  "granularity_note": "names = complete sorted tool-name lists + their sha256; per_tool_hashes adds description (raw and whitespace-collapsed) and inputSchema sha256 per tool. The 25 Sep census stored names only: description and schema drift is UNCHECKABLE for those rows.",
  "source": {
   "t1_files_sha256": {
-   "/evac-bulk/census-probe-2026-09-25/results.jsonl.gz": "038a2598981e8f0e48fc03261a5a6ef44770bd0cfbc4b8aa1d6917737df67dad"
+   "/evac-bulk/census-firstparty-2026-09-25/results.jsonl.gz": "ab1678d2db39999d5b390e0ac6a87f18bd242af86bb4554cdfffb1594d08c6db",
+   "/evac-bulk/census-probe-2026-09-25/results.jsonl.gz": "038a2598981e8f0e48fc03261a5a6ef44770bd0cfbc4b8aa1d6917737df67dad",
+   "/evac-bulk/census-v0.2-2026-09-26/probe/results.jsonl.gz": "df65b18ee0d4d1ceae76f1c4818c2510056bdb3a42e387f897bea7beedcb9ec5",
+   "/evac-bulk/tool-drift/runs/2026-09-26/results.jsonl.gz": "b0aff3fd6a66707a2d41d048a1f9e0043ce116a2455bcca879881205386d2a92",
+   "/evac-bulk/tool-drift/runs/2026-09-27/results.jsonl.gz": "a06f03fa4028cec4b264238fce926b494fc777ce7d18bb454c21cf6418ad0c0a",
+   "/evac-bulk/tool-drift/runs/2026-09-28/results.jsonl.gz": "22891ab82c3314ed0d0e77c28177c12d876d9a6fc124619ba321f2c62fc23b0f",
+   "/evac-bulk/tool-drift/runs/2026-09-29/results.jsonl.gz": "384cb21b8993c45ffdd0879afc6c7857aebc5e722a46f7ac4af92f3bb4cab626"
   },
   "t2_files_sha256": {
-   "/evac-bulk/census-firstparty-2026-09-25/results.jsonl.gz": "ab1678d2db39999d5b390e0ac6a87f18bd242af86bb4554cdfffb1594d08c6db"
+   "/evac-bulk/tool-drift/runs/2026-09-30/results.jsonl.gz": "3e95f46adddd937a68c007bca894b4abf03ef07daffc4e875ff08de9f0af7189"
   },
-  "n_t1_endpoints": 4144,
-  "n_t2_endpoints": 10187,
-  "n_join": 3240,
-  "n_t1_only": 904,
-  "n_t2_only": 6947,
-  "t1_responded_absent_at_t2": 499,
+  "n_t1_endpoints": 21130,
+  "n_t2_endpoints": 497,
+  "n_join": 497,
+  "n_t1_only": 20633,
+  "n_t2_only": 0,
+  "t1_responded_absent_at_t2": 12520,
   "absent_at_t2_rule": "not capsuled and never counted as REMOVED: absence from an observation is UNCHECKABLE"
  },
  "capsules_by_state": {
-  "UNCHANGED_AT_NAME_GRANULARITY": 1485,
-  "UNCHECKABLE": 1755
+  "UNCHANGED_AT_NAME_GRANULARITY": 418,
+  "TOOLS_ADDED": 17,
+  "TOOLS_ADDED+TOOLS_REMOVED": 3,
+  "UNCHECKABLE": 57,
+  "TOOLS_REMOVED": 2
  },
- "changes_by_version_state": {},
- "private_until": "owner approves publication"
+ "changes_by_version_state": {
+  "SAME": 13,
+  "CHANGED": 9
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ }
 }

@@ -1,0 +1,46 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-30T08:17:24Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "claim_watch",
+ "kind": "measurement.claim_watch",
+ "n_capsules": 1,
+ "states": {
+  "CONFIRMED": 1
+ },
+ "merkle_root": "44ec4b9730196fc357c7e20f7a330027cbfa0a9ad38077015b8f13cc67b76869",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "1/1",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "c2090011b2aace79cbbc50b25efb436a97e2b6b0e65480786ba758701e752a27",
+  "bytes": 1076,
+  "uncompressed_sha256": "5db74dd02e6e1b4eab11b11ac074c1b19baa32b8b5a8c51afd625caddaa72c74",
+  "uncompressed_bytes": 1995,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "Claim maintenance: one sealed capsule per watched subject per day, committing to the signed claim-watch receipt (observation, atoms, measurement, change state, event-log head).",
+ "what_this_is_not": "Not a publication of any claim record and not a verdict. Sealed subjects are named only by id.",
+ "source": {
+  "receipts": [
+   {
+    "sealed_id": "4a31dd96e79dcf1b",
+    "date": "2026-09-30",
+    "receipt_sha256": "0780def9b06038c18f46c709789886294dc7b9618c45e1848e5b888ebcd6751e",
+    "receipt_signature_payload_sha256": "661f5f434d831470c0e0803e768f917df3d9393439038665edc24b89aa505f63",
+    "run_change_state": "CONFIRMED"
+   }
+  ],
+  "n_receipts": 1
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "note": "published daily by the owner's approval (recorded 2026-09-26); copies: HF csoai/evidence-index measurement-index/<date>/"
+ }
+}

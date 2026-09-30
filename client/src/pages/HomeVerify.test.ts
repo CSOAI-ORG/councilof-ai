@@ -16,6 +16,9 @@ const src = [
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/^\s*\/\/.*$/gm, "");
 const app = readFileSync(resolve(here, "../App.tsx"), "utf8");
+// 2026-09-30: the technical bands left the front door for /about/#numbers (owner review).
+const aboutNumbers = readFileSync(resolve(here, "../components/about/AboutNumbers.tsx"), "utf8");
+const glance = readFileSync(resolve(here, "../components/home/LiveBoardGlance.tsx"), "utf8");
 // /how-we-work is where the eight bands retired from the front door on 2026-09-23 now live.
 // It is read here so the "nothing was deleted, it moved" claim is pinned against the file that
 // has to carry it, rather than asserted in a comment.
@@ -53,8 +56,9 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain('id="os-chat"');
     expect(src).toContain("The living board");
     expect(src).toContain("HomeHero");
-    expect(src).toContain("HomeCredibility");
-    expect(src).toContain("HomeWeakScore");
+    // 2026-09-30: HomeCredibility and HomeWeakScore moved to /about/#numbers.
+    expect(aboutNumbers).toContain("<HomeCredibility");
+    expect(aboutNumbers).toContain("<HomeWeakScore");
     expect(src).toContain("What this film is saying");
     expect(src).toContain("HomeGspcTable");
     expect(src).toMatch(/totals\?\.lid/);
@@ -166,10 +170,10 @@ describe("owner rulings on the front door, 2026-09-22", () => {
     expect(footer).toContain("/api/footprint");
   });
 
-  it("gives participation a band of its own rather than a thin strip", () => {
-    expect(home).toContain('variant="home"');
-    expect(home).toContain('data-testid="home-participation"');
-    expect(home).not.toContain('variant="badges"');
+  it("gives participation a band of its own rather than a thin strip (on /about/#numbers since 2026-09-30)", () => {
+    expect(aboutNumbers).toContain('variant="home"');
+    expect(aboutNumbers).toContain('data-testid="home-participation"');
+    expect(aboutNumbers).not.toContain('variant="badges"');
   });
 
   it("leads with the credibility: signed evidence, corrections, anchoring, free re-checking", () => {
@@ -177,9 +181,12 @@ describe("owner rulings on the front door, 2026-09-22", () => {
     // HomeStrengths, in six tiles instead of six essays, because at 27,743px the essays were
     // published to whoever was still reading and to nobody else. It is still the SECOND band,
     // above the board and above everything after it, which is what this test has always meant.
-    expect(home.indexOf("<HomeCredibility")).toBeLessThan(home.indexOf('id="board"'));
-    expect(home.indexOf("<HomeCredibility")).toBeGreaterThan(home.indexOf("<HomeHero"));
-    expect(home).toContain("<HomeWeakScore");
+    // 2026-09-30 (owner review): the front door leads with the live board directly under the
+    // hero; the credibility tiles and the weak score moved to /about/#numbers, linked from home.
+    expect(home.indexOf("<LiveBoardGlance")).toBeGreaterThan(home.indexOf("<HomeHero"));
+    expect(home).toContain('href="/about/#numbers"');
+    expect(aboutNumbers).toContain("<HomeCredibility");
+    expect(aboutNumbers).toContain("<HomeWeakScore");
   });
 });
 
@@ -235,7 +242,9 @@ describe("the 2026-09-23 shortening — retired, not deleted", () => {
 });
 
 describe("the count is never published without the separation that qualifies it", () => {
-  const hero = readFileSync(resolve(here, "../components/home/HomeHero.tsx"), "utf8");
+  // 2026-09-30: the count line and its separation line are printed together in LiveBoardGlance;
+  // the long explanation is on /about/#numbers.
+  const hero = glance + aboutNumbers;
 
   it("reads all four separation fields live, or prints none of them", () => {
     // MEASURED means a run exists behind the slot. It does NOT mean the axis told two models
@@ -250,7 +259,8 @@ describe("the count is never published without the separation that qualifies it"
 
   it("says in words that measured is not separated, on the first screen", () => {
     expect(hero).toContain("Measured is not the same as separated.");
-    expect(hero).toContain('data-testid="hero-separation"');
+    expect(hero).toContain('data-testid="board-separation"');
+    expect(hero).toContain('data-testid="about-separation"');
     // A tie is first-class and is never rounded up into a ranking.
     expect(hero).toMatch(/A tie stays a tie/);
   });
@@ -283,11 +293,9 @@ describe("no in-page anchor on the front door points at nothing", () => {
   const mounted = [
     "HomeVerify.tsx",
     "../components/home/HomeHero.tsx",
-    "../components/home/HomeCredibility.tsx",
-    "../components/home/HomeGspcTable.tsx",
-    "../components/home/HomeWeakScore.tsx",
-    "../components/home/HomeComposer.tsx",
-    "../components/MembershipStrip.tsx",
+    "../components/home/LiveBoardGlance.tsx",
+    "../components/home/HomeSteps.tsx",
+    "../components/home/HomeWaysIn.tsx",
   ].map((f) => readFileSync(resolve(here, f), "utf8"));
   const joined = mounted.join("\n");
   const ids = new Set([...joined.matchAll(/id="([a-z0-9-]+)"/g)].map((m) => m[1]));
@@ -307,14 +315,16 @@ describe("no in-page anchor on the front door points at nothing", () => {
 describe("home lock — later merges must not restore the desk video", () => {
   it("HomeVerify.tsx stays living-board first with no HomeDemoLoop", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
-    expect(home).toContain("HomeGspcTable");
+    // 2026-09-30: the compact live board (LiveBoardGlance) replaced the full table on the front
+    // door; the full table is one click away at /board. It carries the one count line.
+    expect(home).toContain("<LiveBoardGlance");
     expect(home).not.toContain("HfLivingRecord");
     expect(home).not.toContain("ReachStrip");
-    expect(home).toContain("The living board");
-    // The first screen must state what this business is, and must carry the one count line.
+    expect(glance).toContain("The living board");
+    expect(glance).toContain('data-testid="board-public-count"');
     expect(home).toContain("<HomeHero");
-    expect(home).toContain("showPublicCount={false}");
-    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<HomeGspcTable"));
+    expect(home.indexOf("<HomeHero")).toBeLessThan(home.indexOf("<LiveBoardGlance"));
+    expect(home).not.toMatch(/model fleets tested/i);
     expect(home).not.toContain("HomeDemoLoop");
     expect(home).not.toContain("csoai-demo.mp4");
     expect(home).not.toContain("HomeBoard");

@@ -700,6 +700,9 @@ export const onRequestGet: PagesFunction = async (context) => {
           "The same three numbers appear below as separated_leads / ties / untested_separations and " +
           "in limitations[0]; there is one derivation.",
         model_fleets: modelFleetCount,
+        model_fleets_note:
+          "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured " +
+          "is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
         fact_runs: factRunCount,
         count_grammar:
           unmeasured === 0

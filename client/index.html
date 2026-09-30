@@ -107,7 +107,12 @@
     <!-- Google Fonts: Inter + Archivo + Source Serif 4 (editorial headlines) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
+    <!-- display=optional, not swap (front-end audit 2026-09-30, measured): with swap, every text page
+         painted in the fallback font, then re-rendered in Inter once JS ran, and the larger re-render
+         was reported as a second Largest Contentful Paint (/methodology/ 1.9 s -> 4.4 s, /academy/
+         1.0 s -> 3.4 s on a throttled phone). With optional the first paint's font is kept for that
+         page view, LCP = first paint, and a cached font is used from the next page on. -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=optional" rel="stylesheet" />
 
     <!-- Per-route self-canonical: each crawled URL canonicals to itself (not just the root).
          NB: during prerender (scripts/prerender.mjs) the captured markup's localhost origin is
