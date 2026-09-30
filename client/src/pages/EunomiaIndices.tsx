@@ -2,7 +2,7 @@ import { EUNOMIA_AXES } from "@/data/eunomia";
 import { useBoardCount } from "@/lib/boardCount";
 
 /**
- * EUNOMIA indices — the three aspirational index axes, UNMEASURED on GET /api/gspc.
+ * Financial-axis indices — the three aspirational index axes, UNMEASURED on GET /api/gspc.
  * C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Do not restore that sticker.
  * A n=10 harness gold set exists as reference input only — not a living-board MEASURED stamp.
  * Measurement, not certification. Empty stays empty until a NEW signed card exists.
@@ -16,7 +16,7 @@ export default function EunomiaIndices() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">EUNOMIA indices — UNMEASURED</h1>
+      <h1 className="text-2xl font-bold">Financial-axis indices — UNMEASURED</h1>
       <p className="mt-1 text-sm text-emerald-300/80">
         The three aspirational index axis · living board GET /api/gspc is authority · {board.public_count}
         {!board.live && " (last recorded observation — the endpoint wins)"}

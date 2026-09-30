@@ -62,7 +62,6 @@ export const CANONICAL_ALIAS = new Map([
   ["/usp", "/why"],
   ["/why-csoai", "/why"],
   ["/our-difference", "/why"],
-  ["/agents", "/council-vs-agents"],
   ["/governance-council", "/council-vs-agents"],
   ["/vs", "/compare"],
   ["/vs-competitors", "/compare"],

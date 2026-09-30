@@ -11,7 +11,7 @@ export default function Sectors() {
   const axisName = (a: string) => (EUNOMIA_AXES.find((x) => x.axis === a)?.axis ?? a);
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">EUNOMIA Sectors — measurement tooling for every end party</h1>
+      <h1 className="text-2xl font-bold">Sectors: measurement tooling for every end party</h1>
       <p className="mt-1 text-sm text-emerald-300/80">white-label · they brand it, we sign it · trust root never white-labels</p>
       <p className="mt-2 text-xs text-slate-400">Each party gets the verifiable measurement surface mapped to ITS axis + EU AI Act exposure. Regulators free (R8); the commercial lane is data-only x402.</p>
       <div className="mt-6 grid gap-3 sm:grid-cols-2">

@@ -11,7 +11,7 @@ export default function Eunomia() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">EUNOMIA — the financial-verification board</h1>
+      <h1 className="text-2xl font-bold">Financial verification: the financial-axis board</h1>
       <p className="mt-1 text-sm text-emerald-300/80">
         {measured.length} of {total} axes measured · exact-label · Wilson CI · Ed25519-signed · recompute-able
       </p>

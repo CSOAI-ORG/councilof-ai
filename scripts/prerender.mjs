@@ -226,6 +226,8 @@ function discover() {
     "/connect/claude",
     // /connect: the connector hub (2026-09-30); the doors and commands must be readable without JS.
     "/connect",
+    // /agents: how an agent uses GSPC (2026-09-30); the doors, tools and skills must be readable without JS.
+    "/agents",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

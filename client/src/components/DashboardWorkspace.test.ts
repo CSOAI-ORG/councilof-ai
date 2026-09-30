@@ -6,8 +6,9 @@ import { LOBBY_TABS } from "./lobby/tabs";
 
 describe("canonical dashboard workspace", () => {
   it("separates MCP catalogue discovery from observed tool execution", () => {
+    // The tool count moved to the GSPC workspace home (30 Sep 2026); the wording rule moved with it.
     const source = readFileSync(
-      resolve(__dirname, "./DashboardWorkspace.tsx"),
+      resolve(__dirname, "./gspc/GspcWorkspaceHome.tsx"),
       "utf8",
     );
     expect(source).toMatch(/declared by tools\/list/);

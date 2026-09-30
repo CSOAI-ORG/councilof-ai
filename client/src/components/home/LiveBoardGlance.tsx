@@ -254,7 +254,7 @@ export default function LiveBoardGlance({
                 </ul>
               </>
             ) : null}
-            {tiles.length === 0 ? <div className="mt-8 min-h-[52rem] sm:min-h-[34rem] lg:min-h-[17rem]" aria-busy="true" aria-label="Loading the board" /> : null}
+            {tiles.length === 0 ? <div role="status" className="mt-8 min-h-[52rem] sm:min-h-[34rem] lg:min-h-[17rem]" aria-busy="true" aria-label="Loading the board" /> : null}
 
             <p className="mt-6 max-w-4xl text-[13px] leading-relaxed text-muted-foreground">
               A tie stays a tie and an untested axis stays untested; neither is rounded up into a ranking, and an
