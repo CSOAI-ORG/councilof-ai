@@ -1631,7 +1631,7 @@ ${STEPS[r.id].map((s, i) => `${i + 1}. ${s}`).join("\n")}
     doctrine_sha256: DOCTRINE.sha256,
     stance: "measurement, not certification; UNMEASURED is reported as UNMEASURED",
     attribution: "Council of AI (CSOAI Ltd, company 16939677); signer did:web:csoai.org#board-attestation-1",
-    extends: OR.oasf.extends,
+    extends: "the AGNTCY Directory import draft for ai.councilof/gspc (read, not edited)",
     catalog: ID.website + "/.well-known/ai-catalog.json",
     ard: ID.website + "/ard/v1/agents",
   };
