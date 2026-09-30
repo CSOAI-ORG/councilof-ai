@@ -259,7 +259,7 @@ export default function GspcWorkspaceHome({
       figure: (
         <LiveFigureLine
           read={toolsRead}
-          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools answer tools/list", source: "POST /mcp → tools/list", as_of: null } : null)}
+          pick={(n) => (typeof n === "number" ? { value: String(n), label: "tools declared by tools/list; a tool is runtime-observed only after its own tools/call", source: "POST /mcp → tools/list", as_of: null } : null)}
           testId="ws-fig-connect"
         />
       ),
