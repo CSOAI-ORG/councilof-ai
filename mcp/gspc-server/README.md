@@ -32,6 +32,7 @@ are reported as two labelled numbers and never reconciled.
 | `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
 | `x402_trust` | Latest x402 catalog trust snapshot: counts of correct challenges and phantom resources. A 402 is a challenge, not delivery. |
 | `mcp_trust` | Latest MCP handshake census snapshot: counts only. `partial: true` whenever the enumeration did not complete — a cap-limited read is a slice, never the population. |
+| `evidence_bundle_preview` | For one obligation (`article-50`, `article-53`, `dora`, `cra`) and an optional subject: the already-signed cards relevant to it and the counsel gate, answered by the HTTP door. Relevant-to, never a determination; EMPTY is an answer. Article 53 output is evidence for review, not a legal determination. |
 
 The free tools above and the metered ones below are exactly what `tools/list` returns — ask it for
 the current set rather than trusting a number in a README. `wired-tools.test.mjs` fails if a listed
@@ -51,6 +52,7 @@ transport your client speaks; the contracts are identical.
 | `art50_marking_evidence` | `/api/art50/marking-evidence` | `preview: true` |
 | `rwa_evidence` | `/api/rwa/evidence` | `preview: true` (unsigned state) |
 | `receipts_batch` | `/api/receipts/batch` | `preview: true` (count, span, roots, batch sha256) |
+| `evidence_bundle` | `/api/evidence-bundle` | `preview: true` (relevant-card count and first cards), or the free tool `evidence_bundle_preview` |
 
 Payment travels as the **`x_payment` argument**, not as a transport header — so stdio carries these
 exactly as the HTTP door does. Up to 0.1.1 this README said the opposite ("stdio has no payment header to

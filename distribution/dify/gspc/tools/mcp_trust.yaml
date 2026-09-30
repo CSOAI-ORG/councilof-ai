@@ -1,0 +1,13 @@
+identity:
+  name: mcp_trust
+  author: csoai
+  label:
+    en_US: "MCP handshake census snapshot"
+description:
+  human:
+    en_US: "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable."
+  llm: "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine — host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable)."
+parameters: []
+extra:
+  python:
+    source: tools/mcp_trust.py

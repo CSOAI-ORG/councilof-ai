@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Drive the shipped stdio server: tools/list must be exactly the names that
- * tools/call actually runs — the twelve free tools and the four x402-metered ones.
+ * tools/call actually runs — every free tool and every x402-metered one.
  * A listed tool that does not run, or a running tool that is not listed, fails here.
  * Spawns index.mjs — not a reimplementation.
  */

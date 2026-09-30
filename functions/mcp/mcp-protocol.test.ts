@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
+import FLEET_LOCK from "./tool-fleet.lock.json";
+const FLEET_SIZE = FLEET_LOCK.fleet_size;
 import { MCP_MAX_REQUEST_BYTES, onRequest } from "./[[path]]";
 
 // Normative contract, not snapshots of the old module-global wire version:
@@ -127,7 +129,7 @@ describe("MCP per-request protocol contract", () => {
     const first = completed(await send(modern("tools/list", {}, { id: 0 })), 0);
     const second = completed(await send(modern("tools/list", {}, { id: "other" })), "other");
     expect(first.tools).toEqual(second.tools);
-    expect(first.tools).toHaveLength(16);
+    expect(first.tools).toHaveLength(FLEET_SIZE);
     expect(Number.isInteger(first.ttlMs)).toBe(true);
     expect(first.ttlMs as number).toBeGreaterThanOrEqual(0);
     expect(first.cacheScope).toBe("public");
@@ -217,7 +219,7 @@ describe("MCP per-request protocol contract", () => {
     expect(initialized.message?.result?.protocolVersion).toBe(LEGACY);
     expect(initialized.response.headers.get("Mcp-Session-Id")).toBeNull();
     const listed = await send(legacy("tools/list", {}, "list", withVersion));
-    expect(listed.message?.result?.tools).toHaveLength(16);
+    expect(listed.message?.result?.tools).toHaveLength(FLEET_SIZE);
     expect(listed.message?.result?.resultType).toBeUndefined();
     mockRoot();
     const result = await send(legacy("tools/call", { name: "get_root", arguments: {} }, "call", withVersion));
@@ -291,7 +293,7 @@ describe("official SDK client interoperability (no external network)", () => {
       expect(client.getProtocolEra()).toBe(mode === "auto" ? "modern" : "legacy");
       expect(client.getNegotiatedProtocolVersion()).toBe(mode === "auto" ? CURRENT : LEGACY);
       const listed = await client.listTools();
-      expect(listed.tools).toHaveLength(16);
+      expect(listed.tools).toHaveLength(FLEET_SIZE);
       const result = await client.callTool({ name: "get_root", arguments: {} });
       expect(result.isError).not.toBe(true);
       expect(result.structuredContent).toMatchObject({ state: "VALID", card_count: 2 });

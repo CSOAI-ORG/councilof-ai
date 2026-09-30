@@ -397,7 +397,7 @@ async function run(outPath) {
       ? {
           probe_scope:
             `PRE-DEPLOY STAND-IN: every ${LIVE_DOOR_ORIGIN}/* target was answered by ${DOOR_ORIGIN} ` +
-            "(this branch's build served locally), NOT by the live door; see `contacted` on each such server. " +
+            "(this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. " +
             "Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
         }
       : {}),

@@ -89,7 +89,7 @@ const call = async (
   return decode(response, body.id);
 };
 
-const FREE_TWELVE = [
+const FREE_LIST = [
   "board_totals",
   "get_axis",
   "verify_card",
@@ -102,12 +102,14 @@ const FREE_TWELVE = [
   "measurement_index",
   "verify_capsule",
   "server_evidence",
+  "evidence_bundle_preview",
 ];
-const PAID_FOUR = [
+const PAID_LIST = [
   "commission_card",
   "art50_marking_evidence",
   "rwa_evidence",
   "receipts_batch",
+  "evidence_bundle",
 ];
 
 /**
@@ -225,14 +227,14 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp tools/list — twelve free + four paid, catalogue free, nothing labelled safe", () => {
-  it("lists the free twelve first and the paid four after, one definitions file each", async () => {
+describe("/mcp tools/list — the free list then the paid list, catalogue free, nothing labelled safe", () => {
+  it("lists the free tools first and the paid tools after, one definitions file each", async () => {
     const r = await call(rpc("tools/list"));
     const names = r.result.tools.map((t: { name: string }) => t.name);
-    expect(names).toEqual([...FREE_TWELVE, ...PAID_FOUR]);
-    expect((FREE as { tools: unknown[] }).tools).toHaveLength(12);
-    expect((PAID as { tools: unknown[] }).tools).toHaveLength(4);
-    expect([...PAID_TOOL_NAMES]).toEqual(PAID_FOUR);
+    expect(names).toEqual([...FREE_LIST, ...PAID_LIST]);
+    expect((FREE as { tools: unknown[] }).tools).toHaveLength(FREE_LIST.length);
+    expect((PAID as { tools: unknown[] }).tools).toHaveLength(PAID_LIST.length);
+    expect([...PAID_TOOL_NAMES]).toEqual(PAID_LIST);
   });
 
   it("every paid definition says PAID, names measurement not certification, and never 'safe' / 'verified registry'", () => {
@@ -264,16 +266,16 @@ describe("/mcp tools/list — twelve free + four paid, catalogue free, nothing l
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
 
-  it("the free twelve definitions are byte-identical to what the stdio server reads (no drift)", async () => {
+  it("the free definitions are byte-identical to what the stdio server reads (no drift)", async () => {
     const { readFileSync } = await import("node:fs");
     const canonical = JSON.parse(
       readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8"),
     );
     expect(canonical.tools.map((t: { name: string }) => t.name)).toEqual(
-      FREE_TWELVE,
+      FREE_LIST,
     );
     expect(
-      canonical.tools.some((t: { name: string }) => PAID_FOUR.includes(t.name)),
+      canonical.tools.some((t: { name: string }) => PAID_LIST.includes(t.name)),
     ).toBe(false);
   });
 
@@ -285,7 +287,7 @@ describe("/mcp tools/list — twelve free + four paid, catalogue free, nothing l
         params: {},
       } as never)
     ).json();
-    expect(g.paid_tools.names).toEqual(PAID_FOUR);
+    expect(g.paid_tools.names).toEqual(PAID_LIST);
     expect(g.paid_tools.doctrine).toMatch(/measurement, not certification/);
     // stdio_alternative must not assert what another package's current version ships — that drifts on
     // its release schedule. It states the mechanism instead.

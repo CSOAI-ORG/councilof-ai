@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 describe("browser MCP request contract", () => {
-  it("falls back only for local tools/list and receives the exact canonical 16", async () => {
+  it("falls back only for local tools/list and receives the exact canonical list", async () => {
     const seen: Request[] = [];
     vi.stubGlobal(
       "fetch",
@@ -56,7 +56,7 @@ describe("browser MCP request contract", () => {
       : [];
 
     expect(tools.map((tool) => tool.name)).toEqual(ALL_TOOL_NAMES);
-    expect(tools).toHaveLength(16);
+    expect(tools).toHaveLength(ALL_TOOL_NAMES.length);
     expect(seen).toHaveLength(1);
     expect(seen[0].url).toBe(`${ORIGIN}/mcp`);
     expect(seen[0].headers.get("accept")).toBe(

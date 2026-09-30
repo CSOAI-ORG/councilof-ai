@@ -1,0 +1,31 @@
+identity:
+  name: list_cards
+  author: csoai
+  label:
+    en_US: "List signed card index rows"
+description:
+  human:
+    en_US: "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself."
+  llm: "The published signed-card index (https://councilof.ai/signed/card_index.json): what the index declares (n_cards) and how many rows it actually carries, reported next to — never reconciled with — the count the card store endpoint (https://councilof.ai/api/cards) reports for itself. Two labelled numbers from two surfaces; if they disagree, this tool shows the disagreement rather than picking one. Optional filters return recent rows: axis, limit. Each row carries card_url, the signed body; pass it, or the row's 64-hex card id, to verify_card."
+parameters:
+  - name: axis
+    type: string
+    required: false
+    label:
+      en_US: "axis"
+    human_description:
+      en_US: "Only list rows whose axis matches this name (case-insensitive)."
+    llm_description: "Only list rows whose axis matches this name (case-insensitive)."
+    form: llm
+  - name: limit
+    type: number
+    required: false
+    label:
+      en_US: "limit"
+    human_description:
+      en_US: "How many rows to include in the listing (newest first). Default 10. The two counts are always reported in full regardless of this limit."
+    llm_description: "How many rows to include in the listing (newest first). Default 10. The two counts are always reported in full regardless of this limit."
+    form: llm
+extra:
+  python:
+    source: tools/list_cards.py

@@ -18,6 +18,11 @@ export type Obligation = {
   existing_pack: string | null;
   counsel_confirmed: boolean;
   honesty: string | null;
+  /**
+   * Stamped on every output for this obligation while counsel has not reviewed its wording (master plugin
+   * plan 2026-09-30: Article 53 is neutral evidence description only until counsel reads it).
+   */
+  review_note: string | null;
 };
 
 export const OBLIGATIONS: Record<string, Obligation> = {
@@ -33,6 +38,7 @@ export const OBLIGATIONS: Record<string, Obligation> = {
     existing_pack: "/packs/eu-article-50",
     counsel_confirmed: true,
     honesty: null,
+    review_note: null,
   },
   "article-53": {
     id: "article-53",
@@ -50,6 +56,7 @@ export const OBLIGATIONS: Record<string, Obligation> = {
       "Art 53 evidence is independent third-party MEASUREMENT of a public model's behaviour, mapped to the " +
       "documentation duties. It is not the provider's technical documentation and never a conformity mark. " +
       "Obligation text confirmed against Reg (EU) 2024/1689 Art 53; penalty magnitude is counsel-pending.",
+    review_note: "Evidence for review, not a legal determination. Counsel review of the Article 53 wording is pending.",
   },
   dora: {
     id: "dora",
@@ -67,6 +74,7 @@ export const OBLIGATIONS: Record<string, Obligation> = {
       "cards of the PUBLIC model into a Register-of-Information-shaped OSCAL file. The Art.28-30 " +
       "obligation text and any penalty magnitude must be confirmed by regulatory counsel before " +
       "this appears in a customer quote.",
+    review_note: null,
   },
   cra: {
     id: "cra",
@@ -83,6 +91,7 @@ export const OBLIGATIONS: Record<string, Obligation> = {
       "CRA is a PIPELINE product (longer cycle) and is NOT in the crosswalk. This bundle assembles " +
       "behaviour + drift-recompute cards; the essential-requirements text and penalty magnitudes are " +
       "counsel-pending. Do not present as a conformity file.",
+    review_note: null,
   },
 };
 

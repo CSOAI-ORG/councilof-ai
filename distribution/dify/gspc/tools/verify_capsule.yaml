@@ -1,0 +1,22 @@
+identity:
+  name: verify_capsule
+  author: csoai
+  label:
+    en_US: "Verify one measurement capsule"
+description:
+  human:
+    en_US: "Verify one measurement capsule."
+  llm: "Verify one measurement capsule. Pass capsule_json as the capsule's JSON TEXT (exact: number lexemes are kept) or as an object. Recomputes capsule_id (sha256 of the canonical JSON without capsule_id), picks the rule by the capsule's schema (csoai.measurement-capsule/0.2: RFC 6962 Merkle with 0x00/0x01 domain separation; the superseded v0.1 capsule schema: the v0.1 rule), finds the published batch of the same kind, recomputes that batch's root from its published leaves, and returns the audit path of this capsule against the root named by the signed index. States: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE, NOT_PUBLISHED. Verifying is free forever. It proves the bytes were published and bound; what they measured is the capsule's own measurement_state and limitations — measurement, not endorsement."
+parameters:
+  - name: capsule_json
+    type: string
+    required: true
+    label:
+      en_US: "capsule_json"
+    human_description:
+      en_US: "The capsule: its JSON text (preferred, byte-exact) or the parsed object."
+    llm_description: "The capsule: its JSON text (preferred, byte-exact) or the parsed object."
+    form: llm
+extra:
+  python:
+    source: tools/verify_capsule.py

@@ -8,7 +8,7 @@ as the source in `mcp/gspc-server/`.
 
 ## Tools
 
-Twelve free tools require no account, key or payment:
+Thirteen free tools require no account, key or payment:
 
 - `board_totals` — read live board totals with their source kind and `as_of` date.
 - `get_axis` — read one axis row, including sample size, interval and MEASURED/UNMEASURED state.
@@ -22,13 +22,15 @@ Twelve free tools require no account, key or payment:
 - `measurement_index` — read the board-signed measurement-capsule index: batch roots, states, anchor states.
 - `verify_capsule` — recompute one capsule's id and its Merkle inclusion under the signed index.
 - `server_evidence` — every published capsule about one endpoint URL; an unknown URL is NOT_MEASURED.
+- `evidence_bundle_preview` — the already-signed cards relevant to one obligation; observations, never a determination.
 
-Four optional x402-metered evidence tools are also discoverable:
+Five optional x402-metered evidence tools are also discoverable:
 
 - `commission_card`
 - `art50_marking_evidence`
 - `rwa_evidence`
 - `receipts_batch`
+- `evidence_bundle`
 
 Payment is explicit in the tool's `x_payment` argument. A schema-valid unpaid call returns
 `PAYMENT_REQUIRED` with the route's challenge; it is not settlement, delivery or revenue.

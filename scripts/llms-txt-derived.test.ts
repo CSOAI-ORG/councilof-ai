@@ -45,7 +45,7 @@ describe("llms.txt derives the tool counts it publishes", () => {
     // Smithery's tools[] is its own snapshot; on 2026-09-28 csoai/gspc-mcp listed 12 names and
     // csoai/gspc 13 while tools/list served 16. The line must not claim a mirror it cannot keep.
     const out = R("public/llms.txt");
-    const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+    const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
     const line = out.split("\n").find((l) => l.startsWith("- Smithery: "));
     expect(line, "llms.txt no longer carries a Smithery line").toBeTruthy();
     expect(line).not.toMatch(/mirrors/);

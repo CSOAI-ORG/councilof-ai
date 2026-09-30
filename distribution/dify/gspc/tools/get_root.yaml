@@ -1,0 +1,13 @@
+identity:
+  name: get_root
+  author: csoai
+  label:
+    en_US: "Public Merkle root"
+description:
+  human:
+    en_US: "GET the permissionless public-root at https://councilof.ai/root.json."
+  llm: "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate."
+parameters: []
+extra:
+  python:
+    source: tools/get_root.py
