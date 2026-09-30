@@ -93,3 +93,18 @@ describe("the type floor", () => {
     expect(phone).toContain("font-size: 0.75rem");
   });
 });
+
+describe("web fonts never cause a second Largest Contentful Paint", () => {
+  it("loads the Google Fonts stylesheet with display=optional", () => {
+    const html = read("client/index.html").replace(/<!--[\s\S]*?-->/g, "");
+    const href = html.match(/href="(https:\/\/fonts\.googleapis\.com\/css2\?[^"]+)"/)?.[1] ?? "";
+    expect(href).toContain("display=optional");
+  });
+});
+
+describe("the hero keeps its height while the board read lands", () => {
+  it("reserves two lines for each live figure", () => {
+    const hero = read("client/src/components/home/HomeHero.tsx");
+    expect(hero).toMatch(/<dd className="order-first min-h-\[2em\]/);
+  });
+});

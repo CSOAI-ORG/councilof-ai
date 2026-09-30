@@ -111,7 +111,7 @@ function Stat({ stat }: { stat: HeroStat }) {
     // source order. The figure is shown first, so it carries order-first rather than moving.
     <div className="flex flex-col gap-1 border-t border-emerald-400/25 pt-3 sm:gap-1.5 sm:pt-4" data-hero-stat={stat.label}>
       <dt className="text-[13px] font-bold leading-tight text-emerald-100/90">{stat.label}</dt>
-      <dd className="order-first font-mono text-lg font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
+      <dd className="order-first min-h-[2em] font-mono text-lg font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
         {stat.value ?? "—"}
       </dd>
       <dd className="hidden text-xs leading-snug text-emerald-200/70 sm:block">{stat.note}</dd>
@@ -279,7 +279,11 @@ export default function HomeHero({
                 <a href="/api/gspc" className="font-semibold text-emerald-300 underline decoration-dotted underline-offset-2">
                   GET /api/gspc
                 </a>{" "}
-                as this page rendered{stamp ? `; the runs behind it were made ${stamp}` : ""}. Nothing on
+                as this page rendered
+                {/* The run dates join from 640px: on a phone they pushed the three ways in below the
+                    first screen, and the board a scroll below prints them in full. The slot keeps
+                    its height while the read lands so the tiles do not jump (CLS). */}
+                {stamp ? <span className="hidden sm:inline">; the runs behind it were made {stamp}</span> : null}. Nothing on
                 this page is a certificate, and a tie between two models stays a tie.{" "}
                 <a href="#board" className="font-semibold text-emerald-300 underline underline-offset-2" data-testid="hero-cta-board">
                   See what is measured →
