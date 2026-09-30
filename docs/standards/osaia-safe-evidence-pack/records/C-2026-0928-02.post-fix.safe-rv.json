@@ -1,0 +1,115 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:C-2026-0928-02:post-fix",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "supersedes": [
+    {
+      "record_id": "csoai:safe-rv:C-2026-0928-02:pre-fix",
+      "sha256": "141a53b4c95a54261924b43db7cd2861389254ed0eb653cb41703b72458c9524",
+      "uri": "out/C-2026-0928-02.pre-fix.safe-rv.json",
+      "reason": "re-test of the corrected code; the pre-fix record is kept unchanged beside it"
+    }
+  ],
+  "finding": {
+    "kind": "public_claim",
+    "finding_ref": "C-2026-0928-02",
+    "disclosure_tier": "public",
+    "summary": "Correction C-2026-0928-02, re-tested post-fix: does the reference canonicaliser write RFC 8785 bytes for astral characters and numbers?"
+  },
+  "claim": {
+    "claim_id": "signed-receipts/v1/_canon@b79ed7fe:rfc8785-scalars",
+    "claim_type": "control_holds",
+    "statement": "The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does.",
+    "subject": {
+      "identifier": "sha256:b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216",
+      "scheme": "sha256"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "oracle",
+      "kind": "runtime",
+      "name": "node JSON.stringify",
+      "version": "v22.12.0",
+      "digest": null,
+      "uri": null,
+      "observed_at": null,
+      "state": "UNPINNED"
+    },
+    {
+      "dep_id": "ledger",
+      "kind": "dataset",
+      "name": "corrections ledger entry C-2026-0928-02",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "f508bd396a69c5ba446022b380a29322ea84768665e64a5d03a3696165b9302c"
+      },
+      "uri": "https://councilof.ai/api/corrections",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "canonicaliser",
+      "kind": "tool",
+      "name": "interceptor.py post-fix",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216"
+      },
+      "uri": "https://councilof.ai/spec/signed-receipts/v1/interceptor.py",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "scalar canonicalisation vs node JSON.stringify",
+    "method_version": "2014 values, seed 20260928",
+    "procedure": "python3 safe_export.py (jcs_probe()): 14 edge values + 2000 seeded doubles from 1e-8 to 1e22",
+    "procedure_digest": null,
+    "reproduction": "independent_reimplementation",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Scalars only; object key ordering is not probed here (the conformance vectors cover it).",
+      "node is the oracle: a defect shared by node and the code under test would not show."
+    ],
+    "noise_floor": "deterministic"
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "The pre-fix canonicaliser must differ from the oracle; it differed on 514 of 2014 values.",
+    "negatives_observed": 514,
+    "denominator": 2014
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 0,
+    "denominator": 2014,
+    "reason": "0 of 2014 values differ from the oracle"
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "canonicaliser",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "Wrong canonicalisation causes wrong rejection across implementations, not false acceptance (per the ledger entry).",
+    "Scalars only; see declared_failure_modes."
+  ]
+}

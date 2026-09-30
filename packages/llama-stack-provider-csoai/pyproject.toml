@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llama-stack-provider-csoai"
+version = "0.1.0"
+description = "Llama Stack out-of-tree eval provider (remote::csoai): verify CSOAI signed evidence batches offline and return each event's state, never a score."
+license = {text = "Apache-2.0"}
+requires-python = ">=3.12"
+dependencies = ["llama-stack>=0.7", "mcp<2", "cryptography>=41"]  # mcp<2: see README
+
+[tool.setuptools.packages.find]
+where = ["src"]

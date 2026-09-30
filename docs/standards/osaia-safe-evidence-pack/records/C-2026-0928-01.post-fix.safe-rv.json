@@ -1,0 +1,123 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:C-2026-0928-01:post-fix",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "supersedes": [
+    {
+      "record_id": "csoai:safe-rv:C-2026-0928-01:pre-fix",
+      "sha256": "d84c899abdf065315698ab52cf9558f28f0a3c3168e54d374a512847e65d0327",
+      "uri": "out/C-2026-0928-01.pre-fix.safe-rv.json",
+      "reason": "re-test of the corrected code; the pre-fix record is kept unchanged beside it"
+    }
+  ],
+  "finding": {
+    "kind": "public_claim",
+    "finding_ref": "C-2026-0928-01",
+    "disclosure_tier": "public",
+    "summary": "Correction C-2026-0928-01, re-test of the served fix: unresolvable keys now give UNVERIFIABLE_KEY, never VALID."
+  },
+  "claim": {
+    "claim_id": "signed-receipts/v1/interceptor.py@b79ed7fe:resolves-before-valid",
+    "claim_type": "control_holds",
+    "statement": "interceptor.py as served (sha256 b79ed7fe...) returns the expected VALID / INVALID / UNVERIFIABLE_KEY result for all 17 core cases.",
+    "subject": {
+      "identifier": "https://councilof.ai/spec/signed-receipts/v1/interceptor.py",
+      "scheme": "url+sha256"
+    },
+    "scope": "The 17 core conformance cases; not the interop cases."
+  },
+  "dependencies": [
+    {
+      "dep_id": "vectors",
+      "kind": "dataset",
+      "name": "conformance vectors.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "dce6927119a84c297516bc21870895b97d1421c44d964cc54f7b9eb758c45f12"
+      },
+      "uri": "https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "ledger",
+      "kind": "dataset",
+      "name": "corrections ledger entry C-2026-0928-01",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "24c6e8f78c8c021cfcc153f1c4fa8a402e06aab4b90c3a7bf3b6969c70df939b"
+      },
+      "uri": "https://councilof.ai/api/corrections",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "verifier",
+      "kind": "tool",
+      "name": "interceptor.py as served",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216"
+      },
+      "uri": "https://councilof.ai/spec/signed-receipts/v1/interceptor.py",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents",
+    "method_version": "dce6927119a8",
+    "procedure": "python3 safe_export.py (conformance()); equivalently python3 run.py <results> --vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+    "procedure_digest": {
+      "alg": "sha256",
+      "value": "dce6927119a84c297516bc21870895b97d1421c44d964cc54f7b9eb758c45f12"
+    },
+    "reproduction": "independent_reimplementation",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Covers only the 17 core cases; a fault outside them passes.",
+      "The pre-fix code has no three-valued result; its bool is mapped VALID/INVALID and it is driven integrity-only when a DID is absent from the fixture map, as deployed."
+    ],
+    "noise_floor": "deterministic; no sampling"
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "The kit's published results for the pre-fix verifier (example-fail-results.json) are scored against vectors.json by this script's comparator; it must report mismatches. It reported 4 of 17.",
+    "negatives_observed": 4,
+    "denominator": 17
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 17,
+    "denominator": 17,
+    "reason": "17 of 17 core cases match; the same comparator scores the pre-fix results FAIL (4 mismatches)."
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "verifier",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "The served URL is not immutable; the digest identifies the bytes tested.",
+    "A verified signature shows these bytes were signed by the named key. It does not show the content is true.",
+    "The GitHub copy the ledger names was not reachable and was not tested."
+  ]
+}

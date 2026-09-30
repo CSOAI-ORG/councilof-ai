@@ -1,0 +1,956 @@
+{
+ "resourceLogs": [
+  {
+   "resource": {
+    "attributes": [
+     {
+      "key": "service.name",
+      "value": {
+       "stringValue": "csoai-evidence-fabric"
+      }
+     }
+    ]
+   },
+   "scopeLogs": [
+    {
+     "logRecords": [
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "87319d84d0bb38e4d163c5837151598f08e1cd043079e85cdec6cbbeb87b7a3d"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:60b6e86089cf71ee9140e81d22f6988d543f58e933279f01636158a5f368fa89"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"The served URL is not immutable; the digest identifies the bytes tested.\", \"A verified signature shows these bytes were signed by the named key. It does not show the content is true.\", \"The GitHub copy the ledger names was not reachable and was not tested.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents | dce6927119a8"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "d7316d1b9919a924131d590028d61e78afb13626c3d6c1cfcb34a308f18c3155"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "https://councilof.ai/spec/signed-receipts/v1/interceptor.py"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "interceptor.py as served (sha256 b79ed7fe...) returns the expected VALID / INVALID / UNVERIFIABLE_KEY result for all 17 core cases."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "CONSISTENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "ff305ad7c8dbe9103ac153ce477d7cf257e1b14b35cdcb8c44f57bcb6f063392"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:bbc894afc99e583ec420f8068ef0c74a54d83332c7147d6b0e07fab227a88fbe"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"This re-test ran the pre-fix bytes supplied from the issuer's git history at the digest the ledger cites; the public copy the ledger names answered 401, so a stranger cannot fetch these bytes today.\", \"It says nothing about receipts issued with the verifier, only about how the verifier classified the vectors.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents | dce6927119a8"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "4d715b0216914dc304d3bf0492ddcf28ba0f7b305ba15e6cc8e73d0d277bbea4"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "interceptor.py (sha256 d908b9e7...) returns VALID only for receipts whose key resolves to the named issuer, and never INVALID merely because resolution failed."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "DIVERGENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "ef24668355dc48a2a3c375aa9cc947401eab9747cc76fa57a97046e255bebbd6"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:39b7f495688ff992fbd0c0474ba47b8f59b3a656fa9651fba086b9f073692488"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"Wrong canonicalisation causes wrong rejection across implementations, not false acceptance (per the ledger entry).\", \"Scalars only; see declared_failure_modes.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "scalar canonicalisation vs node JSON.stringify | 2014 values, seed 20260928"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "58047bdef01251f0e99fbfa6a580ecae689f56a36522566d77fafa9a5251382b"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "sha256:b79ed7fe59229587eecf6b9f31df033374059492d7c1119cd3fad475411d6216"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "CONSISTENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "19a85456c30b1644e44b87b1718d06360bfdf268a8dab6b13764d5e5004ba2d8"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:d13ac90e7b947247dbab389441ac332bc56e29eaccf5fda739f1a2dbef3f195d"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"Wrong canonicalisation causes wrong rejection across implementations, not false acceptance (per the ledger entry).\", \"Scalars only; see declared_failure_modes.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "scalar canonicalisation vs node JSON.stringify | 2014 values, seed 20260928"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "fd9f13e9fb8787dad136ddd9b594919f3f47420457ac9874ecbd3b02d60a1168"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "The reference canonicaliser writes every probed number and string exactly as RFC 8785 (ECMAScript) does."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "DIVERGENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "8fb3e7ae81a3bf318858f73973c5fd9a54af6b79eada10368b6f8f693260a7c5"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:ddf8a9c3a8167684be85f913e4ed066f7040a2b948d92b4bd1e2b93bb7d9511b"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.\", \"A verified signature shows these bytes were signed by the named key. It does not show the content is true.\", \"The ledger is re-signed as it grows; an older signature over an older body is not kept at a stable URL.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "ledger signature_check.how, re-implemented | csoai.corrections/0.1"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "879378e654b882fd38f121cf9fcc0c4302571ea0a3e0fa0825f3e4a19ec008f8"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "https://councilof.ai/api/corrections"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "The served ledger body hashes to the signed content_id, and that attestation verifies under the key in did.json."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "CONSISTENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "0d898efc0a528936b66b534b6e4913c6013a07c04d43270e97c57dd5530e4fa3"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:fdac8c15026a9f9711012c917c29509950ea01e200fc71ccf71efcdb0e6cff4a"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"UNMEASURED entries carry no estimate; that is why most are UNMEASURED.\", \"Says nothing about whether any correction was right, only whether its timing is recorded.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "count correction_latency.per_entry kinds | 2026-09-26"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"observed_negatives\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "68f055e23e3a8504f14dd9edfdb171c3395b21fda17da85205dd518d1c5d81f2"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "https://councilof.ai/api/corrections"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "Every ledger entry carries a first-hand detected_at and published_at, so its time-to-correct is measurable."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "DIVERGENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "81aa413940e9d29085e0917407fe9b58e464f232609893be401414ac5059c957"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:c85b51f1cc02a00f774f83b8e6ea32a54ef8a3eb6201c50f5ed358d99552c8f7"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"Measurement, not accusation: dates and whole days as the public record gives them; no intent, diligence or compliance is characterised.\", \"The signed record.json still carries publication = 'PRIVATE: OWNER-APPROVE required'; it is served publicly, so that field is stale inside signed bytes and needs a superseding record, not an edit.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "quote re-read | csoai.measurement-capsule/0.2"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": null, \"got\": \"NOT_RUN\", \"id\": \"none\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "4058eda912c41f4c80e237d76b530832dc4ca25a17846ee596410ec04185d014"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "web_page"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "incident.2026-06.au-medicare-statistics-portal.agent-access"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "The public record states when the agent's access to the portal ended."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "UNMEASURED"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "43a5516dc63fbf842131a69a462e613c3829ccb6a59cd5638ebb7a22129c8015"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:5f01f24f5a4ad4e0113e609e2166c5c6b2432aad5aa0289e9b4bf3fc1310e67c"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"Measurement, not accusation: dates and whole days as the public record gives them; no intent, diligence or compliance is characterised.\", \"The signed record.json still carries publication = 'PRIVATE: OWNER-APPROVE required'; it is served publicly, so that field is stale inside signed bytes and needs a superseding record, not an edit.\", \"A verified signature shows these bytes were signed by the named key. It does not show the content is true.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "quote re-read + calendar arithmetic | csoai.measurement-capsule/0.2"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "303017b8ed97307d3a46d4fd3a523ec26383c6a1f208414d516217c11bd22546"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "web_page"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "incident.2026-06.au-medicare-statistics-portal.agent-access"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "The government's own transcript dates the run to 18 June 2026 and the first notification to 10 September 2026: 84 whole days."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "CONSISTENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "876607f32852397a6d99a4241e07ff2ddbd1ff0bdf012b54a9d3b45a08cf6788"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:c320ff481da797f74043962b8a21203b36967729424b06622d24904b18b46f5d"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"runtime auth enforcement beyond the discovery boundary (initialize + tools/list); tools/call is never sent\", \"backend behaviour, tool correctness, safety, or quality of any service or vendor\", \"which surface is right: an INCONSISTENT row says two public statements disagree, not which one is true\", \"A verified signature shows these bytes were signed by the named key. It does not show the content is true.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "signed-run check + supersedes chain digests | csoai.signed-run/0.1"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "c2efb32dc76bbc11dfbe4e294096fbb01399391a59e4d6f2c87d62fab5af608d"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "dataset"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "https://huggingface.co/datasets/csoai/mcp-contract-parity@557ca3376194917ddc42e2e8dc301e6503fa2c03"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "record.v0.1.2.json is signed by the board key and names v0.1.1 and v0.1 by sha256, and those bytes are still published."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "CONSISTENT"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      },
+      {
+       "attributes": [
+        {
+         "key": "csoai.declared_sha256",
+         "value": {
+          "stringValue": "0918d2e90d57476ae5e8cc872e75ff3cb7b838990808944f689576d0bb002faf"
+         }
+        },
+        {
+         "key": "csoai.event_id",
+         "value": {
+          "stringValue": "sha256:10f9db66aa7996a329fb3d4c79e956991600cc68546bb378c24c6dee0ffea811"
+         }
+        },
+        {
+         "key": "csoai.limits",
+         "value": {
+          "stringValue": "[\"Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.\", \"A verified signature shows these bytes were signed by the named key. It does not show the content is true.\"]"
+         }
+        },
+        {
+         "key": "csoai.method.holder",
+         "value": {
+          "stringValue": "csoai"
+         }
+        },
+        {
+         "key": "csoai.method.version",
+         "value": {
+          "stringValue": "signed-run check | csoai.signed-run/0.1"
+         }
+        },
+        {
+         "key": "csoai.negative_control",
+         "value": {
+          "stringValue": "{\"expected\": \"DIVERGENT\", \"got\": \"DIVERGENT\", \"id\": \"designed_to_fail\"}"
+         }
+        },
+        {
+         "key": "csoai.observed_sha256",
+         "value": {
+          "stringValue": "4d3a2c6a9440011abfda5f7e5329bad570fc75c33e24a26645bdd0622042a2df"
+         }
+        },
+        {
+         "key": "csoai.ots",
+         "value": {
+          "stringValue": "none"
+         }
+        },
+        {
+         "key": "csoai.sig.kid",
+         "value": {
+          "stringValue": "UNSIGNED"
+         }
+        },
+        {
+         "key": "csoai.subject.kind",
+         "value": {
+          "stringValue": "signed_record"
+         }
+        },
+        {
+         "key": "csoai.subject.locator",
+         "value": {
+          "stringValue": "https://councilof.ai/measurement-capsules/v0.2/index.json"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.explanation",
+         "value": {
+          "stringValue": "The capsule index is signed by the board key and its digest matches the served bytes."
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.name",
+         "value": {
+          "stringValue": "safe-rv"
+         }
+        },
+        {
+         "key": "gen_ai.evaluation.score.label",
+         "value": {
+          "stringValue": "PARTIAL"
+         }
+        }
+       ],
+       "eventName": "gen_ai.evaluation.result",
+       "observedTimeUnixNano": "1790761670000000000",
+       "severityNumber": 9,
+       "severityText": "INFO",
+       "timeUnixNano": "1790761670000000000"
+      }
+     ],
+     "scope": {
+      "name": "csoai.evidence-fabric",
+      "version": "0.1.0"
+     }
+    }
+   ]
+  }
+ ]
+}

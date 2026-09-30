@@ -1,0 +1,129 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:C-2026-0928-01:pre-fix",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "finding": {
+    "kind": "public_claim",
+    "finding_ref": "C-2026-0928-01",
+    "disclosure_tier": "public",
+    "summary": "Correction C-2026-0928-01, re-tested: the published reference verifier reported VALID for a receipt whose signing key it never resolved, so any key naming any issuer passed."
+  },
+  "claim": {
+    "claim_id": "signed-receipts/v1/interceptor.py@d908b9e7:resolves-before-valid",
+    "claim_type": "control_holds",
+    "statement": "interceptor.py (sha256 d908b9e7...) returns VALID only for receipts whose key resolves to the named issuer, and never INVALID merely because resolution failed.",
+    "subject": {
+      "identifier": "sha256:d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb",
+      "scheme": "sha256"
+    },
+    "scope": "The 17 core conformance cases; not the interop cases."
+  },
+  "dependencies": [
+    {
+      "dep_id": "vectors",
+      "kind": "dataset",
+      "name": "conformance vectors.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "dce6927119a84c297516bc21870895b97d1421c44d964cc54f7b9eb758c45f12"
+      },
+      "uri": "https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "ledger",
+      "kind": "dataset",
+      "name": "corrections ledger entry C-2026-0928-01",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "24c6e8f78c8c021cfcc153f1c4fa8a402e06aab4b90c3a7bf3b6969c70df939b"
+      },
+      "uri": "https://councilof.ai/api/corrections",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "verifier",
+      "kind": "tool",
+      "name": "interceptor.py before 2026-09-28",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "d908b9e723cf1525218ba943d8b01b94584ba8f1e6dab12e897e25f967b617cb"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/councilof-ai-source (revision 96bf3a07; not publicly readable on 2026-09-28)",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    }
+  ],
+  "test": {
+    "method_id": "signed-receipts/v1 conformance, 17 core cases, resolution only via each case's did_documents",
+    "method_version": "dce6927119a8",
+    "procedure": "python3 safe_export.py (conformance()); equivalently python3 run.py <results> --vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+    "procedure_digest": {
+      "alg": "sha256",
+      "value": "dce6927119a84c297516bc21870895b97d1421c44d964cc54f7b9eb758c45f12"
+    },
+    "reproduction": "independent_reimplementation",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Covers only the 17 core cases; a fault outside them passes.",
+      "The pre-fix code has no three-valued result; its bool is mapped VALID/INVALID and it is driven integrity-only when a DID is absent from the fixture map, as deployed."
+    ],
+    "noise_floor": "deterministic; no sampling"
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "The kit's published results for the pre-fix verifier (example-fail-results.json) are scored against vectors.json by this script's comparator; it must report mismatches. It reported 4 of 17.",
+    "negatives_observed": 4,
+    "denominator": 17
+  },
+  "result": {
+    "state": "FAIL",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 4,
+    "denominator": 17,
+    "reason": "4 of 17 cases differ from expected: valid-jcs-edge INVALID (expected VALID); unresolvable-key VALID (expected UNVERIFIABLE_KEY); unresolvable-key-forgery VALID (expected UNVERIFIABLE_KEY); unresolvable-key-unsupported-method VALID (expected UNVERIFIABLE_KEY)",
+    "evidence": [
+      {
+        "name": "C-2026-0928-01",
+        "uri": "https://councilof.ai/api/corrections",
+        "digest": {
+          "alg": "sha256",
+          "value": "24c6e8f78c8c021cfcc153f1c4fa8a402e06aab4b90c3a7bf3b6969c70df939b"
+        }
+      }
+    ]
+  },
+  "remediation": {
+    "state": "VERIFIED_BY_RETEST",
+    "reference": "commits 1ae2025fd, acff54074; CORRECTED - reference verifier returns UNVERIFIABLE_KEY, never VALID, for an unresolvable key; served and Hugging Face c",
+    "retest_record_id": "csoai:safe-rv:C-2026-0928-01:post-fix"
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "verifier",
+        "on": "becomes_unavailable"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "This re-test ran the pre-fix bytes supplied from the issuer's git history at the digest the ledger cites; the public copy the ledger names answered 401, so a stranger cannot fetch these bytes today.",
+    "It says nothing about receipts issued with the verifier, only about how the verifier classified the vectors."
+  ]
+}

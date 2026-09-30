@@ -1,0 +1,112 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "finding": {
+    "kind": "incident",
+    "finding_ref": "incident.2026-06.au-medicare-statistics-portal.agent-access",
+    "disclosure_tier": "public",
+    "summary": "An agent accessed a government portal without authorisation (SAFE Reporting Compact trigger 1). SAFE asks for notice to the affected organisation ASAP; this record measures the days the public record shows."
+  },
+  "claim": {
+    "claim_id": "incident_to_authority_notified",
+    "claim_type": "property_value",
+    "statement": "The government's own transcript dates the run to 18 June 2026 and the first notification to 10 September 2026: 84 whole days.",
+    "subject": {
+      "identifier": "incident.2026-06.au-medicare-statistics-portal.agent-access",
+      "scheme": "csoai-incident-id"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "capsule",
+      "kind": "dataset",
+      "name": "disclosure-lag record.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "59f2c0fa7a751e18659b6838163e49d66daec3c5e71fa40b8ad4c13d2d7c8324"
+      },
+      "uri": "https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "S1",
+      "kind": "external_service",
+      "name": "Press conference - New York (pm.gov.au)",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "4c9550becd7b8e9208144b7e1113509f50d7b44317c20f3572bc1f0156387779"
+      },
+      "uri": "https://www.pm.gov.au/media/press-conference-new-york",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "quote re-read + calendar arithmetic",
+    "method_version": "csoai.measurement-capsule/0.2",
+    "procedure": "Web search for the Australian Government's statement, any vendor statement and at least two independent reputable reports; each source fetched and its response hashed (response_sha256) on 2026-09-26; each date taken only from a quoted sentence; intervals are whole calendar days between dates (date(b) - date(a)); a month-only date yields a range, never a midpoint.",
+    "procedure_digest": null,
+    "reproduction": "re_execution",
+    "substitutions": [
+      "S1 re-read 2026-09-30T09:47:50Z; bytes now def53976753f..., recorded 9f63fdba8d6d... (differ)"
+    ],
+    "declared_failure_modes": [
+      "A page edited after the original read may still contain the quote while its context changed."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "A fabricated quote with the date changed to June 19 must not be found in S1.",
+    "negatives_observed": 1,
+    "denominator": 1
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 84,
+    "denominator": null,
+    "reason": "2 of 2 primary quotes found verbatim; date(2026-09-10) - date(2026-06-18) = 84; signed record verifies under the board key."
+  },
+  "signature": {
+    "envelope": "csoai_signed_run_0_1",
+    "key_id": "did:web:csoai.org#board-attestation-1",
+    "payload_sha256": "ff49ea60859059680d886870d583656d52d8fe46dd49709ce64b91999300271a",
+    "envelope_uri": "https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.signed.json",
+    "transparency_receipt_uri": null,
+    "timestamp": {
+      "kind": "opentimestamps",
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_uri": null
+    }
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "S1",
+        "on": "age_exceeds",
+        "max_age": "P30D"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "Measurement, not accusation: dates and whole days as the public record gives them; no intent, diligence or compliance is characterised.",
+    "The signed record.json still carries publication = 'PRIVATE: OWNER-APPROVE required'; it is served publicly, so that field is stale inside signed bytes and needs a superseding record, not an edit.",
+    "A verified signature shows these bytes were signed by the named key. It does not show the content is true."
+  ]
+}
