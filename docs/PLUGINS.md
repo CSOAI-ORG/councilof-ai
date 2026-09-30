@@ -1,10 +1,12 @@
 # Plugins and extensions — one verify surface, one lid, per platform
 
-The estate has ONE board authority (`GET https://councilof.ai/api/gspc`) and ONE
-card-verification rule (`/signed/HOW-TO-VERIFY.md`, implemented once in
-`functions/_lib/cardVerify.ts`). Every plugin below is a *printer* of that GET and a
-*caller* of that rule. None is a second engine; none certifies; none sells a rank.
-Verify is free everywhere.
+The estate has ONE board authority (`GET https://councilof.ai/api/gspc`), ONE live-state join
+(`GET https://councilof.ai/api/state`) and ONE card-verification rule
+(`/signed/HOW-TO-VERIFY.md`, implemented once in `functions/_lib/cardVerify.ts`). Maintained-claim
+state comes from `GET /api/claims/register`; executed rechecks are
+`/api/state → ledgers.claim_maintenance`; append history comes from `GET /api/corrections`.
+Every plugin below is a *reader* of those public authorities and a *caller* of the verifier.
+None is a second engine, ledger or scheduler; none certifies; none sells a rank. Verify is free everywhere.
 
 The two things every platform surface must be able to show:
 
@@ -45,8 +47,8 @@ now gets its own UNCHECKABLE reason.
 
 | Surface | State | Where | Notes |
 |---|---|---|---|
-| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/` (7 tools: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion) | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
-| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`, tool catalogue `functions/mcp/gspc-tools.json` (same 7 names) | shares `functions/_lib/cardVerify.ts` |
+| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/`; its package catalogue/README is the authority for the installed version | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
+| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`; live tool catalogues are `functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json` | shares `functions/_lib/cardVerify.ts`; do not copy a tool count into docs |
 | Claude Code / Grok plugin | REAL (separate repo) | marketplace `CSOAI-ORG/council-of-ai-grok`: `plugin.json`, `.claude-plugin/marketplace.json`, skills `council` `gspc` `pack` `sign-artifact` `verify-card`, commands, agent `measurement-auditor`, `verifier/gspc-verify.mjs` | in this repo only the pointer: `plugins/gspc/{plugin.json,.mcp.json,README.md}` (→ `https://councilof.ai/mcp`) and `.grok-plugin/marketplace.json` |
 | Offline verifier package | REAL | `packages/gspc-card-verifier/` (37/37 under `node --test`), bundled to `public/verifier/gspc-verify.mjs` | profile-driven; refuses out-of-domain numbers |
 | Browser verify page | REAL | `/gspc-verify` → `client/src/lib/recordVerify.ts` → `functions/_lib/cardVerify.ts` | `client/src/lib/cardVerify.ts` is an older twin kept in step by `cardVerifyTwin.test.ts` |
@@ -103,10 +105,12 @@ action; the exact steps are in that README.
 
 Create a GPT → Configure → Actions → **Import from URL** →
 `https://councilof.ai/api/openapi.json`. Authentication: none. The spec exposes only
-what exists: `getBoard` (`/api/gspc`), `getProof` (`/api/proof?sha=`), `getRoot`
-(`/root.json`), `getDid` (`/.well-known/did.json`), `getCardIndex`
-(`/signed/card_index.json`), `getCard` (`/signed/cards/{id}.json`). Instruct the GPT to
-quote `totals.lid` and `totals.public_count` verbatim and never to compose a count.
+what exists, including `getBoard` (`/api/gspc`), `getLiveState` (`/api/state`),
+`getClaimMaintenanceRegister` (`/api/claims/register`), `getCorrections` (`/api/corrections`),
+`getProof` (`/api/proof?sha=`), `getRoot` (`/root.json`), `getDid`
+(`/.well-known/did.json`), `getCardIndex` (`/signed/card_index.json`) and
+`getCard` (`/signed/cards/{id}.json`). Instruct the GPT to quote fields from their authority
+verbatim and never compose a count or turn evidence states into a score.
 Signature verification is NOT an Action — Actions cannot run Ed25519; the GPT should
 hand the user the card URL and the recipe at `/signed/HOW-TO-VERIFY.md`, or the
 extension.

@@ -2,8 +2,8 @@
   "schema": "openapi/3.0.0",
   "info": {
     "title": "Council of AI (CSOAI)",
-    "version": "1.0.0",
-    "description": "AI governance + measurement substrate. 22-axis GSPC. x402 paid attestations.",
+    "version": "1.1.0",
+    "description": "AI measurement and evidence surfaces. Live counts come from /api/state and /api/gspc; no frozen axis count is authoritative here.",
     "contact": {
       "name": "Nicholas Templeman",
       "url": "https://councilof.ai/"
@@ -32,7 +32,7 @@
     },
     "/gspc": {
       "get": {
-        "summary": "The 22-axis GSPC board",
+        "summary": "The live GSPC board \u2014 read current counts from the response",
         "operationId": "getGspcBoard",
         "responses": {
           "200": {
@@ -43,7 +43,7 @@
     },
     "/state": {
       "get": {
-        "summary": "The live state counters",
+        "summary": "The one live derived state surface \u2014 quote values by field name",
         "operationId": "getState",
         "responses": {
           "200": {
@@ -63,17 +63,6 @@
         }
       }
     },
-    "/measure": {
-      "post": {
-        "summary": "Run a 22-axis measurement on a model",
-        "operationId": "postMeasure",
-        "responses": {
-          "200": {
-            "description": "Measurement"
-          }
-        }
-      }
-    },
     "/verify": {
       "post": {
         "summary": "Verify any signed card",
@@ -81,17 +70,6 @@
         "responses": {
           "200": {
             "description": "Verification"
-          }
-        }
-      }
-    },
-    "/anchor": {
-      "post": {
-        "summary": "Anchor any signed card to OTS pending stamp",
-        "operationId": "postAnchor",
-        "responses": {
-          "200": {
-            "description": "Anchor"
           }
         }
       }
@@ -106,6 +84,28 @@
           }
         }
       }
+    },
+    "/claims/register": {
+      "get": {
+        "summary": "Claim Maintenance register \u2014 evidence states, never a score",
+        "operationId": "getClaimMaintenanceRegister",
+        "responses": {
+          "200": {
+            "description": "Claim Maintenance register"
+          }
+        }
+      }
+    },
+    "/corrections": {
+      "get": {
+        "summary": "Public corrections ledger \u2014 append history of CSOAI defects and fixes",
+        "operationId": "getCorrections",
+        "responses": {
+          "200": {
+            "description": "Corrections ledger"
+          }
+        }
+      }
     }
   },
   "tags": [
@@ -115,15 +115,13 @@
     },
     {
       "name": "gspc",
-      "description": "22-axis GSPC measurement"
-    },
-    {
-      "name": "anchor",
-      "description": "OTS / Rekor / EAS anchoring"
+      "description": "Live GSPC measurement; read counts from the response"
     },
     {
       "name": "verify",
       "description": "Card verification"
     }
-  ]
+  ],
+  "x-canonical-openapi": "https://councilof.ai/api/openapi.json",
+  "x-compatibility-note": "Legacy compatibility manifest. Prefer /api/openapi.json for current public read surfaces. This file must not freeze board counts or invent routes."
 }

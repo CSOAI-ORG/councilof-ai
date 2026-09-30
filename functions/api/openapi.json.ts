@@ -19,13 +19,15 @@ export const OPENAPI_SPEC = {
   openapi: "3.1.0",
   info: {
     title: "Council of AI — GSPC measurement (public read surfaces)",
-    version: "0.1.0",
+    version: "0.2.0",
     description:
       "Independent AI-behaviour measurement by CSOAI Ltd. Measurement, not certification. " +
       "Quote totals.lid and totals.public_count from GET /api/gspc verbatim; never compose a count. " +
       "Three verification states exist: VALID, INVALID, UNCHECKABLE. Absence of a field means UNMEASURED. " +
       "TIE is never a win. A withheld leader (public_leader_state) is a state, not a zero. " +
-      "Verify is free; a rank is never sold. Signature checks are not Actions: use /signed/HOW-TO-VERIFY.md.",
+      "Verify is free; a rank is never sold. GET /api/state joins the existing public authorities; " +
+      "GET /api/claims/register is maintained-claim state; GET /api/corrections is append history. " +
+      "Signature checks are not Actions: use /signed/HOW-TO-VERIFY.md.",
     contact: { name: "CSOAI Ltd", url: "https://councilof.ai", email: "nicholas@csoai.org" },
     license: { name: "Apache-2.0", url: "https://www.apache.org/licenses/LICENSE-2.0" },
   },
@@ -40,6 +42,33 @@ export const OPENAPI_SPEC = {
           "with status, kind, separation, and either a public leader or a public_leader_state explaining why the " +
           "leader is withheld (EXCLUDED_OWN_MODEL, NO_SIGNED_CARD). Do not count the axes array; read totals.",
         responses: { "200": { description: "Board payload (application/json)." } },
+      },
+    },
+    "/api/state": {
+      get: {
+        operationId: "getLiveState",
+        summary: "The one live derived state surface",
+        description:
+          "Joins the existing board, self-claims, ledger heads, maintained-claim rechecks and corrections without replacing their authorities. Quote values by field name; never compose counts.",
+        responses: { "200": { description: "Derived live state." } },
+      },
+    },
+    "/api/claims/register": {
+      get: {
+        operationId: "getClaimMaintenanceRegister",
+        summary: "Claim Maintenance register",
+        description:
+          "The existing maintained-claim register. Evidence states are not a score, rank, certification or verdict.",
+        responses: { "200": { description: "Claim Maintenance register." } },
+      },
+    },
+    "/api/corrections": {
+      get: {
+        operationId: "getCorrections",
+        summary: "Public corrections ledger",
+        description:
+          "Append history of CSOAI defects and fixes. A correction is about our published record, not a finding about another party.",
+        responses: { "200": { description: "Corrections ledger." } },
       },
     },
     "/api/proof": {

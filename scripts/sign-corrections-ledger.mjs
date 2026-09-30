@@ -151,7 +151,7 @@ function writeBack(file, src, ledger, att, sigHex, keyHex) {
     '      "The attestation names the digest of the ledger body and the rule that produces it.",\n' +
     `    key_source: "${DID_URL} (${BOARD_DID})",\n` +
     "    note:\n" +
-    '      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +\n' +
+    '      "RE-ISSUED over the current body through POST /api/board-sign; signature.attestation.signed_at records the issuance time. " +\n' +
     '      "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +\n' +
     '      "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +\n' +
     '      "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +\n' +

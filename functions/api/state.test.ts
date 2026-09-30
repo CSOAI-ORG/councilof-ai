@@ -142,3 +142,35 @@ describe("GET /api/state council_http_mcp — derived from the registry the /mcp
     expect(body.council_http_mcp.last_probe.note).toMatch(/historical/);
   });
 });
+
+
+describe("GET /api/state contract convergence — one flywheel, existing authorities", () => {
+  it("joins the existing authorities without creating a second ledger or scheduler", async () => {
+    const body = await (await (onRequestGet as unknown as () => Promise<Response>)()).json();
+    expect(body.contract.authorities).toMatchObject({
+      live_state: "/api/state",
+      measurement_board: "/api/gspc",
+      public_self_claims: "/claims-register.json",
+      maintained_claim_state: "/api/claims/register",
+      executed_rechecks: "/api/state → ledgers.claim_maintenance",
+      corrections: "/api/corrections",
+      ledger_heads: "/api/state → ledgers.ledgers",
+      public_root: "/root.json",
+    });
+    expect(body.contract.flywheel.map((x: { stage: string }) => x.stage)).toEqual([
+      "CAPTURE",
+      "RECHECK",
+      "MEASURE",
+      "CORRECT",
+      "QUOTE",
+    ]);
+    expect(body.ledgers.claim_maintenance.scheduler).toContain("ONE:");
+    expect(body.ledgers.authorities).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ record_type: "claim state of a maintained subject", authority: "GET /api/claims/register" }),
+        expect.objectContaining({ record_type: "whether a scheduled re-check ran", authority: "ledgers.claim_maintenance (executed schedule)" }),
+        expect.objectContaining({ record_type: "a correction of our own published statement", authority: "GET /api/corrections" }),
+      ]),
+    );
+  });
+});
