@@ -13,6 +13,7 @@
 import { useMemo, useState } from "react";
 import { callTool } from "@/lib/sovTools";
 import { useGspcBoard } from "@/components/board/useGspcBoard";
+import NextSteps from "./NextSteps";
 
 const PRESETS = ["read-only", "local-only", "eu-only", "no-unmeasured"] as const;
 const TIE_BREAKS = ["cheapest_declared", "local_first", "lexical_id"] as const;
@@ -312,11 +313,31 @@ export default function RoutePane() {
             </details>
           </section>
         ) : (
-          <p className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground" data-testid="route-idle">
-            No route decided yet. The decision appears here with its separation state and the record behind it.
-          </p>
+          <div className="rounded-3xl border border-dashed border-border p-6" data-testid="route-idle">
+            <p className="text-sm text-muted-foreground">
+              No route decided yet. The decision appears here with its separation state and the record behind it.
+            </p>
+            <button
+              type="button"
+              onClick={() => void decide()}
+              disabled={!task.trim()}
+              className="mt-4 inline-flex min-h-11 items-center rounded-xl bg-emerald-800 px-5 text-sm font-bold text-white hover:bg-emerald-900 disabled:opacity-60"
+            >
+              Decide with the example candidates
+            </button>
+          </div>
         )}
       </div>
+      {result ? (
+        <NextSteps
+          testId="route-next"
+          steps={[
+            { href: "/dashboard?tab=board", title: "Read the axis on the board", body: "See the separation state the router read, with its sample size and interval." },
+            { href: "/dashboard?tab=connect", title: "Call route from your agent", body: "The same tool is route on /mcp/free and the A2A skill gspc-route." },
+            { href: "/dashboard?tab=verify", title: "Verify a signed card", body: "Check the bytes behind a measurement yourself, in your browser." },
+          ]}
+        />
+      ) : null}
     </div>
   );
 }

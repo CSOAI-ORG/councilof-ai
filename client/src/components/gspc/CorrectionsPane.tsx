@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useLiveJson } from "./useLiveJson";
+import NextSteps from "./NextSteps";
 
 type Entry = {
   id?: string;
@@ -44,13 +45,18 @@ export default function CorrectionsPane() {
           <span className="sr-only">Reading the corrections ledger</span>
         </div>
       ) : read.state === "error" ? (
-        <p role="alert" className="mt-6 rounded-2xl border border-amber-500/60 bg-amber-50 p-4 text-sm text-amber-950" data-testid="corrections-error">
-          The ledger is unread right now ({read.error}). Nothing is shown in its place.{" "}
-          <a className="font-bold underline underline-offset-2" href="/api/corrections">
-            Read GET /api/corrections directly
-          </a>
-          .
-        </p>
+        <div role="alert" className="mt-6 rounded-2xl border border-amber-500/60 bg-amber-50 p-4 text-sm text-amber-950" data-testid="corrections-error">
+          <p>
+            The ledger is unread right now ({read.error}). Nothing is shown in its place.{" "}
+            <a className="font-bold underline underline-offset-2" href="/api/corrections">
+              Read GET /api/corrections directly
+            </a>
+            .
+          </p>
+          <button type="button" onClick={read.retry} className="mt-3 inline-flex min-h-11 items-center rounded-xl bg-emerald-800 px-4 text-sm font-bold text-white hover:bg-emerald-900">
+            Try again
+          </button>
+        </div>
       ) : entries.length === 0 ? (
         <p className="mt-6 rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground">The ledger answered with no entries.</p>
       ) : (
@@ -100,6 +106,16 @@ export default function CorrectionsPane() {
             </a>
           </div>
         </>
+      )}
+      {read.state === "loading" ? null : (
+      <NextSteps
+        testId="corrections-next"
+        steps={[
+          { href: "/dashboard?tab=claims", title: "See what we keep re-checking", body: "Claim maintenance: the claims re-read on a schedule, and what changed." },
+          { href: "/dispute/", title: "Ask for a correction", body: "Contest anything we published; a dispute is answered by re-measuring." },
+          { href: "/dashboard?tab=verify", title: "Check a record yourself", body: "A superseded record still verifies; its replacement is named." },
+        ]}
+      />
       )}
     </div>
   );

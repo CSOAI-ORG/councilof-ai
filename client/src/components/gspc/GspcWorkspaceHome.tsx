@@ -399,7 +399,7 @@ export default function GspcWorkspaceHome({
         </div>
 
         <section aria-labelledby="ws-places-h" className="mt-10">
-          <p className="t-kicker text-emerald-800">The workspace</p>
+          <p className="t-kicker text-emerald-800">What you can do next</p>
           <h2 id="ws-places-h" className="mt-2 text-xl font-black tracking-tight text-foreground">
             Verify, connect, route, learn, and see what we corrected
           </h2>

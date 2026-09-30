@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import {
   BookOpenCheck,
   ChevronRight,
   Coins,
+  LifeBuoy,
+  Pin,
+  PinOff,
   Gauge,
   Menu,
   MessageSquareText,
@@ -31,6 +34,7 @@ import {
 } from "@/lib/dashboardView";
 import { setOsOpen } from "@/lib/osChrome";
 import { NAV_ID, PANEL_ID } from "@/components/lobby/LobbyPaneTabs";
+import { MENU_GROUPS, SUPPORT_LINKS, readStartTab, writeStartTab } from "@/components/gspc/workspaceMenu";
 
 const SMALL_QUERY = "(max-width: 767px)";
 
@@ -54,47 +58,129 @@ export function dashboardActiveLabel(activeTab: string, search: string): string 
   );
 }
 
-/** The seven sections, as links. Shared by the desktop sidebar and the mobile drawer. */
+/**
+ * The global menu: the seven sections in labelled groups (Measure, Build, Learn, Markets,
+ * Accountability), with the active section's panes nested under it. Shared by the desktop sidebar
+ * and the mobile drawer. Grouping adds no section; the sections stay DASHBOARD_NAV_GROUPS.
+ */
 function SectionLinks({
   activeGroup,
+  activeTab,
   onNavigate,
 }: {
   activeGroup: DashboardNavGroupId | null;
+  activeTab: string;
   onNavigate?: () => void;
 }) {
+  const byId = new Map(DASHBOARD_NAV_GROUPS.map((g) => [g.id, g]));
   return (
-    <ul className="space-y-1">
-      {DASHBOARD_NAV_GROUPS.map((group) => {
-        const first = group.tabs[0];
-        if (!first) return null;
-        const active = activeGroup === group.id;
-        const Icon = SECTION_ICONS[group.id];
-        return (
-          <li key={group.id}>
-            <Link
-              href={`/dashboard?tab=${first.id}`}
-              aria-current={active ? "page" : undefined}
-              onClick={onNavigate}
-              className={cn(
-                "group flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700",
-                active
-                  ? "bg-emerald-50 font-semibold text-emerald-950 shadow-[inset_0_0_0_1px_rgba(4,98,74,0.14)]"
-                  : "font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950",
-              )}
-            >
-              <Icon
-                className={cn(
-                  "h-4 w-4 shrink-0",
-                  active ? "text-emerald-700" : "text-slate-500 group-hover:text-slate-700",
-                )}
-                aria-hidden="true"
-              />
-              <span className="truncate">{group.label}</span>
-            </Link>
+    <div className="space-y-4">
+      {MENU_GROUPS.map((mg) => (
+        <div key={mg.heading ?? "primary"} role="group" aria-label={mg.heading ?? "Ask"}>
+          {mg.heading ? (
+            <p className="px-3 pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-slate-600">{mg.heading}</p>
+          ) : null}
+          <ul className="space-y-1">
+            {mg.sections.map((id) => {
+              const group = byId.get(id);
+              const first = group?.tabs[0];
+              if (!group || !first) return null;
+              const active = activeGroup === group.id;
+              const Icon = SECTION_ICONS[group.id];
+              return (
+                <li key={group.id}>
+                  <Link
+                    href={`/dashboard?tab=${first.id}`}
+                    aria-current={active ? "page" : undefined}
+                    onClick={onNavigate}
+                    className={cn(
+                      "group flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700",
+                      active
+                        ? "bg-emerald-50 font-semibold text-emerald-950 shadow-[inset_0_0_0_1px_rgba(4,98,74,0.14)]"
+                        : "font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950",
+                    )}
+                  >
+                    <Icon
+                      className={cn(
+                        "h-4 w-4 shrink-0",
+                        active ? "text-emerald-700" : "text-slate-500 group-hover:text-slate-700",
+                      )}
+                      aria-hidden="true"
+                    />
+                    <span className="truncate">{group.label}</span>
+                  </Link>
+                  {active && group.tabs.length > 1 ? (
+                    <ul className="ml-6 mt-1 space-y-0.5 border-l border-emerald-950/10 pl-3" aria-label={`${group.label} panes`}>
+                      {group.tabs.map((tab) => (
+                        <li key={tab.id}>
+                          <Link
+                            href={`/dashboard?tab=${tab.id}`}
+                            onClick={onNavigate}
+                            aria-current={tab.id === activeTab ? "page" : undefined}
+                            className={cn(
+                              "flex min-h-9 items-center rounded-lg px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700",
+                              tab.id === activeTab ? "font-semibold text-emerald-900" : "text-slate-600 hover:text-slate-950",
+                            )}
+                          >
+                            {tab.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Support and resources: one disclosure at the foot of the menu. Pages and machine files only. */
+function SupportMenu() {
+  return (
+    <details className="group/support rounded-xl border border-border bg-white" data-testid="ws-support">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 px-3 text-sm font-semibold text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700">
+        <LifeBuoy className="h-4 w-4 text-slate-500" aria-hidden="true" />
+        Support and resources
+      </summary>
+      <ul className="space-y-0.5 border-t border-border p-2">
+        {SUPPORT_LINKS.map((l) => (
+          <li key={l.href}>
+            <a href={l.href} className="flex min-h-9 items-center rounded-lg px-2 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-950">
+              {l.label}
+            </a>
           </li>
-        );
-      })}
-    </ul>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
+/** "Start here": make the current pane this browser's landing page for /dashboard (or undo it). */
+function StartPageButton({ activeTab }: { activeTab: string }) {
+  const [start, setStart] = useState<string | null>(null);
+  useEffect(() => setStart(readStartTab()), []);
+  const isStart = activeTab === "home" ? start === null : start === activeTab;
+  if (activeTab === "home" && start === null) return null;
+  return (
+    <button
+      type="button"
+      aria-pressed={isStart}
+      onClick={() => {
+        const next = isStart ? null : activeTab;
+        writeStartTab(next);
+        setStart(next === "home" ? null : next);
+      }}
+      title={isStart ? "Opening /dashboard lands here in this browser. Click to go back to Ask." : "Make this pane where /dashboard opens, in this browser only."}
+      className="hidden h-9 shrink-0 items-center gap-1.5 rounded-lg border border-border bg-white px-3 text-xs font-semibold text-slate-800 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700 sm:inline-flex"
+      data-testid="ws-start-page"
+    >
+      {isStart ? <PinOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Pin className="h-3.5 w-3.5" aria-hidden="true" />}
+      {isStart ? "Your start page" : "Start here"}
+    </button>
   );
 }
 
@@ -106,6 +192,7 @@ export default function DashboardLayout({
   // Inside App's public <main> this layout is a <section>: one <main> landmark per page.
   const Landmark = useInsideMainLandmark() ? "section" : "main";
   const search = useSearch();
+  const [, setLocation] = useLocation();
   const drawerRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const [isSmall, setIsSmall] = useState(
@@ -154,6 +241,7 @@ export default function DashboardLayout({
     search.startsWith("?") ? search.slice(1) : search,
   );
   const rawTab = params.get("tab") || "home";
+  const hasTabParam = params.has("tab") || params.has("view");
   const activeTab = normalizeLobbyTabId(rawTab);
   const activeLabel = dashboardActiveLabel(activeTab, search);
   const embeddedView = Boolean(dashboardViewFromSearch(search));
@@ -178,6 +266,14 @@ export default function DashboardLayout({
         </DashboardWorkspace>
       </div>
     );
+
+  // A saved start page applies only to a bare /dashboard; any explicit link wins.
+  useEffect(() => {
+    if (hasTabParam || framed) return;
+    const saved = readStartTab();
+    if (saved && saved !== "home") setLocation(`/dashboard?tab=${saved}`, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sectionTitle = group?.label ?? activeLabel;
   const subTabs = group && group.tabs.length > 1 ? group.tabs : [];
@@ -207,7 +303,10 @@ export default function DashboardLayout({
             aria-label="Workspace destinations"
             className="min-h-0 flex-1 overflow-y-auto px-3 pb-4"
           >
-            <SectionLinks activeGroup={group?.id ?? null} />
+            <SectionLinks activeGroup={group?.id ?? null} activeTab={activeTab} />
+            <div className="mt-5">
+              <SupportMenu />
+            </div>
           </nav>
           <div className="flex items-center justify-between gap-2 border-t border-border p-3">
             <DashboardAccountMenu />
@@ -251,8 +350,12 @@ export default function DashboardLayout({
               >
                 <SectionLinks
                   activeGroup={group?.id ?? null}
+                  activeTab={activeTab}
                   onNavigate={() => setDrawerOpen(false)}
                 />
+                <div className="mt-4">
+                  <SupportMenu />
+                </div>
               </nav>
               <div className="border-t border-border p-3">
                 <DashboardAccountMenu />
@@ -295,7 +398,10 @@ export default function DashboardLayout({
                   {group.description}
                 </p>
               ) : null}
-              <div id={SECTION_ACTIONS_ID} className="ml-auto flex shrink-0 items-center gap-2" />
+              <div className="ml-auto flex shrink-0 items-center gap-2">
+                {!embeddedView ? <StartPageButton activeTab={activeTab} /> : null}
+                <div id={SECTION_ACTIONS_ID} className="flex shrink-0 items-center gap-2" />
+              </div>
             </div>
             {subTabs.length ? (
               <nav
