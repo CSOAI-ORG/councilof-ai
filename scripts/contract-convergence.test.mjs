@@ -34,7 +34,7 @@ test("public claims register declares every status it uses", () => {
 
 test("canonical Actions schema exposes the existing convergence contracts", () => {
   const s = read("functions/api/openapi.json.ts");
-  for (const p of ["/api/state", "/api/claims/register", "/api/corrections"]) assert.ok(s.includes(`\"${p}\"`), p);
+  for (const p of ["/api/state", "/api/claims/register", "/api/claims/events", "/api/claims/events/head", "/api/corrections"]) assert.ok(s.includes(`\"${p}\"`), p);
 });
 
 test("legacy ChatGPT manifest is a compatibility pointer, not a frozen second truth", () => {
@@ -43,6 +43,8 @@ test("legacy ChatGPT manifest is a compatibility pointer, not a frozen second tr
   assert.doesNotMatch(JSON.stringify(p.info), /\b\d+-axis\b/i);
   assert.ok(p.paths["/state"]);
   assert.ok(p.paths["/claims/register"]);
+  assert.ok(p.paths["/claims/events"]);
+  assert.ok(p.paths["/claims/events/head"]);
   assert.ok(p.paths["/corrections"]);
   assert.equal(p.paths["/measure"], undefined);
   assert.equal(p.paths["/anchor"], undefined);
@@ -55,10 +57,12 @@ test("site and plugin surfaces point at the same public contracts", () => {
   for (const s of [claim, dash, block]) {
     assert.ok(s.includes("/api/state"));
     assert.ok(s.includes("/api/corrections"));
+    assert.ok(s.includes("/api/claims/events"));
   }
   assert.ok(claim.includes("/api/claims/register"));
   assert.ok(dash.includes("/api/claims/register"));
   assert.ok(block.includes("/api/claims/register"));
+  assert.ok(claim.includes("/api/claims/events/head"));
 });
 
 test("plugin descriptor carries no frozen tool or axis count", () => {

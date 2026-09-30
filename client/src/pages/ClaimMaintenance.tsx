@@ -23,6 +23,8 @@ const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
+const CLAIM_EVENTS = "/api/claims/events";
+const CLAIM_EVENTS_HEAD = "/api/claims/events/head";
 const LIVE_STATE = "/api/state";
 const PUBLIC_CLAIMS = "/claims-register";
 /** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
@@ -69,6 +71,8 @@ const PAGE_LD = {
     "https://councilof.ai" + REGISTER,
     IMPL,
     "https://councilof.ai" + CORRECTIONS,
+    "https://councilof.ai" + CLAIM_EVENTS,
+    "https://councilof.ai" + CLAIM_EVENTS_HEAD,
   ],
   license: "https://creativecommons.org/publicdomain/zero/1.0/",
   citation: {
@@ -109,6 +113,7 @@ type LiveState = {
   };
   claims_register?: { rows_total?: FactValue<number> };
   corrections_ledger?: { rows_total?: FactValue<number>; latest_entry_id?: string | null };
+  claim_events?: { lines?: FactValue<number>; head_seq?: FactValue<number>; subjects?: FactValue<number>; last_at?: string | null; head_endpoint?: string };
 };
 
 const day = (iso: string | null | undefined) => (iso ? String(iso).slice(0, 10) : null);
@@ -149,6 +154,7 @@ export default function ClaimMaintenance() {
   const asOf = day(reg?.as_of);
   const maintenance = liveState?.claim_maintenance;
   const correctionCount = liveState?.corrections_ledger?.rows_total?.value;
+  const eventCount = liveState?.claim_events?.lines?.value;
   const publicClaimCount = liveState?.claims_register?.rows_total?.value;
   const measuredCount = maintenance?.claims_by_state?.value?.CLAIM_MEASURED ?? reg?.totals?.by_state?.CLAIM_MEASURED;
 
@@ -189,11 +195,12 @@ export default function ClaimMaintenance() {
             Cite as: Council of AI. <em>Claim Maintenance, version 0.1.</em> CSOAI Ltd, 2026-09-22.{" "}
             <a className="underline" href={DOI_URL}>{DOI_URL}</a>
           </p>
-          <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Live claim register summary">
+          <div className="mt-7 grid grid-cols-2 gap-2 sm:grid-cols-5" aria-label="Live claim register summary">
             {[
               ["Subjects", maintenance?.subjects?.value ?? reg?.totals?.subjects],
               ["Claims", maintenance?.claims?.value ?? reg?.totals?.claims],
               ["Measured", measuredCount],
+              ["Events", eventCount],
               ["Corrections", correctionCount],
             ].map(([label, value]) => (
               <div key={String(label)} className="rounded-xl border border-slate-700 bg-white/[0.035] px-3.5 py-3">
@@ -208,16 +215,17 @@ export default function ClaimMaintenance() {
       <section aria-labelledby="flywheel" className="mx-auto max-w-4xl px-5 py-12">
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5 sm:p-6">
           <p className="font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-800">One flywheel · existing authorities</p>
-          <h2 id="flywheel" className="mt-2 text-2xl font-bold">Capture → measure → correct → quote</h2>
+          <h2 id="flywheel" className="mt-2 text-2xl font-bold">Capture → observe → measure → correct → quote</h2>
           <p className="mt-3 max-w-3xl leading-7 text-slate-700">
-            No second ledger lives on this page. Claim Maintenance serves the committed register bytes; GSPC owns measurements; the corrections ledger appends our own defects; and <code className="font-mono text-[12px]">/api/state</code> derives the current quotable view.
+            No second ledger lives on this page. Claim Maintenance serves the committed register bytes; the claim-event feed records the loop's observations; GSPC owns measurements; the corrections ledger appends our own defects; and <code className="font-mono text-[12px]">/api/state</code> derives the current quotable view. The signed event head verifies chain integrity separately.
           </p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
               ["1 · Capture", REGISTER, `${maintenance?.claims?.value ?? reg?.totals?.claims ?? "—"} maintained claims`],
-              ["2 · Measure", "/api/gspc", liveState?.public_count?.value ?? "live board"],
-              ["3 · Correct", CORRECTIONS, `${correctionCount ?? "—"} published corrections`],
-              ["4 · Quote", LIVE_STATE, "derived state by field name"],
+              ["2 · Observe", CLAIM_EVENTS, `${eventCount ?? "—"} chained events`],
+              ["3 · Measure", "/api/gspc", liveState?.public_count?.value ?? "live board"],
+              ["4 · Correct", CORRECTIONS, `${correctionCount ?? "—"} published corrections`],
+              ["5 · Quote", LIVE_STATE, "derived state by field name"],
             ].map(([label, href, note]) => (
               <a key={String(label)} href={String(href)} className="rounded-xl border border-emerald-200 bg-white p-4 hover:border-emerald-400">
                 <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-emerald-800">{label}</p>
@@ -226,7 +234,7 @@ export default function ClaimMaintenance() {
             ))}
           </div>
           <p className="mt-4 text-sm text-slate-600">
-            We maintain claims about others separately from the {publicClaimCount ?? "—"} material public claims we make about ourselves. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
+            Chain verification: <a className="font-semibold text-emerald-800 underline underline-offset-4" href={CLAIM_EVENTS_HEAD}>signed event head</a>. We maintain claims about others separately from the {publicClaimCount ?? "—"} material public claims we make about ourselves. <Link className="font-semibold text-emerald-800 underline underline-offset-4" href={PUBLIC_CLAIMS}>Open our claims register</Link>.
           </p>
         </div>
       </section>

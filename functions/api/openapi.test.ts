@@ -12,7 +12,11 @@ const ROOT = resolve(__dirname, "../..");
 
 function resolvesToBytes(p: string): boolean {
   if (p.startsWith("/api/") && !p.includes("{")) {
-    return existsSync(resolve(ROOT, "functions/api/" + p.slice("/api/".length) + ".ts"));
+    const rel = p.slice("/api/".length);
+    return (
+      existsSync(resolve(ROOT, "functions/api/" + rel + ".ts")) ||
+      existsSync(resolve(ROOT, "functions/api/" + rel + "/index.ts"))
+    );
   }
   if (p === "/signed/cards/{id}.json") return existsSync(resolve(ROOT, "public/signed/cards"));
   return existsSync(resolve(ROOT, "public" + p));

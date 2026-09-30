@@ -32,7 +32,7 @@
     },
     "/gspc": {
       "get": {
-        "summary": "The live GSPC board — read the current count from the response",
+        "summary": "The live GSPC board \u2014 read the current count from the response",
         "operationId": "getGspcBoard",
         "responses": {
           "200": {
@@ -43,7 +43,7 @@
     },
     "/state": {
       "get": {
-        "summary": "The one live state surface — quote values by field name",
+        "summary": "The one live state surface \u2014 quote values by field name",
         "operationId": "getState",
         "responses": {
           "200": {
@@ -87,7 +87,7 @@
     },
     "/claims/register": {
       "get": {
-        "summary": "Claim Maintenance register — evidence states, never a score",
+        "summary": "Claim Maintenance register \u2014 evidence states, never a score",
         "operationId": "getClaimMaintenanceRegister",
         "responses": {
           "200": {
@@ -98,11 +98,39 @@
     },
     "/corrections": {
       "get": {
-        "summary": "Public corrections ledger — append history of CSOAI defects and fixes",
+        "summary": "Public corrections ledger \u2014 append history of CSOAI defects and fixes",
         "operationId": "getCorrections",
         "responses": {
           "200": {
             "description": "Corrections ledger"
+          }
+        }
+      }
+    },
+    "/claims/events": {
+      "get": {
+        "summary": "Append-only Claim Maintenance event feed \u2014 verified hash chain, never a score or verdict",
+        "operationId": "getClaimEvents",
+        "responses": {
+          "200": {
+            "description": "Claim-event feed"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
+          }
+        }
+      }
+    },
+    "/claims/events/head": {
+      "get": {
+        "summary": "Signed verified head for the Claim Maintenance event feed",
+        "operationId": "getClaimEventsHead",
+        "responses": {
+          "200": {
+            "description": "Verified claim-event head"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
           }
         }
       }

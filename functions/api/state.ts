@@ -65,6 +65,7 @@ import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import claimMaintenanceRegister from "../../public/spec/claim-maintenance/register.json";
+import claimEventsHead from "../../public/claims/events/v0.1/head.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
 import councilMcpDoor from "../../evidence/council-mcp-door.json";
@@ -111,6 +112,7 @@ const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
 const SRC_CLAIMS = "public/claims-register.json";
 const SRC_CLAIM_MAINTENANCE = "public/spec/claim-maintenance/register.json";
+const SRC_CLAIM_EVENTS = "public/claims/events/v0.1/head.json";
 const SRC_CORRECTIONS = "functions/api/corrections.ts → LEDGER";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
@@ -119,6 +121,9 @@ const SRC_PUBLIC_ROOT = "public/root.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
+const claimEventsAsOf: string | null = (claimEventsHead as any).as_of ?? null;
+const claimEventsFeed = (claimEventsHead as any).feed ?? {};
+const claimEventsTotals = (claimEventsHead as any).totals ?? {};
 
 // ── live derivation, so snapshot drift is visible rather than silent ─────────
 // /api/gspc computes its totals from these arrays at request time. The signed
@@ -348,6 +353,8 @@ export const onRequestGet: PagesFunction = async () => {
         live_state: "/api/state",
         public_claims: "/claims-register.json",
         claim_maintenance: "/api/claims/register",
+        claim_events: "/api/claims/events",
+        claim_events_head: "/api/claims/events/head",
         corrections: "/api/corrections",
         measurement_board: "/api/gspc",
         note:
@@ -355,8 +362,9 @@ export const onRequestGet: PagesFunction = async () => {
       },
       flywheel: [
         { stage: "CAPTURE", authority: "/api/claims/register", meaning: "record the public claim and its evidence state" },
+        { stage: "OBSERVE", authority: "/api/claims/events", meaning: "append observed claim-loop events to the hash-chained feed; verify the signed head separately" },
         { stage: "MEASURE", authority: "/api/gspc", meaning: "measure only where the declared instrument and evidence support it" },
-        { stage: "CORRECT", authority: "/api/corrections", meaning: "append defects and supersessions; never erase history" },
+        { stage: "CORRECT", authority: "/api/corrections", meaning: "append CSOAI defects and supersessions; never erase history" },
         { stage: "QUOTE", authority: "/api/state", meaning: "derive the current quotable state from committed authorities" },
       ],
       kinds: {
@@ -974,6 +982,58 @@ export const onRequestGet: PagesFunction = async () => {
         "The register is the authority. /api/state only derives this summary. No score, rank, certification or verdict is produced from these counts.",
     },
 
+    // ── CLAIM EVENT CHAIN ───────────────────────────────────────────────────
+    // Summary only. Cryptographic verification remains the job of /api/claims/events/head.
+    claim_events: {
+      authority: SRC_CLAIM_EVENTS,
+      endpoint: "/api/claims/events",
+      head_endpoint: "/api/claims/events/head",
+      lines: fact(
+        claimEventsFeed.n_lines ?? null,
+        "catalogued",
+        SRC_CLAIM_EVENTS + " → feed.n_lines",
+        claimEventsAsOf,
+        "as_of",
+        "Committed claim-loop event rows. A row records an observation/decision state; it is not a verdict, score or correction by itself.",
+      ),
+      head_seq: fact(
+        claimEventsFeed.head_seq ?? null,
+        "catalogued",
+        SRC_CLAIM_EVENTS + " → feed.head_seq",
+        claimEventsAsOf,
+        "as_of",
+        "Sequence number of the committed head line. The signed head endpoint must verify before relying on chain integrity.",
+      ),
+      subjects: fact(
+        claimEventsTotals.subjects ?? null,
+        "catalogued",
+        SRC_CLAIM_EVENTS + " → totals.subjects",
+        claimEventsAsOf,
+        "as_of",
+        "Subjects represented by the committed event-head projection. Sealed subjects stay sealed.",
+      ),
+      disclosed: fact(
+        claimEventsTotals.disclosed ?? null,
+        "catalogued",
+        SRC_CLAIM_EVENTS + " → totals.disclosed",
+        claimEventsAsOf,
+        "as_of",
+      ),
+      sealed: fact(
+        claimEventsTotals.sealed ?? null,
+        "catalogued",
+        SRC_CLAIM_EVENTS + " → totals.sealed",
+        claimEventsAsOf,
+        "as_of",
+      ),
+      first_at: claimEventsFeed.first_at ?? null,
+      last_at: claimEventsFeed.last_at ?? null,
+      bytes_sha256: claimEventsFeed.bytes_sha256 ?? null,
+      verification_state_source: "/api/claims/events/head → verification.state",
+      rule:
+        "The committed head is the summary authority; /api/claims/events/head verifies feed bytes, hash chain and signed head. /api/state never upgrades or guesses that cryptographic state.",
+    },
+
     // ── CORRECTIONS LEDGER ──────────────────────────────────────────────────
     corrections_ledger: {
       authority: SRC_CORRECTIONS,
@@ -989,8 +1049,13 @@ export const onRequestGet: PagesFunction = async () => {
       latest_entry_id: latestCorrectionId,
       timing: correctionLatencyBlock,
       signature_state_source: "/api/corrections → signature_state",
+      historical_artifacts: [
+        { path: "/interop/corrections-feed.json", role: "HISTORICAL_RESEARCH_CORRECTION_CARDS", status: "NOT_CURRENT_LEDGER" },
+        { path: "/interop/correction-watch-2026-09-18.json", role: "HISTORICAL_PROPAGATION_WATCH_RECEIPT", status: "NOT_CURRENT_LEDGER" },
+        { path: "/interop/corrections-that-did-not-travel-2026-09-17-v0.2.json", role: "CORRECTION_PROPAGATION_RESEARCH", status: "NOT_CURRENT_LEDGER" },
+      ],
       rule:
-        "Signature state is checked and published by /api/corrections itself. /api/state never upgrades or guesses that cryptographic state.",
+        "Signature state is checked and published by /api/corrections itself. /api/state never upgrades or guesses that cryptographic state. Historical correction research/watch artefacts are retained for provenance but are never merged into, summed with, or substituted for the current ledger.",
     },
 
     // ── RWA INSTRUMENTS ──────────────────────────────────────────────────────

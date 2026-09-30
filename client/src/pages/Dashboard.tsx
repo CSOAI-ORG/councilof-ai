@@ -59,6 +59,7 @@ type LiveState = {
   claim_maintenance?: { claims?: StateFact<number>; subjects?: StateFact<number>; claims_by_state?: StateFact<Record<string, number>>; subjects_with_scheduled_next_read?: StateFact<number> };
   claims_register?: { rows_total?: StateFact<number> };
   corrections_ledger?: { rows_total?: StateFact<number>; latest_entry_id?: string | null; timing?: { exact?: number; upper_bound?: number; unmeasured?: number; median_seconds_exact?: number } };
+  claim_events?: { lines?: StateFact<number>; head_seq?: StateFact<number>; subjects?: StateFact<number>; disclosed?: StateFact<number>; sealed?: StateFact<number>; last_at?: string | null; head_endpoint?: string };
 };
 
 /** One derived state read for the operator view. The underlying registries and ledgers remain their own authorities. */
@@ -89,6 +90,7 @@ const quickActions = [
   { label: "Open Council chat", href: "/dashboard?tab=home", icon: Users },
   { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
   { label: "Claim Maintenance", href: "/claim-maintenance/", icon: RefreshCw },
+  { label: "Claim events", href: "/api/claims/events", icon: RefreshCw },
   { label: "Claims register", href: "/claims-register", icon: FileCheck },
 ];
 
@@ -116,6 +118,7 @@ export default function Dashboard() {
   const estateIndex = liveState?.estate_index;
   const claimMaintenance = liveState?.claim_maintenance;
   const correctionsLedger = liveState?.corrections_ledger;
+  const claimEvents = liveState?.claim_events;
   const publicClaims = liveState?.claims_register;
 
   // Calculate real metrics
@@ -164,6 +167,18 @@ export default function Dashboard() {
       color: "text-emerald-700",
       bgColor: "bg-emerald-50",
       description: "Claim Maintenance evidence states; never a score or verdict",
+    },
+    {
+      title: "Claim-event chain",
+      value: claimEvents?.lines?.value?.toString() ?? "—",
+      change: claimEvents?.subjects?.value != null
+        ? `${claimEvents.subjects.value} subjects · head ${claimEvents.head_seq?.value ?? "—"}`
+        : "event head unavailable",
+      changeType: "neutral",
+      icon: RefreshCw,
+      color: "text-cyan-700",
+      bgColor: "bg-cyan-50",
+      description: "Append-only Claim Maintenance observations; signed head verifies chain integrity",
     },
     {
       title: "Published corrections",

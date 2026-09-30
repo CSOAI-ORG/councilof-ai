@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import publicRoot from "../../public/root.json";
 import cardIndex from "../../public/signed/card_index.json";
 import claimMaintenanceRegister from "../../public/spec/claim-maintenance/register.json";
+import claimEventsHead from "../../public/claims/events/v0.1/head.json";
 import { LEDGER as correctionsLedger } from "./corrections";
 import { deriveCorpusRelation, onRequestGet } from "./state";
 import MCP_FREE from "../mcp/gspc-tools.json";
@@ -153,18 +154,30 @@ describe("GET /api/state contract convergence", () => {
       live_state: "/api/state",
       public_claims: "/claims-register.json",
       claim_maintenance: "/api/claims/register",
+      claim_events: "/api/claims/events",
+      claim_events_head: "/api/claims/events/head",
       corrections: "/api/corrections",
       measurement_board: "/api/gspc",
     });
-    expect(body.contract.flywheel.map((x: { stage: string }) => x.stage)).toEqual(["CAPTURE", "MEASURE", "CORRECT", "QUOTE"]);
+    expect(body.contract.flywheel.map((x: { stage: string }) => x.stage)).toEqual(["CAPTURE", "OBSERVE", "MEASURE", "CORRECT", "QUOTE"]);
     expect(body.claim_maintenance.claims.value).toBe(claimMaintenanceRegister.totals.claims);
     expect(body.claim_maintenance.subjects.value).toBe(claimMaintenanceRegister.totals.subjects);
     expect(body.claim_maintenance.claims_by_state.value).toEqual(claimMaintenanceRegister.totals.by_state);
     expect(body.claim_maintenance.subjects_with_scheduled_next_read.value).toBe(
       claimMaintenanceRegister.totals.subjects_with_a_scheduled_next_read,
     );
+    expect(body.claim_events.lines.value).toBe(claimEventsHead.feed.n_lines);
+    expect(body.claim_events.head_seq.value).toBe(claimEventsHead.feed.head_seq);
+    expect(body.claim_events.subjects.value).toBe(claimEventsHead.totals.subjects);
+    expect(body.claim_events.bytes_sha256).toBe(claimEventsHead.feed.bytes_sha256);
+    expect(body.claim_events.verification_state_source).toBe("/api/claims/events/head → verification.state");
     expect(body.corrections_ledger.rows_total.value).toBe(correctionsLedger.corrections.length);
     expect(body.corrections_ledger.latest_entry_id).toBe(correctionsLedger.corrections[0].id);
     expect(body.corrections_ledger.signature_state_source).toBe("/api/corrections → signature_state");
+    expect(body.corrections_ledger.historical_artifacts).toEqual([
+      { path: "/interop/corrections-feed.json", role: "HISTORICAL_RESEARCH_CORRECTION_CARDS", status: "NOT_CURRENT_LEDGER" },
+      { path: "/interop/correction-watch-2026-09-18.json", role: "HISTORICAL_PROPAGATION_WATCH_RECEIPT", status: "NOT_CURRENT_LEDGER" },
+      { path: "/interop/corrections-that-did-not-travel-2026-09-17-v0.2.json", role: "CORRECTION_PROPAGATION_RESEARCH", status: "NOT_CURRENT_LEDGER" },
+    ]);
   });
 });

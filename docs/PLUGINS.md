@@ -3,7 +3,7 @@
 The estate has ONE board authority (`GET https://councilof.ai/api/gspc`), ONE live-state
 contract (`GET https://councilof.ai/api/state`) and ONE card-verification rule
 (`/signed/HOW-TO-VERIFY.md`, implemented once in `functions/_lib/cardVerify.ts`). Claim Maintenance
-comes from `GET /api/claims/register`; append history comes from `GET /api/corrections`. Every
+comes from `GET /api/claims/register`; the append-only observation chain comes from `GET /api/claims/events` with verification at `GET /api/claims/events/head`; current CSOAI correction history comes from `GET /api/corrections`. Every
 plugin below is a *reader* of those public authorities and a *caller* of the verifier. None is a
 second engine; none certifies; none sells a rank. Verify is free everywhere.
 
@@ -76,8 +76,8 @@ action; the exact steps are in that README.
 Create a GPT → Configure → Actions → **Import from URL** →
 `https://councilof.ai/api/openapi.json`. Authentication: none. The canonical spec exposes only
 what exists, including `getBoard` (`/api/gspc`), `getLiveState` (`/api/state`),
-`getClaimMaintenanceRegister` (`/api/claims/register`), `getCorrections` (`/api/corrections`),
-`getProof` (`/api/proof?sha=`), `getRoot` (`/root.json`), `getDid` (`/.well-known/did.json`),
+`getClaimMaintenanceRegister` (`/api/claims/register`), `getClaimEvents` (`/api/claims/events`),
+`getClaimEventsHead` (`/api/claims/events/head`), `getCorrections` (`/api/corrections`), `getProof` (`/api/proof?sha=`), `getRoot` (`/root.json`), `getDid` (`/.well-known/did.json`),
 `getCardIndex` (`/signed/card_index.json`) and `getCard` (`/signed/cards/{id}.json`). Instruct the
 GPT to quote fields from their authority verbatim and never compose a count or turn evidence states
 into a score.
@@ -96,3 +96,10 @@ that freezes a count or introduces a second verifier.
 - Chrome Web Store: developer account + upload (steps in the extension README).
 - Rule on the mill-card family in the shared verifier (finding 1 above).
 - Decide whether `public/openapi.json` should be retired in favour of `/api/openapi.json`.
+
+
+### Corrections and claim-event authority
+
+`/api/corrections` is the current CSOAI corrections ledger. Older files under `/interop/` such as `corrections-feed.json`, `correction-watch-2026-09-18.json` and `corrections-that-did-not-travel-2026-09-17-v0.2.json` are retained historical/research artefacts. They are never merged into or summed with the current ledger.
+
+`/api/claims/events` is the append-only Claim Maintenance observation/event feed; `/api/claims/events/head` verifies the committed feed/head/signature relationship. Event states are not corrections or verdicts by themselves. Plugins and dashboards read these same public authorities rather than carrying private copies.
