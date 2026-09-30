@@ -108,3 +108,11 @@ describe("the hero keeps its height while the board read lands", () => {
     expect(hero).toMatch(/<dd className="order-first min-h-\[2em\]/);
   });
 });
+
+describe("/connect's social and search head is the hub's, not a withdrawal notice", () => {
+  it("resolves the seo-head entry for /connect", async () => {
+    const { resolveHead } = await import("../lib/seoHead");
+    const head = resolveHead("/connect/");
+    expect(head.title).toBe("Connect an agent: MCP, A2A and HTTP | Council of AI");
+  });
+});
