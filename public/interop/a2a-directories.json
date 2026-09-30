@@ -11,10 +11,10 @@
     "a2a_version": "1.0",
     "interface": "https://councilof.ai/api/a2a",
     "protocol_binding": "JSONRPC",
-    "skills": 10,
+    "skills": 11,
     "note": "Card shape is A2A v1.0.1: the AgentCard carries NO top-level url or protocolVersion — both are REQUIRED fields of AgentInterface instead, and ours carries all three (url, protocolBinding, protocolVersion). Verified against specification/a2a.proto at tag v1.0.1, not against a remembered field list.",
     "skills_source": "len(public/.well-known/agent-card.json -> skills). Recount it, never retype it.",
-    "skills_recounted_at": "2026-09-26"
+    "skills_recounted_at": "2026-09-30"
   },
   "directories": [
     {
@@ -103,12 +103,12 @@
     "spec": "https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto"
   },
   "supersedes": {
-    "path": "/interop/a2a-directories-20260905T185400Z.json",
-    "sha256": "882427dd8ccebb8d5c7fcb8cdd1372f44f1bb7f4b63c6f3e96f77dfc173308a7",
-    "ots": "/interop/a2a-directories-20260905T185400Z.json.ots",
-    "why": "our_agent.skills recounted from the card (8 -> 10: measurement-capsules and server-evidence joined). The directory rows and totals are NOT re-probed: they remain as of 20260905T185400Z. Timestamped bytes are superseded, never edited."
+    "path": "/interop/a2a-directories-20260930T094635Z.json",
+    "sha256": "e91e8cb0b1ac3a6d82b12d84f138daba97523dd3f488dd9d47e68bfac8fd9eda",
+    "ots": "/interop/a2a-directories-20260930T094635Z.json.ots",
+    "why": "our_agent.skills recounted from the card (10 -> 11: evidence-bundle joined, the free A2A twin of the MCP tool evidence_bundle_preview). The directory rows and totals are NOT re-probed: they remain as of 20260905T185400Z. Timestamped bytes are superseded, never edited; the previous bytes keep their proof at the dated path."
   },
-  "ots_state": "STAMPED 2026-09-26: the OpenTimestamps proof over these exact bytes is /interop/a2a-directories.json.ots (public calendars; calendar-pending until upgraded, and a pending proof is not a Bitcoin attestation). Earlier bytes keep their own proofs at the dated paths named in supersedes and label_restamp.",
+  "ots_state": "STAMPED 2026-09-30: the OpenTimestamps proof over these exact bytes is /interop/a2a-directories.json.ots (public calendars; calendar-pending until upgraded, and a pending proof is not a Bitcoin attestation). Earlier bytes keep their own proofs at the dated paths named in supersedes and label_restamp.",
   "label_restamp": {
     "path": "/interop/a2a-directories-20260926T074032Z.json",
     "sha256": "3070120b21008274492729e374018fd209402791132bbeca861072c7b8dab96e",

@@ -17,3 +17,10 @@ until 30 Sep 2026. The card was re-signed under the same key on 30 Sep (v1.2.0) 
 was renamed `card-status-link` (the doctrine has no mark, badge or grade; the former id still routes). The served
 input was re-stamped (calendar-pending) over its new bytes; the OTS manifest entry for it updates on the next run of
 the manifest producer.
+
+`agent-card-jws-input.2026-09-30-v1.2.0.json` (sha256 5923cccf...) with its OpenTimestamps proof
+`agent-card-jws-input.2026-09-30-v1.2.0.json.ots`, and `agent-card.2026-09-30-v1.2.0.signed.json` (sha256 200a8e6d...),
+are the signing input, proof and signed agent card (v1.2.0, JWS under did:web:csoai.org#card-attestation-2) served
+until the master-plugin land of 30 Sep 2026. The card was re-signed under the same key (v1.3.0) after the skill
+`evidence-bundle` joined (the free A2A twin of the MCP tool `evidence_bundle_preview`). The served input was
+re-stamped (calendar-pending) over its new bytes and the OTS manifest was rebuilt in the same commit.

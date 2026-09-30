@@ -75,7 +75,7 @@
       "id": "mcp-registry-domain",
       "format": "MCP Registry server.json (schema 2025-12-11), domain namespace, remote-only",
       "remote_url": "https://councilof.ai/mcp/",
-      "remote_url_why": "The door with a trailing slash. The bare https://councilof.ai/mcp is registered under io.github.CSOAI-ORG/gspc and the registry refuses one remote URL under two names, so both published ai.councilof/gspc versions (1.4.2 on 2026-09-26, 1.4.3 on 2026-09-28) carry /mcp/; a descriptor naming the bare URL could not be published. Both forms answer the same MCP initialize (read 2026-09-28). check.mjs pins this to identity.door modulo the one slash.",
+      "remote_url_why": "The door with a trailing slash. The bare https://councilof.ai/mcp is registered under io.github.CSOAI-ORG/gspc (the deprecated alias) and the registry refuses one remote URL under two names, so both published ai.councilof/gspc versions (1.4.2 on 2026-09-26, 1.4.3 on 2026-09-28) carry /mcp/; a descriptor naming the bare URL could not be published. Both forms answer the same MCP initialize (read 2026-09-28). check.mjs pins this to identity.door modulo the one slash.",
       "output": [
         "distribution/mcp-registry/ai.councilof-gspc/server.json"
       ],
@@ -373,6 +373,138 @@
       "approver": "Nick — merge; ships with the next deploy",
       "flagged_org_impact": "None beyond the normal merge path.",
       "flagged_org_affected": false
+    },
+    {
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "owner_approval_needed": true,
+      "id": "openai-plugin",
+      "format": "ChatGPT / OpenAI plugin ZIP, Agent Plugins format (plugin.json + mcp.json with exactly one remote MCP server + skills/get-started/SKILL.md + assets/)",
+      "output": [
+        "distribution/openai-plugin/plugin.json",
+        "distribution/openai-plugin/mcp.json",
+        "distribution/openai-plugin/skills/get-started/SKILL.md",
+        "distribution/openai-plugin/assets/logo.png",
+        "distribution/packages/gspc-openai-plugin.zip"
+      ],
+      "doctrine_carriers": [
+        "distribution/openai-plugin/skills/get-started/SKILL.md"
+      ],
+      "listing_channel": "https://platform.openai.com/plugins → Upload plugin (ZIP)",
+      "approver": "Nick — OpenAI organisation/business verification, domain verification, demo video, policy attestations",
+      "flagged_org_impact": "None (no GitHub repo needed).",
+      "flagged_org_affected": false,
+      "mcp_door": "free",
+      "why_free_door": "Paid x402 tools are excluded until OpenAI's commerce policy is read by the owner; the ZIP declares commerce false and connects the free door only."
+    },
+    {
+      "licence": "n/a (listing metadata)",
+      "version_source": "remote",
+      "owner_approval_needed": true,
+      "id": "copilot-studio-connector",
+      "format": "Microsoft Copilot Studio / Power Platform MCP connector (apiDefinition.swagger.json with x-ms-agentic-protocol mcp-streamable-1.0 + apiProperties.json + intro.md + icon.png)",
+      "output": [
+        "distribution/copilot-studio/apiDefinition.swagger.json",
+        "distribution/copilot-studio/apiProperties.json",
+        "distribution/copilot-studio/intro.md",
+        "distribution/copilot-studio/icon.png"
+      ],
+      "doctrine_carriers": [
+        "distribution/copilot-studio/intro.md"
+      ],
+      "listing_channel": "Partner Center → New offer → Connectors and Agents for Microsoft Copilot Studio",
+      "approver": "Nick — verified publisher, business-verified Partner Center account, Responsible AI review",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false,
+      "mcp_door": "free",
+      "known_gap": "Microsoft certification requires an approved authentication method (OAuth 2.0, API key or Basic); both doors are no-auth today. Tenants can still add the free door themselves as a custom MCP tool (see the connect matrix)."
+    },
+    {
+      "licence": "n/a (listing metadata)",
+      "version_source": "remote",
+      "owner_approval_needed": true,
+      "id": "gcp-marketplace-a2a",
+      "format": "Google Cloud Marketplace AI-agent listing kit (A2A only): the served, signed agent card byte-for-byte + LISTING.md",
+      "output": [
+        "distribution/gcp-marketplace/agent-card.json",
+        "distribution/gcp-marketplace/LISTING.md"
+      ],
+      "doctrine_carriers": [
+        "distribution/gcp-marketplace/LISTING.md"
+      ],
+      "listing_channel": "GCP Producer Portal after vendor onboarding (Agent Card uploaded to Cloud Storage)",
+      "approver": "Nick — GCP vendor onboarding, Google sign-in integration, review",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false
+    },
+    {
+      "licence": "Apache-2.0",
+      "version_source": "remote",
+      "owner_approval_needed": true,
+      "id": "dify-plugin",
+      "format": "Dify tool plugin (manifest.yaml + provider + one tool per free MCP tool, Python over the free door) and its .difypkg",
+      "output": [
+        "distribution/dify/gspc/manifest.yaml",
+        "distribution/dify/gspc/main.py",
+        "distribution/dify/gspc/requirements.txt",
+        "distribution/dify/gspc/PRIVACY.md",
+        "distribution/dify/gspc/README.md",
+        "distribution/dify/gspc/_assets/icon.svg",
+        "distribution/dify/gspc/provider/gspc.yaml",
+        "distribution/dify/gspc/provider/gspc.py",
+        "distribution/dify/gspc/tools/board_totals.yaml",
+        "distribution/dify/gspc/tools/board_totals.py",
+        "distribution/dify/gspc/tools/get_axis.yaml",
+        "distribution/dify/gspc/tools/get_axis.py",
+        "distribution/dify/gspc/tools/verify_card.yaml",
+        "distribution/dify/gspc/tools/verify_card.py",
+        "distribution/dify/gspc/tools/list_cards.yaml",
+        "distribution/dify/gspc/tools/list_cards.py",
+        "distribution/dify/gspc/tools/get_root.yaml",
+        "distribution/dify/gspc/tools/get_root.py",
+        "distribution/dify/gspc/tools/get_card.yaml",
+        "distribution/dify/gspc/tools/get_card.py",
+        "distribution/dify/gspc/tools/verify_inclusion.yaml",
+        "distribution/dify/gspc/tools/verify_inclusion.py",
+        "distribution/dify/gspc/tools/x402_trust.yaml",
+        "distribution/dify/gspc/tools/x402_trust.py",
+        "distribution/dify/gspc/tools/mcp_trust.yaml",
+        "distribution/dify/gspc/tools/mcp_trust.py",
+        "distribution/dify/gspc/tools/measurement_index.yaml",
+        "distribution/dify/gspc/tools/measurement_index.py",
+        "distribution/dify/gspc/tools/verify_capsule.yaml",
+        "distribution/dify/gspc/tools/verify_capsule.py",
+        "distribution/dify/gspc/tools/server_evidence.yaml",
+        "distribution/dify/gspc/tools/server_evidence.py",
+        "distribution/dify/gspc/tools/evidence_bundle_preview.yaml",
+        "distribution/dify/gspc/tools/evidence_bundle_preview.py",
+        "distribution/packages/gspc.difypkg"
+      ],
+      "doctrine_carriers": [
+        "distribution/dify/gspc/README.md"
+      ],
+      "listing_channel": "PR of the .difypkg to langgenius/dify-plugins",
+      "approver": "Nick — GitHub PR from a public, unflagged account",
+      "flagged_org_impact": "Needs a public account; not CSOAI-ORG.",
+      "flagged_org_affected": true,
+      "mcp_door": "free"
+    },
+    {
+      "licence": "n/a (listing metadata)",
+      "version_source": "remote",
+      "owner_approval_needed": false,
+      "id": "connect-matrix",
+      "format": "Connect-page data: exact copy-paste setup per client that accepts a pasted MCP URL (consumed by client/src/pages/ConnectHub.tsx)",
+      "output": [
+        "distribution/connect/connect-matrix.json"
+      ],
+      "doctrine_carriers": [
+        "distribution/connect/connect-matrix.json"
+      ],
+      "listing_channel": "this repo → /connect/ on councilof.ai (no listing, no approval)",
+      "approver": "Nick — merge; ships with the next deploy",
+      "flagged_org_impact": "None.",
+      "flagged_org_affected": false
     }
   ],
   "published_channels_note": "Every place a Layer 0 artifact is, or is declared to be, live. scripts/harness-x/parity_live.py reads each one (daily, scripts/pod-loops/harness-x-parity.sh). kind rendered-only = rendered here and not yet listed: reported UNCHECKABLE, never CONSISTENT. kinds smithery / a2a-registry = third-party directories that copy the door or the agent card (compared, never edited from here); listing-unreadable = a directory that lists us but cannot be read without a key we do not hold: UNCHECKABLE.",
@@ -403,6 +535,20 @@
       "row": "well-known-server-card",
       "url": "https://councilof.ai/.well-known/mcp.json",
       "path": "public/.well-known/mcp.json"
+    },
+    {
+      "id": "site-server-card",
+      "kind": "site-server-card",
+      "url": "https://councilof.ai/mcp/server-card",
+      "door": "https://councilof.ai/mcp",
+      "version_source": "remote"
+    },
+    {
+      "id": "site-free-server-card",
+      "kind": "site-server-card",
+      "url": "https://councilof.ai/mcp/free/server-card",
+      "door": "https://councilof.ai/mcp/free",
+      "version_source": "remote"
     },
     {
       "id": "registry-ai.councilof-gspc",
@@ -494,7 +640,8 @@
       "name": "@csoai/layer0",
       "version_source": "layer0_js",
       "source_dir": "packages/layer0-js",
-      "package_json": "packages/layer0-js/package.json"
+      "package_json": "packages/layer0-js/package.json",
+      "expect_absent": "rendered, not published: publishing needs the owner's npm Bypass-2FA granular token"
     },
     {
       "id": "npm-ai-sdk-gspc",
@@ -504,7 +651,8 @@
       "version_source": "adapters",
       "source_dir": "distribution/npm/ai-sdk-gspc",
       "package_json": "distribution/npm/ai-sdk-gspc/package.json",
-      "source_readme": "distribution/npm/ai-sdk-gspc/README.md"
+      "source_readme": "distribution/npm/ai-sdk-gspc/README.md",
+      "expect_absent": "rendered, not published: publishing needs the owner's npm Bypass-2FA granular token"
     },
     {
       "id": "npm-mastra-gspc",
@@ -514,7 +662,8 @@
       "version_source": "adapters",
       "source_dir": "distribution/npm/mastra-gspc",
       "package_json": "distribution/npm/mastra-gspc/package.json",
-      "source_readme": "distribution/npm/mastra-gspc/README.md"
+      "source_readme": "distribution/npm/mastra-gspc/README.md",
+      "expect_absent": "rendered, not published: publishing needs the owner's npm Bypass-2FA granular token"
     },
     {
       "id": "hf-space-csoai-gspc-mcp",
@@ -551,7 +700,7 @@
       "id": "claude-connector",
       "kind": "rendered-only",
       "row": "claude-connector",
-      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+      "why": "SUBMITTED 2026-09-28 (free door); the directory listing is under review and not readable here"
     },
     {
       "id": "gemini-extension",
@@ -596,6 +745,299 @@
       "kind": "listing-unreadable",
       "name": "pulsemcp.com",
       "why": "PulseMCP's v0beta API is sunset (410) and v0.1 needs an X-API-Key we do not hold; whether and how it lists the server is unread"
+    },
+    {
+      "id": "openai-plugin",
+      "kind": "rendered-only",
+      "row": "openai-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "copilot-studio-connector",
+      "kind": "rendered-only",
+      "row": "copilot-studio-connector",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "gcp-marketplace-a2a",
+      "kind": "rendered-only",
+      "row": "gcp-marketplace-a2a",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
+    },
+    {
+      "id": "dify-plugin",
+      "kind": "rendered-only",
+      "row": "dify-plugin",
+      "why": "rendered, not listed anywhere public: the owner step in distribution/SUBMIT.md is open"
     }
-  ]
+  ],
+  "connect_matrix": {
+    "what": "Copy-paste setup for every client that accepts a pasted remote MCP URL. Rendered to distribution/connect/connect-matrix.json and shown on /connect/. {free} and {full} are replaced by the two doors at render time; no other URL may appear. scripts/harness-x/connect-live.mjs checks every block against the live doors (initialize + tools/list for each URL; JSON blocks must parse; the curl block is executed) and writes distribution/connect/connect-live-check.json. Client UIs and CLIs are not driven by that check: those steps are copied from each vendor's documentation, linked per row.",
+    "doors": {
+      "free": "read-only tools, no sign-in, nothing on it moves money",
+      "full": "the free tools plus x402-metered evidence tools; a metered tool answers with a payment challenge until the caller's own wallet signs one"
+    },
+    "clients": [
+      {
+        "id": "claude-code",
+        "platform": "Claude Code",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "Terminal",
+        "kind": "shell",
+        "snippet": "claude mcp add --transport http gspc {free}",
+        "docs": "https://docs.claude.com/en/docs/claude-code/mcp"
+      },
+      {
+        "id": "claude-app",
+        "platform": "Claude (claude.ai, Desktop)",
+        "group": "Chat apps",
+        "door": "free",
+        "where": "Settings → Connectors → Add custom connector",
+        "kind": "text",
+        "snippet": "Name: GSPC\nRemote MCP server URL: {free}\nAuthentication: none",
+        "docs": "https://support.anthropic.com/en/articles/11175166-getting-started-with-custom-connectors-using-remote-mcp"
+      },
+      {
+        "id": "chatgpt",
+        "platform": "ChatGPT (developer mode)",
+        "group": "Chat apps",
+        "door": "free",
+        "where": "Settings → Apps & Connectors → Advanced settings → Developer mode → Create",
+        "kind": "text",
+        "snippet": "Name: GSPC\nMCP server URL: {free}\nAuthentication: No authentication",
+        "docs": "https://platform.openai.com/docs/guides/developer-mode"
+      },
+      {
+        "id": "le-chat",
+        "platform": "Mistral Le Chat",
+        "group": "Chat apps",
+        "door": "free",
+        "where": "Intelligence → Connectors → Add connector → Custom MCP Connector",
+        "kind": "text",
+        "snippet": "Connector name: GSPC\nConnection server: {free}\nAuthentication: none",
+        "docs": "https://docs.mistral.ai/le-chat/knowledge-integrations/connectors/mcp-connectors"
+      },
+      {
+        "id": "perplexity",
+        "platform": "Perplexity (Pro, Max, Enterprise)",
+        "group": "Chat apps",
+        "door": "free",
+        "where": "Settings → Connectors → Add connector → Custom → Remote",
+        "kind": "text",
+        "snippet": "Name: GSPC\nServer URL: {free}\nTransport: Streamable HTTP\nAuthentication: none",
+        "docs": "https://docs.perplexity.ai/docs/agent-api/tools/mcp"
+      },
+      {
+        "id": "cursor",
+        "platform": "Cursor",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.cursor/mcp.json (or .cursor/mcp.json in a project)",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://cursor.com/docs/context/mcp"
+      },
+      {
+        "id": "vscode",
+        "platform": "VS Code (GitHub Copilot agent mode)",
+        "group": "Coding agents",
+        "door": "free",
+        "where": ".vscode/mcp.json",
+        "kind": "json",
+        "snippet": "{\n  \"servers\": {\n    \"gspc\": { \"type\": \"http\", \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://code.visualstudio.com/docs/agent-customization/mcp-servers"
+      },
+      {
+        "id": "windsurf",
+        "platform": "Windsurf",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.codeium/windsurf/mcp_config.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"serverUrl\": \"{free}\" }\n  }\n}",
+        "docs": "https://docs.windsurf.com/windsurf/cascade/mcp"
+      },
+      {
+        "id": "gemini-cli",
+        "platform": "Gemini CLI",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.gemini/settings.json",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"httpUrl\": \"{free}\" }\n  }\n}",
+        "docs": "https://geminicli.com/docs/tools/mcp-server/"
+      },
+      {
+        "id": "codex",
+        "platform": "OpenAI Codex CLI",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "~/.codex/config.toml",
+        "kind": "toml",
+        "snippet": "[mcp_servers.gspc]\nurl = \"{free}\"",
+        "docs": "https://developers.openai.com/codex/mcp"
+      },
+      {
+        "id": "zed",
+        "platform": "Zed",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "settings.json (Agent Panel → Add Custom Server)",
+        "kind": "json",
+        "snippet": "{\n  \"context_servers\": {\n    \"gspc\": { \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://zed.dev/docs/ai/mcp"
+      },
+      {
+        "id": "jetbrains",
+        "platform": "JetBrains AI Assistant",
+        "group": "Coding agents",
+        "door": "free",
+        "where": "Settings → Tools → AI Assistant → Model Context Protocol (MCP) → Add → As JSON",
+        "kind": "json",
+        "snippet": "{\n  \"mcpServers\": {\n    \"gspc\": { \"url\": \"{free}\" }\n  }\n}",
+        "docs": "https://www.jetbrains.com/help/ai-assistant/mcp.html"
+      },
+      {
+        "id": "openai-responses",
+        "platform": "OpenAI Responses API",
+        "group": "Agent frameworks and APIs",
+        "door": "full",
+        "where": "tools[] of a Responses API request",
+        "kind": "json",
+        "snippet": "{\n  \"type\": \"mcp\",\n  \"server_label\": \"gspc\",\n  \"server_url\": \"{full}\",\n  \"require_approval\": \"always\"\n}",
+        "docs": "https://platform.openai.com/docs/guides/tools-remote-mcp"
+      },
+      {
+        "id": "xai-grok",
+        "platform": "Grok (xAI API, Python SDK)",
+        "group": "Agent frameworks and APIs",
+        "door": "free",
+        "where": "xai_sdk remote MCP tool",
+        "kind": "python",
+        "snippet": "from xai_sdk.tools import mcp\n\ntools = [mcp(server_url=\"{free}\", server_label=\"gspc\")]",
+        "docs": "https://docs.x.ai/docs/guides/tools/remote-mcp-tools"
+      },
+      {
+        "id": "google-adk",
+        "platform": "Google ADK (Vertex AI Agent Builder)",
+        "group": "Agent frameworks and APIs",
+        "door": "full",
+        "where": "your ADK agent's tools",
+        "kind": "python",
+        "snippet": "from google.adk.tools.mcp_tool.mcp_toolset import McpToolset\nfrom google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams\n\ngspc = McpToolset(connection_params=StreamableHTTPConnectionParams(url=\"{full}\"))",
+        "docs": "https://google.github.io/adk-docs/tools/mcp-tools/"
+      },
+      {
+        "id": "langchain",
+        "platform": "LangChain / LangGraph",
+        "group": "Agent frameworks and APIs",
+        "door": "full",
+        "where": "pip install langchain-mcp-adapters",
+        "kind": "python",
+        "snippet": "from langchain_mcp_adapters.client import MultiServerMCPClient\n\nclient = MultiServerMCPClient({\"gspc\": {\"transport\": \"streamable_http\", \"url\": \"{full}\"}})\ntools = await client.get_tools()",
+        "docs": "https://github.com/langchain-ai/langchain-mcp-adapters"
+      },
+      {
+        "id": "gemini-enterprise",
+        "platform": "Gemini Enterprise",
+        "group": "Enterprise platforms",
+        "door": "free",
+        "where": "Admin console → Connectors → Add data store → Custom MCP server (tenant admin)",
+        "kind": "text",
+        "snippet": "Server URL: {free}\nAuthentication: none",
+        "docs": "https://docs.cloud.google.com/gemini/enterprise/docs/connectors/custom-mcp-server/set-up-custom-mcp-server"
+      },
+      {
+        "id": "copilot-studio",
+        "platform": "Microsoft Copilot Studio",
+        "group": "Enterprise platforms",
+        "door": "free",
+        "where": "Agent → Tools → Add a tool → New tool → Model Context Protocol",
+        "kind": "text",
+        "snippet": "Server name: GSPC\nServer URL: {free}\nAuthentication: None",
+        "docs": "https://learn.microsoft.com/en-us/microsoft-copilot-studio/mcp-add-existing-server-to-agent"
+      },
+      {
+        "id": "azure-foundry",
+        "platform": "Azure AI Foundry Agent Service",
+        "group": "Enterprise platforms",
+        "door": "free",
+        "where": "Agent → Tools → Add → Custom → Model Context Protocol",
+        "kind": "text",
+        "snippet": "Name: gspc\nRemote MCP server endpoint: {free}\nAuthentication: none",
+        "docs": "https://learn.microsoft.com/en-us/azure/ai-foundry/agents/how-to/tools/model-context-protocol"
+      },
+      {
+        "id": "watsonx",
+        "platform": "IBM watsonx Orchestrate",
+        "group": "Enterprise platforms",
+        "door": "free",
+        "where": "ADK CLI (orchestrate)",
+        "kind": "shell",
+        "snippet": "orchestrate toolkits add --kind mcp --name gspc --description \"GSPC measurement records\" --url {free} --transport streamable_http --tools \"*\"",
+        "docs": "https://developer.watson-orchestrate.ibm.com/tools/toolkits/remote_mcp_toolkits"
+      },
+      {
+        "id": "servicenow",
+        "platform": "ServiceNow (AI Agent Fabric)",
+        "group": "Enterprise platforms",
+        "door": "free",
+        "where": "AI Agent Studio → MCP servers → New",
+        "kind": "text",
+        "snippet": "Name: GSPC\nServer URL: {free}\nAuthentication: none",
+        "docs": "https://www.servicenow.com/community/servicenow-otto-articles/action-fabric-mcp-server-mcp-client-and-a2a-explained/ta-p/3557794"
+      },
+      {
+        "id": "n8n",
+        "platform": "n8n",
+        "group": "Automation",
+        "door": "free",
+        "where": "AI Agent → Tool → MCP Client Tool",
+        "kind": "text",
+        "snippet": "Endpoint: {free}\nServer Transport: HTTP Streamable\nAuthentication: None\nTools to Include: All",
+        "docs": "https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolmcp/"
+      },
+      {
+        "id": "zapier",
+        "platform": "Zapier",
+        "group": "Automation",
+        "door": "free",
+        "where": "MCP Client (beta) → Connect → new connection",
+        "kind": "text",
+        "snippet": "Server URL: {free}\nTransport: Streamable HTTP\nAuthentication: none",
+        "docs": "https://help.zapier.com/hc/en-us/articles/38777069364109"
+      },
+      {
+        "id": "make",
+        "platform": "Make",
+        "group": "Automation",
+        "door": "free",
+        "where": "MCP Client module → Create a connection",
+        "kind": "text",
+        "snippet": "URL: {free}\nAPI key / Access token: leave empty",
+        "docs": "https://apps.make.com/mcp-client"
+      },
+      {
+        "id": "dify",
+        "platform": "Dify",
+        "group": "Automation",
+        "door": "free",
+        "where": "Tools → MCP → Add MCP Server (HTTP)",
+        "kind": "text",
+        "snippet": "Server URL: {free}\nName: GSPC\nServer Identifier: gspc",
+        "docs": "https://docs.dify.ai/en/guides/tools/mcp"
+      },
+      {
+        "id": "curl",
+        "platform": "Any HTTP client (check it yourself)",
+        "group": "No client needed",
+        "door": "free",
+        "where": "Terminal",
+        "kind": "curl",
+        "snippet": "curl -s {free} -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}'",
+        "docs": "https://modelcontextprotocol.io/specification/2025-11-25/basic/transports"
+      }
+    ]
+  }
 }

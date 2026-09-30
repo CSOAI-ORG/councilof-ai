@@ -640,6 +640,13 @@ function buildPaidRequest(name, args) {
       if (str("to")) u.searchParams.set("to", str("to"));
       if (flag("preview")) u.searchParams.set("preview", "1");
       break;
+    case "evidence_bundle":
+      // Same request as the HTTP door (functions/mcp/_paid.ts): preview=true drops bundle=1 (free).
+      if (!str("obligation")) return { error: "obligation is required (article-50, article-53, dora or cra)" };
+      u.searchParams.set("obligation", str("obligation"));
+      if (str("subject")) u.searchParams.set("subject", str("subject").slice(0, 120));
+      if (!flag("preview")) u.searchParams.set("bundle", "1");
+      break;
     default:
       return { error: `no request builder for ${name}` };
   }
@@ -831,6 +838,8 @@ const HANDLERS = {
   measurement_index: (a) => doorTool("measurement_index", a),
   verify_capsule: (a) => doorTool("verify_capsule", a),
   server_evidence: (a) => doorTool("server_evidence", a),
+  // The door answers it (functions/mcp/_evidence.ts), so the two implementations cannot disagree.
+  evidence_bundle_preview: (a) => doorTool("evidence_bundle_preview", a),
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -882,6 +891,8 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — ${payload.headline || "catalog trust counts"}.`;
     case "mcp_trust":
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
+    case "evidence_bundle_preview":
+      return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} — ${payload.relevant_signed_cards ?? 0} already-signed card(s) relevant-to the obligation; observations only, never a determination.${payload.review_note ? " " + payload.review_note : ""}`;
     case "measurement_index":
     case "verify_capsule":
     case "server_evidence":
@@ -890,6 +901,7 @@ function summaryLine(name, payload) {
     case "art50_marking_evidence":
     case "rwa_evidence":
     case "receipts_batch":
+    case "evidence_bundle":
       return `${payload.status ?? "?"} — ${payload.route ?? name}${
         payload.status === "PAYMENT_REQUIRED" && payload.payment_presented === false ? "; nothing charged" : ""
       }${payload.reason ? " — " + payload.reason : ""}. ${PAID_DOCTRINE}.`;

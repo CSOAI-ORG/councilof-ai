@@ -1,0 +1,22 @@
+identity:
+  name: verify_card
+  author: csoai
+  label:
+    en_US: "Verify a signed measurement card (free)"
+description:
+  human:
+    en_US: "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed."
+  llm: "Verify a signed gspc.measurement-card under the published rule (https://councilof.ai/signed/HOW-TO-VERIFY.md): recompute the id from the canonical body bytes, then check the Ed25519 signature under a key PINNED in this verifier and published in the did:web:csoai.org DID document: #card-attestation-1 (the card key of the signed card index) or #card-attestation-2 (the card key added on rotation, 27 Sep 2026; a card names the key it was signed under), plus the board key for the cards it signed. pinned_key in the result names the key that matched. A card that carries its own key proves only that the file is self-consistent — anyone can alter a body and sign it with a key they just generated — so an inline key outside the pinned set is reported INVALID, and a DID key reference outside it UNCHECKABLE. Three verdicts, never two: VALID, INVALID (with the reason), or UNCHECKABLE when the check could not be completed — 'could not check' is a different claim from 'forged'. Accepts the card as a JSON object, a JSON string, a councilof.ai / csoai.org URL, or a 64-hex card id (the record id shown on the site and the card field of list_cards), which resolves to https://councilof.ai/signed/cards/{id}.json. Never a certification."
+parameters:
+  - name: card
+    type: string
+    required: true
+    label:
+      en_US: "card"
+    human_description:
+      en_US: "The signed card: an object, a JSON string, a councilof.ai / csoai.org URL to one, or a 64-hex card id (resolved to https://councilof.ai/signed/cards/{id}.json)."
+    llm_description: "The signed card: an object, a JSON string, a councilof.ai / csoai.org URL to one, or a 64-hex card id (resolved to https://councilof.ai/signed/cards/{id}.json)."
+    form: llm
+extra:
+  python:
+    source: tools/verify_card.py

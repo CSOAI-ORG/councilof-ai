@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { mcpListRequest, observed } from "./capability-drift-guard.mjs";
+import LOCK from "../functions/mcp/tool-fleet.lock.json";
 import { onRequest } from "../functions/mcp/[[path]]";
 
 afterEach(() => vi.unstubAllGlobals());
@@ -20,7 +21,7 @@ it("the real MCP mount accepts the capability drift probe as modern JSON", async
   const mcp = await response.json();
   expect(mcp.result.resultType).toBe("complete");
   const result = observed({ mcp });
-  expect(result.mcp.size).toBe(16);
+  expect(result.mcp.size).toBe(LOCK.fleet_size);
   expect(result.mcp.has("commission_card")).toBe(true);
   expect(result.mcp.has("witness_hash")).toBe(false);
   expect(network).not.toHaveBeenCalled();

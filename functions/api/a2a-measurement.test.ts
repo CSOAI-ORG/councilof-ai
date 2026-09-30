@@ -50,10 +50,22 @@ describe("the measurement skills are wired in all four places", () => {
   it("4: the directory census recount is superseded, not edited — the old bytes keep their proof at a dated path", () => {
     const doc = J("public/interop/a2a-directories.json");
     expect(doc.our_agent.skills).toBe(SKILL_IDS.length);
-    const old = readFileSync(resolve(__dirname, "../..", `public${doc.supersedes.path}`));
-    expect(createHash("sha256").update(old).digest("hex")).toBe(doc.supersedes.sha256);
-    expect(JSON.parse(old.toString()).our_agent.skills).toBe(SKILL_IDS.length - NEW.length);
-    expect(readFileSync(resolve(__dirname, "../..", `public${doc.supersedes.ots}`)).length).toBeGreaterThan(0);
+    // Walk the supersession chain: every link's old bytes still hash to what the newer file recorded and
+    // keep their proof, the count falls at each recount, and one recount is the one that added these skills.
+    // (2026-09-30: evidence-bundle made it 10 -> 11, so the measurement recount is no longer the newest link.)
+    const counts: number[] = [doc.our_agent.skills];
+    let cur = doc;
+    while (cur.supersedes?.path && counts.length < 10) {
+      const old = readFileSync(resolve(__dirname, "../..", `public${cur.supersedes.path}`));
+      expect(createHash("sha256").update(old).digest("hex")).toBe(cur.supersedes.sha256);
+      expect(readFileSync(resolve(__dirname, "../..", `public${cur.supersedes.ots}`)).length).toBeGreaterThan(0);
+      cur = JSON.parse(old.toString());
+      counts.push(cur.our_agent.skills);
+    }
+    expect(counts.length).toBeGreaterThan(1);
+    const steps = counts.slice(1).map((c, i) => counts[i] - c);
+    expect(steps.every((d) => d >= 0)).toBe(true);
+    expect(steps).toContain(NEW.length);
   });
 });
 
