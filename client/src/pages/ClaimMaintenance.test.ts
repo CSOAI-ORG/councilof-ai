@@ -56,7 +56,9 @@ describe("/claim-maintenance — the page states the category and links every ar
     for (const href of [
       "/spec/claim-maintenance/v0.1/",
       "/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md",
-      "/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json",
+      "/spec/claim-maintenance/v0.2/",
+      "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+      "/spec/claim-maintenance/priority.json",
       "/spec/claim-maintenance/",
       "/api/claims/register",
       "/spec/claim-maintenance/register.json",

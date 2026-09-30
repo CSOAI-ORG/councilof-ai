@@ -12,6 +12,7 @@
  *   node smoke.mjs            # full run (needs network for the live tools)
  */
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { createInterface } from "node:readline";
 import { generateKeyPairSync, sign as edSign, createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
@@ -74,22 +75,11 @@ notify("notifications/initialized");
 const list = await rpc("tools/list");
 const names = list.result.tools.map((t) => t.name);
 console.log(`tools: ${names.join(", ")}`);
-const thirteen = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-  "x402_trust",
-  "mcp_trust",
-  "commission_card",
-  "art50_marking_evidence",
-  "rwa_evidence",
-  "receipts_batch",
+const expectedNames = [
+  ...JSON.parse(readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8")).tools.map((t) => t.name),
+  ...JSON.parse(readFileSync(new URL("./paid-tools.json", import.meta.url), "utf8")).tools.map((t) => t.name),
 ];
-expect("tools/list is the canonical thirteen names (9 free + 4 metered)", names.join(","), thirteen.join(","));
+expect("tools/list matches the shipped free + paid manifests", names.join(","), expectedNames.join(","));
 
 // ---- live tools ----
 const totals = await rpc("tools/call", { name: "board_totals", arguments: {} });

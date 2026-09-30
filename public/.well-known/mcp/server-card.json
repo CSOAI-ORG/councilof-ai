@@ -2,7 +2,7 @@
   "schema_version": "2024-11-05",
   "name": "csoai-gspc-mcp",
   "display_name": "Council of AI — GSPC Measurement Tools",
-  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.4.2 (io.github.CSOAI-ORG/gspc is its deprecated alias). POST /mcp lists twelve free readers plus four x402-metered evidence tools; witness_hash is quarantined on HTTP. mill-tool `measure` dropped.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry ai.councilof/gspc server 1.5.0 (io.github.CSOAI-ORG/gspc is its deprecated alias). POST /mcp lists fourteen free readers plus four x402-metered evidence tools; witness_hash is quarantined on HTTP. mill-tool `measure` dropped.",
   "icon_url": "https://councilof.ai/favicon.ico",
   "provider": {
     "name": "CSOAI Ltd",
@@ -16,9 +16,9 @@
       "fallback": "https://csoai.org/mcp",
       "current": "https://councilof.ai/mcp",
       "stdio": "npx -y csoai-gspc-mcp@0.2.2",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is sixteen: twelve free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server 1.4.2. mill-tool `measure` dropped.",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is eighteen: fourteen free readers plus four x402-metered evidence tools. witness_hash is quarantined and not advertised. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server 1.5.0. mill-tool `measure` dropped.",
       "free": "https://councilof.ai/mcp/free",
-      "free_note": "https://councilof.ai/mcp/free serves the twelve free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
+      "free_note": "https://councilof.ai/mcp/free serves the fourteen free readers only, from the same definitions and handlers as https://councilof.ai/mcp: no payment tool and no payment text. It is the address for chat clients and directories that list no payment software."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -40,13 +40,15 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
+      "claim_maintenance_watch",
+      "claim_maintenance_reaction",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "total_tools": 16,
-    "free_tools": 12,
+    "total_tools": 18,
+    "free_tools": 14,
     "metered_tools": 4,
     "streaming": false,
     "auth_required": false

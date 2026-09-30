@@ -1,7 +1,7 @@
 {
   "schema": "csoai.a2a-agent-index/0.1",
-  "note": "16 cards = the 16 MCP tools on POST /mcp (12 free readers, 4 x402-metered). Not 13 human analysts. Count and names are locked by functions/mcp/tool-fleet.lock.json; the lock test fails if this index and the door disagree. Measurement, not certification.",
-  "count": 16,
+  "note": "18 cards = the 18 MCP tools on POST /mcp (14 free readers, 4 x402-metered). Not human analysts. Count and names are locked by functions/mcp/tool-fleet.lock.json; the lock test fails if this index and the door disagree. Measurement, not certification.",
+  "count": 18,
   "agents": [
     {
       "id": "board_totals",
@@ -61,6 +61,16 @@
     {
       "id": "server_evidence",
       "href": "https://councilof.ai/.well-known/agents/server_evidence.json",
+      "paid": false
+    },
+    {
+      "id": "claim_maintenance_watch",
+      "href": "https://councilof.ai/.well-known/agents/claim_maintenance_watch.json",
+      "paid": false
+    },
+    {
+      "id": "claim_maintenance_reaction",
+      "href": "https://councilof.ai/.well-known/agents/claim_maintenance_reaction.json",
       "paid": false
     },
     {

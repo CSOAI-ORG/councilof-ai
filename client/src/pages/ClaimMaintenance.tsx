@@ -16,13 +16,22 @@ import seoHead from "../data/seo-head.json";
  */
 const CANONICAL = "https://councilof.ai/claim-maintenance/";
 const SPEC = "/spec/claim-maintenance/v0.1/";
+const SPEC_CURRENT = "/spec/claim-maintenance/v0.2/";
+const PRIORITY = "/spec/claim-maintenance/priority.json";
+const PRIORITY_WITNESS = "/spec/claim-maintenance/priority-witness.json";
+const PRIORITY_SNAPSHOTS = "/spec/claim-maintenance/priority-snapshots/index.json";
 const SPEC_MD = "/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md";
 const SPEC_INDEX = "/spec/claim-maintenance/";
-const SPEC_SCHEMA = "/spec/claim-maintenance/v0.1/schema/claim-artifact-v0.1.schema.json";
+const SPEC_SCHEMA = "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json";
 const REGISTER = "/api/claims/register";
 const REGISTER_STATIC = "/spec/claim-maintenance/register.json";
 const IMPL = "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs";
 const CORRECTIONS = "/api/corrections";
+const REACTION_INDEX = "/api/claim-maintenance-reaction";
+const REACTION_STATIC = "/spec/claim-maintenance/reaction-index.json";
+const WATCH = "/api/claim-maintenance-watch";
+const WATCH_STATIC = "/spec/claim-maintenance/watch/latest.json";
+const MARKET_SIGNALS = "/spec/claim-maintenance/market-signals-2026-09-30.json";
 /** The archival deposit. A DOI makes a document citable and permanent; it does not make it right. */
 const DOI = "10.5281/zenodo.22901908";
 const DOI_URL = "https://doi.org/10.5281/zenodo.22901908";
@@ -57,13 +66,16 @@ const PAGE_LD = {
       "The continuous, independent observation of the public claims an organisation makes about itself or its products: capturing each claim verbatim with its source and date, hashing and timestamping it so the record cannot be quietly rewritten, re-reading it on a schedule, recording every observed change without alleging anything, and measuring the claim against public evidence where and only where public evidence can settle it.",
     inDefinedTermSet: {
       "@type": "DefinedTermSet",
-      name: "Claim Maintenance, version 0.1",
-      url: "https://councilof.ai" + SPEC,
+      name: "Claim Maintenance, current version 0.2",
+      url: "https://councilof.ai" + SPEC_CURRENT,
     },
     url: CANONICAL,
   },
   significantLink: [
+    "https://councilof.ai" + SPEC_CURRENT,
     "https://councilof.ai" + SPEC,
+    "https://councilof.ai" + PRIORITY,
+    "https://councilof.ai" + PRIORITY_SNAPSHOTS,
     "https://councilof.ai" + REGISTER,
     IMPL,
     "https://councilof.ai" + CORRECTIONS,
@@ -96,6 +108,32 @@ type Register = {
   subjects?: SubjectRow[];
   disclosures?: Array<{ registry_id: string; quoted: string; disclosure: string }>;
 };
+type ClaimWatch = {
+  ran_at_utc?: string;
+  observed_changes_count?: number;
+  review_required_claim_ids?: string[];
+  claim_text_review?: { moved_claims_reviewed?: number; counts?: Record<string, number> };
+  observed_change_kinds?: Record<string, number>;
+  what_this_does_not_mean?: string[];
+};
+type ReactionIndex = {
+  as_of?: string;
+  category?: {
+    direct_name_collision_count_in_snapshot?: number;
+    direct_name_collision_limit?: string;
+    dimension_count?: number;
+    max_single_signal_overlap_fraction?: string;
+    full_stack_collision_count?: number;
+    closest_single_signals?: Array<{ name: string; overlap_count: number; overlap: string[] }>;
+    dimensions_not_seen_anywhere_in_snapshot?: string[];
+  };
+  signals?: Array<{ reaction: string; layer_o_route?: string }>;
+  layer_o_routing?: {
+    counts?: Record<string, number>;
+    meaning?: string;
+    policy?: Record<string, string>;
+  };
+};
 
 const day = (iso: string | null | undefined) => (iso ? String(iso).slice(0, 10) : null);
 
@@ -109,6 +147,8 @@ function Code({ children }: { children: string }) {
 
 export default function ClaimMaintenance() {
   const [reg, setReg] = useState<Register | null | undefined>(undefined);
+  const [reaction, setReaction] = useState<ReactionIndex | null | undefined>(undefined);
+  const [watch, setWatch] = useState<ClaimWatch | null | undefined>(undefined);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -127,8 +167,41 @@ export default function ClaimMaintenance() {
     return () => ac.abort();
   }, []);
 
+  useEffect(() => {
+    const ac = new AbortController();
+    const read = (u: string) =>
+      fetch(u, { signal: ac.signal, headers: { accept: "application/json" } }).then((r) =>
+        r.ok ? r.json() : Promise.reject(new Error(String(r.status))),
+      );
+    read(REACTION_INDEX)
+      .catch(() => read(REACTION_STATIC))
+      .then((j) => setReaction(j as ReactionIndex))
+      .catch(() => setReaction(null));
+    return () => ac.abort();
+  }, []);
+
+  useEffect(() => {
+    const ac = new AbortController();
+    const read = (u: string) =>
+      fetch(u, { signal: ac.signal, headers: { accept: "application/json" } }).then((r) =>
+        r.ok ? r.json() : Promise.reject(new Error(String(r.status))),
+      );
+    read(WATCH)
+      .catch(() => read(WATCH_STATIC))
+      .then((j) => setWatch(j as ClaimWatch))
+      .catch(() => setWatch(null));
+    return () => ac.abort();
+  }, []);
+
   const subjects = reg?.subjects ?? [];
   const asOf = day(reg?.as_of);
+  const reactionCounts = (reaction?.signals ?? []).reduce<Record<string, number>>((acc, row) => {
+    acc[row.reaction] = (acc[row.reaction] ?? 0) + 1;
+    return acc;
+  }, {});
+  const closestSignals = reaction?.category?.closest_single_signals ?? [];
+  const dimensionsNotSeenAnywhere = reaction?.category?.dimensions_not_seen_anywhere_in_snapshot ?? [];
+  const layerORouteCounts = reaction?.layer_o_routing?.counts ?? {};
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -148,7 +221,10 @@ export default function ClaimMaintenance() {
             evidence can settle it.
           </p>
           <div className="mt-7 flex flex-wrap gap-3 text-sm font-semibold">
-            <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC}>Read the specification (v0.1)</a>
+            <a className="rounded-lg bg-emerald-400 px-4 py-2.5 text-slate-950 hover:bg-emerald-300" href={SPEC_CURRENT}>Read the current specification (v0.2)</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY}>Priority record (JSON)</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY_WITNESS}>Priority witness (OTS state)</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY_SNAPSHOTS}>Priority evolution (JSON)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>The register (JSON)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>Run the code</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>
@@ -327,6 +403,117 @@ node claim-capture.mjs --verify artifact.json`}</Code>
             All versions: <a className="underline" href={SPEC_INDEX}>{SPEC_INDEX}</a>
           </p>
         </div>
+      </section>
+
+      <section aria-labelledby="watch" className="border-y border-slate-200 bg-slate-50">
+        <div className="mx-auto max-w-4xl px-5 py-12">
+          <h2 id="watch" className="text-2xl font-bold">Latest maintenance run — what needs a human look</h2>
+          <p className="mt-3 leading-7 text-slate-700">
+            The watch loop re-reads maintained public sources and records change prompts. It never converts a moved
+            digest, a missing phrase or an unreachable source into a truth/falsity finding.
+          </p>
+          {watch === undefined && <p className="mt-5 text-sm text-slate-500">Reading the latest watch summary…</p>}
+          {watch === null && (
+            <p className="mt-5 text-sm text-amber-700">
+              The live watch door did not load. The same committed summary remains at{" "}
+              <a className="underline" href={WATCH_STATIC}>{WATCH_STATIC}</a>.
+            </p>
+          )}
+          {watch && (
+            <>
+              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                {[
+                  ["Observed change prompts", watch.observed_changes_count],
+                  ["Moved claims reviewed", watch.claim_text_review?.moved_claims_reviewed],
+                  ["Human review required", watch.review_required_claim_ids?.length],
+                ].map(([label, value]) => (
+                  <div key={String(label)} className="rounded-lg border border-slate-200 bg-white px-4 py-4">
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">{label}</p>
+                    <p className="mt-2 text-2xl font-black tabular-nums">{value == null ? "—" : String(value)}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-sm leading-6 text-slate-600">
+                Last bounded run: <span className="font-mono">{watch.ran_at_utc ?? "—"}</span>.
+                Review queue: <span className="font-mono">{watch.review_required_claim_ids?.join(" · ") || "none recorded"}</span>.
+              </p>
+            </>
+          )}
+          <p className="mt-5 text-sm text-slate-600">
+            Machine-readable: <a className="underline" href={WATCH}>latest watch API</a> ·{" "}
+            <a className="underline" href={WATCH_STATIC}>committed watch bytes</a>.
+          </p>
+        </div>
+      </section>
+
+      <section aria-labelledby="reaction" className="mx-auto max-w-4xl px-5 py-12">
+        <h2 id="reaction" className="text-2xl font-bold">Category reaction radar — what changed around us</h2>
+        <p className="mt-3 leading-7 text-slate-700">
+          This is a bounded market-comparison layer, not a trademark claim and not a competitor score. It asks one
+          question: when an adjacent product, standard, paper or open-source project moves, does that validate demand,
+          offer a reusable witness/runtime primitive, or directly collide with the Claim Maintenance definition?
+        </p>
+
+        {reaction === undefined && <p className="mt-5 text-sm text-slate-500">Reading the reaction index…</p>}
+        {reaction === null && (
+          <p className="mt-5 text-sm text-amber-700">
+            The reaction index did not load in this browser. The machine-readable index remains available at{" "}
+            <a className="underline" href={REACTION_INDEX}>{REACTION_INDEX}</a>.
+          </p>
+        )}
+        {reaction && (
+          <>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {Object.entries(reactionCounts).map(([name, count]) => (
+                <div key={name} className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-4">
+                  <p className="font-mono text-[11px] font-semibold text-slate-600">{name}</p>
+                  <p className="mt-2 text-2xl font-black tabular-nums">{count}</p>
+                </div>
+              ))}
+            </div>
+            {Object.keys(layerORouteCounts).length > 0 && (
+              <div className="mt-6 rounded-lg border border-sky-200 bg-sky-50 px-4 py-4 text-sm leading-6 text-sky-950">
+                <p className="font-semibold">Layer O adapter queue</p>
+                <p className="mt-1 text-sky-900">
+                  Every reviewed signal is deterministically routed to the harness lane where it could be evaluated or
+                  ingested. Routing is not adoption, equivalence, endorsement or measurement.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {Object.entries(layerORouteCounts).map(([route, count]) => (
+                    <span key={route} className="rounded-full border border-sky-300 bg-white px-3 py-1 font-mono text-[11px] font-semibold">
+                      {route}: {count}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="mt-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm leading-6 text-emerald-950">
+              <p className="font-semibold">Single-system overlap, not primitive exclusivity</p>
+              <p className="mt-2">
+                Closest reviewed signal:{" "}
+                <strong>{closestSignals[0]?.name ?? "—"}</strong>{" "}
+                at <strong>{reaction.category?.max_single_signal_overlap_fraction ?? "—"}</strong> declared dimensions.
+                Full-stack equivalents in this bounded snapshot:{" "}
+                <strong>{reaction.category?.full_stack_collision_count ?? "—"}</strong>.
+              </p>
+              {dimensionsNotSeenAnywhere.length > 0 && (
+                <p className="mt-2">
+                  Dimensions not seen anywhere in this snapshot: {dimensionsNotSeenAnywhere.join(" · ")}.
+                </p>
+              )}
+              <p className="mt-2 text-emerald-900">
+                Phrase/category collisions observed here:{" "}
+                <strong>{reaction.category?.direct_name_collision_count_in_snapshot ?? "—"}</strong>.{" "}
+                {reaction.category?.direct_name_collision_limit}
+              </p>
+            </div>
+          </>
+        )}
+        <p className="mt-5 text-sm text-slate-600">
+          Machine-readable: <a className="underline" href={REACTION_INDEX}>reaction index</a> ·{" "}
+          <a className="underline" href={MARKET_SIGNALS}>pinned market-signal snapshot</a>. The classifier is
+          deterministic; no LLM judge or sentiment score decides the response.
+        </p>
       </section>
 
       <section aria-labelledby="elsewhere" className="mx-auto max-w-4xl px-5 py-12">

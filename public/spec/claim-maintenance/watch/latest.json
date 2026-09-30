@@ -1,0 +1,81 @@
+{
+  "cadence": "weekly",
+  "claim_text_review": {
+    "counts": {
+      "CLAIM_TEXT_EXACT_PRESENT": 23,
+      "CLAIM_TEXT_NOT_FOUND_CURRENT_READ": 6
+    },
+    "interpretation": "Text presence only. EXACT/NORMALIZED_PRESENT means the maintained claim text is still present in the current extracted source while other page bytes moved. NOT_FOUND means the maintained claim text was not found in this read and requires human review. Neither state establishes truth, falsity, motive, endorsement or service quality.",
+    "moved_claims_reviewed": 29,
+    "unique_source_reads": 11
+  },
+  "claims_touched": [
+    "CL-1",
+    "CL-3",
+    "CL-4",
+    "CL-5",
+    "ON-1",
+    "ON-2"
+  ],
+  "discipline": "an observed change is a prompt for a human to look. This loop makes no allegation, sends nothing to any party named in the registry, and never edits a published file",
+  "generated_by": "scripts/claims/watch_run.py + scripts/claims/review_moved_claims.mjs",
+  "observed_change_kinds": {
+    "dated_claim_has_reached_its_resolution_date": 1,
+    "interval_past_a_feed's_own_declared_heartbeat": 1,
+    "source_digest_differs_from_the_recorded_read": 29,
+    "source_not_reachable_this_run": 1
+  },
+  "observed_changes_count": 32,
+  "ran_at_utc": "2026-09-30T04:17:03Z",
+  "registry_reread": {
+    "claimreg-ai-assurance-and-settlement-2026-09-23-rev2.json": {
+      "claims_read": 62,
+      "digests_that_moved": 21,
+      "error": null,
+      "no_comparable_recorded_digest": 0,
+      "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+      "unreachable_this_run": 0
+    },
+    "claimreg-hiring-platforms-2026-09-24-rev2.json": {
+      "claims_read": 29,
+      "digests_that_moved": 8,
+      "error": null,
+      "no_comparable_recorded_digest": 0,
+      "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+      "unreachable_this_run": 0
+    },
+    "claimreg-ondo-chainlink-2026-09-22-rev2.json": {
+      "claims_read": 8,
+      "digests_that_moved": 0,
+      "error": null,
+      "no_comparable_recorded_digest": 7,
+      "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+      "unreachable_this_run": 1
+    }
+  },
+  "review_required_claim_ids": [
+    "AN-2",
+    "CR-2",
+    "CS-1",
+    "CS-2",
+    "CS-3",
+    "CS-4"
+  ],
+  "run_id": "20260930T041401Z",
+  "schema": "csoai.claim-maintenance.watch-summary/0.1",
+  "source_receipt_sha256": "760974e2f21545040463ff5ce943ec6d6400d104de25e2378c8bbafe007ad6ec",
+  "states": {
+    "CL-1": "CLAIM_MEASURED",
+    "CL-3": "CLAIM_MEASURED",
+    "CL-4": "BASELINE_RECORDED",
+    "CL-5": "CLAIM_MEASURED",
+    "ON-1": "BASELINE_RECORDED",
+    "ON-2": "BASELINE_RECORDED"
+  },
+  "what_this_does_not_mean": [
+    "a moved source digest is not a finding about truth or falsity",
+    "claim text not found on one current read is a review trigger, not an allegation",
+    "an unreachable source is inconclusive and is never normalized to absence",
+    "this watch summary is not a replacement for the immutable capture registries"
+  ]
+}

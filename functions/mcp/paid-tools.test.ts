@@ -89,20 +89,7 @@ const call = async (
   return decode(response, body.id);
 };
 
-const FREE_TWELVE = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-  "x402_trust",
-  "mcp_trust",
-  "measurement_index",
-  "verify_capsule",
-  "server_evidence",
-];
+const FREE_NAMES = (FREE as { tools: Array<{ name: string }> }).tools.map((t) => t.name);
 const PAID_FOUR = [
   "commission_card",
   "art50_marking_evidence",
@@ -225,12 +212,12 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp tools/list — twelve free + four paid, catalogue free, nothing labelled safe", () => {
-  it("lists the free twelve first and the paid four after, one definitions file each", async () => {
+describe("/mcp tools/list — declared free fleet + four paid, catalogue free, nothing labelled safe", () => {
+  it("lists the declared free fleet first and the paid four after, one definitions file each", async () => {
     const r = await call(rpc("tools/list"));
     const names = r.result.tools.map((t: { name: string }) => t.name);
-    expect(names).toEqual([...FREE_TWELVE, ...PAID_FOUR]);
-    expect((FREE as { tools: unknown[] }).tools).toHaveLength(12);
+    expect(names).toEqual([...FREE_NAMES, ...PAID_FOUR]);
+    expect((FREE as { tools: unknown[] }).tools).toHaveLength(FREE_NAMES.length);
     expect((PAID as { tools: unknown[] }).tools).toHaveLength(4);
     expect([...PAID_TOOL_NAMES]).toEqual(PAID_FOUR);
   });
@@ -264,13 +251,13 @@ describe("/mcp tools/list — twelve free + four paid, catalogue free, nothing l
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
 
-  it("the free twelve definitions are byte-identical to what the stdio server reads (no drift)", async () => {
+  it("the free definitions are byte-identical to what the stdio server reads (no drift)", async () => {
     const { readFileSync } = await import("node:fs");
     const canonical = JSON.parse(
       readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8"),
     );
     expect(canonical.tools.map((t: { name: string }) => t.name)).toEqual(
-      FREE_TWELVE,
+      FREE_NAMES,
     );
     expect(
       canonical.tools.some((t: { name: string }) => PAID_FOUR.includes(t.name)),

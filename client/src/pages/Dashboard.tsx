@@ -52,6 +52,37 @@ interface DashboardStats {
   cards?: { count: number; signed: number };
 }
 
+interface ClaimMaintenanceWatch {
+  ran_at_utc?: string;
+  observed_changes_count?: number;
+  review_required_claim_ids?: string[];
+  claim_text_review?: {
+    moved_claims_reviewed?: number;
+    counts?: Record<string, number>;
+  };
+}
+
+interface ClaimMaintenanceReaction {
+  as_of?: string;
+  category?: {
+    max_single_signal_overlap_fraction?: string;
+    full_stack_collision_count?: number;
+    direct_name_collision_count_in_snapshot?: number;
+  };
+  signals?: Array<{ reaction: string; layer_o_route?: string }>;
+  layer_o_routing?: { counts?: Record<string, number>; meaning?: string };
+}
+
+interface CorrectionsLedger {
+  corrections?: unknown[];
+}
+
+async function fetchJsonOrNull<T>(url: string): Promise<T | null> {
+  const r = await fetch(url, { headers: { accept: "application/json" } });
+  if (!r.ok) return null;
+  return r.json();
+}
+
 /** The estate census, read live. It is deliberately a SEPARATE query from the dashboard stats:
  *  the census is not a dashboard statistic, it is an inventory, and conflating the two is how a
  *  reader comes to believe an inventory count is a measurement count. */
@@ -84,6 +115,7 @@ const frameworkCompliance: { name: string }[] = [
 
 const quickActions = [
   { label: "Open GSPC board", href: "/dashboard?tab=board", icon: Shield },
+  { label: "Claim Maintenance", href: "/claim-maintenance", icon: RefreshCw },
   { label: "Verify a card", href: "/gspc-verify", icon: FileCheck },
   { label: "Request measurement", href: "/assess", icon: FileCheck },
   { label: "Open Council chat", href: "/dashboard?tab=home", icon: Users },
@@ -102,6 +134,22 @@ export default function Dashboard() {
   const { data: estateIndex } = useQuery({
     queryKey: ["estate-index"],
     queryFn: fetchEstateIndex,
+    staleTime: 60_000,
+  });
+
+  const { data: claimWatch } = useQuery({
+    queryKey: ["claim-maintenance-watch"],
+    queryFn: () => fetchJsonOrNull<ClaimMaintenanceWatch>("/api/claim-maintenance-watch"),
+    staleTime: 60_000,
+  });
+  const { data: claimReaction } = useQuery({
+    queryKey: ["claim-maintenance-reaction"],
+    queryFn: () => fetchJsonOrNull<ClaimMaintenanceReaction>("/api/claim-maintenance-reaction"),
+    staleTime: 60_000,
+  });
+  const { data: corrections } = useQuery({
+    queryKey: ["public-corrections-ledger"],
+    queryFn: () => fetchJsonOrNull<CorrectionsLedger>("/api/corrections"),
     staleTime: 60_000,
   });
 
@@ -312,6 +360,59 @@ export default function Dashboard() {
             );
           })}
         </div>
+
+        <Card data-testid="claim-maintenance-control-loop" className="border-emerald-200/70 bg-emerald-50/40">
+          <CardHeader className="pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <RefreshCw className="h-4 w-4 text-emerald-700" />
+                  Claim Maintenance counter engine
+                </CardTitle>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Source changes prompt review; they are never silently upgraded into findings.
+                </p>
+              </div>
+              <Link href="/claim-maintenance">
+                <Button variant="outline" size="sm">Open category record</Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+              {[
+                ["Observed change prompts", claimWatch?.observed_changes_count],
+                ["Review required", claimWatch?.review_required_claim_ids?.length],
+                ["Category signals", claimReaction?.signals?.length],
+                ["Layer O adapter lanes", claimReaction?.layer_o_routing?.counts ? Object.keys(claimReaction.layer_o_routing.counts).length : undefined],
+                ["Our dated corrections", corrections?.corrections?.length],
+              ].map(([label, value]) => (
+                <div key={String(label)} className="rounded-xl border border-emerald-950/10 bg-white px-4 py-3">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">{label}</p>
+                  <p className="mt-1 text-2xl font-black tabular-nums text-slate-950">
+                    {value == null ? "—" : String(value)}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-600">
+              <a className="underline underline-offset-2" href="/api/claim-maintenance-watch">latest reread</a>
+              <a className="underline underline-offset-2" href="/api/claim-maintenance-reaction">market reaction index</a>
+              <a className="underline underline-offset-2" href="/api/corrections">corrections ledger</a>
+              <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority.json">priority record</a>
+              <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority-witness.json">priority witness</a>
+              <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority-snapshots/index.json">priority evolution</a>
+              <span>
+                Closest single-system overlap: {claimReaction?.category?.max_single_signal_overlap_fraction ?? "—"} · full-stack equivalents in snapshot: {claimReaction?.category?.full_stack_collision_count ?? "—"}
+              </span>
+            </div>
+            <p className="mt-3 text-xs leading-5 text-slate-600">
+              Category overlap is not legal ownership or equivalence. A correction records our own publication history.
+              A source digest moving is a review trigger, not a claim that anyone is wrong. Layer O routing says where a
+              primitive could be evaluated or ingested; it is not evidence that CSOAI adopted or measured that primitive.
+            </p>
+          </CardContent>
+        </Card>
 
         {/* PDCA is account data, not a relabel of public GSPC/card/fleet counts. */}
         {pdcaStats && pdcaStats.totalCycles > 0 ? <motion.div

@@ -100,16 +100,25 @@ describe("K-1 fleet-size lock: one list of names, every surface agrees", () => {
     expect(sorted((listed.result?.tools ?? []).map((t) => t.name))).toEqual(sorted(LOCK_ALL));
   });
 
-  it("the committed probe (evidence/mcp-registry.json) saw the lock on every reachable server", () => {
-    const servers = (REGISTRY as { servers: Array<{ id: string; status: string; alias_of: string | null; tools?: Named[] }> }).servers;
+  it("the committed probe is exact when it observed the current version, otherwise explicitly historical", () => {
+    const servers = (REGISTRY as { servers: Array<{ id: string; status: string; alias_of: string | null; server_version?: string | null; last_probed?: string | null; tools?: Named[] }> }).servers;
     const probed = servers.filter((s) => s.status === "reachable" && !s.alias_of);
     expect(probed.map((s) => s.id)).toEqual(["csoai-gspc-mcp", "csoai-gspc-mcp-stdio"]);
-    for (const s of probed) {
-      expect(sorted((s.tools ?? []).map((t) => t.name)), `${s.id} probe disagrees with the lock`).toEqual(sorted(LOCK_ALL));
+    const current = probed.filter((s) => s.server_version === REGISTRY_DESCRIPTOR.version);
+    for (const s of current) {
+      expect(sorted((s.tools ?? []).map((t) => t.name)), `${s.id} current-version probe disagrees with the lock`).toEqual(sorted(LOCK_ALL));
     }
-    // The row count /api/tools reports as `total` is (server × tool); the fleet is the distinct set.
-    const distinct = new Set(probed.flatMap((s) => (s.tools ?? []).map((t) => t.name)));
-    expect(distinct.size).toBe(LOCK.fleet_size);
+    for (const s of probed.filter((row) => row.server_version !== REGISTRY_DESCRIPTOR.version)) {
+      expect(s.last_probed, `${s.id} historical probe must carry its observation time`).toBeTruthy();
+      expect(s.server_version, `${s.id} historical probe must name the version it actually saw`).toBeTruthy();
+      expect(s.server_version).not.toBe(REGISTRY_DESCRIPTOR.version);
+    }
+    if (current.length) {
+      const distinct = new Set(current.flatMap((s) => (s.tools ?? []).map((t) => t.name)));
+      expect(distinct.size).toBe(LOCK.fleet_size);
+    } else {
+      expect(probed.every((s) => s.server_version !== REGISTRY_DESCRIPTOR.version)).toBe(true);
+    }
   });
 
   it("every descriptor that states a count states the locked one", () => {

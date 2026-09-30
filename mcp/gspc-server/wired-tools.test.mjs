@@ -6,30 +6,13 @@
  * Spawns index.mjs — not a reimplementation.
  */
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 
-const FREE = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-  "x402_trust",
-  "mcp_trust",
-  "measurement_index",
-  "verify_capsule",
-  "server_evidence",
-];
-const PAID = [
-  "commission_card",
-  "art50_marking_evidence",
-  "rwa_evidence",
-  "receipts_batch",
-];
+const FREE = JSON.parse(readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8")).tools.map((t) => t.name);
+const PAID = JSON.parse(readFileSync(new URL("./paid-tools.json", import.meta.url), "utf8")).tools.map((t) => t.name);
 const ALL = [...FREE, ...PAID];
 
 const routeReceipt = Buffer.from(
@@ -166,6 +149,8 @@ const freeCalls = {
   measurement_index: {},
   verify_capsule: { capsule_json: "{}" },
   server_evidence: { endpoint_url: "https://nobody.example/mcp" },
+  claim_maintenance_watch: {},
+  claim_maintenance_reaction: {},
 };
 const freeResults = new Map();
 for (const name of FREE) {

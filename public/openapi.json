@@ -1158,6 +1158,38 @@
         "summary": "POST /api/checkout \u2014 public door is closed."
       }
     },
+    "/api/claim-maintenance-reaction": {
+      "get": {
+        "description": "GET /api/claim-maintenance-reaction \u2014 deterministic category-reaction index.",
+        "operationId": "get__api_claim-maintenance-reaction",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/claim-maintenance-reaction \u2014 deterministic category-reaction index."
+      }
+    },
+    "/api/claim-maintenance-watch": {
+      "get": {
+        "description": "GET /api/claim-maintenance-watch \u2014 latest bounded Claim Maintenance watch summary.",
+        "operationId": "get__api_claim-maintenance-watch",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "GET /api/claim-maintenance-watch \u2014 latest bounded Claim Maintenance watch summary."
+      }
+    },
     "/api/clarity": {
       "get": {
         "description": "",
@@ -13318,7 +13350,7 @@
       "why_no_eip712": "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 signer; eip712 would require a key nobody has provisioned, so we emit none rather than a format we cannot produce"
     },
     "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-    "public_operations": 110,
+    "public_operations": 112,
     "quarantined": [
       {
         "buyable": false,

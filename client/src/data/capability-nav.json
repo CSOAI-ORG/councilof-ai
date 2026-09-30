@@ -9,7 +9,10 @@
       "api-arena-scoreboard",
       "api-art50-marking-evidence-post",
       "api-board-sign-post",
+      "api-claim-maintenance-reaction",
+      "api-claim-maintenance-watch",
       "api-commissions",
+      "api-corrections",
       "api-eunomia-data-post",
       "api-evidence-bundle-post",
       "api-feeds-provider-diff-post",
@@ -85,6 +88,28 @@
       "method": "POST"
     },
     {
+      "id": "api-claim-maintenance-reaction",
+      "kind": "http",
+      "name": "Claim Maintenance reaction index",
+      "description": "Deterministic market/category reaction index for Claim Maintenance. Serves the committed comparison of adjacent commercial products, standards, research and open-source projects against the published Claim Maintenance dimension set, with bounded reaction classes and no LLM judge. Primitive overlap is not equivalence; category-name collisions do not establish legal ownership, endorsement, infringement or trademark status.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/claim-maintenance-reaction",
+      "method": "GET"
+    },
+    {
+      "id": "api-claim-maintenance-watch",
+      "kind": "http",
+      "name": "Claim Maintenance latest watch",
+      "description": "Latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids while preserving the rule that a changed page is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
+      "audience": "both",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/claim-maintenance-watch",
+      "method": "GET"
+    },
+    {
       "id": "api-commissions",
       "kind": "http",
       "name": "Commissions",
@@ -93,6 +118,17 @@
       "lifecycle": "LIVE",
       "payment": "free",
       "path": "/api/commissions",
+      "method": "GET"
+    },
+    {
+      "id": "api-corrections",
+      "kind": "http",
+      "name": "Corrections",
+      "description": "Free public corrections ledger. Each dated entry records what CSOAI published, what was wrong or overstated, how the issue was detected, and the correction/supersession state. Corrections are evidence about CSOAI's own publication history, not a score of third parties.",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "path": "/api/corrections",
       "method": "GET"
     },
     {

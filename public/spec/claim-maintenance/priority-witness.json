@@ -1,0 +1,44 @@
+{
+  "priority_summary": {
+    "full_stack_collision_count": 0,
+    "known_prior_phrase_use_count": 3,
+    "market_signal_count": 31,
+    "max_single_signal_overlap_fraction": "6/16",
+    "standards_contribution_record_count": 4,
+    "technical_profile_dimension_count": 16
+  },
+  "reader_rule": "Publication priority, signature, root inclusion, transparency witnessing, OTS stamping and Bitcoin anchoring are separate evidence states. None establishes trademark ownership, correctness, certification or endorsement.",
+  "root_inclusion": {
+    "reason": "The public root is a card-root over its declared card leaf rule. This priority artifact is not claimed as one of those card leaves.",
+    "root_as_of": "2026-09-22T08:54:02Z",
+    "root_kind": "csoai.public-root/v1",
+    "root_merkle": "40ce3833118fab76a98c55429a5b06c7c3051915780893f3ab60a25cb31ac0a4",
+    "state": "NOT_EVIDENCED_IN_CURRENT_CARD_ROOT"
+  },
+  "schema": "csoai.claim-maintenance-priority-witness/0.1",
+  "signature": {
+    "reason": "No board-sign sidecar exists for this priority artifact in the current source tree. Signing capability is a separate authority lane.",
+    "state": "NOT_BOARD_SIGNED"
+  },
+  "subject": {
+    "bytes": 6677,
+    "category": "Claim Maintenance",
+    "path": "/spec/claim-maintenance/priority.json",
+    "schema": "csoai.claim-maintenance-priority/0.2",
+    "sha256": "aaa95672c51fec0f26e21afbf54852de1d8996aa63b5aa1cfd8ff35efee63ae4"
+  },
+  "timestamp": {
+    "bitcoin_block_heights": [],
+    "chain_verified": false,
+    "meaning": "Calendars accepted the digest, but no Bitcoin block-header attestation is present. STAMPED is not ANCHORED.",
+    "pending_calendars": [
+      "https://alice.btc.calendar.opentimestamps.org",
+      "https://bob.btc.calendar.opentimestamps.org"
+    ],
+    "proof": "/spec/claim-maintenance/priority.json.ots",
+    "proof_binds_to_target": true,
+    "proof_bytes": 546,
+    "proof_sha256": "32cde25646b327cd4d2cf5e5bae68d1fccafb9679fe9d2d4734ea4d51a3d18ff",
+    "state": "STAMPED_PENDING_BITCOIN"
+  }
+}

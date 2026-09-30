@@ -113,8 +113,42 @@ function sharedToolSummary(
       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
     case "mcp_trust":
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
+    case "claim_maintenance_watch":
+      return `${payload.state ?? "?"} — Claim Maintenance reread summary; changed bytes are review triggers, never findings by themselves.`;
+    case "claim_maintenance_reaction":
+      return `${payload.state ?? "?"} — deterministic Claim Maintenance market/category reaction index; overlap is not equivalence or legal ownership.`;
     default:
       return name;
+  }
+}
+
+async function claimMaintenanceReadTool(origin: string, path: string) {
+  const source = `${origin}${path}`;
+  try {
+    const r = await fetch(source, { headers: { accept: "application/json" } });
+    if (!r.ok) {
+      return {
+        state: "UNREACHABLE",
+        source,
+        http_status: r.status,
+        reason: `GET ${path} returned HTTP ${r.status}`,
+        not_a_certification: true,
+      };
+    }
+    const body = await r.json() as Record<string, unknown>;
+    return {
+      ...body,
+      state: "VALID",
+      source,
+      not_a_certification: true,
+    };
+  } catch (e) {
+    return {
+      state: "UNREACHABLE",
+      source,
+      reason: e instanceof Error ? e.message : String(e),
+      not_a_certification: true,
+    };
   }
 }
 
@@ -144,7 +178,11 @@ export async function sharedToolResult(
                   ? await x402TrustTool(origin)
                   : name === "mcp_trust"
                     ? await mcpTrustTool(origin)
-                    : await verifyCardThreeState(args, origin);
+                    : name === "claim_maintenance_watch"
+                      ? await claimMaintenanceReadTool(origin, "/api/claim-maintenance-watch")
+                      : name === "claim_maintenance_reaction"
+                        ? await claimMaintenanceReadTool(origin, "/api/claim-maintenance-reaction")
+                        : await verifyCardThreeState(args, origin);
   return {
     content: [
       {

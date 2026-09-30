@@ -1,0 +1,54 @@
+{
+  "name": "Council of AI — claim_maintenance_watch",
+  "description": "Read the latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids. A changed source is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/claim-maintenance/",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "claim_maintenance_watch",
+      "name": "claim_maintenance_watch",
+      "description": "Read the latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids. A changed source is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
+      "tags": [
+        "claim-maintenance",
+        "monitoring",
+        "measurement"
+      ],
+      "examples": [
+        "POST https://councilof.ai/mcp tools/call {\"name\":\"claim_maintenance_watch\",\"arguments\":{}}"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-ownership-opinion"
+  ],
+  "mcp_tool": "claim_maintenance_watch",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:claim_maintenance_watch"
+}

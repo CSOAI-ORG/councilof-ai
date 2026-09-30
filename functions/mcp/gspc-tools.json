@@ -813,6 +813,78 @@
           "state"
         ]
       }
+    },
+    {
+      "name": "claim_maintenance_watch",
+      "title": "Claim Maintenance latest reread",
+      "description": "Read the latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids. A changed source is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
+      "annotations": {
+        "title": "Claim Maintenance latest reread",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "VALID",
+              "UNREACHABLE"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "claim_maintenance_reaction",
+      "title": "Claim Maintenance reaction index",
+      "description": "Read the deterministic Claim Maintenance market/category reaction index. Compares adjacent products, standards, research and open-source projects against the published dimension set. Primitive overlap is not equivalence; phrase/category collisions do not establish legal ownership, endorsement, infringement or trademark status.",
+      "annotations": {
+        "title": "Claim Maintenance reaction index",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "VALID",
+              "UNREACHABLE"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "additionalProperties": true
+      }
     }
   ]
 }
