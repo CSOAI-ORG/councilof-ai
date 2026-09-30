@@ -244,7 +244,7 @@ export default function ClaimMaintenance() {
           <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {[
               ["1 · Capture", REGISTER, `${reg?.totals?.claims ?? "—"} claim rows`],
-              ["2 · Recheck", CLAIM_EVENTS, `${recheckCounts.CHANGED_CONFIRMED ?? 0} changed · ${recheckCounts.FETCH_FAILED ?? 0} fetch failed · ${eventCount ?? "—"} chained events`],
+              ["2 · Recheck", CLAIM_EVENTS, `${recheckCounts.CHANGED_CONFIRMED ?? 0} changed · ${recheckCounts.FETCH_FAILED ?? 0} not read (FETCH_FAILED) · ${eventCount ?? "—"} chained events`],
               ["3 · Measure", "/api/gspc", liveState?.public_count?.value ?? "live board"],
               ["4 · Correct", CORRECTIONS, `${correctionCount ?? "—"} corrections`],
               ["5 · Quote", LIVE_STATE, "derived state by field name"],

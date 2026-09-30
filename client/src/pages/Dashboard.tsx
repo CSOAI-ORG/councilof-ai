@@ -330,7 +330,7 @@ export default function Dashboard() {
           <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             {[
               ["Capture", "/api/claims/register", maintainedSubjects != null ? `${maintainedSubjects} maintained subjects` : "Register readback unavailable"],
-              ["Recheck", "/api/claims/events", recheckState?.counts ? `${recheckState.counts.CHANGED_CONFIRMED ?? 0} changed · ${recheckState.counts.FETCH_FAILED ?? 0} fetch failed · ${eventChain?.lines ?? "—"} chained events` : "Recheck ledger unavailable"],
+              ["Recheck", "/api/claims/events", recheckState?.counts ? `${recheckState.counts.CHANGED_CONFIRMED ?? 0} changed · ${recheckState.counts.FETCH_FAILED ?? 0} not read (FETCH_FAILED) · ${eventChain?.lines ?? "—"} chained events` : "Recheck ledger unavailable"],
               ["Measure", "/api/gspc", liveState?.public_count?.value ?? "Board unavailable"],
               ["Correct", "/api/corrections", correctionsLedger?.count != null ? `${correctionsLedger.count} ledger entries` : "Ledger unavailable"],
               ["Quote", "/api/state", "Derived state by field name"],
