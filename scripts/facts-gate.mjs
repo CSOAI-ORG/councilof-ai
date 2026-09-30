@@ -143,7 +143,7 @@ const CORRECTION_CTX =
 const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
 
 // "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
-const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
+const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?|pointers?)\b/i;
 
 // "22 axes measured" — postfix-qualified MEASURED count (the live totals.lid grammar).
 // Delegated to ruleMeasuredOverclaim; see the note inside ruleAxisCount.
@@ -216,6 +216,27 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 
     const before = text.slice(Math.max(0, m.index - 40), m.index);
     if (BREAKDOWN_BEFORE.test(before)) continue;
+    // Run-matrix dimensions are counts scoped to that historical run, not the
+    // current board total: "10 models x 14 axes" means a 10x14 experiment.
+    if (/\b\d{1,3}\s+models?\s*[x×]\s*$/i.test(before)) continue;
+    // The frozen cross-hardware reproduction page renders its historical matrix as
+    // "154 cards · 11 models · 14 axes · 9,757 items". Scope that exact route and
+    // matrix grammar only; current board prose on the route still fails.
+    if (
+      /^research\/cross-hardware-reproducibility\/index\.html$/.test(file) &&
+      /\b\d{1,3}\s+models?\s*[·.]\s*$/i.test(before) &&
+      /^\s*[·.]\s*[\d,]+\s+items?\b/i.test(text.slice(COUNT_RE.lastIndex))
+    ) continue;
+    // The dated monthly State report renders the first batch as "1 model, 14 axes".
+    // Scope only this named historical table; a current board claim on the same page
+    // must still fail.
+    if (
+      /^state\/\d{4}-\d{2}\/index\.html$/.test(file) &&
+      /\bCross-runtime reproduction of signed measurement cards\b/i.test(
+        ctx(text, m.index, COUNT_RE.lastIndex, 320)
+      ) &&
+      /\bScope\s+\d{1,3}\s+models?\s*,\s*$/i.test(before)
+    ) continue;
     // Derived triple 22·22·0 with labels "axes · measured · unmeasured".
     // Prerender concatenates the heading number with the next paragraph, so
     // COUNT_RE sees "0 axes". That 0 is unmeasured_axes, not a board-total claim.
@@ -227,6 +248,13 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
     // carry X" against a 22-axis board is still a contradiction and still fails.
     if (n < liveCount && SUBSET_PREDICATE_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
+    // An enumerated subset such as "Separation on 7 axes (governance, ..., care)"
+    // names its members on the spot. Exempt only when the parenthesis contains
+    // exactly n names and n is smaller than the board.
+    if (n < liveCount) {
+      const en = /^\s*\(([^()]{1,400})\)/.exec(text.slice(COUNT_RE.lastIndex));
+      if (en && en[1].split(/\s*,\s*|\s+and\s+/).filter(Boolean).length === n) continue;
+    }
 
     // A published correction quotes the wrong number on purpose.
     if (CORRECTION_CTX.test(ctx(text, m.index, COUNT_RE.lastIndex, 300))) continue;
@@ -392,6 +420,9 @@ function ruleAnchorCount(facts, file, text, add) {
     const n = WORDS[raw] ?? parseInt(raw, 10);
     if (!Number.isFinite(n) || n <= declared) continue;   // understatement is safe
     const window = ctx(text, m.index, re.lastIndex, 130);
+    // "... block 968674 anchors.json ..." is a block height followed by a filename,
+    // not a claim of 968674 cryptographic anchors.
+    if (/^\.json\b/i.test(text.slice(re.lastIndex))) continue;
     if (/\bplanned\b|\bwill\b|\bwould\b|\bonce\b|\bnot yet\b|\bfund(s|ing|ed)?\b|\boutcome\b/i.test(window)) {
       continue;  // future/funded framing is honest — "OUTCOME: a 4-anchor machine"
     }
@@ -444,6 +475,15 @@ function ruleCapabilityTense(facts, file, text, add) {
       // Subject scoping: is this file the LIVE rail's subject rather than this rail's?
       const scope = RAIL_SUBJECT_EXEMPT[rail.id];
       if (scope && scope.files.test(file) && !scope.unless.test(window)) continue;
+
+      // Machine evidence that explicitly says OTS is absent is not a present-tense
+      // claim that the planned atom-anchoring rail is live.
+      if (
+        rail.id === "ots_atom_anchor" &&
+        file === "evidence/index.json" &&
+        (/"ots"\s*:\s*\{[^}]{0,180}"state"\s*:\s*"none"/i.test(window) ||
+         /\bno\s+(?:ots|opentimestamps)\s+proof\b/i.test(window))
+      ) continue;
 
       // Exonerate: the copy already labels the honest status.
       if (/\bunmeasured\b|\bdevnet\b|\bplanned\b|\bnot yet\b|\bwill\b|\bwould\b|\bonce\b|\bonly when\b|\bcoming\b|\brefuses? to mint\b|\bnot attested\b|\bnot located\b/i.test(window)) {
@@ -550,6 +590,14 @@ function selftestCases(N, M, U) {
   ["prohibition form still passes", `<p>Cite live totals.public_count — do not invent ${N} axes.</p>`, false],
   [`${N} axes is the observed slot count and matches the live board`, `<p>The board carries ${N} axes across both families.</p>`, false],
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
+  ["qualified axis-pointer count is not a board total", "<p>NIST AI RMF: 12 axis pointers, 0 frozen provisions.</p>", false],
+  ["cross-hardware matrix dimension is historical scope", "<p>Compared 154 cards · 11 models · 14 axes · 9,757 items</p>", false, "research/cross-hardware-reproducibility/index.html"],
+  ["VIOLATION: current board count still fails on research route", "<p>The board currently has 14 axes.</p>", true, "research/cross-hardware-reproducibility/index.html"],
+  ["enumerated subset names exactly its members", "<p>Separation on 3 axes (governance, safety, care) is computed from rows.</p>", false],
+  ["VIOLATION: enumerated subset count exceeds listed members", "<p>Separation on 4 axes (governance, safety, care) is computed from rows.</p>", true],
+  ["run-matrix dimension is not a board-total claim", "<p>Cross-runtime reproduction, batch 2 (10 models x 14 axes)</p>", false],
+  ["dated State reproduction table: first batch scope is historical", "<p>Cross-runtime reproduction of signed measurement cards Measure Batch 1 Batch 2 Scope 1 model, 14 axes 10 models × 14 axes</p>", false, "state/2026-09/index.html"],
+  ["VIOLATION: dated State route still catches a current board-count claim", "<p>Cross-runtime reproduction of signed measurement cards.</p><p>The board currently has 14 axes.</p>", true, "state/2026-09/index.html"],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
   ["honest swept grammar", `<p>${N} axes · ${M} measured — every slot has a run behind it.</p>`, false],
   [`derived triple flattened ${N}·${M}·${U} axes · measured · unmeasured (reproduces 1804 deploy)`, `<p>Living GSPC · derived totals ${N}·${M}·${U} axes · measured · unmeasured — ${N} axis · ${M} measured</p>`, false],
@@ -575,6 +623,7 @@ function selftestCases(N, M, U) {
   ["VIOLATION: atoms asserted OTS-anchored", "<p>Every queued atom is anchored to Bitcoin via OpenTimestamps.</p>", true],
   ["VIOLATION: press releases asserted anchored", "<p>Every press release is signed and anchored on Bitcoin today.</p>", true],
   ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
+  ["honest OTS absence record", '<p>{"ots":{"state":"none","detail":"no OTS proof published alongside this live surface"}}</p>', false, "evidence/index.json"],
   ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
   ["honest conditional verification rule", "<p>Treat OTS as Bitcoin-anchored only when the sidecar derives CONFIRMED_BITCOIN from the proof bytes.</p>", false],
   // ── anchor-count concept rule (2026-09-03) ───────────────────────────────────
@@ -587,6 +636,8 @@ function selftestCases(N, M, U) {
   ["honest: 4-anchor as a funded OUTCOME", "<p>OUTCOME: a 4-anchor machine that gives regulators a single verifiable surface.</p>", false],
   ["honest: planned framing", "<p>A 4-anchor machine is planned once Bitcoin anchoring lands.</p>", false],
   ["map anchor NODES are a different sense and must pass", "<p>6 Anchor nodes · 5 live on the governance globe.</p>", false],
+  ["anchors.json filename after a Bitcoin block height is not an anchor count", "<p>Bitcoin attestation at block 968674 anchors.json contains anchor states.</p>", false],
+  ["VIOLATION: large numeric anchor claim still fails", "<p>968674 anchors secure this measurement.</p>", true],
   // ── unsigned interop scoping (#841 regression) ────────────────────────────────
   // An unsigned run artifact in /interop/ is a DIFFERENT INSTRUMENT from the board.
   // It legitimately says "4 axes" when measuring 4 axes on its own population.
