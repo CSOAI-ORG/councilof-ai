@@ -26,7 +26,7 @@ export const OPENAPI_SPEC = {
       "Three verification states exist: VALID, INVALID, UNCHECKABLE. Absence of a field means UNMEASURED. " +
       "TIE is never a win. A withheld leader (public_leader_state) is a state, not a zero. " +
       "Verify is free; a rank is never sold. GET /api/state joins the existing public authorities; " +
-      "GET /api/claims/register is maintained-claim state; GET /api/corrections is append history. " +
+      "GET /api/claims/register is maintained-claim state; GET /api/claims/events is append-only recheck event history; GET /api/corrections is append history. " +
       "Signature checks are not Actions: use /signed/HOW-TO-VERIFY.md.",
     contact: { name: "CSOAI Ltd", url: "https://councilof.ai", email: "nicholas@csoai.org" },
     license: { name: "Apache-2.0", url: "https://www.apache.org/licenses/LICENSE-2.0" },
@@ -60,6 +60,26 @@ export const OPENAPI_SPEC = {
         description:
           "The existing maintained-claim register. Evidence states are not a score, rank, certification or verdict.",
         responses: { "200": { description: "Claim Maintenance register." } },
+      },
+    },
+    "/api/claims/events": {
+      get: {
+        operationId: "getClaimEvents",
+        summary: "Append-only Claim Maintenance event feed",
+        description:
+          "Serves committed hash-chained JSONL only when the feed, daily head and signed head verify. Event states describe evidence/workflow history; they are not verdicts, scores or corrections by themselves.",
+        parameters: [
+          { name: "since", in: "query", required: false, schema: { type: "integer", minimum: 0 }, description: "Return events from this sequence number onward." },
+        ],
+        responses: { "200": { description: "Verified claim-event JSONL." }, "400": { description: "Bad since value." }, "503": { description: "Feed/head/signature do not verify." } },
+      },
+    },
+    "/api/claims/events/head": {
+      get: {
+        operationId: "getClaimEventsHead",
+        summary: "Verified signed head for the Claim Maintenance event feed",
+        description: "Returns the committed head, signed envelope and verification checks binding them to the feed bytes.",
+        responses: { "200": { description: "Verified event head." }, "503": { description: "Feed/head/signature do not verify." } },
       },
     },
     "/api/corrections": {

@@ -4,7 +4,8 @@ The estate has ONE board authority (`GET https://councilof.ai/api/gspc`), ONE li
 (`GET https://councilof.ai/api/state`) and ONE card-verification rule
 (`/signed/HOW-TO-VERIFY.md`, implemented once in `functions/_lib/cardVerify.ts`). Maintained-claim
 state comes from `GET /api/claims/register`; executed rechecks are
-`/api/state → ledgers.claim_maintenance`; append history comes from `GET /api/corrections`.
+`/api/state → ledgers.claim_maintenance`; the append-only recheck event history is `GET /api/claims/events`
+with verification at `GET /api/claims/events/head`; append history comes from `GET /api/corrections`.
 Every plugin below is a *reader* of those public authorities and a *caller* of the verifier.
 None is a second engine, ledger or scheduler; none certifies; none sells a rank. Verify is free everywhere.
 
@@ -106,7 +107,8 @@ action; the exact steps are in that README.
 Create a GPT → Configure → Actions → **Import from URL** →
 `https://councilof.ai/api/openapi.json`. Authentication: none. The spec exposes only
 what exists, including `getBoard` (`/api/gspc`), `getLiveState` (`/api/state`),
-`getClaimMaintenanceRegister` (`/api/claims/register`), `getCorrections` (`/api/corrections`),
+`getClaimMaintenanceRegister` (`/api/claims/register`), `getClaimEvents` (`/api/claims/events`),
+`getClaimEventsHead` (`/api/claims/events/head`), `getCorrections` (`/api/corrections`),
 `getProof` (`/api/proof?sha=`), `getRoot` (`/root.json`), `getDid`
 (`/.well-known/did.json`), `getCardIndex` (`/signed/card_index.json`) and
 `getCard` (`/signed/cards/{id}.json`). Instruct the GPT to quote fields from their authority
@@ -128,3 +130,8 @@ that freezes a count or introduces a second verifier.
 - npm: `csoai-gspc-mcp@0.2.2` and `csoai-governance-mcp` are marked deprecated on npm while the
   server card pins the former; publishing a new version is an owner action (HELD).
 - Decide whether `public/openapi.json` should be retired in favour of `/api/openapi.json`.
+
+
+### Claim-event authority
+
+`/api/claims/events` is the append-only Claim Maintenance event history. `/api/claims/events/head` verifies the committed feed bytes, hash chain and signed head. It complements, but does not replace, `/api/state → ledgers.claim_maintenance`, which remains authoritative for whether a scheduled re-check was due, ran or failed. Plugins and dashboards read these same public authorities rather than carrying private copies.

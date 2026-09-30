@@ -153,6 +153,8 @@ describe("GET /api/state contract convergence — one flywheel, existing authori
       public_self_claims: "/claims-register.json",
       maintained_claim_state: "/api/claims/register",
       executed_rechecks: "/api/state → ledgers.claim_maintenance",
+      claim_events: "/api/claims/events",
+      claim_events_head: "/api/claims/events/head",
       corrections: "/api/corrections",
       ledger_heads: "/api/state → ledgers.ledgers",
       public_root: "/root.json",
@@ -165,6 +167,12 @@ describe("GET /api/state contract convergence — one flywheel, existing authori
       "QUOTE",
     ]);
     expect(body.ledgers.claim_maintenance.scheduler).toContain("ONE:");
+    expect(body.ledgers.claim_maintenance.event_chain).toMatchObject({
+      authority: "GET /api/claims/events",
+      verify: "GET /api/claims/events/head",
+      verification_state_source: "GET /api/claims/events/head → verification.state",
+    });
+    expect(body.ledgers.claim_maintenance.event_chain.lines).toBeGreaterThan(0);
     expect(body.ledgers.authorities).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ record_type: "claim state of a maintained subject", authority: "GET /api/claims/register" }),

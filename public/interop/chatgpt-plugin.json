@@ -106,6 +106,34 @@
           }
         }
       }
+    },
+    "/claims/events": {
+      "get": {
+        "summary": "Append-only Claim Maintenance event feed \u2014 verified hash chain, never a score or verdict",
+        "operationId": "getClaimEvents",
+        "responses": {
+          "200": {
+            "description": "Claim-event feed"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
+          }
+        }
+      }
+    },
+    "/claims/events/head": {
+      "get": {
+        "summary": "Signed verified head for the Claim Maintenance event feed",
+        "operationId": "getClaimEventsHead",
+        "responses": {
+          "200": {
+            "description": "Verified claim-event head"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
+          }
+        }
+      }
     }
   },
   "tags": [

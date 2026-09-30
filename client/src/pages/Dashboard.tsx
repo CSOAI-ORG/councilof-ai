@@ -71,6 +71,7 @@ type LiveState = {
       run_at?: string | null;
       counts?: Record<string, number> | null;
       checks?: Array<{ registry_id: string; check: string; due: string; outcome: string }>;
+      event_chain?: { authority?: string; verify?: string; as_of?: string | null; lines?: number | null; head_seq?: number | null; last_at?: string | null; bytes_sha256?: string | null; subjects?: number | null };
     };
     ledgers?: LedgerRow[];
   };
@@ -104,6 +105,7 @@ const quickActions = [
   { label: "Open Council chat", href: "/dashboard?tab=home", icon: Users },
   { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
   { label: "Claim Maintenance", href: "/claim-maintenance/", icon: RefreshCw },
+  { label: "Claim events", href: "/api/claims/events", icon: RefreshCw },
   { label: "Claims register", href: "/claims-register", icon: FileCheck },
 ];
 
@@ -132,6 +134,7 @@ export default function Dashboard() {
   const ledgerState = liveState?.ledgers;
   const correctionsLedger = ledgerState?.corrections_in_this_deploy;
   const recheckState = ledgerState?.claim_maintenance;
+  const eventChain = recheckState?.event_chain;
   const maintainedRegister = ledgerState?.ledgers?.find((row) => row.key === "claim-maintenance-register");
   const maintainedSubjects =
     typeof maintainedRegister?.detail?.subjects === "number" ? maintainedRegister.detail.subjects : null;
@@ -180,6 +183,16 @@ export default function Dashboard() {
       color: "text-emerald-700",
       bgColor: "bg-emerald-50",
       description: "Subjects in the maintained-claim register; presence is not a finding or endorsement",
+    },
+    {
+      title: "Claim-event chain",
+      value: eventChain?.lines?.toString() ?? "—",
+      change: eventChain?.head_seq != null ? `head ${eventChain.head_seq} · ${eventChain.subjects ?? "—"} subjects` : "event head unavailable",
+      changeType: "neutral",
+      icon: RefreshCw,
+      color: "text-cyan-700",
+      bgColor: "bg-cyan-50",
+      description: "Append-only Claim Maintenance event history; signed head verifies chain integrity",
     },
     {
       title: "Published corrections",
@@ -317,7 +330,7 @@ export default function Dashboard() {
           <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             {[
               ["Capture", "/api/claims/register", maintainedSubjects != null ? `${maintainedSubjects} maintained subjects` : "Register readback unavailable"],
-              ["Recheck", "/api/state", recheckState?.counts ? `${recheckState.counts.CHANGED_CONFIRMED ?? 0} changed · ${recheckState.counts.FETCH_FAILED ?? 0} fetch failed` : "Recheck ledger unavailable"],
+              ["Recheck", "/api/claims/events", recheckState?.counts ? `${recheckState.counts.CHANGED_CONFIRMED ?? 0} changed · ${recheckState.counts.FETCH_FAILED ?? 0} fetch failed · ${eventChain?.lines ?? "—"} chained events` : "Recheck ledger unavailable"],
               ["Measure", "/api/gspc", liveState?.public_count?.value ?? "Board unavailable"],
               ["Correct", "/api/corrections", correctionsLedger?.count != null ? `${correctionsLedger.count} ledger entries` : "Ledger unavailable"],
               ["Quote", "/api/state", "Derived state by field name"],
@@ -329,7 +342,7 @@ export default function Dashboard() {
             ))}
           </div>
           <p className="mt-4 text-xs leading-5 text-slate-600">
-            Each card links to the authority for that record type. The dashboard is a derived view; it is not a second registry, ledger, scheduler or measurement engine.
+            Each card links to the authority for that record type. Claim-event integrity is independently exposed at <a className="font-semibold text-emerald-800 underline underline-offset-4" href="/api/claims/events/head">the signed event head</a>. The dashboard is a derived view; it is not a second registry, ledger, scheduler or measurement engine.
           </p>
         </section>
 

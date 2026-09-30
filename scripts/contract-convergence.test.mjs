@@ -17,7 +17,7 @@ test("state uses the already-landed ledgers block and names the one-authority fl
 
 test("canonical Actions exposes only existing convergence reads", () => {
   const s = read("functions/api/openapi.json.ts");
-  for (const p of ["/api/state", "/api/claims/register", "/api/corrections"]) {
+  for (const p of ["/api/state", "/api/claims/register", "/api/claims/events", "/api/claims/events/head", "/api/corrections"]) {
     assert.ok(s.includes(`"${p}"`), p);
   }
 });
@@ -28,6 +28,8 @@ test("legacy ChatGPT manifest points to canonical Actions and freezes no board c
   assert.doesNotMatch(JSON.stringify(p.info), /\b\d+-axis\b/i);
   assert.ok(p.paths["/state"]);
   assert.ok(p.paths["/claims/register"]);
+  assert.ok(p.paths["/claims/events"]);
+  assert.ok(p.paths["/claims/events/head"]);
   assert.ok(p.paths["/corrections"]);
   assert.equal(p.paths["/measure"], undefined);
   assert.equal(p.paths["/anchor"], undefined);
@@ -42,8 +44,10 @@ test("site and plugin surfaces point at the same public authorities", () => {
   for (const s of files) {
     assert.ok(s.includes("/api/state"));
     assert.ok(s.includes("/api/corrections"));
+    assert.ok(s.includes("/api/claims/events"));
   }
   for (const s of files) assert.ok(s.includes("/api/claims/register"));
+  assert.ok(files[0].includes("/api/claims/events/head"));
 });
 
 test("plugin descriptor carries no frozen tool or axis count", () => {
