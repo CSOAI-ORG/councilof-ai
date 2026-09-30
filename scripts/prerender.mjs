@@ -105,12 +105,10 @@ const CLIENT_ONLY_FUNCTION_ROUTES = new Set([
   // render browser and the snapshot is refused as BAKED-FETCH-FAILURE (measured 2026-09-29).
   "/tool-commons",
   "/tool-commons/",
-  // /corrections stays client-only too (measured 2026-09-29): a snapshot bakes the live ledger's
-  // entry text, and entries that quote what they withdraw (a price, the withdrawn index sticker, a
-  // signatory claim) turn brand-gate red on dist/client/corrections/index.html. Serving those
-  // quotes to crawlers is an owner call on the ledger, not a prerender change.
-  "/corrections",
-  "/corrections/",
+  // /corrections is snapshotted again from 2026-09-30 (owner goal, journey A: a reader without
+  // JavaScript, a crawler or an agent got an 11 KB shell with no entries). Its ledger read goes
+  // through the /api/ proxy like every other route; a snapshot that bakes a fetch failure is still
+  // refused by snapshotFailure().
   "/mcp-tools",
   "/pricing",
   "/sovereign-pricing",

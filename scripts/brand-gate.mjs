@@ -31,6 +31,13 @@ const DIST = path.resolve(REPO, (process.argv[2] && !process.argv[2].startsWith(
 // TUI 4 weekend checklist — every ship, rendered copy:
 //   certify / CSOAI Certified / sov33 / Inspect model-judge / 2410 stickers /
 //   GPAI Code signature / rank-for-sale / 2 Nov 2026 cliff / MEASURED-INDEX-v0.1.
+// The corrections ledger page is the retraction-history page: every entry states what we published
+// and got wrong, so some entries necessarily quote the withdrawn string (a priced string, the
+// withdrawn index sticker, a third-party signatory count). It is prerendered with its entries from
+// 2026-09-30 (owner goal, journey A: a no-JS reader got an empty shell). Exactly this one built
+// path is exempt, and only from the three rules its entries quote; every other page, and every
+// other rule on this page, is still enforced (the selftest pins both).
+const CORRECTIONS_LEDGER_PAGE = /^\/corrections\/index\.html$/;
 const RULES = [
   {
     id: "retracted_fault_tolerance",
@@ -104,6 +111,7 @@ const RULES = [
     // A page may DISCLOSE the no-pricing rule ("we never charge £/$ per anything") near the hit.
     nearAllow: /free\s+forever|never\s+(?:sold|charge|priced)|no\s+pricing|not\s+for\s+sale|a\s+grade\s+is\s+never/i,
     why: 'HO.2: no pricing on public surfaces — verification is free forever, a grade is never sold. Remove the amount.',
+    allowOn: CORRECTIONS_LEDGER_PAGE,
   },
   {
     id: "internal_strategy_codename",
@@ -115,6 +123,7 @@ const RULES = [
     pattern: /signed the GPAI Code|GPAI Code of Practice signator|we (?:have )?signed (?:the )?GPAI Code/i,
     nearAllow: /do not sign|not a signator|we do not sign|not sign the GPAI/i,
     why: "We are not a GPAI Code signatory. Transparency CoP (detection/marking tool) only, if signed. C2PA remains planned until CR-012 is live.",
+    allowOn: CORRECTIONS_LEDGER_PAGE,
   },
   {
     id: "certify_claim",
@@ -182,6 +191,7 @@ const RULES = [
     pattern: /MEASURED-INDEX-v0\.1/i,
     nearAllow: /over-claim|overclaim|superseded|C-2026-0826-05|withdrawn|do not restore|correction/i,
     why: "C-2026-0826-05: MEASURED-INDEX-v0.1 is withdrawn. Board GET /api/gspc is UNMEASURED until a new card. Do not restore the sticker.",
+    allowOn: CORRECTIONS_LEDGER_PAGE,
   },
   {
     id: "infra_leak",
@@ -315,8 +325,15 @@ if (SELFTEST) {
     ["internal_codenames", "venturi_capsule.py build --adapter operations", null],
     ["internal_codenames", "Pontius carries admitted evidence across rails", null],
     ["internal_codenames", "Laputa", null],
+    ["pricing_leak", "$0.005/card", "/corrections/index.html"],
+    ["gpai_code_signature", "GPAI Code of Practice signatory", "/corrections/index.html"],
+    ["measured_index_sticker", "MEASURED-INDEX-v0.1", "/corrections/index.html"],
   ];
   let bad = 0;
+  // The corrections-ledger exemption is one built path, never a prefix or a lookalike.
+  for (const p of ["/pricing/index.html", "/corrections-archive/index.html", "/x/corrections/index.html", "/corrections/other.html", "/index.html"]) {
+    if (CORRECTIONS_LEDGER_PAGE.test(p)) { console.error(`\u2716 selftest: corrections exemption leaks to ${p}`); bad++; }
+  }
   for (const [id, mustCatch, mustAllow] of CASES) {
     const rule = RULES.find((r) => r.id === id);
     if (!rule) { console.error(`\u2716 selftest: rule "${id}" no longer exists`); bad++; continue; }

@@ -121,7 +121,10 @@ function sharedToolSummary(
         ? `${payload.state ?? "?"} — ${payload.reason}`
         : `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
-      return `${payload.state ?? "?"} — inclusion against live merkle.`;
+      // A not-a-leaf answer leads with the corpus note, so "INVALID" is never read as "forged".
+      return typeof payload.corpus_note === "string"
+        ? `${payload.state ?? "?"} — ${payload.corpus_note}`
+        : `${payload.state ?? "?"} — inclusion against live merkle.`;
     case "x402_trust":
       return `${payload.state ?? "?"} — ${(payload.headline as string) || "catalog trust counts"}.`;
     case "mcp_trust":

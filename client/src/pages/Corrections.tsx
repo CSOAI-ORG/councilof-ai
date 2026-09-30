@@ -7,9 +7,10 @@
  * newest first, with what was wrong, how it was caught and the fix, plus the ledger's own
  * signature state printed verbatim (the endpoint earns it per request; this page types none).
  *
- * The ledger is read at runtime, not baked in: /api/corrections is a Pages Function, absent on
- * the prerender host, so /corrections is a client-only route in scripts/prerender.mjs and its
- * crawler-visible head comes from client/src/data/seo-head.json. No count is typed here.
+ * The ledger is read at runtime and also snapshotted: scripts/prerender.mjs renders this route
+ * through its /api/ proxy (since 2026-09-30), so a reader without JavaScript, a crawler or an agent
+ * gets the entries at build time; the browser re-reads GET /api/corrections on load. No count is
+ * typed here.
  */
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
