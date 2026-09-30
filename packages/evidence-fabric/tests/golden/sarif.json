@@ -1,0 +1,377 @@
+{
+ "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json",
+ "runs": [
+  {
+   "properties": {
+    "note": "Evidence, not a verdict. 'open' means could not be determined, never a pass."
+   },
+   "results": [
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:c322839afde80b474bbab2d09e9ae21d3d15eb7eac1b74f9b5cb6fa95bb2df72"
+     },
+     "guid": "c322839a-fde8-4b47-8bba-b2d09e9ae21d",
+     "kind": "pass",
+     "level": "none",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-1.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 1: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:c322839afde80b474bbab2d09e9ae21d3d15eb7eac1b74f9b5cb6fa95bb2df72",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "csoai",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": "DIVERGENT",
+       "got": "DIVERGENT",
+       "id": "fixture-control"
+      },
+      "observed_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "CONSISTENT",
+      "subject_kind": "mcp_server"
+     },
+     "ruleId": "fixture-probe"
+    },
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:7bca70290fe9bc1d5ab0302106b33bd86c7e3403738d265d10a346e8bf7a730a"
+     },
+     "guid": "7bca7029-0fe9-4c1d-9ab0-302106b33bd8",
+     "kind": "fail",
+     "level": "warning",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-2.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 2: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:7bca70290fe9bc1d5ab0302106b33bd86c7e3403738d265d10a346e8bf7a730a",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "csoai",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": "DIVERGENT",
+       "got": "DIVERGENT",
+       "id": "fixture-control"
+      },
+      "observed_sha256": "9bf4a7c5e77c60b190f0597a98ca5768fb73683df1515d7f0899eb18a1765b62",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "DIVERGENT",
+      "subject_kind": "mcp_server"
+     },
+     "ruleId": "fixture-probe"
+    },
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:63fbd25f76c8b400760c5baab19367c88602d1bebbe65c6f1f3bb6f200ca600e"
+     },
+     "guid": "63fbd25f-76c8-4400-b60c-5baab19367c8",
+     "kind": "review",
+     "level": "none",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-3.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 3: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:63fbd25f76c8b400760c5baab19367c88602d1bebbe65c6f1f3bb6f200ca600e",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "csoai",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": "DIVERGENT",
+       "got": "DIVERGENT",
+       "id": "fixture-control"
+      },
+      "observed_sha256": "d5df51ea2660efe0fe4f517ad09583b3fbabea31c348d2854f62db672bb75c33",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "PARTIAL",
+      "subject_kind": "mcp_server"
+     },
+     "ruleId": "fixture-probe"
+    },
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:69a55c5222a5478c19778a3add3a2362785edba1c3f86dd2cf44b5ad2ee45240"
+     },
+     "guid": "69a55c52-22a5-478c-9977-8a3add3a2362",
+     "kind": "open",
+     "level": "none",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-4.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 4: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:69a55c5222a5478c19778a3add3a2362785edba1c3f86dd2cf44b5ad2ee45240",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "csoai",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": null,
+       "got": "NOT_RUN",
+       "id": null
+      },
+      "observed_sha256": "d5df51ea2660efe0fe4f517ad09583b3fbabea31c348d2854f62db672bb75c33",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "UNMEASURED",
+      "subject_kind": "mcp_server"
+     },
+     "ruleId": "fixture-probe"
+    },
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:30fa2a9cb2588ad75309a17cb839b496a439b5ca78d3735ab2b688f5079865d8"
+     },
+     "guid": "30fa2a9c-b258-4ad7-9309-a17cb839b496",
+     "kind": "open",
+     "level": "none",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-5.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 5: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:30fa2a9cb2588ad75309a17cb839b496a439b5ca78d3735ab2b688f5079865d8",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "csoai",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": null,
+       "got": "NOT_RUN",
+       "id": null
+      },
+      "observed_sha256": "d5df51ea2660efe0fe4f517ad09583b3fbabea31c348d2854f62db672bb75c33",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "UNCHECKABLE",
+      "subject_kind": "mcp_server"
+     },
+     "ruleId": "fixture-probe"
+    },
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:246c2003b26508d9efec3fecd0172387df25f3ed379efb6c5bab79fd64e55321"
+     },
+     "guid": "246c2003-b265-48d9-afec-3fecd0172387",
+     "kind": "notApplicable",
+     "level": "none",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-6.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 6: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:246c2003b26508d9efec3fecd0172387df25f3ed379efb6c5bab79fd64e55321",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "csoai",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": null,
+       "got": "CONSISTENT",
+       "id": "fixture-control"
+      },
+      "observed_sha256": "d5df51ea2660efe0fe4f517ad09583b3fbabea31c348d2854f62db672bb75c33",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "NOT_DISCRIMINATING",
+      "subject_kind": "mcp_server"
+     },
+     "ruleId": "fixture-probe"
+    },
+    {
+     "fingerprints": {
+      "csoai/event_id/v1": "sha256:29480530ae88bd9b53fa54745acb079744f0631251ffbd90b6327a33ac1549f2"
+     },
+     "guid": "29480530-ae88-4d9b-93fa-54745acb0797",
+     "kind": "fail",
+     "level": "warning",
+     "locations": [
+      {
+       "physicalLocation": {
+        "artifactLocation": {
+         "uri": "https://fixture-7.example.org/mcp"
+        }
+       }
+      }
+     ],
+     "message": {
+      "text": "Fixture 7: the server declares tools/list returns 3 tools."
+     },
+     "properties": {
+      "anchors": {
+       "ots": "none",
+       "rekor": {
+        "log_index": null,
+        "uuid": null
+       }
+      },
+      "declared_sha256": "10f0725c70c17fa5ea0f4660795265d310ac6ffb1ba333ae0dc68a8b10d84a0f",
+      "event_id": "sha256:29480530ae88bd9b53fa54745acb079744f0631251ffbd90b6327a33ac1549f2",
+      "limits": [
+       "FIXTURE: synthetic event for renderer shape tests; it measures nothing."
+      ],
+      "method_holder": "third_party:fixture",
+      "method_version": "0.1",
+      "negative_control": {
+       "expected": "DIVERGENT",
+       "got": "DIVERGENT",
+       "id": "fixture-control"
+      },
+      "observed_sha256": "9bf4a7c5e77c60b190f0597a98ca5768fb73683df1515d7f0899eb18a1765b62",
+      "read_at": "2026-09-30T12:00:00.000Z",
+      "signature": {
+       "state": "UNSIGNED"
+      },
+      "state": "DIVERGENT",
+      "subject_kind": "model_run",
+      "value": 0.25
+     },
+     "ruleId": "fixture-probe"
+    }
+   ],
+   "tool": {
+    "driver": {
+     "informationUri": "https://councilof.ai/spec/evidence-event/v0.1",
+     "name": "GSPC evidence fabric",
+     "organization": "CSOAI Ltd",
+     "rules": [
+      {
+       "id": "fixture-probe",
+       "name": "fixture-probe",
+       "properties": {
+        "holder": "csoai"
+       },
+       "shortDescription": {
+        "text": "declared vs observed: fixture-probe"
+       }
+      }
+     ],
+     "version": "0.1.0"
+    }
+   }
+  }
+ ],
+ "version": "2.1.0"
+}

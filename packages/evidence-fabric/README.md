@@ -1,0 +1,93 @@
+# evidence-fabric: one evidence event, five carriers
+
+Code Apache-2.0. The `csoai.evidence-event/0.1` schema and the field mappings below are CC0-1.0.
+
+`csoai.evidence-event/0.1` is one observation taken from a record that already exists. It says what was
+declared, what was observed, which state that leaves, and the limits of the read. It is evidence, not a
+verdict. The renderers only change its shape. None of them mints a measurement.
+
+```sh
+python3 event.py validate EVENTS.jsonl
+python3 render/ocsf.py    EVENTS.jsonl > findings.ocsf.jsonl     # OCSF 1.9.0 Detection Finding (2004)
+python3 render/otel.py    EVENTS.jsonl > evaluation.otlp.json    # OTel event gen_ai.evaluation.result
+python3 render/sarif.py   EVENTS.jsonl > evidence.sarif          # SARIF 2.1.0
+python3 render/intoto.py  EVENTS.jsonl > statements.jsonl        # in-toto Statement v1
+python3 render/ecs_hec.py EVENTS.jsonl > hec.ndjson              # ECS document in HEC NDJSON
+python3 ingest/sarif_in.py REPORT.sarif --read-at <UTC> > events.jsonl    # third-party SARIF, declared side
+python3 event.py payload <member> EVENTS.jsonl --as-of <UTC> > batch.json # unsigned batch record to sign
+python3 verify.py batch.json batch.signed.json EVENTS.jsonl --did did.json --tamper-control
+python3 -m pytest -q .                                            # tests (needs pytest, jsonschema, pyyaml, cryptography)
+```
+
+## Rules the code enforces
+
+The tests show that each of these rules can reject an event.
+
+- `state` has six values: CONSISTENT, DIVERGENT, PARTIAL, UNMEASURED, UNCHECKABLE and NOT_DISCRIMINATING. There is no pass state and no grade.
+- **UNMEASURED and UNCHECKABLE never carry a number.** `value` must be `null`, and every renderer refuses the event otherwise (`tests/test_doctrine.py`).
+  - This test was written first and failed first. With the renderer guard absent (lane commit `8abff609f`), 20 of its cases failed. They pass once the guard is added.
+- `value` is set only when a number was actually measured. It is never an estimate.
+- A CONSISTENT event must carry a negative control that was actually run. A control that came back other than expected is refused.
+- `limits[]` must hold at least one entry.
+- `event_id` = `sha256:` + sha256 of the RFC 8785 (JCS) bytes of the event, leaving out `event_id`, `signature` and `anchors`.
+  - Signature and anchors are attestations *about* the event and are added afterwards, so an OTS upgrade does not change the id.
+  - A correction is a new event whose `supersedes` names the previous id. The old event is never edited.
+
+## Mapping
+
+| Field | OCSF 1.9.0 Detection Finding (2004; never 2003 Compliance Finding) | OTel `gen_ai.evaluation.result` (Development) | SARIF 2.1.0 result | in-toto Statement v1 | ECS (HEC) |
+|---|---|---|---|---|---|
+| event_id | `finding_info.uid`, `metadata.uid` | `csoai.event_id` | `fingerprints["csoai/event_id/v1"]`, `guid` (derived) | `subject[0]` digest | `event.id`, `related.hash` |
+| subject.locator | `resources[].uid` | `csoai.subject.locator` | `artifactLocation.uri` | `predicate.subject` | `url.full` |
+| claim.text | `finding_info.desc` | `gen_ai.evaluation.explanation` | `message.text` | `predicate.claim` | `message` |
+| method | `finding_info.analytic` | `gen_ai.evaluation.name` | `ruleId`, `tool.driver` | `predicate.method` | `rule.*` |
+| state | `status_id`: CONSISTENT 4, DIVERGENT 1, else 99 + `status_detail` | `gen_ai.evaluation.score.label` | `kind`: pass / fail / open / review / notApplicable | `predicate.state` | `event.outcome`: success / failure / unknown |
+| value | `unmapped.csoai.value`, **only if measured** | `gen_ai.evaluation.score.value`, **absent unless measured** | `properties.value`, **absent unless measured** | `predicate.value` (null) | `csoai.value`, **only if measured** |
+| declared / observed | `evidences[].data` (two items) | `csoai.declared_sha256`, `csoai.observed_sha256` | `properties.*_sha256` | `predicate.declared/observed` | `csoai.*_sha256` |
+| negative control, limits, signature, anchors | `unmapped.csoai.*` | `csoai.*` | `properties.*` | `predicate.*` | `csoai.*` |
+
+Carrier choices, with the reason for each:
+
+- **Severity.** OCSF `severity_id` is always 1 (Informational), because we do not rate risk.
+- **OCSF value field.**
+  - OCSF has no field for a measured value.
+  - `confidence_score` is the event source's confidence and `risk_score` is a risk rating. Neither of them is our measurement, so the value goes under `unmapped`.
+  - This departs from the 30 Sep plan, which put the value in `confidence_score`.
+- **SARIF level and guid.**
+  - `level` is `"none"` whenever `kind` is not `fail`, as SARIF requires.
+  - `guid` is the first 16 bytes of `event_id` laid out as a UUID. The full id is in `fingerprints`.
+- **in-toto predicate type.**
+  - The predicate type is `https://councilof.ai/spec/evidence-event/v0.1`, not `eval-result/v0.1`. That draft (in-toto/attestation PR #575, open, head `0c70fc3c`, read 30 Sep 2026) requires three things:
+    - `claims[].passed`, which is a threshold verdict
+    - `sampleSize`
+    - exactly one model identity and one dataset identity
+  - A declared-vs-observed record has none of these, and filling them in would invent a pass mark.
+  - `assuranceLevel` is still set: `third_party` for our own method, `reproduced` for a re-run of someone else's method.
+  - The DSSE envelope is emitted **unsigned**. `/api/board-sign` signs canonical JSON, not DSSE PAE bytes. The batch signature (below) covers the events.
+- **ECS mapping.**
+  - `event.category` is `["configuration"]`, never `intrusion_detection`.
+  - `event.outcome` for UNMEASURED is `unknown`, never `success`.
+  - `event.risk_score` is never emitted.
+- **Live ingestion is UNMEASURED.** No SIEM, collector or tenant ingestion was run. Each golden output is checked only against the carrier's published schema or registry.
+
+## Validators
+
+Each validator is pinned under `vendor/`, and the tests read it offline.
+
+| File | Source | sha256 |
+|---|---|---|
+| `ocsf-1.9.0-detection_finding.schema.json` | `https://schema.ocsf.io/schema/1.9.0/classes/detection_finding?profiles=` (read 30 Sep 2026) | b680763405d2e472cb3c3c52bd6ca9f5555f048445e8f6092c5cfdd53ae63161 |
+| `sarif-schema-2.1.0.json` | oasis-tcs/sarif-spec@adbb670c `sarif-2.1/schema/sarif-schema-2.1.0.json` | c3b4bb2d6093897483348925aaa73af03b3e3f4bd4ca38cef26dcb4212a2682e |
+| `otel-genai-events.yaml`, `otel-genai-registry.yaml` | open-telemetry/semantic-conventions-genai@bcc7f9c2 `model/gen-ai/` | 55de2362…, 62f9f9ac… |
+| `ecs-subset.json` | the fields we emit, taken from elastic/ecs@9868ff5b `generated/ecs/ecs_flat.yml` (sha256 4277630b…) | — |
+| in-toto | `in-toto-attestation` (PyPI) `Statement.validate()`; the test is skipped if it is not installed | — |
+
+## Signing a batch
+
+Events are signed as a batch, through the existing board-sign path:
+
+1. `python3 event.py payload <member> events.jsonl --as-of <UTC> > batch.json`
+2. On the host that holds the caller token: `sign_record.py batch.json --artifact-path <path> --extra extra.json`. This POSTs `/api/board-sign` and writes `batch.signed.json`, a `.ots` file and `.ots.json`.
+3. `python3 verify.py batch.json batch.signed.json events.jsonl --did did.json --tamper-control` must print VALID. It must also report every one-byte tamper as INVALID.
+
+The signature proves that these bytes were signed by `did:web:csoai.org#board-attestation-1`. It does not prove that any claim inside is true.
