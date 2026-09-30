@@ -55,7 +55,9 @@ rulings exist.
 
 - Only the board's top two rows per axis carry numbers (from `separation_evidence`); every other candidate is
   UNTESTED on that axis.
-- Effect-binding census is not looked up yet: every candidate carries UNMEASURED, so the floor's DIVERGENT rule
-  cannot fire on live data (it is tested with an injected DIVERGENT candidate).
+- Effect-binding census (30 Sep 2026): the core reads /interop/effect-binding-census-index.json (built by
+  scripts/effect-binding/eb_census_index.py from the latest SIGNED server-probe run; CENSUS_URL / CENSUS_FILE here).
+  DOES_NOT_BIND is DIVERGENT and the floor forbids it; BINDS is CONSISTENT; every other outcome, an endpoint the run
+  did not probe, and an unreadable index are UNMEASURED. Tests: functions/_lib/route/census.test.ts (fail-first).
 - agentgateway v1.5.0 has no per-gateway `bindAddress`; port 3900 is not published by the pod, and every route
   refuses a non-loopback source (a request to the pod's own interface address answered 403).

@@ -1,0 +1,55 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.effect-binding-server-run/0.1",
+    "axis": "effect-binding",
+    "board_slot": 23,
+    "ruling_ref": "council-os/ADR-002-axis-23-effect-binding.md",
+    "kind": "deterministic-facts",
+    "status": "RE-RUN",
+    "board_effect": "none: slot 23 rests on the signed 2026-09-22 parent run; this dated re-run neither replaces nor re-flips it",
+    "n": 267,
+    "n_unit": "tool-call servers probed",
+    "as_of": "2026-09-30T15:16:43Z",
+    "rerun_of_sha256": "e7083086fedf34d528caecf5771e0019ef34282c24727532e70ede8b1b87fc69",
+    "artifact": {
+      "path": "/interop/effect-binding-server-probe-2026-09-30.json",
+      "sha256": "a87a69bd4bffd9085cc0cd87ccf7cc5f353e834f67567643c3d8765812137482",
+      "mirror": "https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-30.json"
+    },
+    "raw_log": {
+      "path": "public/interop/effect-binding-server-probe-2026-09-30.log.jsonl (HF mirror only)",
+      "sha256": "ef91947a8d975b751dbfc6a7bb0c7ee1cad6da648f5c58b893c401f16d11eb37",
+      "redactions": {
+        "jwt_shaped_strings": 2,
+        "rule": "replaced by [REDACTED jwt-shaped sha256:<hex of the original>]"
+      }
+    },
+    "verdicts": {
+      "BINDS": 0,
+      "PARTIAL": 25,
+      "DOES_NOT_BIND": 242
+    },
+    "tried": 600,
+    "dropped": {
+      "UNCHECKABLE": 221,
+      "UNREACHABLE": 82,
+      "NO_TOOLS": 1,
+      "NO_READONLY_TOOL": 29
+    },
+    "controls_passed": true,
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token; the PKCS8 never left Cloudflare)",
+    "not_a_grade": "A signature proves these bytes were signed by the board key; it does not prove any claim inside the artifact beyond what its instrument measured (SCITT rule)."
+  },
+  "signature": {
+    "alg": "Ed25519",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "sig_ed25519": "e6d9b8480c2f11f441d4591e46e34aa87c841c042e7de45cdfca93bdbeb78d445f9e56945126158886599c90a9acca02580ce398de993be5da59a66bea085a06",
+    "payload_sha256": "7a7fe0bd7d27503fae3c01ebc2662ec50e6bbc58c0ec03ce75bd193c775e2244",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-30T15:18:57.668Z",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8; int-valued floats as ints (functions/_lib/cardSign.ts canonicalBytes)",
+    "verify": "sha256(canonical preimage) == payload_sha256; Ed25519 verify sig_ed25519 (hex) over the canonical preimage bytes with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
+  },
+  "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
+}

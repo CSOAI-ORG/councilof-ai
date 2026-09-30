@@ -1,6 +1,6 @@
 # Council of AI GSPC (Layer 0)
 
-The `gspc` MCP server (https://councilof.ai/mcp, server 1.4.3) exposes 19 tools (14 free, 5 x402-metered).
+The `gspc` MCP server (https://councilof.ai/mcp, server 1.4.4) exposes 19 tools (14 free, 5 x402-metered).
 
 Free:
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.

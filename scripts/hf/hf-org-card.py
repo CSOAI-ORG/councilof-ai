@@ -292,8 +292,10 @@ def size_category(rows: int) -> str:
 
 # Lines an agent wrote for other agents, pasted onto public cards before the markers existed (found on ~111
 # csoai cards, 30 Sep 2026). They are instructions, not information, so --scrub removes them or reduces them to
-# the sentence a reader needs. Typed lids and typed MCP tool counts outside the markers are replaced with the
-# live values; the BibTeX DOI gets the same availability note the rest of the card carries.
+# the sentence a reader needs. Typed lids and typed MCP tool counts outside the markers are replaced with a
+# pointer to the live source (30 Sep 2026: writing today's value back in only made the next stale card; the
+# registry said "16 tools" while /mcp served 19), so a scrubbed line never needs scrubbing again and no later
+# generator run has a number to overwrite. The BibTeX DOI gets the same availability note the rest of the card carries.
 LEGACY_LINE_RULES = [
     (re.compile(r"^\*\*SUPERSEDED:\*\* typed Hub triples .*Hub cite = live GET only\.\s*$"), None),
     (re.compile(r"^- Hub cite: https://councilof\.ai/api/hub-cards — \*\*re-GET\*\*.*$"),
@@ -304,7 +306,9 @@ LEGACY_LINE_RULES = [
      "Measurement, never certification."),
 ]
 TYPED_LID = re.compile(r"^\*\*Lid:\*\* \d+ axes measured · .*$")
-TYPED_MCP_ROW = re.compile(r"^\| MCP endpoint — .*\| `POST https://councilof\.ai/mcp` \|$")
+TYPED_MCP_ROW = re.compile(r"^\| MCP endpoint — .*\d.*\| `POST https://councilof\.ai/mcp` \|$")
+LID_POINTER = "**Lid:** read `totals.lid` from https://councilof.ai/api/gspc at viewing time (never typed on this card)."
+MCP_POINTER = f"| MCP endpoint — read `tools/list` at viewing time (never typed on this card) | `POST {MCP}` |"
 BIB_DOI = re.compile(r"^(\s*)doi(\s*)= \{" + re.escape(DOI) + r"\},\s*$")
 
 
@@ -316,10 +320,11 @@ def scrub_legacy(text: str, lid: str | None, mcp_n: int | None, as_of: str) -> t
             if rx.match(line):
                 new = repl
                 break
-        if new is line and lid and TYPED_LID.match(line):
-            new = f"**Lid:** {lid}"
-        if new is line and mcp_n is not None and TYPED_MCP_ROW.match(line):
-            new = f"| MCP endpoint — {mcp_n} tools, verified {as_of} | `POST {MCP}` |"
+        # lid, mcp_n and as_of are kept in the signature for callers; no number is written back (see above).
+        if new is line and TYPED_LID.match(line):
+            new = LID_POINTER
+        if new is line and TYPED_MCP_ROW.match(line):
+            new = MCP_POINTER
         if new is line:
             m = BIB_DOI.match(line)
             nxt = lines[i + 1] if i + 1 < len(lines) else ""
@@ -356,7 +361,7 @@ def scrub(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") -> N
     if push and new != text:
         c = api.create_commit(repo, [CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=str(dest))],
                               repo_type=kind, parent_commit=info.sha,
-                              commit_message="card: remove agent directives, live lid and MCP tool count, DOI availability note (hf-org-card.py --scrub)")
+                              commit_message="card: remove agent directives, typed lid and MCP tool count become live pointers, DOI availability note (hf-org-card.py --scrub)")
         print(json.dumps({"repo": repo, "commit": c.oid}))
 
 
