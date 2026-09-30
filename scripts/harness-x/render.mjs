@@ -1557,6 +1557,11 @@ const STEPS = {
     "Owner: fork langgenius/dify-plugins from a public, unflagged account; add distribution/packages/gspc.difypkg under the csoai author folder; open the PR.",
     "Test first in a Dify instance: Plugins → Install from local package file → gspc.difypkg (the folder distribution/dify/gspc/ is the same bytes).",
   ],
+  "agntcy-oasf": [
+    "Sign each record: `node scripts/harness-x/sign-oasf.mjs --token-file <pod caller token>` (writes public/oasf/*.attestation.json), then `node scripts/harness-x/check.mjs`.",
+    "OWNER: choose the route into the directory. (a) The agntcy/dir import-records PR (one entry, from the clean GitHub account), which imports from the MCP Registry; or (b) a directory identity: dirctl push + dirctl sign + dirctl routing publish. Federation of our own node needs a merged agntcy/dir-staging PR (docs/ads/NODE-RUNBOOK.md).",
+    "After listing: read the record back through the public ARD gateway and record the observation in the Layer 0 registry. A listing is never adoption.",
+  ],
   "connect-matrix": [
     "Nothing to submit: /connect/ renders it. After a deploy, run `node scripts/harness-x/connect-live.mjs` and commit distribution/connect/connect-live-check.json.",
   ],
@@ -1604,6 +1609,118 @@ ${STEPS[r.id].map((s, i) => `${i + 1}. ${s}`).join("\n")}
    any change to its skills is re-signed on that host with \`scripts/adapters/agent_card_jws.py --sign\`.
 6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all ${tools.length} tools, or wait.
 `);
+
+// H-OASF — OASF 1.1.0 records for the AGNTCY Agent Directory (ADS). Same inventory as /ard/v1/ and
+// /.well-known/ai-catalog.json. Extends the AGNTCY lane draft (read, never edited). The evaluation module points at
+// SIGNED evidence (datasets) and never carries overall_rating / overall_scores. A record is signed by a detached
+// Ed25519 attestation over sha256(JCS(record)) (scripts/harness-x/sign-oasf.mjs); check.mjs verifies it.
+{
+  const OR = dist.distribution.find((r) => r.id === "agntcy-oasf");
+  const created = OR.oasf.created_at;
+  const card = JSON.parse(read("public/.well-known/agent-card.json"));
+  const skills = [
+    { id: 71002, name: "ai_ml_engineering/model_evaluation/agent_evaluation" },
+    { id: 71001, name: "ai_ml_engineering/model_evaluation/llm_evaluation" },
+  ];
+  const domains = [
+    { id: 11107, name: "technology/artificial_intelligence/ai_agents" },
+    { id: 405, name: "trust_and_safety/risk_management" },
+  ];
+  const annotations = {
+    doctrine: ID.website + "/doctrine/",
+    doctrine_sha256: DOCTRINE.sha256,
+    stance: "measurement, not certification; UNMEASURED is reported as UNMEASURED",
+    attribution: "Council of AI (CSOAI Ltd, company 16939677); signer did:web:csoai.org#board-attestation-1",
+    extends: "the AGNTCY Directory import draft for ai.councilof/gspc (read, not edited)",
+    catalog: ID.website + "/.well-known/ai-catalog.json",
+    ard: ID.website + "/ard/v1/agents",
+  };
+  const evaluation = {
+    name: "core/evaluation", id: 102,
+    annotations: {
+      event_schema: "csoai.evidence-event/0.1",
+      renderer: "packages/evidence-fabric/render/oasf_eval.py",
+      not_a_grade: "No overall_rating or overall_scores: dated evidence with states, never a grade or certification",
+    },
+    data: { referred_evaluations: [{
+      created_at: created,
+      publisher: { name: "CSOAI Ltd (Council of AI)", version: "gspc " + REMOTE_VERSION, url: ID.website },
+      datasets: [
+        { name: "GSPC board (signed, live)", url: ID.board, metadata: [
+          { name: "signature", value: "Ed25519 did:web:csoai.org#board-attestation-1" },
+          { name: "unmeasured_rule", value: "UNMEASURED carries value null; never a number" }] },
+        { name: "Corrections ledger (signed)", url: ID.corrections_api, metadata: [
+          { name: "rule", value: "a correction is a new record naming the replaced one by sha256" }] },
+        { name: "Evidence-event schema", url: ID.website + "/spec/evidence-event/v0.1", metadata: [
+          { name: "states", value: "CONSISTENT DIVERGENT PARTIAL UNMEASURED UNCHECKABLE NOT_DISCRIMINATING" }] },
+      ],
+    }] },
+  };
+  const gspcDesc = "Dated AI measurements and signed evidence over MCP. Read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint. Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED). Free verification; never certification.";
+  const gspc = {
+    name: dist.registry_names.domain, version: REMOTE_VERSION, schema_version: OR.oasf.schema_version,
+    description: gspcDesc, authors: ["Council of AI"], created_at: created, skills, domains,
+    locators: [
+      { type: "url", urls: [FREE_DOOR], annotations: { role: "MCP endpoint, free read-only tools" } },
+      { type: "url", urls: [ID.door], annotations: { role: "MCP endpoint, full door (free + x402-metered tools)" } },
+      { type: "url", urls: [ID.board], annotations: { role: "GSPC board, live JSON" } },
+    ],
+    annotations,
+    modules: [
+      { name: "integration/mcp", id: 202, data: {
+        name: dist.registry_names.domain,
+        description: "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+        connections: [{ type: "streamable-http", url: FREE_DOOR }],
+        mcp_data: { name: dist.registry_names.domain, title: "Council of AI GSPC",
+          description: "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+          version: REMOTE_VERSION, websiteUrl: ID.website,
+          remotes: [{ type: "streamable-http", url: FREE_DOOR }, { type: "streamable-http", url: ID.door }] },
+      } },
+      evaluation,
+    ],
+  };
+  const agentVersion = String(card.version);
+  const agent = {
+    name: "ai.councilof/measurement-agent", version: agentVersion, schema_version: OR.oasf.schema_version,
+    description: "A2A agent for GSPC measurement and evidence workflows: board reads, card and capsule verification, server evidence. Measurement, not certification.",
+    authors: ["Council of AI"], created_at: created, skills, domains,
+    locators: [
+      { type: "url", urls: [ID.website + "/.well-known/agent-card.json"], annotations: { role: "A2A agent card (signed, did:web:csoai.org#card-attestation-2)" } },
+    ],
+    annotations,
+    modules: [
+      { name: "integration/a2a", id: 203, data: {
+        card_schema_version: String(card.supportedInterfaces?.[0]?.protocolVersion ?? "1.0"),
+        card_data: card } },
+      evaluation,
+    ],
+  };
+  emit("public/oasf/ai.councilof.gspc.oasf.json", j(gspc));
+  emit("public/oasf/ai.councilof.measurement-agent.oasf.json", j(agent));
+  emit("distribution/agntcy/README.md", `# OASF records for the AGNTCY Agent Directory (ADS)
+
+Generated by scripts/harness-x/render.mjs from council-os/distribution.json (target \`agntcy-oasf\`). Do not hand-edit.
+
+| record | name | version | served at |
+|---|---|---|---|
+| GSPC MCP server | \`${gspc.name}\` | ${gspc.version} | ${ID.website}/oasf/ai.councilof.gspc.oasf.json |
+| A2A agent | \`${agent.name}\` | ${agent.version} | ${ID.website}/oasf/ai.councilof.measurement-agent.oasf.json |
+
+- Schema: OASF ${OR.oasf.schema_version} (https://schema.oasf.outshift.com/schema/${OR.oasf.schema_version}/objects/record), validated by scripts/harness-x/check.mjs.
+- Evaluation module \`core/evaluation\` (102): pointers to signed evidence; no overall_rating, no overall_scores.
+  Event-level modules are rendered by packages/evidence-fabric/render/oasf_eval.py.
+- Signature: each record has \`<name>.attestation.json\` beside it: a detached Ed25519 signature under
+  did:web:csoai.org#board-attestation-1 over an attestation that carries sha256(JCS(record)). Produce it with
+  \`node scripts/harness-x/sign-oasf.mjs --token-file <pod caller token>\`; check.mjs verifies both halves.
+  ADS's own signing (sigstore, \`dirctl sign\`) is done by the identity that pushes, at push time.
+- Extends: ${OR.oasf.extends}.
+- Pushing to the public directory is an owner step (directory identity; federation joins by a merged PR). Nothing here is pushed.
+
+${LINKS}
+
+Doctrine sha256 ${DOCTRINE.sha256}. Measurement, not certification. A listing is never adoption.
+`);
+}
 
 // ── manifest + write/check ──────────────────────────────────────────────────────────────────
 const manifestEntries = [...outputs.keys()].sort().map((p) => ({ path: p, sha256: sha256(outputs.get(p)) }));

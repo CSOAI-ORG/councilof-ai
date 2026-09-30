@@ -13,6 +13,7 @@ python3 render/otel.py    EVENTS.jsonl > evaluation.otlp.json    # OTel event ge
 python3 render/sarif.py   EVENTS.jsonl > evidence.sarif          # SARIF 2.1.0
 python3 render/intoto.py  EVENTS.jsonl > statements.jsonl        # in-toto Statement v1
 python3 render/ecs_hec.py EVENTS.jsonl > hec.ndjson              # ECS document in HEC NDJSON
+python3 render/oasf_eval.py EVENTS.jsonl --events-url URL > eval.json # OASF 1.1.0 core/evaluation module (id 102)
 python3 ingest/sarif_in.py REPORT.sarif --read-at <UTC> > events.jsonl    # third-party SARIF, declared side
 python3 event.py payload <member> EVENTS.jsonl --as-of <UTC> > batch.json # unsigned batch record to sign
 python3 verify.py batch.json batch.signed.json EVENTS.jsonl --did did.json --tamper-control
@@ -78,6 +79,7 @@ Each validator is pinned under `vendor/`, and the tests read it offline.
 |---|---|---|
 | `ocsf-1.9.0-detection_finding.schema.json` | `https://schema.ocsf.io/schema/1.9.0/classes/detection_finding?profiles=` (read 30 Sep 2026) | b680763405d2e472cb3c3c52bd6ca9f5555f048445e8f6092c5cfdd53ae63161 |
 | `sarif-schema-2.1.0.json` | oasis-tcs/sarif-spec@adbb670c `sarif-2.1/schema/sarif-schema-2.1.0.json` | c3b4bb2d6093897483348925aaa73af03b3e3f4bd4ca38cef26dcb4212a2682e |
+| `oasf-1.1.0-module-evaluation.schema.json` | `https://schema.oasf.outshift.com/schema/1.1.0/modules/evaluation` (read 30 Sep 2026) | d1035648e15743cab5454eac11739a4bdbe0deb135d33b9007515d023c5b045d |
 | `otel-genai-events.yaml`, `otel-genai-registry.yaml` | open-telemetry/semantic-conventions-genai@bcc7f9c2 `model/gen-ai/` | 55de2362…, 62f9f9ac… |
 | `ecs-subset.json` | the fields we emit, taken from elastic/ecs@9868ff5b `generated/ecs/ecs_flat.yml` (sha256 4277630b…) | — |
 | in-toto | `in-toto-attestation` (PyPI) `Statement.validate()`; the test is skipped if it is not installed | — |
@@ -130,3 +132,12 @@ python3 render/w3c_acr01.py --validate report.json      # rows 1-14, run level, 
 | NOT_DISCRIMINATING | void | `evidence-does-not-hold` |
 
 UNMEASURED and UNCHECKABLE never become pass or fail, on events, axes or cards. `other-verdict` and `discrimination` stay `unknown` (or `possible-not-demonstrated`) unless the renderer ran both sides of a delta-related pair itself. Our `negative_control {expected, got}` is a declaration, not a pair. Section 5.4 is answered with shown-by-run, control, prior-run or nothing, never with silence. The golden `tests/golden/w3c_acr01.safe-signature.json` is a real control-run fail: the board signature over the SAFE pack's FREEZE.json passes on the signed bytes, and each of three altered-preimage controls returns fail with its own rule, under the same checker revision and configuration digest.
+
+### OASF 1.1.0 evaluation module (`render/oasf_eval.py`)
+
+The ADS face of the same events. Every event becomes a `datasets[]` pointer (`<events-url>#<event_id>`, with state,
+subject, method, holder, declared/observed sha256, control, limits, signature, OTS as key-value metadata). Only a
+measured number becomes an `evaluation_report.metrics[]` entry (`type` gauge, UCUM unit, value as a string data
+point). UNMEASURED and UNCHECKABLE never become a metric or a value, and no `overall_rating` or `overall_scores`
+is ever written (`tests/test_oasf_eval.py`; fail-first run recorded in `receipts/F-OASF.fail-first.txt`). The golden
+validates against the official module and record schemas served by schema.oasf.outshift.com.
