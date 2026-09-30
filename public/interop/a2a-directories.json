@@ -11,7 +11,7 @@
     "a2a_version": "1.0",
     "interface": "https://councilof.ai/api/a2a",
     "protocol_binding": "JSONRPC",
-    "skills": 11,
+    "skills": 12,
     "note": "Card shape is A2A v1.0.1: the AgentCard carries NO top-level url or protocolVersion — both are REQUIRED fields of AgentInterface instead, and ours carries all three (url, protocolBinding, protocolVersion). Verified against specification/a2a.proto at tag v1.0.1, not against a remembered field list.",
     "skills_source": "len(public/.well-known/agent-card.json -> skills). Recount it, never retype it.",
     "skills_recounted_at": "2026-09-30"
@@ -103,10 +103,10 @@
     "spec": "https://github.com/a2aproject/A2A/blob/v1.0.1/specification/a2a.proto"
   },
   "supersedes": {
-    "path": "/interop/a2a-directories-20260930T094635Z.json",
-    "sha256": "e91e8cb0b1ac3a6d82b12d84f138daba97523dd3f488dd9d47e68bfac8fd9eda",
-    "ots": "/interop/a2a-directories-20260930T094635Z.json.ots",
-    "why": "our_agent.skills recounted from the card (10 -> 11: evidence-bundle joined, the free A2A twin of the MCP tool evidence_bundle_preview). The directory rows and totals are NOT re-probed: they remain as of 20260905T185400Z. Timestamped bytes are superseded, never edited; the previous bytes keep their proof at the dated path."
+    "path": "/interop/a2a-directories-20260930T103424Z.json",
+    "sha256": "d487ad52ee987badd002f31ad055230020478c07c685d8819ca2bb03d151e5d1",
+    "ots": "/interop/a2a-directories-20260930T103424Z.json.ots",
+    "why": "our_agent.skills recounted from the card (11 -> 12: gspc-route joined, the A2A twin of the free MCP tool route, GSPC Route decide-only). The directory rows and totals are NOT re-probed. Timestamped bytes are superseded, never edited; the previous bytes keep their proof at the dated path."
   },
   "ots_state": "STAMPED 2026-09-30: the OpenTimestamps proof over these exact bytes is /interop/a2a-directories.json.ots (public calendars; calendar-pending until upgraded, and a pending proof is not a Bitcoin attestation). Earlier bytes keep their own proofs at the dated paths named in supersedes and label_restamp.",
   "label_restamp": {

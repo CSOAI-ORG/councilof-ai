@@ -5,7 +5,7 @@
 
 export const DOOR = "https://councilof.ai/mcp";
 export const DOCTRINE_SHA256 = "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a";
-export const FREE_TOOLS = ["board_totals","get_axis","verify_card","list_cards","get_root","get_card","verify_inclusion","x402_trust","mcp_trust","measurement_index","verify_capsule","server_evidence","evidence_bundle_preview"];
+export const FREE_TOOLS = ["board_totals","get_axis","verify_card","list_cards","get_root","get_card","verify_inclusion","x402_trust","mcp_trust","measurement_index","verify_capsule","server_evidence","evidence_bundle_preview","route"];
 export const PAID_TOOLS = ["commission_card","art50_marking_evidence","rwa_evidence","receipts_batch","evidence_bundle"];
 export const TOOL_DESCRIPTION = "Live Council of AI GSPC board totals via the board_totals MCP tool. Quote public_count exactly as printed; never add or re-derive a count. UNREACHABLE means the door could not be read and no number is returned. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.";
 
