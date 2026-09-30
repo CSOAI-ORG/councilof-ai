@@ -693,7 +693,13 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     // The shortest real install used to live only in the npm README, which nobody discovering
     // this door would read. If it is not here, discovery leads to "clone the repo" again.
     expect(g.install).toBeTruthy();
-    expect(g.install.claude_code).toMatch(/npx -y csoai-gspc-mcp/);
+    // ONE default line, and it is the free door (no key, read-only). Nothing else claims "default".
+    expect(g.install.default).toBe(`claude mcp add --transport http council-of-ai ${ORIGIN}/mcp/free`);
+    expect(Object.values(g.install).filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
+    // The npm stdio package is labelled as the lighter, separately versioned implementation.
+    expect(g.install.stdio_lite).toMatch(/^npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
+    expect(g.install.claude_code).toBeUndefined();
+    expect(g.install.any_client).toBeUndefined();
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
     // A checkout is a fallback, never the headline.
     expect(JSON.stringify(g.install)).not.toMatch(/git clone|index\.mjs/);

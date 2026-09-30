@@ -32,6 +32,7 @@ import hWatch from "../../public/interop/ledger-heads-2026-09/card-ledger-correc
 import hLayerO from "../../public/interop/ledger-heads-2026-09/card-ledger-layer-o-presence-unsigned.json";
 import hReceipts from "../../public/interop/ledger-heads-2026-09/card-ledger-receipt-chain-unsigned.json";
 import rootInclusion from "../../public/interop/ledger-heads-2026-09/root-inclusion.json";
+import claimEventsHead from "../../public/claims/events/v0.1/head.json";
 
 type Json = Record<string, any>;
 type Atom = { as_of: string; sha256: string; source_urls: string[]; payload: Json };
@@ -74,8 +75,8 @@ export const LEDGER_META: Record<string, { name: string; authority_for: string; 
     anchoring_own: "each dated file OTS-stamped", page: null, atom: hWatch as Atom,
   },
   "layer-o-presence": {
-    name: "Layer O presence", authority_for: "operational surfaces where our artifacts appear, with their states (rollup of the Layer O registry)",
-    producer: "the Layer O registry daily job (python3 -m layer_o daily)", signing: "unsigned; its event chain is hash-linked",
+    name: "Distribution presence", authority_for: "operational surfaces where our artifacts appear, with their states (rollup of the distribution-presence registry)",
+    producer: "the distribution-presence registry daily job", signing: "unsigned; its event chain is hash-linked",
     anchoring_own: "none of its own; its head is a leaf of the public root", page: null, atom: hLayerO as Atom,
   },
   "receipt-chain": {
@@ -90,6 +91,9 @@ const inc = rootInclusion as Json;
 const w = ((rootWitness as Json).witnesses ?? {}) as Json;
 const otsStatus: string | null = w.ots?.status ?? null;
 const rekorStatus: string | null = w.rekor?.status ?? null;
+const claimEvents = claimEventsHead as Json;
+const claimEventsFeed = (claimEvents.feed ?? {}) as Json;
+const claimEventsTotals = (claimEvents.totals ?? {}) as Json;
 
 /** IN_ROOT only when the recorded leaf is actually in the committed root.json. */
 export function rootInclusionOf(key: string, atomSha: string, incDoc: Json, leaves: Set<string>, atomAsOf = "", rootMerkle: unknown = (publicRoot as Json).merkle_root) {
@@ -193,6 +197,21 @@ export function ledgersBlock() {
       outcomes_head_sha256: checksAtom.head_digest ?? null,
       failures_feed: "A CHANGED_CONFIRMED check writes a correction candidate (cand-<16 hex>-<run>-<claim>) for review; only a person promotes it into /api/corrections. A moved source is never an allegation.",
       source: checksAtom.served_url,
+      event_chain: {
+        authority: "GET /api/claims/events",
+        verify: "GET /api/claims/events/head",
+        as_of: claimEvents.as_of ?? null,
+        lines: claimEventsFeed.n_lines ?? null,
+        head_seq: claimEventsFeed.head_seq ?? null,
+        first_at: claimEventsFeed.first_at ?? null,
+        last_at: claimEventsFeed.last_at ?? null,
+        bytes_sha256: claimEventsFeed.bytes_sha256 ?? null,
+        subjects: claimEventsTotals.subjects ?? null,
+        disclosed: claimEventsTotals.disclosed ?? null,
+        sealed: claimEventsTotals.sealed ?? null,
+        verification_state_source: "GET /api/claims/events/head → verification.state",
+        note: "Append-only hash-chained Claim Maintenance event history. It records observed/workflow states; it does not replace the executed schedule ledger, create a correction, or make a verdict about a subject.",
+      },
     },
     authorities: [
       { record_type: "a correction of our own published statement", authority: "GET /api/corrections",
@@ -203,13 +222,16 @@ export function ledgersBlock() {
       { record_type: "claim state of a maintained subject", authority: "GET /api/claims/register" },
       { record_type: "whether a scheduled re-check ran", authority: "ledgers.claim_maintenance (executed schedule)",
         resolved: "GET /api/claims/register derives next_scheduled_read from the signed registries and can show a passed date as SCHEDULED; the executed schedule here is the authority for due, done and failed (C-2026-0929-07)." },
+      { record_type: "append-only Claim Maintenance event history", authority: "GET /api/claims/events",
+        verification: "GET /api/claims/events/head",
+        resolved: "This is evidence of the loop's observed/workflow event history. ledgers.claim_maintenance remains the authority for whether a scheduled re-check was due, ran, or failed." },
       { record_type: "another organisation's correction reaching its page", authority: "corrections-watch",
         resolved: "Not a correction of ours. Its rows never enter /api/corrections; only faults in its own reporting do." },
       { record_type: "the word 'claims register'", authority: "two registers, two record types",
         resolved: "claims_register (public/claims-register.json) holds OUR capability claims; claim-maintenance-register (GET /api/claims/register) holds claims OTHER organisations make about themselves. Never added, never substituted." },
     ],
     not_public: [
-      { name: "Layer O registry rows and contract fields", where: "the Layer O registry job host; its public view is the layer-o-presence rollup above", count: null },
+      { name: "Distribution-presence registry rows and contract fields", where: "the distribution-presence registry job host; its public view is the presence rollup above", count: null },
       { name: "SovSpace predictions and 3KB reaction records", where: "sandbox store; publication STAGED, never councilof.ai", count: null },
       { name: "outbound message log", where: "private; recipients are never published", count: null },
       { name: "deck-lang receipts", where: "lane stores; not served", count: null },
@@ -222,6 +244,7 @@ export function ledgersBlock() {
       { what: "the root that commits to the heads", command: "curl -s https://councilof.ai/root.json | jq '{as_of, card_count, merkle_root}'" },
       { what: "a head is a leaf of the root", command: "curl -s https://councilof.ai/root.json | jq --arg l <root_leaf_sha256> '.card_sha256 | index($l)'" },
       { what: "the claim-maintenance chain", command: "curl -sL https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/README.md" },
+      { what: "the claim-event feed and signed head", command: "curl -s https://councilof.ai/api/claims/events/head | jq '{state:.verification.state, checks:.verification.checks, lines:.head.feed.n_lines, sha256:.head.feed.bytes_sha256}'" },
     ],
   };
 }

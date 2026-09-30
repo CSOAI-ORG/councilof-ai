@@ -84,12 +84,12 @@
       "payment": "free"
     },
     {
-      "id": "measured-badge",
+      "id": "card-status-link",
       "protocols": [
         "a2a"
       ],
-      "title": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "title": "Card status link",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -500,6 +500,45 @@
       "payment": "free"
     },
     {
+      "id": "api-claims-events",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims events",
+      "description": "GET /api/claims/events — the claim-event feed: append-only, hash-chained JSONL.",
+      "endpoint": "/api/claims/events",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events-head",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims events head",
+      "description": "GET /api/claims/events/head — the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
+      "endpoint": "/api/claims/events/head",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-chat",
+      "protocols": [
+        "http"
+      ],
+      "title": "Chat (descriptor)",
+      "description": "GET /api/chat: a descriptor, not a 404. It names the one grounded answerer (Ask the Council) and every skin it is served through (chat, MCP, A2A, AG-UI, A2UI), each with its method and address. POST /api/chat asks the question.",
+      "endpoint": "/api/chat",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-chat-post",
       "protocols": [
         "http"
@@ -877,26 +916,26 @@
       "payment": "free"
     },
     {
-      "id": "api-eunomia-data",
+      "id": "api-signed-data-feed",
       "protocols": [
         "http"
       ],
-      "title": "Eunomia data",
+      "title": "Signed data feed",
       "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
-      "endpoint": "/api/eunomia-data",
+      "endpoint": "/api/signed-data-feed",
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "x402"
     },
     {
-      "id": "api-eunomia-data-post",
+      "id": "api-signed-data-feed-post",
       "protocols": [
         "http"
       ],
-      "title": "Eunomia data (POST)",
+      "title": "Signed data feed (POST)",
       "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
-      "endpoint": "/api/eunomia-data",
+      "endpoint": "/api/signed-data-feed",
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "both",
@@ -2015,6 +2054,19 @@
       "title": "Router",
       "description": "/api/router — the bounded discovery + interop + packages router.",
       "endpoint": "/api/router",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-rulings",
+      "protocols": [
+        "http"
+      ],
+      "title": "Rulings",
+      "description": "GET /api/rulings — every signed ruling record (csoai.ruling/0.1) with its signature state, read-only. A ruling decides which rule applies or whether a rule output is served; it never sets a measured state.",
+      "endpoint": "/api/rulings",
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",

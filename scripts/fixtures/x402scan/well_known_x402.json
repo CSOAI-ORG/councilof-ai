@@ -388,7 +388,7 @@
           "mimeType": "application/json",
           "network": "eip155:8453",
           "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-          "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+          "resource": "https://councilof.ai/api/signed-data-feed?feed=1",
           "scheme": "exact"
         }
       ],
@@ -408,14 +408,14 @@
             "type": "object"
           },
           "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-          "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+          "resource": "https://councilof.ai/api/signed-data-feed?feed=1",
           "scheme": "exact"
         }
       ],
       "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
       "method": "GET",
       "paid_for": "assembly",
-      "url": "https://councilof.ai/api/eunomia-data?feed=1"
+      "url": "https://councilof.ai/api/signed-data-feed?feed=1"
     },
     {
       "accepts": [

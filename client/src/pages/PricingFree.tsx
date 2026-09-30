@@ -38,7 +38,7 @@ export const TIERS = [
   {
     id: "data_feed",
     name: "Tier 3 — Signed data feed",
-    resource: "/api/eunomia-data?feed=1",
+    resource: "/api/signed-data-feed?feed=1",
     get: "One feed document: the signed signals index, the signed First-Fine Watch, root.json and the card index — every block carrying its published signature.",
     never: "Data, never a score product. Never a ranking. Never a rating.",
   },

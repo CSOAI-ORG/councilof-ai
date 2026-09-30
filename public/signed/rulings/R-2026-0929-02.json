@@ -1,0 +1,67 @@
+{
+  "schema": "csoai.ruling/0.1",
+  "reviewers": [],
+  "panel_state": "NOT_CONVENED",
+  "panel_n_eff": "UNMEASURED",
+  "panel_note": "panel not yet convened",
+  "binding": "OWNER",
+  "decider": "owner",
+  "supersedes": null,
+  "ruling_id": "R-2026-0929-02",
+  "class": "other",
+  "question": "Do the watchers adopt the two harness-router winners (multiset claim-diff; fetch_ok gate with two-fetch confirmation)?",
+  "rule_applied": {
+    "ref": "Harness router pre-registered tasks (router.json); rules are adopted, not voted",
+    "text": "The router scored candidate rules on frozen fixtures; the ruling adopts the winners as the watchers' rules. Change detection: false-change rate 0.000 against 0.931 for the naive hash compare, as recorded in the adopting commit."
+  },
+  "evidence": [
+    {
+      "uri": "git:councilof-ai@08d03825f0e697e381606c97060ecdda42f501a2:scripts/reg-watch-policy.mjs",
+      "sha256": "c397f85a2f416ccbced04af63cf6e8d20c24adcf10ba9d3ab90a7bbc07943d7d",
+      "of": "the adopted change-detection rule, whose header records the owner words"
+    },
+    {
+      "uri": "git:councilof-ai@08d03825f0e697e381606c97060ecdda42f501a2:scripts/watch/fixtures/harness-router-20260929/claim_diff.json",
+      "sha256": "e5421f9677574db1eda00ab2627664565398f56289c5f9d6b897a4550bea22ea",
+      "of": "frozen router fixture, claim-diff task"
+    },
+    {
+      "uri": "git:councilof-ai@08d03825f0e697e381606c97060ecdda42f501a2:scripts/watch/fixtures/harness-router-20260929/change_detect.json",
+      "sha256": "742df1baf0803a355a4d79889e2020730cafdc958bc6bb041ac5a1944be79849",
+      "of": "frozen router fixture, change-detection task"
+    }
+  ],
+  "rule_output": null,
+  "owner_ruling_verbatim": "adopt the winners",
+  "owner_ruling_source": {
+    "verbatim_status": "QUOTED",
+    "where": "commit 08d03825f message and scripts/reg-watch-policy.mjs header; excerpt E6",
+    "entry_stamp": "2026-09-29T04:27:17Z"
+  },
+  "decided_at": "2026-09-29",
+  "decided_at_basis": "not after 2026-09-29T04:27:17Z, the commit that records the words",
+  "effective_from": "the landing of lane/adopt-winners-20260929 @ 08d03825f",
+  "correction_ref": null,
+  "effect": {
+    "writes_measured_state": false,
+    "writes_board": false,
+    "note": "Changes how watchers decide a source changed. Sets no board state."
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "key_ed25519_hex": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    "attestation": {
+      "schema": "csoai.ruling-attestation/0.1",
+      "ruling_id": "R-2026-0929-02",
+      "class": "other",
+      "decided_at": "2026-09-29",
+      "content_id": "7dc94b0de6835b83282132067c2d9751e88b1826c9fa19a4e542e4ac548436be",
+      "content_id_rule": "sha256(RFC 8785 JCS of the record without its 'signature' key)",
+      "record_canonical_bytes": 2076,
+      "signed_at": "2026-09-29T05:49:21Z"
+    },
+    "sig_ed25519": "5e7c2cfc3fb23ce296108f7387fedb3be81ef9b306d153688e3f0782435a4d74fde6949b0cf3b9fdc330d6fd1c772a1184021c88e94179a9633c0715a2056703",
+    "signer_auth": "pod-token",
+    "note": "Detached Ed25519 over signature.attestation (RFC 8785 JCS; identical to the board signer's sorted-key form for this ASCII object), issued through POST /api/board-sign on the pod caller token. The attestation commits to this record by content_id. The design note proposed a separate ruling key; none is minted, so this names the board key it was signed under."
+  }
+}

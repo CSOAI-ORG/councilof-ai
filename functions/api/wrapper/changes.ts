@@ -16,9 +16,9 @@ import {
   hasPaymentHeader,
   verifyX402Payment,
   x402Accepts,
-  CSOAI_LID,
   type X402Env,
 } from "../_x402";
+import { WRAPPER_LID } from "../wrapper";
 import { railMode } from "../_x402_config";
 import { WRAPPER_CHANGES_DESCRIPTION } from "../_x402_descriptions";
 
@@ -146,7 +146,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         csoai: {
           schema: "csoai.wrapper.changes/0.1",
           per: "pair-request",
-          lid: CSOAI_LID,
+          lid: WRAPPER_LID,
           never: ["rating", "guarantee", "verdict", "rank", "certificate"],
           deliverable: "delta of wrapped supply and escrow between two ledger snapshots",
           free_preview: `${resourceUrl}&preview=1`,

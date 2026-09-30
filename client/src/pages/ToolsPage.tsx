@@ -6,12 +6,16 @@ import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
+import EXTENSION_MANIFEST from "../../../extensions/chrome-gspc-verify/manifest.json";
 
 // The free door is the default everywhere a config is offered (audit 2026-09-28 #10): the first
 // snippet a developer copies should reach the tools that cost nothing. /mcp is still named below,
 // with what it adds, and both parts of its count are read from the manifests it serves.
 const MCP_URL = "https://councilof.ai/mcp/free";
 const MCP_METERED_URL = "https://councilof.ai/mcp";
+// The zip is rebuilt from extensions/chrome-gspc-verify/ by scripts/build-extension-zip.py; its name
+// carries the manifest version, so the link is read from that manifest, never typed.
+const EXTENSION_ZIP = `/downloads/gspc-verify-${EXTENSION_MANIFEST.version}.zip`;
 const MCP_SNIPPET = `{
   "mcpServers": {
     "gspc": {
@@ -58,7 +62,7 @@ const HOSTS = [
   { name: "Claude", how: "Add gspc → paste the JSON below, or the URL." },
   { name: "Cursor", how: "Paste the JSON into ~/.cursor/mcp.json" },
   { name: "Kimi", how: "MCP settings → same JSON / URL." },
-  { name: "Grok", how: "Same URL, or grok plugin install CSOAI-ORG/council-of-ai-grok" },
+  { name: "Grok", how: "Same URL, as a remote (Streamable HTTP) MCP server." },
 ] as const;
 
 export default function ToolsPage() {
@@ -174,6 +178,22 @@ export default function ToolsPage() {
         <strong>Trust boundary:</strong> a third party verifying a signed record is meaningful evidence. Connecting an MCP server is not.
         The browser verifier stays free and recomputes Ed25519 locally.
       </div>
+      <section id="extension" aria-labelledby="extension-h" className="mt-8 rounded-2xl border border-slate-200 bg-white p-5" data-testid="tools-extension">
+        <h2 id="extension-h" className="text-base font-bold text-slate-900">Browser extension (Chrome, load unpacked)</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Shows the live board, puts a signed-card state on Hugging Face model pages, and verifies a pasted card
+          offline. It is not in the Chrome Web Store: download the zip, unzip it, open{" "}
+          <code>chrome://extensions</code>, switch on Developer mode, choose <strong>Load unpacked</strong> and pick
+          the unzipped folder.
+        </p>
+        <a
+          href={EXTENSION_ZIP}
+          download
+          className="mt-3 inline-flex min-h-11 items-center rounded-lg bg-emerald-800 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-900"
+        >
+          Download GSPC Verify {EXTENSION_MANIFEST.version} (zip)
+        </a>
+      </section>
       <section aria-labelledby="badge-spec-h" className="mt-12">
         <h2 id="badge-spec-h" className="text-xl font-black tracking-tight text-slate-900">
           The three subject states — and the badge that is only a link

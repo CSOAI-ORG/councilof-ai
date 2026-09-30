@@ -59,7 +59,7 @@ CONSISTENT / INCONSISTENT (quoting source and live) / UNCHECKABLE (staged daily:
 
 ## `claude-plugin`
 
-- Output: `distribution/plugin/.claude-plugin/plugin.json`, `distribution/plugin/.claude-plugin/marketplace.json`, `distribution/plugin/.mcp.json`, `distribution/plugin/skills/gspc/SKILL.md`, `distribution/plugin/README.md`
+- Output: `distribution/plugin/.claude-plugin/plugin.json`, `distribution/plugin/.claude-plugin/marketplace.json`, `public/.claude-plugin/marketplace.json`, `distribution/plugin/.mcp.json`, `distribution/plugin/skills/gspc/SKILL.md`, `distribution/plugin/README.md`
 - Version source: `mcp/gspc-server/server.json#/version`
 - Flagged-org impact: Blocked on CSOAI-ORG (repos dark to anonymous readers). Host the marketplace repo on CouncilofAI-CSOAI.
 

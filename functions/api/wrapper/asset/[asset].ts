@@ -7,8 +7,13 @@
  * operator confirmed, pinned ONCE per chain and shared by every pair on it.
  *
  *   ?preview=1   free — every pair's unsigned preview card and the counts by state.
- *   (no header)  the chain is read FIRST. At least one readable pair → 402 (the amount lives ONLY
- *                there). Every pair UNMEASURED → 200 PREVIEW-ONLY: nothing is offered.
+ *   (no header)  the chain is read FIRST, within a READ_BUDGET_MS budget (30 Sep 2026: the cold read
+ *                took ~8.3 s and agents timed out on the paid door). At least one readable pair → 402
+ *                (the amount lives ONLY there). Every pair UNMEASURED → 200 PREVIEW-ONLY: nothing is
+ *                offered. The states of the last completed read are kept in the edge cache for
+ *                STATE_TTL_S and answer the challenge at once; a read that misses the budget finishes
+ *                in the background and the challenge says PENDING_READ. Either way the PAID request
+ *                reads the chain first again, so UNMEASURED is still never sent to the facilitator.
  *   X-PAYMENT    read FIRST; every pair UNMEASURED → 200 preview-only, never sent to the
  *                facilitator. Otherwise one signed card-v0 leaf per READABLE pair (each ≤3072
  *                canonical bytes, the same card /api/wrapper sells), the UNMEASURED pairs listed with
@@ -27,13 +32,12 @@ import {
   declareBazaarHttpGet,
   paymentRequiredResponseSigned,
   hasPaymentHeader,
-  CSOAI_LID,
   type X402Env,
 } from "../../_x402";
 import { railMode } from "../../_x402_config";
 import { sha256Hex } from "../../../_lib/cardSign";
 import { wrapperAssetDescription } from "../../_x402_descriptions";
-import { ROSTER, buildPayload, previewCardFor, signedCardFor, NOT_SOLD, SCHEMA, KIND, type PinMemo, type RosterEntry } from "../../wrapper";
+import { ROSTER, buildPayload, previewCardFor, signedCardFor, NOT_SOLD, SCHEMA, KIND, WRAPPER_LID, type PinMemo, type RosterEntry } from "../../wrapper";
 import DOORS from "../../_wrapper_asset_doors.json";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
@@ -52,6 +56,49 @@ const json = (body: unknown, status = 200) =>
     headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store", "access-control-allow-origin": "*" },
   });
 
+/** How long the unpaid challenge waits for a fresh read before answering from what it has. */
+export const READ_BUDGET_MS = 1500;
+/** How long the states of a completed read answer an unpaid challenge. */
+export const STATE_TTL_S = 300;
+
+type ChallengeState = { counts: Record<string, number>; all_unmeasured: boolean; read_at: string };
+const stateKey = (asset: string) => new Request(`https://councilof.ai/__cache/wrapper-asset-state/${asset}`);
+const edgeCache = (): Cache | null => {
+  try {
+    return typeof caches !== "undefined" && (caches as unknown as { default?: Cache }).default
+      ? (caches as unknown as { default: Cache }).default
+      : null;
+  } catch {
+    return null;
+  }
+};
+async function cachedState(asset: string): Promise<ChallengeState | null> {
+  const c = edgeCache();
+  if (!c) return null;
+  try {
+    const hit = await c.match(stateKey(asset));
+    return hit ? ((await hit.json()) as ChallengeState) : null;
+  } catch {
+    return null;
+  }
+}
+async function storeState(asset: string, st: ChallengeState): Promise<void> {
+  const c = edgeCache();
+  if (!c) return;
+  try {
+    await c.put(stateKey(asset), new Response(JSON.stringify(st), {
+      headers: { "content-type": "application/json", "cache-control": `public, max-age=${STATE_TTL_S}` },
+    }));
+  } catch {
+    /* a cache that cannot be written only costs the next caller a read */
+  }
+}
+const stateOf = (r: { counts: Record<string, number>; allUnmeasured: boolean }): ChallengeState => ({
+  counts: r.counts,
+  all_unmeasured: r.allUnmeasured,
+  read_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
+});
+
 /** Read every pair of one asset; chains are pinned once and shared. */
 export async function readAsset(door: AssetDoor) {
   const memo: PinMemo = new Map();
@@ -63,7 +110,15 @@ export async function readAsset(door: AssetDoor) {
   return { built, counts, readable, allUnmeasured: readable.length === 0 };
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+export const onRequestGet: PagesFunction<Env> = async (context) => {
+  const { request, env } = context;
+  const waitUntil = (p: Promise<unknown>) => {
+    try {
+      (context as { waitUntil?: (p: Promise<unknown>) => void }).waitUntil?.(p);
+    } catch {
+      /* outside the Workers runtime there is nothing to extend */
+    }
+  };
   const url = new URL(request.url);
   const origin = url.origin;
   const asset = decodeURIComponent(url.pathname.slice(PATH_PREFIX.length)).replace(/\/+$/, "").toLowerCase();
@@ -82,7 +137,42 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   });
   const pairIds = pairsFor(door).map((e) => e.id);
 
-  const { built, counts, readable, allUnmeasured } = await readAsset(door);
+  // Unpaid challenge fast path. The paid request (below) always reads the chain first again.
+  type Read = Awaited<ReturnType<typeof readAsset>>;
+  let fastState: (ChallengeState & { source: string }) | null = null;
+  let readDone: Read | null = null;
+  if (!paid && !preview) {
+    const cached = await cachedState(door.asset);
+    if (cached && !cached.all_unmeasured) {
+      fastState = { ...cached, source: "edge-cache" };
+    } else if (!cached) {
+      const reading = readAsset(door).then(async (r) => {
+        await storeState(door.asset, stateOf(r));
+        return r;
+      });
+      const timedOut = Symbol("timeout");
+      const first = await Promise.race([
+        reading,
+        new Promise<typeof timedOut>((res) => setTimeout(() => res(timedOut), READ_BUDGET_MS)),
+      ]);
+      if (first === timedOut) {
+        waitUntil(reading.catch(() => undefined));
+        fastState = {
+          counts: { PENDING_READ: pairIds.length },
+          all_unmeasured: false,
+          read_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
+          source: "pending",
+        };
+      } else {
+        readDone = first;
+      }
+    }
+  }
+
+  const read: Read = fastState
+    ? { built: [], counts: fastState.counts, readable: [], allUnmeasured: false }
+    : readDone ?? (await readAsset(door));
+  const { built, counts, readable, allUnmeasured } = read;
   const previews = async () => Promise.all(built.map(async (b) => previewCardFor(b.entry, b.built)));
   const unmeasuredPairs = built.filter((b) => b.built.payload.state === "UNMEASURED").map((b) => ({ id: b.entry.id, state: "UNMEASURED", reason: b.built.payload.error ?? null }));
 
@@ -118,10 +208,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         csoai: {
           schema: PACK_SCHEMA,
           per: "asset-request",
-          lid: CSOAI_LID,
+          lid: WRAPPER_LID,
           asset: door.symbol,
           pairs: pairIds,
           states_at_challenge: counts,
+          states_source: fastState
+            ? fastState.source === "pending"
+              ? `PENDING_READ: the chain read did not finish within ${READ_BUDGET_MS} ms; it completes in the background. Paying reads the chain first again, and an asset whose every pair is UNMEASURED answers 200 preview-only and is never sent to the facilitator.`
+              : `${fastState.source === "edge-cache" ? "edge cache" : "fresh read"}, read_at ${fastState.read_at} (kept ${STATE_TTL_S} s). Paying reads the chain first again.`
+            : "fresh read",
           never: ["rating", "guarantee", "verdict", "rank", "certificate", "reserve attestation"],
           deliverable: `one signed card-v0 leaf per readable ${door.symbol} pair (the /api/wrapper card), UNMEASURED pairs listed with reasons and never signed`,
           never_charged_for: "UNMEASURED — an asset whose every pair is unreadable answers 200 preview-only, never 402",

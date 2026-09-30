@@ -3,7 +3,7 @@
   "info": {
     "title": "Council of AI (CSOAI)",
     "version": "1.1.0",
-    "description": "AI governance and measurement substrate. Living 23-axis GSPC board; free card verification; x402 evidence services.",
+    "description": "AI governance and measurement substrate. Living GSPC board (read axis counts from /api/gspc and /api/state; none is frozen here); free card verification; x402 evidence services.",
     "contact": {
       "name": "Nicholas Templeman",
       "url": "https://councilof.ai/"
@@ -18,6 +18,8 @@
       "description": "Council OS API"
     }
   ],
+  "x-canonical-openapi": "https://councilof.ai/api/openapi.json",
+  "x-compatibility-note": "Legacy compatibility manifest. Prefer /api/openapi.json for current public read surfaces. This file must not freeze board counts or invent routes.",
   "paths": {
     "/gspc": {
       "get": {
@@ -143,12 +145,62 @@
           }
         }
       }
+    },
+    "/claims/register": {
+      "get": {
+        "summary": "Claim Maintenance register — evidence states, never a score",
+        "operationId": "getClaimMaintenanceRegister",
+        "responses": {
+          "200": {
+            "description": "Claim Maintenance register"
+          }
+        }
+      }
+    },
+    "/corrections": {
+      "get": {
+        "summary": "Public corrections ledger — append history of CSOAI defects and fixes",
+        "operationId": "getCorrections",
+        "responses": {
+          "200": {
+            "description": "Corrections ledger"
+          }
+        }
+      }
+    },
+    "/claims/events": {
+      "get": {
+        "summary": "Append-only Claim Maintenance event feed — verified hash chain, never a score or verdict",
+        "operationId": "getClaimEvents",
+        "responses": {
+          "200": {
+            "description": "Claim-event feed"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
+          }
+        }
+      }
+    },
+    "/claims/events/head": {
+      "get": {
+        "summary": "Signed verified head for the Claim Maintenance event feed",
+        "operationId": "getClaimEventsHead",
+        "responses": {
+          "200": {
+            "description": "Verified claim-event head"
+          },
+          "503": {
+            "description": "Feed/head/signature verification failed"
+          }
+        }
+      }
     }
   },
   "tags": [
     {
       "name": "gspc",
-      "description": "Living 23-axis GSPC measurement board"
+      "description": "Living GSPC measurement board; counts come from the response"
     },
     {
       "name": "verify",

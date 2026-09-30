@@ -149,12 +149,17 @@ const pluginCore = {
 };
 emit("distribution/plugin/.mcp.json", j({ mcpServers: { [PLUGIN]: { type: "http", url: ID.door } } }));
 emit("distribution/plugin/.claude-plugin/plugin.json", j({ ...pluginCore, mcpServers: "./.mcp.json" }));
-emit("distribution/plugin/.claude-plugin/marketplace.json", j({
+const claudeMarketplace = j({
   name: "council-of-ai",
   owner: { name: ID.publisher, email: ID.email },
   metadata: { description: "Council of AI — Layer 0 measurement tools.", version: REMOTE_VERSION },
   plugins: [{ name: PLUGIN, source: "./", description: pluginCore.description, version: REMOTE_VERSION, license: "Apache-2.0", homepage: ID.website }],
-}));
+});
+emit("distribution/plugin/.claude-plugin/marketplace.json", claudeMarketplace);
+// The same bytes, served at https://councilof.ai/.claude-plugin/marketplace.json (ONE-PRODUCT-PLAN lane 2).
+// Its plugin source is "./", which resolves only when the marketplace is added from a git host;
+// until a public one carries distribution/plugin, the working install is the free MCP door.
+emit("public/.claude-plugin/marketplace.json", claudeMarketplace);
 emit("distribution/plugin/.cursor-plugin/plugin.json", j({
   ...pluginCore,
   mcpServers: "./.mcp.json",

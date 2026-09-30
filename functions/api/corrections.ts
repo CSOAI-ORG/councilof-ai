@@ -43,6 +43,67 @@ export const LEDGER = {
   },
   corrections: [
     {
+      "id": "C-2026-0930-11",
+      "date": "2026-09-30",
+      "detected_at": "2026-09-28",
+      "detected_by": "internal audit",
+      "published_at": "UNRECORDED",
+      "timing_evidence": [
+        "The SOV model inventory of 2026-09-28 (internal audit) read the 13 committed Modelfiles for the sov6-*-v3-light fleet (CSOAI-ORG/csoai-static-deploy2, branch jv-wave8-production, commit c755d9f) and found each is FROM a public base model plus a system prompt; only the day is recorded",
+        "published_at is UNRECORDED: the deploy that first serves the corrected sentences had not happened when this entry was written"
+      ],
+      "what_was_wrong": "GET /api/gspc described our own models in the board's comparison rows as fine-tunes. measured_on.model said the rows hold '13 CSOAI own fine-tunes, excluded before comparison'; peritem_rows.own_model_exclusion said 'CSOAI's own fine-tunes (sov6-*-v3-light in the rows; council-*-v3-light on the board) are removed before ranking'; and every row-derived axis carried separation_evidence.fleet '6 base models; CSOAI's own fine-tunes removed before ranking'. These models are not fine-tunes. Each sov6-*-v3-light model is an Ollama Modelfile: a public base model with a system prompt, a short refusal list and a few examples. No weights were trained. Calling them fine-tunes overstated what we built, on the one subject where a measurement body has least excuse. The same payload also said the models were removed 'before ranking'; we compare, we do not rank. The exclusion itself was and is correct: the 13 models are removed before any comparison and are never counted in one.",
+      "how_caught": "An internal inventory of the SOV model estate on 2026-09-28 read the committed Modelfiles and found system-prompt overlays on stock bases, not trained weights. The one-product plan of 2026-09-30 listed the /api/gspc sentence as needing a correction entry, and this lane found the three places GET /api/gspc served it.",
+      "what_changed": "GET /api/gspc now says prompt overlays on stock base models (system prompts, not trained weights), removed before comparison, in measured_on.model, peritem_rows.own_model_exclusion and each separation_evidence.fleet. The signed per-item rows record (/interop/gspc-peritem-rows-2026-08-12.signed.json) keeps its bytes and its signature, so its own_model_exclusion string still says fine-tunes; the served payload names this entry beside it (peritem_rows.own_model_exclusion_correction) instead of editing signed bytes. Producers were fixed with the served text: functions/api/_gspc_power.ts, functions/api/gspc.ts, and the unsigned power file and its generator (functions/api/_gspc_rows_power.ts, scripts/gspc_separation_from_rows.py --power). The generator's signed-record strings are left as signed so the record still reproduces byte for byte. A test (functions/api/gspc.power.test.ts) now fails if the served fleet sentence contains the word fine-tune.",
+      "old_values": {
+        "GET /api/gspc measured_on.model (quoted, not claimed)": "... and 13 CSOAI own fine-tunes, excluded before comparison and never counted in a comparison ...",
+        "GET /api/gspc peritem_rows.own_model_exclusion (quoted, not claimed)": "CSOAI's own fine-tunes (sov6-*-v3-light in the rows; council-*-v3-light on the board) are removed before ranking. Base fleet of 6.",
+        "GET /api/gspc axes[*].separation_evidence.fleet (quoted, not claimed)": "6 base models; CSOAI's own fine-tunes removed before ranking"
+      },
+      "new_values": {
+        "GET /api/gspc measured_on.model": "... and 13 of our own models — prompt overlays on stock base models (system prompts, not trained weights; C-2026-0930-11) — excluded before comparison and never counted in a comparison ...",
+        "GET /api/gspc peritem_rows.own_model_exclusion": "Our own models (sov6-*-v3-light in the rows; council-*-v3-light on the board) are prompt overlays on stock base models (system prompts, not trained weights). They are removed before comparison. Base fleet of 6.",
+        "GET /api/gspc axes[*].separation_evidence.fleet": "6 base models; our own prompt overlays on stock base models removed before comparison"
+      },
+      "status": "CORRECTED - served wording fixed at its producers; signed record unchanged and annotated",
+      "reached_the_public": true,
+      "open_items": [
+        "Hugging Face model cards under csoai that describe sov models as fine-tuned are a separate set of statements; they are listed in the 2026-09-28 inventory and are not changed by this entry.",
+        "The signed per-item rows record keeps the word fine-tunes in its own_model_exclusion string until a new record is signed; this entry is the superseding note."
+      ],
+      "evidence": [
+        "https://councilof.ai/api/gspc (measured_on.model, peritem_rows.own_model_exclusion, peritem_rows.own_model_exclusion_correction, axes[*].separation_evidence.fleet)",
+        "https://councilof.ai/interop/gspc-peritem-rows-2026-08-12.signed.json (signed bytes unchanged)",
+        "functions/api/_gspc_power.ts; functions/api/gspc.ts; functions/api/_gspc_rows_power.ts; scripts/gspc_separation_from_rows.py; functions/api/gspc.power.test.ts"
+      ]
+    },
+    {
+      id: "C-2026-0930-01",
+      date: "2026-09-30",
+      detected_at: "2026-09-29T16:34Z",
+      detected_by: "internal audit",
+      published_at: "UNRECORDED",
+      timing_evidence: [
+        "Live GET https://councilof.ai/api/state during the 29 September contract-convergence audit returned public_count.value = '23 axis · 23 measured'.",
+        "Live GET https://councilof.ai/interop/chatgpt-plugin.json during the same audit still described the service as '22-axis GSPC' and advertised /measure and /anchor.",
+        "Current canonical source inspection before this correction found no dedicated functions/api/measure.ts or functions/api/anchor.ts and no catch-all source route implementing those two legacy declarations.",
+        "published_at remains UNRECORDED until the guarded production deploy and anonymous readback serve the corrected manifest and this ledger entry."
+      ],
+      what_was_wrong: "The live legacy ChatGPT compatibility manifest had become a second, stale description of the estate. It froze the board at '22-axis GSPC' while the live board/state contract reported 23 axis and 23 measured. It also advertised /measure and /anchor operations that were not backed by a dedicated or catch-all source route in the canonical release tree, while omitting the existing Claim Maintenance and corrections read contracts.",
+      how_caught: "A single-source-of-truth convergence audit compared the live plugin bytes, live /api/state, canonical /api/openapi.json and the current canonical staging mirror before changing any public surface.",
+      what_changed: "The compatibility manifest no longer types an axis count, points explicitly to /api/openapi.json as the canonical Actions schema, removes the two unbacked measure/anchor declarations, and adds the existing /api/claims/register and /api/corrections GETs. The canonical Actions schema exposes /api/state, Claim Maintenance and corrections as existing read surfaces. Claim Maintenance, Dashboard and plugin copy now point to the already-landed ledger authorities in /api/state; no new ledger, scheduler, protocol or measurement engine was created.",
+      status: "CORRECTED IN SOURCE; PRODUCTION DEPLOY/READBACK PENDING",
+      reached_the_public: true,
+      evidence: [
+        "/interop/chatgpt-plugin.json",
+        "/api/openapi.json",
+        "/api/state",
+        "/api/claims/register",
+        "/api/corrections",
+        "functions/api/_ledgers.ts"
+      ]
+    },
+    {
       "id": "C-2026-0929-09",
       "date": "2026-09-29",
       "detected_at": "2026-09-29T15:55Z",
@@ -1742,27 +1803,27 @@ export const LEDGER = {
     },
   ],
   signature: {
-    id: "ed83db2b8b361a85be2b5a57a1e1c0174e58e4ee68511c992976afa6740f67fd",
+    id: "c9e00682adeac89c7fd55ad3a87f7b02e3f5f9ce3132f8d26acf136070dc3908",
     signer: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
     did: "did:web:csoai.org#board-attestation-1",
-    signature: "af2cdb6ed9d795a7720ef6d0311dca46baac513a310f7ac075f4dd0585bd966ac5a1835f3fc8962a6abc74954ae304ebd30a2e4446c9351677d6b7f1dc32690b",
+    signature: "df8e454cfc5ad2a65987527f1656e2eb2689b287050f2d948e1a7a8e88c6b8a3e9cf2f794e03d34a8fa6a234eaa2d3988cf334628c67e15d5bc6ad8fd8669504",
     attestation: {
           "artifact": "csoai.corrections/0.1",
-          "content_id": "ed83db2b8b361a85be2b5a57a1e1c0174e58e4ee68511c992976afa6740f67fd",
+          "content_id": "c9e00682adeac89c7fd55ad3a87f7b02e3f5f9ce3132f8d26acf136070dc3908",
           "content_id_rule": "sha256(json.dumps(served body minus keys [\"signature\",\"signature_state\",\"signature_check\",\"correction_latency\",\"note\",\"fix_requires\"], sort_keys=True, separators=(',',':'), ensure_ascii=True))",
-          "entries": 86,
-          "latest_entry_id": "C-2026-0929-09",
-          "ledger_canonical_bytes": 202547,
+          "entries": 88,
+          "latest_entry_id": "C-2026-0930-11",
+          "ledger_canonical_bytes": 209791,
           "note": "Detached. The Ed25519 signature covers THIS object; the ledger body is committed to by content_id because it is larger than the signer's 3KB payload cap. Both must check: the digest must still describe the body a reader just fetched, and this object must verify.",
           "schema": "csoai.corrections-attestation/0.1",
-          "signed_at": "2026-09-29T20:59:15Z"
+          "signed_at": "2026-09-30T07:17:43Z"
     },
     sig_input:
       "Ed25519 over json.dumps(signature.attestation, sort_keys=True, separators=(',',':'), ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +
       "The attestation names the digest of the ledger body and the rule that produces it.",
     key_source: "https://csoai.org/.well-known/did.json (did:web:csoai.org#board-attestation-1)",
     note:
-      "RE-ISSUED 2026-09-22 over the current body through POST /api/board-sign on the pod caller token. " +
+      "RE-ISSUED over the current body through POST /api/board-sign; signature.attestation.signed_at records the issuance time. " +
       "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +
       "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +
       "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +

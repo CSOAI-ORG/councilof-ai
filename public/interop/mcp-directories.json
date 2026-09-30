@@ -32,9 +32,9 @@
       "tool_counts": {
         "note": "The mandate is 'the listing resolves and the tool count is true'. Declared counts are read from Smithery's detail endpoint; served tools are DERIVED from the two canonical files the door reads (functions/mcp/gspc-tools.json + paid-tools.json), never typed. Neither hosted deployment could be called directly: gspc--csoai.run.tools answers 401 at / and 404 at /mcp, so Smithery's runtime needs a key we do not hold. The comparison is therefore declared-vs-source, not declared-vs-tools/list.",
         "served_by_the_door": {
-          "free": 12,
-          "paid": 4,
-          "total": 16,
+          "free": 13,
+          "paid": 5,
+          "total": 18,
           "names": [
             "board_totals",
             "get_axis",
@@ -48,10 +48,12 @@
             "measurement_index",
             "verify_capsule",
             "server_evidence",
+            "evidence_bundle_preview",
             "commission_card",
             "art50_marking_evidence",
             "rwa_evidence",
-            "receipts_batch"
+            "receipts_batch",
+            "evidence_bundle"
           ]
         },
         "listings": [
@@ -112,7 +114,7 @@
       "tool_counts": {
         "verdict": "UNCHECKABLE",
         "declared": 11,
-        "served_by_the_door": 16,
+        "served_by_the_door": 18,
         "names": [
           "art50_marking_evidence",
           "board_totals",
@@ -126,7 +128,7 @@
           "verify_card",
           "verify_inclusion"
         ],
-        "detail": "Last Glama probe recorded 11 tool pages identical to the then-door (7 free + 4 paid). The door now also serves x402_trust (8 free + 4 paid = 12). Glama has not been re-probed since that add, so declared=11 stays and verdict is UNCHECKABLE — not TRUE. names[] is the last probe, not the live door.",
+        "detail": "Last Glama probe recorded 11 tool pages identical to the then-door (7 free + 4 paid). The door now also serves x402_trust (8 free + 4 paid = 12). Glama has not been re-probed since that add, so declared=11 stays and verdict is UNCHECKABLE — not TRUE. names[] is the last probe, not the live door. On 2026-09-30 the door added evidence_bundle_preview (free) and evidence_bundle (x402), so it serves 13 + 5 = 18; Glama has not been re-probed since, so its names[] still lack both.",
         "probe": "compare the /mcp/connectors/ sitemap leaves that are tool pages against jq -r '.tools[].name' functions/mcp/{gspc,paid}-tools.json"
       },
       "tool_count_audit": {
@@ -248,10 +250,10 @@
   },
   "surface_note": "Each row names the surface its state came from. `ours` is never valid evidence about a third party — it reports our own filesystem, and six of these seven rows once did. `rendered` is NECESSARY where a directory has no API and NOT SUFFICIENT where one exists: a rendered search echoes the query, which produced a false LISTED (glama's link count) and a false NOT_LISTED (smithery) on the same day. `api` and `sitemap` are authoritative; a sitemap is a directory's own index of what it lists and answered two rows no API could.",
   "supersedes": {
-    "path": "/interop/mcp-directories-20260914T110800Z.json",
-    "sha256": "e8ea03d9c40385aa3bfc46034f97bc8452eb11d336a3738ca187b6be8c79f0e7",
-    "ots": "/interop/mcp-directories-20260914T110800Z.json.ots",
-    "why": "served_by_the_door recounted from the door's definition files (13 -> 16: measurement_index, verify_capsule and server_evidence joined the free readers on 2026-09-26). The directory rows are NOT re-probed: they remain as of 20260914T110800Z. Timestamped bytes are superseded, never edited."
+    "path": "/interop/mcp-directories-20260930T101213Z.json",
+    "sha256": "bcf3e444e024293072e605a4826cd482eb3af96152c7db039baf03e6a71b61f6",
+    "ots": "/interop/mcp-directories-20260930T101213Z.json.ots",
+    "why": "served_by_the_door recounted from the canonical tool files after evidence_bundle_preview and evidence_bundle joined (2026-09-30). The directory rows are NOT re-probed. Timestamped bytes are superseded, never edited; the previous bytes keep their proof at the dated path."
   },
-  "ots_state": "STAMPED 2026-09-26: the OpenTimestamps proof over these exact bytes is /interop/mcp-directories.json.ots (public calendars; calendar-pending until upgraded, and a pending proof is not a Bitcoin attestation). The superseded bytes keep their own proof at the dated path."
+  "ots_state": "STAMPED 2026-09-30: the OpenTimestamps proof over these exact bytes is /interop/mcp-directories.json.ots (calendar-pending until upgraded; a pending proof is not a Bitcoin attestation). Earlier bytes keep their own proofs at the dated paths named in supersedes."
 }

@@ -1,6 +1,6 @@
 # Retain and verify an assembled data feed
 
-The existing Eunomia feed now publishes a free pre-payment byte contract at https://councilof.ai/api/eunomia-data?manifest=1. This is assembly of existing source artifacts, not new measurement. Each block keeps its original observation date.
+The signed data feed publishes a free pre-payment byte contract at https://councilof.ai/api/signed-data-feed?manifest=1 (the former path /api/eunomia-data answers 308 there, and manifests retained under it still verify). This is assembly of existing source artifacts, not new measurement. Each block keeps its original observation date.
 
 1. Save the free manifest before payment. Its evidence.blocks_sha256 commits to the canonical payload.blocks, not the entire response or a separate capture corpus.
 2. Supply that digest in x-csoai-expected-feed-sha256 on the subsequent feed request. A changed digest returns409 before facilitator verification or settlement. Missing source blocks return503 before payment. No payment is made by downloading the manifest or this checker.
@@ -10,10 +10,10 @@ The existing Eunomia feed now publishes a free pre-payment byte contract at http
 ```sh
 node verify_feed_delivery.mjs manifest.json payload.json
 # Optional: also compare your retained exact response digest and request record.
-node verify_feed_delivery.mjs manifest.json payload.json --payload-sha256 YOUR_SAVED_DIGEST --request-url 'https://councilof.ai/api/eunomia-data?feed=1' --method GET
+node verify_feed_delivery.mjs manifest.json payload.json --payload-sha256 YOUR_SAVED_DIGEST --request-url 'https://councilof.ai/api/signed-data-feed?feed=1' --method GET
 ```
 
-Node20+ and built-in modules only. The script makes no network requests, installs no dependencies, executes no other downloaded code and never pays. Source SHA-256: 294a1f48d4dfc444d5778cc82b2ffb4bcd8c83a00f4b9dd48927b5efb554679b.
+Node20+ and built-in modules only. The script makes no network requests, installs no dependencies, executes no other downloaded code and never pays. Source SHA-256: d63836216d215e19a110b9a1567116be7e8e722f385b3bb8aeae41ddf8b196f7.
 
 ## Separate evidence scopes
 

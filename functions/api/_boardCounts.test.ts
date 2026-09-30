@@ -25,7 +25,7 @@ describe("board count convergence", () => {
       axes: 3,
       measured_axes: 2,
       unmeasured_axes: 1,
-      public_count: "3 axis · 2 measured",
+      public_count: "3 axes · 2 measured",
       by_family: {
         gspc: { axes: 2, measured: 1 },
         financial: { axes: 1, measured: 1 },

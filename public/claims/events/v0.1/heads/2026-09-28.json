@@ -1,0 +1,52 @@
+{
+ "as_of": "2026-09-28T13:20:04Z",
+ "date": "2026-09-28",
+ "feed": {
+  "bytes_sha256": "a90c509de5433c862c4ecf8d20c77cedd6a97b70b317d5e19138a135ac15a933",
+  "first_at": "2026-09-28T07:51:52Z",
+  "head_line_sha256": "b654daaaba3a4747be8faa14d7fcbe1ddcee027ae532745489e1d4874fb707ca",
+  "head_seq": 8,
+  "last_at": "2026-09-28T07:51:57Z",
+  "lines_added_since_prev_head": 9,
+  "n_lines": 9,
+  "path": "/claims/events/v0.1/events.jsonl"
+ },
+ "prev_head": null,
+ "producer": {
+  "script": "scripts/claims/claim_events_export.py",
+  "sha256": "d03c2f65845edb7a0ef2187e691de451af376343461361f801226e4de5f9f156"
+ },
+ "rules": {
+  "append_only": "an existing feed is kept byte-for-byte; a head commits to the whole file by bytes_sha256 and to the previous head by prev_head.sha256",
+  "chain": "line n carries prev_sha256 = sha256 of line n-1's bytes without its newline; line 0 carries null; seq = n. Lines are compact key-sorted UTF-8 JSON.",
+  "disclosure": "a subject is DISCLOSED only when its registry_id is a LIVE row of /spec/claim-maintenance/register.json; otherwise SEALED: sealed id, claims c1..cN and atoms a1..aN by first appearance in the private source, no names, text, URLs or values",
+  "source": "each line names the private source line it projects by store, line index and sha256"
+ },
+ "schema": "csoai.claim-event-head/0.1",
+ "subjects": [
+  {
+   "disclosure": "SEALED",
+   "source_atoms": {
+    "head_line_sha256": "25e4de72c0c8cbed945b03add7d940983c56c5f13e487d3ce6db72f4df2c7c3d",
+    "n_lines": 1
+   },
+   "source_events": {
+    "head_line_sha256": "5509cf1e0ee5ffd85e0c2edb28168aaf41ce28a37cf261c79f154dc006721910",
+    "n_lines": 8
+   },
+   "subject_sealed_id": "4a31dd96e79dcf1b"
+  }
+ ],
+ "totals": {
+  "disclosed": 0,
+  "sealed": 1,
+  "subjects": 1
+ },
+ "verify": "node scripts/claims/claim-events-rederive.mjs --dir public/claims/events/v0.1",
+ "what_this_is": "The append-only log of what the claim maintenance loop observed, measured and decided about the claims it watches, with a head that commits to every byte of it.",
+ "what_this_is_not": [
+  "not a verdict on any subject, and not certification: CONFIRMED means no change was detected against the pinned observation and the checks reproduced",
+  "a QUARANTINED line records a proposal for the owner's review, not a correction",
+  "no score, rank or index may be derived from these states; they describe the evidence, never the claimant"
+ ]
+}

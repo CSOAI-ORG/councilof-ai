@@ -32,7 +32,7 @@ test("the published bundle is byte-identical to a fresh build of src/", () => {
 test("the bundle agrees with the library on every fixture, failures included", () => {
   const run = (bin, file) => {
     try {
-      return { code: 0, out: execFileSync(process.execPath, [bin, file], { encoding: "utf8" }) };
+      return { code: 0, out: execFileSync(process.execPath, [bin, file], { encoding: "utf8", env: { ...process.env, NODE_NO_WARNINGS: "1" } }) };
     } catch (e) {
       return { code: e.status, out: (e.stdout || "") + (e.stderr || "") };
     }

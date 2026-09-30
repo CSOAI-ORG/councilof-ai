@@ -17,6 +17,7 @@ import {
 } from "@modelcontextprotocol/server";
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/server/validators/cf-worker";
 import GSPC_TOOLS from "./gspc-tools.json";
+import STDIO_PACKAGE from "../../mcp/gspc-server/package.json";
 import { sharedToolResult, verifyToolResult } from "./_handlers";
 import { PAID_TOOL_DEFS, PAID_TOOL_NAMES, paidToolResult } from "./_paid";
 import { toolSpan, withTraceHeader } from "./_otel";
@@ -45,6 +46,26 @@ export function toolCountSentence(free: number, paid: number): string {
   return `${free} free tools at /mcp/free; ${free + paid} at /mcp (${free} free + ${paid} metered). The npm package is versioned separately.`;
 }
 export const TOOL_COUNTS = toolCountSentence(FREE_TOOL_COUNT, PAID_TOOL_COUNT);
+
+/**
+ * The stdio package's release line, read from its package.json ("0.2.2" -> "0.2.x"), never typed.
+ * It is a separately versioned, lighter implementation; its tools/list is shorter than this door's.
+ */
+export const STDIO_LITE_LINE = `${String(STDIO_PACKAGE.version).split(".").slice(0, 2).join(".")}.x`;
+
+/**
+ * GET /mcp install block. ONE default line, and it is the free door: no key, no sign-in, read-only.
+ * The metered door and the npm stdio package are alternatives, each labelled for what it is.
+ */
+export function fullDoorInstall(origin: string): Record<string, string> {
+  return {
+    default: `claude mcp add --transport http council-of-ai ${origin}/mcp/free`,
+    this_door: `claude mcp add --transport http council-of-ai-metered ${origin}/mcp (the ${FREE_TOOL_COUNT} free tools plus ${PAID_TOOL_COUNT} x402 tools)`,
+    stdio_lite: `npx -y csoai-gspc-mcp (stdio-lite ${STDIO_LITE_LINE}: fewer tools, versioned separately; ask it for its tools/list)`,
+    no_install_at_all: "curl -s https://councilof.ai/api/gspc",
+    python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
+  };
+}
 const INSTRUCTIONS =
   `GSPC MCP. ${FREE_TOOL_COUNT} free read-only tools and ${PAID_TOOL_COUNT} paid x402 tools. Call tools/list for the current definitions. Call a paid tool without x_payment for its payment challenge; payment comes from the caller's wallet. Payment travels as the x_payment ARGUMENT; each implementation sets the X-PAYMENT header itself. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification stays free. witness_hash is quarantined and not advertised. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.`;
 // The free door speaks to a person using a chat client, so it carries no operations notes and no
@@ -432,13 +453,7 @@ export const onRequest = async ({ request, env, waitUntil }: { request: Request;
       server_info: { ...SERVER_INFO, release_train: "pages-http" },
       doctrine:
         "We measure, never certify. Verification is VALID / INVALID / UNCHECKABLE; an unmeasured axis is a first-class answer.",
-      install: {
-        remote: "Add https://councilof.ai/mcp as a Streamable HTTP MCP server.",
-        claude_code: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-        any_client: "npx -y csoai-gspc-mcp",
-        no_install_at_all: "curl -s https://councilof.ai/api/gspc",
-        python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
-      },
+      install: fullDoorInstall(origin),
       tool_counts: TOOL_COUNTS,
       stdio_alternative:
         "npm csoai-gspc-mcp and the Pages HTTP implementation are released independently. Payment travels as the x_payment ARGUMENT; each door sets the X-PAYMENT header itself. Ask each installed version for its tools/list.",
