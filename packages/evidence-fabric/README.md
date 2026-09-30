@@ -91,3 +91,22 @@ Events are signed as a batch, through the existing board-sign path:
 3. `python3 verify.py batch.json batch.signed.json events.jsonl --did did.json --tamper-control` must print VALID. It must also report every one-byte tamper as INVALID.
 
 The signature proves that these bytes were signed by `did:web:csoai.org#board-attestation-1`. It does not prove that any claim inside is true.
+
+## Bridges: probes, ingesters, maintenance
+
+| Path | What |
+|---|---|
+| `probe/release_parity.py` | Compares the latest version on the package registry (PyPI or npm) with the repository's latest release tag. |
+| `probe/licence_parity.py` | Compares the licence the registry declares with the SPDX licence GitHub detects. NOASSERTION is reported as UNCHECKABLE. |
+| `probe/quote_reread.py` | Re-reads a quoted claim at its URL and checks whether the quote is still there. This is the basic step of claim maintenance. |
+| `probe/a2a_card.py` | Checks an A2A agent card at its well-known URI. It uses `scripts/census/a2a-card-probe.py`, with a control path on the same host. |
+| `probe/mcp_registry.py` | Compares the MCP Registry's latest entry with the package registry or the image tags. When a remote endpoint is listed, it runs `scripts/census/mcp-remote-probe.py` against it. When no remote is listed, the result is UNMEASURED. |
+| `probe/mcp_stdio_tools.py` | Compares a README's claim about which tools a server exposes with what the server's `tools/list` returns. It runs locally over stdio with no credentials. |
+| `ingest/garak_in.py` | Reads a garak report and recounts it. garak holds the method; we hold the run and the recount. |
+| `ingest/openshell_in.py`, `../../harness/openshell-adapter/ocsf_out.py` | Turns declared-vs-observed rows from the OpenShell adapter into events, and renders them as OCSF output. |
+| `ingest/safe_in.py`, `safe_pack.py`, `safe_pack_verify.py` | Turns SAFE re-verification records into events, and builds the frozen pack from them. |
+| `oasf/build_record.py` | Builds our OASF 1.1.0 record with a `core/evaluation` module. It is a sibling of the AGNTCY lane draft, which it does not edit. |
+| `batch.py`, `anchor.py`, `verify.py` | Assemble a batch, log it in Rekor and upgrade its OTS proofs, and verify it offline. |
+| `maintain.py`, `ops/maintain-cron.sh` | Plan, detect and run the day-7, day-30 and day-90 re-reads of each signed batch, then sign, anchor and store each one privately. |
+
+All probes send read-only GET requests, or `initialize` plus `tools/list`. They send no credentials and never call a tool. Anything that needs an account is reported as UNMEASURED, with the reason.

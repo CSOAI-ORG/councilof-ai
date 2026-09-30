@@ -1,0 +1,13 @@
+# nat eval --config_file fixtures/eval.yml --skip_workflow   (run from packages/nat-csoai-evidence)
+workflow:
+  _type: current_datetime   # never run: --skip_workflow evaluates the dataset's generated_answer as given
+eval:
+  general:
+    output_dir: ./.tmp/nat-eval
+    dataset:
+      _type: json
+      file_path: fixtures/dataset.json
+  evaluators:
+    evidence:
+      _type: csoai_evidence
+      did_json: fixtures/test-did.json

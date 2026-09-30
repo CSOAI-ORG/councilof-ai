@@ -38,6 +38,28 @@ def ctl(observed_version):
     return {"id": "fabricated-version", "expected": "DIVERGENT", "got": "CONSISTENT" if observed_version == FAKE else "DIVERGENT"}
 
 
+def oci_match(ident, version):
+    """Public ghcr.io image: anonymous pull token, then tags/list. Returns (url, found) where found is
+    'tag:<t>' if a tag equals the version or carries its build suffix (+<sha> -> '-<sha>' in the tag), else 'absent'."""
+    repo = ident.split("/", 1)[1].split(":", 1)[0]
+    st, b, _, _ = get(f"https://ghcr.io/token?scope=repository:{repo}:pull")
+    if st != 200:
+        return f"https://ghcr.io/v2/{repo}/tags/list", None
+    tok = json.loads(b)["token"]
+    import urllib.request
+    u = f"https://ghcr.io/v2/{repo}/tags/list?n=1000"
+    try:
+        with urllib.request.urlopen(urllib.request.Request(u, headers={"Authorization": f"Bearer {tok}", "User-Agent": "csoai-evidence"}), timeout=30) as r:
+            tags = json.loads(r.read()).get("tags") or []
+    except Exception:
+        return u, None
+    build = version.split("+", 1)[1] if "+" in version else None
+    for t in tags:
+        if t == version or t == version.replace("+", "-") or (build and t.endswith("-" + build)):
+            return u, "tag:" + t
+    return u, "absent"
+
+
 def package_events(name, srv, rurl, rsha, rat):
     out = []
     for p in srv.get("packages") or []:
@@ -46,12 +68,16 @@ def package_events(name, srv, rurl, rsha, rat):
             u = f"https://pypi.org/pypi/{ident}/json"; st, b, sha, at = get(u); pv = json.loads(b)["info"]["version"] if st == 200 else None
         elif rt == "npm":
             u = f"https://registry.npmjs.org/{ident.replace('/', '%2F')}"; st, b, sha, at = get(u); pv = json.loads(b).get("dist-tags", {}).get("latest") if st == 200 else None
+        elif rt == "oci" and ident.startswith("ghcr.io/"):
+            u, pv = oci_match(ident, srv["version"])
+            sha, at = None, now()
         else:
             continue
-        state = "UNCHECKABLE" if pv is None else ("CONSISTENT" if pv == srv["version"] else "DIVERGENT")
+        state = "UNCHECKABLE" if pv is None else ("CONSISTENT" if pv == srv["version"] or (rt == "oci" and pv.startswith("tag:")) else "DIVERGENT")
         out.append(E.build(
             subject={"kind": "mcp_server", "locator": f"mcp-registry:{name}", "declared_by": "registry.modelcontextprotocol.io isLatest entry"},
-            claim={"text": f"The MCP Registry's latest entry for {name} is version {srv['version']}, packaged as {rt}:{ident}; {rt} lists {pv} as latest.",
+            claim={"text": (f"The MCP Registry's latest entry for {name} is version {srv['version']}, packaged as {rt}:{ident}; "
+                            + (f"the image registry's matching tag: {pv}." if rt == "oci" else f"{rt} lists {pv} as latest.")),
                    "source_url": rurl, "source_sha256": rsha, "read_at": rat},
             method={"id": "mcp-registry-package-parity", "version": "0.1", "code_sha256": None, "holder": "csoai"},
             declared={"registry_version": srv["version"], "package": f"{rt}:{ident}"}, observed={"package_latest": pv, "url": u, "sha256": sha, "read_at": at},
