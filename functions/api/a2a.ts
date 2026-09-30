@@ -924,7 +924,8 @@ async function serveV03(id: unknown, method: string, params: unknown, origin: st
   let v1Params: unknown = params;
   if (method === "message/send" || method === "message/stream") {
     const m = record(p?.message);
-    v1Params = m ? { message: v03MessageToV1(m) } : {};
+    const normalized = m && !str(m.messageId) ? { ...m, messageId: crypto.randomUUID() } : m;
+    v1Params = normalized ? { message: v03MessageToV1(normalized) } : {};
   }
   const res = await dispatchV1(id, V03_METHODS[method], v1Params, origin);
   const body = record(await res.json()) ?? {};
