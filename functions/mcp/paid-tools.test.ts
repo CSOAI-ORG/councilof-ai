@@ -103,6 +103,7 @@ const FREE_LIST = [
   "verify_capsule",
   "server_evidence",
   "evidence_bundle_preview",
+  "route",
 ];
 const PAID_LIST = [
   "commission_card",

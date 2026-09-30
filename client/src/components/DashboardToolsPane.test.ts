@@ -23,6 +23,7 @@ describe("dashboard MCP inventory", () => {
       "verify_capsule",
       "server_evidence",
       "evidence_bundle_preview",
+      "route",
     ]);
     expect(METERED_TOOLS).toEqual([
       "commission_card",
@@ -31,7 +32,7 @@ describe("dashboard MCP inventory", () => {
       "receipts_batch",
       "evidence_bundle",
     ]);
-    expect(PUBLISHED_TOOL_COUNT).toBe(18);
+    expect(PUBLISHED_TOOL_COUNT).toBe(19);
   });
 
   it("does not advertise the quarantined witness SKU", () => {

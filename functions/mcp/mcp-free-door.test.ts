@@ -82,7 +82,7 @@ describe("/mcp/free serves exactly the free tools", () => {
     const { response, message } = await rpc("/mcp/free", "tools/list");
     expect(response.status).toBe(200);
     const tools = message.result!.tools!;
-    expect(FREE_NAMES).toHaveLength(13);
+    expect(FREE_NAMES).toHaveLength(14);
     expect(tools.map((t) => t.name)).toEqual(FREE_NAMES);
     expect(tools).toEqual((FREE as { tools: Tool[] }).tools);
     for (const t of tools) {

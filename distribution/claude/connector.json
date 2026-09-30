@@ -5,7 +5,7 @@
   "server_url": "https://councilof.ai/mcp/free",
   "transport": "streamable-http",
   "authentication": "none",
-  "description": "Council of AI's thirteen free read-only tools over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards and capsules. No payment tool is served at this address. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
+  "description": "Council of AI's fourteen free read-only tools over the public GSPC board: read totals and axis rows, retrieve and verify Ed25519-signed measurement cards and capsules. No payment tool is served at this address. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.",
   "company": {
     "name": "CSOAI Ltd",
     "company_number": "16939677",
@@ -84,9 +84,14 @@
       "name": "evidence_bundle_preview",
       "payment": "free",
       "read_only": true
+    },
+    {
+      "name": "route",
+      "payment": "free",
+      "read_only": true
     }
   ],
-  "tool_count": 13,
+  "tool_count": 14,
   "example_prompts": [
     "What does the Council of AI measurement board show right now? How many axes are measured?",
     "Show me the Council of AI safety axis: sample size, accuracy and interval.",
