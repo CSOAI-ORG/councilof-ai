@@ -1,0 +1,411 @@
+{
+ "accuracy": 1,
+ "axis": "detector-interop",
+ "baseline_runtime": {
+  "code_commit": "bdd8873344ff4b3b8b5b5ae01d91ec4b8843edd2",
+  "cpu_count": 4,
+  "cpu_model": null,
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "gpu-t4",
+  "docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "environment_json_sha256": "45a24a35facbc4b9aa123b5a0f118ef321f9f655a133f92981b3dd1dbce914e9",
+  "finished_at": "2026-09-29T11:01:02Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-0bf65b43-fb93-d789-cea4-d339997f8790\n1, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-88255e7c-3355-fbee-b3b0-53041b9fc401",
+  "hardware": "GPU: 2x Tesla T4 (CUDA driver 13.0)",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "provider": "kaggle",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runs": [
+   {
+    "accuracy": 1,
+    "bundle_sha256": "24e6a1610c834e3da6f7417bbe0109756ba0881ab446e2c4e5ce78fe64585406",
+    "counts": {
+     "attempted": 33,
+     "bank_items": 33,
+     "correct": 15,
+     "graded_n": 15,
+     "parse_errors_excluded": 18,
+     "transport_errors_excluded": 0,
+     "transport_ok": 33
+    },
+    "items_sha256": "ca7941fe54d5dc3a792a41e6ca27cc7ba10fbb9c549be985427bf87e98741d89",
+    "run_id": "20260929T104521.294573Z-45b654244b"
+   }
+  ],
+  "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4",
+  "slice_id": "20260929T10-qwen2.5-7b",
+  "started_at": "2026-09-29T10:42:16Z",
+  "substrate": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4"
+ },
+ "counts": {
+  "attempted": 33,
+  "bank_items": 33,
+  "correct": 15,
+  "graded_n": 15,
+  "parse_errors_excluded": 18,
+  "transport_errors_excluded": 0,
+  "transport_ok": 33
+ },
+ "independence": {
+  "differs_on": "compute device and numeric path (rtx4090 vs gpu-t4); provider (runpod vs kaggle)",
+  "note": "declared from the kernels' own records; admission (admit_mill_cards.py) decides",
+  "shared": "code commit bdd8873344ff, ollama 0.34.4, decode settings, banks (allowlist pins, checked in-kernel), model manifest digest"
+ },
+ "instrument_sha256": "9cf7ac4a9ef2d878c10b4d8cc8250fb344676e47299a6874f14edc85ad6dfd75",
+ "intake_bundle_sha256": "286dccc0ed675de0b4b6c399908da791d0c863002cc02279c766db46b316ce84",
+ "intake_state": "VERIFIED_QUARANTINE",
+ "items_sha256": "0934d8b98f60a29af750dd2db4911dd209397661fb4f06994b3d12371e8dce91",
+ "n": 15,
+ "parity": {
+  "aggregate_equal": true,
+  "per_item_cross_hardware": {
+   "differing_items": [],
+   "grade_equal": 33,
+   "n_items": 33,
+   "parsed_label_equal": 33,
+   "raw_output_equal": 33
+  }
+ },
+ "per_item_results": [
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000001-5399cdd4d65c",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "5bf1540ad2f3a34e819b10c41f47752e7c6d9ca2c68c80defda983a1a2399f96",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 1
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000002-25f64f7601cc",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "024f5306633347031f7af1d2f9e64a7190211921e5ffdc3f85099ec8912e379d",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 2
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000003-2f4a1700b635",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "21f51ebcafd78afb14fdebf1016564e02805b813cb83774ca36e6dbf6fc084e3",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 3
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000004-ba2d7905ad8f",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "ac816391569278c06ea940cf55417d38812373c760f6e9749411c91a566c3ac0",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 4
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000005-70805d4ad51b",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "918ceca93eee59c1e0d7cebc6db2dc59c508c722d80366102fc49b1b572d8a5c",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 5
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000006-54d03c500964",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "80ca357e52187fafd4d050587ab7da59637e99d711ce55bdcd60c6bded8af080",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 6
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000007-1863175eba83",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "37fbd600879e7ea8b74b6c3b16b5f851d29491809754c8f4947c8495aa774dd6",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 7
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000008-0a9aa9f55e53",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "5001ac81a9729a3d7082637bce1be2d9a6e803055f464eaef5f16758f983799d",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 8
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000009-b9c6fe528ac1",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "0663e4195592485857dc138b2aa6a8f6adc7fd7eecc86f7496246ea279b60dc5",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 9
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000010-3546ff55a577",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "4991fc466170b2db1f2a5ea835c5f66f0d5bfcce089f5e0b670143165d5bc9d7",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 10
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000011-32533ea76205",
+   "parsed_label": null,
+   "prompt_sha256": "15d6ca40f62dfab75d99daeffcbbc3274544463ae5277f33232ded8d5a42a5d4",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 11
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000012-d5f64773c850",
+   "parsed_label": null,
+   "prompt_sha256": "2106107a85329f3e22d243573d0d9f37f13e3ddd130f2f3ecff72e35c574ef87",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 12
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000013-02a5cf1dcbd4",
+   "parsed_label": null,
+   "prompt_sha256": "d15521a4a1ab783c88c2e70dcd9d5045fd5c1bf019b07bd27c29552789f8d919",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 13
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000014-8e1d9a717223",
+   "parsed_label": null,
+   "prompt_sha256": "cd46b20518c97ff1bc7a687567bbd57116732f38fd8d540756538d75c491357a",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 14
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000015-c8e7ad47433b",
+   "parsed_label": null,
+   "prompt_sha256": "6fab59bad48e0681696e99b97f59bd11f8265271b74adafea2b00810333f2c2e",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 15
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000016-4804e4e6c0b0",
+   "parsed_label": null,
+   "prompt_sha256": "be8cae7e846cd5ebdafda781fa178f8cf19ea7dcc3e19a01db311324ed6d87c4",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 16
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000017-c83c0b0e28c4",
+   "parsed_label": null,
+   "prompt_sha256": "5dc074b1e7f6d3f89497209190aeab099f3ca7dd8614c45f5c042af4a515eefb",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 17
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000018-66e55a1d8bf4",
+   "parsed_label": null,
+   "prompt_sha256": "7825af403f9f669edb75b0635088346d7a206f71446701372b3b68ae96040a92",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 18
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000019-50721e9525e7",
+   "parsed_label": null,
+   "prompt_sha256": "53d0876711fa58bc8990d47f1595b2614f7151ec3e7ccd5aab4e160a0f86fd68",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 19
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000020-fb8d6abf21e8",
+   "parsed_label": null,
+   "prompt_sha256": "408498b65324607dc7fca7b958fcd7f5efaa4ed53f7273304b9eabafc339463d",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 20
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000021-291f4dfa3d05",
+   "parsed_label": null,
+   "prompt_sha256": "1b4a90f4eb9a822048889aba97d786b6a3ae3bf13e340c4b60837d2f3375af74",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 21
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000022-4c769ad748ac",
+   "parsed_label": null,
+   "prompt_sha256": "a7cf5d9b2e0c706338278eae77bd404d245bd79aca9aacf77f0b83c1a69793de",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 22
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000023-bac04504e5c5",
+   "parsed_label": null,
+   "prompt_sha256": "d0b9b3a31708a4987769250ebb16cd323316fd67044979b038ff2324a0673ed7",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 23
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000024-0eb339c6227e",
+   "parsed_label": null,
+   "prompt_sha256": "fd87ed709df0e4ffcd94fb00e1f66f7c86404f981afccfc30c5e08aa271bec41",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 24
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000025-a2d1e122a74c",
+   "parsed_label": null,
+   "prompt_sha256": "d4e27607bd7dde889f656b4ff319b512b1a01baa790daee373d6a9bf1a88678d",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 25
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000026-bbffb42b3525",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "463773c43df9da622b435cc40cce983c99417ddb6ad47e60c012af50fa888826",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 26
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000027-690c1fc153fd",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "c0be4c20ec46f3fcc874e113cc4498c8612c0e670db257ed7c7a2ba19b36550b",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 27
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000028-89b65231099d",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "a2ba53960d310c962eb5232916a2b24badc83ef8f8a1132d2d31e4fca986d798",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 28
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000029-ac4650b41272",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "5a12a19a90b8a0e69ea0893c1ac338f8779d83f5c6bdbf4df7c5ce7bd0a3fe83",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 29
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000030-bd4981ae0ff8",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "216697ae03e03f677f650e915798f45e0ca3a8cd4c425f734f93f79a98fabfb6",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 30
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000031-b181312b7e7a",
+   "parsed_label": null,
+   "prompt_sha256": "4999e080f7818300d33fbb49073f4b7ada18a6a7825b3de645bdf7b36d350f2a",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 31
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000032-fb0ff2724c57",
+   "parsed_label": null,
+   "prompt_sha256": "e98aad93721081c3a3b0fff6eca3562842278817905a3edf887a307acbf12784",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 32
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000033-7466e937c422",
+   "parsed_label": null,
+   "prompt_sha256": "72b03db17b689bb4bbafa20bdc1e25450f40ee5cadd86c8696d8b290deb7d815",
+   "raw_output_sha256": "bcfc7e5a21fb2513ca4a48ebde6b7a08fa12b340bd95e8ccabc7ee0026162119",
+   "sequence": 33
+  }
+ ],
+ "per_item_results_sha256": "617c8c0b910413f36867fd54fb0c194ca0ba48c154639807d1b65329c92236a3",
+ "produced_at": "2026-09-30T08:38:48Z",
+ "produced_by": "oracle-micro-2 ~/lanes/gspc-continuous/build_declarations.py (lane gspc-continuous-20260929)",
+ "run_id": "20260930T082755.624725Z-bf3c578202",
+ "runtime": {
+  "bank_sha256": "d75e96802d9eb9df1c42ea46ce55c577879d0d78d199b1c612c2b14685d62c8e",
+  "code_commit": "bdd8873344ff4b3b8b5b5ae01d91ec4b8843edd2",
+  "cpu_count": 32,
+  "cpu_model": "AMD Ryzen 9 7950X 16-Core Processor",
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "rtx4090",
+  "docker_image": "runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04",
+  "environment_json_sha256": "7d7cff2cadb86be93dbd189bdfa06c8d71c8558c6f81e2c6fef3aa624cfd634c",
+  "finished_at": "2026-09-30T08:30:48Z",
+  "gpu": "0, NVIDIA GeForce RTX 4090, 24564 MiB, 570.195.03, 8.9, GPU-001d94d1-0a24-f46e-9917-aeacf408c95f",
+  "hardware": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8)",
+  "kernel": "runpod-pod:4om8q6jhkrgkzj",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.35",
+  "provider": "runpod",
+  "python": "3.11.10",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runtime_id": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.34.4",
+  "slice_id": "20260930T0827-qwen2.5-7b",
+  "started_at": "2026-09-30T08:27:29Z",
+  "substrate": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.34.4"
+ },
+ "schema": "csoai.mill-runtime-declaration/0.1",
+ "status": "SIDECAR - not inside the card: the intake contract pins the card body/run.json key sets exactly",
+ "subject": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+}
