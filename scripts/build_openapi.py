@@ -515,14 +515,10 @@ def compose(fix: Path = FIX) -> dict:
             op["x-csoai"]["offline_content_verifier"] = BASE + "/verifier/verify_feed_delivery.mjs"
         # `indexed_in` is deliberately NOT carried (2026-09-26): /.well-known/x402.json no longer
         # types third-party index membership, which only a read of the index can establish.
-        # One door, every verb its handler actually exports. The 402 contract is identical on
-        # each; only operationId differs, because operationIds must be unique.
-        item = {}
-        for verb in sorted({method} | set(handler_methods(path))):
-            vop = json.loads(json.dumps(op))
-            vop["operationId"] = f"x402_{did}" if verb == method else f"x402_{did}_{verb}"
-            item[verb] = vop
-        paths[path] = item
+        # Advertise exactly the canonical method named by the x402 resource manifest. A handler may
+        # accept compatibility aliases (for example POST = GET), but those are not separate x402
+        # products and must not duplicate the paid operation, price, or zero-amount free door.
+        paths[path] = {method: op}
         door_paths.append(path)
 
     # 3. the document

@@ -526,6 +526,32 @@
       "payment": "free"
     },
     {
+      "id": "api-claims-events",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claim Maintenance event feed",
+      "description": "Append-only, hash-chained Claim Maintenance event feed. Served only when the committed feed bytes, daily head and signed head verify. Event states describe observations and workflow; they are not verdicts, scores or corrections by themselves.",
+      "endpoint": "/api/claims/events",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events-head",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claim Maintenance event head",
+      "description": "Verified signed head for the Claim Maintenance event feed, binding the committed feed bytes, line count, last-line digest and signing envelope. A valid signature binds bytes; it does not prove the truth of the underlying claim.",
+      "endpoint": "/api/claims/events/head",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "api-clarity",
       "protocols": [
         "http"
