@@ -36,6 +36,14 @@ describe("manifest", () => {
     for (const f of ["lib/cardVerify.mjs", "lib/gspcVerify.mjs", "lib/board.mjs", "lib/hub.mjs", "popup.js", "popup.css", "README.md"]) {
       expect(existsSync(path.join(EXT, f)), f).toBe(true);
     }
+    expect(manifest.icons).toEqual({
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png",
+    });
+    expect(manifest.action.default_icon).toEqual(manifest.icons);
+    for (const f of Object.values(manifest.icons)) expect(existsSync(path.join(EXT, f)), f).toBe(true);
   });
   it("asks for only the two hosts it reads and no broad permission", () => {
     expect(manifest.host_permissions.sort()).toEqual(["https://councilof.ai/*", "https://huggingface.co/*"]);
