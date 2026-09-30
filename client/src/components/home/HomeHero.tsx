@@ -234,16 +234,18 @@ export default function HomeHero({
         {/* WHAT WE DO, in the reader's words: the three kinds of subject, how they are graded, and
             the three properties a stranger can hold us to (signed, re-checked, corrected in public). */}
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/90 sm:mt-5 sm:text-lg" data-testid="hero-what-we-do">
-          We test AI models, agents and the endpoints they call against frozen, published tests, graded
-          by fixed rules, never by another AI. Issued cards are signed, claims are{" "}
+          {/* At most three lines at 375px (ONE-PRODUCT-PLAN rule 2); the grading clause joins from 640px. */}
+          We test AI models, agents and the endpoints they call
+          <span className="hidden sm:inline"> against frozen, published tests, graded by fixed rules, never by another AI</span>.
+          Signed cards, claims{" "}
           <Link href="/claim-maintenance/" className="underline decoration-emerald-300/50 underline-offset-2 hover:text-white">
             re-checked on a schedule
           </Link>
-          , and every error we find is{" "}
+          , errors{" "}
           <Link href="/corrections/" className="underline decoration-emerald-300/50 underline-offset-2 hover:text-white">
             corrected in public
           </Link>
-          . Unmeasured stays visible.
+          .<span className="hidden sm:inline"> Unmeasured stays visible.</span>
         </p>
 
         </div>
