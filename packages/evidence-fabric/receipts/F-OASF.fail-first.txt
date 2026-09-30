@@ -1,0 +1,11 @@
+F-OASF fail-first run, 2026-09-30T16:40:10Z, lanes pod, against the v0 stub render/oasf_eval.py sha256 8035450834af6185a30dff57616423b2aeb23b49303a871a5c8fe897287b0380
+The stub turned any event carrying a value into an OASF metric; the doctrine test must fail on it.
+E       Failed: DID NOT RAISE DoctrineError
+E       Failed: DID NOT RAISE DoctrineError
+E       Failed: DID NOT RAISE DoctrineError
+E           KeyError: 'state'
+FAILED tests/test_oasf_eval.py::test_number_on_unmeasured_is_refused[UNMEASURED-0.42]
+FAILED tests/test_oasf_eval.py::test_number_on_unmeasured_is_refused[UNMEASURED-0]
+FAILED tests/test_oasf_eval.py::test_number_on_unmeasured_is_refused[UNCHECKABLE-7]
+FAILED tests/test_oasf_eval.py::test_unmeasured_events_render_no_metric_and_no_value
+4 failed, 6 deselected in 0.02s
