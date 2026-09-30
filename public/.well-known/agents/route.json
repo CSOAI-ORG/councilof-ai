@@ -1,0 +1,54 @@
+{
+  "name": "Council of AI — route",
+  "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "route",
+      "name": "route",
+      "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+      "tags": [
+        "routing",
+        "policy",
+        "evidence"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"gspc-route\",\"input\":{\"task\":\"Summarise a public paragraph.\",\"objective\":{\"quality_axis\":\"governance\"}}}",
+        "POST https://councilof.ai/mcp/free tools/call {\"name\":\"route\",\"arguments\":{\"task\":\"Summarise a public paragraph.\",\"policy\":{\"presets\":[\"read-only\"]}}}"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment"
+  ],
+  "mcp_tool": "route",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:route"
+}

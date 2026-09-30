@@ -41,6 +41,8 @@ import { DOCTRINE, measurementIndex, serverEvidence, verifyCapsule } from "../_l
 import { executePlan, routeIntent, type Plan } from "../_lib/talkRouter";
 import { recordUsage } from "../_lib/usage";
 import { evidenceBundlePreview } from "../mcp/_evidence";
+import { routeResult } from "../mcp/_route";
+import { routeSummary } from "../_lib/route/route";
 
 type Json = Record<string, unknown>;
 
@@ -167,6 +169,7 @@ export const SKILL_IDS = [
   "measurement-capsules",
   "server-evidence",
   "evidence-bundle",
+  "gspc-route",
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
@@ -470,6 +473,15 @@ function validateSkillInput(selection: SkillSelection): string | null {
     if (input.subject !== undefined && (typeof input.subject !== "string" || input.subject.length > 120)) return "evidence-bundle subject must be a string of at most 120 characters";
     return null;
   }
+  // GSPC Route, decide-only: the same core (functions/_lib/route) as the MCP tool route. The core
+  // validates every field itself and answers BAD_ARGUMENTS; here only the envelope is checked.
+  if (skill === "gspc-route") {
+    const allowed = ["task", "task_sha256", "data_class", "needs_write", "candidates", "policy", "objective", "mode"];
+    const extra = Object.keys(input).filter((k) => !allowed.includes(k));
+    if (extra.length) return `gspc-route input accepts only ${allowed.join(", ")}`;
+    if (input.task === undefined && input.task_sha256 === undefined) return "gspc-route input requires task or task_sha256";
+    return null;
+  }
   return "unsupported skill";
 }
 
@@ -622,6 +634,18 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
         `evidence-bundle: ${String(payload.state)} — ${String(payload.relevant_signed_cards ?? 0)} already-signed card(s) relevant-to ${String((payload.obligation as Json | undefined)?.id ?? input.obligation)}, read from ${origin}/api/evidence-bundle (the same module as the MCP tool evidence_bundle_preview).`,
         payload.review_note ? String(payload.review_note) : "Observations only; relevant-to is never a determination.",
         `Doctrine: ${DOCTRINE}. This skill never charges; the assembled bundle is the x402 MCP tool evidence_bundle.`,
+        REGISTER,
+      ].join("\n"),
+      data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },
+    };
+  }
+  if (skill === "gspc-route") {
+    const payload = await routeResult(input as Record<string, unknown>, origin);
+    return {
+      text: [
+        `gspc-route: ${routeSummary(payload)}`,
+        "Decide-only and unsigned: the caller's policy applied to published measurements (the same module as the MCP tool route). Routing is not ranking.",
+        `Doctrine: ${DOCTRINE}.`,
         REGISTER,
       ].join("\n"),
       data: { state: payload.state, skill, as_of: new Date().toISOString(), doctrine: DOCTRINE, register: REGISTER, payload },

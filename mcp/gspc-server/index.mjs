@@ -840,6 +840,8 @@ const HANDLERS = {
   server_evidence: (a) => doorTool("server_evidence", a),
   // The door answers it (functions/mcp/_evidence.ts), so the two implementations cannot disagree.
   evidence_bundle_preview: (a) => doorTool("evidence_bundle_preview", a),
+  // GSPC Route (decide-only): the door answers it (functions/_lib/route), so the two cannot disagree.
+  route: (a) => doorTool("route", a),
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -893,6 +895,8 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — MCP handshake census${payload.partial ? " (partial round)" : ""}.`;
     case "evidence_bundle_preview":
       return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} — ${payload.relevant_signed_cards ?? 0} already-signed card(s) relevant-to the obligation; observations only, never a determination.${payload.review_note ? " " + payload.review_note : ""}`;
+    case "route":
+      return `${payload.state ?? "?"}${payload.chosen ? " — " + payload.chosen.id + " on basis " + payload.chosen.choice_basis : ""}; separation ${payload.separation ?? "?"}. Unsigned decide-only preview; routing is not ranking.`;
     case "measurement_index":
     case "verify_capsule":
     case "server_evidence":

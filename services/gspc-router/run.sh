@@ -12,7 +12,8 @@ AGW_VERSION=v1.5.0
 AGW_SHA256=daca5cda76e8c5ab0c1a75912fecf2d6365095403f810db72029c49d14a37e7b   # agentgateway-linux-amd64 v1.5.0 (release digest)
 export OLLAMA_MODELS=${OLLAMA_MODELS:-$STATE/ollama-models} OLLAMA_HOST=127.0.0.1:11434
 
-stop() { for p in agentgateway route_service.mjs; do pkill -f "$p" 2>/dev/null || true; done; }
+# Pidfiles, never pkill -f: a pattern also matches any shell whose command line merely mentions it.
+stop() { for f in "$STATE"/route_service.pid "$STATE"/agentgateway.pid "$STATE"/ollama.pid; do [ -f "$f" ] && kill "$(cat "$f")" 2>/dev/null; rm -f "$f"; done; return 0; }
 [ "${1:-start}" = stop ] && { stop; echo stopped; exit 0; }
 
 # Disk floor: never start below 2 GB free where logs, records and models are written.
@@ -30,9 +31,9 @@ fi
 "$BIN/agentgateway" -f "$HERE/agentgateway.yaml" --validate-only
 [ -f "$HERE/dist/route-core.mjs" ] || { echo "REFUSED: dist/route-core.mjs missing; run build.sh"; exit 5; }
 
-curl -sf "http://$OLLAMA_HOST/api/tags" >/dev/null || { nohup ollama serve >> "$LOGS/ollama.log" 2>&1 & sleep 3; }
 stop
-RECORDS_FILE="$STATE/records.jsonl" nohup node "$HERE/route_service.mjs" >> "$LOGS/route_service.log" 2>&1 &
-nohup "$BIN/agentgateway" -f "$HERE/agentgateway.yaml" >> "$LOGS/agentgateway.log" 2>&1 &
+curl -sf "http://$OLLAMA_HOST/api/tags" >/dev/null || { nohup ollama serve >> "$LOGS/ollama.log" 2>&1 & echo $! > "$STATE/ollama.pid"; sleep 3; }
+RECORDS_FILE="$STATE/records.jsonl" nohup node "$HERE/route_service.mjs" >> "$LOGS/route_service.log" 2>&1 & echo $! > "$STATE/route_service.pid"
+nohup "$BIN/agentgateway" -f "$HERE/agentgateway.yaml" >> "$LOGS/agentgateway.log" 2>&1 & echo $! > "$STATE/agentgateway.pid"
 for i in $(seq 1 30); do curl -sf http://127.0.0.1:3900/healthz >/dev/null && break; sleep 1; done
 curl -sf http://127.0.0.1:3900/healthz && echo && echo "gspc-route up: 127.0.0.1:3900 (agentgateway) -> 127.0.0.1:8790 (route_service); records $STATE/records.jsonl"

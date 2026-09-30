@@ -24,3 +24,10 @@ are the signing input, proof and signed agent card (v1.2.0, JWS under did:web:cs
 until the master-plugin land of 30 Sep 2026. The card was re-signed under the same key (v1.3.0) after the skill
 `evidence-bundle` joined (the free A2A twin of the MCP tool `evidence_bundle_preview`). The served input was
 re-stamped (calendar-pending) over its new bytes and the OTS manifest was rebuilt in the same commit.
+
+`agent-card-jws-input.2026-09-30-v1.3.0.json` (sha256 8985ba15...) with its OpenTimestamps proof
+`agent-card-jws-input.2026-09-30-v1.3.0.json.ots`, and `agent-card.2026-09-30-v1.3.0.signed.json` (sha256 c39b4469...),
+are the signing input, proof and signed agent card (v1.3.0, JWS under did:web:csoai.org#card-attestation-2) served
+until the gspc-route land of 30 Sep 2026. The card was re-signed under the same key (v1.4.0) after the skill
+`gspc-route` joined (the A2A twin of the free, decide-only MCP tool `route`). The served input was re-stamped
+(calendar-pending) over its new bytes and the OTS manifest was rebuilt in the same commit.

@@ -519,6 +519,43 @@
       ]
     },
     {
+      "id": "gspc-route",
+      "kind": "a2a_skill",
+      "name": "GSPC Route: decide a path under your policy (free, decide-only)",
+      "description": "GSPC Route (free, decide-only): applies the caller's Cedar policy (presets read-only, local-only, eu-only, no-unmeasured; forbid_providers; allow_kinds) and the fixed GSPC floor to candidates the caller declares, or to the GSPC MCP tools, reads the live board for the named quality axis, and returns the chosen candidate with an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). The same module as the free MCP tool route. Routing is not ranking: TIE and UNTESTED are stated as they are, and a caller tie_break decides an unseparated comparison. Nothing is executed or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.evidence-event/0.1",
+        "csoai.route-evidence/0.1"
+      ],
+      "surfaces": [
+        "a2a",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/api/a2a",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "A2A SendMessage is a JSON-RPC POST; the loop probes GET /api/a2a, the published contract"
+      },
+      "tags": [
+        "routing",
+        "policy",
+        "cedar",
+        "evidence",
+        "decide-only"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"gspc-route\",\"input\":{\"task\":\"Summarise a public paragraph.\",\"objective\":{\"quality_axis\":\"governance\"},\"candidates\":[{\"id\":\"local:llama3.2-3b\",\"kind\":\"local_gpu\",\"model\":\"llama3.2:3b\",\"endpoint\":\"local:ollama/llama3.2:3b\",\"read_only\":true},{\"id\":\"local:mistral-7b\",\"kind\":\"local_gpu\",\"model\":\"mistral:7b\",\"endpoint\":\"local:ollama/mistral:7b\",\"read_only\":true}]}}"
+      ]
+    },
+    {
       "id": "api-a2a",
       "kind": "http",
       "path": "/api/a2a",
@@ -6145,7 +6182,7 @@
         "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
       },
       "required_args": [],
-      "order": 14
+      "order": 15
     },
     {
       "id": "board_totals",
@@ -6200,7 +6237,7 @@
       "required_args": [
         "subject"
       ],
-      "order": 13
+      "order": 14
     },
     {
       "id": "get_axis",
@@ -6453,7 +6490,7 @@
       "required_args": [
         "from"
       ],
-      "order": 16
+      "order": 17
     },
     {
       "id": "rwa_evidence",
@@ -6482,7 +6519,7 @@
       "required_args": [
         "asset"
       ],
-      "order": 15
+      "order": 16
     },
     {
       "id": "verify_card",
@@ -6597,6 +6634,35 @@
       "order": 12
     },
     {
+      "id": "route",
+      "kind": "mcp_tool",
+      "name": "route",
+      "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.evidence-event/0.1",
+        "csoai.route-evidence/0.1"
+      ],
+      "surfaces": [
+        "mcp",
+        "llms"
+      ],
+      "probe": {
+        "method": "POST",
+        "request": "/mcp",
+        "expect_status": [
+          200
+        ],
+        "safe": false,
+        "unsafe_reason": "tools/call is a JSON-RPC POST; the daily loop probes the /mcp door itself, not each tool"
+      },
+      "required_args": [],
+      "order": 13
+    },
+    {
       "id": "evidence_bundle",
       "kind": "mcp_tool",
       "name": "evidence_bundle",
@@ -6625,7 +6691,7 @@
       "required_args": [
         "obligation"
       ],
-      "order": 17
+      "order": 18
     },
     {
       "id": "api-pop-a2a",
