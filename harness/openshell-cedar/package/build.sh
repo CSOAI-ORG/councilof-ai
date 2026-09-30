@@ -19,7 +19,7 @@ cat > $P/__init__.py <<'PY'
 Compares an OpenShell sandbox policy with what an observer records, and translates the policy to Cedar.
 Inconclusive is UNMEASURED; anything not understood is UNCHECKABLE and never an allow.
 """
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 PY
 cat > $P/NOTICE <<'PY'
 csoai-openshell-harness, Copyright 2026 CSOAI Ltd. Apache-2.0.

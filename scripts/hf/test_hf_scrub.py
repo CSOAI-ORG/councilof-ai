@@ -26,9 +26,10 @@ def test_scrub_removes_directives_and_updates_typed_numbers():
     assert "A100 COLD" not in out and "Hub cite = live GET only" not in out and "do not re-paste" not in out
     assert "Measurement, never certification." in out
     assert "- Hub cards (read live): https://councilof.ai/api/hub-cards" in out
-    assert f"**Lid:** {LID}" in out and "22 axes measured" not in out
+    assert hoc.LID_POINTER in out and "22 axes measured" not in out
+    assert LID not in out  # the live value is not typed back in: it would be the next stale line
     assert "Read `totals.lid` from the live board" in out  # an untyped lid sentence is left alone
-    assert "| MCP endpoint — 18 tools, verified 2026-09-30T13:00:00Z | `POST https://councilof.ai/mcp` |" in out
+    assert hoc.MCP_POINTER in out and "12 tools" not in out and "18 tools" not in out
     assert "note         = {DOI record unavailable since 29 Sep 2026" in out
     assert hoc.stale_hits(out) == []
 
@@ -38,4 +39,5 @@ def test_scrub_is_idempotent_and_never_invents_numbers():
     twice, changes = hoc.scrub_legacy(once, LID, 18, "t")
     assert twice == once
     unread, _ = hoc.scrub_legacy(CARD, None, None, "t")
-    assert "22 axes measured" in unread and "12 tools" in unread  # no live value: typed lines are left, not guessed
+    assert unread == once  # the result never depends on a live value: nothing numeric is written
+    assert "22 axes measured" not in unread and "12 tools" not in unread

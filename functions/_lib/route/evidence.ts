@@ -13,6 +13,7 @@
 import type { CallerPolicy } from "./policy";
 import { CEDAR_SCHEMA, FLOOR_CEDAR, renderCedar } from "./policy";
 import type { Decision } from "./decide";
+import type { CensusRead } from "./census";
 import type { Candidate, Objective, Task } from "./types";
 
 export const EVENT_SCHEMA = "csoai.evidence-event/0.1";
@@ -55,9 +56,21 @@ export const ROUTE_LIMITS = [
   "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
   "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
   "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
-  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
   "The task text is carried as its sha256 only; no prompt or response bytes are stored.",
 ];
+
+/** The census line of the limits, written from the read state (census.ts), never a fixed claim. */
+export function censusLimit(c: CensusRead | undefined): string {
+  if (!c || c.state === "NOT_WIRED")
+    return "Effect-binding census was not read for this decision (no census source wired): every candidate carries UNMEASURED, so the floor's DIVERGENT rule could not fire.";
+  if (c.state !== "LIVE")
+    return `Effect-binding census ${c.source} was ${c.state}: every candidate carries UNMEASURED, so the floor's DIVERGENT rule could not fire. Nothing cached was substituted.`;
+  return (
+    `Effect-binding census read from ${c.source} (signed server-probe run as of ${c.run_as_of}, artifact sha256 ${c.artifact_sha256}): ` +
+    `DOES_NOT_BIND is DIVERGENT and forbidden by the floor, BINDS is CONSISTENT, every other outcome and every endpoint the run did not probe is UNMEASURED. ` +
+    `One probe of one public endpoint on one day; P2 sees the server boundary, not its backend.`
+  );
+}
 
 export type RecordInput = {
   task: Task;
@@ -66,6 +79,7 @@ export type RecordInput = {
   candidates: Candidate[];
   decision: Decision;
   board: { state: string; source: string | null; board_separation: string | null };
+  census?: CensusRead;
   locator: string;
   readAt: string;
   declaredBy?: string;
@@ -124,6 +138,7 @@ export async function buildRouteRecord(inp: RecordInput): Promise<Record<string,
       separation: d.separation,
       label: d.label,
       board: inp.board,
+      ...(inp.census ? { census: inp.census } : {}),
       execution: {
         mode: "decide_only",
         status: "n/a",
@@ -141,7 +156,7 @@ export async function buildRouteRecord(inp: RecordInput): Promise<Record<string,
     state: "UNMEASURED",
     value: null,
     negative_control: { id: null, expected: null, got: "NOT_RUN" },
-    limits: ROUTE_LIMITS,
+    limits: [...ROUTE_LIMITS.slice(0, 4), censusLimit(inp.census), ...ROUTE_LIMITS.slice(4)],
     supersedes: null,
     signature: null,
     anchors: { ots: "none", rekor: { log_index: null, uuid: null } },
