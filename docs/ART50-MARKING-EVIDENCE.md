@@ -7,7 +7,7 @@
 
 ## What it is
 
-One signed card-v0 leaf per generative output, answering one question by bytes: **does this output carry a machine-readable mark that the named methods can DETECT, right now?** Beside the measurement, the pack quotes the verbatim Article 50(2) text with its SHA-256 and the EUR-Lex link, the dates the obligation turns on, and the Article 99(4) fine ceiling. It draws no conclusion about whether the obligation is met.
+One signed card-v0 leaf per generative output, answering one question by bytes: **does this output carry a machine-readable mark that the named methods can DETECT, right now?** Beside the measurement, the pack quotes the verbatim Article 50(2) text with its SHA-256 and the EUR-Lex link and the dates the obligation turns on, each with its verbatim basis. It quotes no fine ceiling (dropped 2026-09-30). It draws no conclusion about whether the obligation is met.
 
 | Piece | Where |
 |---|---|
@@ -58,9 +58,10 @@ Two consequences the pack states in its own `statements[]`: a mark **not detecte
 
 ## The legal block (quoted, not interpreted)
 
-- **Article 50(2)** verbatim, `text_sha256` = `8696851c078196b8c8bdbe6d0436336a58ae0df6eeafc6ec85abda71866264eb`, ELI permalink https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng. EUR-Lex refused an automated fetch from the build runtime on 2026-09-02; the text was checked word-for-word against the artificialintelligenceact.eu mirror of the OJ text the same day.
-- **Applies from 2 August 2026** (Article 113). **Systems already on the market before that date: to 2 December 2026** — Commission FAQ on the AI Act, as cited in the owner brief; the FAQ page is script-rendered and was not re-read by this build. Owner to confirm the sentence before the first invoice.
-- **Article 99(4)(g):** up to EUR 15 000 000 or 3 % of total worldwide annual turnover, whichever is higher, for transparency obligations under Article 50.
+- **Article 50(2)** verbatim, `text_sha256` = `8696851c078196b8c8bdbe6d0436336a58ae0df6eeafc6ec85abda71866264eb`, ELI permalink https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng. First checked 2026-09-02 against the artificialintelligenceact.eu mirror (EUR-Lex refused an automated fetch); re-checked 2026-09-30 against the OJ XHTML from the Publications Office cellar (`dc8116a1-3fe6-11ef-865a-01aa75ed71a1.0006.03/DOC_1`, sha256 `8f0b6563…872d721a`) — the text occurs verbatim. Regulation (EU) 2026/1744 does not amend Article 50(2).
+- **Applies from 2 August 2026** (Article 113; 2026/1744 amends Article 113 but does not move Article 50).
+- **2 December 2026** — Article 111(4) of Regulation (EU) 2024/1689, added by Regulation (EU) 2026/1744 Article 1(39)(b) (OJ L, 24.7.2026; in force 27 July 2026 under its Article 4), https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng. Verbatim, and carried in the pack as `dates.pre_existing_text`: "Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or text content, that have been placed on the market before 2 August 2026 shall take the necessary steps in order to comply with Article 50(2) by 2 December 2026." Read 2026-09-30 from the cellar XHTML (`b459c07f-86fb-11f1-bf5e-01aa75ed71a1.0006.03/DOC_1`, sha256 `9d754652…922993db`). This replaces the earlier basis, a Commission FAQ cited from the owner brief and never re-read.
+- **No fine ceiling.** Until 2026-09-30 the pack quoted Article 99(4)(g). It was dropped from delivered records: a penalty figure beside a detection result reads as pressure, and one figure was incomplete — Article 99(6) (SMEs) and Article 99(6a) (SMCs, inserted by 2026/1744 Article 1(38)(c)) make the ceiling "whichever is lower".
 
 ---
 
@@ -68,9 +69,9 @@ Two consequences the pack states in its own `statements[]`: a mark **not detecte
 
 1. **Evidential status.** Is an Ed25519-signed, self-issued measurement card (no trust-list anchoring, no RFC 3161 timestamp verified) admissible as a business record in a UK or EU proceeding, and what wording keeps it inside "measurement" rather than "opinion"? (We never call it legal evidence.)
 2. **Point-in-time vs continuing.** Does a detection at `fetched_at` create any duty on us if the mark is later stripped, or on the design partner if a later output carries none? The pack disclaims both; does the disclaimer hold?
-3. **The grace date.** Is "2 December 2026 for pre-existing systems" a Commission position with legal effect, guidance only, or neither? The pack quotes it as a Commission FAQ statement; the invoice should not.
+3. **The grace date.** The 2 December 2026 date is now statute (Art 111(4), added by 2026/1744), quoted verbatim with its scope. Open question: when is an output's generating system one "placed on the market before 2 August 2026" (substantial modification, same system)? The pack applies the date to no one.
 4. **Scope.** Article 50(2) binds *providers*; the buyer is often a *deployer*. Does measuring a deployer's output say anything about the deployer's own Article 50(4) duties (deep fakes / public-interest text)? The pack does not claim so.
-5. **Fine ceiling display.** Quoting Article 99(4) beside a measurement — is that fair information or could it be read as implied threat / marketing by intimidation under UK CPRs?
+5. **Fine ceiling display.** Resolved by removal (2026-09-30): the pack no longer quotes Article 99(4). Should any penalty reference return, counsel words it.
 6. **Invoice rail.** A signed pack issued before payment on a GBP invoice — any consumer-contract or distance-selling wording needed for a design partner that is a business?
 7. **Method naming.** Naming third-party detectors (SynthID, Video Seal, invisible-watermark) as UNCHECKABLE with citations — any trademark or comparative-claim issue?
 

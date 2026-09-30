@@ -3,13 +3,25 @@
  *
  * Nothing here is interpreted. The pack carries (a) the verbatim Article 50(2) text and its
  * SHA-256, so a reader can check the quoted words against EUR-Lex themselves; (b) the dates the
- * obligation turns on; (c) the Article 99(4) fine ceiling. The measurement never says whether the
+ * obligation turns on, each with its verbatim basis. The measurement never says whether the
  * obligation is met — that is a legal conclusion the pack is not allowed to draw.
  *
- * Verbatim source: Regulation (EU) 2024/1689 (the AI Act), OJ L, 2024/1689, 12.7.2024, Article
- * 50(2). EUR-Lex refused an automated fetch from the build runtime on 2026-09-02; the text below
- * was checked word-for-word against the artificialintelligenceact.eu mirror of the OJ text the
- * same day. The sha256 is recomputed at runtime over exactly these bytes.
+ * NO FINE CEILING (2026-09-30). The pack used to quote the Article 99(4) ceiling beside every
+ * detection result. Dropped from delivered records: a penalty figure next to a "not detected"
+ * reads as pressure, which a measurement has no business applying; and the single figure was
+ * incomplete — Art 99(6) (SMEs) and Art 99(6a) (SMCs, inserted by Reg (EU) 2026/1744 Art 1(38)(c))
+ * make the ceiling "whichever is lower" for most readers. Penalties are for the reader's counsel.
+ *
+ * Verbatim sources, both read from the Publications Office cellar (the OJ XHTML) on 2026-09-30:
+ *   - Reg (EU) 2024/1689, OJ L 12.7.2024 — cellar dc8116a1-3fe6-11ef-865a-01aa75ed71a1.0006.03/DOC_1,
+ *     sha256 8f0b656302f9864cc87e040c371f209a9d65ae1a6cecc25ca5eb737e872d721a. ART50_2_TEXT below
+ *     occurs verbatim in those bytes (first checked 2026-09-02 against the artificialintelligenceact.eu
+ *     mirror, when EUR-Lex refused an automated fetch). 2026/1744 does not amend Article 50(2).
+ *   - Reg (EU) 2026/1744, OJ L 24.7.2026 — cellar b459c07f-86fb-11f1-bf5e-01aa75ed71a1.0006.03/DOC_1,
+ *     sha256 9d754652b867722807e4219c85912ce354233e58a1b4eb8c7752b4d1922993db. ART111_4_TEXT below
+ *     occurs verbatim in those bytes (Art 1(39)(b)). In force 27 July 2026 (its Art 4: the third day
+ *     following publication).
+ * The sha256 the pack carries is recomputed at runtime over exactly the ART50_2_TEXT bytes.
  */
 
 export const ART50_2_TEXT =
@@ -28,28 +40,26 @@ export const ART50_SOURCES = {
   eur_lex: "https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng",
   /** CELEX view of the same text. */
   celex: "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689",
-  /** Commission Q&A on the AI Act (the grace-period statement the owner brief cites). */
-  commission_faq: "https://digital-strategy.ec.europa.eu/en/faqs/artificial-intelligence-act-questions-and-answers",
+  /** ELI permalink for Regulation (EU) 2026/1744, which added Article 111(4) (the 2 December 2026 date). */
+  eur_lex_2026_1744: "https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng",
 } as const;
+
+/** Article 111(4) of Reg (EU) 2024/1689, added by Reg (EU) 2026/1744 Art 1(39)(b), verbatim. */
+export const ART111_4_TEXT =
+  "Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or " +
+  "text content, that have been placed on the market before 2 August 2026 shall take the necessary steps in " +
+  "order to comply with Article 50(2) by 2 December 2026.";
 
 export const ART50_DATES = {
-  /** Article 113: the Regulation applies from 2 August 2026; Article 50 carries no earlier or later carve-out. */
+  /** Article 113: the Regulation applies from 2 August 2026; 2026/1744 amends Art 113 but does not move Article 50. */
   applies_from: "2026-08-02",
   applies_from_basis: "Article 113, Regulation (EU) 2024/1689",
-  /** Owner brief, citing the Commission FAQ: systems already on the market before 2 Aug 2026 — to 2 Dec 2026. */
+  /** Only for systems placed on the market before 2 August 2026 — the text carries the scope; the pack applies it to no one. */
   pre_existing_systems_until: "2026-12-02",
-  pre_existing_basis: "Commission FAQ on the AI Act (as cited in the owner brief; the FAQ page is script-rendered and was not re-read by this build)",
-} as const;
-
-export const ART99_4 = {
-  article: "Article 99(4)(g), Regulation (EU) 2024/1689",
-  ceiling_eur: 15_000_000,
-  ceiling_turnover_pct: 3,
-  /** The operative words, verbatim from Article 99(4) and its point (g). */
-  text:
-    "shall be subject to administrative fines of up to EUR 15 000 000 or, if the offender is an undertaking, up to 3 % " +
-    "of its total worldwide annual turnover for the preceding financial year, whichever is higher: … (g) transparency " +
-    "obligations for providers and deployers pursuant to Article 50.",
+  pre_existing_basis:
+    "Article 111(4), Regulation (EU) 2024/1689, as added by Regulation (EU) 2026/1744 Article 1(39)(b) " +
+    "(OJ L, 24.7.2026; in force 27 July 2026)",
+  pre_existing_text: ART111_4_TEXT,
 } as const;
 
 const hex = (b: ArrayBuffer): string => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
@@ -67,7 +77,6 @@ export async function art50LawBlock(): Promise<Record<string, unknown>> {
     text_sha256: await art50TextSha256(),
     sources: ART50_SOURCES,
     dates: ART50_DATES,
-    fine_ceiling: ART99_4,
     reading:
       "Quoted for the reader's own reading. The measurement beside it records whether a machine-readable mark was " +
       "DETECTED by the named methods at the stated time. It draws no conclusion about whether the obligation is met.",

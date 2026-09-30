@@ -173,14 +173,14 @@ export const SKUS: Record<string, Sku> = {
   // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: is a
   // machine-readable mark DETECTABLE in these bytes (C2PA manifest recomputed in the Function;
   // watermarks UNCHECKABLE where no public detector exists), beside the verbatim Art 50(2)
-  // excerpt hash and the Art 99(4) ceiling. Point-in-time detection, never a conformity opinion.
+  // excerpt hash and its dated OJ basis (Art 113; Art 111(4), added by Reg (EU) 2026/1744). No fine ceiling. Point-in-time detection, never a conformity opinion.
   art50_marking_evidence: {
     id: "art50_marking_evidence",
     name: "Article 50 marking evidence (issuance)",
     artifact:
       "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1 — asset sha256, " +
       "C2PA manifest/assertion/data-hash/signature status, watermark statuses, Art 50(2) excerpt hash, " +
-      "Art 99(4) ceiling, unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1",
+      "Art 111(4) date basis, unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1",
     unit: "1 pack = 1 output (URL or uploaded bytes) × 1 point in time",
     sells: "issuance",
     prices: {
