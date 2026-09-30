@@ -7,6 +7,8 @@ import { useEffect, useLayoutEffect, lazy, Suspense } from "react";
 import { applyHead, resolveHead } from "./lib/seoHead";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
+// Keeps the prerendered page on screen while the first route chunk loads (CLS 0.33 -> ~0; see file).
+import PrerenderedMainFallback from "./components/PrerenderedMainFallback";
 const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -334,6 +336,8 @@ const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
 // /connect/claude: connector documentation for the free MCP door /mcp/free (Claude connector directory, 2026-09-27).
 const ConnectClaude = lazy(() => import("./pages/ConnectClaude"));
+// /connect: the connector hub (2026-09-30) — replaced a "temporarily withdrawn" notice on the MCP/A2A setup journey.
+const ConnectHub = lazy(() => import("./pages/ConnectHub"));
 const CouncilHub = lazy(() => import("./pages/CouncilHub"));
 const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
@@ -588,7 +592,7 @@ function App() {
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <MainLandmarkContext.Provider value={true}>
-                  <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
+                  <Suspense fallback={<PrerenderedMainFallback />}><Switch>
                   <Route path="/" component={HomeVerify} />
                   <Route path="/home-v2" component={ContentReviewNotice} />
                   <Route path="/home-v3" component={NewHomeV3} />
@@ -914,7 +918,7 @@ function App() {
                   <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
                   <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
                   <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
-                  <Route path="/connect" component={ContentReviewNotice} />
+                  <Route path="/connect" component={ConnectHub} />
                   <Route path="/connect/claude" component={ConnectClaude} />
                   <Route path="/connect-gspc" component={ConnectGSPC} />
                   <Route path="/connect-ai" component={ConnectGSPC} />

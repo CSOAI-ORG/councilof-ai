@@ -117,7 +117,7 @@ export default function XrplReaderRail({
                 <span className="truncate text-slate-600">{a.issuer}</span>
                 {a.sig_ed25519 == null && (
                   <>
-                    <span className="text-amber-500">{" — "}</span>
+                    <span className="text-amber-700">{" — "}</span>
                     <span
                       className="shrink-0 rounded-full border border-amber-300 bg-amber-50 px-1.5 text-[10px] font-bold text-amber-800"
                       title="sig_ed25519 is null on this leaf (NO_LAPTOP_SIGN) — an honest gap, not an error"

@@ -109,15 +109,45 @@ function Stat({ stat }: { stat: HeroStat }) {
   return (
     // Inside the hero <dl>: a <div> group may hold only <dt>/<dd>, and the term comes first in
     // source order. The figure is shown first, so it carries order-first rather than moving.
-    <div className="flex flex-col gap-1.5 border-t border-emerald-400/25 pt-4" data-hero-stat={stat.label}>
+    <div className="flex flex-col gap-1 border-t border-emerald-400/25 pt-3 sm:gap-1.5 sm:pt-4" data-hero-stat={stat.label}>
       <dt className="text-[13px] font-bold leading-tight text-emerald-100/90">{stat.label}</dt>
-      <dd className="order-first font-mono text-xl font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
+      <dd className="order-first font-mono text-lg font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
         {stat.value ?? "—"}
       </dd>
-      <dd className="text-[12px] leading-snug text-emerald-200/60">{stat.note}</dd>
+      <dd className="text-xs leading-snug text-emerald-200/70">{stat.note}</dd>
     </div>
   );
 }
+
+/**
+ * THE THREE WAYS IN (owner brief 2026-09-30: the first screen answers "how do I use it").
+ * Each is a real, working surface today: the AG-UI chat on /dashboard, the connector hub at
+ * /connect/ (free MCP door, full MCP, A2A card), and the in-browser verifier. No capability is
+ * named here that its page does not deliver.
+ */
+const WAYS_IN: { testid: string; href: string; verb: string; title: string; body: string }[] = [
+  {
+    testid: "hero-cta-ask",
+    href: "/dashboard",
+    verb: "Ask",
+    title: "Ask in plain words",
+    body: "Each answer names the tool that produced it, the record it cites and the state it returned.",
+  },
+  {
+    testid: "hero-cta-connect",
+    href: "/connect/",
+    verb: "Connect",
+    title: "Connect your agent",
+    body: "Add the free MCP door to Claude, Cursor or any MCP client, or read the A2A agent card.",
+  },
+  {
+    testid: "hero-cta-verify",
+    href: "/gspc-verify",
+    verb: "Verify",
+    title: "Check a record yourself",
+    body: "Paste a signed card and your own browser checks the signature. No account, free forever.",
+  },
+];
 
 export default function HomeHero({
   data: injected,
@@ -142,12 +172,17 @@ export default function HomeHero({
       {/*
         One still, held well back. It carries no claim and no text; the alt says what it is.
 
-        RESPONSIVE AND MODERN-FORMAT, because this is the ONE image above the fold and a phone
-        should not wait for a desktop-width JPEG to draw the first screen. The 640px WebP a phone
-        picks is 16 KB against the 140 KB JPEG this used to serve at every width. The JPEG stays
-        as the <img> fallback for a browser with no WebP.
+        NOT ON PHONES (audit 2026-09-30 #4). It is decorative, and on a throttled phone it was the
+        Largest Contentful Paint twice: once from the prerender at 2.8 s and again at 4.5 s when
+        the client render re-created it. Below 640px the first <source> resolves to an inline
+        1x1 GIF (no request) and the <img> is display:none, so the first screen is text on ink.
+        From 640px up the responsive WebP set is unchanged; the JPEG stays as the fallback.
       */}
       <picture>
+        <source
+          media="(max-width: 639.98px)"
+          srcSet="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        />
         <source
           type="image/webp"
           srcSet="/images/coliseum_hero_arena-640.webp 640w, /images/coliseum_hero_arena-1024.webp 1024w, /images/coliseum_hero_arena-1376.webp 1376w"
@@ -161,7 +196,7 @@ export default function HomeHero({
           height={774}
           fetchPriority="high"
           decoding="async"
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.62]"
+          className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover opacity-[0.55] sm:block"
         />
       </picture>
       <div
@@ -169,19 +204,19 @@ export default function HomeHero({
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(110% 80% at 20% 8%, rgba(16,185,129,.24) 0%, transparent 62%), linear-gradient(180deg, rgba(4,18,12,.46) 0%, rgba(4,18,12,.74) 44%, rgba(4,18,12,.97) 100%)",
+            "radial-gradient(110% 80% at 20% 8%, rgba(16,185,129,.24) 0%, transparent 62%), linear-gradient(180deg, rgba(4,18,12,.46) 0%, rgba(4,18,12,.78) 44%, rgba(4,18,12,.97) 100%)",
         }}
       />
 
-      <div className="section-shell relative z-10 py-12 sm:py-24 lg:py-28">
-        <p className="font-mono text-[11px] font-bold uppercase tracking-[0.3em] text-emerald-300/80">
-          Independent measurement · signed evidence · free to re-check
+      <div className="section-shell relative z-10 py-9 sm:py-16 lg:py-20">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300/85">
+          Independent AI measurement · signed · free to re-check
         </p>
 
         <h1
           id="home-hero-h"
-          className="mt-6 max-w-4xl font-black tracking-[-0.03em] text-white"
-          style={{ fontSize: "clamp(2rem, 1.15rem + 3.9vw, 4.25rem)", lineHeight: 1.04 }}
+          className="mt-4 max-w-4xl font-black tracking-[-0.03em] text-white sm:mt-5"
+          style={{ fontSize: "clamp(1.875rem, 1.05rem + 3.5vw, 4rem)", lineHeight: 1.05 }}
         >
           We measure how AI systems behave,
           <span className="block bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-200 bg-clip-text text-transparent">
@@ -189,58 +224,23 @@ export default function HomeHero({
           </span>
         </h1>
 
-        <p className="mt-6 max-w-2xl text-[1.05rem] leading-[1.55] text-emerald-50/90 sm:text-xl">
-          Frozen, published tests. Answers are graded by fixed rules, never by another AI.
-          Issued measurement cards are signed; unsigned supporting runs are labelled. Re-check
-          the evidence for free, without an account. Unmeasured stays visible.
+        {/* WHAT WE DO, in the reader's words: the three kinds of subject, how they are graded, and
+            the three properties a stranger can hold us to (signed, re-checked, corrected in public). */}
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-emerald-50/90 sm:mt-5 sm:text-lg" data-testid="hero-what-we-do">
+          We test AI models, agents and the endpoints they call against frozen, published tests, graded
+          by fixed rules, never by another AI. Issued cards are signed, claims are{" "}
+          <Link href="/claim-maintenance/" className="underline decoration-emerald-300/50 underline-offset-2 hover:text-white">
+            re-checked on a schedule
+          </Link>
+          , and every error we find is{" "}
+          <Link href="/corrections/" className="underline decoration-emerald-300/50 underline-offset-2 hover:text-white">
+            corrected in public
+          </Link>
+          . Unmeasured stays visible.
         </p>
 
-        <p className="mt-4 max-w-2xl text-[13px] leading-relaxed text-emerald-100/75" data-testid="home-accountable-entity">
-          Operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman.{" "}
-          <Link href="/about/" className="underline underline-offset-2">Who we are</Link>
-        </p>
-
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-          <a
-            href="#board"
-            className="inline-flex min-h-12 items-center justify-center rounded-xl bg-emerald-400 px-7 text-base font-black text-[#03110b] shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-300"
-            data-testid="hero-cta-board"
-          >
-            See what is measured →
-          </a>
-          <Link
-            href="/gspc-verify"
-            className="inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-300/40 px-7 text-base font-bold text-emerald-100 transition hover:border-emerald-300/80 hover:bg-emerald-400/10"
-            data-testid="hero-cta-verify"
-          >
-            Check a record yourself
-          </Link>
-          {/* The connector guide, one click from the first screen (audit 2026-09-28 #10): the free
-              door at /mcp/free was linked from none of home, /tools or /connect. */}
-          <Link
-            href="/connect/claude/"
-            className="inline-flex min-h-12 items-center px-1 text-[15px] font-semibold text-emerald-200 underline decoration-emerald-300/50 underline-offset-4 hover:text-emerald-50"
-            data-testid="hero-cta-connect"
-          >
-            Add to Claude or Cursor →
-          </Link>
-          {/*
-            CROSS-PAGE, NOT AN IN-PAGE HOP. HomeMachineSurface moved to /how-we-work on
-            2026-09-23, so "#machine-surface" became an anchor to nothing — a link that silently
-            does nothing is worse than no link, and this one is the agent's way in. A plain <a>
-            rather than a wouter Link, because the hash has to be honoured on arrival.
-          */}
-          <a
-            href="/how-we-work#machine-surface"
-            className="inline-flex min-h-12 items-center px-1 font-mono text-[13px] font-semibold text-emerald-300/85 underline decoration-dotted underline-offset-4 hover:text-emerald-200"
-            data-testid="hero-cta-agents"
-          >
-            Reading this as an agent? Every door is listed →
-          </a>
-        </div>
-
-        {/* The live board, at a glance. One read, four fields, nothing typed. */}
-        <div className="mt-10 max-w-4xl rounded-3xl border border-white/10 bg-black/15 p-5 backdrop-blur-[2px] sm:p-6" data-testid="hero-board-glance">
+        {/* WHAT IS LIVE NOW. One read, four fields, nothing typed. */}
+        <div className="mt-6 max-w-4xl rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur-[2px] sm:mt-8 sm:rounded-3xl sm:p-6" data-testid="hero-board-glance">
           {error ? (
             <p className="rounded-2xl border border-amber-400/40 bg-amber-400/10 px-5 py-4 text-sm text-amber-100">
               The board is unread right now — {error}. Nothing is shown in its place.{" "}
@@ -251,51 +251,107 @@ export default function HomeHero({
             </p>
           ) : (
             <>
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-6 lg:grid-cols-4">
+              <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">
+                <span className="relative flex h-2 w-2" aria-hidden="true">
+                  <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 motion-safe:animate-ping" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                Live now
+              </p>
+              <dl className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-y-6 lg:grid-cols-4">
                 {stats.map((s) => (
                   <Stat key={s.label} stat={s} />
                 ))}
               </dl>
-              {/*
-                THE QUALIFIER ON THE COUNT, and it is not optional. The tile above says how many
-                slots carry a run; this says what that does and does not establish. Every figure
-                is off the same read — nothing here is typed, and if the board stops publishing
-                the four separation fields this block disappears rather than guessing.
-              */}
-              {sep ? (
-                <div
-                  className="mt-5 rounded-2xl border border-amber-300/30 bg-amber-300/[0.07] px-5 py-4"
-                  data-testid="hero-separation"
-                >
-                  <p className="text-[13px] font-bold leading-snug text-amber-100">
-                    Measured is not the same as separated.
-                  </p>
-                  <p className="mt-1.5 text-[12.5px] leading-relaxed text-emerald-100/75">
-                    A slot counts as measured when a real run sits behind it. Whether the axis
-                    actually told two models apart is a second question, and across the{" "}
-                    <span className="font-mono font-bold text-emerald-100">{sep.comparison}</span>{" "}
-                    model-comparison axes the answer today is{" "}
-                    <span className="font-mono font-bold text-emerald-100">{sep.separated}</span>{" "}
-                    separated,{" "}
-                    <span className="font-mono font-bold text-emerald-100">{sep.ties}</span> tied and{" "}
-                    <span className="font-mono font-bold text-emerald-100">{sep.untested}</span>{" "}
-                    untested. A tie stays a tie and an untested axis stays untested; neither is
-                    rounded up into a ranking.
-                  </p>
-                </div>
-              ) : null}
-
-              <p className="mt-6 text-[12.5px] leading-relaxed text-emerald-200/65">
+              <p className="mt-4 text-xs leading-relaxed text-emerald-200/75 sm:mt-5 sm:text-[13px]">
                 Read live from{" "}
                 <a href="/api/gspc" className="font-semibold text-emerald-300 underline decoration-dotted underline-offset-2">
                   GET /api/gspc
                 </a>{" "}
                 as this page rendered{stamp ? `; the runs behind it were made ${stamp}` : ""}. Nothing on
-                this page is a certificate, and a tie between two models stays a tie.
+                this page is a certificate, and a tie between two models stays a tie.{" "}
+                <a href="#board" className="font-semibold text-emerald-300 underline underline-offset-2" data-testid="hero-cta-board">
+                  See what is measured →
+                </a>
               </p>
             </>
           )}
         </div>
+
+        {/* HOW TO USE IT: three doors, each a working surface. */}
+        <nav aria-label="Three ways to use Council of AI" className="mt-6 max-w-4xl sm:mt-8">
+          <ul className="grid list-none gap-3 p-0 sm:grid-cols-3">
+            {WAYS_IN.map((w, i) => (
+              <li key={w.testid}>
+                <Link
+                  href={w.href}
+                  data-testid={w.testid}
+                  className={
+                    "group flex h-full flex-col rounded-2xl border px-4 py-3.5 transition sm:px-5 sm:py-4 " +
+                    (i === 0
+                      ? "border-emerald-300 bg-emerald-400 text-[#03110b] hover:bg-emerald-300"
+                      : "border-emerald-300/35 bg-white/[0.04] text-emerald-50 hover:border-emerald-300/80 hover:bg-emerald-400/10")
+                  }
+                >
+                  <span className={"font-mono text-xs font-bold uppercase tracking-[0.16em] " + (i === 0 ? "text-emerald-950/75" : "text-emerald-300")}>
+                    {w.verb}
+                  </span>
+                  <span className="mt-1 text-base font-black leading-snug">
+                    {w.title} <span aria-hidden="true" className="inline-block transition group-hover:translate-x-0.5">→</span>
+                  </span>
+                  <span className={"mt-1 text-[13px] leading-snug " + (i === 0 ? "text-emerald-950/80" : "text-emerald-100/75")}>{w.body}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {/*
+            CROSS-PAGE, NOT AN IN-PAGE HOP. HomeMachineSurface moved to /how-we-work on
+            2026-09-23; a plain <a> rather than a wouter Link, because the hash has to be honoured.
+          */}
+          <p className="mt-3">
+            <a
+              href="/how-we-work#machine-surface"
+              className="inline-flex min-h-11 items-center font-mono text-[13px] font-semibold text-emerald-300/90 underline decoration-dotted underline-offset-4 hover:text-emerald-200"
+              data-testid="hero-cta-agents"
+            >
+              Reading this as an agent? Every door is listed →
+            </a>
+          </p>
+        </nav>
+
+        {/*
+          THE QUALIFIER ON THE COUNT, and it is not optional. The tile above says how many slots
+          carry a run; this says what that does and does not establish. Every figure is off the
+          same read; if the board stops publishing the four separation fields this block
+          disappears rather than guessing.
+        */}
+        {!error && sep ? (
+          <div
+            className="mt-6 max-w-4xl rounded-2xl border border-amber-300/30 bg-amber-300/[0.07] px-5 py-4"
+            data-testid="hero-separation"
+          >
+            <p className="text-[13px] font-bold leading-snug text-amber-100">
+              Measured is not the same as separated.
+            </p>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-emerald-100/80">
+              A slot counts as measured when a real run sits behind it. Whether the axis
+              actually told two models apart is a second question, and across the{" "}
+              <span className="font-mono font-bold text-emerald-100">{sep.comparison}</span>{" "}
+              model-comparison axes the answer today is{" "}
+              <span className="font-mono font-bold text-emerald-100">{sep.separated}</span>{" "}
+              separated,{" "}
+              <span className="font-mono font-bold text-emerald-100">{sep.ties}</span> tied and{" "}
+              <span className="font-mono font-bold text-emerald-100">{sep.untested}</span>{" "}
+              untested. A tie stays a tie and an untested axis stays untested; neither is
+              rounded up into a ranking.
+            </p>
+          </div>
+        ) : null}
+
+        <p className="mt-5 max-w-2xl text-[13px] leading-relaxed text-emerald-100/75" data-testid="home-accountable-entity">
+          Operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman.{" "}
+          <Link href="/about/" className="underline underline-offset-2">Who we are</Link>
+        </p>
       </div>
     </section>
   );

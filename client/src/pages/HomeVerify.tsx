@@ -167,7 +167,7 @@ export default function HomeVerify() {
       <section
         id="take-part"
         aria-labelledby="take-part-h"
-        className="surface-sunken section-y-sm border-t border-border"
+        className="cv-auto surface-sunken section-y-sm border-t border-border"
         data-testid="home-take-part"
       >
         <div className="section-shell">
@@ -191,7 +191,7 @@ export default function HomeVerify() {
       <section
         id="board"
         aria-labelledby="home-board-h"
-        className="surface-base section-y scroll-mt-20 border-t border-border"
+        className="cv-auto surface-base section-y scroll-mt-20 border-t border-border"
       >
         <div className="section-shell">
           <HomeGspcTable heading="The living board" highlight={axis} onSelect={setAxis} showPublicCount={false} />
@@ -210,7 +210,7 @@ export default function HomeVerify() {
           {/* Ask in words: the same tools as POST /mcp, streamed over AG-UI from /api/agui/run.
               Unlike the box above, this one does send the question to the site's tools. */}
           <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-9" data-testid="home-talk">
-            <h3 id="home-talk-h" className="text-2xl font-black tracking-tight text-foreground">
+            <h3 id="home-talk-h" className="scroll-mt-24 text-2xl font-black tracking-tight text-foreground">
               Or ask it in words.
             </h3>
             <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
@@ -238,7 +238,7 @@ export default function HomeVerify() {
       <section
         id="participation"
         aria-labelledby="participation-h"
-        className="surface-sunken section-y border-t border-border"
+        className="cv-auto surface-sunken section-y border-t border-border"
         data-testid="home-participation"
       >
         <div className="section-shell">
@@ -259,7 +259,7 @@ export default function HomeVerify() {
         <MembershipStrip variant="home" />
       </section>
 
-      <section className="surface-base section-y border-t border-border">
+      <section className="cv-auto surface-base section-y border-t border-border">
         <div className="section-shell">
           <p className="t-kicker text-emerald-700 dark:text-emerald-300">Keep going</p>
           <h2 className="t-band mt-4 max-w-3xl text-foreground">
