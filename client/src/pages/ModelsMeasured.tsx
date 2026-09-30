@@ -44,7 +44,7 @@ const nf = new Intl.NumberFormat("en-GB");
 
 function Table({ rows, caption, testid }: { rows: Row[]; caption: string; testid: string }) {
   return (
-    <div className="mt-4 overflow-x-auto rounded-2xl border border-border" data-testid={testid}>
+    <div className="mt-4 overflow-x-auto rounded-2xl border border-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-700" data-testid={testid} role="region" aria-label={caption} tabIndex={0}>
       <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead className="bg-muted/60 text-xs uppercase tracking-wide text-muted-foreground">
