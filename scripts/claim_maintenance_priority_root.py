@@ -29,10 +29,38 @@ def merkle_root(hashes: list[str]) -> str | None:
         return None
     level = list(hashes)
     while len(level) > 1:
-        if len(level) % 2:
-            level.append(level[-1])
-        level = [parent_hash(level[i], level[i + 1]) for i in range(0, len(level), 2)]
+        work = level + [level[-1]] if len(level) % 2 else level
+        level = [parent_hash(work[i], work[i + 1]) for i in range(0, len(work), 2)]
     return level[0]
+
+def inclusion_path(hashes: list[str], index: int) -> list[dict]:
+    if index < 0 or index >= len(hashes):
+        raise IndexError(index)
+    proof = []
+    level = list(hashes)
+    i = index
+    while len(level) > 1:
+        work = level + [level[-1]] if len(level) % 2 else level
+        sibling_i = i - 1 if i % 2 else i + 1
+        proof.append({
+            "side": "left" if sibling_i < i else "right",
+            "sha256": work[sibling_i],
+        })
+        level = [parent_hash(work[j], work[j + 1]) for j in range(0, len(work), 2)]
+        i //= 2
+    return proof
+
+def verify_inclusion(leaf_hex: str, proof: list[dict], root_hex: str) -> bool:
+    cur = leaf_hex
+    for step in proof:
+        side, sibling = step["side"], step["sha256"]
+        if side == "left":
+            cur = parent_hash(sibling, cur)
+        elif side == "right":
+            cur = parent_hash(cur, sibling)
+        else:
+            return False
+    return cur == root_hex
 
 def snapshot_rows() -> list[dict]:
     rows = []
@@ -57,6 +85,11 @@ def snapshot_rows() -> list[dict]:
 
 def build() -> dict:
     leaves = snapshot_rows()
+    hashes = [x["leaf_hash"] for x in leaves]
+    root = merkle_root(hashes)
+    for i, row in enumerate(leaves):
+        row["inclusion_proof"] = inclusion_path(hashes, i)
+        row["inclusion_verified"] = bool(root and verify_inclusion(row["leaf_hash"], row["inclusion_proof"], root))
     return {
         "schema": "csoai.claim-maintenance-priority-root/0.1",
         "category": "Claim Maintenance",
@@ -64,7 +97,8 @@ def build() -> dict:
         "leaf_count": len(leaves),
         "leaf_rule": "leaf = SHA256(0x00 || UTF8(public_path) || 0x00 || snapshot_sha256_bytes); leaves sorted lexicographically by public_path",
         "parent_rule": "parent = SHA256(0x01 || left_hash_bytes || right_hash_bytes); duplicate the final hash at an odd-width level",
-        "merkle_root": merkle_root([x["leaf_hash"] for x in leaves]),
+        "merkle_root": root,
+        "proof_rule": "Start from leaf_hash. For each inclusion_proof step, if side=left compute parent(sibling,current); if side=right compute parent(current,sibling). Final hash must equal merkle_root.",
         "leaves": leaves,
         "witness": "/spec/claim-maintenance/priority-root-witness.json",
         "separate_from": {
@@ -91,7 +125,16 @@ def main() -> int:
             print("FAIL claim-maintenance priority-root drift")
             return 1
         doc = json.loads(rendered)
-        print("PASS priority-root", f"leaves={doc['leaf_count']}", f"root={doc['merkle_root']}")
+        if not all(row.get("inclusion_verified") for row in doc.get("leaves", [])):
+            print("FAIL priority-root inclusion proof")
+            return 1
+        if doc.get("leaves"):
+            row = doc["leaves"][0]
+            mutated = ("0" if row["leaf_hash"][0] != "0" else "1") + row["leaf_hash"][1:]
+            if verify_inclusion(mutated, row["inclusion_proof"], doc["merkle_root"]):
+                print("FAIL priority-root mutation selftest")
+                return 1
+        print("PASS priority-root", f"leaves={doc['leaf_count']}", f"root={doc['merkle_root']}", "proofs=verified")
         return 0
     OUT.write_text(rendered)
     doc = json.loads(rendered)

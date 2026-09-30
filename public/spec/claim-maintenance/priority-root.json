@@ -7,6 +7,21 @@
     {
       "bytes": 6677,
       "full_stack_collision_count": 0,
+      "inclusion_proof": [
+        {
+          "sha256": "249fbd267b79ddab625287d659c381e077bbdf4ec072650a085c763be66bd3a8",
+          "side": "right"
+        },
+        {
+          "sha256": "9f07a9b8a88549e869ddeef0d6be31c8f7dc6fac1378bf0a8d9cff7c9414f902",
+          "side": "right"
+        },
+        {
+          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "side": "right"
+        }
+      ],
+      "inclusion_verified": true,
       "leaf_hash": "75e657da75d81345f50e1ef938b741b6397c34f912c09d6ba915606798c126d0",
       "market_signal_count": 49,
       "max_single_signal_overlap_fraction": "6/16",
@@ -17,6 +32,21 @@
     {
       "bytes": 6677,
       "full_stack_collision_count": 0,
+      "inclusion_proof": [
+        {
+          "sha256": "75e657da75d81345f50e1ef938b741b6397c34f912c09d6ba915606798c126d0",
+          "side": "left"
+        },
+        {
+          "sha256": "9f07a9b8a88549e869ddeef0d6be31c8f7dc6fac1378bf0a8d9cff7c9414f902",
+          "side": "right"
+        },
+        {
+          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "side": "right"
+        }
+      ],
+      "inclusion_verified": true,
       "leaf_hash": "249fbd267b79ddab625287d659c381e077bbdf4ec072650a085c763be66bd3a8",
       "market_signal_count": 39,
       "max_single_signal_overlap_fraction": "6/16",
@@ -27,6 +57,21 @@
     {
       "bytes": 6677,
       "full_stack_collision_count": 0,
+      "inclusion_proof": [
+        {
+          "sha256": "bad2b1bb6ba2397961122a119f82c8a6f159669f5a58955ea8337f6621872c57",
+          "side": "right"
+        },
+        {
+          "sha256": "65ca3e851945a1928cf1a429781ca99d8ed2c24db5df7e8238f12e829f14723d",
+          "side": "left"
+        },
+        {
+          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "side": "right"
+        }
+      ],
+      "inclusion_verified": true,
       "leaf_hash": "16e88647366ec07319f892d37bc57fbd7eb4ac32d95a27c0aa6972885ce03872",
       "market_signal_count": 49,
       "max_single_signal_overlap_fraction": "6/16",
@@ -37,6 +82,21 @@
     {
       "bytes": 6677,
       "full_stack_collision_count": 0,
+      "inclusion_proof": [
+        {
+          "sha256": "16e88647366ec07319f892d37bc57fbd7eb4ac32d95a27c0aa6972885ce03872",
+          "side": "left"
+        },
+        {
+          "sha256": "65ca3e851945a1928cf1a429781ca99d8ed2c24db5df7e8238f12e829f14723d",
+          "side": "left"
+        },
+        {
+          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "side": "right"
+        }
+      ],
+      "inclusion_verified": true,
       "leaf_hash": "bad2b1bb6ba2397961122a119f82c8a6f159669f5a58955ea8337f6621872c57",
       "market_signal_count": 44,
       "max_single_signal_overlap_fraction": "6/16",
@@ -47,6 +107,21 @@
     {
       "bytes": 6677,
       "full_stack_collision_count": 0,
+      "inclusion_proof": [
+        {
+          "sha256": "d4af4eaee7091be00469b426c06a91f35a4f65836643c4ad282d12fbc9654329",
+          "side": "right"
+        },
+        {
+          "sha256": "5b256c2870aaab47b80e870c316a81a2add800fddd3c9979777bc9fbb4e515bc",
+          "side": "right"
+        },
+        {
+          "sha256": "aab7f53ae30c6f2f75c3291f2e3a4a31da89ec8c84995e507c13f1b61c58284d",
+          "side": "left"
+        }
+      ],
+      "inclusion_verified": true,
       "leaf_hash": "d4af4eaee7091be00469b426c06a91f35a4f65836643c4ad282d12fbc9654329",
       "market_signal_count": 37,
       "max_single_signal_overlap_fraction": "6/16",
@@ -65,6 +140,7 @@
     "board admission"
   ],
   "parent_rule": "parent = SHA256(0x01 || left_hash_bytes || right_hash_bytes); duplicate the final hash at an odd-width level",
+  "proof_rule": "Start from leaf_hash. For each inclusion_proof step, if side=left compute parent(sibling,current); if side=right compute parent(current,sibling). Final hash must equal merkle_root.",
   "schema": "csoai.claim-maintenance-priority-root/0.1",
   "separate_from": {
     "public_card_root": "/root.json",
