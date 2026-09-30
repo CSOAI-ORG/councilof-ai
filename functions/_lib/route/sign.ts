@@ -10,11 +10,11 @@
  * WHAT IS SIGNED. The UTF-8 bytes of the record's event_id ("sha256:<64 hex>"), which is sha256 of the RFC
  * 8785 JCS of the record minus event_id, signature and anchors (evidence.ts computeEventId, event.py
  * compute_event_id). A verifier recomputes event_id from the record, then checks the Ed25519 signature
- * over that string: packages/evidence-fabric/verify.py --receipt, and verifyReceipt() here and in
- * @csoai/route-client.
+ * over that string: verifyReceipt() below (execute.test.ts group F). No Python or npm verifier for route
+ * receipts exists yet.
  *
  * FAIL CLOSED. No secret, a secret that is not Ed25519, or a secret whose public half is not ROUTE_KEY_X
- * => no signature, and the caller (execute.ts) refuses to execute.
+ * => no signature, and execute.ts refuses to execute (SIGNER_UNAVAILABLE, 503).
  */
 import { computeEventId } from "./evidence";
 
