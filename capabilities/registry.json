@@ -6,6 +6,136 @@
   "generated_by": "scripts/capability-render.mjs legacy",
   "capabilities": [
     {
+      "id": "article50-detect",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Article 50 provenance detection (free)",
+      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "benchmark-quality-register",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Benchmark-quality register",
+      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "east-west-crosswalk",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "East-West crosswalk & cross-border card",
+      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "estate-index",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Estate index (census, not evidence)",
+      "description": "SendMessage answers with the estate census summary from GET /api/state -> estate_index, and the full index is GET /interop/master-consolidation-2026-09-16.json with its OpenTimestamps proof beside it. Every artefact CSOAI holds across this repository, Hugging Face, GitHub, Kaggle and Oracle Object Storage, committed to one Merkle root. Read it as a census, never as evidence: INDEXED means we found the artefact and measured nothing against it, and UNSIGNED means a card body exists carrying signature: null awaiting a signing decision. Two leaf classes sit under the root and are never added together: a bytes leaf is the sha256 of an artefact we read, a record leaf is the sha256 of our own note about a remote artefact we did not download and proves nothing about the remote bytes. The root is UNSIGNED, so it records when the set existed and not who assembled it, and it is therefore not Rekor-witnessable the way public/root.json is. It does not replace root.json or the signed card index, each of which commits to its own separate corpus with zero identifier overlap. Some identifiers are withheld because they carry internal names; those entries are kept and their digests untouched, so inclusion can still be proved by a holder of the real identifier. Measurement, never certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "eu-ai-act-screen",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "EU AI Act screening helper (deterministic, text-only)",
+      "description": "POST https://councilof.ai/api/assess with a system description. Keyword matches name the Annex III categories and Article 5 patterns a human should inspect; no model is consulted. It does not establish legal tier, applicability, exceptions or compliance, and an empty description is UNMEASURED, not a low-risk finding. When no signing key is provisioned the report says UNSIGNED out loud.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "gspc-board",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Signed GSPC Board",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "measured-badge",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Measured Badge",
+      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "measurement-capsules",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Measurement capsules: index and verify (free)",
+      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "server-evidence",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Server evidence: every capsule about one endpoint (free)",
+      "description": "Trust per server, not totals. Every published measurement capsule about ONE endpoint URL across all batches: MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A agent-card signature state, self-parity cells for CSOAI's own doors, and later adapters such as tool drift. Each capsule comes with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer; measurement-capsules {op: verify} re-derives inclusion. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule is NOT_MEASURED with an empty list, never an error and never a clean bill. The same module as the MCP tool server_evidence. Measurement, not endorsement.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "x402-discovery",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "x402 discovery + free door",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-a2a",
       "protocols": [
         "http"
@@ -297,7 +427,7 @@
         "http"
       ],
       "title": "Body state",
-      "description": "/api/body-state — live route reporting the retired GitHub Actions run-history source; no current workflow timestamps.",
+      "description": "/api/body-state — returns SOURCE_RETIRED for the former GitHub workflow observer; current separate surfaces are /api/worker and /api/observability.",
       "endpoint": "/api/body-state",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -383,12 +513,25 @@
       "payment": "free"
     },
     {
+      "id": "api-claim-maintenance-priority-root",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claim maintenance priority root",
+      "description": "GET /api/claim-maintenance-priority-root — deterministic Merkle root over immutable Claim Maintenance contribution-priority snapshots.",
+      "endpoint": "/api/claim-maintenance-priority-root",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-claim-maintenance-reaction",
       "protocols": [
         "http"
       ],
       "title": "Claim Maintenance reaction index",
-      "description": "Deterministic market/category reaction index for Claim Maintenance. Serves the committed comparison of adjacent commercial products, standards, research and open-source projects against the published Claim Maintenance dimension set, with bounded reaction classes and no LLM judge. Primitive overlap is not equivalence; category-name collisions do not establish legal ownership, endorsement, infringement or trademark status.",
+      "description": "GET /api/claim-maintenance-reaction — deterministic category-reaction index.",
       "endpoint": "/api/claim-maintenance-reaction",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -401,7 +544,7 @@
         "http"
       ],
       "title": "Claim Maintenance latest watch",
-      "description": "Latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids while preserving the rule that a changed page is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
+      "description": "GET /api/claim-maintenance-watch — latest bounded Claim Maintenance watch summary.",
       "endpoint": "/api/claim-maintenance-watch",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -414,7 +557,7 @@
         "http"
       ],
       "title": "Claim maintenance register",
-      "description": "The register of every subject Council of AI maintains public claims on, under the Claim Maintenance specification v0.1 (https://councilof.ai/spec/claim-maintenance/v0.1/, CC0). Per subject: claim count, the count in each of the four states (CLAIM_CAPTURED, CLAIM_MEASURED, UNMEASURED, UNCHECKABLE), first-captured date, last-read date, next scheduled read, and the URL of the registry artifact. Generated from the registry files on disk, never hand-listed, and carrying its own as_of. Filter with ?subject= or ?state=; a filtered view labels itself and still reports the whole register's totals. Free. Not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism: no entry states or implies that any claim is false, and no score, rank or index may be derived from these counts.",
+      "description": "GET /api/claims/register — the register of every subject we maintain public claims on.",
       "endpoint": "/api/claims/register",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -544,11 +687,11 @@
         "http"
       ],
       "title": "Corrections",
-      "description": "Free public corrections ledger. Each dated entry records what CSOAI published, what was wrong or overstated, how the issue was detected, and the correction/supersession state. Corrections are evidence about CSOAI's own publication history, not a score of third parties.",
+      "description": "Public corrections ledger for our own publication history. Every entry records something Council of AI/CSOAI got wrong, how it was caught, and the fix. Evidence about our own records, never a claim about another party or a certification.",
       "endpoint": "/api/corrections",
       "method": "GET",
       "lifecycle": "LIVE",
-      "audience": "agent",
+      "audience": "both",
       "payment": "free"
     },
     {
@@ -1181,12 +1324,12 @@
         "http"
       ],
       "title": "Fresh capsule",
-      "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only — the endpoint's own discovery documents vs its initialize + tools/list answer. CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id; read before settle. Free preview; verification stays free. Measurement, not endorsement.",
+      "description": "GET /api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS|VERSION|PROTOCOL",
       "endpoint": "/api/measurement/fresh-capsule",
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "free_preview_then_x402"
+      "payment": "free"
     },
     {
       "id": "api-measurement-fresh-capsule-post",
@@ -1194,12 +1337,12 @@
         "http"
       ],
       "title": "Fresh capsule (POST)",
-      "description": "POST alias of GET /api/measurement/fresh-capsule for gateways that POST {}; the query string selects the claim and the body is ignored.",
+      "description": "GET /api/measurement/fresh-capsule?endpoint=<https MCP URL>&dimension=TOOLS|VERSION|PROTOCOL",
       "endpoint": "/api/measurement/fresh-capsule",
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "free_preview_then_x402"
+      "payment": "free"
     },
     {
       "id": "api-memory",
@@ -1259,7 +1402,7 @@
         "http"
       ],
       "title": "Momentum",
-      "description": "GET /api/momentum — live, sourced, dated figures (board, signed cards, corrections, capsules, PyPI and Hugging Face downloads, census rows, MCP tools, x402 doors) and third-party listings verified on the read; a failed source is omitted, never zeroed.",
+      "description": "GET /api/momentum — live, sourced, dated figures that show the work is real and moving (schema csoai.momentum/0.1). The reads, the rules and the omission logic live in ./_momentum.ts; this file is the Pages handler and its cache.",
       "endpoint": "/api/momentum",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1384,19 +1527,6 @@
       "payment": "free"
     },
     {
-      "id": "api-pop-a2a",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop a2a",
-      "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
-      "endpoint": "/api/pop/a2a",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
-    },
-    {
       "id": "api-pop-a2a-post",
       "protocols": [
         "http"
@@ -1408,19 +1538,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
-    },
-    {
-      "id": "api-pop-claim-watch",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop claim watch",
-      "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
-      "endpoint": "/api/pop/claim-watch",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
     },
     {
       "id": "api-pop-claim-watch-post",
@@ -1436,19 +1553,6 @@
       "payment": "free"
     },
     {
-      "id": "api-pop-corrections",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop corrections",
-      "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
-      "endpoint": "/api/pop/corrections",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
-    },
-    {
       "id": "api-pop-corrections-post",
       "protocols": [
         "http"
@@ -1460,19 +1564,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
-    },
-    {
-      "id": "api-pop-layer0",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop layer0",
-      "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
-      "endpoint": "/api/pop/layer0",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
     },
     {
       "id": "api-pop-layer0-post",
@@ -1488,19 +1579,6 @@
       "payment": "free"
     },
     {
-      "id": "api-pop-mcp-registry",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop mcp registry",
-      "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
-      "endpoint": "/api/pop/mcp-registry",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
-    },
-    {
       "id": "api-pop-mcp-registry-post",
       "protocols": [
         "http"
@@ -1512,19 +1590,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
-    },
-    {
-      "id": "api-pop-ots-proofs",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop ots proofs",
-      "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
-      "endpoint": "/api/pop/ots-proofs",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
     },
     {
       "id": "api-pop-ots-proofs-post",
@@ -1540,19 +1605,6 @@
       "payment": "free"
     },
     {
-      "id": "api-pop-stablecoins",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop stablecoins",
-      "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
-      "endpoint": "/api/pop/stablecoins",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
-    },
-    {
       "id": "api-pop-stablecoins-post",
       "protocols": [
         "http"
@@ -1564,19 +1616,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
-    },
-    {
-      "id": "api-pop-swift",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop swift",
-      "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
-      "endpoint": "/api/pop/swift",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
     },
     {
       "id": "api-pop-swift-post",
@@ -1592,19 +1631,6 @@
       "payment": "free"
     },
     {
-      "id": "api-pop-x402-bazaar",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop x402 bazaar",
-      "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
-      "endpoint": "/api/pop/x402-bazaar",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
-    },
-    {
       "id": "api-pop-x402-bazaar-post",
       "protocols": [
         "http"
@@ -1616,19 +1642,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
-    },
-    {
-      "id": "api-pop-xrpl",
-      "protocols": [
-        "http"
-      ],
-      "title": "Pop xrpl",
-      "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
-      "endpoint": "/api/pop/xrpl",
-      "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free_preview_then_x402"
     },
     {
       "id": "api-pop-xrpl-post",
@@ -1745,7 +1758,7 @@
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "x402"
+      "payment": "free"
     },
     {
       "id": "api-ras-mcp-probe-post",
@@ -1758,7 +1771,7 @@
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "x402"
+      "payment": "free"
     },
     {
       "id": "api-ras-supply",
@@ -1771,7 +1784,7 @@
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "x402"
+      "payment": "free"
     },
     {
       "id": "api-ras-supply-post",
@@ -1784,7 +1797,7 @@
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "x402"
+      "payment": "free"
     },
     {
       "id": "api-ras-x402-check",
@@ -1797,7 +1810,7 @@
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "x402"
+      "payment": "free"
     },
     {
       "id": "api-ras-x402-check-post",
@@ -1810,7 +1823,7 @@
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
-      "payment": "x402"
+      "payment": "free"
     },
     {
       "id": "api-receipt-status",
@@ -2026,7 +2039,7 @@
         "http"
       ],
       "title": "Request attestation",
-      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description": "One named subject gets a card-v0 commission receipt: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
       "endpoint": "/api/request-attestation",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2619,38 +2632,51 @@
       "payment": "x402"
     },
     {
-      "id": "article50-detect",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Article 50 provenance detection (free)",
-      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "benchmark-quality-register",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Benchmark-quality register",
-      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
       "id": "board_totals",
       "protocols": [
         "mcp"
       ],
       "title": "board_totals",
-      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind — a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped — plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "claim_maintenance_priority_root",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "claim_maintenance_priority_root",
+      "description": "Read the separate Claim Maintenance contribution-priority Merkle root. It binds immutable priority snapshots under its own declared leaf rule and is explicitly separate from the public measurement-card root. The root and its OTS/signature witness are evidence of publication history only: never trademark ownership, certification, endorsement or measurement correctness.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "claim_maintenance_reaction",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "claim_maintenance_reaction",
+      "description": "Read the deterministic Claim Maintenance market/category reaction index. Compares adjacent products, standards, research and open-source projects against the published dimension set. Primitive overlap is not equivalence; phrase/category collisions do not establish legal ownership, endorsement, infringement or trademark status.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "claim_maintenance_watch",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "claim_maintenance_watch",
+      "description": "Read the latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids. A changed source is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2669,45 +2695,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "x402"
-    },
-    {
-      "id": "east-west-crosswalk",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "East-West crosswalk & cross-border card",
-      "description": "One signed GSPC measurement mapped across EU, UK, US, Illinois, and China GB/T alignment surfaces. Crosswalk v1 JSON, cross-border signed card, and stranger verify at /gspc-verify. Measurement only — determination stays with authorities.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "estate-index",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Estate index (census, not evidence)",
-      "description": "SendMessage answers with the estate census summary from GET /api/state -> estate_index, and the full index is GET /interop/master-consolidation-2026-09-16.json with its OpenTimestamps proof beside it. Every artefact CSOAI holds across this repository, Hugging Face, GitHub, Kaggle and Oracle Object Storage, committed to one Merkle root. Read it as a census, never as evidence: INDEXED means we found the artefact and measured nothing against it, and UNSIGNED means a card body exists carrying signature: null awaiting a signing decision. Two leaf classes sit under the root and are never added together: a bytes leaf is the sha256 of an artefact we read, a record leaf is the sha256 of our own note about a remote artefact we did not download and proves nothing about the remote bytes. The root is UNSIGNED, so it records when the set existed and not who assembled it, and it is therefore not Rekor-witnessable the way public/root.json is. It does not replace root.json or the signed card index, each of which commits to its own separate corpus with zero identifier overlap. Some identifiers are withheld because they carry internal names; those entries are kept and their digests untouched, so inclusion can still be proved by a holder of the real identifier. Measurement, never certification.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "eu-ai-act-screen",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "EU AI Act screening helper (deterministic, text-only)",
-      "description": "POST https://councilof.ai/api/assess with a system description. Keyword matches name the Annex III categories and Article 5 patterns a human should inspect; no model is consulted. It does not establish legal tier, applicability, exceptions or compliance, and an empty description is UNMEASURED, not a low-risk finding. When no signing key is provisioned the report says UNSIGNED out loud.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
     },
     {
       "id": "get_axis",
@@ -2749,19 +2736,6 @@
       "payment": "free"
     },
     {
-      "id": "gspc-board",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Signed GSPC Board",
-      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
       "id": "list_cards",
       "protocols": [
         "mcp"
@@ -2781,32 +2755,6 @@
       ],
       "title": "mcp_trust",
       "description": "GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable. Counts only by doctrine — host details withheld by design. A partial round or a cap change is disclosed in the snapshot. Measurement, never certification. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable).",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "measured-badge",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "measurement-capsules",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Measurement capsules: index and verify (free)",
-      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -2851,19 +2799,6 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "x402"
-    },
-    {
-      "id": "server-evidence",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "Server evidence: every capsule about one endpoint (free)",
-      "description": "Trust per server, not totals. Every published measurement capsule about ONE endpoint URL across all batches: MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A agent-card signature state, self-parity cells for CSOAI's own doors, and later adapters such as tool drift. Each capsule comes with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer; measurement-capsules {op: verify} re-derives inclusion. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule is NOT_MEASURED with an empty list, never an error and never a clean bill. The same module as the MCP tool server_evidence. Measurement, not endorsement.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
     },
     {
       "id": "server_evidence",
@@ -2916,6 +2851,149 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "x402_trust",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "x402_trust",
+      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-pop-a2a",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop a2a",
+      "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+      "endpoint": "/api/pop/a2a",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-claim-watch",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop claim watch",
+      "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+      "endpoint": "/api/pop/claim-watch",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-corrections",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop corrections",
+      "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+      "endpoint": "/api/pop/corrections",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-layer0",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop layer0",
+      "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+      "endpoint": "/api/pop/layer0",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-mcp-registry",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop mcp registry",
+      "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+      "endpoint": "/api/pop/mcp-registry",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-ots-proofs",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop ots proofs",
+      "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+      "endpoint": "/api/pop/ots-proofs",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-stablecoins",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop stablecoins",
+      "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+      "endpoint": "/api/pop/stablecoins",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-swift",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop swift",
+      "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+      "endpoint": "/api/pop/swift",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-x402-bazaar",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop x402 bazaar",
+      "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+      "endpoint": "/api/pop/x402-bazaar",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-pop-xrpl",
+      "protocols": [
+        "http"
+      ],
+      "title": "Pop xrpl",
+      "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+      "endpoint": "/api/pop/xrpl",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
     },
     {
       "id": "well-known-api-catalog",
@@ -2975,61 +3053,9 @@
         "http"
       ],
       "title": "X402",
-      "description": "GET /.well-known/x402.json — the x402 discovery manifest, served live so `mode` is derived from env (never typed). Replaces the static file that pointed agents at a mock pack host; the metered resources live on THIS origin. No amounts here — they live in each 402 challenge.",
+      "description": "GET /.well-known/x402.json — the x402 discovery manifest, served live so `mode` is derived from env (never typed). Replaces the static file that pointed agents at a mock pack host; the metered resources live on THIS origin.",
       "endpoint": "/.well-known/x402.json",
       "method": "GET",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "x402-discovery",
-      "protocols": [
-        "a2a"
-      ],
-      "title": "x402 discovery + free door",
-      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "x402_trust",
-      "protocols": [
-        "mcp"
-      ],
-      "title": "x402_trust",
-      "description": "GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire. Counts only by doctrine — host details withheld; a 402 is NOT delivery; measurement, never certification.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "claim_maintenance_watch",
-      "protocols": [
-        "mcp"
-      ],
-      "title": "claim_maintenance_watch",
-      "description": "Read the latest bounded Claim Maintenance reread/review summary. Reports source-digest movement, claim-text presence, unreachable reads and review-required claim ids. A changed source is a review trigger, not a finding about truth, falsity, motive, compliance, endorsement or service quality.",
-      "endpoint": null,
-      "method": "POST",
-      "lifecycle": "LIVE",
-      "audience": "agent",
-      "payment": "free"
-    },
-    {
-      "id": "claim_maintenance_reaction",
-      "protocols": [
-        "mcp"
-      ],
-      "title": "claim_maintenance_reaction",
-      "description": "Read the deterministic Claim Maintenance market/category reaction index. Compares adjacent products, standards, research and open-source projects against the published dimension set. Primitive overlap is not equivalence; phrase/category collisions do not establish legal ownership, endorsement, infringement or trademark status.",
-      "endpoint": null,
-      "method": "POST",
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"

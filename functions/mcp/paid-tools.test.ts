@@ -285,7 +285,7 @@ describe("/mcp tools/list — declared free fleet + four paid, catalogue free, n
         clientInfo: { name: "t", version: "0" },
       }),
     );
-    expect(i.result.serverInfo.version).toBe("1.4.2");
+    expect(i.result.serverInfo.version).toBe("1.6.0");
     // Counts are derived from the two definition files, never typed (2026-09-15: the text said
     // "Eight free" while tools/list served nine free tools).
     expect(i.result.instructions).toContain(`${FREE.tools.length} free read-only tools`);

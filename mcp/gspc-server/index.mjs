@@ -765,6 +765,7 @@ const HANDLERS = {
   server_evidence: (a) => doorTool("server_evidence", a),
   claim_maintenance_watch: (a) => doorTool("claim_maintenance_watch", a),
   claim_maintenance_reaction: (a) => doorTool("claim_maintenance_reaction", a),
+  claim_maintenance_priority_root: (a) => doorTool("claim_maintenance_priority_root", a),
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -818,6 +819,8 @@ function summaryLine(name, payload) {
     case "verify_capsule":
     case "server_evidence":
       return `${payload.state ?? "?"}${payload.reason ? " — " + payload.reason : ""} (${MEASUREMENT_DOCTRINE}).`;
+    case "claim_maintenance_priority_root":
+      return `${payload.state ?? "?"} — Claim Maintenance priority Merkle ${String(payload.merkle_root || "").slice(0, 16) || "none"}; separate evidence domain, not the card root.`;
     case "commission_card":
     case "art50_marking_evidence":
     case "rwa_evidence":

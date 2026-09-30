@@ -5,8 +5,8 @@ published, submitted or registered. Every step is an owner action.
 
 Targets: 16. Owner approval needed: 16.
 Affected by the flagged CSOAI-ORG GitHub account (blocked, re-routed to CouncilofAI-CSOAI, or losing GitHub-based provenance): 11 (`mcp-registry-github`, `claude-plugin`, `cursor-plugin`, `grok-plugin`, `gemini-extension`, `pypi-langchain-csoai`, `pypi-llama-index-tools-csoai`, `pypi-crewai-csoai`, `npm-ai-sdk-gspc`, `npm-mastra-gspc`, `docker-mcp-catalog`).
-Remote server version: 1.5.0 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
-Fleet: 18 tools (14 free, 4 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
+Remote server version: 1.6.0 (from `mcp/gspc-server/server.json`; `scripts/harness-x/check.mjs` requires it to equal the live serverInfo.version).
+Fleet: 19 tools (15 free, 4 x402-metered). Doctrine sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a`.
 
 Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harness-x/check.mjs`.
 
@@ -183,4 +183,4 @@ Before any step: `node scripts/harness-x/render.mjs --check && node scripts/harn
 4. **Second registry name** (`ai.councilof/gspc`) — keep both names or one.
 5. **A2A agent card signature.** `/.well-known/agent-card.json` has no `signatures` block. `scripts/adapters/agent_card_jws.py`
    emits the signing input; signing needs the card-attestation-1 key holder (K3 lane). Not done here.
-6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all 18 tools, or wait.
+6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all 19 tools, or wait.

@@ -44,6 +44,7 @@ describe("Claim Maintenance MCP readers", () => {
   it.each([
     ["claim_maintenance_watch", "/api/claim-maintenance-watch", { schema: "csoai.claim-maintenance.watch-summary/0.1", review_required_claims: ["x"] }],
     ["claim_maintenance_reaction", "/api/claim-maintenance-reaction", { schema: "csoai.claim-maintenance-reaction-index/0.1", category: { full_stack_collision_count: 0 } }],
+    ["claim_maintenance_priority_root", "/api/claim-maintenance-priority-root", { schema: "csoai.claim-maintenance-priority-root/0.1", merkle_root: "abc", leaf_count: 4 }],
   ] as const)("%s reads only its canonical API", async (name, path, payload) => {
     network.mockImplementation(async (input) => {
       const url = String(input);

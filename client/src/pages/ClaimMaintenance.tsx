@@ -20,6 +20,8 @@ const SPEC_CURRENT = "/spec/claim-maintenance/v0.2/";
 const PRIORITY = "/spec/claim-maintenance/priority.json";
 const PRIORITY_WITNESS = "/spec/claim-maintenance/priority-witness.json";
 const PRIORITY_SNAPSHOTS = "/spec/claim-maintenance/priority-snapshots/index.json";
+const PRIORITY_ROOT = "/spec/claim-maintenance/priority-root.json";
+const PRIORITY_ROOT_WITNESS = "/spec/claim-maintenance/priority-root-witness.json";
 const SPEC_MD = "/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md";
 const SPEC_INDEX = "/spec/claim-maintenance/";
 const SPEC_SCHEMA = "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json";
@@ -76,6 +78,8 @@ const PAGE_LD = {
     "https://councilof.ai" + SPEC,
     "https://councilof.ai" + PRIORITY,
     "https://councilof.ai" + PRIORITY_SNAPSHOTS,
+    "https://councilof.ai" + PRIORITY_ROOT,
+    "https://councilof.ai" + PRIORITY_ROOT_WITNESS,
     "https://councilof.ai" + REGISTER,
     IMPL,
     "https://councilof.ai" + CORRECTIONS,
@@ -225,6 +229,8 @@ export default function ClaimMaintenance() {
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY}>Priority record (JSON)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY_WITNESS}>Priority witness (OTS state)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY_SNAPSHOTS}>Priority evolution (JSON)</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY_ROOT}>Priority Merkle root</a>
+            <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={PRIORITY_ROOT_WITNESS}>Priority root witness</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={REGISTER}>The register (JSON)</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href={IMPL}>Run the code</a>
             <a className="rounded-lg border border-slate-700 px-4 py-2.5 text-slate-200 hover:border-emerald-400 hover:text-emerald-300" href="mailto:nicholas@csoai.org?subject=Claim%20maintenance%20enquiry">Discuss a use case</a>

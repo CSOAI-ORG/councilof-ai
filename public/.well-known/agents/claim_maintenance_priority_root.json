@@ -1,0 +1,55 @@
+{
+  "name": "Council of AI \u2014 claim_maintenance_priority_root",
+  "description": "Read the separate Claim Maintenance contribution-priority Merkle root. It binds immutable priority snapshots under its own declared leaf rule and is explicitly separate from the public measurement-card root. The root and its OTS/signature witness are evidence of publication history only: never trademark ownership, certification, endorsement or measurement correctness.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/claim-maintenance/",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "claim_maintenance_priority_root",
+      "name": "claim_maintenance_priority_root",
+      "description": "Read the separate Claim Maintenance contribution-priority Merkle root. It binds immutable priority snapshots under its own declared leaf rule and is explicitly separate from the public measurement-card root. The root and its OTS/signature witness are evidence of publication history only: never trademark ownership, certification, endorsement or measurement correctness.",
+      "tags": [
+        "claim-maintenance",
+        "priority",
+        "merkle",
+        "measurement"
+      ],
+      "examples": [
+        "POST https://councilof.ai/mcp tools/call {\"name\":\"claim_maintenance_priority_root\",\"arguments\":{}}"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "trademark-ownership-opinion"
+  ],
+  "mcp_tool": "claim_maintenance_priority_root",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:claim_maintenance_priority_root"
+}

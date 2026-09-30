@@ -1,3 +1,8 @@
+/**
+ * GET /api/corrections — the public corrections ledger for our own publication history.
+ * Every entry records something Council of AI/CSOAI got wrong, how it was caught, and the fix.
+ * It is evidence about our own records, not a claim about another party and not a certification.
+ */
 // /api/corrections — the public corrections ledger.
 //
 // This is a source-maintained machine-readable record: every entry is something the estate

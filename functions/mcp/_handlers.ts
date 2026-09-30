@@ -117,6 +117,8 @@ function sharedToolSummary(
       return `${payload.state ?? "?"} — Claim Maintenance reread summary; changed bytes are review triggers, never findings by themselves.`;
     case "claim_maintenance_reaction":
       return `${payload.state ?? "?"} — deterministic Claim Maintenance market/category reaction index; overlap is not equivalence or legal ownership.`;
+    case "claim_maintenance_priority_root":
+      return `${payload.state ?? "?"} — Claim Maintenance priority Merkle ${String(payload.merkle_root || "").slice(0, 16) || "none"}; separate evidence domain, not the card root.`;
     default:
       return name;
   }
@@ -182,7 +184,9 @@ export async function sharedToolResult(
                       ? await claimMaintenanceReadTool(origin, "/api/claim-maintenance-watch")
                       : name === "claim_maintenance_reaction"
                         ? await claimMaintenanceReadTool(origin, "/api/claim-maintenance-reaction")
-                        : await verifyCardThreeState(args, origin);
+                        : name === "claim_maintenance_priority_root"
+                          ? await claimMaintenanceReadTool(origin, "/api/claim-maintenance-priority-root")
+                          : await verifyCardThreeState(args, origin);
   return {
     content: [
       {

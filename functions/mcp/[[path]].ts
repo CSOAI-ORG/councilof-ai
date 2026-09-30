@@ -23,7 +23,7 @@ import { toolSpan, withTraceHeader } from "./_otel";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "./_measurement";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
-export const MCP_HTTP_SERVER_VERSION = "1.4.2";
+export const MCP_HTTP_SERVER_VERSION = "1.6.0";
 const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,

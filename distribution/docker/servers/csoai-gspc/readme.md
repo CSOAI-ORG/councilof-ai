@@ -1,10 +1,10 @@
 # Council of AI GSPC
 
-Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or OAuth). Server 1.5.0.
+Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or OAuth). Server 1.6.0.
 
 ## Tools
 
-Fourteen free tools:
+Fifteen free tools:
 
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
 - `get_axis` — One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
@@ -20,6 +20,7 @@ Fourteen free tools:
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 - `claim_maintenance_watch` — Read the latest bounded Claim Maintenance reread/review summary.
 - `claim_maintenance_reaction` — Read the deterministic Claim Maintenance market/category reaction index.
+- `claim_maintenance_priority_root` — Read the separate Claim Maintenance contribution-priority Merkle root.
 
 Four optional x402-metered evidence tools (payment is the explicit `x_payment` argument; an unpaid call
 returns the challenge, which is not settlement, delivery or revenue):
@@ -29,7 +30,7 @@ returns the challenge, which is not settlement, delivery or revenue):
 - `rwa_evidence` — Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd.
 - `receipts_batch` — A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256.
 
-`tools/list` must return exactly these eighteen names.
+`tools/list` must return exactly these nineteen names.
 
 ## Evidence boundary
 

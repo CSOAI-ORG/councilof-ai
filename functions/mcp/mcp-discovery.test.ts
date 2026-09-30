@@ -81,7 +81,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
 
     expect(initialized.result.serverInfo).toEqual({
       name: "csoai-gspc-mcp",
-      version: "1.4.2",
+      version: "1.6.0",
     });
     expect(initialized.result.serverInfo.version).not.toBe(NPM_PACKAGE.version);
     expect(initialized.result.serverInfo.version).toBe(
@@ -125,7 +125,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     const paidCount = (PAID as { tools: unknown[] }).tools.length;
 
     expect(listed.result.tools).toHaveLength(freeCount + paidCount);
-    expect([freeCount, paidCount]).toEqual([12, 4]);
+    expect([freeCount, paidCount]).toEqual([15, 4]);
     expect(REGISTRY_DESCRIPTOR.description).toContain(
       `${freeCount + paidCount} HTTP tools (${freeCount} free, ${paidCount} x402)`,
     );
@@ -135,7 +135,7 @@ describe("MCP discovery keeps implementation identities truthful", () => {
   });
 
   it("uses a new registry descriptor without pretending it is already published", () => {
-    expect(REGISTRY_DESCRIPTOR.version).toBe("1.4.2");
+    expect(REGISTRY_DESCRIPTOR.version).toBe("1.6.0");
     expect(REGISTRY_DESCRIPTOR.version).not.toBe(NPM_PACKAGE.version);
     expect(REGISTRY_DESCRIPTOR.description.length).toBeLessThanOrEqual(100);
     expect(REGISTRY_DESCRIPTOR.description).toMatch(/measure, never certify/i);

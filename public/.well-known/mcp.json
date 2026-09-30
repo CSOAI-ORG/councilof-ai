@@ -8,12 +8,12 @@
       "display_name": "GSPC Measurement Tools",
       "url": "https://councilof.ai/mcp",
       "fallback_url": "https://csoai.org/mcp",
-      "stdio": "npx -y csoai-gspc-mcp@0.2.2",
+      "stdio": "npx -y csoai-gspc-mcp@0.3.0",
       "dead_worker": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker.",
       "auth_required": false,
       "registry": {
         "name": "ai.councilof/gspc",
-        "version": "1.5.0",
+        "version": "1.6.0",
         "url": "https://registry.modelcontextprotocol.io",
         "deprecated_alias": "io.github.CSOAI-ORG/gspc"
       },
@@ -32,7 +32,8 @@
         "verify_capsule",
         "server_evidence",
         "claim_maintenance_watch",
-        "claim_maintenance_reaction"
+        "claim_maintenance_reaction",
+        "claim_maintenance_priority_root"
       ]
     }
   ],
@@ -40,8 +41,8 @@
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 18,
-    "free_tools": 14,
+    "total_tools": 19,
+    "free_tools": 15,
     "metered_tools": 4,
     "server_count": 1,
     "tools": [
@@ -59,12 +60,13 @@
       "server_evidence",
       "claim_maintenance_watch",
       "claim_maintenance_reaction",
+      "claim_maintenance_priority_root",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
-    "note": "POST /mcp tools/list: fourteen free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.5.0 points here. A listing does not prove paid settlement or delivery."
+    "note": "POST /mcp tools/list: fifteen free readers plus four x402-metered evidence tools. mill-tool `measure` is dropped. witness_hash remains quarantined and is not advertised. MCP Registry server 1.6.0 points here. A listing does not prove paid settlement or delivery."
   },
   "planted": {
     "tools": [
@@ -82,13 +84,14 @@
       "server_evidence",
       "claim_maintenance_watch",
       "claim_maintenance_reaction",
+      "claim_maintenance_priority_root",
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
       "receipts_batch"
     ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door: fourteen free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No jail run from MCP. mill-tool `measure` dropped."
+    "note": "The product door: fifteen free readers plus four x402-metered evidence tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No jail run from MCP. mill-tool `measure` dropped."
   },
   "provider": {
     "name": "CSOAI Ltd",

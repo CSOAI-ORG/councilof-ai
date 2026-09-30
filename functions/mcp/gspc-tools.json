@@ -885,6 +885,63 @@
         ],
         "additionalProperties": true
       }
+    },
+    {
+      "name": "claim_maintenance_priority_root",
+      "title": "Claim Maintenance priority root",
+      "description": "Read the separate Claim Maintenance contribution-priority Merkle root. It binds immutable priority snapshots under its own declared leaf rule and is explicitly separate from the public measurement-card root. The root and its OTS/signature witness are evidence of publication history only: never trademark ownership, certification, endorsement or measurement correctness.",
+      "annotations": {
+        "title": "Claim Maintenance priority root",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "VALID",
+              "UNREACHABLE"
+            ]
+          },
+          "schema": {
+            "type": "string"
+          },
+          "merkle_root": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "leaf_count": {
+            "type": "integer"
+          },
+          "witness": {
+            "type": "string"
+          },
+          "separate_from": {
+            "type": "object"
+          },
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "additionalProperties": true
+      }
     }
   ]
 }

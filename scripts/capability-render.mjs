@@ -7,11 +7,12 @@
  * are wired into `npm run build:client` beside `mcp-probe --check`, so drift fails the build
  * rather than reaching production.
  *
- *   fleet-lock   functions/mcp/tool-fleet.lock.json        the 13 tools, BY NAME
+ *   fleet-lock   functions/mcp/tool-fleet.lock.json        the MCP tools, BY NAME
  *   a2a          public/.well-known/agent-card.json        the A2A skills[]
  *                public/.well-known/agent.json             its alias, byte-identical
  *   nav          client/src/data/capability-nav.json       the site's capability navigation (data only)
  *   legacy       capabilities/registry.json                the 2026-09-04 registry, now a VIEW
+ *   agent-index  public/.well-known/agents/index.json       one card per MCP tool, derived by NAME
  *
  * Two more renders live in their existing producers rather than here, because those producers
  * already own bytes this one must not fight over:
@@ -176,7 +177,27 @@ function renderLegacy() {
   }));
 }
 
-const TARGETS = { "fleet-lock": renderFleetLock, a2a: renderA2A, nav: renderNav, legacy: renderLegacy };
+// ── per-tool agent index ──────────────────────────────────────────────────────────────────────
+function renderAgentIndex() {
+  const tools = of("mcp_tool").slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const free = tools.filter((t) => t.payment === "free");
+  const paid = tools.filter((t) => t.payment !== "free");
+  emit("public/.well-known/agents/index.json", j({
+    schema: "csoai.a2a-agent-index/0.1",
+    note:
+      `${tools.length} cards = the ${tools.length} MCP tools on POST /mcp (${free.length} free readers, ${paid.length} x402-metered). ` +
+      "Not human analysts. Count and names are rendered from council-os/capabilities.json; " +
+      "functions/mcp/tool-fleet.lock.test.ts fails if this index and the door disagree. Measurement, not certification.",
+    count: tools.length,
+    agents: tools.map((t) => ({
+      id: t.id,
+      href: `https://councilof.ai/.well-known/agents/${t.id}.json`,
+      paid: t.payment !== "free",
+    })),
+  }));
+}
+
+const TARGETS = { "fleet-lock": renderFleetLock, a2a: renderA2A, nav: renderNav, legacy: renderLegacy, "agent-index": renderAgentIndex };
 
 if (target === "all") for (const fn of Object.values(TARGETS)) fn();
 else if (TARGETS[target]) TARGETS[target]();

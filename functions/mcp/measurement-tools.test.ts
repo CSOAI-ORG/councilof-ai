@@ -41,8 +41,12 @@ const NAMES = ["measurement_index", "verify_capsule", "server_evidence"];
 describe("in the fleet: three free read-only tools, no env gate", () => {
   it("are free tools in gspc-tools.json and in the lock, in that order, after mcp_trust", () => {
     const free = FREE.tools.map((t) => t.name);
-    expect(free.slice(-3)).toEqual(NAMES);
-    expect(LOCK.free.slice(-3)).toEqual(NAMES);
+    const freeAnchor = free.indexOf("mcp_trust");
+    const lockAnchor = LOCK.free.indexOf("mcp_trust");
+    expect(freeAnchor).toBeGreaterThanOrEqual(0);
+    expect(lockAnchor).toBeGreaterThanOrEqual(0);
+    expect(free.slice(freeAnchor + 1, freeAnchor + 1 + NAMES.length)).toEqual(NAMES);
+    expect(LOCK.free.slice(lockAnchor + 1, lockAnchor + 1 + NAMES.length)).toEqual(NAMES);
     expect([...MEASUREMENT_TOOL_NAMES]).toEqual(NAMES);
   });
 

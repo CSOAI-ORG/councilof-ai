@@ -5,10 +5,20 @@
     {
       "name": "board_totals",
       "title": "Live GSPC board totals",
-      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind \u2014 a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped \u2014 plus as_of dates for the board and for this fetch. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
+      "description": "Live GSPC board totals from https://councilof.ai/api/gspc. Returns the slot count and the measured count as two labelled numbers WITH their kind \u2014 a slot is a declared position on the board, a measurement is a real run behind it; the two are never summed and never swapped \u2014 plus the board's separation line, and as_of dates for the board and for this fetch. Compact by default; pass detail \"full\" for the long-form count grammar, the per-family counts and the board's full measured_on block. We measure, never certify. If the board cannot be fetched the answer is a distinct UNREACHABLE state: no cached number is ever presented as live.",
       "inputSchema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "detail": {
+            "type": "string",
+            "enum": [
+              "summary",
+              "full"
+            ],
+            "default": "summary",
+            "description": "summary (default): counts, public_count, the separation line, dates and source. full: also count_grammar, by_family and the board's measured_on block."
+          }
+        },
         "additionalProperties": false
       },
       "outputSchema": {
@@ -17,6 +27,10 @@
           "state": {
             "type": "string",
             "description": "LIVE or UNREACHABLE"
+          },
+          "detail": {
+            "type": "string",
+            "description": "summary or full"
           },
           "counts": {
             "type": "array",
@@ -38,6 +52,7 @@
               "null"
             ]
           },
+          "separation": {},
           "count_grammar": {},
           "by_family": {},
           "as_of": {},
@@ -863,6 +878,63 @@
               "VALID",
               "UNREACHABLE"
             ]
+          }
+        },
+        "required": [
+          "state"
+        ],
+        "additionalProperties": true
+      }
+    },
+    {
+      "name": "claim_maintenance_priority_root",
+      "title": "Claim Maintenance priority root",
+      "description": "Read the separate Claim Maintenance contribution-priority Merkle root. It binds immutable priority snapshots under its own declared leaf rule and is explicitly separate from the public measurement-card root. The root and its OTS/signature witness are evidence of publication history only: never trademark ownership, certification, endorsement or measurement correctness.",
+      "annotations": {
+        "title": "Claim Maintenance priority root",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "VALID",
+              "UNREACHABLE"
+            ]
+          },
+          "schema": {
+            "type": "string"
+          },
+          "merkle_root": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "leaf_count": {
+            "type": "integer"
+          },
+          "witness": {
+            "type": "string"
+          },
+          "separate_from": {
+            "type": "object"
+          },
+          "not_a_certification": {
+            "type": "boolean"
           }
         },
         "required": [
