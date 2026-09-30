@@ -468,7 +468,6 @@ const DELISTED = new Map([
   ["/usp", "canonical: /why/"],
   ["/why-csoai", "canonical: /why/"],
   ["/our-difference", "canonical: /why/"],
-  ["/agents", "canonical: /council-vs-agents/"],
   ["/governance-council", "canonical: /council-vs-agents/"],
   ["/vs", "canonical: /compare/"],
   ["/vs-competitors", "canonical: /compare/"],

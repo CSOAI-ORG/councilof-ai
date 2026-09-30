@@ -89,6 +89,7 @@ board moves, so treat this as a copy and re-fetch for current values.
     "separation_public_count": "0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED",
     "separation_public_count_note": "Read with public_count, never instead of it. measured_axes counts axes with a RUN behind them; it is not a count of axes with a separated result. SEPARATED, TIE and UNTESTED are three states and none is folded into another. Derived from the axis array, never typed. The same three numbers appear below as separated_leads / ties / untested_separations and in limitations[0]; there is one derivation.",
     "model_fleets": 14,
+    "model_fleets_note": "Counts model-comparison AXES (one fleet per axis), not models. The number of distinct models measured is a different quantity, derived from the signed cards: /interop/models-measured.json (list at /models-measured/).",
     "fact_runs": 9,
     "count_grammar": "23 axes are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own. A measurement is not a separated leader: 0 of 14 model-comparison axes separated a leader · 7 TIE · 7 UNTESTED. A point-estimate lead is not a measured advantage, and UNTESTED is not a tie.",
     "by_family": {
@@ -839,14 +840,14 @@ it yourself; we did not vet it.
 ## 10. TIMESTAMP PROOFS — anchored is not the same claim as submitted
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-30T12:31:13Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-30T13:46:25Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
-- Detached OpenTimestamps proofs that actually deserialize: 654. The manifest is built by
+- Detached OpenTimestamps proofs that actually deserialize: 659. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
 - Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 650.
-- Still calendar-pending: 4. A calendar-pending proof is a submitted request, not
+- Still calendar-pending: 9. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

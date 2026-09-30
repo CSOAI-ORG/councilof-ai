@@ -3,7 +3,7 @@ import { FINES, DEADLINES, FFW } from "@/data/enforcement";
 export default function EunomiaData() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">EUNOMIA Data — commercial enforcement feed</h1>
+      <h1 className="text-2xl font-bold">Financial-axis data: the enforcement feed</h1>
       <p className="mt-1 text-sm text-emerald-300/80">x402 · data-only · never scores, never ranked</p>
       <p className="mt-2 text-xs text-slate-400">This is the lawful <b>commercial</b> lane — insurers, bond desks, vendors buy <b>data</b> (the signed enforcement record + deadline calendar) per query. Regulators + the public get the signed stream <b>free</b> at <a href="/first-fine-watch" className="text-emerald-300 underline">/first-fine-watch</a> (R8).</p>
 

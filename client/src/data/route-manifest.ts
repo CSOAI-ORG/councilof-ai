@@ -499,8 +499,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/council-vs-agents",
-  "comp": "Agents",
-  "title": "Agents"
+  "comp": "CouncilVsAgents",
+  "title": "Council Vs Agents"
  },
  {
   "path": "/countdown",

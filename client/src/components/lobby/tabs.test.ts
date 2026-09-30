@@ -231,17 +231,17 @@ describe("Council OS tabs", () => {
   });
 
   it("gives the canonical dashboard seven plainly named sections", () => {
-    // ux-unify, 27 Sep 2026: at most seven sidebar sections; Verify + Evidence pack +
-    // Evidence index are ONE section, and the old pill strip (arena, learn, games, tools)
-    // lives inside sections rather than beside them.
+    // gspc-product-ui, 30 Sep 2026: GSPC is the product and Council OS its workspace. Ask leads,
+    // then the six product sections of ONE-PRODUCT-PLAN §2.1 (Board, Verify, Connect, Learn, SovX,
+    // Corrections). Still at most seven; Verify + Evidence pack + Evidence index stay ONE section.
     expect(DASHBOARD_NAV_GROUPS.map((g) => g.label)).toEqual([
       "Ask",
-      "Scores",
-      "Verify & evidence",
-      "Arena & learning",
-      "Tools & connections",
-      "Standards & watchdog",
-      "Request a measurement",
+      "Board",
+      "Verify",
+      "Connect",
+      "Learn",
+      "SovX",
+      "Corrections",
     ]);
     expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(7);
     for (const g of DASHBOARD_NAV_GROUPS) {
@@ -255,22 +255,26 @@ describe("Council OS tabs", () => {
     expect(ids).toEqual([
       "home",
       "board",
-      "results",
       "models",
       "matrix",
+      "standards",
+      "measured",
       "verify",
       "evidence",
       "evidence-index",
-      "space",
-      "learn",
-      "play",
+      "connect",
+      "route",
       "tools",
       "fabric",
       "swift",
       "explore",
-      "standards",
+      "learn",
+      "space",
+      "play",
+      "sovx",
+      "corrections",
+      "claims",
       "watchdog",
-      "measured",
     ]);
     // Every pane the old rail and the old pill strip reached still has a section.
     for (const id of [

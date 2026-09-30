@@ -67,7 +67,11 @@ export type LobbyTabId =
   | "workbench"
   | "software"
   | "learn"
-  | "play";
+  | "play"
+  | "connect"
+  | "route"
+  | "corrections"
+  | "sovx";
 
 export type LobbyTab = {
   id: LobbyTabId;
@@ -265,6 +269,41 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(provable archive|permission[- ]state|permission[- ]events?|archive index|evm archive|signed history|eip[- ]?1186|getproof|proof of state)\b/i,
+  },
+  {
+    id: "connect",
+    label: "Install",
+    blurb:
+      "One line adds the GSPC tools to Claude, Cursor or any MCP client; the A2A card, AG-UI and A2UI doors sit beside it. The tool list is read from tools/list.",
+    path: "",
+    kind: "native",
+    cues: /\b(connect (?:an? )?(?:agent|client|claude|cursor)|install (?:the )?(?:gspc|mcp|connector|plugin)|add (?:it )?to (?:claude|cursor)|mcp setup|plugin setup)\b/i,
+  },
+  {
+    id: "route",
+    label: "Route",
+    blurb:
+      "GSPC Route, decide-only: your candidates and policy in, a routing decision and an unsigned route record out. A tie is printed as TIE, never as a winner.",
+    path: "",
+    kind: "native",
+    cues: /\b(gspc route|route (?:a|my|this) (?:task|request)|routing decision|decide[- ]only|route tool)\b/i,
+  },
+  {
+    id: "corrections",
+    label: "Corrections",
+    blurb:
+      "The public corrections ledger: what we got wrong, how it was caught and what changed, newest first, read live from GET /api/corrections.",
+    path: "",
+    kind: "native",
+    cues: /\b(corrections|what (?:did )?you get wrong|withdrawals?|errata)\b/i,
+  },
+  {
+    id: "sovx",
+    label: "SovX reads",
+    blurb:
+      "SovX: reads of wrapped and bridged stablecoins, for wallets and agents. A read is not a rating.",
+    path: "/wrappers",
+    cues: /\b(sovx|wrapped assets?|wrappers?|bridged stablecoins?|wrapped stablecoins?)\b/i,
   },
   {
     id: "attestations",
@@ -789,12 +828,12 @@ export function routesIn(group: LobbyRouteGroup): LobbyRoute[] {
  */
 export type DashboardNavGroupId =
   | "ask"
-  | "scores"
+  | "board"
   | "verify"
-  | "arena"
-  | "tools"
-  | "oversight"
-  | "request";
+  | "connect"
+  | "learn"
+  | "sovx"
+  | "corrections";
 
 export type DashboardNavGroup = {
   id: DashboardNavGroupId;
@@ -812,75 +851,81 @@ const DASHBOARD_NAV_DEFINITION: {
   description: string;
   tabs: { id: LobbyTabId; label: string }[];
 }[] = [
+  // GSPC is the product; Council OS is its workspace (owner, 30 Sep 2026). Ask leads, then the six
+  // product sections in the order of ONE-PRODUCT-PLAN §2.1: Board, Verify, Connect, Learn, SovX,
+  // Corrections. Route is a Connect pane (it is a tool an agent calls); Claim maintenance is a
+  // Corrections pane (re-checking is how a claim avoids needing a correction).
   {
     id: "ask",
     label: "Ask",
     description:
-      "Ask a question and get an answer drawn only from published evidence.",
+      "Ask in plain words; every answer names the tool and the record it came from.",
     tabs: [{ id: "home", label: "Ask the Council" }],
   },
   {
-    id: "scores",
-    label: "Scores",
-    description: "How measured AI models score on each published test.",
+    id: "board",
+    label: "Board",
+    description: "What we measured, on which axes, and what each result does and does not establish.",
     tabs: [
       { id: "board", label: "Live board" },
-      { id: "results", label: "Benchmark results" },
       { id: "models", label: "Model registry" },
       { id: "matrix", label: "Regulation matrix" },
+      { id: "standards", label: "Standards" },
+      { id: "measured", label: "Request a measurement" },
     ],
   },
   {
     id: "verify",
-    label: "Verify & evidence",
+    label: "Verify",
     description:
-      "Check a signed record yourself, and see the evidence behind every score.",
+      "Check any signed card yourself, in your browser: VALID, INVALID or UNCHECKABLE.",
     tabs: [
       { id: "verify", label: "Check a record" },
-      { id: "claims", label: "Claim maintenance" },
       { id: "evidence", label: "Evidence pack" },
       { id: "evidence-index", label: "Evidence index" },
     ],
   },
   {
-    id: "arena",
-    label: "Arena & learning",
+    id: "connect",
+    label: "Connect",
     description:
-      "Replay recorded model rounds, learn how each test works, and practise.",
+      "Add the GSPC tools to your AI client or agent: MCP, A2A, AG-UI, A2UI, and the decide-only router.",
     tabs: [
-      { id: "space", label: "Model arena" },
-      { id: "learn", label: "Learning" },
-      { id: "play", label: "Games" },
-    ],
-  },
-  {
-    id: "tools",
-    label: "Tools & connections",
-    description:
-      "Connect your own AI tools, and browse everything this workspace can open.",
-    tabs: [
+      { id: "connect", label: "Install" },
+      { id: "route", label: "Route" },
       { id: "tools", label: "MCP tools" },
       { id: "fabric", label: "Connections" },
-      { id: "swift", label: "Payments (x402)" },
+      { id: "swift", label: "Paid doors (x402)" },
       { id: "explore", label: "Everything A–Z" },
     ],
   },
   {
-    id: "oversight",
-    label: "Standards & watchdog",
+    id: "learn",
+    label: "Learn",
     description:
-      "The standards each test maps to, and public reports of AI incidents.",
+      "Learn how each test works, replay recorded model rounds, and practise.",
     tabs: [
-      { id: "standards", label: "Standards" },
-      { id: "watchdog", label: "Watchdog" },
+      { id: "learn", label: "Learning" },
+      { id: "space", label: "Model arena" },
+      { id: "play", label: "Games" },
     ],
   },
   {
-    id: "request",
-    label: "Request a measurement",
+    id: "sovx",
+    label: "SovX",
+    description: "Reads of wrapped and bridged stablecoins, for wallets and agents. A read, not a rating.",
+    tabs: [{ id: "sovx", label: "SovX reads" }],
+  },
+  {
+    id: "corrections",
+    label: "Corrections",
     description:
-      "Ask for your AI system to be measured. Checking a record stays free.",
-    tabs: [{ id: "measured", label: "Request a measurement" }],
+      "Every correction we have published, the claims we keep re-checking, and public incident reports.",
+    tabs: [
+      { id: "corrections", label: "Corrections ledger" },
+      { id: "claims", label: "Claim maintenance" },
+      { id: "watchdog", label: "Watchdog" },
+    ],
   },
 ];
 
@@ -913,17 +958,18 @@ const DASHBOARD_HIDDEN_GROUPS: Record<string, DashboardNavGroupId> = {
   cards: "verify",
   attestations: "verify",
   claimguard: "verify",
-  embed: "tools",
-  harness: "tools",
-  terminal: "tools",
-  products: "tools",
-  library: "tools",
-  workbench: "tools",
-  xrpl: "tools",
-  console: "scores",
-  leaderboard: "scores",
-  art50: "oversight",
-  ras: "request",
+  art50: "verify",
+  embed: "connect",
+  harness: "connect",
+  terminal: "board",
+  products: "connect",
+  library: "connect",
+  workbench: "connect",
+  xrpl: "sovx",
+  console: "board",
+  leaderboard: "board",
+  results: "board",
+  ras: "board",
 };
 
 export function dashboardNavGroupOf(id: string): DashboardNavGroup | null {
@@ -953,6 +999,12 @@ export function normalizeLobbyTabId(id: string): string {
     "ag-ui": "home",
     x402: "swift",
     "x402-doors": "swift",
+    install: "connect",
+    plugin: "connect",
+    router: "route",
+    "gspc-route": "route",
+    ledger: "corrections",
+    wrappers: "sovx",
   };
   return Object.prototype.hasOwnProperty.call(aliases, value)
     ? aliases[value]

@@ -73,7 +73,7 @@ export default function FindingsExplorer() {
       {index && tab === "regulators" && (
         <div className="mt-6 space-y-4">
           {index.regulators.map((r) => (
-            <Link key={r.id} to={`/regulator/${r.id}`} className="block rounded-2xl border border-emerald-500/15 bg-[#05140d] p-5 transition hover:border-emerald-400/40">
+            <div key={r.id} className="block rounded-2xl border border-emerald-500/15 bg-[#05140d] p-5" data-regulator={r.id}>
               <div className="flex flex-wrap items-center gap-3">
                 <RegBadge id={r.id} name={r.name} />
                 <span className="text-sm text-emerald-100/70">{r.long_name || r.name}</span>
@@ -91,7 +91,7 @@ export default function FindingsExplorer() {
               {r.axes_relevant.length > 0 && (
                 <p className="mt-2 font-mono text-[11px] text-emerald-300/45">{r.axes_relevant.map((a) => a.label).join(" · ")}</p>
               )}
-            </Link>
+            </div>
           ))}
         </div>
       )}

@@ -120,7 +120,7 @@ export default function Wrappers() {
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
 
-      <header className="border-b border-emerald-950 bg-slate-950 px-5 py-14 text-slate-100">
+      <header className="border-b border-emerald-950 bg-[#04120c] px-5 py-14 text-slate-100">
         <div className="mx-auto max-w-7xl">
           <nav aria-label="Breadcrumb" className="text-sm text-slate-400">
             <Link href="/" className="underline decoration-slate-600 underline-offset-4 hover:text-emerald-300">Council of AI</Link>
