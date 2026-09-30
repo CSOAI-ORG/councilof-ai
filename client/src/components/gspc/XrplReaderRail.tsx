@@ -113,7 +113,7 @@ export default function XrplReaderRail({
                 {/* real separator characters, not a CSS-only gap: the ticker and issuer
                     ran together ("RLUSDRipple") in every text/accessibility/prerender
                     read of this list, where a flex gap inserts no character. */}
-                <span className="text-slate-400">{" · "}</span>
+                <span className="text-slate-500" aria-hidden="true">{" · "}</span>
                 <span className="truncate text-slate-600">{a.issuer}</span>
                 {a.sig_ed25519 == null && (
                   <>

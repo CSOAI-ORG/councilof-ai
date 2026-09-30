@@ -131,7 +131,7 @@ export default function ConnectHub() {
         </div>
       </header>
 
-      <div className="section-shell grid gap-5 py-10 sm:gap-6 sm:py-14">
+      <div className="section-shell grid grid-cols-[minmax(0,1fr)] gap-5 py-10 sm:gap-6 sm:py-14">
         <div id="free" className="scroll-mt-24">
           <Door id="free-h" kicker="Start here" title="The free MCP door">
             <p className="t-body mt-3 max-w-3xl text-muted-foreground">

@@ -114,7 +114,7 @@ function Stat({ stat }: { stat: HeroStat }) {
       <dd className="order-first font-mono text-lg font-black leading-none tracking-tight text-emerald-50 tabular-nums sm:text-2xl">
         {stat.value ?? "—"}
       </dd>
-      <dd className="text-xs leading-snug text-emerald-200/70">{stat.note}</dd>
+      <dd className="hidden text-xs leading-snug text-emerald-200/70 sm:block">{stat.note}</dd>
     </div>
   );
 }
@@ -208,15 +208,22 @@ export default function HomeHero({
         }}
       />
 
-      <div className="section-shell relative z-10 py-9 sm:py-16 lg:py-20">
+      <div className="section-shell relative z-10 py-8 sm:py-14 lg:py-16">
+        {/*
+          LAYOUT. Phone: what we do -> what is live -> how to use it, in that order, one column.
+          Desktop (lg): the same three blocks, with "what is live" beside the words instead of under
+          them, so all three answers sit in the first 900px (audit 2026-09-30 #3).
+        */}
+        <div className="lg:grid lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-x-12">
+        <div className="lg:col-start-1 lg:row-start-1">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-emerald-300/85">
-          Independent AI measurement · signed · free to re-check
+          Independent AI measurement<span className="hidden sm:inline"> · signed · free to re-check</span>
         </p>
 
         <h1
           id="home-hero-h"
           className="mt-4 max-w-4xl font-black tracking-[-0.03em] text-white sm:mt-5"
-          style={{ fontSize: "clamp(1.875rem, 1.05rem + 3.5vw, 4rem)", lineHeight: 1.05 }}
+          style={{ fontSize: "clamp(1.75rem, 1rem + 2.9vw, 3rem)", lineHeight: 1.06 }}
         >
           We measure how AI systems behave,
           <span className="block bg-gradient-to-r from-emerald-300 via-teal-200 to-amber-200 bg-clip-text text-transparent">
@@ -239,8 +246,10 @@ export default function HomeHero({
           . Unmeasured stays visible.
         </p>
 
+        </div>
+
         {/* WHAT IS LIVE NOW. One read, four fields, nothing typed. */}
-        <div className="mt-6 max-w-4xl rounded-2xl border border-white/10 bg-black/20 p-4 backdrop-blur-[2px] sm:mt-8 sm:rounded-3xl sm:p-6" data-testid="hero-board-glance">
+        <div className="mt-6 max-w-4xl rounded-2xl border border-white/10 bg-black/25 p-4 backdrop-blur-[2px] sm:mt-8 sm:rounded-3xl sm:p-6 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mt-1 lg:self-start" data-testid="hero-board-glance">
           {error ? (
             <p className="rounded-2xl border border-amber-400/40 bg-amber-400/10 px-5 py-4 text-sm text-amber-100">
               The board is unread right now — {error}. Nothing is shown in its place.{" "}
@@ -258,7 +267,7 @@ export default function HomeHero({
                 </span>
                 Live now
               </p>
-              <dl className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-y-6 lg:grid-cols-4">
+              <dl className="grid grid-cols-2 gap-x-5 gap-y-4 sm:gap-y-6">
                 {stats.map((s) => (
                   <Stat key={s.label} stat={s} />
                 ))}
@@ -279,7 +288,7 @@ export default function HomeHero({
         </div>
 
         {/* HOW TO USE IT: three doors, each a working surface. */}
-        <nav aria-label="Three ways to use Council of AI" className="mt-6 max-w-4xl sm:mt-8">
+        <nav aria-label="Three ways to use Council of AI" className="mt-6 max-w-4xl sm:mt-8 lg:col-start-1 lg:row-start-2">
           <ul className="grid list-none gap-3 p-0 sm:grid-cols-3">
             {WAYS_IN.map((w, i) => (
               <li key={w.testid}>
@@ -318,6 +327,7 @@ export default function HomeHero({
             </a>
           </p>
         </nav>
+        </div>
 
         {/*
           THE QUALIFIER ON THE COUNT, and it is not optional. The tile above says how many slots

@@ -211,19 +211,19 @@ export default function About() {
               <h3 className="text-2xl font-bold mb-4 text-red-900">Without CSOAI</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>AI systems deployed without proper safety review</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Companies struggle to find qualified compliance staff</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Nobody outside the vendor can re-run the test that produced the claim</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Governments lack trained personnel for AI oversight</span>
                 </li>
               </ul>
@@ -742,7 +742,7 @@ export default function About() {
       {/* Final CTA */}
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
-          <Card className="p-12 surface-ink text-white text-center">
+          <Card className="p-12 border-[var(--ink-border)] bg-[var(--ink)] text-white text-center">
             <h2 className="text-4xl font-bold mb-6">Start with the free rail</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Training is free and the whole verification rail is free forever. A grade is never
