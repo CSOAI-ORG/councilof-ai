@@ -23,13 +23,15 @@
   "description":"Bounded public-evidence reproduction and conformance results from the sole CSOAI RAS Opportunity Watch. Discovery, measurement, payment, exact-byte delivery and buyer acceptance are separate states.",
   "url":"https://councilof.ai/evidence/ras-opportunity-watch/",
   "datePublished":"2026-09-29",
-  "dateModified":"2026-09-29",
-  "version":"2026-09-29",
+  "dateModified":"2026-09-30",
+  "version":"2026-09-30",
   "identifier":"https://councilof.ai/evidence/ras-opportunity-watch/manifest.json",
   "isAccessibleForFree":true,
   "creator":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai/"},
   "publisher":{"@type":"Organization","name":"CSOAI Ltd","url":"https://councilof.ai/"},
   "license":"https://creativecommons.org/licenses/by/4.0/",
+  "sameAs":"https://github.com/CSOAI-ORG/councilof-ai/releases/tag/ras-opportunity-evidence-2026-09-29",
+  "isBasedOn":["https://github.com/collective-mind-org/collective-minds/blob/c6c8a990a12e23aec66a4e7b0976db5ce843a824/results/cm_bat_r18_billaud.py","https://github.com/contentauth/c2pa-rs","https://councilof.ai/.well-known/agent-card.json","https://apis.io/apis/councilof-ai/council-of-ai-measurement-agent-a2a/"],
   "measurementTechnique":"Bounded independent reproduction and conformance checks with explicit SOURCE_OBSERVED, MEASURED, UNMEASURED/HOLD, payment, settlement, exact-byte delivery and buyer-acceptance states.",
   "keywords":["reproduction","conformance","claim maintenance","C2PA","x402","evidence"],
   "distribution":[
@@ -81,6 +83,17 @@
 </table>
 <p>Machine evidence: <a href="./ras-c2pa-provenance-conformance-20260929.json">C2PA conformance evidence</a>. The free oracle is the official C2PA public-testfiles corpus. Five pinned fixtures cover unsigned media, a valid manifest from an unknown/test source, invalid signature, hard-binding mismatch and assertion-URI mismatch. Cryptographic provenance and signer trust are distinct from the real-world truth of depicted content.</p>
 <aside><strong>Toolchain note.</strong> The current official conformance CLI checkout was not anonymously reproducible at the pinned commit because a declared submodule URL returned “repository not found”. CSOAI preserved that setup failure and used a separately pinned local <code>c2patool</code> fallback only if its local build succeeds. This tooling state is not a finding about AgentTools.</aside>
+
+
+<h2 id="a2a-directory-drift">3. CSOAI A2A directory freshness self-check</h2>
+<table>
+<tr><th>Surface</th><th>Observed public state</th><th>State</th></tr>
+<tr><td>Canonical provider Agent Card</td><td>HTTP 200; A2A protocol 1.0; agent version 1.1.0; signed; <strong>10 skills</strong>, including <code>measurement-capsules</code> and <code>server-evidence</code>.</td><td class="ok">SOURCE OBSERVED</td></tr>
+<tr><td>APIs.io directory projection</td><td>HTTP 200; page still describes the agent as advertising <strong>eight skills</strong>; neither newer skill id appears in the returned page bytes.</td><td class="hold">SOURCE-OBSERVED STALE PROJECTION</td></tr>
+<tr><td>Interpretation</td><td colspan="2">This is directory-freshness drift against CSOAI's own canonical card. It is <strong>not</strong> an outage, security finding, compliance judgment, endorsement claim, or statement about the directory operator's intent. It is a Claim Maintenance example: a dependent public description has not yet caught up to the source it describes.</td></tr>
+<tr><td>Resolution criterion</td><td colspan="2">Re-fetch both URLs. Clear only when the third-party projection independently reflects the current canonical skill set/version. If the canonical card changes again first, record a new versioned observation rather than overwriting history.</td></tr>
+</table>
+<p>Machine evidence: <a href="./ras-csoai-a2a-directory-drift-20260930.json">A2A directory freshness evidence</a>.</p>
 
 <h2>State boundaries</h2>
 <table>

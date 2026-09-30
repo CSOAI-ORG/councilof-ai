@@ -57,9 +57,36 @@
       "observed_at": "2026-09-29T10:21:52.609230+00:00",
       "state": "SOURCE_DEFECT_CONFIRMED_BOUNDED_CAUSAL_CONTROL_NO_EFFECT",
       "version": "git:c6c8a990a12e23aec66a4e7b0976db5ce843a824; PyBaMM:26.8.0.0"
+    },
+    {
+      "acceptance_summary": "Canonical signed A2A card serves 10 skills; the observed APIs.io projection still describes eight and does not contain the two newer skill ids. Clear only when an independent re-fetch shows the directory projection matches the current canonical card.",
+      "canonical_resources": [
+        "https://councilof.ai/.well-known/agent-card.json",
+        "https://apis.io/apis/councilof-ai/council-of-ai-measurement-agent-a2a/"
+      ],
+      "canonical_source": "https://councilof.ai/.well-known/agent-card.json",
+      "change_type": "third_party_directory_projection_stale",
+      "event_key": "councilof.ai-agent-card@1.1.0|third_party_directory_projection_stale:apis.io",
+      "evidence": "ras-csoai-a2a-directory-drift-20260930.json",
+      "execution_owner": [
+        "R-2 CLAIM MAINTENANCE",
+        "R-3 MONITOR"
+      ],
+      "gspc_axes": [
+        "provenance-controls",
+        "continuity",
+        "distribution-integrity"
+      ],
+      "hive": [
+        "provenance-integrity",
+        "interop-effects"
+      ],
+      "observed_at": "2026-09-30T03:41:58Z",
+      "state": "SOURCE_OBSERVED_DIRECTORY_PROJECTION_STALE",
+      "version": "provider-agent-card:1.1.0; protocol:1.0; projection:apis.io-observed-2026-09-30"
     }
   ],
-  "generated_at": "2026-09-29T10:21:52.609230+00:00",
+  "generated_at": "2026-09-30T03:41:58Z",
   "history_scope": "Initial ledger publication contains evidence packs actually executed in this branch; prior conversational watch history is not backfilled or claimed deduplicated.",
   "schema": "csoai.ras-opportunity-ledger/1.0",
   "scope": "Sole RAS Opportunity Watch execution ledger",
