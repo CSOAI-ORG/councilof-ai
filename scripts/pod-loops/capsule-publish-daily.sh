@@ -83,7 +83,12 @@ rm -rf "$V/endpoints"; rm -f "$V/index.json" "$V/index.signed.json" "$V/index.js
 cp -r "$NEW/v0.2/." "$V/" && cp "$NEW/latest.json" public/measurement-capsules/latest.json || fail "copy"
 rm -rf "$X"
 git add -A -- public/measurement-capsules
-git diff --cached --quiet && { summary "UNCHANGED date=$D (the laid-out tree equals master)"; exit 0; }
+# Keep the public VC projection in lock-step with the current self_parity batch.
+# The capsule ID and Merkle path change when the daily batch changes even if the
+# generator code does not, so regenerate before deciding that the tree is unchanged.
+node scripts/mechanism/capsule-vc.mjs || fail "capsule-vc regenerate"
+git add -- public/mechanism/vc.json
+git diff --cached --quiet && { summary "UNCHANGED date=$D (the laid-out tree and mechanism VC equal master)"; exit 0; }
 IR=$(/root/venv/bin/python3 -c 'import json;d=json.load(open("public/measurement-capsules/v0.2/index.json"));print(d["index_root"][:16],d["n_capsules_total"],len(d["batches"]),d["as_of"])')
 set -- $IR; SUBJ="measurement-capsule index $D: $3 batches, $2 capsules, root $1…, as_of $4"
 echo "$SUBJ" > .git/CAPSULE_PUBLISH_SUBJECT
