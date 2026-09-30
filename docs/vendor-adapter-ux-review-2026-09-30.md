@@ -60,7 +60,7 @@ Adapter order: (1) local/mock and OpenShift-compatible test profile, (2) CrowdSt
 - Public documentation and catalogs may be observed and cited; tenant configuration, credential creation, data export, API writes, or deployment require the relevant account owner's authorization.
 - A listing is not integration; a saved connection is not a passing probe; an HTTP response is not measurement; a measurement is not certification or endorsement.
 - Do not describe any vendor as adopting, endorsing, or requiring GSPC without direct evidence.
-- This note is not a claim that the listed adapters are implemented. Current branch changes are limited to correcting stale tool-count language on the GSPC connection page.
+- This note is not a claim that the listed adapters are implemented. Current branch changes correct stale tool-count language on the GSPC connection page and add a tested `--only-extra` mode to the IndexNow helper so a small changed-URL batch does not expand to the full sitemap. No IndexNow submission was made.
 
 ## Official references
 
