@@ -1,17 +1,17 @@
 {
  "schema": "csoai.layer-o-presence/0.1",
- "as_of": "2026-09-29T05:26:26Z",
+ "as_of": "2026-09-30T03:32:50Z",
  "subject": "councilof.ai (CSOAI Ltd, Council of AI)",
  "note": "Where our artifacts appear, read live with GET-only adapters. A state is never set from memory: PUBLISHED/ACCEPTED need a live read that shows the artifact; UNMEASURED means we could not see, not that it is absent. Listing by a catalog is that catalog's act, not an endorsement.",
- "surfaces_total": 65,
+ "surfaces_total": 164,
  "counts_by_state": {
-  "DISCOVERED": 17,
-  "QUALIFIED": 13,
+  "DISCOVERED": 49,
+  "QUALIFIED": 53,
   "READY": 0,
   "AUTH_REQUIRED": 5,
   "BUILDING": 0,
   "CONNECTED": 0,
-  "PUBLISHED": 21,
+  "PUBLISHED": 28,
   "SUBMITTED": 2,
   "UNDER_REVIEW": 1,
   "ACCEPTED": 1,
@@ -19,13 +19,13 @@
   "BLOCKED": 0,
   "STALE": 3,
   "NEEDS_UPDATE": 1,
-  "UNSUPPORTED": 1
+  "UNSUPPORTED": 21
  },
- "measured": 30,
- "unmeasured": 35,
+ "measured": 70,
+ "unmeasured": 94,
  "event_chain": {
-  "events": 114,
-  "head": "48a10951dc973ba9ba74b4ef83aa2d1033e72cbb72607946ec7f5c3dc39710ae",
+  "events": 292,
+  "head": "d195c28d510c8f793ee6ebb394e5bfd3b0aa10556a9b700d875aaf44c499b40f",
   "hash": "sha256 over canonical JSON, prev_hash chained"
  },
  "surfaces": [
@@ -34,8 +34,8 @@
    "name": "A2A Registry (a2aregistry.org)",
    "class": "agent_directory",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:17Z",
-   "evidence_hash": "5ac4b2ab9aebbb3343010d96b4be0e33bc32b5b485589376f05c3732b49d27a3",
+   "as_of": "2026-09-30T03:31:53Z",
+   "evidence_hash": "29260f0c85f7e108b19641c29988cd206d6a233e0aa8d74faab1941ce1be20eb",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -73,11 +73,11 @@
    "surface": "ai_catalog_ard",
    "name": "Own /.well-known/ai-catalog.json (AI Catalog 1.0 / ARD)",
    "class": "identity_discovery",
-   "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:17Z",
-   "evidence_hash": "bd2cd4bf1a0b3103a10f564108299339e4cd57d3c44cdf330f836760b9c51fbc",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-30T03:31:53Z",
+   "evidence_hash": "ec5fbfc1ac2bc3a60b80b7a5d87370cd66ed954462d6b53b847779c1f46d42bd",
    "presence": "MEASURED",
-   "observed": 0
+   "observed": 1
   },
   {
    "surface": "ard_registries",
@@ -94,7 +94,7 @@
    "name": "awesome-mcp-servers (punkpeye)",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:15Z",
+   "as_of": "2026-09-30T03:31:49Z",
    "evidence_hash": "86e1898becee0e0d4722787c561377b8886c58603469e2427055daa1a4a40070",
    "presence": "MEASURED",
    "observed": 0
@@ -114,8 +114,8 @@
    "name": "Cline MCP Marketplace",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:15Z",
-   "evidence_hash": "3cdc693e62929c984f910d9fccaa845f738dd06f4917d4827d256f304bb32331",
+   "as_of": "2026-09-30T03:31:50Z",
+   "evidence_hash": "64e07b322f3948df0c77845227b256a5cd3c5a2e7a7925e340ba5eb1439f04a1",
    "presence": "MEASURED",
    "observed": 0
   },
@@ -124,8 +124,8 @@
    "name": "Docker MCP Catalog",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:14Z",
-   "evidence_hash": "3f4c07b646a59e4f41e5682a48d0756286f7d62d0cbec551a3e6069d2d0bc394",
+   "as_of": "2026-09-30T03:31:49Z",
+   "evidence_hash": "9d50522f279e7ac81323798462ec1627a56b877c215892166796de55b4dcc7d5",
    "presence": "MEASURED",
    "observed": 0
   },
@@ -154,8 +154,8 @@
    "name": "GitHub MCP registry (github.com/mcp)",
    "class": "mcp_catalog",
    "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:16Z",
-   "evidence_hash": "bfac03eced9acf451e3b85ea71e7abf5af358178e90f1d664676a886054c98e4",
+   "as_of": "2026-09-30T03:31:51Z",
+   "evidence_hash": "416faea1e834d296d86d10c419af281c555e5ba2c1255a7ffeda95df60b82524",
    "presence": "MEASURED",
    "observed": 0
   },
@@ -164,8 +164,8 @@
    "name": "Glama MCP directory",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:14Z",
-   "evidence_hash": "3da1c610c304e34daa8130a575c6de86e07c27d04970a23b7f87d08c0d0af147",
+   "as_of": "2026-09-30T03:31:49Z",
+   "evidence_hash": "303d56dc60818aea996cda6b85c50ae5cded6cb494f6ae0c6c1547052ee82eb2",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -194,27 +194,27 @@
    "name": "Hugging Face datasets (csoai)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:25Z",
-   "evidence_hash": "23a8dbb4b9158beab3c26a2f02c2872bea6c61224ad74ae36ed918907156d39b",
+   "as_of": "2026-09-30T03:32:10Z",
+   "evidence_hash": "cf4b433ec209fbbfcef57a9300b373221db4077737f6f6b56e8c787fc1bd5424",
    "presence": "MEASURED",
-   "observed": 131
+   "observed": 134
   },
   {
    "surface": "hf_mcp_spaces",
    "name": "Hugging Face mcp-server tag (Spaces)",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:16Z",
-   "evidence_hash": "becf394bd788f49ce19cd63b8dd1344ce1b9a14adf25ac20dd75f74e4c857001",
+   "as_of": "2026-09-30T03:31:51Z",
+   "evidence_hash": "0fc370bc83f94e387c3083c496ce113f002f2c0300925b0651f1e29bbbb07074",
    "presence": "MEASURED",
-   "observed": 1
+   "observed": 2
   },
   {
    "surface": "hf_models",
    "name": "Hugging Face models (csoai)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:27Z",
+   "as_of": "2026-09-30T03:32:12Z",
    "evidence_hash": "d75384106492071ff4f5784bec34eb7cf02b25f805a5289e156ba3def24ab2f1",
    "presence": "MEASURED",
    "observed": 2
@@ -224,8 +224,8 @@
    "name": "Hugging Face Spaces (csoai)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:26Z",
-   "evidence_hash": "ebf77ca2e640f2873656f7070f4aa2471d7b3007c3ec47dff05a6fc242e6993a",
+   "as_of": "2026-09-30T03:32:11Z",
+   "evidence_hash": "6a86978c73b900e0b8579e02c4b3de27bd51a64fd7a8134e8bfa39bcbda74254",
    "presence": "MEASURED",
    "observed": 39
   },
@@ -244,20 +244,20 @@
    "name": "Internet Archive (Save Page Now)",
    "class": "citation_archive",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:42Z",
-   "evidence_hash": "26487fe5baf80088699e7fe34b6b6436d70665f4563f627274cbed64cc67e970",
+   "as_of": "2026-09-30T03:32:30Z",
+   "evidence_hash": "b325144dab46de5043ddee7367f84cd39f3c8311fa99d7b718da95c4ad0ade26",
    "presence": "MEASURED",
-   "observed": 9
+   "observed": 10
   },
   {
    "surface": "kaggle_datasets",
    "name": "Kaggle datasets (nicktempleman)",
    "class": "model_data_hub",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:28Z",
-   "evidence_hash": "c33c84a24b2d2f908d1be05fedeb278aba7877b209d2509d2815eaa476c98582",
+   "as_of": "2026-09-30T03:32:12Z",
+   "evidence_hash": "5e2a77e2414fc0946a48a9f5f3b3a04275f236933ac80221037089bd7947342b",
    "presence": "MEASURED",
-   "observed": 110
+   "observed": 120
   },
   {
    "surface": "kaggle_models",
@@ -270,12 +270,32 @@
    "observed": null
   },
   {
+   "surface": "living_board_hf",
+   "name": "Layer O living board (Hugging Face)",
+   "class": "model_data_hub",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T06:10:10Z",
+   "evidence_hash": "f2b42eba9ca31fc7e8fccc1b7ee80dcece0587d5f7bbf2af3c6f330cab55272e",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "living_board_kaggle",
+   "name": "Layer O living board (Kaggle)",
+   "class": "model_data_hub",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T06:10:42Z",
+   "evidence_hash": "82f1822e654dc8ef455d139272bae7a1e0d9000dccbb855d27ece698f946fcba",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
    "surface": "lobehub_mcp",
    "name": "LobeHub MCP",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:15Z",
-   "evidence_hash": "77fb9220d3d3dda2c7048b9f92e0a78b0d81d696cfeddc3ad344d5c86d1063b6",
+   "as_of": "2026-09-30T03:31:50Z",
+   "evidence_hash": "f95fd2a079b8acf05b2e0cbdc70a255017955f3088111cc7155cefbd62ae770e",
    "presence": "MEASURED",
    "observed": 20
   },
@@ -283,11 +303,11 @@
    "surface": "mcp_registry",
    "name": "Official MCP Registry",
    "class": "mcp_catalog",
-   "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:14Z",
-   "evidence_hash": "48a10951dc973ba9ba74b4ef83aa2d1033e72cbb72607946ec7f5c3dc39710ae",
-   "presence": "UNMEASURED",
-   "observed": null
+   "state": "PUBLISHED",
+   "as_of": "2026-09-30T03:31:46Z",
+   "evidence_hash": "958026d1707dae67098c511f5c4953630d524ec0d1c1b82a9876fd0a322347d4",
+   "presence": "MEASURED",
+   "observed": 3
   },
   {
    "surface": "mcp_so",
@@ -304,8 +324,8 @@
    "name": "MCP Toplist",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:16Z",
-   "evidence_hash": "29494c9fcc222182ba1c38090dfa0c3abdbecd0a0d49b323aeec602c173e5e64",
+   "as_of": "2026-09-30T03:31:51Z",
+   "evidence_hash": "ff453c3ebd2d8c214dd10b9d5ad93303e2141234724b97e8409bc1a7169233ab",
    "presence": "MEASURED",
    "observed": 1
   },
@@ -354,10 +374,960 @@
    "name": "npm (Harness X packages)",
    "class": "package_registry",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:36Z",
-   "evidence_hash": "f28434fbb4bd9af9b84a479bc4bf9addbb947e960ad449d2f9cbae0d4bc377bf",
+   "as_of": "2026-09-30T03:32:24Z",
+   "evidence_hash": "a570c3390bf7b6554571cb4ada77629feeae82906e416646ccf678a08bd6d73f",
    "presence": "MEASURED",
    "observed": 2
+  },
+  {
+   "surface": "ns_8004scan_io",
+   "name": "8004scan | 8004scan",
+   "class": "agent_directory",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:03:02Z",
+   "evidence_hash": "cfc4d8207b5b7c31e2cc1faa251a076bed72707390b2f3a0c9d96a47d5da90d1",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_ai_act_service_desk_ec_europa_eu",
+   "name": "AI Act Single Information Platform | AI Act Service Desk",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:43:08Z",
+   "evidence_hash": "c1b2c902e28461303025219911bf384c7e5db18747b083d7f3c4ac0f790a124f",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_aiaaic_org",
+   "name": "aiaaic.org",
+   "class": "public_register",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:40:27Z",
+   "evidence_hash": "d7d5d120918fb9a009805d568353f2228d27b6fc184f51c169f18c262762ec56",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_aisi_gov_uk",
+   "name": "The AI Security Institute (AISI)",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:48:03Z",
+   "evidence_hash": "c8ff943ed1e2b3b5704a6f0154dfa10bd3f3c54e47ddffdefc481ef458c72115",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_aiuc_1_com",
+   "name": "aiuc-1.com",
+   "class": "public_register",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:54:02Z",
+   "evidence_hash": "dc1d7593bc0c19af6124f89a2d09c6f3400fddd921fdd35f7f108029262b4c61",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_aiverifyfoundation_sg",
+   "name": "AI Verify Foundation - Building Trustworthy AI",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:38:12Z",
+   "evidence_hash": "3308910cd8e8032e8126ce5f1bd58ef697eaf5181045c0d45239758ea26a2594",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_alternativeto_net",
+   "name": "Just a moment...",
+   "class": "community",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:19:03Z",
+   "evidence_hash": "7557129dd704679ae94696bfa8aa6eccda256129084f73aceefbbdeed6abb281",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_anaconda_org",
+   "name": "Just a moment...",
+   "class": "package_registry",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:20:05Z",
+   "evidence_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_arena_ai",
+   "name": "Arena AI: The Official AI Ranking & LLM Leaderboard",
+   "class": "eval_leaderboard",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:34:50Z",
+   "evidence_hash": "0182cc98b33e4315f059aafd568ed3b805adb57406e20960e0b4b31ec1e51ec0",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_arxiv_org",
+   "name": "arXiv.org e-Print archive",
+   "class": "citation_archive",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:35:22Z",
+   "evidence_hash": "dd3df13f0b6547a22e8328ca32f3da6748961399bda3cdbb8132e8a3b57d45ce",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_baidubce_com",
+   "name": "baidubce.com",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:28:06Z",
+   "evidence_hash": "6e8e866912371f0d72ee8fbb157479954f9db99630a819b22b4b70fce5421788",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_bazaar_info",
+   "name": "bazaar.info",
+   "class": "payment_index",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:04:02Z",
+   "evidence_hash": "3e121ab4585662dedd7566b5895bb535f50735100f33449ea895f23d34882be0",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_berkeley_edu",
+   "name": "Gorilla",
+   "class": "eval_leaderboard",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:05:04Z",
+   "evidence_hash": "95cd1c9b5b07b98ff115f0fdd8852af764aed430aef8f5cf0698c03e45bfc2ae",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_betalist_com",
+   "name": "Discover and get early access to tomorrow's startups | BetaList",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:29:03Z",
+   "evidence_hash": "1dc3d0cde1fc466cf2e8dd7a4f3c018eac6f7809ca099f42f9dd47ffc8507d86",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_blackhoodie_com",
+   "name": "blackhoodie.com",
+   "class": "audit_target",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T07:05:27Z",
+   "evidence_hash": "c5b89d6186180d931a61b485ddbe2a96e344c25b023dadd0b2f92bae5a38b2f6",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_bsigroup_com",
+   "name": "Accelerating Progress Towards a Sustainable World | BSI",
+   "class": "other",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T07:01:03Z",
+   "evidence_hash": "9d675917fcae981a41777957f081ad60258a8d33c310321f4c5a8f4bff7ae255",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_callsphere_ai",
+   "name": "CallSphere: AI Voice & Chat Agents, Deployed for You",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:56:04Z",
+   "evidence_hash": "e8e1e71d627028acf92ad25455245cb992af820582d93dc042a1cca5ecf49cff",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_canada_ca",
+   "name": "Open Government\u200b | Open Government - Government of Canada",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T07:00:10Z",
+   "evidence_hash": "c5a8e3402a90e77ed4513ae95e12ad4e3483e4206a7727b0c6afbcc51668a3dc",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_circle_com",
+   "name": "Circle | The full-stack platform for the internet financial system",
+   "class": "vendor_marketplace",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:30:10Z",
+   "evidence_hash": "5e434a7aaeaf828e8ca0361985242b0cf35726ddca9dedb4898ba68255ff412d",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_commission_europa_eu",
+   "name": "Language selection | European Commission",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:49:02Z",
+   "evidence_hash": "409a18f19fea940c3a55138449d96037fb9ef51148c085b5df6af9bc18e4e00d",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_company_information_service_gov_uk",
+   "name": "Search the register - Find and update company information - GOV.UK",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:53:02Z",
+   "evidence_hash": "173c54d99d3928a2b34eadafbe684378dd8d8679cfcfeff9aca92bf5ea252372",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_contentauthenticity_org",
+   "name": "Content Authenticity Initiative",
+   "class": "search_index",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:51:03Z",
+   "evidence_hash": "b00e52cb9042e7f11c7b8722fa24446f10e4ad0af4e8e6b85e6bff65268e04ee",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_core_ac_uk",
+   "name": "The world\u2019s largest collection of open access research papers",
+   "class": "citation_archive",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:34:47Z",
+   "evidence_hash": "0fdd60acc9a9948823f0541ed53f20c3c2e325968aa0e92728150fcc4d653ae0",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_crossref_org",
+   "name": "Crossref",
+   "class": "citation_archive",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:48:03Z",
+   "evidence_hash": "2760c621c2e34c6dbe0cdfa667cb1a20ea706d6d074d7f79b3c792d2f5c7abb1",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_crunchbase_com",
+   "name": "Crunchbase | Private Company Data & Predictive Intelligence",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:23:04Z",
+   "evidence_hash": "352666016176676ea77b8311fafe2f3fd982100ad1d6f1835c4a80d057fa95a4",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_data_europa_eu",
+   "name": "The European Data Portal",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:39:02Z",
+   "evidence_hash": "4c7afd06b179bb1826dd45d0d998d0a2babf1ef9eb39e720a403c2d25893b187",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_data_gov_uk",
+   "name": "National Data Library - The home of UK public data - data.gov.uk",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:50:04Z",
+   "evidence_hash": "d67bdda9811e9592115f2224f1b96635203e61f9ef47050cfd3ef5364424d6ed",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_data_world",
+   "name": "The Data Catalog Platform | data.world",
+   "class": "model_data_hub",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:36:03Z",
+   "evidence_hash": "ce00e455bd1f010c5a0f7d05ab0b484f78d680c640b7040ff67027e54dd2df44",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_datacite_org",
+   "name": "DataCite \u2013 Connecting Research, Advancing Knowledge - DataCite",
+   "class": "citation_archive",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:42:03Z",
+   "evidence_hash": "55926738e7fec39f3bf3059268313e405c8aa75fa6a66c687107dfaa0977e715",
+   "presence": "MEASURED",
+   "observed": 3
+  },
+  {
+   "surface": "ns_datasetsearch_research_google_com",
+   "name": "Dataset Search",
+   "class": "search_index",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:55:04Z",
+   "evidence_hash": "2feba54d332b1de3ed723d77db4f3a9cb1da0d800de4fda2ad26057fe5e23e82",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_defcon_org",
+   "name": "defcon.org",
+   "class": "audit_target",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T07:06:04Z",
+   "evidence_hash": "c630649c847c910a0a749d47de69828f42e37e2f91571c838ca39dd36df37129",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_defillama_com",
+   "name": "DefiLlama - DeFi Dashboard & Crypto Analytics",
+   "class": "community",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:25:11Z",
+   "evidence_hash": "760e5776a31b16c7b6172b570f5abcb4338efc2d9f611cb0264d54a2e522ba00",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_digital_strategy_ec_europa_eu",
+   "name": "Shaping Europe\u2019s digital future | Shaping Europe\u2019s digital future",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:44:03Z",
+   "evidence_hash": "6f98e2a36a573d0d0f13b3953eb47af6d666e1eb1f2f498a397a481745c1f999",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_docker_io",
+   "name": "Docker | Secure Sandboxes for AI Agents",
+   "class": "package_registry",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:31:03Z",
+   "evidence_hash": "4605ecc2be9b52faa3bdf4ea25f755535bd7312693f057abbc675cda4f5eb1d8",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_dune_com",
+   "name": "The industry standard for onchain data | Dune",
+   "class": "model_data_hub",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:46:03Z",
+   "evidence_hash": "597b350afb8dd8ad4cb2d71ba79e20232915328cb431030a91649f91bc2165cc",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_easscan_org",
+   "name": "easscan.org",
+   "class": "identity_discovery",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:21:10Z",
+   "evidence_hash": "ae124a30b49ce1ac10194983957a3223aa8e9f4e9596cae4d1f683831ac75b97",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_ec_europa_eu",
+   "name": "Language selection | European Commission",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:45:07Z",
+   "evidence_hash": "af70f7f41375528a7c9ddd34f3d80cca44ec6502b8361baed9d89025c7fddbf7",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_epoch_ai",
+   "name": "Epoch AI",
+   "class": "eval_leaderboard",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:37:04Z",
+   "evidence_hash": "7b16fba496c0598b25829aa6e8d5bafed27f84e6fb8c7d10c2413fe0443237ce",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_fda_gov",
+   "name": "fda.gov",
+   "class": "public_register",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:11:03Z",
+   "evidence_hash": "ae10e280a32accae25a82548aeae6932e53e9d401e7cd8e9e271097e640c2ff4",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_fetch_ai",
+   "name": "Fetch.ai - Search and Discover.",
+   "class": "mcp_catalog",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:54:03Z",
+   "evidence_hash": "a7c93139db5e0b6b642e48844f74eca2e3b3c3ca6d00f9fa47ebac5cc673dc31",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_forhumanity_dev",
+   "name": "forhumanity.dev",
+   "class": "other",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T07:02:11Z",
+   "evidence_hash": "3821f5ced13accfa04d23e8652d200a69f6b789ace35e48bbbb5c1ffa9553d87",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_forhumanity_org",
+   "name": "forhumanity.org",
+   "class": "citation_archive",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:43:04Z",
+   "evidence_hash": "5672c7247d7996042ae74f27f1d72804eb983a866e1fd8f51a5df3928285e901",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_github_ai",
+   "name": "github.ai",
+   "class": "vendor_marketplace",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:12:03Z",
+   "evidence_hash": "c2acb53d84f64725eb99af5ca31398076821977676c25815b655bac995df74c3",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_gleif_org",
+   "name": "Home \u2013 GLEIF",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:57:07Z",
+   "evidence_hash": "b169074b1a3d43cc32d56fabe1a4213769d84eac3f5938ca49c2e7d78b6413b6",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_gov_uk",
+   "name": "Welcome to GOV.UK",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:46:03Z",
+   "evidence_hash": "262632d157a9b812bc4ee78badc2ad864f97e2bd5f549c5bcec19dbc5a32394c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_hol_org",
+   "name": "HOL | Agent Registry, Open Standards & Trust Infrastructure",
+   "class": "agent_directory",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:08:06Z",
+   "evidence_hash": "72b3683b874599f33b64f67969844c4d9d6644fc7d190fd8803bfc1899dd094c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_ieee_org",
+   "name": "ieee.org",
+   "class": "audit_target",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T07:07:04Z",
+   "evidence_hash": "917618453d12eae37131c6a0713c731ee2ec265acf2f9361d665d1fe548b8661",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_ietf_org",
+   "name": "IETF Datatracker",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:26:02Z",
+   "evidence_hash": "084da0b0c6439a91af332f24ce93ea96190a651d5881cf9a6feaf5ac32c6fbab",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_incidentdatabase_ai",
+   "name": "Welcome to the Artificial Intelligence Incident Database",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:41:05Z",
+   "evidence_hash": "96bc6156a68b724236680a4d76fd5507b638fff37fdd2a793381c6e203e1563b",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_indexnow_org",
+   "name": "Home | IndexNow.org",
+   "class": "search_index",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:58:02Z",
+   "evidence_hash": "83637d02b7eb7c1ac8ee83d3b2f8c06d4302dcb225c110c1a7c184786eb8c6d8",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_jdf_org",
+   "name": "jdf.org",
+   "class": "citation_archive",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:47:03Z",
+   "evidence_hash": "48fe31484d6633050f531c718f14e7153cf6c6af977e3fa2fbbb17d2a8b4e32b",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_karmahq_xyz",
+   "name": "karmahq.xyz",
+   "class": "identity_discovery",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:22:04Z",
+   "evidence_hash": "ecdee1bb40b362204d63669ff5576dc258f2baf7b689d761db3959edbabf79cc",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_langchain_com",
+   "name": "langchain.com",
+   "class": "assistant_store",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:16:04Z",
+   "evidence_hash": "78faf4e73b3fa1058dd6f048d1f31056625fd173cb5d05148ad118987d4f17bb",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_llama_com",
+   "name": "Products & Solutions for AI Developers | Meta",
+   "class": "vendor_marketplace",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:24:05Z",
+   "evidence_hash": "e4a120461025155e11e07c14bc4dbf4d0cc19692cfda5991625d2db2f8e65524",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_n8n_io",
+   "name": "n8n.io",
+   "class": "assistant_store",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:17:02Z",
+   "evidence_hash": "84139015bf0a0ec07e366211db9c642a434f3e94b5576d29d61d3ee90881dfce",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_nist_gov",
+   "name": "National Institute of Standards and Technology",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:51:05Z",
+   "evidence_hash": "3a0795509ae7111b77377eebf91547ee075ca5f281d45633b89c99c2004d37f3",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_oecd_org",
+   "name": "oecd.org",
+   "class": "public_register",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:13:08Z",
+   "evidence_hash": "e86ea0af3d8f4bf9b6c1566344dfa8b034df84e3219554829d4e7edcb285a0ed",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_oecdai_org",
+   "name": "oecdai.org",
+   "class": "public_register",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:09:02Z",
+   "evidence_hash": "fca31fbf968d0786e8e2f36e6e88eef2abddab9db06350b533ea31cd7d8f147c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_openai_com",
+   "name": "openai.com",
+   "class": "other",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T07:03:04Z",
+   "evidence_hash": "f39b1962eddae4a16b214017ad75b6cb1444ade7ec2fd9cd991e03c4985ea587",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_openaire_eu",
+   "name": "OpenAIRE",
+   "class": "citation_archive",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:40:05Z",
+   "evidence_hash": "f59d016a1813150e849950192ec24b808f5a03b15efc993c670ad6e544b885b1",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_openalex_org",
+   "name": "Just a moment...",
+   "class": "citation_archive",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:44:02Z",
+   "evidence_hash": "cb5afd01cfe6267ac3edb14f51ee9395068f9260bf74aa204c86c35c432abef7",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_opencorporates_com",
+   "name": "opencorporates.com",
+   "class": "community",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:32:03Z",
+   "evidence_hash": "aa2f3983b21c20d78a1f23a6fd442a8374640cc47043b8223c7e2df1e2f321d2",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_openml_org",
+   "name": "OpenML",
+   "class": "eval_leaderboard",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:52:03Z",
+   "evidence_hash": "bf070a67e6ef8fa834d50125a6273771fc396ba58336ac4549546640d8c534f4",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_opensource_observer",
+   "name": "Open Source Observer",
+   "class": "community",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:33:04Z",
+   "evidence_hash": "113d9d330e3dc2a1eab40648df886ae09e4a57b361928d220de344f93c82551c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_openssf_org",
+   "name": "Open Source Security Foundation \u2013 Linux Foundation Projects",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:18:04Z",
+   "evidence_hash": "bd1f613753c359f9bdfa10b1c3b656b40cdfe56406d98dcfdffb50b60532133f",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_opentimestamps_org",
+   "name": "OpenTimestamps",
+   "class": "citation_archive",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:49:04Z",
+   "evidence_hash": "5b24f5f6ec758a0617887a6d2149fd503e41b6d9dfa2f9025ad22ea9cb6d1331",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_oraclecloud_com",
+   "name": "oraclecloud.com",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:06:03Z",
+   "evidence_hash": "061b30b9c280722ce355da217fe6ceebce6f2ce323024627158b5df4647d199c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_orcid_org",
+   "name": "ORCID",
+   "class": "citation_archive",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-29T05:38:02Z",
+   "evidence_hash": "f88826f6090837b5994e0fc063e68a60200bafb5e4ad94da7e32573804149c69",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "ns_outshift_io",
+   "name": "AI Catalog",
+   "class": "other",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T07:04:02Z",
+   "evidence_hash": "6e1fb7141021ef76560ccfd584eb8c5c3793b93da5aa0edd610410c54982a987",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_overheid_nl",
+   "name": "Het algoritmeregister van de Nederlandse overheid",
+   "class": "public_register",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:58:03Z",
+   "evidence_hash": "606e410fae4d3548e2962bd3f31b3ef629d3a0fe47f85c3af234bad99c140f49",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_owasp_org",
+   "name": "OWASP Foundation - The Open Source Foundation for Application Security",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:15:05Z",
+   "evidence_hash": "1130f3fcab1dfbfb622b600b886c872b389b15ecab544912ec933ea52408d1b4",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_palantir_com",
+   "name": "Home | Palantir",
+   "class": "vendor_marketplace",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:34:03Z",
+   "evidence_hash": "32c28c864aa7649ef947dc173ac8211e08d323f972cf01536f36ca96dd4612de",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_paperswithcode_co",
+   "name": "paperswithcode.co",
+   "class": "eval_leaderboard",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:56:02Z",
+   "evidence_hash": "2db95ef40f8bad1fe8af81f06020a2a7eed7a1db5133aaa37913e4870b78543e",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_poe_com",
+   "name": "poe.com",
+   "class": "assistant_store",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:55:02Z",
+   "evidence_hash": "53d15b0438b29b075ba083f23f67411938709898eeaebbe81ac106716c594fe5",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_producthunt_com",
+   "name": "producthunt.com",
+   "class": "community",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:35:03Z",
+   "evidence_hash": "5eed062da02d47fe725ea95a1d7d0671ac97609d69dc5f4e77bc91973221872c",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_railway_app",
+   "name": "Nanda Town 2",
+   "class": "agent_directory",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:14:03Z",
+   "evidence_hash": "4ab47962a5da3cc330f1054b3c8b874709e2387aaa9e6f743bd9c7cdfe5ecf0e",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_resultsense_com",
+   "name": "UK AI News, Insights & Analysis - Resultsense",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:52:03Z",
+   "evidence_hash": "f6847c2fae686b4778cafb9a1f959a657a0b19eb266f302504cc4b6d78b0a03f",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_ror_org",
+   "name": "Home | Research Organization Registry (ROR)",
+   "class": "citation_archive",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:39:02Z",
+   "evidence_hash": "5f9ccbc3021e2815de2b6daf6ba529982dbef844fc79fb4cb22454ce57562c25",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_saashub_com",
+   "name": "SaaSHub - Software Alternatives & Startups",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:36:05Z",
+   "evidence_hash": "896b2555b229818fa4a5b67dda643134b0e2395f5919be29c270055be14bcee4",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_sap_com",
+   "name": "Access Denied",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:47:03Z",
+   "evidence_hash": "9757f54b45e1c68826924530b1cd619cb94e26f3db04e5f2c54d9dd713f0e832",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_scale_com",
+   "name": "Scale Labs - Research to Advance AI | Scale Labs",
+   "class": "eval_leaderboard",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:59:02Z",
+   "evidence_hash": "eb6ff6f9f9abcb53b1bb8edbbe824ddbaf62e55ddcfcf3ee732955a03c730383",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_schneier_com",
+   "name": "Schneier on Security -",
+   "class": "audit_target",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T07:08:03Z",
+   "evidence_hash": "2232ac3c05fd70185df0920961bfbfb16254f58132935ef7b6738a7daf23dbff",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_semanticscholar_org",
+   "name": "Semantic Scholar | AI-Powered Research Tool",
+   "class": "citation_archive",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:50:09Z",
+   "evidence_hash": "92ba2e4d71de1ca04e67533bdb4fa82507eea8b919e75a5c75352597a83ed59b",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_sigstore_dev",
+   "name": "Sigstore",
+   "class": "citation_archive",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T05:45:06Z",
+   "evidence_hash": "b7fb06ee90502586c73370340590cd89de7695e29c16f20797082a71fbb50f18",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_softwareheritage_org",
+   "name": "softwareheritage.org",
+   "class": "citation_archive",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T05:53:02Z",
+   "evidence_hash": "616f01252f3a8ecf1f0fb5df8577aa2e07c64bde87525f9726a0c506686d1558",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_sotapapers_com",
+   "name": "sotapapers.com",
+   "class": "eval_leaderboard",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:01:02Z",
+   "evidence_hash": "ac8d0be4b1eea86def56ff4183273ebc9149fe701d1b2fa8a4f8c08bd789d83a",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_stackshare_io",
+   "name": "Vercel Security Checkpoint",
+   "class": "community",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:37:03Z",
+   "evidence_hash": "a3b6616bfd094ecef5de423d5d12d9f7bfca096e94b61a05b5acb365c0861056",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_swe_bench_github_io",
+   "name": "SWE-bench Leaderboards",
+   "class": "eval_leaderboard",
+   "state": "UNSUPPORTED",
+   "as_of": "2026-09-29T06:07:03Z",
+   "evidence_hash": "1f9152a03d8fd98d4f1830363ca44f3a8ed3b0d1d89e146fa0cbad16de84d48d",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_undp_org",
+   "name": "Home | United Nations Development Programme",
+   "class": "audit_target",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T07:09:04Z",
+   "evidence_hash": "f8bbafc453e811d270d4adbfb3f4e614b78ef909bb7f034191c581609db00dc3",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_wandb_ai",
+   "name": "Weights & Biases: The AI developer platform",
+   "class": "eval_leaderboard",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T05:57:06Z",
+   "evidence_hash": "3931d88291f2a5e937187778fde4ecf213d959d76cd2c04f774c35a0aa7dbb77",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_watsonx_ai",
+   "name": "watsonx.ai",
+   "class": "vendor_marketplace",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:02:03Z",
+   "evidence_hash": "c97465b28048f377dd0c9d74d029285aca3bc26aea9ac6a13bb5bc72cb1006a5",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_xbrl_org",
+   "name": "XBRL",
+   "class": "public_register",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:42:08Z",
+   "evidence_hash": "2a329d067281825f290c7e074cce35609ba4b1089e1346b6318150d90716e0cd",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_yandex_com",
+   "name": "yandex.com",
+   "class": "search_index",
+   "state": "DISCOVERED",
+   "as_of": "2026-09-29T06:00:09Z",
+   "evidence_hash": "076cd361857dac4b3cdc59eb233e38b889d051c5a133edfaf5796cec795c3d66",
+   "presence": "UNMEASURED",
+   "observed": null
+  },
+  {
+   "surface": "ns_ycombinator_com",
+   "name": "Hacker News",
+   "class": "community",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:27:03Z",
+   "evidence_hash": "6e54fd4e41a514e6e9eedf99194d683df2cd43696192695841745705a331f9c9",
+   "presence": "MEASURED",
+   "observed": 0
+  },
+  {
+   "surface": "ns_zapier_com",
+   "name": "Zapier: Automate AI Workflows, Agents, and Apps",
+   "class": "assistant_store",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-29T06:59:06Z",
+   "evidence_hash": "ef9d6d4685b9bfc0ad7a9bc9ab8e07eb25eda77b2c4b637ec96e7470c6c7d6b0",
+   "presence": "UNMEASURED",
+   "observed": null
   },
   {
    "surface": "oecd_tools_catalogue",
@@ -380,6 +1350,26 @@
    "observed": null
   },
   {
+   "surface": "own_academy_exercises",
+   "name": "Academy exercises (reproduce a published measurement)",
+   "class": "other",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-30T03:32:48Z",
+   "evidence_hash": "90a77b413f73c227c1985efbc929a6d8427039c39260276700a71f10fa6fa2de",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
+   "surface": "own_arc_paired_arm",
+   "name": "Humans vs AI: ARC-AGI-2 paired arm (115 tasks)",
+   "class": "other",
+   "state": "PUBLISHED",
+   "as_of": "2026-09-30T03:32:49Z",
+   "evidence_hash": "929c3df5350765834dc44896ee534b8b93861897550dd9b667ab3d6e3aa940ca",
+   "presence": "MEASURED",
+   "observed": 1
+  },
+  {
    "surface": "pulsemcp",
    "name": "PulseMCP",
    "class": "mcp_catalog",
@@ -394,8 +1384,8 @@
    "name": "PyPI (Harness X packages)",
    "class": "package_registry",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:34Z",
-   "evidence_hash": "e9c74cb3c915e5973c9e84d2c06af500fc1a7959dc0d6f8989be85c846e89552",
+   "as_of": "2026-09-30T03:32:21Z",
+   "evidence_hash": "c20fe0bfc899f78753b1e2d395c643b23a30d150f4b0762967feffdd843b4340",
    "presence": "MEASURED",
    "observed": 3
   },
@@ -404,8 +1394,8 @@
    "name": "Smithery",
    "class": "mcp_catalog",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:14Z",
-   "evidence_hash": "c9ec0de605739f52c9f496f8032784ca581092cf74d724f98ae13df5e76653e3",
+   "as_of": "2026-09-30T03:31:49Z",
+   "evidence_hash": "12474e1086953e42099f516e0c7cb3030af76b340bfadeb5085195e6a13f3671",
    "presence": "MEASURED",
    "observed": 2
   },
@@ -564,7 +1554,7 @@
    "name": "Wikidata",
    "class": "citation_archive",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:26:25Z",
+   "as_of": "2026-09-30T03:32:47Z",
    "evidence_hash": "0ac9322ec04f64f1571f49be566ee7d7a826c82ccd050e54b95ea9edd25c576c",
    "presence": "MEASURED",
    "observed": 1
@@ -574,8 +1564,8 @@
    "name": "402 Index",
    "class": "payment_index",
    "state": "NEEDS_UPDATE",
-   "as_of": "2026-09-29T05:25:18Z",
-   "evidence_hash": "b662ff647b193b001f2ee3c7d5d9ac8b964ff588d58daf63a3a2522d7c826ae8",
+   "as_of": "2026-09-30T03:31:53Z",
+   "evidence_hash": "83b8ba799ea898aea8baa9e0ba1de666005b6c36876e9f3f3f8dfc3026bed348",
    "presence": "MEASURED",
    "observed": 30
   },
@@ -584,17 +1574,17 @@
    "name": "agent-tools.cloud",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:20Z",
-   "evidence_hash": "819eb82d8b7d37aa968040941eace8bfb8f6e72477ea7f0b218be763b6d6e96f",
+   "as_of": "2026-09-30T03:32:01Z",
+   "evidence_hash": "1a24ed6cac0b9ff53d8641bb5d8855872c778e4a6d990b39f92d110dfc916750",
    "presence": "MEASURED",
-   "observed": 23
+   "observed": 24
   },
   {
    "surface": "x402_agentic_market",
    "name": "agentic.market",
    "class": "payment_index",
    "state": "QUALIFIED",
-   "as_of": "2026-09-29T05:25:23Z",
+   "as_of": "2026-09-30T03:32:05Z",
    "evidence_hash": "129d14e1c5c08bfd2807760399e04cd70149d93c2a7edb7b9dec1351b1af39fe",
    "presence": "MEASURED",
    "observed": 0
@@ -604,7 +1594,7 @@
    "name": "Coinbase CDP Bazaar",
    "class": "payment_index",
    "state": "AUTH_REQUIRED",
-   "as_of": "2026-09-29T05:25:23Z",
+   "as_of": "2026-09-30T03:32:05Z",
    "evidence_hash": "aa5599ab6e8760fdbef65495f5f2a8ef6f6f0bd0d0132ab5eeb166874ba8e878",
    "presence": "MEASURED",
    "observed": 0
@@ -614,7 +1604,7 @@
    "name": "gold-402 directory",
    "class": "payment_index",
    "state": "ACCEPTED",
-   "as_of": "2026-09-29T05:25:23Z",
+   "as_of": "2026-09-30T03:32:07Z",
    "evidence_hash": "4e62d37555e225b487919189f8ba41d3573a417481da8264b0d92f2b537aaa3d",
    "presence": "MEASURED",
    "observed": 1
@@ -624,8 +1614,8 @@
    "name": "x402 List",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:21Z",
-   "evidence_hash": "d8d9b13a392bbbf94d10d5d6c34663f7cc33ebb9f2cceb4c233d440ff6d101f5",
+   "as_of": "2026-09-30T03:32:03Z",
+   "evidence_hash": "4106123fd6095a09d5919c565bad89fcc53cf4e9aaa36b39a36d5c19c385d977",
    "presence": "MEASURED",
    "observed": 2
   },
@@ -634,7 +1624,7 @@
    "name": "open-402 registry",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:25Z",
+   "as_of": "2026-09-30T03:32:10Z",
    "evidence_hash": "d627859f0f83ef509b6fceab554b4e2b46fa55eef80a0353ff6f9cd6fbe8d0e6",
    "presence": "MEASURED",
    "observed": 1
@@ -644,7 +1634,7 @@
    "name": "PayAI facilitator discovery",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:23Z",
+   "as_of": "2026-09-30T03:32:05Z",
    "evidence_hash": "6ec39d375ac81e77548f7cd04fa2ac409d7acf0b8ae24a852f336bbdbc091c77",
    "presence": "MEASURED",
    "observed": 6
@@ -654,7 +1644,7 @@
    "name": "x402 Endpoint (x402jp)",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:24Z",
+   "as_of": "2026-09-30T03:32:07Z",
    "evidence_hash": "92345ed6a031f343b4016a19e2a5bb53ec2110a578bdef0e71a571f7ba7a8738",
    "presence": "MEASURED",
    "observed": 1
@@ -664,8 +1654,8 @@
    "name": "x402scan",
    "class": "payment_index",
    "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:20Z",
-   "evidence_hash": "8f0c1ef8629ddc9ff40dd829fb118d6d083609192f22a86c42064d0b5f824b3b",
+   "as_of": "2026-09-30T03:31:55Z",
+   "evidence_hash": "c2b5612ceae87e23fbcb71f781f91378aa1fab5b8f001cf28610a5d654a8913a",
    "presence": "MEASURED",
    "observed": 98
   },
@@ -673,11 +1663,11 @@
    "surface": "zenodo",
    "name": "Zenodo (DOIs)",
    "class": "citation_archive",
-   "state": "PUBLISHED",
-   "as_of": "2026-09-29T05:25:41Z",
-   "evidence_hash": "66b6e19451bfbbb588511690581c9d6d25f8df9541f4fb97627782391db10f2d",
+   "state": "QUALIFIED",
+   "as_of": "2026-09-30T03:32:29Z",
+   "evidence_hash": "1580d7d43c52048dd8d8ab383b304f642306f98140c32c8defbbca305d4dda6b",
    "presence": "MEASURED",
-   "observed": 1
+   "observed": 0
   }
  ]
 }
