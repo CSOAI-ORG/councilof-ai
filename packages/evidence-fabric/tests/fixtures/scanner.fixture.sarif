@@ -1,0 +1,6 @@
+{"version":"2.1.0","runs":[{"tool":{"driver":{"name":"fixture-scanner","version":"0.0.1","rules":[{"id":"FX001"},{"id":"FX002"}]}},
+"results":[
+{"ruleId":"FX001","level":"warning","message":{"text":"FIXTURE: prompt text asks the agent to run a shell command"},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"skills/demo/SKILL.md"},"region":{"startLine":12,"startColumn":3,"endLine":12,"endColumn":40}}}]},
+{"ruleId":"FX002","level":"note","message":{"text":"FIXTURE: network call to an undeclared host"},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"skills/demo/run.py"},"region":{"startLine":4}}},{"physicalLocation":{"artifactLocation":{"uri":"skills/demo/run.py"},"region":{"startLine":9}}}]},
+{"ruleId":"FX001","level":"error","message":{"text":"FIXTURE: second hit, no region"},"locations":[{"physicalLocation":{"artifactLocation":{"uri":"skills/other/SKILL.md"}}}]}
+]}]}
