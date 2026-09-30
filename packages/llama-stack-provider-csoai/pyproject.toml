@@ -6,9 +6,18 @@ build-backend = "setuptools.build_meta"
 name = "llama-stack-provider-csoai"
 version = "0.1.0"
 description = "Llama Stack out-of-tree eval provider (remote::csoai): verify CSOAI signed evidence batches offline and return each event's state, never a score."
+readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.12"
-dependencies = ["llama-stack>=0.7", "mcp<2", "cryptography>=41"]  # mcp<2: see README
+authors = [{name = "CSOAI Ltd"}]
+keywords = ["llama-stack", "eval", "provider", "evidence", "ed25519", "openshift-ai"]
+classifiers = ["License :: OSI Approved :: Apache Software License", "Programming Language :: Python :: 3.12", "Topic :: Security"]
+dependencies = ["llama-stack>=0.7,<0.8", "mcp<2", "cryptography>=41"]  # mcp<2: see README
+
+[project.urls]
+Homepage = "https://councilof.ai/connect/"
+"Signing key (DID)" = "https://csoai.org/.well-known/did.json"
+"Helm chart" = "https://councilof.ai/helm/"
 
 [tool.setuptools.packages.find]
 where = ["src"]
