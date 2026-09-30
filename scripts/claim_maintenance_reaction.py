@@ -47,9 +47,9 @@ def layer_o_route(signal: dict) -> str:
         return "ATTESTATION_ENVELOPE"
     if caps & {"agent_observability", "genai_telemetry", "runtime_traces"}:
         return "OBSERVABILITY"
-    if caps & {"policy_enforcement", "deterministic_policy_enforcement", "inline_policy_enforcement"}:
+    if caps & {"policy_enforcement", "deterministic_policy_enforcement", "inline_policy_enforcement", "claim_ceiling", "producing_boundary_analysis", "control_topology"}:
         return "POLICY_RUNTIME"
-    if caps & {"hosted_mcp", "mcp_a2a_gateway", "x402_marketplace"}:
+    if caps & {"hosted_mcp", "mcp_a2a_gateway", "x402_marketplace", "a2a_registry_api", "task_conformance_probe", "agent_card_schema_validation"}:
         return "PROTOCOL_ADAPTER"
     return "EVIDENCE_INPUT"
 def sha256(path: Path) -> str:
@@ -105,6 +105,9 @@ def build(source: dict) -> dict:
             raise ValueError(f"{sid}: reaction_hint {hint} != computed {reaction}")
         covered |= overlap
         route = layer_o_route(signal)
+        route_hint = signal.get("layer_o_route_hint")
+        if route_hint and route_hint != route:
+            raise ValueError(f"{sid}: layer_o_route_hint {route_hint} != computed {route}")
         rows.append({
             **signal,
             "reaction": reaction,

@@ -53,6 +53,29 @@
   "signals": [
     {
       "capabilities": [
+        "agent_card_schema_validation",
+        "scheduled_reachability_probe",
+        "task_conformance_probe",
+        "immutable_agent_card_snapshots",
+        "verification_history",
+        "a2a_registry_api"
+      ],
+      "id": "a2a-registry-task-conformance-2026-09",
+      "kind": "open_source",
+      "layer_o_route_hint": "PROTOCOL_ADAPTER",
+      "name": "A2A Registry health, conformance and task-conformance history",
+      "overlap": [
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "explicit_evidence_state",
+        "supersession_and_correction_history"
+      ],
+      "published": "2026-09",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "url": "https://github.com/prassanna-ravishankar/a2a-registry"
+    },
+    {
+      "capabilities": [
         "signed_agent_records",
         "hash_chained_ledger",
         "rfc3161_timestamp",
@@ -348,6 +371,30 @@
       "published": "2026-09-25",
       "reaction_hint": "INTEGRATION_CANDIDATE",
       "url": "https://datatracker.ietf.org/doc/draft-sharif-agent-audit-trail/05/"
+    },
+    {
+      "capabilities": [
+        "claim_ceiling",
+        "producing_boundary_analysis",
+        "control_topology",
+        "observation_intent_invocation_execution_separation",
+        "positive_evidence_requirement",
+        "external_footprint_reasoning"
+      ],
+      "id": "ietf-claim-boundaries-01",
+      "kind": "research",
+      "layer_o_route_hint": "POLICY_RUNTIME",
+      "name": "Claim Boundaries for Execution Evidence \u2014 draft-sergeev-claim-boundaries-01",
+      "overlap": [
+        "independent_third_party_role",
+        "source_and_observation_binding",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state"
+      ],
+      "published": "2026-09-23",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "url": "https://datatracker.ietf.org/doc/draft-sergeev-claim-boundaries/"
     },
     {
       "capabilities": [

@@ -73,8 +73,8 @@
       "EVIDENCE_INPUT": 24,
       "IDENTITY_ATTESTATION": 1,
       "OBSERVABILITY": 1,
-      "POLICY_RUNTIME": 3,
-      "PROTOCOL_ADAPTER": 2,
+      "POLICY_RUNTIME": 4,
+      "PROTOCOL_ADAPTER": 3,
       "STATUS_REVOCATION": 1,
       "TRANSPARENCY_WITNESS": 3
     },
@@ -199,6 +199,49 @@
   },
   "schema": "csoai.claim-maintenance-reaction-index/0.1",
   "signals": [
+    {
+      "capabilities": [
+        "agent_card_schema_validation",
+        "scheduled_reachability_probe",
+        "task_conformance_probe",
+        "immutable_agent_card_snapshots",
+        "verification_history",
+        "a2a_registry_api"
+      ],
+      "id": "a2a-registry-task-conformance-2026-09",
+      "kind": "open_source",
+      "layer_o_route": "PROTOCOL_ADAPTER",
+      "layer_o_route_hint": "PROTOCOL_ADAPTER",
+      "layer_o_route_policy": "Expose or consume the capability through MCP/A2A/x402 without treating protocol reachability as measurement.",
+      "name": "A2A Registry health, conformance and task-conformance history",
+      "overlap": [
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "explicit_evidence_state",
+        "supersession_and_correction_history"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-09",
+      "reaction": "INTEGRATION_CANDIDATE",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "response": "Evaluate as an adapter or witness rail. Do not collapse its trust claim into Claim Maintenance.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "change_without_motive_inference",
+        "dependency_graph",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://github.com/prassanna-ravishankar/a2a-registry"
+    },
     {
       "capabilities": [
         "signed_agent_records",
@@ -840,6 +883,50 @@
         "self_correction_ledger"
       ],
       "url": "https://datatracker.ietf.org/doc/draft-sharif-agent-audit-trail/05/"
+    },
+    {
+      "capabilities": [
+        "claim_ceiling",
+        "producing_boundary_analysis",
+        "control_topology",
+        "observation_intent_invocation_execution_separation",
+        "positive_evidence_requirement",
+        "external_footprint_reasoning"
+      ],
+      "id": "ietf-claim-boundaries-01",
+      "kind": "research",
+      "layer_o_route": "POLICY_RUNTIME",
+      "layer_o_route_hint": "POLICY_RUNTIME",
+      "layer_o_route_policy": "Apply as a pre/post-execution runtime guard in Layer O; keep policy decisions separate from Claim Maintenance states.",
+      "name": "Claim Boundaries for Execution Evidence \u2014 draft-sergeev-claim-boundaries-01",
+      "overlap": [
+        "independent_third_party_role",
+        "source_and_observation_binding",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-09-23",
+      "reaction": "RESEARCH_VALIDATES_PRIMITIVES",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "response": "Compare methods and cite useful primitives. Keep CSOAI measurements independently reproducible.",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "dependency_graph",
+        "bounded_reverification",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://datatracker.ietf.org/doc/draft-sergeev-claim-boundaries/"
     },
     {
       "capabilities": [
@@ -1693,6 +1780,6 @@
   "source_snapshot": {
     "claim_boundary": "Public-source research snapshot. Inclusion means adjacent relevance, not endorsement, adoption, equivalence, certification, legal ownership, trademark status, or a claim that a source implements CSOAI Claim Maintenance. The words 'claim maintenance' have prior public uses; this snapshot tracks both phrase collisions and technical overlap.",
     "path": "/spec/claim-maintenance/market-signals-2026-09-30.json",
-    "sha256": "d038badfe12e98bee3478c7e7599f66e8a16bff81dabccd397bf24508882e21f"
+    "sha256": "8ce379eb9bfd684d8e11a907d9b024cfcc24aecfe863b4ac5dc43926fa1e3f96"
   }
 }
