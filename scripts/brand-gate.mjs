@@ -111,7 +111,7 @@ const RULES = [
     // A page may DISCLOSE the no-pricing rule ("we never charge £/$ per anything") near the hit.
     nearAllow: /free\s+forever|never\s+(?:sold|charge|priced)|no\s+pricing|not\s+for\s+sale|a\s+grade\s+is\s+never/i,
     why: 'HO.2: no pricing on public surfaces — verification is free forever, a grade is never sold. Remove the amount.',
-    allowOn: CORRECTIONS_LEDGER_PAGE,
+    allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
     id: "internal_strategy_codename",
@@ -123,7 +123,7 @@ const RULES = [
     pattern: /signed the GPAI Code|GPAI Code of Practice signator|we (?:have )?signed (?:the )?GPAI Code/i,
     nearAllow: /do not sign|not a signator|we do not sign|not sign the GPAI/i,
     why: "We are not a GPAI Code signatory. Transparency CoP (detection/marking tool) only, if signed. C2PA remains planned until CR-012 is live.",
-    allowOn: CORRECTIONS_LEDGER_PAGE,
+    allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
     id: "certify_claim",
@@ -191,7 +191,7 @@ const RULES = [
     pattern: /MEASURED-INDEX-v0\.1/i,
     nearAllow: /over-claim|overclaim|superseded|C-2026-0826-05|withdrawn|do not restore|correction/i,
     why: "C-2026-0826-05: MEASURED-INDEX-v0.1 is withdrawn. Board GET /api/gspc is UNMEASURED until a new card. Do not restore the sticker.",
-    allowOn: CORRECTIONS_LEDGER_PAGE,
+    allowOn: /^\/corrections\/index\.html$/, // CORRECTIONS_LEDGER_PAGE (inlined: RULES is evaluated standalone)
   },
   {
     id: "infra_leak",
@@ -331,6 +331,10 @@ if (SELFTEST) {
   ];
   let bad = 0;
   // The corrections-ledger exemption is one built path, never a prefix or a lookalike.
+  for (const id of ["pricing_leak", "gpai_code_signature", "measured_index_sticker"]) {
+    const r = RULES.find((x) => x.id === id);
+    if (!r || !r.allowOn || r.allowOn.source !== CORRECTIONS_LEDGER_PAGE.source) { console.error(`\u2716 selftest: rule "${id}" allowOn is not exactly the corrections ledger page`); bad++; }
+  }
   for (const p of ["/pricing/index.html", "/corrections-archive/index.html", "/x/corrections/index.html", "/corrections/other.html", "/index.html"]) {
     if (CORRECTIONS_LEDGER_PAGE.test(p)) { console.error(`\u2716 selftest: corrections exemption leaks to ${p}`); bad++; }
   }
