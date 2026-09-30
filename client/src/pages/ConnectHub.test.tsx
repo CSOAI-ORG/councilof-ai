@@ -12,6 +12,7 @@ import { Router } from "wouter";
 import ConnectHub, { A2A_ENDPOINT, FULL_DOOR } from "./ConnectHub";
 import { FREE_DOOR } from "./ConnectClaude";
 import HomeHero from "../components/home/HomeHero";
+import HomeWaysIn from "../components/home/HomeWaysIn";
 import FREE_TOOLS from "../../../functions/mcp/gspc-tools.json";
 
 const here = resolve(__dirname);
@@ -63,9 +64,9 @@ describe("/connect is the connector hub, not a withdrawal notice", () => {
   });
 });
 
-describe("the home first screen says how to use it", () => {
+describe("the home page says how to use it", () => {
   it("offers Ask, Connect and Verify, each to a live route", () => {
-    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero data={{ totals: {} }} /></Router>);
+    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeWaysIn /></Router>);
     for (const [id, href] of [
       ["hero-cta-ask", "/dashboard"],
       ["hero-cta-connect", "/connect/"],
@@ -77,7 +78,7 @@ describe("the home first screen says how to use it", () => {
   });
 
   it("says what we do in plain words: agents and endpoints, signed, re-checked, corrected in public", () => {
-    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero data={{ totals: {} }} /></Router>);
+    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero /></Router>);
     expect(html).toContain("agents and the endpoints they call");
     expect(html).toContain("re-checked on a schedule");
     expect(html).toContain("corrected in public");
@@ -91,5 +92,31 @@ describe("the type floor", () => {
     const phone = css.match(/@media \(max-width: 639\.98px\) \{([\s\S]*?)\}/)?.[1] ?? "";
     for (const z of ["9px", "10px", "11px", "11\\.5px"]) expect(phone).toContain(`.text-\\[${z}\\]`);
     expect(phone).toContain("font-size: 0.75rem");
+  });
+});
+
+describe("web fonts never cause a second Largest Contentful Paint", () => {
+  it("loads the Google Fonts stylesheet with display=optional", () => {
+    const html = read("client/index.html").replace(/<!--[\s\S]*?-->/g, "");
+    const href = html.match(/href="(https:\/\/fonts\.googleapis\.com\/css2\?[^"]+)"/)?.[1] ?? "";
+    expect(href).toContain("display=optional");
+  });
+});
+
+describe("the home board keeps its height while the board read lands", () => {
+  // 2026-09-30: the hero no longer carries live figures (home-v2); the figures and tiles are in
+  // LiveBoardGlance, which reserves the tiles' box while GET /api/gspc lands.
+  it("reserves the tile area and each figure's line", () => {
+    const board = read("client/src/components/home/LiveBoardGlance.tsx");
+    expect(board).toMatch(/min-h-\[[0-9.]+rem\][^"]*" aria-busy="true" aria-label="Loading the board"/);
+    expect(board).toMatch(/<dd className="order-first min-h-\[1\.2em\]/);
+  });
+});
+
+describe("/connect's social and search head is the hub's, not a withdrawal notice", () => {
+  it("resolves the seo-head entry for /connect", async () => {
+    const { resolveHead } = await import("../lib/seoHead");
+    const head = resolveHead("/connect/");
+    expect(head.title).toBe("Connect an agent: MCP, A2A and HTTP | Council of AI");
   });
 });

@@ -5,27 +5,30 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/tool_drift/record.json",
-   "sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+   "path": "measurement-capsules/v0.2/2026-09-30/tool_drift/record.json",
+   "sha256": "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-09-26T06:43:21Z"
+   "as_of": "2026-09-30T08:16:18Z"
   },
-  "merkle_root": "fd0f514e03dd825698a3eab57d33431b09e62e442f85c7592db50f2371e9d2df",
-  "n_capsules": 3240,
+  "merkle_root": "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
+  "n_capsules": 497,
   "states": {
-   "UNCHANGED_AT_NAME_GRANULARITY": 1485,
-   "UNCHECKABLE": 1755
+   "TOOLS_ADDED": 17,
+   "TOOLS_ADDED+TOOLS_REMOVED": 3,
+   "TOOLS_REMOVED": 2,
+   "UNCHANGED_AT_NAME_GRANULARITY": 418,
+   "UNCHECKABLE": 57
   },
-  "capsules_sha256": "febe9aed6140c3cc12a0c256fb0ffa9e76bc66a19342f086af03ee60c7baa7aa",
+  "capsules_sha256": "d11db3e6b89d98c9577aff5c41c1aeb8674f94b37f34a95406fb7454a082e35a",
   "adapter": "tool_drift",
   "kind": "measurement.tool_drift"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "1b0e6b7394a8c2635ff70ef4cc7545e3db3b2eea3bea3968a57c316a989d3443ee862cd66116819484e5c67b5f09624c886ea40e1f3d68d07964cc96f85dc70b",
-  "payload_sha256": "291696be40278931035390f9c3c4c8cdb2d780a185afcfb157987ed2af7e5027",
-  "signed_at": "2026-09-26T06:53:20.454Z"
+  "sig_ed25519": "a1b7166785a6dc00e407e4090baf4e03ef2d7ba7e24109ac5ec8774b4fef9e4b53603f2b5268b19590305ffb8c244759a2476dfa1dc9ebdcee9cec067823fd0d",
+  "payload_sha256": "419348d0489d6223ca9d8c9bbdb891639df53799bc5a5028065a9ddb714a3d3c",
+  "signed_at": "2026-09-30T08:16:26.359Z"
  },
  "local_verification": {
   "result": "VERIFIES",

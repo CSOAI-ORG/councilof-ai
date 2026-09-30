@@ -1,0 +1,43 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
+  "artifact": {
+   "path": "measurement-capsules/v0.2/2026-09-30/operations/record.json",
+   "sha256": "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "as_of": "2026-09-30T08:17:01Z"
+  },
+  "merkle_root": "63d1e261f6d2e384823e2563ecf89377496f02cfd9426d669dc0dba97eaf6b51",
+  "n_capsules": 479,
+  "states": {
+   "BITCOIN_ATTESTED": 6,
+   "INCLUDED_PROOF_VERIFIES": 1,
+   "LANDED_NOT_SHIPPED": 74,
+   "PENDING_CALENDAR_COMMITMENT": 1,
+   "PRESENT_SHA256_UNRECORDED": 389,
+   "TIME_TO_CORRECT_UNMEASURED": 7,
+   "UNCHECKABLE": 1
+  },
+  "capsules_sha256": "df7403eb19e22deb39a44d6fcd23f424cfab46cf377ef70316a07a84fc678597",
+  "adapter": "operations",
+  "kind": "operations"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "b83d9d3061037d3aca5fc5d8c40c17e14837e7fc0ce7476bfcdc93364fc48b56a298de23181a2c47733d8a675ad5a472e70e5d1a8b99438e39b3f265f38ba909",
+  "payload_sha256": "fa3823fe4354fafcbd16250a6029414a0e984fc7d2e7be67edd8132feb9f6dd7",
+  "signed_at": "2026-09-30T08:17:09.310Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "merkle root altered": "rejected (control holds)"
+  }
+ }
+}

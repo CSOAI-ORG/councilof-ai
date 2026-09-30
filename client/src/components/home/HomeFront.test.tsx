@@ -3,8 +3,9 @@
  * about the mock and nothing in this file can leak onto a page.
  *
  * What is pinned, band by band:
- *  HomeHero          the four figures come off totals; an unread board prints the reason and NO
- *                    figure; the proposition is in plain words with no banned string
+ *  HomeHero          one plain sentence, no figures, no banned string (rebuilt 2026-09-30)
+ *  LiveBoardGlance   one tile per axis with its read state; count + separation + model count off
+ *                    their sources; an unread board prints the reason and NO figure
  *  HomeStrengths     six cards in the owner's order; every proof line is live-read or a labelled
  *                    absence; a STALE ledger signature survives onto the page
  *  HomeNavigator     five reader questions, every href non-empty, no dead "#" placeholder
@@ -15,7 +16,8 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
-import HomeHero, { heroStamp, heroStats } from "./HomeHero";
+import HomeHero from "./HomeHero";
+import LiveBoardGlance, { boardTiles, modelsHeadline, separationRead } from "./LiveBoardGlance";
 import HomeStrengths, { anchorProof, correctionsProof, machineProof, strengthCards } from "./HomeStrengths";
 import HomeNavigator, { NAV_GROUPS } from "./HomeNavigator";
 import HomeMachineSurface, { MACHINE_DOORS } from "./HomeMachineSurface";
@@ -78,52 +80,97 @@ const estate: ReadState<StatePayload> = {
 /** Banned on every public surface by scripts/brand-gate.mjs. Re-asserted at the component level. */
 const BANNED = [/\bsovos\b/i, /\bsov3\d*\b/i, /\bdorado\b/i, /\bcibola\b/i, /\bCEASAI/i, /\bget certified\b/i, /\bwe certify\b/i, /\bbyzantine\b/i, /\bBFT\b/];
 
-/* ── hero ──────────────────────────────────────────────────────────────── */
+/* ── hero + live board (rebuilt 2026-09-30) ─────────────────────────────── */
+
+const boardWithAxes: GspcPayload = {
+  totals: {
+    public_count: "4 axes · 3 measured (mock)",
+    comparison_axes: 2,
+    separated_leads: 0,
+    ties: 1,
+    untested_separations: 1,
+    model_fleets: 2,
+  },
+  measured_on: { date: "mock run 2026-01-01" },
+  axes: [
+    { axis: "mock-a", bench: "BenchA", kind: "model-comparison", status: "MEASURED", separation: "TIE", n: 40 },
+    { axis: "mock-b", bench: "BenchB", kind: "model-comparison", status: "MEASURED", separation: "UNTESTED", n: 31 },
+    { axis: "mock-c", bench: "FactsC", kind: "deterministic-facts", status: "MEASURED", n: 9 },
+    { axis: "mock-d", bench: "FactsD", kind: "deterministic-facts", status: "UNMEASURED" },
+  ],
+};
+const models = { third_party_models: 123, own_models_excluded: 7 };
 
 describe("HomeHero", () => {
-  it("takes all four first-screen figures off totals and types none of them", () => {
-    expect(heroStats(board).map((s) => s.value)).toEqual(["6 axis · 5 measured (mock)", "1,230", "14", "9"]);
-    expect(heroStamp(board)).toBe("mock run 2026-01-01");
-  });
-
-  it("prints a dash, never a zero, for a figure the payload does not carry", () => {
-    expect(heroStats({ totals: {} }).every((s) => s.value === null)).toBe(true);
-    expect(heroStats(null).map((s) => s.value)).toEqual([null, null, null, null]);
-    expect(heroStamp({})).toBeNull();
-    const html = render(<HomeHero data={null} />);
-    expect(html).toContain("—");
-  });
-
-  it("renders the figures and the endpoint they came from", () => {
-    const html = render(<HomeHero data={board} />);
-    expect(html).toContain("6 axis · 5 measured (mock)");
-    expect(html).toContain("1,230");
-    expect(html).toContain("GET /api/gspc");
-    expect(html).toContain("mock run 2026-01-01");
-  });
-
-  it("says what the business is, in the first screen, without jargon or a banned string", () => {
-    const html = render(<HomeHero data={board} />);
+  it("says what the business is in one plain sentence, with no figure and no banned string", () => {
+    const html = render(<HomeHero />);
     expect(html).toContain("We measure how AI systems behave");
-    expect(html).toContain("free");
-    // Measurement, never certification.
-    expect(html).toContain("Nothing on this page is a certificate");
+    expect(html).toContain("agents and the endpoints they call");
+    expect(html).toContain("re-checked on a schedule");
+    expect(html).toContain("corrected in public");
+    expect(html).not.toMatch(/model fleets tested/i);
+    expect(html).not.toContain("home-accountable-entity");
     for (const re of BANNED) expect(html).not.toMatch(re);
   });
 
-  it("prints the reason and NO figure when the board is unread", () => {
-    const html = render(<HomeHero data={null} error="HTTP 503" />);
-    expect(html).toContain("The board is unread");
-    expect(html).toContain("HTTP 503");
-    expect(html).not.toContain("1,230");
-    expect(html).not.toContain("hero-board-glance\"><dl");
+  it("offers the board, a verification door and a machine door", () => {
+    const html = render(<HomeHero />);
+    expect(html).toContain('data-testid="hero-cta-board"');
+    expect(html).toContain('data-testid="hero-cta-check"');
+    expect(html).toContain('data-testid="hero-cta-agents"');
+  });
+});
+
+describe("LiveBoardGlance", () => {
+  it("makes one tile per axis, with the state read from the payload and never rounded up", () => {
+    const tiles = boardTiles(boardWithAxes);
+    expect(tiles.map((t) => [t.axis, t.group, t.state])).toEqual([
+      ["mock-a", "comparison", "TIE"],
+      ["mock-b", "comparison", "UNTESTED"],
+      ["mock-c", "facts", "FACT_RUN"],
+      ["mock-d", "facts", "UNMEASURED"],
+    ]);
+    expect(boardTiles(null)).toEqual([]);
   });
 
-  it("offers a human door, a verification door and a machine door", () => {
-    const html = render(<HomeHero data={board} />);
-    expect(html).toContain('data-testid="hero-cta-board"');
-    expect(html).toContain('data-testid="hero-cta-verify"');
-    expect(html).toContain('data-testid="hero-cta-agents"');
+  it("reads all four separation fields or none", () => {
+    expect(separationRead(boardWithAxes)).toEqual({ comparison: 2, separated: 0, ties: 1, untested: 1 });
+    expect(separationRead({ totals: { comparison_axes: 2, ties: 1 } })).toBeNull();
+  });
+
+  it("prints the count line, the separation line and the model count off their sources", () => {
+    const html = render(<LiveBoardGlance data={boardWithAxes} models={models} />);
+    expect(html).toContain("4 axes · 3 measured (mock)");
+    expect(html).toContain("0 separated, 1 tie, 1 untested");
+    expect(html).toContain(">123<");
+    expect(html).toContain("our own 7 are listed apart, never counted in");
+    expect(html).toContain('href="/models-measured/"');
+    expect(html).toContain('data-state="UNMEASURED"');
+    expect(html).toContain("GET /api/gspc");
+    expect(html).toContain("mock run 2026-01-01");
+    expect(html).not.toMatch(/model fleets/i);
+  });
+
+  it("prints a dash, never a zero, when the model file is unread", () => {
+    const html = render(<LiveBoardGlance data={boardWithAxes} models={null} />);
+    expect(html).toMatch(/data-testid="board-models-measured"[^>]*>—</);
+  });
+
+  it("accepts the model file only when its headline agrees with its own rows", () => {
+    const rows = [{ kind: "third_party" }, { kind: "third_party" }, { kind: "own" }];
+    expect(modelsHeadline({ schema: "csoai.models-measured/0.1", headline: { third_party_models: 2, own_models_excluded: 1 }, models: rows })).toEqual({
+      third_party_models: 2,
+      own_models_excluded: 1,
+    });
+    expect(modelsHeadline({ schema: "csoai.models-measured/0.1", headline: { third_party_models: 14 }, models: rows })).toBeNull();
+    expect(modelsHeadline({ schema: "other", headline: { third_party_models: 2 }, models: rows })).toBeNull();
+  });
+
+  it("prints the reason and NO figure when the board is unread", () => {
+    const html = render(<LiveBoardGlance data={null} error="HTTP 503" models={models} />);
+    expect(html).toContain("The board is unread");
+    expect(html).toContain("HTTP 503");
+    expect(html).not.toContain(">123<");
   });
 });
 

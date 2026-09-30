@@ -3,7 +3,12 @@
  * (the same shared read as the home strip). Each figure links to its source; the row ends with
  * when it was read and a link to every source. An omitted figure is absent, never zero; if the
  * read fails the row renders nothing.
+ *
+ * NOT ON THE HOME PAGE (owner, 30 Sep 2026: one place for each figure). The front door has its own
+ * proof strip, and two of these five figures (signed cards, corrections) would be printed twice on
+ * one screen. On "/" this row renders nothing; "More numbers" there leads to /about/#numbers.
  */
+import { useLocation } from "wouter";
 import { LiveDot } from "./MomentumStrip";
 import { fmtStamp, isExternal, pick, useMomentum, type MomentumRead } from "./momentum";
 
@@ -20,6 +25,8 @@ const SHORT: Record<string, string> = {
 
 export default function FooterStats({ injected }: { injected?: MomentumRead }) {
   const read = useMomentum(injected);
+  const [location] = useLocation();
+  if (location === "/" || location === "") return null;
   if (read.kind !== "ready") return read.kind === "loading" ? <div className="mb-8 min-h-[7.5rem] sm:min-h-[4.5rem]" aria-hidden="true" /> : null;
   const figs = pick(read.payload, FOOTER_IDS);
   if (!figs.length) return null;

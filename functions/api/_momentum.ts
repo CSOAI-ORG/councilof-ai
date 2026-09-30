@@ -256,6 +256,48 @@ export async function signedCardsFigure(deps: Deps): Promise<Got<Figure>> {
   };
 }
 
+/**
+ * Distinct third-party models with at least one signed, verifying, quotable measurement on a frozen
+ * bank. Read from /interop/models-measured.json, which scripts/build-models-measured.mjs derives at
+ * build time from the signed card index and the OIDC-signed mill cards (signatures checked there).
+ * NOT totals.model_fleets: that counts model-comparison axes. Our own models are counted in that
+ * file separately and never enter this figure.
+ */
+export async function modelsMeasuredFigure(deps: Deps): Promise<Got<Figure>> {
+  const url = own(deps, "/interop/models-measured.json");
+  const r = await read(deps, url);
+  if (!r.ok) return r;
+  const v = r.value;
+  const h = v?.headline;
+  const n = h?.third_party_models;
+  if (v?.schema !== "csoai.models-measured/0.1" || !isPositive(n) || !Array.isArray(v?.models)) {
+    return { ok: false, reason: "/interop/models-measured.json unreadable or not csoai.models-measured/0.1" };
+  }
+  // The headline must equal the rows it summarises, or the figure is not printed.
+  const rows = v.models.filter((m: any) => m?.kind === "third_party").length;
+  if (rows !== n) return { ok: false, reason: `models-measured headline ${n} differs from its ${rows} third-party rows` };
+  const e = exact(n);
+  const ownN = isCount(h?.own_models_excluded) ? h.own_models_excluded : null;
+  return {
+    ok: true,
+    value: {
+      id: "models_measured",
+      group: "evidence",
+      label: "third-party AI models measured on frozen banks",
+      value: n,
+      display: e.display,
+      display_sr: e.sr,
+      unit: "models",
+      as_of: deps.now().toISOString(),
+      as_of_basis: "read",
+      source_url: url,
+      source_label: "/interop/models-measured.json → headline.third_party_models (derived from the signed cards)",
+      detail: ownN !== null ? `our own ${ownN} models are listed separately and never counted in` : "our own models are never counted in",
+      detail_url: "/models-measured/",
+    },
+  };
+}
+
 export async function correctionsFigure(deps: Deps): Promise<Got<{ fig: Figure; latest: { id: string; date: string } }>> {
   const url = own(deps, "/api/corrections");
   const c = await read(deps, url);
@@ -922,7 +964,7 @@ export const RULES = [
 
 export async function buildMomentum(deps: Deps): Promise<Payload> {
   const omitted: Omitted[] = [];
-  const [board, cards, corr, caps, hf, pypi, tools, doors, paper, snap, lst, rec] = await Promise.all([
+  const [board, cards, corr, caps, hf, pypi, tools, doors, paper, snap, lst, rec, models] = await Promise.all([
     boardFigure(deps),
     signedCardsFigure(deps),
     correctionsFigure(deps),
@@ -935,6 +977,7 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
     zenodo(deps, ZENODO_BOARD_SNAPSHOT),
     listings(deps),
     recentFromSources(deps),
+    modelsMeasuredFigure(deps),
   ]);
   const census = hf.ok ? await censusRowsFigure(deps, hf.value.censusIds) : ({ ok: false, reason: "HF dataset list unavailable" } as Got<Figure>);
 
@@ -942,6 +985,7 @@ export async function buildMomentum(deps: Deps): Promise<Payload> {
   const take = (id: string, g: Got<Figure>) => (g.ok ? figures.push(g.value) : omitted.push({ id, reason: g.reason }));
   take("board", board);
   take("signed_cards", cards);
+  take("models_measured", models);
   if (corr.ok) figures.push(corr.value.fig);
   else omitted.push({ id: "corrections", reason: corr.reason });
   if (caps.ok) figures.push(caps.value.fig);

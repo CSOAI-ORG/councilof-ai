@@ -22,7 +22,7 @@
 import { Link } from "wouter";
 import { MEMBERSHIPS } from "@/components/MembershipStrip";
 import { useGspcBoard } from "../board/useGspcBoard";
-import { separationRead } from "./HomeHero";
+import { separationRead } from "./LiveBoardGlance";
 import {
   correctionsSummary,
   otsSplit,

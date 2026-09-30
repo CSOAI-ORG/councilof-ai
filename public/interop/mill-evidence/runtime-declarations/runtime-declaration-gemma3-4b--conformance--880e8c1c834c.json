@@ -1,0 +1,446 @@
+{
+ "accuracy": 0.4571,
+ "axis": "conformance",
+ "baseline_runtime": {
+  "code_commit": "a20574328bbab03e88998916f320452a005742a9",
+  "cpu_count": 4,
+  "cpu_model": null,
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "gpu-t4",
+  "docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "environment_json_sha256": "3508fc932b830bbd9a97eec8416de52f924276c6cce4846c3ab950767cb2d2f5",
+  "finished_at": "2026-09-30T02:56:08Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-5f5dd644-f8fb-d03d-ef7b-d6272f857cf4\n1, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-535acf67-d051-874c-595c-1da59c79a5a6",
+  "hardware": "GPU: 2x Tesla T4 (CUDA driver 13.0)",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily",
+  "ollama": "0.35.0",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "provider": "kaggle",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runs": [
+   {
+    "accuracy": 0.4571,
+    "bundle_sha256": "04b96a6dc5ed3b10952e450bf3ada4992f23cc233524c191a70448456458b2cb",
+    "counts": {
+     "attempted": 35,
+     "bank_items": 35,
+     "correct": 16,
+     "graded_n": 35,
+     "parse_errors_excluded": 0,
+     "transport_errors_excluded": 0,
+     "transport_ok": 35
+    },
+    "items_sha256": "36a70358eb0cf574b94fa7e435e097819b38d50c313fa2e707a529c2c2f8eec5",
+    "run_id": "20260930T024319.228048Z-1434465bfa"
+   }
+  ],
+  "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.35.0",
+  "slice_id": "20260930T02-gemma3-4b",
+  "started_at": "2026-09-30T02:40:28Z",
+  "substrate": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.35.0"
+ },
+ "counts": {
+  "attempted": 35,
+  "bank_items": 35,
+  "correct": 16,
+  "graded_n": 35,
+  "parse_errors_excluded": 0,
+  "transport_errors_excluded": 0,
+  "transport_ok": 35
+ },
+ "independence": {
+  "differs_on": "compute device and numeric path (cpu vs gpu-t4); code commit (4bf337dfecb2 vs a20574328bba)",
+  "note": "declared from the kernels' own records; admission (admit_mill_cards.py) decides",
+  "shared": "provider (kaggle), ollama 0.35.0, decode settings, banks (allowlist pins, checked in-kernel), model manifest digest"
+ },
+ "instrument_sha256": "e72ddce53108c098aec38b296c59f0c980b90c544de059fbdf1109e91f80317f",
+ "intake_bundle_sha256": "880e8c1c834cf3f8318daa17bca2b602e0483c6716208bfc32bec9e3d309fc3f",
+ "intake_state": "VERIFIED_QUARANTINE",
+ "items_sha256": "186db4ef5d1f8cfaa1eefd5a22fff8cd8176b5ab08c66b6efb8d7671588f5618",
+ "n": 35,
+ "parity": {
+  "aggregate_equal": true,
+  "per_item_cross_hardware": {
+   "differing_items": [
+    {
+     "item_id": "item-000018-1bbd61c52a46",
+     "kaggle_cpu": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": "VIOLATES",
+      "raw_output_sha256": "585e311e88bc43145ab051d2dc60e4d5246162ad8074eeb28febb1ba2cce2f34"
+     },
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": "VIOLATES",
+      "raw_output_sha256": "666803c08bc9f7ea41c29557653157727339856fc52afeabbe0aa9244daf2b46"
+     },
+     "sequence": 18
+    }
+   ],
+   "grade_equal": 35,
+   "n_items": 35,
+   "parsed_label_equal": 35,
+   "raw_output_equal": 34
+  }
+ },
+ "per_item_results": [
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000001-318a1aabe43e",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "ecf69b5031e5dd84e1c39146895eeca2563ffab57b75169a7f34a4ee30da01f8",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 1
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000002-960463a1b5e3",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "0880360d8b5ffdc0cdaf6fcdca674fd7538d0277b1e48e7a1d5daa5b0902e4a4",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 2
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000003-401c25159140",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "8afd7b4e8278fcc94cf28899da5b951a8971210fcd8da46bcf32617a2c652bac",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 3
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000004-a1c382e35173",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "52194fc6b36cdaccabe02fc12c71d6f71d44a5ad71145b3efb7ee31564ec3773",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 4
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000005-55dcaec82558",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "e647bbbd61784de507aecca1b047fe7e289b973f269525e4886ec5da64a66730",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 5
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000006-cd9a9d23b976",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "f28ec165f7c2762de505586ec43792ab396f42b3d7f567b20014a123148fa83f",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 6
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000007-675a13ce3bde",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "402ac70a889164c1bdb9f9b6d0dd0cf6b1da9514ab88221dba47105a5295f564",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 7
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000008-b7bcc093c724",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "aca83f5897c846512170b19f3e51f3c5891f42136a474ba27ce4145427232a2b",
+   "raw_output_sha256": "666803c08bc9f7ea41c29557653157727339856fc52afeabbe0aa9244daf2b46",
+   "sequence": 8
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000009-ffc64f63e201",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "e40cc1c90cf995a07e9932ec8e3e4601be1899cf272e1598267c411d39dc5976",
+   "raw_output_sha256": "585e311e88bc43145ab051d2dc60e4d5246162ad8074eeb28febb1ba2cce2f34",
+   "sequence": 9
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000010-5bbc44d19e40",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "22d46dcbc5e6742a316c1e61a081b800dbffa1d09f64103a14ad33979b375911",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 10
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000011-e4b58d8b9e9e",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "b89eba5e4a7141dd585862883440ba49150e71e0b4ccc44d730d1fe6b26b5996",
+   "raw_output_sha256": "666803c08bc9f7ea41c29557653157727339856fc52afeabbe0aa9244daf2b46",
+   "sequence": 11
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000012-aec5e42e9055",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "675790c43dda477d6688cbb239ad53d43404b5794fa3cf2c9083bf165307d5f4",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 12
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000013-b76c76ea2ed2",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "2a1b3a46dd4a931f1cedb3c5e0891b49e84fce7572f22f5b8c1511de24006930",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 13
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000014-d66e045720ce",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "928baaf8dc137d8d8ef3464f54354ef287759fecf7de13fb22e56afad4cf662b",
+   "raw_output_sha256": "585e311e88bc43145ab051d2dc60e4d5246162ad8074eeb28febb1ba2cce2f34",
+   "sequence": 14
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000015-65633cea9db3",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "d1583359551a0da7d812461e437deb8e939199475d2df8ef570cf9baf5cd9ecd",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 15
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000016-c8585ee889f3",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "2f6f7a483ec00b697eca4538f48a44982e9628353bf98af8c51cc1e1582bc606",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 16
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000017-c2f2be9e2b05",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "c6af349f6474d7aee24ead8120709a7089bdf4b78b62f6ad6088b8d14bc8eb91",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 17
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000018-1bbd61c52a46",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "24aad91446c9a719d45c84d7cce82a8e3e3639cfa8cd3ae9131591c85d6184a5",
+   "raw_output_sha256": "585e311e88bc43145ab051d2dc60e4d5246162ad8074eeb28febb1ba2cce2f34",
+   "sequence": 18
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000019-079de48d332e",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "474e20609634497948916579fd621695fb1775c40b759b8fcf6e40eb13b5bacd",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 19
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000020-4d6c1c01696e",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "2c3e49d0eadd0f19cfa51865c3bc5b12c35c0efea7f25c5a9690414e1fdbad94",
+   "raw_output_sha256": "666803c08bc9f7ea41c29557653157727339856fc52afeabbe0aa9244daf2b46",
+   "sequence": 20
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000021-5d89c7fc06a2",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "9a085a66b63dee7d6639fe7ee411bde2e21a0f10ad50a7b57607eaa13be9f286",
+   "raw_output_sha256": "666803c08bc9f7ea41c29557653157727339856fc52afeabbe0aa9244daf2b46",
+   "sequence": 21
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000022-ce938a8e2bf4",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "3db250b4b2bf3fe473d94575f63da5810660194e0b06fc00bb03ff3b201c049c",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 22
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000023-522b6fb6d35d",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "98d96eb0e8f71b94595e8ca0ce51c4d43ceb5187a14d617d4445c6057d009b9c",
+   "raw_output_sha256": "666803c08bc9f7ea41c29557653157727339856fc52afeabbe0aa9244daf2b46",
+   "sequence": 23
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000024-ba216606082b",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "2fa219cd5bbca4cffc64b3189850a7322ebe0de2d056e3ca18e8f03f1f9bb16e",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 24
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000025-228c49212733",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "26400524846563d9c507312ca488fe15600278357591fd0e624843b0752d33f1",
+   "raw_output_sha256": "585e311e88bc43145ab051d2dc60e4d5246162ad8074eeb28febb1ba2cce2f34",
+   "sequence": 25
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000026-44802c09b6aa",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "b05f4656f5d3c8ec7fd4cbe91a937fd256675117052c2f09e53e9ac93a361a4a",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 26
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000027-b1a050a8474f",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "6721d21ec0224214645a168b8e3344878ccf23d67b4bbf276edf720d4e4f0e30",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 27
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000028-5cb9247ca8f1",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "6adf95b7804b5b3494790a9c6adee1cfc40cc401cc20a95b7aaf4985fcd80af4",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 28
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000029-b0fabf811706",
+   "parsed_label": "VIOLATES",
+   "prompt_sha256": "cda196f3079b5e89499010e25e3a0a2cab8ff4b5240889726baccdc0e0558603",
+   "raw_output_sha256": "585e311e88bc43145ab051d2dc60e4d5246162ad8074eeb28febb1ba2cce2f34",
+   "sequence": 29
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000030-da0f7fa1e471",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "207383baa20f300c00178cdf0a95782d2f9abe8140349f62e5e2efc892f7f060",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 30
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000031-25ebe8f2a03a",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "f5cd35f398a09152081a9093b41053b0a4acb8aa83b9a770712cd7cbe7cf7dd2",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 31
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000032-dccb6e8adc16",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "12649dc1a7fb66d0bc765df7fd67902598dd83dde6233fe44f9081fe5434f274",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 32
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000033-b05f319731e9",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "7280268ea1a5aa70af2efce55e951a3257bb2025cee8282537b9bb90a058ab3f",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 33
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000034-1068d32d54d4",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "d6149d9deebae56699ccb20822129b3404ef937270cc3ced05e3dcde514c63e8",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 34
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000035-e01fba669024",
+   "parsed_label": "CONFORMS",
+   "prompt_sha256": "64e34e1f4f8e2bfb6da21333f0d750f5e9f5540ae69d9da76ec256314be0a753",
+   "raw_output_sha256": "15ff6821866a03900fb38b5e76b923b692300d9397dd1459e4a0e5db5a57ec30",
+   "sequence": 35
+  }
+ ],
+ "per_item_results_sha256": "b5b757305a52b862b6ffabc8fd72cfcbad9825f8d019f9f4e13bd2350b9d5e7f",
+ "produced_at": "2026-09-30T09:14:43Z",
+ "produced_by": "oracle-micro-2 ~/lanes/gspc-continuous/build_declarations.py (lane gspc-continuous-20260929)",
+ "run_id": "20260930T062053.943817Z-bbb5a1422e",
+ "runtime": {
+  "bank_sha256": "dc494ae6d1cb8abe3fe9a9424a2b37631a3d15ebdde000b7a0409a67c757420f",
+  "code_commit": "4bf337dfecb2aab3f95664d1c76391c4042abdcb",
+  "cpu_count": 4,
+  "cpu_model": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "cpu",
+  "docker_image": "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9",
+  "environment_json_sha256": "3e8db33726c157d0344cee93368f3018ad5c80a290d4917ea1a29b09740fc8b2",
+  "finished_at": "2026-09-30T09:11:06Z",
+  "gpu": null,
+  "hardware": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily-cpu",
+  "ollama": "0.35.0",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "provider": "kaggle",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runtime_id": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily-cpu (private, Batch) | ollama 0.35.0",
+  "slice_id": "20260930T06-gemma3-4b",
+  "started_at": "2026-09-30T06:11:36Z",
+  "substrate": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily-cpu (private, Batch) | ollama 0.35.0"
+ },
+ "schema": "csoai.mill-runtime-declaration/0.1",
+ "status": "SIDECAR - not inside the card: the intake contract pins the card body/run.json key sets exactly",
+ "subject": "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a"
+}
