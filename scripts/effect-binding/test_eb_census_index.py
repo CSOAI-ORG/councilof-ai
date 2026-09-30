@@ -43,6 +43,34 @@ class T(unittest.TestCase):
             self.assertNotIn(srv["url"], text)
         self.assertEqual(sum(doc["counts"].values()), len(doc["entries"]))
 
+    def test_per_tool_rows(self):
+        def att(tool, base, extra):
+            return {"tool": tool, "baseline": {"kind": base}, "extra": {"kind": extra}}
+        srv = {"read_only_tools": ["a_rejects", "b_accepts", "c_indet", "d_unprobed", "e_split"],
+               "P2": {"attempts": [att("a_rejects", "ok", "tool_error"), att("b_accepts", "ok", "ok"),
+                                   att("c_indet", "http_error", "http_error"), att("e_split", "ok", "ok"),
+                                   att("e_split", "ok", "tool_error"), att("not_listed", "ok", "ok")]}}
+        rows = E.per_tool(srv)
+        h = E.tool_key
+        self.assertEqual(rows[h("a_rejects")], {"p2": "REJECTS"})
+        self.assertEqual(rows[h("b_accepts")], {"p2": "ACCEPTS_SILENTLY"})
+        self.assertEqual(rows[h("c_indet")], {"p2": "INDETERMINATE"})
+        self.assertEqual(rows[h("d_unprobed")], {"p2": "NOT_PROBED"})
+        self.assertEqual(rows[h("e_split")], {"p2": "INDETERMINATE"})  # two decisive results disagree
+        self.assertNotIn(h("not_listed"), rows)  # a tool the probe did not list read-only is never a row
+        self.assertEqual(E.attempt_result(att("x", "ok", "http_error")), "INDETERMINATE")  # transport failure is not a refusal
+
+    def test_committed_index_per_tool_demo_targets(self):
+        # the two demo targets: listed read-only, extra argument rejected in the signed run
+        b, s = self._run()
+        doc = E.build(b, s)
+        for url, tool in [("https://invokera.com/r/public-holidays", "get_next_public_holidays"),
+                          ("https://api.exchangerate.dev/v1/mcp/", "list_currencies")]:
+            self.assertEqual(doc["entries"][E.key(url)]["tools"][E.tool_key(tool)], {"p2": "REJECTS"}, url)
+        text = json.dumps(doc)
+        self.assertNotIn("get_next_public_holidays", text)
+        self.assertNotIn("list_currencies", text)
+
 
 if __name__ == "__main__":
     unittest.main()

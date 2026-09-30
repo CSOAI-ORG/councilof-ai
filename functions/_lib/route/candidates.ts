@@ -47,6 +47,7 @@ const KNOWN_FIELDS = new Set([
   "model",
   "region",
   "endpoint",
+  "tool",
   "cost_declared",
   "latency_declared_ms",
   "read_only",
@@ -107,6 +108,7 @@ export function fleetCandidates(): Candidate[] {
     model: null,
     region: "",
     endpoint: isPaid ? "https://councilof.ai/mcp" : "https://councilof.ai/mcp/free",
+    tool: t.name,
     local: false,
     read_only: t.annotations?.readOnlyHint === true,
     destructive: t.annotations?.destructiveHint === true,
@@ -160,6 +162,8 @@ export function normaliseCandidate(raw: unknown, index: number): Candidate {
   const provider = str("provider") ?? "";
   const model = str("model");
   const region = str("region") ?? "";
+  const tool = str("tool");
+  if (tool !== null && kind !== "mcp_tool") why.push("tool is only meaningful on an mcp_tool candidate");
   let endpoint: string | null = null;
   if (rec.endpoint !== undefined && rec.endpoint !== null) {
     if (typeof rec.endpoint !== "string" || rec.endpoint.length > 300) why.push("endpoint must be a string of at most 300 characters");
@@ -202,6 +206,24 @@ export function normaliseCandidate(raw: unknown, index: number): Candidate {
     else data_class_allowed = [...new Set(v as DataClass[])].sort();
   }
   const local = kind === "local_gpu" || (endpoint?.startsWith("local:") ?? false);
+  // A caller naming one of OUR tools gets our tool: its read-only / paid / destructive facts come from the
+  // fleet definitions (the annotations tools/list serves), never from the caller's declaration.
+  // Without a tool the candidate stays caller-declared (decide-only, as before); execution never calls it.
+  const fp = endpoint && tool && why.length === 0 ? firstPartyDoor(endpoint) : null;
+  if (fp) {
+    const def = fp === "free" ? FREE_BY_NAME.get(tool as string) : FULL_BY_NAME.get(tool as string);
+    if (!def) why.push("tool is not served at this councilof.ai door");
+    else
+      return {
+        ...def,
+        id,
+        region,
+        cost_declared,
+        latency_declared_ms,
+        uncheckable: why,
+        ignored_fields: ignored,
+      };
+  }
   if (kind === "local_gpu" && endpoint && !endpoint.startsWith("local:"))
     why.push("a local_gpu candidate's endpoint must be local:<name>");
   return {
@@ -211,6 +233,7 @@ export function normaliseCandidate(raw: unknown, index: number): Candidate {
     model,
     region,
     endpoint,
+    tool,
     local,
     read_only,
     destructive,
@@ -224,6 +247,23 @@ export function normaliseCandidate(raw: unknown, index: number): Candidate {
     ignored_fields: ignored,
   };
 }
+
+/** "free" | "full" when the endpoint is this site's /mcp/free or /mcp door, else null. */
+export function firstPartyDoor(endpoint: string): "free" | "full" | null {
+  let u: URL;
+  try {
+    u = new URL(endpoint);
+  } catch {
+    return null;
+  }
+  if (u.protocol !== "https:" || u.hostname.toLowerCase() !== "councilof.ai") return null;
+  const p = u.pathname.replace(/\/+$/, "");
+  return p === "/mcp/free" ? "free" : p === "/mcp" ? "full" : null;
+}
+
+const FLEET = fleetCandidates();
+const FREE_BY_NAME = new Map(FLEET.filter((c) => !c.paid).map((c) => [c.tool as string, c]));
+const FULL_BY_NAME = new Map(FLEET.map((c) => [c.tool as string, { ...c, endpoint: "https://councilof.ai/mcp" }]));
 
 export function buildCandidates(raw: unknown): { candidates: Candidate[]; errors: string[] } {
   if (raw === undefined || raw === null) return { candidates: fleetCandidates(), errors: [] };

@@ -3241,6 +3241,32 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "api-route-execute-get",
+      "protocols": [
+        "http"
+      ],
+      "title": "GSPC Route execution door (GET)",
+      "description": "GET /api/route/execute describes the execution door: phases 1-4 of the 30 Sep 2026 owner ruling, the request body and the receipt key did:web:csoai.org#route-attestation-1. Not a ranking or a grade.",
+      "endpoint": "/api/route/execute",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-route-execute-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "GSPC Route execution (POST)",
+      "description": "POST /api/route/execute runs the route decision and then at most one call to the chosen MCP tool. The edge calls only verified read-only tools. Caller credentials are refused and stay client-side. A first-party x402 tool is paid only against its observed challenge, confirmed by sha256. Every outcome returns a receipt signed under did:web:csoai.org#route-attestation-1. Nothing is logged or stored. Not a grade.",
+      "endpoint": "/api/route/execute",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
     }
   ]
 }
