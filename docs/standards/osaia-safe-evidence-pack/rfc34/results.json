@@ -1,0 +1,353 @@
+{
+ "carried_by_ours_not_by_theirs": [
+  "negative_control (designed-to-fail, observed)",
+  "result.state incl. UNMEASURED / PARTIAL / NOT_DISCRIMINATING",
+  "signature (Ed25519, did:web) + timestamp state stated honestly",
+  "supersedes by sha256",
+  "dependencies pinned by digest",
+  "event_id (sha256 of JCS bytes)",
+  "test.declared_failure_modes / noise_floor"
+ ],
+ "control_their_example": {
+  "errors": 0,
+  "file_sha256": "5fa6c688a107d0fffb5a5f1a1c7a1a9e4e7f84f3455744a7e7148ab368fc4620",
+  "result": "VALID (validator accepts their own example)"
+ },
+ "events": [
+  {
+   "errors": 12,
+   "event_id": "sha256:60b6e86089cf71ee9140e81d22f6988d543f58e933279f01636158a5f368fa89",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:bbc894afc99e583ec420f8068ef0c74a54d83332c7147d6b0e07fab227a88fbe",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:39b7f495688ff992fbd0c0474ba47b8f59b3a656fa9651fba086b9f073692488",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:d13ac90e7b947247dbab389441ac332bc56e29eaccf5fda739f1a2dbef3f195d",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:ddf8a9c3a8167684be85f913e4ed066f7040a2b948d92b4bd1e2b93bb7d9511b",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:fdac8c15026a9f9711012c917c29509950ea01e200fc71ccf71efcdb0e6cff4a",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:c85b51f1cc02a00f774f83b8e6ea32a54ef8a3eb6201c50f5ed358d99552c8f7",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:5f01f24f5a4ad4e0113e609e2166c5c6b2432aad5aa0289e9b4bf3fc1310e67c",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:c320ff481da797f74043962b8a21203b36967729424b06622d24904b18b46f5d",
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "event_id": "sha256:10f9db66aa7996a329fb3d4c79e956991600cc68546bb378c24c6dee0ffea811",
+   "valid": false
+  }
+ ],
+ "field_map_ours_to_theirs": [
+  {
+   "fit": "NO_EQUIVALENT",
+   "note": "ours is profile safe-reverification/0.1-draft; theirs is a day-4 incident filing, a different document",
+   "ours": null,
+   "theirs": "schema_version"
+  },
+  {
+   "fit": "PARTIAL",
+   "note": "theirs must match ^SAFE-[A-Z0-9-]{6,64}$; ours are csoai:safe-rv:* and sha256:* (stable, content-derived)",
+   "ours": "record_id / event_id",
+   "theirs": "report_id"
+  },
+  {
+   "fit": "MAPS",
+   "note": "ours names the prior record by id AND sha256, theirs by report_id only",
+   "ours": "supersedes[]",
+   "theirs": "supersedes"
+  },
+  {
+   "fit": "MAPS",
+   "note": "",
+   "ours": "issued_at",
+   "theirs": "filed_at"
+  },
+  {
+   "fit": "PARTIAL",
+   "note": "ours: public only so far",
+   "ours": "finding.disclosure_tier",
+   "theirs": "confidentiality"
+  },
+  {
+   "fit": "NO_EQUIVALENT",
+   "note": "we re-verify published findings; we do not classify incidents",
+   "ours": null,
+   "theirs": "near_miss"
+  },
+  {
+   "fit": "PARTIAL",
+   "note": "theirs wants organization + role enum; ours is a DID",
+   "ours": "issuer (did:web)",
+   "theirs": "filer"
+  },
+  {
+   "fit": "NO_EQUIVALENT",
+   "note": "not our role: we measure, we do not classify an incident",
+   "ours": null,
+   "theirs": "incident_classes"
+  },
+  {
+   "fit": "PARTIAL",
+   "note": "ours times the re-verification, not the incident; disclosure-lag records carry quoted incident dates",
+   "ours": "result.measured_at / dependencies[].observed_at",
+   "theirs": "when"
+  },
+  {
+   "fit": "NO_EQUIVALENT",
+   "note": "",
+   "ours": null,
+   "theirs": "affected_parties_notified"
+  },
+  {
+   "fit": "PARTIAL",
+   "note": "ours identifies the artifact checked, not model/safeguard versions",
+   "ours": "claim.subject",
+   "theirs": "systems"
+  },
+  {
+   "fit": "NO_EQUIVALENT",
+   "note": "field map (records/safe-rfc-fieldmap.json) lists control-layer tags as missing on our side",
+   "ours": null,
+   "theirs": "control_layers"
+  },
+  {
+   "fit": "PARTIAL",
+   "note": "ours says exactly which bytes are pinned by digest",
+   "ours": "dependencies[] (digest + uri + state PINNED/UNPINNED)",
+   "theirs": "preservation"
+  },
+  {
+   "fit": "MAPS",
+   "note": "ours adds UNMEASURED/PARTIAL with value null and a designed-to-fail control",
+   "ours": "limits[] + result.read_state + negative_control",
+   "theirs": "coverage"
+  },
+  {
+   "fit": "MAPS",
+   "note": "",
+   "ours": "finding.summary",
+   "theirs": "narrative"
+  },
+  {
+   "fit": "NOT_USED",
+   "note": "an optional score attachment; we attach no score",
+   "ours": null,
+   "theirs": "srel"
+  }
+ ],
+ "issue": "https://github.com/OpenSecureAIAlliance/RFCs/issues/34",
+ "reading": "The #34 straw man is a day-4 incident filing; our records re-verify published findings. They are different documents, so every one of our records fails its schema, and that is expected. The useful output is the field map: which of their fields our records can fill, and what ours carry that theirs does not.",
+ "records": [
+  {
+   "errors": 13,
+   "file": "C-2026-0928-01.post-fix.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "C-2026-0928-01.pre-fix.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 13,
+   "file": "C-2026-0928-02.post-fix.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "C-2026-0928-02.pre-fix.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "corrections-ledger.integrity.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "corrections-ledger.timing.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "disclosure-lag.activity-stopped.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "disclosure-lag.incident-to-notification.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 13,
+   "file": "mcp-contract-parity.v0.1.2.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  },
+  {
+   "errors": 12,
+   "file": "measurement-capsules.index.safe-rv.json",
+   "missing_required": [
+    "control_layers",
+    "coverage",
+    "filed_at",
+    "filer",
+    "incident_classes",
+    "near_miss",
+    "preservation",
+    "report_id",
+    "schema_version",
+    "systems",
+    "when"
+   ],
+   "valid": false
+  }
+ ],
+ "schema_sha256": "a3d47a8a631932137f2ab91c17f43d503d41a46ffe98da84c7f31e495d4981f3",
+ "schema_url": "https://github.com/user-attachments/files/32363522/safe-day4.schema.json",
+ "validator": "jsonschema 4.26.0 Draft202012Validator"
+}

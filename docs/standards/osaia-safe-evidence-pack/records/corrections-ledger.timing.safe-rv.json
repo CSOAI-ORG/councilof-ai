@@ -1,0 +1,88 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:corrections-ledger:time-to-correct",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "Can the ledger show how long each correction took? SAFE's clocks (ASAP, 72 h, 4 business days, 30/90 days) need detected_at and published_at on every entry."
+  },
+  "claim": {
+    "claim_id": "api/corrections:time_to_correct-measurable",
+    "claim_type": "property_value",
+    "statement": "Every ledger entry carries a first-hand detected_at and published_at, so its time-to-correct is measurable.",
+    "subject": {
+      "identifier": "https://councilof.ai/api/corrections",
+      "scheme": "url+sha256"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "ledger",
+      "kind": "dataset",
+      "name": "corrections ledger, csoai.corrections/0.1",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "ac88d19d9357b04615c3cd009ee51938a1bfe81d4695b61f9d3306e3be2c4df2"
+      },
+      "uri": "https://councilof.ai/api/corrections",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "count correction_latency.per_entry kinds",
+    "method_version": "2026-09-26",
+    "procedure": "read correction_latency {exact, upper_bound, unmeasured} from the signed ledger; recount per_entry",
+    "procedure_digest": null,
+    "reproduction": "re_execution",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Relies on the ledger's own backfill rule (first-hand evidence only)."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "observed_negatives",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "Entries whose time-to-correct is not exactly measurable are observed negatives of the claim.",
+    "negatives_observed": 87,
+    "denominator": 88
+  },
+  "result": {
+    "state": "FAIL",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 1,
+    "denominator": 88,
+    "reason": "exact 1, upper bound only 5, UNMEASURED 82 of 88; detected_at UNRECORDED on 51. Timing fields were added on 2026-09-26; earlier entries are not backfilled by estimate."
+  },
+  "remediation": {
+    "state": "APPLIED",
+    "reference": "timing_fields added 2026-09-26; new entries carry detected_at, detected_window, published_at",
+    "retest_record_id": null
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "ledger",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "UNMEASURED entries carry no estimate; that is why most are UNMEASURED.",
+    "Says nothing about whether any correction was right, only whether its timing is recorded."
+  ]
+}

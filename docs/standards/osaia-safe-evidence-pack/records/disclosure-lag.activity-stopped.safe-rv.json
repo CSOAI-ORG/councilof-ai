@@ -1,0 +1,80 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "finding": {
+    "kind": "incident",
+    "finding_ref": "incident.2026-06.au-medicare-statistics-portal.agent-access",
+    "disclosure_tier": "public",
+    "summary": "When did the agent's access end? SAFE's timeline asks for it; no source read states it."
+  },
+  "claim": {
+    "claim_id": "activity_stopped",
+    "claim_type": "property_value",
+    "statement": "The public record states when the agent's access to the portal ended.",
+    "subject": {
+      "identifier": "incident.2026-06.au-medicare-statistics-portal.agent-access",
+      "scheme": "csoai-incident-id"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "capsule",
+      "kind": "dataset",
+      "name": "disclosure-lag record.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "59f2c0fa7a751e18659b6838163e49d66daec3c5e71fa40b8ad4c13d2d7c8324"
+      },
+      "uri": "https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    }
+  ],
+  "test": {
+    "method_id": "quote re-read",
+    "method_version": "csoai.measurement-capsule/0.2",
+    "procedure": "Web search for the Australian Government's statement, any vendor statement and at least two independent reputable reports; each source fetched and its response hashed (response_sha256) on 2026-09-26; each date taken only from a quoted sentence; intervals are whole calendar days between dates (date(b) - date(a)); a month-only date yields a range, never a midpoint.",
+    "procedure_digest": null,
+    "reproduction": "not_reproducible",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Absence among the sources read is not absence everywhere."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "none",
+    "observed": "NOT_RUN",
+    "description": "Nothing was measured, so there is nothing to control."
+  },
+  "result": {
+    "state": "UNMEASURED",
+    "measured_at": null,
+    "read_state": "NOT_READ",
+    "n": null,
+    "denominator": null,
+    "reason": "No source read states when the agent's access to the portal ended. It is left empty, never estimated."
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "capsule",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "Measurement, not accusation: dates and whole days as the public record gives them; no intent, diligence or compliance is characterised.",
+    "The signed record.json still carries publication = 'PRIVATE: OWNER-APPROVE required'; it is served publicly, so that field is stale inside signed bytes and needs a superseding record, not an edit."
+  ]
+}

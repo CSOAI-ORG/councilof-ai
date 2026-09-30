@@ -1,0 +1,109 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:corrections-ledger:integrity",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "The public corrections ledger (88 entries, newest C-2026-0930-11) is committed to by a content_id that is Ed25519-signed under the board key."
+  },
+  "claim": {
+    "claim_id": "api/corrections:content_id+signature",
+    "claim_type": "artifact_integrity",
+    "statement": "The served ledger body hashes to the signed content_id, and that attestation verifies under the key in did.json.",
+    "subject": {
+      "identifier": "https://councilof.ai/api/corrections",
+      "scheme": "url+sha256"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "ledger",
+      "kind": "dataset",
+      "name": "corrections ledger, csoai.corrections/0.1",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "ac88d19d9357b04615c3cd009ee51938a1bfe81d4695b61f9d3306e3be2c4df2"
+      },
+      "uri": "https://councilof.ai/api/corrections",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    },
+    {
+      "dep_id": "key",
+      "kind": "external_service",
+      "name": "did:web:csoai.org DID document",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "9fad541cbe0ab29e246e77e8ff8fff37fd5183b509ac877612309687fc848ead"
+      },
+      "uri": "https://csoai.org/.well-known/did.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "ledger signature_check.how, re-implemented",
+    "method_version": "csoai.corrections/0.1",
+    "procedure": "Computed on this request, from these bytes. Strip unsigned_wrapper_fields from this document, canonicalise with json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True), SHA-256 it: that is recomputed_content_id and it must equal signature.attestation.content_id and signature.id. Then verify signature.signature as Ed25519 over the same canonical form of signature.attestation under key_ed25519_hex, which is the published key for did:web:csoai.org#board-attestation-1. Both must hold.",
+    "procedure_digest": null,
+    "reproduction": "independent_reimplementation",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "The key is read from did.json at run time; a rotated key changes what verifies."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "One character appended to the first entry's status must break the content_id.",
+    "negatives_observed": 1,
+    "denominator": 1
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 88,
+    "denominator": null,
+    "reason": "content_id recomputed and Ed25519 checked: verifies; tamper control rejected."
+  },
+  "signature": {
+    "envelope": "other",
+    "key_id": "did:web:csoai.org#board-attestation-1",
+    "payload_sha256": "c9e00682adeac89c7fd55ad3a87f7b02e3f5f9ce3132f8d26acf136070dc3908",
+    "envelope_uri": "https://councilof.ai/api/corrections",
+    "transparency_receipt_uri": null,
+    "timestamp": {
+      "kind": "none",
+      "state": "NONE",
+      "proof_uri": null
+    }
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "ledger",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
+    "A verified signature shows these bytes were signed by the named key. It does not show the content is true.",
+    "The ledger is re-signed as it grows; an older signature over an older body is not kept at a stable URL."
+  ]
+}
