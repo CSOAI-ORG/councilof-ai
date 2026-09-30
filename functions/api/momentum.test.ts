@@ -53,6 +53,16 @@ function upstream(): Record<string, Route> {
           { id: "C-2026-0901-01", date: "2026-09-01" },
         ],
       }),
+    [`${ORIGIN}/interop/models-measured.json`]: () =>
+      json({
+        schema: "csoai.models-measured/0.1",
+        headline: { third_party_models: 2, own_models_excluded: 1, own_unconfirmed: 0 },
+        models: [
+          { id: "org/a", kind: "third_party" },
+          { id: "org/b", kind: "third_party" },
+          { id: "own-x", kind: "own" },
+        ],
+      }),
     [`${ORIGIN}/api/x402-quotes`]: () => json({ as_of: "2026-09-27T08:59:00Z", quotes: [{ http: 402 }, { http: 402 }, { http: 500 }] }),
     [`${ORIGIN}/mcp`]: () =>
       text(`event: message\ndata: ${JSON.stringify({ jsonrpc: "2.0", id: 1, result: { tools: [{ name: "a" }, { name: "b" }, { name: "c" }] } })}\n\n`),
@@ -164,6 +174,7 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(ids(p)).toEqual([
       "board",
       "signed_cards",
+      "models_measured",
       "corrections",
       "capsules",
       "pypi_csoai_all_time",
@@ -187,6 +198,9 @@ describe("/api/momentum — every figure is live, sourced and dated", () => {
     expect(by.board.display).toBe("23 of 23");
     expect(by.signed_cards.value).toBe(335);
     expect(by.corrections.value).toBe(3);
+    // 30 Sep 2026: distinct third-party models, never totals.model_fleets (which counts axes).
+    expect(by.models_measured.value).toBe(2);
+    expect(by.models_measured.detail).toBe("our own 1 models are listed separately and never counted in");
     expect(by.corrections.trend?.text).toBe("+2 this week");
     expect(by.capsules.value).toBe(13184);
     expect(by.capsules.detail).toContain("Bitcoin block 968674");
@@ -432,5 +446,24 @@ describe("GET /api/momentum handler", () => {
     } finally {
       globalThis.fetch = real;
     }
+  });
+});
+
+describe("models_measured — the model count, never the axis count", () => {
+  it("is omitted when the headline disagrees with its own rows", async () => {
+    const p = await buildMomentum(
+      deps({
+        [`${ORIGIN}/interop/models-measured.json`]: () =>
+          json({ schema: "csoai.models-measured/0.1", headline: { third_party_models: 14 }, models: [{ id: "a", kind: "third_party" }] }),
+      }),
+    );
+    expect(ids(p)).not.toContain("models_measured");
+    expect(p.omitted.find((x) => x.id === "models_measured")?.reason).toMatch(/differs from its 1 third-party rows/);
+  });
+
+  it("is omitted, never zeroed, when the file does not answer", async () => {
+    const p = await buildMomentum(deps({ [`${ORIGIN}/interop/models-measured.json`]: () => json({}, 404) }));
+    expect(ids(p)).not.toContain("models_measured");
+    expect(p.omitted.find((x) => x.id === "models_measured")).toBeTruthy();
   });
 });

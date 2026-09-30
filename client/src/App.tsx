@@ -243,6 +243,8 @@ const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
 const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
+// /models-measured — the list behind the home page model count (2026-09-30), from /interop/models-measured.json.
+const ModelsMeasured = lazy(() => import("./pages/ModelsMeasured"));
 const FinancialAxes = lazy(() => import("./pages/FinancialAxes"));
 const Stablecoins = lazy(() => import("./pages/Stablecoins"));
 const Wrappers = lazy(() => import("./pages/Wrappers"));
@@ -722,6 +724,7 @@ function App() {
                   <Route path="/ceremony">{() => <Redirect to="/events/three-root-ceremony" />}</Route>
                   <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
+                  <Route path="/models-measured" component={ModelsMeasured} />
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard">{() => <Redirect to="/dashboard?tab=board" />}</Route>
                   <Route path="/financial-axes" component={FinancialAxes} />

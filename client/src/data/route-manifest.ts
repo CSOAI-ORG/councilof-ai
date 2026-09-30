@@ -423,6 +423,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Conformity Route"
  },
  {
+  "path": "/connect",
+  "comp": "ConnectHub",
+  "title": "Connect Hub"
+ },
+ {
   "path": "/connect-ai",
   "comp": "ConnectGSPC",
   "title": "Connect GSPC"
@@ -1421,6 +1426,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/models",
   "comp": "ModelRegistry",
   "title": "Model Registry"
+ },
+ {
+  "path": "/models-measured",
+  "comp": "ModelsMeasured",
+  "title": "Models Measured"
  },
  {
   "path": "/motion-lab",

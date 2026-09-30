@@ -12,6 +12,7 @@ import { Router } from "wouter";
 import ConnectHub, { A2A_ENDPOINT, FULL_DOOR } from "./ConnectHub";
 import { FREE_DOOR } from "./ConnectClaude";
 import HomeHero from "../components/home/HomeHero";
+import HomeWaysIn from "../components/home/HomeWaysIn";
 import FREE_TOOLS from "../../../functions/mcp/gspc-tools.json";
 
 const here = resolve(__dirname);
@@ -63,9 +64,9 @@ describe("/connect is the connector hub, not a withdrawal notice", () => {
   });
 });
 
-describe("the home first screen says how to use it", () => {
+describe("the home page says how to use it", () => {
   it("offers Ask, Connect and Verify, each to a live route", () => {
-    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero data={{ totals: {} }} /></Router>);
+    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeWaysIn /></Router>);
     for (const [id, href] of [
       ["hero-cta-ask", "/dashboard"],
       ["hero-cta-connect", "/connect/"],
@@ -77,7 +78,7 @@ describe("the home first screen says how to use it", () => {
   });
 
   it("says what we do in plain words: agents and endpoints, signed, re-checked, corrected in public", () => {
-    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero data={{ totals: {} }} /></Router>);
+    const html = renderToStaticMarkup(<Router ssrPath="/"><HomeHero /></Router>);
     expect(html).toContain("agents and the endpoints they call");
     expect(html).toContain("re-checked on a schedule");
     expect(html).toContain("corrected in public");

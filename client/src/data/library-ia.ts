@@ -34,7 +34,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // to render more than one set's count, because it labels every count with the set
   // it belongs to. Registered here or it ships flagged "archived" (see the invariant
   // above), which would tell a reader the estate's own index page is superseded.
-  "/board", "/board/models",
+  "/board", "/board/models", "/models-measured",
   // /leaderboard is THE governance leaderboard: the fleet × signed-axis matrix,
   // sortable by any axis, every cell verifiable. /rankings folds into it. Primary,
   // or it ships flagged "archived" under a route the nav actively promotes.
