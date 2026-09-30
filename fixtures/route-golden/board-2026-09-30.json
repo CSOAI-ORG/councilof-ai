@@ -1,0 +1,137 @@
+{
+ "_note": "Recorded from GET https://councilof.ai/api/gspc on 2026-09-30 (three rows, fields the router reads; nothing edited). Used by functions/_lib/route tests and services/gspc-router tests.",
+ "measured_on_date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+ "axes": [
+  {
+   "axis": "governance",
+   "family": "gspc",
+   "kind": "model-comparison",
+   "n": 237,
+   "separation": "TIE",
+   "status": "MEASURED",
+   "leader": "mistral:7b (base model)",
+   "accuracy": 0.5865,
+   "interval": [
+    0.523,
+    0.647
+   ],
+   "separation_p": 0.3787,
+   "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+   "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=237; p=0.3787).",
+   "separation_evidence": {
+    "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+    "file": "peritem_gov.jsonl",
+    "file_sha256": "3a1d3193d3651448dd311efe4c7efcbdffb19e07fba06c15e628b844bfbfa2a5",
+    "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+    "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+    "leader": {
+     "model": "mistral:7b",
+     "k": 139,
+     "n": 237,
+     "accuracy": 0.5865,
+     "wilson95": [
+      0.523,
+      0.647
+     ]
+    },
+    "next_best": {
+     "model": "deepseek-r1:8b",
+     "k": 128,
+     "n": 237,
+     "accuracy": 0.5401,
+     "wilson95": [
+      0.476,
+      0.602
+     ]
+    },
+    "paired_items": 237,
+    "discordant": {
+     "leader_only_correct": 70,
+     "next_best_only_correct": 59
+    },
+    "mcnemar_p": 0.3787,
+    "control": {
+     "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+     "nperm": 1000,
+     "seed": 20260927,
+     "fixed_pair_rate": 0.044,
+     "reselect_rate": 0.001
+    },
+    "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+   }
+  },
+  {
+   "axis": "provenance",
+   "family": "gspc",
+   "kind": "model-comparison",
+   "n": 32,
+   "separation": "TIE",
+   "status": "MEASURED",
+   "leader": "llama3.2:3b (base model)",
+   "accuracy": 0.7188,
+   "interval": [
+    0.546,
+    0.844
+   ],
+   "separation_p": 1,
+   "separation_method": "Exact McNemar on the discordant items, leader vs the best base model, rule fixed 2026-08-13: p<0.05 is SEPARATED, anything else is a TIE. Wilson 95% intervals are annotation only. Computed by scripts/gspc_separation_from_rows.py from the published per-item rows with our own models removed from the fleet before comparison.",
+   "separation_sentence": "No model separated from the next best on this axis (exact McNemar, p≥0.05, n=32; p=1.0).",
+   "separation_evidence": {
+    "source": "https://huggingface.co/datasets/csoai/gspc-peritem-rows-2026-08-12 (revision 294e4cf9e8b72a00aa50de024b3ed3e7ab0b3361)",
+    "file": "peritem_prv.jsonl",
+    "file_sha256": "fb9efe3afda9d075cf38607c53f1c6a8044909b642e58747b9559a87fcc83237",
+    "peritem_sha256": "0d8dacfbe7384a5d2f6a83e7455482ab75f935366bbb6e18da61cfdac8890dec",
+    "fleet": "6 base models; our own prompt overlays on stock base models removed before comparison",
+    "leader": {
+     "model": "llama3.2:3b",
+     "k": 23,
+     "n": 32,
+     "accuracy": 0.7188,
+     "wilson95": [
+      0.546,
+      0.844
+     ]
+    },
+    "next_best": {
+     "model": "gemma3:12b",
+     "k": 22,
+     "n": 32,
+     "accuracy": 0.6875,
+     "wilson95": [
+      0.514,
+      0.82
+     ]
+    },
+    "paired_items": 32,
+    "discordant": {
+     "leader_only_correct": 6,
+     "next_best_only_correct": 5
+    },
+    "mcnemar_p": 1,
+    "control": {
+     "what": "labels shuffled within items, same test re-run; share that came out SEPARATED",
+     "nperm": 1000,
+     "seed": 20260927,
+     "fixed_pair_rate": 0.016,
+     "reselect_rate": 0.001
+    },
+    "recompute": "python3 separation_test.py --rows rows --json out.json  (in the dataset; stdlib only; checks SHA256SUMS first)"
+   }
+  },
+  {
+   "axis": "machinery-conformity",
+   "family": "gspc",
+   "kind": "model-comparison",
+   "n": 33,
+   "separation": "UNTESTED",
+   "status": "MEASURED",
+   "leader": null,
+   "accuracy": null,
+   "interval": null,
+   "separation_p": null,
+   "separation_method": null,
+   "separation_sentence": null,
+   "separation_evidence": null
+  }
+ ]
+}

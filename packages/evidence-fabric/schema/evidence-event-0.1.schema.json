@@ -22,6 +22,11 @@
   "schema": {
    "const": "csoai.evidence-event/0.1"
   },
+  "profile": {
+   "type": "string",
+   "pattern": "^csoai\\.[a-z0-9-]+/[0-9]+\\.[0-9]+$",
+   "description": "Optional. A profile narrows this schema for one kind of record (e.g. csoai.route-evidence/0.1); it never widens it."
+  },
   "event_id": {
    "type": "string",
    "pattern": "^sha256:[0-9a-f]{64}$"
@@ -47,7 +52,8 @@
       "repository",
       "dataset",
       "sandbox_run",
-      "web_page"
+      "web_page",
+      "route"
      ]
     },
     "locator": {

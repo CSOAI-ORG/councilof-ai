@@ -17,7 +17,7 @@ Rules the code enforces (and the tests prove can say no):
   * limits[] has at least one entry.
   * state is one of six words; there is no PASS, no score band, no "compliant".
 """
-import argparse, hashlib, json, math, sys
+import argparse, hashlib, json, math, re, sys
 from decimal import Decimal
 
 SCHEMA = "csoai.evidence-event/0.1"
@@ -25,9 +25,11 @@ FABRIC_VERSION = "0.1.0"
 STATES = ("CONSISTENT", "DIVERGENT", "PARTIAL", "UNMEASURED", "UNCHECKABLE", "NOT_DISCRIMINATING")
 NO_NUMBER_STATES = frozenset({"UNMEASURED", "UNCHECKABLE"})
 SUBJECT_KINDS = ("mcp_server", "a2a_card", "oasf_record", "model_card", "package", "policy", "scanner_report",
-                 "model_run", "signed_record", "repository", "dataset", "sandbox_run", "web_page")
+                 "model_run", "signed_record", "repository", "dataset", "sandbox_run", "web_page", "route")
 ID_EXCLUDE = ("event_id", "signature", "anchors")
 REQUIRED = ("schema", "subject", "claim", "method", "declared", "observed", "state", "value", "negative_control", "limits")
+# A profile narrows this schema for one kind of record (e.g. csoai.route-evidence/0.1); it never widens it.
+PROFILE_RE = re.compile(r"^csoai\.[a-z0-9-]+/[0-9]+\.[0-9]+$")
 BANNED_WORDS = ("certified", "certify", "compliant", "compliance status", "pass mark")
 
 
@@ -137,6 +139,8 @@ def validate(ev):
         return e
     if ev["schema"] != SCHEMA:
         e.append(f"schema must be {SCHEMA}")
+    if "profile" in ev and not (isinstance(ev["profile"], str) and PROFILE_RE.match(ev["profile"])):
+        e.append("profile, when present, must name a profile such as csoai.route-evidence/0.1")
     st = ev["state"]
     if st not in STATES:
         e.append(f"state {st!r} is not one of {'/'.join(STATES)}")

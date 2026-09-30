@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://agentgateway.dev/schema/config
+# GSPC Route pod data plane: agentgateway v1.5.0 (Apache-2.0), decide-only, never exposed publicly.
+# Keys checked against the v1.5.0 schema: run.sh runs `agentgateway -f agentgateway.yaml --validate-only` first.
+#
+#   POST /route                -> route_service.mjs (the same TS core as the MCP tool `route`)
+#   /v1/* (chat/completions)   -> extAuthz asks route_service /authz, which refuses: execution is an owner
+#   POST /route_execute           decision (spec §8), so these answer 501 NOT_ENABLED and no model is called.
+#   Local Ollama (127.0.0.1:11434) is a candidate SOURCE (its /api/tags), never a routed backend here.
+#
+# v1.5.0 has no per-gateway bindAddress, so port 3900 listens on all interfaces. The pod publishes no such
+# port, and every route below also refuses any caller that is not loopback.
+config:
+  adminAddr: 127.0.0.1:15900
+  statsAddr: 127.0.0.1:15920
+  readinessAddr: 127.0.0.1:15921
+gateways:
+  default:
+    port: 3900
+routes:
+- name: route-decide
+  matches:
+  - path:
+      exact: /route
+    method: POST
+  policies:
+    authorization: &loopback
+      rules:
+      - 'source.address == "127.0.0.1" || source.address == "::1" || source.address == "::ffff:127.0.0.1"'
+  backends:
+  - host: 127.0.0.1:8790
+- name: health
+  matches:
+  - path:
+      exact: /healthz
+  policies:
+    authorization: *loopback
+  backends:
+  - host: 127.0.0.1:8790
+- name: execute-not-enabled
+  matches:
+  - path:
+      pathPrefix: /v1/
+  - path:
+      exact: /route_execute
+  policies:
+    authorization: *loopback
+    extAuthz:
+      host: 127.0.0.1:8790
+      protocol:
+        http:
+          path: '"/authz"'
+      failureMode: deny
+  backends:
+  - host: 127.0.0.1:8790
