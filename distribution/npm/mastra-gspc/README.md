@@ -1,6 +1,6 @@
 # @csoai/mastra-gspc
 
-Mastra tool for the Council of AI GSPC board. Calls the Council of AI MCP door (https://councilof.ai/mcp, 18 tools (13 free, 5 x402-metered)) directly over HTTP;
+Mastra tool for the Council of AI GSPC board. Calls the Council of AI MCP door (https://councilof.ai/mcp, 19 tools (14 free, 5 x402-metered)) directly over HTTP;
 zero runtime dependencies beyond the framework peer. One tool: GSPC board totals.
 
 ```js

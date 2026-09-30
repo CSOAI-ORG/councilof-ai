@@ -38,6 +38,7 @@ export const ONE_LINE: Record<string, string> = {
   verify_capsule: "Checks one measurement capsule's id, its inclusion in its batch and the index signature.",
   server_evidence: "Every published measurement capsule about one MCP or agent endpoint URL, or NOT_MEASURED.",
   evidence_bundle_preview: "The already-signed cards relevant to one obligation (Article 50, Article 53, DORA or CRA). Observations, never a determination.",
+  route: "GSPC Route, decide-only: your policy applied to published measurements. TIE and UNTESTED stated; nothing executed.",
 };
 
 export const EXAMPLE_PROMPTS = [

@@ -22,7 +22,8 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
-      "evidence_bundle_preview"
+      "evidence_bundle_preview",
+      "route"
     ],
     "paid": [
       "commission_card",
@@ -294,6 +295,8 @@
         "distribution/dify/gspc/tools/server_evidence.py",
         "distribution/dify/gspc/tools/evidence_bundle_preview.yaml",
         "distribution/dify/gspc/tools/evidence_bundle_preview.py",
+        "distribution/dify/gspc/tools/route.yaml",
+        "distribution/dify/gspc/tools/route.py",
         "distribution/packages/gspc.difypkg"
       ],
       "doctrine_carriers": [
@@ -313,19 +316,19 @@
   "files": [
     {
       "path": "distribution/SUBMIT.md",
-      "sha256": "eb4230bcce013393cc4ac4fe787c08943b890dcbad7dc05003a4d2e64b52644b"
+      "sha256": "039f9c59aeda04238cfa8b9afd6be43727eeeae2475e807c56ca8122d67cb567"
     },
     {
       "path": "distribution/claude/connector.json",
-      "sha256": "e75edaff09b6b96b5aa062adcd7d4a5ecd4071556093419ee029354dfa8d73fe"
+      "sha256": "29a95241add3443531b6bbc280041c4e40528f363da47ce0214b9eac279d1f47"
     },
     {
       "path": "distribution/connect/connect-matrix.json",
-      "sha256": "2ee20fd7fae5e0276e76a8ecb9b5cfd931f1de0590484820b7d4c984382520fa"
+      "sha256": "8ab78f7557933a231918744c28e9779a713df2088198a6c59da36d197a7ad413"
     },
     {
       "path": "distribution/copilot-studio/apiDefinition.swagger.json",
-      "sha256": "938e230e88d19db0bdf9cde1493108ea3035fb538e33e6d8396e1da6d55b0205"
+      "sha256": "b3eb124f86ed7f7d6a03111ace614e768741c9b709676022d1c4d6285cdca05b"
     },
     {
       "path": "distribution/copilot-studio/apiProperties.json",
@@ -337,7 +340,7 @@
     },
     {
       "path": "distribution/copilot-studio/intro.md",
-      "sha256": "a16aa2226375f0dddd63d8c9e32d9e6e8ca657e0022a92657d038afdd5df4ad7"
+      "sha256": "0b1a48b58d4990c6dca03f17cb3a2c8445f3c642b04a3c105c3b1166502327ef"
     },
     {
       "path": "distribution/dify/gspc/PRIVACY.md",
@@ -345,7 +348,7 @@
     },
     {
       "path": "distribution/dify/gspc/README.md",
-      "sha256": "3ae4429d9e487c22de1d11bca2f4ee1f98edab068fc9ee29749a5b2fc7be6fc0"
+      "sha256": "2b473c3e0e864a6d3b403f147dd914ca898c5b45a1d6a3dd76515d5f1ca748fb"
     },
     {
       "path": "distribution/dify/gspc/_assets/icon.svg",
@@ -365,7 +368,7 @@
     },
     {
       "path": "distribution/dify/gspc/provider/gspc.yaml",
-      "sha256": "899fe459c4dbeff57b872eedc34ffc2101e361ae8cc9c70db083ee4d67a02c4f"
+      "sha256": "3e5f05cc9475bee0c6448650b87b5cf9ee09b8434c3d6ddd39711fc92e0ab56e"
     },
     {
       "path": "distribution/dify/gspc/requirements.txt",
@@ -436,6 +439,14 @@
       "sha256": "6a2ec93073f2208ca0aaf460cdee86f62d4331a91f0334bf996ce60314563d65"
     },
     {
+      "path": "distribution/dify/gspc/tools/route.py",
+      "sha256": "bd213ea6d80be0d6a744228031786441d7bed86a46e1d239338c64a1649b5b6a"
+    },
+    {
+      "path": "distribution/dify/gspc/tools/route.yaml",
+      "sha256": "5a99fd58a566bd458a7d2a95cec52139f2d36efccb1e0c132008eaa9c39f6a5d"
+    },
+    {
       "path": "distribution/dify/gspc/tools/server_evidence.py",
       "sha256": "72edcb1ba2ab6217d386a6a24d495812d2a2859f3cc33173ca4d46140332e8bc"
     },
@@ -477,35 +488,35 @@
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/readme.md",
-      "sha256": "a1d635b66063a6dc6ba3eb7b8070b77ca68b37794a753b028e3431f21382ec8a"
+      "sha256": "6680a371673ab60cb5e1ad4193d1a35eaffc885d2063603490119f0e6839eb9c"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/server.yaml",
-      "sha256": "1666ea551b11f463870978142d03ea78224bf92c92b17bb96a6c822bcc2a632a"
+      "sha256": "1392c9af017fb63373af426f8e3b6e79eb3c6e242a797a8176adf20c992fa957"
     },
     {
       "path": "distribution/docker/servers/csoai-gspc/tools.json",
-      "sha256": "5c74959963ead10f1ff8065ef4875ad54691a94963a4f8f47b4534a072f34ee5"
+      "sha256": "2208a317c0b60879efdb68d5ab62b23e1d977686357392e36114aafe1c5fd6b1"
     },
     {
       "path": "distribution/gcp-marketplace/LISTING.md",
-      "sha256": "cae4bf85d46333900904a4cfdf15d4e4a24cd398e4042039ebb41d178544fefa"
+      "sha256": "71b3a3e54e7075d68da0076fcdf1035426d1beeab5e2ffc4b5c4a5df36a9cf3d"
     },
     {
       "path": "distribution/gcp-marketplace/agent-card.json",
-      "sha256": "c39b44698ce6dac3864196efb0b2ebbe50f910c6fd9e285beff2d1c794c1d5cc"
+      "sha256": "91d3918b65a17e8db38649c39004cbcbbe86cd3d08539d8fbfa10773e98ec188"
     },
     {
       "path": "distribution/gemini/GEMINI.md",
-      "sha256": "a1819cd1aaa7d3d9ea40d7ebc8ac14588de7526a7cd4eb9df3ee5f396d7d8eaa"
+      "sha256": "5ff6d010c131a25ff16f60de3267c89f54bfbdb72a058b7c8435d1cba823c96e"
     },
     {
       "path": "distribution/gemini/gemini-extension.json",
-      "sha256": "40ac94bf3667cde3b0c0e5053b4afdc83effe2524370e77fecd0697e2cabf708"
+      "sha256": "7c86fd5eefa0748be2c4f0523b1126bf7eff0ecb1cbc2c75d802f8cfe0be48a8"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/README.md",
-      "sha256": "653a961fc3cab68982291abbc9ce8a111009c806f3dabb1c151cde10699f04f9"
+      "sha256": "b58d747f634daae22430d17b06872f6889a039130c9a3c420c2e01ef2c25d46e"
     },
     {
       "path": "distribution/hf-space/csoai-gspc-mcp/app.py",
@@ -517,11 +528,11 @@
     },
     {
       "path": "distribution/mcp-registry/ai.councilof-gspc/server.json",
-      "sha256": "9ddd469709a9c2099bcd12b38c37c1ea9bd34868f6a0013ac49dfcf6e0de8216"
+      "sha256": "533bd3d10a40a66ba5d055273064a25c4ce850dc1126482400e11229e46fa984"
     },
     {
       "path": "distribution/mcp-registry/io.github.CSOAI-ORG-gspc/server.json",
-      "sha256": "2a50c082bf3b05b2df4b9ef2da01351b9deed02f0d3b07df8327b4f00eaa6355"
+      "sha256": "6329059774852bb96b1ad480604299a7c39f213919dd796a311651b7e038e00b"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/LICENSE",
@@ -529,11 +540,11 @@
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/README.md",
-      "sha256": "58d34c0eda9db876fd1baac2aa28ce6ade08d1098503a9ea2475a8c5c4cfb8da"
+      "sha256": "c9cb5ba40aa75c01a53cf94656ff238a151a8da198999cacf4d9649278bb6a0d"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/gspc-client.js",
-      "sha256": "785efbbe1731c0dc6b98609aa809683156328f6fc2fca8640acfc366d69652a5"
+      "sha256": "68984c1e556302249bc2f1e566bbafa5623f83b20362a17da1a2271e3935e3dc"
     },
     {
       "path": "distribution/npm/ai-sdk-gspc/index.d.ts",
@@ -553,11 +564,11 @@
     },
     {
       "path": "distribution/npm/mastra-gspc/README.md",
-      "sha256": "975e1f745883084e4f0a8244d1d7c388946419aa5b6f75a1f14597ce6c947ea4"
+      "sha256": "b14d01dedfe7d5cc9831aa20c02849deef499d8fb17623f548549b5012cd9d02"
     },
     {
       "path": "distribution/npm/mastra-gspc/gspc-client.js",
-      "sha256": "785efbbe1731c0dc6b98609aa809683156328f6fc2fca8640acfc366d69652a5"
+      "sha256": "68984c1e556302249bc2f1e566bbafa5623f83b20362a17da1a2271e3935e3dc"
     },
     {
       "path": "distribution/npm/mastra-gspc/index.d.ts",
@@ -581,39 +592,39 @@
     },
     {
       "path": "distribution/openai-plugin/plugin.json",
-      "sha256": "0163b188ea8782ebbf424591decce3b0e20491707ee76d21a42d9f81f49d0cca"
+      "sha256": "84b8a949773c8d0a72085dde3de1906f1417593f4abca1f3a34e457ca0526241"
     },
     {
       "path": "distribution/openai-plugin/skills/get-started/SKILL.md",
-      "sha256": "4fdef47cdc92131d839c849ce1ee431f3ab952857a041ef40e8f5d9a077340e1"
+      "sha256": "cecb770dcf32e70203931085bd410ff96f2490e050581931d034970f3794cc44"
     },
     {
       "path": "distribution/openai/app.json",
-      "sha256": "ab3c4eb475b46f9c587e1c2bc7f92435439f7a2a417b2c41322af2988265d474"
+      "sha256": "50bdc210966de64028f0cd69780d67d41883b6dc50566aae7f4f70863d292ad4"
     },
     {
       "path": "distribution/packages/gspc-openai-plugin.zip",
-      "sha256": "50a94e11bf0b4a21fb7a2a86f5be1724d95e7616c164a31e6c4a05f6e272ee4b"
+      "sha256": "9bb30b9760c845cd81248d957a8a8342fd56fe1fdfb8f428102220b47b66ef7c"
     },
     {
       "path": "distribution/packages/gspc.difypkg",
-      "sha256": "1db78ecaf72e33e466e8b7a6373501d1c6f6292dcca418464155c7de7af82fae"
+      "sha256": "b63b897fb11c93843698645f44e5d69f1e498e0f32bfa204c2678c8891fd2a05"
     },
     {
       "path": "distribution/plugin/.claude-plugin/marketplace.json",
-      "sha256": "25f1cb0dddbce67c2e9a67d868232264568f6e7b1694d603b2e46fb9def79366"
+      "sha256": "0b929b6a6e1bdfa0026cd657a4ff5fe65aeb3932b466984e426a10a640e05e00"
     },
     {
       "path": "distribution/plugin/.claude-plugin/plugin.json",
-      "sha256": "e7182f8bd3bef86c8b96fa2559d15e739dd58f268c815c6c7ce3ef344e7595ff"
+      "sha256": "2cfb83bed4b282effc1f5438b87d6862fcf422be4932b6b357bc8b780b40b8b7"
     },
     {
       "path": "distribution/plugin/.cursor-plugin/plugin.json",
-      "sha256": "45a5cdde0e3ad9a0415d882a259fc2936205da81e43417e9d1015b2957e54c78"
+      "sha256": "c1c04176689733a48584574dc444a9526c4027c0e177458a9322be085ae009c4"
     },
     {
       "path": "distribution/plugin/.grok-plugin/marketplace.json",
-      "sha256": "0c55b42d6ea2ff701eb79657288874f95e167901ef10170b77d4652027207640"
+      "sha256": "6d4d731e5aa71ee03e9e65768fc3f6a341089a23f67a57ab67800c9abed0cf86"
     },
     {
       "path": "distribution/plugin/.mcp.json",
@@ -621,11 +632,11 @@
     },
     {
       "path": "distribution/plugin/README.md",
-      "sha256": "2bbcb28c37b88abb58b2d173191e970ddfe130f68f9e5de7e3d673a2a7c14d98"
+      "sha256": "4351c2a9a74ac227986dfc6f375e1f9945fe7977a73f1c0fe1601157f0ed0f77"
     },
     {
       "path": "distribution/plugin/skills/gspc/SKILL.md",
-      "sha256": "bcdb2df03d3ce580e43ea5af0e8a90245b6241e790ac3cd2b27fe087a791fdf5"
+      "sha256": "00843c5795ffe579e2c96f9a45d27c9a3ada3fc52dd747473f77b9de0ff1239c"
     },
     {
       "path": "distribution/python/crewai-csoai/LICENSE",
@@ -701,15 +712,15 @@
     },
     {
       "path": "public/.claude-plugin/marketplace.json",
-      "sha256": "25f1cb0dddbce67c2e9a67d868232264568f6e7b1694d603b2e46fb9def79366"
+      "sha256": "0b929b6a6e1bdfa0026cd657a4ff5fe65aeb3932b466984e426a10a640e05e00"
     },
     {
       "path": "public/.well-known/mcp.json",
-      "sha256": "f60b694dc03df057b92080c912e4881bc33ac7d2714111d0cb3fb4cd45848c53"
+      "sha256": "eaed8a78177c5f660bc468bc15bf90112d9151cad052c2788ac88abaec69e436"
     },
     {
       "path": "public/.well-known/mcp/server-card.json",
-      "sha256": "43c8dcc5dfebf1ea07d892a0da942f0132e5e3a9459c2cb19f7f1479167b8ba3"
+      "sha256": "40a593f3a686087b414fb0c47a497d43b7e69675b7f759f691871c0cc71cb6f9"
     }
   ]
 }

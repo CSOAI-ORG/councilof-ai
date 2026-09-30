@@ -1,5 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { mkdtempSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 import { parseArgs, ageDays, findModel, formatRow } from "../bin/csoai.mjs";
 
 test("parseArgs: command + subject", () => {
@@ -56,4 +61,14 @@ test("formatRow: null accuracy renders an em dash, not a zero", () => {
   assert.match(line, /—/);
   assert.match(line, /VALID/);
   assert.doesNotMatch(line, /0\.0%/);
+});
+
+test("CLI executes when invoked through an npm-style symlink", () => {
+  const dir = mkdtempSync(join(tmpdir(), "csoai-cli-symlink-"));
+  const linked = join(dir, "csoai");
+  const bin = fileURLToPath(new URL("../bin/csoai.mjs", import.meta.url));
+  symlinkSync(bin, linked);
+  const r = spawnSync(process.execPath, [linked], { encoding: "utf8" });
+  assert.equal(r.status, 2);
+  assert.match(r.stderr, /no command/);
 });

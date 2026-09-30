@@ -1,0 +1,259 @@
+{
+  "schema": "csoai.interop-listing-state/0.1",
+  "slug": "mcp-directories",
+  "name": "MCP directory listing state",
+  "as_of": "20260914T110800Z",
+  "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
+  "totals": {
+    "servers_in_official_registry": 330,
+    "registry_version_entries": 1272,
+    "packages_pypi": 329,
+    "packages_npm": 1,
+    "note": "Counts are DERIVED by paginating the registry search and counting entries flagged isLatest. They are not typed."
+  },
+  "directories": [
+    {
+      "id": "mcp-registry",
+      "name": "Official Model Context Protocol registry",
+      "url": "https://registry.modelcontextprotocol.io",
+      "state": "LISTED",
+      "evidence": "330 isLatest servers under search=CSOAI-ORG; 25 of them name a repository that does not exist (see csoai/mcp-registry-self-audit)",
+      "probe": "curl -s 'https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100' and page nextCursor",
+      "surface": "api"
+    },
+    {
+      "id": "smithery",
+      "name": "Smithery",
+      "url": "https://smithery.ai",
+      "state": "LISTED",
+      "evidence": "2 servers in the csoai namespace, both confirmed at their DETAIL endpoints: csoai/gspc and csoai/gspc-mcp. A THIRD server, csgaglobal/csoai-compliance-council, carries our name in a namespace that is NOT ours; recorded as a fact about the registry, not claimed as ours. Smithery is now part of Arcade.dev and /docs/build/deployments 404s.",
+      "probe": "curl -s https://registry.smithery.ai/servers/csoai/gspc-mcp | jq '[.tools[].name]' # the DETAIL endpoint, not ?q=csoai — see known_defects",
+      "surface": "api",
+      "tool_counts": {
+        "note": "The mandate is 'the listing resolves and the tool count is true'. Declared counts are read from Smithery's detail endpoint; served tools are DERIVED from the two canonical files the door reads (functions/mcp/gspc-tools.json + paid-tools.json), never typed. Neither hosted deployment could be called directly: gspc--csoai.run.tools answers 401 at / and 404 at /mcp, so Smithery's runtime needs a key we do not hold. The comparison is therefore declared-vs-source, not declared-vs-tools/list.",
+        "served_by_the_door": {
+          "free": 13,
+          "paid": 5,
+          "total": 18,
+          "names": [
+            "board_totals",
+            "get_axis",
+            "verify_card",
+            "list_cards",
+            "get_root",
+            "get_card",
+            "verify_inclusion",
+            "x402_trust",
+            "mcp_trust",
+            "measurement_index",
+            "verify_capsule",
+            "server_evidence",
+            "evidence_bundle_preview",
+            "commission_card",
+            "art50_marking_evidence",
+            "rwa_evidence",
+            "receipts_batch",
+            "evidence_bundle"
+          ]
+        },
+        "listings": [
+          {
+            "qualifiedName": "csoai/gspc-mcp",
+            "declared": 7,
+            "verdict": "TRUE BUT INCOMPLETE",
+            "detail": "Its seven are the first seven free tools the door serves. The door now also serves x402_trust plus four x402-metered tools; a client reading this listing cannot discover those five.",
+            "served_not_declared": [
+              "x402_trust",
+              "mcp_trust"
+            ]
+          },
+          {
+            "qualifiedName": "csoai/gspc",
+            "declared": 8,
+            "verdict": "FALSE",
+            "detail": "Four of its eight name tools the door does not serve: measure, verify, jail-probe, enter-arena. Two of those are not merely absent — functions/mcp/[[path]].ts answers tools/call for `measure` and `jail-probe` with -32601 and the text 'mill-tool dropped ... this door does not mill'. The listing also omits get_root, get_card, verify_inclusion and all four paid tools. Only 4 of its 8 names are real.",
+            "declared_not_served": [
+              "measure",
+              "verify",
+              "jail-probe",
+              "enter-arena"
+            ],
+            "served_not_declared": [
+              "get_root",
+              "get_card",
+              "verify_inclusion",
+              "commission_card",
+              "art50_marking_evidence",
+              "rwa_evidence",
+              "receipts_batch",
+              "x402_trust",
+              "mcp_trust"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "glama",
+      "name": "Glama MCP",
+      "url": "https://glama.ai/mcp",
+      "state": "LISTED",
+      "evidence": "368 csoai URLs across Glama's 19 sitemap sections, in TWO shapes: 317 under /mcp/servers/CSOAI-ORG/<name> and 51 under /mcp/connectors/io.github.CSOAI-ORG/<name>. All 51 connector pages return 200. 40 of them carry a Status field and every one reads Unhealthy, last tested 2026-09-05 19:11-19:18 UTC. The remaining 11 are not servers at all — they are per-TOOL pages under the Council of AI GSPC connector.",
+      "probe": "curl -sL https://glama.ai/sitemap.xml | grep -oE '<loc>[^<]+</loc>' | sed 's/<[^>]*>//g' | xargs -n1 curl -sL | grep -oiE '<loc>[^<]*CSOAI[^<]*</loc>' | sed 's/<[^>]*>//g'",
+      "surface": "sitemap",
+      "health": {
+        "verdict": "EVERY CONNECTOR GLAMA HEALTH-CHECKS IS UNHEALTHY",
+        "connector_pages": 51,
+        "showing_a_status": 40,
+        "unhealthy": 40,
+        "healthy": 0,
+        "last_tested_utc": "2026-09-05 19:11 to 19:18",
+        "detail": "40 is not a coincidence: exactly 40 of our 330 registry entries advertise a callable remote, and mcp-registry-resolution.json measures that none of the 40 can be reached (39 name api.meok.ai, which has no DNS record; the 40th is councilof.ai/mcp, which answers 405 to POST under B37). Glama reaches the same verdict from the outside, on its own schedule, and PUBLISHES it. This is a third-party surface agreeing with our own measurement — and it means the failure is not private: anyone browsing Glama sees 40 CSOAI connectors marked Unhealthy.",
+        "probe": "curl -sL https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/a2a-governance-bridge-mcp | grep -o 'Unhealthy'"
+      },
+      "tool_counts": {
+        "verdict": "UNCHECKABLE",
+        "declared": 11,
+        "served_by_the_door": 18,
+        "names": [
+          "art50_marking_evidence",
+          "board_totals",
+          "commission_card",
+          "get_axis",
+          "get_card",
+          "get_root",
+          "list_cards",
+          "receipts_batch",
+          "rwa_evidence",
+          "verify_card",
+          "verify_inclusion"
+        ],
+        "detail": "Last Glama probe recorded 11 tool pages identical to the then-door (7 free + 4 paid). The door now also serves x402_trust (8 free + 4 paid = 12). Glama has not been re-probed since that add, so declared=11 stays and verdict is UNCHECKABLE — not TRUE. names[] is the last probe, not the live door. On 2026-09-30 the door added evidence_bundle_preview (free) and evidence_bundle (x402), so it serves 13 + 5 = 18; Glama has not been re-probed since, so its names[] still lack both.",
+        "probe": "compare the /mcp/connectors/ sitemap leaves that are tool pages against jq -r '.tools[].name' functions/mcp/{gspc,paid}-tools.json"
+      },
+      "tool_count_audit": {
+        "scope": "45 of the 317 /mcp/servers/ pages sampled; 12 of those declare a tool count; 10 map to a package the registry names",
+        "method": "For each, the wheel for the EXACT version the registry names was downloaded from PyPI and its decorated tool functions counted (@<x>.tool(...) immediately preceding a def). Declared-vs-registered, not declared-vs-tools/list: no server was started and no tool was called.",
+        "checked": 10,
+        "match": 9,
+        "mismatch": 1,
+        "mismatches": [
+          {
+            "package": "agent-identity-trust-mcp",
+            "declared": 19,
+            "registered": 5,
+            "tools": [
+              "register_agent_identity",
+              "issue_credential",
+              "verify_credential",
+              "get_agent_reputation",
+              "list_registered_agents"
+            ],
+            "detail": "PyPI's latest IS the version the registry names (1.0.13) and the GitHub repo's server.py registers the same five. Package and repository agree; the directory does not. Glama's figure is not derived from anything we publish."
+          }
+        ],
+        "counter_defect": "The first pass reported 3 mismatches. Two were MY counter's fault: these packages ship an auth_middleware.py carrying a template example decorated as a tool and named `my_tool`, which is not a registered server tool. Excluding that file, crypto-tracker-ai-mcp (4) and competitor-monitor-ai-mcp (11) both match Glama exactly. An off-by-one that appears in more than one package at once is a defect in the instrument before it is a defect in the subject.",
+        "probe": "download the wheel for the registry-named version and count @<x>.tool( decorators outside auth_middleware.py"
+      }
+    },
+    {
+      "id": "pulsemcp",
+      "name": "PulseMCP",
+      "url": "https://pulsemcp.com",
+      "state": "UNKNOWN",
+      "evidence": "WAS LISTED on 2026-09-05: 213 csoai server URLs in PulseMCP's own sitemap (23,833 total), five sampled, all 200. RE-PROBED 2026-09-06 10:35 BST and PulseMCP now refuses this client on every surface: sitemap 403, site search 403, and two known server pages from that same reading (/servers/csoai-acord-bridge, /servers/csoai-agent-audit-logger) 403 — all four returning an IDENTICAL 5487-byte body, which is what proves it is one block page and not four absences. Their documented v0beta API answers 410 Gone as before. A 403 is not a delisting and a uniform block page is not evidence about any URL behind it, so this reads UNKNOWN rather than NOT_LISTED — and it must not read LISTED either, because nothing here can currently confirm it. Re-check from an unblocked network or with the owner's browser profile.",
+      "probe": "curl -s -A '<browser UA>' -o /tmp/a -w '%{http_code} %{size_download}' https://www.pulsemcp.com/sitemap.xml ; repeat for /servers?q=csoai and for a known /servers/csoai-* page. IDENTICAL non-200 sizes across unrelated paths = one block page: report UNKNOWN, never NOT_LISTED. Only a 200 sitemap or a 200 server page may move this row.",
+      "surface": "sitemap",
+      "submission_state": "2026-09-14: https://www.pulsemcp.com/submit states PulseMCP is not accepting new server or client submissions and is not changing existing listings; it points publishers to the official MCP registry, where we are LISTED. This is a fact about the submission path, not about listing state."
+    },
+    {
+      "id": "mcp-so",
+      "name": "mcp.so",
+      "url": "https://mcp.so/servers/csoai-gspc-measurement",
+      "state": "UNKNOWN",
+      "evidence": "WAS LISTED in the owner browser on 2026-09-11. On 2026-09-14 the exact public detail URL returned HTTP 500. That does not prove delisting, and the authenticated submissions table does not prove current public reachability, so the public state is UNKNOWN until the detail page answers again. Re-probed 2026-09-14T11:08Z: the detail URL now answers HTTP 200 (68,219 bytes), but the served body names neither CSOAI-ORG nor councilof-ai, so the row's own rule still does not allow LISTED.",
+      "probe": "curl -sS -L -o /tmp/mcp-so-detail -w '%{http_code} %{url_effective}' https://mcp.so/servers/csoai-gspc-measurement; only a 200 detail page naming @CSOAI-ORG and CSOAI-ORG/councilof-ai may restore LISTED",
+      "surface": "rendered"
+    },
+    {
+      "id": "cline",
+      "name": "Cline MCP marketplace",
+      "url": "https://github.com/cline/mcp-marketplace",
+      "state": "NOT_LISTED",
+      "evidence": "GitHub code search over cline/mcp-marketplace returns total_count 0 and the README carries no csoai mention. A rendered search page showed 9 'mentions' — that was the UI echoing the query, not a listing",
+      "probe": "gh api 'search/code?q=csoai+repo:cline/mcp-marketplace' --jq .total_count  -> 0",
+      "surface": "api"
+    },
+    {
+      "id": "docker-mcp",
+      "name": "Docker MCP catalog",
+      "url": "https://hub.docker.com/mcp",
+      "state": "NOT_LISTED",
+      "evidence": "Re-probed 2026-09-14T11:08Z. The Docker MCP catalog is built from github.com/docker/mcp-registry: its servers/ directory has no csoai, gspc or council entry, GitHub code search over docker/mcp-registry for csoai returns 0, and our submission PR docker/mcp-registry#4733 is OPEN (not merged). The previous LISTED reading used the Docker Hub image search, which returns csoai/meok-sovereign: that is a container image repository, not an MCP catalog entry, so it could not establish this row.",
+      "probe": "gh api repos/docker/mcp-registry/contents/servers --jq '[.[].name|select(test(\"csoai|gspc|council\";\"i\"))]'  -> [] ; gh pr view 4733 -R docker/mcp-registry --json state  -> OPEN",
+      "surface": "api",
+      "submission": {
+        "url": "https://github.com/docker/mcp-registry/pull/4733",
+        "state": "OPEN"
+      }
+    },
+    {
+      "id": "lobehub",
+      "name": "LobeHub MCP",
+      "url": "https://lobehub.com/mcp/csoai-org-councilof-ai",
+      "state": "LISTED",
+      "evidence": "Probed 2026-09-14T11:11Z: the exact detail URL answers HTTP 200 and its served body names the repository CSOAI-ORG/councilof-ai (4 occurrences). A listing page does not prove tool health; tool health stays unmeasured here. Its description is generated from the repository README and currently carries an axis count; the fix belongs in the README, not in LobeHub.",
+      "probe": "curl -sL -A '<browser UA>' https://lobehub.com/mcp/csoai-org-councilof-ai | grep -ci 'CSOAI-ORG/councilof-ai'  -> >0 for LISTED",
+      "surface": "rendered"
+    }
+  ],
+  "known_defects": [
+    {
+      "id": "meok-remote-unresolvable",
+      "severity": "degraded-not-dead",
+      "detail": "39 of the 330 latest registry entries advertise a remote at https://api.meok.ai/ . The host api.meok.ai has no DNS record; the meok.ai apex resolves. All 39 carry a PyPI stdio fallback, so discovery by package still works and only discovery by remote fails.",
+      "probe": "dig +short api.meok.ai  (empty)  vs  dig +short meok.ai  (resolves)",
+      "owner_action": "re-publish those entries to repoint or drop the remotes block"
+    },
+    {
+      "id": "npm-provenance-absent",
+      "severity": "missing",
+      "detail": "csoai-gspc-mcp@0.2.1 has no attestations key under dist. npm publish --provenance is free from a GitHub-hosted runner.",
+      "probe": "curl -s https://registry.npmjs.org/csoai-gspc-mcp/latest",
+      "owner_action": "enable provenance on the next publish"
+    },
+    {
+      "id": "stale-advice-v1.0.0",
+      "severity": "informational",
+      "detail": "A 2026-09-02 brief advises keeping gspc v1.0.0. That version advertises csoai-gspc-mcp.nicholastempleman.workers.dev/mcp, which returns 404. isLatest is v1.2.0 and points at councilof.ai/mcp, which returns 200.",
+      "probe": "curl -o /dev/null -w '%{http_code}' https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
+    },
+    "2026-09-05: glama and docker-mcp were published as NOT_LISTED and were LISTED. Cause: state derived from a scan of our own slug files, not from the directory. Corrected with rendered/API probes, each row now carries the command that produced it.",
+    "2026-09-05: a rendered directory search echoes the query text, so counting mentions can read as presence. cline showed 9 'mentions' and is genuinely absent; confirmed with GitHub code search total_count=0.",
+    "2026-09-05: the first correction of this file cited '27 csoai mentions and 85 csoai links' as the evidence for glama=LISTED. 63 of those 85 were HREF-ONLY — Glama's own facet links carrying query=csoai in the URL, i.e. our search term echoed back. The state was right; the evidence was mostly an artefact. This is the same query-echo trap recorded one entry above for cline, fallen into in the same session. Count links whose TEXT names us, or listings under the author facet.",
+    "2026-09-05: smithery was published NOT_LISTED on the evidence 'zero csoai mentions on a Playwright-RENDERED search page'. WRONG. Smithery's own registry API returns two servers in the csoai namespace. The rendered homepage search and the registry API are different surfaces, and the page not showing a result is not the registry lacking one. A rendered check is necessary where there is no API and is NOT sufficient where there is one — query the API.",
+    "2026-09-05: mcp-so and pulsemcp both sat at UNKNOWN because their APIs were missing or dead (404 / 410). A SITEMAP IS A DIRECTORY'S OWN INDEX OF WHAT IT LISTS and answered both: mcp.so 0 of 27,929, pulsemcp 213 of 23,833. Reach for the sitemap before recording UNKNOWN — and note the rendered mcp.so search showed '2 csoai mentions' that the sitemap proves were query echo.",
+    "2026-09-05: the smithery row's own probe went stale without the listing changing. `?q=csoai&pageSize=50` returned csoai/gspc and 49 unrelated servers but NOT csoai/gspc-mcp, which is alive and returns 200 with seven tools at its detail endpoint. A search index and a detail endpoint are different surfaces, and a row whose evidence says '2 servers' must be probed where both are visible. Had the row been re-derived from that search it would have recorded a delisting that never happened.",
+    "2026-09-05: csoai/gspc advertises four tools the door does not serve, two of which it explicitly refuses by name. A directory listing is not self-correcting — nothing on Smithery re-reads our tool definitions, so a tool dropped here stays advertised there until someone re-publishes. Dropping a tool is therefore a DISTRIBUTION change, not only a code change.",
+    "2026-09-05: this row was published claiming '367 csoai connector URLs shaped /mcp/connectors/...'. The SHAPE was wrong. Glama carries 368 csoai URLs in two different shapes — 317 /mcp/servers/CSOAI-ORG/<name> and only 51 /mcp/connectors/io.github.CSOAI-ORG/<name> — and 11 of those 51 are per-tool pages, not servers. A count taken across a sitemap without reading the paths it counted collapsed three distinct kinds of page into one number. A guessed /mcp/servers/io.github.CSOAI-ORG/<name> URL 404s, which is a 404 on a path nobody publishes and proves nothing; the sitemap publishes both real shapes.",
+    "2026-09-05: a first pass at auditing Glama's tool counts reported 3 of 10 wrong. Two of the three were the COUNTER's error, not Glama's: several packages ship an auth_middleware.py containing a template example decorated as a tool and named `my_tool`, and a naive regex counted it. Both wrong rows were off by exactly one, in the same direction, in different packages — the signature of an instrument defect rather than a subject defect. Excluding that file the score is 9 of 10, and the one real mismatch is off by fourteen."
+  ],
+  "what_this_does_not_establish": [
+    "No directory named here endorses the Council of AI.",
+    "NOT_LISTED means no listing was found at as_of, not that a submission was refused.",
+    "No download or install count is claimed. Package-registry download totals are dominated by mirror traffic and are not adoption."
+  ],
+  "links": {
+    "self": "https://councilof.ai/interop/mcp-directories.json",
+    "mcp_door": "https://councilof.ai/mcp",
+    "live_board": "https://councilof.ai/api/gspc"
+  },
+  "surface_note": "Each row names the surface its state came from. `ours` is never valid evidence about a third party — it reports our own filesystem, and six of these seven rows once did. `rendered` is NECESSARY where a directory has no API and NOT SUFFICIENT where one exists: a rendered search echoes the query, which produced a false LISTED (glama's link count) and a false NOT_LISTED (smithery) on the same day. `api` and `sitemap` are authoritative; a sitemap is a directory's own index of what it lists and answered two rows no API could.",
+  "supersedes": {
+    "path": "/interop/mcp-directories-20260930T101213Z.json",
+    "sha256": "bcf3e444e024293072e605a4826cd482eb3af96152c7db039baf03e6a71b61f6",
+    "ots": "/interop/mcp-directories-20260930T101213Z.json.ots",
+    "why": "served_by_the_door recounted from the canonical tool files after evidence_bundle_preview and evidence_bundle joined (2026-09-30). The directory rows are NOT re-probed. Timestamped bytes are superseded, never edited; the previous bytes keep their proof at the dated path."
+  },
+  "ots_state": "STAMPED 2026-09-30: the OpenTimestamps proof over these exact bytes is /interop/mcp-directories.json.ots (calendar-pending until upgraded; a pending proof is not a Bitcoin attestation). Earlier bytes keep their own proofs at the dated paths named in supersedes."
+}
