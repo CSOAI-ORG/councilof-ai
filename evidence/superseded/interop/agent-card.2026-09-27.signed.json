@@ -1,7 +1,7 @@
 {
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-  "version": "1.2.0",
+  "version": "1.1.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
@@ -77,16 +77,16 @@
       ]
     },
     {
-      "id": "card-status-link",
-      "name": "Card status link",
-      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
+      "id": "measured-badge",
+      "name": "Measured Badge",
+      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
       "tags": [
         "measurement",
         "governance",
         "verification"
       ],
       "examples": [
-        "SendMessage with Part.data {\"skill\":\"card-status-link\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
+        "SendMessage with Part.data {\"skill\":\"measured-badge\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
         "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
       ]
     },
@@ -218,7 +218,7 @@
   "signatures": [
     {
       "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
-      "signature": "-Vw48pD1wCKQ2Tb3cc6c95um_AScvzvtjRdUZFPjZhD8Prp_Vc6o6uptn0V8nzNfw-iDVPMInmfOeQYZF-p4Dw"
+      "signature": "9Bebvm-aAto_zmU0dtkIoEbn0oTSSsm8tyoFJveAf1WF7s2LO4G0L3A_KolwBQcJiq_QO6p6-JPpE4H4s9cEBA"
     }
   ]
 }
