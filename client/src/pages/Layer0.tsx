@@ -352,6 +352,38 @@ export default function Layer0() {
           </p>
         </section>
 
+        {/* DISCOVERY: AI CATALOG, ARD, ADS (one inventory, three faces) */}
+        <section>
+          <h2 className="text-2xl font-bold text-emerald-50">Discovery: AI Catalog, ARD and ADS</h2>
+          <p className="mt-1 text-[13px] text-emerald-100/60 leading-relaxed">
+            One inventory, three machine faces. Every entry is listed, and states separately whether our signed records
+            measured it. A listing is not an attestation: an entry we have not measured carries no evidence field and no
+            trust manifest, and stays UNMEASURED.
+          </p>
+          <ul className="mt-4 space-y-2 text-[13px] text-emerald-100/80">
+            <li>
+              <a href="/.well-known/ai-catalog.json" className="text-emerald-300 hover:underline">AI Catalog</a>{" "}
+              (application/ai-catalog+json): conformance Level 2, Discoverable, exactly. Level 3 needs a JWS signature on
+              each trust manifest, which our signer does not produce yet.
+            </li>
+            <li>
+              <a href="/ard/v1/agents" className="text-emerald-300 hover:underline">ARD registry</a>: GET /ard/v1/agents
+              (filter, pageSize, pageToken), GET /ard/v1/agents/&lt;identifier&gt;, POST /ard/v1/search, POST
+              /ard/v1/explore, over our own entries and the MCP servers and A2A agents the census catalogued. Read-only,
+              free. A search score is text match only, never a quality score. Manifest:{" "}
+              <a href="/.well-known/ard.json" className="text-emerald-300 hover:underline">/.well-known/ard.json</a>.
+            </li>
+            <li>
+              ADS (AGNTCY Agent Directory): OASF 1.1.0 records for{" "}
+              <a href="/oasf/ai.councilof.gspc.oasf.json" className="text-emerald-300 hover:underline">the MCP server</a> and{" "}
+              <a href="/oasf/ai.councilof.measurement-agent.oasf.json" className="text-emerald-300 hover:underline">the A2A agent</a>,
+              each covered by a detached Ed25519{" "}
+              <a href="/oasf/attestation.json" className="text-emerald-300 hover:underline">attestation</a>. Their
+              evaluation module points at signed evidence and carries no grade. Not yet pushed to the public directory.
+            </li>
+          </ul>
+        </section>
+
         {/* CROSS-LINKS */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
           <h2 className="text-lg font-bold text-emerald-50">Check the floor yourself</h2>
