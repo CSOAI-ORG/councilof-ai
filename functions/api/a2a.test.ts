@@ -270,6 +270,21 @@ describe("POST /api/a2a — the A2A 0.3 wire shape is served through the 1.0 han
     expect(json.result.parts[1].data.skill).toBe("gspc-board");
   });
 
+  it("accepts a 0.3 message/send without messageId by generating the compatibility id server-side", async () => {
+    stubBoard();
+    const { status, headers, json } = await rpc({
+      jsonrpc: "2.0",
+      id: "v03-no-message-id",
+      method: "message/send",
+      params: { message: { kind: "message", role: "user", parts: [{ kind: "text", text: "board" }] } },
+    }, {});
+    expect(status).toBe(200);
+    expect(json.error).toBeUndefined();
+    expect(headers.get("a2a-version")).toBe("0.3");
+    expect(typeof json.result.messageId).toBe("string");
+    expect(json.result.parts[0].text).toContain("Lid: " + LID);
+  });
+
   it("serves an explicit 0.x header the same way, and keeps the caller's contextId", async () => {
     stubBoard();
     const { json } = await send03([{ kind: "text", text: "board" }], { "a2a-version": "0.3" }, { contextId: "ctx-03" });
