@@ -1,0 +1,81 @@
+{
+  "average_score": null,
+  "eval_output_items": [
+    {
+      "id": "fx-consistent",
+      "score": null,
+      "reasoning": {
+        "verification": "VALID",
+        "state": "CONSISTENT",
+        "reason": "signed by did:web:test.invalid#fixture-test-key at None",
+        "otel": {
+          "gen_ai.evaluation.name": "fixture-probe",
+          "gen_ai.evaluation.score.label": "CONSISTENT",
+          "gen_ai.evaluation.explanation": "FIXTURE 1: declared 3 tools.",
+          "csoai.event_id": "sha256:e0d035ceefdee7a66ea642acd6b2dd1a75c51621b3ad956749840e440886e8f6"
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "fx-divergent",
+      "score": null,
+      "reasoning": {
+        "verification": "VALID",
+        "state": "DIVERGENT",
+        "reason": "signed by did:web:test.invalid#fixture-test-key at None",
+        "otel": {
+          "gen_ai.evaluation.name": "fixture-probe",
+          "gen_ai.evaluation.score.label": "DIVERGENT",
+          "gen_ai.evaluation.explanation": "FIXTURE 2: declared 3 tools.",
+          "csoai.event_id": "sha256:a66be43140115604008967f761626238f4cd9969eb10c245b701621e0269ca56"
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "fx-unmeasured",
+      "score": null,
+      "reasoning": {
+        "verification": "VALID",
+        "state": "UNMEASURED",
+        "reason": "signed by did:web:test.invalid#fixture-test-key at None",
+        "otel": {
+          "gen_ai.evaluation.name": "fixture-probe",
+          "gen_ai.evaluation.score.label": "UNMEASURED",
+          "gen_ai.evaluation.explanation": "FIXTURE 3: declared 3 tools.",
+          "csoai.event_id": "sha256:911c1762e2ac727bca55a1928fb7f823f5a463bf845c3bc8b8bb789c54075423"
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "fx-tampered",
+      "score": null,
+      "reasoning": {
+        "verification": "INVALID",
+        "state": "INVALID",
+        "reason": "events bytes differ from the signed batch",
+        "otel": {
+          "gen_ai.evaluation.name": "csoai-evidence",
+          "gen_ai.evaluation.score.label": "INVALID"
+        }
+      },
+      "error": null
+    },
+    {
+      "id": "fx-unknown-key",
+      "score": null,
+      "reasoning": {
+        "verification": "UNVERIFIABLE_KEY",
+        "state": "UNVERIFIABLE_KEY",
+        "reason": "key 'did:web:test.invalid#not-pinned' not pinned",
+        "otel": {
+          "gen_ai.evaluation.name": "csoai-evidence",
+          "gen_ai.evaluation.score.label": "UNVERIFIABLE_KEY"
+        }
+      },
+      "error": null
+    }
+  ]
+}
