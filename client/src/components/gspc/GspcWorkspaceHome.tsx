@@ -27,11 +27,12 @@ import {
   exercisesFigure,
   sovxFigure,
   useLiveJson,
-  verifiedCardsFigure,
   type Figure,
   type LiveRead,
 } from "./useLiveJson";
 import { useModelsCount } from "./useModelsCount";
+import StartHere from "./StartHere";
+import CorpusCount from "./CorpusCount";
 
 const nf = new Intl.NumberFormat("en-GB");
 
@@ -158,6 +159,7 @@ function WorkspaceBoardCard() {
               </>
             )}
           </p>
+          <CorpusCount />
           <p className="mt-3 text-xs leading-snug text-muted-foreground">
             A tie stays a tie; untested stays untested. Read live from <a className="font-semibold text-emerald-800 underline underline-offset-2" href="/api/gspc">GET /api/gspc</a>. Not a certificate.
           </p>
@@ -248,7 +250,13 @@ export default function GspcWorkspaceHome({
       title: "Verify",
       job: "Paste a signed card; your browser recomputes its hash and signature. Free, nothing uploaded.",
       img: { base: "/images/home/evidence-card", w: 480, h: 268 },
-      figure: <LiveFigureLine read={state} pick={verifiedCardsFigure} testId="ws-fig-verify" />,
+      figure: (
+        <p className="mt-3 text-[13px] leading-snug text-muted-foreground" data-testid="ws-fig-verify">
+          Every check ends <span className="font-mono font-bold text-foreground">VALID</span>,{" "}
+          <span className="font-mono font-bold text-foreground">INVALID</span> or{" "}
+          <span className="font-mono font-bold text-foreground">UNCHECKABLE</span>; never a silent pass.
+        </p>
+      ),
     },
     {
       id: "connect",
@@ -381,6 +389,7 @@ export default function GspcWorkspaceHome({
       </section>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-8 sm:py-8 lg:px-12">
+        <StartHere />
         <div className="grid gap-6 xl:grid-cols-12">
           <section id="ws-ask" aria-labelledby="ws-ask-h" className="min-w-0 scroll-mt-4 xl:col-span-7">
             <p className="t-kicker text-emerald-800">Ask the Council</p>

@@ -35,6 +35,9 @@ import {
 import { setOsOpen } from "@/lib/osChrome";
 import { NAV_ID, PANEL_ID } from "@/components/lobby/LobbyPaneTabs";
 import { MENU_GROUPS, SUPPORT_LINKS, readStartTab, writeStartTab } from "@/components/gspc/workspaceMenu";
+import BoardStatusStrip from "@/components/gspc/BoardStatusStrip";
+import { recordActivity, useActivity } from "@/components/lobby/workspace";
+import { LOBBY_TABS } from "@/components/lobby/tabs";
 
 const SMALL_QUERY = "(max-width: 767px)";
 
@@ -73,8 +76,28 @@ function SectionLinks({
   onNavigate?: () => void;
 }) {
   const byId = new Map(DASHBOARD_NAV_GROUPS.map((g) => [g.id, g]));
+  // Recently visited: the last three panes this session opened, other than the one on screen.
+  const recent = [...new Map(useActivity().filter((a) => a.kind === "pane" && a.tabId && a.tabId !== activeTab).map((a) => [a.tabId!, a])).values()].slice(0, 3);
   return (
     <div className="space-y-4">
+      {recent.length ? (
+        <div role="group" aria-label="Recently visited">
+          <p className="px-3 pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-slate-600">Recent</p>
+          <ul className="space-y-0.5">
+            {recent.map((a) => (
+              <li key={a.tabId}>
+                <Link
+                  href={`/dashboard?tab=${a.tabId}`}
+                  onClick={onNavigate}
+                  className="flex min-h-9 items-center rounded-lg px-3 text-sm text-slate-700 hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700"
+                >
+                  <span className="truncate">{a.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
       {MENU_GROUPS.map((mg) => (
         <div key={mg.heading ?? "primary"} role="group" aria-label={mg.heading ?? "Ask"}>
           {mg.heading ? (
@@ -275,6 +298,11 @@ export default function DashboardLayout({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const tab = LOBBY_TABS.find((t) => t.id === activeTab);
+    if (tab && activeTab !== "home" && !embeddedView) recordActivity({ kind: "pane", label: tab.label, tabId: tab.id });
+  }, [activeTab, embeddedView]);
+
   const sectionTitle = group?.label ?? activeLabel;
   const subTabs = group && group.tabs.length > 1 ? group.tabs : [];
 
@@ -430,6 +458,7 @@ export default function DashboardLayout({
             ) : null}
           </div>
 
+          {activeTab !== "home" && !embeddedView ? <BoardStatusStrip /> : null}
           <div
             id={PANEL_ID}
             role="region"
