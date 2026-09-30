@@ -358,7 +358,7 @@ const applyRowsSeparation = (a: PublicAxis): RowsAxis => {
           own_model_exclusion_note:
             "Our own council specialist held the point lead in the full 19-model fleet and is excluded: a " +
             "neutral measurement body does not rank its own models against the vendors it measures. The " +
-            "leader shown is the external-only re-rank of the same published rows (6 base models).",
+            "top row shown is the external-only re-rank of the same published rows (6 base models).",
         }
       : {}),
     note:

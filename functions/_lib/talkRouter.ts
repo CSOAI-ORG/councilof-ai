@@ -26,6 +26,7 @@
  *     what the census counts; "trustworthy" is not a state any tool emits.
  */
 import GSPC_TOOLS from "../mcp/gspc-tools.json";
+import { TOP_OBSERVED_LABEL, isSeparated } from "./leaderLabel";
 import PAID_TOOLS from "../mcp/paid-tools.json";
 import AXIS_ALIASES from "../mcp/axis-aliases.json";
 import { sharedToolResult, type McpToolResult } from "../mcp/_handlers";
@@ -261,7 +262,7 @@ export function citationOf(tool: string, p: Json, origin: string): Citation {
 /** Fields shown verbatim per tool. Only keys the payload actually carries are shown. */
 const SHOW: Record<string, string[]> = {
   board_totals: ["public_count"],
-  get_axis: ["n", "accuracy", "interval", "leader", "note"],
+  get_axis: ["n", "accuracy", "interval", "separation", "leader", "top_observed_not_separated", "note"],
   verify_card: ["id", "reason", "pinned_key", "note"],
   get_card: ["reason", "sha256"],
   verify_inclusion: ["reason", "merkle_root"],
@@ -298,6 +299,14 @@ function renderOutcome(o: ToolOutcome): string {
       if (!(k in p)) continue;
       const v = p[k];
       if (Array.isArray(v) && v.length === 0) continue;
+      if (o.tool === "get_axis" && (k === "leader" || k === "top_observed_not_separated")) {
+        // Tracker row 10: a name is a leader only when separation SEPARATED it. A payload from an older
+        // producer may still carry `leader` on a TIE/UNTESTED row; it is relabelled here, never printed as a leader.
+        if (v === null || v === undefined || v === "") continue;
+        const label = k === "leader" && isSeparated(p.separation) ? "leader (separated)" : TOP_OBSERVED_LABEL;
+        lines.push(`- ${label}: ${fmt(v)}`);
+        continue;
+      }
       lines.push(`- ${k}: ${fmt(v)}`);
     }
     if (o.tool === "board_totals" && Array.isArray(p.counts)) {

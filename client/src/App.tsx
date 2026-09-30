@@ -205,6 +205,8 @@ const X402Activity = lazy(() => import("./pages/X402Activity"));
 const DisclosureLagMedicareAgent = lazy(() => import("./pages/DisclosureLagMedicareAgent"));
 // /measurements/disclosure-lag/2026-09-gemini-evaluation — second disclosure-lag record (owner-approved 2026-09-28).
 const DisclosureLagGeminiEvaluation = lazy(() => import("./pages/DisclosureLagGeminiEvaluation"));
+// /measurements/disclosure-completeness — what public benchmark artifacts state about themselves; signed dated record sets (lane L2, 2026-09-30).
+const DisclosureCompleteness = lazy(() => import("./pages/DisclosureCompleteness"));
 const VerifyServer = lazy(() => import("./pages/VerifyServer"));
 const MeasurementCapsules = lazy(() => import("./pages/MeasurementCapsules"));
 const CrossHardwareReproducibility = lazy(() => import("./pages/CrossHardwareReproducibility"));
@@ -690,6 +692,7 @@ function App() {
                   <Route path="/measurements/x402-activity" component={X402Activity} />
                   <Route path="/measurements/disclosure-lag/2026-09-medicare-agent" component={DisclosureLagMedicareAgent} />
                   <Route path="/measurements/disclosure-lag/2026-09-gemini-evaluation" component={DisclosureLagGeminiEvaluation} />
+                  <Route path="/measurements/disclosure-completeness" component={DisclosureCompleteness} />
                   <Route path="/verify-server" component={VerifyServer} />
                   <Route path="/measurement-capsules" component={MeasurementCapsules} />
                   <Route path="/research/cross-hardware-reproducibility" component={CrossHardwareReproducibility} />

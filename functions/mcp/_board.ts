@@ -5,6 +5,7 @@
  */
 import { axisSpellings, canonicalAxis, sameAxis } from "./_axis";
 import { corpusNote } from "../_lib/corpusNote";
+import { isSeparated, leaderLabel } from "../_lib/leaderLabel";
 
 export const UPSTREAM = "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp";
 
@@ -149,6 +150,11 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
     };
   }
   const measured = String(row.status ?? "").toUpperCase() === "MEASURED";
+  // A row is a leader only when separation SEPARATED it (functions/_lib/leaderLabel.ts). On a TIE or
+  // UNTESTED axis the board's top row is the top observed point estimate, so it is returned under that
+  // name and `leader` stays null. separation is copied so a caller can see why.
+  const topName = typeof row.leader === "string" && row.leader.trim() ? row.leader : null;
+  const separated = isSeparated(row.separation);
   return {
     state: "LIVE",
     axis: row.axis,
@@ -162,7 +168,10 @@ export async function getAxisTool(origin: string, args: Record<string, unknown>)
     n: row.n ?? null,
     accuracy: row.accuracy ?? null,
     interval: row.interval ?? null,
-    leader: row.leader ?? null,
+    separation: row.separation ?? null,
+    leader: separated ? topName : null,
+    top_observed_not_separated: separated ? null : topName,
+    leader_label: topName ? leaderLabel(row.separation) : null,
     dataset: row.dataset ?? null,
     // The doors behind the row, copied from it: a model-comparison axis carries a frozen bank on
     // the Hub, a deterministic-facts axis carries a run artifact, and a row that carries neither
