@@ -466,7 +466,7 @@ function normPath(p: string) {
   return s === "" ? "/" : s;
 }
 
-function App() {
+function AppShell() {
   const [location] = useLocation();
   // Subscribed, not read from window: the top-level `embed=1` strip below changes ONLY the
   // query string (the pathname stays /dashboard/), and useLocation does not re-render on a
@@ -583,7 +583,6 @@ function App() {
                   <Dashboard />
                 </Suspense>
                 <Suspense fallback={null}><Toaster position="top-right" /></Suspense>
-                <AskHost />
               </TooltipProvider>
             </AnalyticsProvider>
           </AuthProvider>
@@ -1206,7 +1205,6 @@ function App() {
                 <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
-                <AskHost />
               </div>
               <Suspense fallback={null}><Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} /></Suspense>
             </TooltipProvider>
@@ -1214,6 +1212,20 @@ function App() {
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
+  );
+}
+
+/**
+ * Ask GSPC sits OUTSIDE the shell switch: Council OS and the site shell are different trees, so a
+ * host inside either would remount (and drop a running watch-mode plan) when a step crosses between
+ * them, e.g. from /dashboard/?tab=board to /verify-server/.
+ */
+function App() {
+  return (
+    <>
+      <AppShell />
+      <AskHost />
+    </>
   );
 }
 

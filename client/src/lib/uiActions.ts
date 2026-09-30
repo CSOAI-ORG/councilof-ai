@@ -296,7 +296,7 @@ export const UI_COMMANDS: Record<FrontendToolName, Executor> = {
 
   async highlight(args, step) {
     const sel = typeof args.selector === "string" ? args.selector : "";
-    const el = await waitFor(sel);
+    const el = await waitFor(sel, 8000); // a pane or a lookup may still be loading
     if (!el) return skipped("That part is not on this page, so nothing was highlighted.");
     el.scrollIntoView({ behavior: reduceMotion() ? "auto" : "smooth", block: "center" });
     drawRing(el, typeof args.label === "string" ? args.label.slice(0, 80) : "");
