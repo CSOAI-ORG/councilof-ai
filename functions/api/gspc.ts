@@ -11,6 +11,7 @@ import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
+import { buildCite, citeUrl, sha256Hex } from "./_gspc_cite";
 import { FINANCIAL_FACTS_AS_OF, financialFamilyBlock } from "./_gspc_fin_as_of";
 import { ROWS_SEPARATION } from "./_gspc_rows_separation";
 import { MDE_STATES, UNDERPOWERED_STATE, applyUnderpowered, measuredOnModel, withPower } from "./_gspc_power";
@@ -417,6 +418,32 @@ export const publicLeaderCount = (axes: typeof AXES): number =>
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
+
+  // ?format=cite — a citation block whose sha256 is over the exact bytes its `url` serves
+  // (functions/api/_gspc_cite.ts). The bytes are read from THIS handler, in-process, under the
+  // same cache key the cited url resolves to (/api/gspc?axis=… — the /api/gspc/axis/:axis alias
+  // rewrites to it), so the hash and the url agree at the edge that answered. Any other format
+  // value is ignored, as it always was.
+  if (url.searchParams.get("format") === "cite") {
+    const target = new URL("/api/gspc", url.origin);
+    if (axis) target.searchParams.set("axis", axis);
+    const inner = await (onRequestGet as unknown as (c: typeof context) => Promise<Response>)({
+      ...context,
+      request: new Request(target.toString(), { method: "GET", headers: { accept: "application/json" } }),
+    });
+    const common = {
+      "content-type": "application/json; charset=utf-8",
+      "access-control-allow-origin": "*",
+      // Not edge-cached: the block must hash whatever the cited url serves right now.
+      "cache-control": "no-store",
+    };
+    if (inner.status !== 200) {
+      return new Response(await inner.text(), { status: inner.status, headers: common });
+    }
+    const bytes = new Uint8Array(await inner.arrayBuffer());
+    const block = buildCite({ bytes, sha256: await sha256Hex(bytes), url: citeUrl(url.origin, axis), axis });
+    return new Response(JSON.stringify(block, null, 2), { headers: common });
+  }
 
   // EDGE CACHE. This handler already declares `public, max-age=300`, but Pages Functions are
   // not cached by that header alone — every response came back `cf-cache-status: DYNAMIC`, so
