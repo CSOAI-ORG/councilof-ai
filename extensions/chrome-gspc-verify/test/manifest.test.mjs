@@ -4,7 +4,7 @@
  * compliance, the retracted council-size claim, or fault tolerance.
  */
 import { describe, it, expect } from "vitest";
-import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, lstatSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,8 +13,11 @@ const manifest = JSON.parse(readFileSync(path.join(EXT, "manifest.json"), "utf8"
 
 function walk(dir, out = []) {
   for (const f of readdirSync(dir)) {
+    if (f === "node_modules") continue;
     const p = path.join(dir, f);
-    if (statSync(p).isDirectory()) walk(p, out);
+    const stat = lstatSync(p);
+    if (stat.isSymbolicLink()) continue;
+    if (stat.isDirectory()) walk(p, out);
     else out.push(p);
   }
   return out;
