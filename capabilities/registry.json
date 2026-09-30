@@ -591,6 +591,19 @@
       "payment": "free"
     },
     {
+      "id": "api-claims-watch-request-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claim watch request (POST)",
+      "description": "POST /api/claims/watch-request — a person asks for a subject to be re-checked monthly. A request for review, not a schedule: stored verbatim in KV (LEADS) for a person to accept into the claim-maintenance register or decline; answered NOT_RECORDED (503) when no store is bound, never a pretend success. Requires confirmed: true (the GSPC evidence panel sends it only after a Confirm click). Nothing is measured, scheduled, charged, signed or published by it.",
+      "endpoint": "/api/claims/watch-request",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
       "id": "api-clarity",
       "protocols": [
         "http"
