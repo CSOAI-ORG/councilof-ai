@@ -381,6 +381,8 @@ export interface RegistryRow {
 // merged upstream PR evidence. A live row must link to its public evidence, never back
 // to a submission form: that distinction prevents duplicate outward submissions.
 export const REGISTRIES: RegistryRow[] = [
+  { name: "npm — gspc-card-verifier", status: "listed", permissionless: true, where: "https://www.npmjs.com/package/gspc-card-verifier", note: "Version 1.0.0 is live. Offline zero-dependency verifier; registry presence is distribution, not adoption." },
+  { name: "npm — @csoai/gspc-cli", status: "listed", permissionless: true, where: "https://www.npmjs.com/package/@csoai/gspc-cli", note: "Version 0.2.1 is live and declares gspc-card-verifier 1.0.0. Installability is not usage." },
   { name: "Official MCP Registry", status: "listed", permissionless: true, where: "ai.councilof/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp; io.github.CSOAI-ORG/gspc is its deprecated alias. Downstream aggregators ingest from here." },
   { name: "A2A agent directories", status: "listed", permissionless: true, where: "https://a2aregistry.org", note: "Council of AI — Measurement Agent is registered and the public record reports healthy and conformant." },
   { name: "Smithery", status: "listed", permissionless: true, where: "https://smithery.ai/servers/csoai/gspc-mcp", note: "The current csoai/gspc-mcp entry is live. A stale csoai/gspc duplicate should be corrected or retired; do not submit another entry." },
