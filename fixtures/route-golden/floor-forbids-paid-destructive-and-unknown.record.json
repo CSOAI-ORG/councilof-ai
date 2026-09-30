@@ -27,8 +27,8 @@
   },
   "policy": {
    "caller_sha256": "3eac83f6106d7d7dc530d824d4e6272f4015309a39a555eea5b4e7cad6c69c18",
-   "floor_sha256": "764368cd4d88cc88b894dccf2cab6c6a5953bc7755a70340cdd263afc3d4bb1f",
-   "cedar_schema_sha256": "cbbfa0f5fc500234d9580de406681320ee313631883d3bc42754327057236f03",
+   "floor_sha256": "7e532be828f5e668ebee34dfd55dd61e66b11eb620da3f7a3d5b94191450dbfb",
+   "cedar_schema_sha256": "73f220feccb5e68bf15c0fd979f48680082ac6f8fbe794c1b89b406befeb3b90",
    "presets": [
     "eu-only"
    ],
@@ -39,7 +39,8 @@
    ],
    "uncheckable": [],
    "confirm_destructive": false,
-   "caller_wallet": false
+   "caller_wallet": false,
+   "allow_divergent_effect_binding": false
   },
   "objective": {
    "quality_axis": "provenance",
@@ -52,7 +53,7 @@
     "cheapest_declared"
    ]
   },
-  "candidates_sha256": "3762b035008245ce1fa32df1aa9e7141177f06fd39cb5e5e35d3c0f3c17d6119"
+  "candidates_sha256": "237a796fa4bd55c80887097cd0b2311fadb3a8c26d4881e93f072e2819782b19"
  },
  "observed": {
   "considered": [
@@ -350,7 +351,7 @@
  "limits": [
   "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
   "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
-  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Unsigned: a decide-only preview carries no signature and makes no signed statement; only execution receipts (POST /api/route/execute) are signed, under did:web:csoai.org#route-attestation-1.",
   "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
   "Effect-binding census was not read for this decision (no census source wired): every candidate carries UNMEASURED, so the floor's DIVERGENT rule could not fire.",
   "The task text is carried as its sha256 only; no prompt or response bytes are stored."
@@ -365,5 +366,5 @@
   }
  },
  "maintenance": null,
- "event_id": "sha256:e46d850e7c94a9028fb186cefe9d6a78fae5daea3bca54d81f699e7ad5b43920"
+ "event_id": "sha256:b959c521510eb0df8f81eef37bade3e48e0ac7c10bc67a6a398b5ddaaf3e0123"
 }
