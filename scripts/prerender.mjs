@@ -232,7 +232,7 @@ function discover() {
     "/regulator-findings",
     "/arena-scoreboard",
     "/watchdog", "/disclaimers", "/csoai-law",
-    "/models", "/tools", "/plugin", "/api-docs",
+    "/models", "/models-measured", "/tools", "/plugin", "/api-docs",
     "/workbench", "/instrument", "/system-card", "/feed", "/mcp-fleet",
     "/crosswalk", "/refutation-ledger", "/library",
     "/east-west", "/challenge",
