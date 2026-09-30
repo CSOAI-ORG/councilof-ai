@@ -1,5 +1,5 @@
 {
-  "available_now_count": 194,
+  "available_now_count": 196,
   "available_now_ids": [
     "api-a2a",
     "api-a2a-post",
@@ -26,6 +26,8 @@
     "api-challenge-post",
     "api-chat-post",
     "api-checkout-post",
+    "api-claims-events",
+    "api-claims-events-head",
     "api-claims-register",
     "api-clarity",
     "api-commission-queue",
@@ -197,7 +199,7 @@
     "x402_trust"
   ],
   "canonical_source": "council-os/capabilities.json",
-  "canonical_source_sha256": "7ebed178ce6e0b9b797cd005b529e6fbc82c55c18c25e5c83949e8602a99f383",
+  "canonical_source_sha256": "572576b71b16c0761faf76bea2b69d67ed5cdcad34a45a2dd28f89a7f986d9e3",
   "capabilities": [
     {
       "audience": "agent",
@@ -706,7 +708,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1132,6 +1133,48 @@
         ],
         "method": "GET",
         "request": "/api/claims/register",
+        "safe": true
+      },
+      "surfaces": [
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "Append-only, hash-chained Claim Maintenance event feed. Served only when the committed feed bytes, daily head and signed head verify. Event states describe observations and workflow; they are not verdicts, scores or corrections by themselves.",
+      "description_state": "DOCUMENTED",
+      "id": "api-claims-events",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Claim Maintenance event feed",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/claims/events",
+        "safe": true
+      },
+      "surfaces": [
+        "llms"
+      ]
+    },
+    {
+      "audience": "both",
+      "description": "Verified signed head for the Claim Maintenance event feed, binding the committed feed bytes, line count, last-line digest and signing envelope. A valid signature binds bytes; it does not prove the truth of the underlying claim.",
+      "description_state": "DOCUMENTED",
+      "id": "api-claims-events-head",
+      "kind": "http",
+      "lifecycle": "LIVE",
+      "name": "Claim Maintenance event head",
+      "payment": "free",
+      "probe": {
+        "expect_status": [
+          200
+        ],
+        "method": "GET",
+        "request": "/api/claims/events/head",
         "safe": true
       },
       "surfaces": [
@@ -1727,7 +1770,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1773,7 +1815,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -1923,7 +1964,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -2076,7 +2116,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -2735,9 +2774,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2757,9 +2794,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2779,9 +2814,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2801,9 +2834,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2823,9 +2854,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2845,9 +2874,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2867,9 +2894,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2889,9 +2914,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2911,9 +2934,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -2933,9 +2954,7 @@
         "safe": false,
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
-      "surfaces": [
-        "openapi"
-      ]
+      "surfaces": []
     },
     {
       "audience": "agent",
@@ -3043,7 +3062,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -3175,7 +3193,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -3477,7 +3494,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -3586,7 +3602,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -4248,7 +4263,6 @@
         "unsafe_reason": "POST would write; the daily loop reads only"
       },
       "surfaces": [
-        "openapi",
         "llms",
         "nav"
       ]
@@ -5211,41 +5225,41 @@
       ]
     }
   ],
-  "content_id": "65b9c3e8facd868dd3944d7dde9a78044c4e20ce2fdcf5fc91481e1d76bf3fe7",
+  "content_id": "e316488b2314f183fd70d193113ffc2adc7854ccf053e0327e7c3f2979573d26",
   "counts": {
     "audience": {
       "agent": 204,
-      "both": 25
+      "both": 27
     },
     "kind": {
       "a2a_skill": 10,
-      "http": 188,
+      "http": 190,
       "mcp_tool": 16,
       "population_door": 10,
       "well_known": 5
     },
     "lifecycle": {
       "DOOR_CLOSED": 1,
-      "LIVE": 194,
+      "LIVE": 196,
       "METHOD_NOT_ALLOWED": 1,
       "NOT_IMPLEMENTED": 13,
       "QUARANTINED_PRE_RELEASE": 15,
       "RETIRED": 5
     },
     "payment": {
-      "free": 196,
+      "free": 198,
       "free_preview_then_x402": 17,
       "not_sold": 1,
       "x402": 15
     },
     "surfaces": {
       "a2a": 10,
-      "llms": 73,
+      "llms": 75,
       "mcp": 16,
       "nav": 22,
-      "openapi": 178
+      "openapi": 158
     },
-    "total": 229
+    "total": 231
   },
   "kind": "public-operational-index",
   "laws": [
@@ -5258,7 +5272,7 @@
   ],
   "routing_note": "Only lifecycle=LIVE entries are projected in available_now. Other declarations remain visible for correction/history but are not represented as callable now. Runtime measurement state remains owned by the relevant measurement evidence.",
   "schema": "csoai.layer0-drive-through/0.3",
-  "source_commit": "02ebe0cdcbc7828b92adb6988ad0c943f085e807",
+  "source_commit": "94336a3c3a823d26cffd781a83e0dce9a8933087",
   "unavailable_by_lifecycle": {
     "DOOR_CLOSED": [
       "api-fulfill"
