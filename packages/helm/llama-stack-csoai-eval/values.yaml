@@ -1,0 +1,47 @@
+# The container installs llama-stack-provider-csoai from PyPI at start (needs egress to pypi.org), then runs
+# `llama stack run` with the run config below. No model is called and the provider makes no network requests.
+image:
+  repository: python
+  tag: "3.12-slim"
+  pullPolicy: IfNotPresent
+
+provider:
+  # pip requirement installed at start; pin it
+  requirement: "llama-stack-provider-csoai==0.1.0"
+
+# Batches to verify: a PersistentVolumeClaim holding one directory per signed batch
+# (batch.json, batch.signed.json, events.jsonl). Mounted read-only at /data/bundles.
+bundles:
+  existingClaim: ""
+
+# The pinned DID document the provider verifies against. Default: the copy of
+# https://csoai.org/.well-known/did.json shipped in this chart (files/did.json). Set to override.
+didJson: ""
+
+service:
+  type: ClusterIP
+  port: 8321
+
+# OpenShift's restricted SCC assigns its own UID: set runAsUser to null there.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: ["ALL"]
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 1Gi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
