@@ -30,7 +30,7 @@ Acceptance: every material event names an existing execution owner and bounded a
 
 ## Phase 3 — End-party UX
 
-State: **PASS in source + public GitHub release; canonical web deploy HOLD**
+State: **PASS in source; authenticated GitHub continuity available; permissionless public web deploy HOLD**
 
 The human wrapper has explicit start paths for:
 
@@ -67,20 +67,22 @@ State: **PASS for provider surface; dependent-directory freshness under Claim Ma
 
 Acceptance: provider card remains reachable/signed and protocol-declared; dependent projections are re-read and never silently overwritten.
 
-## Phase 6 — Public distribution
+## Phase 6 — Distribution
 
-State: **PASS**
+State: **AUTHENTICATED CONTINUITY PASS; PERMISSIONLESS PUBLIC HOLD**
 
-Public source branch:
+Authenticated GitHub source branch:
 - `codex/ras-production-release-20260929`
 
-Public releases:
+Authenticated GitHub releases:
 - `ras-opportunity-evidence-2026-09-29`
 - `ras-opportunity-evidence-2026-09-30` (superseding evidence set)
 
-The 30 Sep release was downloaded back from GitHub and all eight assets matched the source/manifest hashes exactly.
+The 30 Sep release was downloaded back through the authenticated GitHub API and all eight assets matched the source/manifest hashes exactly.
 
-Acceptance: public re-download exact-byte verification passes.
+Important correction: GitHub reports the repository as PUBLIC to the authenticated account, but anonymous requests to the repository page, release page, release API and raw branch file returned HTTP 404 from a network where unrelated public GitHub repositories returned 200. Therefore this surface is **not counted as permissionless public distribution**.
+
+Acceptance: an anonymous, no-cookie/no-token read of the chosen release or mirror returns HTTP 200 and its downloaded evidence bytes match the manifest. Until then, GitHub is continuity/storage evidence only, not a public reach claim.
 
 ## Phase 7 — Canonical councilof.ai publication
 
