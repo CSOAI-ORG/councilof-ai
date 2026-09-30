@@ -42,7 +42,7 @@ describe("the packaged MCP server advertises exactly what the door serves", () =
   it("keeps npm's rendered description short and accurate", () => {
     const { description } = J(resolve(__dirname, "package.json"));
     expect(description.length).toBeLessThanOrEqual(255);
-    expect(description).toContain("Nineteen tools: fourteen free tools and five x402-metered evidence tools");
+    expect(description).toContain("Nineteen tools: fourteen free readers and five x402-metered evidence tools");
   });
 
   it("ships both canonical tool banks in the Docker client", () => {
