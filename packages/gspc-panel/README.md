@@ -22,10 +22,16 @@ attribution with a verify link, and an Ask box. UNMEASURED and UNCHECKABLE never
 
 | Subject | Reads | Signature |
 |---|---|---|
-| MCP server / agent card URL | `server_evidence`, `verify_capsule` (`/mcp/free`), `/api/corrections` | capsule id + batch inclusion + index signature, by councilof.ai's verifier |
-| 64-hex card id | `/signed/cards/<id>.json`, `/api/gspc`, `verify_card`, `/api/corrections` | **in the browser**: the vendored `public/signed/verify-card.mjs` (pinned key), cross-checked by `verify_card` |
+| MCP server / agent card URL | the static capsule tree (`/measurement-capsules/…`) through `functions/_lib/measurementCapsule.ts`, the module the MCP tools `server_evidence` and `verify_capsule` run; `/api/corrections` | **in the browser**: capsule id recomputed, Merkle inclusion, index signature under the pinned board key |
+| 64-hex card id | `/signed/cards/<id>.json`, `/api/gspc`, `/api/corrections` | **in the browser**: the vendored `public/signed/verify-card.mjs` (pinned key) |
 | model id | `/interop/models-measured.json` | the list is unsigned and says so; verify one of its cards |
 | `claimreg-…` | `/api/claims/register`, `/api/state` (claim_maintenance) | the register's sidecar-pin result |
+
+**Why the browser does not POST `/mcp/free`.** That door validates Origin (the MCP spec's DNS-rebinding
+protection) and answers a cross-origin preflight with 403 (recorded 30 Sep 2026,
+`test/fixtures/live-2026-09-30/preflight_mcp_free.headers`). So the panel runs the same tool modules
+in the page, over the same static, signed files, and a host console never needs our server to vouch
+for anything. The AG-UI path still carries the MCP tool results, computed server-side.
 
 ## Transports
 

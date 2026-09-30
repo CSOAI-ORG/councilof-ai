@@ -17,6 +17,12 @@ const SERVER_FX = {
   "https://councilof.ai/mcp/free": "unmeasured",
 };
 
+// Static capsule-tree files the in-browser server_evidence / verify_capsule path reads
+// (recorded by running functions/_lib/measurementCapsule.ts against live councilof.ai).
+const STATIC_FX = Object.fromEntries(
+  Object.entries(JSON.parse(readFileSync(resolve(FX, "static-index.json"), "utf8"))).map(([path, v]) => [path, v.split(" ")[1]]),
+);
+
 const GET_FX = {
   "/api/gspc": "gspc.json",
   "/api/corrections": "corrections.trimmed.json",
@@ -26,7 +32,7 @@ const GET_FX = {
   "/signed/cards/94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1.json": "card-llama.json",
 };
 
-export function replayFetch({ overrides = {} } = {}) {
+export function replayFetch({ overrides = {}, install = true } = {}) {
   const calls = [];
   const capsuleFx = {};
   for (const n of ["own", "tandem", "agentlookups"]) {
@@ -70,7 +76,22 @@ export function replayFetch({ overrides = {} } = {}) {
       throw new Error(`replay: no AG-UI recording for ${content}`);
     }
     if (method === "GET" && GET_FX[u.pathname]) return ok(fx(GET_FX[u.pathname]));
+    if (method === "GET" && STATIC_FX[u.pathname]) return new Response(readFileSync(resolve(FX, STATIC_FX[u.pathname])), { status: 200, headers: { "content-type": "application/json" } });
     throw new Error(`replay: no recording for ${key}`);
   }
+  // The capsule module calls the global fetch (as it does in a browser), so the replay installs itself there.
+  if (install) globalThis.fetch = fetchFn;
   return { fetchFn, calls };
+}
+
+/** Recorded CORS preflight answers: status line and headers as councilof.ai sent them. */
+export function preflight(name) {
+  const lines = fx(`preflight${name}.headers`).split(/\r?\n/).filter(Boolean);
+  const status = Number(lines[0].split(" ")[1]);
+  const headers = {};
+  for (const l of lines.slice(1)) {
+    const i = l.indexOf(":");
+    if (i > 0 && /^access-control-/i.test(l.slice(0, i))) headers[l.slice(0, i).toLowerCase()] = l.slice(i + 1).trim();
+  }
+  return { status, headers };
 }

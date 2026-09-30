@@ -17,6 +17,11 @@ import {
   STATES,
 } from "./constants.js";
 import { boardAxisForCard, classifySubject, normaliseModelId } from "./subject.js";
+// The same module the MCP tools server_evidence and verify_capsule run (and /verify-server runs in the
+// browser): it reads the static, signed capsule tree, so the check happens HERE, not on our server.
+// Why not POST /mcp/free from the browser: that door validates Origin (MCP DNS-rebinding protection)
+// and answers a cross-origin preflight 403, so a host console cannot call it from a page.
+import { serverEvidence, verifyCapsule } from "../../../functions/_lib/measurementCapsule.ts";
 
 const str = (v) => (typeof v === "string" && v.trim() ? v.trim() : null);
 const arr = (v) => (Array.isArray(v) ? v : []);
@@ -90,12 +95,12 @@ async function serverModel(subject, sources) {
   m.verify_url = `${sources.origin}/verify-server?url=${encodeURIComponent(subject.input)}`;
   let sc;
   try {
-    sc = await sources.tool("server_evidence", { endpoint_url: subject.input });
+    sc = sources.serverEvidence ? await sources.serverEvidence(subject.input) : await serverEvidence(sources.origin, subject.input);
   } catch (e) {
-    m.state_note = `server_evidence could not be read: ${e.message}`;
+    m.state_note = `The capsule index could not be read: ${e.message}`;
     return m;
   }
-  m.sources.push(`${sources.origin}/mcp/free · server_evidence`);
+  m.sources.push(`${sources.origin}/measurement-capsules/latest.json (server_evidence, run in this browser)`);
   if (str(sc.shard_url)) m.sources.push(sc.shard_url);
   const caps = arr(sc.capsules);
   if (sc.state === "MEASURED" && caps.length) {
@@ -116,19 +121,20 @@ async function serverModel(subject, sources) {
     m.figures = [{ label: "Published capsules", value: caps.length }];
     for (const c of caps)
       if (c.correction_pointer) m.corrections.push({ id: str(c.capsule_id)?.slice(0, 16) ?? null, date: str(c.observed_at), summary: `Correction pointer on this capsule: ${JSON.stringify(c.correction_pointer).slice(0, 200)}`, url: null });
-    // Signature: the capsule's id, its batch inclusion and the index signature, checked by verify_capsule.
+    // Signature, in this browser: the capsule's id recomputed from its exact text, its Merkle inclusion
+    // in the batch, and the batch root's index signature under the pinned board key (verify_capsule's rule).
     try {
-      const v = await sources.tool("verify_capsule", { capsule_json: caps[0].capsule_json });
+      const v = sources.verifyCapsule ? await sources.verifyCapsule(caps[0].capsule_json) : await verifyCapsule(sources.origin, caps[0].capsule_json);
       const sig = rec(v.index_signature);
       const ok = v.state === "INCLUDED" && sig.state === "VERIFIES";
       m.signature = {
-        state: ok ? "VALID" : v.state === "UNCHECKABLE" || v.state === "UNREACHABLE" ? "UNCHECKABLE" : "INVALID",
-        where: "councilof.ai verify_capsule",
-        detail: `capsule id ${str(rec(v.capsule_id).state) ?? "not stated"} · ${str(v.state) ?? "no state"} in batch · index signature ${str(sig.state) ?? "not stated"}`,
+        state: ok ? "VALID" : v.state === "UNCHECKABLE" || v.state === "UNREACHABLE" || v.state === "NOT_PUBLISHED" ? "UNCHECKABLE" : "INVALID",
+        where: "in this browser (capsule id, Merkle inclusion, index signature)",
+        detail: `capsule id ${str(rec(v.capsule_id).state) ?? "not stated"} · ${str(v.state) ?? "no state"} in batch · index signature ${str(sig.state) ?? "not stated"}${ok ? "" : str(v.reason) ? ` — ${v.reason}` : ""}`,
         key: str(sig.did),
       };
     } catch (e) {
-      m.signature = { state: "UNCHECKABLE", where: "councilof.ai verify_capsule", detail: e.message, key: null };
+      m.signature = { state: "UNCHECKABLE", where: "in this browser", detail: e.message, key: null };
     }
     m.citation = `Council of AI, GSPC server evidence for ${subject.input}. ${caps.length} capsule(s), index root ${str(sc.index_root) ?? "not stated"}, as of ${str(sc.as_of) ?? "not stated"}. ${str(sc.shard_url) ?? ""} · Evidence by GSPC · Council of AI.`;
   } else if (sc.state === "NOT_MEASURED") {
@@ -205,11 +211,6 @@ async function cardModel(subject, sources, verifyCard) {
     { label: "Accuracy (as signed)", value: typeof body.accuracy === "number" ? body.accuracy : null },
     { label: "n", value: typeof body.n === "number" ? body.n : "not in the card" },
   ];
-  // Cross-check on the server: the same rule, run by councilof.ai's verify_card.
-  try {
-    const s = await sources.tool("verify_card", { card: subject.input });
-    m.signature.detail += ` councilof.ai verify_card: ${str(s.state) ?? "no state"}.`;
-  } catch {}
   m.citation = `Council of AI, signed measurement card ${subject.input} (${str(body.model) ?? "model not stated"}, ${str(body.axis) ?? "axis not stated"}, created ${str(body.created) ?? "not stated"}), Ed25519 ${str(v.keyId) ?? ""}. ${sources.origin}/signed/cards/${subject.input}.json · Evidence by GSPC · Council of AI.`;
   await withCorrections(m, sources, [subject.input]);
   return m;

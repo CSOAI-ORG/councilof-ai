@@ -70,7 +70,7 @@ describe("AG-UI in (recorded POST /api/agui/run streams)", () => {
     const d = await direct("https://tandem.ac/mcp");
     expect(m.state).toBe(d.state);
     expect(m.declared_vs_observed).toEqual(d.declared_vs_observed);
-    expect(r.calls.filter((c) => c.method === "POST").length).toBe(1); // verify_capsule only
+    expect(r.calls.filter((c) => c.method === "POST").length).toBe(0); // the stream carried server_evidence; verification is in-browser GETs
   });
   it("a card run from the stream still verifies the signature in-process", async () => {
     const m = await modelFromAgui(fx("agui-card.sse"), { sources: makeSources({ fetchFn: replayFetch().fetchFn }), verifyCard });

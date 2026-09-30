@@ -4,8 +4,8 @@ import { test, expect } from "@playwright/test";
 import { readFileSync, existsSync, mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { replayFetch, fx } from "../replay.js";
-import { onRequestPost as watchHandler } from "../../../../functions/api/claims/watch-request.ts";
+import { replayFetch, fx, preflight } from "../replay.js";
+import { onRequestPost as watchHandler, onRequestOptions as watchOptions } from "../../../../functions/api/claims/watch-request.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SHOTS = process.env.SHOTS_DIR || resolve(here, "../../.shots");
@@ -16,15 +16,23 @@ const THREE = ["https://councilof.ai/mcp", "https://tandem.ac/mcp", CARD];
 
 async function wire(page) {
   const seen = [];
-  const { fetchFn } = replayFetch();
+  const { fetchFn } = replayFetch({ install: false });
   await page.route("**/*", async (route) => {
     const req = route.request();
     const u = new URL(req.url());
     seen.push(u.origin);
     if (u.origin === "http://127.0.0.1:4817") return route.continue();
     if (u.origin !== "https://councilof.ai") return route.abort();
-    if (req.method() === "OPTIONS")
-      return route.fulfill({ status: 204, headers: { "access-control-allow-origin": "*", "access-control-allow-methods": "GET, POST, OPTIONS", "access-control-allow-headers": "accept, content-type" } });
+    if (req.method() === "OPTIONS") {
+      // Recorded live preflights (2026-09-30): /api/agui/run 204, /mcp/free 403 (its Origin guard).
+      // /api/claims/watch-request is new in this lane: answered by its own handler.
+      if (u.pathname === "/api/claims/watch-request") {
+        const r = await watchOptions({ request: new Request(req.url(), { method: "OPTIONS" }), env: {} });
+        return route.fulfill({ status: r.status, headers: Object.fromEntries(r.headers) });
+      }
+      const p = preflight(u.pathname.replace(/\//g, "_"));
+      return route.fulfill({ status: p.status, headers: p.headers });
+    }
     if (u.pathname === "/api/claims/watch-request") {
       // Our own new endpoint, not yet deployed: answered by its real handler (no KV bound here).
       const res = await watchHandler({ request: new Request(req.url(), { method: "POST", body: req.postData() }), env: {} });
@@ -205,4 +213,15 @@ test("Ask: connect GSPC to my project — exact steps, no network call", async (
   await expect(P(page).locator(".steps")).toContainText("https://councilof.ai/mcp/free");
   await expect(P(page).locator(".steps")).toContainText("helm upgrade -i gspc-evidence");
   expect(posts.length).toBe(before);
+});
+
+test("the panel never POSTs the MCP door from a browser (its Origin guard answers a cross-origin preflight 403)", async ({ page }) => {
+  await wire(page);
+  const posts = [];
+  page.on("request", (r) => r.method() !== "GET" && posts.push(`${r.method()} ${new URL(r.url()).pathname}`));
+  await page.goto(qs(["https://councilof.ai/mcp", "https://tandem.ac/mcp", "94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1"]));
+  await panels(page, 3);
+  expect(posts.filter((p) => p.includes("/mcp/free"))).toEqual([]);
+  const sig = await page.evaluate(() => [...document.querySelectorAll("gspc-evidence-panel")].map((e) => e.shadowRoot.querySelector("[data-signature]").textContent + " " + e.shadowRoot.querySelector('[data-region="signature"]').textContent.includes("in this browser")));
+  expect(sig).toEqual(["VALID true", "VALID true", "VALID true"]);
 });

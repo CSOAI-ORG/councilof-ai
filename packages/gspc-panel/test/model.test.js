@@ -33,7 +33,9 @@ describe("MCP server subjects (recorded live 2026-09-30)", () => {
     expect(m.declared_vs_observed.rows.every((r) => r.observed === "CONSISTENT")).toBe(true);
     expect(m.declared_vs_observed.rows.map((r) => r.dimension)).toContain("AUTH");
     expect(m.signature.state).toBe("VALID");
+    expect(m.signature.where).toContain("in this browser");
     expect(m.signature.key).toBe("did:web:csoai.org#board-attestation-1");
+    expect(calls.some((c) => c.url.endsWith("/mcp/free"))).toBe(false); // the browser path never POSTs the MCP door
     expect(m.last_measured).toMatch(/^2026-/);
     expect(m.next_recheck).toBeNull();
     expect(m.citation).toContain("Evidence by GSPC · Council of AI");
@@ -60,7 +62,7 @@ describe("MCP server subjects (recorded live 2026-09-30)", () => {
   });
 
   it("server_evidence unreachable -> UNCHECKABLE, never a cached number", async () => {
-    const { m } = await run("https://councilof.ai/mcp", { overrides: { "POST /mcp/free": () => new Response("upstream", { status: 502 }) } });
+    const { m } = await run("https://councilof.ai/mcp", { overrides: { "GET /measurement-capsules/latest.json": () => new Response("upstream", { status: 502 }) } });
     expect(m.state).toBe("UNCHECKABLE");
     expect(m.figures).toEqual([]);
   });
@@ -71,7 +73,6 @@ describe("signed card subject", () => {
     const { m } = await run(CARD);
     expect(m.signature.state).toBe("VALID");
     expect(m.signature.where).toContain("in this browser");
-    expect(m.signature.detail).toContain("councilof.ai verify_card: VALID");
     expect(m.state).toBe("TIE"); // gspc-governance -> board axis governance, separation TIE (recorded /api/gspc)
     expect(m.figures.find((f) => f.label === "Accuracy (as signed)").value).toBe(0.3684);
     expect(m.figures.find((f) => f.label === "n").value).toBe("not in the card");
