@@ -146,6 +146,39 @@ async function serveLivingGspcState(ctx: EventContext<Env, any, any>): Promise<R
 export const onRequest: PagesFunction<Env> = async (ctx) => {
   const sub = Array.isArray(ctx.params.path) ? ctx.params.path.join("/") : "";
 
+  // Health of the in-process/public AG-UI profile. It does not assert the optional external wire.
+  if (sub === "health") {
+    if (ctx.request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "access-control-allow-origin": "*",
+          "access-control-allow-methods": "GET, HEAD, OPTIONS",
+          "access-control-allow-headers": "accept, content-type",
+        },
+      });
+    }
+    if (ctx.request.method !== "GET" && ctx.request.method !== "HEAD") {
+      return Response.json({ error: "method_not_allowed" }, { status: 405 });
+    }
+    const origin = new URL(ctx.request.url).origin;
+    return Response.json(
+      {
+        schema: "csoai.agui-health/0.1",
+        status: "AVAILABLE",
+        profile: "in-process-router+public-gspc",
+        in_process_run: `${origin}/api/agui/run`,
+        public_state_stream: `${origin}/api/agui/gspc-state`,
+        external_wire: {
+          configured: Boolean(ctx.env.AGUI_WIRE_URL),
+          state: ctx.env.AGUI_WIRE_URL ? "CONFIGURED" : "OPTIONAL_NOT_CONFIGURED",
+        },
+        note: "Health describes the in-process AG-UI run and public GSPC stream. It does not assert availability of an optional external/private wire.",
+      },
+      { status: 200, headers: { "cache-control": "no-store", "access-control-allow-origin": "*" } },
+    );
+  }
+
   // Local living-GSPC stream — no RunPod required. Agents + humans share GET /api/gspc.
   if (sub === "gspc-state" || sub === "gspc/state") {
     if (ctx.request.method === "OPTIONS") {
