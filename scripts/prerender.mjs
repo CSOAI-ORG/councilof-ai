@@ -224,6 +224,8 @@ function discover() {
     // /connect/claude: connector documentation for /mcp/free (2026-09-27); a directory reviewer and an
     // answer engine must read the setup, tool list and prompts without running JS.
     "/connect/claude",
+    // /connect: the connector hub (2026-09-30); the doors and commands must be readable without JS.
+    "/connect",
     "/challenge",
     // The alliance claim map: 123 rows rendered from the registry. Without a snapshot a
     // crawler cold-loading it gets the shell, and the map is the one thing worth citing here.

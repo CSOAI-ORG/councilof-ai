@@ -154,10 +154,10 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Origin Story */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+      <div className="surface-ink text-white py-16 sm:py-24">
         <div className="container max-w-4xl">
           <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight">
             We measure AI systems, sign the result, and publish what we could not measure
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed mb-8" data-testid="about-accountable-entity">
@@ -211,19 +211,19 @@ export default function About() {
               <h3 className="text-2xl font-bold mb-4 text-red-900">Without CSOAI</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>AI systems deployed without proper safety review</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Companies struggle to find qualified compliance staff</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Nobody outside the vendor can re-run the test that produced the claim</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Governments lack trained personnel for AI oversight</span>
                 </li>
               </ul>
@@ -375,7 +375,7 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">1</div>
+                  <div className="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold">1</div>
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
@@ -400,7 +400,7 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">2</div>
+                  <div className="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold">2</div>
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
@@ -426,7 +426,7 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">3</div>
+                  <div className="w-12 h-12 rounded-full bg-purple-700 flex items-center justify-center text-white font-bold">3</div>
                   <div className="w-1 h-20 bg-purple-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
@@ -451,7 +451,7 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">4</div>
+                  <div className="w-12 h-12 rounded-full bg-orange-700 flex items-center justify-center text-white font-bold">4</div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
                   <h3 className="text-2xl font-bold mb-4">💼 Free training, and an honest account of where it leads</h3>
@@ -531,7 +531,7 @@ export default function About() {
       </div>
 
       {/* Our Commitment */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-20">
+      <div className="surface-ink text-white py-16 sm:py-20">
         <div className="container max-w-4xl text-center">
           <Heart className="h-16 w-16 text-emerald-400 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Our Commitment to You</h2>
@@ -742,7 +742,7 @@ export default function About() {
       {/* Final CTA */}
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
-          <Card className="p-12 bg-gradient-to-br from-slate-900 to-emerald-900 text-white text-center">
+          <Card className="p-12 border-[var(--ink-border)] bg-[var(--ink)] text-white text-center">
             <h2 className="text-4xl font-bold mb-6">Start with the free rail</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Training is free and the whole verification rail is free forever. A grade is never

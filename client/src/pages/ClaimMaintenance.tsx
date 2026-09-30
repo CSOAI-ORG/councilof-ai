@@ -185,11 +185,11 @@ export default function ClaimMaintenance() {
         <script type="application/ld+json">{JSON.stringify(PAGE_LD)}</script>
       </Helmet>
 
-      <header className="border-b border-slate-800 bg-slate-950 text-slate-100">
+      <header className="surface-ink border-b border-[var(--ink-border)] text-slate-100">
         <div className="mx-auto max-w-4xl px-5 py-14">
           <p className="text-xs font-semibold uppercase tracking-widest text-emerald-400">A named category, with a written specification</p>
-          <h1 className="mt-3 text-4xl font-bold leading-tight">Claim maintenance</h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-300">
+          <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">Claim maintenance</h1>
+          <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg sm:leading-8">
             The continuous, independent observation of the public claims an organisation makes about itself or its
             products: capturing each claim verbatim with its source and date, hashing and timestamping it so the
             record cannot be quietly rewritten, re-reading it on a schedule, recording every observed change without

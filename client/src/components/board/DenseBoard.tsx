@@ -223,7 +223,7 @@ export default function DenseBoard({
                           {((a.accuracy ?? 0) * 100).toFixed(0)}%
                         </span>
                       ) : (
-                        <span className="text-slate-400">—</span>
+                        <span className="text-slate-500">—</span>
                       )}
                     </td>
                     <td className="px-4 py-2 text-center font-mono text-xs text-slate-500">

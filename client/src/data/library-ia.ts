@@ -52,6 +52,8 @@ export const PRIMARY_PATHS = new Set<string>([
   // /connect/claude — the connector documentation named in the Claude connector directory listing
   // (2026-09-27). Unregistered it would ship "archived" on the page a directory reviewer reads.
   "/connect/claude",
+  // /connect — the connector hub (2026-09-30): free MCP door, full MCP, A2A card, HTTP, offline verify.
+  "/connect",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
