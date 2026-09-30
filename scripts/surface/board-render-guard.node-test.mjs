@@ -20,7 +20,7 @@ test("visible text joins the figure to its sentence across elements", () => {
   assert.equal(visibleText("<p>8&nbsp;TIE &middot; 6 UNTESTED</p><script>'2 TIE · 12 UNTESTED'</script>"), "8 TIE · 6 UNTESTED");
 });
 test("expected figures come from totals, not from this file", () => {
-  assert.deepEqual(expectedFromBoard(board()), { separated: 0, comparison: 14, ties: 8, untested: 6, lid: [23, 14, 0, 9, 9] });
+  assert.deepEqual(expectedFromBoard(board()), { separated: 0, comparison: 14, ties: 8, untested: 6, lid: [23, 14, 0, 9, 9], lid2: null });
 });
 test("57dfceff home band agrees with its board", () => {
   assert.deepEqual(checkText(visibleText(band(8, 6) + lid(9)), expectedFromBoard(board())), []);
@@ -54,4 +54,12 @@ test("guardRenderedBoard reads only snapshotted routes, from the files prerender
   const g = guardRenderedBoard(dist, results, board());
   assert.equal(g.checked, 2);
   assert.deepEqual(g.violations.map((v) => [v.route, v.rule]), [["/for/enterprise", "lid"]]);
+});
+
+test("comparison-wording lid (30 Sep 2026) is checked against the payload, and a drifted page is refused", () => {
+  const exp = expectedFromBoard(board({ lid: "23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate." }));
+  assert.deepEqual(exp.lid2, [23, 14, 0, 7, 7, 9]);
+  assert.equal(checkText("<p>23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs</p>", exp).filter((v) => v.rule === "lid-comparison").length, 0);
+  const bad = checkText("23 axes measured · 14 model comparisons: 1 separated · 7 TIE · 6 UNTESTED · 9 fact runs", exp).filter((v) => v.rule === "lid-comparison");
+  assert.equal(bad.length, 1);
 });
