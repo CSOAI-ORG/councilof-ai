@@ -195,11 +195,15 @@ describe("AG-UI run — streams RUN / TOOL_CALL / TEXT_MESSAGE events from the s
       "TOOL_CALL_ARGS",
       "TOOL_CALL_END",
       "TOOL_CALL_RESULT",
+      "CUSTOM",
       "TEXT_MESSAGE_START",
       ...ev.filter((e) => e.type === "TEXT_MESSAGE_CONTENT").map(() => "TEXT_MESSAGE_CONTENT"),
       "TEXT_MESSAGE_END",
       "RUN_FINISHED",
     ]);
+    // The board card also arrives as an A2UI v0.9.1 surface (AG-UI CUSTOM event "a2ui").
+    expect(ev[5]).toMatchObject({ name: "a2ui", value: { protocol: "A2UI", version: "v0.9.1", tool: "board_totals" } });
+    expect((ev[5] as any).value.messages[0]).toHaveProperty("createSurface");
     expect(ev[0]).toMatchObject({ threadId: "t1", runId: "r1" });
     expect(ev[1]).toMatchObject({ toolCallName: "board_totals" });
     const result = JSON.parse(String(ev[4].content));

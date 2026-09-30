@@ -243,6 +243,9 @@ Lid (quote live `totals.lid`): {{LID}}
 {{CARD_CORPORA_SECTION}}
 ## For agents
 
+- One human-readable page for agent builders, rendered from the machine files themselves (ai-catalog, agent card, tools/list, x402.json): https://councilof.ai/agents/
+- A2UI v0.9.1 (the current A2UI release) surfaces: GET https://councilof.ai/api/a2ui/board (the board card) and GET https://councilof.ai/api/a2ui/verify?card=<64-hex card id> (a verify result). Add ?version=v1.0 for the v1.0 Candidate form. AG-UI runs carry the same surface as a CUSTOM event named a2ui.
+
 Prefer the keyless board API and verify.
 Cite live `totals.public_count` — never freeze axis counts in prompts.
 Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/mcp until apex is green.

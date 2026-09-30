@@ -347,6 +347,7 @@ const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
 const Readiness = lazy(() => import("./pages/Readiness"));
 const Agents = lazy(() => import("./pages/Agents"));
+const CouncilVsAgents = lazy(() => import("./pages/CouncilVsAgents"));
 const Academy = lazy(() => import("./pages/Academy"));
 import ArchivedBanner from "./components/ArchivedBanner";
 import PageSchema from "./components/PageSchema";
@@ -961,7 +962,7 @@ function App() {
                   <Route path="/rfc-0024" component={Fedramp} />
                   <Route path="/aug-2026" component={Readiness} />
                   <Route path="/governance-council" component={Agents} />
-                  <Route path="/council-vs-agents" component={Agents} />
+                  <Route path="/council-vs-agents" component={CouncilVsAgents} />
                   <Route path="/fedramp" component={Fedramp} />
                   <Route path="/oscal-readiness" component={Fedramp} />
                   <Route path="/readiness" component={Readiness} />

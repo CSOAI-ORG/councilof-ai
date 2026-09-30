@@ -68,6 +68,9 @@ const DashboardArenaPane = lazy(
 const DashboardLearningPane = lazy(
   () => import("@/components/DashboardLearningPane"),
 );
+const ConnectPane = lazy(() => import("@/components/gspc/ConnectPane"));
+const RoutePane = lazy(() => import("@/components/gspc/RoutePane"));
+const CorrectionsPane = lazy(() => import("@/components/gspc/CorrectionsPane"));
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
@@ -97,6 +100,9 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // software: signed-in dashboard at /dashboard, the layout redirects there
   play: LobbyPlay, // gold local-play gallery (local kind)
   art50: LobbyArt50Pane, // Article 50 marking evidence — native workflow pane, no standalone URL
+  connect: ConnectPane, // Connect → Install: /connect data (ConnectClaude TOOLS, ConnectHub PLATFORMS)
+  route: RoutePane, // Connect → Route: the free decide-only MCP tool `route`
+  corrections: CorrectionsPane, // Corrections ledger, live GET /api/corrections
 };
 
 /** Extra in-shell panes that are not sidebar tabs (they have no page of their own). */
@@ -186,7 +192,9 @@ export default function DashboardPane({ id }: { id: string }) {
   return (
     <Suspense
       fallback={
-        <div className="p-6 text-sm text-muted-foreground">Loading {r}…</div>
+        <div role="status" aria-live="polite" className="p-6 text-sm text-muted-foreground" data-testid="dashboard-pane-loading">
+          Loading {paneLabel(r) ?? r}…
+        </div>
       }
     >
       <div

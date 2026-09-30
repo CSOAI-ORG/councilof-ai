@@ -25,7 +25,7 @@ const CRA = [
 export default function EunomiaCrosswalk() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
-      <h1 className="text-2xl font-bold">EUNOMIA — EU AI Act × CRA cross-reference watch</h1>
+      <h1 className="text-2xl font-bold">EU AI Act × CRA cross-reference watch</h1>
       <p className="mt-1 text-sm text-emerald-300/80">statute → axis → requirement → exposure · live sources linked · measurement, not certification</p>
       <p className="mt-2 text-xs text-slate-400">
         Article numbers and dates are canonical public facts. Live sources:{" "}
