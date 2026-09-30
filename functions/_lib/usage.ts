@@ -48,6 +48,8 @@ export type SelfTool = {
  * The header `x-csoai-self: <name>` also excludes a request when <name> is listed here.
  */
 export const SELF_TOOLS: readonly SelfTool[] = [
+  { name: "harness-x-check", kind: "internal-job", runs_on: "scripts/harness-x/check.mjs", ua_token: "harness-x-check" },
+  { name: "outward-gate", kind: "internal-job", runs_on: "scripts/outward-gate/outward_gate.py", ua_token: "CSOAI-outward-gate" },
   { name: "presence-loop", kind: "monitor", runs_on: "oracle-micro-2 ~/lanes/presence/presence_loop.py (every minute)", ua_token: "csoai-presence" },
   { name: "prod-canary", kind: "canary", runs_on: "oracle-micro-2 ~/lanes/ops-guard-20260928/bin/prod-canary.py (every 10 min)", ua_token: "CSOAI-ops-canary" },
   { name: "audit-watchdog", kind: "audit", runs_on: "oracle-micro-2 ~/lanes/automation-runpod-20260928/watchdog-audit (twice hourly)", ua_token: "CSOAI-audit-watchdog" },
@@ -120,6 +122,7 @@ function kvOf(env: unknown): KV | null {
 export function recordUsage(ctx: UsageCtx, dim: UsageDim, rawName: string): string | null {
   try {
     if (selfToolOf(ctx.request.headers)) return null;
+    if (dim === "mcp_client" && SELF_NAMES.has(cleanName(rawName).toLowerCase())) return null;
     const kv = kvOf(ctx.env);
     if (!kv) return null;
     const key = usageKey(utcDay(), dim, cleanName(rawName), crypto.randomUUID().slice(0, 8));

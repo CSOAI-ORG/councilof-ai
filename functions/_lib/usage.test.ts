@@ -35,6 +35,8 @@ describe("self-exclusion is by name, never by guess", () => {
     expect(selfToolOf(new Headers({ "user-agent": "CSOAI-ops-canary/0.1 (+https://councilof.ai; public reads only)" }))).toBe("prod-canary");
     expect(selfToolOf(new Headers({ "user-agent": "CSOAI-audit-watchdog/1.0" }))).toBe("audit-watchdog");
     expect(selfToolOf(new Headers({ "user-agent": "csoai-smoke-talk/1" }))).toBe("smoke-talk");
+    expect(selfToolOf(new Headers({ "user-agent": "harness-x-check/1" }))).toBe("harness-x-check");
+    expect(selfToolOf(new Headers({ "user-agent": "CSOAI-outward-gate/0.1" }))).toBe("outward-gate");
   });
 
   it("excludes a listed name sent in x-csoai-self, and nothing else", () => {
@@ -78,6 +80,8 @@ describe("recordUsage stores a name and a count, never who", () => {
   it("writes nothing for our own traffic or without a binding", async () => {
     const kv = fakeKv();
     expect(recordUsage({ request: req({ "user-agent": "CSOAI-ops-canary/0.1" }), env: { SOV_ARENA_STATE: kv }, waitUntil }, "chat_state", "grounded")).toBeNull();
+    expect(recordUsage({ request: req(), env: { SOV_ARENA_STATE: kv }, waitUntil }, "mcp_client", "harness-x-check")).toBeNull();
+    expect(recordUsage({ request: req(), env: { SOV_ARENA_STATE: kv }, waitUntil }, "mcp_client", "outward-gate")).toBeNull();
     expect(recordUsage({ request: req(), env: {}, waitUntil }, "chat_state", "grounded")).toBeNull();
     await settle();
     expect(kv.store.size).toBe(0);
