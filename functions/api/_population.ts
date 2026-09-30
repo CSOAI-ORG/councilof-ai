@@ -739,7 +739,7 @@ const claimWatch: PopulationEntry = {
   population: "one row per published claim registry (a vendor's public claims captured, hashed, source-cited, each with a measurement plan), with the file's digest, its digest-reproducibility and its .ots state read from bytes",
   tags: ["population", "claims", "watch", "registry", "x402"],
   read: async (io, full) => {
-    const unit = "claims captured across the published registries";
+    const unit = "claim rows across all published registry versions, including superseded historical versions";
     const rows: Record<string, unknown>[] = [];
     const source: string[] = [];
     const unmeasured: string[] = [];
@@ -843,6 +843,11 @@ const claimWatch: PopulationEntry = {
       registries.map((r) => (isObj(r.supersedes) ? str((r.supersedes as Record<string, unknown>).registry_id) : null))
         .filter((x): x is string => !!x),
     );
+    const liveRegistries = registries.filter((r) => {
+      const id = str(r.registry_id);
+      return !id || !superseded.has(id);
+    });
+    const liveN = liveRegistries.reduce((a, r) => a + (r.claims as number), 0);
     const measured = stateTotals["CLAIM_MEASURED"] || 0;
     const stillCaptured = stateTotals["CLAIM_CAPTURED"] || 0;
     const notMeasured = (stateTotals["UNMEASURED"] || 0) + (stateTotals["UNCHECKABLE"] || 0);
@@ -855,11 +860,14 @@ const claimWatch: PopulationEntry = {
       reason: null,
       unmeasured: [
         ...unmeasured,
-        `${measured} of ${n} claim rows across the published registries are CLAIM_MEASURED, ${stillCaptured} remain CLAIM_CAPTURED and ${notMeasured} are UNMEASURED or UNCHECKABLE — counted from the served bytes at request time, not typed here. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry.`,
+        `${measured} of ${n} historical claim rows across all published registry versions are CLAIM_MEASURED, ${stillCaptured} remain CLAIM_CAPTURED and ${notMeasured} are UNMEASURED or UNCHECKABLE. ${liveN} claim rows are in the current non-superseded registry set. Counts are derived from served bytes at request time. A measured claim carries its method, window, denominator and sources. No claim of falsity is made about any entry.`,
       ],
       head: {
         registries,
-        claim_states_across_registries: stateTotals,
+        historical_published_claim_rows: n,
+        current_live_claim_rows: liveN,
+        current_live_registry_count: liveRegistries.length,
+        claim_states_across_all_published_registry_versions: stateTotals,
         superseded_registry_ids: [...superseded],
         supersession_rule: "a superseding registry is a new file; the prior bytes are never edited and both remain served",
         identification: "a claim is a sentence captured verbatim from the vendor's public page or API at the registry's created_utc, typed by kind, with the plan by which it could be measured; the file bytes are served unchanged and never edited",

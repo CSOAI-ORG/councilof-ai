@@ -251,6 +251,17 @@ describe("free preview — every reading is derived from the artifact bytes", ()
     }
     expect(b.state).toBe("INDEXED");
     expect(b.n).toBe(claims);
+    expect(b.n_unit).toMatch(/all published registry versions/);
+    expect(b.head.historical_published_claim_rows).toBe(b.n);
+    const supersededIds = new Set(
+      rows
+        .map((r) => (r.supersedes as Record<string, unknown> | null)?.registry_id)
+        .filter((x): x is string => typeof x === "string" && x.length > 0),
+    );
+    const liveRows = rows.filter((r) => !supersededIds.has(String(r.registry_id ?? "")));
+    const liveClaims = liveRows.reduce((n, r) => n + Number(r.claims ?? 0), 0);
+    expect(b.head.current_live_claim_rows).toBe(liveClaims);
+    expect(b.head.current_live_registry_count).toBe(liveRows.length);
     const path = "/claims/" + files[0];
     const raw = readFileSync(resolve(PUBLIC, "." + path));
     const file = JSON.parse(raw.toString("utf8"));
