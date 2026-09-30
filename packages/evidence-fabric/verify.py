@@ -13,6 +13,12 @@ Checks, in order (any failure stops with the reason):
  5. BATCH.events_file.sha256 == sha256(EVENTS.jsonl bytes), and every event_id recomputes and matches the list
 Exit 0 VALID, 1 INVALID, 3 UNVERIFIABLE_KEY, 2 input error. A VALID result shows who signed these bytes and
 that they are unchanged. It does not show that any claim inside is true.
+
+    python3 verify.py --structure RECORD.json|EVENTS.jsonl   -> STRUCTURE_VALID | INVALID  (no signature check)
+Structure mode checks one record (or every line of a JSONL file) against event.py validate(), the base JSON
+Schema and, when the record names a profile this package ships (csoai.route-evidence/0.1), that profile's
+schema and doctrine rules. It never says VALID: an unsigned record has no signer to verify, and the result
+reports "signed": false for it. Exit 0 STRUCTURE_VALID, 1 INVALID, 2 input error.
 """
 import argparse, base64, hashlib, json, os, sys
 
@@ -73,6 +79,94 @@ def verify_bytes(batch_raw, signed_raw, events_raw, did_doc):
 
 EXIT = {"VALID": 0, "INVALID": 1, "UNVERIFIABLE_KEY": 3, "UNCHECKABLE": 3}
 
+SCHEMA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schema")
+PROFILE_SCHEMAS = {"csoai.route-evidence/0.1": "route-evidence-0.1.schema.json"}
+# Words a router may never write about an unseparated choice (spec: routing is not ranking).
+ROUTE_BANNED = ("best", "safest", "recommended", "compliant", "certified")
+
+
+def _schema_errors(obj, name):
+    try:
+        import jsonschema
+    except ImportError:
+        return None  # reported as a limit, never as a pass
+    schema = json.load(open(os.path.join(SCHEMA_DIR, name), encoding="utf-8"))
+    return [f"{name}: {'/'.join(map(str, e.absolute_path)) or '<root>'}: {e.message}"
+            for e in jsonschema.Draft7Validator(schema).iter_errors(obj)]
+
+
+def _route_doctrine(ev):
+    """Rules of csoai.route-evidence/0.1 that a schema cannot say."""
+    e = []
+    obs = ev.get("observed") or {}
+    separated = obs.get("separation") == "SEPARATED"
+    router_text = json.dumps({"chosen": obs.get("chosen"), "label": obs.get("label"), "separation": obs.get("separation"),
+                              "limits": ev.get("limits"), "claim": ev.get("claim"),
+                              "labels": [m.get("label") for c in obs.get("considered") or [] for m in c.get("measurements") or []]},
+                             ensure_ascii=False).lower()
+    import re as _re
+    for w in ROUTE_BANNED:
+        if _re.search(r"\b" + w + r"\b", router_text):
+            e.append(f"route record uses the word {w!r}")
+    if not separated and "leader" in router_text:
+        e.append("route record says 'leader' about a comparison that was not SEPARATED")
+    for c in obs.get("considered") or []:
+        for m in c.get("measurements") or []:
+            if m.get("state") == "UNTESTED" and m.get("value") is not None:
+                e.append(f"candidate {c.get('id')!r}: UNTESTED measurement carries a number")
+        if c.get("permit") and (c.get("uncheckable") or c.get("forbid_policy")):
+            e.append(f"candidate {c.get('id')!r} is permitted although it is uncheckable or forbidden")
+    ch = obs.get("chosen")
+    if ch and ch.get("id") not in {c.get("id") for c in obs.get("considered") or [] if c.get("permit")}:
+        e.append("chosen candidate is not among the permitted ones")
+    return e
+
+
+def verify_structure(ev):
+    """(result, reasons, info) for one record. Never VALID: structure is not a signature."""
+    errs = list(E.validate(ev)) if isinstance(ev, dict) else ["record is not an object"]
+    if isinstance(ev, dict) and "event_id" not in ev:
+        errs.append("record has no event_id")
+    limits = []
+    if isinstance(ev, dict):
+        base = _schema_errors(ev, "evidence-event-0.1.schema.json")
+        if base is None:
+            limits.append("jsonschema not installed: JSON Schema not applied")
+        else:
+            errs += base
+        prof = ev.get("profile")
+        if prof in PROFILE_SCHEMAS:
+            pe = _schema_errors(ev, PROFILE_SCHEMAS[prof])
+            if pe is not None:
+                errs += pe
+            if prof == "csoai.route-evidence/0.1":
+                errs += _route_doctrine(ev)
+        elif prof is not None:
+            limits.append(f"profile {prof!r} is not shipped here: base rules only")
+    info = {"event_id": ev.get("event_id") if isinstance(ev, dict) else None,
+            "profile": ev.get("profile") if isinstance(ev, dict) else None,
+            "signed": bool(isinstance(ev, dict) and ev.get("signature")), "limits": limits}
+    return ("INVALID" if errs else "STRUCTURE_VALID"), errs, info
+
+
+def structure_main(path):
+    try:
+        raw = open(path, encoding="utf-8").read()
+    except OSError as ex:
+        print(f"ERROR {ex}"); return 2
+    try:
+        recs = [json.loads(raw)] if raw.lstrip().startswith("{") and not path.endswith(".jsonl") else \
+            [json.loads(l) for l in raw.splitlines() if l.strip()]
+    except ValueError as ex:
+        print(json.dumps({"result": "INVALID", "reason": f"unparseable: {ex}"})); return 1
+    out = []
+    for r in recs:
+        res, why, info = verify_structure(r)
+        out.append({"result": res, "reasons": why, **info})
+    overall = "STRUCTURE_VALID" if out and all(o["result"] == "STRUCTURE_VALID" for o in out) else "INVALID"
+    print(json.dumps({"result": overall, "n_records": len(out), "records": out}, indent=1))
+    return 0 if overall == "STRUCTURE_VALID" else 1
+
 
 def flip(b, i=None):
     b = bytearray(b)
@@ -82,6 +176,11 @@ def flip(b, i=None):
 
 
 def main(argv=None):
+    argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "--structure":
+        if len(argv) != 2:
+            print("usage: verify.py --structure RECORD.json|EVENTS.jsonl"); return 2
+        return structure_main(argv[1])
     ap = argparse.ArgumentParser()
     ap.add_argument("batch"); ap.add_argument("signed"); ap.add_argument("events")
     ap.add_argument("--did", required=True, help="a saved copy of https://csoai.org/.well-known/did.json")

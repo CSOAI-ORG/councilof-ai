@@ -1,0 +1,360 @@
+{
+ "schema": "csoai.evidence-event/0.1",
+ "profile": "csoai.route-evidence/0.1",
+ "subject": {
+  "kind": "route",
+  "locator": "urn:gspc:route:00000000-0000-4000-8000-000000000001",
+  "declared_by": "caller:anon"
+ },
+ "claim": {
+  "text": "Route chosen for task sha256:9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 under caller policy sha256:3eac83f6106d7d7dc530d824d4e6272f4015309a39a555eea5b4e7cad6c69c18",
+  "source_url": null,
+  "source_sha256": null,
+  "read_at": "2026-09-30T12:00:00.000Z"
+ },
+ "method": {
+  "id": "gspc-route",
+  "version": "0.1.0",
+  "code_sha256": null,
+  "holder": "csoai"
+ },
+ "declared": {
+  "task": {
+   "sha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+   "data_class": "internal",
+   "needs_write": false,
+   "content_retained": false
+  },
+  "policy": {
+   "caller_sha256": "3eac83f6106d7d7dc530d824d4e6272f4015309a39a555eea5b4e7cad6c69c18",
+   "floor_sha256": "764368cd4d88cc88b894dccf2cab6c6a5953bc7755a70340cdd263afc3d4bb1f",
+   "cedar_schema_sha256": "ac74fb074ddb933f20037f82ec30e5e8bf3f75c14522445136db99116b12060d",
+   "presets": [
+    "eu-only"
+   ],
+   "rules": [
+    "caller:permit",
+    "caller:preset:eu-only",
+    "caller:forbid-providers"
+   ],
+   "uncheckable": [],
+   "confirm_destructive": false,
+   "caller_wallet": false
+  },
+  "objective": {
+   "quality_axis": "provenance",
+   "weights": {
+    "quality": 1,
+    "cost": 0,
+    "latency": 0
+   },
+   "tie_break": [
+    "cheapest_declared"
+   ]
+  },
+  "candidates_sha256": "3762b035008245ce1fa32df1aa9e7141177f06fd39cb5e5e35d3c0f3c17d6119"
+ },
+ "observed": {
+  "considered": [
+   {
+    "id": "x402:weather",
+    "kind": "x402_resource",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "floor:paid-needs-caller-wallet",
+    "forbids_matched": [
+     "floor:paid-needs-caller-wallet"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:deleter",
+    "kind": "mcp_tool",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "floor:destructive-needs-confirm",
+    "forbids_matched": [
+     "floor:destructive-needs-confirm"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:vendor-x",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "caller:forbid-providers",
+    "forbids_matched": [
+     "caller:forbid-providers"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:us-only",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "caller:preset:eu-only",
+    "forbids_matched": [
+     "caller:preset:eu-only"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:eu-a",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:eu-b",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:public-only",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "floor:data-class-not-declared",
+    "forbids_matched": [
+     "floor:data-class-not-declared"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:odd",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "uncheckable:unknown attribute \"trust_me\"",
+    "forbids_matched": [],
+    "uncheckable": [
+     "unknown attribute \"trust_me\""
+    ],
+    "ignored_fields": [],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "model:sponsored",
+    "kind": "model",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [
+     "bid",
+     "sponsor"
+    ],
+    "measurements": [
+     {
+      "axis": "provenance",
+      "state": "UNTESTED",
+      "value": null,
+      "interval": null,
+      "n": null,
+      "source": null,
+      "source_sha256": null,
+      "label": null
+     }
+    ],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   }
+  ],
+  "permitted": [
+   "model:eu-a",
+   "model:eu-b",
+   "model:sponsored"
+  ],
+  "chosen": {
+   "id": "model:eu-b",
+   "choice_basis": "tie_break:cheapest_declared"
+  },
+  "separation": "UNTESTED",
+  "label": null,
+  "board": {
+   "state": "UNREACHABLE",
+   "source": "/api/gspc",
+   "board_separation": null
+  },
+  "execution": {
+   "mode": "decide_only",
+   "status": "n/a",
+   "provider_observed": null,
+   "model_observed": null,
+   "latency_ms": null,
+   "usage": null,
+   "cost_declared": null,
+   "receipt_schema": "csoai.route-receipt/0.1",
+   "receipt": null
+  },
+  "heal": [],
+  "payment": {
+   "x402": "none",
+   "tx": null,
+   "payer_is_self": false
+  }
+ },
+ "state": "UNMEASURED",
+ "value": null,
+ "negative_control": {
+  "id": null,
+  "expected": null,
+  "got": "NOT_RUN"
+ },
+ "limits": [
+  "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
+  "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
+  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
+  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
+  "The task text is carried as its sha256 only; no prompt or response bytes are stored."
+ ],
+ "supersedes": null,
+ "signature": null,
+ "anchors": {
+  "ots": "none",
+  "rekor": {
+   "log_index": null,
+   "uuid": null
+  }
+ },
+ "maintenance": null,
+ "event_id": "sha256:aa1b12aa117296099a310a5ba5c7db2722c36038a13dae5182b6d07232b6bcd1"
+}
