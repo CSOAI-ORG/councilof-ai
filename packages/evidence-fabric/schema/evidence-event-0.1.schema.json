@@ -1,0 +1,260 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "$id": "https://councilof.ai/spec/evidence-event/v0.1/schema.json",
+ "title": "csoai.evidence-event/0.1",
+ "description": "One observation derived from an existing record: what was declared, what was observed, the state, and the limits of the read. Evidence, not a verdict. CC0-1.0. Rules the schema cannot express (event_id recomputation, negative-control agreement) are enforced by event.py validate().",
+ "type": "object",
+ "required": [
+  "schema",
+  "event_id",
+  "subject",
+  "claim",
+  "method",
+  "declared",
+  "observed",
+  "state",
+  "value",
+  "negative_control",
+  "limits"
+ ],
+ "additionalProperties": false,
+ "properties": {
+  "schema": {
+   "const": "csoai.evidence-event/0.1"
+  },
+  "event_id": {
+   "type": "string",
+   "pattern": "^sha256:[0-9a-f]{64}$"
+  },
+  "subject": {
+   "type": "object",
+   "required": [
+    "kind",
+    "locator"
+   ],
+   "properties": {
+    "kind": {
+     "enum": [
+      "mcp_server",
+      "a2a_card",
+      "oasf_record",
+      "model_card",
+      "package",
+      "policy",
+      "scanner_report",
+      "model_run",
+      "signed_record",
+      "repository",
+      "dataset",
+      "sandbox_run",
+      "web_page"
+     ]
+    },
+    "locator": {
+     "type": "string",
+     "minLength": 1
+    },
+    "declared_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "claim": {
+   "type": "object",
+   "required": [
+    "text"
+   ],
+   "properties": {
+    "text": {
+     "type": "string",
+     "minLength": 1
+    },
+    "source_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source_sha256": {
+     "type": [
+      "string",
+      "null"
+     ],
+     "pattern": "^[0-9a-f]{64}$"
+    },
+    "read_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   }
+  },
+  "method": {
+   "type": "object",
+   "required": [
+    "id",
+    "version",
+    "holder"
+   ],
+   "properties": {
+    "id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "version": {
+     "type": [
+      "string",
+      "number"
+     ]
+    },
+    "code_sha256": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "holder": {
+     "type": "string",
+     "pattern": "^(csoai|third_party:.+)$"
+    }
+   }
+  },
+  "declared": {},
+  "observed": {},
+  "state": {
+   "enum": [
+    "CONSISTENT",
+    "DIVERGENT",
+    "PARTIAL",
+    "UNMEASURED",
+    "UNCHECKABLE",
+    "NOT_DISCRIMINATING"
+   ]
+  },
+  "value": {
+   "type": [
+    "number",
+    "null"
+   ]
+  },
+  "negative_control": {
+   "type": "object",
+   "required": [
+    "got"
+   ],
+   "properties": {
+    "id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "expected": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "got": {
+     "type": "string"
+    }
+   }
+  },
+  "limits": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "string",
+    "minLength": 1
+   }
+  },
+  "supersedes": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "properties": {
+    "event_id": {
+     "type": "string",
+     "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "sha256": {
+     "type": "string"
+    }
+   }
+  },
+  "signature": {
+   "type": [
+    "object",
+    "null"
+   ]
+  },
+  "anchors": {
+   "type": [
+    "object",
+    "null"
+   ]
+  },
+  "maintenance": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "properties": {
+    "next_read_utc": {
+     "type": "string"
+    },
+    "schedule": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "state": {
+      "enum": [
+       "UNMEASURED",
+       "UNCHECKABLE"
+      ]
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "value": {
+      "type": "null"
+     }
+    }
+   }
+  },
+  {
+   "if": {
+    "properties": {
+     "state": {
+      "const": "CONSISTENT"
+     }
+    }
+   },
+   "then": {
+    "properties": {
+     "negative_control": {
+      "properties": {
+       "got": {
+        "not": {
+         "const": "NOT_RUN"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ ]
+}

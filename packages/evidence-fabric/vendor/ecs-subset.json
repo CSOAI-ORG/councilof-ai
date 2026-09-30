@@ -1,0 +1,165 @@
+{
+ "fields": {
+  "@timestamp": {
+   "level": "core",
+   "type": "date"
+  },
+  "ecs.version": {
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.category": {
+   "allowed_values": [
+    "api",
+    "authentication",
+    "configuration",
+    "database",
+    "driver",
+    "email",
+    "file",
+    "host",
+    "iam",
+    "intrusion_detection",
+    "library",
+    "malware",
+    "network",
+    "package",
+    "process",
+    "registry",
+    "session",
+    "threat",
+    "vulnerability",
+    "web"
+   ],
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.created": {
+   "level": "core",
+   "type": "date"
+  },
+  "event.dataset": {
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.id": {
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.kind": {
+   "allowed_values": [
+    "alert",
+    "asset",
+    "enrichment",
+    "event",
+    "metric",
+    "state",
+    "pipeline_error",
+    "signal"
+   ],
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.module": {
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.outcome": {
+   "allowed_values": [
+    "failure",
+    "success",
+    "unknown"
+   ],
+   "level": "core",
+   "type": "keyword"
+  },
+  "event.provider": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "event.reference": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "event.risk_score": {
+   "level": "core",
+   "type": "float"
+  },
+  "event.type": {
+   "allowed_values": [
+    "access",
+    "admin",
+    "allowed",
+    "change",
+    "connection",
+    "creation",
+    "deletion",
+    "denied",
+    "device",
+    "end",
+    "error",
+    "group",
+    "indicator",
+    "info",
+    "installation",
+    "protocol",
+    "start",
+    "user"
+   ],
+   "level": "core",
+   "type": "keyword"
+  },
+  "labels": {
+   "level": "core",
+   "type": "object"
+  },
+  "message": {
+   "level": "core",
+   "type": "match_only_text"
+  },
+  "observer.product": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "observer.vendor": {
+   "level": "core",
+   "type": "keyword"
+  },
+  "observer.version": {
+   "level": "core",
+   "type": "keyword"
+  },
+  "related.hash": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "rule.id": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "rule.name": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "rule.reference": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "rule.ruleset": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "rule.version": {
+   "level": "extended",
+   "type": "keyword"
+  },
+  "url.full": {
+   "level": "extended",
+   "type": "wildcard"
+  }
+ },
+ "note": "subset of ECS field definitions this renderer may emit; regenerate from the pinned source, never hand-edit",
+ "read_at": "2026-09-30",
+ "source": "https://raw.githubusercontent.com/elastic/ecs/9868ff5b9cab65376fab3e3829382b3424a3ee69/generated/ecs/ecs_flat.yml",
+ "source_sha256": "4277630b672c0469e1ba4697b160f7d13a1ec2015033f5323fb25cfd0fe3fa0e"
+}
