@@ -32,6 +32,8 @@ export default defineConfig({
     outDir: '../dist/client',
     emptyOutDir: true,
     sourcemap: false,
+    // Read by scripts/inject-dashboard-preload.mjs (Council OS deep-link preloads), which then deletes it from dist.
+    manifest: true,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
