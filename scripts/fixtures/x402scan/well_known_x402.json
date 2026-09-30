@@ -11,11 +11,11 @@
   "extensions": {
     "offer-receipt": {
       "alg": "EdDSA",
-      "board_signing_key_configured": true,
+      "board_signing_key_configured": false,
       "did_document": "https://csoai.org/.well-known/did.json",
       "eip712": "NOT offered. The extension admits eip712 and jws; when a board key is provisioned the edge can emit jws but has no secp256k1 signer. A client that requires eip712 should treat this rail as unsigned rather than expect a format we cannot produce.",
       "emission": "conditional",
-      "facilitator_configured": true,
+      "facilitator_configured": false,
       "format": "jws",
       "kid": "did:web:csoai.org#board-attestation-1",
       "offers": "signed only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise the 402 omits the offer-receipt block and csoai.offer_receipt names the gap",
@@ -30,6 +30,112 @@
       }
     }
   },
+  "free_doors": [
+    {
+      "description": "Verify a published CSOAI record — re-fetches a councilof.ai / csoai.org record, recomputes its sha256 and checks its signature under the pinned board keys. Free forever; POST a RAS receipt to verify it.",
+      "free": true,
+      "method": "GET",
+      "outputSchema": {
+        "properties": {
+          "checks": {
+            "type": "array"
+          },
+          "family": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fetched": {
+            "properties": {
+              "bytes": {
+                "type": "integer"
+              },
+              "http_status": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "free": {
+            "const": true
+          },
+          "record_url": {
+            "type": "string"
+          },
+          "schema": {
+            "const": "csoai.verify/0.1"
+          },
+          "state": {
+            "enum": [
+              "VALID",
+              "INVALID",
+              "UNCHECKABLE"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "state",
+          "free"
+        ],
+        "type": "object"
+      },
+      "url": "https://councilof.ai/api/verify?record_url=https://councilof.ai/signed/card_index.json"
+    },
+    {
+      "description": "Daily x402 conformance index — serves the latest SIGNED daily run when one exists; until then says INDEX_PENDING and points at the latest unsigned census run, never an invented list. Free.",
+      "free": true,
+      "method": "GET",
+      "outputSchema": {
+        "properties": {
+          "free": {
+            "const": true
+          },
+          "index": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "latest_unsigned_run": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "schema": {
+            "const": "csoai.x402-index/0.1"
+          },
+          "state": {
+            "enum": [
+              "SIGNED",
+              "INDEX_PENDING",
+              "SIGNATURE_INVALID",
+              "UNCHECKABLE"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "state",
+          "free"
+        ],
+        "type": "object"
+      },
+      "url": "https://councilof.ai/api/x402/index"
+    }
+  ],
+  "index_membership": "not asserted by this manifest — whether a third-party index lists a resource is measured by reading that index, never typed here",
   "mcp": {
     "free_tools": [
       "board_totals",
@@ -40,9 +146,12 @@
       "get_card",
       "verify_inclusion",
       "x402_trust",
-      "mcp_trust"
+      "mcp_trust",
+      "measurement_index",
+      "verify_capsule",
+      "server_evidence"
     ],
-    "how": "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment",
+    "how": "tools/call without x_payment returns the route's 402 challenge per the x402 MCP transport: isError:true, the PaymentRequired object in structuredContent and as JSON in content[0].text; pay, then call again with x_payment",
     "paid_tools": [
       "commission_card",
       "art50_marking_evidence",
@@ -52,8 +161,8 @@
     "transport": "streamable-http",
     "url": "https://councilof.ai/mcp"
   },
-  "mode": "live",
-  "mode_note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+  "mode": "challenge-only",
+  "mode_note": "402 challenges are complete (asset, amount, payTo) but no facilitator is provisioned, so no receipt can settle and no paid artefact is granted. Nothing is charged. Verification stays free.",
   "network": "eip155:8453",
   "not": [
     "score",
@@ -77,11 +186,42 @@
     {
       "accepts": [
         {
-          "description": "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
+          "amount": "0",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": null,
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "0",
+            "offered_amount_atomic": "0",
+            "pricing_basis": "STANDARD",
+            "product_id": "csoai.product.free_door",
+            "sku_id": "free_door"
+          },
+          "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "0",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/free-door",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "0",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -94,21 +234,57 @@
         }
       ],
       "amount": "0",
-      "description": "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
-      "indexed_in": "x402 Bazaar (PayAI)",
+      "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
+      "free_equivalents": [
+        "https://councilof.ai/api/gspc",
+        "https://councilof.ai/root.json"
+      ],
       "method": "GET",
-      "note": "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+      "note": "Payable and priced at zero — it settles, and charges nothing. It answers 402 rather than 200 on purpose: the x402 Bazaar catalogues only a resource that settles, so a 200 route cannot be indexed. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one. To read the same content without any x402 handshake, GET a free_equivalents URL — those answer 200.",
       "paid_for": null,
       "url": "https://councilof.ai/api/free-door"
     },
     {
       "accepts": [
         {
-          "description": "A card-v0 commission receipt for one named subject: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.request_attestation",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -120,7 +296,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "A card-v0 commission receipt for one named subject: SHA-256 content-addressed and Ed25519-signed by did:web:csoai.org#board-attestation-1 when available, otherwise sig_ed25519:null with unsigned_reason. Check csoai.signer before paying. Paid reserve returns up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The separate interop root in the free preview is not included in the paid reserve. Payment never creates a MEASURED board cell.",
+      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
       "method": "GET",
       "paid_for": "issuance",
       "url": "https://councilof.ai/api/request-attestation?subject=model-or-subject-id"
@@ -128,11 +304,44 @@
     {
       "accepts": [
         {
-          "description": "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "250000000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.evidence_bundle",
+            "sku_id": "evidence_bundle",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -144,7 +353,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+      "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
       "method": "GET",
       "paid_for": "assembly",
       "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1"
@@ -152,11 +361,44 @@
     {
       "accepts": [
         {
-          "description": "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.issuance",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/signed-data-feed?feed=1",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -164,23 +406,56 @@
             "type": "object"
           },
           "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
-          "resource": "https://councilof.ai/api/eunomia-data?feed=1",
+          "resource": "https://councilof.ai/api/signed-data-feed?feed=1",
           "scheme": "exact"
         }
       ],
-      "description": "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
+      "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
       "method": "GET",
       "paid_for": "assembly",
-      "url": "https://councilof.ai/api/eunomia-data?feed=1"
+      "url": "https://councilof.ai/api/signed-data-feed?feed=1"
     },
     {
       "accepts": [
         {
-          "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.issuance",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/proof?bundle=1",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -192,7 +467,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
       "method": "GET",
       "paid_for": "assembly",
       "url": "https://councilof.ai/api/proof?bundle=1"
@@ -200,11 +475,44 @@
     {
       "accepts": [
         {
-          "description": "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.request_attestation",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/rwa/evidence?asset=RLUSD",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -216,7 +524,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+      "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
       "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
       "method": "GET",
       "paid_for": "issuance",
@@ -225,11 +533,44 @@
     {
       "accepts": [
         {
-          "description": "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.request_attestation",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper?id=usdc.e:arbitrum",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -241,7 +582,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+      "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/wrapper?id=<wrapped-symbol:chain>&preview=1",
       "method": "GET",
       "paid_for": "issuance",
@@ -250,11 +591,44 @@
     {
       "accepts": [
         {
-          "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.request_attestation",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -266,7 +640,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+      "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/wrapper/changes?id=usdc.e:arbitrum&preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -275,11 +649,221 @@
     {
       "accepts": [
         {
-          "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.wrapper.asset.usdc",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/asset/usdc",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/asset/usdc",
+          "scheme": "exact"
+        }
+      ],
+      "asset": "USDC",
+      "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "free_preview": "https://councilof.ai/api/wrapper/asset/usdc?preview=1",
+      "method": "GET",
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/wrapper/asset/usdc"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.wrapper.asset.usdt",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/asset/usdt",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/asset/usdt",
+          "scheme": "exact"
+        }
+      ],
+      "asset": "USDT",
+      "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "free_preview": "https://councilof.ai/api/wrapper/asset/usdt?preview=1",
+      "method": "GET",
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/wrapper/asset/usdt"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.wrapper.asset.dai",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/asset/dai",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/wrapper/asset/dai",
+          "scheme": "exact"
+        }
+      ],
+      "asset": "DAI",
+      "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "free_preview": "https://councilof.ai/api/wrapper/asset/dai?preview=1",
+      "method": "GET",
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/wrapper/asset/dai"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "25000000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.art50_marking_evidence",
+            "sku_id": "art50_marking_evidence",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -291,7 +875,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+      "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
       "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/og-image.png&preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -300,11 +884,44 @@
     {
       "accepts": [
         {
-          "description": "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "25000000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.provider_diff_feed",
+            "sku_id": "provider_diff_feed",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/feeds/provider-diff?history=1",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -316,7 +933,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+      "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
       "method": "GET",
       "paid_for": "assembly",
       "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
@@ -324,11 +941,44 @@
     {
       "accepts": [
         {
-          "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "100000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.receipts_batch",
+            "sku_id": "receipts_batch",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -340,7 +990,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
       "free_preview": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00:00:00Z&preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -349,11 +999,103 @@
     {
       "accepts": [
         {
-          "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.request_attestation",
+            "sku_id": "request_attestation",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/measurement/fresh-capsule",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/measurement/fresh-capsule",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
+      "free_preview": "https://councilof.ai/api/measurement/fresh-capsule?endpoint=https://councilof.ai/mcp&dimension=TOOLS&preview=1",
+      "free_verification": "https://councilof.ai/mcp (verify_capsule, server_evidence are free)",
+      "method": "GET",
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/measurement/fresh-capsule"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.stablecoins",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/stablecoins",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -365,7 +1107,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+      "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/stablecoins?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -375,11 +1117,44 @@
     {
       "accepts": [
         {
-          "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.swift",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/swift",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -391,7 +1166,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+      "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/swift?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -401,11 +1176,44 @@
     {
       "accepts": [
         {
-          "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.xrpl",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/xrpl",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -417,7 +1225,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+      "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/xrpl?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -427,11 +1235,44 @@
     {
       "accepts": [
         {
-          "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.x402-bazaar",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/x402-bazaar",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -443,7 +1284,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+      "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/x402-bazaar?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -453,11 +1294,44 @@
     {
       "accepts": [
         {
-          "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.mcp-registry",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/mcp-registry",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -469,7 +1343,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+      "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -479,11 +1353,44 @@
     {
       "accepts": [
         {
-          "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.a2a",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/a2a",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -495,7 +1402,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+      "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/a2a?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -505,11 +1412,44 @@
     {
       "accepts": [
         {
-          "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.ots-proofs",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/ots-proofs",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -521,7 +1461,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+      "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/ots-proofs?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -531,11 +1471,44 @@
     {
       "accepts": [
         {
-          "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.layer0",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/layer0",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -547,7 +1520,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+      "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/layer0?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -557,11 +1530,44 @@
     {
       "accepts": [
         {
-          "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.corrections",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/corrections",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -573,7 +1579,7 @@
           "scheme": "exact"
         }
       ],
-      "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+      "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/corrections?preview=1",
       "method": "GET",
       "paid_for": "assembly",
@@ -583,11 +1589,44 @@
     {
       "accepts": [
         {
-          "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+          "amount": "10000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": "csoai-launch-30d-20260911",
+            "ends_at": "2026-10-11T00:00:00Z",
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "10000",
+            "pricing_basis": "PROMO_EXISTING_DATA",
+            "product_id": "csoai.product.population.claim-watch",
+            "sku_id": "issuance",
+            "starts_at": "2026-09-11T00:00:00Z"
+          },
+          "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
           "extra": {
-            "name": "USDC",
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
             "version": "2"
           },
+          "maxAmountRequired": "10000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/pop/claim-watch",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "10000",
           "maxTimeoutSeconds": 300,
           "mimeType": "application/json",
           "network": "base",
@@ -599,12 +1638,1641 @@
           "scheme": "exact"
         }
       ],
-      "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+      "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
       "free_preview": "https://councilof.ai/api/pop/claim-watch?preview=1",
       "method": "GET",
       "paid_for": "assembly",
       "population": "claim-watch",
       "url": "https://councilof.ai/api/pop/claim-watch"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "20000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": null,
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
+            "product_id": "csoai.product.ras.mcp_probe",
+            "sku_id": "ras_fresh_read"
+          },
+          "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "outputSchema": {
+            "properties": {
+              "board_effect": {
+                "const": "none"
+              },
+              "evidence": {
+                "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+                "type": "object"
+              },
+              "kind": {
+                "const": "receipt"
+              },
+              "payment_changes_result": {
+                "const": false
+              },
+              "receipt": {
+                "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+                "properties": {
+                  "as_of": {
+                    "type": "string"
+                  },
+                  "did": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "schema": {
+                    "const": "https://councilof.ai/schema/card-v0.json"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sig_ed25519": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "unmeasured": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "unsigned_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "schema",
+                  "surface",
+                  "payload",
+                  "sha256",
+                  "sig_ed25519",
+                  "unmeasured"
+                ],
+                "type": "object"
+              },
+              "result": {
+                "properties": {
+                  "fetched_at": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "const": "csoai.ras.mcp-probe/0.1"
+                  },
+                  "protocol": {
+                    "properties": {
+                      "era": {
+                        "enum": [
+                          "modern",
+                          "legacy",
+                          null
+                        ]
+                      },
+                      "negotiated": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "requested": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "state": {
+                    "enum": [
+                      "RESPONDED",
+                      "AUTH_REQUIRED",
+                      "NOT_MCP",
+                      "MCP_ERROR",
+                      "UNREACHABLE",
+                      "TIMEOUT"
+                    ]
+                  },
+                  "tool_called": {
+                    "const": false
+                  },
+                  "tools": {
+                    "properties": {
+                      "count": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "names_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "state": {
+                        "enum": [
+                          "LISTED",
+                          "LIST_ERROR",
+                          "NOT_ATTEMPTED",
+                          "PARTIAL"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "state",
+                  "protocol",
+                  "tools",
+                  "tool_called",
+                  "fetched_at"
+                ],
+                "type": "object"
+              },
+              "schema": {
+                "const": "csoai.ras.mcp-probe/0.1"
+              },
+              "settle": {
+                "properties": {
+                  "network": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "payer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "transaction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "kind",
+              "result",
+              "receipt",
+              "settle",
+              "payment_changes_result",
+              "board_effect"
+            ],
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/ras/mcp-probe",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "properties": {
+              "board_effect": {
+                "const": "none"
+              },
+              "evidence": {
+                "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+                "type": "object"
+              },
+              "kind": {
+                "const": "receipt"
+              },
+              "payment_changes_result": {
+                "const": false
+              },
+              "receipt": {
+                "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+                "properties": {
+                  "as_of": {
+                    "type": "string"
+                  },
+                  "did": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "schema": {
+                    "const": "https://councilof.ai/schema/card-v0.json"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sig_ed25519": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "unmeasured": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "unsigned_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "schema",
+                  "surface",
+                  "payload",
+                  "sha256",
+                  "sig_ed25519",
+                  "unmeasured"
+                ],
+                "type": "object"
+              },
+              "result": {
+                "properties": {
+                  "fetched_at": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "const": "csoai.ras.mcp-probe/0.1"
+                  },
+                  "protocol": {
+                    "properties": {
+                      "era": {
+                        "enum": [
+                          "modern",
+                          "legacy",
+                          null
+                        ]
+                      },
+                      "negotiated": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "requested": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "state": {
+                    "enum": [
+                      "RESPONDED",
+                      "AUTH_REQUIRED",
+                      "NOT_MCP",
+                      "MCP_ERROR",
+                      "UNREACHABLE",
+                      "TIMEOUT"
+                    ]
+                  },
+                  "tool_called": {
+                    "const": false
+                  },
+                  "tools": {
+                    "properties": {
+                      "count": {
+                        "type": [
+                          "integer",
+                          "null"
+                        ]
+                      },
+                      "names_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "state": {
+                        "enum": [
+                          "LISTED",
+                          "LIST_ERROR",
+                          "NOT_ATTEMPTED",
+                          "PARTIAL"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "state",
+                  "protocol",
+                  "tools",
+                  "tool_called",
+                  "fetched_at"
+                ],
+                "type": "object"
+              },
+              "schema": {
+                "const": "csoai.ras.mcp-probe/0.1"
+              },
+              "settle": {
+                "properties": {
+                  "network": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "payer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "transaction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "kind",
+              "result",
+              "receipt",
+              "settle",
+              "payment_changes_result",
+              "board_effect"
+            ],
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/ras/mcp-probe",
+          "scheme": "exact"
+        }
+      ],
+      "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
+      "method": "GET",
+      "outputSchema": {
+        "properties": {
+          "board_effect": {
+            "const": "none"
+          },
+          "evidence": {
+            "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+            "type": "object"
+          },
+          "kind": {
+            "const": "receipt"
+          },
+          "payment_changes_result": {
+            "const": false
+          },
+          "receipt": {
+            "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+            "properties": {
+              "as_of": {
+                "type": "string"
+              },
+              "did": {
+                "type": "string"
+              },
+              "payload": {
+                "type": "object"
+              },
+              "schema": {
+                "const": "https://councilof.ai/schema/card-v0.json"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "sig_ed25519": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "subject": {
+                "type": "string"
+              },
+              "surface": {
+                "type": "string"
+              },
+              "unmeasured": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "unsigned_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "surface",
+              "payload",
+              "sha256",
+              "sig_ed25519",
+              "unmeasured"
+            ],
+            "type": "object"
+          },
+          "result": {
+            "properties": {
+              "fetched_at": {
+                "type": "string"
+              },
+              "kind": {
+                "const": "csoai.ras.mcp-probe/0.1"
+              },
+              "protocol": {
+                "properties": {
+                  "era": {
+                    "enum": [
+                      "modern",
+                      "legacy",
+                      null
+                    ]
+                  },
+                  "negotiated": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "requested": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "state": {
+                "enum": [
+                  "RESPONDED",
+                  "AUTH_REQUIRED",
+                  "NOT_MCP",
+                  "MCP_ERROR",
+                  "UNREACHABLE",
+                  "TIMEOUT"
+                ]
+              },
+              "tool_called": {
+                "const": false
+              },
+              "tools": {
+                "properties": {
+                  "count": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ]
+                  },
+                  "names_sha256": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "state": {
+                    "enum": [
+                      "LISTED",
+                      "LIST_ERROR",
+                      "NOT_ATTEMPTED",
+                      "PARTIAL"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "required": [
+              "kind",
+              "state",
+              "protocol",
+              "tools",
+              "tool_called",
+              "fetched_at"
+            ],
+            "type": "object"
+          },
+          "schema": {
+            "const": "csoai.ras.mcp-probe/0.1"
+          },
+          "settle": {
+            "properties": {
+              "network": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "payer": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "transaction": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "kind",
+          "result",
+          "receipt",
+          "settle",
+          "payment_changes_result",
+          "board_effect"
+        ],
+        "type": "object"
+      },
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/ras/mcp-probe?url=https://councilof.ai/mcp"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "20000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": null,
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
+            "product_id": "csoai.product.ras.x402_check",
+            "sku_id": "ras_fresh_read"
+          },
+          "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "outputSchema": {
+            "properties": {
+              "board_effect": {
+                "const": "none"
+              },
+              "evidence": {
+                "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+                "type": "object"
+              },
+              "kind": {
+                "const": "receipt"
+              },
+              "payment_changes_result": {
+                "const": false
+              },
+              "receipt": {
+                "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+                "properties": {
+                  "as_of": {
+                    "type": "string"
+                  },
+                  "did": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "schema": {
+                    "const": "https://councilof.ai/schema/card-v0.json"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sig_ed25519": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "unmeasured": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "unsigned_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "schema",
+                  "surface",
+                  "payload",
+                  "sha256",
+                  "sig_ed25519",
+                  "unmeasured"
+                ],
+                "type": "object"
+              },
+              "result": {
+                "properties": {
+                  "fetched_at": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "const": "csoai.ras.x402-check/0.1"
+                  },
+                  "row": {
+                    "description": "the census probe() row: status, payment_required_header, x402_version, has_accepts, has_bazaar_extension, header_x402_version, header_has_bazaar_extension, scheme, network, amount, conformant",
+                    "type": "object"
+                  },
+                  "rule": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "enum": [
+                      "CONFORMANT",
+                      "NOT_CONFORMANT",
+                      "UNREACHABLE"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "state",
+                  "row",
+                  "rule",
+                  "fetched_at"
+                ],
+                "type": "object"
+              },
+              "schema": {
+                "const": "csoai.ras.x402-check/0.1"
+              },
+              "settle": {
+                "properties": {
+                  "network": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "payer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "transaction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "kind",
+              "result",
+              "receipt",
+              "settle",
+              "payment_changes_result",
+              "board_effect"
+            ],
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/ras/x402-check",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "properties": {
+              "board_effect": {
+                "const": "none"
+              },
+              "evidence": {
+                "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+                "type": "object"
+              },
+              "kind": {
+                "const": "receipt"
+              },
+              "payment_changes_result": {
+                "const": false
+              },
+              "receipt": {
+                "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+                "properties": {
+                  "as_of": {
+                    "type": "string"
+                  },
+                  "did": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "schema": {
+                    "const": "https://councilof.ai/schema/card-v0.json"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sig_ed25519": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "unmeasured": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "unsigned_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "schema",
+                  "surface",
+                  "payload",
+                  "sha256",
+                  "sig_ed25519",
+                  "unmeasured"
+                ],
+                "type": "object"
+              },
+              "result": {
+                "properties": {
+                  "fetched_at": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "const": "csoai.ras.x402-check/0.1"
+                  },
+                  "row": {
+                    "description": "the census probe() row: status, payment_required_header, x402_version, has_accepts, has_bazaar_extension, header_x402_version, header_has_bazaar_extension, scheme, network, amount, conformant",
+                    "type": "object"
+                  },
+                  "rule": {
+                    "type": "string"
+                  },
+                  "state": {
+                    "enum": [
+                      "CONFORMANT",
+                      "NOT_CONFORMANT",
+                      "UNREACHABLE"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "state",
+                  "row",
+                  "rule",
+                  "fetched_at"
+                ],
+                "type": "object"
+              },
+              "schema": {
+                "const": "csoai.ras.x402-check/0.1"
+              },
+              "settle": {
+                "properties": {
+                  "network": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "payer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "transaction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "kind",
+              "result",
+              "receipt",
+              "settle",
+              "payment_changes_result",
+              "board_effect"
+            ],
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/ras/x402-check",
+          "scheme": "exact"
+        }
+      ],
+      "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
+      "method": "GET",
+      "outputSchema": {
+        "properties": {
+          "board_effect": {
+            "const": "none"
+          },
+          "evidence": {
+            "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+            "type": "object"
+          },
+          "kind": {
+            "const": "receipt"
+          },
+          "payment_changes_result": {
+            "const": false
+          },
+          "receipt": {
+            "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+            "properties": {
+              "as_of": {
+                "type": "string"
+              },
+              "did": {
+                "type": "string"
+              },
+              "payload": {
+                "type": "object"
+              },
+              "schema": {
+                "const": "https://councilof.ai/schema/card-v0.json"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "sig_ed25519": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "subject": {
+                "type": "string"
+              },
+              "surface": {
+                "type": "string"
+              },
+              "unmeasured": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "unsigned_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "surface",
+              "payload",
+              "sha256",
+              "sig_ed25519",
+              "unmeasured"
+            ],
+            "type": "object"
+          },
+          "result": {
+            "properties": {
+              "fetched_at": {
+                "type": "string"
+              },
+              "kind": {
+                "const": "csoai.ras.x402-check/0.1"
+              },
+              "row": {
+                "description": "the census probe() row: status, payment_required_header, x402_version, has_accepts, has_bazaar_extension, header_x402_version, header_has_bazaar_extension, scheme, network, amount, conformant",
+                "type": "object"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "state": {
+                "enum": [
+                  "CONFORMANT",
+                  "NOT_CONFORMANT",
+                  "UNREACHABLE"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "state",
+              "row",
+              "rule",
+              "fetched_at"
+            ],
+            "type": "object"
+          },
+          "schema": {
+            "const": "csoai.ras.x402-check/0.1"
+          },
+          "settle": {
+            "properties": {
+              "network": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "payer": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "transaction": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "kind",
+          "result",
+          "receipt",
+          "settle",
+          "payment_changes_result",
+          "board_effect"
+        ],
+        "type": "object"
+      },
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/ras/x402-check?url=https://councilof.ai/api/free-door"
+    },
+    {
+      "accepts": [
+        {
+          "amount": "20000",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "csoai_pricing": {
+            "campaign_id": null,
+            "fresh_compute_excluded": true,
+            "normal_amount_atomic": "20000",
+            "offered_amount_atomic": "20000",
+            "pricing_basis": "STANDARD",
+            "product_id": "csoai.product.ras.supply",
+            "sku_id": "ras_fresh_read"
+          },
+          "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
+          "extra": {
+            "decimals": 6,
+            "name": "USD Coin",
+            "symbol": "USDC",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "eip155:8453",
+          "outputSchema": {
+            "properties": {
+              "board_effect": {
+                "const": "none"
+              },
+              "evidence": {
+                "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+                "type": "object"
+              },
+              "kind": {
+                "const": "receipt"
+              },
+              "payment_changes_result": {
+                "const": false
+              },
+              "receipt": {
+                "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+                "properties": {
+                  "as_of": {
+                    "type": "string"
+                  },
+                  "did": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "schema": {
+                    "const": "https://councilof.ai/schema/card-v0.json"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sig_ed25519": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "unmeasured": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "unsigned_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "schema",
+                  "surface",
+                  "payload",
+                  "sha256",
+                  "sig_ed25519",
+                  "unmeasured"
+                ],
+                "type": "object"
+              },
+              "result": {
+                "properties": {
+                  "evidence_kind": {
+                    "enum": [
+                      "STATE_PROOF_VERIFIED",
+                      "OPERATOR_API",
+                      "REJECTED"
+                    ]
+                  },
+                  "fetched_at": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "object"
+                  },
+                  "kind": {
+                    "const": "csoai.ras.supply-read/0.1"
+                  },
+                  "proof": {
+                    "type": "object"
+                  },
+                  "supply": {
+                    "properties": {
+                      "base_units": {
+                        "type": "string"
+                      },
+                      "decimal": {
+                        "type": "string"
+                      },
+                      "decimals": {
+                        "type": "integer"
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "target",
+                  "evidence_kind",
+                  "height",
+                  "fetched_at"
+                ],
+                "type": "object"
+              },
+              "schema": {
+                "const": "csoai.ras.supply/0.1"
+              },
+              "settle": {
+                "properties": {
+                  "network": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "payer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "transaction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "kind",
+              "result",
+              "receipt",
+              "settle",
+              "payment_changes_result",
+              "board_effect"
+            ],
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/ras/supply",
+          "scheme": "exact"
+        }
+      ],
+      "accepts_v1": [
+        {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
+          "extra": {
+            "name": "USD Coin",
+            "version": "2"
+          },
+          "maxAmountRequired": "20000",
+          "maxTimeoutSeconds": 300,
+          "mimeType": "application/json",
+          "network": "base",
+          "outputSchema": {
+            "properties": {
+              "board_effect": {
+                "const": "none"
+              },
+              "evidence": {
+                "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+                "type": "object"
+              },
+              "kind": {
+                "const": "receipt"
+              },
+              "payment_changes_result": {
+                "const": false
+              },
+              "receipt": {
+                "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+                "properties": {
+                  "as_of": {
+                    "type": "string"
+                  },
+                  "did": {
+                    "type": "string"
+                  },
+                  "payload": {
+                    "type": "object"
+                  },
+                  "schema": {
+                    "const": "https://councilof.ai/schema/card-v0.json"
+                  },
+                  "sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "type": "string"
+                  },
+                  "sig_ed25519": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "surface": {
+                    "type": "string"
+                  },
+                  "unmeasured": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "unsigned_reason": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "schema",
+                  "surface",
+                  "payload",
+                  "sha256",
+                  "sig_ed25519",
+                  "unmeasured"
+                ],
+                "type": "object"
+              },
+              "result": {
+                "properties": {
+                  "evidence_kind": {
+                    "enum": [
+                      "STATE_PROOF_VERIFIED",
+                      "OPERATOR_API",
+                      "REJECTED"
+                    ]
+                  },
+                  "fetched_at": {
+                    "type": "string"
+                  },
+                  "height": {
+                    "type": "object"
+                  },
+                  "kind": {
+                    "const": "csoai.ras.supply-read/0.1"
+                  },
+                  "proof": {
+                    "type": "object"
+                  },
+                  "supply": {
+                    "properties": {
+                      "base_units": {
+                        "type": "string"
+                      },
+                      "decimal": {
+                        "type": "string"
+                      },
+                      "decimals": {
+                        "type": "integer"
+                      }
+                    },
+                    "type": [
+                      "object",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "kind",
+                  "target",
+                  "evidence_kind",
+                  "height",
+                  "fetched_at"
+                ],
+                "type": "object"
+              },
+              "schema": {
+                "const": "csoai.ras.supply/0.1"
+              },
+              "settle": {
+                "properties": {
+                  "network": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "payer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "transaction": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "kind",
+              "result",
+              "receipt",
+              "settle",
+              "payment_changes_result",
+              "board_effect"
+            ],
+            "type": "object"
+          },
+          "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+          "resource": "https://councilof.ai/api/ras/supply",
+          "scheme": "exact"
+        }
+      ],
+      "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
+      "method": "GET",
+      "outputSchema": {
+        "properties": {
+          "board_effect": {
+            "const": "none"
+          },
+          "evidence": {
+            "description": "unsigned bulk returned beside the receipt; its digest is inside result where it matters",
+            "type": "object"
+          },
+          "kind": {
+            "const": "receipt"
+          },
+          "payment_changes_result": {
+            "const": false
+          },
+          "receipt": {
+            "description": "card-v0 receipt; sha256 and sig_ed25519 cover the canonical bytes (sorted keys, compact) of `payload`",
+            "properties": {
+              "as_of": {
+                "type": "string"
+              },
+              "did": {
+                "type": "string"
+              },
+              "payload": {
+                "type": "object"
+              },
+              "schema": {
+                "const": "https://councilof.ai/schema/card-v0.json"
+              },
+              "sha256": {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "sig_ed25519": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "subject": {
+                "type": "string"
+              },
+              "surface": {
+                "type": "string"
+              },
+              "unmeasured": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "unsigned_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "surface",
+              "payload",
+              "sha256",
+              "sig_ed25519",
+              "unmeasured"
+            ],
+            "type": "object"
+          },
+          "result": {
+            "properties": {
+              "evidence_kind": {
+                "enum": [
+                  "STATE_PROOF_VERIFIED",
+                  "OPERATOR_API",
+                  "REJECTED"
+                ]
+              },
+              "fetched_at": {
+                "type": "string"
+              },
+              "height": {
+                "type": "object"
+              },
+              "kind": {
+                "const": "csoai.ras.supply-read/0.1"
+              },
+              "proof": {
+                "type": "object"
+              },
+              "supply": {
+                "properties": {
+                  "base_units": {
+                    "type": "string"
+                  },
+                  "decimal": {
+                    "type": "string"
+                  },
+                  "decimals": {
+                    "type": "integer"
+                  }
+                },
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "target",
+              "evidence_kind",
+              "height",
+              "fetched_at"
+            ],
+            "type": "object"
+          },
+          "schema": {
+            "const": "csoai.ras.supply/0.1"
+          },
+          "settle": {
+            "properties": {
+              "network": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "payer": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "transaction": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "schema",
+          "kind",
+          "result",
+          "receipt",
+          "settle",
+          "payment_changes_result",
+          "board_effect"
+        ],
+        "type": "object"
+      },
+      "paid_for": "issuance",
+      "url": "https://councilof.ai/api/ras/supply?asset=USDC&ledger=ethereum"
     }
   ],
   "schema": "csoai.x402/0.2",

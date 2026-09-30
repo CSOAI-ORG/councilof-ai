@@ -29,7 +29,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     q: 'What is the GSPC board, and what does its count line ("… axis · … measured") mean?',
     a: "GSPC (Governance · Safety · Provenance · Continuity) is the living board of measurement slots. The count — read from GET /api/gspc, not typed here — states how many slots carry a measured result versus how many are honestly empty or described.",
-    url: "/gspc-scoreboard",
+    url: "/dashboard/?tab=board",
   },
   {
     q: "What is a measurement card?",
@@ -73,8 +73,8 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Is verification free, and is a grade ever for sale?",
-    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Where measurement is paid it is pay-as-you-go x402, quoted at the 402 itself — not live yet.",
-    url: "/enterprise",
+    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Where measurement is paid it is pay-as-you-go x402, quoted at the 402 itself. The x402 doors that are live are the ones listed in the machine-readable manifest at /.well-known/x402.json; /services reads that manifest on every load, so this answer names no count.",
+    url: "/dashboard/?task=enterprise-start&tab=measured",
   },
   {
     q: "Is a measurement card legal advice, and what happens when the law changes?",

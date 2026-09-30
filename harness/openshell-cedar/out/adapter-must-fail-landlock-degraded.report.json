@@ -1,0 +1,62 @@
+{
+ "translator": {
+  "name": "openshell-yaml-to-cedar",
+  "version": "0.1.0"
+ },
+ "openshell_pin": {
+  "release": "v0.1.2",
+  "tag_commit": "6648bd0c290efbc41ba131ee9831ee45cd431f94",
+  "previous_release": "v0.1.1",
+  "previous_tag_commit": "4ce767fc0cadad773c398e15109c0286f4b7aa30",
+  "sandbox_policy_rego_sha256": "4a17fe93b7bb7e7f8abbdda25dbfb76a2e43b48c5dc8fa6e5f063619bb6def41"
+ },
+ "status": "UNCHECKABLE",
+ "counts": {
+  "policies": 11,
+  "elements": 4,
+  "uncheckable": 1
+ },
+ "elements": [
+  {
+   "source": "platform:always-blocked-addresses",
+   "status": "TRANSLATED",
+   "policies": [
+    "p001",
+    "p002",
+    "p003",
+    "p004"
+   ]
+  },
+  {
+   "source": "platform:control-plane-ports",
+   "status": "TRANSLATED",
+   "policies": [
+    "p005",
+    "p006"
+   ],
+   "note": "widened: OpenShell applies this to exact-host, IP and allowed_ips endpoints; v0 applies it to all"
+  },
+  {
+   "source": "filesystem_policy",
+   "status": "TRANSLATED",
+   "policies": [
+    "p007",
+    "p008",
+    "p009",
+    "p010",
+    "p011"
+   ],
+   "note": "baseline paths are included as the adapter model adds them"
+  },
+  {
+   "source": "landlock.compatibility",
+   "status": "UNCHECKABLE",
+   "reason": "best_effort: the kernel may start the sandbox without the filesystem rules; the Cedar policies state the declaration only"
+  }
+ ],
+ "rule": "Nothing UNCHECKABLE contributes a permit. Forbids are never dropped, only widened.",
+ "input": {
+  "file": "policy.yaml",
+  "sha256": "4a611ff82daa57ba4cf07b4712499ed184bab92fa2369138fb642e59978c7193"
+ }
+}

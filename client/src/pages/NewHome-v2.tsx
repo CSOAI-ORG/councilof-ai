@@ -579,7 +579,7 @@ export default function NewHomeV2() {
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="/try" className="rounded-xl bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-800">Ask the Council -&gt;</a>
-            <a href="/meok-law" className="rounded-xl border border-emerald-300/50 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Your jurisdiction stack -&gt;</a>
+            <a href="/law" className="rounded-xl border border-emerald-300/50 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Your jurisdiction stack -&gt;</a>
           </div>
         </div>
       </section>

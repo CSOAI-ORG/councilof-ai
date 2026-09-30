@@ -1,0 +1,283 @@
+{
+ "schema": "csoai.measurement-publication-erratum/0.1",
+ "as_of": "2026-09-27T01:44:41Z",
+ "what_this_is": "A dated erratum to one field. Every file listed was published with private_until = 'owner approves publication', written before the owner approved publication. The field is obsolete; the files are public.",
+ "what_this_is_not": "Not a re-issue: no listed file is changed, re-signed or replaced, and no measurement changes. Not a grade, ranking, admission or approval of anything the files measure.",
+ "date": "2026-09-26",
+ "index_file": "measurement-index-v0.2-2026-09-26.json",
+ "index_sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+ "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
+ "erratum": "The field private_until = 'owner approves publication' in each file listed here is obsolete. The owner approved publication of the measurement index and everything it binds on 2026-09-26; every file listed is public. The files' bytes are unchanged, because they are signed and anchored: this record supersedes that one field and nothing else. Read it as publication = {state: PUBLIC, approved: 2026-09-26}.",
+ "field_superseded": {
+  "private_until": "owner approves publication"
+ },
+ "publication": {
+  "state": "PUBLIC",
+  "approved": "2026-09-26",
+  "approved_by": "owner",
+  "approval_evidence": "owner approval given in the Claude Code session on 2026-09-26 and recorded at 13:38:15Z (~/.config/csoai/approvals/measurement-index-hf-publish.APPROVED on the measurement host, recorded by the coordinator session); reaffirmed by the owner on 2026-09-27"
+ },
+ "index_publication_record": {
+  "file": "measurement-index-v0.2-2026-09-26.publication.json",
+  "sha256": "effd4713967cff6e03e548f752c87cbb7405a869f15871b00ac92c950201a804"
+ },
+ "from_now_on": "batch records, daily indexes and chain heads written after the approval carry publication {state: PUBLIC} in place of private_until (producer change of 27 Sep 2026)",
+ "n_files": 16,
+ "files": [
+  {
+   "file": "measurement-index-v0.2-2026-09-26.json",
+   "role": "daily index (final)",
+   "schema": "csoai.measurement-capsule-index/0.2",
+   "sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.json",
+     "sha256_at_check": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+     "checked_at": "2026-09-27T01:44:32Z",
+     "same_bytes": true
+    },
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/index.json",
+     "sha256_at_check": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+     "checked_at": "2026-09-27T01:44:32Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json",
+   "role": "daily index (superseded same-day version)",
+   "schema": "csoai.measurement-capsule-index/0.2",
+   "sha256": "d42687b0c8be1c8b63389255c2f7353876bdfcd5a1039f284257eb808c85ce26",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T071103Z.json",
+     "sha256_at_check": "d42687b0c8be1c8b63389255c2f7353876bdfcd5a1039f284257eb808c85ce26",
+     "checked_at": "2026-09-27T01:44:33Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json",
+   "role": "daily index (superseded same-day version)",
+   "schema": "csoai.measurement-capsule-index/0.2",
+   "sha256": "123684626b707d0cf51804144586e057a58a309d961085012e98f474475281ea",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T072439Z.json",
+     "sha256_at_check": "123684626b707d0cf51804144586e057a58a309d961085012e98f474475281ea",
+     "checked_at": "2026-09-27T01:44:33Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json",
+   "role": "daily index (superseded same-day version)",
+   "schema": "csoai.measurement-capsule-index/0.2",
+   "sha256": "ec2d149b584655551cca9e429e61e1674fb809eeb6ad4198dbcaa8925363e8fd",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T075412Z.json",
+     "sha256_at_check": "ec2d149b584655551cca9e429e61e1674fb809eeb6ad4198dbcaa8925363e8fd",
+     "checked_at": "2026-09-27T01:44:34Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json",
+   "role": "daily index (superseded same-day version)",
+   "schema": "csoai.measurement-capsule-index/0.2",
+   "sha256": "34a2decc4077d56ca54d965ae81c9d694de7b704a13b8d003bcad6c970ae0c0c",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T083332Z.json",
+     "sha256_at_check": "34a2decc4077d56ca54d965ae81c9d694de7b704a13b8d003bcad6c970ae0c0c",
+     "checked_at": "2026-09-27T01:44:34Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json",
+   "role": "daily index (superseded same-day version)",
+   "schema": "csoai.measurement-capsule-index/0.2",
+   "sha256": "0c620e52f19bddc9f6fdeb341dc730082ff0b011b82b0535064e1408139e37e9",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-v0.2-2026-09-26.superseded-20260926T103401Z.json",
+     "sha256_at_check": "0c620e52f19bddc9f6fdeb341dc730082ff0b011b82b0535064e1408139e37e9",
+     "checked_at": "2026-09-27T01:44:36Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-chain-genesis.json",
+   "role": "chain genesis",
+   "schema": "csoai.measurement-index-chain-genesis/0.1",
+   "sha256": "485dc3bd0177eba45bc62d460bdcc1093bc6d10bce64d0e7b58bfe3ed4bd8885",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-chain-genesis.json",
+     "sha256_at_check": "485dc3bd0177eba45bc62d460bdcc1093bc6d10bce64d0e7b58bfe3ed4bd8885",
+     "checked_at": "2026-09-27T01:44:36Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-index-chain-head-2026-09-26.json",
+   "role": "weekly chain head",
+   "schema": "csoai.measurement-index-chain-head/0.1",
+   "sha256": "b07962ce1d559a9c4c2d9a51fd6d7a6636004c5c7ac7eadca2c7f297a2eaaa46",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://huggingface.co/datasets/csoai/evidence-index/resolve/main/measurement-index/2026-09-26/measurement-index-chain-head-2026-09-26.json",
+     "sha256_at_check": "b07962ce1d559a9c4c2d9a51fd6d7a6636004c5c7ac7eadca2c7f297a2eaaa46",
+     "checked_at": "2026-09-27T01:44:37Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-a2a_card/record.json",
+   "role": "batch record (a2a_card)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/a2a_card/record.json",
+     "sha256_at_check": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6",
+     "checked_at": "2026-09-27T01:44:37Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-contract_parity.r2/record.json",
+   "role": "batch record (contract_parity)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/contract_parity/record.json",
+     "sha256_at_check": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357",
+     "checked_at": "2026-09-27T01:44:37Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-cross_ledger.r2/record.json",
+   "role": "batch record (cross_ledger)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "ace6cbe3697ed1f6715ea2f921eaad07c82cab795fb86609a3d16b3c956465df",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/cross_ledger/record.json",
+     "sha256_at_check": "ace6cbe3697ed1f6715ea2f921eaad07c82cab795fb86609a3d16b3c956465df",
+     "checked_at": "2026-09-27T01:44:38Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-mill_cross_runtime/record.json",
+   "role": "batch record (mill_cross_runtime)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/mill_cross_runtime-5ae00c1f4c2e/record.json",
+     "sha256_at_check": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+     "checked_at": "2026-09-27T01:44:38Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-mill_cross_runtime-batch2/record.json",
+   "role": "batch record (mill_cross_runtime)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/mill_cross_runtime-78226433e9e4/record.json",
+     "sha256_at_check": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+     "checked_at": "2026-09-27T01:44:39Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-public_signals/record.json",
+   "role": "batch record (public_signals)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/public_signals/record.json",
+     "sha256_at_check": "abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690",
+     "checked_at": "2026-09-27T01:44:39Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-self_parity/record.json",
+   "role": "batch record (self_parity)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/self_parity/record.json",
+     "sha256_at_check": "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337",
+     "checked_at": "2026-09-27T01:44:40Z",
+     "same_bytes": true
+    }
+   ]
+  },
+  {
+   "file": "measurement-capsules-v0.2-2026-09-26-tool_drift/record.json",
+   "role": "batch record (tool_drift)",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+   "private_until": "owner approves publication",
+   "public_at": [
+    {
+     "url": "https://councilof.ai/measurement-capsules/v0.2/tool_drift/record.json",
+     "sha256_at_check": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+     "checked_at": "2026-09-27T01:44:40Z",
+     "same_bytes": true
+    }
+   ]
+  }
+ ],
+ "files_sha256": "5abb10057168512539f3316f86ac88658e423c250e72920180b04af537cc99f4",
+ "files_sha256_rule": "sha256 of the canonical JSON (sorted keys, separators , and :) of [[file, sha256], ...] in the order listed",
+ "signed_fields": [
+  "date",
+  "index_sha256",
+  "publication",
+  "n_files",
+  "files_sha256"
+ ]
+}

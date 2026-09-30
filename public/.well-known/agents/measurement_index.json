@@ -1,0 +1,55 @@
+{
+  "name": "Council of AI — measurement_index",
+  "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "extendedAgentCard": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "measurement_index",
+      "name": "measurement_index",
+      "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
+      "tags": [
+        "measurement",
+        "mcp",
+        "merkle"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"measurement-capsules\",\"input\":{\"op\":\"index\"}}",
+        "POST https://councilof.ai/mcp tools/call {\"name\":\"measurement_index\",\"arguments\":{}}",
+        "GET https://councilof.ai/measurement-capsules/latest.json"
+      ]
+    }
+  ],
+  "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment"
+  ],
+  "mcp_tool": "measurement_index",
+  "paid": false,
+  "did": "did:web:councilof.ai:agents:measurement_index"
+}

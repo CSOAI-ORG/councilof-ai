@@ -16,6 +16,7 @@
 // recomputable for free (the leaves are in /feeds/provider-diff/leaves/, the signed copies in /cards/).
 // What is never sold: a verdict on any change, a grade, the content of any page (never captured).
 // Doctrine: measurement not certification; verify free forever; hash-only; buyer-led.
+import { headFromGet } from "../_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -27,6 +28,7 @@ import {
 } from "../_x402";
 import { railMode } from "../_x402_config";
 import { SKUS } from "../_skus";
+import { PROVIDER_DIFF_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { REVENUE_KV?: KVNamespace };
 
@@ -181,8 +183,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (!wantHistory) return json(free);
 
   // ── x402 door: the signed historical batch ──
-  const description =
-    "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.";
+  const description = PROVIDER_DIFF_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU_ID, tier: "history_batch", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -318,3 +319,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
+import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 
@@ -72,7 +73,7 @@ function LiveBoardCount() {
   }, []);
   return (
     <>
-      <div className="text-2xl font-bold text-emerald-600 mb-2 leading-snug">{label}</div>
+      <div className="text-2xl font-bold text-emerald-700 mb-2 leading-snug">{label}</div>
       <p className="text-gray-600 font-semibold">
         Living GSPC board — counts from GET /api/gspc. The larger number counts slots; the smaller
         counts measurements. A published slot exists so a gap is visible, and is not evidence that
@@ -153,12 +154,23 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section - Origin Story */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-24">
+      <div className="surface-ink text-white py-16 sm:py-24">
         <div className="container max-w-4xl">
           <Badge className="mb-6 bg-emerald-500/20 text-emerald-300 border-emerald-500/30">Our Story</Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight">
             We measure AI systems, sign the result, and publish what we could not measure
           </h1>
+          <p className="text-lg text-gray-300 leading-relaxed mb-8" data-testid="about-accountable-entity">
+            Council of AI is operated by <strong className="text-white">CSOAI Ltd</strong>, UK Companies House{" "}
+            <a
+              href="https://find-and-update.company-information.service.gov.uk/company/16939677"
+              className="text-emerald-300 underline"
+              rel="noopener noreferrer"
+            >
+              16939677
+            </a>
+            , founded by Nicholas Templeman. The company is accountable for everything published on this site.
+          </p>
           <p className="text-xl text-gray-300 leading-relaxed mb-8">
             In 2024, as artificial intelligence began transforming every industry, a critical question emerged:
             <span className="text-emerald-300 font-semibold"> Who watches the watchmen?</span> Governments scrambled to regulate.
@@ -172,11 +184,20 @@ export default function About() {
         </div>
       </div>
 
+      {/* Live, sourced figures (GET /api/momentum); each links to its source. */}
+      <div className="container max-w-5xl">
+        <MomentumStrip
+          variant="panel"
+          title="What the work adds up to, counted live"
+          ids={["pypi_csoai_all_time", "pypi_meok_all_time", "hf_downloads_30d_other", "hf_downloads_30d_self_read", "capsules", "census_rows", "signed_cards", "corrections", "board", "hf_datasets"]}
+        />
+      </div>
+
       {/* The Problem We're Solving */}
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-red-50 text-red-600 border-red-200">The Problem</Badge>
+            <Badge className="mb-4 bg-red-50 text-red-700 border-red-200">The Problem</Badge>
             <h2 className="text-4xl font-bold mb-6">Making AI behaviour checkable</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               AI displacement forecasts vary enormously and we have measured none of them, so we
@@ -190,19 +211,19 @@ export default function About() {
               <h3 className="text-2xl font-bold mb-4 text-red-900">Without CSOAI</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>AI systems deployed without proper safety review</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Companies struggle to find qualified compliance staff</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Nobody outside the vendor can re-run the test that produced the claim</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-red-500 mt-1">✗</span>
+                  <span className="text-red-700 mt-1">✗</span>
                   <span>Governments lack trained personnel for AI oversight</span>
                 </li>
               </ul>
@@ -237,13 +258,13 @@ export default function About() {
       <div className="bg-slate-50 py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Our Mission</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">Our Mission</Badge>
             <h2 className="text-4xl font-bold mb-6">Protecting Humanity While Creating Careers</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               We are not a certification body and never will be — we measure, sign and publish
               evidence, and the competent authorities decide. What we are building is the
               infrastructure for a role we think the law is about to require:
-              <span className="font-semibold text-emerald-600"> the AI Safety Analyst</span>. That
+              <span className="font-semibold text-emerald-700"> the AI Safety Analyst</span>. That
               this becomes a large profession is our bet, not a measurement — we have no forecast to
               cite and we are not going to invent one.
             </p>
@@ -345,7 +366,7 @@ export default function About() {
       <div className="bg-slate-50 py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">What Makes Us Different</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">What Makes Us Different</Badge>
             <h2 className="text-4xl font-bold mb-6">We're Not Just Talking. We're Building.</h2>
           </div>
 
@@ -354,20 +375,22 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">1</div>
+                  <div className="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold">1</div>
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
-                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed; latest test fully correlated</span></h3>
+                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-700">— designed; latest test fully correlated</span></h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     The intended architecture spreads review across providers so no single vendor decides alone.
                     The council-seat figure is a design, not a live system. The{" "}
                     <a href="/interop/council-independence.json" className="text-emerald-700 underline">latest point experiment measured rho=1 and n_eff=1 across three nominal legs</a>,
                     so it does not establish independent or unbiased review.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> When a company's own AI reviews their AI, there's a conflict of interest.
-                    Our multi-vendor approach ensures unbiased safety assessments.
+                    Spreading review across vendors is meant to reduce that conflict. It has not yet been shown to: the
+                    latest measurement above found the legs fully correlated, so we claim no independence and no
+                    unbiased review until a measurement shows otherwise.
                   </p>
                 </Card>
               </div>
@@ -377,20 +400,20 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold">2</div>
+                  <div className="w-12 h-12 rounded-full bg-emerald-700 flex items-center justify-center text-white font-bold">2</div>
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
                   <h3 className="text-2xl font-bold mb-4">👁️ Watchdog: a public intake</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
                     There is a public intake for behaviour that looks wrong, at{" "}
-                    <Link href="/public-watchdog" className="text-emerald-700 underline">/public-watchdog</Link>.
+                    <Link href="/dashboard/?tab=watchdog" className="text-emerald-700 underline">the Watchdog pane of Council OS</Link>.
                     What it is: somewhere to report, that anyone can use. What it is not: a published
                     incident register — we do not yet operate one, and a triaged public register of
                     reports is <strong>not yet available</strong>. We also hold nobody accountable:
                     we measure, and only a regulator can approve, ban, fine or clear anything.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> an intake with no register behind it is worth
                     less than one with, and pretending otherwise is the kind of claim this page
                     exists to retire.
@@ -403,7 +426,7 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">3</div>
+                  <div className="w-12 h-12 rounded-full bg-purple-700 flex items-center justify-center text-white font-bold">3</div>
                   <div className="w-1 h-20 bg-purple-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
@@ -416,7 +439,7 @@ export default function About() {
                     <strong>not yet available</strong>: re-measurement is arranged run by run today,
                     so do not read this as a monitoring subscription.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> a PDF from six months ago describes a model that
                     no longer exists. A dated, signed card at least tells you which model it describes.
                   </p>
@@ -428,7 +451,7 @@ export default function About() {
             <div className="relative">
               <div className="flex gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold">4</div>
+                  <div className="w-12 h-12 rounded-full bg-orange-700 flex items-center justify-center text-white font-bold">4</div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
                   <h3 className="text-2xl font-bold mb-4">💼 Free training, and an honest account of where it leads</h3>
@@ -439,7 +462,7 @@ export default function About() {
                     one rating organisation on one criterion and that is the whole of our comparative
                     evidence. The training exists and is free; the career outcome is unmeasured.
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-600">
                     <strong>Why it matters:</strong> a training pipeline that promises income it has
                     not measured is selling something. Free training with an unmeasured outcome,
                     stated as such, is the honest version of the same offer.
@@ -455,7 +478,7 @@ export default function About() {
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-50 text-emerald-600 border-emerald-200">Metrics</Badge>
+            <Badge className="mb-4 bg-emerald-50 text-emerald-700 border-emerald-200">Metrics</Badge>
             <h2 className="text-4xl font-bold mb-6">By the Numbers</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
               Every figure below is read from a live endpoint at page load, with the artifact and
@@ -508,7 +531,7 @@ export default function About() {
       </div>
 
       {/* Our Commitment */}
-      <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 text-white py-20">
+      <div className="surface-ink text-white py-16 sm:py-20">
         <div className="container max-w-4xl text-center">
           <Heart className="h-16 w-16 text-emerald-400 mx-auto mb-6" />
           <h2 className="text-4xl font-bold mb-6">Our Commitment to You</h2>
@@ -523,12 +546,12 @@ export default function About() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/academy">
-              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+              <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                 Start Training Today
               </Button>
             </Link>
             <Link href="/academy">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
                 Open the academy
               </Button>
             </Link>
@@ -610,7 +633,7 @@ export default function About() {
               <Building2 className="h-8 w-8 text-blue-600 mx-auto mb-3" />
               <h4 className="font-bold mb-2">UK Registered</h4>
               <p className="text-sm text-gray-600">Companies House No: 16939677</p>
-              <p className="text-xs text-gray-500 mt-1">Registered in England & Wales</p>
+              <p className="text-xs text-gray-600 mt-1">Registered in England & Wales</p>
             </Card>
             <Card className="p-6 text-center bg-gradient-to-br from-purple-50 to-white border-purple-200 hover:shadow-lg transition-shadow">
               <Globe className="h-8 w-8 text-purple-600 mx-auto mb-3" />
@@ -719,7 +742,7 @@ export default function About() {
       {/* Final CTA */}
       <div className="bg-white py-20">
         <div className="container max-w-4xl">
-          <Card className="p-12 bg-gradient-to-br from-slate-900 to-emerald-900 text-white text-center">
+          <Card className="p-12 border-[var(--ink-border)] bg-[var(--ink)] text-white text-center">
             <h2 className="text-4xl font-bold mb-6">Start with the free rail</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Training is free and the whole verification rail is free forever. A grade is never
@@ -729,12 +752,12 @@ export default function About() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/academy">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button size="lg" className="bg-emerald-700 hover:bg-emerald-800 text-white">
                   Start Free Training
                 </Button>
               </Link>
               <Link href="/dashboard?task=enterprise-start&tab=measured">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10 hover:text-white">
                   Enterprise lobby
                 </Button>
               </Link>

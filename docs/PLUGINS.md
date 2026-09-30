@@ -1,26 +1,55 @@
 # Plugins and extensions — one verify surface, one lid, per platform
 
-The estate has ONE board authority (`GET https://councilof.ai/api/gspc`) and ONE
-card-verification rule (`/signed/HOW-TO-VERIFY.md`, implemented once in
-`functions/_lib/cardVerify.ts`). Every plugin below is a *printer* of that GET and a
-*caller* of that rule. None is a second engine; none certifies; none sells a rank.
-Verify is free everywhere.
+The estate has ONE board authority (`GET https://councilof.ai/api/gspc`), ONE live-state join
+(`GET https://councilof.ai/api/state`) and ONE card-verification rule
+(`/signed/HOW-TO-VERIFY.md`, implemented once in `functions/_lib/cardVerify.ts`). Maintained-claim
+state comes from `GET /api/claims/register`; executed rechecks are
+`/api/state → ledgers.claim_maintenance`; the append-only recheck event history is `GET /api/claims/events`
+with verification at `GET /api/claims/events/head`; append history comes from `GET /api/corrections`.
+Every plugin below is a *reader* of those public authorities and a *caller* of the verifier.
+None is a second engine, ledger or scheduler; none certifies; none sells a rank. Verify is free everywhere.
 
 The two things every platform surface must be able to show:
 
-1. **The lid** — `totals.lid` from `/api/gspc`, printed verbatim (live today:
-   "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is
-   TIE · not a certificate" — do not copy this line into code; fetch it).
+1. **The lid** — `totals.lid` from `/api/gspc`, printed verbatim. No example is quoted
+   here: the one this file used to carry went stale within days. Fetch it.
 2. **A three-state verify** — VALID / INVALID / UNCHECKABLE for a pasted card, with the
    signing key pinned to `did:web:csoai.org` and "could not check" never rendered as
    "forged".
 
-## Inventory (bytes adjudicated 2026-09-02)
+## End to end, 2026-09-28 (clean environment on the lanes pod, against live endpoints)
+
+Each row was installed or run from scratch and called for real; the proof files are under
+`/workspace/lanes/plugin-ext-20260928/` on the pod volume. The tool list of a server is
+whatever its `tools/list` answers — counts below are what was READ, with the time.
+
+| Surface | Result | What was run |
+|---|---|---|
+| HTTP MCP `https://councilof.ai/mcp` | WORKS | initialize → serverInfo 1.4.2 (== `mcp/gspc-server/server.json`); tools/list 16 (12 read-only annotated, 4 x402); one real call per tool, 21:31Z: board_totals LIVE 23 axis · 23 measured, verify_card VALID, get_root VALID (merkle c2ab6d59…), verify_inclusion VALID; x402 tools answer the challenge, nothing settled |
+| HTTP MCP `https://councilof.ai/mcp/free` | WORKS | same 12 read-only tools; the 4 x402 names are absent (not found), as the directory submission requires |
+| Claude Code plugin `gspc@council-of-ai` (`distribution/plugin`, this repo) | WORKS | Claude Code 2.1.283, clean HOME: `plugin validate` passes; marketplace add + install; `claude mcp list` → `plugin:gspc:gspc … (HTTP) ✔ Connected` |
+| Claude Code plugin `council-of-ai@council-of-ai` (repo `CSOAI-ORG/council-of-ai-grok`) | BROKEN | (a) repo 404 anonymously while the org is dark — not installable by anyone else; (b) HEAD's `.mcp.json` entry has `url` but no `"type": "http"` → Claude Code registers **no** server ("No MCP servers configured"; adding the type → Connected); (c) five commits since 29 Aug kept version 0.1.1, so installed copies stay on cb01690, which still wires `csoai-governance` + unpinned `npx csoai-gspc-mcp`; (d) `/sign` calls `csoai-governance`. Proposal patch 0.1.2 (all four) staged in the lane dir, HELD for the owner |
+| npm `csoai-governance-mcp` 0.1.0 (in the installed plugin above) | BROKEN | every tool errors: csoai_catalog 404, csoai_sign 405, csoai_verify 405, csoai_govern "unavailable". Its default gateway is not a CSOAI surface. npm marks it deprecated. Not wired into any surface in this repo |
+| npm `csoai-gspc-mcp` 0.2.2 (stdio) | WORKS, narrower | 12 tools: the 8 free + 4 x402 all answer; `mcp_trust`, `measurement_index`, `verify_capsule`, `server_evidence` are "unknown tool" — the repo source declares the same version with 16 tools (same version, different bytes: owned by the harness-x parity lane). npm marks 0.2.2 deprecated, and the server card pins exactly that version |
+| Chrome extension `extensions/chrome-gspc-verify/` 0.1.1 | WORKS (after this change) | loaded unpacked in Chromium 1228 (Playwright, headless): popup board prints `totals.public_count` verbatim and one row per live axis (23 rows == live); verify: signed card VALID, mill card VALID, tampered INVALID, bad JSON UNCHECKABLE, public-root leaf UNCHECKABLE + inclusion VALID via live `/api/proof`; Hub badge on a model page with signed cards → MEASURED, on one without → UNMEASURED. vitest 55/55 |
+| Grok pointer (`.grok-plugin/marketplace.json` → `plugins/gspc/`) | FIXED TEXT | said "Four tools" / "Seven tools" / "No 23rd axis" against a 16-tool server and a 23-axis board; now types no count. `.mcp.json` gains `"type": "http"`. Not install-tested: no Grok CLI on the pod, and the GitHub install path is dark |
+
+Found and fixed in the extension: `lib/cardVerify.mjs` had drifted from
+`functions/_lib/cardVerify.ts` (the twin test failed): it lacked the rotated
+`#card-attestation-2` key, so a card naming that key came back UNCHECKABLE "not pinned".
+Regenerating alone turned all 2,825 mill cards INVALID, because the extension injected a
+`pubkey` beside the card's `did` and the shared rule now calls that `key_ambiguous`; the
+extension now passes the card through and lets the shared verifier resolve the DID. The
+mill-card test takes 20–30 s on the pod and timed out at vitest's 5 s default; it has an
+explicit bound. A public-root leaf was told "not a shape CSOAI publishes", which is false; it
+now gets its own UNCHECKABLE reason.
+
+## Inventory (bytes adjudicated 2026-09-02; superseded where the table above disagrees)
 
 | Surface | State | Where | Notes |
 |---|---|---|---|
-| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/` (7 tools: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion) | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
-| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`, tool catalogue `functions/mcp/gspc-tools.json` (same 7 names) | shares `functions/_lib/cardVerify.ts` |
+| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/`; its package catalogue/README is the authority for the installed version | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
+| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`; live tool catalogues are `functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json` | shares `functions/_lib/cardVerify.ts`; do not copy a tool count into docs |
 | Claude Code / Grok plugin | REAL (separate repo) | marketplace `CSOAI-ORG/council-of-ai-grok`: `plugin.json`, `.claude-plugin/marketplace.json`, skills `council` `gspc` `pack` `sign-artifact` `verify-card`, commands, agent `measurement-auditor`, `verifier/gspc-verify.mjs` | in this repo only the pointer: `plugins/gspc/{plugin.json,.mcp.json,README.md}` (→ `https://councilof.ai/mcp`) and `.grok-plugin/marketplace.json` |
 | Offline verifier package | REAL | `packages/gspc-card-verifier/` (37/37 under `node --test`), bundled to `public/verifier/gspc-verify.mjs` | profile-driven; refuses out-of-domain numbers |
 | Browser verify page | REAL | `/gspc-verify` → `client/src/lib/recordVerify.ts` → `functions/_lib/cardVerify.ts` | `client/src/lib/cardVerify.ts` is an older twin kept in step by `cardVerifyTwin.test.ts` |
@@ -31,7 +60,9 @@ The two things every platform surface must be able to show:
 
 Findings the inventory surfaced (not fixed here; owner to rule):
 
-- Mill cards (`/interop/mill-cards-signed/*.json`) carry `did` and no `pubkey`, and are
+- RESOLVED by 2026-09-28: the shared verifier now resolves a mill card's `did` itself and
+  returns VALID (see the table above). Original finding, kept for the record:
+  Mill cards (`/interop/mill-cards-signed/*.json`) carry `did` and no `pubkey`, and are
   signed under **board-attestation-1**. `functions/_lib/cardVerify.ts` classifies them as
   `unrecognised_family`, so `/gspc-verify` and the `/mcp` `verify_card` tool return
   "nothing was checked" for a genuinely signed card, and the stdio MCP returns
@@ -67,18 +98,21 @@ then install `council-of-ai`). Skills `/council-of-ai:gspc` (board) and
 
 ### Chrome extension
 
-`extensions/chrome-gspc-verify/` — load unpacked (README). Popup = lid + 22-row board +
-verify box; badge on `huggingface.co/<org>/<model>`. Web Store publication is an owner
+`extensions/chrome-gspc-verify/` — load unpacked (README). Popup = lid + one row per live
+board axis + verify box; badge on `huggingface.co/<org>/<model>`. Web Store publication is an owner
 action; the exact steps are in that README.
 
 ### ChatGPT / Custom GPT Actions
 
 Create a GPT → Configure → Actions → **Import from URL** →
 `https://councilof.ai/api/openapi.json`. Authentication: none. The spec exposes only
-what exists: `getBoard` (`/api/gspc`), `getProof` (`/api/proof?sha=`), `getRoot`
-(`/root.json`), `getDid` (`/.well-known/did.json`), `getCardIndex`
-(`/signed/card_index.json`), `getCard` (`/signed/cards/{id}.json`). Instruct the GPT to
-quote `totals.lid` and `totals.public_count` verbatim and never to compose a count.
+what exists, including `getBoard` (`/api/gspc`), `getLiveState` (`/api/state`),
+`getClaimMaintenanceRegister` (`/api/claims/register`), `getClaimEvents` (`/api/claims/events`),
+`getClaimEventsHead` (`/api/claims/events/head`), `getCorrections` (`/api/corrections`),
+`getProof` (`/api/proof?sha=`), `getRoot` (`/root.json`), `getDid`
+(`/.well-known/did.json`), `getCardIndex` (`/signed/card_index.json`) and
+`getCard` (`/signed/cards/{id}.json`). Instruct the GPT to quote fields from their authority
+verbatim and never compose a count or turn evidence states into a score.
 Signature verification is NOT an Action — Actions cannot run Ed25519; the GPT should
 hand the user the card URL and the recipe at `/signed/HOW-TO-VERIFY.md`, or the
 extension.
@@ -92,5 +126,12 @@ that freezes a count or introduces a second verifier.
 ## Owner actions
 
 - Chrome Web Store: developer account + upload (steps in the extension README).
-- Rule on the mill-card family in the shared verifier (finding 1 above).
+- council-of-ai-grok 0.1.2: push the staged proposal patch once the org is reachable (HELD).
+- npm: `csoai-gspc-mcp@0.2.2` and `csoai-governance-mcp` are marked deprecated on npm while the
+  server card pins the former; publishing a new version is an owner action (HELD).
 - Decide whether `public/openapi.json` should be retired in favour of `/api/openapi.json`.
+
+
+### Claim-event authority
+
+`/api/claims/events` is the append-only Claim Maintenance event history. `/api/claims/events/head` verifies the committed feed bytes, hash chain and signed head. It complements, but does not replace, `/api/state → ledgers.claim_maintenance`, which remains authoritative for whether a scheduled re-check was due, ran or failed. Plugins and dashboards read these same public authorities rather than carrying private copies.

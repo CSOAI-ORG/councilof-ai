@@ -25,6 +25,7 @@ const dist = process.argv[2] || "dist/client";
 // count toward the cap. 2026-09-22 owner decision: public/proofs (3,993 .ots) leaves the site for the
 // HF mirror (in-repo /proofs/* → 302 rule; scripts/drop-proofs-from-dist.mjs + the pod deploy pipeline
 // remove it from dist/). Counting it here would fail every build on a directory that never uploads.
+// 2026-09-28: cards/ too (`--exclude proofs,cards`), both served from HF csoai/councilof-ai-evidence.
 const exArg = process.argv.indexOf("--exclude");
 const EXCLUDE = new Set(exArg > 0 ? String(process.argv[exArg + 1] || "").split(",").filter(Boolean) : []);
 const over = [];

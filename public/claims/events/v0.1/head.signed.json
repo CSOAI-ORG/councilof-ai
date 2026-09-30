@@ -1,0 +1,29 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the record's own instruments measured.",
+  "artifact": {
+   "path": "claims/events/v0.1/heads/2026-09-28.json",
+   "sha256": "d341f078503b1a57ea81532a25ee09bec06526e1df189bbde79533c6323f9a03",
+   "schema": "csoai.claim-event-head/0.1",
+   "as_of": "2026-09-28T13:20:04Z"
+  }
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "fdca026388105f55f8128283c8bc862db579530956645c53dc1fcf9e9f78387ac8b8401dbce600c1afc5c7910615b78a3c9a63341b7b0350cdddc57341f19707",
+  "payload_sha256": "818f869ce66a438b497406281074a6f86c84eaa4e642c476300c80a4e8557f91",
+  "signed_at": "2026-09-28T13:20:05.650Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "as_of altered": "rejected (control holds)"
+  }
+ }
+}

@@ -122,6 +122,33 @@ class JCS(unittest.TestCase):
     def test_small_numbers(self):
         self.assertEqual(A.jcs([1e-7, 0.000001, 1e21, 123.0, -0.0]), "[1e-7,0.000001,1e+21,123,0]")
 
+    # The three classes the a2a-tck a2a-jcs-v01 corpus (a2aproject/a2a-tck#228 @ 97b00723) does not
+    # reach, on which the hand-written canonicaliser diverged SILENTLY from RFC 8785 (2026-09-27
+    # differential fuzz, 1,952 of 199,925 random doubles). Each expected value is RFC 8785 / ES6.
+    def test_six_decimal_truncation_class(self):
+        self.assertEqual(A.jcs([1.5e-06]), "[0.0000015]")  # was "0.000002"
+        self.assertEqual(A.jcs([-6.147300447958981e-05]), "[-0.00006147300447958981]")  # was "-0.000061"
+
+    def test_large_integral_double_class(self):
+        self.assertEqual(A.jcs([1.3355731926399844e+19]), "[13355731926399844000]")  # was the exact binary value
+
+    def test_int_beyond_safe_range_has_no_canonical_form(self):
+        # I-JSON has no form for it; a JS/Go signer would round it. Refused, never printed.
+        with self.assertRaises(ValueError):
+            A.jcs([9007199254740993])
+        self.assertEqual(A.jcs([9007199254740991]), "[9007199254740991]")
+
+    def test_refusal_is_uncheckable_not_failed(self):
+        # _check() maps a canonicaliser ValueError to UNCHECKABLE: a card we cannot canonicalise
+        # never becomes a FAILED signature.
+        c = card()
+        c["x_big"] = 9007199254740993
+        c["signatures"] = [{"protected": b64u(json.dumps({"alg": "ES256", "jku": JKU, "kid": "k1"}).encode()),
+                            "signature": b64u(b"\x00" * 64)}]
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual(r["sig_state"], "UNCHECKABLE")
+        self.assertIn("JCS failed", r.get("reason", ""))
+
 
 class Signatures(unittest.TestCase):
     def st(self, c, fetch=stub_fetch):
@@ -176,6 +203,157 @@ class Signatures(unittest.TestCase):
 
     def test_garbage_signature_object(self):
         self.assertEqual(self.st(card(signatures=[{"protected": "!!", "signature": "x"}]))["sig_state"], "UNCHECKABLE")
+
+
+# A2A spec 8.4.1 "Example of Default Value Removal" (docs/specification.md @ 72b3761), verbatim.
+SPEC_EXAMPLE_IN = {"name": "Example Agent", "description": "",
+                   "capabilities": {"streaming": False, "pushNotifications": False, "extensions": []}, "skills": []}
+SPEC_EXAMPLE_OUT = '{"capabilities":{"pushNotifications":false,"streaming":false},"description":"","name":"Example Agent","skills":[]}'
+
+
+def card_with_defaults():
+    """A v1.0-shaped card carrying properties whose value is the proto3 default, next to REQUIRED
+    and `optional` ones that must survive, plus one field the proto does not define."""
+    return {
+        "name": "defaults agent", "description": "", "version": "1.0.0",
+        "supportedInterfaces": [{"url": "https://agent.example/a2a", "protocolBinding": "JSONRPC",
+                                 "protocolVersion": "1.0", "tenant": ""}],       # tenant: plain string, default
+        "provider": {"organization": "Example", "url": "https://agent.example"},
+        "documentationUrl": "",                                                    # optional: explicitly set, kept
+        "capabilities": {"streaming": False, "extensions": [                       # streaming optional: kept
+            {"uri": "urn:x-ext", "description": "", "required": False, "params": {}}]},  # "" / false: removed; Struct kept
+        "securitySchemes": {},                                                     # map, empty: removed
+        "securityRequirements": [],                                                # repeated, empty: removed
+        "defaultInputModes": ["text/plain"], "defaultOutputModes": ["text/plain"],
+        "skills": [{"id": "s1", "name": "one", "description": "", "tags": [], "examples": [],  # tags REQUIRED: kept
+                    "inputModes": None}],                                          # null == not set: removed
+        "x-vendor": {"note": ""},                                                  # not in the proto: kept as served
+    }
+
+
+def sign_spec(c, header, signer):
+    """Sign the way 8.4.2 says: defaults removed, signatures excluded, JCS."""
+    body = A.strip_defaults({k: v for k, v in c.items() if k != "signatures"})
+    prot = b64u(json.dumps(header).encode())
+    out = dict(c)
+    out["signatures"] = [{"protected": prot, "signature": b64u(signer((prot + "." + b64u(A.jcs(body).encode())).encode()))}]
+    return out
+
+
+class SpecDefaultRemoval(unittest.TestCase):
+    """A2A spec 8.4.3 step 3: "Remove properties with default values from the received Agent Card"."""
+    H = {"alg": "ES256", "kid": "k-ec", "jku": JKU, "typ": "JOSE"}
+
+    def test_spec_example_verbatim(self):
+        self.assertEqual(A.jcs(A.strip_defaults(SPEC_EXAMPLE_IN)), SPEC_EXAMPLE_OUT)
+
+    def test_field_rules(self):
+        unknown = []
+        b = A.strip_defaults(card_with_defaults(), unknown=unknown)
+        self.assertEqual(b["description"], "")                          # REQUIRED
+        self.assertEqual(b["documentationUrl"], "")                     # optional, explicitly set
+        self.assertIs(b["capabilities"]["streaming"], False)            # optional
+        self.assertEqual(b["capabilities"]["extensions"], [{"uri": "urn:x-ext", "params": {}}])
+        self.assertNotIn("tenant", b["supportedInterfaces"][0])
+        for k in ("securitySchemes", "securityRequirements"):
+            self.assertNotIn(k, b)
+        self.assertEqual(b["skills"], [{"id": "s1", "name": "one", "description": "", "tags": []}])
+        self.assertEqual(b["x-vendor"], {"note": ""})
+        self.assertEqual(unknown, ["x-vendor"])
+        self.assertEqual(A.strip_defaults({"documentation_url": "", "icon_url": None, "name": ""}), {"documentation_url": "", "name": ""})
+
+    def test_card_carrying_defaults_verifies(self):
+        c = sign_spec(card_with_defaults(), self.H, es256)
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual(r["sig_state"], "VERIFIED")
+        self.assertTrue(r["defaults_removed"])
+        self.assertEqual(r["fields_not_in_schema"], ["x-vendor"])
+
+    def test_tampered_default_carrying_card_fails(self):
+        c = sign_spec(card_with_defaults(), self.H, es256)
+        c["skills"][0]["examples"] = ["added after signing"]
+        self.assertEqual(A.check_signatures(c, stub_fetch)["sig_state"], "FAILED")
+
+    def test_signed_over_served_bytes_is_failed_with_a_diagnostic(self):
+        c = sign(card_with_defaults(), self.H, es256)  # JCS of the card as served: 8.4.3 not followed by the signer
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual(r["sig_state"], "FAILED")
+        self.assertIn("jcs_defaults_not_removed/b64", r["signatures"][0]["alt_serialisations_verifying"])
+
+    def test_sdk_clean_empty_signer_is_named(self):
+        body = A._sdk_clean_empty({k: v for k, v in card_with_defaults().items()})
+        prot = b64u(json.dumps(self.H).encode())
+        c = card_with_defaults()
+        c["signatures"] = [{"protected": prot, "signature": b64u(es256((prot + "." + b64u(A.jcs(body).encode())).encode()))}]
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual(r["sig_state"], "FAILED")
+        self.assertIn("jcs_sdk_clean_empty/b64", r["signatures"][0]["alt_serialisations_verifying"])
+
+    def test_no_default_card_payload_unchanged(self):
+        self.assertFalse(A.check_signatures(SIGNED_JKU, stub_fetch)["defaults_removed"])
+
+    def test_must_fail_control_without_step_3(self):
+        """Restore the pre-fix verifier (no default removal): the spec-signed default-carrying card must
+        then FAIL - so test_card_carrying_defaults_verifies cannot pass without step 3."""
+        c = sign_spec(card_with_defaults(), self.H, es256)
+        saved = A.strip_defaults
+        try:
+            A.strip_defaults = lambda v, *a, **k: v
+            self.assertEqual(A.check_signatures(c, stub_fetch)["sig_state"], "FAILED")
+        finally:
+            A.strip_defaults = saved
+        self.assertEqual(A.check_signatures(c, stub_fetch)["sig_state"], "VERIFIED")
+
+    def test_declared_version(self):
+        self.assertEqual(A.declared_protocol(card()), (["0.3.0"], "0.x"))
+        self.assertEqual(A.declared_protocol(card_with_defaults()), (["1.0"], "1.x"))
+        self.assertEqual(A.declared_protocol({"name": "x"}), ([], None))
+        self.assertEqual(A.declared_protocol({"protocolVersion": "banana"})[1], None)
+        self.assertEqual(A.declared_protocol({"supportedInterfaces": [{"protocolVersion": "0.3"}, {"protocolVersion": "1.0"}]})[1], "1.x")
+
+    def test_0_3_card_judged_under_its_declared_version(self):
+        """A card declaring 0.3 signed over its served bytes, default values included: VERIFIED under 0.3
+        (no canonicalisation step there), with the 1.x verdict recorded beside it, never substituted."""
+        c = dict(card_with_defaults(), protocolVersion="0.3.0")
+        signed = sign(c, self.H, es256)
+        r = A.check_signatures(signed, stub_fetch)
+        self.assertEqual((r["sig_state"], r["rule"], r["declared_major"]), ("VERIFIED", A.RULE_0X, "0.x"))
+        self.assertEqual(r["sig_state_under_1x_rules"], "FAILED")
+        self.assertEqual(r["note"], "protocol 0.3 defines no canonicalisation step; verdict under the declared version; "
+                                    "under 1.x rules this card would FAIL")
+        # the same bytes declaring 1.0 are FAILED (8.4.3 applies), and carry no 0.x note
+        r1 = A.check_signatures(sign(card_with_defaults(), self.H, es256), stub_fetch)
+        self.assertEqual((r1["sig_state"], r1["rule"]), ("FAILED", A.RULE_1X))
+        self.assertNotIn("note", r1)
+
+    def test_0_3_card_signed_with_defaults_removed_fails_under_0_3(self):
+        c = sign_spec(dict(card_with_defaults(), protocolVersion="0.3"), self.H, es256)
+        r = A.check_signatures(c, stub_fetch)
+        self.assertEqual((r["sig_state"], r["sig_state_under_1x_rules"]), ("FAILED", "VERIFIED"))
+        self.assertIn("jcs_8_4_3_defaults_removed/b64", r["signatures"][0]["alt_serialisations_verifying"])
+        self.assertTrue(r["note"].endswith("would VERIFY"))
+
+    def test_0_3_card_without_defaults_has_no_note(self):
+        r = A.check_signatures(SIGNED_JKU, stub_fetch)
+        self.assertEqual((r["sig_state"], r["rule"]), ("VERIFIED", A.RULE_0X))
+        self.assertNotIn("sig_state_under_1x_rules", r)
+
+    def test_undeclared_card_gets_current_spec(self):
+        c = card_with_defaults()
+        c.pop("supportedInterfaces")
+        self.assertEqual(A.check_signatures(sign_spec(c, self.H, es256), stub_fetch)["rule"], A.RULE_1X)
+
+    def test_proto_pin_fails_closed(self):
+        saved, cache = A.A2A_PROTO_SHA256, dict(A._SCHEMA_CACHE)
+        try:
+            A._SCHEMA_CACHE.clear()
+            A.A2A_PROTO_SHA256 = "0" * 64
+            with self.assertRaises(RuntimeError):
+                A.a2a_schema()
+        finally:
+            A.A2A_PROTO_SHA256 = saved
+            A._SCHEMA_CACHE.clear()
+            A._SCHEMA_CACHE.update(cache)
 
 
 def agent_host(h, method):

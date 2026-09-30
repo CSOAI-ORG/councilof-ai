@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.charter-amendments/0.1",
+  "name": "Council of AI Operational Constitutional Harness Charter: amendment log",
+  "machine_charter": "https://councilof.ai/.well-known/constitutional-harness.json",
+  "human_charter": "https://councilof.ai/constitutional-harness/",
+  "pointer": "https://councilof.ai/.well-known/charter.json",
+  "log_rule": "Append-only. Entries are added, never edited or removed. A new charter version appends one entry that names the changed articles and source pins and gives the sha256 of the new bytes. The bytes of every earlier version stay published at that entry's snapshot_url.",
+  "entries": [
+    {
+      "seq": 0,
+      "version": "0.1.0",
+      "issued_at": "2026-09-28T04:17:00Z",
+      "sha256": "3dcf79a7526785324ef15deaa40adabc5e77fbc99c4ebd089309d948c3c3e32e",
+      "bytes": 11841,
+      "url": "https://councilof.ai/.well-known/constitutional-harness.json",
+      "snapshot_url": "https://councilof.ai/reports/constitutional-harness-charter-2026-09-28.json",
+      "change": "INITIAL_VERSION",
+      "changed_articles": "all; first version (articles 1-22)",
+      "supersedes": [
+        {
+          "what": "52-Article partnership charter",
+          "state": "HISTORICAL",
+          "note": "Historical reference prose. Under the charter's own precedence list it applies only where it does not conflict with the operational charter."
+        },
+        {
+          "what": "/.well-known/charter.json descriptor csoai.well-known/0.1 (as_of 20260904T060144Z)",
+          "sha256": "98c88e8db6d92c4e61ceecbcfe416ed342cfe34f07469ae454e3bdbd29077ced",
+          "state": "SUPERSEDED_DESCRIPTOR"
+        }
+      ],
+      "signature": {
+        "state": "UNSIGNED",
+        "note": "No signature over these bytes exists. Signing is held for an owner decision."
+      },
+      "timestamp": {
+        "state": "NONE",
+        "note": "No OpenTimestamps proof over these bytes exists yet."
+      },
+      "publication": {
+        "state": "PUBLIC_TWO_HOST_VERIFIED",
+        "independent_organization": false,
+        "note": "Copied from the charter's own publication block: two owner-controlled hosts read the served bytes back. That is not independent witnessing."
+      }
+    }
+  ],
+  "claim_boundary": "This log records which charter bytes were published, when, and what they replaced. It is not legislation, certification, accreditation, regulatory approval or legal advice, and an entry grants no authority."
+}

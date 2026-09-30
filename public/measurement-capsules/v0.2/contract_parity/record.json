@@ -1,0 +1,99 @@
+{
+ "schema": "csoai.measurement-capsule-batch/0.2",
+ "as_of": "2026-09-26T07:54:58Z",
+ "capsule_schema": "csoai.measurement-capsule/0.2",
+ "adapter": "contract_parity",
+ "kind": "measurement.contract_parity",
+ "n_capsules": 9148,
+ "states": {
+  "CONSISTENT": 5570,
+  "INCONSISTENT": 2905,
+  "UNCHECKABLE": 673
+ },
+ "merkle_root": "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+ "merkle": "RFC 6962 Merkle Tree Hash over the capsule_id leaves (32 bytes each) sorted ascending: leaf = SHA-256(0x00 || capsule_id), node = SHA-256(0x01 || left || right); for n > 1 leaves the split is at k = the largest power of two smaller than n (RFC 6962 section 2.1), so no leaf is promoted or duplicated; one leaf = its leaf hash; empty = SHA-256 of the empty string",
+ "canonicalisation": {
+  "rule": "JSON, object keys sorted, no insignificant whitespace, UTF-8, non-ASCII unescaped; every capsule's bytes are checked byte-equal to its RFC 8785 (JCS) serialisation at build and at verify",
+  "jcs_byte_equal": "9148/9148",
+  "checked_with": "rfc8785 0.1.4 (independent RFC 8785 implementation)"
+ },
+ "capsules_file": {
+  "path": "capsules.jsonl.gz",
+  "sha256": "7b24218a5616d4deb2461ddca0ff97dc7eafc5f094be77ca1f772f05ac862d6d",
+  "bytes": 1992620,
+  "uncompressed_sha256": "ff198ba50fca2b5731e85979e1e80c28fadcb45879020e69cccedf0dc71d248f",
+  "uncompressed_bytes": 20201526,
+  "format": "gzip (mtime 0, no filename, level 9) of canonical JSON lines sorted by capsule_id"
+ },
+ "authority_state": "NONE: measurement only; this capsule grants and records no execution authority",
+ "what_this_is": "MCP contract parity, one capsule per (endpoint, dimension) where two or more public surfaces (registry, mcp.json, server card, x402 manifest, live initialize/tools/list) spoke to the same dimension.",
+ "what_this_is_not": "Not a grade, ranking or approval of any service. INCONSISTENT says two public statements disagree, not which one is true; nothing beyond the discovery boundary was sent.",
+ "source": {
+  "record": "/evac-bulk/cp-fix-20260926/v012/rec/record.v0.1.2.json",
+  "record_version": "0.1.2",
+  "record_schema": "csoai.mcp-contract-parity/0.1.2",
+  "record_sha256": "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed",
+  "record_signature": "VERIFIES",
+  "record_signature_payload_sha256": "54af1df09502faa849335d41a77a0f10ecaa48c109544f97bfc390fc0103a458",
+  "rows_file": "/evac-bulk/cp-fix-20260926/v012/rec/rows.v0.1.2.jsonl.gz",
+  "rows_sha256": "8fb15bcbb83db1ae6a61945c2f870a16d27adcc751c059439e63d8e910730492",
+  "rows_pinned_by_record": true,
+  "hf_dataset": "https://huggingface.co/datasets/csoai/mcp-contract-parity",
+  "v0_1_2": "used"
+ },
+ "rows": {
+  "n_rows": 5828,
+  "not_attempted_rows": 0
+ },
+ "included_states": [
+  "CONSISTENT",
+  "INCONSISTENT",
+  "UNCHECKABLE"
+ ],
+ "inclusion_rule": "CONSISTENT and INCONSISTENT always (two or more surfaces spoke, by the source's state definitions); UNCHECKABLE only when >= 2 distinct surfaces (declaring documents, the public list, the live answer) were declared or observed",
+ "capsules_by_dimension_state": {
+  "AUTH:CONSISTENT": 928,
+  "AUTH:INCONSISTENT": 5,
+  "AUTH:UNCHECKABLE": 424,
+  "PAYMENT:CONSISTENT": 112,
+  "PAYMENT:INCONSISTENT": 4,
+  "PROTOCOL:CONSISTENT": 459,
+  "PROTOCOL:INCONSISTENT": 33,
+  "PROTOCOL:UNCHECKABLE": 247,
+  "TOOLS:CONSISTENT": 908,
+  "TOOLS:INCONSISTENT": 219,
+  "TOOLS:UNCHECKABLE": 2,
+  "VERSION:CONSISTENT": 3163,
+  "VERSION:INCONSISTENT": 2644
+ },
+ "skipped_not_capsuled": {
+  "rule": "SINGLE_SURFACE (one surface only), UNCHECKABLE where fewer than two surfaces were declared or observed (key carries the reason), and not-attempted rows are counted here, never capsuled",
+  "by_dimension_state": {
+   "AUTH:SINGLE_SURFACE": 4332,
+   "AUTH:UNCHECKABLE(DISCOVERY_NOT_AUTH_OBSERVABLE):fewer_than_two_surfaces": 3,
+   "AUTH:UNCHECKABLE(SURFACE_UNREAD):fewer_than_two_surfaces": 136,
+   "PAYMENT:SINGLE_SURFACE": 558,
+   "PAYMENT:UNCHECKABLE(NO_PAYMENT_SURFACE):fewer_than_two_surfaces": 5140,
+   "PAYMENT:UNCHECKABLE(SURFACE_UNREAD):fewer_than_two_surfaces": 14,
+   "PROTOCOL:SINGLE_SURFACE": 4909,
+   "PROTOCOL:UNCHECKABLE(NO_NEGOTIATED_VERSION):fewer_than_two_surfaces": 2,
+   "PROTOCOL:UNCHECKABLE(NO_PROTOCOL_SURFACE):fewer_than_two_surfaces": 22,
+   "PROTOCOL:UNCHECKABLE(SURFACE_UNREAD):fewer_than_two_surfaces": 156,
+   "TOOLS:SINGLE_SURFACE": 4424,
+   "TOOLS:UNCHECKABLE(DECLARED_COUNT_SCOPE_UNSTATED):fewer_than_two_surfaces": 1,
+   "TOOLS:UNCHECKABLE(LIVE_TOOL_LIST_UNAVAILABLE):fewer_than_two_surfaces": 156,
+   "TOOLS:UNCHECKABLE(SUBSET_UNDER_AUTH):fewer_than_two_surfaces": 7,
+   "TOOLS:UNCHECKABLE(SURFACE_UNREAD):fewer_than_two_surfaces": 111,
+   "VERSION:SINGLE_SURFACE": 20,
+   "VERSION:UNCHECKABLE(SURFACE_UNREAD):fewer_than_two_surfaces": 1
+  },
+  "not_attempted_rows": 0
+ },
+ "corrections": {
+  "on_capsules": 5,
+  "on_skipped_rows": 425,
+  "pointer": "correction_pointer names the record version + sha256 in which the (endpoint, dimension) changed"
+ },
+ "observed_at_rule": "the live read's finished time for the row (else the source record's as_of)",
+ "private_until": "owner approves publication"
+}

@@ -1,0 +1,22 @@
+{
+  "implementation": "interceptor.py as on master before 2026-09-28 (resolves when it can, integrity-only when it cannot)",
+  "results": {
+    "valid-publickeyhex": "VALID",
+    "valid-publickeymultibase": "VALID",
+    "valid-publickeyjwk": "VALID",
+    "valid-jcs-edge": "INVALID",
+    "tampered-payload": "INVALID",
+    "tampered-payload-content-id-recomputed": "INVALID",
+    "tampered-signature": "INVALID",
+    "different-key-forgery": "INVALID",
+    "unresolvable-key": "VALID",
+    "unresolvable-key-forgery": "VALID",
+    "unresolvable-key-unsupported-method": "VALID",
+    "tampered-and-unresolvable": "INVALID",
+    "key-substring-match": "INVALID",
+    "revoked-key": "INVALID",
+    "wrong-canonicalisation-key-order": "INVALID",
+    "wrong-canonicalisation-whitespace": "INVALID",
+    "malformed-no-signature": "INVALID"
+  }
+}

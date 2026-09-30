@@ -1,0 +1,230 @@
+{
+  "accepts": [
+    {
+      "amount": "20000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": null,
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "20000",
+        "pricing_basis": "STANDARD",
+        "product_id": "csoai.product.ras.mcp_probe",
+        "sku_id": "ras_fresh_read"
+      },
+      "description": "MCP discovery probe receipt — one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "20000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/ras/mcp-probe",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "board_effect": "none — nothing paid is written to the GSPC board, the public root or any card index",
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "one signed card-v0 receipt over a live read-only MCP discovery: state, requested vs negotiated protocol version, tool count and tool-names sha256 (names returned beside it)",
+    "failure_is_delivered": "a result about the target that is bad news (unreachable, not conformant, not MCP …) is delivered as that result; only a computation OUR side could not run is left unsettled",
+    "free_preview": "https://councilof.ai/evidence/mcp-remote-census/",
+    "free_preview_is": "the last published, signed run of this instrument over its public population, free; not a preview of your target, which has not been computed",
+    "input_check": {
+      "note": "syntax only; DNS and redirects are checked again at run time and a refusal there settles nothing",
+      "ok": true
+    },
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a tool call",
+      "a grade",
+      "a rank",
+      "a safety judgement",
+      "a certificate",
+      "a board cell"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
+    },
+    "payment_changes_result": false,
+    "per": "one fresh computation",
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.ras.mcp-probe/0.1",
+    "verify_free": "https://councilof.ai/api/verify"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "url": "https://councilof.ai/mcp"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "kind": "receipt",
+            "receipt": {
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>"
+            },
+            "result": {
+              "kind": "csoai.ras.mcp-probe/0.1",
+              "protocol": {
+                "negotiated": "<version or null>",
+                "requested": [
+                  "2026-07-28"
+                ]
+              },
+              "state": "RESPONDED | AUTH_REQUIRED | NOT_MCP | MCP_ERROR | UNREACHABLE | TIMEOUT",
+              "tool_called": false,
+              "tools": {
+                "count": "<int or null>",
+                "names_sha256": "<hex or null>"
+              }
+            },
+            "schema": "csoai.ras.mcp-probe/0.1"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "url": {
+                    "description": "public https MCP endpoint (Streamable HTTP); private, link-local and metadata addresses are refused",
+                    "format": "uri",
+                    "pattern": "^https://",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIyMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yYXMvbWNwLXByb2JlIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDkyLCJ2ZXJzaW9uIjoxfQ.LySHQKngtio5NXkmOrf7oQ4NN7boJsFS9cAdOj6o3lTBw8EQyntfOCK2evGj5dCw7d47jFnQVGmS56-Zn2ivAg"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "MCP discovery probe receipt — one live read-only discovery of a public https MCP endpoint (server/discover, else initialize + tools/list; no tool is ever called): state, requested vs negotiated protocol version, tool count and tool-names sha256, Ed25519-signed. A probe, not a grade.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI MCP Probe",
+    "tags": [
+      "mcp",
+      "probe",
+      "discovery",
+      "receipt",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/ras/mcp-probe"
+  },
+  "x402Version": 2
+}

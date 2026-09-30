@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -17,7 +16,6 @@ import {
 } from 'lucide-react';
 
 export default function GovernmentLinks() {
-  useEffect(() => { document.title = "GovernmentLinks | CSOAI"; }, []);
   const regions = [
     {
       name: 'European Union',

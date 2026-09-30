@@ -1,0 +1,251 @@
+{
+  "accepts": [
+    {
+      "amount": "20000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": null,
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "20000",
+        "pricing_basis": "STANDARD",
+        "product_id": "csoai.product.ras.supply",
+        "sku_id": "ras_fresh_read"
+      },
+      "description": "Token supply read receipt — one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "20000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/ras/supply",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "board_effect": "none — nothing paid is written to the GSPC board, the public root or any card index",
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "one signed card-v0 receipt over a fresh totalSupply() read (address parsed from the issuer's page on the request), with the EIP-1186 proof and its verification on Ethereum",
+    "failure_is_delivered": "a result about the target that is bad news (unreachable, not conformant, not MCP …) is delivered as that result; only a computation OUR side could not run is left unsettled",
+    "free_preview": "https://councilof.ai/evidence/cross-ledger-usdc/",
+    "free_preview_is": "the last published, signed run of this instrument over its public population, free; not a preview of your target, which has not been computed",
+    "input_check": {
+      "note": "syntax only; DNS and redirects are checked again at run time and a refusal there settles nothing",
+      "ok": true
+    },
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a reserve attestation",
+      "a proof of backing",
+      "a rate",
+      "a grade",
+      "a certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
+    },
+    "payment_changes_result": false,
+    "per": "one fresh computation",
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.ras.supply/0.1",
+    "verify_free": "https://councilof.ai/api/verify"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "asset": "USDC",
+            "ledger": "ethereum"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "kind": "receipt",
+            "receipt": {
+              "sha256": "<hex>",
+              "sig_ed25519": "<hex or null>"
+            },
+            "result": {
+              "evidence_kind": "STATE_PROOF_VERIFIED | OPERATOR_API | REJECTED",
+              "height": {
+                "number": "<int>",
+                "state_root": "<0x…>"
+              },
+              "kind": "csoai.ras.supply-read/0.1",
+              "proof": {
+                "account_proof_verified": true,
+                "storage_proof_verified": true
+              },
+              "supply": {
+                "base_units": "<int>",
+                "decimals": 6
+              }
+            },
+            "schema": "csoai.ras.supply/0.1"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "asset": {
+                    "description": "asset whose issuer publishes a deployment list the reader parses",
+                    "enum": [
+                      "USDC"
+                    ],
+                    "type": "string"
+                  },
+                  "ledger": {
+                    "description": "EVM ledger named on the issuer's list",
+                    "enum": [
+                      "ethereum",
+                      "arbitrum",
+                      "avalanche",
+                      "base",
+                      "celo",
+                      "hyperevm",
+                      "linea",
+                      "optimism",
+                      "polygon",
+                      "sonic",
+                      "unichain",
+                      "zksync"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "asset",
+                  "ledger"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIyMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9yYXMvc3VwcGx5Iiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDkzLCJ2ZXJzaW9uIjoxfQ.BYjcJNVRlK3VeUG4dyWCrr8krNGgoaTUqXcqRGMkwe-8Us7uHbz3FGd-44JkJB5Et0smaXjnRe0MqUUHUS44Cw"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Token supply read receipt — one fresh totalSupply() read of an issuer-listed EVM deployment (USDC, address parsed from the issuer page on the request); on Ethereum the EIP-1186 storage proof is checked against the block stateRoot, elsewhere it is labelled OPERATOR_API. Not a reserve attestation.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Supply Read",
+    "tags": [
+      "stablecoin",
+      "supply",
+      "eip-1186",
+      "evidence",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/ras/supply"
+  },
+  "x402Version": 2
+}

@@ -1,0 +1,85 @@
+{
+ "kind": "csoai.root-witness/v1",
+ "as_of": "2026-09-29T05:03:28Z",
+ "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
+ "artifact": {
+  "url": "https://councilof.ai/root.json",
+  "also": "https://councilof.ai/api/root",
+  "sha256": "7e1c425142a0ced8e3e115f8a9aed7657122ad865dbd5e48a12f6c718c4e6b34",
+  "bytes": 24721,
+  "merkle_root": "2a377a501b090587e54d8a83468b97069a202ad15eb2b69bfa8cd2a0506520f3",
+  "card_count": 308,
+  "as_of": "2026-09-29T05:03:20Z"
+ },
+ "corpus_scope": {
+  "relationship": "SEPARATE_CORPORA",
+  "public_root_count": 308,
+  "public_root_sha256": "7e1c425142a0ced8e3e115f8a9aed7657122ad865dbd5e48a12f6c718c4e6b34",
+  "signed_card_count": 335,
+  "signed_card_id_overlap": 0,
+  "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
+  "note": "The 308 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "field": "sig_ed25519",
+  "preimage_fields": [
+   "kind",
+   "schema",
+   "as_of",
+   "merkle_root",
+   "card_count",
+   "did_intended"
+  ],
+  "preimage_canonical": "JSON sorted keys, separators (',',':'), ensure_ascii=false, UTF-8",
+  "preimage_sha256": "707cf24a71026cdc6593b2272f474890766872efec3de3ad7df87369ac7f715c",
+  "preimage_bytes": 274,
+  "verified_against_did_json": true
+ },
+ "witnesses": {
+  "rekor": {
+   "status": "WITNESSED",
+   "uuid": "108e9186e8c5677ad8f31b6389d6212f74bccd98d06f379fc8eab2738c5be3a178576b075808a36c",
+   "logIndex": 2994068086,
+   "integratedTime": 1790658201,
+   "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+   "new": true,
+   "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2994068086",
+   "type": "rekord/x509 over the preimage bytes with the board signature",
+   "entry_file": "https://councilof.ai/interop/rekor-root-7e1c4251.json"
+  },
+  "ots": {
+   "path": "public/interop/root-7e1c4251.json.ots",
+   "url": "https://councilof.ai/interop/root-7e1c4251.json.ots",
+   "proof_sha256": "d8f550417ec2cf0cfa002b76c0f6a5ffd25e7a09d3e7d8310a202237ac6ee168",
+   "subject_sha256": "7e1c425142a0ced8e3e115f8a9aed7657122ad865dbd5e48a12f6c718c4e6b34",
+   "bitcoin_blocks": [],
+   "observed_at": "2026-09-29T05:03:26Z",
+   "scope": "PUBLIC_ROOT_BYTES_ONLY",
+   "status": "STAMPED_PENDING_BITCOIN",
+   "note": "Status is derived from the proof bytes. Pending is not a Bitcoin timestamp."
+  },
+  "eas_base": {
+   "status": "NOT_YET",
+   "reason": "no EAS attestation in the append-only log matches this root.json sha256",
+   "log": "https://councilof.ai/interop/eas-root-attestations.json"
+  },
+  "xrpl_memo": {
+   "status": "NOT_YET",
+   "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"
+  }
+ },
+ "verify_hints": [
+  "https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md"
+ ],
+ "conflict": {
+  "status": "NONE",
+  "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
+  "as_of": "2026-09-29T05:03:20Z",
+  "merkle_root": "2a377a501b090587e54d8a83468b97069a202ad15eb2b69bfa8cd2a0506520f3",
+  "sidecars_scanned": 51,
+  "conflicts": [],
+  "byte_variants": [],
+  "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
+ }
+}

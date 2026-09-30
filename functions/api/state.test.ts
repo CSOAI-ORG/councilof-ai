@@ -3,6 +3,9 @@ import { describe, expect, it } from "vitest";
 import publicRoot from "../../public/root.json";
 import cardIndex from "../../public/signed/card_index.json";
 import { deriveCorpusRelation, onRequestGet } from "./state";
+import MCP_FREE from "../mcp/gspc-tools.json";
+import MCP_PAID from "../mcp/paid-tools.json";
+import councilMcpDoor from "../../evidence/council-mcp-door.json";
 
 describe("GET /api/state corpus truth", () => {
   it("derives and separates public-root leaves from signed-card index entries", async () => {
@@ -118,5 +121,64 @@ describe("GET /api/state corpus truth", () => {
       public_root_leaves: null,
       separately_indexed_signed_cards: null,
     });
+  });
+});
+
+// 2026-09-26: council_http_mcp.tools_count said 7 (a 2026-09-01 probe) while tools/list served 13.
+describe("GET /api/state council_http_mcp — derived from the registry the /mcp handler serves", () => {
+  it("tools_count is the free + paid registry length and tools are its names, in order", async () => {
+    const body = await (await (onRequestGet as unknown as () => Promise<Response>)()).json();
+    const door = body.council_http_mcp;
+    const names = [...MCP_FREE.tools, ...MCP_PAID.tools].map((t: { name: string }) => t.name);
+    expect(door.tools_count.value).toBe(names.length);
+    expect(door.tools_count.kind).toBe("catalogued");
+    expect(door.tools).toEqual(names);
+    expect(door.tools_count.note).toContain(`${MCP_FREE.tools.length} free + ${MCP_PAID.tools.length} paid`);
+  });
+
+  it("the dated probe it used to read is kept only as a labelled last_probe", async () => {
+    const body = await (await (onRequestGet as unknown as () => Promise<Response>)()).json();
+    expect(body.council_http_mcp.last_probe.tools_count).toBe((councilMcpDoor as { tools_count: number }).tools_count);
+    expect(body.council_http_mcp.last_probe.note).toMatch(/historical/);
+  });
+});
+
+
+describe("GET /api/state contract convergence — one flywheel, existing authorities", () => {
+  it("joins the existing authorities without creating a second ledger or scheduler", async () => {
+    const body = await (await (onRequestGet as unknown as () => Promise<Response>)()).json();
+    expect(body.contract.authorities).toMatchObject({
+      live_state: "/api/state",
+      measurement_board: "/api/gspc",
+      public_self_claims: "/claims-register.json",
+      maintained_claim_state: "/api/claims/register",
+      executed_rechecks: "/api/state → ledgers.claim_maintenance",
+      claim_events: "/api/claims/events",
+      claim_events_head: "/api/claims/events/head",
+      corrections: "/api/corrections",
+      ledger_heads: "/api/state → ledgers.ledgers",
+      public_root: "/root.json",
+    });
+    expect(body.contract.flywheel.map((x: { stage: string }) => x.stage)).toEqual([
+      "CAPTURE",
+      "RECHECK",
+      "MEASURE",
+      "CORRECT",
+      "QUOTE",
+    ]);
+    expect(body.ledgers.claim_maintenance.scheduler).toContain("ONE:");
+    expect(body.ledgers.claim_maintenance.event_chain).toMatchObject({
+      authority: "GET /api/claims/events",
+      verify: "GET /api/claims/events/head",
+      verification_state_source: "GET /api/claims/events/head → verification.state",
+    });
+    expect(body.ledgers.claim_maintenance.event_chain.lines).toBeGreaterThan(0);
+    expect(body.ledgers.authorities).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ record_type: "claim state of a maintained subject", authority: "GET /api/claims/register" }),
+        expect.objectContaining({ record_type: "whether a scheduled re-check ran", authority: "ledgers.claim_maintenance (executed schedule)" }),
+        expect.objectContaining({ record_type: "a correction of our own published statement", authority: "GET /api/corrections" }),
+      ]),
+    );
   });
 });

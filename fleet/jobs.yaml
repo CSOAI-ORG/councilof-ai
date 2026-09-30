@@ -1,0 +1,1784 @@
+# fleet/jobs.yaml - every scheduled job the estate runs, and how the supervisor treats it.
+# Written in the JSON subset of YAML so fleet/supervisor.py reads it with the stdlib (comment lines start with #).
+# Inventoried 2026-09-25 from: `crontab -l` + ~/lanes/*.sh on oracle-micro-2, scripts/pod-loops/scheduler.sh
+# (3090 pod), `list_scheduled_jobs(namespace="csoai")`, .github/workflows, and the Mac's crontab + LaunchAgents.
+# supervise: active  = health read every 10 min; retry once on its host, then the failover chain
+#            observe = health read and recorded, never acted on (another lane's job, or known broken)
+#            dormant = host is down/parked; signal not readable from Oracle (UNMEASURED, never guessed)
+#            self    = the supervisors themselves (each watched by the other)
+# health.type: json_field_age | file_mtime | log_last_line | hf_repo_fresh | status_json_job | pod_job | disabled | remote | none
+# health.noop: {runs N, patterns|zero|same} -> NOOP (exit 0 but nothing done for N runs in a row); states OK NOOP PAUSED DISABLED are not BAD
+# failover target types: hf_job | runpod_backup | kaggle | runpod_pod | proofof_twin (gates in fleetlib.target_allowed)
+{
+ "version": 1,
+ "inventoried_at": "2026-09-25",
+ "policy": {
+  "primary_host": "oracle-micro-2",
+  "hf_namespace": "csoai",
+  "heartbeat_repo": "csoai/fleet-heartbeat",
+  "control_lease_ttl_s": 1800,
+  "silence_s": 1800,
+  "twin_lease_ttl_s": 4500,
+  "twin_schedule": "17 * * * *",
+  "twin_critical": [
+   "funding-watchdog",
+   "hf-bundle",
+   "root-check",
+   "domain-watch"
+  ],
+  "twin_inputs": [
+   "~/lanes/domains.json"
+  ],
+  "runpod_backup_pod": "dgj6roe9sazwsd",
+  "runpod_ssh_key": "~/.ssh/fleet_runpod_ed25519",
+  "retry": {
+   "same_host_max": 1,
+   "wait_s": 1200
+  },
+  "budget": {
+   "funding_state": "~/fleet/runpod_funding.json",
+   "funding_max_age_s": 3600,
+   "runpod_requires_level": "GREEN",
+   "caps_per_day": {
+    "hf_jobs_cpu": 24,
+    "hf_jobs_gpu": 0,
+    "kaggle": 6,
+    "runpod_backup": 6,
+    "runpod_pod": 0,
+    "proofof_twin": 0
+   }
+  },
+  "sandbox_rule": "class experimental -> only the proofof.ai twin runner, no credentials, default-deny (owner ruling 25 Sep)"
+ },
+ "jobs": [
+  {
+   "id": "funding-watchdog",
+   "host": "oracle-micro-2",
+   "schedule": "*/15 * * * *",
+   "command": "flock -n /tmp/funding-watchdog.lock bash $HOME/lanes/funding-watchdog.sh",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/runpod_funding.json",
+    "field": "at",
+    "max_age_s": 2400
+   },
+   "supervise": "active",
+   "cron_match": "lanes/funding-watchdog.sh",
+   "max_runtime_s": 1800,
+   "outputs": [
+    "~/fleet/runpod_funding.json",
+    "~/lanes/logs/runpod-balance.log"
+   ],
+   "portable": "funding-ro",
+   "twin_period_s": 3600,
+   "failover": [
+    {
+     "type": "hf_job",
+     "name": "hf-cpu-basic",
+     "flavor": "cpu-basic",
+     "secrets": [
+      "HF_TOKEN"
+     ]
+    },
+    {
+     "type": "runpod_backup",
+     "name": "runpod-backup-cpu",
+     "pod_id": "dgj6roe9sazwsd"
+    }
+   ],
+   "failover_cooldown_s": 3600,
+   "note": "failover copies are READ-ONLY (no podStop): they need an owner-issued read-only RunPod key; without it they report UNMEASURED",
+   "class": "production"
+  },
+  {
+   "id": "hf-bundle",
+   "host": "oracle-micro-2",
+   "schedule": "30 3 * * *",
+   "command": "flock -n /tmp/hf-bundle.lock nice -n 15 bash $HOME/lanes/hf-bundle.sh >> $HOME/lanes/logs/hf-bundle.log 2>&1",
+   "health": {
+    "type": "hf_repo_fresh",
+    "repo": "csoai/councilof-ai-bundle",
+    "repo_type": "dataset",
+    "max_age_s": 100800
+   },
+   "supervise": "active",
+   "cron_match": "lanes/hf-bundle.sh",
+   "max_runtime_s": 3600,
+   "outputs": [
+    "hf://datasets/csoai/councilof-ai-bundle/latest.bundle"
+   ],
+   "portable": "bundle-verify",
+   "twin_period_s": 86400,
+   "failover": [
+    {
+     "type": "hf_job",
+     "name": "hf-cpu-basic",
+     "flavor": "cpu-basic",
+     "secrets": [
+      "HF_TOKEN"
+     ]
+    }
+   ],
+   "failover_cooldown_s": 86400,
+   "note": "takeover is verify-only: the source bare repo ~/mirrors/councilof-ai.git lives on Oracle; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26 logs FAILED_DISK_FLOOR to ~/lanes/logs/hf-bundle.log",
+   "class": "production"
+  },
+  {
+   "id": "domain-watch",
+   "host": "oracle-micro-2",
+   "schedule": "15 6 * * *",
+   "command": "flock -n /tmp/domain-watch.lock bash $HOME/lanes/domain-watch.sh",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/domain_watch.json",
+    "field": "at",
+    "max_age_s": 97200
+   },
+   "supervise": "active",
+   "cron_match": "lanes/domain-watch.sh",
+   "max_runtime_s": 900,
+   "outputs": [
+    "~/fleet/domain_watch.json",
+    "~/lanes/logs/domain-watch.log"
+   ],
+   "portable": "domain-watch",
+   "twin_period_s": 86400,
+   "failover": [
+    {
+     "type": "hf_job",
+     "name": "hf-cpu-basic",
+     "flavor": "cpu-basic",
+     "secrets": [
+      "HF_TOKEN"
+     ]
+    },
+    {
+     "type": "runpod_backup",
+     "name": "runpod-backup-cpu",
+     "pod_id": "dgj6roe9sazwsd"
+    }
+   ],
+   "failover_cooldown_s": 86400,
+   "class": "production"
+  },
+  {
+   "id": "xl-daily",
+   "host": "oracle-micro-2",
+   "schedule": "20 4 * * *",
+   "command": "flock -n /tmp/xl-daily.lock bash $HOME/lanes/xl-daily.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/xl-daily.log",
+    "max_age_s": 97200,
+    "must_contain": "rc=0"
+   },
+   "supervise": "active",
+   "cron_match": "lanes/xl-daily.sh",
+   "max_runtime_s": 5400,
+   "not_before": "2026-09-27T06:00:00Z",
+   "outputs": [
+    "/evac-bulk/xl-daily/<date>/xl-daily-<date>.json",
+    "/evac-bulk/xl-daily/<date>/xl-daily-<date>.signed.json",
+    "/evac-bulk/xl-daily/institutional-evidence-links.json"
+   ],
+   "failover": [],
+   "note": "cross-ledger daily loop, top 20% of tokenised assets by value (lane xl-loop-20260926): signed + OTS, changes by name, NEW dated files to HF csoai/cross-ledger-supply. Skips with FAILED_DISK_FLOOR below root 1536M / bulk 2048M. Not portable yet (needs the lane checkout).",
+   "class": "measurement"
+  },
+  {
+   "id": "root-check",
+   "host": "oracle-micro-2",
+   "schedule": "5 * * * *",
+   "command": "flock -n /tmp/oracle-root-check.lock bash $HOME/oracle-root-check.sh >> $HOME/lanes/logs/root-check.cron.log 2>&1",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/lanes/out/root-check-latest.json",
+    "field": "ran_at",
+    "max_age_s": 4500
+   },
+   "supervise": "active",
+   "cron_match": "oracle-root-check.sh",
+   "max_runtime_s": 300,
+   "outputs": [
+    "~/lanes/out/root-check-latest.json",
+    "~/lanes/logs/root-check.log"
+   ],
+   "portable": "root-check",
+   "twin_period_s": 3600,
+   "failover": [
+    {
+     "type": "hf_job",
+     "name": "hf-cpu-basic",
+     "flavor": "cpu-basic",
+     "secrets": [
+      "HF_TOKEN"
+     ]
+    },
+    {
+     "type": "runpod_backup",
+     "name": "runpod-backup-cpu",
+     "pod_id": "dgj6roe9sazwsd"
+    }
+   ],
+   "failover_cooldown_s": 3600,
+   "class": "measurement"
+  },
+  {
+   "id": "gspc-public-witness",
+   "host": "oracle-micro-2",
+   "schedule": "*/15 * * * *",
+   "command": "flock -n /tmp/gspc-public-witness.lock /usr/bin/python3 /home/ubuntu/bin/gspc_public_witness.py >> /home/ubuntu/gspc-witness/cron.log 2>&1",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/gspc-witness/cron.log",
+    "max_age_s": 2400
+   },
+   "supervise": "active",
+   "cron_match": "gspc_public_witness.py",
+   "max_runtime_s": 600,
+   "outputs": [
+    "~/gspc-witness/"
+   ],
+   "failover": [],
+   "class": "measurement"
+  },
+  {
+   "id": "verify-record",
+   "host": "oracle-micro-2",
+   "schedule": "*/30 * * * *",
+   "command": "bash /home/ubuntu/verify_record.sh >> /home/ubuntu/city-report/verify_record.log 2>&1",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/city-report/verify_record.log",
+    "max_age_s": 4200
+   },
+   "supervise": "active",
+   "cron_match": "verify_record.sh",
+   "max_runtime_s": 600,
+   "outputs": [
+    "~/city-report/verify_record.log"
+   ],
+   "failover": [],
+   "class": "measurement"
+  },
+  {
+   "id": "oracle-fleet-status",
+   "host": "oracle-micro-2",
+   "schedule": "*/15 * * * *",
+   "command": "bash ~/oracle-fleet-status.sh >/dev/null 2>&1",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/fleet_status_oracle.json",
+    "field": "updated",
+    "max_age_s": 2400
+   },
+   "supervise": "active",
+   "cron_match": "oracle-fleet-status.sh",
+   "max_runtime_s": 300,
+   "outputs": [
+    "~/fleet/fleet_status_oracle.json"
+   ],
+   "failover": [],
+   "class": "production"
+  },
+  {
+   "id": "fleet-supervisor",
+   "host": "oracle-micro-2",
+   "schedule": "*/10 * * * *",
+   "command": "flock -n /tmp/fleet-supervisor.lock python3 $HOME/fleet/sv/supervisor.py --mode primary >> $HOME/lanes/logs/fleet-supervisor.log 2>&1",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/fleet_status.json",
+    "field": "updated",
+    "max_age_s": 1800
+   },
+   "supervise": "self",
+   "cron_match": "fleet/sv/supervisor.py",
+   "max_runtime_s": 540,
+   "outputs": [
+    "~/fleet/fleet_status.json",
+    "~/fleet/actions.jsonl",
+    "hf://datasets/csoai/fleet-heartbeat/heartbeat/oracle.json"
+   ],
+   "note": "watched from outside by the HF twin (heartbeat age), not by itself",
+   "class": "production"
+  },
+  {
+   "id": "flywheel-census-weekly",
+   "host": "oracle-micro-2",
+   "schedule": "0 2 * * 0",
+   "command": "$HOME/lanes/flywheel/run.sh census-weekly",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "census-weekly",
+    "field": "last_success",
+    "max_age_s": 691200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh census-weekly",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only; no non-dry run yet (first scheduled run Sun 27 Sep 02:00Z), so last_success is absent -> PENDING_FIRST_RUN until then",
+   "class": "measurement",
+   "not_before": "2026-09-27T08:00:00Z"
+  },
+  {
+   "id": "flywheel-x402-daily",
+   "host": "oracle-micro-2",
+   "schedule": "5 1 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh x402-daily",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "x402-daily",
+    "field": "last_success",
+    "max_age_s": 97200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "added",
+      "dropped"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh x402-daily",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only",
+   "class": "measurement"
+  },
+  {
+   "id": "flywheel-ots-upgrade",
+   "host": "oracle-micro-2",
+   "schedule": "40 12 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh ots-upgrade",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "ots-upgrade",
+    "field": "last_success",
+    "max_age_s": 97200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "states_this_run.UPGRADED_TO_BITCOIN"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh ots-upgrade",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only",
+   "class": "measurement"
+  },
+  {
+   "id": "flywheel-retention",
+   "host": "oracle-micro-2",
+   "schedule": "50 6 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh retention",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "retention",
+    "field": "last_success",
+    "max_age_s": 97200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 7,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "removed_dirs_or_files"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh retention",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only",
+   "class": "measurement"
+  },
+  {
+   "id": "flywheel-harvest-e2e",
+   "host": "oracle-micro-2",
+   "schedule": "20 */6 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh harvest-e2e",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "harvest-e2e",
+    "field": "last_success",
+    "max_age_s": 25200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "same": [
+      "candidate_root_sha256"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh harvest-e2e",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only; watch added 2026-09-26",
+   "class": "measurement"
+  },
+  {
+   "id": "flywheel-universe-refresh",
+   "host": "oracle-micro-2",
+   "schedule": "5 */6 * * *",
+   "command": "$HOME/lanes/flywheel/run.sh universe-refresh",
+   "health": {
+    "type": "status_json_job",
+    "path": "~/fleet/flywheel_status.json",
+    "key": "universe-refresh",
+    "field": "last_success",
+    "max_age_s": 25200,
+    "fail_unless": {
+     "rc": [
+      "0"
+     ]
+    },
+    "noop": {
+     "runs": 3,
+     "history_glob": "/evac-bulk/flywheel/logs/{key}-*.result.json",
+     "zero": [
+      "changes.added",
+      "changes.removed",
+      "changes.changed"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "cron_match": "flywheel/run.sh universe-refresh",
+   "max_runtime_s": 21600,
+   "outputs": [
+    "~/fleet/flywheel_status.json",
+    "~/lanes/logs/flywheel.log"
+   ],
+   "owner_lane": "flywheel",
+   "note": "owned by the flywheel lane (run.sh does its own flock/disk floor); observed only; watch added 2026-09-26",
+   "class": "measurement"
+  },
+  {
+   "id": "govbench",
+   "host": "oracle-micro-2",
+   "schedule": "0 */4 * * *",
+   "command": "~/run_govbench.sh",
+   "health": {
+    "type": "disabled",
+    "why": "cron line commented out 2026-09-26: GOVBENCH_AUTO_TESTER.py (cd ~/mac-sync/clawd/csoai-static-deploy2) exists on no Oracle/pod/Mac path and in no git history"
+   },
+   "supervise": "observe",
+   "cron_match": "run_govbench.sh",
+   "failover": [],
+   "note": "DISABLED 2026-09-26; re-enable only after the tester is restored to a real path",
+   "class": "legacy"
+  },
+  {
+   "id": "airbench",
+   "host": "oracle-micro-2",
+   "schedule": "*/25 * * * *",
+   "command": "airbench_full.py --budget-seconds 600",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/airbench/airbench.log",
+    "max_age_s": 3300,
+    "bad_if_last_line_contains": [
+     "Error",
+     "Traceback",
+     "FAILED"
+    ]
+   },
+   "supervise": "observe",
+   "cron_match": "airbench_full.py",
+   "failover": [],
+   "note": "harvester fails closed since 2026-09-26 (FAILED_UPSTREAM_NOT_JSON / FAILED_DISK_FLOOR lines); 25 Sep JSONDecodeError was an unguarded json.loads",
+   "class": "legacy"
+  },
+  {
+   "id": "gcp-evac-watcher",
+   "host": "oracle-micro-2",
+   "schedule": "*/10 * * * *",
+   "command": "bash ~/gcp-evac-watcher-oracle.sh",
+   "health": {
+    "type": "none",
+    "why": "writes no log; GCP is settled-dead (memory gcp-dead-regenerate-dont-recover)"
+   },
+   "supervise": "observe",
+   "cron_match": "gcp-evac-watcher-oracle.sh",
+   "failover": [],
+   "note": "candidate for removal: GCP billing dead",
+   "class": "legacy"
+  },
+  {
+   "id": "sov-town",
+   "host": "oracle-micro-2",
+   "schedule": "*/5 * * * *",
+   "command": "/home/ubuntu/sov-town/sov_town_cron.sh",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/sov-town/cron.log",
+    "max_age_s": 900
+   },
+   "supervise": "observe",
+   "cron_match": "sov_town_cron.sh",
+   "failover": [],
+   "note": "legacy cron, observed only",
+   "class": "legacy"
+  },
+  {
+   "id": "snapshot-pipe",
+   "host": "oracle-micro-2",
+   "schedule": "43 */6 * * *",
+   "command": "airbench/snapshot_pipe.py",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/airbench/snapshot_pipe.log",
+    "max_age_s": 23400
+   },
+   "supervise": "observe",
+   "cron_match": "snapshot_pipe.py",
+   "failover": [],
+   "note": "legacy cron, observed only",
+   "class": "legacy"
+  },
+  {
+   "id": "sov-eater",
+   "host": "oracle-micro-2",
+   "schedule": "*/30 * * * *",
+   "command": "greenfield-sov/sovereign_eater.py",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/greenfield-sov/logs/eater.log",
+    "max_age_s": 4200,
+    "bad_if_last_line_contains": [
+     "FAILED_DISK_FLOOR"
+    ]
+   },
+   "supervise": "observe",
+   "cron_match": "sovereign_eater.py",
+   "failover": [],
+   "note": "legacy cron, observed only; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26",
+   "class": "legacy"
+  },
+  {
+   "id": "eat-remote-battery",
+   "host": "oracle-micro-2",
+   "schedule": "17 */6 * * *",
+   "command": "~/eat_remote_battery.sh",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/eat_remote.log",
+    "max_age_s": 23400
+   },
+   "supervise": "observe",
+   "cron_match": "eat_remote_battery.sh",
+   "failover": [],
+   "note": "log last written 9 Aug: likely dead",
+   "class": "legacy"
+  },
+  {
+   "id": "honey-consolidator",
+   "host": "oracle-micro-2",
+   "schedule": "35 * * * *",
+   "command": "~/honey_consolidator_remote.sh",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/honey_consolidator.log",
+    "max_age_s": 4500,
+    "bad_if_last_line_contains": [
+     "FAILED_DISK_FLOOR"
+    ]
+   },
+   "supervise": "observe",
+   "cron_match": "honey_consolidator_remote.sh",
+   "failover": [],
+   "note": "legacy cron, observed only; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26",
+   "class": "legacy"
+  },
+  {
+   "id": "honey-verify",
+   "host": "oracle-micro-2",
+   "schedule": "*/15 * * * *",
+   "command": "/evac-bulk/honey_verify.py",
+   "health": {
+    "type": "file_mtime",
+    "path": "/evac-bulk/honey-verify.log",
+    "max_age_s": 2400,
+    "bad_if_last_line_contains": [
+     "FAILED_DISK_FLOOR"
+    ]
+   },
+   "supervise": "observe",
+   "cron_match": "honey_verify.py",
+   "failover": [],
+   "note": "legacy cron, observed only; disk floor (/ >= 1.5G, /evac-bulk >= 2G) since 2026-09-26",
+   "class": "legacy"
+  },
+  {
+   "id": "city-report",
+   "host": "oracle-micro-2",
+   "schedule": "0 5 * * *",
+   "command": "/home/ubuntu/city-report.py",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/city-report/cron.log",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "city-report.py",
+   "failover": [],
+   "note": "legacy cron, observed only",
+   "class": "legacy"
+  },
+  {
+   "id": "oracle-daily-index",
+   "host": "oracle-micro-2",
+   "schedule": "30 23 * * *",
+   "command": "bash $HOME/lanes/bin/oracle_daily_index.sh",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/oracle-daily-index.log",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "oracle_daily_index.sh",
+   "failover": [],
+   "note": "moved out of /tmp to ~/lanes/bin on 2026-09-26 (the /tmp original is kept)",
+   "class": "legacy"
+  },
+  {
+   "id": "dc-remote",
+   "host": "oracle-micro-2",
+   "schedule": "*/5 * * * * + @reboot",
+   "command": "bash $HOME/dc-remote.sh",
+   "health": {
+    "type": "file_mtime",
+    "path": "~/dc-remote.log",
+    "max_age_s": 900
+   },
+   "supervise": "observe",
+   "cron_match": "dc-remote.sh",
+   "failover": [],
+   "note": "Desktop Commander keepalive",
+   "class": "legacy"
+  },
+  {
+   "id": "pod-watchdog",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "every 10 min",
+   "command": "scheduler.sh -> /workspace/lanes/loops/watchdog",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "watchdog",
+    "max_age_s": 1800,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-commission-dispatch",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "every 10 min",
+   "command": "scheduler.sh -> /workspace/lanes/loops/commission-dispatch",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "commission-dispatch",
+    "max_age_s": 1800,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-root-check-pod",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :05 (pulls Oracle's)",
+   "command": "scheduler.sh -> /workspace/lanes/loops/root-check-pod",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "root-check-pod",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-runpod-upload-heartbeat",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "every 6 h",
+   "command": "scheduler.sh -> /workspace/lanes/loops/runpod-upload-heartbeat",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "runpod-upload-heartbeat",
+    "max_age_s": 25200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-drift-draft",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :40",
+   "command": "scheduler.sh -> /workspace/lanes/loops/drift-draft",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "drift-draft",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "no new drift"
+     ],
+     "result_re": "RECEIPT"
+    }
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-trust-chain",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :45",
+   "command": "scheduler.sh -> /workspace/lanes/loops/trust-chain",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "trust-chain",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "\\| 0 proof\\(s\\) upgraded"
+     ],
+     "result_re": "RESULT"
+    }
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-bazaar-conformance",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "03:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/bazaar-conformance",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "bazaar-conformance",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "DISABLED 2026-09-26: OOM-killed (rc=137) in transfer mode and duplicates Oracle's flywheel x402-daily (same csoai/x402-bazaar-conformance dataset)",
+   "class": "production"
+  },
+  {
+   "id": "pod-settlement-dry",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "03:30Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/settlement-dry",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "settlement-dry",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-revenue-snapshot",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "04:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/revenue-snapshot",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "revenue-snapshot",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-hubcard-refresh",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "05:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/hubcard-refresh",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "hubcard-refresh",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-hf-flush",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "05:30Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/hf-flush",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "hf-flush",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-gspc-spray-hf",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :20",
+   "command": "scheduler.sh -> /workspace/lanes/loops/gspc-spray-hf",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "gspc-spray-hf",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-corrections-watch",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "06:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/corrections-watch",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "corrections-watch",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-indexnow-ping",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "06:30Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/indexnow-ping",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "indexnow-ping",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "to submit 0\\b"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-census-capture",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "07:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/census-capture",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "census-capture",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-distribution-measure",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "07:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/distribution-measure",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "distribution-measure",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-swh-archive",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "07:30Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/swh-archive",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "swh-archive",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "submitted=0\\b"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-capability-probe",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "08:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/capability-probe",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "capability-probe",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-swh-visit-readback",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "08:30Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/swh-visit-readback",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "swh-visit-readback",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "fail_re": "\\bSKIP reader absent\\b|\\brc=[1-9]\\d*\\b|\\bFAIL"
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-claim-watch-measure",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "Mon 09:20Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/claim-watch-measure",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "claim-watch-measure",
+    "max_age_s": 691200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-register-402index",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "02:20Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/register-402index",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "register-402index",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "missing 0\\b"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-settle-all-doors",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "02:40Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/settle-all-doors",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "settle-all-doors",
+    "max_age_s": 97200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-mill-hourly",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :10",
+   "command": "scheduler.sh -> /workspace/lanes/loops/mill-hourly",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "mill-hourly",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": true,
+   "failover": [
+    {
+     "type": "kaggle",
+     "name": "kaggle-2xT4",
+     "kernel_dir": null
+    },
+    {
+     "type": "hf_job",
+     "name": "hf-t4-small",
+     "flavor": "t4-small",
+     "secrets": [
+      "HF_TOKEN"
+     ]
+    },
+    {
+     "type": "runpod_pod",
+     "name": "runpod-3090",
+     "pod_id": "fpowppss5ngtkw"
+    }
+   ],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old; GPU job: logs PAUSED_NO_GPU once while ollama is down (transfer mode) -> PAUSED",
+   "class": "production"
+  },
+  {
+   "id": "pod-mill-hourly-land",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :50",
+   "command": "scheduler.sh -> /workspace/lanes/loops/mill-hourly-land",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "mill-hourly-land",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-harness-outcomes",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :57",
+   "command": "scheduler.sh -> /workspace/lanes/loops/harness-outcomes",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "harness-outcomes",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800,
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "\\bappended=0\\b"
+     ]
+    }
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-arena-hourly",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :35",
+   "command": "scheduler.sh -> /workspace/lanes/loops/arena-hourly",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "arena-hourly",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": true,
+   "failover": [
+    {
+     "type": "kaggle",
+     "name": "kaggle-2xT4",
+     "kernel_dir": null
+    },
+    {
+     "type": "hf_job",
+     "name": "hf-t4-small",
+     "flavor": "t4-small",
+     "secrets": [
+      "HF_TOKEN"
+     ]
+    },
+    {
+     "type": "runpod_pod",
+     "name": "runpod-3090",
+     "pod_id": "fpowppss5ngtkw"
+    }
+   ],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old; GPU job: logs PAUSED_NO_GPU once while ollama is down (transfer mode) -> PAUSED",
+   "class": "production"
+  },
+  {
+   "id": "pod-durability-mirror",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "hourly :15",
+   "command": "scheduler.sh -> /workspace/lanes/loops/durability-mirror",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "durability-mirror",
+    "max_age_s": 5400,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "pod-durability-hf-publish",
+   "host": "pod:fpowppss5ngtkw",
+   "schedule": "Sun 09:00Z",
+   "command": "scheduler.sh -> /workspace/lanes/loops/durability-hf-publish",
+   "health": {
+    "type": "pod_job",
+    "path": "~/fleet/pod_jobs.json",
+    "key": "durability-hf-publish",
+    "max_age_s": 691200,
+    "export_max_age_s": 1800
+   },
+   "supervise": "observe",
+   "gpu": false,
+   "failover": [],
+   "note": "pod scheduler (loops/scheduler.sh) is live; state read from the pod's own export (loops/fleet-export.py, every 10 min -> Oracle ~/fleet/pod_jobs.json). UNMEASURED only when that export is >30 min old",
+   "class": "production"
+  },
+  {
+   "id": "hf-gspc-mill-all-axes",
+   "host": "hf-jobs:csoai",
+   "schedule": "0 5 * * * (SUSPENDED since 11 Sep)",
+   "command": "ci/hf-jobs/mill-all-axes.sh from csoai/councilof-ai-mirror bundle",
+   "health": {
+    "type": "none",
+    "why": "suspended scheduled job 6a9828d50718b0f6d8910f72"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "class": "measurement"
+  },
+  {
+   "id": "fleet-twin",
+   "host": "hf-jobs:csoai",
+   "schedule": "17 * * * *",
+   "command": "supervisor.py --mode twin (code from csoai/fleet-heartbeat code/, sha256-verified)",
+   "health": {
+    "type": "none",
+    "why": "its heartbeat is heartbeat/hf-twin.json in the dataset; Oracle reads it"
+   },
+   "supervise": "self",
+   "failover": [],
+   "max_runtime_s": 1800,
+   "class": "production"
+  },
+  {
+   "id": "gha-deploy",
+   "host": "github:CSOAI-ORG/councilof-ai",
+   "schedule": "every 3 h + push",
+   "command": ".github/workflows/deploy.yml",
+   "health": {
+    "type": "none",
+    "why": "GitHub account flagged since 2 Sep; deploys run from the pod (deploy-prod.sh)"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "class": "production"
+  },
+  {
+   "id": "gha-gspc-spray",
+   "host": "github:CSOAI-ORG/councilof-ai",
+   "schedule": "09:40Z daily",
+   "command": ".github/workflows/gspc-spray.yml",
+   "health": {
+    "type": "none",
+    "why": "GitHub account flagged"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "class": "measurement"
+  },
+  {
+   "id": "mac-gspc-fred-context",
+   "host": "mac",
+   "schedule": "every 24 h",
+   "command": "ai.csoai.gspc-fred-context",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-gspc-oracle-context",
+   "host": "mac",
+   "schedule": "every 60 s",
+   "command": "ai.csoai.gspc-oracle-context",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-gspc-sec-context",
+   "host": "mac",
+   "schedule": "every 15 min",
+   "command": "ai.csoai.gspc-sec-context",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-powerhouse-cycle",
+   "host": "mac",
+   "schedule": "every 15 min",
+   "command": "ai.csoai.powerhouse-cycle",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-watchdog-audit",
+   "host": "mac",
+   "schedule": "every 5 min",
+   "command": "ai.csoai.watchdog-audit",
+   "health": {
+    "type": "disabled",
+    "why": "moved to Oracle 2026-09-28 by lane automation-runpod-20260928 (Mac plist bootout + moved to ~/Library/LaunchAgents/_disabled_automation_runpod_20260928/, .bak kept); see job watchdog-audit"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "MIGRATED -> watchdog-audit",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-claim-capture-publish",
+   "host": "mac",
+   "schedule": "hourly (last exit 2)",
+   "command": "com.csoai.claim-capture-publish",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-nsite-spray",
+   "host": "mac",
+   "schedule": "hourly",
+   "command": "com.csoai.nsite-spray",
+   "health": {
+    "type": "disabled",
+    "why": "moved to Oracle 2026-09-28 by lane automation-runpod-20260928 (Mac plist bootout + moved to ~/Library/LaunchAgents/_disabled_automation_runpod_20260928/, .bak kept); see job nsite-spray"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "MIGRATED -> nsite-spray",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-ots-anchor",
+   "host": "mac",
+   "schedule": "07:00 local",
+   "command": "com.csoai.ots-anchor",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-ots-upgrade-loop",
+   "host": "mac",
+   "schedule": "hourly (last exit 1)",
+   "command": "com.meok.ots-upgrade-loop",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-frameworks-drum-check",
+   "host": "mac",
+   "schedule": "every 15 min",
+   "command": "com.meok.frameworks-drum-check",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-frameworks-drum-overnight",
+   "host": "mac",
+   "schedule": "02:30 local",
+   "command": "com.meok.frameworks-drum-overnight",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-tea-dualwalk",
+   "host": "mac",
+   "schedule": "every 6 h",
+   "command": "com.meok.tea-dualwalk",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-trash-to-gdrive",
+   "host": "mac",
+   "schedule": "every 15 min (last exit 1)",
+   "command": "com.meok.trash-to-gdrive",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-meok-gaming-revenue",
+   "host": "mac",
+   "schedule": "*/15",
+   "command": "cron:meok-gaming-revenue",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-jeeves-full-auto",
+   "host": "mac",
+   "schedule": "*/30 (installed twice)",
+   "command": "cron:jeeves-full-auto",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-jeeves-all-day-batch",
+   "host": "mac",
+   "schedule": "0 */4 (installed twice)",
+   "command": "cron:jeeves-all-day-batch",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-hermes-session-prune",
+   "host": "mac",
+   "schedule": "0 5",
+   "command": "cron:hermes-session-prune",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "mac-cj-refresh",
+   "host": "mac",
+   "schedule": "0 18",
+   "command": "cron:cj-refresh",
+   "health": {
+    "type": "none",
+    "why": "the Mac sleeps and is never in the critical path"
+   },
+   "supervise": "observe",
+   "failover": [],
+   "note": "migrate off the Mac or retire; see run-on-cloud-not-mac",
+   "class": "legacy"
+  },
+  {
+   "id": "self-parity",
+   "host": "oracle-micro-2",
+   "schedule": "10 5 * * *",
+   "command": "flock -n /tmp/self-parity.lock bash $HOME/lanes/self-parity-20260926/scripts/self-parity/run.sh",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/self_parity.json",
+    "field": "last_success",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "self-parity/run.sh",
+   "max_runtime_s": 3600,
+   "outputs": [
+    "/evac-bulk/self-parity/<date>/record.json",
+    "~/fleet/self_parity.json",
+    "~/lanes/logs/self-parity.log"
+   ],
+   "failover": [],
+   "owner_lane": "self-parity-20260926",
+   "note": "measures our own listings in external indexes; signs via board-sign with the Oracle pod token + OTS; run.sh does its own disk floor (FAILED_DISK_FLOOR < 2G bulk); publishes nothing; observed only (needs the lane checkout and the token)",
+   "class": "measurement"
+  },
+  {
+   "id": "outward-gate",
+   "host": "oracle-micro-2",
+   "schedule": "40 6 * * *",
+   "command": "flock -n /tmp/outward-gate.lock $HOME/lanes/bin/disk-floor.sh outward-gate $HOME/lanes/logs/outward-gate.log bash $HOME/lanes/outward-gate-20260926/scripts/outward-gate/run.sh",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/outward_gate.json",
+    "field": "last_success",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "outward-gate/run.sh",
+   "max_runtime_s": 10800,
+   "outputs": [
+    "/evac-bulk/outward-gate/<date>/scorecard.json",
+    "/evac-bulk/outward-gate/<date>/SCORECARD.md",
+    "~/fleet/outward_gate.json",
+    "~/lanes/logs/outward-gate.log"
+   ],
+   "failover": [],
+   "owner_lane": "outward-gate-20260926",
+   "note": "outward quality gate: scores every public artifact (HF csoai/*, live councilof.ai surfaces, venturi batches, packages, queued notices) PASS/FAIL/NA per check; nothing goes out below 100%; measures only, public reads at <=1 req/s/host, UA CSOAI-outward-gate/0.1; publishes and sends nothing; disk floor via disk-floor.sh",
+   "class": "measurement"
+  },
+  {
+   "id": "tool-drift",
+   "host": "oracle-micro-2",
+   "schedule": "30 7 * * *",
+   "command": "flock -n /tmp/tool-drift.lock $HOME/lanes/bin/disk-floor.sh tool-drift $HOME/lanes/logs/tool-drift.log nice -n 15 /usr/bin/python3 $HOME/lanes/tool-drift-20260926/tool_drift_probe.py run --cap 500",
+   "health": {
+    "type": "json_field_age",
+    "path": "~/fleet/tool_drift.json",
+    "field": "last_success",
+    "max_age_s": 97200
+   },
+   "supervise": "observe",
+   "cron_match": "tool-drift-20260926/tool_drift_probe.py",
+   "max_runtime_s": 3600,
+   "outputs": [
+    "/evac-bulk/tool-drift/runs/<date>/summary.json",
+    "/evac-bulk/tool-drift/latest.jsonl.gz",
+    "~/fleet/tool_drift.json",
+    "~/lanes/logs/tool-drift.log"
+   ],
+   "failover": [],
+   "owner_lane": "tool-drift-20260926",
+   "note": "re-probes <= 500/day of the MCP endpoints whose latest observation RESPONDED (round-robin, least recently re-probed first), via the pinned census prober: robots.txt, initialize/server-discover, tools/list only, never tools/call, 1 req/s/host, UA CSOAI-census/0.1; keeps per-tool name + description + inputSchema sha256 so drift is measurable at full granularity; disk floor via lanes/bin/disk-floor.sh (FAILED_DISK_FLOOR); honours an exclusion list if one exists; publishes nothing; observed only",
+   "class": "measurement"
+  },
+  {
+   "id": "capsule-daily",
+   "host": "oracle-micro-2",
+   "schedule": "5 8 * * *",
+   "command": "flock -n /tmp/capsule-daily.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh capsule-daily $HOME/lanes/logs/capsule-daily.log bash $HOME/lanes/bin/capsule-daily.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/capsule-daily.log",
+    "max_age_s": 97200,
+    "must_contain": "rc=0",
+    "noop": {
+     "runs": 3,
+     "patterns": [
+      "state=NOOP"
+     ]
+    }
+   },
+   "supervise": "active",
+   "cron_match": "lanes/bin/capsule-daily.sh",
+   "max_runtime_s": 3600,
+   "not_before": "2026-09-27T09:00:00Z",
+   "outputs": [
+    "/evac-bulk/measurement-capsules-v0.2-<date>-<adapter>/",
+    "/evac-bulk/measurement-index-v0.2-<date>.json",
+    "/evac-bulk/measurement-index-v0.2-<date>.signed.json",
+    "/evac-bulk/measurement-index-v0.2-<date>.json.ots",
+    "/evac-bulk/.capsule-daily/done-<date>",
+    "~/lanes/logs/capsule-daily.log"
+   ],
+   "failover": [],
+   "owner_lane": "venturi-capsule-20260926",
+   "note": "measurement-capsule daily loop: builds a signed + OTS batch only for an adapter whose source record is new (self_parity, tool_drift runs, cross_ledger, public_signals only with a verifying source signature; contract_parity/a2a_card when a new signed census record appears), carries unchanged batches by reference, writes the day's signed + OTS index, pushes the day's batches + index to the SovSpace reaction pod (sov-push-from-oracle.sh). Idempotent (lock + done-marker per date; a re-run is safe). rc=0 DONE/NOOP/ALREADY_DONE, rc=1 FAILED/PARTIAL, FAILED_DISK_FLOOR below root 512M / bulk 2048M. Publishes nothing. Not portable (needs the lane checkout, the board-sign token and the pod key).",
+   "class": "measurement"
+  },
+  {
+   "id": "capsule-chain-daily-index",
+   "host": "oracle-micro-2",
+   "schedule": "5 8 * * *",
+   "command": "flock -n /tmp/capsule-daily.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh capsule-daily $HOME/lanes/logs/capsule-daily.log bash $HOME/lanes/bin/capsule-daily.sh",
+   "health": {
+    "type": "dated_file",
+    "path": "/evac-bulk/measurement-index-v0.2-<date>.json",
+    "lag_days": 1,
+    "deadline_utc": "09:00",
+    "why": "a missed day in the hash-chained measurement-index chain: the next index will carry it as gap_days > 0; it cannot be back-filled"
+   },
+   "supervise": "observe",
+   "cron_match": "lanes/bin/capsule-daily.sh",
+   "max_runtime_s": 3600,
+   "not_before": "2026-09-27T09:00:00Z",
+   "outputs": [
+    "/evac-bulk/measurement-index-v0.2-<date>.json",
+    "/evac-bulk/.capsule-daily/chain-verify-<date>.json",
+    "/evac-bulk/measurement-index-chain-head-<date>.json (Sundays)"
+   ],
+   "failover": [],
+   "owner_lane": "venturi-capsule-20260926",
+   "note": "gap alarm for the hash-chained daily measurement index (index schema 0.3): yesterday's /evac-bulk/measurement-index-v0.2-<date>.json must exist by 09:00Z, else MISSING (BAD). Observe only: a re-run cannot back-fill a day once a later day is chained (capsule-daily refuses), so the day stays a declared gap. The chain itself is verified by capsule-daily step 5 (venturi_capsule.py verify-chain).",
+   "class": "measurement"
+  },
+  {
+   "id": "nsite-spray",
+   "host": "oracle-micro-2",
+   "schedule": "28 * * * *",
+   "command": "flock -n /tmp/nsite-spray.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh nsite-spray $HOME/lanes/logs/nsite-spray.log bash $HOME/lanes/automation-runpod-20260928/nsite-spray/run.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/nsite-spray.log",
+    "max_age_s": 10800,
+    "must_contain": "rc=0"
+   },
+   "supervise": "observe",
+   "cron_match": "automation-runpod-20260928/nsite-spray/run.sh",
+   "max_runtime_s": 900,
+   "outputs": [
+    "~/lanes/automation-runpod-20260928/nsite-spray/latest.json",
+    "~/lanes/automation-runpod-20260928/nsite-spray/status.json",
+    "~/lanes/automation-runpod-20260928/nsite-spray/claim-watch.json",
+    "~/lanes/logs/nsite-spray.log"
+   ],
+   "failover": [],
+   "class": "measurement",
+   "note": "was Mac com.csoai.nsite-spray (hourly). Read-only GETs: canonical board/DID/governance + 8 estate apexes spray report, prohibited-claim watch. Publishes nothing."
+  },
+  {
+   "id": "watchdog-audit",
+   "host": "oracle-micro-2",
+   "schedule": "13,43 * * * *",
+   "command": "flock -n /tmp/watchdog-audit.lock env FLOOR_ROOT_M=512 $HOME/lanes/bin/disk-floor.sh watchdog-audit $HOME/lanes/logs/watchdog-audit.log bash $HOME/lanes/automation-runpod-20260928/watchdog-audit/run.sh",
+   "health": {
+    "type": "log_last_line",
+    "path": "~/lanes/logs/watchdog-audit.log",
+    "max_age_s": 7200,
+    "must_contain": "rc=0"
+   },
+   "supervise": "observe",
+   "cron_match": "automation-runpod-20260928/watchdog-audit/run.sh",
+   "max_runtime_s": 300,
+   "outputs": [
+    "~/lanes/automation-runpod-20260928/watchdog-audit/state/latest.json",
+    "~/lanes/logs/watchdog-audit.log"
+   ],
+   "failover": [],
+   "class": "measurement",
+   "note": "was Mac ai.csoai.watchdog-audit (every 5 min; 30 min here, Oracle / is 93%). 4 unauthenticated GETs + read-only runpodctl pod get; receipts accumulate ~110 KB/day under state/ (retention = owner call)."
+  }
+ ]
+}

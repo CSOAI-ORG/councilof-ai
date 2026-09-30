@@ -52,7 +52,7 @@ export default function PublicPrivacy() {
     <section className="min-h-screen bg-slate-50 px-5 py-14 text-slate-950">
       <article className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
         <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-          Operative notice · version 1.2 · 14 September 2026
+          Operative notice · version 1.3 · 27 September 2026
         </p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Privacy notice</h1>
         <p className="mt-5 leading-7 text-slate-700">
@@ -91,6 +91,55 @@ export default function PublicPrivacy() {
                 </div>
               ))}
             </div>
+          </section>
+
+          <section id="mcp" aria-labelledby="mcp-h">
+            <h2 id="mcp-h" className="text-2xl font-bold">The MCP endpoints (/mcp and /mcp/free)</h2>
+            <p className="mt-3 leading-7 text-slate-700">
+              https://councilof.ai/mcp and https://councilof.ai/mcp/free are Model Context Protocol
+              servers that AI clients such as Claude call on your behalf. /mcp/free carries only the
+              free read-only tools. /mcp carries those plus four x402-metered tools. Both are handled by
+              functions/mcp/[[path]].ts. No account, sign-in, key or cookie is used on either.
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-6 leading-7 text-slate-700">
+              <li>
+                <span className="font-semibold">What a tool call sends us:</span> the tool name and the
+                arguments the AI client chose. Depending on the tool, that is an axis name, a SHA-256,
+                a signed measurement card or capsule (as JSON, or as a councilof.ai or csoai.org URL),
+                or an endpoint URL. We receive the tool call, not your conversation.
+              </li>
+              <li>
+                <span className="font-semibold">How it is used:</span> the arguments are processed in
+                memory to produce the answer. The free tools read public files on councilof.ai and
+                csoai.org only; they do not contact an endpoint URL you name. Our MCP code does not
+                write tool calls, arguments or answers to storage.
+              </li>
+              <li>
+                <span className="font-semibold">Payments (/mcp only):</span> if a paid tool on /mcp is
+                called with an x402 payment authorization that settles, the route it calls keeps the
+                x402 payment records described in the first row above, and may keep the request it
+                fulfilled with the transaction (for example the subject and axis of a commissioned
+                measurement, or the hash of a checked file) in the same KV store. Nothing on /mcp/free
+                takes a payment, so none of this happens there.
+              </li>
+              <li>
+                <span className="font-semibold">Logs:</span> the request itself (IP address of the
+                machine that makes it, user agent, URL and time) reaches Cloudflare like any other
+                request, as in the request-logs row above. For a connector added in Claude, that machine
+                is normally Anthropic&apos;s, not your device. The code includes an optional trace that
+                writes the tool name to Cloudflare&apos;s function log. It is switched off; when it is
+                on, every MCP response carries an x-otel-trace-id header, so you can check.
+              </li>
+              <li>
+                <span className="font-semibold">Retention:</span> we keep nothing from a /mcp/free call.
+                Cloudflare&apos;s processing is under Cloudflare&apos;s own retention, and we keep no copy.
+              </li>
+              <li>
+                <span className="font-semibold">Questions:</span>{" "}
+                <a className="text-emerald-800 underline" href={`mailto:${controller.email}`}>{controller.email}</a>,
+                or contact@csoai.org for support with the connector.
+              </li>
+            </ul>
           </section>
 
           <section>

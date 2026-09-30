@@ -17,7 +17,8 @@ describe("GET /api/claims/register", () => {
     const body = await res.json();
     expect(body).toEqual(register);
     expect(res.headers.get("content-type")).toMatch(/application\/json/);
-    expect(res.headers.get("link")).toContain("/spec/claim-maintenance/v0.1/");
+    expect(res.headers.get("link")).toContain("/spec/claim-maintenance/v0.2/");
+    expect(res.headers.get("x-claim-maintenance-spec")).toBe("https://councilof.ai/spec/claim-maintenance/v0.2/");
   });
 
   it("counts what is on disk, not what we wish existed", () => {

@@ -26,8 +26,21 @@ States (exactly one per listing):
   ROBOTS_DISALLOWED   robots.txt (rules, or a 5xx/429 robots.txt = disallow-all) forbids the candidates
   INVALID_URL         the listing's URL is not an absolute http(s) URL
 
-Signature check (CARD_SERVED only), per A2A AgentCardSignature: a detached JWS, `protected` +
-"." + base64url(JCS(card without `signatures`)) (RFC 7515 + RFC 8785). Per card:
+Signature check (CARD_SERVED only), per A2A spec §8.4.3 "Signature Verification" (a2aproject/A2A
+docs/specification.md @ 72b3761, sha256 6a78d242...2e75): a detached JWS, `protected` + "." +
+base64url(JCS(card with default values removed, `signatures` excluded)) (RFC 7515 + RFC 8785).
+§8.4.3 step 3, "Remove properties with default values from the received Agent Card", is applied
+by strip_defaults() with the field rules of §8.4.1 rule 1 / §5.7, read from the vendored proto
+a2a-spec/a2a.proto (same commit; sha256 checked at load): a field whose value is its proto3
+default ("" / false / 0 / [] / {} / null) is removed unless it is REQUIRED, `optional`, or a oneof
+member. Fields the proto does not define (e.g. v0.3 `url`, `preferredTransport`) cannot be judged
+and are kept as served; each check records them (fields_not_in_schema).
+Each card is judged against the spec version it DECLARES (top-level protocolVersion, else
+supportedInterfaces[].protocolVersion): 1.x, or nothing recognisable, gets step 3; 0.x gets JCS of
+the served bytes, because the v0.3.0 spec defines no canonicalisation step - and when step 3 would
+change its payload, the 1.x verdict is recorded beside it (sig_state_under_1x_rules + note), never
+substituted. A 1.x signature over the served bytes (defaults kept) is FAILED and named in
+alt_serialisations_verifying as jcs_defaults_not_removed. Per card:
   NO_SIGNATURES   no `signatures` array (or an empty one)
   VERIFIED        at least one signature verifies under a key the card itself points to, and none fails
   FAILED          a key was found and a signature did not verify under it
@@ -51,6 +64,7 @@ import importlib.util
 import ipaddress
 import json
 import os
+import re
 import socket
 import sys
 import threading
@@ -71,40 +85,137 @@ MAX_REDIRECTS = 3
 
 
 # ---------------------------------------------------------------- canonical JSON (RFC 8785)
-def _jcs_num(v):
-    if isinstance(v, bool):
-        return "true" if v else "false"
-    if isinstance(v, int):
-        return str(v)
-    if v != v or v in (float("inf"), float("-inf")):
-        raise ValueError("JCS: non-finite number")
-    if v == 0:
-        return "0"
-    if v.is_integer() and abs(v) < 1e21:
-        return str(int(v))
-    r = repr(v)  # shortest round-trip, as ES6 Number.prototype.toString for these ranges
-    if "e" in r:
-        m, e = r.split("e")
-        e = int(e)
-        if -7 < e < 21:
-            return format(v, "f").rstrip("0").rstrip(".") if e < 0 else str(v)
-        return f"{m}e{'+' if e > 0 else '-'}{abs(e)}"
-    return r
+# rfc8785 (PyPI, 0.1.4) is one of the two oracles that produced the a2a-tck a2a-jcs-v01 vectors
+# (a2aproject/a2a-tck#228). The hand-written canonicaliser this replaces passed all 57 of them,
+# but it diverged SILENTLY from RFC 8785 on numbers the corpus does not reach:
+#   * a double in 1e-6 <= |x| < 1e-4 was cut to 6 decimals (1.5e-06 -> "0.000002", not "0.0000015")
+#   * an integral double in 2**53 <= |x| < 1e21 printed its exact binary value
+#     (1.3355731926399844e+19 -> "13355731926399844352", not "13355731926399844000")
+#   * an int beyond +-(2**53 - 1) printed every digit; RFC 8785 (I-JSON) has no form for it
+# rfc8785 raises CanonicalizationError / UnicodeEncodeError (both ValueError) for input with no
+# canonical form; _check() turns that into UNCHECKABLE, never FAILED.
+import rfc8785
 
 
 def jcs(v):
+    return rfc8785.dumps(v).decode("utf-8")
+
+
+# ---------------------------------------------------------------- A2A 8.4.3 step 3 (pure)
+A2A_SPEC_COMMIT = "72b3761bd84c59291da694dcd97cdfc2c010df39"
+A2A_PROTO = os.path.join(HERE, "a2a-spec", "a2a.proto")
+A2A_PROTO_SHA256 = "945df6e34001b2bfd0fd62d9484b63094dfad9d78705e41e2873441c419ae2d1"
+_FIELD = re.compile(r"^\s*(optional\s+|repeated\s+)?(map<[^>]+>|[\w.]+)\s+(\w+)\s*=\s*\d+\s*(\[[^\]]*\])?\s*;")
+_SCALAR_DEFAULT = {"string": "", "bytes": "", "bool": False}
+_NUMERIC = {"int32", "int64", "uint32", "uint64", "sint32", "sint64", "fixed32", "fixed64", "sfixed32",
+            "sfixed64", "float", "double"}
+
+
+def _camel(name):
+    head, *rest = name.split("_")
+    return head + "".join(w[:1].upper() + w[1:] for w in rest)
+
+
+def parse_proto(text):
+    """-> {message: {json_name or proto name: field}}, field = dict(name, type, label, required, oneof).
+    Top-level messages and one-line field declarations only (all a2a.proto @ A2A_SPEC_COMMIT has)."""
+    msgs, cur, oneof, depth = {}, None, False, 0
+    for line in text.splitlines():
+        code = line.split("//", 1)[0]
+        m = re.match(r"^message\s+(\w+)\s*\{", code)
+        if m and depth == 0:
+            cur, depth, oneof = m.group(1), 1, False
+            msgs[cur] = {}
+            continue
+        if cur is None:
+            continue
+        if re.match(r"^\s*oneof\s+\w+\s*\{", code):
+            oneof, depth = True, depth + 1
+            continue
+        f = _FIELD.match(code)
+        if f:
+            label = (f.group(1) or "").strip() or ("map" if f.group(2).startswith("map<") else "singular")
+            fld = {"name": f.group(3), "type": f.group(2), "label": label, "oneof": oneof,
+                   "required": "REQUIRED" in (f.group(4) or "")}
+            msgs[cur][_camel(f.group(3))] = fld
+            msgs[cur][f.group(3)] = fld  # proto3 JSON parsers accept the original name too
+        depth += code.count("{") - code.count("}")
+        if oneof and depth == 1:
+            oneof = False
+        if depth <= 0:
+            cur, depth = None, 0
+    return msgs
+
+
+_SCHEMA_CACHE = {}
+
+
+def a2a_schema():
+    """The vendored proto, fail-closed on any byte change (a different proto is a different rule set)."""
+    if "s" not in _SCHEMA_CACHE:
+        with open(A2A_PROTO, "rb") as fh:
+            raw = fh.read()
+        got = hashlib.sha256(raw).hexdigest()
+        if got != A2A_PROTO_SHA256:
+            raise RuntimeError(f"a2a.proto sha256 {got} != pinned {A2A_PROTO_SHA256}")
+        _SCHEMA_CACHE["s"] = parse_proto(raw.decode("utf-8"))
+    return _SCHEMA_CACHE["s"]
+
+
+def _is_default(fld, v):
     if v is None:
-        return "null"
-    if isinstance(v, (bool, int, float)):
-        return _jcs_num(v)
-    if isinstance(v, str):
-        return json.dumps(v, ensure_ascii=False)
-    if isinstance(v, list):
-        return "[" + ",".join(jcs(x) for x in v) + "]"
-    if isinstance(v, dict):
-        ks = sorted(v, key=lambda k: k.encode("utf-16-be"))
-        return "{" + ",".join(json.dumps(k, ensure_ascii=False) + ":" + jcs(v[k]) for k in ks) + "}"
-    raise TypeError(type(v).__name__)
+        return True
+    if fld["label"] == "repeated":
+        return v == [] if isinstance(v, list) else False
+    if fld["label"] == "map":
+        return v == {} if isinstance(v, dict) else False
+    t = fld["type"]
+    if t in _SCALAR_DEFAULT:
+        return type(v) is type(_SCALAR_DEFAULT[t]) and v == _SCALAR_DEFAULT[t]
+    if t in _NUMERIC:
+        return type(v) in (int, float) and v == 0
+    return False  # a message field has presence: set, even when {}
+
+
+def strip_defaults(v, message="AgentCard", schema=None, path="", unknown=None):
+    """A2A 8.4.3 step 3 over a JSON card, schema-driven. Returns a new value; never mutates v.
+    `unknown` (list) collects the paths of fields the schema does not define (kept as served)."""
+    schema = schema if schema is not None else a2a_schema()
+    fields = schema.get(message)
+    if fields is None or not isinstance(v, dict):
+        return v
+    out = {}
+    for k, val in v.items():
+        fld = fields.get(k)
+        if fld is None:
+            if unknown is not None:
+                unknown.append(path + k)
+            out[k] = val
+            continue
+        keep_default = fld["required"] or fld["label"] == "optional" or fld["oneof"]
+        if val is None and not fld["required"]:
+            continue  # proto3 JSON: null == not set
+        if not keep_default and _is_default(fld, val):
+            continue
+        t = fld["type"]
+        if fld["label"] == "map":
+            vt = t[4:-1].split(",", 1)[1].strip()
+            out[k] = {mk: strip_defaults(mv, vt, schema, f"{path}{k}.{mk}.", unknown) for mk, mv in val.items()} \
+                if isinstance(val, dict) and vt in schema else val
+        elif fld["label"] == "repeated" and t in schema and isinstance(val, list):
+            out[k] = [strip_defaults(x, t, schema, f"{path}{k}[].", unknown) for x in val]
+        elif t in schema:
+            out[k] = strip_defaults(val, t, schema, f"{path}{k}.", unknown)
+        else:
+            out[k] = val  # scalars, google.protobuf.Struct (params, header): kept byte-for-byte
+    return out
+
+
+def spec_payload_body(card):
+    """8.4.3 steps 3-4: defaults removed, `signatures` excluded. -> (body, fields_not_in_schema)."""
+    unknown = []
+    body = strip_defaults({k: v for k, v in card.items() if k != "signatures"}, unknown=unknown)
+    return body, sorted(set(unknown))
 
 
 def b64u_dec(s):
@@ -212,7 +323,22 @@ def keys_from_doc(pointer, doc):
     return []
 
 
+def _sdk_clean_empty(d):
+    """a2a-python utils/signing.py _clean_empty (main @ 0d5473c): drops every "", [] and {} at any depth."""
+    if isinstance(d, dict):
+        c = {k: x for k, v in d.items() if (x := _sdk_clean_empty(v)) is not None}
+        return c or None
+    if isinstance(d, list):
+        c = [x for v in d if (x := _sdk_clean_empty(v)) is not None]
+        return c or None
+    return None if (isinstance(d, str) and not d) else d
+
+
 ALT_SERIALISATIONS = {
+    # keyed on the card AS SERVED minus `signatures` (b = served body), NOT the 8.4.3 payload
+    "jcs_defaults_not_removed": lambda b: jcs(b),
+    "jcs_8_4_3_defaults_removed": lambda b: jcs(strip_defaults(b)),
+    "jcs_sdk_clean_empty": lambda b: jcs(_sdk_clean_empty(b) or {}),
     "json_sorted_compact_ascii": lambda b: json.dumps(b, sort_keys=True, separators=(",", ":")),
     "json_sorted_compact_utf8": lambda b: json.dumps(b, sort_keys=True, separators=(",", ":"), ensure_ascii=False),
     "json_insertion_order_compact": lambda b: json.dumps(b, separators=(",", ":"), ensure_ascii=False),
@@ -237,16 +363,54 @@ def alt_serialisations(body, protected, sig, alg, jwks):
     return sorted(set(hits))
 
 
+RULE_1X = "a2a-1.x-8.4.3"          # defaults removed, signatures excluded, JCS (spec 8.4.3 @ A2A_SPEC_COMMIT)
+RULE_0X = "a2a-0.x-served-bytes"   # signatures excluded, JCS; 0.x specs define no default-removal step
+NOTE_0X = ("protocol 0.3 defines no canonicalisation step; verdict under the declared version; "
+           "under 1.x rules this card would {verdict}")
+
+
+def declared_protocol(card):
+    """What the card declares: top-level protocolVersion (0.x cards), else supportedInterfaces[].protocolVersion
+    (1.x cards). -> (declared list, major) with major "1.x" | "0.x" | None (nothing recognisable declared)."""
+    pv = card.get("protocolVersion")
+    if isinstance(pv, (str, int, float)) and not isinstance(pv, bool):
+        vs = [str(pv)]
+    else:
+        vs = sorted({str(i.get("protocolVersion")) for i in (card.get("supportedInterfaces") or [])
+                     if isinstance(i, dict) and isinstance(i.get("protocolVersion"), (str, int, float))})
+    ms = {("1.x" if re.match(r"^v?1(\.|$)", v.strip()) else "0.x" if re.match(r"^v?0\.\d", v.strip()) else None) for v in vs}
+    major = "1.x" if "1.x" in ms else "0.x" if ms == {"0.x"} else None
+    return vs, major
+
+
 def check_signatures(card, fetch_doc):
-    """Pure given fetch_doc(url) -> (doc or None, reason). -> dict with sig_state + per-signature detail."""
+    """Pure given fetch_doc(url) -> (doc or None, reason). -> dict with sig_state + per-signature detail.
+    Each card is judged against the spec version it DECLARES: 1.x (or nothing recognisable declared -> the
+    current spec) gets 8.4.3 default removal; 0.x gets JCS of the served bytes, and when the two payloads
+    differ the 1.x verdict is recorded beside it (sig_state_under_1x_rules), never substituted."""
+    declared, major = declared_protocol(card)
+    rule = RULE_0X if major == "0.x" else RULE_1X
+    out = _check(card, fetch_doc, rule)
+    out.update(declared_protocolVersion=declared[:5], declared_major=major, rule=rule)
+    if rule == RULE_0X and out.get("defaults_removed"):
+        alt = _check(card, fetch_doc, RULE_1X)
+        out["sig_state_under_1x_rules"] = alt["sig_state"]
+        if alt["sig_state"] != out["sig_state"]:
+            out["note"] = NOTE_0X.format(verdict={"FAILED": "FAIL", "VERIFIED": "VERIFY"}.get(alt["sig_state"], alt["sig_state"]))
+    return out
+
+
+def _check(card, fetch_doc, rule):
     sigs = card.get("signatures")
     if not isinstance(sigs, list) or not sigs:
         return {"sig_state": "NO_SIGNATURES", "n_signatures": 0}
-    body = {k: v for k, v in card.items() if k != "signatures"}
+    body = {k: v for k, v in card.items() if k != "signatures"}  # as served
     try:
-        payload = b64u(jcs(body).encode("utf-8"))
+        spec_body, not_in_schema = spec_payload_body(card)
+        payload = b64u(jcs(spec_body if rule == RULE_1X else body).encode("utf-8"))
     except (TypeError, ValueError) as e:
         return {"sig_state": "UNCHECKABLE", "n_signatures": len(sigs), "reason": f"JCS failed: {e}"}
+    defaults_removed = spec_body != body  # whether 8.4.3 step 3 changes the payload (applied only under RULE_1X)
     detail = []
     for s in sigs[:5]:
         d = {}
@@ -302,7 +466,10 @@ def check_signatures(card, fetch_doc):
             d["result"] = "VERIFIED"
         elif any(o[0] is False for o in outcomes):
             d["result"] = "FAILED"
-            d["reason"] = "signature does not verify over JCS(card without signatures) under the pointed-to key"
+            d["reason"] = ("signature does not verify over the A2A 8.4.3 payload (defaults removed, signatures "
+                           "excluded, JCS) under the pointed-to key" if rule == RULE_1X else
+                           "signature does not verify over JCS(card without signatures) under the pointed-to key "
+                           "(declared 0.x: no default removal)")
             want = {"ES256": 64, "ES384": 96, "ES512": 132}.get(alg)
             if want and len(sig) != want:
                 d["reason"] += f"; signature is {len(sig)} bytes, not the {want}-byte JWS R||S form (DER-encoded?)"
@@ -316,7 +483,9 @@ def check_signatures(card, fetch_doc):
         st = "VERIFIED"
     else:
         st = "UNCHECKABLE"
-    out = {"sig_state": st, "n_signatures": len(sigs), "signatures": detail}
+    out = {"sig_state": st, "n_signatures": len(sigs), "signatures": detail,
+           "canonicalisation": (rule + "@" + A2A_SPEC_COMMIT[:7]) if rule == RULE_1X else rule, "defaults_removed": defaults_removed,
+           "fields_not_in_schema": not_in_schema[:40]}
     if st == "VERIFIED":
         out["verified_key_sources"] = sorted({d["key_source"] for d in detail if d.get("result") == "VERIFIED"})
     return out
@@ -685,10 +854,19 @@ def summarise(run, started, finished, n_planned, n_frame_entries):
             "failed_that_verify_under_a_non_spec_serialisation": sum(
                 1 for r in served for d in r["signature_check"].get("signatures", [])
                 if d.get("result") == "FAILED" and d.get("alt_serialisations_verifying")),
-            "failed_note": ("FAILED = no verification over JCS(card without signatures) under the key the card points "
-                            "to; alt_serialisations_verifying is a diagnostic of 4 non-spec serialisations, never a pass"),
+            "cards_signed_where_defaults_removed_changes_the_payload": sum(
+                1 for r in served if r["signature_check"].get("defaults_removed")),
+            "signed_cards_by_rule": dict(collections.Counter(
+                r["signature_check"]["rule"] for r in served if r["signature_check"].get("n_signatures"))),
+            "declared_0x_where_1x_rules_give_another_verdict": sorted(
+                r["id"] for r in served if r["signature_check"].get("note")),
+            "failed_note": ("FAILED = no verification over the A2A 8.4.3 payload (defaults removed, signatures excluded, "
+                            f"JCS) under the key the card points to; alt_serialisations_verifying is a diagnostic of "
+                            f"{len(ALT_SERIALISATIONS)} non-spec serialisations, never a pass"),
             "denominator": "cards served (CARD_SERVED), not listings",
-            "canonicalisation": "JCS (RFC 8785) of the card with `signatures` removed; detached JWS (RFC 7515)",
+            "canonicalisation": ("A2A spec 8.4.3 @ " + A2A_SPEC_COMMIT[:7] + ": properties with default values removed "
+                                 "(field rules from a2a.proto, sha256 " + A2A_PROTO_SHA256[:12] + "), `signatures` "
+                                 "excluded, JCS (RFC 8785); detached JWS (RFC 7515)"),
         },
         "registry_is_healthy_but_no_card_served": healthy_not_served,
         "requests": {"cards_and_robots": sum(run.gate.requests.values()), "key_documents": run.key_requests,

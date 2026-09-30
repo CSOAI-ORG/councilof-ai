@@ -1,0 +1,13 @@
+{
+ "schema": "csoai.probe-exclusions/0.1",
+ "rule": "An operator who objects to being probed, or asks to opt out of future probing, names an endpoint or a host (email nicholas@csoai.org). It is added here with the date received, and every later run of scripts/census/mcp-remote-probe.py and scripts/census/contract-parity.py skips it before any request and records the skip by name. Entries are never removed without the operator's request. Objections themselves are recorded in the census record of the next run.",
+ "entry_shape": {
+  "id": "short id",
+  "match": "endpoint | host",
+  "value": "https://host/path or host",
+  "received_utc": "ISO-8601",
+  "via": "email | issue | other",
+  "scope": "all CSOAI census probes"
+ },
+ "entries": []
+}

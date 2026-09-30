@@ -47,6 +47,8 @@ const index = JSON.parse(readFileSync(join(signedDir, "card_index.json"), "utf8"
 // Using the same file a stranger downloads is the point: if this script needed a
 // private canonicaliser, the published verifier would not be the real one.
 const files = readdirSync(cardsDir).filter((f) => f.endsWith(".json"));
+// Stamped when the verification pass starts, so the date can never postdate the check it names.
+const VERIFIED_AT = new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 const tally = { VALID: 0, INVALID: 0, UNCHECKABLE: 0 };
 const signedParents = new Set();
 const pubkeys = new Set();
@@ -120,6 +122,12 @@ const out = {
   as_of_field: chain.as_of ? "chain.json → as_of" : index.created ? "card_index.json → created" : null,
 
   bodies: {
+    // WHEN THE CHECK RAN, not when the index was created. `as_of` above is card_index.json's
+    // creation date (19 Aug); every surface quoting "335 signed cards, every one verifies" was
+    // printing that date as if it were the verification run (audit 2026-09-28 #17). The run is
+    // this script, so this script stamps it. Re-run it to refresh the claim; the date then moves.
+    verified_at: VERIFIED_AT,
+    verified_at_basis: "Run time of scripts/derive-chain-facts.mjs: when every body below was last re-verified with public/signed/verify-card.mjs.",
     published: files.length,
     verified_valid: tally.VALID,
     verified_invalid: tally.INVALID,

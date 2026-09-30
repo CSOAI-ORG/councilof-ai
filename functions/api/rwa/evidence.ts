@@ -21,6 +21,7 @@
  * Doctrine: never paywalls /api/gspc, /api/xrpl or /root.json — those stay free and this endpoint
  * reads them like any stranger. Buyer-led. MEASURED is never written here (state PROBED/UNMEASURED).
  */
+import { headFromGet } from "../_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -33,6 +34,7 @@ import {
 } from "../_x402";
 import { railMode } from "../_x402_config";
 import { signPayload, canonicalBytes, sha256Hex, PAYLOAD_CAP_BYTES } from "../../_lib/cardSign";
+import { RWA_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -316,7 +318,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  const description = `A signed XRPL evidence card for ${asset || "<asset>"}: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.`;
+  const description = RWA_EVIDENCE_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -435,3 +437,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

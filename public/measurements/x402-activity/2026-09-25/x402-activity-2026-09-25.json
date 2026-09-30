@@ -1,0 +1,279 @@
+{
+ "schema": "csoai.x402-activity/0.1",
+ "kind": "measurement.x402_activity",
+ "day": "2026-09-25",
+ "as_of": "2026-09-26T15:22:43Z",
+ "started": "2026-09-26T15:16:49Z",
+ "partial": false,
+ "publisher": "Council of AI (CSOAI), councilof.ai",
+ "doctrine": "Measurement, not endorsement or accusation. No seller, payer or index is scored or named here. Classes are structural facts about addresses and amounts; none states why anyone paid.",
+ "question": "Of the USDC payments on Base mainnet that reached payees listed in the public x402 Bazaars on this UTC day, how many came from distinct outside wallets, and how many from the payee itself, a sibling payee, another listed payee, or an amount below any listed price?",
+ "window": {
+  "day_utc": "2026-09-25",
+  "chain": "Base mainnet (chain id 8453)",
+  "first_block": 51752527,
+  "last_block": 51795726,
+  "blocks": 43200,
+  "boundary_check": "block(first-1).ts < day start <= block(first).ts; block(last).ts < next day start <= block(last+1).ts"
+ },
+ "population": {
+  "listed_base_usdc_payees": 1757,
+  "listed_hosts_with_base_usdc_payee": 2481,
+  "bazaar_read": {
+   "cdp": {
+    "resources": 17628,
+    "reported_total": 17613,
+    "complete": true
+   },
+   "payai": {
+    "resources": 6928,
+    "reported_total": 6928,
+    "complete": true
+   },
+   "resources_read": 24556,
+   "read_attempts": 1,
+   "complete": true,
+   "enumerator": {
+    "file": "bin/x402-bazaar-conformance.py (enumerate_index, pinned)",
+    "sha256": "7753137c9706682a06275d28d98ba061bbc605af976fb05cbc75ed7291669965"
+   }
+  },
+  "accepts_entries_not_measured": {
+   "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp|other-asset|exact": 7961,
+   "eip155:137|other-asset|exact": 3211,
+   "eip155:42161|other-asset|exact": 2554,
+   "eip155:84532|other-asset|exact": 1173,
+   "eip155:143|other-asset|exact": 886,
+   "xrpl:0|other-asset|exact": 717,
+   "eip155:8453|usdc-base|upto": 706,
+   "eip155:4663|other-asset|exact": 704,
+   "algorand:wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=|other-asset|exact": 688,
+   "eip155:10|other-asset|exact": 657,
+   "eip155:43114|other-asset|exact": 641,
+   "eip155:1329|other-asset|exact": 639,
+   "eip155:42220|other-asset|exact": 631,
+   "stellar:pubnet|other-asset|exact": 631,
+   "solana|other-asset|exact": 376,
+   "eip155:56|other-asset|exact": 212,
+   "eip155:480|other-asset|exact": 211,
+   "eip155:8453|other-asset|exact": 206,
+   "eip155:196|other-asset|exact": 167,
+   "algorand:wGHE2Pwdvd7S12BL5FaOP20EGYesN73k|other-asset|exact": 80,
+   "eip155:999|other-asset|exact": 64,
+   "eip155:8453|usdc-base|batch-settlement": 51,
+   "cosmos:noble-1|other-asset|exact_cosmos_authz": 46,
+   "eip155:137|other-asset|upto": 45,
+   "eip155:42161|other-asset|upto": 45,
+   "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1|other-asset|exact": 44,
+   "eip155:1|other-asset|exact": 31,
+   "eip155:4326|other-asset|exact": 23,
+   "eip155:5042|other-asset|exact": 20,
+   "base-sepolia|other-asset|exact": 18,
+   "nano:mainnet|other-asset|exact": 15,
+   "solana-devnet|other-asset|exact": 12,
+   "eip155:42793|other-asset|exact": 10,
+   "eip155:1187947933|other-asset|exact": 10,
+   "eip155:130|other-asset|exact": 8,
+   "eip155:146|other-asset|exact": 8,
+   "polygon|other-asset|exact": 7,
+   "hyperliquid:mainnet|other-asset|exact": 6,
+   "eip155:8453|other-asset|onchain": 6,
+   "eip155:1440000|other-asset|onchain": 6,
+   "eip155:56|other-asset|long-events-stable-txhash": 6,
+   "stacks:1|other-asset|exact": 5,
+   "eip155:196|other-asset|aggr_deferred": 4,
+   "hedera:testnet|other-asset|exact": 4,
+   "zeroclick:card|other-asset|exact": 4,
+   "eip155:50|other-asset|exact": 3,
+   "eip155:80002|other-asset|exact": 3,
+   "animica:1|other-asset|exact": 2,
+   "cosmos:gonka-mainnet|other-asset|exact": 2,
+   "eip155:5042002|other-asset|exact": 2,
+   "eip155:56|other-asset|long-events-txhash": 2,
+   "eip155:1952|other-asset|exact": 2,
+   "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp|other-asset|upto": 1,
+   "aws:base|other-asset|agent-pay": 1,
+   "eip155:8453|usdc-base|4mica-credit": 1,
+   "eip155:11142220|other-asset|exact": 1,
+   "eip155:8453|usdc-base|settled-transfer": 1,
+   "eip155:84532|other-asset|upto": 1,
+   "lightning:mainnet|other-asset|exact": 1,
+   "xrpl:mainnet|other-asset|exact": 1,
+   "base|usdc-base|eip3009": 1,
+   "xlayer-testnet|other-asset|exact": 1,
+   "xlayer|other-asset|exact": 1,
+   "base|other-asset|exact": 1,
+   "sei-testnet|other-asset|exact": 1,
+   "peaq|other-asset|exact": 1
+  },
+  "payees_file": {
+   "path": "x402-activity-2026-09-25.payees.jsonl.gz",
+   "sha256": "951d0026e14af408da138b8c4be65f4ec9212934a7a6a77e3fd27dcef168fba1",
+   "rows": 1757
+  }
+ },
+ "method": {
+  "unit": "one USDC Transfer log to a listed payee, in a transaction that also carries a USDC AuthorizationUsed log whose authorizer is the transfer's sender (EIP-3009 transferWithAuthorization)",
+  "classes_first_match": {
+   "SELF_SAME_ADDRESS": "payer == payee",
+   "SELF_SAME_LISTING": "payer is another payee listed by a host that also lists this payee",
+   "ESTATE_SELF": "payer or payee is a wallet CSOAI declares its own (estate_wallets)",
+   "PAYER_IS_LISTED_PAYEE": "payer is itself a listed payee anywhere in either Bazaar",
+   "ZERO_VALUE": "value == 0",
+   "BELOW_SMALLEST_PRICE": "0 < value < the smallest price any Bazaar listing asks of this payee",
+   "EXTERNAL": "none of the above"
+  },
+  "flags": {
+   "repeat_pair": "the payer paid this payee >= 2 times in the window",
+   "high_frequency_pair": "the payer paid this payee >= 100 times in the window"
+  },
+  "headline_rule": "distinct_external_payers = distinct senders with >= 1 EXTERNAL settlement",
+  "estate_wallets": {
+   "0x212686404a7d1e1fd88f35ed6200c3af7a78ae31": "CSOAI x402 payTo (ESTATE_PAY_TO)",
+   "0x6ea00613c15f2463bc10c7188215c4fa6f4943c6": "CSOAI self-test payer (KNOWN_INTERNAL_X402_WALLETS)",
+   "0x38c13f2642d23fca4a0a1877cea09e9a84d406f0": "CSOAI settle-loop payer (burner, generated 2026-09-22)"
+  },
+  "rpc": {
+   "endpoints": [
+    "https://mainnet.base.org",
+    "https://base.drpc.org"
+   ],
+   "calls": 122,
+   "errors_by_code": {},
+   "chunk_blocks": 2000,
+   "topic_batch": 1000
+  },
+  "code": {
+   "file": "flywheel_x402_activity.py",
+   "sha256": "c3502a34d36557b5a636aa784a3a1a84dcdc033b150f3f48f0ae4d7966bd62b9"
+  }
+ },
+ "inbound_not_eip3009": {
+  "transfers": 358,
+  "usdc_atomic": 42500953399
+ },
+ "headline": {
+  "settlements": 28122,
+  "usdc_atomic": 713617378,
+  "distinct_payers": 1073,
+  "distinct_payees_paid": 453,
+  "external_settlements": 27809,
+  "external_usdc_atomic": 711133451,
+  "distinct_external_payers": 1047,
+  "distinct_payees_with_external_payment": 439,
+  "external_share_of_settlements": 0.98887,
+  "external_share_of_usdc": 0.996519
+ },
+ "by_class": {
+  "SELF_SAME_ADDRESS": {
+   "settlements": 63,
+   "usdc_atomic": 1116000,
+   "distinct_payers": 7,
+   "distinct_payees": 7
+  },
+  "SELF_SAME_LISTING": {
+   "settlements": 18,
+   "usdc_atomic": 39000,
+   "distinct_payers": 4,
+   "distinct_payees": 5
+  },
+  "ESTATE_SELF": {
+   "settlements": 0,
+   "usdc_atomic": 0,
+   "distinct_payers": 0,
+   "distinct_payees": 0
+  },
+  "PAYER_IS_LISTED_PAYEE": {
+   "settlements": 42,
+   "usdc_atomic": 257864,
+   "distinct_payers": 9,
+   "distinct_payees": 9
+  },
+  "ZERO_VALUE": {
+   "settlements": 0,
+   "usdc_atomic": 0,
+   "distinct_payers": 0,
+   "distinct_payees": 0
+  },
+  "BELOW_SMALLEST_PRICE": {
+   "settlements": 190,
+   "usdc_atomic": 1071063,
+   "distinct_payers": 19,
+   "distinct_payees": 16
+  },
+  "EXTERNAL": {
+   "settlements": 27809,
+   "usdc_atomic": 711133451,
+   "distinct_payers": 1047,
+   "distinct_payees": 439
+  }
+ },
+ "flags": {
+  "repeat_pair": {
+   "all": {
+    "settlements": 27318,
+    "usdc_atomic": 624148757,
+    "distinct_payers": 616,
+    "distinct_payees": 239
+   },
+   "external": {
+    "settlements": 27015,
+    "usdc_atomic": 621761830,
+    "distinct_payers": 595,
+    "distinct_payees": 228
+   }
+  },
+  "high_frequency_pair": {
+   "threshold": 100,
+   "all": {
+    "settlements": 16945,
+    "usdc_atomic": 213333163,
+    "distinct_payers": 44,
+    "distinct_payees": 16
+   },
+   "external": {
+    "settlements": 16823,
+    "usdc_atomic": 213211163,
+    "distinct_payers": 43,
+    "distinct_payees": 15
+   }
+  },
+  "external_one_settlement_payers": 446
+ },
+ "concentration": {
+  "top1_share_of_external_usdc": 0.033868,
+  "top10_share_of_external_usdc": 0.289155
+ },
+ "sensitivity": {
+  "external_payers_paying_at_least_0.01_usdc": 828,
+  "external_payers_paying_at_least_0.10_usdc": 378,
+  "external_payers_paying_at_least_1.00_usdc": 29
+ },
+ "uncheckable": [
+  "common control of payer and payee through different addresses (only same-address, same-listing and listed-payee links are observable)",
+  "whether any service was delivered after payment",
+  "whether a person, an agent or a script initiated a payment",
+  "whether an EIP-3009 transfer answered an x402 challenge rather than another EIP-3009 flow",
+  "payments to payees that neither Bazaar lists"
+ ],
+ "not_measured": [
+  "every network other than Base mainnet (see population.accepts_entries_not_measured)",
+  "facilitator identity (transaction sender) - not read",
+  "the x402 schemes other than exact (e.g. batch-settlement escrows)"
+ ],
+ "rows_file": {
+  "path": "x402-activity-2026-09-25.rows.jsonl.gz",
+  "sha256": "6a1771ef57a7d543cee8e19b47e987d0d4e0da908f77f58525217b1cc2e1d875",
+  "uncompressed_sha256": "635f32c1705e3b298acce3cbc110188e73023fb815a370166686577848e3ef9b",
+  "rows": 28122,
+  "note": "one line per settlement: tx, log_index, block, from, to, value, class, flags"
+ },
+ "not_evidence_of": [
+  "intent, wrongdoing or honesty of any seller, payer or facilitator",
+  "the quality or worth of any service",
+  "endorsement, ranking or approval"
+ ],
+ "verify": "Re-run: read both Bazaars, rebuild the payee set (payees_file pins it), eth_getLogs USDC Transfer and AuthorizationUsed over window.first_block..last_block, apply the classes in order; every settlement is a line in rows_file (sha256 pinned). Signature: <record>.signed.json, canonical JSON (keys sorted, no whitespace, UTF-8), Ed25519 under #board-attestation-1 in https://csoai.org/.well-known/did.json.",
+ "objection_route": "https://councilof.ai/census/",
+ "finished": "2026-09-26T15:22:43Z"
+}

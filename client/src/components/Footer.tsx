@@ -7,7 +7,9 @@
 
 import { Link } from 'wouter';
 import { BookOpen, Linkedin, Mail } from 'lucide-react';
+import EmailOff from './EmailOff';
 import FooterVerifyStrip from './FooterVerifyStrip';
+import FooterStats from './momentum/FooterStats';
 import MembershipStrip from './MembershipStrip';
 import { PAID_STEP_HREF, PAID_STEP_LINE } from './paidStep';
 import { useSiteChromeHidden } from '@/lib/osChrome';
@@ -16,6 +18,9 @@ interface FooterLink {
   name: string;
   href: string;
   external?: boolean;
+  /** A same-tab full page load: the address is served by a Pages Function or a static file,
+   *  not by an SPA route, so client-side navigation to it would render the SPA's 404. */
+  native?: boolean;
 }
 
 export function Footer() {
@@ -27,14 +32,14 @@ export function Footer() {
     {
       title: 'Product',
       links: [
-        { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Request attestation', href: '/assess' },
-        { name: 'Board', href: '/dashboard?tab=board' },
-        { name: 'Tools — plugin snippet', href: '/tools' },
-        { name: 'Ask about a measured run', href: '/contact?arm=run' },
-        { name: 'Ledger', href: '/contact?arm=ledger' },
-        { name: 'Data', href: '/contact?arm=data' },
-        { name: 'Library', href: '/library' },
+        { name: 'Verify a card', href: '/gspc-verify/' },
+        { name: 'Request attestation', href: '/assess/' },
+        { name: 'Board', href: '/dashboard/?tab=board' },
+        { name: 'Tools — plugin snippet', href: '/tools/' },
+        { name: 'Ask about a measured run', href: '/contact/?arm=run' },
+        { name: 'Ledger', href: '/contact/?arm=ledger' },
+        { name: 'Data', href: '/contact/?arm=data' },
+        { name: 'Library', href: '/library/' },
       ],
     },
     // 2026-09-22: a fifth column. Every address below answers today (checked live) and each one
@@ -58,34 +63,53 @@ export function Footer() {
       title: 'Evidence',
       links: [
         { name: 'GSPC JSON', href: '/api/gspc', external: true },
-        { name: 'Current evidence mirror', href: 'https://huggingface.co/datasets/csoai/councilof-ai-mirror', external: true },
-        { name: 'Methodology', href: '/methodology' },
-        { name: 'Honesty gate', href: '/honesty' },
-        // The readable ledger (DashboardAttestationsPane renders /api/corrections), not raw JSON.
-        { name: 'Corrections', href: '/dashboard?tab=attestations' },
-        { name: 'How far this reaches', href: '/reach' },
+        { name: 'Evidence files (cards, proofs)', href: 'https://huggingface.co/datasets/csoai/councilof-ai-evidence', external: true },
+        { name: 'Methodology', href: '/methodology/' },
+        { name: 'Honesty gate', href: '/honesty/' },
+        // The readable ledger page (renders /api/corrections), not raw JSON.
+        { name: 'Corrections', href: '/corrections/' },
+        { name: 'How far this reaches', href: '/reach/' },
         { name: 'llms.txt', href: '/llms.txt', external: true },
-        { name: 'API docs', href: '/api-docs' },
+        { name: 'API docs', href: '/api-docs/' },
+      ],
+    },
+    // 2026-09-28 (search-reach): the published record pages. A live crawl of the 443 sitemap URLs
+    // found every one of these with ZERO links from any other page — reachable from the sitemap
+    // alone, so a crawler that follows links never met them and an answer engine had no path in.
+    // Each href answered 200 on 2026-09-28. They are Pages Functions or static files, hence native.
+    {
+      title: 'Records',
+      links: [
+        { name: 'MCP servers — declared vs observed', href: '/mcp-servers/', native: true },
+        { name: 'A2A agent cards — listed vs served', href: '/agent-cards/', native: true },
+        { name: 'x402 doors and hosts', href: '/x402/', native: true },
+        { name: 'Tokenised-asset deployments', href: '/stablecoins/deployments/', native: true },
+        { name: 'Daily measurement notes', href: '/notes/daily/', native: true },
+        { name: 'GSPC axes, one page each', href: '/axes', native: true },
+        { name: 'Signed findings', href: '/findings/', native: true },
+        { name: 'Claim maintenance', href: '/claim-maintenance/', native: true },
+        { name: 'Records feed (Atom)', href: '/feeds/records.xml', native: true },
       ],
     },
     {
       title: 'Company',
       links: [
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Partners', href: '/partners' },
-        { name: 'Blog', href: '/blog' },
-        { name: 'FAQ', href: '/faq' },
-        { name: 'Careers', href: '/careers' },
+        { name: 'About', href: '/about/' },
+        { name: 'Independence and conflicts', href: '/independence/' },
+        { name: 'Contact', href: '/contact/' },
+        { name: 'Where we take part', href: '/memberships/' },
+        { name: 'Blog', href: '/blog/' },
+        { name: 'FAQ', href: '/faq/' },
+        { name: 'Careers', href: '/careers/' },
       ],
     },
     {
       title: 'Legal',
       links: [
-        { name: 'Disclaimers', href: '/disclaimers' },
-        { name: 'Privacy', href: '/privacy-policy' },
-        { name: 'Terms', href: '/terms-of-service' },
-        { name: 'GDPR / DPA', href: '/dpa' },
+        { name: 'Disclaimers', href: '/disclaimers/' },
+        { name: 'Privacy', href: '/privacy-policy/' },
+        { name: 'Terms', href: '/terms-of-service/' },
+        { name: 'GDPR / DPA', href: '/dpa/' },
       ],
     },
   ];
@@ -99,12 +123,10 @@ export function Footer() {
   return (
     <footer
       className="surface-raised border-t border-border"
-      // The workspace launcher (CouncilLobby) is fixed bottom-right: h-12, lifted
-      // 1.25rem + --cookie-banner-h. Measured at 390x664 on 2026-09-14 it sat over
-      // the company line at full scroll on 5 of 6 pages, so that line could never
-      // be read on a phone. Reserve the launcher's own footprint below the last
-      // line, plus the banner's published height, so everything scrolls clear.
-      style={{ paddingBottom: "calc(4.25rem + var(--cookie-banner-h, 0px))" }}
+      // Reserve the cookie banner's published height below the last line so the
+      // company line scrolls clear of it on a phone. (The fixed workspace launcher
+      // this also used to clear was removed on 27 Sep 2026.)
+      style={{ paddingBottom: "calc(1rem + var(--cookie-banner-h, 0px))" }}
     >
       <div className="section-shell py-12 sm:py-14">
         {/* Brand + socials */}
@@ -141,14 +163,15 @@ export function Footer() {
           <p className="text-muted-foreground text-sm max-w-md">
             Independent measurement body. Signed attestation and transparent measurement — never certification.
           </p>
-          <div className="flex space-x-4 sm:ml-auto">
+          <div className="-mx-2.5 flex gap-1 sm:ml-auto">
             {socialLinks.map((social) => (
               <a
                 key={social.name}
                 href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                // 44x44 hit area around a 20px glyph (audit 2026-09-30 #8: the bare icon was 20x20).
+                className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
                 aria-label={social.name}
               >
                 <social.icon className="h-5 w-5" />
@@ -157,15 +180,19 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Link columns (4) */}
-        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
+        {/* Link columns (6) */}
+        <div className="mb-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
           {footerSections.map((section) => (
             <div key={section.title}>
               <h3 className="t-kicker mb-3 text-foreground">{section.title}</h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    {link.external ? (
+                    {link.native ? (
+                      <a href={link.href} className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                        {link.name}
+                      </a>
+                    ) : link.external ? (
                       <a
                         href={link.href}
                         target="_blank"
@@ -187,7 +214,12 @@ export function Footer() {
         </div>
 
         {/*
-          FRAMEWORKS WE MEASURE AGAINST — text, with the relationship named, never a logo row.
+          REFERENCE FRAMEWORKS — text, with the relationship named, never a logo row.
+          2026-09-26: "framework we measure against" became "reference framework (no crosswalk
+          measured)" for NIST AI RMF, ISO/IEC 42001 and DORA. No signed crosswalk exists for any of
+          the three (see /about), so "measure against" said more than we have. The Linux Foundation
+          pill left "Bodies we take part in": its only evidence is private (see
+          public/interop/memberships.json → excluded).
 
           WHAT WAS HERE UNTIL 2026-09-23, and why it went. Nine <img> badges drawn in-house at
           /images/badges/frameworks/*.svg: an EU AI Act badge rendering the European emblem's
@@ -216,7 +248,7 @@ export function Footer() {
         */}
         <div className="border-t border-border pt-6 mb-6">
           <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
-            Frameworks we measure against
+            Reference frameworks
           </p>
           <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
             {[
@@ -227,17 +259,17 @@ export function Footer() {
               },
               {
                 name: 'NIST AI RMF',
-                detail: 'framework we measure against',
+                detail: 'reference framework (no crosswalk measured)',
                 href: 'https://www.nist.gov/itl/ai-risk-management-framework',
               },
               {
                 name: 'ISO/IEC 42001',
-                detail: 'framework we measure against',
+                detail: 'reference framework (no crosswalk measured)',
                 href: 'https://www.iso.org/standard/81230.html',
               },
               {
                 name: 'DORA',
-                detail: 'framework we measure against',
+                detail: 'reference framework (no crosswalk measured)',
                 href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
               },
             ].map((f) => (
@@ -264,7 +296,6 @@ export function Footer() {
               { name: 'Open Invention Network', detail: 'member', href: 'https://openinventionnetwork.com/' },
               { name: 'LOT Network', detail: 'member', href: 'https://lotnet.com/' },
               { name: 'Decentralized Identity Foundation', detail: 'did:web trust root', href: 'https://identity.foundation/' },
-              { name: 'Linux Foundation', detail: 'hosts DIF and C2PA', href: 'https://www.linuxfoundation.org/' },
             ].map((f) => (
               <li key={f.name}>
                 <a
@@ -283,20 +314,24 @@ export function Footer() {
           <p className="text-muted-foreground text-xs text-center mt-4 font-medium">
             Naming a framework is not a claim to comply with it, and taking part in a body is not
             that body endorsing us. We are not certified to SOC 2 or ISO 42001, and we hold no
-            certification under any scheme. Measurement credential, never certification.{' '}
-            <Link href="/memberships" className="text-primary hover:underline">
+            certification under any scheme. We publish measurements, never certifications.{' '}
+            <Link href="/memberships/" className="text-primary underline underline-offset-2 hover:decoration-2">
               Every participation record, with its evidence
             </Link>
             .
           </p>
         </div>
 
+        {/* Live figures from GET /api/momentum: each links to its source and carries its date;
+            a figure whose source failed is absent, never zero. */}
+        <FooterStats />
+
         {/* Find us / verify us — live platform logos + listings */}
         <FooterVerifyStrip />
 
         <p data-paid-step="x402" className="text-muted-foreground text-xs text-center mt-4 mb-2">
           {PAID_STEP_LINE}{" "}
-          <a href={PAID_STEP_HREF} className="text-primary hover:underline">
+          <a href={PAID_STEP_HREF} className="text-primary underline underline-offset-2 hover:decoration-2">
             GET {PAID_STEP_HREF}
           </a>
         </p>
@@ -316,7 +351,7 @@ export function Footer() {
               the argument. */}
           Every stage of how far this work travels is measured separately and never added
           together.{" "}
-          <Link href="/reach" className="text-primary hover:underline">
+          <Link href="/reach/" className="text-primary underline underline-offset-2 hover:decoration-2">
             All seven stages, including the ones we cannot measure yet
           </Link>
         </p>
@@ -358,7 +393,10 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · contact@csoai.org
+            © {currentYear} CSOAI Ltd · Registered in England & Wales No. 16939677 · 3rd Floor, 86–90 Paul Street, London EC2A 4NE · <EmailOff text="contact@csoai.org" />
+          </p>
+          <p className="text-muted-foreground text-xs">
+            To object to, dispute or request a correction of anything we publish: <a href="/dispute/" className="underline">/dispute</a> or <a href="mailto:contact@csoai.org" className="underline">contact@csoai.org</a>. Corrections are dated in the <a href="/corrections/" className="underline">ledger</a>.
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
             Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.

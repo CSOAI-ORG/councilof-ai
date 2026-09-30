@@ -64,7 +64,7 @@ const DOORS = [
   ["Council of AI", "https://councilof.ai", "CSOAI-GSPC on the main site."],
   ["CSOAI-GSPC API", "https://councilof.ai/api/gspc", "The same figures, machine-readable."],
   ["Signed card index", "https://councilof.ai/signed/card_index.json", "Public compact cards."],
-  ["Methodology DOI", "https://doi.org/10.5281/zenodo.21991104", "Citable snapshot."],
+  ["Methodology (DOI 10.5281/zenodo.21991104)", "https://councilof.ai/methodology/", "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. Live methodology page, not the deposit's bytes."],
   ["Board dataset", "https://huggingface.co/datasets/csoai/gspc-board", "Hub mirror of CSOAI-GSPC."],
   ["Governance bank", "https://huggingface.co/datasets/csoai/gspc-gov", "The published governance bank. Other banks come from each axis record."],
 ];

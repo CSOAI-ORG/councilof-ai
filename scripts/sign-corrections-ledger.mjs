@@ -150,13 +150,13 @@ function writeBack(file, src, ledger, att, sigHex, keyHex) {
     'ensure_ascii=False) - the attestation is ASCII-only, so ensure_ascii does not change its bytes. " +\n' +
     '      "The attestation names the digest of the ledger body and the rule that produces it.",\n' +
     `    key_source: "${DID_URL} (${BOARD_DID})",\n` +
-    `    note: ${JSON.stringify(
-      "RE-ISSUED " + att.signed_at + " over the current " + att.entries +
-      "-entry body through POST /api/board-sign on the pod caller token. The detached attestation pins " +
-      "the current ledger content_id; every later append MUST re-issue with scripts/sign-corrections-ledger.mjs. " +
-      "Changing an id alone cannot make the endpoint VALID because the handler verifies both the body digest " +
-      "and Ed25519 signature at request time."
-    )},\n` +
+    "    note:\n" +
+    '      "RE-ISSUED over the current body through POST /api/board-sign; signature.attestation.signed_at records the issuance time. " +\n' +
+    '      "The 2026-08-22 signature was under did:web:csoai.org#card-attestation-1 (d4cb0eaa) and covered a " +\n' +
+    '      "15-entry ledger; 46 appends followed and none re-issued it, which is why this endpoint read STALE " +\n' +
+    '      "for a month. Every append MUST re-issue: run scripts/sign-corrections-ledger.mjs. Bumping id alone " +\n' +
+    '      "cannot green the flag any more - id is inside the signed attestation, and the handler verifies the " +\n' +
+    '      "Ed25519 bytes at request time, not just a digest match.",\n' +
     "  },\n";
   const sigStart = src.indexOf("\n  signature: {", src.indexOf("export const LEDGER = {"));
   if (sigStart < 0) throw new Error("no signature block in the LEDGER literal");

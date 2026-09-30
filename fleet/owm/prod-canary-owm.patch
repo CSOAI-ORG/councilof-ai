@@ -1,0 +1,35 @@
+--- a/fleet/ops-guard/prod-canary.py	2026-09-28 21:55:18.763867781 +0000
++++ b/fleet/ops-guard/prod-canary.py	2026-09-28 21:55:18.772867784 +0000
+@@ -27,6 +27,7 @@
+ EXPECT_TOOLS = int(os.environ.get("EXPECT_TOOLS", "12"))
+ UA = "CSOAI-ops-canary/0.1 (+https://councilof.ai; public reads only)"
+ TIMEOUT = 25
++OWM_MAX_AGE = int(os.environ.get("OWM_MAX_AGE", "4500"))  # 2 OWM cycles + grace
+ 
+ 
+ def iso(t):
+@@ -113,6 +114,24 @@
+             rc = 2
+         elif st["regressed"].pop(name, None):
+             lines.append("%s RECOVERED check=%s observed=%s expected %s" % (iso(t), name, r["value"], want))
++    # OWM dead-man's switch (lane reaction-orchestrator-20260928; STAGED patch, to be applied by lane ops-guard).
++    # Local read of ~/fleet/owm_heartbeat.json only; it never changes rc (this canary's rc stays about production).
++    # STALE lines: once an hour while stale, and at once when the stale set changes.
++    try:
++        hb = json.load(open(os.path.join(HOME, "fleet/owm_heartbeat.json")))
++        hb_at = datetime.strptime(hb["updated"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
++        hb_age = int((t - hb_at).total_seconds())
++        stale = sorted(j["job"] for j in hb.get("stale_jobs") or [])
++        if hb_age > OWM_MAX_AGE:
++            stale = ["owm-cycle(age_s=%d)" % hb_age] + stale
++        results["owm_heartbeat"] = {"ok": not stale, "age_s": hb_age, "stale": stale}
++        if stale and (t.minute < 10 or stale != st.get("owm_stale")):
++            lines.append("%s STALE check=owm_heartbeat jobs=%s" % (iso(t), ",".join(stale)))
++        elif not stale and st.get("owm_stale"):
++            lines.append("%s RECOVERED check=owm_heartbeat" % iso(t))
++        st["owm_stale"] = stale
++    except Exception as e:  # noqa: BLE001 - no heartbeat yet is UNMEASURED, not a regression
++        results["owm_heartbeat"] = {"ok": None, "state": "UNMEASURED", "error": type(e).__name__}
+     if rc == 0 and t.minute < 10:
+         m, rt = results["mcp_tools"], results["root_card_count"]
+         lines.append("%s OK mcp_tools=%s root_card_count=%s floor=%s root_as_of=%s"

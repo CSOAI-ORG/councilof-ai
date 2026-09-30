@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 // BrandGraphics — reusable, dependency-free branded visuals for CSOAI pages.
 // All custom coded SVG/CSS (emerald #10b981 / teal #2dd4bf / slate-900) — NO stock/AI photos.
@@ -95,33 +95,117 @@ export function PersonaHeroArt({ persona = "default", className = "" }: { person
   );
 }
 
-// ---- Dependency-free branded slideshow (auto-rotate + dots + pause on hover) ----
-export function Slideshow({ slides, interval = 5000 }: { slides: { title: string; body: string; tag?: string }[]; interval?: number }) {
+// A bounded, user-controlled slideshow on the existing institutional ink surface.
+export function Slideshow({ slides, interval = 5000, label = "Featured information" }: {
+  slides: { title: string; body: string; tag?: string }[];
+  interval?: number;
+  label?: string;
+}) {
   const [i, setI] = useState(0);
-  const paused = useRef(false);
+  const [userPaused, setUserPaused] = useState(false);
+  const [hoverPaused, setHoverPaused] = useState(false);
+  const [focusPaused, setFocusPaused] = useState(false);
+  // Start static until the browser preference is known; SSR must not need window.
+  const [reduced, setReduced] = useState(true);
+  const [hidden, setHidden] = useState(false);
+  const id = useId();
+  const count = slides.length;
+  const index = count ? i % count : 0;
+  const delay = typeof interval === "number" && Number.isFinite(interval)
+    && interval >= 5000 && interval <= 2147483647 ? interval : null;
+  const rotating = count > 1 && delay !== null
+    && !userPaused && !hoverPaused && !focusPaused && !reduced && !hidden;
+
   useEffect(() => {
-    const t = setInterval(() => { if (!paused.current) setI((v) => (v + 1) % slides.length); }, interval);
-    return () => clearInterval(t);
-  }, [slides.length, interval]);
-  if (!slides.length) return null;
-  const s = slides[i];
+    if (typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(query.matches);
+    update();
+    query.addEventListener?.("change", update);
+    return () => query.removeEventListener?.("change", update);
+  }, []);
+  useEffect(() => {
+    const update = () => setHidden(document.hidden);
+    update();
+    document.addEventListener("visibilitychange", update);
+    return () => document.removeEventListener("visibilitychange", update);
+  }, []);
+  useEffect(() => { setI(value => value < count ? value : 0); }, [count]);
+  useEffect(() => {
+    if (!rotating || delay === null) return;
+    const timer = window.setInterval(() => setI(value => (value + 1) % count), delay);
+    return () => window.clearInterval(timer);
+  }, [rotating, delay, count]);
+
+  if (!count) return null;
+  const slide = slides[index];
+  const select = (next: number) => {
+    setI((next + count) % count);
+    setUserPaused(true);
+  };
+  const focusClass = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ink-kicker)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--ink)]";
+  const controlClass = `inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-lg border border-[var(--ink-border)] px-3 text-sm font-semibold transition-colors hover:bg-[var(--ink-raised-hover)] motion-reduce:transition-none ${focusClass}`;
+  const rotationUnavailable = reduced || delay === null;
+
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-[#03110b] p-6 sm:p-8"
-      onMouseEnter={() => (paused.current = true)} onMouseLeave={() => (paused.current = false)}>
-      <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(500px 240px at 90% -10%, rgba(45,212,191,.16), transparent 60%)" }} />
-      <div key={i} className="relative min-h-[120px] animate-[fadeIn_.5s_ease]">
-        {s.tag && <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">{s.tag}</p>}
-        <h3 className="mt-2 text-xl sm:text-2xl font-black text-white">{s.title}</h3>
-        <p className="mt-2 max-w-2xl text-sm sm:text-base text-emerald-50/80">{s.body}</p>
+    <section
+      data-council-slideshow="true"
+      aria-label={label}
+      aria-roledescription="carousel"
+      className="surface-ink relative overflow-hidden rounded-2xl border border-[var(--ink-border)] p-6 sm:p-8"
+      onMouseEnter={() => setHoverPaused(true)}
+      onMouseLeave={() => setHoverPaused(false)}
+      onFocusCapture={() => setFocusPaused(true)}
+      onBlurCapture={event => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setFocusPaused(false);
+      }}
+    >
+      <div aria-live={rotating ? "off" : "polite"} aria-atomic="true">
+        <div id={`${id}-slide`} role="group" aria-roledescription="slide"
+          aria-label={`Slide ${index + 1} of ${count}`}
+          className="relative min-h-[120px]">
+          {slide.tag && <p className="ink-kicker font-mono text-xs uppercase tracking-[0.14em]">{slide.tag}</p>}
+          <h3 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">{slide.title}</h3>
+          <p className="ink-muted mt-3 max-w-2xl text-base leading-relaxed">{slide.body}</p>
+        </div>
       </div>
-      <div className="relative mt-5 flex gap-2">
-        {slides.map((_, k) => (
-          <button key={k} aria-label={`Slide ${k + 1}`} onClick={() => setI(k)}
-            className={`h-1.5 rounded-full transition-all ${k === i ? "w-8 bg-emerald-400" : "w-2.5 bg-emerald-500/30 hover:bg-emerald-500/50"}`} />
-        ))}
-      </div>
-      <style>{`@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}`}</style>
-    </div>
+      {count > 1 && (
+        <div className="relative mt-6">
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Slideshow controls">
+            <button type="button" disabled={rotationUnavailable}
+              aria-label={rotationUnavailable ? "Automatic rotation disabled" : userPaused ? "Resume automatic slides" : "Pause automatic slides"}
+              aria-describedby={`${id}-rotation`} className={`${controlClass} disabled:cursor-default`}
+              onClick={() => setUserPaused(value => !value)}>
+              {rotationUnavailable ? "Automatic rotation off" : userPaused ? "Resume slides" : "Pause slides"}
+            </button>
+            <div className="inline-flex shrink-0 gap-2" role="group" aria-label="Previous and next slide">
+              <button type="button" aria-label="Previous slide" aria-controls={`${id}-slide`}
+                className={controlClass} onClick={() => select(index - 1)}>←</button>
+              <button type="button" aria-label="Next slide" aria-controls={`${id}-slide`}
+                className={controlClass} onClick={() => select(index + 1)}>→</button>
+            </div>
+            <span className="ink-muted ml-auto text-sm tabular-nums" aria-hidden="true">{index + 1} / {count}</span>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1" role="group" aria-label="Choose a slide">
+            {slides.map((item, k) => (
+              <button key={k} type="button" aria-label={`Slide ${k + 1}: ${item.title}`}
+                aria-current={k === index ? "true" : undefined} aria-controls={`${id}-slide`}
+                onClick={() => select(k)}
+                className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg hover:bg-[var(--ink-raised-hover)] ${focusClass}`}>
+                <span aria-hidden="true" className={`h-1.5 rounded-full ${k === index ? "w-7 bg-[var(--ink-kicker)]" : "w-3 bg-[var(--ink-muted)]"}`} />
+              </button>
+            ))}
+          </div>
+          <p id={`${id}-rotation`} className="ink-muted mt-1 text-xs leading-relaxed">
+            {reduced ? "Automatic rotation is off for reduced motion." : delay === null
+              ? "Automatic rotation is off. Use the slide controls."
+              : userPaused ? "Automatic rotation is paused. Resume when ready."
+              : focusPaused || hoverPaused ? "Paused while you use this slideshow."
+              : "Slides rotate every " + (delay / 1000) + " seconds. Pause to read at your own pace."}
+          </p>
+        </div>
+      )}
+    </section>
   );
 }
 

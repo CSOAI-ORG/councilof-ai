@@ -36,9 +36,13 @@ const REPO = join(HERE, "..", "..");
  *
  * The leading `\b[A-Za-z0-9]` keeps "localhost", "locale", "local.json" and "$LOCAL" out:
  * each needs a label and a dot before `local` to match at all.
+ *
+ * 2026-09-26: `.local` must also be the LAST label — `(?!\.[A-Za-z0-9])`. The per-endpoint capsule
+ * shards carry third-party declarations verbatim, and one names the JSON path
+ * `transport.local.tools`. An mDNS name ends in `.local`; `x.local.y` is not one.
  */
 const HOSTNAME_PATTERNS: Array<[string, RegExp]> = [
-  ["mDNS .local hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.local(?![\w-])/],
+  ["mDNS .local hostname", /\b[A-Za-z0-9][A-Za-z0-9-]{1,62}\.local(?![\w-]|\.[A-Za-z0-9])/],
   ["MacBook machine name", /MacBook/i],
   ["iMac machine name", /\biMac\b/],
   ["Mac mini machine name", /\bMac[- ]mini\b/i],
@@ -133,6 +137,15 @@ describe("no machine hostname reaches a served surface", () => {
         expect(re.test(spared), `${label} must not match ${spared}`).toBe(false);
       }
     }
+  });
+
+  it("control: the mDNS pattern catches a machine name and ignores a dotted JSON path", () => {
+    const mdns = HOSTNAME_PATTERNS.find(([label]) => label === "mDNS .local hostname")![1];
+    expect("NICHOLASs-MacBook-Air-2.local").toMatch(mdns);
+    expect('"probe_host": "build-box.local"').toMatch(mdns);
+    expect("reached studio.local.").toMatch(mdns);
+    expect('"path":"transport.local.tools"').not.toMatch(mdns);
+    expect("csoai.local-json-canonicalize-result").not.toMatch(mdns);
   });
 
   it("no served JSON contains a machine hostname", { timeout: 120_000 }, () => {

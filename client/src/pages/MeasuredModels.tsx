@@ -374,7 +374,7 @@ export default function MeasuredModels() {
           Measured models
         </h1>
         <p className="mt-3 max-w-3xl text-base text-gray-700">
-          Every model we have run against the signed card set, ranked by how much of it we actually
+          Every model we have run against the signed card set, listed by how much of it we actually
           measured. Each filled cell is one model on one axis on one date, recorded in a file
           stamped so that anyone can confirm offline that it has not been edited since. Most cells
           are empty, and the empty ones are shown.
@@ -579,7 +579,9 @@ export default function MeasuredModels() {
             zero, and a measured zero appears as <span className="font-mono">0·</span>.
           </p>
           <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-            <table className="w-full text-left text-xs" data-testid="coverage-matrix">
+            {/* Opts OUT of the base-layer whole-word table sizing (styles/index.css): this matrix has a
+                sticky model column, and sized from whole model ids it would fill a phone. */}
+            <table className="w-full text-left text-xs [word-break:break-word]" data-testid="coverage-matrix">
               <thead className="border-b border-gray-200 bg-gray-50 text-[10px] uppercase text-gray-600">
                 <tr>
                   <th className="sticky left-0 z-10 bg-gray-50 px-3 py-2 font-semibold">Model</th>
@@ -648,7 +650,7 @@ export default function MeasuredModels() {
           <div className="mt-3 flex flex-wrap gap-2 text-sm">
             <a
               href="/signed/HOW-TO-VERIFY.md"
-              className="rounded-lg bg-emerald-600 px-3 py-2 font-bold text-white hover:bg-emerald-700"
+              className="rounded-lg bg-emerald-700 px-3 py-2 font-bold text-white hover:bg-emerald-800"
             >
               The verification steps
             </a>

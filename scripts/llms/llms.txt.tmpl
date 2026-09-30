@@ -2,6 +2,7 @@
 
 Public name: Council of AI. Legal: CSOAI Ltd, UK Companies House 16939677. did:web:csoai.org.
 Neutral AI measurement body. Measurement, not certification. We do not certify, accredit, or issue conformity assessments.
+Contact: contact@csoai.org. To object to, dispute or request a correction of anything we publish: https://councilof.ai/dispute/ or that address; dated corrections: https://councilof.ai/api/corrections.
 
 ## Claim boundary (quote this paragraph; it is the whole of what we assert)
 
@@ -30,7 +31,7 @@ Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO nu
 
 Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the withheld model axes — their count is `totals.own_leaders_excluded` + `totals.uncarded_leaders_dropped`, read live):
 {{LID}}
-Also quote `totals.public_leader_count` beside any "{{MEASURED}} measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
+Also quote `totals.public_leader_count` beside any "{{MEASURED}} measured" claim. Public point leaders are shown on safety (TIE), swarm (UNTESTED for separation), and jail (UNTESTED for separation). The 8 financial axes are fact runs, not leader scores. TIE is TIE; UNTESTED is not a win. Not a certificate.
 
 What MEASURED means on this board, said plainly, because it is narrower than it sounds: a slot is
 MEASURED when a real run exists behind it and that run's artifact is published. It does NOT mean the
@@ -89,7 +90,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Signed offers: a 402 carries `extensions["offer-receipt"].info.offers[]` only when the Pages signing key is available — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
 - Signed receipts: a settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt` only when settlement exposes the required payer and transaction evidence and the Pages signing key is available
 - Check either without trusting us: download https://councilof.ai/verifier/verify_receipt.py (exact-byte manifest and dependency guide: https://councilof.ai/verifier/receipt-toolkit.json and https://councilof.ai/verifier/receipt-toolkit.md), then verify against https://csoai.org/.well-known/did.json or POST https://councilof.ai/api/receipts/verify
-- Your receipts: GET https://councilof.ai/api/receipts?payer=0x… — status UNRECORDED means no store is bound on that deployment, never that you did not pay
+- Your receipts: GET /api/receipts?payer=<your 0x wallet address> on this origin (a bare /api/receipts answers 400: payer is required) — status UNRECORDED means no store is bound on that deployment, never that you did not pay
 - We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
 - A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
 - Verify stays free: https://councilof.ai/gspc-verify
@@ -145,6 +146,28 @@ Each feed below is DERIVED from the artifact rather than appended by hand, so no
 - Newly signed measurement cards, each individually verifiable: https://councilof.ai/feeds/cards.xml
 - The public root (guid is the merkle_root, so a poll that finds the same bytes is not a change): https://councilof.ai/feeds/roots.xml
 - Evidence notes (dated, one citable page per note, each naming the artifacts behind it): https://councilof.ai/notes/ — RSS: https://councilof.ai/feeds/notes.xml
+- Every new dated record — corrections, the daily "what changed" note, evidence notes, signed measurement records — in one feed: https://councilof.ai/feeds/records.xml (Atom) — JSON Feed: https://councilof.ai/feeds/records.json
+- Daily notes, generated from the signed daily measurement-capsule index and published only when its signature verifies: https://councilof.ai/notes/daily/
+
+## Dated measurement records and kits (one page or dataset each)
+
+Each record below is a dated account of what public sources state, with its sources hashed, signed with the board key and timestamped. None makes a claim about anyone's intent, about the causes of an incident, or about the security of any system, and none is a rating.
+
+- Disclosure lag, the Medicare statistics portal agent access: https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-medicare-agent/record.json (board signature record.signed.json and OpenTimestamps proof record.json.ots beside it)
+- Disclosure lag, the Gemini cyber-evaluation access to outside systems: https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/ — record https://councilof.ai/measurements/disclosure-lag/2026-09-gemini-evaluation/record.json (same three files)
+- signed-receipts/v1 conformance kit — test vectors, Python and Node runners, reference results; the reference verifier answers UNVERIFIABLE_KEY, never VALID, for a key it cannot resolve: https://councilof.ai/spec/signed-receipts/v1/conformance/ — vectors https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json — specification https://councilof.ai/spec/signed-receipts/
+- COBOL copybook decoding test corpus — records whose correct values are known by construction, with must-fail controls; CC0; results against open-source decoders are held until each project's maintainers have seen them: https://huggingface.co/datasets/csoai/cobol-copybook-decoding-corpus
+- All of the signed records above, plus corrections and daily notes, as a feed: https://councilof.ai/feeds/records.xml (Atom) — https://councilof.ai/feeds/records.json (JSON Feed)
+
+## Measured entities, one page each
+
+Each page shows declared vs observed, the dates, the evidence level and its signed source, and has a machine twin at <page>index.json. None says anything about security, quality or safety, and none is a rating. Operators who opted out, or whose robots.txt refuses CSOAI-census, have no page. Objections and context: https://councilof.ai/census/
+
+- MCP servers (contract parity per host): https://councilof.ai/mcp-servers/ — https://councilof.ai/mcp-servers/<host>/
+- A2A agent cards (listed vs served, signature state): https://councilof.ai/agent-cards/ — https://councilof.ai/agent-cards/<host>/
+- x402 doors and settlement-census hosts: https://councilof.ai/x402/ — https://councilof.ai/x402/<door-or-host>/
+- Tokenised-asset deployments (issuer list vs ledger read): https://councilof.ai/stablecoins/deployments/ — https://councilof.ai/stablecoins/<asset>/<chain>/
+- Sitemap index of all of them: https://councilof.ai/sitemaps/index.xml
 - Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
 
 The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
@@ -157,12 +180,14 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Source-linked SOV World observatory (dated simulation archive; check source date and signature-verification status on the page): https://councilof.ai/world/observatory/
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — {{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (free door, the address to add to Claude or any chat client): POST https://councilof.ai/mcp/free — the {{MCP_FREE_WORD}} free read-only readers only, same definitions as /mcp, no payment tool. No account, no key. Setup, tool list and example prompts: https://councilof.ai/connect/claude/
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - Mill-card root discovery pointer: https://councilof.ai/interop/card-root-latest.json — an unsigned pointer to immutable root bytes. Follow `root_url` and check `root_sha256`. Its leaf count is separate from `/root.json`, `/signed/card_index.json` and `/api/gspc`. Read the `.ots` sidecar and verify its subject hash. Calendar-only proofs remain pending; a BitcoinBlockHeaderAttestation tag can be checked against public block headers, but a tag alone is not local full-node chain validation or a certificate.
 {{DATED_MILL_ROOT_LINE}}
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp`. Query https://registry.npmjs.org/csoai-gspc-mcp for the published version, then call that install's `tools/list`; package source in this repository targets the same {{MCP_TOOLS}}-tool contract as the HTTP door.
-- MCP registry: io.github.CSOAI-ORG/gspc → https://councilof.ai/mcp (Query the official registry for the currently published server version.)
-- Smithery: https://smithery.ai/server/csoai/gspc-mcp — its tools[] mirrors all {{MCP_TOOLS}} tools served by POST https://councilof.ai/mcp: exactly the {{MCP_FREE_WORD}} free tools plus {{MCP_PAID_WORD}} x402-metered evidence tools. Prefer the live POST /mcp tools/list over any stale duplicate listing (csoai/gspc).
+- Verify a server (per-server evidence, in the browser): https://councilof.ai/verify-server/ — every signed measurement capsule keyed to ONE endpoint URL, each re-derivable in the page (capsule id + Merkle inclusion + index signature). States only; an unknown URL is NOT_MEASURED, never clean. Same module as the MCP tools server_evidence / verify_capsule.
+- MCP registry: ai.councilof/gspc → https://councilof.ai/mcp (the canonical, domain-verified name; io.github.CSOAI-ORG/gspc is its deprecated alias for the same door. Query the official registry for the currently published server version.)
+- Smithery: https://smithery.ai/servers/csoai/gspc-mcp — a third-party listing of this door. Its tools[] is Smithery's own snapshot and can lag the door; before relying on it, read the live POST https://councilof.ai/mcp tools/list ({{MCP_TOOLS}} tools: {{MCP_FREE_WORD}} free readers plus {{MCP_PAID_WORD}} x402-metered evidence tools). The older csoai/gspc entry is a stale duplicate.
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
@@ -174,12 +199,19 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
 
 - Hugging Face org: https://huggingface.co/csoai
-- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc
+- MCP flagship: POST https://councilof.ai/mcp — registry id ai.councilof/gspc (deprecated alias: io.github.CSOAI-ORG/gspc)
+- Live momentum figures: GET https://councilof.ai/api/momentum (schema csoai.momentum/0.1) -> `figures[]`,
+  each with its own `value`, `as_of`, `source_url` and `label`, read at request time from the source it
+  names and cached for one hour; plus `listings[]` (third-party indexes that named us on that read; a listing
+  is not an endorsement), `anchors[]`, `recent[]` and `omitted[]` (every source that failed, with its reason:
+  a failed source is left out, never zeroed). Quote a figure with its as_of and source_url, never from this file.
+  How each is measured: https://councilof.ai/methodology/#how-momentum-is-measured
 - MCP Registry footprint: read it live at GET https://councilof.ai/api/footprint ->
   `registry_listings.value` (distinct server names) and `registry_listings.versions` (distinct
-  name@version rows), each with that payload's own `as_of`, `source_url` and paging state. Every
-  entry sits under ONE namespace, io.github.CSOAI-ORG; there is no second namespace and nothing to
-  deduplicate. Do not freeze either count here — we publish into that registry, so the number moves.
+  name@version rows), each with that payload's own `as_of`, `source_url` and paging state. The
+  footprint counts ONE namespace, io.github.CSOAI-ORG. The flagship's canonical name,
+  ai.councilof/gspc, is a domain-namespace entry outside that count; io.github.CSOAI-ORG/gspc inside
+  it is the flagship's deprecated alias, not a second server. Do not freeze either count here — we publish into that registry, so the number moves.
   WE MEASURE WHAT WE PROBE; WE DO NOT VET THE REGISTRY. A listing is a name we published ourselves:
   it says a server is registered, not that anyone runs it, and not that we or anyone else reviewed
   what it does. The registry validates namespace OWNERSHIP at publish time, which is a check on who
@@ -202,19 +234,13 @@ Lid (quote live `totals.lid`): {{LID}}
 ## Distribution — measured, PARTIAL, and not adoption
 
 {{DISTRIBUTION_SECTION}}
+## Signed evidence records (evidence linked from the board, never counted into it)
+
+{{EVIDENCE_RECORDS_SECTION}}
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 {{OTS_SECTION}}
 {{CARD_CORPORA_SECTION}}
-## Public operational indexes
-
-- Layer-0 drive-through capability/lifecycle projection: https://councilof.ai/layer0-drive-through.json
-- EAT public flywheel observation projection: https://councilof.ai/eat-flywheel.json
-- Distribution/release state: https://councilof.ai/layer0-distribution.json
-- Multi-dimensional public progress index: https://councilof.ai/progress-index.json
-- These are operational/discovery projections, not certification, endorsement, compliance or a trust score.
-- A generated file is not deployed; a deployed file is not independently read back until the release gate says so.
-
 ## For agents
 
 Prefer the keyless board API and verify.

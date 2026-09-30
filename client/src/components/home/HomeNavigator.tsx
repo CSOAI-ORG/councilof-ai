@@ -69,7 +69,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: "#machine-surface", label: "The data doors", what: "ten published populations, each with a free preview" },
       { href: "/tools", label: "Tools for the editor you already use", what: "ask the live board from inside your own assistant" },
       { href: "/api-docs", label: "The API", what: "every endpoint, its shape and what it will not claim" },
-      { href: "/contact?arm=run", label: "Ask about measuring your system", what: "a scoped run is arranged by enquiry; the receipt-only API does not start one" },
+      { href: "/contact/?arm=run", label: "Ask about measuring your system", what: "a scoped run is arranged by enquiry; the receipt-only API does not start one" },
       { href: "/embed", label: "Put a record on your own site", what: "a badge that re-checks its own signature in each reader's browser" },
     ],
   },
@@ -89,10 +89,10 @@ export const NAV_GROUPS: NavGroup[] = [
     question: "Who are you?",
     lede: "A UK company, and a short list of things we refuse to be.",
     links: [
-      { href: "/about", label: "About us", what: "who is behind this and how it is paid for" },
+      { href: "/about/", label: "About us", what: "who is behind this and how it is paid for" },
       { href: "/memberships", label: "Where we take part", what: "every participation record, each linked to its evidence" },
       { href: "/library", label: "The library", what: "the full archive, by subject, nothing deleted" },
-      { href: "/contact", label: "Contact", what: "one address, and what we will and will not answer" },
+      { href: "/contact/", label: "Contact", what: "one address, and what we will and will not answer" },
     ],
   },
 ];

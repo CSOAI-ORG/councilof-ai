@@ -26,7 +26,9 @@
  * NEVER: a grade, a rank, a certificate, or a paid artefact served free. Verification is free
  * forever, which is exactly why a zero price here is honest rather than promotional.
  */
+import { headFromGet } from "./_head";
 import { x402Accepts, buildPaymentRequiredV2, paymentRequiredResponseSigned, verifyX402Payment, type X402Env } from "./_x402";
+import { FREE_DOOR_DESCRIPTION } from "./_x402_descriptions";
 
 type Env = X402Env;
 
@@ -40,21 +42,24 @@ type Env = X402Env;
  * The seed script no longer truncates, but any OTHER indexer may, so the opening sentence is
  * written to survive being cut at 120 with its meaning intact.
  */
-export const DESCRIPTION =
-  "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero " +
-  "because it is free forever. That is the real price, not a promotion — a grade is never sold. " +
-  "Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.";
+// The canonical text lives in functions/api/x402-descriptions.json (free_door) — the one source the
+// manifest, this 402 (and so the Bazaar extension's catalogue entry) and llms.txt all read.
+export const DESCRIPTION = FREE_DOOR_DESCRIPTION;
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const resourceUrl = `${url.origin}/api/free-door`;
 
   // The one honest way to price this: zero, stated through the protocol. X402_AMOUNT is read by
-  // x402Accepts ahead of any SKU price, so the door advertises 0 without inventing a SKU for it.
+  // x402Accepts ahead of any SKU price, so the door advertises 0 without a priced SKU behind it.
+  // Its own product and sku id (public audit 2026-09-28, fix #29): it borrowed request_attestation's,
+  // so every 402 here said csoai.product.request_attestation and every zero-value settle on this door
+  // was recorded against the attestation product in the settlement ledger.
   const accepts = x402Accepts({ ...env, X402_AMOUNT: "0" }, resourceUrl, {
-    skuId: "request_attestation",
+    skuId: FREE_DOOR_SKU,
     tier: "per_request",
     description: DESCRIPTION,
+    productId: FREE_DOOR_PRODUCT_ID,
   });
 
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
@@ -80,6 +85,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         },
       },
     },
+    // THE INPUT AND OUTPUT SCHEMAS LIVE AT FIXED PATHS (added 2026-09-28). x402scan and AgentCash read a
+    // v2 door's input schema from schema.properties.input.properties.body, else .queryParams, and its
+    // output schema from schema.properties.output.properties.example (@agentcash/discovery 1.7.5,
+    // extractSchemas2). This door declared neither, so every registration reported
+    // SCHEMA_INPUT_MISSING and SCHEMA_OUTPUT_MISSING — both severity "error" — on the one door built
+    // to be indexed (x402scan register, 28 Sep 04:08Z). The input schema below is an object with no
+    // properties and additionalProperties:false: it states exactly "no query parameters", which is
+    // the truth. info.input still carries no queryParams key, so the facilitator's check of info
+    // against this schema (the 2026-09-05 rejection above) is unchanged: queryParams is optional here.
     schema: {
       $schema: "https://json-schema.org/draft/2020-12/schema",
       type: "object",
@@ -89,11 +103,41 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           properties: {
             type: { type: "string", const: "http" },
             method: { type: "string", enum: ["GET"] },
+            queryParams: {
+              type: "object",
+              description: "This door takes no query parameters. An unpaid GET answers the zero-amount 402.",
+              properties: {},
+              additionalProperties: false,
+            },
           },
           required: ["type", "method"],
           additionalProperties: false,
         },
-        output: { type: "object", properties: { type: { type: "string" } }, required: ["type"] },
+        output: {
+          type: "object",
+          properties: {
+            type: { type: "string" },
+            // The 200 body a settled (zero) payment returns. The five required keys are the ones the
+            // live Bazaar record already promises (see FULFILMENT below); the rest are added at
+            // request time and may be absent or null.
+            example: {
+              type: "object",
+              properties: {
+                schema: { type: "string", const: "csoai.free-door/0.1" },
+                price_usdc: { type: "number", const: 0 },
+                board: { type: "string" },
+                root: { type: "string" },
+                verify: { type: "string" },
+                catalog: { type: "string" },
+                totals: { description: "/api/gspc totals read live at request time; null when that read failed" },
+                totals_note: { type: "string" },
+                paid: { type: "object" },
+              },
+              required: ["schema", "price_usdc", "board", "root", "verify"],
+            },
+          },
+          required: ["type"],
+        },
       },
       required: ["input"],
     },
@@ -193,8 +237,19 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // exactly what settling buys. On 2026-09-06 five of nine doors carried neither, and this one
   // carried no csoai block at all — so a buyer reading the challenge could not tell what it was
   // for. This door is the free one: its deliverable says so plainly rather than implying a purchase.
+  // WHY 402 AND NOT 200 FOR A FREE RESOURCE (asked by a developer-persona test, 2026-09-26).
+  // A free resource would normally answer 200. This one answers a zero-amount 402 because the x402
+  // Bazaar catalogues a resource only off a confirmed settle, and a 200 route has nothing to settle
+  // (the /api/gspc seed indexed nothing — see the header of this file). So the 402 is the discovery
+  // mechanism, not a gate: the SAME content is served with 200 and no handshake at
+  // `free_equivalents`. `free_preview` used to point back at this door, i.e. at another 402 —
+  // a pointer to "the free version" that was itself a challenge. It now names a 200 route.
   const csoaiBase = {
-    free_preview: `${url.origin}/api/free-door`,
+    free_preview: `${url.origin}/api/gspc`,
+    free_equivalents: [`${url.origin}/api/gspc`, `${url.origin}/root.json`],
+    why_402:
+      "A zero-amount 402 so the x402 Bazaar can index this rail (it catalogues only resources that " +
+      "settle). Nothing is charged. The same content answers 200 with no handshake at free_equivalents.",
     deliverable:
       "the Bazaar door itself: this resource is free and settles for zero. It exists so an index " +
       "can discover the rail; it sells nothing and a settlement here buys nothing.",
@@ -209,9 +264,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // in the body alone. x402 v2 carries the challenge in that header — it is where a v2 client and
   // the Bazaar indexer look — so a door built specifically to be indexed was advertising a price
   // that nothing machine-readable could find. Measured 2026-09-05: free-door header=False, while
-  // /api/proof, /api/eunomia-data and /api/rwa/evidence all answered header=True.
+  // /api/proof, /api/signed-data-feed (then /api/eunomia-data) and /api/rwa/evidence all answered header=True.
   return paymentRequiredResponseSigned(answer, env);
 };
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);
+
+/** This door's own identity on the rail; never another product's (read inside onRequestGet). */
+export const FREE_DOOR_PRODUCT_ID = "csoai.product.free_door";
+export const FREE_DOOR_SKU = "free_door";

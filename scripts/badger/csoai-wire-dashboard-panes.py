@@ -202,7 +202,7 @@ export default function DashboardSandboxPane() {
         <CardHeader>
           <CardTitle>Sandbox</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Code interpreter sandbox. Every result is signed + attested.
+            Code interpreter sandbox. Planned, not running: nothing is signed or attested yet.
           </p>
         </CardHeader>
         <CardContent>
@@ -237,7 +237,7 @@ def build_operator_pane() -> str:
     return '''/**
  * DashboardOperatorPane — browser agent (operator).
  *
- * Every action is signed + attested.
+ * Planned, not running: nothing is signed or attested yet.
  */
 
 import { useState } from "react";
@@ -263,7 +263,7 @@ export default function DashboardOperatorPane() {
         <CardHeader>
           <CardTitle>Operator</CardTitle>
           <p className="text-sm text-muted-foreground">
-            Browser agent. Every action is signed + attested.
+            Browser agent. Planned, not running: nothing is signed or attested yet.
           </p>
         </CardHeader>
         <CardContent>

@@ -89,7 +89,7 @@ const call = async (
   return decode(response, body.id);
 };
 
-const FREE_NINE = [
+const FREE_TWELVE = [
   "board_totals",
   "get_axis",
   "verify_card",
@@ -99,6 +99,9 @@ const FREE_NINE = [
   "verify_inclusion",
   "x402_trust",
   "mcp_trust",
+  "measurement_index",
+  "verify_capsule",
+  "server_evidence",
 ];
 const PAID_FOUR = [
   "commission_card",
@@ -222,12 +225,12 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-describe("/mcp tools/list — nine free + four paid, catalogue free, nothing labelled safe", () => {
-  it("lists the free nine first and the paid four after, one definitions file each", async () => {
+describe("/mcp tools/list — twelve free + four paid, catalogue free, nothing labelled safe", () => {
+  it("lists the free twelve first and the paid four after, one definitions file each", async () => {
     const r = await call(rpc("tools/list"));
     const names = r.result.tools.map((t: { name: string }) => t.name);
-    expect(names).toEqual([...FREE_NINE, ...PAID_FOUR]);
-    expect((FREE as { tools: unknown[] }).tools).toHaveLength(9);
+    expect(names).toEqual([...FREE_TWELVE, ...PAID_FOUR]);
+    expect((FREE as { tools: unknown[] }).tools).toHaveLength(12);
     expect((PAID as { tools: unknown[] }).tools).toHaveLength(4);
     expect([...PAID_TOOL_NAMES]).toEqual(PAID_FOUR);
   });
@@ -261,13 +264,13 @@ describe("/mcp tools/list — nine free + four paid, catalogue free, nothing lab
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
 
-  it("the free nine definitions are byte-identical to what the stdio server reads (no drift)", async () => {
+  it("the free twelve definitions are byte-identical to what the stdio server reads (no drift)", async () => {
     const { readFileSync } = await import("node:fs");
     const canonical = JSON.parse(
       readFileSync(new URL("./gspc-tools.json", import.meta.url), "utf8"),
     );
     expect(canonical.tools.map((t: { name: string }) => t.name)).toEqual(
-      FREE_NINE,
+      FREE_TWELVE,
     );
     expect(
       canonical.tools.some((t: { name: string }) => PAID_FOUR.includes(t.name)),
@@ -295,7 +298,7 @@ describe("/mcp tools/list — nine free + four paid, catalogue free, nothing lab
         clientInfo: { name: "t", version: "0" },
       }),
     );
-    expect(i.result.serverInfo.version).toBe("1.4.2");
+    expect(i.result.serverInfo.version).toBe("1.4.3");
     // Counts are derived from the two definition files, never typed (2026-09-15: the text said
     // "Eight free" while tools/list served nine free tools).
     expect(i.result.instructions).toContain(`${FREE.tools.length} free read-only tools`);
@@ -310,7 +313,7 @@ describe("/mcp tools/list — nine free + four paid, catalogue free, nothing lab
 });
 
 describe("/mcp tools/call — paid tools", () => {
-  it("unpaid: returns the route's 402 challenge as structuredContent (not an error), forwarding exactly the route path", async () => {
+  it("unpaid: returns the route's 402 challenge per the x402 MCP transport (isError:true, PaymentRequired at the top level), forwarding exactly the route path", async () => {
     const seen = stubOrigin({
       deployed: ["/api/request-attestation", "/api/receipts/batch"],
     });
@@ -320,8 +323,15 @@ describe("/mcp tools/call — paid tools", () => {
         arguments: { subject: "qwen3", axis: "gov" },
       }),
     );
-    expect(r.result.isError).toBe(false);
-    const sc = r.result.structuredContent;
+    // x402 transports-v2/mcp.md: "servers MUST return a tool result with isError: true containing
+    // the PaymentRequired data" — structuredContent holds x402Version + accepts, and content[0].text
+    // is the same object as JSON. Until 2026-09-26 this was isError:false with the challenge nested.
+    expect(r.result.isError).toBe(true);
+    const sc = r.result.structuredContent as unknown as Record<string, unknown> & Envelope["result"]["structuredContent"];
+    expect(sc.x402Version).toBe(2);
+    expect((sc.accepts as Array<Record<string, unknown>>)[0]).toMatchObject({ scheme: "exact", network: "eip155:8453", payTo: "0xpay" });
+    expect(JSON.parse(r.result.content[0].text)).toEqual(sc);
+    expect(r.result.content[1].text).toMatch(/^PAYMENT_REQUIRED/);
     expect(sc.status).toBe("PAYMENT_REQUIRED");
     expect(sc.payment_required.accepts[0]).toMatchObject({
       scheme: "exact",
@@ -334,7 +344,6 @@ describe("/mcp tools/call — paid tools", () => {
     expect(sc.delivery_state).toBe("NOT_DELIVERED");
     expect(sc.settlement_state).toBe("NOT_REQUESTED");
     expect(sc.not_a_certification).toBe(true);
-    expect(r.result.content[0].text).toMatch(/^PAYMENT_REQUIRED/);
     expect(seen).toHaveLength(1);
     const u = new URL(seen[0].url);
     expect(u.origin + u.pathname).toBe(`${ORIGIN}/api/request-attestation`);
@@ -361,10 +370,32 @@ describe("/mcp tools/call — paid tools", () => {
     expect(sc.delivery_state).toBe("NOT_DELIVERED");
     expect(sc.settlement_state).toBe("UNCONFIRMED");
     expect(sc.nothing_charged).toBeUndefined();
-    expect(r.result.content[0].text).toMatch(
+    expect(r.result.isError).toBe(true);
+    expect(r.result.content[1].text).toMatch(
       /inspect the wallet, chain and facilitator before .*retrying/i,
     );
     expect(JSON.stringify(r)).not.toContain(token);
+  });
+
+  // PAYMENT SEMANTICS UNCHANGED by the 2026-09-26 isError switch: payment is read ONLY from the
+  // x_payment argument. A client that puts a payload in _meta["x402/payment"] (the x402 MCP
+  // transport's field, not read here yet) gets the challenge again, and nothing is forwarded.
+  it("a payload sent only in _meta['x402/payment'] is not forwarded: same challenge, nothing charged", async () => {
+    const seen = stubOrigin({ deployed: ["/api/request-attestation"] });
+    const r = await call(
+      rpc("tools/call", {
+        name: "commission_card",
+        arguments: { subject: "qwen3" },
+        _meta: { "x402/payment": { x402Version: 2, payload: { signature: "0xabc" } } },
+      }),
+    );
+    expect(r.result.isError).toBe(true);
+    const sc = r.result.structuredContent;
+    expect(sc.status).toBe("PAYMENT_REQUIRED");
+    expect(sc.payment_presented).toBe(false);
+    expect(sc.nothing_charged).toBe(true);
+    expect(seen).toHaveLength(1);
+    expect(seen[0].headers.get("x-payment")).toBeNull();
   });
 
   it("paid: keeps delivery distinct while reporting a present, unverified route receipt", async () => {
@@ -660,7 +691,13 @@ describe("GET /mcp — the one-command install is at the point of discovery", ()
     // The shortest real install used to live only in the npm README, which nobody discovering
     // this door would read. If it is not here, discovery leads to "clone the repo" again.
     expect(g.install).toBeTruthy();
-    expect(g.install.claude_code).toMatch(/npx -y csoai-gspc-mcp/);
+    // ONE default line, and it is the free door (no key, read-only). Nothing else claims "default".
+    expect(g.install.default).toBe(`claude mcp add --transport http council-of-ai ${ORIGIN}/mcp/free`);
+    expect(Object.values(g.install).filter((v) => /\/mcp\/free\b/.test(String(v)))).toHaveLength(1);
+    // The npm stdio package is labelled as the lighter, separately versioned implementation.
+    expect(g.install.stdio_lite).toMatch(/^npx -y csoai-gspc-mcp \(stdio-lite \d+\.\d+\.x: fewer tools/);
+    expect(g.install.claude_code).toBeUndefined();
+    expect(g.install.any_client).toBeUndefined();
     expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
     // A checkout is a fallback, never the headline.
     expect(JSON.stringify(g.install)).not.toMatch(/git clone|index\.mjs/);

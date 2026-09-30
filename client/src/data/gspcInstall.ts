@@ -6,7 +6,8 @@
 // official docs — it is shown clearly labelled "unverified", never as a promise.
 //
 // The asset (already live, a STANDARD MCP server so it works on every MCP client):
-//   remote HTTP MCP : https://councilof.ai/mcp   (streamable-http, no auth, 7 read tools)
+//   remote HTTP MCP : https://councilof.ai/mcp/free   (streamable-http, no auth, the free readers)
+//                     https://councilof.ai/mcp        (the same free readers + the x402-metered tools)
 //   stdio (npm)     : npx -y csoai-gspc-mcp
 //   universal REST  : GET https://councilof.ai/api/gspc  (+ ?axis=), GET /api/cards
 //   OpenAPI 3.1     : https://councilof.ai/openapi/gspc.json
@@ -14,7 +15,12 @@
 //
 // We MEASURE; we never certify. The test line proves the connection with a real call.
 
-export const MCP_URL = "https://councilof.ai/mcp";
+// Every snippet on /connect-gspc defaults to the FREE door (audit 2026-09-28 #10): a developer who
+// pastes the first config they see should get the tools that cost nothing, not a door whose
+// metered tools answer with a payment challenge. /mcp is still named, with what it adds.
+export const MCP_FREE_URL = "https://councilof.ai/mcp/free";
+export const MCP_METERED_URL = "https://councilof.ai/mcp";
+export const MCP_URL = MCP_FREE_URL;
 export const STDIO_CMD = "npx -y csoai-gspc-mcp";
 export const OPENAPI_URL = "https://councilof.ai/openapi/gspc.json";
 export const FN_TOOLS_URL = "https://councilof.ai/openapi/gspc-function-tools.json";
@@ -55,11 +61,11 @@ export const MCP_NATIVE: PlatformCard[] = [
     tagline: "One CLI command. HTTP transport, no auth.",
     docUrl: "https://code.claude.com/docs/en/mcp",
     blocks: [
-      { label: "Remote (recommended)", lang: "bash", code: "claude mcp add --transport http csoai-gspc https://councilof.ai/mcp" },
+      { label: "Remote (recommended)", lang: "bash", code: `claude mcp add --transport http csoai-gspc ${MCP_URL}` },
       { label: "stdio fallback", lang: "bash", code: "claude mcp add --transport stdio csoai-gspc -- npx -y csoai-gspc-mcp" },
       { label: "Project .mcp.json", lang: "json", code: `{
   "mcpServers": {
-    "csoai-gspc": { "type": "http", "url": "https://councilof.ai/mcp" }
+    "csoai-gspc": { "type": "http", "url": "${MCP_URL}" }
   }
 }` },
     ],
@@ -78,7 +84,7 @@ export const MCP_NATIVE: PlatformCard[] = [
   "mcpServers": {
     "csoai-gspc": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://councilof.ai/mcp"]
+      "args": ["-y", "mcp-remote", "${MCP_URL}"]
     }
   }
 }` },
@@ -101,7 +107,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     blocks: [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
-    "csoai-gspc": { "url": "https://councilof.ai/mcp" }
+    "csoai-gspc": { "url": "${MCP_URL}" }
   }
 }` },
       { label: "stdio", lang: "json", code: `{
@@ -123,7 +129,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     blocks: [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
-    "csoai-gspc": { "serverUrl": "https://councilof.ai/mcp" }
+    "csoai-gspc": { "serverUrl": "${MCP_URL}" }
   }
 }` },
       { label: "stdio", lang: "json", code: `{
@@ -147,7 +153,7 @@ export const MCP_NATIVE: PlatformCard[] = [
   "mcpServers": {
     "csoai-gspc": {
       "type": "streamableHttp",
-      "url": "https://councilof.ai/mcp",
+      "url": "${MCP_URL}",
       "disabled": false,
       "autoApprove": []
     }
@@ -172,7 +178,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     blocks: [
       { label: "Remote", lang: "json", code: `{
   "context_servers": {
-    "csoai-gspc": { "url": "https://councilof.ai/mcp" }
+    "csoai-gspc": { "url": "${MCP_URL}" }
   }
 }` },
       { label: "stdio", lang: "json", code: `{
@@ -195,7 +201,7 @@ export const MCP_NATIVE: PlatformCard[] = [
       { label: "Remote", lang: "yaml", code: `mcpServers:
   - name: csoai-gspc
     type: streamable-http
-    url: https://councilof.ai/mcp` },
+    url: ${MCP_URL}` },
       { label: "stdio", lang: "yaml", code: `mcpServers:
   - name: csoai-gspc
     type: stdio
@@ -217,7 +223,7 @@ export const MCP_NATIVE: PlatformCard[] = [
     blocks: [
       { label: "Remote", lang: "json", code: `{
   "mcpServers": {
-    "councilof": { "httpUrl": "https://councilof.ai/mcp" }
+    "councilof": { "httpUrl": "${MCP_URL}" }
   }
 }` },
       { label: "stdio", lang: "json", code: `{
@@ -243,7 +249,7 @@ export const NON_MCP: PlatformCard[] = [
     blocks: [
       { label: "Steps", lang: "text", code: `Settings → Apps → Advanced → enable Developer mode
 → Create app → paste server URL:
-https://councilof.ai/mcp` },
+${MCP_URL}` },
     ],
     note: "Requires a paid tier (Plus minimum) with Developer mode on. Our server is read-only, so the Plus/Pro fetch-only limit does not restrict it.",
   },
@@ -275,7 +281,7 @@ Authentication: None` },
       { label: "Responses API tool (server-side MCP)", lang: "json", code: `{
   "type": "mcp",
   "server_label": "councilof",
-  "server_url": "https://councilof.ai/mcp",
+  "server_url": "${MCP_URL}",
   "require_approval": "never",
   "allowed_tools": ["board_totals","get_axis","verify_card","list_cards","get_root","get_card","verify_inclusion"]
 }` },
@@ -323,7 +329,7 @@ Authentication: None` },
     blocks: [
       { label: "~/.grok/ mcpServers (mirror Claude Code — UNVERIFIED shape)", lang: "json", code: `{
   "mcpServers": {
-    "csoai-gspc": { "type": "http", "url": "https://councilof.ai/mcp" }
+    "csoai-gspc": { "type": "http", "url": "${MCP_URL}" }
   }
 }` },
     ],
@@ -338,7 +344,7 @@ Authentication: None` },
     tagline: "Custom Remote Connector — pick 'open authentication', paste the URL.",
     docUrl: "https://www.perplexity.ai/help-center/en/articles/13915507-adding-custom-remote-connectors",
     blocks: [
-      { label: "Settings → Connectors → Add custom", lang: "text", code: `Remote MCP URL:  https://councilof.ai/mcp
+      { label: "Settings → Connectors → Add custom", lang: "text", code: `Remote MCP URL:  ${MCP_URL}
 Authentication:  open authentication (no auth)` },
     ],
     note: "Requires Pro/Max/Enterprise + Developer Mode (beta). The developer Agent API can also connect MCP servers; the exact request shape for an external MCP is unverified.",
@@ -375,7 +381,7 @@ export interface RegistryRow {
 // merged upstream PR evidence. A live row must link to its public evidence, never back
 // to a submission form: that distinction prevents duplicate outward submissions.
 export const REGISTRIES: RegistryRow[] = [
-  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "io.github.CSOAI-ORG/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp. Downstream aggregators ingest from here." },
+  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "ai.councilof/gspc", note: "Live registry entry pointing to https://councilof.ai/mcp; io.github.CSOAI-ORG/gspc is its deprecated alias. Downstream aggregators ingest from here." },
   { name: "A2A agent directories", status: "listed", permissionless: true, where: "https://a2aregistry.org", note: "Council of AI — Measurement Agent is registered and the public record reports healthy and conformant." },
   { name: "Smithery", status: "listed", permissionless: true, where: "https://smithery.ai/servers/csoai/gspc-mcp", note: "The current csoai/gspc-mcp entry is live. A stale csoai/gspc duplicate should be corrected or retired; do not submit another entry." },
   { name: "mcp.so", status: "listed", permissionless: true, where: "https://mcp.so/servers/csoai-gspc-measurement", note: "The public flagship page is live, Verified and Featured. Listing presence does not prove tool health or use." },

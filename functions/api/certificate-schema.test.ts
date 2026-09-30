@@ -1,48 +1,24 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { onRequestGet } from "./certificate-schema";
 
-const call = async () => {
-  const res = await (onRequestGet as unknown as Function)({ env: {} });
-  return { status: res.status, body: await res.json() };
-};
-
-describe("/api/certificate-schema — PHASE3 C.2 contract", () => {
-  it("returns the schema endpoint contract", async () => {
-    const { status, body } = await call();
-    expect(status).toBe(200);
-    expect(body.schema).toBe("csoai.certificate-schema-endpoint/0.1");
-    expect(body.endpoint).toBe("/api/certificate-schema");
-    expect(body.schema_version).toBe("csoai.certificate/0.1");
+describe("/api/certificate-schema — withdrawn, renamed to csoai.completion-record/0.1", () => {
+  it("answers the retired-endpoint shape and names the replacement", async () => {
+    const res = await (onRequestGet as unknown as Function)({ env: {} });
+    expect(res.status).toBe(503);
+    const body = await res.json();
+    expect(body.schema).toBe("csoai.retired-endpoint/0.1");
+    expect(body.code).toBe("RETIRED");
+    expect(body.replaced_by.record).toBe("csoai.completion-record/0.1");
+    expect(body.replaced_by.schema).toBe("https://councilof.ai/schemas/csoai-completion-record-0.1.schema.json");
   });
 
-  it("lists all required fields by name", async () => {
-    const { body } = await call();
-    for (const f of body.required_fields) {
-      expect(typeof f).toBe("string");
-      expect(f.length).toBeGreaterThan(0);
-    }
-    expect(body.required_fields.length).toBeGreaterThanOrEqual(7);
-  });
-
-  it("states hard doctrine: non_certification, non_promotion, writes_board:false", async () => {
-    const { body } = await call();
-    const doctrine = body.hard_doctrine.join(" | ");
-    expect(doctrine).toContain("non_certification");
-    expect(doctrine).toContain("non_promotion");
-    expect(doctrine).toContain("writes_board");
-  });
-
-  it("names the schema URL and verification paths", async () => {
-    const { body } = await call();
-    expect(body.schema_url).toContain("csoai-certificate-0.1.schema.json");
-    expect(body.relationships.verified_by.length).toBeGreaterThanOrEqual(1);
-    expect(body.relationships.signed_by[0]).toMatch(/^did:web:.+#board-attestation-1\b/);
-    expect(body.relationships.superseded_by[0]).toContain("refund-record");
-  });
-
-  it("embeds the schema JSON itself", async () => {
-    const { body } = await call();
-    expect(body.schema_json["$id"]).toContain("csoai-certificate-0.1.schema.json");
-    expect(body.schema_json.properties.schema.const).toBe("csoai.certificate/0.1");
+  it("the replacement schema is published and is the completion-record profile", () => {
+    const s = JSON.parse(readFileSync(resolve(__dirname, "../../public/schemas/csoai-completion-record-0.1.schema.json"), "utf8"));
+    expect(s.$id).toBe("https://councilof.ai/schemas/csoai-completion-record-0.1.schema.json");
+    expect(s.properties.csoaiRecord.properties.schema.const).toBe("csoai.completion-record/0.1");
+    expect(s.properties.csoaiRecord.properties.non_certification.const).toBe(true);
+    expect(s.properties.credentialSubject.properties.achievement.properties.achievementType.const).toBe("Assignment");
   });
 });

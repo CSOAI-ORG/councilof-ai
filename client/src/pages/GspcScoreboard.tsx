@@ -5,11 +5,13 @@ import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { verifyPublishedArenaElo } from "@/lib/arenaAttestation";
 import { BOARD_COUNT_OBSERVED, boardCountFromPayload, boardKindSplitFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
+import RowsSeparationPanel, { RowsAxisDetermination } from "@/components/board/RowsSeparationPanel";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
 import GspcTerminal from "@/components/board/GspcTerminal";
 import AttestationDeepDive from "@/components/board/AttestationDeepDive";
 import XrplReaderRail from "@/components/gspc/XrplReaderRail";
+import BankExposureNote from "@/components/gspc/BankExposureNote";
 import { downloadBoardCsv } from "@/lib/boardCsv";
 import { Activity } from "lucide-react";
 
@@ -320,6 +322,21 @@ export default function GspcScoreboard() {
           Board source: GET /api/gspc — recompute published results, free
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
+        {/* A reader who opened /gspc/<axis> asked for ONE axis. Its deep-dive sits below the
+            board-wide qualifiers and the whole terminal — about three phone screens down — so
+            the first screen now hands them the way there. Nothing is summarised here and no
+            number is shown: the link only moves the reader to the block that carries them. */}
+        {wantAxis && (focused || isFinancialAxis) && (
+          <p className="mt-4">
+            <a
+              href="#axis-deep-dive"
+              data-testid="axis-jump"
+              className="inline-flex min-h-11 items-center rounded-lg border border-emerald-600/30 bg-white px-4 py-2 text-sm font-bold text-emerald-800 hover:bg-emerald-50"
+            >
+              Go straight to the <span className="mx-1 font-mono">{wantAxis}</span> axis ↓
+            </a>
+          </p>
+        )}
         <p className="mt-3 max-w-3xl text-gray-600">
           {board.lid ?? board.public_count}
           {board.public_leader_count != null && !board.lid && (
@@ -363,7 +380,7 @@ export default function GspcScoreboard() {
         {!data && !err && <p className="mt-4 text-gray-600">Loading the live board…</p>}
 
         {isFinancialAxis && (
-          <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
+          <div id="axis-deep-dive" className="mt-8 scroll-mt-24 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
               Financial axis · {board.public_count}
             </p>
@@ -462,7 +479,7 @@ export default function GspcScoreboard() {
         )}
 
         {focused && !isFinancialAxis && (
-          <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
+          <div id="axis-deep-dive" className="mt-8 scroll-mt-24 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">Axis deep-dive</p>
             <h2 className="mt-1 text-2xl font-black text-gray-900">{focused.axis}</h2>
             {(() => {
@@ -499,6 +516,7 @@ export default function GspcScoreboard() {
                 </p>
               );
             })()}
+            <RowsAxisDetermination a={focused as any} />
             <p className="mt-3 flex flex-wrap gap-4 text-sm">
               {/* Only an axis WITH a frozen bank gets the bank link. A financial axis has
                   no HuggingFace bank; minting the URL anyway would publish a
@@ -518,13 +536,18 @@ export default function GspcScoreboard() {
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
               <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">Full board</Link>
             </p>
+            <BankExposureNote axis={focused.axis} />
           </div>
         )}
 
         {data && (
-          <div className="mt-8 overflow-x-auto rounded-xl border border-emerald-600/15 bg-white shadow-sm">
+          <div className="relative mt-8 overflow-x-auto rounded-xl border border-emerald-600/15 bg-white shadow-sm">
             {/* See note on the Elo table above: without a min-width the board
-                crushed at 375px and rendered n=237 as "23 / 7" on two lines. */}
+                crushed at 375px and rendered n=237 as "23 / 7" on two lines.
+                `relative` is load-bearing: the last header holds an sr-only span, which is
+                position:absolute. With no positioned ancestor its containing block was the
+                page, so it sat at the table's far right edge OUTSIDE this scroller and widened
+                the whole document — 1022px of sideways scroll at 390px, 259px at 1280px. */}
             <table className="w-full min-w-[46rem] text-sm">
               <thead>
                 <tr className="border-b bg-emerald-50/60 text-left text-gray-700">
@@ -647,6 +670,8 @@ export default function GspcScoreboard() {
             </span>
           </p>
         )}
+
+        {data && <RowsSeparationPanel data={data} />}
 
         {/* Side rail: the live XRPL reader — names quoted from GET /api/xrpl, never typed. */}
         <div className="mt-10">

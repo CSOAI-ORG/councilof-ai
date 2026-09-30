@@ -4,7 +4,7 @@
  * R8 canon (load-bearing): regulators get signed streams free forever (verification free).
  * This endpoint is public + verify-free, on the measurement surface, NEVER the commercial
  * lane. It is never a score a ranked party pays for — the x402 micropayment lane is lawful
- * only on the commercial side (/api/eunomia-data: insurers, bond desks, vendors buying
+ * only on the commercial side (/api/signed-data-feed: insurers, bond desks, vendors buying
  * DATA, never scores, never ranked). Measurement, not certification.
  *
  * Grammar law: publish "systematic signed coverage of the public enforcement record".
@@ -13,7 +13,7 @@
  *
  * PROVENANCE (restored 2026-08-26). The rows below are the same rows the site already
  * publishes at /first-fine-watch (client/src/data/enforcement.ts) and sells as data at
- * /api/eunomia-data — landed by 33a26615 on 2026-08-24. They are NOT re-derived here and
+ * /api/signed-data-feed (then /api/eunomia-data) — landed by 33a26615 on 2026-08-24. They are NOT re-derived here and
  * carry no fresher claim than that review. Every row is REPORTED (a public secondary
  * record), not MEASURED by us; `verified` says so per row.
  *

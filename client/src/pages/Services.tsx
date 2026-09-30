@@ -26,6 +26,7 @@ import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
  */
 
 const MANIFEST = "/.well-known/x402.json";
+const NOT_JSON = "not-json";
 
 type Load =
   | { state: "loading" }
@@ -34,18 +35,27 @@ type Load =
 
 export default function Services() {
   const [load, setLoad] = useState<Load>({ state: "loading" });
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     document.title = "Supported feeds and evidence doors — Council of AI";
     let alive = true;
     void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((r) => {
+        if (!r.ok) return Promise.reject(new Error("HTTP " + r.status));
+        // A host without the rail's Function (the prerender preview) answers the SPA's HTML for this
+        // path. That is "not read here", not a parse error to print into the page.
+        if (!/json/i.test(r.headers.get("content-type") ?? "")) return Promise.reject(new Error(NOT_JSON));
+        return r.json();
+      })
       .then((j) => alive && setLoad({ state: "live", catalogue: buildCatalogue(j) }))
-      .catch((err: Error) => alive && setLoad({ state: "unread", reason: err.message }));
+      .catch((err: Error) =>
+        alive && setLoad({ state: "unread", reason: err instanceof SyntaxError ? NOT_JSON : err.message }),
+      );
     return () => {
       alive = false;
     };
-  }, []);
+  }, [attempt]);
 
   const cat = load.state === "live" ? load.catalogue : null;
 
@@ -93,18 +103,31 @@ export default function Services() {
 
       <section id="supported-feeds" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-12">
         {load.state === "loading" ? (
-          <p className="text-slate-400">Reading the manifest…</p>
+          <p role="status" className="text-slate-400">Reading the manifest…</p>
         ) : load.state === "unread" ? (
           <div
             data-testid="services-unread"
+            role="status"
             className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-6"
           >
             <p className="font-mono text-xs uppercase tracking-widest text-amber-300">Unread</p>
-            <p className="mt-2 leading-7 text-slate-300">
-              The rail's manifest at <code className="text-slate-200">{MANIFEST}</code> did not
-              answer ({load.reason}). No doors are listed, because listing a door we could not read
-              would be inventing one. This is not a claim that the rail is down.
-            </p>
+            {load.reason === NOT_JSON ? (
+              <p className="mt-2 leading-7 text-slate-300">
+                This copy of the page was rendered without the live manifest. The doors are listed
+                in the machine-readable manifest at{" "}
+                <a href={MANIFEST} className="text-slate-200 underline">{MANIFEST}</a>, which this
+                page reads when it loads in a browser. No door is listed here, because listing a door
+                we did not read would be inventing one.
+              </p>
+            ) : (
+              <p className="mt-2 leading-7 text-slate-300">
+                The rail's manifest at <code className="text-slate-200">{MANIFEST}</code> could not be
+                read on this load ({load.reason}). No doors are listed, because
+                listing a door we could not read would be inventing one. This is not a claim that the
+                rail is down.
+              </p>
+            )}
+            <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-4 min-h-11 rounded border border-amber-300 px-4 py-2 font-semibold focus-visible:outline focus-visible:outline-2">Retry manifest read</button>
           </div>
         ) : (
           <div className="space-y-12">
@@ -142,7 +165,7 @@ export default function Services() {
                         {c.freePreview ? (
                           <ServicePreview template={c.freePreview} />
                         ) : (
-                          <p className="mt-3 text-[12px] text-slate-500">
+                          <p className="mt-3 text-[12px] text-slate-400">
                             No free preview is published for this door.
                           </p>
                         )}

@@ -5,7 +5,7 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 14/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 15/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
@@ -14,6 +14,8 @@
 /merge-me             /how-we-work   308
 /merge-me/            /how-we-work   308
 /favicon.ico           /csoai-icon.svg      308
+/conflicts            /independence/       308
+/conflicts/           /independence/       308
 /schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
 /schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
 /signed/publisher-health.json  /publisher-health.json  308
@@ -187,11 +189,9 @@
 /claimguard.html        /honesty/                308
 /coming                 /honesty/                308
 /coming/                /honesty/                308
-/corrections            /dashboard?tab=attestations  308
-/corrections/           /dashboard?tab=attestations  308
 /stack                  /stack/index.json        308
 /stack/                 /stack/index.json        308
-/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json  302
+/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-22.json  302
 
 # --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---
 /honesty  /honesty/  308
@@ -239,7 +239,8 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (395) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (415) ---
+/a2ui  /a2ui/  308
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -286,6 +287,7 @@
 /canada-aida  /canada-aida/  308
 /careers  /careers/  308
 /catalog  /catalog/  308
+/census  /census/  308
 /ceremony  /ceremony/  308
 /certificate-verification  /certificate-verification/  308
 /certificates  /certificates/  308
@@ -313,9 +315,11 @@
 /connect  /connect/  308
 /connect-ai  /connect-ai/  308
 /connect-gspc  /connect-gspc/  308
+/connect/claude  /connect/claude/  308
 /contact  /contact/  308
 /cookie-policy  /cookie-policy/  308
 /cookies  /cookies/  308
+/corrections  /corrections/  308
 /council  /council/  308
 /council-detail  /council-detail/  308
 /council-licensing  /council-licensing/  308
@@ -328,6 +332,7 @@
 /cra-readiness  /cra-readiness/  308
 /credo-ai-alternative  /credo-ai-alternative/  308
 /crosswalks  /crosswalks/  308
+/crosswalks/owasp-asi  /crosswalks/owasp-asi/  308
 /csoai-law  /csoai-law/  308
 /custody  /custody/  308
 /cyber-scan  /cyber-scan/  308
@@ -402,6 +407,7 @@
 /glossary  /glossary/  308
 /gods-eye  /gods-eye/  308
 /gone-space  /gone-space/  308
+/governance  /governance/  308
 /governance-commons  /governance-commons/  308
 /governance-council  /governance-council/  308
 /governance-graph  /governance-graph/  308
@@ -414,6 +420,7 @@
 /gpai-evidence  /gpai-evidence/  308
 /graph  /graph/  308
 /gspc-anchors  /gspc-anchors/  308
+/gspc-console  /gspc-console/  308
 /gspc-gap-map  /gspc-gap-map/  308
 /gspc-vs-ailuminate  /gspc-vs-ailuminate/  308
 /gspc/jail  /gspc/jail/  308
@@ -439,10 +446,12 @@
 /how-we-work  /how-we-work/  308
 /hr-ai-act  /hr-ai-act/  308
 /humanoids-poc  /humanoids-poc/  308
+/independence  /independence/  308
 /industries  /industries/  308
 /industry-playbooks  /industry-playbooks/  308
 /industry-solutions  /industry-solutions/  308
 /integrations  /integrations/  308
+/interop/a2a-jcs-2026-09-27  /interop/a2a-jcs-2026-09-27/  308
 /iso-42001  /iso-42001/  308
 /iso-42001-vs-eu-ai-act  /iso-42001-vs-eu-ai-act/  308
 /iso-eu  /iso-eu/  308
@@ -476,6 +485,12 @@
 /mcp  /mcp/  308
 /mcp-tools  /mcp-tools/  308
 /me  /me/  308
+/measurement-capsules  /measurement-capsules/  308
+/measurements/disclosure-completeness  /measurements/disclosure-completeness/  308
+/measurements/disclosure-lag/2026-09-gemini-evaluation  /measurements/disclosure-lag/2026-09-gemini-evaluation/  308
+/measurements/disclosure-lag/2026-09-medicare-agent  /measurements/disclosure-lag/2026-09-medicare-agent/  308
+/measurements/x402-activity  /measurements/x402-activity/  308
+/mechanism  /mechanism/  308
 /membership-agreement  /membership-agreement/  308
 /memberships  /memberships/  308
 /meok-law  /meok-law/  308
@@ -551,6 +566,7 @@
 /report  /report/  308
 /reports  /reports/  308
 /research-transparency  /research-transparency/  308
+/research/cross-hardware-reproducibility  /research/cross-hardware-reproducibility/  308
 /resources  /resources/  308
 /rfc-0024  /rfc-0024/  308
 /risk-assessment  /risk-assessment/  308
@@ -582,12 +598,15 @@
 /sovereign  /sovereign/  308
 /sovereign-network  /sovereign-network/  308
 /sovereign-twin  /sovereign-twin/  308
+/spec/signed-receipts  /spec/signed-receipts/  308
 /specimens/clarity  /specimens/clarity/  308
 /specimens/kokotajlo  /specimens/kokotajlo/  308
 /specimens/rlusd  /specimens/rlusd/  308
 /stablecoins  /stablecoins/  308
 /stablewatch  /stablewatch/  308
 /standards  /standards/  308
+/state  /state/  308
+/state/2026-09  /state/2026-09/  308
 /status  /status/  308
 /status/internal  /status/internal/  308
 /statute-to-predicate  /statute-to-predicate/  308
@@ -615,6 +634,7 @@
 /vanta-alternative  /vanta-alternative/  308
 /verifiable-trust  /verifiable-trust/  308
 /verify-leaderboard  /verify-leaderboard/  308
+/verify-server  /verify-server/  308
 /voice  /voice/  308
 /vs  /vs/  308
 /vs-competitors  /vs-competitors/  308
@@ -689,7 +709,8 @@
 # --- static asset trees: served directly, never routed to the app ---
 /sov-space/*    /gspc-arena             308
 /widget/*               /dashboard?tab=learn         308
-/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat  302
+/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302
+/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302
 /benchmarks/*  /benchmarks/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200

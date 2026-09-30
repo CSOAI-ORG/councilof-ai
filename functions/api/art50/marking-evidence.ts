@@ -29,12 +29,14 @@
  * list bundled), SynthID and every keyed watermark (no public key-free detector), and the
  * open-source DWT-DCT detector (public, but not implemented in this Function).
  */
+import { headFromGet } from "../_head";
 import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHttpGet, paymentRequiredResponseSigned, hasPaymentHeader, CSOAI_LID, type X402Env } from "../_x402";
 import { railMode } from "../_x402_config";
 import { signPayload, cardV0 } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
 import { invoiceHandoff } from "../_invoice_handoff";
+import { ART50_MARKING_EVIDENCE_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -258,6 +260,19 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: KIND, error: "bad_request", reason: "invoice=gbp needs commissioned_by=<organisation> (2–80 chars of letters, digits, space . , & ' ( ) _ / -)" }, 400);
   }
 
+  // THE CHALLENGE NAMES THE RESOURCE THE BUYER ASKED FOR, QUERY INCLUDED (2026-09-26). A GET is
+  // priced per named output (`url=`), and this door used to advertise the bare path in
+  // resource.url and accepts[].resource while every other door kept its query — so the facilitator
+  // and any index heard of a different resource from the one paid for. A POST (bytes/manifest in
+  // the body) has no query to keep. functions/.well-known/x402-listing-parity.test.ts pins it.
+  const namedOutput = request.method === "GET" ? url.searchParams.get("url") : null;
+  const challengeUrl = (() => {
+    if (!namedOutput) return resourceUrl;
+    const u = new URL(resourceUrl);
+    u.searchParams.set("url", namedOutput);
+    return u.toString();
+  })();
+
   const input = await readInput(request, url);
   if (input.error) return json({ schema: KIND, error: "uncheckable", reason: input.error, url: input.url, http: input.http }, input.error.includes("cap") ? 413 : 400);
   if (!input.source) {
@@ -281,9 +296,8 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         400,
       );
     }
-    const description =
-      "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
-    const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
+    const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
+    const accepts = x402Accepts(env, challengeUrl, { skuId: "request_attestation", tier: "per_request", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.
@@ -299,11 +313,11 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       },
       outputExample: { schema: KIND, measurement: { checked: [] } },
     });
-    const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+    const payment = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
     if (!payment.ok) {
       return paymentRequiredResponseSigned(
         buildPaymentRequiredV2({
-          resourceUrl,
+          resourceUrl: challengeUrl,
           description,
           serviceName: "CSOAI Art50 Marking",
           tags: ["art50", "marking", "c2pa", "x402"],
@@ -326,8 +340,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
   const fetched_at = new Date().toISOString();
   const m = await measure(input);
   const law = await art50LawBlock();
-  const description =
-    "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
+  const description = ART50_MARKING_EVIDENCE_DESCRIPTION;
 
   // No measurable input means no deliverable. Reject it before either the x402 facilitator or
   // invoice-reference path is entered; payment may never precede deliverability validation.
@@ -356,7 +369,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     const reference = await invoiceReference(org, m.subject.sha256, fetched_at);
     payment = { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP" };
   } else {
-    const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "pack", description });
+    const accepts = x402Accepts(env, challengeUrl, { skuId: SKU, tier: "pack", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
     // Behavior) — that echo is what gets a resource catalogued.
@@ -378,10 +391,10 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
         unmeasured: ["root_inclusion", "watermark.synthid"],
       },
     });
-    const paid = await verifyX402Payment(request, env, resourceUrl, accepts[0], { bazaar });
+    const paid = await verifyX402Payment(request, env, challengeUrl, accepts[0], { bazaar });
     if (!paid.ok) {
       const paymentRequired = buildPaymentRequiredV2({
-        resourceUrl,
+        resourceUrl: challengeUrl,
         description,
         serviceName: "CSOAI Article 50 marking evidence",
         tags: ["article-50", "c2pa", "marking", "measurement", "x402"],
@@ -472,3 +485,6 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
 
 export const onRequestGet = handle;
 export const onRequestPost = handle;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(handle);

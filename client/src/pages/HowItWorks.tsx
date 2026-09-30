@@ -75,7 +75,7 @@ export default function HowItWorks() {
           <p className="mx-auto mt-2 max-w-xl text-sm text-emerald-900/80">
             No public prices. A grade is never sold. Verify is free forever.
           </p>
-          <a href="/assess" className="mt-4 inline-block rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white hover:bg-emerald-500">Get measured -&gt;</a>
+          <a href="/assess" className="mt-4 inline-block rounded-xl bg-emerald-700 px-6 py-3 text-sm font-bold text-white hover:bg-emerald-800">Get measured -&gt;</a>
         </div>
       </section>
     </div>

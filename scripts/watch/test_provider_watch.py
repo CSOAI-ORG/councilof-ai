@@ -173,8 +173,17 @@ def test_three_runs_state_and_leaves() -> None:
         assert (r2["first"], r2["changed"], r2["bytes_only"], r2["unchanged"]) == (0, 0, 1, 1)
         assert not [f for f in leaves.iterdir() if "acme" in f.name]  # cosmetic reformat is not a diff
 
+        # a real edit seen once is UNCONFIRMED (two-fetch rule): no diff leaf, last_ok not moved
         r3 = _run({**base, T_A["url"]: html_res("page_a_changed.html", url=T_A["url"])}, state, leaves, "2026-09-05T05:20:00Z")
-        assert r3["changed"] == 1 and r3["changed_ids"] == ["acme/usage_policy"]
+        assert r3["changed"] == 0 and r3["unconfirmed"] == 1 and r3["unconfirmed_ids"] == ["acme/usage_policy"]
+        assert not [f for f in leaves.iterdir() if "acme-usage_policy" in f.name]
+        assert state["targets"]["acme/usage_policy"]["last_ok"]["fetched_at"] == "2026-09-04T05:20:00Z"
+        assert state["targets"]["acme/usage_policy"]["pending"]["first_seen_at"] == "2026-09-05T05:20:00Z"
+
+        # the same edit on the next capture (>= 10 min later) confirms the change
+        r4 = _run({**base, T_A["url"]: html_res("page_a_changed.html", url=T_A["url"])}, state, leaves, "2026-09-06T05:20:00Z")
+        assert r4["changed"] == 1 and r4["changed_ids"] == ["acme/usage_policy"]
+        assert "pending" not in state["targets"]["acme/usage_policy"]
         diff_files = [f for f in leaves.iterdir() if "acme-usage_policy" in f.name]
         assert len(diff_files) == 1
 
@@ -183,7 +192,7 @@ def test_three_runs_state_and_leaves() -> None:
         assert _check(card) is None, _check(card)
         p = card["payload"]
         assert p["kind"] == pw.LEAF_KIND and p["state"] == "PROBED"
-        assert p["prev_fetched_at"] == "2026-09-04T05:20:00Z" and p["fetched_at"] == "2026-09-05T05:20:00Z"
+        assert p["prev_fetched_at"] == "2026-09-04T05:20:00Z" and p["fetched_at"] == "2026-09-06T05:20:00Z"
         assert p["prev_sha256"] != p["new_sha256"] and p["attests"] == pw.ATTESTS
         assert card["sig_ed25519"] is None and card["sha256"] == pw.sha256_hex(pw.canonical_bytes(p))
         assert len(pw.canonical_bytes(p)) <= pw.CAP and len(pw.canonical_bytes(card)) <= pw.CAP
@@ -192,19 +201,19 @@ def test_three_runs_state_and_leaves() -> None:
         # state: append-only history, hash-only, per-target facts
         ent = state["targets"]["acme/usage_policy"]
         kinds = [h["kind"] for h in ent["history"]]
-        assert kinds == ["FIRST_CAPTURE", "BYTES_ONLY", "CHANGED"], kinds
+        assert kinds == ["FIRST_CAPTURE", "BYTES_ONLY", "UNCONFIRMED", "CHANGED"], kinds
         assert ent["history"][-1]["leaf"] == diff_files[0].name
-        assert ent["n_runs"] == 3 and ent["n_changed"] == 1
+        assert ent["n_runs"] == 4 and ent["n_changed"] == 1
         assert state["targets"]["acme/terms"]["history"][-1]["kind"] == "FIRST_CAPTURE"  # unchanged runs not appended
         assert state["targets"]["other/pricing"]["latest"]["state"] == "UNCHECKABLE"
-        assert len(state["runs"]) == 3
+        assert len(state["runs"]) == 4
         blob = json.dumps(state) + "".join(f.read_text() for f in leaves.iterdir())
         for word in ("violates", "competing model", "Usage Policy", "applicable law"):
             assert word not in blob, word  # never the content
 
         # daily leaves: one per run, valid, under cap, no verdict word
         dailies = sorted(f for f in leaves.iterdir() if f.name.startswith("card-daily-"))
-        assert len(dailies) == 3
+        assert len(dailies) == 4
         d = json.loads(dailies[-1].read_text())
         assert _check(d) is None and d["payload"]["kind"] == pw.DAILY_KIND
         assert d["payload"]["n_changed"] == 1 and d["payload"]["uncheckable"] == ["other/pricing"]
@@ -215,7 +224,7 @@ def test_three_runs_state_and_leaves() -> None:
         (fake_root / "public" / "feeds" / "provider-diff").mkdir(parents=True)
         (fake_root / "public" / "feeds" / "provider-diff" / "leaves").symlink_to(leaves)
         out = provider_diff.collect(fake_root)
-        assert out["sidecar"]["n_skipped"] == 0 and out["sidecar"]["n_leaves"] == 4, out["sidecar"]
+        assert out["sidecar"]["n_skipped"] == 0 and out["sidecar"]["n_leaves"] == 5, out["sidecar"]
         assert all(leaf["surface"] == "public.notice" for leaf in out["leaves"])
 
         # the index
@@ -225,8 +234,50 @@ def test_three_runs_state_and_leaves() -> None:
         assert len(idx["recent_diffs"]) == 1 and idx["recent_diffs"][0]["id"] == "acme/usage_policy"
         assert idx["recent_diffs"][0]["leaf"].endswith(diff_files[0].name)
         row = next(r for r in idx["targets"] if r["id"] == "acme/usage_policy")
-        assert row["n_changes"] == 1 and row["last_change_at"] == "2026-09-05T05:20:00Z" and row["churn_suspect"] is False
+        assert row["n_changes"] == 1 and row["last_change_at"] == "2026-09-06T05:20:00Z" and row["churn_suspect"] is False
         assert not VERDICT_RE.search(json.dumps(idx))
+
+
+def test_two_fetch_confirmation_rule() -> None:
+    c1 = {"state": "OK", "norm_sha256": "n2", "bytes_sha256": "b2", "fetched_at": "2026-09-29T00:00:00Z"}
+    k, pend = pw.confirm("CHANGED", None, c1)
+    assert k == "UNCONFIRMED" and pend["first_seen_at"] == c1["fetched_at"]
+    k2, pend2 = pw.confirm("CHANGED", pend, dict(c1, fetched_at="2026-09-29T00:09:59Z"))  # 599 s: too soon
+    assert k2 == "UNCONFIRMED" and pend2["first_seen_at"] == c1["fetched_at"] and pend2["n_seen"] == 2
+    k3, pend3 = pw.confirm("CHANGED", pend2, dict(c1, fetched_at="2026-09-29T00:10:00Z"))  # 600 s: confirmed
+    assert k3 == "CHANGED" and pend3 is None
+    k4, pend4 = pw.confirm("CHANGED", pend, dict(c1, norm_sha256="n3", fetched_at="2026-09-30T00:00:00Z"))
+    assert k4 == "UNCONFIRMED" and pend4["norm_sha256"] == "n3"  # a different new state restarts the candidate
+    assert pw.confirm(None, pend, {"state": "UNKNOWN"}) == (None, pend)  # a failed fetch keeps the candidate, decides nothing
+    assert pw.confirm("UNCHANGED", pend, c1) == ("UNCHANGED", None)  # flicker back to baseline clears it
+
+
+def test_harness_router_change_detection_fixtures() -> None:
+    """The router's 61 frozen cases (36 real reg-watch events + synthetic): false-change 0, miss 0, unknowns unflagged."""
+    fx = json.loads((FIX / "harness-router-20260929" / "change_detect.json").read_text())
+    ok = lambda h: bool(h) and h != pw.EMPTY_SHA256  # noqa: E731
+    cap = lambda h, at: ({"state": "OK", "norm_sha256": h, "bytes_sha256": h, "fetched_at": at} if ok(h)  # noqa: E731
+                         else {"state": "UNKNOWN", "norm_sha256": None, "bytes_sha256": None, "fetched_at": at})
+    fp, miss, unk = [], [], []
+    for c in fx:
+        base = c["prev"] if ok(c["prev"]) else c.get("last_good")
+        flagged = False
+        if base:
+            prev_ok = {"norm_sha256": base, "bytes_sha256": base}
+            c1 = cap(c["cur"], "2026-09-29T00:00:00Z")
+            k1, pend = pw.confirm(pw.classify(prev_ok, c1), None, c1)
+            flagged = k1 == "CHANGED"
+            if c.get("confirm") is not None:
+                c2 = cap(c["confirm"], "2026-09-29T00:10:00Z")
+                k2, _ = pw.confirm(pw.classify(prev_ok, c2), pend, c2)
+                flagged = flagged or k2 == "CHANGED"
+        if c["truth"] == "no_change" and flagged:
+            fp.append(c["id"])
+        if c["truth"] == "change" and not flagged:
+            miss.append(c["id"])
+        if c["truth"] == "unknown" and flagged:
+            unk.append(c["id"])
+    assert (fp, miss, unk) == ([], [], []), (fp, miss, unk)
 
 
 def test_implicit_run_clock_records_each_capture_time() -> None:

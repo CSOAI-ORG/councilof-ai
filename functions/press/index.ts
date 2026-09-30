@@ -13,7 +13,11 @@ import { build } from "../api/press.json";
 import type { RevenueEnv } from "../api/revenue";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const pre = (s: string) => `<pre class="p"><code>${esc(s)}</code></pre>`;
+// Each command block scrolls sideways on a phone, so it is a keyboard stop with a name: a
+// scrollable region a keyboard cannot reach is unreadable past its right edge (axe
+// scrollable-region-focusable, ux-gauntlet 2026-09-26).
+const pre = (s: string, label = "Command that checks this") =>
+  `<pre class="p" tabindex="0" role="region" aria-label="${esc(label)}"><code>${esc(s)}</code></pre>`;
 
 export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
   const d = await build(env);
@@ -25,7 +29,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
     ? c.items.map((i) => `<article><h3>${esc(i.id)} <span class="d">${esc(i.date)}</span></h3>
       <p><b>What was wrong.</b> ${esc(i.what_was_wrong)}</p>
       <p><b>How it was caught.</b> ${esc(i.how_caught)}</p>
-      <p><b>Fix.</b> ${esc(i.fix)}</p>${pre(i.proof)}</article>`).join("\n")
+      <p><b>Fix.</b> ${esc(i.fix)}</p>${pre(i.proof, `Proof for ${i.id}`)}</article>`).join("\n")
     : `<p class="n">No correction was issued in this window. That is a fact about the window, not a claim that nothing was wrong.</p>`;
 
   // FAQ, and the FAQPage node built from THE SAME answers. Two copies — one for the reader and
@@ -54,7 +58,7 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
     mainEntity: d.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
   });
 
-  const notAnnounced = d.not_announced.map((n) => `<article><h3>${esc(n.subject)} — <span class="u">${esc(n.state)}</span></h3><p>${esc(n.why)}</p>${pre(n.proof)}</article>`).join("\n");
+  const notAnnounced = d.not_announced.map((n) => `<article><h3>${esc(n.subject)} — <span class="u">${esc(n.state)}</span></h3><p>${esc(n.why)}</p>${pre(n.proof, `Check for ${n.subject}`)}</article>`).join("\n");
 
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -63,6 +67,11 @@ export const onRequestGet: PagesFunction<RevenueEnv> = async ({ env }) => {
 <script type="application/ld+json">${ORG_LD}</script>
 <meta name="description" content="What changed at the Council of AI, with the command that proves each line. Derived from the corrections ledger, the public root and the signed card index. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/press/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://councilof.ai/press/">
+<meta property="og:title" content="Press — Council of AI">
+<meta property="og:description" content="What changed at the Council of AI, with the command that proves each line. Measurement, not certification.">
+<meta property="og:image" content="https://councilof.ai/og-image.png">
 <link rel="alternate" type="application/rss+xml" title="Corrections" href="https://councilof.ai/feeds/corrections.xml">
 <link rel="alternate" type="application/rss+xml" title="Signed cards" href="https://councilof.ai/feeds/cards.xml">
 <link rel="alternate" type="application/rss+xml" title="Public root" href="https://councilof.ai/feeds/roots.xml">
@@ -77,20 +86,22 @@ h3{margin:1.4rem 0 .3rem;font-size:1rem}
 .d{color:var(--mut);font-weight:400;font-size:.85rem}
 .u{color:#b45309}.n{color:var(--mut)}
 .p{background:var(--pre);border:1px solid var(--line);border-radius:6px;padding:.6rem .7rem;overflow-x:auto;font-size:.82rem;margin:.5rem 0 0}
-dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1rem;margin:.6rem 0}dt{color:var(--mut)}
+dl{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:.35rem 1rem;margin:.6rem 0}dt{color:var(--mut)}dd{margin:0;min-width:0;overflow-wrap:anywhere}
+p,h3{overflow-wrap:anywhere}
+.p:focus-visible{outline:2px solid #047857;outline-offset:2px}
 article{border-left:2px solid var(--line);padding-left:1rem;margin:1.2rem 0}
 footer{margin-top:3rem;color:var(--mut);font-size:.85rem;border-top:1px solid var(--line);padding-top:1rem}
 code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 </style></head><body><main>
 <h1>Press</h1>
 <div style="border-left:3px solid #b45309;padding-left:1rem;margin:0 0 1.4rem">
-<p><strong>Press contact:</strong> Nicholas Templeman, founder — <a href="mailto:press@councilof.ai">press@councilof.ai</a></p>
+<p><strong>Press contact:</strong> Nicholas Templeman, founder — <a href="mailto:contact@csoai.org?subject=Press">contact@csoai.org</a></p>
 <p class="n">For deadline queries, include <strong>PRESS URGENT</strong> in the subject.</p>
 <p class="n"><a href="/feeds/corrections.xml">Corrections feed (RSS)</a> — every correction is published here first.</p>
 </div>
 <p class="lede">${esc(d.doctrine)}</p>
 <p class="lede">Window <b>${esc(d.window.from)} → ${esc(d.window.to)}</b>. ${esc(d.window.derivation)}</p>
-${pre(d.window.proof)}
+${pre(d.window.proof, "Command that derives this window")}
 
 <h2>Corrections issued in this window — ${esc(c.value)} of ${esc(c.total)} total</h2>
 <p>${esc(c.note)}</p>
@@ -103,17 +114,17 @@ ${corrections}
 <dt>as_of</dt><dd>${esc(r.as_of)}</dd>
 <dt>signature</dt><dd>${esc(r.signature_state)}</dd>
 </dl>
-<p>${esc(r.scope)}</p>${pre(r.proof)}
+<p>${esc(r.scope)}</p>${pre(r.proof, "Command that checks the public root")}
 
 <h2>Signed measurement cards</h2>
 <p>${esc(s.indexed)} indexed, ${esc(s.added_this_window)} added in this window. ${esc(s.corpus_note)}</p>
-${pre(s.verify_one)}
+${pre(s.verify_one, "Command that verifies one signed card")}
 
 <h2>Distribution surfaces</h2>
-<p>${esc(d.distribution_surfaces.note)}</p>${pre(d.distribution_surfaces.proof)}
+<p>${esc(d.distribution_surfaces.note)}</p>${pre(d.distribution_surfaces.proof, "Command that checks the distribution surfaces")}
 
 <h2>Commercial evidence</h2>
-<p>${esc(d.commercial_evidence.note)}</p>${pre(d.commercial_evidence.proof)}
+<p>${esc(d.commercial_evidence.note)}</p>${pre(d.commercial_evidence.proof, "Command that checks the commercial evidence")}
 
 <h2>Questions we are actually asked</h2>
 <p class="n">The questions are ours. Every answer is computed from the ledger, the board or the root at request time, so an answer cannot be edited into something the artifacts do not support.</p>

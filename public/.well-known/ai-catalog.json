@@ -2,20 +2,102 @@
   "specVersion": "1.0",
   "host": {
     "displayName": "Council of AI",
-    "identifier": "did:web:councilof.ai"
+    "identifier": "did:web:csoai.org",
+    "documentationUrl": "https://councilof.ai/llms.txt"
   },
   "entries": [
     {
-      "identifier": "urn:air:councilof.ai:a2a:agent-card",
-      "displayName": "Council of AI A2A agent",
-      "type": "application/a2a-agent-card+json",
-      "url": "https://councilof.ai/.well-known/agent-card.json"
+      "identifier": "urn:air:councilof.ai:mcp:gspc",
+      "type": "application/mcp-server-card+json",
+      "url": "https://councilof.ai/.well-known/mcp/server.json",
+      "tags": ["mcp", "measurement", "verification"],
+      "extensions": {
+        "ai.councilof.catalog-note": {
+          "card_format": "MCP Registry server.json (schema 2025-12-11). The MCP Server Card (SEP-2127) is an open proposal; this document is the registry-shaped card for the same server.",
+          "remote": "https://councilof.ai/mcp",
+          "free_tools_only": "https://councilof.ai/mcp/free",
+          "extended_card": "https://councilof.ai/.well-known/mcp/server-card.json"
+        }
+      }
     },
     {
-      "identifier": "urn:air:councilof.ai:mcp:gspc",
-      "displayName": "Council of AI MCP server",
-      "type": "application/mcp-server-card+json",
-      "url": "https://councilof.ai/.well-known/mcp/server-card.json"
+      "identifier": "urn:air:councilof.ai:a2a:measurement-agent",
+      "type": "application/a2a-agent-card+json",
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "tags": ["a2a", "measurement"],
+      "extensions": {
+        "ai.councilof.catalog-note": {
+          "endpoint": "https://councilof.ai/api/a2a",
+          "binding": "JSONRPC"
+        }
+      }
+    },
+    {
+      "identifier": "urn:air:councilof.ai:ag-ui:run",
+      "displayName": "AG-UI run endpoint (descriptor)",
+      "type": "application/json",
+      "url": "https://councilof.ai/api/agui",
+      "description": "Descriptor for the AG-UI endpoint: POST https://councilof.ai/api/agui/run streams AG-UI events. Deterministic routing onto the MCP tools; no model in the path.",
+      "tags": ["ag-ui", "chat", "streaming"]
+    },
+    {
+      "identifier": "urn:air:councilof.ai:a2ui:run",
+      "displayName": "A2UI renderer surface",
+      "type": "application/json",
+      "url": "https://councilof.ai/api/a2ui",
+      "description": "Descriptor for a CSOAI A2UI v1.0 Candidate projection. POST /api/a2ui/run returns grounded Council OS answers as A2UI NDJSON; GET /api/a2ui/gspc projects the living GSPC state.",
+      "tags": ["a2ui", "agent-ui", "streaming"],
+      "extensions": {
+        "ai.councilof.catalog-note": {
+          "protocol_status": "A2UI v1.0 Candidate",
+          "run": "https://councilof.ai/api/a2ui/run",
+          "living_gspc": "https://councilof.ai/api/a2ui/gspc",
+          "source": "https://councilof.ai/api/gspc"
+        }
+      }
+    },
+    {
+      "identifier": "urn:air:councilof.ai:chat:talk",
+      "displayName": "Chat endpoint",
+      "type": "application/json",
+      "data": {
+        "endpoint": "https://councilof.ai/api/chat",
+        "method": "POST",
+        "input": {"message": "<plain text>"},
+        "output": "JSON with an answer quoted from a named MCP tool's output",
+        "note": "POST only; a GET returns 404."
+      },
+      "tags": ["chat"]
+    },
+    {
+      "identifier": "urn:air:councilof.ai:dataset:gspc-board",
+      "displayName": "GSPC board (live JSON)",
+      "type": "application/json",
+      "url": "https://councilof.ai/api/gspc",
+      "description": "The live measurement board. Quote its own totals; an unmeasured slot is published as unmeasured.",
+      "tags": ["dataset", "measurement"]
+    },
+    {
+      "identifier": "urn:air:councilof.ai:dataset:huggingface-listing",
+      "displayName": "Public datasets on the Hugging Face Hub (author csoai)",
+      "type": "application/json",
+      "url": "https://huggingface.co/api/datasets?author=csoai&limit=1000",
+      "description": "The Hub's own listing of every public dataset under the csoai account; read it rather than a count typed here.",
+      "tags": ["dataset", "huggingface"]
+    },
+    {
+      "identifier": "urn:air:councilof.ai:catalog:api",
+      "displayName": "API catalog (RFC 9727 linkset)",
+      "type": "application/linkset+json",
+      "url": "https://councilof.ai/.well-known/api-catalog",
+      "tags": ["api-catalog"]
     }
-  ]
+  ],
+  "extensions": {
+    "ai.councilof.catalog-note": {
+      "spec": "https://ai-catalog.io/ (Agent-Card/ai-catalog, specification/ai-catalog.md at 04a99cd, 2026-09-05)",
+      "conformance": "Level 2 (Discoverable). No trustManifest is claimed.",
+      "doctrine": "Measurement, not certification. A listing is never adoption."
+    }
+  }
 }

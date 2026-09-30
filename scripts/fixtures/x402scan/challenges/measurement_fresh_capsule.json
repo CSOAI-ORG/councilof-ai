@@ -1,0 +1,225 @@
+{
+  "accepts": [
+    {
+      "amount": "10000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "csoai_pricing": {
+        "campaign_id": "csoai-launch-30d-20260911",
+        "ends_at": "2026-10-11T00:00:00Z",
+        "fresh_compute_excluded": true,
+        "normal_amount_atomic": "20000",
+        "offered_amount_atomic": "10000",
+        "pricing_basis": "PROMO_EXISTING_DATA",
+        "product_id": "csoai.product.request_attestation",
+        "sku_id": "request_attestation",
+        "starts_at": "2026-09-11T00:00:00Z"
+      },
+      "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only — the endpoint's own discovery documents vs its initialize + tools/list answer. Returns CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id. Measurement, not endorsement; verification stays free.",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "10000",
+      "maxTimeoutSeconds": 300,
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "resource": "https://councilof.ai/api/measurement/fresh-capsule",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "one csoai.measurement-capsule/0.2 (kind measurement.contract_parity) + board signature over a payload pinning its capsule_id",
+    "free_preview": "https://councilof.ai/api/measurement/fresh-capsule?endpoint=<url>&dimension=TOOLS&preview=1",
+    "free_verification": [
+      "https://councilof.ai/mcp (verify_capsule, server_evidence)",
+      "https://councilof.ai/measurement-capsules/latest.json"
+    ],
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "rating",
+      "guarantee",
+      "verdict",
+      "rank",
+      "certificate",
+      "endorsement"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "offer_receipt": {
+      "alg": "EdDSA",
+      "extension": "offer-receipt",
+      "format": "jws",
+      "kid": "did:web:csoai.org#board-attestation-1",
+      "reason": "1 of 1 accepts entries signed",
+      "signed": true,
+      "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+      "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
+    },
+    "per": "endpoint-dimension-request",
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.measurement-capsule/0.2"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "dimension": "TOOLS",
+            "endpoint": "https://example.com/mcp"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "capsule": {
+              "capsule_id": "<hex>",
+              "kind": "measurement.contract_parity",
+              "measurement_state": "CONSISTENT",
+              "schema": "csoai.measurement-capsule/0.2",
+              "subject_id": "https://example.com/mcp"
+            },
+            "signature": {
+              "sig_ed25519": "<hex or null>"
+            }
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "dimension": {
+                    "description": "which declared-vs-observed claim to re-measure",
+                    "enum": [
+                      "TOOLS",
+                      "VERSION",
+                      "PROTOCOL"
+                    ],
+                    "type": "string"
+                  },
+                  "endpoint": {
+                    "description": "https URL of one MCP endpoint (Streamable HTTP)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "endpoint",
+                  "dimension"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    },
+    "offer-receipt": {
+      "info": {
+        "offers": [
+          {
+            "acceptIndex": 0,
+            "format": "jws",
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9tZWFzdXJlbWVudC9mcmVzaC1jYXBzdWxlIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDkwLCJ2ZXJzaW9uIjoxfQ.O3EkrIZOGNCQ5kIiQPMTmdsNIN4FFot1ae5wxg6qk8rcldtodImgOMuQxSPrM6IN5Jh9N_2kgtMRl-eco2QVDQ"
+          }
+        ]
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "offers": {
+            "items": {
+              "properties": {
+                "acceptIndex": {
+                  "type": "integer"
+                },
+                "format": {
+                  "const": "jws",
+                  "type": "string"
+                },
+                "signature": {
+                  "description": "JWS compact serialization containing the offer payload",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "format",
+                "signature"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "offers"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim (TOOLS, VERSION or PROTOCOL) about one MCP endpoint, live, at the discovery boundary only — the endpoint's own discovery documents vs its initialize + tools/list answer. Returns CONSISTENT, INCONSISTENT or UNCHECKABLE with sha256 of every read and a board signature pinning the capsule id. Measurement, not endorsement; verification stays free.",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Fresh Capsule",
+    "tags": [
+      "mcp",
+      "measurement",
+      "parity",
+      "evidence",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/measurement/fresh-capsule"
+  },
+  "x402Version": 2
+}

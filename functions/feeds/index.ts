@@ -22,6 +22,7 @@ import { entries as cards } from "./cards.xml";
 import { entries as roots } from "./roots.xml";
 import { entries as census } from "./x402-census.xml";
 import { entries as notes } from "./notes.xml";
+import { boardEntries } from "./_board";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -30,6 +31,7 @@ interface Desc { name?: string; state?: string; description?: string; as_of?: st
 function feeds() {
   const safe = (f: () => { iso: string }[]) => { try { return f(); } catch { return null; } };
   const c = safe(corrections), k = safe(cards), r = safe(roots), x = safe(census), nt = safe(notes);
+  const bd = safe(boardEntries);
   return [
     { path: "/feeds/corrections.xml", type: "application/rss+xml", title: "Corrections ledger",
       n: c?.length ?? null, newest: c?.[0]?.iso ?? null,
@@ -37,6 +39,12 @@ function feeds() {
     { path: "/feeds/corrections.atom", type: "application/atom+xml", title: "Corrections ledger (Atom)",
       n: c?.length ?? null, newest: c?.[0]?.iso ?? null,
       what: "The same entries in Atom. One source, two syntaxes." },
+    { path: "/feeds/board.atom", type: "application/atom+xml", title: "GSPC board changes",
+      n: bd?.length ?? null, newest: bd?.[0]?.iso ?? null,
+      what: "One entry per signed freeze of the GSPC board: its public count, when it was frozen, and its claim state (CURRENT, or superseded and by what). A superseded freeze stays listed, because its bytes still verify. When the live board has moved past the newest freeze, the subtitle says so." },
+    { path: "/feeds/board.json", type: "application/feed+json", title: "GSPC board changes (JSON Feed)",
+      n: bd?.length ?? null, newest: bd?.[0]?.iso ?? null,
+      what: "The same entries as JSON Feed 1.1. Its _gspc extension compares the live board with the newest signed freeze. One source, two syntaxes." },
     { path: "/feeds/cards.xml", type: "application/rss+xml", title: "Newly signed measurement cards",
       n: k?.length ?? null, newest: k?.[0]?.iso ?? null,
       what: "The newest entries in the SIGNED CARD INDEX, each with the id a stranger can verify. Not the public-root leaf set and not the on-disk wrapper count — three corpora, zero overlap." },
@@ -49,6 +57,12 @@ function feeds() {
     { path: "/feeds/roots.xml", type: "application/rss+xml", title: "The public root",
       n: r?.length ?? null, newest: r?.[0]?.iso ?? null,
       what: "One item by design: there is no root-history artifact, and a back-history invented from one snapshot would be fabricated dates. The guid is the merkle_root, so a poll that finds the same bytes is not a change." },
+    { path: "/feeds/records.xml", type: "application/atom+xml", title: "Every new dated record",
+      n: null, newest: null,
+      what: "Corrections, the daily what-changed note (generated from the signed daily measurement-capsule index, published only when its signature verifies) and evidence notes, in one Atom feed. n is null here because the daily notes are read from the signed index on the dataset at request time." },
+    { path: "/feeds/records.json", type: "application/feed+json", title: "Every new dated record (JSON Feed)",
+      n: null, newest: null,
+      what: "The same entries as /feeds/records.xml, as JSON Feed 1.1. One source, two syntaxes." },
     { path: "/feeds/receipts.xml", type: "application/atom+xml", title: "Settled receipts",
       n: null, newest: null,
       what: "One entry per settled receipt, derived from the same REVENUE_KV records /api/revenue counts, each carrying its transaction so the chain is the check rather than our arithmetic. A self-settlement — our own wallet paying our own door — is labelled as one in the title: it proves the rail settles and it is never a buyer. n is null here because the count lives at the edge, not in this index." },

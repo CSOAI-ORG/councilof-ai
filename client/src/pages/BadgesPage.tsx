@@ -13,7 +13,6 @@ const BADGES: Badge[] = [
   { id: "layer0-signed", label: "Layer 0 Signed \u00B7 Ed25519", dot: "#34d399" },
   { id: "eu-ai-act-ready", label: "EU AI Act Measured", dot: "#059669" },
   { id: "council-governed", label: "Council-designed (33-seat design; not a live guarantee — DR-0007)", dot: "#10b981" },
-  { id: "meok-open", label: "MEOK Open \u00B7 MIT", dot: "#6ee7b7" },
 ];
 
 function badgeSvg(b: Badge): string {
@@ -56,7 +55,7 @@ export default function BadgesPage() {
       </section>
       <section className="mx-auto max-w-5xl px-6 pb-16">
         <div className="rounded-2xl border border-emerald-500/15 bg-black/20 p-5 text-sm text-emerald-100/75">
-          <b className="text-emerald-200">This is the open commons.</b> Badges are step one. Next, Council Space opens the full toolset - the MEOK open MCPs, forks, APIs and A2A protocols - as runnable cards anyone can use, with the Council assistant orchestrating and Layer 0 signing every run. Open source, made easy. MIT-licensed. Built in the open on GitHub.
+          <b className="text-emerald-200">This is the open commons.</b> Badges are step one. Next, Council Space opens the full toolset - the open MCPs, forks, APIs and A2A protocols - as runnable cards anyone can use, with the Council assistant orchestrating and Layer 0 signing every run. Open source, made easy. MIT-licensed. Built in the open on GitHub.
           <div className="mt-4 flex flex-wrap gap-3">
             <a href="/gspc-arena" className="rounded-xl bg-emerald-500 px-4 py-2 font-bold text-[#03110b] hover:bg-emerald-400">Enter Council Space -&gt;</a>
             <a href="/try" className="rounded-xl border border-emerald-400/40 px-4 py-2 font-semibold text-emerald-100 hover:bg-white/5">Ask the Council -&gt;</a>

@@ -404,7 +404,8 @@ export function buildCoverageLedger(
     {
       id: "erc8004",
       label: "ERC-8004 registry",
-      href: "/interop/erc8004-callable/",
+      // The directory has no index on Pages (404); link the probe record this row is read from.
+      href: "/interop/erc8004-callable/probe-registered-vs-callable-2026-09-02.json",
       unit: "registrations",
       indexed: field(
         ercTotals?.registered_all_indexer ?? null,

@@ -72,16 +72,13 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// Mock data for government dashboard
+// Reference frameworks only. 2026-09-26: the invented compliance rates (87.3 / 92.7 / 96.1 /
+// 79.1%), system counts and requirement counts were removed. No registry is connected and
+// CSOAI does not score compliance, so there is no number to show.
 const complianceFrameworks = [
   {
     id: "eu-ai-act",
     name: "EU AI Act",
-    articles: 113,
-    requirements: 113,
-    compliantCount: 1089,
-    totalSystems: 1247,
-    complianceRate: 87.3,
     lastUpdated: "2026-01-13",
     region: "European Union",
     icon: Scale,
@@ -91,11 +88,6 @@ const complianceFrameworks = [
   {
     id: "nist-ai-rmf",
     name: "NIST AI RMF",
-    articles: 72,
-    requirements: 72,
-    compliantCount: 1156,
-    totalSystems: 1247,
-    complianceRate: 92.7,
     lastUpdated: "2026-01-13",
     region: "United States",
     icon: Shield,
@@ -105,11 +97,6 @@ const complianceFrameworks = [
   {
     id: "iso-42001",
     name: "ISO 42001",
-    articles: 56,
-    requirements: 56,
-    compliantCount: 1198,
-    totalSystems: 1247,
-    complianceRate: 96.1,
     lastUpdated: "2026-01-12",
     region: "International",
     icon: Globe2,
@@ -119,11 +106,6 @@ const complianceFrameworks = [
   {
     id: "tc260",
     name: "TC260 AI Safety",
-    articles: 48,
-    requirements: 48,
-    compliantCount: 987,
-    totalSystems: 1247,
-    complianceRate: 79.1,
     lastUpdated: "2026-01-13",
     region: "China",
     icon: Building2,
@@ -140,7 +122,6 @@ const regionalData = [
     name: "Europe",
     totalSystems: null,
     compliantSystems: null,
-    complianceRate: null,
     activeIncidents: null,
     pendingInvestigations: null,
     enforcementActions: null,
@@ -152,7 +133,6 @@ const regionalData = [
     name: "North America",
     totalSystems: null,
     compliantSystems: null,
-    complianceRate: null,
     activeIncidents: null,
     pendingInvestigations: null,
     enforcementActions: null,
@@ -164,7 +144,6 @@ const regionalData = [
     name: "Asia-Pacific",
     totalSystems: null,
     compliantSystems: null,
-    complianceRate: null,
     activeIncidents: null,
     pendingInvestigations: null,
     enforcementActions: null,
@@ -176,7 +155,6 @@ const regionalData = [
     name: "Global Overview",
     totalSystems: null,
     compliantSystems: null,
-    complianceRate: null,
     activeIncidents: null,
     pendingInvestigations: null,
     enforcementActions: null,
@@ -467,7 +445,6 @@ export default function GovernmentDashboard() {
   // No live national registry feeds this dashboard yet — headline figures are
   // shown as "—" rather than invented (see the notice strip below the hero).
   const totalSystems: number | null = null;
-  const overallCompliance: number | null = null;
   const activeIncidentCount: number | null = null;
   const pendingActions: number | null = null;
 
@@ -592,8 +569,8 @@ export default function GovernmentDashboard() {
               <div className="text-sm text-emerald-600 font-medium">Monitored Systems</div>
             </div>
             <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-emerald-100">
-              <div className="text-4xl font-bold text-emerald-700">{overallCompliance != null ? `${overallCompliance}%` : "—"}</div>
-              <div className="text-sm text-emerald-600 font-medium">Overall Compliance</div>
+              <div className="text-4xl font-bold text-emerald-700">UNMEASURED</div>
+              <div className="text-sm text-emerald-600 font-medium">Framework status (no registry)</div>
             </div>
             <div className="text-center p-4 rounded-lg bg-white shadow-sm border border-emerald-100">
               <div className="text-4xl font-bold text-amber-600">{activeIncidentCount ?? "—"}</div>
@@ -665,11 +642,11 @@ export default function GovernmentDashboard() {
               Multi-Framework Compliance
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Illustrative framework layout
+              Reference frameworks
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Four sample framework cards demonstrate a possible layout. Their counts and rates are
-              invented placeholders, not live compliance measurements.
+              Four reference frameworks. No compliance rate is shown: no registry is connected, and
+              CSOAI measures behaviour on its board; it does not score compliance.
             </p>
           </div>
 
@@ -691,35 +668,15 @@ export default function GovernmentDashboard() {
                         <div className={`w-12 h-12 rounded-xl ${colorClasses.light} flex items-center justify-center`}>
                           <Icon className={`h-6 w-6 ${colorClasses.text}`} />
                         </div>
-                        <Badge variant="outline" className="text-xs">
-                          {framework.requirements} Requirements
-                        </Badge>
                       </div>
                       <CardTitle className="text-lg">{framework.name}</CardTitle>
                       <CardDescription>{framework.region}</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
-                        <div>
-                          {/* The figure is marked AT the figure, not only in a banner at the
-                              top of the page. A reader arriving mid-page, and any answer
-                              engine extracting this card, would otherwise lift "87.3%" as a
-                              CSOAI measurement of EU AI Act compliance. A disclaimer a
-                              scraper never reaches is not a disclaimer. */}
-                          <div className="flex justify-between text-sm mb-2">
-                            <span className="text-gray-600">Compliance Rate</span>
-                            <span className={`font-bold ${colorClasses.text}`}>
-                              {framework.complianceRate}%
-                              <span className="ml-1.5 font-normal text-[10px] uppercase tracking-wide text-amber-700">
-                                sample data
-                              </span>
-                            </span>
-                          </div>
-                          <Progress value={framework.complianceRate} className="h-2" />
-                        </div>
-                        <div className="flex justify-between text-xs text-gray-500">
-                          <span>{framework.compliantCount.toLocaleString()} compliant</span>
-                          <span>{framework.totalSystems.toLocaleString()} total</span>
+                        <div className="flex justify-between text-sm" data-testid="framework-status">
+                          <span className="text-gray-600">Measured status</span>
+                          <span className="font-bold text-gray-700">UNMEASURED</span>
                         </div>
                         <div className="pt-3 border-t">
                           <p className="text-xs text-gray-500 mb-2">Key Areas:</p>
@@ -784,8 +741,8 @@ export default function GovernmentDashboard() {
                       </div>
                       <div className="text-center p-6 bg-green-50 rounded-xl">
                         <CheckCircle2 className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                        <div className="text-3xl font-bold text-green-700">{region.complianceRate != null ? `${region.complianceRate}%` : "—"}</div>
-                        <div className="text-sm text-green-600">Compliance Rate</div>
+                        <div className="text-3xl font-bold text-green-700">UNMEASURED</div>
+                        <div className="text-sm text-green-600">Framework status</div>
                       </div>
                       <div className="text-center p-6 bg-amber-50 rounded-xl">
                         <AlertTriangle className="h-8 w-8 text-amber-600 mx-auto mb-2" />

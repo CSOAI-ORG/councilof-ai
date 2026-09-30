@@ -156,6 +156,15 @@ function fixtureFetcher(
             })
           : json({ error: "not_found" }, 404);
       }
+      if (url.pathname === "/api/a2ui") {
+        return json({
+          schema: "csoai.a2ui/0.1",
+          protocol: "A2UI",
+          version: "v1.0",
+          status: "Candidate",
+          endpoint: "https://example.test/api/a2ui/run",
+        });
+      }
       if (url.pathname === "/api/compute") {
         return json({
           census: {
@@ -368,11 +377,11 @@ describe("GET /api/fabric", () => {
         OBSERVED_AT,
       );
       expect(mcpCalls).toBe(1);
-      expect(otherRails).toHaveBeenCalledTimes(16);
+      expect(otherRails).toHaveBeenCalledTimes(17);
       expect(externalFetch).not.toHaveBeenCalled();
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "RUNTIME_OBSERVED",
-        summary: expect.stringContaining("13 tool declarations"),
+        summary: expect.stringContaining("16 tool declarations"),
         writes_board: false,
       });
     } finally {
@@ -389,7 +398,7 @@ describe("GET /api/fabric", () => {
     );
 
     expect(manifest.schema).toBe("csoai.capability-fabric/0.1");
-    expect(fetcher).toHaveBeenCalledTimes(17);
+    expect(fetcher).toHaveBeenCalledTimes(18);
     expect(manifest.rails.length).toBe(17);
     expect(manifest.action_contract).toMatchObject({
       schema: "csoai.capability-action-contract/0.1",
@@ -452,7 +461,11 @@ describe("GET /api/fabric", () => {
     expect(byId(manifest, "a2a-discovery").state).toBe("CATALOGUED");
     expect(byId(manifest, "a2a-runtime").state).toBe("UNREACHABLE");
     expect(byId(manifest, "a2a-runtime").endpoint).toBe("/api/a2a");
-    expect(byId(manifest, "a2ui-renderer").state).toBe("UNCHECKABLE");
+    expect(byId(manifest, "a2ui-renderer")).toMatchObject({
+      state: "RUNTIME_OBSERVED",
+      endpoint: "/api/a2ui",
+      summary: expect.stringContaining("Candidate"),
+    });
     expect(byId(manifest, "hf-census")).toMatchObject({
       state: "CATALOGUED",
       freshness_seconds: 86_400,
@@ -640,7 +653,7 @@ describe("GET /api/fabric", () => {
       await vi.advanceTimersByTimeAsync(3_500);
       const manifest = await pending;
 
-      expect(fetcher).toHaveBeenCalledTimes(17);
+      expect(fetcher).toHaveBeenCalledTimes(18);
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "UNREACHABLE",
         last_error: "probe timed out after 3500ms",

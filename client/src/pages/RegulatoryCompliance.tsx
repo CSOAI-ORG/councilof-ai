@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -20,7 +19,6 @@ import {
 } from 'lucide-react';
 
 export default function RegulatoryCompliance() {
-  useEffect(() => { document.title = "RegulatoryCompliance | CSOAI"; }, []);
   const frameworks = [
     {
       id: 'eu-ai-act',

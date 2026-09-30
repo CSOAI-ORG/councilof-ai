@@ -20,7 +20,7 @@ ship independently into the SovOS Games arcade.
 
 ---
 
-## Slot 1 — COUNCIL TOWN ✅ LIVE
+## Slot 1 — COUNCIL TOWN — NOT LIVE (games-catalog.ts marks it `broken: true`; corrected 29 Sep 2026)
 
 | Field | Value |
 |---|---|

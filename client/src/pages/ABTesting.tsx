@@ -1,4 +1,4 @@
-import {useState, useEffect } from "react";
+import {useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/select";
 
 export default function ABTesting() {
-  useEffect(() => { document.title = "ABTesting | CSOAI"; }, []);
   const { data: experiments, isLoading, refetch } = trpc.abTesting.getExperiments.useQuery();
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedExperimentId, setSelectedExperimentId] = useState<number | null>(null);

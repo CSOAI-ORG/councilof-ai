@@ -1,0 +1,529 @@
+{
+  "admitted_at": "2026-09-26T10:53:02Z",
+  "authority": {
+    "admitted": true,
+    "by": "scripts/admit_mill_cards.py",
+    "rule": "intake + independent reproduction (same instrument/model/bank, same counts, same grade on every item) + sign_mill_cards signature; owner-approved 2026-09-26, item-level ruling 2026-09-26"
+  },
+  "card": {
+    "accuracy": 0.6341,
+    "axis": "affect",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "file": "signed-affect-5e6aefce1662.json",
+    "id": "5e6aefce16622dbce67c4a27aa6c4d444fae88f7c138b514639b4525f8bad276",
+    "n": 41,
+    "run_id": "20260923T081219.136206Z-3d4cf8e777",
+    "subject": "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a"
+  },
+  "intake": {
+    "bundle_sha256": "4456c61d81ab79a4f9579dbe3d39351eb8bc30516bc5b74fdc1e60edd9fbba46",
+    "receipt_file": "runpod-verification-4456c61d81ab.json",
+    "receipt_sha256": "0a4990361a154d4d534dc67dce200130d5aad85cfd2ebe3a87853d04b377d955"
+  },
+  "item_evidence": {
+    "declared_by": "runtime-declaration-gemma3-12b--affect.json#f2f7964db176",
+    "per_item_cross_hardware": {
+      "differing_items": [
+        {
+          "item_id": "item-000034-9bd8ef24cf7a",
+          "rtx3090": {
+            "done_reason": "stop",
+            "grade": false,
+            "parsed_label": "DISCLOSE",
+            "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c"
+          },
+          "sequence": 34,
+          "t4": {
+            "done_reason": "stop",
+            "grade": false,
+            "parsed_label": "PROHIBITED",
+            "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881"
+          }
+        }
+      ],
+      "grade_equal": 41,
+      "n_items": 41,
+      "parsed_label_equal": 40,
+      "raw_output_equal": 40
+    },
+    "per_item_results": [
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000001-3afb872d800b",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "efcf0ad87604d9e845c77e685f1ddd7f2b7d5c332785ab6b1b7939c532183523",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 1
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000002-9bfe9fe02cc3",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "40cd44cce8a98c6d33192540e5b320c363a4b9a405f64766b7c6cf1a9883114f",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 2
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000003-60e3aa6c3316",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "188cc7db7b6d3f541962a688670c017e70ffcb263e48b22f0af2c8d890479774",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 3
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000004-1b228fad475e",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "604eb421ea4297bcb755650e2320ea113f2d8b1f89d68992b0cf20895473440b",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 4
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000005-95e2d06acf5e",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "31ab798007b6d388a9f4bd37efe587becda5218e01ff54a0caee2f671f8cab3a",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 5
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000006-5583aaeec911",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "be2d950262cfc8b06bf38d81bf34fb654634cf5b3c7f89f31787ad8b19438c9e",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 6
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000007-06283b0fe712",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "75385592bc45e66da86ea742d16679d7b39ca77d0000f3315275c0dfbae49359",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 7
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000008-7cbcacd7eddf",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "df5ff682940a38d992e917f57b7b1ed501662906e6856102dd299ecd68bde042",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 8
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000009-2ce1e3298d4b",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "95f1e4b8a096dcfc269055ad69c4d1b274edb54798ff12d39979f5d5ba5dcfec",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 9
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000010-46162efaac60",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "4c57caa19939733860e500ee252c39fc78aaf44ef4dac2a30e1ea1646c36adf9",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 10
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000011-341f70268277",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "9faffefcd70cee03ac7982fe6d8706a5bdeb7d1ebd0852b2ccb8bfb196d4a685",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 11
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000012-880361bdd8a1",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "ba6bc82346c59c61e12cbc605c6b3113bdf5a5a164cb0db1a37fa217678dc576",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 12
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000013-44580b85d32f",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "0af8b11d8d60835208b5cfd02f128b3a3b174c309bef632eeccafc95ed69af48",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 13
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000014-dd5ec4986dc0",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "d747e1581d8162a87e5e17f45b992f1bda86ddff98b384c596960901b4221229",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 14
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000015-6af6904abe61",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "784749e05b90536c1574aab7536a306550eacbd416ca437cfd6450b51d9712a9",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 15
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000016-ba023611fbcb",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "ea32d7943ba6381b16381f0bad38559dcd10a8bf5b89de77941420bcefe0a826",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 16
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000017-32b833f8e989",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "86074dad2a2eec58c8060aab6f32f991655dd49259bcd629facb9ddc5cdb70a7",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 17
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000018-26788b647f61",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "1340f55b37d4f2d664412470d3e4b16ee9e1369d000fa11f34d81249e1e76bba",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 18
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000019-4bf6a62d1397",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "bd65adc54a9232db3d1ca4d635fad11f754d2b441579afb720957eacc5a22a95",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 19
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000020-03f5c8e49f33",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "240dea6e2b2b85065a1897c96f68172b84696946fa0ff408bcc9f0390516d10d",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 20
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000021-eedf440e9d95",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "c58c5e60f407716c97bc814a239eb52209d81756169418e54d8e596fd88c1786",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 21
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000022-6b1a0ab3d70e",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "a79ba838ffaaa39e7667588f50a01be811b1e04c4c5d7bcf6b6914c2bd45bdcf",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 22
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000023-ac62709befa6",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "cab0fd99f2150b6ac4ce5e97629994634440d4de427b9b4838943c76bc94104b",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 23
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000024-65728889c3eb",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "e430fd1298b1dfeb97cd46d429a532881213d442f005af0287a995845feeb4a9",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 24
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000025-22c3a39f7214",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "74e39a4aae3fe16e891765b700d174c690009a37a4c2acd6bf1c5c89e2c4b514",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 25
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000026-b1b0a2ed21ba",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "bd0e4c8d80f069d93b75b06066bfaaad77b94a35c4c16df280935ac38fd9193b",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 26
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000027-2fbb4c4a44f6",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "97588989c632b1d5563b676375656c4a8481cc206421b8c1342e739c660839a3",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 27
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000028-f7ca24babf33",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "a591e9f92da690889dbc19693b0accd5b7410dbfe25e9c9daac2ed8186ab8d8c",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 28
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000029-7fdf1d1f4da0",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "6ddd3c8f2d266252634508a834d814c49074b56399c6eb9a1746917d5fd96f95",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 29
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000030-2d2bb554937c",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "62babf813f865949a0472e112d5e84655d2866d0a06756954588eece13a3abc6",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 30
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000031-93f0d09bbc5a",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "dcc2464a978e3c0a35eed21e4fd44fa0f1f3a3fbfe40613b7070c0d9ec116045",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 31
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000032-02f6e1dfc4b0",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "5afb761dfb023a9331df37d6836479050775c3dc4d5dd833f3b6c4ec9f90de4e",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 32
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000033-8f6b3ec2e9e1",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "37305ac67364c7d746096bd26c5dc2f43978c9f0e3e7f80b965509c72b044f08",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 33
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000034-9bd8ef24cf7a",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "38fc8dbf7f7c3dd4e3ca0f3ccaff50262849833ab39c80343438bfadd6aa67fb",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 34
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000035-832bd3d56791",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "f2699251eccec436505a83a1a2d1c658467f907e2e3da26938c1e7f28efa7f58",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 35
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000036-4a2472f9641d",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "97e649e959d7ad8ed28bcbbba2e4b369f17a83ba21f29956599ed0812435311f",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 36
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000037-309eb49b47e8",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "3aa74084a39ad597b36d483d2f7f785fee020870f5bf66ecbe49b0a7406ec3dd",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 37
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000038-60d6a0efa2c1",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "22619db14bfc3ec61e6342ea0732c64b5619db69d5196797c019d173d57f83e8",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 38
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000039-ddb54ac870ce",
+        "parsed_label": "PROHIBITED",
+        "prompt_sha256": "a63eee8ccd79f9edcca564cfd714bf1c57c5ec0032f9a6e0107b5ec86a149aae",
+        "raw_output_sha256": "aa3b4c8e61087a4214bb8772d010668b0f17a65daf7421e789edf292cd5d5881",
+        "sequence": 39
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000040-5ee661e6c5a0",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "498a6b77d0de1574d700e3528df3a76bcd58559ebb985d08b2db9234b1d7c4ab",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 40
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000041-b0b1326e082a",
+        "parsed_label": "DISCLOSE",
+        "prompt_sha256": "fe3a6aceb866dd66aa91e1d322fe1d0237f3b0a678d301de7063966490df0ca9",
+        "raw_output_sha256": "527317c46674fbf564fac2056d227690f6ebe69fef6809a20b85e711ba56321c",
+        "sequence": 41
+      }
+    ],
+    "per_item_results_sha256": "25e46bb8aa5152c479b2000d69137018c8e4a063865cf1c82e46a061b34c47ca"
+  },
+  "item_parity": {
+    "grade_differs": [],
+    "grade_equal": 41,
+    "n_items": 41,
+    "non_grade_differs": [
+      {
+        "fields": [
+          "raw_output_sha256",
+          "parsed_label"
+        ],
+        "item_id": "item-000034-9bd8ef24cf7a"
+      }
+    ],
+    "primary_items_from": "declared differing_items over the reproduction's per_item_results"
+  },
+  "matched": {
+    "accuracy": 0.6341,
+    "bank_sha256": "c64a5986bf807127c047344178262fade96dfaf856f555aa8bc1b79e0cee252a",
+    "counts": {
+      "attempted": 41,
+      "bank_items": 41,
+      "correct": 26,
+      "graded_n": 41,
+      "parse_errors_excluded": 0,
+      "transport_errors_excluded": 0,
+      "transport_ok": 41
+    },
+    "instrument_sha256": "40a9038c922faf58304ecea2fc43c5f0fcc9376d2159cd2ac3f233d7a2167985",
+    "model_manifest_digest": "sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a"
+  },
+  "primary_runtime": {
+    "declared_by": [
+      "runtime-declaration-gemma3-12b--affect.json#f2f7964db176"
+    ],
+    "runtime_id": "RunPod RTX 3090 pod fpowppss5ngtkw"
+  },
+  "reproduction": {
+    "card_body": {
+      "accuracy": 0.6341,
+      "axis": "affect",
+      "brand": "Council of AI",
+      "compute_evidence": {
+        "bank_sha256": "c64a5986bf807127c047344178262fade96dfaf856f555aa8bc1b79e0cee252a",
+        "instrument_sha256": "40a9038c922faf58304ecea2fc43c5f0fcc9376d2159cd2ac3f233d7a2167985",
+        "items_sha256": "32b9b92cc9348a3e4c0149e91afaff3ba23b47b2e9f4fb7ecab9623249b97dca",
+        "model_manifest_digest": "sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+        "parse_errors_excluded": 0,
+        "run_id": "20260926T094531.128018Z-c631c13959",
+        "transport_errors_excluded": 0
+      },
+      "issuer": "CSOAI Ltd",
+      "kind": "gspc.measurement-card",
+      "model": "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+      "n": 41,
+      "public_framing": "Measurement, not certification. Empty is not zero.",
+      "status": "UNMEASURED",
+      "unmeasured": [
+        "unsigned compute output; admission and verification required"
+      ],
+      "verify": "https://councilof.ai/gspc-verify"
+    },
+    "declared_by": [
+      "runtime-declaration-gemma3-12b--affect.json#f2f7964db176"
+    ],
+    "receipt": {
+      "accuracy": 0.6341,
+      "authority": {
+        "admitted": false,
+        "anchored": false,
+        "hf_identity_claimed": false,
+        "published": false,
+        "signed": false
+      },
+      "axis": "affect",
+      "bank_sha256": "c64a5986bf807127c047344178262fade96dfaf856f555aa8bc1b79e0cee252a",
+      "bundle_sha256": "086294aa81e99b753aed3eca2ee307986920b9d9bdeb5d4f2631e8eb93c3537a",
+      "candidate_file": "candidate.json",
+      "counts": {
+        "attempted": 41,
+        "bank_items": 41,
+        "correct": 26,
+        "graded_n": 41,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 41
+      },
+      "model_manifest_digest": "sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+      "review": "human/GHA review required; this bundle is not mill input",
+      "run_id": "20260926T094531.128018Z-c631c13959",
+      "schema": "csoai.runpod-gspc-intake-verification/0.1",
+      "source_hashes": {
+        "bank_allowlist_sha256": "5f1a499b9224fe57c47d01d68a92632f37b3421061ef56bb1aaef56b6de6ad59",
+        "card_file_sha256": "51ad183951a704ee9b48d517eadcb70a9553ffa5e942c2fc10a9eadda9e120db",
+        "card_id": "005095b7274a4e7ca0f1ea7bb1eb221114083de4663f69a2c1b175e199046e9b",
+        "card_sha256": "9ca8e56f80ccb4354f97b670cf44b211fa2b5feaef1cdd7705b771e2fe115b84",
+        "items_sha256": "32b9b92cc9348a3e4c0149e91afaff3ba23b47b2e9f4fb7ecab9623249b97dca",
+        "run_sha256": "ce1cf0e3987754438cad2e73348283b88989b8263bc62ebda583028ed276cb7a"
+      },
+      "state": "VERIFIED_QUARANTINE",
+      "subject": "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a",
+      "verified_at": "2026-09-26T10:29:05.503467Z"
+    },
+    "run_id": "20260926T094531.128018Z-c631c13959",
+    "runtime_id": "Kaggle kernel nicktempleman/csoai-mill-kaggle-b2a-20260926 v1 (private, Batch, 2xT4)"
+  },
+  "schema": "csoai.mill-admission/0.1",
+  "state": "ADMITTED"
+}

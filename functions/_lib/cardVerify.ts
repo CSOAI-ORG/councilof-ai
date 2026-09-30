@@ -41,6 +41,18 @@ export const CARD_ATTESTATION_HEX =
   "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38";
 
 /**
+ * The card key added on rotation (27 Sep 2026, commit 8325539dd): published in did.json as a
+ * verificationMethod and assertionMethod beside #card-attestation-1, which is NOT revoked and still
+ * anchors the cards of the signed card index. The private half of #card-attestation-1 is held on no
+ * automation host, so a card signed from now on is signed under this key and names it by DID.
+ * Until 2026-09-28 it was missing from this pin set, so such a card came back UNCHECKABLE
+ * (key_not_pinned) while the verify_card tool description named only #card-attestation-1.
+ */
+export const CARD_ATTESTATION_2_KID = "did:web:csoai.org#card-attestation-2";
+export const CARD_ATTESTATION_2_HEX =
+  "2cfab90cdb6cbb059bf931c6517ac9ff410937d4185280083bafbdf29b61bbba";
+
+/**
  * PINNED TRUST ANCHORS — the deciding anchor set, fixed in this verifier's source.
  *
  * These are the Ed25519 verification methods published in the did:web:csoai.org DID
@@ -64,6 +76,7 @@ export const PINNED_ANCHORS: Anchor[] = [
   { id: "did:web:csoai.org#estate-chain-1", hex: "33472e026871db20cdbd99e76c47532ebfcf84b37abed5b260dae3589df5696d" },
   { id: "did:web:csoai.org#board-attestation-1", hex: "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170" },
   { id: CARD_ATTESTATION_KID, hex: CARD_ATTESTATION_HEX },
+  { id: CARD_ATTESTATION_2_KID, hex: CARD_ATTESTATION_2_HEX },
 ];
 
 /** Resolve a DID-keyed card only against the verifier's offline pin set. */
@@ -285,7 +298,7 @@ async function ed25519Verify(
 
 /* -------------------------------------------------------------------- verdict */
 
-export type CheckOk = boolean | null; // null = not applicable to this family
+export type CheckOk = boolean | null; // null = not applicable to this family, or not run (detail says UNCHECKED)
 
 export interface CardCheck {
   label: string;
@@ -293,6 +306,11 @@ export interface CardCheck {
   detail: string;
   /** Machine-readable code, stable across wording changes. */
   code: string;
+  /**
+   * true = this row reports a real check whose result is shown in `ok` but which never decides the
+   * verdict (the live did.json cross-check: the pinned anchor set decides). Excluded from `valid`.
+   */
+  advisory?: boolean;
 }
 
 export interface CardVerdict {
@@ -642,15 +660,18 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
           `can mint one. The signature check below is reported separately.`,
       });
     }
-    // Live did.json cross-check — informational only (ok: null), stated as such. A
-    // disagreement is worth surfacing (key rotation, or a tampered live document),
-    // but the pinned set above already decided.
+    // Live did.json cross-check — ADVISORY: it reports its own result but never decides the
+    // verdict (the pinned set above did). `ok` states what the cross-check found: true = the live
+    // document agrees with the pin, false = it has drifted, null = it did not run (and the detail
+    // then says UNCHECKED). Until 2026-09-26 this row said ok:null while its detail read "agrees",
+    // so a machine reader saw "not checked" for a check that had run and passed.
     if (anchors.length > 0) {
       const liveHit = anchors.find((a) => a.hex === keyHex);
       const agrees = !!liveHit === !!pinnedHit;
       checks.push({
         label: "Live anchor cross-check",
-        ok: null,
+        ok: agrees,
+        advisory: true,
         code: agrees ? "live_anchor_agrees" : "live_anchor_disagrees",
         detail: agrees
           ? "The live did.json agrees with the pinned anchor set for this key. Cross-check only — the pinned set decided."
@@ -663,9 +684,10 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
       checks.push({
         label: "Live anchor cross-check",
         ok: null,
+        advisory: true,
         code: "live_anchor_unavailable",
         detail:
-          "did.json was not consulted or could not be fetched. The verdict is unaffected: the trust " +
+          "UNCHECKED — did.json was not consulted or could not be fetched. The verdict is unaffected: the trust " +
           "anchor is pinned in this verifier's source, and the live document is only ever a cross-check.",
       });
     }
@@ -719,7 +741,8 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
     }
   }
 
-  const valid = reasons.length === 0 && checks.every((c) => c.ok !== false);
+  // Advisory rows (the live-anchor cross-check) report a result but never decide the verdict.
+  const valid = reasons.length === 0 && checks.every((c) => c.ok !== false || c.advisory === true);
   const framing = (rec as { body?: { public_framing?: unknown } })?.body?.public_framing;
   if (typeof framing === "string") {
     checks.push({

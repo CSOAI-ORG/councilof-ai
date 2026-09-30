@@ -76,7 +76,7 @@ async function readChallenge(url: string, signal: AbortSignal): Promise<{ x402Ve
 }
 
 const Code = ({ children }: { children: string }) => (
-  <pre className="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100">
+  <pre tabIndex={0} role="region" aria-label="Scrollable code example" className="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-950 p-4 text-xs leading-6 text-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400">
     <code>{children}</code>
   </pre>
 );
@@ -93,18 +93,25 @@ function pathOf(url: string): string {
 export default function Quickstart() {
   const [manifest, setManifest] = useState<Manifest | null | undefined>(undefined);
   const [challenge, setChallenge] = useState<{ x402Version?: number; accepts?: Accept[] } | null | undefined>(undefined);
+  const [manifestAttempt, setManifestAttempt] = useState(0);
+  const [challengeAttempt, setChallengeAttempt] = useState(0);
 
   useEffect(() => {
     const c = new AbortController();
+    setManifest(undefined);
     void (async () => {
       const m = (await readJson(MANIFEST, c.signal)) as Manifest | null;
       setManifest(m && Array.isArray(m.resources) ? m : null);
     })();
-    void (async () => {
-      setChallenge(await readChallenge(EXAMPLE_DOOR, c.signal));
-    })();
     return () => c.abort();
-  }, []);
+  }, [manifestAttempt]);
+
+  useEffect(() => {
+    const c = new AbortController();
+    setChallenge(undefined);
+    void (async () => setChallenge(await readChallenge(EXAMPLE_DOOR, c.signal)))();
+    return () => c.abort();
+  }, [challengeAttempt]);
 
   const resources = manifest?.resources ?? [];
   const liveAccept = challenge?.accepts?.[0];
@@ -196,8 +203,8 @@ curl -s https://councilof.ai/interop/root-witness-pointer.json | jq '.witnesses'
         <Code>{`# MCP (Streamable HTTP) — tools/list needs no wallet
 curl -s -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
   -X POST ${mcpUrl} -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'`}</Code>
-        {manifest === undefined && <p className="mt-3 text-sm text-slate-500">Reading the live manifest…</p>}
-        {manifest === null && <p className="mt-3 text-sm text-amber-700">The manifest did not load in this browser. The command above reads it directly.</p>}
+        {manifest === undefined && <p role="status" className="mt-3 text-sm text-slate-500">Reading the manifest…</p>}
+        {manifest === null && <><p role="status" className="mt-3 text-sm text-amber-700">The manifest could not be read. Resource availability is unknown; the command above remains available.</p><button type="button" className="mt-3 min-h-11 rounded border border-slate-400 px-4 text-sm underline focus-visible:outline focus-visible:outline-2" onClick={() => setManifestAttempt(n => n + 1)}>Retry manifest read</button></>}
         {resources.length > 0 && (
           <ul className="mt-4 divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white text-sm">
             {resources.map((r) => (
@@ -309,7 +316,8 @@ jq '{x402Version, accepts: [.accepts[] | {scheme, network, asset, payTo, amount,
             </code>
           </p>
         )}
-        {challenge === null && <p className="mt-3 text-sm text-amber-700">The live 402 did not load in this browser. The command above reads it directly.</p>}
+        {challenge === undefined && <p role="status" className="mt-3 text-sm text-slate-500">Reading the 402 preview…</p>}
+        {challenge === null && <><p role="status" className="mt-3 text-sm text-amber-700">No supported 402 preview could be read. The amount is unknown; this is not a zero-price offer or a payment.</p><button type="button" className="mt-3 min-h-11 rounded border border-slate-400 px-4 text-sm underline focus-visible:outline focus-visible:outline-2" onClick={() => setChallengeAttempt(n => n + 1)}>Retry 402 preview</button></>}
         <Code>{`# check the signed offer offline (needs: pip install cryptography)
 curl --fail --silent --show-error --proto '=https' --output verify_receipt.py https://councilof.ai/verifier/verify_receipt.py
 # Source-parity manifest and dependency instructions: https://councilof.ai/verifier/receipt-toolkit.md
@@ -398,7 +406,7 @@ x-payment-response: <base64 settlement response>
 curl -s https://csoai.org/.well-known/did.json -o did.json
 node card-v0-verify.mjs receipt.json did.json            # your paid receipt
 # try it now on a published leaf:
-curl -s https://councilof.ai/cards/090963760060e3ee.json -o leaf.json
+curl -sL https://councilof.ai/cards/090963760060e3ee.json -o leaf.json
 node card-v0-verify.mjs leaf.json did.json
 # observed: VALID  payload signed by did:web:csoai.org#board-attestation-1 · sha256 …   (exit 0; a changed byte gives INVALID, exit 1)`}</Code>
         <Code>{`# the measurement cards the receipt references (payload.reserve[].card) verify with the card verifier

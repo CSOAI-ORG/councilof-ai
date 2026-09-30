@@ -138,7 +138,8 @@ function HarnessDoor() {
           typeof j?.census?.n_unique_ids === "number"
             ? Number(j.census.n_unique_ids).toLocaleString("en-GB")
             : "see digest";
-        const graded = typeof j?.census?.n_measured === "number" ? String(j.census.n_measured) : "0";
+        // Absent is UNCHECKABLE, never a typed "0" (a zero here would be an invented measurement).
+        const graded = typeof j?.census?.n_measured === "number" ? String(j.census.n_measured) : "UNCHECKABLE";
         setLane({
           status: "ready",
           agui: String(j?.agui?.status || "unconfigured"),
@@ -282,6 +283,11 @@ function HarnessDoor() {
         <div className="mt-3">
           <GspcStreamCard />
         </div>
+        <p className="mt-3 text-xs text-slate-600" data-testid="a2ui-surface-note">
+          Renderer lane: <a className="font-medium underline" href="/api/a2ui">GET /api/a2ui</a> describes the
+          A2UI v1.0 Candidate projection; <a className="font-medium underline" href="/api/a2ui/gspc">GET /api/a2ui/gspc</a>
+          carries the same living GSPC source as NDJSON. Candidate protocol support, not certification.
+        </p>
         <p className="mt-3 text-xs text-slate-600" data-testid="w3c-agent-conformance-draft">
           Draft opening only:{" "}
           <a
@@ -441,8 +447,8 @@ function SwiftX402Door() {
             · assembly · amount at 402
           </li>
           <li>
-            <a className="font-semibold text-emerald-800 underline" href="/api/eunomia-data?feed=1">
-              /api/eunomia-data?feed=1
+            <a className="font-semibold text-emerald-800 underline" href="/api/signed-data-feed?feed=1">
+              /api/signed-data-feed?feed=1
             </a>{" "}
             · assembly · amount at 402
           </li>

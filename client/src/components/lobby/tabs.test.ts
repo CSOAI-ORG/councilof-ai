@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  DASHBOARD_NAV_GROUPS,
   DASHBOARD_TABS,
+  dashboardNavGroupOf,
   DEFAULT_TAB,
   isDashboardTab,
   isDocumentFrame,
@@ -228,41 +230,65 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
 
-  it("gives the canonical dashboard one curated permanent rail", () => {
+  it("gives the canonical dashboard seven plainly named sections", () => {
+    // ux-unify, 27 Sep 2026: at most seven sidebar sections; Verify + Evidence pack +
+    // Evidence index are ONE section, and the old pill strip (arena, learn, games, tools)
+    // lives inside sections rather than beside them.
+    expect(DASHBOARD_NAV_GROUPS.map((g) => g.label)).toEqual([
+      "Ask",
+      "Scores",
+      "Verify & evidence",
+      "Arena & learning",
+      "Tools & connections",
+      "Standards & watchdog",
+      "Request a measurement",
+    ]);
+    expect(DASHBOARD_NAV_GROUPS.length).toBeLessThanOrEqual(7);
+    for (const g of DASHBOARD_NAV_GROUPS) {
+      expect(g.tabs.length, `${g.id} resolves every member`).toBeGreaterThan(0);
+      expect(g.description.length).toBeGreaterThan(20);
+    }
+    const verify = DASHBOARD_NAV_GROUPS.find((g) => g.id === "verify")!;
+    expect(verify.tabs.map((t) => t.id)).toEqual(["verify", "evidence", "evidence-index"]);
+
     const ids = DASHBOARD_TABS.map((t) => t.id);
     expect(ids).toEqual([
       "home",
-      "measured",
-      "verify",
       "board",
-      "evidence-index",
-      "swift",
+      "results",
+      "models",
+      "matrix",
+      "verify",
       "evidence",
-      "tools",
+      "evidence-index",
+      "space",
       "learn",
-      "watchdog",
-      "standards",
+      "play",
+      "tools",
       "fabric",
+      "swift",
+      "explore",
+      "standards",
+      "watchdog",
+      "measured",
     ]);
-    expect(DASHBOARD_TABS.map((t) => t.label)).toEqual([
-      "Ask",
-      "Requests",
-      "Verify",
-      "GSPC board",
-      "Evidence index",
-      "SWIFT · x402",
-      "Evidence",
-      "Improve",
-      "Learning",
-      "Watchdog",
-      "Standards",
-      "Connections",
-    ]);
+    // Every pane the old rail and the old pill strip reached still has a section.
+    for (const id of [
+      "home", "measured", "verify", "board", "evidence-index", "swift", "evidence",
+      "tools", "learn", "watchdog", "standards", "fabric", "space", "play",
+    ])
+      expect(ids).toContain(id);
+    expect(new Set(ids).size).toBe(ids.length);
     expect(
       LOBBY_TABS.filter(isDashboardTab)
         .map((t) => t.id)
         .sort(),
     ).toEqual([...ids].sort());
+  });
+
+  it("files every pane outside a section under one for its title", () => {
+    for (const id of ["cards", "state", "archive", "attestations", "embed", "harness", "art50"])
+      expect(dashboardNavGroupOf(id), id).not.toBeNull();
   });
 });
 

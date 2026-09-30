@@ -4,12 +4,10 @@
  */
 
 import { useState } from "react";
-import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   Shield,
   AlertTriangle,
@@ -31,18 +29,12 @@ import { Link } from "wouter";
 export default function PublicDashboard() {
   const [selectedFramework, setSelectedFramework] = useState<string>("all");
 
-  // Fetch public statistics
-  const { data: recentReports } = trpc.watchdog.list.useQuery();
-
-  // Calculate watchdog stats from reports
-  const watchdogStats = {
-    total: recentReports?.length || 0,
-    verified: recentReports?.filter(r => r.status === "resolved").length || 0,
-  };
-
-  // Calculate aggregate stats
-  const totalIncidents = watchdogStats?.total || 0;
-  const resolvedIncidents = watchdogStats?.verified || 0;
+  // This page used to call trpc.watchdog.list, a procedure no deployed endpoint serves: every
+  // visit fired GET /api/trpc/watchdog.list and got a 404, and the `|| 0` fallback then printed
+  // "0 incidents / 0 resolved" as if a count had been read. No public incident list is
+  // published, so the honest value is unread, not zero. The call is gone; the tiles say so.
+  const totalIncidents: number | null = null;
+  const resolvedIncidents: number | null = null;
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950">
       {/* Header */}
@@ -55,22 +47,17 @@ export default function PublicDashboard() {
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-white">CSOAI</h1>
+                  <p className="text-xl font-bold text-white">CSOAI</p>
                   <p className="text-xs text-zinc-400">Public Transparency Dashboard</p>
                 </div>
               </div>
             </Link>
             <div className="flex items-center gap-4">
-              <Link href="/watchdog">
-                <a href="/watchdog" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
+              <Link href="/dashboard/?tab=watchdog">
+                <a href="/dashboard/?tab=watchdog" className="border-zinc-700 text-zinc-300 hover:bg-zinc-800">
                   <AlertTriangle className="w-4 h-4 mr-2" />
                   Report Incident
                 </a>
-              </Link>
-              <Link href="/login">
-                <Button className="bg-gradient-to-r from-emerald-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500">
-                  Sign In
-                </Button>
               </Link>
             </div>
           </div>
@@ -107,7 +94,8 @@ export default function PublicDashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-zinc-400">Incidents Reported</p>
-                    <p className="text-3xl font-bold text-white">{totalIncidents}</p>
+                    <p className="text-3xl font-bold text-white">{totalIncidents ?? "—"}</p>
+                    {totalIncidents === null ? <p className="text-xs text-zinc-400">No public incident list is published</p> : null}
                   </div>
                 </div>
               </CardContent>
@@ -121,7 +109,8 @@ export default function PublicDashboard() {
                   </div>
                   <div>
                     <p className="text-sm text-zinc-400">Resolved</p>
-                    <p className="text-3xl font-bold text-white">{resolvedIncidents}</p>
+                    <p className="text-3xl font-bold text-white">{resolvedIncidents ?? "—"}</p>
+                    {resolvedIncidents === null ? <p className="text-xs text-zinc-400">No public incident list is published</p> : null}
                   </div>
                 </div>
               </CardContent>
@@ -163,14 +152,16 @@ export default function PublicDashboard() {
         <div className="container mx-auto">
           <Card className="bg-zinc-900/50 border-zinc-800">
             <CardHeader>
-              <CardTitle className="text-white">Compliance Frameworks</CardTitle>
+              <CardTitle className="text-white">Reference frameworks</CardTitle>
               <CardDescription className="text-zinc-400">
-                Monitor compliance across major AI safety frameworks
+                We measure; we do not certify, and we publish no compliance score. No per-article,
+                per-requirement or per-clause percentage has been measured for any framework below,
+                so none is shown (UNMEASURED).
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs value={selectedFramework} onValueChange={setSelectedFramework}>
-                <TabsList className="bg-zinc-800">
+                <TabsList className="bg-zinc-800 text-zinc-300">
                   <TabsTrigger value="all">All</TabsTrigger>
                   <TabsTrigger value="euai">EU AI Act</TabsTrigger>
                   <TabsTrigger value="nist">NIST AI RMF</TabsTrigger>
@@ -183,24 +174,21 @@ export default function PublicDashboard() {
                         <Globe className="h-5 w-5 text-blue-400" />
                         <span className="font-medium text-white">EU AI Act</span>
                       </div>
-                      <p className="text-sm text-zinc-400">113 articles, 88% compliance</p>
-                      <Progress value={88} className="mt-2 h-2" />
+                      <p className="text-sm text-zinc-400">Crosswalked in /crosswalk/east-west-v1.json. No compliance score measured (UNMEASURED).</p>
                     </div>
                     <div className="p-4 bg-zinc-800/50 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <Building2 className="h-5 w-5 text-green-400" />
                         <span className="font-medium text-white">NIST AI RMF</span>
                       </div>
-                      <p className="text-sm text-zinc-400">72 requirements, 92% compliance</p>
-                      <Progress value={92} className="mt-2 h-2" />
+                      <p className="text-sm text-zinc-400">Reference framework, no crosswalk measured (UNMEASURED).</p>
                     </div>
                     <div className="p-4 bg-zinc-800/50 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
                         <FileText className="h-5 w-5 text-purple-400" />
                         <span className="font-medium text-white">ISO 42001</span>
                       </div>
-                      <p className="text-sm text-zinc-400">10 clauses, 85% compliance</p>
-                      <Progress value={85} className="mt-2 h-2" />
+                      <p className="text-sm text-zinc-400">Reference framework, no crosswalk measured (UNMEASURED).</p>
                     </div>
                   </div>
                 </TabsContent>
@@ -226,7 +214,7 @@ export default function PublicDashboard() {
               </Button>
             </Link>
             <Link href="/about">
-              <Button size="lg" variant="outline" className="border-zinc-700 text-zinc-300">
+              <Button size="lg" variant="outline" className="border-zinc-700 bg-transparent text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100">
                 Learn More
               </Button>
             </Link>

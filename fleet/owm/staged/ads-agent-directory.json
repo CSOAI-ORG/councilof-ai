@@ -1,0 +1,67 @@
+{
+  "schema": "csoai.owm-staged-source/0.1",
+  "enabled": false,
+  "why_off": "Staged by lane agntcy-catalog-20260928. OFF by default: owm.py reads fleet/owm/owm-registry.json only, and nothing below is in it. Turning it on is an integrator step after the owner OK on naming a third-party directory in internal state; the OWM public snapshot must never carry per-agent rows.",
+  "enable_steps": [
+    "1. Land lane/agntcy-catalog-20260928 (scripts/census/ads-snapshot.py, ads-parity.py, ads-weekly.sh).",
+    "2. On the lanes pod: install the job.cron line below (flock on /workspace/locks/lanes-heavy.lock; the script skips when under 2 GB free).",
+    "3. Append subject below to fleet/owm/owm-registry.json subjects[] and job below to fleet/automation/JOBS.json; re-run fleet/owm/test_owm.py."
+  ],
+  "subject": {
+    "id": "obs:agent-directory-parity",
+    "label": "agent-directory listing: verbatim snapshot and record-vs-locator parity (weekly)",
+    "kind": "capture",
+    "claim": "The newest parity aggregate was built from the newest verbatim snapshot of the agent-directory listing, and that snapshot read the whole listing (unique records equal the declared total of the listing).",
+    "schedule_job": "ads-parity-weekly",
+    "sources": [
+      {
+        "id": "ads-snapshot",
+        "type": "local_json",
+        "label": "newest verbatim ARD snapshot manifest (copied from the pod; a few KB)",
+        "path": "~/lanes/state/ads/MANIFEST.json",
+        "max_age_s": 1209600,
+        "fields": {
+          "snapshot_sha256": "records_jsonl_sha256",
+          "declared_total": "totalCount_seen",
+          "unique_records": "unique_records"
+        }
+      },
+      {
+        "id": "ads-aggregate",
+        "type": "local_json",
+        "label": "newest parity aggregate (counts only; names no agent, server or company)",
+        "path": "~/lanes/state/ads/aggregate.json",
+        "max_age_s": 1209600,
+        "fields": {
+          "snapshot_sha256": "snapshot.records_jsonl_sha256",
+          "declared_total": "snapshot.declared_total",
+          "unique_records": "snapshot.unique_records"
+        }
+      }
+    ]
+  },
+  "job": {
+    "id": "ads-parity-weekly",
+    "host": "lanes pod (the snapshot is about 150 MB: not Oracle, not the Mac)",
+    "cron": "30 3 * * 2 flock -n /workspace/locks/lanes-heavy.lock timeout 5400 bash /root/lanes-clones/agntcy-catalog-20260928/scripts/census/ads-weekly.sh",
+    "why_tuesday": "the directory import runs Mondays 00:00Z (agntcy/dir .github/workflows/import-records.yaml, cron 0 0 * * 1); Tuesday reads the settled listing",
+    "outputs_to_oracle": ["MANIFEST.json", "aggregate.json"],
+    "enabled": false
+  },
+  "claim_watch_subject_source": {
+    "id": "ads:ard-listing",
+    "enabled": false,
+    "type": "ard_listing",
+    "listing": "https://ai-catalog.outshift.io/v1/agents",
+    "read": {"page_size": 100, "max_requests_per_s": 1, "user_agent": "CSOAI-census/0.1 (+https://councilof.ai/census)", "auth": "none"},
+    "subjects": "one per record CID; identity = CID (content address), so a changed record is a new subject, never an edit",
+    "change_events": [
+      "ADDED: a CID in this snapshot and not in the previous one",
+      "REMOVED: a CID in the previous snapshot and not in this one",
+      "DECLARED_VERSION_CHANGED: same MCP server name, a new CID with another declared version",
+      "TRUST_LABEL_CHANGED: agntcy.dir.trust.v1.Status {trusted, verified} differs for the same CID",
+      "LOCATOR_STATE_CHANGED: an ads-parity check state differs for the same CID and locator"
+    ],
+    "publication": "HELD: events name third parties; internal state only until the owner gives a per-company OK"
+  }
+}

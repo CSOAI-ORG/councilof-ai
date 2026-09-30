@@ -1,0 +1,5472 @@
+{
+  "schema": "csoai.cross-ledger-supply/0.2",
+  "family": "csoai.cross-ledger-supply (0.1 = USDC pilot; 0.2 adds products, issuer_reported, reconciliation)",
+  "status": "measured read; signature and timestamp are sidecar files",
+  "writes_board": false,
+  "kind": "deterministic-facts (per-read evidence labelled; see evidence_kind_legend)",
+  "asset_key": "benji",
+  "asset": "BENJI",
+  "issuer": "Franklin Templeton",
+  "question": "Is BENJI the same thing on every ledger Franklin Templeton's own contracts page says it lives on, and how much does each ledger's state say is issued?",
+  "as_of": "2026-09-25T11:12:21Z",
+  "started_at": "2026-09-25T11:12:21Z",
+  "finished_at": "2026-09-25T11:17:43Z",
+  "reader": "scripts/readers/cross_ledger_funds.py",
+  "registry": "scripts/readers/cross_ledger_assets.json",
+  "registry_sha256": "36a8b3afee928b71418e04c4066a2940fdb30d80415fb1939636e01ceecd23dd",
+  "issuer_list_evidence": {
+    "page": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+    "url": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+    "fetched_at": "2026-09-25T11:12:21Z",
+    "http_status": 200,
+    "final_url": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+    "sha256": "448cd47616700a7cc1751b5d99c2be9b65b328fce8fd4884a8b7dbb42f6094b9",
+    "bytes": 136317,
+    "parser": "labelled_role_blocks",
+    "method": "server-rendered HTML; tags stripped to lines; each '<PRODUCT> (<Ledger>)' header followed by role/identifier pairs; the 'Fund Token' identifier is the deployment",
+    "state": "READ",
+    "deployments_parsed": 13
+  },
+  "issuer_list_rows": [
+    {
+      "product": "BENJI",
+      "label": "Stellar",
+      "header_line": "BENJI (Stellar)",
+      "identifier": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "modules": {},
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Polygon",
+      "header_line": "BENJI (Polygon)",
+      "identifier": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+      "modules": {
+        "Registry Module": "0xC8CFAC89e292A6486775fb86f789612Bcc692C7d",
+        "Token Registry": "0xb0bfE43Cdd483bF0062c216a4708B18Ab741Ba16",
+        "Authorization Module": "0x026d556aCCe6e9599CA6D85cd034f663F0FFE2BD",
+        "Transactional Module": "0x9119EaD895210d841cB4F556248A3cc054294fB0",
+        "Transfer Agent Module": "0x72254A323775123BA500b00CaCf3662367Ef52fa",
+        "Intent Validation Module": "0xd89A872ED716533dB70f1dF33651645C78a185e6",
+        "MultiSig Module": "0xC7dceF14F78d2bFD324365FF38E803c1F5578F3e"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Arbitrum",
+      "header_line": "BENJI (Arbitrum)",
+      "identifier": "0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+      "modules": {
+        "Registry Module": "0xCB788286abCa7b681FeB056877B62c778f0A37df",
+        "Token Registry Module": "0x32338b38A0b370F221258753c48F07C5Cd89CA68",
+        "Authorization Module": "0xB1eF38B2Ef8FFcfFa70E41afad175e7BaE15f517",
+        "Transactional Module": "0x9C012931e13F2546d64B75401fDF7EEc6B651CBD",
+        "Transfer Agent Module": "0x3A1540808757b7D9813de9843A9fb4b580844745",
+        "Intent Validation Module": "0x8564efe0555f1AEFbe492A27bbffE75E5A593A15",
+        "MultiSig Module": "0x9f7Ecd1186B092A4C0C71cE0200Fda3c7196854b"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Avalanche",
+      "header_line": "BENJI (Avalanche)",
+      "identifier": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+      "modules": {
+        "Registry Module": "0x5Bb59a51E1C469537eEAB04af6B44C2e980fBa5c",
+        "Token Registry Module": "0x41766EF57bd228E214200A527283d7C53b73C729",
+        "Authorization Module": "0xdf67bF51f121297FCAD7a65ccC98579b43aC6C56",
+        "Transactional Module": "0x9AC1580474DA8C725735555036ebac9d486E47f3",
+        "Transfer Agent Module": "0xf208FF7C8aA13a3bF79b56146aAFe81e1Ca27044",
+        "Intent Validation Module": "0x7A7EEE7f40A6dD8784F4b4F7f47d73F886aa2682",
+        "MultiSig Module": "0x72fa8846C8D6750e1EA5f28E2ec4a75C838117E3"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Aptos",
+      "header_line": "BENJI (Aptos)",
+      "identifier": "0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+      "modules": {
+        "Authorization Module": "0x4705f33d665762a5371d3b8786e63749814e749295ea73269b379c84b756d83a",
+        "Transfer Agent and Transaction Management Module": "0xe10898758351ac7d32835ca8f7ef75a31232d210a1ba9cb628f85aef8a6f8eb6",
+        "MultiSig and Access Control Module": "0x15b4c718c7aa8ee06ab6593600cdaca04e07777dab7b0e1a7edb2a6cc14f757c"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Ethereum",
+      "header_line": "BENJI (Ethereum)",
+      "identifier": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+      "modules": {
+        "Registry Module": "0xD7644d80575678C027CED844bbeEF5Ad12277d40",
+        "Token Registry Module": "0x14DD78f8Ca45231dCe301AdEae179dcbEE40427E",
+        "Authorization Module": "0x55dd370DeDe1AD474d3543Be06452615d3B5b162",
+        "Transactional Module": "0x648a6e41B4e445506b848cE49FfEF827651ab4f5",
+        "Transfer Agent Module": "0x8C8Bfc3151C2161a4baD77268e246A08e5D9c666",
+        "Intent Validation Module": "0xBA5314385d4A849f8D8dBFb867b67547683F8a93",
+        "MultiSig Module": "0xA2Bd91Fb0c8258134706629edf7464C14bAB8b66"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Base",
+      "header_line": "BENJI (Base)",
+      "identifier": "0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+      "modules": {
+        "Registry Module": "0x59Ecee0Bb35a5355B0940280Ca195Cbc49E148BE",
+        "Token Registry Module": "0xd5436c2db02474d57e3327e4a4d844f8590c97d9",
+        "Authorization Module": "0x0a18C08Dc0063E0d02a01675d782c119e8922FCF",
+        "Transactional Module": "0x5Ba6b6701266b17427C120D87Dcb8cB82C07F8F1",
+        "Transfer Agent Module": "0x095D7B0210C8347C6e080b52b8c3444297f9b27b",
+        "Intent Validation Module": "0x42CC64C2c8f7AD649C83761666Fb415B6e467226",
+        "MultiSig Module": "0x8D5fd7549609116C2435BE021CEF928041618F44"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "BENJI",
+      "label": "Solana",
+      "header_line": "BENJI (Solana)",
+      "identifier": "5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1",
+      "modules": {
+        "MultiSig Module": "sig1in5E29ExXFMNHUCeCCCZsDs6hqAsumidwDTgkr5",
+        "MultiChain Module": "chn2eSrribmaDfGZF74aZRwrJBKoGqQiuUGwfGei8aP"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "gBENJI",
+      "label": "Stellar",
+      "header_line": "gBENJI (Stellar)",
+      "identifier": "GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+      "modules": {},
+      "in_page_bytes": true
+    },
+    {
+      "product": "iBENJI",
+      "label": "Ethereum",
+      "header_line": "iBENJI (Ethereum)",
+      "identifier": "0x90276e9d4a023b5229e0c2e9d4b2a83fe3a2b48c",
+      "modules": {
+        "Registry Module": "0xf70e2726C60644aD6EFe87289c2dF830f39D34F7",
+        "Token Registry Module": "0x950fAE11DDdb4A10368cc4E4Fd93386A587e23Ba",
+        "Authorization Module": "0x12aBfF8Dca2d09D99019dFCC9bf07539a8264066",
+        "Transactional Module": "0x1933797BBf8F901b69bb81245D5A82091a0e0b76",
+        "Transfer Agent Module": "0xaB266e4fa5D088cC440433C3EA1e066fD710a0a5",
+        "Intent Validation Module": "0x9B61815c4388C7e0a9EF32B5B2B8926C379786d0",
+        "MultiSig Module": "0xe9cAc1Be0dfCaf655E0193385800B9DaF9B723E2"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "iBENJI",
+      "label": "BNB Smart Chain",
+      "header_line": "iBENJI (BNB Smart Chain)",
+      "identifier": "0x3d0a2A3a30a43a2C1C4b92033609245E819ae6a6",
+      "modules": {
+        "Registry Module": "0xafcF771F5bacc9ECF3c32D4d145177Aa9945D00c",
+        "Token Registry Module": "0xFA77edca23Da53456c26BFe6b87C38Ef3dc7Da19",
+        "Authorization Module": "0xfE1cE41141D489983E87CAD56943e4d92bd12014",
+        "Transactional Module": "0xAb56aa7f1eD443401Cefb3eD17D2795d4da59f6c",
+        "Transfer Agent Module": "0x6C4dD0157B714e269E11242e2a4812Ab2c043318",
+        "Intent Validation Module": "0xC21509ecDeBf27f0cBD30cf2803B82c4aed29F29",
+        "MultiSig Module": "0x9a867849f67df276eAf0611A4383247300266BB4"
+      },
+      "in_page_bytes": true
+    },
+    {
+      "product": "sgBENJI",
+      "label": "Stellar",
+      "header_line": "sgBENJI (Stellar)",
+      "identifier": "GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+      "modules": {},
+      "in_page_bytes": true
+    },
+    {
+      "product": "grBENJI",
+      "label": "Stellar",
+      "header_line": "grBENJI (Stellar)",
+      "identifier": "GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ",
+      "modules": {},
+      "in_page_bytes": true
+    }
+  ],
+  "evidence_kind_legend": {
+    "STATE_PROOF_VERIFIED": "A Merkle proof returned by the node was verified by this reader against the stateRoot of a block header whose hash this reader recomputed from the header fields (EIP-1186), and the proven value equals the plain eth_call answer. The header itself is not checked against consensus (no light client); on an L2 it is the L2's header and nothing here checks it against L1 settlement. A second operator's copy of the same block is compared and recorded.",
+    "STATE_PROOF_RECORDED": "A proof was returned and its bytes kept, but it was not fully verified here — either it failed, or it verified against a stateRoot whose block hash could not be recomputed from the returned header fields (chain-specific header format), so the stateRoot is not bound to the block hash here. The reason is in the row.",
+    "OPERATOR_API": "One operator's API answer. Not a proof. Where a second independent operator exists it is read too and two_operators_agree is recorded — agreement between operators is still not a proof.",
+    "UNCHECKABLE": "The read failed; the HTTP status or error is recorded. Never a zero, never 'absent'.",
+    "REJECTED": "The endpoint answered but the on-ledger identity (symbol / asset code / metadata symbol) is not the product ticker the issuer page names for that deployment; no supply is recorded against the product."
+  },
+  "two_operators_agree_legend": {
+    "true": "an independent second operator returned the same supply (at the same pinned height where the ledger allows pinning)",
+    "false": "an independent second operator returned a different supply at the same pinned height",
+    "NOT_COMPARABLE": "the second read differed but the ledger/API cannot pin a height, so the two reads are at different heights",
+    "NOT_TRIED": "no keyless second operator was found or the second read failed (reason in the row)"
+  },
+  "per_ledger": [
+    {
+      "ledger": "stellar",
+      "product": "BENJI",
+      "supply_decimal": "430691880.4855482",
+      "decimals": 7,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 64609792
+    },
+    {
+      "ledger": "polygon",
+      "product": "BENJI",
+      "supply_decimal": "32206461.812513615916650543",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 94419754
+    },
+    {
+      "ledger": "arbitrum",
+      "product": "BENJI",
+      "supply_decimal": "47950819.162464907015564307",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 508744906
+    },
+    {
+      "ledger": "avalanche",
+      "product": "BENJI",
+      "supply_decimal": "34309356.142162081852426527",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_RECORDED",
+      "two_operators_agree": "true",
+      "height": 96120688
+    },
+    {
+      "ledger": "aptos",
+      "product": "BENJI",
+      "supply_decimal": "14713483.381624994",
+      "decimals": 9,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 7356338123
+    },
+    {
+      "ledger": "ethereum",
+      "product": "BENJI",
+      "supply_decimal": "48209314.242417926951548284",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 26054009
+    },
+    {
+      "ledger": "base",
+      "product": "BENJI",
+      "supply_decimal": "59725674.950165151280437460",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 51772802
+    },
+    {
+      "ledger": "solana",
+      "product": "BENJI",
+      "supply_decimal": "209512.057557357",
+      "decimals": 9,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 450336516
+    },
+    {
+      "ledger": "stellar",
+      "product": "gBENJI",
+      "supply_decimal": "56720355.5672037",
+      "decimals": 7,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 64609839
+    },
+    {
+      "ledger": "ethereum",
+      "product": "iBENJI",
+      "supply_decimal": "195922530.492655972484309178",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 26054041
+    },
+    {
+      "ledger": "bsc",
+      "product": "iBENJI",
+      "supply_decimal": "1524087437.202981538514940268",
+      "decimals": 18,
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "height": 123939466
+    },
+    {
+      "ledger": "stellar",
+      "product": "sgBENJI",
+      "supply_decimal": "24352527.5694453",
+      "decimals": 7,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 64609854
+    },
+    {
+      "ledger": "stellar",
+      "product": "grBENJI",
+      "supply_decimal": "516072.2845994",
+      "decimals": 7,
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "height": 64609855
+    }
+  ],
+  "rows": [
+    {
+      "ledger": "stellar",
+      "product": "BENJI",
+      "issuer_label": "Stellar",
+      "deployment_id": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "supply_base_units": "4306918804855482",
+      "decimals": 7,
+      "supply_decimal": "430691880.4855482",
+      "observed_at": "2026-09-25T11:12:22Z",
+      "height": {
+        "kind": "ledger (Horizon history_latest_ledger read just before /assets)",
+        "number": 64609792,
+        "closed_at": "2026-09-25T11:12:19Z"
+      },
+      "endpoint": "https://horizon.stellar.org",
+      "operator": "Stellar Development Foundation (Horizon)",
+      "response_sha256": "1877c3141f1ec906476ac72c3f51f8419fb08c82e54e44a05e96b067015faf7c",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://horizon.stellar.lobstr.co",
+        "operator": "LOBSTR (Horizon)",
+        "independent": true,
+        "ledger": 64609792,
+        "supply_decimal": "430691880.4855482",
+        "response_sha256": "79fcbb30328a0b6b32353e94bce21fb7cd88f57318646401af0d5e7bb8db0419"
+      },
+      "identity": {
+        "asset_code": "BENJI",
+        "asset_issuer": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+        "decimals": "7 (Stellar protocol fixed precision)",
+        "contract_id": "CCDSDPD7FXB74PFB2SYCHGQRWLXQRYRTQSPCVSRJ7FAOLOUGWEYAXQ7A",
+        "accounts_authorized": 1372,
+        "rule": "the asset code is the product ticker in the issuer page's header for this deployment; the page lists the issuer account, not the code"
+      },
+      "proof": null,
+      "notes": [
+        "supply = Horizon balances (authorized + authorized_to_maintain_liabilities + unauthorized) + claimable balances + liquidity pools + Soroban contract balances; components kept"
+      ],
+      "other_asset_codes_under_issuer": [
+        {
+          "asset_code": "BENJ",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "Benji",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "focgx",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "FOCGX",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "RLUSD",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "USDPEND",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 1372
+        },
+        {
+          "asset_code": "Uspend",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        }
+      ],
+      "supply_components": {
+        "balances.authorized": "430691880.4855482",
+        "balances.authorized_to_maintain_liabilities": "0.0000000",
+        "balances.unauthorized": "0.0000000",
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000"
+      },
+      "issuer_listed": {
+        "identifier": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {}
+      }
+    },
+    {
+      "ledger": "polygon",
+      "product": "BENJI",
+      "issuer_label": "Polygon",
+      "deployment_id": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+      "supply_base_units": "32206461812513615916650543",
+      "decimals": 18,
+      "supply_decimal": "32206461.812513615916650543",
+      "observed_at": "2026-09-25T11:12:24Z",
+      "height": {
+        "kind": "block (latest minus 6 at read time, then pinned)",
+        "number": 94419754,
+        "hash": "0x44247cca18da9dc97be196b3aa4ecc9ec1870af4d9cacf5dbcae155c7c7e4bae",
+        "state_root": "0xeb3040f3c78de4665747499cebfee2910ee22f5ca5325b484e4f9cbd3f0dd730",
+        "timestamp": 1790334771,
+        "chain_id": 137,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://polygon-bor-rpc.publicnode.com",
+      "operator": "PublicNode (Allnodes)",
+      "response_sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://1rpc.io/matic",
+        "operator": "1RPC (Automata)",
+        "independent": true,
+        "block_hash": "0x44247cca18da9dc97be196b3aa4ecc9ec1870af4d9cacf5dbcae155c7c7e4bae",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "32206461812513615916650543",
+        "response_sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+        "failed_before": [
+          {
+            "endpoint": "https://polygon-rpc.com",
+            "operator": "Polygon Labs (polygon-rpc.com)",
+            "error": "HTTP 401: {\"error\":\"message: API key disabled, reason: tenant disabled, json-rpc code: -32051, rest code: 403\"}"
+          }
+        ]
+      },
+      "identity": {
+        "symbol": "BENJI",
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://polygon-bor-rpc.publicnode.com",
+        "proof_operator": "PublicNode (Allnodes)",
+        "failed_before": [],
+        "response_sha256": "15d8647695591e718aa45d8a6c70d93c1d6cf54464eb407cc690abf3064d7e68",
+        "account_proof_nodes": 8,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 32206461812513615916650543,
+        "error": null,
+        "proven_storage_root": "0x0bdbe0c25001996806125f417751ec05efb022e1b3c28a77aa45baeef9147888",
+        "proven_code_hash": "0x932cddc50793da935ccf915651ad67f6b746e9936fcc5614f0ff492563782c75",
+        "eth_call_value": 32206461812513615916650543,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/polygon-BENJI-proof.json",
+          "sha256": "71571ea223f761754b5b116f0e6f8c0a6ccf8f2debe15fc9abd65bc35c0c7ebc"
+        }
+      },
+      "notes": [
+        "slot 53 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header"
+      ],
+      "slot_search": {
+        "block": 94419730,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0xC8CFAC89e292A6486775fb86f789612Bcc692C7d",
+          "Token Registry": "0xb0bfE43Cdd483bF0062c216a4708B18Ab741Ba16",
+          "Authorization Module": "0x026d556aCCe6e9599CA6D85cd034f663F0FFE2BD",
+          "Transactional Module": "0x9119EaD895210d841cB4F556248A3cc054294fB0",
+          "Transfer Agent Module": "0x72254A323775123BA500b00CaCf3662367Ef52fa",
+          "Intent Validation Module": "0xd89A872ED716533dB70f1dF33651645C78a185e6",
+          "MultiSig Module": "0xC7dceF14F78d2bFD324365FF38E803c1F5578F3e"
+        }
+      }
+    },
+    {
+      "ledger": "arbitrum",
+      "product": "BENJI",
+      "issuer_label": "Arbitrum",
+      "deployment_id": "0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+      "supply_base_units": "47950819162464907015564307",
+      "decimals": 18,
+      "supply_decimal": "47950819.162464907015564307",
+      "observed_at": "2026-09-25T11:13:08Z",
+      "height": {
+        "kind": "block (latest minus 20 at read time, then pinned)",
+        "number": 508744906,
+        "hash": "0x28fd1506f1fb9125c2e813faf3c787fa69eb5fa7f69a764505fcac2fc0c03457",
+        "state_root": "0x5e3dae20a734a4bebd95784dfee45b5757541301aef0f01152d2d1ef45f2c5d2",
+        "timestamp": 1790334829,
+        "chain_id": 42161,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://arb1.arbitrum.io/rpc",
+      "operator": "Offchain Labs (arb1)",
+      "response_sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://arbitrum-one-rpc.publicnode.com",
+        "operator": "PublicNode (Allnodes)",
+        "independent": true,
+        "block_hash": "0x28fd1506f1fb9125c2e813faf3c787fa69eb5fa7f69a764505fcac2fc0c03457",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "47950819162464907015564307",
+        "response_sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "BENJI",
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://arb1.arbitrum.io/rpc",
+        "proof_operator": "Offchain Labs (arb1)",
+        "failed_before": [],
+        "response_sha256": "3d8810a2dedc4d8078a579ea2997f5e5768151a922669d3819d89cc59db91106",
+        "account_proof_nodes": 8,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 47950819162464907015564307,
+        "error": null,
+        "proven_storage_root": "0x94eb80da72ac579e24e85745c55897a0536925bb5ba24fbcefba8392abf4abed",
+        "proven_code_hash": "0x932cddc50793da935ccf915651ad67f6b746e9936fcc5614f0ff492563782c75",
+        "eth_call_value": 47950819162464907015564307,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/arbitrum-BENJI-proof.json",
+          "sha256": "2b6b65cdba0b70b68fa1f802bd685cbe82f93e14e6348c3e37c1d0e488121350"
+        }
+      },
+      "notes": [
+        "slot 53 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header",
+        "L2: the header is the L2's own; nothing here checks it against L1 settlement or a fault/validity proof"
+      ],
+      "slot_search": {
+        "block": 508744722,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0xCB788286abCa7b681FeB056877B62c778f0A37df",
+          "Token Registry Module": "0x32338b38A0b370F221258753c48F07C5Cd89CA68",
+          "Authorization Module": "0xB1eF38B2Ef8FFcfFa70E41afad175e7BaE15f517",
+          "Transactional Module": "0x9C012931e13F2546d64B75401fDF7EEc6B651CBD",
+          "Transfer Agent Module": "0x3A1540808757b7D9813de9843A9fb4b580844745",
+          "Intent Validation Module": "0x8564efe0555f1AEFbe492A27bbffE75E5A593A15",
+          "MultiSig Module": "0x9f7Ecd1186B092A4C0C71cE0200Fda3c7196854b"
+        }
+      }
+    },
+    {
+      "ledger": "avalanche",
+      "product": "BENJI",
+      "issuer_label": "Avalanche",
+      "deployment_id": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+      "supply_base_units": "34309356142162081852426527",
+      "decimals": 18,
+      "supply_decimal": "34309356.142162081852426527",
+      "observed_at": "2026-09-25T11:14:00Z",
+      "height": {
+        "kind": "block (latest minus 6 at read time, then pinned)",
+        "number": 96120688,
+        "hash": "0xd21ade94dd4235e4f5eb14230cb4178624e691f3e929f1ef732049e5a0d86bb1",
+        "state_root": "0x7059609f7802a227e42bd28d3c81115085ebeedb30d036f83905d04061e81333",
+        "timestamp": 1790334881,
+        "chain_id": 43114,
+        "header_hash_recomputed": false
+      },
+      "endpoint": "https://api.avax.network/ext/bc/C/rpc",
+      "operator": "Ava Labs (api.avax.network)",
+      "response_sha256": "dcc47acad4806e52383bd8aabe7f51816e24bf832f1554b03201d4926c2053e0",
+      "evidence_kind": "STATE_PROOF_RECORDED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://avalanche-c-chain-rpc.publicnode.com",
+        "operator": "PublicNode (Allnodes)",
+        "independent": true,
+        "block_hash": "0xd21ade94dd4235e4f5eb14230cb4178624e691f3e929f1ef732049e5a0d86bb1",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "34309356142162081852426527",
+        "response_sha256": "e8e05a65b94f737342f730df353cd694eab693ec610f17487eaf63ce82712e03",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "BENJI",
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://avalanche-c-chain-rpc.publicnode.com",
+        "proof_operator": "PublicNode (Allnodes)",
+        "failed_before": [
+          {
+            "endpoint": "https://api.avax.network/ext/bc/C/rpc",
+            "operator": "Ava Labs (api.avax.network)",
+            "error": "RPC error: {'code': -32601, 'message': 'the method eth_getProof is not available'}"
+          }
+        ],
+        "response_sha256": "a5ac88e38cd7f9c8894bd525c4fba552042f300150449d20ca0e465c7322978c",
+        "account_proof_nodes": 8,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": false,
+        "storage_proof_verified": false,
+        "proven_value": null,
+        "error": "ProofError: node 7059609f7802a227… not in proof",
+        "eth_call_value": 34309356142162081852426527,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/avalanche-BENJI-proof.json",
+          "sha256": "0a73b1161417b20110e8c71236dd6385048f945fccec8efbc2aca9a0b0d8e793"
+        }
+      },
+      "notes": [
+        "proof did not verify: ProofError: node 7059609f7802a227… not in proof",
+        "ledger note from the registry: 2026-09-25 probe: Ava Labs' public RPC does not offer eth_getProof; PublicNode and dRPC return proofs whose root node is not the block header's stateRoot, and PublicNode's headers carry settledHeight/settled* fields (possibly asynchronous execution, where a header commits to an earlier settled state - not established here). Header hash is not recomputed by this reader for this header format."
+      ],
+      "slot_search": {
+        "block": 96120647,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0x5Bb59a51E1C469537eEAB04af6B44C2e980fBa5c",
+          "Token Registry Module": "0x41766EF57bd228E214200A527283d7C53b73C729",
+          "Authorization Module": "0xdf67bF51f121297FCAD7a65ccC98579b43aC6C56",
+          "Transactional Module": "0x9AC1580474DA8C725735555036ebac9d486E47f3",
+          "Transfer Agent Module": "0xf208FF7C8aA13a3bF79b56146aAFe81e1Ca27044",
+          "Intent Validation Module": "0x7A7EEE7f40A6dD8784F4b4F7f47d73F886aa2682",
+          "MultiSig Module": "0x72fa8846C8D6750e1EA5f28E2ec4a75C838117E3"
+        }
+      }
+    },
+    {
+      "ledger": "aptos",
+      "product": "BENJI",
+      "issuer_label": "Aptos",
+      "deployment_id": "0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+      "supply_base_units": "14713483381624994",
+      "decimals": 9,
+      "supply_decimal": "14713483.381624994",
+      "observed_at": "2026-09-25T11:14:54Z",
+      "height": {
+        "kind": "ledger_version (pinned via ?ledger_version=)",
+        "number": 7356338123,
+        "chain_id": 1,
+        "ledger_timestamp_us": "1790334894496816",
+        "block_height": "1069463919"
+      },
+      "endpoint": "https://api.mainnet.aptoslabs.com/v1",
+      "operator": "Aptos Labs (fullnode REST)",
+      "response_sha256": "5fba4e2556963f81b5720e56854fa9e897715aba727160678bbb3d9cdb3fd6a8",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://aptos-rest.publicnode.com/v1",
+        "operator": "PublicNode (Allnodes) (fullnode REST)",
+        "independent": true,
+        "ledger_version": 7356338123,
+        "supply_base_units": "14713483381624994",
+        "response_sha256": "5fba4e2556963f81b5720e56854fa9e897715aba727160678bbb3d9cdb3fd6a8"
+      },
+      "identity": {
+        "symbol": "BENJI",
+        "name": "Frk OnChain US Gov Mon Fd",
+        "decimals": 9,
+        "resource": "0x1::fungible_asset::Metadata"
+      },
+      "proof": null,
+      "notes": [
+        "0x1::fungible_asset::supply view at a pinned ledger_version. Aptos fullnodes can serve state proofs against a signed ledger info; this reader does not verify them -> OPERATOR_API"
+      ],
+      "issuer_listed": {
+        "identifier": "0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Authorization Module": "0x4705f33d665762a5371d3b8786e63749814e749295ea73269b379c84b756d83a",
+          "Transfer Agent and Transaction Management Module": "0xe10898758351ac7d32835ca8f7ef75a31232d210a1ba9cb628f85aef8a6f8eb6",
+          "MultiSig and Access Control Module": "0x15b4c718c7aa8ee06ab6593600cdaca04e07777dab7b0e1a7edb2a6cc14f757c"
+        }
+      }
+    },
+    {
+      "ledger": "ethereum",
+      "product": "BENJI",
+      "issuer_label": "Ethereum",
+      "deployment_id": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+      "supply_base_units": "48209314242417926951548284",
+      "decimals": 18,
+      "supply_decimal": "48209314.242417926951548284",
+      "observed_at": "2026-09-25T11:14:56Z",
+      "height": {
+        "kind": "block (finalized tag)",
+        "number": 26054009,
+        "hash": "0xdccd0adf8474a2951201196dba7e8d9818af9eeadf31c6df6992eee9a4be14b6",
+        "state_root": "0xed0371c794f3c90775247c22829515ec6fe38b87e7bfa15d8a9b87f04abd5098",
+        "timestamp": 1790333783,
+        "chain_id": 1,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://ethereum-rpc.publicnode.com",
+      "operator": "PublicNode (Allnodes)",
+      "response_sha256": "3f69dceeae864537e5e4e963763b23ac95d571a91b44582d09233351a09cfc9c",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://rpc.mevblocker.io",
+        "operator": "MEV Blocker",
+        "independent": true,
+        "block_hash": "0xdccd0adf8474a2951201196dba7e8d9818af9eeadf31c6df6992eee9a4be14b6",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "48209314242417926951548284",
+        "response_sha256": "589e9dca70972fa4911ce531b8632b4d4c83298477c796f01f977e353e58d023",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "BENJI",
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://ethereum-rpc.publicnode.com",
+        "proof_operator": "PublicNode (Allnodes)",
+        "failed_before": [],
+        "response_sha256": "0f5d749a389b8f516fb87fc26d35eb4b5f8315df96799699e74de3f24e07fa71",
+        "account_proof_nodes": 8,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 48209314242417926951548284,
+        "error": null,
+        "proven_storage_root": "0xc4e6dc998f8b0cb5bf0834d15aba2b1d341efb9cb66e24785dad419db3f1dbfe",
+        "proven_code_hash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+        "eth_call_value": 48209314242417926951548284,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/ethereum-BENJI-proof.json",
+          "sha256": "ba9d2c452aa218d28850d014ccc0cb5ec0b5b78841a4598f49a8e50bca006ec5"
+        }
+      },
+      "notes": [
+        "slot 53 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header"
+      ],
+      "slot_search": {
+        "block": 26054009,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0xD7644d80575678C027CED844bbeEF5Ad12277d40",
+          "Token Registry Module": "0x14DD78f8Ca45231dCe301AdEae179dcbEE40427E",
+          "Authorization Module": "0x55dd370DeDe1AD474d3543Be06452615d3B5b162",
+          "Transactional Module": "0x648a6e41B4e445506b848cE49FfEF827651ab4f5",
+          "Transfer Agent Module": "0x8C8Bfc3151C2161a4baD77268e246A08e5D9c666",
+          "Intent Validation Module": "0xBA5314385d4A849f8D8dBFb867b67547683F8a93",
+          "MultiSig Module": "0xA2Bd91Fb0c8258134706629edf7464C14bAB8b66"
+        }
+      }
+    },
+    {
+      "ledger": "base",
+      "product": "BENJI",
+      "issuer_label": "Base",
+      "deployment_id": "0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+      "supply_base_units": "59725674950165151280437460",
+      "decimals": 18,
+      "supply_decimal": "59725674.950165151280437460",
+      "observed_at": "2026-09-25T11:15:36Z",
+      "height": {
+        "kind": "block (latest minus 10 at read time, then pinned)",
+        "number": 51772802,
+        "hash": "0x84ecb1d6053138cf456f311c30ce6e464d6934813485848281a62f02931bf79b",
+        "state_root": "0x2b7201d0de400c35927df71b117d17ccf82e505a30f9e16331f3d98359b714e7",
+        "timestamp": 1790334951,
+        "chain_id": 8453,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://base-rpc.publicnode.com",
+      "operator": "PublicNode (Allnodes)",
+      "response_sha256": "fafd2d4387f50036f354836ff54af6ea565ba75d3623cb12250c0cfd2d9578a2",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://mainnet.base.org",
+        "operator": "Coinbase (mainnet.base.org)",
+        "independent": true,
+        "block_hash": "0x84ecb1d6053138cf456f311c30ce6e464d6934813485848281a62f02931bf79b",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "59725674950165151280437460",
+        "response_sha256": "40a3cb273e3b716d82063ed68924149dc3c6acf6ad4d2247cdadd971d5a845d3",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "BENJI",
+        "name": "Franklin OnChain U.S. Government Money Fund",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://mainnet.base.org",
+        "proof_operator": "Coinbase (mainnet.base.org)",
+        "failed_before": [
+          {
+            "endpoint": "https://base-rpc.publicnode.com",
+            "operator": "PublicNode (Allnodes)",
+            "error": "RPC error: {'code': -32602, 'message': 'distance to target block exceeds maximum proof window'}"
+          }
+        ],
+        "response_sha256": "eaa3d6ec1fdbe7d390a2dc843308ecc5fcfa48fda3a64f17fee391972f5147e7",
+        "account_proof_nodes": 10,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 59725674950165151280437460,
+        "error": null,
+        "proven_storage_root": "0x0f886f105670c6ce27943af54f5221e0e389895bed9828fc2302bbd550daf752",
+        "proven_code_hash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+        "eth_call_value": 59725674950165151280437460,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/base-BENJI-proof.json",
+          "sha256": "2308b862ef75fdd65686324c49f3ec3fd8b6f282d32b7e2d15b8ceb1576ec2c4"
+        }
+      },
+      "notes": [
+        "slot 53 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header",
+        "L2: the header is the L2's own; nothing here checks it against L1 settlement or a fault/validity proof"
+      ],
+      "slot_search": {
+        "block": 51772785,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0x59Ecee0Bb35a5355B0940280Ca195Cbc49E148BE",
+          "Token Registry Module": "0xd5436c2db02474d57e3327e4a4d844f8590c97d9",
+          "Authorization Module": "0x0a18C08Dc0063E0d02a01675d782c119e8922FCF",
+          "Transactional Module": "0x5Ba6b6701266b17427C120D87Dcb8cB82C07F8F1",
+          "Transfer Agent Module": "0x095D7B0210C8347C6e080b52b8c3444297f9b27b",
+          "Intent Validation Module": "0x42CC64C2c8f7AD649C83761666Fb415B6e467226",
+          "MultiSig Module": "0x8D5fd7549609116C2435BE021CEF928041618F44"
+        }
+      }
+    },
+    {
+      "ledger": "solana",
+      "product": "BENJI",
+      "issuer_label": "Solana",
+      "deployment_id": "5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1",
+      "supply_base_units": "209512057557357",
+      "decimals": 9,
+      "supply_decimal": "209512.057557357",
+      "observed_at": "2026-09-25T11:16:17Z",
+      "height": {
+        "kind": "slot (context.slot, commitment=finalized)",
+        "number": 450336516
+      },
+      "endpoint": "https://api.mainnet-beta.solana.com",
+      "operator": "Solana Foundation (api.mainnet-beta)",
+      "response_sha256": "6a7ecd5a572b9e1d64378438de921624e0461a5ba1925c55bb53e0e9ac355bbb",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://solana.leorpc.com/",
+        "operator": "LeoRPC (published free key 'FREE')",
+        "independent": true,
+        "supply_base_units": "209512057557357",
+        "slot": 450336522,
+        "response_sha256": "391df4f53675c448db601c29490fc4ec4cc39b1c627f04d254008f445f192aa0"
+      },
+      "identity": {
+        "program": "spl-token-2022",
+        "decimals": 9,
+        "metadata_symbol": "BENJI",
+        "metadata_name": "BENJI",
+        "extensions": [
+          "metadataPointer",
+          "transferHook",
+          "permanentDelegate",
+          "tokenMetadata"
+        ]
+      },
+      "proof": null,
+      "notes": [],
+      "issuer_listed": {
+        "identifier": "5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "MultiSig Module": "sig1in5E29ExXFMNHUCeCCCZsDs6hqAsumidwDTgkr5",
+          "MultiChain Module": "chn2eSrribmaDfGZF74aZRwrJBKoGqQiuUGwfGei8aP"
+        }
+      }
+    },
+    {
+      "ledger": "stellar",
+      "product": "gBENJI",
+      "issuer_label": "Stellar",
+      "deployment_id": "GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+      "supply_base_units": "567203555672037",
+      "decimals": 7,
+      "supply_decimal": "56720355.5672037",
+      "observed_at": "2026-09-25T11:16:19Z",
+      "height": {
+        "kind": "ledger (Horizon history_latest_ledger read just before /assets)",
+        "number": 64609839,
+        "closed_at": "2026-09-25T11:16:14Z"
+      },
+      "endpoint": "https://horizon.stellar.org",
+      "operator": "Stellar Development Foundation (Horizon)",
+      "response_sha256": "6598eb0dd2d3628d1d76a8b4785579e18a85c631414098602f852603559606f7",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://horizon.stellar.lobstr.co",
+        "operator": "LOBSTR (Horizon)",
+        "independent": true,
+        "ledger": 64609840,
+        "supply_decimal": "56720355.5672037",
+        "response_sha256": "991361d981528237462bc7806a50821aae2a547e1c77b097e9df55f7b598c0d3"
+      },
+      "identity": {
+        "asset_code": "gBENJI",
+        "asset_issuer": "GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+        "decimals": "7 (Stellar protocol fixed precision)",
+        "contract_id": "CAZGJD4BG6RLFQIAGPDPSX3IR73CBSVDEIBUDQGDZ3RCGGSOYSVBDSM7",
+        "accounts_authorized": 15,
+        "rule": "the asset code is the product ticker in the issuer page's header for this deployment; the page lists the issuer account, not the code"
+      },
+      "proof": null,
+      "notes": [
+        "supply = Horizon balances (authorized + authorized_to_maintain_liabilities + unauthorized) + claimable balances + liquidity pools + Soroban contract balances; components kept"
+      ],
+      "other_asset_codes_under_issuer": [
+        {
+          "asset_code": "USDPEND",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 15
+        }
+      ],
+      "supply_components": {
+        "balances.authorized": "56720355.5672037",
+        "balances.authorized_to_maintain_liabilities": "0.0000000",
+        "balances.unauthorized": "0.0000000",
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000"
+      },
+      "issuer_listed": {
+        "identifier": "GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {}
+      }
+    },
+    {
+      "ledger": "ethereum",
+      "product": "iBENJI",
+      "issuer_label": "Ethereum",
+      "deployment_id": "0x90276e9d4a023b5229e0c2e9d4b2a83fe3a2b48c",
+      "supply_base_units": "195922530492655972484309178",
+      "decimals": 18,
+      "supply_decimal": "195922530.492655972484309178",
+      "observed_at": "2026-09-25T11:16:22Z",
+      "height": {
+        "kind": "block (finalized tag)",
+        "number": 26054041,
+        "hash": "0x57fe71a07e1300d45ae39010bf54d14bb79e099b97ee944cc2f5fa2876d38134",
+        "state_root": "0x1cd93b6ce1cea605080758aac7c7ed1985a0fe1832100784d48837b0efc2a6bc",
+        "timestamp": 1790334167,
+        "chain_id": 1,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://ethereum-rpc.publicnode.com",
+      "operator": "PublicNode (Allnodes)",
+      "response_sha256": "fb5fb3afd98caed27ee7e8adb3f8867730e4dfd7fdb6ee8c4aabebacc31c1059",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://rpc.mevblocker.io",
+        "operator": "MEV Blocker",
+        "independent": true,
+        "block_hash": "0x57fe71a07e1300d45ae39010bf54d14bb79e099b97ee944cc2f5fa2876d38134",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "195922530492655972484309178",
+        "response_sha256": "2154621cf25fe9c046965bd5c56b59a33c9f4279f26f62f0940f78a4bcc32040",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "iBENJI",
+        "name": "Franklin OnChain Institutional Liquidity Fund Ltd.",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://ethereum-rpc.publicnode.com",
+        "proof_operator": "PublicNode (Allnodes)",
+        "failed_before": [],
+        "response_sha256": "33f0230a08cc447b8bcb660f4369ab2a8388938ffe70591a3fbc7e4804d3e91b",
+        "account_proof_nodes": 9,
+        "storage_proof_nodes": 3,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 195922530492655972484309178,
+        "error": null,
+        "proven_storage_root": "0x79c60e35daa5daff6a2d76c2b6cb09a26c810c2991c116c89e1e0ee90a2374f7",
+        "proven_code_hash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+        "eth_call_value": 195922530492655972484309178,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/ethereum-iBENJI-proof.json",
+          "sha256": "f2a6224513cc8fc22ed8ee3329400bbcb77b79aa5183ac63859bff071d8e77e3"
+        }
+      },
+      "notes": [
+        "slot 53 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header"
+      ],
+      "slot_search": {
+        "block": 26054041,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0x90276e9d4a023b5229e0c2e9d4b2a83fe3a2b48c",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0xf70e2726C60644aD6EFe87289c2dF830f39D34F7",
+          "Token Registry Module": "0x950fAE11DDdb4A10368cc4E4Fd93386A587e23Ba",
+          "Authorization Module": "0x12aBfF8Dca2d09D99019dFCC9bf07539a8264066",
+          "Transactional Module": "0x1933797BBf8F901b69bb81245D5A82091a0e0b76",
+          "Transfer Agent Module": "0xaB266e4fa5D088cC440433C3EA1e066fD710a0a5",
+          "Intent Validation Module": "0x9B61815c4388C7e0a9EF32B5B2B8926C379786d0",
+          "MultiSig Module": "0xe9cAc1Be0dfCaf655E0193385800B9DaF9B723E2"
+        }
+      }
+    },
+    {
+      "ledger": "bsc",
+      "product": "iBENJI",
+      "issuer_label": "BNB Smart Chain",
+      "deployment_id": "0x3d0a2A3a30a43a2C1C4b92033609245E819ae6a6",
+      "supply_base_units": "1524087437202981538514940268",
+      "decimals": 18,
+      "supply_decimal": "1524087437.202981538514940268",
+      "observed_at": "2026-09-25T11:16:55Z",
+      "height": {
+        "kind": "block (latest minus 6 at read time, then pinned)",
+        "number": 123939466,
+        "hash": "0xc57e3eba91e5205d36d927fe808c2e10b8215b83f2614864fb02edeae06977c0",
+        "state_root": "0x903fb4f1351fbcf75c02f4e9d7a77f8d06637a2ec679b7c97c161603ee0cbe24",
+        "timestamp": 1790335047,
+        "chain_id": 56,
+        "header_hash_recomputed": true
+      },
+      "endpoint": "https://bsc-rpc.publicnode.com",
+      "operator": "PublicNode (Allnodes)",
+      "response_sha256": "f7eebdadbef26f73886b17b02551cbe33c34afeccec1aad2abc36781506ef3bb",
+      "evidence_kind": "STATE_PROOF_VERIFIED",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://bsc-mainnet.public.blastapi.io",
+        "operator": "Blast API",
+        "independent": true,
+        "block_hash": "0xc57e3eba91e5205d36d927fe808c2e10b8215b83f2614864fb02edeae06977c0",
+        "same_block_hash": true,
+        "state_root_matches": true,
+        "supply_base_units": "1524087437202981538514940268",
+        "response_sha256": "2001bc4ede56518efe40adaafef6eff9536872177c601abdd35e605b6f47f17c",
+        "failed_before": []
+      },
+      "identity": {
+        "symbol": "iBENJI",
+        "name": "Franklin OnChain Institutional Liquidity Fund Ltd.",
+        "decimals": 18
+      },
+      "proof": {
+        "type": "EIP-1186 eth_getProof",
+        "slot": "0x35",
+        "slot_name": "53",
+        "proof_endpoint": "https://bsc-mainnet.public.blastapi.io",
+        "proof_operator": "Blast API",
+        "failed_before": [
+          {
+            "endpoint": "https://bsc-rpc.publicnode.com",
+            "operator": "PublicNode (Allnodes)",
+            "error": "RPC error: {'code': -32602, 'message': 'distance to target block exceeds maximum proof window'}"
+          }
+        ],
+        "response_sha256": "5dd4fba38b061fbaebb50ceabb19bfc297406d91832cf043327c87d7c8b8af7b",
+        "account_proof_nodes": 9,
+        "storage_proof_nodes": 2,
+        "account_proof_verified": true,
+        "storage_proof_verified": true,
+        "proven_value": 1524087437202981538514940268,
+        "error": null,
+        "proven_storage_root": "0x2a0d7104cbc76f7ec3a501115d8b780ab0b6efafaa65e993907eef5f46b23136",
+        "proven_code_hash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+        "eth_call_value": 1524087437202981538514940268,
+        "file": {
+          "path": "public/interop/cross-ledger-benji-2026-09-25/bsc-iBENJI-proof.json",
+          "sha256": "851f369d03b433c1f2d48947f80db52d3de470d07b4ce8af95cdd810b99967e1"
+        }
+      },
+      "notes": [
+        "slot 53 found empirically (the only one of 70 candidates equal to totalSupply()); account proof verified against stateRoot, storage proof against storageRoot, proven value == eth_call totalSupply(); block hash recomputed from header"
+      ],
+      "slot_search": {
+        "block": 123939389,
+        "n_candidates": 70,
+        "candidate_set": [
+          "0..64",
+          "erc7201(openzeppelin.storage.ERC20)+0",
+          "erc7201(openzeppelin.storage.ERC20)+1",
+          "erc7201(openzeppelin.storage.ERC20)+2",
+          "erc7201(openzeppelin.storage.ERC20)+3",
+          "erc7201(openzeppelin.storage.ERC20)+4"
+        ],
+        "matching": [
+          "53"
+        ],
+        "method": "eth_getStorageAt at the discovery block for every candidate, compared to eth_call totalSupply() at that block"
+      },
+      "issuer_listed": {
+        "identifier": "0x3d0a2A3a30a43a2C1C4b92033609245E819ae6a6",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {
+          "Registry Module": "0xafcF771F5bacc9ECF3c32D4d145177Aa9945D00c",
+          "Token Registry Module": "0xFA77edca23Da53456c26BFe6b87C38Ef3dc7Da19",
+          "Authorization Module": "0xfE1cE41141D489983E87CAD56943e4d92bd12014",
+          "Transactional Module": "0xAb56aa7f1eD443401Cefb3eD17D2795d4da59f6c",
+          "Transfer Agent Module": "0x6C4dD0157B714e269E11242e2a4812Ab2c043318",
+          "Intent Validation Module": "0xC21509ecDeBf27f0cBD30cf2803B82c4aed29F29",
+          "MultiSig Module": "0x9a867849f67df276eAf0611A4383247300266BB4"
+        }
+      }
+    },
+    {
+      "ledger": "stellar",
+      "product": "sgBENJI",
+      "issuer_label": "Stellar",
+      "deployment_id": "GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+      "supply_base_units": "243525275694453",
+      "decimals": 7,
+      "supply_decimal": "24352527.5694453",
+      "observed_at": "2026-09-25T11:17:36Z",
+      "height": {
+        "kind": "ledger (Horizon history_latest_ledger read just before /assets)",
+        "number": 64609854,
+        "closed_at": "2026-09-25T11:17:29Z"
+      },
+      "endpoint": "https://horizon.stellar.org",
+      "operator": "Stellar Development Foundation (Horizon)",
+      "response_sha256": "98ae7f4b0c8cefdd1bd3dec44ea88539f2748dccff93de03cda00d48bf9c363b",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://horizon.stellar.lobstr.co",
+        "operator": "LOBSTR (Horizon)",
+        "independent": true,
+        "ledger": 64609855,
+        "supply_decimal": "24352527.5694453",
+        "response_sha256": "9f90689ac7715b1e57154440ce4d83ff935251a09d141c29be0f14536f3abc44"
+      },
+      "identity": {
+        "asset_code": "sgBENJI",
+        "asset_issuer": "GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+        "decimals": "7 (Stellar protocol fixed precision)",
+        "contract_id": null,
+        "accounts_authorized": 13,
+        "rule": "the asset code is the product ticker in the issuer page's header for this deployment; the page lists the issuer account, not the code"
+      },
+      "proof": null,
+      "notes": [
+        "supply = Horizon balances (authorized + authorized_to_maintain_liabilities + unauthorized) + claimable balances + liquidity pools + Soroban contract balances; components kept"
+      ],
+      "other_asset_codes_under_issuer": [
+        {
+          "asset_code": "USDPEND",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 13
+        }
+      ],
+      "supply_components": {
+        "balances.authorized": "24352527.5694453",
+        "balances.authorized_to_maintain_liabilities": "0.0000000",
+        "balances.unauthorized": "0.0000000",
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000"
+      },
+      "issuer_listed": {
+        "identifier": "GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {}
+      }
+    },
+    {
+      "ledger": "stellar",
+      "product": "grBENJI",
+      "issuer_label": "Stellar",
+      "deployment_id": "GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ",
+      "supply_base_units": "5160722845994",
+      "decimals": 7,
+      "supply_decimal": "516072.2845994",
+      "observed_at": "2026-09-25T11:17:39Z",
+      "height": {
+        "kind": "ledger (Horizon history_latest_ledger read just before /assets)",
+        "number": 64609855,
+        "closed_at": "2026-09-25T11:17:34Z"
+      },
+      "endpoint": "https://horizon.stellar.org",
+      "operator": "Stellar Development Foundation (Horizon)",
+      "response_sha256": "d41272c7944b865276487752108c4b653c1bf34265a90bf22c262200b290b968",
+      "evidence_kind": "OPERATOR_API",
+      "two_operators_agree": "true",
+      "second_read": {
+        "endpoint": "https://horizon.stellar.lobstr.co",
+        "operator": "LOBSTR (Horizon)",
+        "independent": true,
+        "ledger": 64609855,
+        "supply_decimal": "516072.2845994",
+        "response_sha256": "af0af76a9fae04b6a9bc85c33e535c62695e7fa04d5707e276cacbab41c5505d"
+      },
+      "identity": {
+        "asset_code": "grBENJI",
+        "asset_issuer": "GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ",
+        "decimals": "7 (Stellar protocol fixed precision)",
+        "contract_id": "CBEFW4IKKVB5KAX7QJAOHZUY77X5M6TRHE7ER6V75WESMAG7SSJBWP4R",
+        "accounts_authorized": 12,
+        "rule": "the asset code is the product ticker in the issuer page's header for this deployment; the page lists the issuer account, not the code"
+      },
+      "proof": null,
+      "notes": [
+        "supply = Horizon balances (authorized + authorized_to_maintain_liabilities + unauthorized) + claimable balances + liquidity pools + Soroban contract balances; components kept"
+      ],
+      "other_asset_codes_under_issuer": [
+        {
+          "asset_code": "AMA1",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "grBenji",
+          "supply_decimal": "0.0000000",
+          "accounts_authorized": 0
+        },
+        {
+          "asset_code": "USDPEND",
+          "supply_decimal": "500000.0000000",
+          "accounts_authorized": 6
+        }
+      ],
+      "supply_components": {
+        "balances.authorized": "516072.2845994",
+        "balances.authorized_to_maintain_liabilities": "0.0000000",
+        "balances.unauthorized": "0.0000000",
+        "claimable_balances_amount": "0.0000000",
+        "liquidity_pools_amount": "0.0000000",
+        "contracts_amount": "0.0000000"
+      },
+      "issuer_listed": {
+        "identifier": "GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ",
+        "in_page_bytes": true,
+        "modules_listed_not_read": {}
+      }
+    }
+  ],
+  "listed_not_read": [],
+  "sum_by_evidence_kind": {
+    "BENJI": {
+      "OPERATOR_API": {
+        "n_rows": 3,
+        "ledgers": [
+          "stellar",
+          "aptos",
+          "solana"
+        ],
+        "sum_decimal": "445614875.924730551"
+      },
+      "STATE_PROOF_VERIFIED": {
+        "n_rows": 4,
+        "ledgers": [
+          "polygon",
+          "arbitrum",
+          "ethereum",
+          "base"
+        ],
+        "sum_decimal": "188092270.167561601164200594"
+      },
+      "STATE_PROOF_RECORDED": {
+        "n_rows": 1,
+        "ledgers": [
+          "avalanche"
+        ],
+        "sum_decimal": "34309356.142162081852426527"
+      }
+    },
+    "gBENJI": {
+      "OPERATOR_API": {
+        "n_rows": 1,
+        "ledgers": [
+          "stellar"
+        ],
+        "sum_decimal": "56720355.5672037"
+      }
+    },
+    "iBENJI": {
+      "STATE_PROOF_VERIFIED": {
+        "n_rows": 2,
+        "ledgers": [
+          "ethereum",
+          "bsc"
+        ],
+        "sum_decimal": "1720009967.695637510999249446"
+      }
+    },
+    "sgBENJI": {
+      "OPERATOR_API": {
+        "n_rows": 1,
+        "ledgers": [
+          "stellar"
+        ],
+        "sum_decimal": "24352527.5694453"
+      }
+    },
+    "grBENJI": {
+      "OPERATOR_API": {
+        "n_rows": 1,
+        "ledgers": [
+          "stellar"
+        ],
+        "sum_decimal": "516072.2845994"
+      }
+    }
+  },
+  "sum_rule": "per product and per evidence kind only. No cross-product, cross-kind or cross-issuer total is given.",
+  "issuer_reported": [
+    {
+      "kind": "sec_edgar_nmfp3",
+      "why": "The fund's own monthly SEC Form N-MFP3 (Franklin Templeton Trust). It is the issuer's statement - the claim, not evidence of what any ledger holds.",
+      "applies_to_product": "BENJI",
+      "is": "the issuer's own statement (a claim), kept apart from measured supply; never summed with it",
+      "submissions_index": {
+        "url": "https://data.sec.gov/submissions/CIK0001786958.json",
+        "fetched_at": "2026-09-25T11:17:42Z",
+        "http_status": 200,
+        "final_url": "https://data.sec.gov/submissions/CIK0001786958.json",
+        "sha256": "330221d16b6623ded1beab3a71784d029d1b1343d034f9d2d45f991c2a90be23",
+        "bytes": 29685
+      },
+      "state": "READ",
+      "registrant": "FRANKLIN TEMPLETON TRUST",
+      "form": "N-MFP3",
+      "accession": "0002071691-26-021281",
+      "filing_date": "2026-09-04",
+      "report_date": "2026-08-31",
+      "document": {
+        "url": "https://www.sec.gov/Archives/edgar/data/1786958/000207169126021281/primary_doc.xml",
+        "fetched_at": "2026-09-25T11:17:42Z",
+        "http_status": 200,
+        "final_url": "https://www.sec.gov/Archives/edgar/data/1786958/000207169126021281/primary_doc.xml",
+        "sha256": "95d9a389e3797514144c8adaac6b77829e24bac80d15431eafeadf2c60dc8ac7",
+        "bytes": 175079
+      },
+      "series_id": "S000067043",
+      "series_name": "Franklin OnChain U.S. Government Money Fund",
+      "net_assets_of_series_usd": "686635362.22",
+      "shares_outstanding": "686637083.5800",
+      "total_share_classes": "1",
+      "transfer_agent_named_in_filing": "Franklin Templeton Investor Services LLC",
+      "note": "Month-end figures the fund reports to the SEC. A share count is not a ledger supply; the report date is not the on-chain read date. Not compared: see comparison.",
+      "comparison": {
+        "state": "NOT_COMPARED",
+        "why": "the filing is a month-end share count from the issuer; the ledger reads are issued token supply on a later date, at different heights on each ledger. A comparison that means anything needs same-instant ledger reads and the transfer agent's register for that instant. Neither number is evidence for the other."
+      }
+    }
+  ],
+  "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+  "reconciliation": {
+    "state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+    "controlling_record": "the fund's share register kept by its transfer agent (named in the N-MFP3 read below)",
+    "why": "No transfer-agent register is public. The issuer describes the on-chain token as a representation of fund shares; which record controls, and whether the two agree on any date, is not measured here.",
+    "transfer_agent_named_by_issuer_filing": "Franklin Templeton Investor Services LLC",
+    "public_transfer_agent_record_found": false,
+    "meaning": "the on-chain supply below has not been reconciled against the controlling record; until it is, no statement of ownership, AUM or NAV follows from it"
+  },
+  "not_evidence_of": [
+    "AUM, NAV, ownership, redeemability, fund compliance",
+    "settlement finality, reserves, backing, or the value of anything",
+    "the fund's or bank's controlling record (transfer-agent register / deposit ledger) — not read, not reconciled",
+    "circulating or investor-held supply (issued supply only; no holder, treasury or module balance is excluded)",
+    "that one ledger's token is interchangeable with another's — only what each ledger's state says",
+    "any relationship between CSOAI and the issuer: target is not client, public evidence is not private connectivity"
+  ],
+  "relationship": "PUBLIC_EVIDENCE_TARGET_NOT_CLIENT — no client, partner or Alliance relationship is stated or implied",
+  "honesty": "An on-chain supply read is not AUM, NAV, ownership, settlement or compliance. OPERATOR_API is one operator's answer; two operators agreeing is still not a proof. STATE_PROOF_VERIFIED means a Merkle proof was checked here against a header's stateRoot — the header was not checked against consensus. We measure and sign; we never tokenize, custody or sell an instrument. No investment advice.",
+  "iso20022_camt053_shape": {
+    "what_this_is": "A field mapping only: each per-ledger read laid out in the shape of an ISO 20022 camt.053 (BankToCustomerStatement) closing-balance row, the shape a reconciliation reads. No conformance is claimed; no message is produced or validated against the XSD.",
+    "field_map": {
+      "Stmt/Acct/Id/Othr/Id": "deployment_id (as the issuer page lists it)",
+      "Stmt/Acct/Svcr": "ledger (an analogy, not a role)",
+      "Stmt/Bal/Tp/CdOrPrtry/Cd": "CLBD (closing booked) — here: issued supply at the recorded height",
+      "Stmt/Bal/Amt": "supply_decimal (token units, not currency; not NAV)",
+      "Stmt/Bal/Amt/@Ccy": "UNMAPPED — a fund share or deposit token has no ISO 4217 code here; none is chosen",
+      "Stmt/Bal/Dt/DtTm": "observed_at",
+      "Stmt/ElctrncSeqNb": "height.number",
+      "Stmt/AddtlStmtInf": "product + evidence_kind",
+      "Stmt/Ntry": "UNMAPPED — no entries are read; balance-only snapshot"
+    },
+    "rows": [
+      {
+        "Acct.Id": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+        "Acct.Svcr": "stellar",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "430691880.4855482",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:12:22Z",
+        "ElctrncSeqNb": 64609792,
+        "AddtlStmtInf": "BENJI OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+        "Acct.Svcr": "polygon",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "32206461.812513615916650543",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:12:24Z",
+        "ElctrncSeqNb": 94419754,
+        "AddtlStmtInf": "BENJI STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+        "Acct.Svcr": "arbitrum",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "47950819.162464907015564307",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:13:08Z",
+        "ElctrncSeqNb": 508744906,
+        "AddtlStmtInf": "BENJI STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+        "Acct.Svcr": "avalanche",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "34309356.142162081852426527",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:14:00Z",
+        "ElctrncSeqNb": 96120688,
+        "AddtlStmtInf": "BENJI STATE_PROOF_RECORDED"
+      },
+      {
+        "Acct.Id": "0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+        "Acct.Svcr": "aptos",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "14713483.381624994",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:14:54Z",
+        "ElctrncSeqNb": 7356338123,
+        "AddtlStmtInf": "BENJI OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+        "Acct.Svcr": "ethereum",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "48209314.242417926951548284",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:14:56Z",
+        "ElctrncSeqNb": 26054009,
+        "AddtlStmtInf": "BENJI STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+        "Acct.Svcr": "base",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "59725674.950165151280437460",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:15:36Z",
+        "ElctrncSeqNb": 51772802,
+        "AddtlStmtInf": "BENJI STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1",
+        "Acct.Svcr": "solana",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "209512.057557357",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:16:17Z",
+        "ElctrncSeqNb": 450336516,
+        "AddtlStmtInf": "BENJI OPERATOR_API"
+      },
+      {
+        "Acct.Id": "GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP",
+        "Acct.Svcr": "stellar",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "56720355.5672037",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:16:19Z",
+        "ElctrncSeqNb": 64609839,
+        "AddtlStmtInf": "gBENJI OPERATOR_API"
+      },
+      {
+        "Acct.Id": "0x90276e9d4a023b5229e0c2e9d4b2a83fe3a2b48c",
+        "Acct.Svcr": "ethereum",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "195922530.492655972484309178",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:16:22Z",
+        "ElctrncSeqNb": 26054041,
+        "AddtlStmtInf": "iBENJI STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "0x3d0a2A3a30a43a2C1C4b92033609245E819ae6a6",
+        "Acct.Svcr": "bsc",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "1524087437.202981538514940268",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:16:55Z",
+        "ElctrncSeqNb": 123939466,
+        "AddtlStmtInf": "iBENJI STATE_PROOF_VERIFIED"
+      },
+      {
+        "Acct.Id": "GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C",
+        "Acct.Svcr": "stellar",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "24352527.5694453",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:17:36Z",
+        "ElctrncSeqNb": 64609854,
+        "AddtlStmtInf": "sgBENJI OPERATOR_API"
+      },
+      {
+        "Acct.Id": "GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ",
+        "Acct.Svcr": "stellar",
+        "Bal.Tp": "CLBD",
+        "Bal.Amt": "516072.2845994",
+        "Bal.Ccy": null,
+        "Bal.DtTm": "2026-09-25T11:17:39Z",
+        "ElctrncSeqNb": 64609855,
+        "AddtlStmtInf": "grBENJI OPERATOR_API"
+      }
+    ],
+    "statement_date": "2026-09-25"
+  },
+  "request_log": [
+    {
+      "url": "https://horizon.stellar.org/",
+      "status": 200,
+      "sha256": "f7d4ca885d1fb6d7f29bcbf2ed59624a48325093897d4bd988c28a094ae8c0bb",
+      "bytes": 4332
+    },
+    {
+      "url": "https://horizon.stellar.org/assets?asset_issuer=GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5&limit=200",
+      "status": 200,
+      "sha256": "1877c3141f1ec906476ac72c3f51f8419fb08c82e54e44a05e96b067015faf7c",
+      "bytes": 10026
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/",
+      "status": 200,
+      "sha256": "a296e15b91e6dbe7cdc536ddd699d0076f9e13c12c3f8f323b9a31c32934d170",
+      "bytes": 4470
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/assets?asset_issuer=GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5&limit=200",
+      "status": 200,
+      "sha256": "79fcbb30328a0b6b32353e94bce21fb7cd88f57318646401af0d5e7bb8db0419",
+      "bytes": 10044
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "4559ea083c821b9fbcecde1c4bb199edeed3e244fbf5748d9a2a6bc02d3234ff",
+      "bytes": 41
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "31f2e48f9c5dffa6a5d4bd065b5a17175e2318c1ab74d0ec2d173eca2e9076f5",
+      "bytes": 46
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "b86344800519880efc9371d550aacc6a35daadd9e75b7c705788bca4cee4c8da",
+      "bytes": 10879
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d320d23e8442a8fd86eebd88ec53a99f6058c870acb582ad85e4e005f7b57ed0",
+      "bytes": 231
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d8b345f8985b713d519493baebd6f80df70ce7b537f27e6626789d1d225bc7a2",
+      "bytes": 295
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f962c53c789e95ee3f0b229b29cd751597f8ad1c964c8f1e28b4c5816ad2059f",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6000fa1ee4c2f37263fffcbac4128ee1c7d6a4b2d422b13d07af72f145792747",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "9607e43cdb42e42919d67a012329ff628e9429027a983cd3887747436a558d35",
+      "bytes": 46
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6d9ea297003622d19dcf3cfcae19cfcda09a2dfdbb666b8ef2ee2360ff18e331",
+      "bytes": 8395
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+      "bytes": 103
+    },
+    {
+      "url": "https://polygon-bor-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "15d8647695591e718aa45d8a6c70d93c1d6cf54464eb407cc690abf3064d7e68",
+      "bytes": 9221
+    },
+    {
+      "url": "https://polygon-rpc.com",
+      "status": 401,
+      "sha256": "aa5ef750f317bb85a6bb250dbe3ce8d4be85e8363b90f7e71b02fa9be0ee7af9",
+      "bytes": 101
+    },
+    {
+      "url": "https://1rpc.io/matic",
+      "status": 200,
+      "sha256": "6d9ea297003622d19dcf3cfcae19cfcda09a2dfdbb666b8ef2ee2360ff18e331",
+      "bytes": 8395
+    },
+    {
+      "url": "https://1rpc.io/matic",
+      "status": 200,
+      "sha256": "d56f5df4a94ffef1a6e4a00b64571c1222afbad1e88f44b420037ba2b89417ac",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "937de275b7fc223f33af3b5fdcef1c024e5cf8b2665ad8161096c7e6f9e1733d",
+      "bytes": 43
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "f2f9e112e8f8cd7724401a2c9565856d10336250a2023309b9f4a990975b6fdf",
+      "bytes": 47
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "fd071241bff2854e16284aaafefdde447e6a0e9a2c7da0a6d57254f89929e5d4",
+      "bytes": 2032
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "d320d23e8442a8fd86eebd88ec53a99f6058c870acb582ad85e4e005f7b57ed0",
+      "bytes": 231
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "d8b345f8985b713d519493baebd6f80df70ce7b537f27e6626789d1d225bc7a2",
+      "bytes": 295
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "f962c53c789e95ee3f0b229b29cd751597f8ad1c964c8f1e28b4c5816ad2059f",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "6000fa1ee4c2f37263fffcbac4128ee1c7d6a4b2d422b13d07af72f145792747",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "3ef036250ef8084711df92cbfa500f874a1e363c46a723a791f02126c56fa0c9",
+      "bytes": 47
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "fad653a23094648cfac6b1c4f5445c4b80b65ffbf280a42c0d775a831b3c3f36",
+      "bytes": 1962
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+      "bytes": 103
+    },
+    {
+      "url": "https://arb1.arbitrum.io/rpc",
+      "status": 200,
+      "sha256": "3d8810a2dedc4d8078a579ea2997f5e5768151a922669d3819d89cc59db91106",
+      "bytes": 8515
+    },
+    {
+      "url": "https://arbitrum-one-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d6385ffe5aa83ffa74dc983927f825847f81a0b9c2ccdb95e18688fd6efc645a",
+      "bytes": 1962
+    },
+    {
+      "url": "https://arbitrum-one-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "cacc13a3254ba95f7bd46b3d89be53b9c708b6311e4584d2aa57456497386cc8",
+      "bytes": 103
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "44ea664f8d84c21b03c48843e8bc21887f869f5eb40154a88147a7bba467ab58",
+      "bytes": 42
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "1f557caf108905095a1dccda318d0ca13eed47c5e2f1cfdf8f79a1180e498462",
+      "bytes": 45
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "e2bce273bd998bde24d88fd8a231f69bb69e9ecbf637f2488d04f84f503d53e8",
+      "bytes": 2200
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "3f047082a4787b37bccf1d029f195494ceffdff37c0c285dc1f124f4439da05f",
+      "bytes": 230
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "ece7d7d800aaac60759d158428c149e2bbd8366f6196871c311c84cf99089e3d",
+      "bytes": 294
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "942eb00e02101dd8673395e77f951530862ae177255e90bbbb71a3c42dd6fba6",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "dcc47acad4806e52383bd8aabe7f51816e24bf832f1554b03201d4926c2053e0",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "db4796fef52c36f78989daa650510ae045136f8ce6ff5ea321cd80081e7ed2af",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "dcc47acad4806e52383bd8aabe7f51816e24bf832f1554b03201d4926c2053e0",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "5d112f48e76ada904f658b29cf08c7de2da30b13907b90d339d41937793d797d",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "07778262514edeb32d4bc8ff957229af311c46a20cf737e1e68f1593eefd8289",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d6270a96c74e698681cb7c0012a25d17a018228bca3a631fd19a384e561ca22a",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "fd067672f11f494b15c0966f61d7c4c109092e5d0c23ab282564992b5ea2339c",
+      "bytes": 45
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "d131c48e04fd75bbf05e0584a42aec6d0e2540504dd291b7c4a24cdc3040c925",
+      "bytes": 3167
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "dcc47acad4806e52383bd8aabe7f51816e24bf832f1554b03201d4926c2053e0",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "dcc47acad4806e52383bd8aabe7f51816e24bf832f1554b03201d4926c2053e0",
+      "bytes": 102
+    },
+    {
+      "url": "https://api.avax.network/ext/bc/C/rpc",
+      "status": 200,
+      "sha256": "13f505b093d597f484911f846098cd8c6e6abf90b7956ad0aae7d9c589e11ec2",
+      "bytes": 101
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "a5ac88e38cd7f9c8894bd525c4fba552042f300150449d20ca0e465c7322978c",
+      "bytes": 8645
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6c087733292e6e52ce87e07bcc45a83a9afe9bdca07a61136c51a2723b69ccfe",
+      "bytes": 3168
+    },
+    {
+      "url": "https://avalanche-c-chain-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "e8e05a65b94f737342f730df353cd694eab693ec610f17487eaf63ce82712e03",
+      "bytes": 103
+    },
+    {
+      "url": "https://api.mainnet.aptoslabs.com/v1/",
+      "status": 200,
+      "sha256": "d86df220a2f0f3a6adf9ffb447c43f0e9535cfcabc1380618cb0a6e1f52a1f1a",
+      "bytes": 298
+    },
+    {
+      "url": "https://api.mainnet.aptoslabs.com/v1/accounts/0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739/resource/0x1::fungible_asset::Metadata?ledger_version=7356338123",
+      "status": 200,
+      "sha256": "ac1c4c5b961ccb81a1b8f47fc4a8b8711f0a6c3b8c2657375a311666b815e170",
+      "bytes": 257
+    },
+    {
+      "url": "https://api.mainnet.aptoslabs.com/v1/view?ledger_version=7356338123",
+      "status": 200,
+      "sha256": "5fba4e2556963f81b5720e56854fa9e897715aba727160678bbb3d9cdb3fd6a8",
+      "bytes": 31
+    },
+    {
+      "url": "https://aptos-rest.publicnode.com/v1/view?ledger_version=7356338123",
+      "status": 200,
+      "sha256": "5fba4e2556963f81b5720e56854fa9e897715aba727160678bbb3d9cdb3fd6a8",
+      "bytes": 31
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+      "bytes": 40
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "70c9fff62e921c362139a73e59c039f092d51b397b07ce0d56549a45b73177e0",
+      "bytes": 35886
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d320d23e8442a8fd86eebd88ec53a99f6058c870acb582ad85e4e005f7b57ed0",
+      "bytes": 231
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d8b345f8985b713d519493baebd6f80df70ce7b537f27e6626789d1d225bc7a2",
+      "bytes": 295
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "3f69dceeae864537e5e4e963763b23ac95d571a91b44582d09233351a09cfc9c",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "3f69dceeae864537e5e4e963763b23ac95d571a91b44582d09233351a09cfc9c",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f962c53c789e95ee3f0b229b29cd751597f8ad1c964c8f1e28b4c5816ad2059f",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6000fa1ee4c2f37263fffcbac4128ee1c7d6a4b2d422b13d07af72f145792747",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "70c9fff62e921c362139a73e59c039f092d51b397b07ce0d56549a45b73177e0",
+      "bytes": 35886
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "3f69dceeae864537e5e4e963763b23ac95d571a91b44582d09233351a09cfc9c",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "3f69dceeae864537e5e4e963763b23ac95d571a91b44582d09233351a09cfc9c",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "0f5d749a389b8f516fb87fc26d35eb4b5f8315df96799699e74de3f24e07fa71",
+      "bytes": 9093
+    },
+    {
+      "url": "https://rpc.mevblocker.io",
+      "status": 200,
+      "sha256": "e5241b4e5f7cbc3c93c413cf60827fb1c435340066ed1f377c69b3e75c6d4cc6",
+      "bytes": 35885
+    },
+    {
+      "url": "https://rpc.mevblocker.io",
+      "status": 200,
+      "sha256": "589e9dca70972fa4911ce531b8632b4d4c83298477c796f01f977e353e58d023",
+      "bytes": 102
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "60a8e1c6a5247eee8b12ffe2450558e6199f6146acc9caed1be20cd1d373d45e",
+      "bytes": 43
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "db95d8ea21cf2056e4a8281c4156900fe2ed5fc0c52b8da56715685ec0acb967",
+      "bytes": 46
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "dece1b378ca8f0b3286eecfce9410b48d9adf27616a28f660e3703df7120bc74",
+      "bytes": 25242
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d320d23e8442a8fd86eebd88ec53a99f6058c870acb582ad85e4e005f7b57ed0",
+      "bytes": 231
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d8b345f8985b713d519493baebd6f80df70ce7b537f27e6626789d1d225bc7a2",
+      "bytes": 295
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fafd2d4387f50036f354836ff54af6ea565ba75d3623cb12250c0cfd2d9578a2",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fafd2d4387f50036f354836ff54af6ea565ba75d3623cb12250c0cfd2d9578a2",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f962c53c789e95ee3f0b229b29cd751597f8ad1c964c8f1e28b4c5816ad2059f",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "6000fa1ee4c2f37263fffcbac4128ee1c7d6a4b2d422b13d07af72f145792747",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "5d0162af1547d72d0194255f0df5028672d92f8d4166a744072a3aba85dd32bd",
+      "bytes": 46
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8333d3fdae65e6498adfc8e59c60b874791067cd892a313310f1515b302142f5",
+      "bytes": 17238
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fafd2d4387f50036f354836ff54af6ea565ba75d3623cb12250c0cfd2d9578a2",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fafd2d4387f50036f354836ff54af6ea565ba75d3623cb12250c0cfd2d9578a2",
+      "bytes": 103
+    },
+    {
+      "url": "https://base-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "988564fbb26ba717b2c3a60dbbc05c6583781a36b5a747e8a5226b5b242ae659",
+      "bytes": 114
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "eaa3d6ec1fdbe7d390a2dc843308ecc5fcfa48fda3a64f17fee391972f5147e7",
+      "bytes": 9433
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "8333d3fdae65e6498adfc8e59c60b874791067cd892a313310f1515b302142f5",
+      "bytes": 17238
+    },
+    {
+      "url": "https://mainnet.base.org",
+      "status": 200,
+      "sha256": "40a3cb273e3b716d82063ed68924149dc3c6acf6ad4d2247cdadd971d5a845d3",
+      "bytes": 103
+    },
+    {
+      "url": "https://api.mainnet-beta.solana.com",
+      "status": 200,
+      "sha256": "6a7ecd5a572b9e1d64378438de921624e0461a5ba1925c55bb53e0e9ac355bbb",
+      "bytes": 200
+    },
+    {
+      "url": "https://api.mainnet-beta.solana.com",
+      "status": 200,
+      "sha256": "973276ddb3a06b78cf3c3e5e540740f89daef47001941c636ebeba9326511e58",
+      "bytes": 1247
+    },
+    {
+      "url": "https://solana.leorpc.com/?api_key=FREE",
+      "status": 200,
+      "sha256": "391df4f53675c448db601c29490fc4ec4cc39b1c627f04d254008f445f192aa0",
+      "bytes": 200
+    },
+    {
+      "url": "https://horizon.stellar.org/",
+      "status": 200,
+      "sha256": "c6850c6cd42e23081c065edbe41fdff672482b1511600d6896a19f89a3d6ef36",
+      "bytes": 4332
+    },
+    {
+      "url": "https://horizon.stellar.org/assets?asset_issuer=GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP&limit=200",
+      "status": 200,
+      "sha256": "6598eb0dd2d3628d1d76a8b4785579e18a85c631414098602f852603559606f7",
+      "bytes": 3167
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/",
+      "status": 200,
+      "sha256": "090b81196bbb55862483b401398b95a22a87a383efbd633efb8b2d11b12e6a58",
+      "bytes": 4470
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/assets?asset_issuer=GD5J73EKK5IYL5XS3FBTHHX7CZIYRP7QXDL57XFWGC2WVYWT326OBXRP&limit=200",
+      "status": 200,
+      "sha256": "991361d981528237462bc7806a50821aae2a547e1c77b097e9df55f7b598c0d3",
+      "bytes": 3185
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "208c0be5a34cd9b241311e625b3035aa89cb237969cbc1a0c9cbd8c8517087eb",
+      "bytes": 40
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d52410d2c559f1f6077e000d08d2a382f06a5ffb6e9b5a38c0351fdc0ced366b",
+      "bytes": 23258
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "665b56c6a0a3d94288e7f4d3af4ef17ad626ef92cedd9f84d2770c5609b2c2f9",
+      "bytes": 231
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "72efa3bd70650c8fdd9744ee9a5ad9d42f38c0cc895f0151a91daf0f2a337c5b",
+      "bytes": 295
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fb5fb3afd98caed27ee7e8adb3f8867730e4dfd7fdb6ee8c4aabebacc31c1059",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fb5fb3afd98caed27ee7e8adb3f8867730e4dfd7fdb6ee8c4aabebacc31c1059",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fa20e79ec664d4ad70bc6ac16a9e5dcce3ccbba88c800c5c895bf8823e1dcc64",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "cb0d5b9d1bf62389a1f1ca3d4154a5f289d80d3451709e6201a88d8d03733638",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "d52410d2c559f1f6077e000d08d2a382f06a5ffb6e9b5a38c0351fdc0ced366b",
+      "bytes": 23258
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fb5fb3afd98caed27ee7e8adb3f8867730e4dfd7fdb6ee8c4aabebacc31c1059",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fb5fb3afd98caed27ee7e8adb3f8867730e4dfd7fdb6ee8c4aabebacc31c1059",
+      "bytes": 103
+    },
+    {
+      "url": "https://ethereum-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "33f0230a08cc447b8bcb660f4369ab2a8388938ffe70591a3fbc7e4804d3e91b",
+      "bytes": 9584
+    },
+    {
+      "url": "https://rpc.mevblocker.io",
+      "status": 200,
+      "sha256": "0693cce1731d6b42ff86ccd5dd1c5400fc6f1c3c4100beeed5299552a1f591c1",
+      "bytes": 23257
+    },
+    {
+      "url": "https://rpc.mevblocker.io",
+      "status": 200,
+      "sha256": "2154621cf25fe9c046965bd5c56b59a33c9f4279f26f62f0940f78a4bcc32040",
+      "bytes": 102
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "7c7ca3f8749c429839490413a34f1b23784b90f18ac1d8638aef1864f3a127b3",
+      "bytes": 41
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "2de17a1d8532266b80dd8a5ead6b0d0ffef1ac3fa7ce6c86f3795755d2b74196",
+      "bytes": 46
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8940c3a629c7103f1fb3faa65bb43826a3751af22c3061f481bc704af9d31883",
+      "bytes": 7673
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "665b56c6a0a3d94288e7f4d3af4ef17ad626ef92cedd9f84d2770c5609b2c2f9",
+      "bytes": 231
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "72efa3bd70650c8fdd9744ee9a5ad9d42f38c0cc895f0151a91daf0f2a337c5b",
+      "bytes": 295
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "eb1491e7ee73b8c00c20f6c14cc08ba880f85b8ac95a685f3f6acf426f743d8b",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f7eebdadbef26f73886b17b02551cbe33c34afeccec1aad2abc36781506ef3bb",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "8f317fda0fe2e9f75c8f73bb6d6b71250335ba6fddf5f261c04d9b1d62e6708a",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f7eebdadbef26f73886b17b02551cbe33c34afeccec1aad2abc36781506ef3bb",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "fa20e79ec664d4ad70bc6ac16a9e5dcce3ccbba88c800c5c895bf8823e1dcc64",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "cb0d5b9d1bf62389a1f1ca3d4154a5f289d80d3451709e6201a88d8d03733638",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "29e9e2984794042a7b032aaced108b942d1809d049bfe9e0e2be92749d7bbe17",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "625d9df2c8159d32cd5910cc1f6fa4803e7b59f63dd7c2781677c80c1a5a3021",
+      "bytes": 46
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "b5d24e3ffb4bf473e2757526253425f64a8e15224d08cf9ed48ea71e972ebe20",
+      "bytes": 7326
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f7eebdadbef26f73886b17b02551cbe33c34afeccec1aad2abc36781506ef3bb",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "f7eebdadbef26f73886b17b02551cbe33c34afeccec1aad2abc36781506ef3bb",
+      "bytes": 103
+    },
+    {
+      "url": "https://bsc-rpc.publicnode.com",
+      "status": 200,
+      "sha256": "988564fbb26ba717b2c3a60dbbc05c6583781a36b5a747e8a5226b5b242ae659",
+      "bytes": 114
+    },
+    {
+      "url": "https://bsc-mainnet.public.blastapi.io",
+      "status": 200,
+      "sha256": "5dd4fba38b061fbaebb50ceabb19bfc297406d91832cf043327c87d7c8b8af7b",
+      "bytes": 9288
+    },
+    {
+      "url": "https://bsc-mainnet.public.blastapi.io",
+      "status": 200,
+      "sha256": "0aafa8d58c43351befc342e9dd00263d1c9236ce4a81f32c5a87ae9c37b9390a",
+      "bytes": 7325
+    },
+    {
+      "url": "https://bsc-mainnet.public.blastapi.io",
+      "status": 200,
+      "sha256": "2001bc4ede56518efe40adaafef6eff9536872177c601abdd35e605b6f47f17c",
+      "bytes": 102
+    },
+    {
+      "url": "https://horizon.stellar.org/",
+      "status": 200,
+      "sha256": "6171fae2da0ef034a601857f7131b257a4d5fafbaa04d0df22572fdb43780d81",
+      "bytes": 4332
+    },
+    {
+      "url": "https://horizon.stellar.org/assets?asset_issuer=GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C&limit=200",
+      "status": 200,
+      "sha256": "98ae7f4b0c8cefdd1bd3dec44ea88539f2748dccff93de03cda00d48bf9c363b",
+      "bytes": 3087
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/",
+      "status": 200,
+      "sha256": "2dcc1af9df103bf5f26c01840b63016a88eed1b67fc8269b3af6301b72910998",
+      "bytes": 4470
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/assets?asset_issuer=GAGICV3VBJSKKH5H5MQQIUTUP462YVHC23KUHZY6FJERRJFBDIVZBM5C&limit=200",
+      "status": 200,
+      "sha256": "9f90689ac7715b1e57154440ce4d83ff935251a09d141c29be0f14536f3abc44",
+      "bytes": 3105
+    },
+    {
+      "url": "https://horizon.stellar.org/",
+      "status": 200,
+      "sha256": "1db22e7e134fc84e26b4949202fbeb1dcaf91271f4423297e6e5893d07b7a221",
+      "bytes": 4332
+    },
+    {
+      "url": "https://horizon.stellar.org/assets?asset_issuer=GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ&limit=200",
+      "status": 200,
+      "sha256": "d41272c7944b865276487752108c4b653c1bf34265a90bf22c262200b290b968",
+      "bytes": 5454
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/",
+      "status": 200,
+      "sha256": "2dcc1af9df103bf5f26c01840b63016a88eed1b67fc8269b3af6301b72910998",
+      "bytes": 4470
+    },
+    {
+      "url": "https://horizon.stellar.lobstr.co/assets?asset_issuer=GA3ZBL3LBRKOF7CZ6MCA7JLPHWQCGYCCGKH4GVWNEDZOXW4IPXFGN2FQ&limit=200",
+      "status": 200,
+      "sha256": "af0af76a9fae04b6a9bc85c33e535c62695e7fa04d5707e276cacbab41c5505d",
+      "bytes": 5472
+    }
+  ],
+  "prior_pack_comparison": {
+    "prior_as_of": "2026-09-02T04:51:26Z",
+    "prior_pack": "benji-onchain-supply-2026-09",
+    "per_ledger": [
+      {
+        "ledger": "stellar",
+        "prior_chain_name": "Stellar",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+        "prior_total_supply": "447966470.9497616",
+        "now_contract": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+        "same_contract": true,
+        "now_supply_decimal": "430691880.4855482",
+        "now_evidence_kind": "OPERATOR_API",
+        "now_two_operators_agree": "true",
+        "change_decimal": "-17274590.4642134",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read, second operator recorded"
+      },
+      {
+        "ledger": "ethereum",
+        "prior_chain_name": "Ethereum",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+        "prior_total_supply": "48099752.286024417481679295",
+        "now_contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+        "same_contract": true,
+        "now_supply_decimal": "48209314.242417926951548284",
+        "now_evidence_kind": "STATE_PROOF_VERIFIED",
+        "now_two_operators_agree": "true",
+        "change_decimal": "109561.956393509469868989",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read with an EIP-1186 proof, second operator recorded"
+      },
+      {
+        "ledger": "polygon",
+        "prior_chain_name": "Polygon",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+        "prior_total_supply": "32133268.426128809533454758",
+        "now_contract": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+        "same_contract": true,
+        "now_supply_decimal": "32206461.812513615916650543",
+        "now_evidence_kind": "STATE_PROOF_VERIFIED",
+        "now_two_operators_agree": "true",
+        "change_decimal": "73193.386384806383195785",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read with an EIP-1186 proof, second operator recorded"
+      },
+      {
+        "ledger": "arbitrum",
+        "prior_chain_name": "Arbitrum",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+        "prior_total_supply": "47841844.669865952634343475",
+        "now_contract": "0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+        "same_contract": true,
+        "now_supply_decimal": "47950819.162464907015564307",
+        "now_evidence_kind": "STATE_PROOF_VERIFIED",
+        "now_two_operators_agree": "true",
+        "change_decimal": "108974.492598954381220832",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read with an EIP-1186 proof, second operator recorded"
+      },
+      {
+        "ledger": "base",
+        "prior_chain_name": "Base",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+        "prior_total_supply": "59584102.332446749667500804",
+        "now_contract": "0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+        "same_contract": true,
+        "now_supply_decimal": "59725674.950165151280437460",
+        "now_evidence_kind": "STATE_PROOF_VERIFIED",
+        "now_two_operators_agree": "true",
+        "change_decimal": "141572.617718401612936656",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read with an EIP-1186 proof, second operator recorded"
+      },
+      {
+        "ledger": "avalanche",
+        "prior_chain_name": "Avalanche",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+        "prior_total_supply": "34231383.654052522372342291",
+        "now_contract": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+        "same_contract": true,
+        "now_supply_decimal": "34309356.142162081852426527",
+        "now_evidence_kind": "STATE_PROOF_RECORDED",
+        "now_two_operators_agree": "true",
+        "change_decimal": "77972.488109559480084236",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read with an EIP-1186 proof, second operator recorded"
+      },
+      {
+        "ledger": "aptos",
+        "prior_chain_name": "Aptos",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+        "prior_total_supply": "19673206.526646601",
+        "now_contract": "0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+        "same_contract": true,
+        "now_supply_decimal": "14713483.381624994",
+        "now_evidence_kind": "OPERATOR_API",
+        "now_two_operators_agree": "true",
+        "change_decimal": "-4959723.145021607",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read, second operator recorded"
+      },
+      {
+        "ledger": "solana",
+        "prior_chain_name": "Solana",
+        "prior_status": "DISCOVERED",
+        "prior_contract": "5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1",
+        "prior_total_supply": "355.994303631",
+        "now_contract": "5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1",
+        "same_contract": true,
+        "now_supply_decimal": "209512.057557357",
+        "now_evidence_kind": "OPERATOR_API",
+        "now_two_operators_agree": "true",
+        "change_decimal": "209156.063253726",
+        "difference_in_method": "prior: one public read labelled DISCOVERED, unsigned; now: evidence-kind labelled read, second operator recorded"
+      },
+      {
+        "ledger": "bsc",
+        "prior_chain_name": "BNB",
+        "prior_status": "UNCHECKABLE",
+        "prior_contract": null,
+        "prior_total_supply": null,
+        "now": "NOT_ON_ISSUER_PAGE_AS_BENJI",
+        "now_note": "the issuer page lists iBENJI (a different fund) on BNB Smart Chain, not BENJI; iBENJI is read as its own product in this record, never as BENJI"
+      }
+    ],
+    "products_on_issuer_page_not_in_prior_pack": [
+      "gBENJI",
+      "grBENJI",
+      "iBENJI",
+      "sgBENJI"
+    ],
+    "note": "Supply changes between two dates are subscriptions/redemptions/moves on each ledger; nothing here says which."
+  }
+}

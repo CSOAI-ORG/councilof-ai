@@ -41,12 +41,16 @@ describe("llms.txt derives the tool counts it publishes", () => {
     expect(Number(m![1]), `door serves ${free}+${paid}`).toBe(free + paid);
   });
 
-  it("the Smithery line names the complete derived tool contract", () => {
+  it("the Smithery line points at the live door's derived tool contract and claims no mirror", () => {
+    // Smithery's tools[] is its own snapshot; on 2026-09-28 csoai/gspc-mcp listed 12 names and
+    // csoai/gspc 13 while tools/list served 16. The line must not claim a mirror it cannot keep.
     const out = R("public/llms.txt");
     const words = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
-    expect(out).toMatch(new RegExp(
-      `tools\\[\\] mirrors all ${free + paid} tools served[^\\n]+` +
-      `exactly the ${words[free]} free tools plus ${words[paid]} x402-metered evidence tools`,
+    const line = out.split("\n").find((l) => l.startsWith("- Smithery: "));
+    expect(line, "llms.txt no longer carries a Smithery line").toBeTruthy();
+    expect(line).not.toMatch(/mirrors/);
+    expect(line).toMatch(new RegExp(
+      `can lag the door[^\\n]+tools/list \\(${free + paid} tools: ${words[free]} free readers plus ${words[paid]} x402-metered evidence tools\\)`,
     ));
   });
 

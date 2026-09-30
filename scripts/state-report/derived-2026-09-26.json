@@ -1,0 +1,905 @@
+{
+ "numbers": {
+  "a2a_v0_1": {
+   "listings": 443,
+   "rule_states": {
+    "None:FAILED": 3,
+    "None:UNCHECKABLE": 12,
+    "None:VERIFIED": 18
+   },
+   "sig_states": {
+    "FAILED": 3,
+    "NO_SIGNATURES": 389,
+    "UNCHECKABLE": 12,
+    "VERIFIED": 18
+   },
+   "states": {
+    "AUTH_REQUIRED": 2,
+    "CARD_SERVED": 422,
+    "NOT_FOUND": 5,
+    "ROBOTS_DISALLOWED": 9,
+    "UNREACHABLE": 5
+   }
+  },
+  "a2a_v0_1_1": {
+   "declared_0x_where_1x_rules_differ": 3,
+   "failed_that_verify_over_served_bytes": 6,
+   "listings": 443,
+   "rule_states": {
+    "a2a-0.x-served-bytes:FAILED": 1,
+    "a2a-0.x-served-bytes:UNCHECKABLE": 2,
+    "a2a-0.x-served-bytes:VERIFIED": 5,
+    "a2a-1.x-8.4.3:FAILED": 7,
+    "a2a-1.x-8.4.3:UNCHECKABLE": 10,
+    "a2a-1.x-8.4.3:VERIFIED": 8
+   },
+   "sig_states": {
+    "FAILED": 8,
+    "NO_SIGNATURES": 389,
+    "UNCHECKABLE": 12,
+    "VERIFIED": 13
+   },
+   "states": {
+    "AUTH_REQUIRED": 2,
+    "CARD_SERVED": 422,
+    "NOT_FOUND": 5,
+    "ROBOTS_DISALLOWED": 9,
+    "UNREACHABLE": 5
+   },
+   "uncheckable_points_to_no_key": 9
+  },
+  "contract_parity": {
+   "dimension_states": {
+    "AUTH": {
+     "CONSISTENT": 928,
+     "INCONSISTENT": 5,
+     "SINGLE_SURFACE": 4332,
+     "UNCHECKABLE": 563
+    },
+    "PAYMENT": {
+     "CONSISTENT": 112,
+     "INCONSISTENT": 4,
+     "SINGLE_SURFACE": 558,
+     "UNCHECKABLE": 5154
+    },
+    "PROTOCOL": {
+     "CONSISTENT": 459,
+     "INCONSISTENT": 33,
+     "SINGLE_SURFACE": 4909,
+     "UNCHECKABLE": 427
+    },
+    "TOOLS": {
+     "CONSISTENT": 908,
+     "INCONSISTENT": 219,
+     "SINGLE_SURFACE": 4424,
+     "UNCHECKABLE": 277
+    },
+    "VERSION": {
+     "CONSISTENT": 3163,
+     "INCONSISTENT": 2644,
+     "SINGLE_SURFACE": 20,
+     "UNCHECKABLE": 1
+    }
+   },
+   "endpoints_with_any_inconsistent": 2764,
+   "history_any_inconsistent": {
+    "0.1": 2778,
+    "0.1.1": 2768,
+    "0.1.2": 2764
+   },
+   "hosts": null,
+   "matches_record": true,
+   "non_version": 256,
+   "per_endpoint": {
+    "0": 3064,
+    "1": 2626,
+    "2": 135,
+    "3": 3
+   },
+   "population": {
+    "auth_required+advertises_x402_or_a2a": 20,
+    "responded": 5807,
+    "watch_list": 1
+   },
+   "read_gaps": 247,
+   "record_version": "0.1.2",
+   "registry_vs_live_version": {
+    "differ": 2632,
+    "equal": 3170
+   },
+   "rows": 5828,
+   "v1_24_to_1_29": {
+    "inconsistent": 243,
+    "rows": 251
+   },
+   "v1_27_0": {
+    "distinct_registry_versions": 9,
+    "hosts": 14,
+    "inconsistent": 42,
+    "rows": 43
+   },
+   "version_inconsistent_by_live_top": [
+    [
+     "1.0.0",
+     514
+    ],
+    [
+     "0.1.0",
+     382
+    ],
+    [
+     "1.1.0",
+     120
+    ],
+    [
+     "0.1.1",
+     98
+    ],
+    [
+     "2.0.0",
+     69
+    ],
+    [
+     "1.2.0",
+     67
+    ]
+   ],
+   "version_only": 2508
+  },
+  "erc8004": {
+   "a2a_probe": {
+    "n_attempted": 4389,
+    "n_planned": 4389,
+    "read_state": "EXHAUSTED"
+   },
+   "a2a_probe_recount": {
+    "AUTH_REQUIRED": 6,
+    "CARD_INVALID": 16,
+    "CARD_SERVED": 886,
+    "HF_SPACE_NOT_CONTACTED": 1,
+    "NOT_FOUND": 3407,
+    "ROBOTS_DISALLOWED": 26,
+    "TIMEOUT": 11,
+    "UNREACHABLE": 36
+   },
+   "a2a_sig_recount": {
+    "NO_SIGNATURES": 881,
+    "None": 3503,
+    "UNCHECKABLE": 1,
+    "VERIFIED": 4
+   },
+   "agents": 505635,
+   "declares_endpoint": {
+    "agents": 13210,
+    "by_kind_agents": {
+     "A2A": 5088,
+     "MCP": 4911,
+     "web": 9815
+    },
+    "by_source": {
+     "fetched": 7745,
+     "on-chain": 5465
+    },
+    "rule": "a registration JSON object whose services (or legacy endpoints) list has an entry named MCP, A2A or web with an http(s) endpoint"
+   },
+   "fetch": {
+    "hosts": 588,
+    "planned": 38305,
+    "requests": 14555
+   },
+   "mcp_probe": {
+    "n_attempted": 2113,
+    "n_planned": 2144,
+    "read_state": "PARTIAL"
+   },
+   "mcp_probe_recount": {
+    "AUTH_REQUIRED": 32,
+    "MCP_ERROR": 2,
+    "NOT_ATTEMPTED": 31,
+    "NOT_MCP": 1092,
+    "RESPONDED": 580,
+    "SSE_ENDPOINT_ONLY": 3,
+    "TIMEOUT": 11,
+    "UNREACHABLE": 393
+   },
+   "per_chain": {
+    "base": 95776,
+    "bsc": 358401,
+    "ethereum": 51458
+   },
+   "plan": 101127,
+   "read_state": "PARTIAL",
+   "states_match_record": true,
+   "states_recount": {
+    "DECLARES_ENDPOINT": 13210,
+    "INVALID_JSON": 2205,
+    "NOT_FETCHED": 231014,
+    "NO_ENDPOINT": 187513,
+    "NO_URI": 52469,
+    "URI_UNREACHABLE": 13788,
+    "URI_UNSUPPORTED_SCHEME": 5436
+   }
+  },
+  "hf_spaces": {
+   "states": {
+    "AUTH_REQUIRED": 1,
+    "BUILDING": 1,
+    "BUILD_ERROR": 759,
+    "CONFIG_ERROR": 46,
+    "NOT_MCP": 19,
+    "PAUSED": 1251,
+    "RESPONDED": 2232,
+    "ROBOTS_DISALLOWED": 4,
+    "RUNNING_NOT_GRADIO": 35,
+    "RUNTIME_ERROR": 3059,
+    "SLEEPING": 3008,
+    "SSE_ENDPOINT_ONLY": 401,
+    "STAGE_UNREADABLE": 5,
+    "TIMEOUT": 1
+   }
+  },
+  "index": {
+   "as_of": "2026-09-26T10:34:15Z",
+   "batches": [
+    {
+     "adapter": "a2a_card",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+     "n": 33,
+     "record_pinned": true,
+     "record_sha256": "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6",
+     "signature": "VERIFIES",
+     "states": {
+      "FAILED": 8,
+      "UNCHECKABLE": 12,
+      "VERIFIED": 13
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "contract_parity",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+     "n": 9148,
+     "record_pinned": true,
+     "record_sha256": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357",
+     "signature": "VERIFIES",
+     "states": {
+      "CONSISTENT": 5570,
+      "INCONSISTENT": 2905,
+      "UNCHECKABLE": 673
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "cross_ledger",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "a6e3fd14b1cc68072d919bfc59565161e59c492f97c775bbebefd48705770bf9",
+     "n": 353,
+     "record_pinned": true,
+     "record_sha256": "ace6cbe3697ed1f6715ea2f921eaad07c82cab795fb86609a3d16b3c956465df",
+     "signature": "VERIFIES",
+     "states": {
+      "CONSISTENT": 101,
+      "INCONSISTENT": 4,
+      "ISSUER_LIST_UNAVAILABLE": 2,
+      "LISTED_NOT_READ": 34,
+      "OPERATOR_API": 77,
+      "PERMISSIONED_NOT_READABLE": 6,
+      "STATE_PROOF_RECORDED": 10,
+      "STATE_PROOF_VERIFIED": 49,
+      "TOTAL_COMPLETE": 10,
+      "TOTAL_PARTIAL": 8,
+      "UNCHECKABLE": 52
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "mill_cross_runtime",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+     "n": 14,
+     "record_pinned": true,
+     "record_sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+     "signature": "VERIFIES",
+     "states": {
+      "NOT_REPRODUCED": 7,
+      "REPRODUCED_AGGREGATE_ONLY": 2,
+      "REPRODUCED_ITEMWISE": 5
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "mill_cross_runtime",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "78226433e9e433b311e067ee56fcbaf415f6dc57301254f3bb4922a0b8053cf6",
+     "n": 140,
+     "record_pinned": true,
+     "record_sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+     "signature": "VERIFIES",
+     "states": {
+      "NOT_REPRODUCED": 82,
+      "REPRODUCED_AGGREGATE_ONLY": 9,
+      "REPRODUCED_ITEMWISE": 49
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "public_signals",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "ef67f71508192f08f1aedb00276592ee81e85661e7c3421bec036d4e7b9adb42",
+     "n": 118,
+     "record_pinned": true,
+     "record_sha256": "abbcec606003f5eab774c6990f32b6c95c4eca692e5467c5e987fe5d426c8690",
+     "signature": "VERIFIES",
+     "states": {
+      "MEASURED": 103,
+      "PARTIAL": 3,
+      "UNCHECKABLE": 12
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "self_parity",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "53d5c6b23a13c464546d31ab18abcf1fae3990961019fc2443748d62922acf3a",
+     "n": 138,
+     "record_pinned": true,
+     "record_sha256": "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337",
+     "signature": "VERIFIES",
+     "states": {
+      "CONSISTENT": 37,
+      "INCONSISTENT": 8,
+      "NOT_DECLARED": 1,
+      "NOT_LISTED": 55,
+      "UNCHECKABLE": 37
+     },
+     "states_ok": true
+    },
+    {
+     "adapter": "tool_drift",
+     "capsules_sha_ok": true,
+     "merkle_ok": true,
+     "merkle_root": "fd0f514e03dd825698a3eab57d33431b09e62e442f85c7592db50f2371e9d2df",
+     "n": 3240,
+     "record_pinned": true,
+     "record_sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+     "signature": "VERIFIES",
+     "states": {
+      "UNCHANGED_AT_NAME_GRANULARITY": 1485,
+      "UNCHECKABLE": 1755
+     },
+     "states_ok": true
+    }
+   ],
+   "index_root": "85533b833d36f8a4165da34206ee6e39f7434c646c8a2c381d251391ceec366d",
+   "index_root_ok": true,
+   "n_batches": 8,
+   "n_capsules": 13184,
+   "ots_state": "PENDING_CALENDAR_COMMITMENT (as recorded by the index for every batch)",
+   "root_over_batch_merkle_roots": "aba3b220f3fc7cc6b056e1620b8cc5f40d282b1841af39856e2152c8349cf5ef",
+   "root_over_batch_ok": true,
+   "unique": 13184
+  },
+  "mcp_census": {
+   "correction": "the read_state label only; no measurement re-run; every count, state, row and published file identical to 0.2",
+   "frame_sources": {
+    "a2aregistry": {
+     "distinct_endpoints": 442,
+     "read_state": "EXHAUSTED",
+     "rows_read": 445
+    },
+    "docker-mcp-registry": {
+     "distinct_endpoints": 77,
+     "read_state": "EXHAUSTED",
+     "rows_read": 328
+    },
+    "hf-spaces": {
+     "distinct_endpoints": 10858,
+     "read_state": "EXHAUSTED",
+     "rows_read": 10858
+    },
+    "mcp-registry": {
+     "distinct_endpoints": 22151,
+     "read_state": "EXHAUSTED",
+     "rows_read": 36134
+    },
+    "smithery": {
+     "distinct_endpoints": 0,
+     "read_state": "PARTIAL",
+     "rows_read": 500
+    }
+   },
+   "frame_vs_prior": {
+    "mcp-registry distinct endpoints": [
+     21958,
+     22151
+    ],
+    "mcp-registry rows": [
+     35873,
+     36134
+    ]
+   },
+   "not_attempted_by_reason": {
+    "hf.space: sleep state not checked; a request could wake the Space": 10,
+    "rights gate MEASURE_PUBLIC RESTRICTED: advertised address is not public (loopback/private/local)": 3,
+    "robots.txt HTTP n: treated as disallow-all": 264,
+    "robots.txt disallows this path for CSOAI-census": 670,
+    "templated URL: path needs a caller-supplied value": 123
+   },
+   "observed": 21126,
+   "own_estate": {
+    "RESPONDED": 1,
+    "UNREACHABLE": 39
+   },
+   "population": 22196,
+   "protocol_version": {
+    "era_prober_0.2": {
+     "legacy": 6890,
+     "modern": 392
+    },
+    "note": "prober 0.1 (2026-09-25 rows) sent only a legacy initialize requesting 2025-11-25. Prober 0.2 (2026-09-26 rows) sends MCP 2026-07-28 server/discover first and falls back to initialize 2025-11-25; requested is the version on the exchange that was graded. Negotiated is conditional on what was requested; neither is a census of what servers support.",
+    "offered_prober_0.2": {
+     "2026-07-28": 392,
+     "2026-07-28 > 2025-11-25": 6890
+    },
+    "requested_to_negotiated": {
+     "prober_0.1_rows (2026-09-25, reused)": {
+      "2025-11-25 -> 2024-11-05": 257,
+      "2025-11-25 -> 2025-03-26": 285,
+      "2025-11-25 -> 2025-06-18": 1146,
+      "2025-11-25 -> 2025-11-05": 3,
+      "2025-11-25 -> 2025-11-25": 4005,
+      "2025-11-25 -> 2026-07-28": 109
+     },
+     "prober_0.2_rows (2026-09-26)": {
+      "2025-11-25 -> 2024-11-05": 247,
+      "2025-11-25 -> 2025-03-26": 4162,
+      "2025-11-25 -> 2025-06-18": 300,
+      "2025-11-25 -> 2025-11-25": 2169,
+      "2025-11-25 -> 2026-07-28": 12,
+      "2026-07-28 -> 2026-07-28": 392
+     }
+    }
+   },
+   "read_state": "PARTIAL",
+   "record_version": "0.2.1",
+   "rows_by_observation": {
+    "census-firstparty-2026-09-25": 10184,
+    "census-probe-2026-09-25": 903,
+    "census-v0.2-2026-09-26": 10039,
+    "census-v0.2-2026-09-26 (not attempted)": 944,
+    "plan (not contacted)": 126
+   },
+   "smithery_declared_total": 17268,
+   "states_match_record": true,
+   "states_recount": {
+    "AUTH_REQUIRED": 4948,
+    "MCP_ERROR": 65,
+    "NOT_ATTEMPTED": 1070,
+    "NOT_MCP": 1411,
+    "RESPONDED": 13087,
+    "SSE_ENDPOINT_ONLY": 144,
+    "TIMEOUT": 212,
+    "UNREACHABLE": 1259
+   }
+  },
+  "mill_batch1": {
+   "cards": 14,
+   "grade_differ": 14,
+   "grade_equal": 873,
+   "items": 887,
+   "itemwise_with_equal_counts": 5,
+   "raw_differ": 60,
+   "states": {
+    "NOT_REPRODUCED": 7,
+    "REPRODUCED_AGGREGATE_ONLY": 2,
+    "REPRODUCED_ITEMWISE": 5
+   }
+  },
+  "mill_batch2": {
+   "admission_dry_run": {
+    "ADMITTED": 46,
+    "ADMITTED_n_ge_30": 37,
+    "NOT_ADMITTED": 94
+   },
+   "axes": 14,
+   "cards": 140,
+   "grade_differ": 246,
+   "grade_equal": 8624,
+   "grade_equal_summary": 8624,
+   "items": 8870,
+   "items_summary": 8870,
+   "itemwise_with_equal_counts": 46,
+   "models": 10,
+   "raw_differ": 1466,
+   "raw_equal_summary": 7404,
+   "same_runtime_repeat_not_identical": 20,
+   "states": {
+    "NOT_REPRODUCED": 82,
+    "REPRODUCED_AGGREGATE_ONLY": 9,
+    "REPRODUCED_ITEMWISE": 49
+   }
+  },
+  "public_signals": {
+   "by_self_or_external": {
+    "EXTERNAL": 15,
+    "MIXED_UNSEPARABLE": 43,
+    "NOT_APPLICABLE": 10,
+    "SELF": 50
+   },
+   "by_state": {
+    "MEASURED": 103,
+    "PARTIAL": 3,
+    "UNCHECKABLE": 12
+   },
+   "n_signals": 118
+  },
+  "self_parity": {
+   "cells": 138,
+   "inconsistent_by_index": {
+    "402index": 1,
+    "mcp-registry": 1,
+    "payai-bazaar": 5,
+    "smithery": 1
+   },
+   "inconsistent_by_kind": {
+    "tools": 1,
+    "version": 1,
+    "x402_listing_url": 6
+   },
+   "states": {
+    "CONSISTENT": 37,
+    "INCONSISTENT": 8,
+    "NOT_DECLARED": 1,
+    "NOT_LISTED": 55,
+    "UNCHECKABLE": 37
+   }
+  },
+  "tool_drift": {
+   "states": {
+    "UNCHANGED_AT_NAME_GRANULARITY": 1485,
+    "UNCHECKABLE": 1755
+   }
+  },
+  "x402": {
+   "diff": {
+    "conformant_now": 477,
+    "conformant_previous": 470,
+    "current_hosts": 2713,
+    "hosts_added": 26,
+    "hosts_dropped": 48,
+    "lost_conformance": 4,
+    "newly_conformant": 3,
+    "previous_hosts": 2735
+   },
+   "header_only": 1013,
+   "headline": {
+    "answered_402": 1636,
+    "carried_bazaar_extension": 593,
+    "carried_payment_required_header": 1527,
+    "conformant": 477,
+    "conformant_pct": 17.58,
+    "unreachable": 19,
+    "x402_version_2": 555
+   },
+   "indexes": {
+    "cdp": {
+     "complete": true,
+     "reported_total": 17548,
+     "resources": 17548
+    },
+    "payai": {
+     "complete": true,
+     "reported_total": 6909,
+     "resources": 6909
+    }
+   },
+   "recount": {
+    "answered_402": 1636,
+    "conformant": 477,
+    "hosts": 2713,
+    "unreachable": 19
+   },
+   "snapshot_pinned_by_release": true
+  },
+  "xl_daily": {
+   "assets_wired": 21,
+   "deployments": 113,
+   "evidence_kinds": {
+    "OPERATOR_API": 52,
+    "STATE_PROOF_RECORDED": 9,
+    "STATE_PROOF_VERIFIED": 40,
+    "UNCHECKABLE": 12
+   },
+   "findings_inconsistent_by_kind": {
+    "SUPPLY_ON_DEPRECATED_DEPLOYMENT": 3,
+    "UNLISTED_CONTRACT_WITH_PRODUCT_SYMBOL_AT_A_LISTED_ADDRESS": 1
+   },
+   "frame_n": 280,
+   "issuer_list_states": {
+    "ISSUER_LIST_UNAVAILABLE": 1,
+    "PERMISSIONED_NOT_READABLE": 3,
+    "READ": 14,
+    "UNCHECKABLE": 3
+   },
+   "k": 56,
+   "ledgers_by_kind": {
+    "OPERATOR_API": [
+     "aptos",
+     "bsc",
+     "ethereum",
+     "hedera",
+     "hyperevm",
+     "mantle",
+     "monad",
+     "near",
+     "plasma",
+     "plume",
+     "polygon",
+     "solana",
+     "stellar",
+     "sui",
+     "ton",
+     "tron",
+     "unichain",
+     "xlayer",
+     "xrpl",
+     "zksync"
+    ],
+    "STATE_PROOF_RECORDED": [
+     "avalanche",
+     "cronos",
+     "kaia",
+     "kava",
+     "tempo",
+     "xrplevm"
+    ],
+    "STATE_PROOF_VERIFIED": [
+     "abcore",
+     "arbitrum",
+     "base",
+     "bsc",
+     "celo",
+     "ethereum",
+     "ink",
+     "linea",
+     "mantle",
+     "morph",
+     "noble",
+     "optimism",
+     "polygon",
+     "robinhood",
+     "sonic",
+     "unichain"
+    ],
+    "UNCHECKABLE": [
+     "aptos",
+     "arbitrum",
+     "avalanche",
+     "base",
+     "sei",
+     "worldchain"
+    ]
+   },
+   "listed_not_read": 14,
+   "parity_asset_states": {
+    "CONSISTENT": 4,
+    "INCONSISTENT": 2,
+    "UNCHECKABLE": 15
+   },
+   "unmeasured_selected": 41
+  }
+ },
+ "sources": {
+  "a2a_v0_1": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "dec8cc0c938bbd716a94cc2ca1a9a06c835136db74379b67e2c2628f288fa0fe",
+   "path": "census-universes-publish-2026-09-25/a2a/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-25T08:22:33.567Z"
+  },
+  "a2a_v0_1_1": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "29cb8f0885a3b9bdfbd87c1fa111b1e4402eaf048e42a2eb22cf76a9629e7415",
+   "path": "cp-fix-20260926/a2a-corr/out/record.v0.1.1.json",
+   "payload_sha256_ok": true,
+   "sha256": "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T04:06:22.149Z"
+  },
+  "a2a_v0_1_1_rows": {
+   "path": "cp-fix-20260926/a2a-corr/out/data/cards.v0.1.1.jsonl.gz",
+   "sha256": "93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2791c"
+  },
+  "cp_v0_1": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "c168264381e3f2ed4af313c9315834c875dc62cb0b223c3020b8e8498fa505dd",
+   "path": "contract-parity-2026-09-25/record/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-25T12:25:41.808Z"
+  },
+  "cp_v0_1_1": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "8b8190b7fa2cb07a777a6d77f631d6b2ad47bbc27f1e0279bfa16bf0cd747a51",
+   "path": "cp-fix-20260926/record/record.v0.1.1.json",
+   "payload_sha256_ok": true,
+   "sha256": "9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T02:21:40.535Z"
+  },
+  "cp_v0_1_2": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "8425658e4921988f61841f4b6408d7533670fc311cfd8322e2d61bfd4bc55162",
+   "path": "cp-fix-20260926/v012/rec/record.v0.1.2.json",
+   "payload_sha256_ok": true,
+   "sha256": "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T07:32:39.698Z"
+  },
+  "cp_v0_1_2_rows": {
+   "path": "cp-fix-20260926/v012/rec/rows.v0.1.2.jsonl.gz",
+   "sha256": "8fb15bcbb83db1ae6a61945c2f870a16d27adcc751c059439e63d8e910730492"
+  },
+  "erc8004": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "44e3c973f2a3cfe8f21fb1444fc6991c1154c1b07c784b48ef2870f04a2fef63",
+   "path": "stage/erc8004-agent-census/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "60bd9728f22159351feb71ccd6e0c01faab582f0ccf661415e36f339e52d2538",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T05:31:49.737Z"
+  },
+  "erc8004_agents_rows": {
+   "path": "stage/erc8004-agent-census/agents.jsonl.gz",
+   "sha256": "eafd6b18313df16a139114347f136afc527d7c349f01e7c348a436657e9b6995"
+  },
+  "hf_spaces": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "8ffba1a1fcebdea1a28221dab4a59ba28b5b29873344f0dad6457fb9d1a0f897",
+   "path": "census-universes-publish-2026-09-25/hf/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "53022d26ca321b291ca5578b3b318ef645ecf1e4343b13320ebc91642abb906e",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-25T08:22:30.245Z"
+  },
+  "hf_spaces_rows": {
+   "path": "census-universes-publish-2026-09-25/hf/data/spaces.jsonl.gz",
+   "sha256": "7b9bb0d630444a41f5757499f14e096e0fb37431c69aed6ebbc2aa0ba415088c"
+  },
+  "index": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "abe1dd3385f1fcc2996d71e390bd695cb90509741036239891b92646cb5f13d8",
+   "path": "measurement-index-v0.2-2026-09-26.json",
+   "payload_sha256_ok": true,
+   "sha256": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T10:34:15.836Z"
+  },
+  "mcp_census_v0_2_1": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "1cc03d072ecc76715a6627ba6105a227df7ba0ce9c41059d199d4f27a8004701",
+   "path": "census-v0.2-2026-09-26/pub/record.v0.2.1.json",
+   "payload_sha256_ok": true,
+   "sha256": "3155502aa629a3e0e8dd0240862933e475cc2afaf3417d03c0efa314d139c4bd",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T07:33:47.357Z"
+  },
+  "mcp_census_v0_2_rows": {
+   "path": "census-v0.2-2026-09-26/pub/results.v0.2.public.jsonl.gz",
+   "sha256": "a9b644a17e116c1c6f12c4ecacbb013bab62b3d04f5e84f4715578406984fc70"
+  },
+  "mcp_census_v0_2_superseded": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "9d60b4ed8d5db2ca7f59e57ca4edea275426afafe0b47131006594559fbdc03d",
+   "path": "census-v0.2-2026-09-26/pub/record.v0.2.json",
+   "payload_sha256_ok": true,
+   "sha256": "a18447e5bb27decbc7d20c1542994811f47dee94b4650faed7b231af5c5d72bd",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T07:04:34.530Z"
+  },
+  "mill_batch1": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "18a726ece04b3b550f985f68cd767b4a283e430eb1e3102b2ceb3e26202c5203",
+   "path": "measurement-capsules-v0.2-2026-09-26-mill_cross_runtime/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T06:20:12.622Z"
+  },
+  "mill_batch2": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "0eeb913f7e36161c2e46dedefc68997de65294db5c515e03176bd38f4e483607",
+   "path": "measurement-capsules-v0.2-2026-09-26-mill_cross_runtime-batch2/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T10:33:45.092Z"
+  },
+  "mill_batch2_admission": {
+   "path": "mill-kaggle-batch2-2026-09-26/admission-dryrun.txt.gz",
+   "sha256": "20a0210e39d54dcbaa4067c0f7a8c5241a915df78ed7edbae6d53c03820f2ccf"
+  },
+  "mill_batch2_parity_summary": {
+   "path": "mill-kaggle-batch2-2026-09-26/parity-summary.json",
+   "sha256": "a3bd67a4fd119a4c5f0ec2190c2dde0aff1064bcdeb25c0d4961e541055d4e59"
+  },
+  "public_signals": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "410a35360158082e84d14c6c3e7f0e61944bd23cd92a7c918aa9b597b21df3c7",
+   "path": "public-signals/2026-09-26/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "7c23af1cea95c58d99a2eff2928c5637f38057d238d1b44e49fb8832460f81b0",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T08:31:57.056Z"
+  },
+  "self_parity": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "c9819351c79aaeb53742cfbd4ea1d3e86435a37ebbfb6e3402bb819a85c05d51",
+   "path": "self-parity/2026-09-26/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "a2f205ca43d096ec0e9f621d8e0dcda2bd2d8040b39ff277ef7ae50fa9de4dfe",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T05:46:23.225Z"
+  },
+  "tool_drift": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "d1ef2d355459afae33bed898cfd4576c0da1362cd15ec9714e9958c6275456c6",
+   "path": "measurement-capsules-v0.2-2026-09-26-tool_drift/record.json",
+   "payload_sha256_ok": true,
+   "sha256": "a7a13dab161631d0557726fd64c0dee82bd0b95cb54e2749d96aaddc93fef473",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T06:53:20.454Z"
+  },
+  "x402_diff_2026_09_26": {
+   "path": "flywheel/x402/diff-2026-09-26.json",
+   "sha256": "ff101ce3705cf1ee1ae3284f572cec4d7e9cc92889b6c68a9a0aa2aa7a35cbd9"
+  },
+  "x402_release_2026_09_25": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "54ad5548c00393f0cb66bbef3ddbaef688221b8b6f4700320fd9ab5ffe1fef2c",
+   "path": "flywheel/x402/release-2026-09-25.json",
+   "payload_sha256_ok": true,
+   "sha256": "0d84f400f17a0d771e557d51a5a2edd0674d05c617e23f73d4d5c87db1bae1f4",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-25T11:32:26.082Z"
+  },
+  "x402_release_2026_09_26": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "3e4191b31d612c5651a4c1916300330017fc32ce07377c119f353b2cca8beae2",
+   "path": "flywheel/x402/release-2026-09-26.json",
+   "payload_sha256_ok": true,
+   "sha256": "4e7635ae398be274371ee48a81f7cb1def46c13ef01742e830bbea93b8c13a0b",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T01:11:11.344Z"
+  },
+  "x402_snapshot_2026_09_26": {
+   "path": "flywheel/x402/snapshots/conformance-2026-09-26.jsonl",
+   "sha256": "5faccd86a679f1407da1926e11fba5e98f9e1367f494f56b48f3978369f92853"
+  },
+  "x402_summary_2026_09_26": {
+   "path": "flywheel/x402/summary-2026-09-26.json",
+   "sha256": "4705777f34e72bf935b19398dca486ad252212531ede84d963086087f6d2e3cd"
+  },
+  "xl_daily": {
+   "artifact_sha256_pinned": true,
+   "ots_file_sha256": "5becea1d861a147b5a509b682e735415a99d28cd538f31cef6cdfac7dad51479",
+   "path": "xl-daily/2026-09-26/xl-daily-2026-09-26.json",
+   "payload_sha256_ok": true,
+   "sha256": "b02851fcbc8ea5ad6460c6c847e8af9eaec74d36a09121989590dc180a5d700d",
+   "signature": "VERIFIES",
+   "signed_at": "2026-09-26T06:44:44.913Z"
+  }
+ }
+}

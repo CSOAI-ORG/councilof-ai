@@ -1,0 +1,120 @@
+{
+ "schema": "csoai.eee-export-manifest/0.1",
+ "produced_at": "2026-09-28T14:05:49Z",
+ "state": "STAGED \u2014 not submitted. Submission to huggingface.co/datasets/evaleval/EEE_datastore is HELD for the owner.",
+ "eee": {
+  "version": "0.3.0",
+  "eval_schema_sha256": "c9c6195aec8a9dfa0b2aba4924ac1aa8a184c9d8ca97cee778cb531088e39b48",
+  "source": "https://github.com/evaleval/every_eval_ever/tree/v0.3.0"
+ },
+ "inputs": {
+  "card_index_sha256": "4ff54c78dba0b15b56dc3fdeec62f11f98fa7bf5d4efffc9e54c6839247242a7",
+  "own_model_register": "public/independence/own-model-disclosure.json",
+  "did_json_sha256": "9fad541cbe0ab29e246e77e8ff8fff37fd5183b509ac877612309687fc848ead",
+  "ollama_library_check_sha256": "e733a08cdc3f0160094137c713c611cef5d304f446516fbf9b8e0be47f25e6ad"
+ },
+ "counts": {
+  "cards_in_index": 335,
+  "cards_verified": 335,
+  "excluded_own_or_unconfirmed": 235,
+  "third_party_cards": 100,
+  "held": 42,
+  "unidentified": 0,
+  "exported": 58
+ },
+ "held_axes": {
+  "care": "H1",
+  "gov": "H1",
+  "swag-30": "H3a",
+  "swarm-candidates": "H2"
+ },
+ "held_models": {
+  "deepseek-r1:8b": [
+   "arc-30",
+   "mmlu-30"
+  ],
+  "qwen3:4b": [
+   "arc-30",
+   "mmlu-30"
+  ]
+ },
+ "validation": {
+  "eee_cli": {
+   "command": "python -m every_eval_ever.validate 'data/*/*/*/*.json' (semantic checks on)",
+   "exit": 0,
+   "files": 58,
+   "valid": 58,
+   "errors": 0,
+   "warnings": 0
+  },
+  "duplicates": {
+   "command": "python -m every_eval_ever.validator.check_duplicate_entries",
+   "exit": 0
+  },
+  "raw_json_schema_draft7": {
+   "files": 58,
+   "errors": 0
+  }
+ },
+ "files": {
+  "data/councilof-ai__gspc-card-corpus/google/gemma3-12b/1ff46295-5feb-4d80-b6b2-e7a7a6a9ad0e.json": "992f0ee837cab3fe2095047f6c5498a62a8b5a1bd1f8e19f38fcfb4b46a1025c",
+  "data/councilof-ai__gspc-card-corpus/google/gemma3-12b/8d060586-5543-43b6-8213-65a8bce1b53f.json": "c61e69788e373bfc3faeb094fe131948a52b48c5bcb67001b581d4a33d2727ad",
+  "data/councilof-ai__gspc-card-corpus/google/gemma3-12b/fc6b08ec-3938-4873-a0af-6c07aea8b942.json": "b312ded2f5def5e91df15b4fc9f6c9a513f310e13629a4d5a5dc591f6a5046d6",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/01f088aa-83b2-4e86-b049-ecaaab7270d2.json": "5325a565d279318befcf3a431fa498f112287012aa0f15a2f811e2988a9da426",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/03e98569-acd6-4f50-a7f1-31332a3cd820.json": "30c1f1972a91214d592ec14b44de407024e03b6ba24b1bfa911afa42f1f1265b",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/09c4b13f-8fb5-4ae2-8382-12550f43559e.json": "dbcb6bd8a2db2cc04dc1d7d60a63d72cc7058057802680f200cfec585c185e23",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/0b09865a-33c9-4251-954a-1eabdcb6ea3e.json": "80bae2b869e19bd38c24755544bf4acf3faa17852c5538f67a6a6777c0575c0c",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/1b0ff7cc-c3bb-4b10-ac21-50a5bc728447.json": "a496393af62dbd8a4adafe65acade1925483d564227624d23244b24320cf9baa",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/2519d3be-3093-45f6-bf4a-09ba037c5be2.json": "30716b1984653176954d591ac837baf07bcfffb85fa584c892050be48cde1413",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/aadb9d23-f416-4987-9b86-506569d0678c.json": "3f36c171da1f7330f25d398fba3b5f7acb211f41d4ae7482555c98f3ad2c4e10",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/be2a56e7-28f5-4746-9ac7-7d1a4ab3505b.json": "26f00683e22060119773043392dba3c147b49589e55a8034b644d97d65ecb882",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/e85989fa-badc-4b57-b7a5-98bc91cc9eb4.json": "010e9d741d62f947302ed6601b453d5d454961880cb3f01f3b501cf2a7b47d19",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/f575f2d2-1cba-4438-b8eb-8651cccff30d.json": "341ecd2ce21bc5ecbb1f8254b90ab1be761a06eacf5bf6f4413aa860e3d1decd",
+  "data/councilof-ai__gspc-card-corpus/meta-llama/llama3.2-3b/f70735a4-9dcf-4ba5-bfa6-deb59e197318.json": "01d576c4740564633f9895f9e747f8c190105301eaf5608e1c3dc7db6d8d2cec",
+  "data/councilof-ai__gspc-card-corpus/microsoft/phi4-14b/2fd1ea47-fa39-4281-9a77-582e51ab416e.json": "6c2377c66670e7d86de2f2febaf3d9b615645706750eee11ff54dc47fbdb2640",
+  "data/councilof-ai__gspc-card-corpus/microsoft/phi4-14b/60a5c4fb-fa63-470a-9c29-137402d16488.json": "2ec06371b33396f152036d5dfce1b2980a6b4e3dd8051edd27f9de469d4e48b4",
+  "data/councilof-ai__gspc-card-corpus/microsoft/phi4-14b/7c9f45be-2195-4af0-8a83-e257c13a6335.json": "84697315e5c0984474c8652a2626f0a24a618e52fc22e90f02bb5507b5815774",
+  "data/councilof-ai__gspc-card-corpus/mistralai/mistral-7b/5d2c34b5-9ee2-479a-98d9-dd71e49be20b.json": "979e17c1d5b5e894949fd4931c6d5e7a62663c8659ab6398a80ee685186a08bf",
+  "data/councilof-ai__gspc-card-corpus/mistralai/mistral-7b/8b48f8c0-b2ae-4ff9-a17c-845c2f2d9f9e.json": "986cf77d6154b504edf5a2cd65333b5f60cea22a73f8a0330a6def4c0c2a37be",
+  "data/councilof-ai__gspc-card-corpus/mistralai/mistral-7b/a6eb10aa-143f-4424-95ed-b0f75a4af5ec.json": "98dae61cd4eeb9bc2599ee014159a7a312747cda98867e535d7953d449c53a9e",
+  "data/councilof-ai__gspc-card-corpus/mistralai/mistral-7b/b9e9e5f2-2a21-4515-b7ef-24ad266caed4.json": "87369921af01cffa8a9445bde161745088a1771c5e1fe0eb7bc9224dc92530b8",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b-instruct/7ba01443-7e1e-442e-9dfc-343b8ebc9601.json": "6cd852b7a9a31ff5bca2f0846ff93d10cfef2fc1fda1d36e61ff17fee542753f",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b-instruct/7e16a4ff-b2a8-4c0a-9fe5-b4ea816f2510.json": "43c54e0a970dc377d5d4a870bf2a16d41694db8acca9a2707df72e47ff7d85db",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b-instruct/999d79f5-42fc-4cf2-9629-7df5b268efd3.json": "4d70883509dea6260e40cf3b667b078b82ee4dfdddada2cb5a0db3da3fd4b2e3",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b-instruct/ce4c3c7b-b9e9-479b-98b0-dd78d9baebe9.json": "cab43ab13e1fb323b399f2e22ebc02c45f546c1a5b7309a8624ffbde9d52d954",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/00452c31-3687-4e97-8035-24b795857dd4.json": "45c0d8df4bb093436cf79b497f2606564051f8268cd02281b7b0416e6d5cc03c",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/0834d8d1-5404-4c94-962b-ac85667bf840.json": "e91f308916e34d7de1e6799f55ad75b4c7f3391d29d6941f5f025f992ee3f068",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/28a6a99f-5180-4326-8a56-9a63555d0df2.json": "fca96b964a2baa12c6748e82b3bf9e27e85fdf01e6b8d7ba54793dcca251606f",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/34f36c31-10b1-4623-9e7f-4048c4a0a89f.json": "2f0b4e5ca18467353153cb7d4d3d164684eeaaa0a65f223bad21445e35cbd772",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/3cc4448a-41f4-415c-ab54-0224243670dd.json": "d03e3aac5290e33d77a5312b56b11e4326e73fc95ab4933407cb16105ebc4e01",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/94c5b432-6744-42e4-90c8-268f3751ae58.json": "017734cbb9380dab82dc28d69f9c22e5b30a38fa8a85b15253944b39b5fdb77a",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/96c04cff-11c2-4c9f-b122-4d3c6bca7098.json": "1e39bf2b8d9ee37b6ee31e4dd9bbe3ee3b30426d1633068d6c7df3b71375ea2d",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-0.5b/dff3fb59-51ac-4d0e-b3a4-8882b1bac505.json": "e39ff3fcffae463053add65ef09ae0c2c2efb912f3e4e8f0d13930a63b5b5559",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/06a6045b-126a-4436-a88c-5c029ad4cff1.json": "b6bb42530282d57d00f6904256ceb4941ad7290f45e62b79e8cc360afff7a908",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/0cfd22ee-b9ee-467b-85a5-1f01b43ed839.json": "d1dae9faa61281652ddf450c63ed03bbf0ddca0cdb40eebc4522207dcf2ca20f",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/38f78aac-1b9c-4be0-a51b-b6c40da66fe4.json": "ba594837e852d879c31b0748fbd4faa4d7437a0470ffeca949891bc9de31f791",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/72268630-0928-4221-bd3a-8787c9ed04f1.json": "ed5e3579423dfb3c25bf4ea9dff27789aea2b020f5917cd7dbea8d0fe3734cc3",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/7b94c9c0-5471-45ae-9009-f7624194910b.json": "35b53cc22bf5e3f6fef198a90c90cec8a8e949c3c71d7bf19ea9a64448ff8aa4",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/93b66ae4-5498-4cc8-a848-e7713058b9e4.json": "3f51964e6f23ee8def18e80d2f6d3cc5b16338d65ce517544e18670621da649f",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/b02b7a9d-0808-41ed-9f60-bc7556983437.json": "9066df8e2c8d7a1a9d3911b27b5178c9e838fb916efd24d69803b6cbeb497776",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/d67c5c8d-d7e8-4d8a-84d3-e9daf52e7e3d.json": "4a93661cfc89bcaf6aa063f2dd355d9821558d5b0b8742faefa20dd225c95ab0",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/e6791e3a-3f10-4e94-8962-815241024dc8.json": "4654dc492082100050955661b5096eea93bd239fbeab32214fe92d98f36638d4",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-1.5b/eca7b4dd-6216-493d-8c3a-01a3e97d84b5.json": "0ca98a7aee3e0c2522f24677eda7fb349fcd6be7eed960b308c81749ca02fa88",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-3b/54e29cd1-a1dc-4d21-9876-74fbcee5ce84.json": "abd5436b961502dbd9e5d1ac330f08383860ce4ba911b62e803c287c98c98afb",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-3b/9c72692d-2d1d-4613-90ce-e30d7dcfb9f4.json": "9fea81fe8dfc53f661ca7543275a7a8cfd65a58698e4d918b8ca17e54c46f752",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-3b/c1244c0b-3f2f-45bc-8747-1904657b3be4.json": "e03882448e9c581d2a16d15cb5e64980b2740ff0e64f8dfc224c8d0dfe8384cc",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-7b/26dbc886-9ae2-4226-81b4-d2849c70e807.json": "ba7c26b305468295e54f8277ae9eceecac4a537c4fa5cdc45c14880329b9ec51",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-7b/388bb9e2-1f11-41f3-ad24-0573acda8fb3.json": "00a49102732e6544f95bfbd001e55ec9aa5cae66e3d67a49a01bb716a053d8f4",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-7b/bb12c96d-d29a-4e99-9b00-9eae47dbf4e1.json": "f26b423929ca82e33fbcb867018407c37505f1477eb381dafe25afbc1d25d003",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen2.5-7b/e23f39b9-582e-49cf-b84b-5d2876774204.json": "804a7da79bef7bcc88ce628e61ff929028a70e7a77d77e9c498999a9685cf434",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen3-0.6b/2465c698-654d-42f3-a0b6-d48abaab5a0b.json": "2082e5c587de0e9d2722d98138205e79ff6e2d19802fe6df6b1dcd7160d06e22",
+  "data/councilof-ai__gspc-card-corpus/qwen/qwen3-0.6b/3b6dc10c-122e-4465-8444-56232d072014.json": "060435cdffa39e9f9b94f4c4becda1776422be99c1211af671354ae679bb96e7",
+  "data/councilof-ai__gspc-card-corpus/tiiuae/falcon3-7b/186dd107-b25f-45ec-91c5-2be2269bb57d.json": "5b67434eddc18c097d329459a9bad369abb74c78e510fb6311f7d3a1b335b288",
+  "data/councilof-ai__gspc-card-corpus/tiiuae/falcon3-7b/5df5b887-b5d7-4463-9151-2d326839e5ba.json": "8ba1c321583f00d63eae20dd16a8ac8cadd375f4724ad3eaa98a57126194f54d",
+  "data/councilof-ai__gspc-card-corpus/tiiuae/falcon3-7b/7c1c0344-43a7-4222-9a5e-ab62c42a8af8.json": "6d00c674844b1cc12763ba69351b5a1117f5afa44510a8c398274d456e97a265",
+  "data/councilof-ai__gspc-card-corpus/tiiuae/falcon3-7b/8e178b6e-75bd-4828-8652-b4193d301f59.json": "018c859737c5f37f2fb52d7decacd03dd72599120bff6dc173a406ffb5d6046f",
+  "data/councilof-ai__gspc-card-corpus/tiiuae/falcon3-7b/b2686f6f-a392-48c4-b84e-9c6f2e3672f9.json": "3c6725ecd16fbb032bdb08638364db9203bff947c7fded27bb1a00848f7496b3",
+  "data/councilof-ai__gspc-card-corpus/tiiuae/falcon3-7b/cfa3a6bb-dd07-4410-aa52-e5ccb32a1be6.json": "f664f9aa0ec41fb8ba268a689cc352c4e7d88503c0131017127b1f1b1313faa5",
+  "adapter_reports/councilof-ai__gspc-card-corpus_failures.json": "c04586f0bbf5268c21000005b5213f0554241575bad15f8dcba5afb0cf862f06"
+ }
+}

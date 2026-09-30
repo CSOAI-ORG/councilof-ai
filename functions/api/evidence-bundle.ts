@@ -20,6 +20,7 @@
  *   5. EMPTY IS EMPTY — zero relevant cards ⇒ the bundle says so (and the 402 preview said so
  *      before anyone paid). A buyer is never sold an empty bundle blind.
  */
+import { headFromGet } from "./_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -34,6 +35,7 @@ import { railMode } from "./_x402_config";
 import { OBLIGATIONS, resolveObligation, isRelevant, type CardLite, type Obligation } from "./_obligations";
 import { invoiceHandoff, INVOICE_CONTACT } from "./_invoice_handoff";
 import { signPayload, cardV0, sha256Hex } from "../_lib/cardSign";
+import { EVIDENCE_BUNDLE_DESCRIPTION } from "./_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -157,8 +159,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       return json({ ...listing, reason: "pass obligation=<article-50|article-53|dora|cra>&bundle=1 before presenting payment" }, obRaw ? 404 : 400);
     }
     const resourceUrl = new URL("/api/evidence-bundle?obligation=article-50&bundle=1", origin).toString();
-    const description =
-      "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one obligation. Not a conformity determination.";
+    const description = EVIDENCE_BUNDLE_DESCRIPTION;
     const accepts = x402Accepts(env, resourceUrl, { skuId: "evidence_bundle", tier: "bundle", description });
     // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
     // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -274,8 +275,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.evidence-bundle/0.1", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay the accepts[] entry (x402) → retry with X-PAYMENT", invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "for a buyer who cannot pay USDC: returns a quotation reference, never an amount and never the pack — CSOAI LTD invoices and delivers on settlement" }, catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
-  const description =
-    `An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to ${ob.control_id}. Not a conformity determination.`;
+  const description = EVIDENCE_BUNDLE_DESCRIPTION;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "evidence_bundle", tier: "bundle", description });
   // Computed once, used twice: the 402 advertises this block and the paid path echoes the SAME
   // object into the PaymentPayload sent to the facilitator (specs/extensions/bazaar.md, Client
@@ -379,3 +379,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

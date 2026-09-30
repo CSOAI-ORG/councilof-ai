@@ -504,6 +504,11 @@ export default function HomeGspcBoard({
   const factRuns = typeof totals.fact_runs === "number" ? totals.fact_runs : axes.filter((a) => a.kind === "deterministic-facts").length;
   const separated = typeof totals.separated_leads === "number" ? totals.separated_leads : axes.filter((a) => a.separation === "SEPARATED").length;
   const ties = typeof totals.ties === "number" ? totals.ties : axes.filter((a) => a.separation === "TIE").length;
+  // Read, not loaded-with-nothing: no payload or an empty axis array means the tiles have no source.
+  const unread = !loading && (!!error || axes.length === 0);
+  // The tiles' as_of is the payload's own measurement stamp (measured_on.date) — never the clock.
+  const rawMeasuredOn = (data?.measured_on as { date?: unknown } | undefined)?.date;
+  const measuredOn = typeof rawMeasuredOn === "string" && rawMeasuredOn.trim() ? rawMeasuredOn.trim() : null;
 
   return (
     <section
@@ -557,12 +562,15 @@ export default function HomeGspcBoard({
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-2 lg:grid-cols-5" aria-label="Live board summary">
+        {/* No axes read = nothing to count. The fallbacks above derive from the axis array, so an
+            unreadable board used to print 0 / 0 / 0 TIE / 0 — a count of nothing presented as a
+            measurement. Say UNCHECKABLE instead; never infer a value from an absent payload. */}
         {[
-          ["Measured axes", loading ? "…" : String(measuredAxes), `${axes.length || "—"} declared`],
-          ["Model fleets", loading ? "…" : String(comparisonAxes), "comparison axes"],
-          ["Separated", loading ? "…" : String(separated), `${ties} TIE`],
-          ["Fact runs", loading ? "…" : String(factRuns), "public facts"],
-          ["Status", error ? "UNREACHABLE" : loading ? "READING" : "LIVE", error ? "no value inferred" : "from /api/gspc"],
+          ["Measured axes", loading ? "…" : unread ? "UNCHECKABLE" : String(measuredAxes), unread ? "no axes read" : `${axes.length} declared`],
+          ["Model fleets", loading ? "…" : unread ? "UNCHECKABLE" : String(comparisonAxes), "comparison axes"],
+          ["Separated", loading ? "…" : unread ? "UNCHECKABLE" : String(separated), unread ? "no value inferred" : `${ties} TIE`],
+          ["Fact runs", loading ? "…" : unread ? "UNCHECKABLE" : String(factRuns), "public facts"],
+          ["Status", error ? "UNREACHABLE" : loading ? "READING" : unread ? "UNCHECKABLE" : "LIVE", error || unread ? "no value inferred" : "from /api/gspc"],
         ].map(([label, value, note]) => (
           <div key={label} className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
@@ -571,6 +579,17 @@ export default function HomeGspcBoard({
           </div>
         ))}
       </div>
+      {!loading ? (
+        <p className="mt-2 text-xs text-slate-600 dark:text-emerald-100/65" data-testid="gspc-tiles-as-of">
+          as_of:{" "}
+          <strong className="font-semibold text-slate-800 dark:text-emerald-50">
+            {unread ? "UNCHECKABLE — the board was not read on this load" : measuredOn ?? "UNCHECKABLE — the payload carries no measured_on.date"}
+          </strong>
+          {" · "}source:{" "}
+          <a href="/api/gspc" className="font-mono underline underline-offset-2">GET /api/gspc</a>
+          {" → totals, measured_on.date"}
+        </p>
+      ) : null}
 
       <nav aria-label="Published evidence path" className="mt-4 grid gap-2 sm:grid-cols-2 xl:grid-cols-4" data-testid="board-supply-led-entry">
         <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">1 · Explore measurements</a>

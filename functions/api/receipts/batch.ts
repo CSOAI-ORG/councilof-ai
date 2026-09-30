@@ -26,6 +26,7 @@
  *
  * Never: a conclusion about any leaf, a grade, a certificate, a settlement-receipt claim.
  */
+import { headFromGet } from "../_head";
 import {
   verifyX402Payment,
   x402Accepts,
@@ -362,3 +363,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 /** Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored. */
 export const onRequestPost = onRequestGet;
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

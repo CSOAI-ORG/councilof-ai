@@ -1,0 +1,43 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own sources and instruments show.",
+  "artifact": {
+   "path": "/interop/disclosure-completeness-2026-09-30/epoch-date-and-n/record.json",
+   "sha256": "55c9345fa517c67991ba76e71144bb18111730d445a764d5a20cc1d6a1f5fedc",
+   "schema": "csoai.disclosure-completeness-record/0.1",
+   "as_of": "2026-09-29T15:10:19Z"
+  },
+  "answer": "Of 11112 result rows in 87 files, 6189 state a result date and 330 state a sample size (n); 33 state both.",
+  "inputs_digest_sha256": "69bb279093ee7e13ab79ea6a9c9a0ce4bfd6b73ffd243d1c292fd7dcaf729d8d",
+  "kind": "measurement.disclosure_completeness",
+  "method_code_sha256": "2f431f315f804ecd6943f21c6dd814a5f0bd0d7d8056d198a41ac5d2e88caaf6",
+  "n_inputs": 1,
+  "publication": "PUBLISHED on councilof.ai under /interop/disclosure-completeness-2026-09-30/epoch-date-and-n/",
+  "record_id": "epoch-date-and-n-2026-09-30",
+  "set": "disclosure-completeness-2026-09-30",
+  "source": "Epoch AI, Capabilities & benchmarking (benchmark_data.zip)"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "ae0ae3afe42e8caf06db585cae277afc0e6f65e33f882f3971dd6c484f2fb4420d74703069ce0b557a8eb1c8903a4a24e53b58b35ec6bfcf697a2f15964e7e05",
+  "payload_sha256": "c6a899603bdf3bed914400bf1311ea027db5c54e336ff267144e17ab94eb06e8",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-30T03:12:27.451Z",
+  "canonical": "JSON, keys sorted, no whitespace, UTF-8, non-ASCII unescaped"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended to the record": "rejected (control holds)",
+   "artifact sha256 altered in the payload": "rejected (control holds)",
+   "signature bit flipped": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record's bytes; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

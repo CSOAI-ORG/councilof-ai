@@ -1,0 +1,15 @@
+{
+ "@context": [
+  "https://www.w3.org/ns/did/v1"
+ ],
+ "id": "did:web:issuer.example",
+ "verificationMethod": [
+  {
+   "id": "did:web:issuer.example#key-1",
+   "type": "JsonWebKey2020",
+   "controller": "did:web:issuer.example",
+   "publicKeyHex": "4a29f17df31f7bcdf65f27df8868e05321cc3cce3417ce3d24699bf76508c444",
+   "note": "PUBLISHED TEST KEY: seed = sha256(\"openshell-adapter example TEST key: issuer\"). Signs example receipts only."
+  }
+ ]
+}

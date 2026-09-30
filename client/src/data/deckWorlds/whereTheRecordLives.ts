@@ -44,7 +44,7 @@ export const RECORD_HERO = {
   },
   actions: [
     { href: "/gspc-verify", label: "Verify a card yourself", primary: true },
-    { href: "https://doi.org/10.5281/zenodo.21991104", label: "The archived board (DOI)" },
+    { href: "/interop/zenodo-status.json", label: "The archived board (DOI): Zenodo record unavailable since 29 Sep 2026" },
   ],
 };
 
@@ -71,9 +71,9 @@ export const RECORD_SLIDES: Slide[] = [
       alt: "A branching white structure holding a green faceted stone at its centre, labelled as the signed result",
     },
     points: [
-      { tag: "benefit", text: "Published to Hugging Face, PyPI, GitHub and Zenodo — each checked live" },
+      { tag: "benefit", text: "Published to Hugging Face, PyPI and GitHub — each checked live. Zenodo: record unavailable since 29 Sep 2026 (account blocked by Zenodo; appeal pending)" },
       { tag: "benefit", text: "Verification is client-side: no account, no server call, no permission" },
-      { tag: "benefit", text: "DOI 10.5281/zenodo.21991104 — an archival identifier we do not control" },
+      { tag: "benefit", text: "DOI 10.5281/zenodo.21991104 — an archival identifier we do not control, and the reason why: Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending." },
       { tag: "usp", text: "Software Heritage snapshot 7b219f85… records the repository visit dated 2 September 2026" },
     ],
   },

@@ -82,6 +82,9 @@ const EXISTING = [
   "/merge-me             /how-we-work   308",
   "/merge-me/            /how-we-work   308",
   "/favicon.ico           /csoai-icon.svg      308",
+  // /conflicts was 404; a reader looking for our conflict-of-interest disclosure lands on it (2026-09-27).
+  "/conflicts            /independence/       308",
+  "/conflicts/           /independence/       308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
   // Eat lid 2026-09-01 (still true 2026-09-06): GET /publisher-health.json 200,
@@ -304,19 +307,24 @@ const EXISTING = [
   "/claimguard.html        /honesty/                308",
   "/coming                 /honesty/                308",
   "/coming/                /honesty/                308",
-  // 2026-09-15: /corrections/ was a guessable 404 and the footer opened raw JSON. The readable
-  // corrections ledger is the dashboard attestations tab (it renders GET /api/corrections).
-  "/corrections            /dashboard?tab=attestations  308",
-  "/corrections/           /dashboard?tab=attestations  308",
+  // 2026-09-15: /corrections/ was a guessable 404 and the footer opened raw JSON; it then 308'd to
+  // the dashboard attestations tab. 2026-09-26: /corrections is a routed page of its own
+  // (client/src/pages/Corrections.tsx), so no rule here — the bare→slash canonicaliser is derived.
   "/stack                  /stack/index.json        308",
   "/stack/                 /stack/index.json        308",
-  // 2026-09-22 owner decision — two trees leave the Pages upload and are served from the HF mirror
+  // 2026-09-22 owner decision — trees that leave the Pages upload are served by 302 from Hugging Face
   // (scripts/deploy-exclusions.json + scripts/drop-proofs-from-dist.mjs refuse to drop anything not
-  // listed here): proofs/ (3,993 .ots, the 20,000-file cap) and the axis-23 run artifact, whose bytes
-  // are sha256-pinned inside its signed companion and list third-party registry names the brand gate
+  // listed here): proofs/ (the 20,000-file cap) and the axis-23 run artifact, whose bytes are
+  // sha256-pinned inside its signed companion and list third-party registry names the brand gate
   // refuses on this surface. The companion (the board row's evidence_url) stays on-site.
-  "/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/interop/effect-binding-server-probe-2026-09-22.json  302",
-  "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-mirror/resolve/main/public/proofs/:splat  302",
+  // 2026-09-28 owner decision — cards/ follows (the root of 28 Sep built 20,042 files), and all three
+  // move from csoai/councilof-ai-mirror (which also carried full-history bundles) to the public
+  // csoai/councilof-ai-evidence, which holds only these files. scripts/pod-loops/evidence_sync.py
+  // makes the dataset byte-equal to the build before every deploy and holds the deploy otherwise.
+  // /cards/card_index.json (above) is an exact rule, so it still wins over the /cards/* splat.
+  "/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-22.json  302",
+  "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302",
+  "/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302",
 ];
 
 const STOREFRONT = [
@@ -397,7 +405,6 @@ const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
   "/advisory",   // reviewed legacy hand-off page
   "/benchmarks", // static-first benchmark registry
   "/globe",      // exact /globe -> /globe3d.html redirect owns this door
-  "/governance", // canonical static Governance Fabric front; React /governance is a legacy redirect
 ]);
 const publicHtmlRouteCollisions = routes
   .map(normFrom)

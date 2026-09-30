@@ -59,7 +59,7 @@ const MAPPING: MappingRow[] = [
     risk: "Unexpected Code Execution",
     controls:
       "Jail containment is measured as a floor, not assumed · least-privilege tools",
-    surface: "jail axis — measured, leader statistically tied (a tie is not a win)",
+    surface: "jail axis — measured, leader separation UNTESTED (a point lead is not a win)",
   },
   {
     asi: "ASI06",
@@ -126,6 +126,14 @@ export default function OwaspAgentic() {
           mapping of the ASI list; if an earlier one exists, tell us and we will cite it in{" "}
           <a className="text-emerald-700 underline" href="/api/corrections">
             the corrections ledger
+          </a>
+          .
+        </p>
+        <p className="mt-3 text-[15px] text-gray-700">
+          This page maps our own controls. For which of our checks observe evidence about each ASI item in other
+          systems, with strength and live data, see{" "}
+          <a className="text-emerald-700 underline" href="/crosswalks/owasp-asi/">
+            the OWASP ASI crosswalk
           </a>
           .
         </p>

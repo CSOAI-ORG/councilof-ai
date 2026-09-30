@@ -1,0 +1,63 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/a2a-card-census-2026-09-25/record.v0.1.1.json",
+      "sha256": "4a2b46bb42aa727363ca04d8a2cc21ed76b50a4c6937a62f80d6fcfda191af91",
+      "schema": "csoai.a2a-card-census/0.1.1",
+      "as_of": "2026-09-25T07:25:59Z"
+    },
+    "supersedes_sha256": "b290b53d05912d8b3a5913c7e73e693f40cc71be8e0432c4626643c6d662176c",
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim inside beyond what the record's own instrument measured.",
+    "read_state": "EXHAUSTED",
+    "n_planned": 443,
+    "states": {
+      "CARD_SERVED": 422,
+      "ROBOTS_DISALLOWED": 9,
+      "NOT_FOUND": 5,
+      "UNREACHABLE": 5,
+      "AUTH_REQUIRED": 2
+    },
+    "sig_state": {
+      "verified": 13,
+      "failed": 8,
+      "uncheckable": 12,
+      "no_signatures": 389
+    },
+    "rows_changed": [
+      "fbbc1e43-6975-46d2-a066-7e8ad90357b3",
+      "ee821d2a-b667-40b7-9dda-b1170aaefa7f",
+      "6f97c159-43ed-49de-92b6-1d5aa5ae8ce7",
+      "41d157e0-cdec-4431-a6e1-07e070f35b08",
+      "125be81b-7326-41cd-85a2-7e0c2aa031b8",
+      "77c18a1a-bc34-4314-9cd3-8192f9f288a2",
+      "ee3508f9-9a8d-4221-8668-fef137ff9fff"
+    ],
+    "summary_cross_checks_hold": true,
+    "published_files": {
+      "data/cards.v0.1.1.jsonl.gz": "93f9865008531a9cb5c44bc8c8d32a1bf1dc775c4e3ec9880128f13c6ab2791c",
+      "correction.v0.1.1.evidence.json": "7a59a331f8313f004a7f7e0f2499834ca1d7f32d13362ab14fd400d2efcd6605"
+    }
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "450b207bae807fb0e2566f4efa4a285bc0c301a71191f02534edb5a32b47b23c7aeb6944b726116818330992b1c283406315244592fa7051c65b76cdce6c6003",
+    "payload_sha256": "fa6e4386a9b9d9e97521e1d7bb7c66ef69ee6cc2ff62988882eca6f574260900",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-26T04:06:22.149Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "record sha256 altered": "rejected (control holds)",
+      "supersedes altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload as above, sha256 must equal signature.payload_sha256, verify sig_ed25519 (hex) with the #board-attestation-1 key in https://csoai.org/.well-known/did.json"
+}

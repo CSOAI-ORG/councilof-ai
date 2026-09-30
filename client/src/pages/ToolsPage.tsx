@@ -1,3 +1,4 @@
+import MomentumStrip from "@/components/momentum/MomentumStrip";
 import { useEffect, useState } from "react";
 import { ArrowRight, CheckCircle2, Copy, PlugZap, ShieldCheck, Terminal } from "lucide-react";
 import SignedAgentTravel from "@/components/SignedAgentTravel";
@@ -5,8 +6,16 @@ import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
 import { ALL_TOOL_NAMES, FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { setMetaDescription } from "@/lib/utils";
+import EXTENSION_MANIFEST from "../../../extensions/chrome-gspc-verify/manifest.json";
 
-const MCP_URL = "https://councilof.ai/mcp";
+// The free door is the default everywhere a config is offered (audit 2026-09-28 #10): the first
+// snippet a developer copies should reach the tools that cost nothing. /mcp is still named below,
+// with what it adds, and both parts of its count are read from the manifests it serves.
+const MCP_URL = "https://councilof.ai/mcp/free";
+const MCP_METERED_URL = "https://councilof.ai/mcp";
+// The zip is rebuilt from extensions/chrome-gspc-verify/ by scripts/build-extension-zip.py; its name
+// carries the manifest version, so the link is read from that manifest, never typed.
+const EXTENSION_ZIP = `/downloads/gspc-verify-${EXTENSION_MANIFEST.version}.zip`;
 const MCP_SNIPPET = `{
   "mcpServers": {
     "gspc": {
@@ -53,16 +62,16 @@ const HOSTS = [
   { name: "Claude", how: "Add gspc → paste the JSON below, or the URL." },
   { name: "Cursor", how: "Paste the JSON into ~/.cursor/mcp.json" },
   { name: "Kimi", how: "MCP settings → same JSON / URL." },
-  { name: "Grok", how: "Same URL, or grok plugin install CSOAI-ORG/council-of-ai-grok" },
+  { name: "Grok", how: "Same URL, as a remote (Streamable HTTP) MCP server." },
 ] as const;
 
 export default function ToolsPage() {
   const [copied, setCopied] = useState(false);
   const [cardCopied, setCardCopied] = useState(false);
   useEffect(() => {
-    document.title = "Add gspc in your tool | councilof.ai";
+    document.title = "Add the GSPC tools to your AI client | Council of AI";
     setMetaDescription(
-      `Council OS for people already in Claude, Cursor, Kimi, or Grok. ${ALL_TOOL_NAMES.length} tools at https://councilof.ai/mcp: ${FREE_TOOL_NAMES.length} free readers and ${PAID_TOOL_NAMES.length} x402-metered evidence tools. Measurement, never certification.`,
+      `Council OS for people already in Claude, Cursor, Kimi, or Grok. ${FREE_TOOL_NAMES.length} free tools at ${MCP_URL}; ${ALL_TOOL_NAMES.length} at ${MCP_METERED_URL} (${FREE_TOOL_NAMES.length} free + ${PAID_TOOL_NAMES.length} x402-metered evidence tools). Measurement, never certification.`,
     );
   }, []);
 
@@ -70,7 +79,7 @@ export default function ToolsPage() {
     <section className="mx-auto max-w-6xl px-4 py-12 sm:py-16" data-testid="tools-mcp">
       <div className="overflow-hidden rounded-[2rem] border border-emerald-400/15 bg-[#06150f] text-white shadow-[0_28px_80px_rgba(3,17,11,0.18)]">
         <div className="grid gap-0 lg:grid-cols-[1.12fr_0.88fr]">
-          <div className="p-6 sm:p-8 lg:p-10">
+          <div className="min-w-0 p-6 sm:p-8 lg:p-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-200">
               <PlugZap className="h-3.5 w-3.5" />
               Agent tools · MCP endpoint
@@ -83,19 +92,26 @@ export default function ToolsPage() {
               and verify signed records without turning a directory listing into a trust claim.
             </p>
             <div className="mt-6 flex flex-wrap gap-2 text-sm">
+              {/* Both counts are read from the manifests the /mcp door serves
+                  (functions/mcp/gspc-tools.json + paid-tools.json), never typed. They are
+                  two parts of one total, so the pills say so instead of standing side by
+                  side as if they measured different things. */}
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
-                <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                {FREE_TOOL_NAMES.length} free readers
+                <Terminal className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                {ALL_TOOL_NAMES.length} tools in all
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
-                <ShieldCheck className="h-4 w-4 text-emerald-300" />
-                client-side verification
+                <CheckCircle2 className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                {FREE_TOOL_NAMES.length} free to read
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-emerald-100">
-                <Terminal className="h-4 w-4 text-emerald-300" />
-                {ALL_TOOL_NAMES.length} listed tools
+                <ShieldCheck className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                {PAID_TOOL_NAMES.length} metered (x402)
               </span>
             </div>
+            <p className="mt-3 text-xs leading-5 text-emerald-100/75">
+              Verification runs in your browser and is always free.
+            </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <button
                 type="button"
@@ -119,12 +135,23 @@ export default function ToolsPage() {
               >
                 Verify a record <ArrowRight className="h-4 w-4" />
               </a>
+              <a
+                href="/connect/claude/"
+                data-testid="tools-connect-claude"
+                className="inline-flex min-h-11 items-center gap-1 px-1 text-sm font-semibold text-emerald-200 underline decoration-emerald-300/50 underline-offset-4 hover:text-emerald-50"
+              >
+                Add to Claude or Cursor →
+              </a>
             </div>
           </div>
-          <div className="border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
+          <div className="min-w-0 border-t border-white/10 bg-black/10 p-5 sm:p-7 lg:border-l lg:border-t-0">
             <p className="font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-emerald-300/70">Connection config</p>
             <p className="mt-2 break-all font-mono text-xs text-emerald-100/65">{MCP_URL}</p>
-            <pre className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
+            <p className="mt-1 text-xs leading-5 text-emerald-100/65" data-testid="tools-door-split">
+              {FREE_TOOL_NAMES.length} free tools, no payment. <span className="font-mono">{MCP_METERED_URL}</span> serves{" "}
+              {ALL_TOOL_NAMES.length}: {FREE_TOOL_NAMES.length} free + {PAID_TOOL_NAMES.length} metered.
+            </p>
+            <pre tabIndex={0} className="mt-4 overflow-x-auto rounded-2xl border border-white/10 bg-[#020a06] p-5 text-[13px] leading-6 text-emerald-100 shadow-inner">
               <code>{MCP_SNIPPET}</code>
             </pre>
             <p className="mt-4 text-xs leading-5 text-emerald-100/55">
@@ -151,6 +178,22 @@ export default function ToolsPage() {
         <strong>Trust boundary:</strong> a third party verifying a signed record is meaningful evidence. Connecting an MCP server is not.
         The browser verifier stays free and recomputes Ed25519 locally.
       </div>
+      <section id="extension" aria-labelledby="extension-h" className="mt-8 rounded-2xl border border-slate-200 bg-white p-5" data-testid="tools-extension">
+        <h2 id="extension-h" className="text-base font-bold text-slate-900">Browser extension (Chrome, load unpacked)</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          Shows the live board, puts a signed-card state on Hugging Face model pages, and verifies a pasted card
+          offline. It is not in the Chrome Web Store: download the zip, unzip it, open{" "}
+          <code>chrome://extensions</code>, switch on Developer mode, choose <strong>Load unpacked</strong> and pick
+          the unzipped folder.
+        </p>
+        <a
+          href={EXTENSION_ZIP}
+          download
+          className="mt-3 inline-flex min-h-11 items-center rounded-lg bg-emerald-800 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-900"
+        >
+          Download GSPC Verify {EXTENSION_MANIFEST.version} (zip)
+        </a>
+      </section>
       <section aria-labelledby="badge-spec-h" className="mt-12">
         <h2 id="badge-spec-h" className="text-xl font-black tracking-tight text-slate-900">
           The three subject states — and the badge that is only a link
@@ -163,7 +206,7 @@ export default function ToolsPage() {
           It is navigation, not evidence about the model whose README contains it. Only a VALID,
           subject-bound signed cell may render that model’s score.
         </p>
-        <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <div role="region" aria-label="GSPC badge states" tabIndex={0} className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
           <table className="w-full min-w-[34rem] text-sm">
             <caption className="sr-only">
               The three permitted GSPC badge states and when each is allowed on a model or agent card.
@@ -205,7 +248,7 @@ export default function ToolsPage() {
           DISCOVERED means listed, not graded. Add this to your own README if you want a clearly
           labelled link to the global board; nobody is PR-bombed with it and it never grades the model.
         </p>
-        <pre className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
+        <pre tabIndex={0} className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
           <code>{MODEL_CARD_BLOCK}</code>
         </pre>
         <button
@@ -237,6 +280,11 @@ export default function ToolsPage() {
         </a>
         .
       </p>
+      <MomentumStrip
+        variant="panel"
+        title="The tools, and how far they travel"
+        ids={["mcp_tools", "x402_doors", "pypi_csoai_all_time", "hf_downloads_30d_other"]}
+      />
       <SignedAgentTravel />
       <TwoSpeed />
       <WatchlistPane />

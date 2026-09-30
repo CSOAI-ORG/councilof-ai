@@ -48,7 +48,7 @@ export default function RegionsMap() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - regulatory map</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs AI, by region</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Filter by EU, US, or Global and see the frameworks in force, what's phasing in, and the CSOAI bridge that covers each. For the city-to-bloc stack of any single place, use MEOK Law.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Filter by EU, US, or Global and see the frameworks in force, what's phasing in, and the CSOAI bridge that covers each. For the city-to-bloc stack of any single place, use the jurisdiction engine.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-10">
@@ -70,7 +70,7 @@ export default function RegionsMap() {
           ))}
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <a href="/meok-law" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Your exact jurisdiction stack -&gt;</a>
+          <a href="/law" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Your exact jurisdiction stack -&gt;</a>
           <a href="/map" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The relevance map -&gt;</a>
           <a href="/sectors" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">By sector -&gt;</a>
         </div>

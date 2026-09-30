@@ -8,6 +8,7 @@
  * The snapshot as_of values are read from the live files, never typed.
  * If only one snapshot exists, the delta is UNCHECKABLE (no previous to compare).
  */
+import { headFromGet } from "../_head";
 import {
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
@@ -15,10 +16,11 @@ import {
   hasPaymentHeader,
   verifyX402Payment,
   x402Accepts,
-  CSOAI_LID,
   type X402Env,
 } from "../_x402";
+import { WRAPPER_LID } from "../wrapper";
 import { railMode } from "../_x402_config";
+import { WRAPPER_CHANGES_DESCRIPTION } from "../_x402_descriptions";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string };
 
@@ -108,7 +110,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const preview = url.searchParams.get("preview") === "1";
 
   const resourceUrl = `${origin}/api/wrapper/changes?id=${encodeURIComponent(id || "<pair>")}`;
-  const description = `Delta of wrapped supply and escrow for ${id || "<pair>"} since the previous ledger snapshot. Returns per-field changes, not a rate or grade.`;
+  const description = WRAPPER_CHANGES_DESCRIPTION;
 
   // Validate ID format
   if (!id || !/^[a-z0-9.]+:[a-z]+$/.test(id)) {
@@ -144,7 +146,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         csoai: {
           schema: "csoai.wrapper.changes/0.1",
           per: "pair-request",
-          lid: CSOAI_LID,
+          lid: WRAPPER_LID,
           never: ["rating", "guarantee", "verdict", "rank", "certificate"],
           deliverable: "delta of wrapped supply and escrow between two ledger snapshots",
           free_preview: `${resourceUrl}&preview=1`,
@@ -250,3 +252,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   return json(result);
 };
+
+// HEAD answers as GET would, with no body and never with a payment (functions/api/_head.ts).
+export const onRequestHead = headFromGet(onRequestGet);

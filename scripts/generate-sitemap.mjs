@@ -187,18 +187,6 @@ const CHANGEFREQ = new Map([
 // catalogue entries. Derive this set from App.tsx so a newly quarantined route
 // cannot remain advertised to crawlers by accident.
 const src = readFileSync(APP_TSX, "utf8");
-// Some SPA alias paths are intentionally owned by reviewed static HTML fronts.
-// Keep one ownership authority by deriving the exception set from the redirects generator.
-const redirectGeneratorSource = readFileSync(join(ROOT, "scripts/generate-redirects.mjs"), "utf8");
-const reviewedMarker = "const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([";
-const reviewedStart = redirectGeneratorSource.indexOf(reviewedMarker);
-const reviewedEnd = reviewedStart < 0 ? -1 : redirectGeneratorSource.indexOf("]);", reviewedStart);
-if (reviewedStart < 0 || reviewedEnd < 0) {
-  throw new Error("[sitemap] reviewed public HTML ownership set is missing from generate-redirects.mjs");
-}
-const reviewedPublicHtmlAppRoutes = new Set(
-  [...redirectGeneratorSource.slice(reviewedStart, reviewedEnd + 3).matchAll(/"([^"]+)"/g)].map((x) => x[1]),
-);
 const reviewNoticePaths = new Set(
   [...src.matchAll(/<Route\b[^>]*?\bpath="([^"]+)"[^>]*?\bcomponent=\{ContentReviewNotice\}/g)]
     .map((match) => match[1]),
@@ -341,9 +329,7 @@ while ((m = routeRe.exec(src)) !== null) {
   // tag disowns it. Measured live 2026-09-14: /ceremony and /lookup were in the sitemap, each
   // 308 -> a 200 copy of another page. The target route is listed in its own right.
   if (/^<Route\b[^>]*?\bpath="[^"]+"[^>]*>\s*\{\s*\(\)\s*=>\s*<Redirect\b/.test(src.slice(m.index, m.index + 400))) {
-    // A reviewed static front may intentionally own the same URL. Do not mark that path seen:
-    // the static-page pass below must be allowed to add and canonicalise the real HTML surface.
-    if (!reviewedPublicHtmlAppRoutes.has(p)) seen.add(p);
+    seen.add(p);
     skippedAlias++;
     continue;
   }
@@ -565,15 +551,31 @@ const MACHINE_PATHS = [
   ["/api/feed.xml", "daily", "0.7"],
   ["/api/reported", "daily", "0.6"],
   ["/llms.txt", "daily", "0.6"],
-  ["/layer0-drive-through.json", "hourly", "0.6"],
-  ["/eat-flywheel.json", "hourly", "0.6"],
-  ["/layer0-distribution.json", "hourly", "0.6"],
-  ["/progress-index.json", "hourly", "0.6"],
   ["/.well-known/agent-card.json", "daily", "0.6"],
   ["/.well-known/did.json", "daily", "0.6"],
   ["/.well-known/scitt.json", "daily", "0.6"],
   ["/api/arena/scoreboard", "daily", "0.6"],
   ["/api/regulator-findings", "daily", "0.6"],
+  // Reach engine (functions/_lib/reach): the derived records feeds and the daily-note hub. Entity
+  // pages are NOT listed here: they live in the Function-generated /sitemaps/<type>-<n>.xml, named by
+  // /sitemaps/index.xml (scripts/reach/entity-sitemap-gate.mjs checks that no entity URL is in both).
+  ["/feeds/records.xml", "daily", "0.6"],
+  ["/feeds/records.json", "daily", "0.5"],
+  ["/notes/daily/", "daily", "0.6"],
+  // Machine-readable records previously served only by an out-of-band release (27 Sep); now in public/.
+  ["/progress-index.json", "daily", "0.5"],
+  ["/eat-flywheel.json", "daily", "0.5"],
+  ["/layer0-distribution.json", "daily", "0.5"],
+  ["/layer0-drive-through.json", "daily", "0.5"],
+  // signed-receipts/v1 conformance kit (28 Sep): the golden vectors a third-party verifier is run against.
+  // Its page, /spec/signed-receipts/v1/conformance/, is a static public/*.html and is collected below.
+  ["/spec/signed-receipts/v1/conformance/vectors.json", "weekly", "0.6"],
+  // /extension/: the GSPC Verify browser-extension install page. councilof.ai serves it 200 (indexable)
+  // but no App.tsx route or public/*.html produces it in this build, so the parser above cannot see
+  // it; release_guard's known-public baseline learned it live on 30 Sep 2026 and sitemap-source /
+  // sitemap-built held every deploy until it was listed. If the page is ever withdrawn, remove this
+  // line in the same change (a sitemap lists what the edge serves).
+  ["/extension/", "weekly", "0.5"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }

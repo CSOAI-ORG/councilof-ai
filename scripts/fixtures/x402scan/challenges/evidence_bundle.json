@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.evidence_bundle",
         "sku_id": "evidence_bundle",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "bundle"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.",
       "extra": {
@@ -39,7 +38,7 @@
       "how": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1&invoice=gbp&commissioned_by=<legal entity>",
       "note": "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice"
     },
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "conformity determination",
       "certificate",
@@ -56,7 +55,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "bundle",
     "preview": {
@@ -476,7 +475,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldmlkZW5jZS1idW5kbGUiLCJzY2hlbWUiOiJleGFjdCIsInZhbGlkVW50aWwiOjE3OTAwOTMwMzEsInZlcnNpb24iOjF9.Ao_oyXLTGTWkOB-YwGE6UTSIGPwklcs3VoOrhbGO1lcmOXIX9IIsTDqychMXAQJxRbMi0OavH2cX8BF66UcPAA"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9ldmlkZW5jZS1idW5kbGU_b2JsaWdhdGlvbj1hcnRpY2xlLTUwJmJ1bmRsZT0xIiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDg4LCJ2ZXJzaW9uIjoxfQ.0CJzbXoYAq3l0bHOy0W390bRVO-MpE0kczPrVJQ0LivDajX0HqjRO0yEkd2MUcl0PtmZQdLICVlGIiX-sGSKBw"
           }
         ]
       },

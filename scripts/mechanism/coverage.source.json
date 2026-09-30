@@ -1,0 +1,100 @@
+{
+  "id": "mechanism-coverage",
+  "title": "Open measurement mechanism: coverage of the frozen provision corpus",
+  "page": "/mechanism/",
+  "json": "/mechanism/coverage.json",
+  "edited": "2026-09-27",
+  "statements": [
+    "This report counts what the published data holds. Every number in it is derived by scripts/mechanism/build-coverage.mjs from committed files; none is typed.",
+    "A provision marked PREDICATE has a deterministic check whose result a stranger can re-run. It is a measurement of one observable the provision names, not a finding that anyone complies with or breaches it.",
+    "A provision marked RELATED_MEASURE is one that a measured board axis points to as relevant. The pointer is informative: the axis does not test the provision.",
+    "HASH_ONLY means the provision is in the frozen manifest as an identifier and a SHA-256, and nothing tests it. The source text bytes behind those hashes were not recovered, so the manifest is not an inspectable legal corpus.",
+    "Measurement, not certification. No compliance label, endorsement or regulator relationship is stated or implied."
+  ],
+  "sources": {
+    "manifest": "public/interop/frozen-provision-hashes.json",
+    "inventory": "public/interop/regulatory-inventory.json",
+    "regulator_crosswalk": "client/src/data/regulator-crosswalk.json",
+    "east_west": "public/crosswalk/east-west-v1.json",
+    "gpai_art12": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json",
+    "owasp": "public/crosswalks/owasp-asi.json",
+    "capsule_root": "public/measurement-capsules/v0.2",
+    "app": "client/src/App.tsx"
+  },
+  "hierarchy": [
+    { "level": "authority", "label": "Authority", "means": "Who makes or enforces the rule. Held as a source-and-routing record; a record is not a relationship with the authority and not a live regulator API." },
+    { "level": "instrument", "label": "Instrument", "means": "The law, framework or standard, named by its official identifier (CELEX for EU acts)." },
+    { "level": "version", "label": "Version", "means": "Which text of the instrument was frozen. Today the manifest pins each provision by a SHA-256 of normalised text; the source bytes that produced those hashes were not recovered." },
+    { "level": "provision", "label": "Provision", "means": "One addressable unit of the instrument (an article, or an id the manifest assigns), with its frozen hash." },
+    { "level": "obligation", "label": "Obligation", "means": "A single duty cut out of a provision, with its conditions. No obligation register exists yet." },
+    { "level": "applicability", "label": "Applicability", "means": "Whether the obligation applies to a given system. Not determined here: every authority record says applicability needs review by the party concerned." },
+    { "level": "crosswalks", "label": "Crosswalks", "means": "Rows elsewhere that map this instrument to another framework or to a measured axis." },
+    { "level": "evidence_requirement", "label": "Evidence requirement", "means": "What bytes a test needs to see. Stated per predicate below." },
+    { "level": "test", "label": "Test / profile", "means": "A deterministic predicate (PREDICATE) or a measured axis that points to the provision (RELATED_MEASURE)." },
+    { "level": "watcher", "label": "Watcher", "means": "Something that polls the authority and expires the mapping when the text changes. Read from the manifest's own watcher field." }
+  ],
+  "instruments": [
+    { "celex": "32024R1689", "name": "EU AI Act", "inventory_name": "EU AI Act", "long": "Regulation (EU) 2024/1689", "jurisdiction": "EU", "authority_record": "eu-ai-act-2024-1689", "crosswalk_regulator": "eu-ai-act", "east_west_regime": "EU", "source_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj" },
+    { "celex": "32016R0679", "name": "GDPR", "inventory_name": "GDPR", "long": "Regulation (EU) 2016/679", "jurisdiction": "EU", "authority_record": "eu-gdpr-2016-679", "crosswalk_regulator": null, "east_west_regime": null, "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj" },
+    { "celex": "32024R2847", "name": "Cyber Resilience Act", "inventory_name": "Cyber Resilience Act", "long": "Regulation (EU) 2024/2847", "jurisdiction": "EU", "authority_record": null, "crosswalk_regulator": null, "east_west_regime": null, "source_url": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj" },
+    { "celex": "32022R2554", "name": "DORA", "inventory_name": "DORA", "long": "Regulation (EU) 2022/2554", "jurisdiction": "EU", "authority_record": null, "crosswalk_regulator": null, "east_west_regime": null, "source_url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj" },
+    { "celex": "32022L2555", "name": "NIS2", "inventory_name": "NIS2", "long": "Directive (EU) 2022/2555", "jurisdiction": "EU", "authority_record": null, "crosswalk_regulator": null, "east_west_regime": null, "source_url": "https://eur-lex.europa.eu/eli/dir/2022/2555/oj" },
+    { "celex": "32022L2464", "name": "CSRD", "inventory_name": "CSRD", "long": "Directive (EU) 2022/2464", "jurisdiction": "EU", "authority_record": null, "crosswalk_regulator": null, "east_west_regime": null, "source_url": "https://eur-lex.europa.eu/eli/dir/2022/2464/oj" }
+  ],
+  "predicates": [
+    {
+      "id": "art50-marking-evidence",
+      "name": "Article 50 marking evidence",
+      "celex": "32024R1689",
+      "article": "50",
+      "scope": "Paragraph 2 only: whether a generated file carries a machine-readable mark that named methods detect, at the time of the check.",
+      "deterministic": "C2PA manifest-store presence, assertion hashes, the c2pa.hash.data hard binding and the COSE_Sign1 claim signature under the leaf's own key; IPTC DigitalSourceType read from XMP.",
+      "not_measured": "C2PA chain trust (no trust list is bundled), SynthID and other keyed watermarks, the open-source DWT-DCT detector and text watermarks. The response lists each with its reason.",
+      "evidence_requirement": "The file's bytes (an https URL we fetch, or the bytes posted), up to 20 MiB, or a C2PA manifest on its own.",
+      "result_wording": "Results read \"marking not detected by method X\"; never absent, compliant or non-compliant.",
+      "binding_today": "The check quotes the verbatim Article 50(2) text with its SHA-256. It does not yet cite the frozen provision id.",
+      "code": ["functions/api/art50/marking-evidence.ts", "functions/_lib/c2pa.ts", "functions/_lib/art50Law.ts"],
+      "code_must_contain": { "functions/_lib/art50Law.ts": "Article 50(2), Regulation (EU) 2024/1689" },
+      "free_route": "/api/art50/marking-evidence?url=https://example.com/image.png&preview=1"
+    }
+  ],
+  "related_measure_sources": [
+    { "id": "regulator-crosswalk", "path": "client/src/data/regulator-crosswalk.json", "regulator": "eu-ai-act", "celex": "32024R1689", "kind": "axis pointers (relevant-to)" },
+    { "id": "gpai-art12", "path": "public/interop/gpai-art12-pact-iaw/gpai-art12-pact-gspc-crosswalk.json", "celex": "32024R1689", "kind": "axis pointers (related_measure)" }
+  ],
+  "frameworks_outside_corpus": [
+    { "id": "nist-ai-rmf", "name": "NIST AI RMF 1.0", "authority_record": "us-nist-ai-rmf-1", "crosswalk_regulator": "nist-ai-rmf", "files": ["public/interop/nist-airmf-gspc-crosswalk.json"], "page": "/crosswalks/" },
+    { "id": "iso-42001", "name": "ISO/IEC 42001:2023", "authority_record": null, "crosswalk_regulator": "iso-42001", "files": [], "page": "/crosswalks/" },
+    { "id": "owasp-asi", "name": "OWASP Top 10 for Agentic Applications (2026)", "authority_record": null, "crosswalk_regulator": "owasp-asi", "files": ["public/crosswalks/owasp-asi.json"], "page": "/crosswalks/owasp-asi/" }
+  ],
+  "jurisdictions": [
+    { "id": "EU", "label": "European Union / EEA", "inventory": ["EU_EEA"], "east_west": ["EU"], "routes": ["/eu-ai-act"] },
+    { "id": "UK", "label": "United Kingdom", "inventory": ["UNITED_KINGDOM"], "east_west": ["UK"], "routes": ["/uk-ai-regulation", "/compliance/uk-ai-bill", "/frameworks/uk-ai-bill"] },
+    { "id": "US-FED", "label": "United States (federal, incl. NIST)", "inventory": ["UNITED_STATES_FEDERAL", "UNITED_STATES_GLOBAL_USE"], "east_west": [], "routes": ["/us-ai-regulation"] },
+    { "id": "US-CA", "label": "California", "inventory": [], "east_west": [], "routes": ["/california-ai-law"] },
+    { "id": "US-CO", "label": "Colorado", "inventory": [], "east_west": [], "routes": ["/colorado-ai-act"] },
+    { "id": "US-TX", "label": "Texas", "inventory": [], "east_west": [], "routes": ["/texas-ai-act"] },
+    { "id": "US-IL", "label": "Illinois", "inventory": [], "east_west": ["US-IL"], "routes": [] },
+    { "id": "CA", "label": "Canada", "inventory": ["CANADA_FEDERAL"], "east_west": [], "routes": ["/canada-aida", "/compliance/canada-ai-act", "/frameworks/canada-ai-act"] },
+    { "id": "CN", "label": "China", "inventory": ["CHINA"], "east_west": ["CN"], "routes": ["/china-ai-law", "/compliance/tc260"] },
+    { "id": "JP", "label": "Japan", "inventory": ["JAPAN"], "east_west": [], "routes": [] },
+    { "id": "SG", "label": "Singapore", "inventory": ["SINGAPORE_GLOBAL_USE"], "east_west": [], "routes": ["/singapore-ai-governance"] },
+    { "id": "KR", "label": "South Korea", "inventory": ["SOUTH_KOREA"], "east_west": [], "routes": ["/south-korea-ai-act"] },
+    { "id": "IN", "label": "India", "inventory": ["INDIA"], "east_west": [], "routes": [] },
+    { "id": "BR", "label": "Brazil", "inventory": ["BRAZIL"], "east_west": [], "routes": [] },
+    { "id": "AU", "label": "Australia", "inventory": ["AUSTRALIA"], "east_west": [], "routes": ["/compliance/australia-ai-governance", "/frameworks/australia-ai"] },
+    { "id": "ZA", "label": "South Africa", "inventory": ["SOUTH_AFRICA"], "east_west": [], "routes": [] },
+    { "id": "COE", "label": "Council of Europe treaty parties", "inventory": ["COUNCIL_OF_EUROPE_PARTIES"], "east_west": [], "routes": [] }
+  ],
+  "routes_today": [
+    { "id": "verify-server", "name": "Look up an endpoint", "how": "Paste an MCP server, A2A agent or x402 endpoint URL at /verify-server/. It shows every published capsule about it and re-checks each one in your browser.", "link": "/verify-server/", "is": "free, no account", "is_not": "It only shows what the public censuses already measured. It does not start a new measurement." },
+    { "id": "registries", "name": "Be in a public registry the censuses read", "how": "The census capsules read public listings: MCP servers in the public registries the MCP census reads (contract parity, tool drift) and signed agent cards listed in the a2aregistry census. A listed endpoint is read when that census next runs.", "link": "/measurement-capsules/", "is": "free, permissionless", "is_not": "No date is promised, and being measured is not being endorsed." },
+    { "id": "art50-preview", "name": "Article 50(2) marking check on one file", "how": "GET /api/art50/marking-evidence?url=<https URL>&preview=1 runs the deterministic marking check on the file and returns the result unsigned.", "link": "/api/art50/marking-evidence?url=https://example.com/image.png&preview=1", "is": "free preview, same measurement as the signed pack", "is_not": "Not a legal opinion on Article 50. A signed pack is a separate commissioned route." },
+    { "id": "mcp-tools", "name": "Agents: the MCP server", "how": "POST https://councilof.ai/mcp, tools measurement_index, verify_capsule and server_evidence.", "link": "/measurement-capsules/", "is": "free, no key", "is_not": "Read and verify only." },
+    { "id": "dispute", "name": "Contest a published result", "how": "The dispute route re-runs the frozen instrument and publishes the re-run as a new signed record.", "link": "/dispute/", "is": "free", "is_not": "An allegation is measured, not argued." }
+  ],
+  "not_open_today": [
+    { "id": "evidence-intake", "what": "POST /api/evidence-intake, which would queue a candidate record for operator review.", "why": "It returns WRITER_AUTH_UNAVAILABLE: no public writer is configured, so nothing submitted there is stored." },
+    { "id": "claim-form", "what": "A form to submit an arbitrary written claim for measurement.", "why": "None exists. A claim is measured today only when it is one of the kinds an instrument above reads." }
+  ]
+}

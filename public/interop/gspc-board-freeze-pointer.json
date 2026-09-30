@@ -22,7 +22,8 @@
     "alg": "Ed25519",
     "keyid": "sha256:51dd13decb9932423495dd378484fe2b43d7304d69d6526fad10251b88216ab7",
     "public_key_hex": "d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c",
-    "custody": "3-party MPC (Coinbase cb-mpc, Ed25519 additive), owner's own Oracle tenancy",
+    "custody": "MPC signing protocol (Coinbase cb-mpc, Ed25519 additive) with all three shares in one directory on one host: one failure domain. The share split was never performed. Correction C-2026-0925-01; see /signed/gspc-board.status.json -> custody_truth.",
+    "custody_as_claimed_in_signed_bytes": "3-party MPC (Coinbase cb-mpc, Ed25519 additive), owner's own Oracle tenancy - superseded by correction C-2026-0925-01 (one host, one failure domain)",
     "parties": 3,
     "board_says": "22 axis \u00b7 22 measured",
     "measured_on": {

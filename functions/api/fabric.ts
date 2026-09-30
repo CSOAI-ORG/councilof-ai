@@ -368,6 +368,7 @@ export async function buildFabricManifest(
     aguiState,
     agentCard,
     a2aRuntime,
+    a2ui,
     compute,
     providerCanary,
     actionJobs,
@@ -392,6 +393,7 @@ export async function buildFabricManifest(
     ),
     boundedProbe(origin, "/.well-known/agent-card.json", fetcher),
     boundedProbe(origin, "/api/a2a", fetcher, a2aInit),
+    boundedProbe(origin, "/api/a2ui", fetcher),
     boundedProbe(origin, "/api/compute", fetcher),
     boundedProbe(origin, "/api/provider-canary", fetcher),
     boundedProbe(origin, "/api/action-jobs", fetcher),
@@ -623,21 +625,39 @@ export async function buildFabricManifest(
     );
   }
 
-  rails.push(
-    rail(observedAt, {
-      id: "a2ui-renderer",
-      label: "A2UI renderer",
-      role: "declarative interactive tool surfaces",
-      protocol: "A2UI",
-      state: "UNCHECKABLE",
-      endpoint: null,
-      evidence_ref: null,
-      summary:
-        "No same-origin A2UI renderer endpoint is published, so runtime rendering is not claimed.",
-      freshness_seconds: null,
-      last_error: "no published runtime endpoint",
-    }),
-  );
+  if (a2ui.ok && a2ui.json && text(a2ui.json.protocol) === "A2UI") {
+    const version = text(a2ui.json.version) ?? "unknown version";
+    const status = text(a2ui.json.status) ?? "unknown status";
+    rails.push(
+      rail(observedAt, {
+        id: "a2ui-renderer",
+        label: "A2UI renderer",
+        role: "declarative interactive tool surfaces",
+        protocol: "A2UI",
+        state: "RUNTIME_OBSERVED",
+        endpoint: "/api/a2ui",
+        evidence_ref: "/api/a2ui",
+        summary:
+          "A2UI " + version + " " + status + " descriptor answered; this establishes the same-origin presentation projection, not execution authority or protocol conformance.",
+        freshness_seconds: null,
+        last_error: null,
+      }),
+    );
+  } else {
+    rails.push(
+      unavailable(observedAt, {
+        id: "a2ui-renderer",
+        label: "A2UI renderer",
+        role: "declarative interactive tool surfaces",
+        protocol: "A2UI",
+        endpoint: "/api/a2ui",
+        evidence_ref: "/api/a2ui",
+        probe: a2ui,
+        summary:
+          "The same-origin A2UI descriptor did not produce usable runtime evidence.",
+      }),
+    );
+  }
 
   const computeBody = compute.ok ? compute.json : null;
   const census = record(computeBody?.census);

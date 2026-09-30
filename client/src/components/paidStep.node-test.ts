@@ -9,7 +9,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 
 test("names the live catalog and feed door, never a price", () => {
   assert.equal(PAID_STEP_HREF, "/api/x402");
-  assert.equal(PAID_STEP_FEED, "/api/eunomia-data?feed=1");
+  assert.equal(PAID_STEP_FEED, "/api/signed-data-feed?feed=1");
   assert.equal(PAID_STEP_COMMISSION, "/api/request-attestation");
   assert.match(PAID_STEP_LINE.toLowerCase(), /verification is free/);
   assert.match(PAID_STEP_LINE, /commission_card/);

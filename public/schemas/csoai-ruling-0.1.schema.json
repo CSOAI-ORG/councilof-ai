@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schemas/csoai-ruling-0.1.schema.json",
+  "title": "csoai.ruling/0.1",
+  "description": "A signed record of one ruling. A ruling decides WHICH pre-registered rule applies, or WHETHER a rule's output is served, published, named or admitted. It never sets a measured state: SEPARATED, TIE, UNTESTED, MEASURED, UNMEASURED and ADMITTED/NOT_ADMITTED come only from pinned rules over pinned bytes. Where the question concerns a rule's output, that output is copied into rule_output with origin 'rule' and the commit that computed it; the ruling cannot author it. The reviewer panel is ADVISORY: the owner's ruling is binding until the panel's measured independence reaches n_eff >= 2. A JSON Schema cannot compare fields or walk key names at every depth, so the producer (scripts/rulings/ruling-lib.mjs) also refuses measured-state keys anywhere in the record, fault-tolerance vocabulary the panel has not earned, and a binding panel below n_eff 2. The signature is detached: Ed25519 under did:web:csoai.org#board-attestation-1 over signature.attestation, which commits to the record by content_id = sha256(RFC 8785 JCS of the record without 'signature').",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "ruling_id",
+    "question",
+    "class",
+    "rule_applied",
+    "evidence",
+    "rule_output",
+    "reviewers",
+    "panel_state",
+    "panel_n_eff",
+    "panel_note",
+    "binding",
+    "decider",
+    "owner_ruling_verbatim",
+    "owner_ruling_source",
+    "decided_at",
+    "decided_at_basis",
+    "effective_from",
+    "supersedes",
+    "correction_ref",
+    "effect"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.ruling/0.1" },
+    "ruling_id": { "type": "string", "pattern": "^R-[0-9]{4}-[0-9]{4}-[0-9]{2}$" },
+    "question": { "type": "string", "minLength": 10, "maxLength": 600 },
+    "class": {
+      "enum": ["admission", "state-name", "board-change", "naming", "dispute", "publication", "other"]
+    },
+    "rule_applied": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "text"],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 3,
+          "description": "The doctrine, ADR, charter article or owner-rule this ruling applies, by name (e.g. 'Standing doctrine: UNMEASURED is first-class', 'ADR-002')."
+        },
+        "text": { "type": "string", "minLength": 10, "maxLength": 600 },
+        "uri": { "type": "string", "pattern": "^(https://|git:)" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["uri", "sha256", "of"],
+        "properties": {
+          "uri": {
+            "type": "string",
+            "pattern": "^(https://|git:)",
+            "description": "https:// for a public byte source; git:<repo>@<40-hex commit>:<path> for a committed file."
+          },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "of": { "type": "string", "minLength": 3, "description": "What bytes the sha256 is over." }
+        }
+      }
+    },
+    "rule_output": {
+      "description": "null when the question is not about a rule's output. Otherwise the output exactly as the rule computed it. Recorded, never set: origin is always 'rule'.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["origin", "value", "computed_by"],
+          "properties": {
+            "origin": { "const": "rule" },
+            "value": { "type": "string", "minLength": 1 },
+            "computed_by": { "type": "string", "pattern": "^git:[A-Za-z0-9._-]+@[0-9a-f]{40}:" }
+          }
+        }
+      ]
+    },
+    "reviewers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["provider", "model", "verdict", "rationale_hash"],
+        "properties": {
+          "provider": { "type": "string", "minLength": 1 },
+          "model": { "type": "string", "minLength": 1 },
+          "family": { "type": "string", "minLength": 1 },
+          "verdict": { "enum": ["CONCUR", "DISSENT", "CANNOT_REPRODUCE"] },
+          "rationale_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "key": { "type": "string", "description": "The reviewer's own verification key, when it has one." },
+          "sig": { "type": "string" }
+        }
+      }
+    },
+    "panel_state": {
+      "enum": ["NOT_CONVENED", "ADVISORY", "INDEPENDENT"],
+      "description": "NOT_CONVENED: no reviewer ran. ADVISORY: reviewers ran but measured n_eff < 2 (or unmeasured); the owner's ruling alone binds. INDEPENDENT: measured n_eff >= 2."
+    },
+    "panel_n_eff": {
+      "description": "Effective number of independent reviewers by the council-independence method, as a decimal string, or UNMEASURED. A string, so RFC 8785 number formatting never enters the signed bytes.",
+      "oneOf": [
+        { "const": "UNMEASURED" },
+        { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$" }
+      ]
+    },
+    "panel_note": { "type": "string", "minLength": 3 },
+    "binding": {
+      "enum": ["OWNER"],
+      "description": "Who binds. OWNER until the panel's measured n_eff >= 2; 0.1 defines no other value."
+    },
+    "decider": { "const": "owner" },
+    "owner_ruling_verbatim": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The owner's words, quoted exactly from owner_ruling_source.where. The literal UNRECORDED when no first-hand quote exists; never a paraphrase presented as a quote."
+    },
+    "owner_ruling_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verbatim_status", "where"],
+      "properties": {
+        "verbatim_status": {
+          "enum": ["QUOTED", "AS_RECORDED", "UNRECORDED"],
+          "description": "QUOTED: the source shows the owner's words in quotation marks. AS_RECORDED: the source's own entry text, which records the ruling without quotation marks. UNRECORDED: no first-hand record of the words exists."
+        },
+        "where": { "type": "string", "minLength": 3 },
+        "entry_stamp": { "type": "string" },
+        "redaction": { "type": "string" }
+      }
+    },
+    "decided_at": {
+      "type": "string",
+      "pattern": "^([0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}(:[0-9]{2})?Z)?|UNRECORDED)$"
+    },
+    "decided_at_basis": { "type": "string", "minLength": 3 },
+    "effective_from": {
+      "type": "string",
+      "minLength": 3,
+      "description": "An ISO date/datetime, or the event the ruling takes effect on (e.g. 'the next board re-sign')."
+    },
+    "supersedes": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^R-[0-9]{4}-[0-9]{4}-[0-9]{2}$" }] },
+    "correction_ref": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^C-[0-9]{4}-[0-9]{4}-[0-9]{2}$" }] },
+    "effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["writes_measured_state", "writes_board", "note"],
+      "properties": {
+        "writes_measured_state": { "const": false },
+        "writes_board": { "const": false },
+        "note": { "type": "string", "minLength": 3 }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["did", "key_ed25519_hex", "attestation", "sig_ed25519", "signer_auth", "note"],
+      "properties": {
+        "did": { "const": "did:web:csoai.org#board-attestation-1" },
+        "key_ed25519_hex": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "sig_ed25519": { "type": "string", "pattern": "^[0-9a-f]{128}$" },
+        "signer_auth": { "enum": ["pod-token", "github-oidc"] },
+        "note": { "type": "string" },
+        "attestation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schema", "ruling_id", "class", "decided_at", "content_id", "content_id_rule", "record_canonical_bytes", "signed_at"],
+          "properties": {
+            "schema": { "const": "csoai.ruling-attestation/0.1" },
+            "ruling_id": { "type": "string" },
+            "class": { "type": "string" },
+            "decided_at": { "type": "string" },
+            "content_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+            "content_id_rule": { "type": "string" },
+            "record_canonical_bytes": { "type": "integer", "minimum": 1 },
+            "signed_at": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

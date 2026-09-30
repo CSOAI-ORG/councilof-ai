@@ -11,9 +11,17 @@
  * receipt — it only classifies the opaque response's receipt shape). Settlement is the route's job
  * via functions/api/_x402.ts, fail-closed. The route's
  * reply comes back as structuredContent in three honest states:
- *   402 → status PAYMENT_REQUIRED: the full x402 v2 body (accepts[], extensions.bazaar, csoai
- *         preview) + the PAYMENT-REQUIRED header, so an MCP client pays from its own wallet and
- *         calls again with x_payment. isError:false — a challenge is an answer, not a failure.
+ *   402 → status PAYMENT_REQUIRED, following the x402 MCP transport (x402-foundation/x402
+ *         specs/transports-v2/mcp.md, "Payment Required Signaling"): isError:TRUE, structuredContent
+ *         carries the route's PaymentRequired object at the TOP LEVEL (x402Version, resource,
+ *         accepts[], extensions) next to this wrapper's own fields, and content[0].text is
+ *         JSON.stringify(structuredContent); the human summary moves to content[1].text. Until
+ *         2026-09-26 this returned isError:false with the challenge nested under
+ *         `payment_required`, which an x402 MCP client (checks structuredContent.x402Version +
+ *         accepts) could not recognise. `payment_required` is kept for existing readers.
+ *         PAYMENT SEMANTICS UNCHANGED: payment is still read only from the `x_payment` argument and
+ *         forwarded as X-PAYMENT; `_meta["x402/payment"]` is not read, so a client that sends only
+ *         that receives the same challenge and is charged nothing (paid-tools.test.ts pins both).
  *   2xx → status DELIVERED: delivery is separate from settlement and receipt state. A free preview,
  *         a paid delivery with no settle echo, a settle echo with a receipt gap, and a settle echo
  *         carrying an unverified JWS receipt are four different structured states.
@@ -283,7 +291,13 @@ export async function paidToolResult(
   }
 
   if (res.status === 402) {
+    const paymentRequired =
+      body && typeof body === "object" && !Array.isArray(body)
+        ? (body as Record<string, unknown>)
+        : {};
     const payload = {
+      // x402 MCP transport: the PaymentRequired object sits at the top level of structuredContent.
+      ...paymentRequired,
       ...base,
       status: "PAYMENT_REQUIRED",
       http_status: 402,
@@ -295,10 +309,17 @@ export async function paidToolResult(
         ? "A payment authorization was presented, but this response does not prove settlement. Inspect the returned reason, wallet, chain and facilitator before signing or retrying."
         : "sign accepts[0] (x402 exact scheme, EIP-3009 transferWithAuthorization under extra.name/version) with your wallet, base64 the payload, and call this tool again with x_payment=<that value>. The free preview, if any, is in payment_required.csoai.preview.",
     };
-    return reply(
-      payload,
-      `PAYMENT_REQUIRED — ${tool.csoai.route} answered 402; accepts[] carries asset, amount and payTo. ${retryWarning} ${DOCTRINE}.`,
-    );
+    const summary = `PAYMENT_REQUIRED — ${tool.csoai.route} answered 402; accepts[] carries asset, amount and payTo. ${retryWarning} ${DOCTRINE}.`;
+    return {
+      content: [
+        { type: "text" as const, text: JSON.stringify(payload) },
+        { type: "text" as const, text: summary },
+      ],
+      structuredContent: payload,
+      // isError marks "not delivered — payment required", as the x402 MCP transport requires. It is
+      // a challenge, not a fault: nothing was charged unless x_payment was presented.
+      isError: true,
+    };
   }
   if (res.status === 404) {
     return reply(

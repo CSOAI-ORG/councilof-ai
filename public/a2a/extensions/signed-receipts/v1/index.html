@@ -27,7 +27,7 @@
   <dl>
     <dt>Extension URI</dt><dd><code>https://councilof.ai/a2a/extensions/signed-receipts/v1</code></dd>
     <dt>Status</dt><dd>Draft, for the A2A two-tier extension path (experimental → official)</dd>
-    <dt>Specification</dt><dd><a href="https://github.com/CSOAI-ORG/a2a-signed-receipts/blob/main/SPEC.md">SPEC.md</a></dd>
+    <dt>Specification</dt><dd><a href="https://huggingface.co/datasets/csoai/councilof-ai-source/resolve/96bf3a07d4f944e9a9ed577e329ef10e20d38dfc/contributions/a2a-signed-receipts/f80de2731ceb/SPEC.md">SPEC.md</a></dd>
     <dt>Discussion</dt><dd><a href="https://github.com/a2aproject/A2A/issues/2150">a2aproject/A2A#2150</a></dd>
     <dt>Licence</dt><dd>Apache-2.0</dd>
     <dt>Maintainer</dt><dd>CSOAI Ltd (Council of AI), UK company 16939677</dd>
@@ -65,8 +65,10 @@
   <a href="https://councilof.ai/api/corrections">C-2026-0902-09</a>.</p>
 
   <h2>Running code</h2>
-  <p><a href="https://github.com/CSOAI-ORG/a2a-signed-receipts/blob/main/interceptor.py">interceptor.py</a>
-  — an ADK-style client/server interceptor. Offline card verifier:
+  <p><a href="https://councilof.ai/spec/signed-receipts/v1/interceptor.py">interceptor.py</a>
+  — an ADK-style client/server interceptor. Since 28 September 2026 it returns <code>UNVERIFIABLE_KEY</code>, never
+  VALID, when it cannot resolve the signing key. Conformance vectors and a one-command runner:
+  <a href="https://councilof.ai/spec/signed-receipts/v1/conformance/">/spec/signed-receipts/v1/conformance/</a>. Offline card verifier:
   <a href="https://councilof.ai/verifier/gspc-verify.mjs">gspc-verify.mjs</a>, Apache-2.0, zero
   dependencies, three states rather than two. Our published verification rule:
   <a href="https://councilof.ai/signed/HOW-TO-VERIFY.md">HOW-TO-VERIFY.md</a>.</p>

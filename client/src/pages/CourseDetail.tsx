@@ -13,11 +13,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookOpen, Clock, Award, Users, CheckCircle2, Loader2, ArrowLeft, Play, GraduationCap } from "lucide-react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
-import {useState, useEffect } from "react";
+import {useState } from "react";
 import { Progress } from "@/components/ui/progress";
 
 export default function CourseDetail() {
-  useEffect(() => { document.title = "CourseDetail | CSOAI"; }, []);
   const { id } = useParams<{ id: string }>();
   const [, setLocation] = useLocation();
   const [isEnrolling, setIsEnrolling] = useState(false);

@@ -27,3 +27,33 @@ describe("GET /api/regulation", () => {
     });
   });
 });
+
+// FU-1 (29 Sep 2026): the Treaty Office chart is the primary source for CETS 225 and it is not in
+// dispute. The feed states the status it records; C-2026-0929-03 is the ledger entry for CETS 225.
+describe("/api/regulation CETS 225", () => {
+  const all = JSON.stringify(REGULATION_FEED);
+  const cets = REGULATION_FEED.resolved_disputes.find((r) => r.item.includes("CETS 225"));
+
+  it("is no longer listed as disputed", () => {
+    expect(REGULATION_FEED.disputed).toHaveLength(0);
+    expect(all).not.toContain("sources disagree");
+    expect(all).not.toContain("stated honestly rather than guessed");
+  });
+
+  it("states the status from the Treaty Office chart", () => {
+    expect(cets?.status).toBe("NOT_IN_FORCE");
+    expect(cets?.statement).toMatch(/^Not in force\./);
+    expect(cets?.statement).toContain("status as of 29/09/2026");
+    expect(cets?.statement).toContain("European Union on 15 May 2026");
+    expect(cets?.statement).toContain("21 signatories");
+    expect(cets?.statement).toContain("at least three Council of Europe member States");
+    expect(cets?.statement).toContain("Art. 30(3)");
+    expect(cets?.source).toContain("treatynum=225");
+    expect(cets?.correction).toContain("C-2026-0929-03");
+  });
+
+  it("attributes obligations to the Parties, not to users or deployers", () => {
+    expect(cets?.statement).toContain("addressed to the Parties");
+    expect(cets?.statement).not.toMatch(/deployer|incident report/i);
+  });
+});

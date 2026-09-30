@@ -12,7 +12,7 @@ const COG: Step[] = [
   { glyph: "✦", name: "Remember", body: "Writes to a compounding memory: episodic, semantic, procedural, relational, preference." },
   { glyph: "❂", name: "Reflect", body: "Periodically distils raw memory into higher-order insights — the Smallville reflection loop." },
   { glyph: "◈", name: "Plan", body: "Turns goals + memory into a governed plan, checked against Layer 0 policy before acting." },
-  { glyph: "➤", name: "Act", body: "Executes through frameworks — MEOK bridge, social, legacy — with attestation on every step." },
+  { glyph: "➤", name: "Act", body: "Executes through connected frameworks — social, legacy — with attestation on every step." },
 ];
 
 type Mem = { type: string; body: string };

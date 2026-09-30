@@ -1,0 +1,230 @@
+{
+ "x402Version": 2,
+ "error": "Payment required",
+ "resource": {
+  "url": "https://councilof.ai/api/pop/mcp-registry",
+  "description": "Population door: MCP registry listings — 354 own server names in the official MCP registry (one row per name, classified on isLatest=true), as of 2026-09-22T08:27:50Z, state INDEXED. one row per server name the estate publishes in the official MCP registry, classified on its latest version (remote alive / package resolvable), with the registry's full-walk census reported beside it. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank",
+  "mimeType": "application/json",
+  "serviceName": "CSOAI Population Door",
+  "tags": [
+   "population",
+   "mcp",
+   "registry",
+   "census",
+   "x402"
+  ]
+ },
+ "accepts": [
+  {
+   "scheme": "exact",
+   "network": "eip155:8453",
+   "amount": "10000",
+   "maxAmountRequired": "10000",
+   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+   "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+   "maxTimeoutSeconds": 300,
+   "extra": {
+    "name": "USD Coin",
+    "version": "2",
+    "decimals": 6,
+    "symbol": "USDC"
+   },
+   "csoai_pricing": {
+    "product_id": "csoai.product.population.mcp-registry",
+    "sku_id": "issuance",
+    "tier": "reserve",
+    "pricing_basis": "PROMO_EXISTING_DATA",
+    "campaign_id": "csoai-launch-30d-20260911",
+    "normal_amount_atomic": "20000",
+    "offered_amount_atomic": "10000",
+    "starts_at": "2026-09-11T00:00:00Z",
+    "ends_at": "2026-10-11T00:00:00Z",
+    "fresh_compute_excluded": true
+   },
+   "resource": "https://councilof.ai/api/pop/mcp-registry",
+   "description": "Population door: MCP registry listings — 354 own server names in the official MCP registry (one row per name, classified on isLatest=true), as of 2026-09-22T08:27:50Z, state INDEXED. one row per server name the estate publishes in the official MCP registry, classified on its latest version (remote alive / package resolvable), with the registry's full-walk census reported beside it. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
+   "mimeType": "application/json"
+  }
+ ],
+ "extensions": {
+  "bazaar": {
+   "info": {
+    "input": {
+     "type": "http",
+     "method": "GET"
+    },
+    "output": {
+     "type": "json",
+     "example": {
+      "schema": "csoai.population-door/0.1",
+      "kind": "slice",
+      "id": "mcp-registry",
+      "state": "INDEXED",
+      "n": 354,
+      "n_unit": "own server names in the official MCP registry (one row per name, classified on isLatest=true)",
+      "as_of": "2026-09-22T08:27:50Z",
+      "source": [
+       "/interop/mcp-registry-self-listings-2026-09-22.json",
+       "/interop/agent-population-2026-09-17.json"
+      ],
+      "rows": "<the population rows / artifact bytes, verbatim>",
+      "attestation": {
+       "schema": "https://councilof.ai/schema/card-v0.json",
+       "surface": "population.slice",
+       "payload": {
+        "kind": "csoai.population.slice/0.1",
+        "rows_sha256": "<hex>"
+       },
+       "sha256": "<hex>",
+       "sig_ed25519": "<hex or null>"
+      },
+      "settle": {
+       "transaction": "<0x… or null>",
+       "network": "<caip2 or null>",
+       "payer": "<0x… or null>"
+      }
+     }
+    }
+   },
+   "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "input": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "const": "http"
+       },
+       "method": {
+        "type": "string",
+        "enum": [
+         "GET",
+         "HEAD",
+         "DELETE"
+        ]
+       }
+      },
+      "required": [
+       "type",
+       "method"
+      ],
+      "additionalProperties": false
+     },
+     "output": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string"
+       },
+       "example": {
+        "type": "object"
+       }
+      },
+      "required": [
+       "type"
+      ]
+     }
+    },
+    "required": [
+     "input"
+    ]
+   }
+  },
+  "offer-receipt": {
+   "info": {
+    "offers": [
+     {
+      "format": "jws",
+      "acceptIndex": 0,
+      "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvbWNwLXJlZ2lzdHJ5Iiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNDAxNTk1LCJ2ZXJzaW9uIjoxfQ.6bxnT4wfF1ZdJS89n3kpuCzt_TDspZ9EUd1eUGoWSivpyL0W0fXJDvRiSPaURb6dRGwZ_gUlqM60kbMd36BkCA"
+     }
+    ]
+   },
+   "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+     "offers": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "format": {
+         "type": "string",
+         "const": "jws"
+        },
+        "acceptIndex": {
+         "type": "integer"
+        },
+        "signature": {
+         "type": "string",
+         "description": "JWS compact serialization containing the offer payload"
+        }
+       },
+       "required": [
+        "format",
+        "signature"
+       ]
+      }
+     }
+    },
+    "required": [
+     "offers"
+    ]
+   }
+  }
+ },
+ "csoai": {
+  "schema": "csoai.population-door/0.1",
+  "per": "population-slice",
+  "population": "mcp-registry",
+  "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 3 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
+  "never": [
+   "a grade",
+   "a rank",
+   "a verdict about any row",
+   "a paywall on the source artifact",
+   "a certificate"
+  ],
+  "deliverable": "the MCP registry listings slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+  "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
+  "free_manifest": "https://councilof.ai/api/pop/mcp-registry/manifest",
+  "free_sources": [
+   "/interop/mcp-registry-self-listings-2026-09-22.json",
+   "/interop/agent-population-2026-09-17.json"
+  ],
+  "rail": {
+   "mode": "live",
+   "pay_to_configured": true,
+   "facilitator_configured": true,
+   "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free."
+  },
+  "not_paid_reason": "no x-payment header",
+  "catalog": "https://councilof.ai/api/x402",
+  "all_doors": [
+   "https://councilof.ai/api/pop/stablecoins",
+   "https://councilof.ai/api/pop/swift",
+   "https://councilof.ai/api/pop/xrpl",
+   "https://councilof.ai/api/pop/x402-bazaar",
+   "https://councilof.ai/api/pop/mcp-registry",
+   "https://councilof.ai/api/pop/a2a",
+   "https://councilof.ai/api/pop/ots-proofs",
+   "https://councilof.ai/api/pop/layer0",
+   "https://councilof.ai/api/pop/corrections",
+   "https://councilof.ai/api/pop/claim-watch"
+  ],
+  "offer_receipt": {
+   "extension": "offer-receipt",
+   "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+   "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+   "format": "jws",
+   "alg": "EdDSA",
+   "kid": "did:web:csoai.org#board-attestation-1",
+   "signed": true,
+   "reason": "1 of 1 accepts entries signed",
+   "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
+  }
+ }
+}

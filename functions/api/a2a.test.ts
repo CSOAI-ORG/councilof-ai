@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { A2A_ERROR, A2A_PROTOCOL_VERSION, SKILL_IDS, onRequestGet, onRequestPost } from "./a2a";
+import { A2A_ERROR, A2A_PROTOCOL_VERSION, GREETING_EXAMPLES, LEGACY_SKILL_IDS, SKILL_IDS, isCapabilityGreeting, onRequestGet, onRequestPost } from "./a2a";
 
 const LID =
   "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
@@ -111,7 +111,39 @@ describe("POST /api/a2a — SendMessage", () => {
     expect(sourceFetch).not.toHaveBeenCalled();
   });
 
-  it("does not turn unrelated free text into a measurement or task", async () => {
+  // 2026-09-26: a bare "hello" got INVALID_SKILL_SELECTOR while that error's own text said a
+  // greeting was accepted. Greetings now answer with the capability list; the error names them.
+  it.each(["hello", "Hello!", "hi", "Hey there", "help", "hi, what can you do?", "What are your skills?"])(
+    "a greeting (%s) is answered with the capability list, not INVALID_SKILL_SELECTOR",
+    async (text) => {
+      const sourceFetch = vi.fn();
+      vi.stubGlobal("fetch", sourceFetch);
+      const { json } = await rpc({
+        jsonrpc: "2.0", id: 1, method: "SendMessage", params: {
+          message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text }] },
+        },
+      });
+      expect(json.error).toBeUndefined();
+      expect(json.result.message.parts[1].data).toMatchObject({ kind: "CAPABILITY_HELP", skills: [...SKILL_IDS] });
+      expect(sourceFetch).not.toHaveBeenCalled();
+    },
+  );
+
+  it("every greeting the error text names is one the parser accepts, and a sentence that merely contains one is not", async () => {
+    for (const g of GREETING_EXAMPLES.split(", ")) expect(isCapabilityGreeting(g), g).toBe(true);
+    for (const t of ["measure all models", "hi please grade gpt-4o", "helpful", "which model is best"]) expect(isCapabilityGreeting(t), t).toBe(false);
+    const { json } = await rpc({
+      jsonrpc: "2.0", id: 1, method: "SendMessage", params: {
+        message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "measure all models" }] },
+      },
+    });
+    // 2026-09-29: unplaced text is a RESULT that says no tool matched (a2aregistry.org recorded the
+    // old -32602 as "Returning errors when contacted by users"), not a capability greeting.
+    expect(json.error).toBeUndefined();
+    expect(json.result.message.parts[1].data.kind).toBe("NO_TOOL_MATCHED");
+  });
+
+  it("does not turn unrelated free text into a measurement or task — it answers that no tool matched", async () => {
     const sourceFetch = vi.fn();
     vi.stubGlobal("fetch", sourceFetch);
     const { json } = await rpc({
@@ -119,7 +151,10 @@ describe("POST /api/a2a — SendMessage", () => {
         message: { messageId: "m-1", role: "ROLE_USER", parts: [{ text: "measure all models" }] },
       },
     });
-    expect(json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
+    expect(json.error).toBeUndefined();
+    expect(json.result.message.role).toBe("ROLE_AGENT");
+    expect(json.result.message.parts[0].text).toContain("could not match that question to a tool");
+    expect(json.result.message.parts[1].data).toMatchObject({ kind: "NO_TOOL_MATCHED", state: "unknown", tool_calls: [], citations: [] });
     expect(sourceFetch).not.toHaveBeenCalled();
   });
 
@@ -203,8 +238,89 @@ describe("POST /api/a2a — SendMessage", () => {
       method: "SendMessage",
       params: { message: { messageId: "m-other", role: "ROLE_USER", parts: [{ text: "please assess this" }] } },
     });
-    expect(ambiguous.json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
-    expect(ambiguous.json.error.data[0].reason).toBe("INVALID_SKILL_SELECTOR");
+    expect(ambiguous.json.error).toBeUndefined();
+    expect(ambiguous.json.result.message.parts[1].data.kind).toBe("NO_TOOL_MATCHED");
+  });
+});
+
+// 2026-09-29 (growth gaps A1): most A2A SDK clients in the wild send the 0.3 shape — method
+// message/send, no A2A-Version header, parts carrying {kind}. Every one of them got -32009.
+describe("POST /api/a2a — the A2A 0.3 wire shape is served through the 1.0 handler", () => {
+  const send03 = (parts: unknown[], headers: Record<string, string> = {}, extra: Record<string, unknown> = {}) =>
+    rpc(
+      {
+        jsonrpc: "2.0",
+        id: "v03",
+        method: "message/send",
+        params: { message: { kind: "message", messageId: "m-03", role: "user", parts, ...extra } },
+      },
+      headers,
+    );
+
+  it("answers message/send with no version header as a 0.3 Message", async () => {
+    stubBoard();
+    const { status, headers, json } = await send03([{ kind: "text", text: "board" }]);
+    expect(status).toBe(200);
+    expect(json.error).toBeUndefined();
+    expect(headers.get("a2a-version")).toBe("0.3");
+    expect(json.result).toMatchObject({ kind: "message", role: "agent" });
+    expect(json.result.parts[0]).toMatchObject({ kind: "text" });
+    expect(json.result.parts[0].text).toContain(`Lid: ${LID}`);
+    expect(json.result.parts[1]).toMatchObject({ kind: "data" });
+    expect(json.result.parts[1].data.skill).toBe("gspc-board");
+  });
+
+  it("accepts a 0.3 message/send without messageId by generating the compatibility id server-side", async () => {
+    stubBoard();
+    const { status, headers, json } = await rpc({
+      jsonrpc: "2.0",
+      id: "v03-no-message-id",
+      method: "message/send",
+      params: { message: { kind: "message", role: "user", parts: [{ kind: "text", text: "board" }] } },
+    }, {});
+    expect(status).toBe(200);
+    expect(json.error).toBeUndefined();
+    expect(headers.get("a2a-version")).toBe("0.3");
+    expect(typeof json.result.messageId).toBe("string");
+    expect(json.result.parts[0].text).toContain("Lid: " + LID);
+  });
+
+  it("serves an explicit 0.x header the same way, and keeps the caller's contextId", async () => {
+    stubBoard();
+    const { json } = await send03([{ kind: "text", text: "board" }], { "a2a-version": "0.3" }, { contextId: "ctx-03" });
+    expect(json.error).toBeUndefined();
+    expect(json.result.contextId).toBe("ctx-03");
+  });
+
+  it("maps a 0.3 data part onto the structured selector", async () => {
+    stubBoard();
+    const { json } = await send03([{ kind: "data", data: { skill: "gspc-board", input: {} } }]);
+    expect(json.error).toBeUndefined();
+    expect(json.result.parts[1].data.skill).toBe("gspc-board");
+  });
+
+  it("answers free text it cannot place with a result, never an error", async () => {
+    const sourceFetch = vi.fn();
+    vi.stubGlobal("fetch", sourceFetch);
+    const { json } = await send03([{ kind: "text", text: "please assess this" }]);
+    expect(json.error).toBeUndefined();
+    expect(json.result.kind).toBe("message");
+    expect(json.result.parts[1].data.kind).toBe("NO_TOOL_MATCHED");
+    expect(sourceFetch).not.toHaveBeenCalled();
+  });
+
+  it("keeps 0.3 task methods on the same error codes as 1.0", async () => {
+    const got = await rpc({ jsonrpc: "2.0", id: 9, method: "tasks/get", params: { id: "t-1" } }, {});
+    expect(got.json.error.code).toBe(A2A_ERROR.TASK_NOT_FOUND);
+    const stream = await rpc({ jsonrpc: "2.0", id: 9, method: "message/stream", params: {} }, {});
+    expect(stream.json.error.code).toBe(A2A_ERROR.UNSUPPORTED_OPERATION);
+  });
+
+  it("still refuses a 0.3 method name under a declared 1.0 header, and an unknown slash method", async () => {
+    const mixed = await send03([{ kind: "text", text: "board" }], V1_HEADERS);
+    expect(mixed.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
+    const unknown = await rpc({ jsonrpc: "2.0", id: 9, method: "tasks/frobnicate", params: {} }, {});
+    expect(unknown.json.error.code).toBe(A2A_ERROR.VERSION_NOT_SUPPORTED);
   });
 });
 
@@ -266,12 +382,12 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     expect(json.error.message).toMatch(/redirected \(302\)/i);
   });
 
-  it("routes measured-badge with only an encoded immutable subject and card hash", async () => {
+  it("routes card-status-link with only an encoded immutable subject and card hash", async () => {
     const fetchMock = vi.fn(async () => Response.json({ measured: true }));
     vi.stubGlobal("fetch", fetchMock);
     const card = "a".repeat(64);
     const subject = `owner/model@${"b".repeat(40)}`;
-    const { json } = await callSkill("measured-badge", { card, subject });
+    const { json } = await callSkill("card-status-link", { card, subject });
     expect(json.error).toBeUndefined();
     const [url, init] = fetchMock.mock.calls[0];
     const parsed = new URL(url);
@@ -280,6 +396,16 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
     expect(parsed.searchParams.get("card")).toBe(card);
     expect(parsed.searchParams.get("subject")).toBe(subject);
     expect(init.method).toBe("GET");
+  });
+
+  it("the former id measured-badge still routes (legacy alias), and is not on the card or in SKILL_IDS", async () => {
+    const fetchMock = vi.fn(async () => Response.json({ measured: true }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { json } = await callSkill("measured-badge", { card: "a".repeat(64), subject: `owner/model@${"b".repeat(40)}` });
+    expect(json.error).toBeUndefined();
+    expect(new URL(fetchMock.mock.calls[0][0]).pathname).toBe("/api/badge");
+    expect((SKILL_IDS as readonly string[]).includes("measured-badge")).toBe(false);
+    expect(LEGACY_SKILL_IDS["measured-badge"]).toBe("card-status-link");
   });
 
   it("never forwards caller authorization, cookies, or payment headers", async () => {
@@ -326,7 +452,7 @@ describe("POST /api/a2a — seven explicit skill routes", () => {
       { data: { skill: "gspc-board", input: {} } },
       { data: { skill: "x402-discovery", input: {} } },
     ])).json.error.code).toBe(A2A_ERROR.INVALID_PARAMS);
-    expect((await callSkill("measured-badge", { card: "abc", subject: "owner/model@main" })).json.error.code)
+    expect((await callSkill("card-status-link", { card: "abc", subject: "owner/model@main" })).json.error.code)
       .toBe(A2A_ERROR.INVALID_PARAMS);
     expect((await callSkill("east-west-crosswalk", { url: "https://example.com" })).json.error.code)
       .toBe(A2A_ERROR.INVALID_PARAMS);

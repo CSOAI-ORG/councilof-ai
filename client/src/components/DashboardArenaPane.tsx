@@ -714,12 +714,13 @@ export default function DashboardArenaPane({
               <strong>Historical taxonomy boundary.</strong> The replay source
               uses a legacy, noncanonical 15-axis arena taxonomy. It is not the
               canonical GSPC board, and replaying it creates no current
-              ranking or measurement.
+              ranking or measurement. Most of its axes read 0.0 because of a
+              keyword-grader defect: a 0.0 here is not a model score.
             </p>
             <span className="w-fit shrink-0 rounded-full border border-amber-700/20 bg-white/60 px-2.5 py-1 font-mono text-[10px] font-semibold text-amber-950">
               {board.signature
                 ? "SIGNED HISTORICAL ARTEFACT"
-                : "MEASURED · SIGNATURE UNCHECKABLE"}
+                : "HISTORICAL · SIGNATURE UNCHECKABLE"}
             </span>
           </aside>
           <section

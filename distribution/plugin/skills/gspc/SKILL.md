@@ -5,7 +5,7 @@ description: Read the Council of AI GSPC board and verify signed measurement car
 
 # GSPC (Council of AI, Layer 0)
 
-The `gspc` MCP server (https://councilof.ai/mcp) exposes 13 tools (9 free, 4 x402-metered).
+The `gspc` MCP server (https://councilof.ai/mcp) exposes 16 tools (12 free, 4 x402-metered).
 
 Free:
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
@@ -17,6 +17,9 @@ Free:
 - `verify_inclusion` — Check a sha256 against the live public-root merkle via GET /api/proof?sha=.
 - `x402_trust` — GET the latest x402 catalog trust snapshot: counts of how many catalogued x402 resources open a correct 402 challenge vs how many are phantom on the wire.
 - `mcp_trust` — GET the latest MCP handshake trust snapshot (https://councilof.ai/interop/mcp-trust/latest.json): counts of how many internet-facing MCP servers answer a correct initialize handshake, how many respond with an auth challenge, and how many are unreachable.
+- `measurement_index` — Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested.
+- `verify_capsule` — Verify one measurement capsule.
+- `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 
 x402-metered (call without `x_payment` to see the challenge; a challenge is not a payment):
 - `commission_card` — Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation.
@@ -29,5 +32,7 @@ Rules for answers:
 2. Verification has three states — VALID, INVALID, UNCHECKABLE. "Could not check" is never "forged".
 3. UNMEASURED and UNREACHABLE are answers, not errors. Never fill an empty cell.
 4. Measurement only: a card is evidence, never a grade, mark or endorsement. Verification is free.
+
+Data: https://councilof.ai/api/gspc · Corrections ledger: https://councilof.ai/corrections/ (JSON: https://councilof.ai/api/corrections) · Verify a card, free: https://councilof.ai/gspc-verify/
 
 Doctrine: `docs/DOCTRINE.md` sha256 `845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a` (human page https://councilof.ai/doctrine/).

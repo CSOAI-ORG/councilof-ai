@@ -12,8 +12,7 @@
         "pricing_basis": "PROMO_EXISTING_DATA",
         "product_id": "csoai.product.population.mcp-registry",
         "sku_id": "issuance",
-        "starts_at": "2026-09-11T00:00:00Z",
-        "tier": "reserve"
+        "starts_at": "2026-09-11T00:00:00Z"
       },
       "description": "Population door: MCP registry listings — 354 own server names in the official MCP registry (one row per name, classified on isLatest=true), as of 2026-09-22T08:27:50Z, state INDEXED. one row per server name the estate publishes in the official MCP registry, classified on its latest version (remote alive / package resolvable), with the registry's full-walk census reported beside it. A read-transform of the estate's own published artifact, with a signed digest of the slice. Not a grade, not a rank.",
       "extra": {
@@ -46,12 +45,13 @@
     ],
     "catalog": "https://councilof.ai/api/x402",
     "deliverable": "the MCP registry listings slice: the population rows verbatim from the artifact(s) in source[], plus a card-v0 attestation leaf over the reading (sha256 of the rows, signed when the Pages key is present) and the facilitator's settle record",
+    "free_manifest": "https://councilof.ai/api/pop/mcp-registry/manifest",
     "free_preview": "https://councilof.ai/api/pop/mcp-registry?preview=1",
     "free_sources": [
       "/interop/mcp-registry-self-listings-2026-09-22.json",
       "/interop/agent-population-2026-09-17.json"
     ],
-    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "lid": "23 axes measured · 14 model fleets · 0 separated leaders · 9 public leader scores · 9 fact runs · TIE is TIE · not a certificate.",
     "never": [
       "a grade",
       "a rank",
@@ -69,7 +69,7 @@
       "signed": true,
       "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
       "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
-      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run scripts/verify_receipt.py to do it without us."
+      "verify": "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over `header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run the same-site https://councilof.ai/verifier/verify_receipt.py checker. Default mode reads the public DID document; saved-key replay can be offline. Signature validity is not proof of settlement."
     },
     "per": "population-slice",
     "population": "mcp-registry",
@@ -223,7 +223,7 @@
           {
             "acceptIndex": 0,
             "format": "jws",
-            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvbWNwLXJlZ2lzdHJ5Iiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwMDkzMDM0LCJ2ZXJzaW9uIjoxfQ.ePqqTcvbBo1MXGz25Xp2yuDH6KGsiTOQdxzrZHbT0VBR7IL--1_6BHNOmIeLp-kM3GgR4kw9iPv9bzZ6ax_qBA"
+            "signature": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEifQ.eyJhbW91bnQiOiIxMDAwMCIsImFzc2V0IjoiMHg4MzM1ODlmQ0Q2ZURiNkUwOGY0YzdDMzJENGY3MWI1NGJkQTAyOTEzIiwibmV0d29yayI6ImVpcDE1NTo4NDUzIiwicGF5VG8iOiIweDIxMjY4NjQwNEE3RDFFMWZEODhGMzVlRDYyMDBjM2FGN0E3OGFlMzEiLCJyZXNvdXJjZVVybCI6Imh0dHBzOi8vY291bmNpbG9mLmFpL2FwaS9wb3AvbWNwLXJlZ2lzdHJ5Iiwic2NoZW1lIjoiZXhhY3QiLCJ2YWxpZFVudGlsIjoxNzkwNTcyNDkxLCJ2ZXJzaW9uIjoxfQ.Gilv1_Eis_ZTlUOnbH_tJcr9XTMgX8wDfKJlpuYsii8ovwS5_SG4UZpv-ioDPHUV_DPgd0SSNKMGVDolc0loBQ"
           }
         ]
       },

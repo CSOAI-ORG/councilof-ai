@@ -1,0 +1,625 @@
+{
+  "schema": "csoai.zenodo-status/0.1",
+  "title": "Zenodo availability of CSOAI's DOIs",
+  "as_of": "2026-09-29T16:46Z",
+  "notice": "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
+  "event": "At 15:47Z on 29 Sep 2026 Zenodo blocked the account that held CSOAI's deposits as spam, after one of our own automated lanes bulk-published 54 datasets there at roughly 15-second intervals. Every record on the account began answering HTTP 410 ('User was blocked'), including records deposited weeks earlier. The owner is appealing; the outcome is unknown. We do not contact Zenodo from automation.",
+  "rule": "The DOIs are kept: they are the permanent names and may resolve again. No surface we publish links one as available. Each prints the identifier, this notice, and the artifact's other live copy where one exists. 'Same bytes' is claimed only where the served file's sha256 equals the digest the deposit itself recorded.",
+  "method": "For each DOI: anonymous GET https://doi.org/10.5281/zenodo.<id> following redirects; http_status is the final hop. Alternatives: anonymous GET, HTTP status and sha256 of the body.",
+  "signed_files_not_edited": {
+    "note": "These files embed a DOI inside signed bytes. They are not rewritten; this document is their dated superseding note. The A2A cards also carry an X-CSOAI-DOI-Status response header.",
+    "files": [
+      "public/signed/gspc-board.signed.json",
+      "public/signed/gspc-board.2026-09-25.signed.json",
+      "public/signed/gspc-board.2026-09-29.signed.json",
+      "public/signed/board_living.json",
+      "public/signed/gspc-measurement.json",
+      "public/signals/value-ledger.signed.json",
+      "public/.well-known/agent-card.json (JWS)",
+      "public/.well-known/agent.json (JWS)"
+    ]
+  },
+  "correction": "https://councilof.ai/api/corrections (C-2026-0929-09)",
+  "signed": false,
+  "dois": [
+    {
+      "doi": "10.5281/zenodo.21991104",
+      "kind": "concept",
+      "what": "GSPC Methodology and the 417-Provision Frozen Corpus Anchor (methodology record; the DOI GET /api/gspc names)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/21991105",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/methodology/",
+          "relation": "live methodology page; not the deposit's bytes",
+          "http_status_at_check": 200
+        },
+        {
+          "url": "https://councilof.ai/api/gspc",
+          "relation": "live board; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "The deposit held methodology.md, corpus_anchor.json and board_art5.signed.json (md5 9414340e…, 6879708…, ffbf81e9… per the Wayback capture of 2026-09-17). No byte-identical copy of those three files is served; none is claimed."
+    },
+    {
+      "doi": "10.5281/zenodo.21991105",
+      "kind": "version of 21991104",
+      "what": "the published version of the methodology record",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/21991105",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/methodology/",
+          "relation": "live methodology page; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22901781",
+      "kind": "concept",
+      "what": "Claim Maintenance specification, all versions",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22901908",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/spec/claim-maintenance/",
+          "relation": "version index",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22901908",
+      "kind": "version of 22901781",
+      "what": "Claim Maintenance specification v0.1",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22901908",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/spec/claim-maintenance/v0.1/claim-maintenance-v0.1.md",
+          "relation": "same bytes as the deposited document of record",
+          "http_status_at_check": 200,
+          "sha256": "3296bf8f08d2a7cbfe049f102f540e411462b00351a8d9b52d4d23444daf8c3d",
+          "sha256_matches_deposit": true
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22901782",
+      "kind": "superseded version of 22901781",
+      "what": "first deposit of Claim Maintenance v0.1, superseded before it was served",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22901782",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/spec/claim-maintenance/v0.1/",
+          "relation": "the superseding version; see its section 15",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Wayback capture of the landing page: http://web.archive.org/web/20260922164830/https://zenodo.org/records/22901782"
+    },
+    {
+      "doi": "10.5281/zenodo.23030504",
+      "kind": "version of 22901781",
+      "what": "Claim Maintenance specification v0.2",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23030504",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/spec/claim-maintenance/v0.2/claim-maintenance-v0.2.md",
+          "relation": "same bytes as the deposited document of record",
+          "http_status_at_check": 200,
+          "sha256": "d649ba0fdefb63abc205102bc8863db2e7852b207fd4e9e23e05e286e13e3b2e",
+          "sha256_matches_deposit": true
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.23030507",
+      "kind": "concept",
+      "what": "signed-receipts/v1, all versions",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23030508",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/spec/signed-receipts/v1/draft-0.3/SPEC.md",
+          "relation": "same bytes as the deposited SPEC-draft-0.3.md",
+          "http_status_at_check": 200,
+          "sha256": "91520cda9998c613377f1cdae2ae7a8dc5464cf3eab1f3f6a5ef269e0d938f58",
+          "sha256_matches_deposit": true
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.23030508",
+      "kind": "version of 23030507",
+      "what": "signed-receipts/v1 draft 0.3 with conformance vectors and runners",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23030508",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/spec/signed-receipts/v1/draft-0.3/SPEC.md",
+          "relation": "same bytes as SPEC-draft-0.3.md",
+          "http_status_at_check": 200,
+          "sha256": "91520cda9998c613377f1cdae2ae7a8dc5464cf3eab1f3f6a5ef269e0d938f58",
+          "sha256_matches_deposit": true
+        },
+        {
+          "url": "https://councilof.ai/spec/signed-receipts/v1/SPEC.md",
+          "relation": "same bytes as SPEC-draft-0.2.md",
+          "http_status_at_check": 200,
+          "sha256": "f5a7400b1963473718156d14e70df6c640ee12881e6c56dc5ecbfac0e9e43efa",
+          "sha256_matches_deposit": true
+        },
+        {
+          "url": "https://councilof.ai/spec/signed-receipts/v1/conformance/vectors.json",
+          "relation": "same bytes as vectors.json",
+          "http_status_at_check": 200,
+          "sha256": "dce6927119a84c297516bc21870895b97d1421c44d964cc54f7b9eb758c45f12",
+          "sha256_matches_deposit": true
+        },
+        {
+          "url": "https://councilof.ai/spec/signed-receipts/v1/conformance/run.mjs",
+          "relation": "same bytes as run.mjs",
+          "http_status_at_check": 200,
+          "sha256": "099ac2e4819e7f9b203fdab88a18191e682c79538da26dd5851d7d1456b596f9",
+          "sha256_matches_deposit": true
+        },
+        {
+          "url": "https://councilof.ai/spec/signed-receipts/v1/conformance/run.py",
+          "relation": "same bytes as run.py",
+          "http_status_at_check": 200,
+          "sha256": "9ceeba741f9645b8138356f9a18c18b85653a3a5b0fd86082c65cebac83a6351",
+          "sha256_matches_deposit": true
+        }
+      ],
+      "note": "signed-receipts-v1-draft-0.3-kit.zip (sha256 27e7925d…) has no same-bytes copy on councilof.ai."
+    },
+    {
+      "doi": "10.5281/zenodo.23030505",
+      "kind": "concept",
+      "what": "measurement capsules v0.2 companion files",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23030506",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/measurement-capsules/v0.2/anchors.json",
+          "relation": "live capsule publication; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.23030506",
+      "kind": "version of 23030505",
+      "what": "measurement capsules v0.2 companion files for draft-templeman-scitt-measurement-capsule-00",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23030506",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/measurement-capsules/v0.2/anchors.json",
+          "relation": "live capsule publication; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22293340",
+      "kind": "concept",
+      "what": "GSPC board snapshots, all versions",
+      "state": "RESOLVED_AT_CHECK",
+      "http_status_at_check": 200,
+      "final_url": "https://zenodo.org/records/22344048",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        },
+        {
+          "url": "https://councilof.ai/api/gspc",
+          "relation": "live board",
+          "http_status_at_check": 200
+        }
+      ],
+      "note_state": "Still answered 200 at this check although the account is blocked; other records on the account went 410 within the hour, so no surface links it as durable."
+    },
+    {
+      "doi": "10.5281/zenodo.22293341",
+      "kind": "version of 22293340",
+      "what": "GSPC board snapshot 2026-09-04",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22293341",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22344048",
+      "kind": "version of 22293340",
+      "what": "GSPC board snapshot 2026-09-05",
+      "state": "RESOLVED_AT_CHECK",
+      "http_status_at_check": 200,
+      "final_url": "https://zenodo.org/records/22344048",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note_state": "Still answered 200 at this check although the account is blocked; other records on the account went 410 within the hour, so no surface links it as durable."
+    },
+    {
+      "doi": "10.5281/zenodo.22646341",
+      "kind": "version of 22293340",
+      "what": "GSPC board snapshot",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22646341",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22811459",
+      "kind": "version of 22293340",
+      "what": "GSPC board snapshot 2026-09-15",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22811459",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.23020634",
+      "kind": "version of 22293340",
+      "what": "GSPC board snapshot 2026-09-28T07:32:07Z",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23020634",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.23030509",
+      "kind": "version of 22293340",
+      "what": "GSPC board snapshot 2026-09-28 with the signed corrections ledger",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/23030509",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/datasets/csoai/gspc-board",
+          "relation": "live board dataset; not the deposit's bytes",
+          "http_status_at_check": 200
+        },
+        {
+          "url": "https://councilof.ai/api/corrections",
+          "relation": "live signed corrections ledger",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22985467",
+      "kind": "record",
+      "what": "Preprint: cross-hardware reproducibility of LLM evaluation results",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22985467",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/research/cross-hardware-reproducibility/",
+          "relation": "live research page; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22732100",
+      "kind": "record",
+      "what": "destination-manifest deposit (2026-09-14)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22732100",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/interop/destination-manifest-2026-09-14.json",
+          "relation": "live manifest; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22806072",
+      "kind": "record",
+      "what": "mirror deposit of agent-population-2026-09-17.json and master-consolidation-rollup-v0.1.json",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22806072",
+      "alternatives": [
+        {
+          "url": "https://councilof.ai/interop/mirror-manifest.json",
+          "relation": "the mirror manifest naming the other legs",
+          "http_status_at_check": 200
+        }
+      ]
+    },
+    {
+      "doi": "10.5281/zenodo.22076930",
+      "kind": "record",
+      "what": "value-ledger artifact",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22076930",
+      "alternatives": [],
+      "note": "Cited inside the signed value ledger (public/signals/value-ledger.signed.json), whose bytes are not edited."
+    },
+    {
+      "doi": "10.5281/zenodo.21755656",
+      "kind": "concept",
+      "what": "stale EAT-benchmark dataset DOI carried by the dated 2026-08-05 six-axes snapshot",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/21755657",
+      "alternatives": [],
+      "note": "Already superseded by 21991104 before the block."
+    },
+    {
+      "doi": "10.5281/zenodo.21755657",
+      "kind": "version of 21755656",
+      "what": "as above",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/21755657",
+      "alternatives": []
+    },
+    {
+      "doi": "10.5281/zenodo.22070699",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070699",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070703",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070703",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070706",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070706",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070711",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070711",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070713",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070713",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070715",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070715",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070718",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070718",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070721",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070721",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070723",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070723",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.22070725",
+      "kind": "record",
+      "what": "per-axis bank DOI (minted 2026-08-23)",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22070725",
+      "alternatives": [
+        {
+          "url": "https://huggingface.co/csoai",
+          "relation": "the banks' Hugging Face datasets; not the deposit's bytes",
+          "http_status_at_check": 200
+        }
+      ],
+      "note": "Emitted as a JSON-LD identifier only; no doi.org citation link while unavailable."
+    },
+    {
+      "doi": "10.5281/zenodo.17910664",
+      "kind": "concept",
+      "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/17929847",
+      "alternatives": []
+    },
+    {
+      "doi": "10.5281/zenodo.17929847",
+      "kind": "record",
+      "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/17929847",
+      "alternatives": []
+    },
+    {
+      "doi": "10.5281/zenodo.21973003",
+      "kind": "record",
+      "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/21973003",
+      "alternatives": []
+    },
+    {
+      "doi": "10.5281/zenodo.22011165",
+      "kind": "record",
+      "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22011165",
+      "alternatives": []
+    },
+    {
+      "doi": "10.5281/zenodo.22347020",
+      "kind": "record",
+      "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22347020",
+      "alternatives": []
+    },
+    {
+      "doi": "10.5281/zenodo.22987453",
+      "kind": "record",
+      "what": "CSOAI deposit cited only in internal docs, queues or dated filings, not on a served surface",
+      "state": "UNAVAILABLE",
+      "http_status_at_check": 410,
+      "final_url": "https://zenodo.org/records/22987453",
+      "alternatives": []
+    }
+  ]
+}

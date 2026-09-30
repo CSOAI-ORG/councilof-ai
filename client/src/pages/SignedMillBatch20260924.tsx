@@ -15,7 +15,7 @@ export default function SignedMillBatch20260924() {
   const unmeasured = batch.cards.filter((card) => card.status === "UNMEASURED").length;
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
+    <section className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
       <div className="mx-auto max-w-5xl px-6 py-14">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
           Dated evidence directory · 24 September 2026
@@ -86,6 +86,6 @@ export default function SignedMillBatch20260924() {
           <a className="text-emerald-800 underline" href="/dashboard?tab=board">GSPC board</a>.
         </p>
       </div>
-    </main>
+    </section>
   );
 }

@@ -13,7 +13,6 @@ from __future__ import annotations
 import json
 import sys
 import traceback
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -125,25 +124,13 @@ def corroboration_measurement(org: str, term: str, domains: list[str]) -> dict:
 
 
 def pontes_participant_measurement() -> dict:
-    # Each named entity is an independent public-site read. Run them concurrently so one slow
-    # organisation cannot serialize the whole 18-entity measurement for many minutes. Results are
-    # keyed and sorted below, so scheduling order never changes the published artifact.
-    def read_one(org: str, doms: list[str]):
-        try:
-            return org, corroborate.check(org, 'Pontes', domains=doms, bounded=True)
-        except Exception:
-            return org, {'status': 'SEARCH_INCONCLUSIVE', 'meaning': 'harness raised',
-                         'traceback': traceback.format_exc()[-400:]}
-
-    # Warm the Common Crawl collection lookup once before fan-out; every worker then reuses the
-    # exact same collection endpoint and source receipt.
-    corroborate.cc_api(bounded=True)
     rows = {}
-    with ThreadPoolExecutor(max_workers=min(6, len(PONTES_NAMED))) as pool:
-        futures = [pool.submit(read_one, org, doms) for org, doms in PONTES_NAMED.items()]
-        for future in as_completed(futures):
-            org, result = future.result()
-            rows[org] = result
+    for org, doms in PONTES_NAMED.items():
+        try:
+            rows[org] = corroborate.check(org, 'Pontes', domains=doms)
+        except Exception:
+            rows[org] = {'status': 'SEARCH_INCONCLUSIVE', 'meaning': 'harness raised',
+                         'traceback': traceback.format_exc()[-400:]}
     tally = {s: sorted(k for k, v in rows.items() if v['status'] == s)
              for s in ('CORROBORATED', 'NOT_FOUND', 'SEARCH_INCONCLUSIVE', 'NOT_SEARCHED')}
     conclusive = len(tally['CORROBORATED']) + len(tally['NOT_FOUND'])
@@ -156,10 +143,9 @@ def pontes_participant_measurement() -> dict:
         'state': 'CLAIM_MEASURED',
         'measured_at': c.now_iso(),
         'method': ('take the entities the publisher\'s own press release names, and for each one search that '
-                   'entity\'s OWN published index (robots.txt -> a bounded sitemap read; the keyless Common '
-                   'Crawl URL index is the fallback when that site index cannot be read) for the programme '
-                   'name, quoting any hit from the entity\'s own visible page text. Network reads are time '
-                   'bounded; a timeout becomes SEARCH_INCONCLUSIVE, never an absence'),
+                   'entity\'s OWN published index (robots.txt -> sitemaps, plus the keyless Common Crawl URL '
+                   'index for its domain) for the programme name, quoting any hit from the entity\'s own '
+                   'visible page text'),
         'window': 'each named entity\'s public web presence as served at measured_at',
         'denominator': {
             'entities_named_by_the_publisher': len(PONTES_NAMED),

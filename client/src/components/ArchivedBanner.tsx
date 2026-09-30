@@ -26,7 +26,7 @@ export default function ArchivedBanner() {
           <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
           Reference / archive
         </span>
-        <span className="text-amber-800/80">
+        <span className="text-amber-800">
           {repl ? (
             <>
               A reference page — there is a current version:{" "}
@@ -43,7 +43,7 @@ export default function ArchivedBanner() {
                more useful to a reader than a confident pointer to the wrong place. */
             <>
               A reference page, kept for the record.{" "}
-              <span className="text-amber-800/70">No current version supersedes it.</span>{" "}
+              <span className="text-amber-800">No current version supersedes it.</span>{" "}
               <Link href="/dashboard?tab=board" className="font-semibold underline hover:text-amber-950">
                 See the measurement board →
               </Link>

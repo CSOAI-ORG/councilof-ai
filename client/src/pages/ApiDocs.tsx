@@ -89,6 +89,8 @@ console.log({
   "schema": "csoai.gspc-axes/0.5",
   "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
   "doi": "10.5281/zenodo.21991104",
+  "doi_status": "UNAVAILABLE",
+  "doi_status_note": "Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending.",
   "measured_on": {
     "model": "fleet and date live on the payload — not typed on this page",
     "date": "see measured_on.date",
@@ -146,7 +148,8 @@ console.log({
   const FIELDS = [
     { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
-    { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record. Axis counts live in the payload." },
+    { f: "doi", d: "10.5281/zenodo.21991104 — the methodology record's identifier. Axis counts live in the payload." },
+    { f: "doi_status", d: "UNAVAILABLE since 29 Sep 2026: the Zenodo record answers HTTP 410 (account blocked by Zenodo; appeal pending). doi_alternative names the live methodology page." },
     { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from axes[]: published slots, rows whose status is MEASURED, and quotable MEASURED rows. A measurement does not imply a public leader or a completed separation test. Read the live numbers — do not type them here." },
     { f: "totals.separated_leads / ties / untested_separations", d: "Derived only over measured model-comparison axes. A TIE is not a win; a deterministic-fact axis has no applicable separation test. These counts move — read them from the live payload." },
     { f: "totals.items", d: "Sum of per-axis n across the selection. Read the live number from the payload." },
@@ -279,6 +282,7 @@ console.log({
                         variant="ghost"
                         size="sm"
                         className="absolute top-2 right-2 gap-2"
+                        aria-label={copiedCode === id ? `Copied the ${id} example` : `Copy the ${id} example`}
                         onClick={() => copyToClipboard(code, id)}
                       >
                         {copiedCode === id ? (
@@ -287,7 +291,7 @@ console.log({
                           <Copy className="w-4 h-4" />
                         )}
                       </Button>
-                      <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                      <pre tabIndex={0} className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                         <code>{code}</code>
                       </pre>
                     </div>
@@ -311,6 +315,7 @@ console.log({
                   variant="ghost"
                   size="sm"
                   className="absolute top-2 right-2 gap-2"
+                  aria-label={copiedCode === "response" ? "Copied the response example" : "Copy the response example"}
                   onClick={() => copyToClipboard(responseExample, "response")}
                 >
                   {copiedCode === "response" ? (
@@ -319,7 +324,7 @@ console.log({
                     <Copy className="w-4 h-4" />
                   )}
                 </Button>
-                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
+                <pre tabIndex={0} className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                   <code>{responseExample}</code>
                 </pre>
               </div>

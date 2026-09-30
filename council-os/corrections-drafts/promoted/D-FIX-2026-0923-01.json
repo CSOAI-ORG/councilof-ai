@@ -1,0 +1,29 @@
+{
+ "promoted": {
+  "ledger_id": "C-2026-0929-04",
+  "on": "2026-09-29",
+  "by": "lane ledgers-20260929 (owner instruction 2026-09-29: merge every correction-like event into the ledger)"
+ },
+ "DRAFT": true,
+ "schema": "csoai.corrections-draft/0.1",
+ "status": "DRAFT - owner approval required",
+ "draft_id": "D-FIX-2026-0923-01",
+ "not_published": "Never merged or published by this lane. Only the owner promotes a draft, and no ledger id is assigned until they do.",
+ "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+ "license": "CC-BY-4.0",
+ "generated_at": "2026-09-23T05:35:00Z",
+ "generator": "hand-written by the fix-receipt lane, not auto-drafted by drift-draft.py",
+ "promotion_note": "This draft was written by hand and therefore does NOT sit in the drift-draft loop's queue, so `promote-draft.sh D-FIX-2026-0923-01` will not find it. The owner either copies this object into out/drift-draft/queue/ first, or lifts the fields below straight into functions/api/corrections.ts under the next free ledger id. Writing into the live loop queue from this lane was avoided on purpose: the loop owns its own index and a second writer would race it.",
+ "corrections": [
+  {
+   "id": "D-FIX-2026-0923-01",
+   "date": "2026-09-23",
+   "first_observed_at": "2026-09-23T04:10:35Z",
+   "what_was_wrong": "The frozen bank behind the jail axis reverted on the measurement machine to the 41-row placeholder file that correction C-2026-0922-02 had ruled out the day before, sha256 f0f31f9a556266ce6f06660440b5ff819a19ee0b7801d72e78020a1ceda3a66e. The digest gate installed by that correction worked exactly as intended and halted the hourly slice 20260923T04 at 04:10:35Z before a single job was generated, with the reason recorded verbatim in the engine's own log. No wrong measurement was published as a result: the gate stopped the run rather than admitting the placeholder bytes. What was wrong is that the cured state did not hold for twenty-four hours, and nothing in the estate would have said so unless somebody read the log.",
+   "why_it_was_wrong": "C-2026-0922-02 fixed the producer at the source and installed a gate so no further placeholder run could be admitted. It did not establish how the pod bank file comes to be written, so the same bytes could be put back by whatever wrote them the first time. A gate that refuses bad bytes is not the same as a path that cannot produce them, and the difference showed up on the first morning after.",
+   "what_changed": "The reverted file was moved aside under a dated name, /workspace/banks-all/gspc-jail.jsonl.reverted-20260923T042152Z, and the goldbank bytes were put back after checking their sha256 against the digest the gate pins: 0b45b620f2277c364275420f812e9415698e3b8bf0b105a7bbb4c2b2627d0f4a, 71 rows. Nothing was deleted and no signed byte was edited. The before-and-after is published as fix receipt FR-2026-0923-01 at /interop/fix-receipts/fix-receipt-chain.jsonl: before, slice 20260923T04 generated 0 jobs and the log names the gate as the reason; after, the same slice generated 14 pinned jobs at 04:57:48Z and slice 20260923T05 generated 14 more at 05:10:06Z, with the gate's reason absent from every line since. The cause of the reversion is NOT established and no guard against a further recurrence has been added.",
+   "reached_the_public": false,
+   "note": "The engine did not resume producing measurements, and any sentence saying it did would be unmeasured. Both slices since the restore halt for an unrelated reason - free space on the machine - and no signed measurement card has been produced since 2026-09-23T03:24:19Z. That second fault is real, is not this fault, and is recorded here so that a reader of the fix receipt is not left with a tidier picture than the log supports."
+  }
+ ]
+}

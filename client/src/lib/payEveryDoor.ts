@@ -34,6 +34,8 @@ export const MANIFEST_PATH = "/.well-known/x402.json";
 export const LISTING_PATH = "/api/x402-listing";
 export const FOUR02_LISTING_PATH = "/api/x402-listing-402index";
 export const DOOR_SETTLES_PATH = "/api/door-settles";
+/** Every same-origin door's unpaid answer, read server-side in one 200 (functions/api/x402-quotes.ts). */
+export const QUOTES_PATH = "/api/x402-quotes";
 
 /** The one sentence the page must carry, verbatim. */
 export const THE_LINE =
@@ -176,6 +178,26 @@ export async function quoteDoor(door: Door, fetchImpl: typeof fetch = fetch): Pr
         ? "the door answered without a payment challenge — there is nothing here to settle"
         : `the door answered HTTP ${r.status}${err ? `: ${err}` : ""} — no challenge to pay`,
   };
+}
+
+/** One row of /api/x402-quotes: a door's own status and JSON body, relayed verbatim. */
+export type RelayedQuote = { url: string; http: number | null; body: unknown; error?: string | null; skipped?: string | null };
+
+/**
+ * A fetch that answers quoteDoor from a relayed row instead of the network.
+ *
+ * WHY. Asked from the browser, every door's intended 402 is logged by the browser itself as
+ * "Failed to load resource" before any script sees it — 25 console errors on a working page.
+ * /api/x402-quotes asks the same doors the same way server-side and returns each answer in one
+ * 200; this replays a row through the SAME quoteDoor parser, so the displayed outcome cannot
+ * differ from a direct read. A row with no status (unreachable or skipped) returns null and the
+ * caller asks the door itself, exactly as before.
+ */
+export function relayedFetch(row: RelayedQuote | undefined): typeof fetch | null {
+  if (!row || typeof row.http !== "number" || row.http < 200 || row.http > 599) return null;
+  const status = row.http;
+  const text = row.body === null || row.body === undefined ? "" : JSON.stringify(row.body);
+  return (async () => new Response(text, { status, headers: { "content-type": "application/json" } })) as unknown as typeof fetch;
 }
 
 /** What the facilitator reported in X-PAYMENT-RESPONSE, decoded and nothing more. */

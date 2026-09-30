@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { learningScenarioUrl } from "./DashboardLearningPane";
+import { learningBoardUrl, learningScenarioUrl } from "./DashboardLearningPane";
 
 describe("learningScenarioUrl", () => {
   it("keeps production same-origin", () => {
@@ -15,5 +15,16 @@ describe("learningScenarioUrl", () => {
     expect(learningScenarioUrl("safety", "localhost")).toBe(
       "https://councilof.ai/api/learning-scenarios?axis=safety",
     );
+  });
+});
+
+describe("learningBoardUrl", () => {
+  it("reads the live board roster same-origin in production", () => {
+    expect(learningBoardUrl("councilof.ai")).toBe("/api/gspc");
+  });
+
+  it("reads the public board in local review builds", () => {
+    expect(learningBoardUrl("127.0.0.1")).toBe("https://councilof.ai/api/gspc");
+    expect(learningBoardUrl("localhost")).toBe("https://councilof.ai/api/gspc");
   });
 });

@@ -5,9 +5,19 @@
  * run a model, train a model, or write a GSPC cell. It only gives the dashboard a
  * deterministic five-stage learning sequence for every axis already named by the
  * committed board snapshot. Live measurement state remains the API's concern.
+ *
+ * The committed snapshot is the FALLBACK roster. The dashboard reads GET /api/gspc and
+ * passes the reply to buildLearningPaths(), so a path exists for every axis on the live
+ * board even after the snapshot below is superseded (2026-09-28: the pane printed 22 paths
+ * from the superseded 2026-09-02 freeze while the live board carried 23 axes).
+ * gspc-learning-paths.test.ts fails when this import stops being the CURRENT freeze.
  */
 
-import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.signed.json";
+import BOARD_SNAPSHOT from "../../../public/signed/gspc-board.2026-09-29.signed.json";
+
+/** The committed freeze imported above; its status file says whether it is still current. */
+export const LEARNING_SNAPSHOT_FILE =
+  "public/signed/gspc-board.2026-09-29.signed.json" as const;
 
 export const GSPC_LEARNING_PATH_SCHEMA =
   "csoai.gspc-learning-path/0.1" as const;
@@ -89,6 +99,7 @@ type CanonicalAxisRow = {
 
 export const LEARNING_AXIS_SOURCE = Object.freeze({
   kind: "COMMITTED_BOARD_SNAPSHOT",
+  file: LEARNING_SNAPSHOT_FILE,
   live: false,
   identityFieldsOnly: true,
   signatureVerifiedHere: false,
@@ -210,6 +221,15 @@ export const GSPC_LEARNING_PATHS: readonly GspcLearningPath[] = Object.freeze(
   CANONICAL_AXIS_ROWS.map(makePath),
 );
 
+/**
+ * Paths for a board reply the caller already holds (the dashboard passes GET /api/gspc).
+ * Pure: identity fields only, the same validation as the snapshot, and it throws on any
+ * unsupported or duplicate row so a malformed reply can never produce a partial roster.
+ */
+export function buildLearningPaths(board: unknown): readonly GspcLearningPath[] {
+  return Object.freeze(readCanonicalAxisRows(board).map(makePath));
+}
+
 const PATH_BY_AXIS = new Map(
   GSPC_LEARNING_PATHS.map((path) => [path.axis.id, path] as const),
 );
@@ -247,8 +267,13 @@ export interface LearningProgress {
 export function deriveLearningProgress(
   axisId: string,
   requestedCompletedStageIds: readonly string[],
+  paths: readonly GspcLearningPath[] = GSPC_LEARNING_PATHS,
 ): LearningProgress | null {
-  if (!PATH_BY_AXIS.has(axisId)) return null;
+  const known =
+    paths === GSPC_LEARNING_PATHS
+      ? PATH_BY_AXIS.has(axisId)
+      : paths.some((path) => path.axis.id === axisId);
+  if (!known) return null;
 
   const requested = new Set(requestedCompletedStageIds);
   const completed: LearningStageId[] = [];

@@ -28,6 +28,7 @@ export default function LobbyComposer({
   onClose,
   tools = [],
   onTool,
+  onAsk,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -45,6 +46,9 @@ export default function LobbyComposer({
   tools?: ComposerTool[];
   /** Opens the usable dashboard pane behind a selected runtime tool. */
   onTool?: (tool: ComposerTool) => void;
+  /** Offered every free-text question first. Returning true means the host answered it (the
+   *  dashboard home hands questions to the AG-UI TalkPanel); false falls through to chat.send. */
+  onAsk?: (text: string) => boolean;
 }) {
   const [q, setQ] = useState("");
   const [audience, setAudience] = useState<string>(() => {
@@ -139,10 +143,16 @@ export default function LobbyComposer({
 
   function submit() {
     const text = q.trim();
-    if (!text || chat.busy) return;
+    if (chat.busy) return;
+    // The button always looks and acts live: with nothing typed it puts the cursor in the box.
+    if (!text) {
+      inputRef.current?.focus();
+      return;
+    }
     setQ("");
     setSeeded(false);
     setAsksOpen(false);
+    if (onAsk?.(text)) return;
     void chat.send(text, onNavigate, onOpenRoute);
   }
 
@@ -176,15 +186,15 @@ export default function LobbyComposer({
             }}
             aria-label="Ask the Council, or name a pane to open"
             aria-describedby="coai-lobby-chat-note"
-            placeholder='Ask the Council — paste a card to verify here (nothing uploaded). Or say "show the board"'
+            placeholder="Ask a question, or paste a signed record to check it"
             className="max-h-28 min-h-12 w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-[15px] leading-snug text-foreground placeholder:text-muted-foreground shadow-inner transition outline-none focus:border-primary focus:ring-2 focus:ring-primary/25 motion-reduce:transition-none"
           />
         </div>
         <button
           type="button"
           onClick={submit}
-          disabled={chat.busy || !q.trim()}
-          className={`${PRIMARY} min-h-11 shrink-0 px-5 py-2.5 text-[14px]`}
+          disabled={chat.busy}
+          className={`${PRIMARY} min-h-11 shrink-0 px-6 py-2.5 text-[15px] shadow-sm`}
         >
           {chat.busy ? "…" : "Ask"}
         </button>
@@ -259,7 +269,7 @@ export default function LobbyComposer({
             aria-haspopup="dialog"
             className={`min-h-11 rounded-xl border border-border bg-background px-3 py-2.5 text-[12px] font-semibold text-foreground transition hover:bg-accent motion-reduce:transition-none ${FOCUS}`}
           >
-            Asks
+            Suggestions
             {audience !== DEFAULT_AUDIENCE && (
               <span className="ml-1.5 rounded-full border border-emerald-700/30 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-900">
                 {AUDIENCES.find((a) => a.id === audience)?.label ?? audience}
@@ -347,7 +357,7 @@ export default function LobbyComposer({
           "How it answers" toggle stays clickable and aria-describedby stays intact. */}
       <p id="coai-lobby-chat-note" className={`mt-2 ${TYPE.fine}`}>
         <span className={turns.length > 0 && !noteOpen ? "sr-only" : undefined}>
-          Answers from published measurement, or it refuses.
+          Answers come only from published measurements; nothing you paste is uploaded.
         </span>{" "}
         <button
           type="button"
@@ -355,13 +365,14 @@ export default function LobbyComposer({
           aria-expanded={noteOpen}
           className={`rounded font-semibold text-emerald-800 underline underline-offset-2 ${FOCUS}`}
         >
-          {noteOpen ? "Hide lanes" : "How it answers"}
+          {noteOpen ? "Hide" : "How it answers"}
         </button>
       </p>
       {noteOpen && (
         <p className={`${MEASURE} mt-1 ${TYPE.fine}`}>
-          Pane commands switch locally with no model. Everything else hits the
-          published endpoint; failures are labelled <em>deterministic</em>.
+          Asking to open a page (for example &ldquo;show the board&rdquo;) switches
+          here with no model involved. Every other question goes to the published
+          answer endpoint; if it cannot answer from evidence, it says so.
         </p>
       )}
     </div>

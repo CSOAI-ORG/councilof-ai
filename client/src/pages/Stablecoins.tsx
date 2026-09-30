@@ -1,13 +1,16 @@
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
 import StablecoinReadinessView from "@/components/StablecoinReadinessView";
+import StablecoinCorpusRelation from "@/components/StablecoinCorpusRelation";
 
 const CANONICAL = "https://councilof.ai/stablecoins/";
 const READINESS_LEDGER = "/interop/stablecoin-universe-2026-09/readiness.json";
 const PROMOTION_QUEUE = "/interop/stablecoin-universe-2026-09/promotion-queue.json";
+const SUPPLY_READ = "/interop/stablecoin-corpus-index-2026-09-16.json";
+const CROSS_LEDGER = "/api/xl";
 
 const PAGE_DESCRIPTION =
-  "Explore a frozen stablecoin discovery index with evidence-derived measurement, signature, root, witness and settlement status for each asset. Indexed is not measured.";
+  "Explore a frozen stablecoin discovery index with evidence-derived measurement, signature, root, witness and settlement status for each asset, and the daily signed cross-ledger record. Indexed is not measured.";
 
 const PAGE_LD = {
   "@context": "https://schema.org",
@@ -44,6 +47,18 @@ const PAGE_LD = {
         encodingFormat: "application/json",
         contentUrl: `https://councilof.ai${PROMOTION_QUEUE}`,
       },
+      {
+        "@type": "DataDownload",
+        name: "Stablecoin supply read (dated corpus index)",
+        encodingFormat: "application/json",
+        contentUrl: `https://councilof.ai${SUPPLY_READ}`,
+      },
+      {
+        "@type": "DataDownload",
+        name: "Cross-ledger daily record (signed, served verbatim)",
+        encodingFormat: "application/json",
+        contentUrl: `https://councilof.ai${CROSS_LEDGER}`,
+      },
     ],
     variableMeasured: [
       "index state",
@@ -52,6 +67,8 @@ const PAGE_LD = {
       "root inclusion state",
       "external witness or anchor state",
       "asset-specific settlement state",
+      "ledger supply figure per issuer-listed deployment (cross-ledger record)",
+      "issuer-list parity state per asset (cross-ledger record)",
     ],
   },
 };
@@ -138,6 +155,8 @@ export default function Stablecoins() {
           </article>
         </div>
       </section>
+
+      <StablecoinCorpusRelation />
 
       <section aria-label="Stablecoin evidence catalog" className="mx-auto max-w-7xl px-5 pb-16">
         <StablecoinReadinessView />

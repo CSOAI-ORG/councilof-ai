@@ -137,7 +137,14 @@ export const ESTATE_FACTS_OBSERVED: EstateFacts = factsFrom({
   attested: Number(cf?.withheld?.attested_by_published_parent) || 0,
   manifestSigned: cf?.chain?.manifest_signed === true,
   live: false,
-  asOf: typeof cf?.as_of === "string" ? cf.as_of : null,
+  // When the bodies were last VERIFIED (the derive-chain-facts run), not when the index was
+  // created: cf.as_of is card_index.json's creation date (audit 2026-09-28 #17).
+  asOf:
+    typeof cf?.bodies?.verified_at === "string"
+      ? cf.bodies.verified_at
+      : typeof cf?.as_of === "string"
+        ? cf.as_of
+        : null,
 });
 
 /** Read the facts out of a /api/state payload. Returns null rather than inventing. */

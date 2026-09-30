@@ -233,6 +233,8 @@ gate "pages-size-guard (25 MiB)"     node scripts/pages-size-guard.mjs "$DIST"
 gate "check-prerender"               node scripts/check-prerender.mjs "$DIST"
 gate "brand-gate"                    node scripts/brand-gate.mjs "$DIST"
 gate "signed-json-guard"             node scripts/signed-json-guard.mjs "$DIST"
+gate "canary-leak-gate selftest"     node scripts/canary-leak-gate.mjs --selftest
+gate "canary-leak-gate"              node scripts/canary-leak-gate.mjs "$DIST" public
 gate "price-gate"                    node scripts/price-gate.mjs "$DIST"
 gate "facts-gate"                    node scripts/facts-gate.mjs "$DIST"
 # Head gate: no "undefined" <title>, no SPA page without a meta description, no bare shell

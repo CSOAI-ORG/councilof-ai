@@ -49,9 +49,11 @@ const BADGES: VerifyBadge[] = [
     logo: '/images/badges/verify/pypi.svg',
   },
   {
-    label: 'Zenodo DOI 10.5281/zenodo.21991104',
-    href: 'https://doi.org/10.5281/zenodo.21991104',
-    title: 'Canonical concept DOI on Zenodo',
+    // 29 Sep 2026: the Zenodo record answers 410 (account blocked; appeal pending). The DOI is
+    // kept as an identifier; the link goes to the dated status record, not to the dead record.
+    label: 'DOI 10.5281/zenodo.21991104 · Zenodo record unavailable',
+    href: '/interop/zenodo-status.json',
+    title: 'Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending. Live methodology: /methodology/',
     logo: '/images/badges/verify/zenodo.svg',
   },
   {

@@ -147,10 +147,10 @@ function validate(
 
   const axes = board?.axes ?? [];
   const axisIds = axes.map((row) => row.axis);
-  expect(axes.length === 22, `historical signed board has ${axes.length} axes, expected 22`);
+  expect(axes.length === 22, `signed board has ${axes.length} axes, expected 22`);
   expect(new Set(axisIds).size === axes.length, "signed board axis ids must be unique");
   expect(board?.totals?.axes === axes.length, "signed board total does not derive from axis array");
-  expect(inventory?.counts?.gspc_axes === axes.length, "inventory historical GSPC snapshot count does not derive from signed board");
+  expect(inventory?.counts?.gspc_axes === axes.length, "inventory GSPC count does not derive from signed board");
 
   const jurisdictions = eastWest?.jurisdictions ?? [];
   expect(jurisdictions.length === 4, `published east-west crosswalk has ${jurisdictions.length} regimes, expected 4`);
@@ -212,5 +212,5 @@ if (process.argv.includes("--selftest")) {
     for (const error of errors) console.error(`regulatory-inventory-gate: ${error}`);
     process.exit(1);
   }
-  console.log("regulatory-inventory-gate: PASS — 417 provision hashes + reproducible root · 17 authority adapters · 25 crosswalk assets · 22 historical signed-snapshot axes · 4 published regimes");
+  console.log("regulatory-inventory-gate: PASS — 417 provision hashes + reproducible root · 17 authority adapters · 25 crosswalk assets · 22 GSPC axes · 4 published regimes");
 }

@@ -1,0 +1,39 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
+  "artifact": {
+   "path": "measurement-capsules/v0.2/contract_parity/record.json",
+   "sha256": "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357",
+   "schema": "csoai.measurement-capsule-batch/0.2",
+   "as_of": "2026-09-26T07:54:58Z"
+  },
+  "merkle_root": "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+  "n_capsules": 9148,
+  "states": {
+   "CONSISTENT": 5570,
+   "INCONSISTENT": 2905,
+   "UNCHECKABLE": 673
+  },
+  "capsules_sha256": "7b24218a5616d4deb2461ddca0ff97dc7eafc5f094be77ca1f772f05ac862d6d",
+  "adapter": "contract_parity",
+  "kind": "measurement.contract_parity"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "243a2904580425efdefb53ec23696c9fe454567c23f9193badc4896205d6542517fc5456592d36fe7cf48af09ea8fd99de0a118602d5e12e149d2f3df1ddc40a",
+  "payload_sha256": "1b5c9e6ab97383940b8990b7822676d1ba467b85d64dcb9f87d53ba2886e0bdb",
+  "signed_at": "2026-09-26T07:55:29.898Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "merkle root altered": "rejected (control holds)"
+  }
+ }
+}

@@ -46,7 +46,7 @@ It does two jobs. First, it records the current board without inventing scores. 
 
 - **Ed25519 signed cards.** Each cell is a measurement card: axis, model, accuracy, issuer, timestamp, previous-hash, signature. Offline-verifiable against did:web:csoai.org#board-attestation-1.
 
-- **SHA-256 over canonical JSON.** Content integrity on the card body and on the 417-provision frozen corpus anchor (Zenodo doi:10.5281/zenodo.21991105). Merkle root of the living stamp is published.
+- **SHA-256 over canonical JSON.** Content integrity on the card body and on the 417-provision frozen corpus anchor (Zenodo doi:10.5281/zenodo.21991105 — Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending). Merkle root of the living stamp is published.
 
 **2.2 Why this is stricter than Hugging Face capability boards**
 
@@ -416,7 +416,7 @@ If a scalar is required for a dashboard, publish coverage first (measured-of-22)
 
 **11. Sources used in this review**
 
-Living board and method: GET https://councilof.ai/api/gspc ; https://councilof.ai/gspc-scoreboard ; https://councilof.ai/os ; GitHub CSOAI-ORG/councilof-ai ; Zenodo 10.5281/zenodo.21991105.
+Living board and method: GET https://councilof.ai/api/gspc ; https://councilof.ai/gspc-scoreboard ; https://councilof.ai/os ; GitHub CSOAI-ORG/councilof-ai ; Zenodo 10.5281/zenodo.21991105 (Zenodo record unavailable since 29 Sep 2026: account blocked by Zenodo; appeal pending).
 
 Hub record: https://huggingface.co/csoai and the gspc-\* dataset / Space family.
 

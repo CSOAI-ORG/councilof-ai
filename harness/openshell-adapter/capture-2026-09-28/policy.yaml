@@ -1,0 +1,34 @@
+# Capture policy for the declared-vs-observed adapter (our example, not an upstream file).
+# example.com: a read-only REST endpoint whose deny_rules deny every GET,
+#   left in `audit` enforcement (the documented default), so the deny is
+#   declared but the request is still allowed out.
+# example.net: the same rule set in `enforce` mode.
+# Every other destination has no rule, so the default-deny path applies.
+version: 1
+network_policies:
+  example_audit:
+    name: example-audit
+    endpoints:
+      - host: example.com
+        port: 443
+        protocol: rest
+        enforcement: audit
+        access: read-only
+        deny_rules:
+          - method: GET
+            path: /**
+    binaries:
+      - { path: /usr/bin/curl }
+  example_enforce:
+    name: example-enforce
+    endpoints:
+      - host: example.net
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+        deny_rules:
+          - method: GET
+            path: /**
+    binaries:
+      - { path: /usr/bin/curl }

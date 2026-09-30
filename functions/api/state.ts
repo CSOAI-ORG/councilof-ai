@@ -61,14 +61,14 @@
  * the fleet), commit, deploy. This endpoint has no state of its own.
  */
 
-import boardSigned from "../../public/signed/gspc-board.signed.json";
-import boardStatus from "../../public/signed/gspc-board.status.json";
 import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
 import councilMcpDoor from "../../evidence/council-mcp-door.json";
+import MCP_FREE_TOOLS from "../mcp/gspc-tools.json";
+import MCP_PAID_TOOLS from "../mcp/paid-tools.json";
 import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 import estateSummary from "../../public/interop/master-consolidation-summary.json";
@@ -78,6 +78,9 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { crosscheckBoardSnapshot } from "./_board_snapshot";
+import { axisCountLine } from "./_boardCounts";
+import { ledgersBlock } from "./_ledgers";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -104,9 +107,18 @@ const fact = (
 ): Fact => ({ value, kind, source, as_of, as_of_field, ...(note ? { note } : {}) });
 
 // ── sources, named once ──────────────────────────────────────────────────────
-const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
+// The three bodies.* facts are counted and verified by that script's run, so they are dated by the
+// run (bodies.verified_at), not by card_index.json's creation date, which is what chain-facts.as_of
+// names. Before 2026-09-28 "335 signed cards, every one verifies" carried 19 Aug, the index date
+// (audit #17). Older facts files without verified_at fall back to as_of and say so.
+const CHAIN_VERIFIED_AT: string | null =
+  typeof (chainFacts as any).bodies?.verified_at === "string" ? (chainFacts as any).bodies.verified_at : (chainFacts as any).as_of ?? null;
+const CHAIN_VERIFIED_AT_FIELD: string | null =
+  typeof (chainFacts as any).bodies?.verified_at === "string"
+    ? "chain-facts.json → bodies.verified_at (last verification run of scripts/derive-chain-facts.mjs)"
+    : (chainFacts as any).as_of_field ?? null;
 const SRC_CLAIMS = "public/claims-register.json";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
@@ -115,15 +127,6 @@ const SRC_PUBLIC_ROOT = "public/root.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
-
-// ── board: as_of comes from the payload's own measurement stamp ──────────────
-// This artifact carries no ISO timestamp. Its honest date-of-record is the
-// measurement stamp it was signed over, so that string is quoted verbatim rather
-// than parsed into something that looks more precise than it is.
-const boardTotals = (boardSigned as any).totals ?? {};
-const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
-const boardCustody = (boardSigned as any).custody_attestation ?? {};
-const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 
 // ── live derivation, so snapshot drift is visible rather than silent ─────────
 // /api/gspc computes its totals from these arrays at request time. The signed
@@ -135,13 +138,13 @@ const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
-const livePublicCount = `${liveAxisSlots} axis · ${liveMeasuredAxes} measured`;
+const livePublicCount = axisCountLine(liveAxisSlots, liveMeasuredAxes);
 const liveCountGrammar =
   liveUnmeasuredAxes === 0
-    ? `${liveAxisSlots} axis are on the board and every one carries a measurement — no ` +
+    ? `${liveAxisSlots} ${liveAxisSlots === 1 ? "axis is" : "axes are"} on the board and every one carries a measurement — no ` +
       `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
       `future slot is added with no run behind it, this line separates the two again on its own.`
-    : `${liveAxisSlots} axis are on the board; ${liveMeasuredAxes} of them carry a measurement and ` +
+    : `${liveAxisSlots} ${liveAxisSlots === 1 ? "axis is" : "axes are"} on the board; ${liveMeasuredAxes} of them carry a measurement and ` +
       `${liveUnmeasuredAxes} are declared slots with no run behind them. The larger number counts slots, ` +
       `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
       `so the gap is visible; it is not evidence of anything having been measured.`;
@@ -155,23 +158,30 @@ const liveByFamily = {
     axes: LIVE_AXES.filter((a) => a.family === "financial").length,
     measured: LIVE_AXES.filter((a) => a.family === "financial" && a.status === "MEASURED").length,
     note:
-      "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs. " +
+      "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs. " +
       "Measured is not scored. None has a leader, an accuracy or a separation determination.",
   },
 };
 const liveMeasuredOn: string = MEASURED_ON.date;
-const boardCountsAgree =
-  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
-// Matching counts are necessary but not sufficient. The preserved MPC freeze has
-// a known signed-run overclaim and ambiguous historical leader notes, so it fails
-// closed until an owner MPC ceremony replaces it and its status becomes CURRENT.
-const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
+// The NEWEST signed freeze (by frozen_at in its status document) is compared, never a
+// hard-coded file: functions/api/_board_snapshot.ts. Matching counts are necessary but
+// not sufficient — the freeze's status document must also say CURRENT, evaluated there.
+// A superseded freeze stays in `history`; its bytes still verify.
+const boardCrosscheck = crosscheckBoardSnapshot({
+  axis_slots: liveAxisSlots,
+  measured_axes: liveMeasuredAxes,
+  unmeasured_axes: liveUnmeasuredAxes,
+});
+const boardCountsAgree = boardCrosscheck.counts_agree;
+const boardAgrees = boardCrosscheck.agrees;
+const boardClaimState = boardCrosscheck.claim_state;
 const SNAPSHOT_DISAGREEMENT =
   "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the " +
-  "committed axis arrays. The preserved signed snapshot at public/signed/gspc-board.signed.json " +
-  "is not current while signed_snapshot_agrees is false: either its counts drift or its status " +
-  "records a known claim defect. Read /signed/gspc-board.status.json. Re-signing that file is an " +
-  "owner MPC ceremony, not a laptop sign and not the Pages 3KB card-sign path.";
+  "committed axis arrays. The newest signed freeze (signed_snapshot.source, status in " +
+  "gspc-board.<date>.status.json) is not current while signed_snapshot_agrees is false: either " +
+  "its counts drift or its status withdraws reliance. A new freeze is produced by " +
+  "scripts/gspc-board-snapshot.mjs then scripts/gspc-board-attest.mjs (#board-attestation-1, " +
+  "single key) as a NEW dated file; signed bytes are superseded, never edited.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
 const cards: Array<{ signed?: boolean; card?: string }> = (cardIndex as any).cards ?? [];
@@ -293,6 +303,7 @@ const rwaHeaderAgrees =
   rwaHeader.not_located === rwaNotLocated;
 
 export const onRequestGet: PagesFunction = async () => {
+  const ledgerState = ledgersBlock();
   const body = {
     schema: "csoai.live-state/1",
     title: "CSOAI live state — the numbers a lane may quote",
@@ -329,6 +340,27 @@ export const onRequestGet: PagesFunction = async () => {
       freshness_self_test:
         "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/a; sleep 5; " +
         "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/b; diff /tmp/a /tmp/b && echo IDENTICAL",
+      authorities: {
+        live_state: "/api/state",
+        measurement_board: "/api/gspc",
+        public_self_claims: "/claims-register.json",
+        maintained_claim_state: "/api/claims/register",
+        executed_rechecks: "/api/state → ledgers.claim_maintenance",
+        claim_events: "/api/claims/events",
+        claim_events_head: "/api/claims/events/head",
+        corrections: "/api/corrections",
+        ledger_heads: "/api/state → ledgers.ledgers",
+        public_root: "/root.json",
+        rule:
+          "One authority per record type. /api/state is the derived join; it does not replace the board, claim register, correction ledger, recheck ledger, claim-event feed or public root.",
+      },
+      flywheel: [
+        { stage: "CAPTURE", authority: "/api/claims/register", meaning: "capture maintained public claims in the existing register" },
+        { stage: "RECHECK", authority: "/api/state → ledgers.claim_maintenance", meaning: "record whether scheduled reads ran; event_chain links the append-only /api/claims/events history and signed head" },
+        { stage: "MEASURE", authority: "/api/gspc", meaning: "measure only where the declared instrument and evidence support it" },
+        { stage: "CORRECT", authority: "/api/corrections", meaning: "append our own defects and fixes; never erase history" },
+        { stage: "QUOTE", authority: "/api/state", meaning: "derive the current quotable view by field name" },
+      ],
       kinds: {
         measured: "A run happened against a frozen bank or source and was graded.",
         probed: "Something was contacted and answered, at as_of.",
@@ -400,8 +432,8 @@ export const onRequestGet: PagesFunction = async () => {
       live_derivation_crosscheck: {
         note:
           "Live counts above are derived from the committed axis arrays — the same source GET " +
-          "/api/gspc uses. The signed file is an MPC freeze of that computation. Drift is " +
-          "published rather than silently inherited.",
+          "/api/gspc uses. The signed snapshot is a dated freeze of that computation, compared " +
+          "here against the NEWEST freeze. Drift is published rather than silently inherited.",
         source: SRC_AXES,
         live_axis_slots: liveAxisSlots,
         live_measured_axes: liveMeasuredAxes,
@@ -409,29 +441,33 @@ export const onRequestGet: PagesFunction = async () => {
         signed_snapshot_counts_agree: boardCountsAgree,
         signed_snapshot_agrees: boardAgrees,
         signed_snapshot: {
-          source: SRC_BOARD,
-          axis_slots: boardTotals.axes ?? null,
-          measured_axes: boardTotals.measured_axes ?? null,
-          unmeasured_axes: boardTotals.unmeasured_axes ?? null,
-          public_count: boardTotals.public_count ?? null,
-          as_of: boardMeasuredOn,
+          source: boardCrosscheck.source,
+          selected_by: boardCrosscheck.selected_by,
+          frozen_at: boardCrosscheck.frozen_at,
+          axis_slots: boardCrosscheck.axis_slots,
+          measured_axes: boardCrosscheck.measured_axes,
+          unmeasured_axes: boardCrosscheck.unmeasured_axes,
+          public_count: boardCrosscheck.public_count,
+          as_of: boardCrosscheck.as_of,
           claim_state: boardClaimState,
-          status_source: "public/signed/gspc-board.status.json",
-          status: boardAgrees
-            ? "current signed freeze agrees with live axis arrays"
-            : "superseded or drifted freeze — do not file",
+          status_source: boardCrosscheck.status_source,
+          status: boardCrosscheck.status,
         },
+        history: boardCrosscheck.history,
         on_disagreement: SNAPSHOT_DISAGREEMENT,
       },
       signature: {
+        source: boardCrosscheck.source,
         artifact_state: boardClaimState,
-        signer: boardCustody.signer ?? null,
-        alg: boardCustody.alg ?? null,
-        keyid: boardCustody.keyid ?? null,
-        content_id: boardCustody.content_id ?? null,
-        custody: boardCustody.custody ?? null,
-        verify: boardCustody.verify ?? null,
-        sig_input: boardCustody.sig_input ?? null,
+        shape: boardCrosscheck.signature.shape,
+        signer: boardCrosscheck.signature.signer,
+        alg: boardCrosscheck.signature.alg,
+        public_key_hex: boardCrosscheck.signature.public_key_hex,
+        content_id: boardCrosscheck.signature.content_id,
+        payload_sha256: boardCrosscheck.signature.payload_sha256,
+        custody: boardCrosscheck.signature.custody,
+        signed_at: boardCrosscheck.signature.signed_at,
+        verify: boardCrosscheck.signature.verify,
       },
       caveat:
         "Measurement, not certification. A score describes a measured run on a frozen split on a " +
@@ -440,17 +476,32 @@ export const onRequestGet: PagesFunction = async () => {
 
     // ── COUNCIL HTTP MCP DOOR (not the 2026-08-27 fleet probe) ──────────────
     council_http_mcp: {
-      authority: "evidence/council-mcp-door.json",
+      // DERIVED FROM THE REGISTRY THE HANDLER SERVES (2026-09-26). This read "7" from a dated
+      // probe (evidence/council-mcp-door.json, 2026-09-01) for three weeks after the door grew to
+      // nine free + four paid tools, while its note said "Seven tools". functions/mcp/[[path]].ts
+      // answers tools/list with exactly these two files, so their length IS the served count.
+      authority: "functions/mcp/gspc-tools.json + functions/mcp/paid-tools.json (what functions/mcp/[[path]].ts serves on tools/list)",
       url: (councilMcpDoor as { url: string }).url,
       tools_count: fact(
-        (councilMcpDoor as { tools_count: number }).tools_count,
-        "probed",
-        "evidence/council-mcp-door.json → tools_count",
-        (councilMcpDoor as { as_of: string }).as_of,
-        "as_of",
-        "POST /mcp tools/list. Seven tools. Distinct from mcp_fleet.tools_probed (8 from two other servers on 2026-08-27). Do not add those numbers.",
+        MCP_FREE_TOOLS.tools.length + MCP_PAID_TOOLS.tools.length,
+        "catalogued",
+        "functions/mcp/gspc-tools.json + functions/mcp/paid-tools.json → tools.length",
+        null,
+        null,
+        `The tool registry the /mcp handler serves: ${MCP_FREE_TOOLS.tools.length} free + ${MCP_PAID_TOOLS.tools.length} paid (x402). ` +
+          "Distinct from mcp_fleet.tools_probed (two other servers, 2026-08-27). Do not add those numbers.",
       ),
-      tools: (councilMcpDoor as { tools: string[] }).tools,
+      tools: [...MCP_FREE_TOOLS.tools, ...MCP_PAID_TOOLS.tools].map((t) => t.name),
+      free_tools: MCP_FREE_TOOLS.tools.map((t) => t.name),
+      paid_tools: MCP_PAID_TOOLS.tools.map((t) => t.name),
+      // The dated probe is kept, labelled as what it is: a past observation, not the current count.
+      last_probe: {
+        source: "evidence/council-mcp-door.json",
+        kind: "probed",
+        tools_count: (councilMcpDoor as { tools_count: number }).tools_count,
+        as_of: (councilMcpDoor as { as_of: string }).as_of,
+        note: "historical probe; superseded by the registry-derived tools_count above",
+      },
     },
 
     // ── THE MCP FLEET ────────────────────────────────────────────────────────
@@ -755,16 +806,16 @@ export const onRequestGet: PagesFunction = async () => {
         (chainFacts as any).bodies.published,
         "catalogued",
         SRC_CHAIN + " → bodies.published",
-        (chainFacts as any).as_of,
-        (chainFacts as any).as_of_field,
+        CHAIN_VERIFIED_AT,
+        CHAIN_VERIFIED_AT_FIELD,
         "Card bodies present in public/signed/cards/, counted from the directory.",
       ),
       bodies_verified_valid: fact(
         (chainFacts as any).bodies.verified_valid,
         "measured",
         SRC_CHAIN + " → bodies.verified_valid",
-        (chainFacts as any).as_of,
-        (chainFacts as any).as_of_field,
+        CHAIN_VERIFIED_AT,
+        CHAIN_VERIFIED_AT_FIELD,
         "Bodies that VERIFY: id recomputed from the canonical body and the Ed25519 signature " +
           "checked against the pinned card-attestation key, by the same verifier we publish. " +
           "This is a measurement, not a catalogue entry — the check was run.",
@@ -773,8 +824,8 @@ export const onRequestGet: PagesFunction = async () => {
         (chainFacts as any).bodies.distinct_pubkeys,
         "measured",
         SRC_CHAIN + " → bodies.distinct_pubkeys",
-        (chainFacts as any).as_of,
-        (chainFacts as any).as_of_field,
+        CHAIN_VERIFIED_AT,
+        CHAIN_VERIFIED_AT_FIELD,
         "Distinct pubkey values across the published bodies.",
       ),
       chain_positions: fact(
@@ -840,6 +891,10 @@ export const onRequestGet: PagesFunction = async () => {
         "DISCLOSURE, and only withheld_attested_by_published_parent is a PROOF. Four different " +
         "numbers about four different things — never substituted for one another.",
     },
+
+    // ── LEDGERS: one authority per record type, heads committed to the ONE root ──
+    // functions/api/_ledgers.ts; read by /corrections ("Ledgers and corrections").
+    ledgers: ledgerState,
 
     // ── THE CLAIMS REGISTER ──────────────────────────────────────────────────
     claims_register: {
@@ -1034,7 +1089,7 @@ export const onRequestGet: PagesFunction = async () => {
           where: "Only after a result is promoted into a signed artifact in this repo.",
         },
         {
-          subject: "MEOK / SOVOS / sov34 model figures",
+          subject: "MEOK model figures",
           why_not:
             "A different estate with a different boundary. CSOAI measures; it does not host that model. " +
             "Its numbers never belong in a CSOAI count.",

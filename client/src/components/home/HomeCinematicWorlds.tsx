@@ -39,10 +39,10 @@ const WORLDS: World[] = [
     title: "The Coliseum — how we test containment",
     kicker: "Arena",
     headline: "The model goes in the arena.",
-    lede: "Frozen, published tests. Practice stays practice. Jail is measured — a TIE stays a TIE.",
+    lede: "Frozen, published tests. Practice stays practice. Jail is measured — an undecided separation stays UNTESTED.",
     takeaways: [
       "The target does not move after you sit.",
-      "Jail is measured. A TIE is never dressed up as a pass.",
+      "Jail is measured. An UNTESTED separation is never dressed up as a pass.",
     ],
     primary: { href: "/dashboard?tab=board", label: "Open the scoreboard" },
     secondary: { href: "/gspc-verify", label: "Verify a card" },

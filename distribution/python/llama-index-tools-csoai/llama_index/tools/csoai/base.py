@@ -5,13 +5,17 @@ from typing import Optional
 
 from llama_index.core.tools.tool_spec.base import BaseToolSpec
 
-from ._board import TOOL_DESCRIPTION, read_board
+from ._board import TOOL_DESCRIPTION, VERIFY_TOOL_DESCRIPTION, read_board, read_verify
 
 
 class CSOAIGSPCToolSpec(BaseToolSpec):
-    spec_functions = ["gspc_board"]
+    spec_functions = ["gspc_board", "verify_card"]
 
     def gspc_board(self, axis: Optional[str] = None) -> dict:
         return read_board(axis)
 
+    def verify_card(self, card_id: Optional[str] = None, card: Optional[dict] = None) -> dict:
+        return read_verify(card_id, card)
+
     gspc_board.__doc__ = TOOL_DESCRIPTION
+    verify_card.__doc__ = VERIFY_TOOL_DESCRIPTION

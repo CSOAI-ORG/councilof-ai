@@ -17,6 +17,7 @@
 #   06:00Z         corrections-watch.sh     logs/corrections-watch.log  (re-fetch the 15 stale pages, publish to the HF mirror)
 #   07:00Z         census-capture.sh        logs/census-capture.log  (claim-capture census: 9 public authless
 #   08:00Z         capability-probe.sh      logs/capability-probe.log  (request every surface council-os/capabilities.json declares against live; DRAFT one correction per mismatch into drift-draft's queue; never publishes)
+#   08:15Z         harness-x-parity.sh      logs/harness-x-parity.log  (STAGED 2026-09-28: every live Layer 0 channel in council-os/distribution.json#published_channels vs the single source; Sundays also a clean install + run per package; never publishes)
 #                                           catalogues -> canonical records -> RFC 9162 root -> OTS submit ->
 #                                           detached board signature -> HF csoai/claim-capture-census + out/census.
 #                                           DAILY, and daily is the honest cadence: DefiLlama's own responses
@@ -129,6 +130,10 @@ while true; do
   # THE STAMP IS THIS SCHEDULER'S. The script gets --now and must not stamp itself: a second
   # write finds the first already there and the run exits 0 having measured nothing.
   if due 08 00 && stamp capability-probe;    then nohup bash "$LOOPS/capability-probe.sh" --now 8>&- >/dev/null 2>&1 & fi
+  # 08:15Z harness-x parity (STAGED 2026-09-28, lane harness-x-20260928): every live Layer 0 channel -- PyPI, npm,
+  # the HF MCP Space, the MCP Registry, the door and its well-known files -- against council-os/distribution.json.
+  # Reads only. THE STAMP IS THIS SCHEDULER'S; the script gets --now and must not stamp itself.
+  if due 08 15 && stamp harness-x-parity;    then nohup bash "$LOOPS/harness-x-parity.sh" --now 8>&- >/dev/null 2>&1 & fi
   # Mondays 09:20Z, claim maintenance on named subjects. THE STAMP IS THIS SCHEDULER'S. The script
   # gets --now and refuses to run without it, and writes no stamp of its own: a second stamp would
   # find the first already written and the run would exit 0 having measured nothing. The day gate is

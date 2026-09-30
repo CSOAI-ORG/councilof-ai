@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useBoardCount } from "@/lib/boardCount";
 
 /**
- * ArenaScoreboard — the signed, per-axis Elo leaderboard.
+ * ArenaScoreboard — a signed HISTORICAL arena artefact (29 Aug): per-axis pass rates, not Elo.
  *
  * Driven entirely by GET /api/arena/scoreboard (the pod-canonical signed artifact).
  * Every figure, n, and count is read from the payload — nothing hardcoded.
@@ -125,10 +125,11 @@ export default function ArenaScoreboard() {
       <div className="mb-8">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/60">Council OS · measurement</p>
         <h1 className="mt-2 text-4xl sm:text-4xl font-black tracking-tight">
-          The signed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">per-axis leaderboard.</span>
+          A signed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">historical arena artefact.</span>
         </h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">
-          Scores on this published board are deterministic measurements of the named fleet on frozen probes.
+          This is a historical artefact (signed 29 Aug 2026) of per-axis pass rates, not Elo. Most axes read 0.0
+          because of a keyword-grader defect, so a 0.0 here is not a model score and the board is not a current measurement.
           This board is content-addressed and Ed25519-signed — you can recompute it and verify
           it against the pinned published key. That verify path is the point: it is what neither a
           usage rank nor a crowd Elo can offer.

@@ -24,6 +24,18 @@
  *   node scripts/mcp-probe.mjs --out path.json      # write elsewhere
  *   node scripts/mcp-probe.mjs --check              # exit 1 if the tracked artifact is stale/invalid
  *   node scripts/mcp-probe.mjs --selftest           # verify the honesty invariants, no network
+ *   node scripts/mcp-probe.mjs --door-origin http://127.0.0.1:8799
+ *                                                   # PRE-DEPLOY: contact this branch's build
+ *                                                   # (served locally) for every councilof.ai target
+ *
+ * --door-origin exists because the fleet can only change in the commit that changes it, and that
+ * commit is not live until it deploys: a live probe of a branch that adds tools sees the OLD fleet,
+ * so the lock test (functions/mcp/tool-fleet.lock.test.ts) could never go green before the deploy
+ * that it gates. With the flag, each https://councilof.ai/* target is answered by the given origin
+ * instead, and the artifact says so on every such server — `contacted` (the URL actually probed)
+ * and `stand_in_for` (the declared endpoint) — and once at the top in `probe_scope`. Nothing is
+ * disguised: validate() refuses a stand-in record without those fields. After the deploy, run the
+ * probe again WITHOUT the flag and commit the live observation.
  *
  * Requires Node 18+ (global fetch). No npm dependencies.
  */
@@ -108,7 +120,18 @@ async function rpc(endpoint, method, params) {
 
 // ---------------------------------------------------------------- probe
 
+const DOOR_ORIGIN_IDX = process.argv.indexOf("--door-origin");
+const DOOR_ORIGIN = DOOR_ORIGIN_IDX >= 0 ? String(process.argv[DOOR_ORIGIN_IDX + 1] || "").replace(/\/+$/, "") : null;
+const LIVE_DOOR_ORIGIN = "https://councilof.ai";
+
+/** The URL actually contacted for a target: its own endpoint, or the stand-in origin for our door. */
+function contactUrl(endpoint) {
+  if (!DOOR_ORIGIN || typeof endpoint !== "string" || !endpoint.startsWith(LIVE_DOOR_ORIGIN + "/")) return endpoint;
+  return DOOR_ORIGIN + endpoint.slice(LIVE_DOOR_ORIGIN.length);
+}
+
 async function probeOne(target) {
+  const contacted = contactUrl(target.endpoint);
   // Every field below starts unmeasured. Only a returning probe may overwrite one.
   const rec = {
     id: target.id,
@@ -128,9 +151,12 @@ async function probeOne(target) {
     declared_by: target.declared_by || null,
     catalogue_source: null,
     catalogue_claim: null,
+    ...(contacted !== target.endpoint
+      ? { contacted, stand_in_for: target.endpoint }
+      : {}),
   };
 
-  const init = await rpc(target.endpoint, "initialize", {
+  const init = await rpc(contacted, "initialize", {
     protocolVersion: PROTOCOL_VERSION,
     capabilities: {},
     clientInfo: { name: "csoai-mcp-probe", version: "1" },
@@ -150,7 +176,7 @@ async function probeOne(target) {
   rec.name = init.body.result.serverInfo?.name || null;
   rec.server_version = init.body.result.serverInfo?.version || null;
 
-  const list = await rpc(target.endpoint, "tools/list", {});
+  const list = await rpc(contacted, "tools/list", {});
   if (list.error || !Array.isArray(list.body?.result?.tools)) {
     // Reachable, but the tool surface is unmeasured. Do NOT invent a count.
     rec.error = list.error || "tools/list returned no tools array";
@@ -367,6 +393,14 @@ async function run(outPath) {
     probe_method: PROBE_METHOD,
     probe_host: probeEnvironment(),
     targets_file: "scripts/mcp-targets.json",
+    ...(DOOR_ORIGIN
+      ? {
+          probe_scope:
+            `PRE-DEPLOY STAND-IN: every ${LIVE_DOOR_ORIGIN}/* target was answered by ${DOOR_ORIGIN} ` +
+            "(this branch's build served locally), NOT by the live door; see `contacted` on each such server. " +
+            "Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
+        }
+      : {}),
     honesty_contract: [
       "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
       "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -411,6 +445,14 @@ function validate(artifact) {
   ok(Array.isArray(artifact.servers), "servers missing");
 
   const VALID = new Set(["reachable", "unreachable", "catalogued-not-probed"]);
+  const standIns = (artifact.servers || []).filter((s) => s.contacted !== undefined || s.stand_in_for !== undefined);
+  for (const s of standIns) {
+    ok(typeof s.contacted === "string" && typeof s.stand_in_for === "string" && s.contacted !== s.stand_in_for,
+      `${s.id}: a stand-in record must name both the URL contacted and the endpoint it stands in for`);
+    ok(s.endpoint === s.stand_in_for, `${s.id}: stand_in_for must be the declared endpoint`);
+  }
+  ok(!standIns.length || (typeof artifact.probe_scope === "string" && /STAND-IN/.test(artifact.probe_scope)),
+    "stand-in records present but the artifact has no probe_scope saying so — a local answer would read as the live door");
   for (const s of artifact.servers || []) {
     ok(VALID.has(s.status), `${s.id}: invalid status "${s.status}"`);
     // The core invariant: a timestamp may exist only where a probe returned.
@@ -504,6 +546,22 @@ function selftest() {
     process.exit(1);
   }
 
+  // A pre-deploy stand-in (a local build answering for https://councilof.ai/mcp) that does not say so.
+  const disguised = {
+    schema: "csoai.mcp-registry/1",
+    probe_method: PROBE_METHOD,
+    probe_host: PROBE_ENVIRONMENTS[0],
+    counts: { reachable_endpoints: 1, reachable_distinct_servers: 1, tools_probed: 0 },
+    servers: [{
+      id: "csoai-gspc-mcp", endpoint: "https://councilof.ai/mcp", status: "reachable", last_probed: new Date().toISOString(),
+      tools_count: 0, tools: [], contacted: "http://127.0.0.1:8799/mcp", stand_in_for: "https://councilof.ai/mcp",
+    }],
+  };
+  if (!validate(disguised).some((e) => e.includes("no probe_scope saying so"))) {
+    console.error("SELFTEST FAIL: validator accepted a stand-in probe with no probe_scope");
+    process.exit(1);
+  }
+
   // stripClaimedState must be the thing that makes the above unreachable in practice.
   const stripped = stripClaimedState({ tools_count: 3, status: "LIVE" });
   if (stripped.status !== undefined || stripped.tools_count !== undefined || stripped.asserted_tools_count !== 3) {
@@ -511,7 +569,7 @@ function selftest() {
     process.exit(1);
   }
 
-  console.log("selftest ok — validator rejects fabricated freshness, unmeasured counts, machine hostnames and LIVE catalogue claims");
+  console.log("selftest ok — validator rejects fabricated freshness, unmeasured counts, machine hostnames, LIVE catalogue claims and undisclosed stand-in probes");
 }
 
 // ---------------------------------------------------------------- main

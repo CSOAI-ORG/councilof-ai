@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Removes from dist/ what never deploys (scripts/deploy-exclusions.json): a directory or file leaves the
-// upload only if public/_redirects carries a rule that keeps its URL resolving (302 to the HF mirror).
+// upload only if public/_redirects carries a rule that keeps its URL resolving (302 to Hugging Face; since
+// 2026-09-28 the public dataset csoai/councilof-ai-evidence, kept in sync by scripts/pod-loops/evidence_sync.py).
 // Owner decisions 2026-09-22: proofs/ (Cloudflare Pages 20,000-file cap) and the axis-23 run artifact
 // (signed-pinned bytes that the brand gate refuses on this surface). Runs AFTER vite build and BEFORE the
 // gates that scan dist/. Nothing is removed from the repository.

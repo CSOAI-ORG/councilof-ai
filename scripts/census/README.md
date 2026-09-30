@@ -76,6 +76,16 @@ Sources: official MCP registry (`version=latest`, cursor), HF Spaces `filter=mcp
 of one commit), Smithery (anonymous cap: always PARTIAL). x402 bazaars are read by
 `x402-bazaar-conformance.py`, not here.
 
+Opt-in, not in the standing run: `--sources agent-directory` reads an AGNTCY Directory Service
+catalogue (`GET /v1/agents?page_size=&page_token=` -> `results[]`, `nextPageToken`, `totalCount`;
+OASF records: MCP server cards, A2A agent cards, agent skills). The proxy cuts large bodies
+mid-JSON (page_size=100 arrived cut at ~786 KB on 2026-09-28), so a cut page is re-requested at the
+same page_token with page_size 25 -> 10 -> 5 -> 1 before the walk stops PARTIAL. `EXHAUSTED` needs an
+empty `nextPageToken`, a `totalCount` that did not move during the walk, and distinct identifiers
+== `totalCount`. The listing's own trust and scan fields are kept as `listing_*` meta: they are
+the catalogue's claims about a record, never a measurement of ours. Skills records declare no
+endpoint and are counted in `entries_without_endpoint`.
+
 Each source ends `EXHAUSTED`, `PARTIAL` or `FAILED`; `population_total` is `null` unless
 `EXHAUSTED`, and the union total is `null` unless every source is. An error body, a non-200,
 a cut page or a repeated cursor is never an end. Raw pages are kept gzipped under `raw/<source>/`

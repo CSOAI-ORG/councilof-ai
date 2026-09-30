@@ -12,3 +12,4 @@ test('offline browser does not send mutations or foreign requests',()=>{assert.e
 test('uncaught JS error cannot yield a passing snapshot',()=>assert.match(snapshotFailure('A lot of otherwise good text',['Cannot read properties of undefined']),/^JS_RUNTIME_FAILURE/));
 test('explicit fetch failure remains a blocker',()=>assert.match(snapshotFailure('Failed to fetch',[]),/^BAKED-FETCH/));
 test('honest unmeasured or unavailable state is not an invented page error',()=>assert.equal(snapshotFailure('UNMEASURED. Source unavailable; not zero.',[]),null));
+test('a Pages Function under /.well-known is proxied to the data origin',()=>assert.equal(parseRenderRequest('/.well-known/x402.json','https://councilof.ai').target,'https://councilof.ai/.well-known/x402.json'));

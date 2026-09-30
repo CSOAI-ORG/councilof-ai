@@ -1,0 +1,129 @@
+{
+ "schema": "csoai.layer0-automation/0.1",
+ "as_of": "2026-09-28T21:16Z",
+ "what_this_is": "Every Layer 0 step, whether it runs by itself today, and the staged job for each manual one. A staged job is written and tested but NOT installed in any crontab: installing it is the integrator's step, and jobs marked owner_gated run only on the owner's say-so.",
+ "hosts": {
+  "build_pod": "the only deploy host; heavy work under flock /workspace/locks/heavy.lock",
+  "oracle": "oracle-micro-2; light streaming jobs only; holds the board-sign caller token and the HF token"
+ },
+ "steps": [
+  {
+   "id": "liveness-atom",
+   "what": "DID key present, signed public root, Rekor + OTS witness states at one instant",
+   "state": "AUTOMATED",
+   "runs": "build pod /workspace/ci-v2/root-daily.sh step layer0-atom (triggered 05:00Z from Oracle root-daily-trigger.sh)",
+   "producer": "scripts/readers/layer0_liveness_reader.py",
+   "gap": "runs with --gate-result UNRUN, so release_gate stays UNRUN in every card"
+  },
+  {
+   "id": "ots-upgrade-hf",
+   "what": "upgrade every csoai Hugging Face .ots from pending to a Bitcoin attestation, block headers checked on two explorers",
+   "state": "AUTOMATED",
+   "runs": "Oracle cron 40 12 * * * lanes/flywheel/run.sh ots-upgrade (flywheel_ots.py)"
+  },
+  {
+   "id": "ots-upgrade-repo",
+   "what": "land upgraded proofs for the repository's own public/**/*.ots (flywheel keeps mirror upgrades in /evac-bulk/flywheel/ots/upgraded/ 'for the repo lane'; nothing lands them)",
+   "state": "MANUAL",
+   "staged_job": "scripts/layer0/jobs/ots-repo-upgrade.sh (bundle by default; PUSH=1 pushes lane/ots-upgrade-<day>, never master)",
+   "schedule": "daily 13:10Z on the build pod (after the Oracle flywheel pass)",
+   "today": "both Layer 0 ceremony proofs already carried Bitcoin attestations on canon master (4 and 3 blocks); NO_CHANGE for Layer 0 itself",
+   "pin_rule": "a pending proof whose sha256 another tracked file pins, or that has a <subject>.ots.json sidecar, is NOT upgraded by the job; the pinning producer re-emits first. The derived public/interop/ots/manifest.json is rebuilt in the same commit and the deploy gate scripts/pod-loops/root_ots_manifest_gate.py must pass; llms.txt is regenerated only when canon llms.txt was fresh before the job",
+   "why_pin_rule": "the first job test (15:57Z) would have landed 41 upgraded proofs whose old digests 18 other files pinned (ots-state sidecars, the 2026-09-28 root witness, census records, test fixtures), 18 of them under public/interop without the manifest rebuild the deploy gate requires",
+   "test_run": "2026-09-28T21:12Z on the lanes pod against lane/layer0-20260928: 43 pending, 18 pinned (held; listed in ots-repo-upgrade-20260928T2112Z.json), 25 upgraded; 87 new attestations, 82 matched on blockstream.info and mempool.space, 5 on blockstream.info alone (mempool.space did not answer); manifest gate VALID_PREIMAGE_ONLY. The 25 proofs are the last commit on lane/layer0-20260928",
+   "needs": "python3 with opentimestamps and node on the host (the build pod has both; the lanes pod needs a uv venv)"
+  },
+  {
+   "id": "ots-pinned-reemit",
+   "what": "re-emit the files that pin a still-pending proof (ots-state sidecars, root witness, census records, fixtures) so the ots-repo-upgrade job may land that proof",
+   "state": "MANUAL, PER PRODUCER",
+   "why_no_generic_job": "the 20 pinning files come from different producers and one (the root witness) is a witnessed record; a job that rewrote them would be editing other lanes' evidence",
+   "today": "18 pending proofs held by 20 pinning files (list: the ots-repo-upgrade report)"
+  },
+  {
+   "id": "llms-txt-regen",
+   "what": "public/llms.txt and llms-full.txt regenerated whenever an input they print moves (board lid, OTS manifest)",
+   "state": "MANUAL (npm run capabilities:render runs it; nothing runs it when the manifest or the board moves)",
+   "today": "stale on canon master 982fe3f6d: regenerating from unchanged inputs changes 45 lines in 2 files (lid 3 -> 9 public leader scores, ties 2 -> 8, OTS manifest as_of and counts). Not this lane's file: left to its producer; the fix at land time is node scripts/llms-txt.mjs"
+  },
+  {
+   "id": "ots-block-check",
+   "what": "every Bitcoin attestation in the repository's proofs checked against the block header on blockstream.info and mempool.space",
+   "state": "MANUAL",
+   "last_run": "public/interop/ots/block-check-2026-09-22.json; lane run 2026-09-28T14:09Z: 7 of 7 Layer 0 attestations MATCHES_BLOCK_HEADER on both explorers",
+   "staged_job": "scripts/layer0/jobs/ots-block-check.sh",
+   "schedule": "weekly Mon 06:20Z on the build pod (network-light: one header per distinct height)"
+  },
+  {
+   "id": "record-verification",
+   "what": "does every Layer 0 record verify against did:web:csoai.org; do its OTS proofs commit to its bytes; are the served bytes the canon bytes",
+   "state": "MANUAL (new: scripts/layer0/verify_layer0_records.py, 10 tests)",
+   "staged_job": "scripts/layer0/jobs/verify-records.sh",
+   "schedule": "daily 05:40Z on the build pod, after root-daily",
+   "today": "5 records; 0 verify against the DID (3 declare themselves unsigned, 2 do not say); 5 of 5 served bytes match canon; OTS 2 BITCOIN, 1 NOT_A_PROOF (named .ots.invalid), 2 NONE"
+  },
+  {
+   "id": "detached-seal",
+   "what": "board-key seal (<record>.seal.json) over a Layer 0 record's exact bytes without editing them, so the Bitcoin-attested .ots stays valid",
+   "state": "MANUAL / OWNER-GATED",
+   "staged_job": "scripts/layer0/seal_layer0_record.py --rehearse (throwaway key; runs anywhere) and --sign --token-file (board-sign; owner OK required)",
+   "owner_gated": true,
+   "why_gated": "the Layer 0 ceremony checklist hard law: owner signing and irreversible anchors are owner-gated",
+   "today": "rehearsal PASS on layer0-ceremony-2026-09-03.json: seal verifies (also under scripts/verify_signed.py), altered seal INVALID, other bytes INVALID"
+  },
+  {
+   "id": "surface-reprobe",
+   "what": "repeat the surface ceremony's own probe list and record what moved since its as_of",
+   "state": "MANUAL (the 2026-09-03 surface ceremony has no producer in the repository; new: scripts/layer0/surface_reprobe.py)",
+   "staged_job": "scripts/layer0/jobs/surface-reprobe.sh",
+   "schedule": "weekly Mon 06:30Z on the build pod (29 requests to the estate's own hosts)",
+   "today": "29 probes: 19 same status, 10 now 308 to a live 200 page (.html canonicalisation and csoai.org -> councilof.ai), 0 dead"
+  },
+  {
+   "id": "root-ceremony-prep",
+   "what": "Phase 0/3/4 of the constitutional root ceremony: build candidate, invariants, signal delta, throwaway-key rehearsal",
+   "state": "MANUAL, MAC-BOUND",
+   "blocker": "build_candidate.py hard-codes /Users/nicholas/clawd/councilof-ai-work and two _alignment paths (lines 16, 19, 21); test_candidate.py line 26 likewise. It can only run on the Mac, against the dirty shared checkout the runbook itself says must not be rooted.",
+   "staged_job": "scripts/layer0/jobs/root-ceremony-prep.sh",
+   "schedule": "daily 06:00Z on the build pod once ported",
+   "job_state": "FAILS CLOSED with NEEDS_PORT until the three scripts take --repo and live in the repository"
+  },
+  {
+   "id": "root-ceremony-freeze",
+   "what": "Phase 2 clean freeze: one clean canonical release commit plus the manifest of lanes outside the ceremony",
+   "state": "MANUAL (now automatable: the staging mirror master is by construction a clean commit)",
+   "staged_job": "scripts/layer0/jobs/root-ceremony-freeze.sh",
+   "schedule": "on demand before a ceremony"
+  },
+  {
+   "id": "root-ceremony-truth-repair",
+   "what": "Phase 1: the xReserve successor correction published from a clean lineage and read back anonymously",
+   "state": "MANUAL / OWNER-GATED",
+   "owner_gated": true
+  },
+  {
+   "id": "root-ceremony-sign",
+   "what": "Phase 5: production signature, publish, witness",
+   "state": "OWNER-ONLY",
+   "owner_gated": true
+  },
+  {
+   "id": "npm-publish",
+   "what": "publish @csoai/layer0 0.2.0",
+   "state": "HELD",
+   "owner_gated": true,
+   "blockers": [
+    "owner's npm Bypass-2FA granular token (the account's second factor is a WebAuthn key)",
+    "no Layer 0 gateway answers: api.csoai.org has no DNS record and councilof.ai returns 404 on /api/gate, /api/a2a/route and /api/a2a/verify (re-probed 2026-09-28); a published client would fail on every call"
+   ]
+  },
+  {
+   "id": "agent-directory-census",
+   "what": "read a public Agent Directory catalogue to exhaustion and check each record's Sigstore attestations from bytes",
+   "state": "MANUAL (new: scripts/census/agent_directory_census.py, 9 tests)",
+   "staged_job": "scripts/layer0/jobs/agent-directory-census.sh",
+   "schedule": "weekly Mon 07:00Z on the build pod (31 paced requests, ~22 MB)",
+   "publication": "HELD: the output names a third-party catalogue and the companies that authored its records; needs the owner's per-company OK"
+  }
+ ]
+}

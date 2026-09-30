@@ -138,6 +138,12 @@ function isUnsignedInteropFile(file, rawContent) {
 const CORRECTION_CTX =
   /\bC-\d{4}-\d{4}-\d{2}\b|\bcorrections? ledger\b|\bwe published a correction\b|\bcount-gating canon\b|\bpreviously read\b|\bgrammar_correction\b|\bsupersed(?:ed|es)\b|\bwas accurate while\b|\bretired\b/i;
 
+// The corrections ledger page renders ONLY published corrections (prerendered with its entries
+// from 2026-09-30): each entry quotes the count it corrected, often more than 300 characters after
+// its C-id heading. The whole built page is correction context for the axis-count rule. Exactly this
+// one built path; every other rule still runs on it (selftest pins both directions).
+const CORRECTIONS_LEDGER_FILE = "corrections/index.html";
+
 // "1 of 4 axes resolved", "the other 10 axes are ties" — breakdowns of a whole,
 // not an assertion of the board total.
 const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
@@ -227,8 +233,18 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
     // carry X" against a 22-axis board is still a contradiction and still fails.
     if (n < liveCount && SUBSET_PREDICATE_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
+    // ENUMERATED subset (2026-09-29): "Separation on 7 axes (governance, safety, …, care)".
+    // The count names its members in the parenthesis that follows, so it is checkable on the
+    // spot: exempt only when the list holds exactly n comma-separated names and n is smaller
+    // than the board. The sentence is served live by /api/gspc and sits in the signed
+    // 2026-09-29 freeze, whose bytes are never edited to satisfy a regex.
+    if (n < liveCount) {
+      const en = /^\s*\(([^()]{1,400})\)/.exec(text.slice(COUNT_RE.lastIndex));
+      if (en && en[1].split(/\s*,\s*|\s+and\s+/).filter(Boolean).length === n) continue;
+    }
 
     // A published correction quotes the wrong number on purpose.
+    if (file === CORRECTIONS_LEDGER_FILE) continue;
     if (CORRECTION_CTX.test(ctx(text, m.index, COUNT_RE.lastIndex, 300))) continue;
 
     // The board legitimately describes itself as "13 canonical axes ... + jail" —
@@ -554,6 +570,8 @@ function selftestCases(N, M, U) {
   ["honest swept grammar", `<p>${N} axes · ${M} measured — every slot has a run behind it.</p>`, false],
   [`derived triple flattened ${N}·${M}·${U} axes · measured · unmeasured (reproduces 1804 deploy)`, `<p>Living GSPC · derived totals ${N}·${M}·${U} axes · measured · unmeasured — ${N} axis · ${M} measured</p>`, false],
   ["VIOLATION: a real 0-axes board-total claim still fails", "<p>The board currently carries 0 axes.</p>", true],
+  ["enumerated subset: the count names exactly its members", "<p>Separation on 3 axes (governance, safety, care) is computed from rows.</p>", false],
+  ["VIOLATION: enumerated list shorter than the count", "<p>Separation on 4 axes (governance, safety, care) is computed from rows.</p>", true],
   [`${M} measured is the observed measured count, not an overclaim`, `<p>The board publishes ${M} measured axes.</p>`, false],
   // "All N axes are measured" is honest only while no slot is declared-but-unmeasured.
   [`all ${N} axes are measured is ${U === 0 ? "honest" : "an OVERCLAIM"} (U = ${U})`, `<p>All ${N} axes are measured and signed.</p>`, U !== 0],
@@ -628,6 +646,25 @@ function selftestCases(N, M, U) {
     '<p>Everything here is anchored to Bitcoin via OpenTimestamps.</p>',
     true,
     "subdomains/proofs/index.html",
+  ],
+  // ── corrections ledger page (2026-09-30) ─────────────────────────────────────
+  [
+    "the corrections ledger page may quote the axis count an old entry corrected",
+    `<p>Fix: the board now derives '${N - 1} axes' from the axis array: ${N - 1} slots.</p>`,
+    false,
+    "corrections/index.html",
+  ],
+  [
+    "VIOLATION: the same stale count on any other page is still caught",
+    `<p>Fix: the board now derives '${N - 1} axes' from the axis array: ${N - 1} slots.</p>`,
+    true,
+    "corrections-archive/index.html",
+  ],
+  [
+    "VIOLATION: the corrections page is not exempt from the other rules",
+    "<p>Every queued atom is anchored to Bitcoin via OpenTimestamps.</p>",
+    true,
+    "corrections/index.html",
   ],
   ];
 }

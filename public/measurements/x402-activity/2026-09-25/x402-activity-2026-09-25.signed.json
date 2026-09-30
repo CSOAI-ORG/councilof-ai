@@ -1,0 +1,48 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "artifact": {
+   "path": "measurements/x402-activity/2026-09-25/x402-activity-2026-09-25.json",
+   "sha256": "b8faf56f5634fe7d1ee29985ac0a9346fc5c2ebb54bb951508ff8b745e57da81",
+   "schema": "csoai.x402-activity/0.1",
+   "as_of": "2026-09-26T15:22:43Z"
+  },
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured.",
+  "kind": "measurement.x402_activity",
+  "day": "2026-09-25",
+  "headline": {
+   "settlements": 28122,
+   "usdc_atomic": 713617378,
+   "distinct_payers": 1073,
+   "distinct_payees_paid": 453,
+   "external_settlements": 27809,
+   "external_usdc_atomic": 711133451,
+   "distinct_external_payers": 1047,
+   "distinct_payees_with_external_payment": 439,
+   "external_share_of_settlements": 0.98887,
+   "external_share_of_usdc": 0.996519
+  },
+  "rows_sha256": "6a1771ef57a7d543cee8e19b47e987d0d4e0da908f77f58525217b1cc2e1d875",
+  "payees_sha256": "951d0026e14af408da138b8c4be65f4ec9212934a7a6a77e3fd27dcef168fba1"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "bcb0c04f4d42c372fb499e2a494442f87596d3132081f8dc3ed3743594c00afc3d28b25b9c3a292633b43170ba60250a4a75f4c1b50de054ce2aac072dbad50c",
+  "payload_sha256": "509160a65a0b75326a4b588cacc357bc9a9e86fbb6e32dca5890b1084702c837",
+  "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+  "signer_auth": "pod-token",
+  "signed_at": "2026-09-26T15:22:43.855Z"
+ },
+ "local_verification": {
+  "did_document": "https://csoai.org/.well-known/did.json",
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte appended": "rejected (control holds)",
+   "artifact sha256 altered": "rejected (control holds)"
+  }
+ },
+ "verify": "canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the artifact; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

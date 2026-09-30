@@ -1,0 +1,502 @@
+{
+  "name": "SovX measured wrappers",
+  "timestamp": "2026-09-28T22:17:22Z",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "keywords": [
+    "measured wrappers",
+    "measurement state",
+    "wrapped assets",
+    "not an endorsement",
+    "not a recommendation"
+  ],
+  "tags": {
+    "listed": {
+      "name": "Measured wrapper",
+      "description": "Listed with its current measurement state and the date of that state, from SovX wrapped asset measurements. A listing is not an endorsement or a recommendation. A state is not a rating."
+    },
+    "parity": {
+      "name": "Escrow parity read",
+      "description": "ESCROW_PARITY_READ: the wrapped supply and the origin chain escrow balance were both read at pinned blocks. A read, not a rating."
+    },
+    "native": {
+      "name": "Native issuance",
+      "description": "UNCHECKABLE_NATIVE_ISSUANCE: issued natively on this chain, so no escrow exists to read. Supply read, no ratio claimed."
+    },
+    "custodial": {
+      "name": "Indexed custodial",
+      "description": "INDEXED_CUSTODIAL: reserve held by a custodian off this chain and not readable here. Supply read, no ratio claimed."
+    },
+    "unmeasured": {
+      "name": "Unmeasured",
+      "description": "UNMEASURED: a read failed. The error is recorded and nothing is inferred."
+    }
+  },
+  "tokens": [
+    {
+      "chainId": 1,
+      "address": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "name": "WBTC on ethereum",
+      "symbol": "WBTC",
+      "decimals": 8,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/wbtc:ethereum",
+        "caip19": {
+          "chain_id": "eip155:1",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+        },
+        "records": "wbtc:ethereum"
+      }
+    },
+    {
+      "chainId": 1,
+      "address": "0x39fBBABf11738317a448031930706cd3e612e1B9",
+      "name": "wXRP on ethereum",
+      "symbol": "wXRP",
+      "decimals": 18,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/wxrp:ethereum",
+        "caip19": {
+          "chain_id": "eip155:1",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x39fBBABf11738317a448031930706cd3e612e1B9"
+        },
+        "records": "wxrp:ethereum"
+      }
+    },
+    {
+      "chainId": 1,
+      "address": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+      "name": "BUIDL on ethereum",
+      "symbol": "BUIDL",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/buidl:ethereum",
+        "caip19": {
+          "chain_id": "eip155:1",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x7712c34205737192402172409a8F7ccef8aA2AEc"
+        },
+        "records": "buidl:ethereum"
+      }
+    },
+    {
+      "chainId": 1,
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "name": "cbBTC on ethereum",
+      "symbol": "cbBTC",
+      "decimals": 8,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/cbbtc:ethereum",
+        "caip19": {
+          "chain_id": "eip155:1",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
+        },
+        "records": "cbbtc:ethereum"
+      }
+    },
+    {
+      "chainId": 10,
+      "address": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071",
+      "name": "USDT0 on optimism",
+      "symbol": "USDT0",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "native"
+      ],
+      "extensions": {
+        "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdt0:optimism",
+        "caip19": {
+          "chain_id": "eip155:10",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x01bFF41798a0BcF287b996046Ca68b395DbC1071"
+        },
+        "records": "usdt0:optimism"
+      }
+    },
+    {
+      "chainId": 10,
+      "address": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+      "name": "USDC.e on optimism",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdc.e:optimism",
+        "caip19": {
+          "chain_id": "eip155:10",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607"
+        },
+        "records": "usdc.e:optimism"
+      }
+    },
+    {
+      "chainId": 10,
+      "address": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58",
+      "name": "USDT on optimism",
+      "symbol": "USDT",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdt:optimism",
+        "caip19": {
+          "chain_id": "eip155:10",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58"
+        },
+        "records": "usdt:optimism"
+      }
+    },
+    {
+      "chainId": 10,
+      "address": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+      "name": "DAI on optimism",
+      "symbol": "DAI",
+      "decimals": 18,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/dai:optimism",
+        "caip19": {
+          "chain_id": "eip155:10",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1"
+        },
+        "records": "dai:optimism"
+      }
+    },
+    {
+      "chainId": 14,
+      "address": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE",
+      "name": "FXRP on flare",
+      "symbol": "FXRP",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/fxrp:flare",
+        "caip19": {
+          "chain_id": "eip155:14",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xAd552A648C74D49E10027AB8a618A3ad4901c5bE"
+        },
+        "records": "fxrp:flare"
+      }
+    },
+    {
+      "chainId": 137,
+      "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      "name": "USDC.e on polygon",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdc.e:polygon",
+        "caip19": {
+          "chain_id": "eip155:137",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+        },
+        "records": "usdc.e:polygon"
+      }
+    },
+    {
+      "chainId": 137,
+      "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+      "name": "DAI on polygon",
+      "symbol": "DAI",
+      "decimals": 18,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/dai:polygon",
+        "caip19": {
+          "chain_id": "eip155:137",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063"
+        },
+        "records": "dai:polygon"
+      }
+    },
+    {
+      "chainId": 137,
+      "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      "name": "USDT on polygon",
+      "symbol": "USDT",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "native"
+      ],
+      "extensions": {
+        "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdt:polygon",
+        "caip19": {
+          "chain_id": "eip155:137",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+        },
+        "records": "usdt:polygon"
+      }
+    },
+    {
+      "chainId": 8453,
+      "address": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
+      "name": "DAI on base",
+      "symbol": "DAI",
+      "decimals": 18,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/dai:base",
+        "caip19": {
+          "chain_id": "eip155:8453",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb"
+        },
+        "records": "dai:base"
+      }
+    },
+    {
+      "chainId": 8453,
+      "address": "0x7e0AEdc93d9f898bE835A44BFcA3842E52416B82",
+      "name": "JPMD on base",
+      "symbol": "JPMD",
+      "decimals": 2,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/jpmd:base",
+        "caip19": {
+          "chain_id": "eip155:8453",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x7e0AEdc93d9f898bE835A44BFcA3842E52416B82"
+        },
+        "records": "jpmd:base"
+      }
+    },
+    {
+      "chainId": 8453,
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "name": "USDC on base",
+      "symbol": "USDC",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "native"
+      ],
+      "extensions": {
+        "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdc:base",
+        "caip19": {
+          "chain_id": "eip155:8453",
+          "asset_namespace": "erc20",
+          "asset_reference": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+        },
+        "records": "usdc:base"
+      }
+    },
+    {
+      "chainId": 8453,
+      "address": "0xcb585250f852C6c6bf90434AB21A00f02833a4af",
+      "name": "cbXRP on base",
+      "symbol": "cbXRP",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/cbxrp:base",
+        "caip19": {
+          "chain_id": "eip155:8453",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xcb585250f852C6c6bf90434AB21A00f02833a4af"
+        },
+        "records": "cbxrp:base"
+      }
+    },
+    {
+      "chainId": 8453,
+      "address": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf",
+      "name": "cbBTC on base",
+      "symbol": "cbBTC",
+      "decimals": 8,
+      "tags": [
+        "listed",
+        "custodial"
+      ],
+      "extensions": {
+        "state": "INDEXED_CUSTODIAL",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/cbbtc:base",
+        "caip19": {
+          "chain_id": "eip155:8453",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
+        },
+        "records": "cbbtc:base"
+      }
+    },
+    {
+      "chainId": 8453,
+      "address": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA",
+      "name": "USDbC on base",
+      "symbol": "USDbC",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdbc:base",
+        "caip19": {
+          "chain_id": "eip155:8453",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA"
+        },
+        "records": "usdbc:base"
+      }
+    },
+    {
+      "chainId": 42161,
+      "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      "name": "USDC on arbitrum",
+      "symbol": "USDC",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "native"
+      ],
+      "extensions": {
+        "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdc:arbitrum",
+        "caip19": {
+          "chain_id": "eip155:42161",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831"
+        },
+        "records": "usdc:arbitrum"
+      }
+    },
+    {
+      "chainId": 42161,
+      "address": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9",
+      "name": "USDT/USDT0 on arbitrum",
+      "symbol": "USDT/USDT0",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "native"
+      ],
+      "extensions": {
+        "state": "UNCHECKABLE_NATIVE_ISSUANCE",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdt:arbitrum",
+        "caip19": {
+          "chain_id": "eip155:42161",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"
+        },
+        "records": "usdt:arbitrum usdt0:arbitrum"
+      }
+    },
+    {
+      "chainId": 42161,
+      "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+      "name": "USDC.e on arbitrum",
+      "symbol": "USDC.e",
+      "decimals": 6,
+      "tags": [
+        "listed",
+        "parity"
+      ],
+      "extensions": {
+        "state": "ESCROW_PARITY_READ",
+        "as_of": "2026-09-14T10:51:51.468Z",
+        "evidence": "https://councilof.ai/w/usdc.e:arbitrum",
+        "caip19": {
+          "chain_id": "eip155:42161",
+          "asset_namespace": "erc20",
+          "asset_reference": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"
+        },
+        "records": "usdc.e:arbitrum"
+      }
+    }
+  ]
+}

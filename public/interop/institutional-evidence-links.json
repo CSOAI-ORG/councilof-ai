@@ -1,0 +1,291 @@
+{
+ "schema": "csoai.institutional-evidence-links/0.1",
+ "as_of": "2026-09-25T11:24:01Z",
+ "what_this_is": "A join table for the estate's institutional binding layer: per binding key, the cross-ledger records measured today, or UNMEASURED with the reason. Produced by the cross-ledger-funds lane so the binding layer can consume it without anyone editing that layer.",
+ "binding_layer_source": {
+  "path": "ras_hive_os/institutional_bindings.py (lane ras-hive-os-20260924; read only)",
+  "sha256_when_read": "0a73e610e5c4a1674389bb435484690eff0d57646f68292230f852e7d3d3d22b",
+  "keys": [
+   "swift",
+   "wells-fargo",
+   "franklin-templeton-benji",
+   "jpmorgan",
+   "citi",
+   "hsbc",
+   "bny",
+   "blackrock-buidl"
+  ]
+ },
+ "institutions": {
+  "swift": {
+   "records": [],
+   "evidence_kinds": {},
+   "products": [],
+   "state": "UNMEASURED",
+   "reason": "NO_ISSUED_TOKEN_WITH_PUBLIC_ADDRESS: Swift is infrastructure, not a token issuer; no Swift-published deployment on a permissionless ledger was found. The binding layer's press-release source was re-fetched and its status is recorded.",
+   "source_fetch": {
+    "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "fetched_at": "2026-09-25T11:24:00Z",
+    "http_status": 403,
+    "final_url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "sha256": "36793c67c924777f6d42659e6acebecf84b315309b183338394cf86d1defa679",
+    "bytes": 5254
+   },
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "wells-fargo": {
+   "records": [],
+   "evidence_kinds": {},
+   "products": [],
+   "state": "UNMEASURED",
+   "reason": "NO_ISSUED_TOKEN_WITH_PUBLIC_ADDRESS: no Wells Fargo token with an issuer-published address on a permissionless ledger was found; the binding layer lists it as a Swift-cohort target",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "franklin-templeton-benji": {
+   "records": [
+    "/interop/cross-ledger-benji-2026-09-25.json"
+   ],
+   "evidence_kinds": {
+    "OPERATOR_API": 6,
+    "STATE_PROOF_VERIFIED": 6,
+    "STATE_PROOF_RECORDED": 1
+   },
+   "products": [
+    "BENJI",
+    "gBENJI",
+    "grBENJI",
+    "iBENJI",
+    "sgBENJI"
+   ],
+   "issuer_list_state": "READ",
+   "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+   "state": "MEASURED_RECORDS_AVAILABLE",
+   "what_is_measured": "issued token supply per public ledger at recorded heights, each read labelled by evidence kind; NOT AUM, NAV, ownership, redeemability or compliance; unreconciled with the controlling record",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "jpmorgan": {
+   "records": [
+    "/interop/cross-ledger-jpmd-2026-09-25.json"
+   ],
+   "evidence_kinds": {
+    "STATE_PROOF_VERIFIED": 1
+   },
+   "products": [
+    "JPMD"
+   ],
+   "issuer_list_state": "READ",
+   "reconciliation_state": "UNRECONCILED_WITH_ISSUING_BANK_LEDGER",
+   "state": "MEASURED_RECORDS_AVAILABLE",
+   "what_is_measured": "issued token supply per public ledger at recorded heights, each read labelled by evidence kind; NOT AUM, NAV, ownership, redeemability or compliance; unreconciled with the controlling record",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "citi": {
+   "records": [
+    "/interop/cross-ledger-citi-token-services-2026-09-25.json"
+   ],
+   "evidence_kinds": {},
+   "products": [],
+   "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+   "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+   "state": "UNMEASURED",
+   "reason": "PERMISSIONED_NOT_READABLE: the issuer's own page says the token lives on a private/permissioned ledger; nothing public to read",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "hsbc": {
+   "records": [
+    "/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json"
+   ],
+   "evidence_kinds": {},
+   "products": [],
+   "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+   "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+   "state": "UNMEASURED",
+   "reason": "PERMISSIONED_NOT_READABLE: the issuer's own page says the token lives on a private/permissioned ledger; nothing public to read",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "bny": {
+   "records": [
+    "/interop/cross-ledger-bny-digital-cash-2026-09-25.json"
+   ],
+   "evidence_kinds": {},
+   "products": [],
+   "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+   "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+   "state": "UNMEASURED",
+   "reason": "PERMISSIONED_NOT_READABLE: the issuer's own page says the token lives on a private/permissioned ledger; nothing public to read",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  },
+  "blackrock-buidl": {
+   "records": [
+    "/interop/cross-ledger-buidl-2026-09-25.json"
+   ],
+   "evidence_kinds": {},
+   "products": [],
+   "issuer_list_state": "ISSUER_LIST_UNAVAILABLE",
+   "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+   "state": "UNMEASURED",
+   "reason": "ISSUER_LIST_UNAVAILABLE: no issuer-published deployment list was found; explorer/aggregator addresses are not read",
+   "relationship_statement": "none — this file states no relationship; the consumer's relationship_state is unchanged"
+  }
+ },
+ "records": [
+  {
+   "asset": "BENJI",
+   "path": "/interop/cross-ledger-benji-2026-09-25.json",
+   "sha256": "51ec46fbe5ab0d30d0a68ed35bb63ee48517a08a9f7cc4b751b415c9544fed77",
+   "hf_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/main/interop/cross-ledger-benji-2026-09-25.json",
+   "councilof_path": "/interop/cross-ledger-benji-2026-09-25.json (served on councilof.ai only after this lane merges and deploys)",
+   "signed": {
+    "path": "/interop/cross-ledger-benji-2026-09-25.signed.json",
+    "sha256": "a82bfb795e58c87b1f3697ac6f2956d0ae257909a5c91d7ca1bac5665963f72c",
+    "signed_at": "2026-09-25T11:22:15.085Z"
+   },
+   "ots": {
+    "path": "/interop/cross-ledger-benji-2026-09-25.json.ots",
+    "state": "PENDING_CALENDAR_COMMITMENT"
+   },
+   "issuer_list_state": "READ",
+   "issuer_list_source": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+   "evidence_kinds": {
+    "OPERATOR_API": 6,
+    "STATE_PROOF_VERIFIED": 6,
+    "STATE_PROOF_RECORDED": 1
+   },
+   "products": [
+    "BENJI",
+    "gBENJI",
+    "grBENJI",
+    "iBENJI",
+    "sgBENJI"
+   ],
+   "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+   "issuer_reported_present": true
+  },
+  {
+   "asset": "JPMD",
+   "path": "/interop/cross-ledger-jpmd-2026-09-25.json",
+   "sha256": "ce0e151f6dd0806c9daa691f220684547e0290200679ae5e778d81866eda106b",
+   "hf_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/main/interop/cross-ledger-jpmd-2026-09-25.json",
+   "councilof_path": "/interop/cross-ledger-jpmd-2026-09-25.json (served on councilof.ai only after this lane merges and deploys)",
+   "signed": {
+    "path": "/interop/cross-ledger-jpmd-2026-09-25.signed.json",
+    "sha256": "ea14b09b8b1c51508576c8ed0862f9f37b6b9652ffc9bcaf736c1235f8c9a07f",
+    "signed_at": "2026-09-25T11:22:17.940Z"
+   },
+   "ots": {
+    "path": "/interop/cross-ledger-jpmd-2026-09-25.json.ots",
+    "state": "PENDING_CALENDAR_COMMITMENT"
+   },
+   "issuer_list_state": "READ",
+   "issuer_list_source": "https://www.jpmorgan.com/kinexys/digital-payments/jpm-coin",
+   "evidence_kinds": {
+    "STATE_PROOF_VERIFIED": 1
+   },
+   "products": [
+    "JPMD"
+   ],
+   "reconciliation_state": "UNRECONCILED_WITH_ISSUING_BANK_LEDGER",
+   "issuer_reported_present": false
+  },
+  {
+   "asset": "Citi Token Services (tokenized deposits)",
+   "path": "/interop/cross-ledger-citi-token-services-2026-09-25.json",
+   "sha256": "796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab",
+   "hf_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/main/interop/cross-ledger-citi-token-services-2026-09-25.json",
+   "councilof_path": "/interop/cross-ledger-citi-token-services-2026-09-25.json (served on councilof.ai only after this lane merges and deploys)",
+   "signed": {
+    "path": "/interop/cross-ledger-citi-token-services-2026-09-25.signed.json",
+    "sha256": "4cce291fc2d8cbe65199eebc4067141debf65918f7ae78880225ca7e8b6d67a7",
+    "signed_at": "2026-09-25T11:22:17.186Z"
+   },
+   "ots": {
+    "path": "/interop/cross-ledger-citi-token-services-2026-09-25.json.ots",
+    "state": "PENDING_CALENDAR_COMMITMENT"
+   },
+   "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+   "issuer_list_source": "https://www.citigroup.com/global/news/press-release/2024/citi-token-services-marks-new-milestone",
+   "evidence_kinds": {},
+   "products": [],
+   "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+   "issuer_reported_present": false
+  },
+  {
+   "asset": "HSBC Tokenised Deposit Service",
+   "path": "/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json",
+   "sha256": "48dd4f9722bd1d27836fa65cfc4081b45c41eee51fea7d686b3483fd7ac364e3",
+   "hf_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/main/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json",
+   "councilof_path": "/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json (served on councilof.ai only after this lane merges and deploys)",
+   "signed": {
+    "path": "/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.signed.json",
+    "sha256": "c95967c53dbac251cdf0aaa06a3eef238c430d6c9a61d978d1b3b4014a2e1e7b",
+    "signed_at": "2026-09-25T11:22:17.529Z"
+   },
+   "ots": {
+    "path": "/interop/cross-ledger-hsbc-tokenised-deposit-service-2026-09-25.json.ots",
+    "state": "PENDING_CALENDAR_COMMITMENT"
+   },
+   "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+   "issuer_list_source": "https://www.business.hsbc.com/en-gb/products/tokenised-deposit-service",
+   "evidence_kinds": {},
+   "products": [],
+   "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+   "issuer_reported_present": false
+  },
+  {
+   "asset": "BNY digital cash / tokenized deposits",
+   "path": "/interop/cross-ledger-bny-digital-cash-2026-09-25.json",
+   "sha256": "ec9bf90130e449a01c4814a697dac351a02abc832cd2c426db3255ef1bbf03c9",
+   "hf_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/main/interop/cross-ledger-bny-digital-cash-2026-09-25.json",
+   "councilof_path": "/interop/cross-ledger-bny-digital-cash-2026-09-25.json (served on councilof.ai only after this lane merges and deploys)",
+   "signed": {
+    "path": "/interop/cross-ledger-bny-digital-cash-2026-09-25.signed.json",
+    "sha256": "dd76f430ce67c771657c403e1b7b80d7d75781af1d1cfa094e5e61a75fe286c7",
+    "signed_at": "2026-09-25T11:22:16.030Z"
+   },
+   "ots": {
+    "path": "/interop/cross-ledger-bny-digital-cash-2026-09-25.json.ots",
+    "state": "PENDING_CALENDAR_COMMITMENT"
+   },
+   "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+   "issuer_list_source": "https://www.bny.com/corporate/global/en/about-us/newsroom/company-news/bny-extends-digital-cash-capabilities-for-institutional-clients.html",
+   "evidence_kinds": {},
+   "products": [],
+   "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+   "issuer_reported_present": false
+  },
+  {
+   "asset": "BUIDL",
+   "path": "/interop/cross-ledger-buidl-2026-09-25.json",
+   "sha256": "cf280c0b6c99359e86767c0f646a287835b33ee6c34bc2a46164c2c23034db56",
+   "hf_url": "https://huggingface.co/datasets/csoai/cross-ledger-supply/resolve/main/interop/cross-ledger-buidl-2026-09-25.json",
+   "councilof_path": "/interop/cross-ledger-buidl-2026-09-25.json (served on councilof.ai only after this lane merges and deploys)",
+   "signed": {
+    "path": "/interop/cross-ledger-buidl-2026-09-25.signed.json",
+    "sha256": "c65332b9c392b0800f829a72e56816c96899070b132f31968ee0b4b733cb14dc",
+    "signed_at": "2026-09-25T11:22:16.580Z"
+   },
+   "ots": {
+    "path": "/interop/cross-ledger-buidl-2026-09-25.json.ots",
+    "state": "PENDING_CALENDAR_COMMITMENT"
+   },
+   "issuer_list_state": "ISSUER_LIST_UNAVAILABLE",
+   "issuer_list_source": [
+    "https://securitize.io/blackrock/BUIDL",
+    "https://www.blackrock.com/cash/en-us/products/buidl",
+    "https://investorsupport.securitize.io/hc/en-us/articles/360050816994-Adding-a-token-to-the-MetaMask-wallet-view"
+   ],
+   "evidence_kinds": {},
+   "products": [],
+   "reconciliation_state": "UNRECONCILED_WITH_TRANSFER_AGENT",
+   "issuer_reported_present": false
+  }
+ ],
+ "laws": [
+  "target is not client",
+  "public evidence is not private connectivity",
+  "on-chain observation is not legal ownership, AUM, settlement finality or compliance",
+  "UNMEASURED is a published state, not an omission",
+  "verification of published CSOAI evidence remains free"
+ ],
+ "producer": "scripts/readers/build_institutional_evidence_links.py"
+}

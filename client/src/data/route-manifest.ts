@@ -13,6 +13,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Not Found"
  },
  {
+  "path": "/a2ui",
+  "comp": "Redirect",
+  "title": "A2ui"
+ },
+ {
   "path": "/ab-testing",
   "comp": "ABTesting",
   "title": "ABTesting"
@@ -293,6 +298,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Ceasai Training"
  },
  {
+  "path": "/census",
+  "comp": "Census",
+  "title": "Census"
+ },
+ {
   "path": "/ceremony",
   "comp": "Redirect",
   "title": "Ceremony"
@@ -304,8 +314,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/charter",
-  "comp": "Charter",
-  "title": "Charter"
+  "comp": "OperationalCharter",
+  "title": "Operational Charter"
  },
  {
   "path": "/chat",
@@ -423,6 +433,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Connect GSPC"
  },
  {
+  "path": "/connect/claude",
+  "comp": "ConnectClaude",
+  "title": "Connect Claude"
+ },
+ {
   "path": "/consensus",
   "comp": "Redirect",
   "title": "Consensus"
@@ -441,6 +456,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/cookies",
   "comp": "CookiePolicy",
   "title": "Cookie Policy"
+ },
+ {
+  "path": "/corrections",
+  "comp": "Corrections",
+  "title": "Corrections"
  },
  {
   "path": "/council",
@@ -513,14 +533,19 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Crosswalks"
  },
  {
+  "path": "/crosswalks/owasp-asi",
+  "comp": "CrosswalkOwaspAsi",
+  "title": "Crosswalk Owasp Asi"
+ },
+ {
   "path": "/crown-jewels",
   "comp": "Redirect",
   "title": "Crown Jewels"
  },
  {
   "path": "/csoai-law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "JurisdictionEngine",
+  "title": "Jurisdiction Engine"
  },
  {
   "path": "/custody",
@@ -953,6 +978,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Space"
  },
  {
+  "path": "/gspc-console",
+  "comp": "GspcConsole",
+  "title": "Gspc Console"
+ },
+ {
   "path": "/gspc-gap-map",
   "comp": "GSPCGapMap",
   "title": "GSPCGap Map"
@@ -1103,6 +1133,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Poc Showcase"
  },
  {
+  "path": "/independence",
+  "comp": "Independence",
+  "title": "Independence"
+ },
+ {
   "path": "/industries",
   "comp": "IndustrySolutions",
   "title": "Industry Solutions"
@@ -1136,6 +1171,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/intel",
   "comp": "Intel",
   "title": "Intel"
+ },
+ {
+  "path": "/interop/a2a-jcs-2026-09-27",
+  "comp": "A2aJcs20260927",
+  "title": "A2a Jcs20260927"
  },
  {
   "path": "/iso-42001",
@@ -1194,8 +1234,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "JurisdictionEngine",
+  "title": "Jurisdiction Engine"
  },
  {
   "path": "/layer0",
@@ -1318,6 +1358,36 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Council Hub"
  },
  {
+  "path": "/measurement-capsules",
+  "comp": "MeasurementCapsules",
+  "title": "Measurement Capsules"
+ },
+ {
+  "path": "/measurements/disclosure-completeness",
+  "comp": "DisclosureCompleteness",
+  "title": "Disclosure Completeness"
+ },
+ {
+  "path": "/measurements/disclosure-lag/2026-09-gemini-evaluation",
+  "comp": "DisclosureLagGeminiEvaluation",
+  "title": "Disclosure Lag Gemini Evaluation"
+ },
+ {
+  "path": "/measurements/disclosure-lag/2026-09-medicare-agent",
+  "comp": "DisclosureLagMedicareAgent",
+  "title": "Disclosure Lag Medicare Agent"
+ },
+ {
+  "path": "/measurements/x402-activity",
+  "comp": "X402Activity",
+  "title": "X402 Activity"
+ },
+ {
+  "path": "/mechanism",
+  "comp": "Mechanism",
+  "title": "Mechanism"
+ },
+ {
   "path": "/membership-agreement",
   "comp": "MembershipAgreement",
   "title": "Membership Agreement"
@@ -1329,8 +1399,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/meok-law",
-  "comp": "MeokLaw",
-  "title": "Meok Law"
+  "comp": "JurisdictionEngine",
+  "title": "Jurisdiction Engine"
  },
  {
   "path": "/methodology",
@@ -1743,6 +1813,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Research Transparency"
  },
  {
+  "path": "/research/cross-hardware-reproducibility",
+  "comp": "CrossHardwareReproducibility",
+  "title": "Cross Hardware Reproducibility"
+ },
+ {
   "path": "/resources",
   "comp": "Resources",
   "title": "Resources"
@@ -1908,6 +1983,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Twin"
  },
  {
+  "path": "/spec/signed-receipts",
+  "comp": "SignedReceiptsSpec",
+  "title": "Signed Receipts Spec"
+ },
+ {
   "path": "/specimens/clarity",
   "comp": "ClaritySpecimen",
   "title": "Clarity Specimen"
@@ -1941,6 +2021,16 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/start",
   "comp": "OnboardOS",
   "title": "Onboard OS"
+ },
+ {
+  "path": "/state",
+  "comp": "StateIndex",
+  "title": "State Index"
+ },
+ {
+  "path": "/state/2026-09",
+  "comp": "StateReport202609",
+  "title": "State Report202609"
  },
  {
   "path": "/status",
@@ -2071,6 +2161,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/verify-leaderboard",
   "comp": "VerifyLeaderboard",
   "title": "Verify Leaderboard"
+ },
+ {
+  "path": "/verify-server",
+  "comp": "VerifyServer",
+  "title": "Verify Server"
  },
  {
   "path": "/voice",

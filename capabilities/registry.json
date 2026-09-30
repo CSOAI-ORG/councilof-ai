@@ -84,12 +84,12 @@
       "payment": "free"
     },
     {
-      "id": "measured-badge",
+      "id": "card-status-link",
       "protocols": [
         "a2a"
       ],
-      "title": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "title": "Card status link",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -103,6 +103,32 @@
       ],
       "title": "x402 discovery + free door",
       "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode is reported from runtime env, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts are conditional: a 402 carries extensions['offer-receipt'].info.offers[] only when BOARD_SIGN_KEY_PKCS8_B64 is provisioned and an accepts[] entry can be committed; otherwise csoai.offer_receipt names the gap. A signed receipt appears in the X-PAYMENT-RESPONSE SettlementResponse only after facilitator-confirmed settlement when the facilitator names a payer and the board key is available; otherwise receiptGap states why no signed receipt was attached. Emitted signatures use format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify one without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). No eip712 is emitted — the edge has no secp256k1 signer.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "measurement-capsules",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Measurement capsules: index and verify (free)",
+      "description": "Read the latest signed measurement-capsule index, or verify one capsule. {\"op\":\"index\"} returns the index root over every published capsule, each batch's Merkle root, capsule count and measurement states, the index's board signature re-verified against the pinned key, and the published anchor states (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. {\"op\":\"verify\",\"capsule_json\":...} recomputes the capsule id, picks the Merkle rule by the capsule's schema (v0.2: RFC 6962 with domain separation) and returns the audit path against the batch root the signed index names: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE or NOT_PUBLISHED. The same module as the MCP tools measurement_index and verify_capsule. Verification is free forever. Measurement, not endorsement: no verdict, score or ranking.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "server-evidence",
+      "protocols": [
+        "a2a"
+      ],
+      "title": "Server evidence: every capsule about one endpoint (free)",
+      "description": "Trust per server, not totals. Every published measurement capsule about ONE endpoint URL across all batches: MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A agent-card signature state, self-parity cells for CSOAI's own doors, and later adapters such as tool drift. Each capsule comes with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer; measurement-capsules {op: verify} re-derives inclusion. Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule is NOT_MEASURED with an empty list, never an error and never a clean bill. The same module as the MCP tool server_evidence. Measurement, not endorsement.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -206,7 +232,7 @@
         "http"
       ],
       "title": "Arena scoreboard",
-      "description": "HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first.",
+      "description": "Historical arena artefact (signed 29 Aug 2026): per-axis pass rates, not Elo. Most axes read 0.0 because of a keyword-grader defect, so it is not a measurement of the models; kept for provenance. HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first.",
       "endpoint": "/api/arena/scoreboard",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -219,7 +245,7 @@
         "http"
       ],
       "title": "Art50 marking evidence",
-      "description": "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+      "description": "Art. 50 marking evidence: one signed pack for one generative output at a named URL, measured from its bytes. Reports whether a machine-readable mark (C2PA manifest, assertion hashes, hard binding, claim signature; IPTC digitalSourceType) is detectable now, beside the verbatim Article 50(2) text. States: DETECTED, NOT_DETECTED or UNCHECKABLE; never a legal determination. Free unsigned preview; verification is free.",
       "endpoint": "/api/art50/marking-evidence",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -427,10 +453,10 @@
         "http"
       ],
       "title": "Certificate schema",
-      "description": "GET /api/certificate-schema — the schema URL the issuer and the verifier agree on.",
+      "description": "certificate-schema — withdrawn; the record is csoai.completion-record/0.1.",
       "endpoint": "/api/certificate-schema",
       "method": "GET",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -456,6 +482,45 @@
       "description": "",
       "endpoint": "/api/challenge",
       "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims events",
+      "description": "GET /api/claims/events — the claim-event feed: append-only, hash-chained JSONL.",
+      "endpoint": "/api/claims/events",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-claims-events-head",
+      "protocols": [
+        "http"
+      ],
+      "title": "Claims events head",
+      "description": "GET /api/claims/events/head — the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
+      "endpoint": "/api/claims/events/head",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-chat",
+      "protocols": [
+        "http"
+      ],
+      "title": "Chat (descriptor)",
+      "description": "GET /api/chat: a descriptor, not a 404. It names the one grounded answerer (Ask the Council) and every skin it is served through (chat, MCP, A2A, AG-UI, A2UI), each with its method and address. POST /api/chat asks the question.",
+      "endpoint": "/api/chat",
+      "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
@@ -838,26 +903,26 @@
       "payment": "free"
     },
     {
-      "id": "api-eunomia-data",
+      "id": "api-signed-data-feed",
       "protocols": [
         "http"
       ],
-      "title": "Eunomia data",
-      "description": "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
-      "endpoint": "/api/eunomia-data",
+      "title": "Signed data feed",
+      "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
+      "endpoint": "/api/signed-data-feed",
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "x402"
     },
     {
-      "id": "api-eunomia-data-post",
+      "id": "api-signed-data-feed-post",
       "protocols": [
         "http"
       ],
-      "title": "Eunomia data (POST)",
+      "title": "Signed data feed (POST)",
       "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
-      "endpoint": "/api/eunomia-data",
+      "endpoint": "/api/signed-data-feed",
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "both",
@@ -869,7 +934,7 @@
         "http"
       ],
       "title": "Evidence bundle",
-      "description": "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+      "description": "Signed compliance evidence bundle for one obligation: EU AI Act Article 50 or 53, DORA or EU-CRA, as OSCAL results. Built only from already-signed measurement cards, each with its full bytes and Merkle inclusion proof, plus one signed manifest card. States: ASSEMBLED, or zero relevant cards stated as zero; never a finding that an obligation is met. Verification is free at /gspc-verify.",
       "endpoint": "/api/evidence-bundle",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -960,7 +1025,7 @@
         "http"
       ],
       "title": "Feeds provider diff",
-      "description": "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+      "description": "Provider change record: the signed history of document changes the daily watcher recorded for tracked model providers. Each diff leaf comes with its Merkle inclusion proof, assembled per request. States: each diff exactly as the watcher recorded it; the latest state per provider is free at the same path without history=1. Verification is free.",
       "endpoint": "/api/feeds/provider-diff",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1051,7 +1116,7 @@
         "http"
       ],
       "title": "Free door",
-      "description": "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
+      "description": "Live board totals and the signed public root, free: the axis totals and Merkle root, served through a real x402 settle. It reads nothing new: the totals are the board's own and the root is the published one. States: each axis MEASURED or UNMEASURED exactly as the board states it. Verification is free forever; the same bytes answer 200 at /api/gspc and /root.json.",
       "endpoint": "/api/free-door",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1306,6 +1371,58 @@
       "payment": "free"
     },
     {
+      "id": "api-measurement-fresh-capsule",
+      "protocols": [
+        "http"
+      ],
+      "title": "Fresh capsule",
+      "description": "Fresh measurement capsule: re-measures one declared-vs-observed claim about one MCP endpoint, live. Compares the endpoint's own discovery documents with its initialize and tools/list answers for TOOLS, VERSION or PROTOCOL, each read hashed; no tool is ever called. States: CONSISTENT, INCONSISTENT, or UNCHECKABLE with the reason. Free unsigned preview; verification is free.",
+      "endpoint": "/api/measurement/fresh-capsule",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-measurement-fresh-capsule-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Fresh capsule (POST)",
+      "description": "POST alias of GET /api/measurement/fresh-capsule for gateways that POST {}; the query string selects the claim and the body is ignored.",
+      "endpoint": "/api/measurement/fresh-capsule",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-momentum",
+      "protocols": [
+        "http"
+      ],
+      "title": "Momentum",
+      "description": "GET /api/momentum — live, sourced, dated figures (board, signed cards, corrections, capsules, PyPI and Hugging Face downloads, census rows, MCP tools, x402 doors) and third-party listings verified on the read; a failed source is omitted, never zeroed.",
+      "endpoint": "/api/momentum",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-usage",
+      "protocols": [
+        "http"
+      ],
+      "title": "Usage",
+      "description": "GET /api/usage — daily counts of what callers did at the agent doors (MCP initialize client names, tool calls, A2A outcomes, chat and AG-UI states); aggregate only, no IP or text; our own monitors excluded by name; kind measured, a lower bound; never revenue.",
+      "endpoint": "/api/usage",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-observability",
       "protocols": [
         "http"
@@ -1397,15 +1514,28 @@
       "payment": "free"
     },
     {
+      "id": "api-owm",
+      "protocols": [
+        "http"
+      ],
+      "title": "Outer world model snapshot",
+      "description": "GET /api/owm — the outer world model snapshot: every observed subject (own surfaces included), its state (CONSISTENT / INCONSISTENT / SINGLE_SURFACE / UNCHECKABLE / UNMEASURED), last change, evidence sha256 and next check, plus each reaction-loop stage and whether it is LIVE, STAGED or MISSING.",
+      "endpoint": "/api/owm",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-paddle-webhook",
       "protocols": [
         "http"
       ],
       "title": "Paddle webhook",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "endpoint": "/api/paddle-webhook",
       "method": "GET",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1415,10 +1545,10 @@
         "http"
       ],
       "title": "Paddle webhook (POST)",
-      "description": "POST /api/paddle-webhook — Paddle settlement webhook.",
+      "description": "paddle-webhook — withdrawn: records are free and are never called certificates.",
       "endpoint": "/api/paddle-webhook",
       "method": "POST",
-      "lifecycle": "LIVE",
+      "lifecycle": "RETIRED",
       "audience": "agent",
       "payment": "free"
     },
@@ -1597,7 +1727,7 @@
         "http"
       ],
       "title": "Proof",
-      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, with leaf hashes, indexes, proof paths, the Merkle root and signed card count. Not a grade.",
+      "description": "Inclusion proof bundle for leaves available in the last published Merkle root, read from that root. Each leaf comes with its hash, index and proof path, plus the root and the signed card count. States: included with a path, or absent from the root. Verification is free: recompute any path against /root.json.",
       "endpoint": "/api/proof",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1675,7 +1805,7 @@
         "http"
       ],
       "title": "Receipts batch",
-      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves, with inclusion paths and carrying roots. Not payment or settlement receipts.",
+      "description": "Historical measurement-card batch from published roots for a requested time window, capped at 200 leaves. Each signed card-v0 leaf comes with its inclusion path and the root that carried it. States: the leaves found in the window, or an empty batch stated as empty. Not payment or settlement receipts. Free preview (count, span, batch sha256); verification is free.",
       "endpoint": "/api/receipts/batch",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1857,7 +1987,7 @@
         "http"
       ],
       "title": "Request attestation",
-      "description": "A card-v0 commission receipt for one named subject: content-addressed (sha256 of the canonical payload), Ed25519-signed by did:web:csoai.org#board-attestation-1 when that key answers at issue time (it also signs this 402's extensions[\"offer-receipt\"] offer), else delivered with sig_ed25519 null and unsigned_reason; csoai.signer here says which before you pay. Plus up to 24 signed measurement cards for the subject; reserve_count reports the full match count. Payment never mints a MEASURED cell.",
+      "description": "One named subject gets a card-v0 commission receipt, content-addressed, signed by did:web:csoai.org#board-attestation-1. Without that key: sig_ed25519:null, unsigned_reason. Check csoai.signer before paying. Paid reserve: up to 24 card-v1 references from dated /signed/card-matrix.json only; reserve_count covers that corpus. The interop root in the free preview is not included in the paid reserve. States: SIGNED or UNSIGNED. Payment never creates a MEASURED board cell. Verification is free.",
       "endpoint": "/api/request-attestation",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -1917,12 +2047,25 @@
       "payment": "free"
     },
     {
+      "id": "api-rulings",
+      "protocols": [
+        "http"
+      ],
+      "title": "Rulings",
+      "description": "GET /api/rulings — every signed ruling record (csoai.ruling/0.1) with its signature state, read-only. A ruling decides which rule applies or whether a rule output is served; it never sets a measured state.",
+      "endpoint": "/api/rulings",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-rwa-evidence",
       "protocols": [
         "http"
       ],
       "title": "Rwa evidence",
-      "description": "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+      "description": "RWA asset evidence: one signed card of one XRPL issued asset's on-ledger state, read live per request. Reads the AccountRoot flags, Domain, the two-way xrp-ledger.toml check and the gateway obligation, each raw fetch hashed. States: PROBED, UNCHECKABLE (an unreachable source is never a failure) or UNMEASURED. Free unsigned preview; verification is free.",
       "endpoint": "/api/rwa/evidence",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2312,7 +2455,7 @@
         "http"
       ],
       "title": "Wrapper",
-      "description": "Wrapped-asset parity evidence — signed card of one bridged stablecoin pair: wrapped totalSupply vs origin-chain bridge-escrow balance at pinned finalized blocks, with a free preview. A ratio, not a rate or a reserve attestation.",
+      "description": "Wrapped-asset parity evidence: one signed card of one bridged or wrapped token pair, read live from public RPC. Reads the wrapped totalSupply and the origin-chain bridge-escrow balance at finalized blocks whose hash a second RPC operator confirmed, raw reads hashed. States: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
       "endpoint": "/api/wrapper",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2325,7 +2468,7 @@
         "http"
       ],
       "title": "Wrapper changes",
-      "description": "Wrapped-asset parity evidence: change feed showing the delta of wrapped supply and escrow since the previous ledger snapshot. A diff, not a rate or a grade.",
+      "description": "Wrapped-asset parity evidence: change record for one pair between the two latest published ledger snapshots. Returns per-field deltas of wrapped supply, escrow balance and ratio, with both snapshot dates read from the files. States: DELTA_READ, or UNCHECKABLE when only one snapshot exists. Free preview; verification is free.",
       "endpoint": "/api/wrapper/changes",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2333,13 +2476,117 @@
       "payment": "free_preview_then_x402"
     },
     {
+      "id": "api-wrapper-index-json",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper index",
+      "description": "GET /api/wrapper/index.json — every asset on the wrapped-asset roster and in the per-deployment archives, keyed by CAIP-19, with the lookup URL for each. The sides that have no CAIP-19 id (a fund register, bank deposits) are listed separately with the reason, never dropped.",
+      "endpoint": "/api/wrapper/index.json",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-wrapper-post",
       "protocols": [
         "http"
       ],
       "title": "Wrapper (POST)",
-      "description": "GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at provider-reported finalized blocks, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
+      "description": "GET /api/wrapper?id=<roster id> — per-request signed evidence card of ONE wrapped/bridged stablecoin pair: the wrapped token's totalSupply on its chain and the canonical token's balance in the bridge escrow on the origin chain, both read live from public RPC at a FINALIZED block whose hash a SECOND, different RPC operator confirmed, every raw result sha256'd. Sold over the existing x402 rail (same accepts entry / facilitator / settle path as /api/request-attestation).",
       "endpoint": "/api/wrapper",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-xl",
+      "protocols": [
+        "http"
+      ],
+      "title": "Cross-ledger daily record (signed, verbatim)",
+      "description": "GET /api/xl — the signed cross-ledger daily record, free and verbatim: the newest xl-daily record on the public Hugging Face dataset csoai/cross-ledger-supply, byte for byte as published, served only after its Ed25519-signed wrapper verifies under the pinned board key and pins the sha256 of exactly these bytes. ?date=YYYY-MM-DD serves that day's record; ?part=signed serves the signed wrapper itself. A record that does not verify is never served (503). The values are each ledger's own supply figure (totalSupply() or its equivalent), not issued or outstanding supply, reserves or redeemability, and nothing here ranks issuers.",
+      "endpoint": "/api/xl",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "api-wrapper-asset-usdc",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper asset pack USDC",
+      "description": "Wrapped-asset parity evidence for USDC: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "endpoint": "/api/wrapper/asset/usdc",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-wrapper-asset-usdc-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper asset pack USDC (POST)",
+      "description": "POST alias of GET /api/wrapper/asset/usdc for gateways that POST {}; the body is ignored.",
+      "endpoint": "/api/wrapper/asset/usdc",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-wrapper-asset-usdt",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper asset pack USDT",
+      "description": "Wrapped-asset parity evidence for USDT: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "endpoint": "/api/wrapper/asset/usdt",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-wrapper-asset-usdt-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper asset pack USDT (POST)",
+      "description": "POST alias of GET /api/wrapper/asset/usdt for gateways that POST {}; the body is ignored.",
+      "endpoint": "/api/wrapper/asset/usdt",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "both",
+      "payment": "free"
+    },
+    {
+      "id": "api-wrapper-asset-dai",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper asset pack DAI",
+      "description": "Wrapped-asset parity evidence for DAI: every roster pair of that asset, read live in one request. One signed card per pair: wrapped supply, escrow balance where an escrow exists, finalized blocks whose hash a second RPC operator confirmed. States per pair: ESCROW_PARITY_READ, UNCHECKABLE_NATIVE_ISSUANCE, INDEXED_CUSTODIAL or UNMEASURED. All UNMEASURED answers 200 preview-only and is never sold. Free preview; verification is free.",
+      "endpoint": "/api/wrapper/asset/dai",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free_preview_then_x402"
+    },
+    {
+      "id": "api-wrapper-asset-dai-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Wrapper asset pack DAI (POST)",
+      "description": "POST alias of GET /api/wrapper/asset/dai for gateways that POST {}; the body is ignored.",
+      "endpoint": "/api/wrapper/asset/dai",
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "both",
@@ -2385,6 +2632,19 @@
       "payment": "free"
     },
     {
+      "id": "api-x402-quotes",
+      "protocols": [
+        "http"
+      ],
+      "title": "X402 quotes",
+      "description": "GET /api/x402-quotes — every door the x402 manifest declares, asked once without payment, with the HTTP status and body each door answered, read live.",
+      "endpoint": "/api/x402-quotes",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "api-x402-trust-seller",
       "protocols": [
         "http"
@@ -2422,6 +2682,84 @@
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "free"
+    },
+    {
+      "id": "api-ras-mcp-probe",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras mcp probe",
+      "description": "MCP discovery probe receipt: one live, read-only discovery of a public https MCP endpoint, signed. Runs server/discover, else initialize and tools/list, and never calls a tool: protocol version requested and negotiated, tool count, tool-names sha256. States include LISTED, PARTIAL, AUTH_REQUIRED, NOT_MCP, TIMEOUT and UNREACHABLE, delivered as found. Verification is free at /api/verify.",
+      "endpoint": "/api/ras/mcp-probe",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-mcp-probe-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras mcp probe (POST)",
+      "description": "GET /api/ras/mcp-probe?url=<https MCP endpoint> — ONE live, read-only MCP discovery of a public endpoint, returned with an Ed25519-signed receipt.",
+      "endpoint": "/api/ras/mcp-probe",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-x402-check",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras x402 check",
+      "description": "x402 challenge conformance receipt: one live GET of a public x402 resource, checked and signed. The rule is the daily census's: HTTP 402, a PAYMENT-REQUIRED header, x402Version 2 and extensions.bazaar in the body. States: CONFORMANT, NOT_CONFORMANT, TIMEOUT, UNREACHABLE or BLOCKED, delivered as found. Verification is free at /api/verify.",
+      "endpoint": "/api/ras/x402-check",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-x402-check-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras x402 check (POST)",
+      "description": "GET /api/ras/x402-check?url=<https x402 resource> — ONE live GET of a public x402 resource, scored by the rule of the daily census, returned with an Ed25519-signed receipt.",
+      "endpoint": "/api/ras/x402-check",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-supply",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras supply",
+      "description": "Token supply read receipt: one fresh totalSupply() read of an issuer-listed EVM deployment, signed. The address is parsed from the issuer's own page on the request (USDC). States: STATE_PROOF_VERIFIED on Ethereum (EIP-1186 proof checked against the block stateRoot), OPERATOR_API elsewhere, or UNCHECKABLE with the reason. Not a reserve attestation. Verification is free at /api/verify.",
+      "endpoint": "/api/ras/supply",
+      "method": "GET",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
+    },
+    {
+      "id": "api-ras-supply-post",
+      "protocols": [
+        "http"
+      ],
+      "title": "Ras supply (POST)",
+      "description": "GET /api/ras/supply?asset=USDC&ledger=ethereum — one fresh, signed read of an issuer-listed token deployment's totalSupply(), labelled by the strength of the evidence behind it.",
+      "endpoint": "/api/ras/supply",
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "x402"
     },
     {
       "id": "art50_marking_evidence",
@@ -2528,6 +2866,45 @@
       "payment": "free"
     },
     {
+      "id": "measurement_index",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "measurement_index",
+      "description": "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "verify_capsule",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "verify_capsule",
+      "description": "Verify one measurement capsule. Pass capsule_json as the capsule's JSON TEXT (exact: number lexemes are kept) or as an object. Recomputes capsule_id (sha256 of the canonical JSON without capsule_id), picks the rule by the capsule's schema (csoai.measurement-capsule/0.2: RFC 6962 Merkle with 0x00/0x01 domain separation; the superseded v0.1 capsule schema: the v0.1 rule), finds the published batch of the same kind, recomputes that batch's root from its published leaves, and returns the audit path of this capsule against the root named by the signed index. States: INCLUDED, NOT_INCLUDED, ID_MISMATCH, UNCHECKABLE, NOT_PUBLISHED. Verifying is free forever. It proves the bytes were published and bound; what they measured is the capsule's own measurement_state and limitations — measurement, not endorsement.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
+      "id": "server_evidence",
+      "protocols": [
+        "mcp"
+      ],
+      "title": "server_evidence",
+      "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g. tool drift) — each with its measurement_state, observed_at, correction_pointer, limitations, batch Merkle root and an inclusion pointer (verify_capsule re-derives inclusion). Read from a static per-endpoint shard keyed by sha256 of the normalised URL. An endpoint with no capsule answers NOT_MEASURED with an empty list — never an error and never a clean bill. No verdict, score or ranking: measurement, not endorsement.",
+      "endpoint": null,
+      "method": "POST",
+      "lifecycle": "LIVE",
+      "audience": "agent",
+      "payment": "free"
+    },
+    {
       "id": "receipts_batch",
       "protocols": [
         "mcp"
@@ -2598,7 +2975,7 @@
         "http"
       ],
       "title": "Pop a2a",
-      "description": "A2A registry population slice — the agents enumerable without a credential from the public A2A registry frame, with the estate's own directory-listing state. A frame count, not a global count.",
+      "description": "A2A registry population slice: the agents enumerable without a credential from the public A2A registry frame. Counted within that frame, with the estate's own directory-listing state beside it; a frame count, not a global count. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/a2a",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2611,7 +2988,7 @@
         "http"
       ],
       "title": "Pop claim watch",
-      "description": "Claim-maintenance registries slice — each published registry of a vendor's public claims (captured verbatim, hashed, source-cited, each with a measurement plan) with the file's digest, digest-reproducibility and .ots state read from bytes. CLAIM_CAPTURED, never a claim of falsity.",
+      "description": "Claim-maintenance registries slice: each published registry of a vendor's public claims, captured verbatim. Each claim is hashed, source-cited and paired with a measurement plan; file digest, reproducibility and .ots state are read from bytes. CLAIM_CAPTURED, never a claim of falsity. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
       "endpoint": "/api/pop/claim-watch",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2624,7 +3001,7 @@
         "http"
       ],
       "title": "Pop corrections",
-      "description": "Corrections ledger slice, full history — every published correction (what was wrong, how it was caught, the fix, dated) with a per-entry content digest. The free /api/corrections stays free; this meters the assembled slice.",
+      "description": "Corrections ledger slice: the same entries as free /api/corrections, packaged with per-entry digests. Each entry states what was wrong, how it was caught, the fix and the date; /api/corrections stays free. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/corrections",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2637,7 +3014,7 @@
         "http"
       ],
       "title": "Pop layer0",
-      "description": "Layer-0 ceremony slice — every rail and probe of the estate's own machine surface at the ceremony's as_of with the HTTP status returned, and the ceremony artifact's .ots state. Self-attestation, dated.",
+      "description": "Layer-0 ceremony slice: every rail and probe of the estate's own machine surface at the ceremony's as_of. Carries the HTTP status each returned and the ceremony artifact's .ots state; self-attestation, dated. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/layer0",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2650,7 +3027,7 @@
         "http"
       ],
       "title": "Pop mcp registry",
-      "description": "MCP registry listings slice — every server name the estate publishes in the official registry, classified on its latest version, with the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption.",
+      "description": "MCP registry listings slice: every server name the estate publishes in the official registry, from the census artifact. Each is classified on its latest version, beside the registry's full-walk census and the effect-binding server probe's counts. Distribution, not adoption. States: INDEXED, UNCHECKABLE or UNMEASURED. Free preview; verification is free.",
       "endpoint": "/api/pop/mcp-registry",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2663,7 +3040,7 @@
         "http"
       ],
       "title": "Pop ots proofs",
-      "description": "OpenTimestamps proof manifest slice — every published .ots proof of an estate artifact with the state its bytes were read into (Bitcoin-attested, calendar-pending, subject absent). A pending proof is not anchored.",
+      "description": "OpenTimestamps proof manifest slice: every published .ots proof of an estate artifact, each state read from its bytes. Rows are Bitcoin-attested, calendar-pending or subject absent; a pending proof is not anchored. States: MEASURED when the rows agree with the manifest, else UNCHECKABLE, or UNMEASURED. Free preview; verification is free.",
       "endpoint": "/api/pop/ots-proofs",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2676,7 +3053,7 @@
         "http"
       ],
       "title": "Pop stablecoins",
-      "description": "Stablecoin universe slice — every asset the frozen discovery index catalogues, with each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation.",
+      "description": "Stablecoin universe slice: every asset the frozen discovery index catalogues, read from the published artifact. Carries each reader's per-chain deployment reads and every unmeasured asset's own reason. Assets, never supply; a read, not a reserve attestation. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/stablecoins",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2689,7 +3066,7 @@
         "http"
       ],
       "title": "Pop swift",
-      "description": "SWIFT-linked bank census slice — every bank named in a dated public notice about the Swift digital-asset MVP, in its notice's own state (LIVE, COMMITTED, DISCOVERED). Mixed identity by design; never a client list.",
+      "description": "SWIFT-linked bank census slice: every bank named in a dated public notice about the Swift digital-asset MVP. Each row keeps its notice's own wording (LIVE, COMMITTED, DISCOVERED) and a hashed press URL; mixed identity by design, never a client list. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/swift",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2702,7 +3079,7 @@
         "http"
       ],
       "title": "Pop x402 bazaar",
-      "description": "x402 Bazaar listings slice — the payable resources the two public discovery indexes catalogue, counted within each frame with the overlap published, plus the estate's own door census. Appearing in an index is not delivery.",
+      "description": "x402 Bazaar listings slice: the payable resources the two public discovery indexes catalogue, from the census artifact. Counted within each frame, with the overlap published, plus the estate's own door census. Appearing in an index is not delivery. States: INDEXED, UNCHECKABLE or UNMEASURED, with n and as_of read at request time. Free preview; verification is free.",
       "endpoint": "/api/pop/x402-bazaar",
       "method": "GET",
       "lifecycle": "LIVE",
@@ -2715,7 +3092,7 @@
         "http"
       ],
       "title": "Pop xrpl",
-      "description": "XRPL issued-asset slice — the assets whose signed xrpl.asset.state card sits on the current public root, from the live reader, with the issuer registry artifact beside it. A read, not a rating.",
+      "description": "XRPL issued-asset slice: the assets whose signed xrpl.asset.state card sits on the current public root. Read from the live reader, with the issuer registry artifact beside it and never merged. States: INDEXED, UNCHECKABLE or UNMEASURED (a reader that cannot find the locked set is UNMEASURED, never zero). Free preview; verification is free.",
       "endpoint": "/api/pop/xrpl",
       "method": "GET",
       "lifecycle": "LIVE",

@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: Apache-2.0
+# Must-catch fixture (ours): fields this translator does not know. `allow_every_path` is not an
+# OpenShell field; `tls` is a real field v0 does not model; `priority` is not a rule field. None of
+# them may become an allow: each element is UNCHECKABLE and contributes no permit.
+version: 1
+network_policies:
+  looks_permissive:
+    name: looks-permissive
+    endpoints:
+      - host: files.example.com
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        access: read-only
+        allow_every_path: true
+      - host: tls.example.com
+        port: 443
+        tls: skip
+    binaries:
+      - { path: /usr/bin/curl }
+  ranked:
+    name: ranked
+    priority: 1
+    endpoints:
+      - host: ranked.example.com
+        port: 443
+    binaries:
+      - { path: /usr/bin/curl }
+  ordinary:
+    name: ordinary
+    endpoints:
+      - host: ok.example.com
+        port: 443
+    binaries:
+      - { path: /usr/bin/curl }

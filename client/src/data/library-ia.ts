@@ -42,11 +42,18 @@ export const PRIMARY_PATHS = new Set<string>([
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/verify-leaderboard", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/watchdog-hub",
+  // The GSPC console moved from a static file into the site shell (27 Sep 2026).
+  "/gspc-console",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
   // A promoted self-serve destination (footer + /tools + /mcp cross-link); unregistered
   // it would ship the ArchivedBanner under a link we actively promote. /connect-ai is
   // the same page under a shorter alias.
   "/connect-gspc", "/connect-ai",
+  // /connect/claude — the connector documentation named in the Claude connector directory listing
+  // (2026-09-27). Unregistered it would ship "archived" on the page a directory reviewer reads.
+  "/connect/claude",
+  // /connect — the connector hub (2026-09-30): free MCP door, full MCP, A2A card, HTTP, offline verify.
+  "/connect",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
@@ -134,11 +141,17 @@ export const PRIMARY_PATHS = new Set<string>([
   "/xrpl-attest", "/claims-register",
   // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/verify-certificate", "/accreditation",
+  // /charter: in-app pointer to the operational charter (a direct request 308s to /constitutional-harness/).
+  "/charter",
   // Company
   "/about", "/library", "/contact", "/disclaimers",
   // These three routes serve the operative Terms v1.1 and are indexed. Calling
   // the current contract a "reference / archive" contradicts its acceptance text.
   "/terms-of-service", "/terms", "/legal/terms",
+  // The operative privacy notice, on all three of its routes. It shipped under the "Reference /
+  // archive" banner until 2026-09-27, which reads as a stale policy to anyone checking it (the Claude
+  // connector directory requires a current privacy policy link).
+  "/privacy-policy", "/privacy", "/legal/privacy",
   "/faq", "/traction",
   // #148 — /dispute is a live Charter Article 18 page, not an archive.
   // Without this entry it shipped under the "Reference / archive" banner.
@@ -149,6 +162,38 @@ export const PRIMARY_PATHS = new Set<string>([
   // /memberships — where we take part, from public/interop/memberships.json. Linked from the
   // home strip and the footer; unregistered it would ship under the "archived" banner.
   "/memberships",
+  // /corrections — the corrections ledger page (2026-09-26). Linked from the footer; unregistered
+  // it would ship the "archived" banner on the page that says where we were wrong.
+  "/corrections",
+  // /census — the crawler's own page; its user agent string links here.
+  "/census",
+  // /state — State of the Agent Internet: the stable address and its dated editions (2026-09-26).
+  "/state",
+  "/state/2026-09",
+  // /measurements/x402-activity — wash-adjusted x402 activity, signed daily record (2026-09-26).
+  "/measurements/x402-activity",
+  // /measurements/disclosure-lag/2026-09-medicare-agent — disclosure-lag measurement (owner-approved 2026-09-27).
+  "/measurements/disclosure-lag/2026-09-medicare-agent",
+  // /measurements/disclosure-lag/2026-09-gemini-evaluation — second disclosure-lag measurement (owner-approved 2026-09-28).
+  "/measurements/disclosure-lag/2026-09-gemini-evaluation",
+  // /measurements/disclosure-completeness — disclosure completeness and lag of public benchmark artifacts, signed dated sets (2026-09-30).
+  "/measurements/disclosure-completeness",
+  // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
+  "/verify-server",
+  // /measurement-capsules — the human page over the capsule index: kinds, chain, anchors, how to verify (2026-09-26).
+  "/measurement-capsules",
+  // /research/cross-hardware-reproducibility — preprint + open dataset on item-level cross-runtime reproducibility (2026-09-27).
+  "/research/cross-hardware-reproducibility",
+  // /spec/signed-receipts — canonical home of the signed-receipts/v1 A2A extension spec (2026-09-27).
+  "/spec/signed-receipts",
+  // /interop/a2a-jcs-2026-09-27 — our canonicalisers against the A2A TCK RFC 8785 vectors (2026-09-27).
+  "/interop/a2a-jcs-2026-09-27",
+  // /independence: conflicts of interest, own-model counts and who holds the keys (2026-09-27).
+  "/independence",
+  // /crosswalks/owasp-asi: OWASP Agentic Top 10 + MCP Top 10 mapped to our checks, with strength (2026-09-27).
+  "/crosswalks/owasp-asi",
+  // /mechanism: claim -> provision id -> predicate -> signed capsule -> daily index; coverage counted (2026-09-27).
+  "/mechanism",
   // /reach — the full seven-stage funnel. Linked from the home page and from the footer
   // of every route, so unregistered it would ship the "archived" banner under a link the site
   // is actively promoting, on the page whose whole point is that the number is current.

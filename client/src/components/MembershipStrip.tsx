@@ -16,6 +16,7 @@
  * Variants: `home` (grouped, wraps) for the routed home page; `footer` (one compact line ending
  * "Where we take part →") for the site footer.
  */
+import type { ReactNode } from "react";
 import { Link } from "wouter";
 import manifest from "../../../public/interop/memberships.json";
 
@@ -41,6 +42,16 @@ export interface MembershipRow {
   deadline?: string;
   question?: string;
   answer?: string;
+  /** Featured rows only: the name spelled out, the role as the record states it, and the rank. */
+  display_name?: string;
+  role_label?: string;
+  tier?: string;
+  featured?: number;
+  evidence_label?: string;
+  /** Set when the evidence URL stopped resolving (e.g. the Zenodo 410 of 29 Sep 2026); printed beside the link. */
+  status_note?: string;
+  status_since?: string;
+  status_url?: string;
 }
 
 export interface MembershipsManifest {
@@ -72,12 +83,15 @@ export const KIND_LABEL: Record<MembershipKind, string> = {
 
 /** Where a pill sends the reader: the public evidence, or the manifest row that names the private record. */
 export function evidenceHref(row: MembershipRow): string {
+  // A row whose evidence no longer resolves (status_note, e.g. the Zenodo 410 of 29 Sep 2026) never
+  // links the dead URL: it sends the reader to its own row, which prints the URL and the reason.
+  if (row.status_note) return `/memberships#${row.id}`;
   return row.evidence_kind === "public_url" ? row.evidence : `/memberships#${row.id}`;
 }
 
 /**
  * badgeRows — the compact home row: one pill per body the owner asked to see on the first screen
- * (Linux Foundation, OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each, plus one
+ * (OSAIA, C2PA, DIF), plus W3C and IETF aggregated into one pill each, plus one
  * pill per remaining group so the hero shows the whole footprint rather than only the standards
  * bodies. Derived from the manifest by predicate, so a body that leaves the manifest leaves the
  * row, and every count is computed from the rows — none is typed.
@@ -104,7 +118,6 @@ export function badgeRows(m: MembershipsManifest = MEMBERSHIPS): { label: string
     return [{ label, kind, href: `/memberships#${id}`, count: rows.length }];
   };
   return [
-    ...one(/^The Linux Foundation/, "Linux Foundation"),
     ...one(/^Open Secure AI Alliance/, "Open Secure AI Alliance"),
     ...one(/^C2PA/, "C2PA"),
     ...one(/^Decentralized Identity Foundation/, "DIF"),
@@ -122,6 +135,55 @@ export function isExternalHref(href: string): boolean {
   return /^https?:\/\//i.test(href);
 }
 
+/** The featured rows (Alliance, C2PA, DIF first), in the order the manifest ranks them. */
+export function featuredRows(m: MembershipsManifest = MEMBERSHIPS): MembershipRow[] {
+  return m.rows
+    .filter((r) => typeof r.featured === "number" && r.state === "VERIFIED" && r.display_name && r.role_label)
+    .sort((a, b) => (a.featured ?? 0) - (b.featured ?? 0));
+}
+
+/**
+ * The chips under the featured cards: every other standards body, policy programme and commons
+ * row, with W3C and IETF each aggregated into one chip. Registries, scholarly ids and filings are
+ * not here (a listing or a filing beside memberships reads as a standing); /memberships has them.
+ */
+export function featuredChips(
+  m: MembershipsManifest = MEMBERSHIPS,
+): { key: string; label: string; kind: MembershipKind; since: string | null; href: string; count?: number }[] {
+  const featured = new Set(featuredRows(m).map((r) => r.id));
+  const rows = m.rows.filter((r) => !featured.has(r.id) && r.state === "VERIFIED" && ["standards", "policy", "commons"].includes(r.group));
+  const w3c = rows.filter((r) => /^W3C /.test(r.org));
+  const ietf = rows.filter((r) => /^IETF /.test(r.org));
+  const latest = (xs: MembershipRow[]) =>
+    xs
+      .map((x) => x.since)
+      .filter((d): d is string => !!d)
+      .sort()
+      .pop() ?? null;
+  const rest = rows.filter((r) => !/^W3C /.test(r.org) && !/^IETF /.test(r.org));
+  return [
+    ...(w3c.length ? [{ key: "w3c", label: "W3C Community Groups", kind: "participant" as MembershipKind, since: latest(w3c), href: "/memberships#standards", count: w3c.length }] : []),
+    ...(ietf.length ? [{ key: "ietf", label: "IETF lists and drafts", kind: "participant" as MembershipKind, since: latest(ietf), href: "/memberships#standards", count: ietf.length }] : []),
+    ...rest.map((r) => ({ key: r.id, label: r.short, kind: r.kind, since: r.since, href: evidenceHref(r) })),
+  ];
+}
+
+const dayFmt = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+function fmtSince(d: string | null): string | null {
+  if (!d) return null;
+  const t = Date.parse(`${d}T00:00:00Z`);
+  return Number.isFinite(t) ? dayFmt.format(new Date(t)) : d;
+}
+
+/** A plain anchor either way: in-page hashes and off-site evidence both want a real navigation. */
+function Anchor({ href, className, children, title }: { href: string; className: string; children: ReactNode; title?: string }) {
+  return (
+    <a href={href} className={className} title={title} {...(isExternalHref(href) ? { rel: "noopener noreferrer" } : {})}>
+      {children}
+    </a>
+  );
+}
+
 export function groupedRows(m: MembershipsManifest = MEMBERSHIPS): { id: string; label: string; rows: MembershipRow[] }[] {
   return m.groups
     .map((g) => ({ ...g, rows: m.rows.filter((r) => r.group === g.id) }))
@@ -130,7 +192,7 @@ export function groupedRows(m: MembershipsManifest = MEMBERSHIPS): { id: string;
 
 function Pill({ row }: { row: MembershipRow }) {
   const href = evidenceHref(row);
-  const external = row.evidence_kind === "public_url";
+  const external = isExternalHref(href);
   const cls =
     "inline-flex flex-wrap items-center gap-x-1.5 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-slate-800 transition hover:border-emerald-600/50 hover:bg-emerald-50";
   const body = (
@@ -167,8 +229,79 @@ function Pill({ row }: { row: MembershipRow }) {
   );
 }
 
-export default function MembershipStrip({ variant = "home" }: { variant?: "home" | "footer" | "badges" }) {
+export default function MembershipStrip({ variant = "home" }: { variant?: "home" | "footer" | "badges" | "featured" }) {
   const groups = groupedRows();
+
+  if (variant === "featured") {
+    const feats = featuredRows();
+    const chips = featuredChips();
+    return (
+      <div data-testid="membership-featured">
+        <ul className="mt-9 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-[1.2fr_1.2fr_1fr]">
+          {feats.map((r, i) => (
+            <li key={r.id} className={`min-w-0 ${i === 2 ? "sm:col-span-2 lg:col-span-1" : ""}`} data-testid={`membership-featured-${r.id}`}>
+              <Anchor
+                href={evidenceHref(r)}
+                title={`${r.org}: ${r.what_it_proves}`}
+                className={`group flex h-full flex-col rounded-2xl border bg-card p-6 transition hover:shadow-[0_18px_40px_-30px_rgba(4,18,12,.55)] ${
+                  i < 2 ? "border-emerald-600/35 shadow-[inset_0_3px_0_0_rgba(5,150,105,.85)]" : "border-border"
+                }`}
+              >
+                <span className="inline-flex w-fit items-center rounded-full bg-emerald-600/10 px-2.5 py-0.5 text-[11.5px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+                  {r.role_label}
+                </span>
+                <span className={`mt-3 block font-black leading-snug tracking-tight text-foreground ${i < 2 ? "text-xl" : "text-lg"}`}>{r.display_name}</span>
+                {r.since && (
+                  <span className="mt-2 block text-sm text-muted-foreground">
+                    since <time dateTime={r.since}>{fmtSince(r.since)}</time>
+                  </span>
+                )}
+                <span className="mt-auto block pt-4 text-xs leading-relaxed text-muted-foreground">
+                  {r.evidence_label ?? (r.public_evidence ? "public evidence" : "private evidence")}
+                  <span aria-hidden="true"> · </span>
+                  <span className="font-semibold text-foreground/80 underline decoration-emerald-600/40 underline-offset-4 group-hover:decoration-emerald-600">
+                    {r.public_evidence ? "open the evidence" : "what the record shows"}
+                  </span>
+                </span>
+              </Anchor>
+            </li>
+          ))}
+        </ul>
+        {chips.length > 0 && (
+          <ul className="mt-5 flex list-none flex-wrap gap-2 p-0" data-testid="membership-featured-chips">
+            {chips.map((c) => (
+              <li key={c.key} className="max-w-full">
+                <Anchor
+                  href={c.href}
+                  className="inline-flex max-w-full flex-wrap items-center gap-x-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[12.5px] text-foreground/85 transition hover:border-emerald-600/50 hover:text-foreground"
+                >
+                  <span className="font-semibold">{c.label}</span>
+                  <span aria-hidden="true" className="text-foreground/40">·</span>
+                  <span>{KIND_LABEL[c.kind]}</span>
+                  {c.count && c.count > 1 ? <span className="text-foreground/70">· {c.count}</span> : null}
+                  {c.since && (
+                    <>
+                      <span aria-hidden="true" className="text-foreground/40">·</span>
+                      <time dateTime={c.since} className="text-foreground/70">
+                        {c.count && c.count > 1 ? "latest " : "since "}
+                        {fmtSince(c.since)}
+                      </time>
+                    </>
+                  )}
+                </Anchor>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="mt-5 text-xs text-muted-foreground" data-testid="membership-featured-honesty">
+          {HONESTY_LINE}{" "}
+          <a href="/memberships/" className="font-semibold text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+            Every entry, its evidence, and what it does not mean
+          </a>
+        </p>
+      </div>
+    );
+  }
 
   if (variant === "badges") {
     const badges = badgeRows();
@@ -216,6 +349,21 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
   if (variant === "footer") {
     return (
       <div data-testid="membership-strip-footer" className="border-t border-border pt-6 mb-6 text-center">
+        <ul className="mb-3 flex list-none flex-wrap items-center justify-center gap-2 p-0" data-testid="membership-footer-featured">
+          {featuredRows().map((r) => (
+            <li key={r.id} className="max-w-full">
+              <Anchor
+                href={evidenceHref(r)}
+                title={`${r.org}${r.since ? ` since ${r.since}` : ""} (${r.evidence_label ?? "evidence"})`}
+                className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-1.5 rounded-full border border-emerald-600/30 bg-background px-3 py-1 text-[12px] text-foreground/85 hover:border-emerald-600/60 hover:text-foreground"
+              >
+                <span className="font-bold text-emerald-800 dark:text-emerald-300">{r.role_label}</span>
+                <span aria-hidden="true" className="text-foreground/40">·</span>
+                <span className="font-medium">{r.display_name}</span>
+              </Anchor>
+            </li>
+          ))}
+        </ul>
         <p className="text-muted-foreground text-xs">
           <Link href="/memberships" className="font-semibold text-foreground hover:text-primary hover:underline">
             Where we take part →
@@ -227,16 +375,17 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
               {g.rows.map((r, ri) => (
                 <span key={r.id}>
                   {ri > 0 && ", "}
-                  {r.evidence_kind === "public_url" ? (
+                  {r.evidence_kind === "public_url" && !r.status_note ? (
                     <a href={r.evidence} rel="noopener noreferrer" className="hover:text-primary hover:underline" title={`${r.org} — ${KIND_LABEL[r.kind]}${r.since ? ` since ${r.since}` : ""}`}>
                       {r.short}
                     </a>
                   ) : (
-                    <Link href={`/memberships#${r.id}`} className="hover:text-primary hover:underline" title={`${r.org} — ${KIND_LABEL[r.kind]}${r.since ? ` since ${r.since}` : ""} (private evidence)`}>
+                    <Link href={`/memberships#${r.id}`} className="hover:text-primary hover:underline" title={`${r.org} — ${KIND_LABEL[r.kind]}${r.since ? ` since ${r.since}` : ""}${r.status_note ? `. ${r.status_note}` : " (private evidence)"}`}>
                       {r.short}
                     </Link>
                   )}
                   {r.state === "PENDING" ? " (pending)" : ""}
+                  {r.status_note ? " (unavailable)" : ""}
                 </span>
               ))}
             </span>
@@ -259,7 +408,7 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
       </div>
       {groups.map((g) => (
         <div key={g.id} className="mt-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500">{g.label}</h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-600">{g.label}</h3>
           <ul className="mt-2 flex list-none flex-wrap gap-2 p-0">
             {g.rows.map((r) => (
               <li key={r.id}>
@@ -271,7 +420,7 @@ export default function MembershipStrip({ variant = "home" }: { variant?: "home"
       ))}
       <p className="mt-4 text-xs text-slate-600" data-testid="membership-strip-honesty">
         {HONESTY_LINE}{" "}
-        <span className="text-slate-500">Manifest as of <time dateTime={MEMBERSHIPS.as_of}>{MEMBERSHIPS.as_of}</time>, unsigned; re-checked by scripts/memberships-check.mjs.</span>
+        <span className="text-slate-600">Manifest as of <time dateTime={MEMBERSHIPS.as_of}>{MEMBERSHIPS.as_of}</time>, unsigned; re-checked by scripts/memberships-check.mjs.</span>
       </p>
     </section>
   );

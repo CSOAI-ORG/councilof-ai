@@ -6,11 +6,11 @@
 [![22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.](https://councilof.ai/api/badge)](https://councilof.ai/api/gspc)
 [![GSPC living board — 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.](https://councilof.ai/badge/board.svg)](https://councilof.ai/api/gspc)
 
-[![PyPI csoai-gspc](https://img.shields.io/pypi/v/csoai-gspc?style=flat-square&color=16a34a&label=PyPI%20csoai--gspc)](https://pypi.org/project/csoai-gspc/) [![npm csoai-gspc-mcp](https://img.shields.io/npm/v/csoai-gspc-mcp?style=flat-square&color=16a34a&label=npm%20csoai--gspc--mcp)](https://www.npmjs.com/package/csoai-gspc-mcp) [![DOI 10.5281/zenodo.21991104](https://zenodo.org/badge/DOI/10.5281/zenodo.21991104.svg)](https://doi.org/10.5281/zenodo.21991104) [![License MIT](https://img.shields.io/badge/license-MIT-16a34a?style=flat-square)](https://github.com/CSOAI-ORG/councilof-ai/blob/master/LICENSE)
+[![PyPI csoai-gspc](https://img.shields.io/pypi/v/csoai-gspc?style=flat-square&color=16a34a&label=PyPI%20csoai--gspc)](https://pypi.org/project/csoai-gspc/) [![npm csoai-gspc-mcp](https://img.shields.io/npm/v/csoai-gspc-mcp?style=flat-square&color=16a34a&label=npm%20csoai--gspc--mcp)](https://www.npmjs.com/package/csoai-gspc-mcp) [![DOI 10.5281/zenodo.21991104](https://zenodo.org/badge/DOI/10.5281/zenodo.21991104.svg)](https://doi.org/10.5281/zenodo.21991104) [![License MIT](https://img.shields.io/badge/license-MIT-16a34a?style=flat-square)](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/LICENSE)
 
 Independent AI-governance measurement. This repository is the live site, API and signing pipeline behind [councilof.ai](https://councilof.ai): the GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, the corrections ledger, the A2A agent card, the x402 manifest, and the PyPI / npm readers. **Measurement, not certification.**
 
-_derived 2026-09-09T15:55:49Z by [`scripts/github/org-readme.py`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/github/org-readme.py) — every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._
+_derived 2026-09-09T15:55:49Z by [`scripts/github/org-readme.py`](https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/github/org-readme.py) — every number on this page is read live from the URLs in that script; if this page and the API disagree, the API is right._
 
 ## The board today
 
@@ -115,6 +115,9 @@ _Pushed by `scripts/spray/gspc-spray.py` (daily, idempotent by `as_of` and finge
 
 <!-- org-readme:end -->
 
+> **Source mirror.** The GitHub org `CSOAI-ORG` is temporarily unavailable. The source of this repository is mirrored,
+> MIT-licensed, at https://huggingface.co/datasets/csoai/councilof-ai-source (`git clone` works; the tree is under `source/`).
+
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/CSOAI-ORG/councilof-ai/badge)](https://scorecard.dev/viewer/?uri=github.com/CSOAI-ORG/councilof-ai)
 
 ## Hosting and deploy
@@ -191,7 +194,7 @@ Network: Base (eip155:8453) · Asset: USDC · Pay-to: 0x212686404A7D1E1fD88F35eD
 
 ## License
 
-MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
+MIT © [CSOAI-ORG](https://huggingface.co/csoai)
 
 ---
 

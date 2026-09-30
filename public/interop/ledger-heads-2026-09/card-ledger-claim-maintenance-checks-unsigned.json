@@ -1,0 +1,50 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Ledger head: claim-maintenance-checks (served bytes, digest and count at one read)",
+ "as_of": "2026-09-29T17:09:12Z",
+ "source_urls": [
+  "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json"
+ ],
+ "payload": {
+  "kind": "csoai.ledger-head/0.1",
+  "ledger": "claim-maintenance-checks",
+  "authority_for": "executed day-7/30/90 re-checks of maintained claims",
+  "served_url": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json",
+  "http_status": 200,
+  "not_a_grade": true,
+  "bytes_sha256": "00f3172af2e626ba5a25ce3357f1dc9dd9bb48721a4fdddca069bc6521a9940a",
+  "n_bytes": 5611,
+  "entries": 11,
+  "head_digest": "69252bb8b005d38c03f2ddf09d8c9fcb0ce39a9facbbc87b28d06db0c85db409",
+  "last_update": "2026-09-29T16:55:06Z",
+  "outcomes": {
+   "CHANGED_CONFIRMED": 1,
+   "FETCH_FAILED": 1,
+   "NOT_YET_DUE": 9
+  },
+  "checks": [
+   "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|scheduled-read|2026-09-28|CHANGED_CONFIRMED",
+   "claimreg-ondo-chainlink-2026-09-22-rev2|day-7|2026-09-29|FETCH_FAILED",
+   "claimreg-hiring-platforms-2026-09-24-rev2|scheduled-read|2026-10-01|NOT_YET_DUE",
+   "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|day-7|2026-10-02|NOT_YET_DUE",
+   "claimreg-hiring-platforms-2026-09-24-rev2|day-7|2026-10-02|NOT_YET_DUE",
+   "claimreg-ondo-chainlink-2026-09-22-rev2|day-30|2026-10-22|NOT_YET_DUE",
+   "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|day-30|2026-10-25|NOT_YET_DUE",
+   "claimreg-hiring-platforms-2026-09-24-rev2|day-30|2026-10-25|NOT_YET_DUE",
+   "claimreg-ondo-chainlink-2026-09-22-rev2|day-90|2026-12-21|NOT_YET_DUE",
+   "claimreg-ai-assurance-and-settlement-2026-09-23-rev2|day-90|2026-12-24|NOT_YET_DUE",
+   "claimreg-hiring-platforms-2026-09-24-rev2|day-90|2026-12-24|NOT_YET_DUE"
+  ],
+  "state": "PROBED"
+ },
+ "sha256": "0fdebe914252dcbcf35f2ee462629c12c1c62b3b74d380d538f32ff4e9c6a4cd",
+ "unmeasured": [
+  "whether any entry is correct; this atom commits to the served bytes and their head only"
+ ],
+ "tags": [
+  "ledger-head",
+  "claim-maintenance-checks",
+  "ledger-heads-2026-09"
+ ]
+}

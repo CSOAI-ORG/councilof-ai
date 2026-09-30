@@ -212,7 +212,7 @@ describe("HomeNavigator", () => {
 
   it("reaches the board, the verifier, the ledger, the data doors and the library", () => {
     const hrefs = NAV_GROUPS.flatMap((g) => g.links.map((l) => l.href));
-    for (const href of ["#board", "/gspc-verify", "/refutation-ledger", "#machine-surface", "/library", "/memberships", "/contact?arm=run"]) {
+    for (const href of ["#board", "/gspc-verify", "/refutation-ledger", "#machine-surface", "/library", "/memberships", "/contact/?arm=run"]) {
       expect(hrefs).toContain(href);
     }
   });

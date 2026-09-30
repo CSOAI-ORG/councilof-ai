@@ -279,8 +279,8 @@ export const CAPABILITY_ACTION_DEFINITIONS: readonly CapabilityActionDefinition[
           evidence_rail_id: "a2a-runtime",
         },
         A2UI: {
-          mode: "UNBOUND",
-          binding: null,
+          mode: "PRESENTATION_ONLY",
+          binding: "GET /api/a2ui/gspc",
           evidence_rail_id: "a2ui-renderer",
         },
         AGUI: {

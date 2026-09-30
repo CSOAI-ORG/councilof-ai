@@ -1,0 +1,409 @@
+{
+ "accuracy": 0.6667,
+ "axis": "detector-interop",
+ "baseline_runtime": {
+  "code_commit": "bdd8873344ff4b3b8b5b5ae01d91ec4b8843edd2",
+  "cpu_count": 4,
+  "cpu_model": null,
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "gpu-t4",
+  "docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "environment_json_sha256": "03d5e783654f0604ee2854f1434d7ed4c12435115e77c564c1909bcf95f7ca10",
+  "finished_at": "2026-09-28T10:47:50Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-20bf8912-0798-697e-320f-1f09824d7aa8\n1, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-855ea377-915c-0d76-b254-482862c42fbb",
+  "hardware": "GPU: 2x Tesla T4 (CUDA driver 13.0)",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runs": [
+   {
+    "accuracy": 0.6667,
+    "bundle_sha256": "8541b32477fe217b4bae4be7fa3f2782b35edc51a637c57c9f85644287ae7484",
+    "counts": {
+     "attempted": 33,
+     "bank_items": 33,
+     "correct": 22,
+     "graded_n": 33,
+     "parse_errors_excluded": 0,
+     "transport_errors_excluded": 0,
+     "transport_ok": 33
+    },
+    "items_sha256": "909b6d4ee8150963855566f958857fac251ea2ec95be96081a15ac12a5bbae36",
+    "run_id": "20260928T104344.611749Z-5dfc78663d"
+   }
+  ],
+  "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4",
+  "slice_id": "20260928T10-hf.co-openbmb-MiniCPM5-2B-GGUF-Q8_0",
+  "started_at": "2026-09-28T10:40:16Z",
+  "substrate": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4"
+ },
+ "counts": {
+  "attempted": 33,
+  "bank_items": 33,
+  "correct": 22,
+  "graded_n": 33,
+  "parse_errors_excluded": 0,
+  "transport_errors_excluded": 0,
+  "transport_ok": 33
+ },
+ "independence": {
+  "differs_on": "compute device and numeric path (cpu vs gpu-t4)",
+  "note": "declared from the kernels' own records; admission (admit_mill_cards.py) decides",
+  "shared": "provider (Kaggle), kernel docker image family, ollama build, code commit and banks"
+ },
+ "instrument_sha256": "1ca1f644184702ccad408103b4b91a47c7add4b5b6dead8452f1717add046f53",
+ "intake_bundle_sha256": "1ce9810c8466e1d8e99ddfadb282f3b8eeb924d5a177ed162b2809958018aac3",
+ "intake_state": "VERIFIED_QUARANTINE",
+ "items_sha256": "477b5bbbc06c492a3f477ba397006857ec77191d06be6d84a844d1cea0bcdde2",
+ "n": 33,
+ "parity": {
+  "aggregate_equal": true,
+  "per_item_cross_hardware": {
+   "differing_items": [],
+   "grade_equal": 33,
+   "n_items": 33,
+   "parsed_label_equal": 33,
+   "raw_output_equal": 33
+  }
+ },
+ "per_item_results": [
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000001-5399cdd4d65c",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "5bf1540ad2f3a34e819b10c41f47752e7c6d9ca2c68c80defda983a1a2399f96",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 1
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000002-25f64f7601cc",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "024f5306633347031f7af1d2f9e64a7190211921e5ffdc3f85099ec8912e379d",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 2
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000003-2f4a1700b635",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "21f51ebcafd78afb14fdebf1016564e02805b813cb83774ca36e6dbf6fc084e3",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 3
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000004-ba2d7905ad8f",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "ac816391569278c06ea940cf55417d38812373c760f6e9749411c91a566c3ac0",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 4
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000005-70805d4ad51b",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "918ceca93eee59c1e0d7cebc6db2dc59c508c722d80366102fc49b1b572d8a5c",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 5
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000006-54d03c500964",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "80ca357e52187fafd4d050587ab7da59637e99d711ce55bdcd60c6bded8af080",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 6
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000007-1863175eba83",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "37fbd600879e7ea8b74b6c3b16b5f851d29491809754c8f4947c8495aa774dd6",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 7
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000008-0a9aa9f55e53",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "5001ac81a9729a3d7082637bce1be2d9a6e803055f464eaef5f16758f983799d",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 8
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000009-b9c6fe528ac1",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "0663e4195592485857dc138b2aa6a8f6adc7fd7eecc86f7496246ea279b60dc5",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 9
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000010-3546ff55a577",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "4991fc466170b2db1f2a5ea835c5f66f0d5bfcce089f5e0b670143165d5bc9d7",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 10
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000011-32533ea76205",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "15d6ca40f62dfab75d99daeffcbbc3274544463ae5277f33232ded8d5a42a5d4",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 11
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000012-d5f64773c850",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "2106107a85329f3e22d243573d0d9f37f13e3ddd130f2f3ecff72e35c574ef87",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 12
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000013-02a5cf1dcbd4",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "d15521a4a1ab783c88c2e70dcd9d5045fd5c1bf019b07bd27c29552789f8d919",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 13
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000014-8e1d9a717223",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "cd46b20518c97ff1bc7a687567bbd57116732f38fd8d540756538d75c491357a",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 14
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000015-c8e7ad47433b",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "6fab59bad48e0681696e99b97f59bd11f8265271b74adafea2b00810333f2c2e",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 15
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000016-4804e4e6c0b0",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "be8cae7e846cd5ebdafda781fa178f8cf19ea7dcc3e19a01db311324ed6d87c4",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 16
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000017-c83c0b0e28c4",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "5dc074b1e7f6d3f89497209190aeab099f3ca7dd8614c45f5c042af4a515eefb",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 17
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000018-66e55a1d8bf4",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "7825af403f9f669edb75b0635088346d7a206f71446701372b3b68ae96040a92",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 18
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000019-50721e9525e7",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "53d0876711fa58bc8990d47f1595b2614f7151ec3e7ccd5aab4e160a0f86fd68",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 19
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000020-fb8d6abf21e8",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "408498b65324607dc7fca7b958fcd7f5efaa4ed53f7273304b9eabafc339463d",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 20
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000021-291f4dfa3d05",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "1b4a90f4eb9a822048889aba97d786b6a3ae3bf13e340c4b60837d2f3375af74",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 21
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000022-4c769ad748ac",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "a7cf5d9b2e0c706338278eae77bd404d245bd79aca9aacf77f0b83c1a69793de",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 22
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000023-bac04504e5c5",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "d0b9b3a31708a4987769250ebb16cd323316fd67044979b038ff2324a0673ed7",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 23
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000024-0eb339c6227e",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "fd87ed709df0e4ffcd94fb00e1f66f7c86404f981afccfc30c5e08aa271bec41",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 24
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000025-a2d1e122a74c",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "d4e27607bd7dde889f656b4ff319b512b1a01baa790daee373d6a9bf1a88678d",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 25
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000026-bbffb42b3525",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "463773c43df9da622b435cc40cce983c99417ddb6ad47e60c012af50fa888826",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 26
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000027-690c1fc153fd",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "c0be4c20ec46f3fcc874e113cc4498c8612c0e670db257ed7c7a2ba19b36550b",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 27
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000028-89b65231099d",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "a2ba53960d310c962eb5232916a2b24badc83ef8f8a1132d2d31e4fca986d798",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 28
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000029-ac4650b41272",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "5a12a19a90b8a0e69ea0893c1ac338f8779d83f5c6bdbf4df7c5ce7bd0a3fe83",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 29
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000030-bd4981ae0ff8",
+   "parsed_label": "INTEROPERABLE",
+   "prompt_sha256": "216697ae03e03f677f650e915798f45e0ca3a8cd4c425f734f93f79a98fabfb6",
+   "raw_output_sha256": "3eb869b3016260f89b6d86287ed3bb91e7fd4663289dab085ffba243a5ecaa18",
+   "sequence": 30
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000031-b181312b7e7a",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "4999e080f7818300d33fbb49073f4b7ada18a6a7825b3de645bdf7b36d350f2a",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 31
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000032-fb0ff2724c57",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "e98aad93721081c3a3b0fff6eca3562842278817905a3edf887a307acbf12784",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 32
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000033-7466e937c422",
+   "parsed_label": "DIVERGENT",
+   "prompt_sha256": "72b03db17b689bb4bbafa20bdc1e25450f40ee5cadd86c8696d8b290deb7d815",
+   "raw_output_sha256": "b38e628bc33598b52e73c8f9477374f37da602d0484d8348f8e05145ef24114e",
+   "sequence": 33
+  }
+ ],
+ "per_item_results_sha256": "7dab20128d0d054dee21dc56a2de5dd790b5802d4532e76da02c93fa9a8b82d8",
+ "produced_at": "2026-09-29T16:49:51Z",
+ "produced_by": "oracle-micro-2 ~/lanes/gspc-continuous/build_declarations.py (lane gspc-continuous-20260929)",
+ "run_id": "20260929T153111.252944Z-a3d1cdc471",
+ "runtime": {
+  "bank_sha256": "d75e96802d9eb9df1c42ea46ce55c577879d0d78d199b1c612c2b14685d62c8e",
+  "code_commit": "8731272286d2745bebe45f124d7a96890a1a4077",
+  "cpu_count": 4,
+  "cpu_model": "Intel(R) Xeon(R) CPU @ 2.20GHz",
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "cpu",
+  "docker_image": "gcr.io/kaggle-images/python@sha256:dafd4ce5668bbf1ad422e4c109e0f18c9623c3a7c7f48b0235f13142755c40b9",
+  "environment_json_sha256": "75428236c5fd3174386894b9ce8dfa4810183d9e076da0d2bf00890c32ccd419",
+  "finished_at": "2026-09-29T16:46:54Z",
+  "gpu": null,
+  "hardware": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily-cpu",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runtime_id": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily-cpu (private, Batch) | ollama 0.34.4",
+  "slice_id": "20260929T15-hf.co-openbmb-MiniCPM5-2B-GGUF-Q8_0",
+  "started_at": "2026-09-29T15:16:40Z",
+  "substrate": "CPU only: Intel(R) Xeon(R) CPU @ 2.20GHz x4; no accelerator | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily-cpu (private, Batch) | ollama 0.34.4"
+ },
+ "schema": "csoai.mill-runtime-declaration/0.1",
+ "status": "SIDECAR - not inside the card: the intake contract pins the card body/run.json key sets exactly",
+ "subject": "ollama:hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0@sha256:c7e50c7ffebc34187452ed4946b57622e7a820bed89ef49a19c52c0b3a9698e0"
+}

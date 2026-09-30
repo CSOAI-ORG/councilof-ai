@@ -11,7 +11,7 @@
     <meta name="description" content="Council of AI (CSOAI LTD, UK 16939677) — a neutral AI-governance measurement body. We measure against frozen statute and issue signed, independently verifiable evidence. Measurement, not certification." />
 
     <!-- SEO Meta Tags -->
-    <meta name="keywords" content="AI safety, AI governance, EU AI Act, NIST AI RMF, AI compliance, AI risk management, responsible AI, AI ethics, AI regulation, PDCA, AI auditing" />
+    <meta name="keywords" content="AI safety, AI governance, EU AI Act, NIST AI RMF, AI measurement, AI risk management, responsible AI, AI ethics, AI regulation, PDCA, AI evaluation" />
     <meta name="author" content="CSOAI" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://councilof.ai" />
@@ -26,6 +26,9 @@
     <link rel="alternate" type="application/atom+xml" title="Council of AI — corrections ledger (Atom)" href="https://councilof.ai/feeds/corrections.atom" />
     <link rel="alternate" type="application/rss+xml" title="Council of AI — newly signed measurement cards" href="https://councilof.ai/feeds/cards.xml" />
     <link rel="alternate" type="application/rss+xml" title="Council of AI — public root" href="https://councilof.ai/feeds/roots.xml" />
+    <!-- Every new dated record (corrections, daily measurement notes, evidence notes), derived. -->
+    <link rel="alternate" type="application/atom+xml" title="Council of AI — new records" href="https://councilof.ai/feeds/records.xml" />
+    <link rel="alternate" type="application/feed+json" title="Council of AI — new records (JSON Feed)" href="https://councilof.ai/feeds/records.json" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -114,6 +117,7 @@
 
   <body>
     <div id="root"></div>
+    <noscript><p>Council of AI is operated by CSOAI Ltd (England &amp; Wales, Companies House 16939677). We measure; we do not certify. Contact: <a href="mailto:contact@csoai.org">contact@csoai.org</a>. To object to, dispute or request a correction of anything we publish: <a href="/dispute/">/dispute</a> or the same address. Dated corrections: <a href="/api/corrections">/api/corrections</a>. This page needs JavaScript to show the rest.</p></noscript>
     <script type="module" src="/src/main.tsx"></script>
     <!-- Analytics script - uncomment when VITE_ANALYTICS_ENDPOINT is configured
     <script

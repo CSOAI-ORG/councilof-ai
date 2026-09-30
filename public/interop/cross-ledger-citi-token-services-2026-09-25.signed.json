@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.signed-run/0.1",
+  "payload": {
+    "schema": "csoai.signed-artifact/0.1",
+    "artifact": {
+      "path": "/interop/cross-ledger-citi-token-services-2026-09-25.json",
+      "sha256": "796c03215483b769e07354b488109e9b1c58a25e3b1653c43745f825d265bcab",
+      "schema": "csoai.cross-ledger-supply/0.2",
+      "as_of": "2026-09-25T11:18:58Z"
+    },
+    "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+    "not_a_grade": "The signature proves these bytes were signed by the board key on the date below; it does not prove any claim inside beyond what the record's own instruments measured. An on-chain supply read is not AUM, NAV, ownership, redeemability or compliance.",
+    "asset": "Citi Token Services (tokenized deposits)",
+    "issuer_list_state": "PERMISSIONED_NOT_READABLE",
+    "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+    "reads": [],
+    "proof_files": {}
+  },
+  "signature": {
+    "did": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig_ed25519": "d55f581062f74be0451d06708f819c61b1394bcd506726cb61ec3906ab9b33ea3c7a3f037d3d871d8786e8bb701d2780eec7b6a322beeb0cf607b40fb0384808",
+    "payload_sha256": "7d2ff0540df989ade4cc2bc05465c06c3b0ff592b62dfe329b3c7aec1f1bc92d",
+    "canonical": "JSON.stringify of key-sorted object, UTF-8 (functions/_lib/cardSign.ts canonicalBytes)",
+    "signer_auth": "pod-token",
+    "signed_at": "2026-09-25T11:22:17.186Z"
+  },
+  "local_verification": {
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "result": "VERIFIES",
+    "altered_preimage_controls": {
+      "trailing byte appended": "rejected (control holds)",
+      "record sha256 altered": "rejected (control holds)"
+    }
+  },
+  "verify": "canonicalise payload (keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256 of the record file; verify sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json"
+}

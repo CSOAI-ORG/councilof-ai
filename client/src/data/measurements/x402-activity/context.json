@@ -1,0 +1,128 @@
+{
+ "schema": "csoai.x402-activity-context/0.1",
+ "as_of": "2026-09-26T15:20:31Z",
+ "what_this_is": "Other parties' published findings about x402 activity, quoted verbatim with the bytes we read. Their findings, not ours: different methods, networks and windows; never combined with each other or with our record.",
+ "never_cited": "No share is cited here that the named sources do not state or that cannot be computed from two figures they state.",
+ "items": [
+  {
+   "id": "visa-artemis-page",
+   "who": "Visa (with Artemis Analytics)",
+   "title": "Agentic Payments: What Onchain Data Reveals",
+   "url": "https://www.visa.com/en-us/thought-leadership/innovation/agentic-payments-from-the-ground-up",
+   "published_as_printed": "Last updated on July 14, 2026",
+   "accessed_utc": "2026-09-26T15:20:16Z",
+   "response_sha256": "7a1c5e0a4911eb916c3c59e95b96d70f6d93f15644d9bb27f7807b6b6a999c3b",
+   "response_bytes": 493293,
+   "quotes": [
+    "it has processed roughly $15.0 million in adjusted volume across 109.6 million transactions.",
+    "All transaction figures in this article are adjusted totals that exclude identified wash and test activity, taken from the joint Visa and Artemis report and based on Artemis Analytics onchain data as of April 21, 2026."
+   ],
+   "derived": null,
+   "note": null
+  },
+  {
+   "id": "visa-artemis-report",
+   "who": "Visa (with Artemis Analytics)",
+   "title": "Agentic payments report (PDF linked from the page above)",
+   "url": "https://www.visa.com/vcom-assets/content/dam/visa/reimagine-visa/thought-leadership/documents/agentic-payments-report.pdf",
+   "published_as_printed": "JULY 2026 (cover)",
+   "accessed_utc": "2026-09-26T15:11:48Z",
+   "response_sha256": "0d6a4a20419053f37fdf02bd0dff4dcdf889eb4431a162120c858a114f7242fe",
+   "response_bytes": 23229194,
+   "quotes": [
+    "has processed over $135.7M in volume across 178.3M transactions since May 2025.",
+    "All transaction figures cited in this section are cumulative raw onchain totals from Artemis Analytics as of April 21, 2026."
+   ],
+   "derived": {
+    "what": "share of raw x402 dollar volume not in Visa/Artemis's adjusted total",
+    "formula": "1 - 15.0 / 135.7",
+    "value": 0.8895,
+    "by": "CSOAI, from the two figures quoted above; Visa and Artemis state the two totals, the subtraction is ours"
+   },
+   "note": null
+  },
+  {
+   "id": "trm-2026-09-09",
+   "who": "TRM Labs",
+   "title": "Who's Actually Paying? Measuring AI Agent Payments Onchain",
+   "url": "https://www.trmlabs.com/trm-tech-blog/whos-actually-paying-measuring-ai-agent-payments-onchain",
+   "published_as_printed": "September 9, 2026",
+   "accessed_utc": "2026-09-26T15:20:16Z",
+   "response_sha256": "0f1403572e2783c1b32bcb4f32e4c10f47c646b1e49c9a7ed8f6372912301221",
+   "response_bytes": 191686,
+   "quotes": [
+    "TRM identified roughly USD 52.7 million across 198.9 million settlement transactions mediated by known x402 facilitators since May 2025.",
+    "About half of settled volume falls away once self-payment, bulk flows, and thin-buyer sellers are removed.",
+    "Applied to the USD 25.62 million of screened x402 commerce, the two tests put the share that appears to be agentic at between 0.6% and 7.5% ."
+   ],
+   "derived": null,
+   "note": null
+  },
+  {
+   "id": "x402-org-counter",
+   "who": "x402.org (project site)",
+   "title": "x402.org home page counters",
+   "url": "https://x402.org/",
+   "published_as_printed": "counters labelled 'Last 30 Days'",
+   "accessed_utc": "2026-09-26T15:20:15Z",
+   "response_sha256": "359d4427b1e63dc12c033b1c51d9a7ccc6f9db12f0a2d253b14f0fa8cbc3637d",
+   "response_bytes": 92116,
+   "quotes": [
+    "75.41M",
+    "Transactions",
+    "$24.24M",
+    "Volume",
+    "Last 30 Days"
+   ],
+   "observed_unchanged_in": {
+    "wayback_captures": [
+     {
+      "capture": "https://web.archive.org/web/20260901171836/https://x402.org/",
+      "response_sha256": "b8d21ff6cf3705bc6ca7591d39d075c3380332fe3f9b79d355cf744ecbf2d8c3",
+      "shows_75.41M": true,
+      "shows_$24.24M": true
+     },
+     {
+      "capture": "https://web.archive.org/web/20260903102552/https://x402.org/",
+      "response_sha256": "70e66006428399b4a8b45175b12bb99a7cadd96cdb031d99397c19e493813d9a",
+      "shows_75.41M": true,
+      "shows_$24.24M": true
+     },
+     {
+      "capture": "https://web.archive.org/web/20260907015408/https://x402.org/",
+      "response_sha256": "d94bbb5de875cc130084039b238043424545cf6cd9e396f46a2f64c8b9c53d9f",
+      "shows_75.41M": true,
+      "shows_$24.24M": true
+     },
+     {
+      "capture": "https://web.archive.org/web/20260910041103/https://x402.org/",
+      "response_sha256": "9eb1e106fa4799ef4c7e911f6b2c868c974308394fc318294f81e981187de7a7",
+      "shows_75.41M": true,
+      "shows_$24.24M": true
+     },
+     {
+      "capture": "https://web.archive.org/web/20260917164151/https://x402.org/",
+      "response_sha256": "376b84562844b4c52477ab74aace7f9be9af917f6ab9e59f2c84a5c7e86e91c7",
+      "shows_75.41M": true,
+      "shows_$24.24M": true
+     },
+     {
+      "capture": "https://web.archive.org/web/20260922183614/https://x402.org/",
+      "response_sha256": "8dce85f03f5694a4e2ff6368a142bd118f69df7cc91a705af9061d89aa13c694",
+      "shows_75.41M": true,
+      "shows_$24.24M": true
+     }
+    ],
+    "live_read_2026_09_26": true
+   },
+   "derived": {
+    "what": "first and last dates the same two figures were seen",
+    "first": "2026-09-01 (earliest capture read)",
+    "last": "2026-09-26 (live read)",
+    "by": "CSOAI, by reading each capture; a rolling 30-day total that does not move for 25 days is reported as unchanged, not explained"
+   },
+   "note": "We state only that the figures did not change across these reads. We do not know why."
+  }
+ ],
+ "access_times_note": "accessed_utc is the file time of the bytes we hashed; the Wayback captures were read at 2026-09-26T15:20:31Z"
+}

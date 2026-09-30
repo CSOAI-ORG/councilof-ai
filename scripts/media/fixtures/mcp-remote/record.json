@@ -1,0 +1,621 @@
+{
+ "schema": "csoai.mcp-remote-census/0.1",
+ "record_id": "mcp-remote-census-2026-09-25",
+ "as_of": "2026-09-25T06:54:10Z",
+ "built_utc": "2026-09-25T07:07:15Z",
+ "publisher": "Council of AI (CSOAI), councilof.ai",
+ "licence": {
+  "data": "CC-BY-4.0"
+ },
+ "what_this_is": "A dated measurement of what remote MCP endpoints, listed in public catalogues, answered to initialize and tools/list on 2026-09-25, from one place. It is a measurement of the endpoints we attempted - the top 20% of an ordered plan - and not of every endpoint in any catalogue.",
+ "read_state_vocabulary": {
+  "EXHAUSTED": "the upstream signalled its end (no next cursor / declared total reached) and every row was read",
+  "PARTIAL": "some rows or endpoints were not read; counts are over what was read and are never a population total"
+ },
+ "units": {
+  "catalogue row": "one listing in one source catalogue",
+  "endpoint": "one canonical URL (scheme + lowercased host + non-default port + path; query/fragment dropped)",
+  "host": "one lowercased hostname",
+  "attempted endpoint": "an endpoint the probe contacted (robots.txt at least); one row in probe/results.public.jsonl.gz",
+  "tool count": "len(tools) summed over tools/list pages for ONE endpoint, only when the listing completed",
+  "tool_names_sha256": "sha256 of the sorted tool names joined by \\n, UTF-8"
+ },
+ "producer": {
+  "repo": "councilof-ai (lane census-frame-20260925)",
+  "commit": "cc058890fe6d844b088ead2416e0b0e36e29d076",
+  "files": {
+   "scripts/census/frame.py": {
+    "sha256_at_head": "15e9cd111d0f100b286227d21ee78d755eaaf2071ec816d5c0ff66d44df6895f"
+   },
+   "scripts/census/reach.py": {
+    "sha256_at_head": "bdfc929218c54d5479c68ca8316ca4be29130fc63b47dc0b767c9182c3143111"
+   },
+   "scripts/census/read_state.py": {
+    "sha256_at_head": "70ebf780e3fbb889d5b244ef7051a091f5e262d0658d87583ba90974e42a8a0f"
+   },
+   "scripts/census/mcp-remote-probe.py": {
+    "sha256_at_head": "ba02431e8ac3407ae9362b1412e74ce7baa01032a59e3a9d02f37e46b473c0ac"
+   }
+  },
+  "this_builder": "scripts/census/build-mcp-remote-census-record.py"
+ },
+ "inputs": {
+  "frame/summary.json": "ce4bb52a70a6077c3f2ab004e04da616578bcad362bf712e86f63c9da48428e2",
+  "frame/plan-top20.json": "493c81c10a2b91c0707e2df3e6e6c07f614898d881282ae18766b703c8d53565",
+  "frame/plan-top20.jsonl.gz": "1adae1f64839fd04bfb69ee65983a37a81c024d5800fcc3e15a993425d8863d4",
+  "frame/entries.jsonl.gz": "7932d3c69a283b9d04e581d37acd4d50526a32b9a7a1048ba6fe788c032c7e15",
+  "probe/summary.json": "991ef00bf40c6c56960ff08110fdf3ebceb366f5d1f8b15aadf3f85cb8ef9ae1",
+  "probe/results.jsonl.gz": "038a2598981e8f0e48fc03261a5a6ef44770bd0cfbc4b8aa1d6917737df67dad",
+  "probe/not_attempted.jsonl.gz": "ff6a58921b5db8f65b60486c3a6f52cb726939a78482ebb06777fdce53dccc06",
+  "probe/results.run1.jsonl.gz (first run, kept, not published)": "9398a095bdee8bef892bccd33e30096b86c6704f70f840bc7013b21b1c22d848"
+ },
+ "summary_cross_checks": {
+  "attempted_rows == summary.n_attempted": true,
+  "not_attempted_rows == summary.n_not_attempted": true,
+  "plan_rows == summary.n_planned": true,
+  "attempted + not_attempted == planned": true,
+  "state counts == summary.states": true,
+  "plan sha256 == summary.plan.sha256": true,
+  "distinct endpoints attempted == attempted rows": true
+ },
+ "independent_reads": {
+  "what_this_is": "Two readers of the official MCP registry, written separately, ran about an hour apart on the same day. Their row counts are CITED side by side. The data is not merged, and this is not a reconciliation: the registry changed between the reads, so a difference is expected and is not an error in either.",
+  "reads": [
+   {
+    "reader": "census frame (this record)",
+    "producer": "scripts/census/frame.py",
+    "user_agent": "CSOAI-census/0.1 (+https://councilof.ai)",
+    "endpoint": "https://registry.modelcontextprotocol.io/v0/servers?limit=100&version=latest",
+    "window_utc": [
+     "2026-09-25T05:45:50Z",
+     "2026-09-25T05:54:05Z"
+    ],
+    "window_note": "the whole frame run; the MCP registry source took 464 s of it",
+    "read_state": "EXHAUSTED",
+    "pages": 359,
+    "rows": 35873,
+    "file": "frame/summary.json",
+    "sha256": "ce4bb52a70a6077c3f2ab004e04da616578bcad362bf712e86f63c9da48428e2"
+   },
+   {
+    "reader": "RAS discovery lane (a different lane, different code)",
+    "producer": "sync_official_mcp_full.py",
+    "producer_sha256": "f1c147035561ae553a4e96e94f6c458e500e3bc76f73acf78d49f6fdc1f6aa38",
+    "user_agent": "CSOAI-RAS-Discovery/0.1",
+    "endpoint": "https://registry.modelcontextprotocol.io/v0.1/servers?limit=100&version=latest",
+    "finished_utc_file_mtime": "2026-09-25T04:40:39Z",
+    "read_state": "COMPLETE",
+    "pages": 359,
+    "rows": 35859,
+    "remote": 21911,
+    "file": "summary.json",
+    "sha256": "8ec4692760de6a30b9687704fba33c36327d70a2258bccb16da33f0b4dd323f2",
+    "rows_file_sha256": "645ef70dbb8d04c9f1d900b05bfecde5165353bf277190b422a3f29f9338a59f",
+    "corpus_diff": {
+     "file": "mcp-corpus-diff-20260925.json",
+     "sha256": "6c8c41b133320154acd558cf34e1710bdbbb3f90d97b37dfc735f54ddf82e116",
+     "against": "the estate's canonical public MCP corpus",
+     "canonical_public_sha256": "06cafe9d6ecd6669ced2abd3066795e53f3f64759a0b2056f5bdfc1bc9b6c59d",
+     "canonical_mcp_ids": 31807,
+     "new_official_ids": 4364,
+     "canonical_ids_absent_from_current_official": 312,
+     "version_changed_common": 3509,
+     "its_note": "Discovery/currentness delta only. Absent from current official does not mean unsafe/dead; new official does not imply quality or endorsement."
+    }
+   }
+  ],
+  "time_gap": "the RAS read finished at about 04:40Z; the frame read ran 05:45:50Z-05:54:05Z, roughly 65-74 minutes later",
+  "row_difference_frame_minus_ras": 14,
+  "id_sets": {
+   "in_both": 35859,
+   "only_in_frame_read": 14,
+   "only_in_ras_read": 0,
+   "in_both_with_a_different_latest_version": 29
+  },
+  "reading": "Every id in the earlier RAS read (35,859) is also in the later frame read, which has 14 more; 29 shared ids carry a different latest version. That is consistent with publications made between the reads, and the two reads agree to within that churn. 'remote' (RAS) and 'entries with an endpoint' (frame) are defined differently and are not compared."
+ },
+ "frame": {
+  "schema": "csoai.census-frame/0.1",
+  "run": [
+   "2026-09-25T05:45:50Z",
+   "2026-09-25T05:54:05Z"
+  ],
+  "user_agent": "CSOAI-census/0.1 (+https://councilof.ai)",
+  "requests": 384,
+  "sources": {
+   "mcp-registry": {
+    "read_state": "EXHAUSTED",
+    "reason": "metadata.nextCursor absent on page 359: upstream end",
+    "declared_total": null,
+    "rows_read": 35873,
+    "distinct_ids": 35873,
+    "population_total": 35873,
+    "distinct_endpoints": 21958,
+    "entries_without_endpoint": 14063,
+    "page_set_sha256": "60482de9b0b1121b6532d24721d2f2911393816466427bb734d11c5333d52ffb"
+   },
+   "hf-spaces": {
+    "read_state": "EXHAUSTED",
+    "reason": "no rel=next Link after page 11: upstream end",
+    "declared_total": null,
+    "rows_read": 10822,
+    "distinct_ids": 10822,
+    "population_total": 10822,
+    "distinct_endpoints": 10822,
+    "entries_without_endpoint": 0,
+    "page_set_sha256": "a6297b951e5c7660c9663d1159b39f80181597dbca1a583f44d6423811aea2fc"
+   },
+   "a2aregistry": {
+    "read_state": "EXHAUSTED",
+    "reason": "offset reached declared total 443; 443 distinct ids == declared",
+    "declared_total": 443,
+    "rows_read": 443,
+    "distinct_ids": 443,
+    "population_total": 443,
+    "distinct_endpoints": 440,
+    "entries_without_endpoint": 0,
+    "page_set_sha256": "9363da3cb7ebd07c9de57333d449eae9366824beec89becc59230cab0014e9f9"
+   },
+   "docker-mcp-registry": {
+    "read_state": "EXHAUSTED",
+    "reason": "commit 49b643ce3fc7: tree lists 328 servers/*/server.yaml; tarball of the same commit parsed all 328",
+    "declared_total": 328,
+    "rows_read": 328,
+    "distinct_ids": 328,
+    "population_total": 328,
+    "distinct_endpoints": 77,
+    "entries_without_endpoint": 251,
+    "page_set_sha256": "84d9a779dbba9a6763428696dbfcaa52de380229f48633bc02ea245f05447654"
+   },
+   "smithery": {
+    "read_state": "PARTIAL",
+    "reason": "anonymous API advertises totalPages=5 at pageSize 100 (500 rows served, 264 distinct) against declared totalCount=17186; page 6 returned 0 servers. The listing carries no endpoint URL. Reading further needs an API key.",
+    "declared_total": 17186,
+    "rows_read": 500,
+    "distinct_ids": 264,
+    "population_total": null,
+    "distinct_endpoints": 0,
+    "entries_without_endpoint": 264,
+    "page_set_sha256": "f78a5f7f1658417279b96a72bd1b6604b7414b92f0a0318f2dc651a7ffe1e789"
+   }
+  },
+  "union": {
+   "endpoints_read": 33261,
+   "hosts_read": 25526,
+   "combined_population_total": null,
+   "combined_population_total_null_because": [
+    "smithery: PARTIAL"
+   ],
+   "note": "endpoints_read counts what was read. It is not a population total: Smithery was read PARTIAL (264 distinct of a declared 17,186; the anonymous API stops at 5 pages and lists no endpoint URL)."
+  },
+  "overlap_endpoint_level_in_2plus_catalogues": 36,
+  "overlap_host_level_in_2plus_catalogues": 262,
+  "what_a_row_is": "an endpoint URL a public catalogue lists. DISCOVERED, UNMEASURED.",
+  "what_it_never_proves": "that the endpoint is live, speaks its protocol, is safe, or is good."
+ },
+ "plan": {
+  "schema": "csoai.census-frame/0.1/plan-top20",
+  "as_of": "2026-09-25T06:33:07Z",
+  "candidates": 21880,
+  "excluded": {
+   "not listed by an MCP remote catalogue (HF Space base URL / A2A)": 11258,
+   "templated path: needs a caller-supplied value, not probeable as listed": 123
+  },
+  "fraction": 0.2,
+  "top_n": 4376,
+  "sha256_plan_rows": "1adae1f64839fd04bfb69ee65983a37a81c024d5800fcc3e15a993425d8863d4",
+  "tier_1_reach_signalled": {
+   "n": 1575,
+   "signal_mix": {
+    "dockerhub_pull_count": 16,
+    "npm_weekly_downloads": 1276,
+    "smithery_use_count": 6,
+    "pypi_downloads_7d": 277
+   },
+   "signals": {
+    "npm_weekly_downloads": {
+     "source": "https://api.npmjs.org/downloads/point/last-week/",
+     "status": {
+      "ok": 1288,
+      "not_found": 18
+     }
+    },
+    "pypi_downloads_7d": {
+     "source": "https://pepy.tech/api/v2/projects/",
+     "definition": "sum, all versions, over one 7-day calendar window shared by every package; dates absent from pepy's map add nothing",
+     "status": {
+      "ok": 290
+     }
+    },
+    "dockerhub_pull_count": {
+     "source": "https://hub.docker.com/v2/repositories/",
+     "definition": "all-time pull_count; not a window",
+     "status": {
+      "ok": 19,
+      "not_dockerhub:ghcr.io": 32
+     }
+    },
+    "smithery_use_count": {
+     "source": "frame raw/smithery (the rows the anonymous API served)",
+     "read_state": "PARTIAL"
+    }
+   },
+   "rule": "ordered by standing WITHIN the endpoint's own signal (reach_pct); signals are different units and are never added or converted"
+  },
+  "tier_2_alphabetical_fill": {
+   "n": 2801,
+   "label": "ALPHABETICAL FILL - not a reach signal",
+   "what_it_is": "the remaining plan slots filled in MCP registry listing order, then Docker catalogue order",
+   "listing_order_is_byte_ascending_server_name": {
+    "adjacent_pairs_ascending": 35872,
+    "adjacent_pairs": 35872
+   },
+   "fill_reached": {
+    "last_registry_order": 3179,
+    "last_server_name": "com.backgroundcheckquotes/site",
+    "registry_entries": 35873
+   },
+   "bias_measured": {
+    "io.github.*_share_in_fill": [
+     0,
+     2801
+    ],
+    "io.github.*_share_among_registry_entries_with_a_probeable_endpoint": [
+     11324,
+     21705
+    ],
+    "meaning": "the fill favours reverse-DNS names early in the byte order; it is a deterministic tie-break, not a sample of the registry"
+   }
+  },
+  "github_stars": {
+   "used": false,
+   "why": "api.github.com serves 60 unauthenticated requests/hour; no key is used by rule",
+   "candidates_with_github_repo": 14154,
+   "hours_at_60_per_hour": 235.9
+  }
+ },
+ "probe": {
+  "schema": "csoai.census-probe/0.1",
+  "window": [
+   "2026-09-25T06:38:51Z",
+   "2026-09-25T06:54:10Z"
+  ],
+  "user_agent": "CSOAI-census/0.1 (+https://councilof.ai/census)",
+  "read_state": "PARTIAL",
+  "read_state_rule": "EXHAUSTED only if every planned endpoint was attempted; anything else is PARTIAL",
+  "n_planned": 4376,
+  "n_attempted": 4144,
+  "n_not_attempted": 232,
+  "not_attempted_by_reason": {
+   "robots.txt disallows this path for CSOAI-census": 187,
+   "robots.txt HTTP n: treated as disallow-all (RFC 9309 server error; 429 = slow down)": 45
+  },
+  "states": {
+   "RESPONDED": 2008,
+   "AUTH_REQUIRED": 1428,
+   "NOT_MCP": 346,
+   "UNREACHABLE": 255,
+   "TIMEOUT": 62,
+   "SSE_ENDPOINT_ONLY": 37,
+   "MCP_ERROR": 8
+  },
+  "state_meanings": {
+   "RESPONDED": "answered initialize with an MCP result",
+   "AUTH_REQUIRED": "refused without a credential (401/402/403 or an auth error); no credential was ever sent",
+   "MCP_ERROR": "answered with a JSON-RPC error to initialize",
+   "SSE_ENDPOINT_ONLY": "legacy SSE transport: served an endpoint event; no session was opened",
+   "NOT_MCP": "answered, but not with MCP (HTML, 404, non-JSON-RPC)",
+   "UNREACHABLE": "no usable answer: DNS, TLS, connect failure, or HTTP 5xx",
+   "TIMEOUT": "no answer within 10 s connect / 15 s read"
+  },
+  "states_by_plan_tier": {
+   "reach_signal": {
+    "AUTH_REQUIRED": 511,
+    "RESPONDED": 775,
+    "SSE_ENDPOINT_ONLY": 21,
+    "NOT_MCP": 83,
+    "UNREACHABLE": 72,
+    "TIMEOUT": 28,
+    "MCP_ERROR": 4
+   },
+   "registry_order": {
+    "AUTH_REQUIRED": 917,
+    "MCP_ERROR": 4,
+    "RESPONDED": 1233,
+    "NOT_MCP": 263,
+    "UNREACHABLE": 183,
+    "SSE_ENDPOINT_ONLY": 16,
+    "TIMEOUT": 34
+   }
+  },
+  "attempted_by_ranked_by": {
+   "registry_order:mcp-registry": 2650,
+   "npm_weekly_downloads": 1209,
+   "pypi_downloads_7d": 263,
+   "dockerhub_pull_count": 16,
+   "smithery_use_count": 6
+  },
+  "auth_required_http_status": {
+   "401": 1343,
+   "403": 17,
+   "None": 49,
+   "404": 1,
+   "200": 2,
+   "402": 16
+  },
+  "requests": {
+   "total": 12739,
+   "run1": 12341,
+   "reprobe": 398,
+   "max_to_one_host_run1": 450,
+   "hosts_stopped_by_429": 0
+  },
+  "limits": {
+   "min_interval_s_per_host": 1.0,
+   "connections_per_host": 1,
+   "workers": 32,
+   "connect_timeout_s": 10.0,
+   "read_timeout_s": 15.0,
+   "budget_s": 3600.0,
+   "retries": "at most one: 429/503 after Retry-After (cap 60 s) or a reset connection",
+   "legacy_sse_session_opened": false
+  },
+  "sent_to_endpoints": [
+   "GET /robots.txt (once per host)",
+   "POST initialize",
+   "POST notifications/initialized",
+   "POST tools/list (<= 5 pages)",
+   "DELETE (only when a session id was issued)",
+   "GET with Accept: text/event-stream (legacy SSE; endpoint event only)"
+  ],
+  "never_sent": [
+   "tools/call",
+   "resources/read",
+   "prompts/get",
+   "any credential",
+   "any payment"
+  ],
+  "corrections": [
+   {
+    "what": "re-probe after a client fix: an SSE data line longer than one 64 KiB readline was split and dropped, so large tools/list results over SSE read as no_response",
+    "endpoints_reprobed": 93,
+    "reprobe_window": [
+     "2026-09-25T06:53:43Z",
+     "2026-09-25T06:54:10Z"
+    ],
+    "transitions": {
+     "RESPONDED/no_response -> RESPONDED/ok": 89,
+     "RESPONDED/no_response -> RESPONDED/no_response": 3,
+     "NOT_MCP/None -> NOT_MCP/None": 1
+    },
+    "first_run_kept_as": [
+     "results.run1.jsonl.gz",
+     "summary.run1.json"
+    ]
+   }
+  ],
+  "population_note": "counts are over the attempted endpoints of the top-20% plan (reach-signalled first, then MCP registry listing order). They are not frame totals and not population totals."
+ },
+ "measured_tool_surface": {
+  "over": "RESPONDED endpoints whose tools/list completed (all pages read, status ok)",
+  "responded": 2008,
+  "tools_list_status": {
+   "ok": 1984,
+   "no_response": 3,
+   "auth_required": 17,
+   "error": 4
+  },
+  "per_endpoint_tool_count": {
+   "n": 1983,
+   "p25": 4,
+   "median": 7,
+   "p75": 16,
+   "max": 627,
+   "min": 1,
+   "zero_tools": 0
+  },
+  "per_host_tool_count_best_ranked_endpoint_per_host": {
+   "n": 1781,
+   "p25": 4,
+   "median": 7,
+   "p75": 13,
+   "max": 627,
+   "min": 1,
+   "zero_tools": 0
+  },
+  "per_endpoint_tool_count_excluding_getvda_ai_and_a2awire_com": {
+   "n": 1777,
+   "p25": 4,
+   "median": 7,
+   "p75": 14,
+   "max": 627,
+   "min": 1,
+   "zero_tools": 0
+  },
+  "percentile_method": "nearest rank",
+  "distinct_tool_name_sets": 1701,
+  "largest_identical_tool_name_set": 92,
+  "responded_hosts": 1804,
+  "top_hosts_by_responded_endpoints": [
+   [
+    "a2awire.com",
+    112
+   ],
+   [
+    "nova.civai.co",
+    22
+   ],
+   [
+    "ainetcafe.com",
+    13
+   ],
+   [
+    "apished.com",
+    10
+   ],
+   [
+    "mcp.socialdatax.com",
+    10
+   ]
+  ],
+  "sum_of_tool_counts_is_not_a_population_figure": true,
+  "transport": {
+   "streamable-http": 1155,
+   "streamable-http(sse-response)": 853
+  }
+ },
+ "protocol_version": {
+  "requested": "2025-11-25",
+  "answered": {
+   "2025-11-25": 1419,
+   "2025-06-18": 297,
+   "2025-03-26": 116,
+   "2026-07-28": 95,
+   "2024-11-05": 80,
+   "2025-11-05": 1
+  },
+  "note": "a server answers with the requested version when it supports it, otherwise with one of its own; this distribution is conditional on the request and is not a census of what servers support"
+ },
+ "anomalies": [
+  {
+   "id": "A1",
+   "host": "getvda.ai",
+   "measured": {
+    "responded_subdomains": 94,
+    "responded_endpoints": 94,
+    "answering_protocol_version": {
+     "2026-07-28": 94
+    },
+    "sharing_one_tool_name_set": 92,
+    "that_set": [
+     "invoke",
+     "selftest"
+    ],
+    "that_set_sha256": "683d0c7bbc412ff0c7935b725531ee22c740f8c9cd321f0f7123b2c837ea388d"
+   },
+   "what_we_say": "92 distinct getvda.ai subdomains answered with the identical 2-tool set ['invoke', 'selftest'] and every getvda.ai endpoint answered protocolVersion '2026-07-28' to a request for '2025-11-25'. They are 94 of the 2008 RESPONDED endpoints and the single largest identical tool-name set. Counts per endpoint therefore over-weight one operator.",
+   "what_we_do_not_say": "anything about the operator's intent, or whether the version string is correct"
+  },
+  {
+   "id": "A2",
+   "host": "a2awire.com",
+   "measured": {
+    "responded_endpoints": 112,
+    "tool_name_sets": [
+     [
+      "4d7c4b53ad26763cb42a26020396d66d388c73c0594bcf134898b2f3472cc147",
+      59,
+      16
+     ],
+     [
+      "ecd9a747a0ff84d043eb1d5bf43effdd42187dfd31bfc8c81fb1d5c7fa39a2cc",
+      50,
+      23
+     ],
+     [
+      "eb7b765b6268978999f24bfbb9a0b6a9ba0d319f6ba58ec90328dfecce920d99",
+      1,
+      10
+     ],
+     [
+      "c8f80e1b11a34e8091e352d6ec5c03d87d3060f1aaa431248cf69290de00ffb3",
+      1,
+      5
+     ],
+     [
+      "8d011cf4b9082b78a37a2edc99c71c9cb9707da46f34eb8c83f985a44b5e03d9",
+      1,
+      4
+     ]
+    ]
+   },
+   "what_we_say": "109 of 112 a2awire.com endpoints fall into two tool-name sets (59 with 16 tools, 50 with 23 tools). One host is the largest single contributor of RESPONDED endpoints.",
+   "correction_to_the_brief": "the lane brief said '109/112 identical'; the rows show 109/112 in TWO identical sets, not one"
+  },
+  {
+   "id": "A3",
+   "stage": "UNREACHABLE by cause; every DNS failure happened at the robots.txt fetch, the first request to a host",
+   "measured": {
+    "unreachable": 255,
+    "by_cause": {
+     "dns: name does not resolve (EAI_NONAME / EAI_NODATA)": 231,
+     "tls handshake failed at robots.txt fetch": 10,
+     "HTTP 5xx on the MCP request": 9,
+     "connect failed at robots.txt fetch": 4,
+     "dns: temporary resolver failure (EAI_AGAIN)": 1
+    },
+    "dns_name_does_not_resolve": 231,
+    "dns_name_does_not_resolve_hosts": 182,
+    "dns_temporary_failure": 1,
+    "of_which_ours_api_meok_ai": 39
+   },
+   "what_we_say": "231 attempted endpoints are listed at hostnames that do not resolve (EAI_NONAME/EAI_NODATA at the robots.txt fetch); 1 more had a temporary resolver failure and is not counted as dead. 39 of the 231 are our own (see own_entries)."
+  }
+ ],
+ "own_entries": {
+  "statement": "39 remote endpoints published under our own namespace io.github.CSOAI-ORG in the official MCP registry point at api.meok.ai, which does not resolve in DNS. They were probed like everyone else's and are counted in UNREACHABLE above. This is our defect, not the registry's.",
+  "hosts_matching": [
+   "meok.ai",
+   "csoai.org",
+   "councilof.ai"
+  ],
+  "states": {
+   "UNREACHABLE": 39,
+   "RESPONDED": 1
+  },
+  "dead_endpoints": 39,
+  "dead_registry_ids": 39,
+  "dead_registry_ids_in_io.github.CSOAI-ORG": 39,
+  "answering": [
+   "https://councilof.ai/mcp"
+  ],
+  "why_not_fixed": "Deprecating or deleting any io.github.CSOAI-ORG/* entry requires GitHub authentication as an Owner of the organisation; a domain proof for councilof.ai grants ai.councilof/* only. The reasons, from the registry's own source, are recorded in the supersession record.",
+  "supersession_record": {
+   "url": "https://councilof.ai/interop/mcp-registry-2026-09-23/supersession.json",
+   "repo_path": "public/interop/mcp-registry-2026-09-23/supersession.json",
+   "sha256": "7802f6641c41ce2deb8b3c16cebfa064cd1dd86638d2567d7d08a3e20ef9fb81",
+   "record_id": "mcp-registry-supersession-2026-09-23",
+   "its_finding_F1": "39 of the 40 entries that declare a remote endpoint point at a host with no DNS record at all."
+  },
+  "exclude_to_remove_our_own": "drop rows whose host is api.meok.ai or councilof.ai"
+ },
+ "not_evidence_of": [
+  "that any server is safe, secure, correct, maintained, or fit for any purpose",
+  "the quality of any server or its tools, or that a tool does what its name says",
+  "endorsement, ranking, grading, or approval of any server or operator",
+  "anything about the ~80% of the frame outside the top-20% plan, or the 232 planned endpoints not attempted",
+  "a population total of MCP servers or endpoints: the frame is PARTIAL (Smithery) and the probe is PARTIAL",
+  "reachability at any other moment or from any other network location",
+  "what AUTH_REQUIRED servers expose behind their credential"
+ ],
+ "published_files": {
+  "probe/results.public.jsonl.gz": {
+   "sha256": "f29c89c910f1677ab570de701494415806a9796770323e5c50a79fc2664b2bb3",
+   "bytes": 180722,
+   "rows": 4144
+  },
+  "probe/not_attempted.jsonl.gz": {
+   "sha256": "663cc83fa46fbe103f69a540c6ab1ddcc43374328e0b5e735c1f7b68b14a6be1",
+   "bytes": 3587,
+   "rows": 232
+  },
+  "frame/summary.json": {
+   "sha256": "ce4bb52a70a6077c3f2ab004e04da616578bcad362bf712e86f63c9da48428e2",
+   "bytes": 5534
+  },
+  "frame/plan-top20.json": {
+   "sha256": "493c81c10a2b91c0707e2df3e6e6c07f614898d881282ae18766b703c8d53565",
+   "bytes": 2900
+  },
+  "probe/summary.json": {
+   "sha256": "991ef00bf40c6c56960ff08110fdf3ebceb366f5d1f8b15aadf3f85cb8ef9ae1",
+   "bytes": 5650
+  }
+ },
+ "hf_dataset": "https://huggingface.co/datasets/csoai/mcp-remote-census",
+ "verify": {
+  "signature": "record.signed.json: canonicalise its payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.json); verify signature.sig_ed25519 (hex) with the #board-attestation-1 Ed25519 key in https://csoai.org/.well-known/did.json",
+  "timestamp": "record.json.ots is an OpenTimestamps proof over sha256(record.json). When published it was a PENDING calendar commitment; `ots upgrade` then `ots verify record.json.ots` against a Bitcoin node decides whether it has become a Bitcoin attestation",
+  "files": "sha256 of every published file is in published_files and is pinned by the signature through record.json"
+ }
+}

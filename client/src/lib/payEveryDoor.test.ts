@@ -18,6 +18,7 @@ import {
   listingFor,
   payDoor,
   quoteDoor,
+  relayedFetch,
   remainingDoors,
   retryDoorWithPayment,
   sameResource,
@@ -136,6 +137,29 @@ describe("the door list is the manifest, never a typed list", () => {
     const q = await quoteDoor(door(), missing);
     expect(q.kind).toBe("no-challenge");
     if (q.kind === "no-challenge") expect(q.detail).toContain("unknown_obligation");
+  });
+});
+
+describe("a relayed quote reads exactly like a direct one", () => {
+  it("replays the door's own 402 body through quoteDoor to the same challenge", async () => {
+    const direct = await quoteDoor(door(), (async () => jsonResponse(402, PAYMENT_REQUIRED)) as unknown as typeof fetch);
+    const replay = relayedFetch({ url: door().url, http: 402, body: PAYMENT_REQUIRED });
+    expect(replay).not.toBeNull();
+    const relayed = await quoteDoor(door(), replay!);
+    expect(relayed).toEqual(direct);
+    expect(relayed.kind).toBe("challenge");
+  });
+
+  it("keeps a non-402 answer's status and error text", async () => {
+    const q = await quoteDoor(door(), relayedFetch({ url: door().url, http: 404, body: { error: "unknown_obligation" } })!);
+    expect(q.kind).toBe("no-challenge");
+    if (q.kind === "no-challenge") expect(q.detail).toContain("HTTP 404: unknown_obligation");
+  });
+
+  it("returns null (ask the door directly) when the relay has no status for it", () => {
+    expect(relayedFetch(undefined)).toBeNull();
+    expect(relayedFetch({ url: door().url, http: null, body: null, error: "timeout" })).toBeNull();
+    expect(relayedFetch({ url: door().url, http: null, body: null, skipped: "not a door on this origin" })).toBeNull();
   });
 });
 

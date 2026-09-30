@@ -9,8 +9,10 @@ const AXES = [...AXES_A, ...AXES_B, ...AXES_FIN];
 describe("the badge's public_leader_count is derived, not typed", () => {
   it("matches what the board serves today", () => {
     // Live 2026-09-06: /api/gspc totals.public_leader_count = 3, and the badge typed 3.
-    // The value was right; nothing computed it.
-    expect(publicLeaderCount(AXES)).toBe(3);
+    // The value was right; nothing computed it. 2026-09-27: the per-item rows were published and
+    // six carded axes gained a leader read from them (governance, continuity, provenance,
+    // conformance, openness, care) — 3 + 6 = 9.
+    expect(publicLeaderCount(AXES)).toBe(9);
   });
 
   it("counts only model-comparison axes that still carry a leader after both exclusions", () => {

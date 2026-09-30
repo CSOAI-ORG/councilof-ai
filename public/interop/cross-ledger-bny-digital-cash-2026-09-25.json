@@ -1,0 +1,86 @@
+{
+  "schema": "csoai.cross-ledger-supply/0.2",
+  "family": "csoai.cross-ledger-supply (0.1 = USDC pilot; 0.2 adds products, issuer_reported, reconciliation)",
+  "status": "measured read; signature and timestamp are sidecar files",
+  "writes_board": false,
+  "kind": "deterministic-facts (per-read evidence labelled; see evidence_kind_legend)",
+  "asset_key": "bny-digital-cash",
+  "asset": "BNY digital cash / tokenized deposits",
+  "issuer": "BNY",
+  "question": null,
+  "as_of": "2026-09-25T11:19:07Z",
+  "started_at": "2026-09-25T11:19:07Z",
+  "finished_at": "2026-09-25T11:19:10Z",
+  "reader": "scripts/readers/cross_ledger_funds.py",
+  "registry": "scripts/readers/cross_ledger_assets.json",
+  "registry_sha256": "36a8b3afee928b71418e04c4066a2940fdb30d80415fb1939636e01ceecd23dd",
+  "issuer_list_evidence": {
+    "page": "https://www.bny.com/corporate/global/en/about-us/newsroom/company-news/bny-extends-digital-cash-capabilities-for-institutional-clients.html",
+    "url": "https://www.bny.com/corporate/global/en/about-us/newsroom/company-news/bny-extends-digital-cash-capabilities-for-institutional-clients.html",
+    "fetched_at": "2026-09-25T11:19:07Z",
+    "http_status": 200,
+    "final_url": "https://www.bny.com/corporate/global/en/about-us/newsroom/company-news/bny-extends-digital-cash-capabilities-for-institutional-clients.html",
+    "sha256": "db42c68aecb096301f346fb94420fcf772131b8e8ac039f5737fc7be6f402445",
+    "bytes": 163851,
+    "parser": "permissioned_statement",
+    "state": "PERMISSIONED_NOT_READABLE",
+    "issuer_sentence_found": true,
+    "issuer_sentence": "private, permissioned blockchain",
+    "issuer_sentence_context": "This capability operates on BNY’s private, permissioned blockchain and is governed by the company’s established risk, compliance, and control frameworks."
+  },
+  "issuer_list_rows": [],
+  "evidence_kind_legend": {
+    "STATE_PROOF_VERIFIED": "A Merkle proof returned by the node was verified by this reader against the stateRoot of a block header whose hash this reader recomputed from the header fields (EIP-1186), and the proven value equals the plain eth_call answer. The header itself is not checked against consensus (no light client); on an L2 it is the L2's header and nothing here checks it against L1 settlement. A second operator's copy of the same block is compared and recorded.",
+    "STATE_PROOF_RECORDED": "A proof was returned and its bytes kept, but it was not fully verified here — either it failed, or it verified against a stateRoot whose block hash could not be recomputed from the returned header fields (chain-specific header format), so the stateRoot is not bound to the block hash here. The reason is in the row.",
+    "OPERATOR_API": "One operator's API answer. Not a proof. Where a second independent operator exists it is read too and two_operators_agree is recorded — agreement between operators is still not a proof.",
+    "UNCHECKABLE": "The read failed; the HTTP status or error is recorded. Never a zero, never 'absent'.",
+    "REJECTED": "The endpoint answered but the on-ledger identity (symbol / asset code / metadata symbol) is not the product ticker the issuer page names for that deployment; no supply is recorded against the product."
+  },
+  "two_operators_agree_legend": {
+    "true": "an independent second operator returned the same supply (at the same pinned height where the ledger allows pinning)",
+    "false": "an independent second operator returned a different supply at the same pinned height",
+    "NOT_COMPARABLE": "the second read differed but the ledger/API cannot pin a height, so the two reads are at different heights",
+    "NOT_TRIED": "no keyless second operator was found or the second read failed (reason in the row)"
+  },
+  "per_ledger": [],
+  "rows": [],
+  "listed_not_read": [],
+  "sum_by_evidence_kind": {},
+  "sum_rule": "per product and per evidence kind only. No cross-product, cross-kind or cross-issuer total is given.",
+  "issuer_reported": [],
+  "reconciliation_state": "NOT_APPLICABLE_NOT_READ",
+  "reconciliation": {
+    "state": "NOT_APPLICABLE_NOT_READ",
+    "why": "no public-ledger deployment to read",
+    "transfer_agent_named_by_issuer_filing": null,
+    "public_transfer_agent_record_found": false,
+    "meaning": "the on-chain supply below has not been reconciled against the controlling record; until it is, no statement of ownership, AUM or NAV follows from it"
+  },
+  "not_evidence_of": [
+    "AUM, NAV, ownership, redeemability, fund compliance",
+    "settlement finality, reserves, backing, or the value of anything",
+    "the fund's or bank's controlling record (transfer-agent register / deposit ledger) — not read, not reconciled",
+    "circulating or investor-held supply (issued supply only; no holder, treasury or module balance is excluded)",
+    "that one ledger's token is interchangeable with another's — only what each ledger's state says",
+    "any relationship between CSOAI and the issuer: target is not client, public evidence is not private connectivity"
+  ],
+  "relationship": "PUBLIC_EVIDENCE_TARGET_NOT_CLIENT — no client, partner or Alliance relationship is stated or implied",
+  "honesty": "An on-chain supply read is not AUM, NAV, ownership, settlement or compliance. OPERATOR_API is one operator's answer; two operators agreeing is still not a proof. STATE_PROOF_VERIFIED means a Merkle proof was checked here against a header's stateRoot — the header was not checked against consensus. We measure and sign; we never tokenize, custody or sell an instrument. No investment advice.",
+  "iso20022_camt053_shape": {
+    "what_this_is": "A field mapping only: each per-ledger read laid out in the shape of an ISO 20022 camt.053 (BankToCustomerStatement) closing-balance row, the shape a reconciliation reads. No conformance is claimed; no message is produced or validated against the XSD.",
+    "field_map": {
+      "Stmt/Acct/Id/Othr/Id": "deployment_id (as the issuer page lists it)",
+      "Stmt/Acct/Svcr": "ledger (an analogy, not a role)",
+      "Stmt/Bal/Tp/CdOrPrtry/Cd": "CLBD (closing booked) — here: issued supply at the recorded height",
+      "Stmt/Bal/Amt": "supply_decimal (token units, not currency; not NAV)",
+      "Stmt/Bal/Amt/@Ccy": "UNMAPPED — a fund share or deposit token has no ISO 4217 code here; none is chosen",
+      "Stmt/Bal/Dt/DtTm": "observed_at",
+      "Stmt/ElctrncSeqNb": "height.number",
+      "Stmt/AddtlStmtInf": "product + evidence_kind",
+      "Stmt/Ntry": "UNMAPPED — no entries are read; balance-only snapshot"
+    },
+    "rows": [],
+    "statement_date": "2026-09-25"
+  },
+  "request_log": []
+}

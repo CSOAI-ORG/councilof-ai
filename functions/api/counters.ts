@@ -46,14 +46,13 @@
  * This endpoint has no state of its own — edit the artifact, commit, deploy.
  */
 
-import boardSigned from "../../public/signed/gspc-board.signed.json";
-import boardStatus from "../../public/signed/gspc-board.status.json";
 import regulatoryInventory from "../../public/interop/regulatory-inventory.json";
 import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
+import { crosscheckBoardSnapshot } from "./_board_snapshot";
 import { AXES as REGISTER_ROWS, AXIS_REGISTER_SOURCE } from "./_axis_register";
 
 /** How a number was obtained. Never inferred from the value, never collapsed. */
@@ -97,17 +96,13 @@ const counter = (
 });
 
 // ── sources, named once ──────────────────────────────────────────────────────
-const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,c,fin}.ts (the arrays /api/gspc derives from)";
 const SRC_REGULATORY_INVENTORY = "public/interop/regulatory-inventory.json";
 
 // ── the board's own date-of-record ───────────────────────────────────────────
-// This artifact carries no ISO instant. Its honest date-of-record is the measurement
-// stamp it was signed over, so that string is quoted VERBATIM rather than parsed into
-// something that would look more precise than it is.
-const boardTotals = (boardSigned as any).totals ?? {};
-const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
-const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
+// Read from the NEWEST signed freeze (functions/api/_board_snapshot.ts). Its honest
+// date-of-record is the measurement stamp it was signed over, so that string is quoted
+// VERBATIM rather than parsed into something that would look more precise than it is.
 
 // ── live derivation, so snapshot drift is published rather than inherited ────
 // /api/gspc computes its totals from these arrays at request time; the signed file is
@@ -117,9 +112,16 @@ const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
-const boardCountsAgree =
-  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
-const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
+// Same comparison /api/state publishes — one implementation, so the two cannot disagree.
+const boardCrosscheck = crosscheckBoardSnapshot({
+  axis_slots: liveAxisSlots,
+  measured_axes: liveMeasuredAxes,
+  unmeasured_axes: liveAxisSlots - liveMeasuredAxes,
+});
+const boardMeasuredOn: string | null = boardCrosscheck.as_of;
+const boardCountsAgree = boardCrosscheck.counts_agree;
+const boardAgrees = boardCrosscheck.agrees;
+const boardClaimState = boardCrosscheck.claim_state;
 const regulatoryCounts = (regulatoryInventory as any).counts ?? {};
 const regulatoryAsOf: string | null = (regulatoryInventory as any).as_of ?? null;
 const frozenAt: string | null = (regulatoryInventory as any).frozen_provisions?.frozen_at ?? null;
@@ -279,21 +281,23 @@ export const onRequestGet: PagesFunction = async () => {
         "snapshot of that same computation. Both are computed and compared here so drift is " +
         "published rather than silently inherited by whichever surface a reader opened.",
       live_source: SRC_AXES,
-      signed_source: SRC_BOARD,
+      signed_source: boardCrosscheck.source,
+      signed_selected_by: boardCrosscheck.selected_by,
+      signed_frozen_at: boardCrosscheck.frozen_at,
       live_axis_slots: liveAxisSlots,
       live_measured_axes: liveMeasuredAxes,
-      signed_axis_slots: boardTotals.axes ?? null,
-      signed_measured_axes: boardTotals.measured_axes ?? null,
+      signed_axis_slots: boardCrosscheck.axis_slots,
+      signed_measured_axes: boardCrosscheck.measured_axes,
       signed_snapshot_counts_agree: boardCountsAgree,
       signed_snapshot_agrees: boardAgrees,
       signed_snapshot_claim_state: boardClaimState,
-      signed_snapshot_status_source: "public/signed/gspc-board.status.json",
+      signed_snapshot_status_source: boardCrosscheck.status_source,
       on_disagreement:
         "Quote the live counters above and GET /api/gspc — both derive from the committed axis " +
-        "arrays. Do not file the preserved snapshot while signed_snapshot_agrees is false: its " +
-        "counts may drift or its status may record a known claim defect. Read " +
-        "/signed/gspc-board.status.json. Re-signing is an owner MPC ceremony, not a laptop sign " +
-        "and not the Pages 3KB card-sign path.",
+        "arrays. Do not file the newest signed freeze while signed_snapshot_agrees is false: its " +
+        "counts may drift or its status (gspc-board.<date>.status.json) may withdraw reliance. " +
+        "A new freeze is a NEW dated file from scripts/gspc-board-attest.mjs; signed bytes are " +
+        "superseded, never edited.",
     },
 
     note:

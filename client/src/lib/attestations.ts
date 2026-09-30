@@ -593,7 +593,29 @@ export const HOW_TO_VERIFY: RailLink[] = [
   { href: "/root.json", label: "root.json — the one signed root" },
   { href: "/interop/root-witness-latest.json", label: "root-witness-latest.json — the witness sidecar" },
   { href: "/interop/root-witness-pointer.json", label: "root-witness-pointer.json — drift: witnessed bytes vs live bytes" },
+  // Bare `?sha=` answers 400 — see howToVerifyLinks(), which fills a leaf read from the live root.
   { href: "/api/proof?sha=", label: "GET /api/proof?sha=<64-hex> — one free inclusion proof" },
   { href: "/api/corrections", label: "GET /api/corrections — the appended-only ledger" },
   { href: "/.well-known/did.json", label: "did.json — the published keys" },
 ];
+
+const PROOF_DOOR = "/api/proof?sha=";
+
+/**
+ * HOW_TO_VERIFY with the proof door made followable. A bare `/api/proof?sha=` is a 400 by design,
+ * so the link carries a real leaf — the first card_sha256 of the root read on this load — and says
+ * so. With no leaf read, the link goes to root.json (where the leaves are) and the label says the
+ * example leaf is UNCHECKABLE rather than pointing at a request that cannot succeed.
+ */
+export function howToVerifyLinks(rootLeaves: unknown): RailLink[] {
+  const leaf = Array.isArray(rootLeaves)
+    ? rootLeaves.find((x): x is string => typeof x === "string" && /^[a-f0-9]{64}$/i.test(x))
+    : undefined;
+  return HOW_TO_VERIFY.map((l) =>
+    l.href !== PROOF_DOOR
+      ? l
+      : leaf
+        ? { href: `${PROOF_DOOR}${leaf.toLowerCase()}`, label: `GET /api/proof?sha=<64-hex> — one free inclusion proof (example: leaf ${leaf.slice(0, 12)}… of the root read on this load)` }
+        : { href: "/root.json", label: "GET /api/proof?sha=<64-hex> — one free inclusion proof (example leaf UNCHECKABLE: root.json not read on this load — take a card_sha256 from it)" },
+  );
+}

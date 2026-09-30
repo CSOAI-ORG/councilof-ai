@@ -1,0 +1,113 @@
+{
+ "schema": "csoai/intake-census/v0",
+ "kind": "catalogued",
+ "note": "A read of someone else's public catalogue. It signs nothing and measures nothing: every count is the catalogue's own bytes, read keyless from the source below. Signature validity of the Sigstore bundles is UNMEASURED here: bundles were parsed, not verified.",
+ "source": "https://ai-catalog.outshift.io/v1/agents",
+ "operator": "AI Catalog (ai-catalog.outshift.io), powered by the AGNTCY Agent Directory Service",
+ "as_of": "2026-09-28T15:10:55Z",
+ "total_count_declared": 3087,
+ "rows_read": 3087,
+ "unique_record_cids": 3087,
+ "unique_display_names": 1801,
+ "media_type": {
+  "application/agent-skills+gzip": 1717,
+  "application/agent-skills+md": 823,
+  "application/mcp-server-card+json": 544,
+  "application/a2a-agent-card+json": 2,
+  "application/ai-catalog+json": 1
+ },
+ "catalogue_trust_status": {
+  "trusted=True,verified=False": 3060,
+  "trusted=False,verified=False": 27
+ },
+ "records_with_security_scan_metadata": 3027,
+ "publisher_identity_attestations": {
+  "records_by_attestation_count": {
+   "0": 27,
+   "1": 1515,
+   "2": 1545
+  },
+  "total": 4605,
+  "types": {
+   "publisher-identity": 4605
+  },
+  "bundle_media_type": {
+   "application/vnd.dev.sigstore.bundle.v0.3+json": 4605
+  },
+  "with_rekor_inclusion_proof": 4605,
+  "distinct_signing_certificates": 3060,
+  "signing_certificate_oidc_issuer": {
+   "https://token.actions.githubusercontent.com": 3053,
+   "https://github.com/login/oauth": 7
+  },
+  "attestations_by_certificate_subject": {
+   "URI:https://github.com/agntcy/dir/.github/workflows/import-records.yaml@refs/heads/main": 4598,
+   "email:<individual>@cisco.com": 7
+  },
+  "signature_validity": "UNMEASURED"
+ },
+ "mcp_server_cards": {
+  "records": 544,
+  "distinct_server_names": 59,
+  "connection_types": {
+   "stdio": 989,
+   "streamable-http": 241,
+   "sse": 4
+  },
+  "remote_urls": 34,
+  "templated_remote_urls": 13,
+  "concrete_remote_hosts": [
+   "api.githubcopilot.com",
+   "api.thousandeyes.com",
+   "devnet.cisco.com",
+   "gitlab.com",
+   "learn.microsoft.com",
+   "mcp.atlassian.com",
+   "mcp.circleci.com",
+   "mcp.eu.postman.com",
+   "mcp.grafana.com",
+   "mcp.newrelic.com",
+   "mcp.postman.com",
+   "mcp.sentry.dev",
+   "mcp.svc.cloud.microsoft",
+   "myplatform.jfrog.github.io",
+   "sentinel.microsoft.com"
+  ],
+  "hosts_already_in_councilof_mcp_census": [
+   "api.thousandeyes.com",
+   "learn.microsoft.com"
+  ],
+  "hosts_not_in_councilof_mcp_census": [
+   "api.githubcopilot.com",
+   "devnet.cisco.com",
+   "gitlab.com",
+   "mcp.atlassian.com",
+   "mcp.circleci.com",
+   "mcp.eu.postman.com",
+   "mcp.grafana.com",
+   "mcp.newrelic.com",
+   "mcp.postman.com",
+   "mcp.sentry.dev",
+   "mcp.svc.cloud.microsoft",
+   "myplatform.jfrog.github.io",
+   "sentinel.microsoft.com"
+  ],
+  "councilof_mcp_census": {
+   "url": "https://councilof.ai/mcp-servers/index.json",
+   "n_hosts": 5311,
+   "newest_observation": "2026-09-27T03:17:46Z"
+  }
+ },
+ "a2a_agent_cards": [
+  {
+   "name": "Hello World Agent",
+   "card_url": "http://localhost:9999/"
+  },
+  {
+   "name": "a2a-helloworld",
+   "card_url": "http://localhost:8080"
+  }
+ ],
+ "elapsed_s": 114.5,
+ "producer": "scripts/intake/agntcy-ai-catalog-census.py"
+}
