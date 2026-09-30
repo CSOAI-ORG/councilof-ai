@@ -44,7 +44,7 @@ export const navigation: NavGroup[] = [
       { name: 'Signed registers', href: '/registers', description: 'The financial-axis register — a stranger can re-derive every row' },
       { name: 'First-Fine Watch', href: '/first-fine-watch', description: 'Signed enforcement record: EU AI Act fines and the deadlines behind them' },
       { name: 'Financial-axis data feed', href: '/eunomia-data', description: 'x402 data-only lane — enforcement record + deadline calendar, never scores' },
-      { name: 'Financial-axis catalogue', href: '/eunomia-catalog', description: 'Every surface, API, HF mirror, A2A card and MCP tool — catalogued and linked' },
+      { name: 'Financial-axis catalogue', href: '/financial-catalog', description: 'Every surface, API, HF mirror, A2A card and MCP tool — catalogued and linked' },
       { name: 'EU AI Act × CRA watch', href: '/eunomia-crosswalk', description: 'Statute → axis → requirement → exposure, with live source links' },
       { name: 'Financial-axis indices', href: '/eunomia-indices', description: 'The aspirational index axes — UNMEASURED on GET /api/gspc. Do not restore MEASURED-INDEX-v0.1' },
     ],
