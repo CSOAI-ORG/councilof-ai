@@ -857,7 +857,7 @@ export default function ComparisonPage() {
               },
               {
                 q: "What's included in the Prosperity Fund?",
-                a: "The Prosperity Fund pools revenues to provide UBI-style payments to certified analysts, create job opportunities, and support research in AI safety.",
+                a: "The Prosperity Fund pools revenues to provide UBI-style payments to Academy-trained analysts, create job opportunities, and support research in AI safety.",
               },
               {
                 q: "How is CSOAI different from hiring consultants?",

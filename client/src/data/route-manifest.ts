@@ -423,6 +423,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Conformity Route"
  },
  {
+  "path": "/connect",
+  "comp": "ConnectHub",
+  "title": "Connect Hub"
+ },
+ {
   "path": "/connect-ai",
   "comp": "ConnectGSPC",
   "title": "Connect GSPC"
@@ -2285,12 +2290,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/x402-board",
   "comp": "X402Leaderboard",
-  "title": "X402 Leaderboard"
+  "title": "x402 door board"
  },
  {
   "path": "/x402-leaderboard",
   "comp": "X402Leaderboard",
-  "title": "X402 Leaderboard"
+  "title": "x402 door board"
  },
  {
   "path": "/xrpl-attest",

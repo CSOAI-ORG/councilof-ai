@@ -136,7 +136,7 @@ export default function Article50() {
 
         {/* SELF-CONFORMANCE */}
         <div className="mt-10 rounded-2xl border border-emerald-400/30 bg-emerald-500/[0.07] p-6">
-          <h2 className="text-xl font-black tracking-tight">We sell this. Here is us, under it.</h2>
+          <h2 className="text-xl font-black tracking-tight">We measure this. Here is us, under it.</h2>
           <p className="mt-2 text-[13px] text-emerald-100/80 leading-relaxed">
             From 2 August 2026 this page&apos;s obligations apply to csoai.org itself. So the whole
             site is measured the same way we would measure yours:{" "}
