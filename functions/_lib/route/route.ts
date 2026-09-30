@@ -7,6 +7,7 @@
  */
 import { isSeparated } from "../leaderLabel";
 import { buildCandidates } from "./candidates";
+import { applyCensus } from "./census";
 import { decide } from "./decide";
 import { buildRouteRecord, sha256Hex } from "./evidence";
 import { callerPolicy, type PolicyContext } from "./policy";
@@ -36,6 +37,8 @@ export const BANNED_ROUTE_WORDS = /\b(best|safest|recommended|compliant|certifie
 export type RouteDeps = {
   /** Reads /api/gspc; injected so tests and the pod service supply their own board. */
   fetchBoard: () => Promise<unknown>;
+  /** Reads the effect-binding census index (census.ts). Absent => every candidate stays UNMEASURED (NOT_WIRED). */
+  fetchCensus?: () => Promise<unknown>;
   now?: () => Date;
   uuid?: () => string;
 };
@@ -136,6 +139,7 @@ export async function route(args: Record<string, unknown>, deps: RouteDeps): Pro
       board = { state: "UNREACHABLE", axis: null, source: "/api/gspc" };
     }
   }
+  const census = await applyCensus(candidates, deps.fetchCensus);
   const decision = decide(candidates, policy, ctx, objective, board.axis);
   const readAt = (deps.now ?? (() => new Date()))().toISOString();
   const uuid = (deps.uuid ?? (() => crypto.randomUUID()))();
@@ -150,6 +154,7 @@ export async function route(args: Record<string, unknown>, deps: RouteDeps): Pro
       source: board.source,
       board_separation: board.axis?.separation ?? null,
     },
+    census,
     locator: `urn:gspc:route:${uuid}`,
     readAt,
   });

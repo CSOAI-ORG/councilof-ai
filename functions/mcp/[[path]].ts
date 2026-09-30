@@ -28,7 +28,7 @@ import { buildServerCard, serverCardDoor, SERVER_CARD_MEDIA_TYPE } from "./_serv
 import { recordUsage } from "../_lib/usage";
 
 // HTTP runtime and registry descriptor share an identity; npm releases separately.
-export const MCP_HTTP_SERVER_VERSION = "1.4.3";
+export const MCP_HTTP_SERVER_VERSION = "1.4.4";
 const SERVER_INFO = {
   name: "csoai-gspc-mcp",
   version: MCP_HTTP_SERVER_VERSION,

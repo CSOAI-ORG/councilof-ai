@@ -17,12 +17,22 @@ const PORT = Number(process.env.ROUTE_PORT || 8790);
 const OLLAMA = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
 const BOARD_URL = process.env.BOARD_URL || "https://councilof.ai/api/gspc";
 const BOARD_FILE = process.env.BOARD_FILE || "";
+const CENSUS_URL = process.env.CENSUS_URL || "https://councilof.ai/interop/effect-binding-census-index.json";
+const CENSUS_FILE = process.env.CENSUS_FILE || "";
 const RECORDS = process.env.RECORDS_FILE || "";
 const MAX_BODY = 256 * 1024;
 
 async function fetchBoard() {
   if (BOARD_FILE) return JSON.parse(fs.readFileSync(BOARD_FILE, "utf8"));
   const r = await fetch(BOARD_URL, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(15000) });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+/** The signed effect-binding census index the floor reads (functions/_lib/route/census.ts). */
+async function fetchCensus() {
+  if (CENSUS_FILE) return JSON.parse(fs.readFileSync(CENSUS_FILE, "utf8"));
+  const r = await fetch(CENSUS_URL, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(15000) });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 }
@@ -89,7 +99,7 @@ export const server = http.createServer(async (req, res) => {
         return send(res, 503, { state: "UNREACHABLE", source: `${OLLAMA}/api/tags`, error: String(e.message || e) });
       }
     }
-    const out = await route(args, { fetchBoard });
+    const out = await route(args, { fetchBoard, fetchCensus });
     if (out.state === "NOT_ENABLED") return send(res, 501, out);
     if (out.state === "BAD_ARGUMENTS") return send(res, 400, out);
     if (RECORDS && out.record) fs.appendFileSync(RECORDS, JSON.stringify(out.record) + "\n");

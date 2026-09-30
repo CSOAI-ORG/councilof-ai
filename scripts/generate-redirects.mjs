@@ -323,6 +323,7 @@ const EXISTING = [
   // makes the dataset byte-equal to the build before every deploy and holds the deploy otherwise.
   // /cards/card_index.json (above) is an exact rule, so it still wins over the /cards/* splat.
   "/interop/effect-binding-server-probe-2026-09-22.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-22.json  302",
+  "/interop/effect-binding-server-probe-2026-09-30.json  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/interop/effect-binding-server-probe-2026-09-30.json  302",
   "/proofs/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/proofs/:splat  302",
   "/cards/*  https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/cards/:splat  302",
 ];

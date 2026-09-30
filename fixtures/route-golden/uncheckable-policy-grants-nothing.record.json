@@ -82,6 +82,15 @@
    "source": null,
    "board_separation": null
   },
+  "census": {
+   "state": "NOT_WIRED",
+   "source": null,
+   "run_as_of": null,
+   "artifact_sha256": null,
+   "signed_payload_sha256": null,
+   "looked_up": 0,
+   "matched": 0
+  },
   "execution": {
    "mode": "decide_only",
    "status": "n/a",
@@ -112,7 +121,7 @@
   "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
   "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
   "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
-  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
+  "Effect-binding census was not read for this decision (no census source wired): every candidate carries UNMEASURED, so the floor's DIVERGENT rule could not fire.",
   "The task text is carried as its sha256 only; no prompt or response bytes are stored."
  ],
  "supersedes": null,
@@ -125,5 +134,5 @@
   }
  },
  "maintenance": null,
- "event_id": "sha256:1a9649407d861a3f33f32afbc68f16f090db6ab6f0ce18e568278cf464e54ab0"
+ "event_id": "sha256:f35de532fb9c5362527535d787cd2eb4d651fa989eb4178fac559d5a5d0e2242"
 }
