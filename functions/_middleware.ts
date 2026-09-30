@@ -13,12 +13,22 @@
  */
 import { wwwToApex } from "./_lib/wwwRedirect";
 import { negotiateMarkdown, prefersMarkdown } from "./_lib/markdownNegotiation";
+import { serveDashboardSnapshot, snapshotDirectVisit } from "./_lib/dashboardTabSnapshot";
 
-type Ctx = { request: Request; next: () => Promise<Response> };
+type Ctx = {
+  request: Request;
+  next: () => Promise<Response>;
+  env?: { ASSETS?: { fetch: (input: Request | URL | string, init?: RequestInit) => Promise<Response> } };
+};
 
 export const onRequest = async (context: Ctx): Promise<Response> => {
   const redirect = wwwToApex(context.request);
   if (redirect) return redirect;
   if (prefersMarkdown(context.request)) return negotiateMarkdown(context.request, await context.next());
+  // Council OS deep links get the snapshot of the pane they name (./_lib/dashboardTabSnapshot.ts).
+  const direct = snapshotDirectVisit(context.request);
+  if (direct) return direct;
+  const snap = await serveDashboardSnapshot(context.request, context.env?.ASSETS);
+  if (snap) return snap;
   return context.next();
 };

@@ -9,6 +9,7 @@
  * Each with its own lens preset.
  */
 
+import { openAsk } from "@/components/ask/askBus";
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
@@ -69,7 +70,7 @@ export interface CesiumPortalCardProps {
   globeUrl?: string;
   /** Camera target preset (lat/lng/height) — defaults to lens preset */
   preset?: string;
-  /** Topic to pass to the demo-tour via SovereignDock */
+  /** Topic of the guided walk-through (Ask GSPC watch mode) */
   tourTopic?: string;
 }
 
@@ -86,8 +87,9 @@ export default function CesiumPortalCard({
   const tour = tourTopic || meta.tour;
 
   const openTour = () => {
-    // SovereignDock is mounted globally; open it with ?tour=<topic>
-    window.dispatchEvent(new CustomEvent("sov:openDock", { detail: { tour } }));
+    // 30 Sep 2026: SovereignDock (the old listener for "sov:openDock") was never mounted, so this
+    // button did nothing. It now opens Ask GSPC with the guided walk-through (watch mode, opt-in).
+    openAsk(`walk me through it${tour ? ` (${tour})` : ""}`);
   };
 
   return (

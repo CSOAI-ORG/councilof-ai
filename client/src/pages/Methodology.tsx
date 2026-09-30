@@ -5,6 +5,7 @@ import { SpectrumView } from "@/components/gspc/SpectrumView";
 import { setMetaDescription } from "@/lib/utils";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
 import MomentumMethodNote from "@/components/momentum/MomentumMethodNote";
+import DocMeta from "@/components/docs/DocMeta";
 
 /**
  * /methodology — how the instrument works.
@@ -67,6 +68,7 @@ export default function Methodology() {
               measures.
             </span>
           </h1>
+          <div className="max-w-3xl"><DocMeta updated="2026-09-27" slug="methodology" /></div>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Each result reports what a published test found. The record identifies the subject,
             method, test material and limits. Deterministic grading applies the rule consistently

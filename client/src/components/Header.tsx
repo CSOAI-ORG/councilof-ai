@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Award } from 'lucide-react';
-import { NotificationCenter } from '@/pages/NotificationCenter';
-import { useState, useEffect, useRef } from 'react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Award, MessageSquareText } from 'lucide-react';
+// Signed-in only, and it pulls the tRPC notification client: loaded on demand, not in every first paint.
+const NotificationCenter = lazy(() => import('@/pages/NotificationCenter').then((m) => ({ default: m.NotificationCenter })));
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSiteChromeHidden } from '@/lib/osChrome';
 import {
@@ -13,7 +14,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { GlobalSearch } from '@/components/GlobalSearch';
+// 30 Sep 2026 (council-os-watch): the old header search (a model call) is retired. ⌘K / Ctrl-K opens the palette
+// (components/ask/CommandPalette.tsx, loaded on first use) whose search falls through to Ask GSPC.
+import { openAsk, openPalette } from '@/components/ask/askBus';
+import CorpusChip from '@/components/CorpusChip';
 import { PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
@@ -27,7 +31,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -75,7 +78,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
   useEffect(() => {
     setActiveDropdown(null);
     setMobileMenuOpen(false);
-    setSearchOpen(false);
   }, [location]);
 
   // /gspc-verify stays free + loginless — no Sign In chrome on this route.
@@ -211,12 +213,24 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
 
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
             <Button asChild variant="ghost" size="sm" className="hidden rounded-xl font-semibold text-emerald-800 hover:bg-emerald-50 lg:inline-flex"><Link href="/gspc-verify">Verify</Link></Button>
-            <button onClick={() => setSearchOpen(true)} className="rounded-xl p-2 text-slate-500 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search">
-              <Search className="h-5 w-5" />
+            <CorpusChip />
+            <button
+              type="button"
+              onClick={() => openAsk()}
+              className="inline-flex min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-emerald-800/25 px-2.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-50"
+              aria-label="Ask GSPC"
+              title="Ask GSPC"
+              data-testid="ask-launcher"
+            >
+              <MessageSquareText className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden 2xl:inline">Ask</span>
+            </button>
+            <button type="button" onClick={() => openPalette()} className="inline-flex min-h-10 shrink-0 items-center rounded-xl p-2 text-slate-600 transition-colors hover:bg-emerald-50 hover:text-emerald-800" aria-label="Search pages and ask (Ctrl K)" title="Search pages and ask (Ctrl K / ⌘K)" aria-keyshortcuts="Control+K Meta+K" data-testid="palette-launcher">
+              <Search className="h-5 w-5" aria-hidden="true" />
             </button>
             {user ? (
               <>
-                <NotificationCenter />
+                <Suspense fallback={null}><NotificationCenter /></Suspense>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon" className="text-muted-foreground h-9 w-9 rounded-full bg-emerald-50 hover:bg-emerald-100">
@@ -249,7 +263,8 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
           </div>
 
           <div className="md:hidden flex items-center gap-2">
-            <button onClick={() => setSearchOpen(true)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search"><Search className="h-5 w-5" /></button>
+            <button type="button" onClick={() => openAsk()} className="inline-flex min-h-10 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-emerald-900 hover:bg-muted" aria-label="Ask GSPC" data-testid="ask-launcher-mobile"><MessageSquareText className="h-5 w-5" aria-hidden="true" /><span className="sr-only sm:not-sr-only">Ask</span></button>
+            <button type="button" onClick={() => openPalette()} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label="Search pages and ask"><Search className="h-5 w-5" aria-hidden="true" /></button>
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg text-muted-foreground hover:bg-muted" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}>
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -322,7 +337,6 @@ export function Header({ inApp = false }: { inApp?: boolean } = {}) {
           </div>
         )}
       </nav>
-      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 }

@@ -32,6 +32,7 @@ import AXIS_ALIASES from "../mcp/axis-aliases.json";
 import { sharedToolResult, type McpToolResult } from "../mcp/_handlers";
 import { MEASUREMENT_TOOL_NAMES, measurementToolResult } from "../mcp/_measurement";
 import { PAID_TOOL_NAMES, paidToolResult } from "../mcp/_paid";
+import { ROUTER_READ_TOOLS, routerReadResult } from "./talkReads";
 
 type Json = Record<string, unknown>;
 
@@ -194,6 +195,10 @@ export function routeIntent(raw: string): Plan {
   if (/\bx402\b|\bpaid (doors?|endpoints?|apis?)\b|\bpayment doors?\b/.test(t)) return { kind: "tools", intent: "x402 door census", calls: [{ tool: "x402_trust", args: {} }] };
   if (/\bmcp\b.*\b(servers?|trust|census|handshake|ecosystem|internet)\b|\b(servers?|trust|census)\b.*\bmcp\b/.test(t)) return { kind: "tools", intent: "MCP handshake census", calls: [{ tool: "mcp_trust", args: {} }] };
   if (/\bmeasurement (index|capsules?)\b|\bcapsules?\b/.test(t)) return { kind: "tools", intent: "measurement capsule index", calls: [{ tool: "measurement_index", args: {} }] };
+  if (/\b(corrections?|correction ledger|correction history|self[- ]corrections?)\b/.test(t))
+    return { kind: "tools", intent: "correction ledger", calls: [{ tool: "corrections_summary", args: { limit: 5 } }] };
+  if (/\bclaim[- ]maintenance\b|\bclaims? register\b|\bmaintained claims?\b|\bclaim lifecycle\b/.test(t))
+    return { kind: "tools", intent: "Claim Maintenance register", calls: [{ tool: "claim_maintenance_register", args: {} }] };
   if (/\b(public root|merkle root|root\.json|the root)\b/.test(t)) return { kind: "tools", intent: "public root", calls: [{ tool: "get_root", args: {} }] };
 
   const axis = extractAxis(text);
@@ -216,6 +221,7 @@ const rec = (v: unknown): Json | null => (v && typeof v === "object" && !Array.i
 
 /** In-process dispatch to the same functions POST /mcp calls. x_payment never passes. */
 export async function callTool(name: string, args: Json, origin: string): Promise<McpToolResult> {
+  if (ROUTER_READ_TOOLS.has(name)) return (await routerReadResult(name, args, origin)) as unknown as McpToolResult;
   if (!ROUTABLE_TOOLS.has(name)) throw new Error(`not a /mcp tool: ${name}`);
   const clean: Json = {};
   for (const [k, v] of Object.entries(args)) if (k !== "x_payment" && !k.startsWith("_")) clean[k] = v;
@@ -270,6 +276,8 @@ const SHOW: Record<string, string[]> = {
   list_cards: [],
   x402_trust: ["as_of", "headline"],
   mcp_trust: ["as_of", "headline", "partial", "doctrine"],
+  corrections_summary: ["count", "signature_state_reported", "signature_verification", "correction_latency", "recent", "note"],
+  claim_maintenance_register: ["as_of", "totals", "subject_count", "registry_count", "right_of_reply", "does_not_prove", "note"],
   measurement_index: ["as_of", "n_capsules_total", "n_batches", "index_root"],
   verify_capsule: ["reason"],
   server_evidence: ["endpoint", "n_capsules", "by_adapter", "as_of", "other_endpoints_measured_at_this_origin", "note"],
@@ -331,13 +339,14 @@ function renderOutcome(o: ToolOutcome): string {
 }
 
 export const HELP_TEXT =
-  "I answer by calling the same tools as POST /mcp and quoting their output. I can:\n" +
+  "I answer by calling the same tools as POST /mcp (plus two read-only router reads: corrections and Claim Maintenance) and quoting their output. I can:\n" +
   "- **board totals** — \"what does the board say\" (board_totals)\n" +
   "- **one axis** — \"how did safety measure\" (get_axis)\n" +
   "- **a server** — \"is example.com/mcp trustworthy\" → what is measured about it (server_evidence) and the MCP census (mcp_trust)\n" +
   "- **a signed card** — paste a 64-hex card id (verify_card); \"is <hex> included in the root\" (verify_inclusion)\n" +
   "- **the public root** — \"show the public root\" (get_root); **signed cards** — \"list signed cards\" (list_cards)\n" +
   "- **x402 doors** — \"x402 census\" (x402_trust); **capsules** — \"measurement index\" (measurement_index)\n" +
+  "- **corrections** — \"show corrections\" (corrections_summary); **Claim Maintenance** — \"claim maintenance status\" (claim_maintenance_register)\n" +
   "- **paid tools** — commission_card, art50_marking_evidence, rwa_evidence, receipts_batch: I return the 402 challenge; payment comes from your own wallet, never from me.\n\n" +
   "I do not invent numbers, grade trust, or pay for anything.";
 

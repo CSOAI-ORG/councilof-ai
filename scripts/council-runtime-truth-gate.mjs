@@ -534,9 +534,11 @@ for (const [route, comparison] of [
 const sharedTruthSources = [
   "client/src/components/Header.tsx",
   "client/src/components/Footer.tsx",
-  "client/src/components/GlobalSearch.tsx",
+  "client/src/components/ask/AskHost.tsx",
+  "client/src/components/ask/AskPane.tsx",
+  "client/src/components/ask/CommandPalette.tsx",
+  "client/src/components/CorpusChip.tsx",
   "client/src/components/BuiltOnFooter.tsx",
-  "client/src/components/SovereignDock.tsx",
   "client/src/components/CouncilVote.tsx",
   "client/src/components/home/LivingStages.tsx",
   "client/src/lib/demoTour.ts",
@@ -569,8 +571,13 @@ assert.doesNotMatch(
 );
 
 const headerSource = readFileSync("client/src/components/Header.tsx", "utf8");
-assert.match(headerSource, /import \{ GlobalSearch \} from ['"]@\/components\/GlobalSearch['"]/);
-assert.match(headerSource, /<GlobalSearch\b/);
+// 30 Sep 2026: GlobalSearch (a model call via askSovereign) retired; ⌘K opens the command palette,
+// whose search falls through to Ask GSPC (the deterministic talk router). The header must keep both doors.
+assert.match(headerSource, /import \{ openAsk, openPalette \} from ['"]@\/components\/ask\/askBus['"]/);
+assert.match(headerSource, /onClick=\{\(\) => openAsk\(\)\}/);
+assert.match(headerSource, /onClick=\{\(\) => openPalette\(\)\}/);
+assert.match(appSource, /<AskHost \/>/);
+assert.doesNotMatch(headerSource, /askSovereign|GlobalSearch/);
 
 // Audit every local module transitively reachable from a routed page or the
 // shared shell. Direct-page scanning missed copy imported by those pages (for

@@ -31,10 +31,21 @@
  * this file fails the check. It runs in the release gate. The guard's import-walk is being
  * extended to cover gateway fetch calls — the blind spot this version corrects by hand.
  *
- * GLOBAL SURFACE, NOT A ROUTE: the Council Signal (components/SovereignDock.tsx) is mounted
- * site-wide from App.tsx and chats with the live endpoint. It is an AI-system surface; the
- * notice wiring for it is tracked in the Art 50 pack, and it is named here because a registry
- * that only counts routes would miss it.
+ * GLOBAL SURFACE, NOT A ROUTE: Ask GSPC (components/ask/AskPane.tsx, opened from the header, the
+ * ⌘K palette or any page) is mounted site-wide from App.tsx. It is RULE-BASED: it posts to
+ * /api/agui/run, whose deterministic talk router (functions/_lib/talkRouter.ts) and page-move
+ * planner (functions/_lib/uiTools.ts) are keyword and entity matching over signed-record tools.
+ * No model writes its answers or chooses its steps. It is named here because a registry that only
+ * counts routes would miss it.
+ *
+ * THE 2026-09-30 CORRECTION. Version 2.0.0 said the Council Signal (components/SovereignDock.tsx)
+ * was "mounted on every page". It was not mounted anywhere (App.tsx has not imported it since the
+ * shell convergence), and its endpoint /api/orchestrate returned 404. The same audit found
+ * components/GlobalSearch.tsx — the header's ⌘K search — calling the /api/chat model through
+ * askSovereign with no entry in this registry. Both are retired: the file is deleted and ⌘K now
+ * falls through to Ask GSPC. DemoOS (/demo) no longer calls a model either: its questions go to
+ * the same talk router. Anything that adds a model call to these surfaces must register here as
+ * ai_system and mount <AISystemNotice> first.
  */
 
 export type SurfaceNature = "rule_based" | "ai_system" | "unclassified";
@@ -49,11 +60,11 @@ export interface Surface {
 
 
 export const SURFACES: Surface[] = [
-  { route: "/dashboard?tab=home", label: "Council Signal (global) — inside Council OS", nature: "ai_system",
-    mechanism: "The dock sends your message to the configured chat endpoint (/api/chat) and a model writes the reply. It is mounted on every page; the notice below the dock header discloses this at first interaction, per Article 50(1). No Council review is implied.",
-    evidence: ["client/src/components/SovereignDock.tsx", "client/src/lib/sovAsk.ts"] },
+  { route: "/dashboard?tab=home", label: "Ask GSPC (global) — every page and inside Council OS", nature: "rule_based",
+    mechanism: "Questions go to POST /api/agui/run. A deterministic keyword and entity router picks the same signed-record tools POST /mcp serves and quotes their fields with a citation; a question no tool answers is answered 'not measured' with no number. Watch mode (off by default) moves the page with steps chosen by the same kind of fixed rules, each shown, logged and undoable; commit, pay and schedule steps stop at a visible Confirm. No model call exists in this surface's code. Opt-in voice uses the browser's own speech synthesis and recognition.",
+    evidence: ["client/src/components/ask/AskPane.tsx", "client/src/components/talk/TalkPanel.tsx", "client/src/lib/aguiTalk.ts", "client/src/lib/uiActions.ts", "functions/_lib/talkRouter.ts", "functions/_lib/uiTools.ts"] },
   { route: "/", label: "Home + Council Console", nature: "rule_based",
-    mechanism: "The console pattern-matches your question against frozen statute text and renders the matching provision. There is no inference call in the console's code, and nothing you type into it is transmitted or stored. The page also carries an email form posting to /api/subscribe, and — like every page — the global Council Signal, which IS an AI-system surface (see the note at the top of this file).",
+    mechanism: "The console pattern-matches your question against frozen statute text and renders the matching provision. There is no inference call in the console's code, and nothing you type into it is transmitted or stored. The page also carries an email form posting to /api/subscribe, and — like every page — the global Ask GSPC pane, which is rule-based (see the note at the top of this file).",
     evidence: ["client/src/components/SovereignConsole.tsx", "client/src/pages/NewHome-v2.tsx"] },
   { route: "/tour", label: "Guided product tour", nature: "rule_based",
     mechanism: "A scripted walkthrough. Every step, its copy and its ordering are hard-coded in client/src/lib/demoTour.ts; the module contains no fetch, no model call and no network egress of any kind, so the tour shows the same thing to every visitor. It narrates surfaces — it never generates their content.",
@@ -157,9 +168,9 @@ export const SURFACES: Surface[] = [
   { route: "/deepfake-protection", label: "Protect", nature: "rule_based",
     mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
     evidence: ["client/src/pages/Protect.tsx"] },
-  { route: "/demo", label: "DemoOS", nature: "ai_system",
-    mechanism: "The guided demo answers questions by sending your input to the configured /api/chat model endpoint, where a single model writes the answer; no Council review, vote, or signature is implied. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/sovAsk.ts"] },
+  { route: "/demo", label: "DemoOS", nature: "rule_based",
+    mechanism: "CORRECTED 30 Sep 2026 — until then a question typed or spoken during the demo went to the /api/chat model. It now goes to POST /api/agui/run, the deterministic talk router Ask GSPC uses, and the demo reads back the cited tool summaries or says the question is not measured. The scripted steps are hard-coded in demoOsSteps.ts. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/aguiTalk.ts", "functions/_lib/talkRouter.ts"] },
   { route: "/me", label: "CouncilTwin", nature: "rule_based",
     mechanism: "A canvas visualisation plus a passport-minting call to a signing endpoint (sha256 / Ed25519), not a model. No model call exists in this surface's code.",
     evidence: ["client/src/pages/CouncilTwin.tsx"] },
@@ -590,11 +601,11 @@ export const DECLARED_UNCALLED_SDKS = ["@anthropic-ai/sdk", "openai", "@google/g
 export const ROUTES_SCANNED = 311;
 
 /** Distinct components (not routes) whose code calls the live chat endpoint. */
-export const AI_SYSTEM_COMPONENTS = 14;
+export const AI_SYSTEM_COMPONENTS = 12; // 14 on 2026-08-01; SovereignDock (deleted) and DemoOS (router) left on 2026-09-30
 
 /** AI-system routes that mount <AISystemNotice> above the interaction today.
     The rest carry their disclosure in this registry while the component is wired. */
 export const NOTICE_MOUNTED_ROUTES = ["/", "/instrument", "/globe", "/world", "/try", "/scan", "/cyber-scan", "/gods-eye", "/classifier"];
 
-export const REGISTRY_VERSION = "2.0.0";
+export const REGISTRY_VERSION = "2.1.0";
 export const ASSESSED_AT = "2026-08-01";

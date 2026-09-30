@@ -15,7 +15,21 @@
  * reader's own wallet, outside this page. Labels are copied from the tool result, never computed.
  */
 
+import { FRONTEND_TOOLS, FRONTEND_TOOL_NAMES, type FrontendToolName, type PageContext, type StepEffect } from "../../../functions/_lib/uiTools";
+
 export type Json = Record<string, unknown>;
+
+/** A frontend (watch-mode) tool call the run handed to the browser. Executed by lib/uiActions.ts. */
+export type UiStepCall = {
+  id: string;
+  tool: FrontendToolName;
+  argsText: string;
+  args: Json;
+  say: string;
+  effect: StepEffect;
+  confirm: boolean;
+  ended: boolean;
+};
 
 export type Citation = { tool: string; record_id: string | null; url: string | null };
 
@@ -46,6 +60,12 @@ export type TalkRun = {
   confirm: ConfirmRequest | null;
   error?: string;
   result?: Json;
+  /** Frontend tool calls (watch mode), in the order the run sent them. */
+  ui: UiStepCall[];
+  /** AG-UI shared state: STATE_SNAPSHOT replaces it, STATE_DELTA patches it. */
+  state: Json;
+  /** Set when the run would move the page but watch consent was not sent. */
+  consentRequired: { intent: string; steps: number } | null;
 };
 
 export type SseEvent = { event: string | null; data: Json };
@@ -80,7 +100,75 @@ export function parseSse(buffer: string): { events: SseEvent[]; rest: string } {
 }
 
 export function newRun(question: string, id: string): TalkRun {
-  return { id, question, status: "streaming", tools: [], text: "", confirm: null };
+  return { id, question, status: "streaming", tools: [], text: "", confirm: null, ui: [], state: {}, consentRequired: null };
+}
+
+/**
+ * RFC 6902 JSON Patch, the subset AG-UI STATE_DELTA needs (add, replace, remove; "-" appends).
+ * Pure: returns a new document. An operation on a path that does not exist is skipped, never
+ * guessed at (the next STATE_SNAPSHOT resynchronises).
+ */
+export function applyPatch(doc: Json, ops: unknown): Json {
+  const out = JSON.parse(JSON.stringify(doc ?? {})) as Json;
+  for (const raw of Array.isArray(ops) ? ops : []) {
+    const op = rec(raw);
+    const path = str(op?.path);
+    if (!op || path === null || !/^(add|replace|remove)$/.test(String(op.op))) continue;
+    const keys = path.split("/").slice(1).map((k) => k.replace(/~1/g, "/").replace(/~0/g, "~"));
+    if (!keys.length) continue;
+    let node: unknown = out;
+    let ok = true;
+    for (const k of keys.slice(0, -1)) {
+      const next = Array.isArray(node) ? node[Number(k)] : rec(node)?.[k];
+      if (next === undefined || next === null || typeof next !== "object") {
+        if (op.op === "add" && !Array.isArray(node) && rec(node)) {
+          (node as Json)[k] = {};
+          node = (node as Json)[k];
+          continue;
+        }
+        ok = false;
+        break;
+      }
+      node = next;
+    }
+    if (!ok) continue;
+    const last = keys[keys.length - 1];
+    if (Array.isArray(node)) {
+      const i = last === "-" ? node.length : Number(last);
+      if (!Number.isInteger(i) || i < 0 || i > node.length) continue;
+      if (op.op === "remove") node.splice(i, 1);
+      else if (op.op === "add") node.splice(i, 0, op.value);
+      else if (i < node.length) node[i] = op.value;
+    } else if (rec(node)) {
+      const n = node as Json;
+      if (op.op === "remove") delete n[last];
+      else if (op.op === "replace" && !(last in n)) continue;
+      else n[last] = op.value;
+    }
+  }
+  return out;
+}
+
+function uiStepFrom(id: string, name: string, argsText: string, ended: boolean): UiStepCall {
+  let args: Json = {};
+  try {
+    args = rec(JSON.parse(argsText || "{}")) ?? {};
+  } catch {
+    args = {};
+  }
+  const { say, effect, confirm, ...rest } = args;
+  const eff = effect === "commit" || effect === "pay" || effect === "schedule" ? effect : "view";
+  return {
+    id,
+    tool: name as FrontendToolName,
+    argsText,
+    args: rest,
+    say: typeof say === "string" ? say : "",
+    effect: eff,
+    // A commit, pay or schedule step always stops at Confirm, whatever the flag says.
+    confirm: confirm === true || eff !== "view",
+    ended,
+  };
 }
 
 /** Fold one AG-UI event into the run. Pure. Unknown event types leave the run unchanged. */
@@ -88,12 +176,20 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
   const type = str(ev.type);
   switch (type) {
     case "TOOL_CALL_START": {
+      const name = str(ev.toolCallName) ?? "tool";
+      if (FRONTEND_TOOL_NAMES.has(name)) {
+        const id = str(ev.toolCallId) ?? `ui_${run.ui.length + 1}`;
+        if (run.ui.some((u) => u.id === id)) return run;
+        return { ...run, ui: [...run.ui, uiStepFrom(id, name, "", false)] };
+      }
       const id = str(ev.toolCallId) ?? `call_${run.tools.length + 1}`;
       if (run.tools.some((t) => t.id === id)) return run;
       return { ...run, tools: [...run.tools, { id, name: str(ev.toolCallName) ?? "tool", argsText: "", status: "running" }] };
     }
     case "TOOL_CALL_ARGS": {
       const id = str(ev.toolCallId);
+      if (run.ui.some((u) => u.id === id))
+        return { ...run, ui: run.ui.map((u) => (u.id === id ? uiStepFrom(u.id, u.tool, u.argsText + (str(ev.delta) ?? ""), false) : u)) };
       return { ...run, tools: run.tools.map((t) => (t.id === id ? { ...t, argsText: t.argsText + (str(ev.delta) ?? "") } : t)) };
     }
     case "TOOL_CALL_RESULT": {
@@ -123,9 +219,22 @@ export function reduceRun(run: TalkRun, ev: Json): TalkRun {
         : [...run.tools, { id: id ?? `call_${run.tools.length + 1}`, name: patch.name ?? "tool", argsText: patch.argsText ?? "", ...patch, status: "done" as const }];
       return { ...run, tools };
     }
+    case "TOOL_CALL_END": {
+      const id = str(ev.toolCallId);
+      if (!run.ui.some((u) => u.id === id)) return run;
+      return { ...run, ui: run.ui.map((u) => (u.id === id ? uiStepFrom(u.id, u.tool, u.argsText, true) : u)) };
+    }
+    case "STATE_SNAPSHOT":
+      return { ...run, state: rec(ev.snapshot) ?? {} };
+    case "STATE_DELTA":
+      return { ...run, state: applyPatch(run.state, ev.delta) };
     case "TEXT_MESSAGE_CONTENT":
       return { ...run, text: run.text + (str(ev.delta) ?? "") };
     case "CUSTOM": {
+      if (ev.name === "consent_required") {
+        const v = rec(ev.value) ?? {};
+        return { ...run, consentRequired: { intent: str(v.intent) ?? "move the page", steps: typeof v.steps === "number" ? v.steps : 0 } };
+      }
       if (ev.name !== "confirm_required") return run;
       const v = rec(ev.value) ?? {};
       const tools = (Array.isArray(v.tools) ? v.tools : [])
@@ -212,6 +321,14 @@ export const TALK_SUGGESTIONS: { text: string; tool: string }[] = [
 export type StreamOptions = {
   question: string;
   confirmTool?: string[];
+  /** Where the reader is; lets "this" mean the page's subject. */
+  page?: PageContext;
+  /** Declare the watch-mode frontend tools (RunAgentInput.tools), so the run can plan page moves. */
+  declareUi?: boolean;
+  /** Send watch consent: only when the viewer switched watch on in this tab. */
+  watch?: boolean;
+  /** Frontend tool results to report back ({role:"tool"} messages), for the follow-up run. */
+  toolResults?: { toolCallId: string; content: string; error?: string }[];
   signal?: AbortSignal;
   endpoint?: string;
   onEvent: (ev: Json) => void;
@@ -223,9 +340,17 @@ export async function streamRun(o: StreamOptions): Promise<void> {
   const body: Json = {
     threadId: `web-${Date.now().toString(36)}`,
     runId: `run-${Math.random().toString(36).slice(2, 10)}`,
-    messages: [{ id: "m1", role: "user", content: o.question }],
+    messages: [
+      ...(o.question ? [{ id: "m1", role: "user", content: o.question }] : []),
+      ...(o.toolResults ?? []).map((r, i) => ({ id: `t${i + 1}`, role: "tool", toolCallId: r.toolCallId, content: r.content, ...(r.error ? { error: r.error } : {}) })),
+    ],
   };
-  if (o.confirmTool?.length) body.forwardedProps = { confirm: { tools: o.confirmTool, tool: o.confirmTool[0] } };
+  const fp: Json = {};
+  if (o.confirmTool?.length) fp.confirm = { tools: o.confirmTool, tool: o.confirmTool[0] };
+  if (o.page) fp.page = o.page;
+  if (o.declareUi || o.watch) body.tools = FRONTEND_TOOLS;
+  if (o.watch) fp.consent = { watch: true };
+  if (Object.keys(fp).length) body.forwardedProps = fp;
   const f = o.fetchImpl ?? fetch;
   const r = await f(o.endpoint ?? "/api/agui/run", {
     method: "POST",
