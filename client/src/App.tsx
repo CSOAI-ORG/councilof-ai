@@ -818,6 +818,7 @@ function App() {
                   <Route path="/first-fine-watch" component={FirstFineWatch} />
                   <Route path="/eunomia-data" component={EunomiaData} />
                   <Route path="/eunomia" component={Eunomia} />
+                  <Route path="/financial-catalog" component={EunomiaCatalog} />
                   <Route path="/eunomia-catalog" component={EunomiaCatalog} />
                   <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
                   <Route path="/eunomia-indices" component={EunomiaIndices} />

@@ -10,6 +10,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { CLAUDE_CODE_CMD, CURSOR_JSON, FREE_DOOR, ONE_LINE, TOOLS } from "@/pages/ConnectClaude";
+import NextSteps from "./NextSteps";
 import { A2A_ENDPOINT, AGENT_CARD, FULL_DOOR, PLATFORMS, VERIFY_OFFLINE } from "@/pages/ConnectHub";
 
 function CopyLine({ label, text, testId }: { label: string; text: string; testId?: string }) {
@@ -123,12 +124,14 @@ export default function ConnectPane() {
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-muted-foreground">
-        How an agent uses all of this, in one page:{" "}
-        <Link href="/agents/" className="font-bold text-emerald-800 underline underline-offset-4">
-          For agents →
-        </Link>
-      </p>
+      <NextSteps
+        testId="connect-next"
+        steps={[
+          { href: "/agents/", title: "Read the agent guide", body: "Every door, tool, skill and paid door, rendered from the machine files." },
+          { href: "/dashboard?tab=route", title: "Try GSPC Route", body: "Decide-only routing over the published measurements; TIE stays TIE." },
+          { href: "/dashboard?tab=home", title: "Ask a first question", body: "“What does the board say?” The answer names the tool and the record." },
+        ]}
+      />
     </div>
   );
 }
