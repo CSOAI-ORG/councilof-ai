@@ -570,6 +570,12 @@ const MACHINE_PATHS = [
   // signed-receipts/v1 conformance kit (28 Sep): the golden vectors a third-party verifier is run against.
   // Its page, /spec/signed-receipts/v1/conformance/, is a static public/*.html and is collected below.
   ["/spec/signed-receipts/v1/conformance/vectors.json", "weekly", "0.6"],
+  // /extension/: the GSPC Verify browser-extension install page. councilof.ai serves it 200 (indexable)
+  // but no App.tsx route or public/*.html produces it in this build, so the parser above cannot see
+  // it; release_guard's known-public baseline learned it live on 30 Sep 2026 and sitemap-source /
+  // sitemap-built held every deploy until it was listed. If the page is ever withdrawn, remove this
+  // line in the same change (a sitemap lists what the edge serves).
+  ["/extension/", "weekly", "0.5"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
