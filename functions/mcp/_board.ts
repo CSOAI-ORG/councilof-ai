@@ -4,6 +4,7 @@
  * Do not edit mcp/gspc-server — four-tool npm package stays honest.
  */
 import { axisSpellings, canonicalAxis, sameAxis } from "./_axis";
+import { corpusNote } from "../_lib/corpusNote";
 
 export const UPSTREAM = "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp";
 
@@ -466,15 +467,49 @@ export async function verifyInclusionTool(origin: string, args: Record<string, u
   if (!/^[0-9a-f]{64}$/.test(sha)) {
     return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
   }
+  const path = `/api/proof?sha=${sha}`;
+  let status = 0;
+  let d: Record<string, unknown> | null = null;
   try {
-    const d = (await fetchOriginJson(origin, `/api/proof?sha=${sha}`)) as Record<string, unknown>;
-    if (d.kind === "inclusion") return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
-    if (d.error === "not_found") return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
-    return { state: "UNCHECKABLE", sha256: sha, reason: d.reason ?? "unexpected proof body", not_a_certification: true };
-  } catch (e) {
-    if (isHttp404(e)) {
-      return { state: "INVALID", sha256: sha, reason: "not a leaf", not_a_certification: true };
+    const r = await fetch(`${origin}${path}`, { headers: { accept: "application/json" } });
+    status = r.status;
+    try {
+      d = (await r.json()) as Record<string, unknown>;
+    } catch {
+      d = null;
     }
-    return { ...unreachablePayload(origin, `/api/proof?sha=${sha}`, e), state: "UNCHECKABLE", sha256: sha };
+    if (!r.ok && status !== 404) throw new Error(`GET ${origin}${path} returned HTTP ${status}`);
+  } catch (e) {
+    return { ...unreachablePayload(origin, path, e), state: "UNCHECKABLE", sha256: sha };
   }
+  if (status === 200 && d?.kind === "inclusion") {
+    return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+  }
+  if (status === 404 || d?.error === "not_found") {
+    // INVALID stays INVALID (the enum is fixed). The corpus note says what it means: not a leaf of
+    // THIS root, which covers one corpus only. /api/proof carries it; an older deploy that does not
+    // is answered with the same helper, so the sentence never depends on which side shipped first.
+    const note =
+      d && typeof d.corpus_note === "string"
+        ? {
+            corpus: d.corpus,
+            corpus_note: d.corpus_note,
+            ...(d.verify_with ? { verify_with: d.verify_with } : {}),
+            ...(d.mill_card_root ? { mill_card_root: d.mill_card_root } : {}),
+            ...(d.anchoring ? { anchoring: d.anchoring } : {}),
+          }
+        : await corpusNote(sha, (p) => fetch(`${origin}${p}`), {
+            card_count: typeof d?.card_count === "number" ? d.card_count : null,
+            as_of: typeof d?.as_of === "string" ? d.as_of : null,
+          });
+    return {
+      state: "INVALID",
+      sha256: sha,
+      reason: (d?.reason as string) ?? "not a leaf",
+      merkle_root: d?.merkle_root ?? null,
+      ...note,
+      not_a_certification: true,
+    };
+  }
+  return { state: "UNCHECKABLE", sha256: sha, reason: d?.reason ?? "unexpected proof body", not_a_certification: true };
 }

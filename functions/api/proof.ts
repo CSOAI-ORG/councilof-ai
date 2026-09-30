@@ -14,6 +14,7 @@ import {
   type X402Env,
 } from "./_x402";
 import { PROOF_BUNDLE_DESCRIPTION } from "./_x402_descriptions";
+import { corpusNote } from "../_lib/corpusNote";
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -229,6 +230,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   const index = hashes.indexOf(sha);
   if (index < 0) {
+    // Not a leaf is not "forged": say which corpus this root covers and, when the sha is a known id of
+    // another corpus, where that card is verified instead (functions/_lib/corpusNote.ts; 2026-09-30).
+    const note = await corpusNote(sha, (p) => fetch(u(p)), root);
     return json(
       {
         schema: "csoai.public-root-proof/0.1",
@@ -239,6 +243,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         reason: "sha is not a leaf of the last published root (trail is that root only)",
         merkle_root: root.merkle_root || null,
         as_of: root.as_of || null,
+        card_count: root.card_count ?? null,
+        ...note,
       },
       404,
     );

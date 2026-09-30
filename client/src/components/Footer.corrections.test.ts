@@ -38,7 +38,10 @@ describe("footer Corrections link lands on a readable page", () => {
 
   it("is wired as a primary, prerendered, titled page — not archived, not redirected", () => {
     expect(primary).toMatch(/^\s*"\/corrections",/m);
-    expect(prerender).toMatch(/CLIENT_ONLY_FUNCTION_ROUTES = new Set\(\[[\s\S]*?"\/corrections",/);
+    // Snapshotted with its entries since 2026-09-30 (a no-JS reader got an empty 11 KB shell):
+    // listed among the routes that must prerender, and absent from the client-only set.
+    expect(prerender).toMatch(/"\/corrections", "\/census",/);
+    expect(prerender).not.toMatch(/CLIENT_ONLY_FUNCTION_ROUTES = new Set\(\[[^\]]*?"\/corrections\/?",/);
     expect(seoHead.routes["/corrections"]?.title).toBeTruthy();
     for (const from of ["/corrections", "/corrections/"]) {
       const rule = redirects.split("\n").find((l) => new RegExp(`^\\s*"${from.replace(/\//g, "\\/")}\\s`).test(l));
