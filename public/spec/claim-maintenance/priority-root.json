@@ -1,7 +1,7 @@
 {
   "category": "Claim Maintenance",
   "domain": "category-contribution-priority",
-  "leaf_count": 5,
+  "leaf_count": 6,
   "leaf_rule": "leaf = SHA256(0x00 || UTF8(public_path) || 0x00 || snapshot_sha256_bytes); leaves sorted lexicographically by public_path",
   "leaves": [
     {
@@ -9,15 +9,40 @@
       "full_stack_collision_count": 0,
       "inclusion_proof": [
         {
-          "sha256": "249fbd267b79ddab625287d659c381e077bbdf4ec072650a085c763be66bd3a8",
+          "sha256": "75e657da75d81345f50e1ef938b741b6397c34f912c09d6ba915606798c126d0",
           "side": "right"
         },
         {
-          "sha256": "9f07a9b8a88549e869ddeef0d6be31c8f7dc6fac1378bf0a8d9cff7c9414f902",
+          "sha256": "eda1b75b44208e8eb4ea81cbe62772bbd5c036944a8acde51c1d77104dfd3cce",
           "side": "right"
         },
         {
-          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "sha256": "ca43fd6fb03d18b692914800d144770f5e83b6fda84f99e9d9067ca7e4ccf19c",
+          "side": "right"
+        }
+      ],
+      "inclusion_verified": true,
+      "leaf_hash": "c858e3c4218033dfe2899e0fd885bd39e7959c75d2c7c82b80772b01273659c7",
+      "market_signal_count": 49,
+      "max_single_signal_overlap_fraction": "6/16",
+      "path": "/spec/claim-maintenance/priority-snapshots/2026-09-30-1bafaf26609f.json",
+      "reaction_sha256": "1bafaf26609f19ab9315ed8b307ef960419142a6b464906eb2838e282a1f57ab",
+      "sha256": "6285b1684078cb27fae4a9ac5c2c45c052c0480c1bd9a460d2d72d25b6308642"
+    },
+    {
+      "bytes": 6677,
+      "full_stack_collision_count": 0,
+      "inclusion_proof": [
+        {
+          "sha256": "c858e3c4218033dfe2899e0fd885bd39e7959c75d2c7c82b80772b01273659c7",
+          "side": "left"
+        },
+        {
+          "sha256": "eda1b75b44208e8eb4ea81cbe62772bbd5c036944a8acde51c1d77104dfd3cce",
+          "side": "right"
+        },
+        {
+          "sha256": "ca43fd6fb03d18b692914800d144770f5e83b6fda84f99e9d9067ca7e4ccf19c",
           "side": "right"
         }
       ],
@@ -34,15 +59,15 @@
       "full_stack_collision_count": 0,
       "inclusion_proof": [
         {
-          "sha256": "75e657da75d81345f50e1ef938b741b6397c34f912c09d6ba915606798c126d0",
-          "side": "left"
-        },
-        {
-          "sha256": "9f07a9b8a88549e869ddeef0d6be31c8f7dc6fac1378bf0a8d9cff7c9414f902",
+          "sha256": "16e88647366ec07319f892d37bc57fbd7eb4ac32d95a27c0aa6972885ce03872",
           "side": "right"
         },
         {
-          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "sha256": "0fc40af40e5f8d7eb7ee31bfcc7acc1ba64082985a8ff9dda618077d0b312d2e",
+          "side": "left"
+        },
+        {
+          "sha256": "ca43fd6fb03d18b692914800d144770f5e83b6fda84f99e9d9067ca7e4ccf19c",
           "side": "right"
         }
       ],
@@ -59,15 +84,15 @@
       "full_stack_collision_count": 0,
       "inclusion_proof": [
         {
-          "sha256": "bad2b1bb6ba2397961122a119f82c8a6f159669f5a58955ea8337f6621872c57",
-          "side": "right"
-        },
-        {
-          "sha256": "65ca3e851945a1928cf1a429781ca99d8ed2c24db5df7e8238f12e829f14723d",
+          "sha256": "249fbd267b79ddab625287d659c381e077bbdf4ec072650a085c763be66bd3a8",
           "side": "left"
         },
         {
-          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "sha256": "0fc40af40e5f8d7eb7ee31bfcc7acc1ba64082985a8ff9dda618077d0b312d2e",
+          "side": "left"
+        },
+        {
+          "sha256": "ca43fd6fb03d18b692914800d144770f5e83b6fda84f99e9d9067ca7e4ccf19c",
           "side": "right"
         }
       ],
@@ -84,16 +109,16 @@
       "full_stack_collision_count": 0,
       "inclusion_proof": [
         {
-          "sha256": "16e88647366ec07319f892d37bc57fbd7eb4ac32d95a27c0aa6972885ce03872",
-          "side": "left"
-        },
-        {
-          "sha256": "65ca3e851945a1928cf1a429781ca99d8ed2c24db5df7e8238f12e829f14723d",
-          "side": "left"
-        },
-        {
-          "sha256": "41e2c126eaf56f6548ba25ef872b9dfa539aa9492d6e4aacd1a16aeb7dda04cb",
+          "sha256": "d4af4eaee7091be00469b426c06a91f35a4f65836643c4ad282d12fbc9654329",
           "side": "right"
+        },
+        {
+          "sha256": "0dd48d87aa10019178012656a8c58746191e18e14b1fe7fdb409a27da863f035",
+          "side": "right"
+        },
+        {
+          "sha256": "3f42525badf2613fad333949af416e5a591766cb06e0440612fe396f722921d1",
+          "side": "left"
         }
       ],
       "inclusion_verified": true,
@@ -109,15 +134,15 @@
       "full_stack_collision_count": 0,
       "inclusion_proof": [
         {
-          "sha256": "d4af4eaee7091be00469b426c06a91f35a4f65836643c4ad282d12fbc9654329",
+          "sha256": "bad2b1bb6ba2397961122a119f82c8a6f159669f5a58955ea8337f6621872c57",
+          "side": "left"
+        },
+        {
+          "sha256": "0dd48d87aa10019178012656a8c58746191e18e14b1fe7fdb409a27da863f035",
           "side": "right"
         },
         {
-          "sha256": "5b256c2870aaab47b80e870c316a81a2add800fddd3c9979777bc9fbb4e515bc",
-          "side": "right"
-        },
-        {
-          "sha256": "aab7f53ae30c6f2f75c3291f2e3a4a31da89ec8c84995e507c13f1b61c58284d",
+          "sha256": "3f42525badf2613fad333949af416e5a591766cb06e0440612fe396f722921d1",
           "side": "left"
         }
       ],
@@ -130,7 +155,7 @@
       "sha256": "807abd6f4ae8275eb9e8680c6d956ebb7c7e826e31f6fc5fe2b7c51e7a0420dc"
     }
   ],
-  "merkle_root": "48bcfd477fbe39177de3ca4f36ed83dbe43b7fb6f9237326725aa8983b57e4df",
+  "merkle_root": "2ea9bcbf51a0028ec63c57ae3d34722b021a5552ca2d31adccd7cbedc63657f9",
   "not_evidence_of": [
     "trademark ownership",
     "exclusive rights in the words Claim Maintenance",
