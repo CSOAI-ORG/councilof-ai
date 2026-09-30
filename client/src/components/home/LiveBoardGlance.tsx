@@ -205,7 +205,7 @@ export default function LiveBoardGlance({
             <dl className="mt-6 grid max-w-5xl gap-x-8 gap-y-4 sm:grid-cols-3" data-testid="board-glance-figures">
               <div className="flex flex-col">
                 <dt className="text-[13px] font-semibold text-muted-foreground">on the board</dt>
-                <dd className="order-first font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-public-count">
+                <dd className="order-first min-h-[1.2em] font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-public-count">
                   {count ?? "—"}
                 </dd>
               </div>
@@ -213,7 +213,7 @@ export default function LiveBoardGlance({
                 <dt className="text-[13px] font-semibold text-muted-foreground">
                   {sep ? `model-comparison axes: ${sep.separated} separated, ${sep.ties} tie, ${sep.untested} untested` : "model-comparison axes"}
                 </dt>
-                <dd className="order-first font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-separation">
+                <dd className="order-first min-h-[1.2em] font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-separation">
                   {sep ? nf.format(sep.comparison) : "—"}
                 </dd>
               </div>
@@ -224,7 +224,7 @@ export default function LiveBoardGlance({
                   </Link>
                   {models?.own_models_excluded ? `; our own ${models.own_models_excluded} are listed apart, never counted in` : ""}
                 </dt>
-                <dd className="order-first font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-models-measured">
+                <dd className="order-first min-h-[1.2em] font-mono text-2xl font-black tracking-tight text-foreground sm:text-3xl" data-testid="board-models-measured">
                   {models ? nf.format(models.third_party_models) : "—"}
                 </dd>
               </div>
@@ -254,7 +254,7 @@ export default function LiveBoardGlance({
                 </ul>
               </>
             ) : null}
-            {tiles.length === 0 ? <div className="mt-8 min-h-[18rem]" aria-busy="true" aria-label="Loading the board" /> : null}
+            {tiles.length === 0 ? <div className="mt-8 min-h-[52rem] sm:min-h-[34rem] lg:min-h-[17rem]" aria-busy="true" aria-label="Loading the board" /> : null}
 
             <p className="mt-6 max-w-4xl text-[13px] leading-relaxed text-muted-foreground">
               A tie stays a tie and an untested axis stays untested; neither is rounded up into a ranking, and an

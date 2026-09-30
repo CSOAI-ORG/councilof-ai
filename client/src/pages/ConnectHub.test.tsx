@@ -94,3 +94,29 @@ describe("the type floor", () => {
     expect(phone).toContain("font-size: 0.75rem");
   });
 });
+
+describe("web fonts never cause a second Largest Contentful Paint", () => {
+  it("loads the Google Fonts stylesheet with display=optional", () => {
+    const html = read("client/index.html").replace(/<!--[\s\S]*?-->/g, "");
+    const href = html.match(/href="(https:\/\/fonts\.googleapis\.com\/css2\?[^"]+)"/)?.[1] ?? "";
+    expect(href).toContain("display=optional");
+  });
+});
+
+describe("the home board keeps its height while the board read lands", () => {
+  // 2026-09-30: the hero no longer carries live figures (home-v2); the figures and tiles are in
+  // LiveBoardGlance, which reserves the tiles' box while GET /api/gspc lands.
+  it("reserves the tile area and each figure's line", () => {
+    const board = read("client/src/components/home/LiveBoardGlance.tsx");
+    expect(board).toMatch(/min-h-\[[0-9.]+rem\][^"]*" aria-busy="true" aria-label="Loading the board"/);
+    expect(board).toMatch(/<dd className="order-first min-h-\[1\.2em\]/);
+  });
+});
+
+describe("/connect's social and search head is the hub's, not a withdrawal notice", () => {
+  it("resolves the seo-head entry for /connect", async () => {
+    const { resolveHead } = await import("../lib/seoHead");
+    const head = resolveHead("/connect/");
+    expect(head.title).toBe("Connect an agent: MCP, A2A and HTTP | Council of AI");
+  });
+});
