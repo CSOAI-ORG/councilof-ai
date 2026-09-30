@@ -150,7 +150,8 @@
       "measurement_index",
       "verify_capsule",
       "server_evidence",
-      "evidence_bundle_preview"
+      "evidence_bundle_preview",
+      "route"
     ],
     "how": "tools/call without x_payment returns the route's 402 challenge per the x402 MCP transport: isError:true, the PaymentRequired object in structuredContent and as JSON in content[0].text; pay, then call again with x_payment",
     "paid_tools": [

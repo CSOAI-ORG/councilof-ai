@@ -4,7 +4,7 @@ Remote MCP: `https://councilof.ai/mcp` (streamable HTTP; no account, API key or 
 
 ## Tools
 
-Thirteen free tools:
+Fourteen free tools:
 
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
 - `get_axis` — One axis row from the live GSPC board at https://councilof.ai/api/gspc — every axis the board carries, behavioural and financial families alike, addressed by the axis id exactly as the board spells it: n, accuracy, interval, MEASURED or UNMEASURED status, family, kind, the bank or run-artifact URL behind the row, and dates.
@@ -19,6 +19,7 @@ Thirteen free tools:
 - `verify_capsule` — Verify one measurement capsule.
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 - `evidence_bundle_preview` — For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle.
+- `route` — GSPC Route (free, decide-only).
 
 Five optional x402-metered evidence tools (payment is the explicit `x_payment` argument; an unpaid call
 returns the challenge, which is not settlement, delivery or revenue):
@@ -29,7 +30,7 @@ returns the challenge, which is not settlement, delivery or revenue):
 - `receipts_batch` — A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256.
 - `evidence_bundle` — An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present.
 
-`tools/list` must return exactly these eighteen names.
+`tools/list` must return exactly these nineteen names.
 
 ## Evidence boundary
 

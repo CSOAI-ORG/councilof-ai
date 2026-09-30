@@ -26,6 +26,8 @@
  */
 
 import { verifyCard, defaultProfile } from "gspc-card-verifier";
+import { realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const DEFAULT_BASE = "https://councilof.ai";
 const MATRIX_PATH = "/signed/card-matrix.json";
@@ -180,4 +182,4 @@ async function main() {
 }
 
 // Run only as a script, not when imported by tests.
-if (import.meta.url === `file://${process.argv[1]}`) main();
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) main();

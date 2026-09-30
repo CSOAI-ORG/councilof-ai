@@ -953,6 +953,253 @@
           "state"
         ]
       }
+    },
+    {
+      "name": "route",
+      "title": "GSPC Route: decide a path under your policy (free, decide-only)",
+      "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string",
+            "maxLength": 20000,
+            "description": "The task. Hashed (sha256) and never stored or echoed."
+          },
+          "task_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{64}$",
+            "description": "Alternative to task: its sha256."
+          },
+          "data_class": {
+            "type": "string",
+            "enum": [
+              "public",
+              "internal",
+              "confidential",
+              "pii"
+            ],
+            "description": "Default public. A non-public class is routed only to candidates that declare it in data_class_allowed."
+          },
+          "needs_write": {
+            "type": "boolean"
+          },
+          "candidates": {
+            "type": "array",
+            "maxItems": 32,
+            "description": "Omit to route among the GSPC MCP tools. A candidate field the router does not know makes that candidate UNCHECKABLE (never permitted); sponsor/bid/placement fields are ignored.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "model",
+                    "mcp_tool",
+                    "a2a_agent",
+                    "x402_resource",
+                    "local_gpu"
+                  ]
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string"
+                },
+                "region": {
+                  "type": "string"
+                },
+                "endpoint": {
+                  "type": "string",
+                  "description": "https://public-host/... or local:<name> for an endpoint you run"
+                },
+                "cost_declared": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "latency_declared_ms": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "read_only": {
+                  "type": "boolean"
+                },
+                "destructive": {
+                  "type": "boolean"
+                },
+                "paid": {
+                  "type": "boolean"
+                },
+                "data_class_allowed": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "public",
+                      "internal",
+                      "confidential",
+                      "pii"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "kind"
+              ]
+            }
+          },
+          "policy": {
+            "type": "object",
+            "description": "presets [read-only, local-only, eu-only, no-unmeasured], forbid_providers [..], allow_kinds [..], confirm_destructive, caller_wallet. Unknown keys grant nothing.",
+            "properties": {
+              "presets": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "forbid_providers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "allow_kinds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "confirm_destructive": {
+                "type": "boolean"
+              },
+              "caller_wallet": {
+                "type": "boolean"
+              }
+            }
+          },
+          "objective": {
+            "type": "object",
+            "properties": {
+              "quality_axis": {
+                "type": "string",
+                "description": "A board axis id, e.g. governance"
+              },
+              "weights": {
+                "type": "object",
+                "properties": {
+                  "quality": {
+                    "type": "number"
+                  },
+                  "cost": {
+                    "type": "number"
+                  },
+                  "latency": {
+                    "type": "number"
+                  }
+                }
+              },
+              "tie_break": {
+                "description": "cheapest_declared, local_first, lexical_id (default in that order)",
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "decide",
+              "execute"
+            ],
+            "description": "decide (default). execute is not enabled and answers NOT_ENABLED."
+          }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "ROUTED",
+              "NO_PERMITTED_CANDIDATE",
+              "BAD_ARGUMENTS",
+              "NOT_ENABLED"
+            ]
+          },
+          "mode": {
+            "type": "string"
+          },
+          "preview": {
+            "type": "boolean"
+          },
+          "signed": {
+            "type": "boolean"
+          },
+          "chosen": {
+            "type": [
+              "object",
+              "null"
+            ]
+          },
+          "separation": {
+            "type": "string"
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "considered": {
+            "type": "integer"
+          },
+          "permitted": {
+            "type": "integer"
+          },
+          "forbidden": {
+            "type": "array"
+          },
+          "record": {
+            "type": "object"
+          },
+          "note": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array"
+          },
+          "http_status": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "annotations": {
+        "title": "GSPC Route: decide a path under your policy (free, decide-only)",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     }
   ]
 }
