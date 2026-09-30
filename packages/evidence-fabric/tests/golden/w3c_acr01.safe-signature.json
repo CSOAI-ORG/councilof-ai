@@ -1,0 +1,346 @@
+{
+ "checks": [
+  {
+   "check_id": "csoai/board-signature-covers-artifact",
+   "discrimination": {
+    "demonstrated": "evo:trailing-byte-appended"
+   },
+   "evidence": {
+    "carried": [
+     "evo:trailing-byte-appended",
+     "evo:artifact-digest-altered",
+     "evo:signature-bit-flipped"
+    ]
+   },
+   "other_verdict": {
+    "demonstrated": "evo:trailing-byte-appended"
+   },
+   "state": "pass",
+   "x-csoai": {
+    "artifact_ref": "docs/standards/osaia-safe-evidence-pack/FREEZE.json",
+    "rule": null
+   }
+  }
+ ],
+ "control_fixtures": [
+  {
+   "derived_from": {
+    "change": "the artifact bytes gain one trailing newline, so they are no longer the signed bytes",
+    "ref": "docs/standards/osaia-safe-evidence-pack/FREEZE.json",
+    "sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9"
+   },
+   "expected": {
+    "rule": "artifact-digest",
+    "state": "fail"
+   },
+   "fixture_id": "csoai-safe-freeze-trailing-byte-appended",
+   "input": {
+    "carry": "ewogImFzX29mIjogIjIwMjYtMDktMzBUMTA6MDU6MDBaIiwKICJldmVudHMiOiAxMCwKICJmaWxlcyI6IDM3LAogIm5vdGUiOiAiRnJvemVuOiBhbnkgY2hhbmdlIHRvIGFueSBsaXN0ZWQgZmlsZSBjaGFuZ2VzIFNIQTI1NlNVTVMgYW5kIHNvIHRoaXMgZGlnZXN0LiBBIG5ldyBwYWNrIGlzIGEgbmV3IEZSRUVaRSwgbmV2ZXIgYW4gZWRpdC4iLAogInNjaGVtYSI6ICJjc29haS5zYWZlLWV2aWRlbmNlLXBhY2svMC4xIiwKICJzaGEyNTZzdW1zX3NoYTI1NiI6ICJmODY5ZTkxN2M2MTI2NWVkYzY5ZWViYjNiMzMxZDlhZTYwZjQwN2E4YWYzNDliNWY1ZTg5OTY4OTJhMDlhMGNlIiwKICJzdGF0ZV9jb3VudHMiOiB7CiAgIkNPTlNJU1RFTlQiOiA1LAogICJESVZFUkdFTlQiOiAzLAogICJQQVJUSUFMIjogMSwKICAiVU5NRUFTVVJFRCI6IDEKIH0KfQoK"
+   },
+   "observed": {
+    "rule": "artifact-digest",
+    "runner": "render/w3c_acr01.py signature_run",
+    "state": "fail"
+   },
+   "provenance": {
+    "author": "CSOAI",
+    "license": "CC0-1.0",
+    "source": "FREEZE.signed.json local_verification.altered_preimage_controls"
+   },
+   "target_check": {
+    "check_id": "csoai/board-signature-covers-artifact",
+    "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+    "config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595"
+   },
+   "why_must_fail": "The artifact bytes gain one trailing newline, so they are no longer the signed bytes.",
+   "x-csoai-input-role": "artifact",
+   "x-csoai-isolation-observed": {
+    "artifact-digest": "pass",
+    "ed25519-signature": "fail",
+    "payload-digest": "fail"
+   }
+  },
+  {
+   "derived_from": {
+    "change": "the payload's artifact sha256 is changed, so the payload is no longer the signed payload",
+    "ref": "docs/standards/osaia-safe-evidence-pack/FREEZE.json",
+    "sha256": "1a4384163d821958a5dba05da0d659b9949eb45cdf99a0f9fb3c07d5661e29c4"
+   },
+   "expected": {
+    "rule": "payload-digest",
+    "state": "fail"
+   },
+   "fixture_id": "csoai-safe-freeze-artifact-digest-altered",
+   "input": {
+    "carry": "ewogInNjaGVtYSI6ICJjc29haS5zaWduZWQtcnVuLzAuMSIsCiAicGF5bG9hZCI6IHsKICAic2NoZW1hIjogImNzb2FpLnNpZ25lZC1hcnRpZmFjdC8wLjEiLAogICJzaWduZXIiOiAiZGlkOndlYjpjc29haS5vcmcjYm9hcmQtYXR0ZXN0YXRpb24tMSB2aWEgUE9TVCAvYXBpL2JvYXJkLXNpZ24gKHBvZCBjYWxsZXIgdG9rZW4pIiwKICAibm90X2FfZ3JhZGUiOiAiVGhlIHNpZ25hdHVyZSBwcm92ZXMgdGhlc2UgYnl0ZXMgd2VyZSBzaWduZWQgYnkgdGhlIGJvYXJkIGtleSBvbiB0aGUgZGF0ZSBiZWxvdzsgaXQgZG9lcyBub3QgcHJvdmUgYW55IGNsYWltIGluc2lkZSBiZXlvbmQgd2hhdCB0aGUgcmVjb3JkJ3Mgb3duIHNvdXJjZXMgYW5kIGluc3RydW1lbnRzIHNob3cuIiwKICAiYXJ0aWZhY3QiOiB7CiAgICJwYXRoIjogImRvY3Mvc3RhbmRhcmRzL29zYWlhLXNhZmUtZXZpZGVuY2UtcGFjay9GUkVFWkUuanNvbiIsCiAgICJzaGEyNTYiOiAiMDU1MTY0ZWU4NDAyZjgxMjgxZWEyMTQyMjZlMWUzYmMyYTViYTgwOGQzNTQzMDM0N2Q5Y2U0ZDhkMTI4ZWNkOSIsCiAgICJzY2hlbWEiOiAiY3NvYWkuc2FmZS1ldmlkZW5jZS1wYWNrLzAuMSIsCiAgICJhc19vZiI6ICIyMDI2LTA5LTMwVDEwOjA1OjAwWiIKICB9LAogICJ3aGF0IjogIlNBRkUgZXZpZGVuY2UgcGFjayBmcmVlemU6IEZSRUVaRS5qc29uIG5hbWVzIHRoZSBzaGEyNTYgb2YgU0hBMjU2U1VNUywgd2hpY2ggbGlzdHMgZXZlcnkgZmlsZSBpbiB0aGUgcGFjay4iLAogICJsYW5lIjogImxhbmUvZXZpZGVuY2UtZmFicmljLTIwMjYwOTMwIiwKICAidmVyaWZ5IjogInB5dGhvbjMgdmVyaWZ5LnB5IC0tb2ZmbGluZSBpbnNpZGUgdGhlIHBhY2siCiB9LAogInNpZ25hdHVyZSI6IHsKICAiZGlkIjogImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEiLAogICJhbGciOiAiRWQyNTUxOSIsCiAgInNpZ19lZDI1NTE5IjogIjIxY2E3ZjgyNjViYjhkODUyNGZlYmFlZGY1MjNhYWM0MzgzZWYxODJmNzQ2ZTVmNDA3ZjliYTcxNGNkMDQ5ZDg3MzY0N2IwMDkxMWUxMTcwN2FjMmE1NmQ3ODhkNDY2MzA4NmNlMTQ0MmI5MzMxYWUxMjAwMmNkOGUzOTJlODAzIiwKICAicGF5bG9hZF9zaGEyNTYiOiAiOWUwNzBmYzFmZTUxYWQzNjE1MzVjNDAwNzJkNjA4ZGFiMDRiMjRmYTNjMjQ4ZmEzZDAxMjNhN2Y0MjQ3YTYxNyIsCiAgInNpZ25lcl9hdXRoIjogInBvZC10b2tlbiIsCiAgInNpZ25lZF9hdCI6ICIyMDI2LTA5LTMwVDEwOjAxOjA4Ljc2NFoiLAogICJjYW5vbmljYWwiOiAiSlNPTiwga2V5cyBzb3J0ZWQsIG5vIHdoaXRlc3BhY2UsIFVURi04LCBub24tQVNDSUkgdW5lc2NhcGVkIgogfSwKICJsb2NhbF92ZXJpZmljYXRpb24iOiB7CiAgImRpZF9kb2N1bWVudCI6ICJodHRwczovL2Nzb2FpLm9yZy8ud2VsbC1rbm93bi9kaWQuanNvbiIsCiAgImtleV94IjogImsyZlBXYjZjdHl1OGw1YXQ4RllnSHNIRml0X3FvVC1Ec3NXM1ZOYkNBWEEiLAogICJyZXN1bHQiOiAiVkVSSUZJRVMiLAogICJhbHRlcmVkX3ByZWltYWdlX2NvbnRyb2xzIjogewogICAidHJhaWxpbmcgYnl0ZSBhcHBlbmRlZCB0byB0aGUgcmVjb3JkIjogInJlamVjdGVkIChjb250cm9sIGhvbGRzKSIsCiAgICJhcnRpZmFjdCBzaGEyNTYgYWx0ZXJlZCBpbiB0aGUgcGF5bG9hZCI6ICJyZWplY3RlZCAoY29udHJvbCBob2xkcykiLAogICAic2lnbmF0dXJlIGJpdCBmbGlwcGVkIjogInJlamVjdGVkIChjb250cm9sIGhvbGRzKSIKICB9CiB9LAogInZlcmlmeSI6ICJjYW5vbmljYWxpc2UgcGF5bG9hZCAoSlNPTiwga2V5cyBzb3J0ZWQsIG5vIHdoaXRlc3BhY2UsIFVURi04KTsgc2hhMjU2IG11c3QgZXF1YWwgc2lnbmF0dXJlLnBheWxvYWRfc2hhMjU2OyBwYXlsb2FkLmFydGlmYWN0LnNoYTI1NiBtdXN0IGVxdWFsIHNoYTI1NiBvZiB0aGUgcmVjb3JkJ3MgYnl0ZXM7IHZlcmlmeSBzaWdfZWQyNTUxOSAoaGV4KSB3aXRoIHRoZSAjYm9hcmQtYXR0ZXN0YXRpb24tMSBFZDI1NTE5IGtleSBpbiBodHRwczovL2Nzb2FpLm9yZy8ud2VsbC1rbm93bi9kaWQuanNvbiIKfQ=="
+   },
+   "observed": {
+    "rule": "payload-digest",
+    "runner": "render/w3c_acr01.py signature_run",
+    "state": "fail"
+   },
+   "provenance": {
+    "author": "CSOAI",
+    "license": "CC0-1.0",
+    "source": "FREEZE.signed.json local_verification.altered_preimage_controls"
+   },
+   "target_check": {
+    "check_id": "csoai/board-signature-covers-artifact",
+    "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+    "config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595"
+   },
+   "why_must_fail": "The payload's artifact sha256 is changed, so the payload is no longer the signed payload.",
+   "x-csoai-input-role": "signed-record",
+   "x-csoai-isolation-observed": {
+    "artifact-digest": "fail",
+    "ed25519-signature": "fail",
+    "payload-digest": "fail"
+   }
+  },
+  {
+   "derived_from": {
+    "change": "one hex digit of the Ed25519 signature is changed, so it cannot verify",
+    "ref": "docs/standards/osaia-safe-evidence-pack/FREEZE.json",
+    "sha256": "1a4384163d821958a5dba05da0d659b9949eb45cdf99a0f9fb3c07d5661e29c4"
+   },
+   "expected": {
+    "rule": "ed25519-signature",
+    "state": "fail"
+   },
+   "fixture_id": "csoai-safe-freeze-signature-bit-flipped",
+   "input": {
+    "carry": "ewogInNjaGVtYSI6ICJjc29haS5zaWduZWQtcnVuLzAuMSIsCiAicGF5bG9hZCI6IHsKICAic2NoZW1hIjogImNzb2FpLnNpZ25lZC1hcnRpZmFjdC8wLjEiLAogICJzaWduZXIiOiAiZGlkOndlYjpjc29haS5vcmcjYm9hcmQtYXR0ZXN0YXRpb24tMSB2aWEgUE9TVCAvYXBpL2JvYXJkLXNpZ24gKHBvZCBjYWxsZXIgdG9rZW4pIiwKICAibm90X2FfZ3JhZGUiOiAiVGhlIHNpZ25hdHVyZSBwcm92ZXMgdGhlc2UgYnl0ZXMgd2VyZSBzaWduZWQgYnkgdGhlIGJvYXJkIGtleSBvbiB0aGUgZGF0ZSBiZWxvdzsgaXQgZG9lcyBub3QgcHJvdmUgYW55IGNsYWltIGluc2lkZSBiZXlvbmQgd2hhdCB0aGUgcmVjb3JkJ3Mgb3duIHNvdXJjZXMgYW5kIGluc3RydW1lbnRzIHNob3cuIiwKICAiYXJ0aWZhY3QiOiB7CiAgICJwYXRoIjogImRvY3Mvc3RhbmRhcmRzL29zYWlhLXNhZmUtZXZpZGVuY2UtcGFjay9GUkVFWkUuanNvbiIsCiAgICJzaGEyNTYiOiAiODU1MTY0ZWU4NDAyZjgxMjgxZWEyMTQyMjZlMWUzYmMyYTViYTgwOGQzNTQzMDM0N2Q5Y2U0ZDhkMTI4ZWNkOSIsCiAgICJzY2hlbWEiOiAiY3NvYWkuc2FmZS1ldmlkZW5jZS1wYWNrLzAuMSIsCiAgICJhc19vZiI6ICIyMDI2LTA5LTMwVDEwOjA1OjAwWiIKICB9LAogICJ3aGF0IjogIlNBRkUgZXZpZGVuY2UgcGFjayBmcmVlemU6IEZSRUVaRS5qc29uIG5hbWVzIHRoZSBzaGEyNTYgb2YgU0hBMjU2U1VNUywgd2hpY2ggbGlzdHMgZXZlcnkgZmlsZSBpbiB0aGUgcGFjay4iLAogICJsYW5lIjogImxhbmUvZXZpZGVuY2UtZmFicmljLTIwMjYwOTMwIiwKICAidmVyaWZ5IjogInB5dGhvbjMgdmVyaWZ5LnB5IC0tb2ZmbGluZSBpbnNpZGUgdGhlIHBhY2siCiB9LAogInNpZ25hdHVyZSI6IHsKICAiZGlkIjogImRpZDp3ZWI6Y3NvYWkub3JnI2JvYXJkLWF0dGVzdGF0aW9uLTEiLAogICJhbGciOiAiRWQyNTUxOSIsCiAgInNpZ19lZDI1NTE5IjogIjAxY2E3ZjgyNjViYjhkODUyNGZlYmFlZGY1MjNhYWM0MzgzZWYxODJmNzQ2ZTVmNDA3ZjliYTcxNGNkMDQ5ZDg3MzY0N2IwMDkxMWUxMTcwN2FjMmE1NmQ3ODhkNDY2MzA4NmNlMTQ0MmI5MzMxYWUxMjAwMmNkOGUzOTJlODAzIiwKICAicGF5bG9hZF9zaGEyNTYiOiAiOWUwNzBmYzFmZTUxYWQzNjE1MzVjNDAwNzJkNjA4ZGFiMDRiMjRmYTNjMjQ4ZmEzZDAxMjNhN2Y0MjQ3YTYxNyIsCiAgInNpZ25lcl9hdXRoIjogInBvZC10b2tlbiIsCiAgInNpZ25lZF9hdCI6ICIyMDI2LTA5LTMwVDEwOjAxOjA4Ljc2NFoiLAogICJjYW5vbmljYWwiOiAiSlNPTiwga2V5cyBzb3J0ZWQsIG5vIHdoaXRlc3BhY2UsIFVURi04LCBub24tQVNDSUkgdW5lc2NhcGVkIgogfSwKICJsb2NhbF92ZXJpZmljYXRpb24iOiB7CiAgImRpZF9kb2N1bWVudCI6ICJodHRwczovL2Nzb2FpLm9yZy8ud2VsbC1rbm93bi9kaWQuanNvbiIsCiAgImtleV94IjogImsyZlBXYjZjdHl1OGw1YXQ4RllnSHNIRml0X3FvVC1Ec3NXM1ZOYkNBWEEiLAogICJyZXN1bHQiOiAiVkVSSUZJRVMiLAogICJhbHRlcmVkX3ByZWltYWdlX2NvbnRyb2xzIjogewogICAidHJhaWxpbmcgYnl0ZSBhcHBlbmRlZCB0byB0aGUgcmVjb3JkIjogInJlamVjdGVkIChjb250cm9sIGhvbGRzKSIsCiAgICJhcnRpZmFjdCBzaGEyNTYgYWx0ZXJlZCBpbiB0aGUgcGF5bG9hZCI6ICJyZWplY3RlZCAoY29udHJvbCBob2xkcykiLAogICAic2lnbmF0dXJlIGJpdCBmbGlwcGVkIjogInJlamVjdGVkIChjb250cm9sIGhvbGRzKSIKICB9CiB9LAogInZlcmlmeSI6ICJjYW5vbmljYWxpc2UgcGF5bG9hZCAoSlNPTiwga2V5cyBzb3J0ZWQsIG5vIHdoaXRlc3BhY2UsIFVURi04KTsgc2hhMjU2IG11c3QgZXF1YWwgc2lnbmF0dXJlLnBheWxvYWRfc2hhMjU2OyBwYXlsb2FkLmFydGlmYWN0LnNoYTI1NiBtdXN0IGVxdWFsIHNoYTI1NiBvZiB0aGUgcmVjb3JkJ3MgYnl0ZXM7IHZlcmlmeSBzaWdfZWQyNTUxOSAoaGV4KSB3aXRoIHRoZSAjYm9hcmQtYXR0ZXN0YXRpb24tMSBFZDI1NTE5IGtleSBpbiBodHRwczovL2Nzb2FpLm9yZy8ud2VsbC1rbm93bi9kaWQuanNvbiIKfQ=="
+   },
+   "observed": {
+    "rule": "ed25519-signature",
+    "runner": "render/w3c_acr01.py signature_run",
+    "state": "fail"
+   },
+   "provenance": {
+    "author": "CSOAI",
+    "license": "CC0-1.0",
+    "source": "FREEZE.signed.json local_verification.altered_preimage_controls"
+   },
+   "target_check": {
+    "check_id": "csoai/board-signature-covers-artifact",
+    "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+    "config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595"
+   },
+   "why_must_fail": "One hex digit of the Ed25519 signature is changed, so it cannot verify.",
+   "x-csoai-input-role": "signed-record",
+   "x-csoai-isolation-observed": {
+    "artifact-digest": "fail",
+    "ed25519-signature": "pass",
+    "payload-digest": "fail"
+   }
+  }
+ ],
+ "domain": {
+  "description": "one signed artifact and its signature record",
+  "id": "dom:safe-pack-freeze",
+  "population": 1
+ },
+ "evidence_objects": [
+  {
+   "changed": "input artifact",
+   "compared": [
+    "verdict",
+    "rule"
+   ],
+   "delta": "the artifact bytes gain one trailing newline, so they are no longer the signed bytes",
+   "fixed": {
+    "checker": {
+     "check_id": "csoai/board-signature-covers-artifact",
+     "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67"
+    },
+    "constraint_set": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+    "domain": "dom:safe-pack-freeze"
+   },
+   "id": "evo:trailing-byte-appended",
+   "moved": [
+    "verdict",
+    "rule"
+   ],
+   "observations": [
+    {
+     "input": {
+      "artifact_sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+      "signed_sha256": "1a4384163d821958a5dba05da0d659b9949eb45cdf99a0f9fb3c07d5661e29c4"
+     },
+     "rule": null,
+     "verdict": "pass"
+    },
+    {
+     "input": {
+      "artifact_sha256": "8340289547f8ef5245b319365f16a43fef9556cde596fdd0f57e662048c7789c",
+      "signed_sha256": "1a4384163d821958a5dba05da0d659b9949eb45cdf99a0f9fb3c07d5661e29c4"
+     },
+     "rule": "artifact-digest",
+     "verdict": "fail"
+    }
+   ]
+  },
+  {
+   "changed": "input artifact",
+   "compared": [
+    "verdict",
+    "rule"
+   ],
+   "delta": "the payload's artifact sha256 is changed, so the payload is no longer the signed payload",
+   "fixed": {
+    "checker": {
+     "check_id": "csoai/board-signature-covers-artifact",
+     "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67"
+    },
+    "constraint_set": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+    "domain": "dom:safe-pack-freeze"
+   },
+   "id": "evo:artifact-digest-altered",
+   "moved": [
+    "verdict",
+    "rule"
+   ],
+   "observations": [
+    {
+     "input": {
+      "artifact_sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+      "signed_sha256": "1a4384163d821958a5dba05da0d659b9949eb45cdf99a0f9fb3c07d5661e29c4"
+     },
+     "rule": null,
+     "verdict": "pass"
+    },
+    {
+     "input": {
+      "artifact_sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+      "signed_sha256": "e6fc97feb0105f403d1a2ca4ae230fba4e9a05d256838de675ef09c551a46d80"
+     },
+     "rule": "payload-digest",
+     "verdict": "fail"
+    }
+   ]
+  },
+  {
+   "changed": "input artifact",
+   "compared": [
+    "verdict",
+    "rule"
+   ],
+   "delta": "one hex digit of the Ed25519 signature is changed, so it cannot verify",
+   "fixed": {
+    "checker": {
+     "check_id": "csoai/board-signature-covers-artifact",
+     "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67"
+    },
+    "constraint_set": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+    "domain": "dom:safe-pack-freeze"
+   },
+   "id": "evo:signature-bit-flipped",
+   "moved": [
+    "verdict",
+    "rule"
+   ],
+   "observations": [
+    {
+     "input": {
+      "artifact_sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+      "signed_sha256": "1a4384163d821958a5dba05da0d659b9949eb45cdf99a0f9fb3c07d5661e29c4"
+     },
+     "rule": null,
+     "verdict": "pass"
+    },
+    {
+     "input": {
+      "artifact_sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+      "signed_sha256": "f1a3722be0656ea700f60b3922588cfe8918bf1a3734d6bee5e997f5f4cf31a6"
+     },
+     "rule": "ed25519-signature",
+     "verdict": "fail"
+    }
+   ]
+  }
+ ],
+ "format": "w3c-agent-conformance-reporting/0.1",
+ "note": "Measurement records re-expressed in the v0.1 per-check shape. Not a certification, grade or ranking. pass on a gspc measurement check means a run exists; it says nothing about any model.",
+ "producer": {
+  "name": "GSPC evidence fabric",
+  "renderer": "render/w3c_acr01.py",
+  "version": "0.1.0"
+ },
+ "rollup": {
+  "aggregate": {
+   "denominator": 1,
+   "note": "inconclusive and void are in the denominator and cannot improve it (5.1)",
+   "over": "declared, exercised checks",
+   "pass": 1
+  },
+  "by_state": {
+   "fail": 0,
+   "inconclusive": 0,
+   "not-exercised": 0,
+   "pass": 1,
+   "void": 0
+  },
+  "completeness": {
+   "accounting": {
+    "population": 1,
+    "state": "satisfied"
+   },
+   "evidence": {
+    "population": 1,
+    "state": "satisfied"
+   },
+   "execution": {
+    "population": 1,
+    "state": "satisfied"
+   },
+   "no_declared_check_void": {
+    "population": 1,
+    "state": "satisfied"
+   }
+  },
+  "declared": 1,
+  "discriminating_power": {
+   "basis": "control",
+   "controls": [
+    {
+     "check_id": "csoai/board-signature-covers-artifact",
+     "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+     "config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+     "expected_rule": "artifact-digest",
+     "fixture_id": "csoai-safe-freeze-trailing-byte-appended",
+     "observed_state": "fail",
+     "rule": "artifact-digest"
+    },
+    {
+     "check_id": "csoai/board-signature-covers-artifact",
+     "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+     "config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+     "expected_rule": "payload-digest",
+     "fixture_id": "csoai-safe-freeze-artifact-digest-altered",
+     "observed_state": "fail",
+     "rule": "payload-digest"
+    },
+    {
+     "check_id": "csoai/board-signature-covers-artifact",
+     "checker_revision": "sha256:3ec9dded61cb085522e3b6dbc59fc1349fa4c4d3e5de88164d0e25f658d87f67",
+     "config_digest": "07d791d1fb7ae96addc18a93904fcb6965b6663acd17857d835c9781e16c2595",
+     "expected_rule": "ed25519-signature",
+     "fixture_id": "csoai-safe-freeze-signature-bit-flipped",
+     "observed_state": "fail",
+     "rule": "ed25519-signature"
+    }
+   ]
+  },
+  "evidence_counter": {
+   "carried": 1,
+   "referenced": 0
+  }
+ },
+ "source": {
+  "count": 1,
+  "ref": "docs/standards/osaia-safe-evidence-pack/FREEZE.json",
+  "sha256": "855164ee8402f81281ea214226e1e3bc2a5ba808d35430347d9ce4d8d128ecd9",
+  "tree_shape": "flat"
+ },
+ "spec": "https://lists.w3.org/Archives/Public/public-agent-conformance/2026Sep/0087.html"
+}
