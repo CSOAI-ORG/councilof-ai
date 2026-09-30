@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "wouter";
+import DocMeta from "@/components/docs/DocMeta";
 
 /**
  * /quickstart — the public supply path: measurements, changes, verification and supported feeds.
@@ -149,6 +150,7 @@ export default function Quickstart() {
           <h1 className="mt-3 max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
             Explore measurements, see what changed, verify evidence, then connect a supported feed.
           </h1>
+          <div className="max-w-3xl"><DocMeta updated="2026-09-29" slug="quickstart" /></div>
           <p className="mt-5 max-w-3xl text-base leading-7 text-slate-300 sm:text-lg">
             Start with the public evidence. The board, change feed and verification path are open reads.
             The supported door and tool lists below come from the live manifest. Commissioning is optional

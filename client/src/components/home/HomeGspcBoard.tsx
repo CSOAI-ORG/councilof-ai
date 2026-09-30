@@ -168,7 +168,7 @@ function Badge({ children, tone = "neutral" }: { children: ReactNode; tone?: "ne
       : tone === "warn"
         ? "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-700/60 dark:bg-amber-900/25 dark:text-amber-100"
         : "border-slate-200 bg-slate-50 text-slate-700 dark:border-emerald-900/50 dark:bg-white/5 dark:text-emerald-100/80";
-  return <span className={`inline-block rounded-md border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${cls}`}>{children}</span>;
+  return <span className={`inline-block rounded-md border px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide ${cls}`}>{children}</span>;
 }
 
 function LeaderText({ a }: { a: GspcAxis }) {
@@ -222,13 +222,13 @@ function RunEvidence({ a }: { a: GspcAxis }) {
   const evidence = axisRunEvidence(a);
   if (!evidence) {
     return (
-      <span className="block text-[11px] leading-relaxed text-slate-500 dark:text-emerald-100/60">
+      <span className="block text-xs leading-relaxed text-slate-500 dark:text-emerald-100/60">
         No run artifact published.
       </span>
     );
   }
   return (
-    <span className="block text-[11px] leading-relaxed text-slate-500 dark:text-emerald-100/60">
+    <span className="block text-xs leading-relaxed text-slate-500 dark:text-emerald-100/60">
       <a href={evidence.href} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
         {evidence.label}
       </a>
@@ -248,13 +248,27 @@ export function BoardStrip({
   initialView?: "list" | "table";
 }) {
   const [expanded, setExpanded] = useState(initiallyExpanded);
+  // ?axis=<id> (a shared link, or Ask GSPC's setFilter) opens the full strip so that row is on screen.
+  useEffect(() => {
+    const want = () => {
+      const a = new URLSearchParams(window.location.search).get("axis");
+      if (a && axes.some((x) => x.axis === a)) setExpanded(true);
+    };
+    want();
+    const on = (e: Event) => {
+      const d = (e as CustomEvent<{ tool: string; args: Record<string, unknown> }>).detail;
+      if (d?.tool === "setFilter" && d.args?.key === "axis") want();
+    };
+    window.addEventListener("council:ui", on);
+    return () => window.removeEventListener("council:ui", on);
+  }, [axes]);
   const [view, setView] = useState<"list" | "table">(initialView);
   const listId = useId();
   const scrollHintId = `${listId}-scroll-hint`;
   const rows = visibleAxes(axes, expanded);
   const hidden = axes.length - Math.min(axes.length, STRIP_N);
 
-  const th = "px-2 py-1.5 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60";
+  const th = "px-2 py-1.5 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60";
   const td = "px-2 py-1 align-top text-xs text-slate-800 dark:text-emerald-50";
 
   return (
@@ -265,7 +279,7 @@ export function BoardStrip({
           type="button"
           onClick={() => setView((v) => (v === "list" ? "table" : "list"))}
           aria-pressed={view === "table"}
-          className="rounded-md border border-slate-200 px-2 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-emerald-900/50 dark:text-emerald-100 dark:hover:bg-white/5"
+          className="rounded-md border border-slate-200 px-2 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-emerald-900/50 dark:text-emerald-100 dark:hover:bg-white/5"
         >
           {view === "table" ? "List view" : "Table view"}
         </button>
@@ -444,9 +458,9 @@ export function HubResultsBoard({
               <caption className="sr-only">Up to nine signed measured observations for {hubAxisLabel(selectedAxis)}, sorted by model name; scores may come from different banks.</caption>
               <thead className="bg-slate-50 dark:bg-white/5">
                 <tr>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Model</th>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Observed score</th>
-                  <th className="px-3 py-2 text-left text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Evidence</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Model</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Observed score</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-emerald-100/60">Evidence</th>
                 </tr>
               </thead>
               <tbody>
@@ -520,7 +534,7 @@ export default function HomeGspcBoard({
           <h1 id="home-gspc-board-h" className="text-xl font-bold">
             GSPC board
           </h1>
-          <p className="mt-1 text-sm font-semibold text-emerald-800 dark:text-emerald-300" data-testid="gspc-public-count">
+          <p className="mt-1 text-sm font-semibold text-emerald-800 dark:text-emerald-300" data-testid="gspc-public-count" data-ui-region="board-totals">
             {error
               ? "Board is unreachable right now. Empty stays empty."
               : loading
@@ -573,9 +587,9 @@ export default function HomeGspcBoard({
           ["Status", error ? "UNREACHABLE" : loading ? "READING" : unread ? "UNCHECKABLE" : "LIVE", error || unread ? "no value inferred" : "from /api/gspc"],
         ].map(([label, value, note]) => (
           <div key={label} className="rounded-2xl border border-slate-200/80 bg-slate-50/70 px-3.5 py-3 dark:border-emerald-900/40 dark:bg-white/[0.035]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-emerald-100/55">{label}</p>
             <p className="mt-1 text-xl font-black tracking-tight text-slate-950 dark:text-emerald-50">{value}</p>
-            <p className="mt-0.5 text-[11px] text-slate-500 dark:text-emerald-100/55">{note}</p>
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-emerald-100/55">{note}</p>
           </div>
         ))}
       </div>

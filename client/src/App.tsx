@@ -1,4 +1,3 @@
-import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation, Redirect } from "wouter";
@@ -14,6 +13,14 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MainLandmarkContext } from "./contexts/MainLandmarkContext";
 import { Header } from "./components/Header";
+// Ask GSPC + the ⌘K palette: one small host on every shell; the pane and palette are lazy chunks.
+import AskHost from "./components/ask/AskHost";
+// The toast host (sonner, ~33 kB) is not needed for first paint; toast() calls queue until it mounts.
+const Toaster = lazy(() => import("@/components/ui/sonner").then((m) => ({ default: m.Toaster })));
+// Council OS deep links (?tab=route, ?tab=board ...): start the pane's chunk now, in parallel with the
+// dashboard chunks, instead of after DashboardLayout has rendered (one round trip off LCP).
+import { prefetchPaneFromUrl } from "./lib/panePrefetch";
+prefetchPaneFromUrl();
 import { useSearch as useOsSearch } from "wouter";
 import { normalizeLobbyTabId } from "@/components/lobby/tabs";
 /** Council OS = the Dashboard. Legacy /os?lobby=X lands on /dashboard?tab=X so every old door
@@ -42,8 +49,8 @@ function DashboardDoor({ defaultTab }: { defaultTab: string }) {
 }
 
 import HomeVerify from "./pages/HomeVerify";
-import ToolsPage from "./pages/ToolsPage";
-import JailFolder from "./pages/JailFolder";
+const ToolsPage = lazy(() => import("./pages/ToolsPage"));
+const JailFolder = lazy(() => import("./pages/JailFolder"));
 import { Footer } from "./components/Footer";
 import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
@@ -575,7 +582,8 @@ function App() {
                 >
                   <Dashboard />
                 </Suspense>
-                <Toaster position="top-right" />
+                <Suspense fallback={null}><Toaster position="top-right" /></Suspense>
+                <AskHost />
               </TooltipProvider>
             </AnalyticsProvider>
           </AuthProvider>
@@ -1198,8 +1206,9 @@ function App() {
                 <Suspense fallback={null}><CouncilLobby /></Suspense>
                 <DemoTour />
                 <CookieConsent />
+                <AskHost />
               </div>
-              <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />
+              <Suspense fallback={null}><Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} /></Suspense>
             </TooltipProvider>
           </AnalyticsProvider>
         </AuthProvider>

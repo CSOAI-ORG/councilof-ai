@@ -9,7 +9,10 @@ import { personaSpeak, stopVoice } from "../lib/sovPersona";
 // the user can barge in by voice any time. Doubles as SOV33 training.
 
 import TrustMarquee from "../components/TrustMarquee";
-import { askSovereign } from "../lib/sovAsk";
+// 30 Sep 2026 (council-os-watch): the demo no longer calls a model. Questions go to the same
+// deterministic talk router as Ask GSPC (POST /api/agui/run); the narration is its cited answer.
+import { newRun, reduceRun, streamRun } from "../lib/aguiTalk";
+import { startListening } from "../lib/councilListen";
 import { STEPS, type Step, type Win } from "./demoOsSteps";
 import {
   BOOT, NAV_GROUPS, NAV_LAYERS, NAV_SHOW, NET_DOMAINS, BOTTOM_NAV,
@@ -213,12 +216,28 @@ export default function DemoOS() {
   }
   function interrupt() {
     if (timer.current) clearTimeout(timer.current); stopVoice(); setPaused(true); setListening(true); say("sov", "I'm listening - go ahead.");
-    const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition; if (!SR) { say("sov", "Voice needs a Chromium browser - type to me instead."); setListening(false); return; }
-    try { const r = new SR(); r.lang = "en-US"; r.interimResults = false; r.maxAlternatives = 1; r.onresult = (e: any) => { const said = e.results[0][0].transcript; say("you", said); answer(said); }; r.onend = () => setListening(false); r.start(); } catch (e) { setListening(false); }
+    // Push-to-talk through the one shared speech-input module (lib/councilListen.ts).
+    startListening({
+      onTranscript: (said, isFinal) => { if (isFinal && said) { say("you", said); answer(said); } },
+      onEnd: () => setListening(false),
+      onError: (m) => { say("sov", m); setListening(false); },
+    }, "en-US");
   }
   async function answer(q: string) {
     setListening(false); say("sov", "…");
-    const res = await askSovereign(q, { system: "You are the CSOAI Council assistant guiding an interactive tour of the CSOAI AI-governance interface. Answer only as that governance/cybersecurity assistant — never as a personal companion, never poetic, never mention other products. Be concise and concrete. Distinguish public measurements, catalogues, and design demos. Never claim a live Council, complete regulatory coverage, automatic signing, or a signature unless a linked artifact verifies it." });
+    let run = newRun(q, "demo");
+    try {
+      await streamRun({ question: q, onEvent: (ev) => { run = reduceRun(run, ev); } });
+    } catch (e) {
+      run = { ...run, status: "error", error: e instanceof Error ? e.message : String(e) };
+    }
+    // Speak the tool summaries, not the field list: "board_totals: MEASURED 23 of 23 slots".
+    const spoken = run.status === "error"
+      ? `No answer: ${run.error}. No number is given in its place.`
+      : run.tools.length
+        ? run.tools.map((t) => `${t.summary ?? t.name}${t.label ? ` (${t.label})` : ""}`).join(" ")
+        : "No signed record answers that, so it is not measured. Ask about the board, an axis, a card id or a server.";
+    const res = { text: spoken };
     setChat((c) => c.slice(0, -1).concat({ id: ++idc.current, who: "sov", t: res.text }));
     speak(res.text);
   }
@@ -227,7 +246,7 @@ export default function DemoOS() {
   const solo = wins.length === 1;
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-[#03080e] text-emerald-50">
+    <div className="relative h-screen w-screen overflow-hidden bg-[#03080e] text-emerald-50" data-own-cmdk="">
       <AISystemNotice route="/demo" />
       <iframe ref={frame} src="/globe3d.html" title="globe" className="absolute inset-0 h-full w-full border-0" />
       <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(1200px 640px at 50% 120%, rgba(3,8,14,.72), transparent 60%)" }} />

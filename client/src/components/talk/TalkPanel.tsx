@@ -14,7 +14,9 @@
  * reader chooses to make it, comes from their own wallet, outside this panel.
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { ArrowUp, ExternalLink, Loader2, ShieldAlert, Wrench } from "lucide-react";
+import { ArrowUp, ExternalLink, Loader2, Mic, MicOff, ShieldAlert, Wrench, Eye } from "lucide-react";
+import type { PageContext } from "../../../../functions/_lib/uiTools";
+import { LISTEN_PRIVACY_NOTE, isListenSupported, startListening, stopListening } from "@/lib/councilListen";
 import {
   argsOf,
   challengeOf,
@@ -44,7 +46,7 @@ function StateLabel({ label }: { label?: string }) {
   if (!label) return null;
   return (
     <span
-      className={`inline-flex max-w-full items-center rounded-full border px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wide break-all ${TONE[toneOf(label)]}`}
+      className={`inline-flex max-w-full items-center rounded-full border px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-wide break-all ${TONE[toneOf(label)]}`}
       data-testid="talk-state"
     >
       {label}
@@ -189,10 +191,12 @@ function RunView({
   run,
   onConfirm,
   onCancel,
+  onEnableWatch,
 }: {
   run: TalkRun;
   onConfirm: (run: TalkRun) => void;
   onCancel: (run: TalkRun) => void;
+  onEnableWatch?: (run: TalkRun) => void;
 }) {
   return (
     <article id={`talk-${run.id}`} className="scroll-mt-4 space-y-3" aria-label={`Question: ${run.question}`} data-testid="talk-run">
@@ -233,6 +237,18 @@ function RunView({
         </div>
       ) : null}
       {run.status === "cancelled" ? <p className="text-sm text-muted-foreground">Cancelled. Nothing was called.</p> : null}
+      {run.consentRequired && onEnableWatch ? (
+        <div className="rounded-xl border border-border bg-muted p-3 text-sm text-foreground" data-testid="talk-consent" role="group" aria-label="Watch mode is off">
+          <p className="flex items-center gap-2 font-semibold">
+            <Eye className="h-4 w-4 shrink-0" aria-hidden="true" /> I can show you this on the page ({run.consentRequired.steps} step
+            {run.consentRequired.steps === 1 ? "" : "s"}), but watch mode is off.
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">Nothing on the page moved. Turn watch on to let Ask GSPC move it; you can stop or undo any step.</p>
+          <button type="button" onClick={() => onEnableWatch(run)} className={`mt-2 min-h-11 rounded-lg border border-emerald-800/40 bg-card px-4 text-sm font-semibold text-emerald-900 hover:bg-emerald-50 dark:text-emerald-100 dark:hover:bg-emerald-950 ${FOCUS}`}>
+            Turn watch on and show me
+          </button>
+        </div>
+      ) : null}
       {run.text ? (
         <div className="rounded-xl border border-border bg-card p-3" data-testid="talk-answer">
           <AnswerText text={run.text} />
@@ -257,15 +273,37 @@ type Props = {
   /** Heading id for aria-labelledby, when the host renders one. */
   labelledBy?: string;
   className?: string;
+  /** Where the reader is, read at ask time (forwardedProps.page). */
+  page?: () => PageContext;
+  /** Declare the watch-mode frontend tools so a run can plan page moves. */
+  declareUi?: boolean;
+  /** The viewer switched watch on in this tab: send watch consent. */
+  watch?: boolean;
+  /** Called once per run when it finishes (the watch executor takes its ui steps from here). */
+  onRunDone?: (run: TalkRun) => void;
+  /** Offered when a run would have moved the page but watch was off. */
+  onEnableWatch?: (run: TalkRun) => void;
+  /** Show the push-to-talk mic (opt-in voice input). */
+  listen?: boolean;
+  /** Hide the built-in suggestions (the host shows its own). */
+  hideSuggestions?: boolean;
 };
 
-const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ variant = "standalone", labelledBy, className = "" }, ref) {
+const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel(
+  { variant = "standalone", labelledBy, className = "", page, declareUi, watch, onRunDone, onEnableWatch, listen, hideSuggestions },
+  ref,
+) {
   const [runs, setRuns] = useState<TalkRun[]>([]);
   const [q, setQ] = useState("");
   const [announce, setAnnounce] = useState("");
   const abortRef = useRef<AbortController | null>(null);
   const seq = useRef(0);
   const busy = runs.some((r) => r.status === "streaming");
+  const [hearing, setHearing] = useState(false);
+  const [micNote, setMicNote] = useState<string | null>(null);
+  const opts = useRef({ page, declareUi, watch, onRunDone });
+  opts.current = { page, declareUi, watch, onRunDone };
+  useEffect(() => () => stopListening(), []);
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -284,9 +322,13 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
       setRuns((all) => [...all.slice(-9), newRun(text, id)]);
       setAnnounce(`Asking: ${text}`);
       let final: TalkRun = newRun(text, id);
+      const o = opts.current;
       streamRun({
         question: text,
         confirmTool,
+        page: o.page?.(),
+        declareUi: o.declareUi,
+        watch: o.watch,
         signal: ctl.signal,
         onEvent: (ev) => {
           final = reduceRun(final, ev);
@@ -300,6 +342,7 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
             setAnnounce("The answer stream closed early.");
             return;
           }
+          opts.current.onRunDone?.(final);
           const labels = final.tools.map((t) => `${t.name}: ${t.label ?? "no state"}`).join("; ");
           setAnnounce(
             final.status === "awaiting_confirmation"
@@ -320,6 +363,26 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
   );
 
   useImperativeHandle(ref, () => ({ ask: (question: string) => start(question) }), [start]);
+
+  const mic = () => {
+    if (hearing) {
+      stopListening();
+      return;
+    }
+    setMicNote(null);
+    startListening({
+      onStart: () => setHearing(true),
+      onEnd: () => setHearing(false),
+      onError: (m) => setMicNote(m),
+      onTranscript: (t, isFinal) => {
+        setQ(t);
+        if (isFinal && t.trim()) {
+          setQ("");
+          start(t);
+        }
+      },
+    });
+  };
 
   // Bring the newest question to the top of the view when it is asked, so its tool cards and
   // answer stream in below it instead of off-screen under the suggestions.
@@ -346,12 +409,12 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
       {runs.length ? (
         <div className="space-y-6" data-testid="talk-transcript">
           {runs.map((r) => (
-            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} />
+            <RunView key={r.id} run={r} onConfirm={confirm} onCancel={cancel} onEnableWatch={onEnableWatch} />
           ))}
         </div>
       ) : null}
 
-      <div className={runs.length ? "mt-6" : ""}>
+      <div className={`${runs.length ? "mt-6" : ""} ${hideSuggestions ? "hidden" : ""}`}>
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground" id="talk-suggest-h">
           {runs.length ? "Try another question" : "Try a question"}
         </p>
@@ -398,6 +461,19 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
             autoComplete="off"
             className={`min-h-11 min-w-0 flex-1 rounded-xl border border-border bg-background px-3 text-base text-foreground placeholder:text-muted-foreground sm:text-sm ${FOCUS}`}
           />
+          {listen && isListenSupported() ? (
+            <button
+              type="button"
+              onClick={mic}
+              aria-pressed={hearing}
+              aria-label={hearing ? "Stop listening" : "Speak your question"}
+              aria-describedby="talk-mic-note"
+              className={`inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-foreground hover:bg-muted ${FOCUS}`}
+              data-testid="talk-mic"
+            >
+              {hearing ? <MicOff className="h-4 w-4" aria-hidden="true" /> : <Mic className="h-4 w-4" aria-hidden="true" />}
+            </button>
+          ) : null}
           <button
             type="submit"
             disabled={busy || !q.trim()}
@@ -407,6 +483,12 @@ const TalkPanel = forwardRef<TalkPanelHandle, Props>(function TalkPanel({ varian
             {busy ? <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" /> : <ArrowUp className="h-4 w-4" aria-hidden="true" />}
           </button>
         </form>
+      ) : null}
+      {listen && variant === "standalone" ? (
+        <p id="talk-mic-note" className="mt-2 text-xs text-muted-foreground" data-testid="talk-mic-note">
+          {micNote ? <span className="font-semibold text-foreground">{micNote} </span> : null}
+          {isListenSupported() ? LISTEN_PRIVACY_NOTE : "This browser has no speech recognition; typing works everywhere."}
+        </p>
       ) : null}
       <p className="mt-3 text-xs text-muted-foreground">
         Answers are fields of the named tools&apos; output, the same tools POST /mcp serves. No model writes them. Measurement, not
