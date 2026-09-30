@@ -1545,7 +1545,7 @@ const STEPS = {
   ],
   "copilot-studio-connector": [
     "Owner: verified publisher with a business-verified Partner Center account, enrolled in the Microsoft 365 and Copilot program.",
-    "BLOCKER: certification requires OAuth 2.0, API key or Basic authentication; both doors are no-auth. Decide whether to add a token endpoint before submitting.",
+    "BLOCKER: Microsoft's MCP connector review requires OAuth 2.0, API key or Basic authentication; both doors are no-auth. Decide whether to add a token endpoint before submitting.",
     "Partner Center → New offer → Connectors and Agents for Microsoft Copilot Studio; upload distribution/copilot-studio/ (apiDefinition.swagger.json, apiProperties.json, intro.md, icon.png).",
     "Without certification a tenant can add the free door itself (Copilot Studio → Tools → Add a tool → Model Context Protocol); that path is on /connect/.",
   ],
@@ -1600,7 +1600,7 @@ ${STEPS[r.id].map((s, i) => `${i + 1}. ${s}`).join("\n")}
 3. **Doctrine text.** \`docs/DOCTRINE.md\` rule 4 types a board grammar ("22 · 15 · 7") that the live board no longer prints.
    Outputs carry only the hash, so nothing stale is copied; fix the text, then \`render.mjs --pin-doctrine\`.
 4. **Second registry name** (\`${dist.registry_names.domain}\`) — keep both names or one.
-5. **A2A agent card signature.** The card is signed under \`did:web:csoai.org#card-attestation-2\` (key on oracle-micro-2 only);
+5. **A2A agent card signature.** The card is signed under \`did:web:csoai.org#card-attestation-2\` (the key never leaves its one signing host);
    any change to its skills is re-signed on that host with \`scripts/adapters/agent_card_jws.py --sign\`.
 6. **Paid tools in consumer app stores** (OpenAI, Claude directory) — list the door with all ${tools.length} tools, or wait.
 `);

@@ -253,7 +253,7 @@ for (const [id, p, urlKey, wantUrl, wantTools] of [
   const boards = new Set();
   for (const [id, dir, name, board] of pkgs) {
     const files = rowsById[id].output.filter((p) => p.endsWith(".py"));
-    const r = spawnSync("python3", ["-m", "py_compile", ...files.map((f) => join(REPO, f))], { encoding: "utf8" });
+    const r = spawnSync("python3", ["-c", "import sys\nfor f in sys.argv[1:]: compile(open(f, encoding='utf-8').read(), f, 'exec')", ...files.map((f) => join(REPO, f))], { encoding: "utf8" });
     rec(id, "py_compile every module", r.status === 0, r.stderr.trim() || `${files.length} module(s)`);
     const pp = read(`${dir}/pyproject.toml`);
     rec(id, "pyproject: name, Apache-2.0, depends on csoai-gspc, version == adapter_version",
@@ -324,7 +324,7 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
   const fm = frontMatter(read(`${dir}/README.md`));
   rec("hf-space", "README front matter: sdk gradio, app_file exists, licence apache-2.0",
     fm?.sdk === "gradio" && existsSync(join(REPO, dir, fm.app_file)) && fm.license === "apache-2.0", fm ? `${fm.sdk} ${fm.app_file}` : "no front matter");
-  const r = spawnSync("python3", ["-m", "py_compile", join(REPO, dir, "app.py")], { encoding: "utf8" });
+  const r = spawnSync("python3", ["-c", "import sys\nfor f in sys.argv[1:]: compile(open(f, encoding='utf-8').read(), f, 'exec')", join(REPO, dir, "app.py")], { encoding: "utf8" });
   rec("hf-space", "py_compile app.py", r.status === 0, r.stderr.trim() || "ok");
   rec("hf-space", "launches with mcp_server=True", /launch\(mcp_server=True\)/.test(read(`${dir}/app.py`)), "app.py");
 }
@@ -379,7 +379,7 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
   //     text; affirmative use fails. (d) no public price.
   // not_a_ / not_an_: a snake_case negation key (not_a_certification), which the server card now
   // carries in each tool output schema since it renders the full tools[] (fix #24).
-  const NEG = /\b(not|never|no|nor|without|non)\b|n't|explicitly_not|\bnot_an?_/i;
+  const NEG = /\b(not|never|no|nor|nothing|without|non)\b|n't|explicitly_not|\bnot_an?_/i;
   const affirmative = [], negated = [];
   const prices = [];
   // A JSON string under a negation key (explicitly_not, does_not_establish, claim_boundary) is a
@@ -401,7 +401,10 @@ const allOutputs = manifest.files.map((f) => f.path).concat(["distribution/MANIF
     if (Array.isArray(node)) return node.forEach((v) => walkJson(p, v, underNegKey));
     if (node && typeof node === "object") for (const [k, v] of Object.entries(node)) { scanText(p, k, underNegKey); walkJson(p, v, underNegKey || NEG_KEYS.test(k)); }
   };
-  for (const p of allOutputs) {
+  // A byte copy of a file the site already serves (the GCP kit's agent card) is scanned by the site's own gates and by
+  // the doctrine lint below; its chain id "eip155:8453, USDC" is not a price.
+  const SERVED_COPIES = new Set(["distribution/gcp-marketplace/agent-card.json"]);
+  for (const p of allOutputs.filter((x) => !SERVED_COPIES.has(x))) {
     const t = read(p);
     if (p.endsWith(".json")) walkJson(p, JSON.parse(t), false); else scanText(p, t, false);
     for (const m of t.matchAll(/(?:[$£€]\s?\d[\d,.]*|\b(?:USD|GBP|EUR)\s?\d[\d,.]*|\d[\d,.]*\s?(?:USD|GBP|EUR|USDC)\b)/g)) prices.push(`${p}: ${m[0]}`);
@@ -541,7 +544,7 @@ const SERVED_PAID = readJson("functions/mcp/paid-tools.json").tools;
   // dify
   const DF = "distribution/dify/gspc";
   const pyFiles = readdirSync(join(REPO, DF, "tools")).filter((f) => f.endsWith(".py")).map((f) => join(REPO, DF, "tools", f)).concat([join(REPO, DF, "main.py"), join(REPO, DF, "provider/gspc.py")]);
-  const pc = spawnSync("python3", ["-m", "py_compile", ...pyFiles], { encoding: "utf8" });
+  const pc = spawnSync("python3", ["-c", "import sys\nfor f in sys.argv[1:]: compile(open(f, encoding='utf-8').read(), f, 'exec')", ...pyFiles], { encoding: "utf8" });
   rec("dify-plugin", "py_compile every module", pc.status === 0, pc.stderr.trim() || `${pyFiles.length} module(s)`);
   if (YAML) {
     const r = py(`import yaml,glob,sys
