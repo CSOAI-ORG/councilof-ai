@@ -1,0 +1,26 @@
+{
+  "name": "@csoai/gspc-panel",
+  "version": "0.1.0",
+  "description": "Embeddable GSPC evidence panel: a framework-free web component plus a React wrapper. Evidence by GSPC · Council of AI. Measurement, not certification.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./react": "./src/react.js",
+    "./core": "./src/model.js",
+    "./a2ui": "./src/a2ui.js",
+    "./agui": "./src/agui.js",
+    "./bundle": "../../public/panel/gspc-panel.js"
+  },
+  "peerDependencies": { "react": ">=18" },
+  "peerDependenciesMeta": { "react": { "optional": true } },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "test": "vitest run --config vitest.config.mjs",
+    "test:e2e": "playwright test --config test/e2e/playwright.config.mjs"
+  },
+  "homepage": "https://councilof.ai/panel/"
+}

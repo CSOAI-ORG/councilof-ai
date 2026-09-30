@@ -1,0 +1,105 @@
+{
+ "schema": "csoai.signed-run/0.1",
+ "payload": {
+  "schema": "csoai.signed-artifact/0.1",
+  "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
+  "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
+  "artifact": {
+   "path": "measurement-capsules/v0.2/index/2026-09-30.json",
+   "sha256": "c96b94b988df4ea029a6516ddc1fc7c65ed4e712b3833b475b20bee2e32277ef",
+   "schema": "csoai.measurement-capsule-index/0.3",
+   "as_of": "2026-09-30T08:18:22Z"
+  },
+  "index_root": "6760518bfff7149f6f552075527640432f7200c2986476bf8b5f8685caf7b693",
+  "root_over_batch_merkle_roots": "195eae7926bead60969a2838a75a9e5b1c780cbd3330d781e8f9332520abd37c",
+  "n_batches": 10,
+  "n_capsules_total": 10979,
+  "batches": [
+   [
+    "a2a_card",
+    33,
+    "bf12f4ad340a11a14ecbd359ba90b3aaebb36bb75bcf9e11f433148441bae436",
+    "180a16f838f33372e1e6345fb272d7b3427a55dacee5571c34a6947a116cc6b6"
+   ],
+   [
+    "claim_watch",
+    1,
+    "44ec4b9730196fc357c7e20f7a330027cbfa0a9ad38077015b8f13cc67b76869",
+    "3fdbf6cc820fa40f7606792fc0db7492c227b5e5f5152d88fece3a0cbcedf4a9"
+   ],
+   [
+    "contract_parity",
+    9148,
+    "70403984d857b7b167d0010608f79c5407bc8642435eb72e7644c83918b1a788",
+    "1b9186699b27ac5bc13c4b211f7a5f1317aee96e0c85c27668ac21b9214af357"
+   ],
+   [
+    "cross_ledger",
+    383,
+    "4d1a955e12833786393c04473064299ad54464c0a0dd1ba4e5794a62f52de892",
+    "67107098348dd2e1568fc3198c042969a455e854a669d9bd43c70dd1c24fa682"
+   ],
+   [
+    "mill_cross_runtime",
+    14,
+    "5ae00c1f4c2ed290fb91206f29372d0df3e61478c568d4797855502e751ebff6",
+    "32ece857c94062f41a03aad9e269532cdbe5dc0a576ed20110edc4ecacb0468d"
+   ],
+   [
+    "mill_cross_runtime",
+    140,
+    "78226433e9e433b311e067ee56fcbaf415f6dc57301254f3bb4922a0b8053cf6",
+    "422fa6377b274bab095e8e875f67d087a275417c14c90a4c4e4cedb56ca9a5ff"
+   ],
+   [
+    "operations",
+    479,
+    "63d1e261f6d2e384823e2563ecf89377496f02cfd9426d669dc0dba97eaf6b51",
+    "ceeb69de3df39518a53c2b955add283f0496169262ea9bafd0ad202916fc014d"
+   ],
+   [
+    "public_signals",
+    118,
+    "80a2d12efb54ff01aa150680639df8326b0cf3c5e5cb7ef5662f0d95d37718ec",
+    "8767d3d5f402e429dccce4ad96d056dcecc2d28a8e171f2ed3850ca8469a41e9"
+   ],
+   [
+    "self_parity",
+    166,
+    "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
+    "df18985070be64a74df767b5356b76aa67f9277baa8c485ee3166de65369f51a"
+   ],
+   [
+    "tool_drift",
+    497,
+    "3d12f23d6a96689128717534436d69f4f6e21c475c5311a6c55eb4787969e655",
+    "c0ef83eeb2d00d058b5ab6f3ecd0ca7f670278fd39a996d202d42a20f19078c0"
+   ]
+  ],
+  "chain": {
+   "date": "2026-09-30",
+   "chain_seq": 4,
+   "prev_date": "2026-09-29",
+   "prev_index_sha256": "fb56321561f16362c83d8eaaf9320083bb2ac96fa466f4d560625639cc08b332",
+   "prev_index_root": "5ce9511e9554cef6d92d166af08f9bae0b5149655fa555e2025a505ed9af06df",
+   "gap_days": 0,
+   "supersedes_sha256": null
+  }
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "alg": "Ed25519",
+  "sig_ed25519": "61da95c1dcb341412421261e4fd875a78e11196f4639cb6636d513b65bbca65f73818abd52b594ec3926296b802443a3798c3c851a6f3e9fcb7cf6dea3cc7105",
+  "payload_sha256": "7f955626118fee533f3cea960ec66fe30b9cce8dda8b3f2aac3d01ad29df7add",
+  "signed_at": "2026-09-30T08:18:27.746Z"
+ },
+ "local_verification": {
+  "result": "VERIFIES",
+  "altered_preimage_controls": {
+   "trailing byte": "rejected (control holds)",
+   "record sha altered": "rejected (control holds)",
+   "index root altered": "rejected (control holds)",
+   "prev index sha altered": "rejected (control holds)"
+  }
+ }
+}

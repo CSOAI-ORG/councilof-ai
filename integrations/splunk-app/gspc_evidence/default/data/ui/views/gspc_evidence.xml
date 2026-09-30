@@ -1,0 +1,42 @@
+<dashboard version="1.1" script="gspc_panel_loader.js" stylesheet="gspc_panel.css">
+  <label>GSPC evidence</label>
+  <description>GSPC evidence events in this Splunk, and the live GSPC evidence panel for the subject you pick. The panel reads councilof.ai only. Evidence by GSPC · Council of AI. Measurement, not certification.</description>
+  <fieldset submitButton="true" autoRun="true">
+    <input type="text" token="gspc_subject" searchWhenChanged="true">
+      <label>Subject (MCP server URL, agent card URL, model id, card id or claim id)</label>
+      <default>https://councilof.ai/mcp</default>
+    </input>
+    <input type="time" token="t">
+      <label>Time</label>
+      <default><earliest>-30d@d</earliest><latest>now</latest></default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>GSPC evidence events (OCSF and ECS) — click a row to open its subject in the panel</title>
+      <table>
+        <search>
+          <query>sourcetype IN ("csoai:evidence:ecs","csoai:evidence:ocsf")
+| eval gspc_subject=coalesce(gspc_subject, 'csoai.subject.locator', 'resources{}.uid'), gspc_state=coalesce(gspc_state, 'csoai.state', 'unmapped.csoai.state')
+| stats latest(_time) AS last_seen count BY gspc_subject gspc_state sourcetype
+| convert ctime(last_seen)
+| sort - last_seen</query>
+          <earliest>$t.earliest$</earliest>
+          <latest>$t.latest$</latest>
+        </search>
+        <option name="drilldown">row</option>
+        <drilldown>
+          <set token="form.gspc_subject">$row.gspc_subject$</set>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>GSPC evidence panel</title>
+      <html>
+        <div id="gspc-panel-slot" data-token="gspc_subject"></div>
+      </html>
+    </panel>
+  </row>
+</dashboard>
