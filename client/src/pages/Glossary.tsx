@@ -1334,7 +1334,7 @@ export default function Glossary() {
                 training record — it attests training, not conformity.
               </p>
               <a href="/certification" className="hover:bg-purple-50 hover:text-purple-700">
-                View Certifications
+                View training
               </a>
             </Card>
 

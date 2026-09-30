@@ -115,7 +115,7 @@ export function Footer() {
   ];
 
   const socialLinks = [
-    { name: 'Source snapshot', icon: BookOpen, href: 'https://huggingface.co/datasets/csoai/councilof-ai-source' },
+    { name: 'Source snapshot (archived)', icon: BookOpen, href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai' },
     { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
     { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
   ];

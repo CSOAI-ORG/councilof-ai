@@ -210,10 +210,6 @@
     {
      "label": "Admission receipt",
      "url": "https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
-    },
-    {
-     "label": "Index builder source",
-     "url": "https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/surface/build-hub-cards-index.mjs"
     }
    ],
    "social": "A signed card is not enough to enter the Hub index. Its admission receipt must hash to the value the card names, its item and bank files must match, and its status must follow the n>=30 rule. https://councilof.ai/interop/mill-evidence/admission-aa3e2e9e5738.json"
@@ -335,10 +331,6 @@
    "summary": "Since the 2026-09-13 evidence ruling, a Hub card without item evidence cannot land as quotable; older cards are superseded, not deleted.",
    "body": "Since the 2026-09-13 evidence ruling, a Hub card that carries just an aggregate accuracy cannot enter the quotable path. The landing script, scripts/land_mill_cards.py, says it plainly: an aggregate-only card is never quotable; a card that binds an evidence bundle must find it, and a bundle that is absent or hashes differently fails closed; and cards with no evidence bundle are skipped with the reason that aggregate-only cards stopped landing after the 2026-09-13 evidence ruling. Older cards are not deleted. When a current card with item evidence replaces one, SUPERSEDED.jsonl records it with the reason \"#2075: replaced by a current reproducibly admitted v0.2 item-evidence card\". The Hub cards index describes its source as reproducibly admitted signed Hub cards on the deployed commit, and publishes how many signed files it saw and how many it skipped, so the retired population stays countable without being quotable. The reason is reproducibility: an aggregate cannot be re-graded, and item rows can.",
    "artifacts": [
-    {
-     "label": "Landing script",
-     "url": "https://huggingface.co/datasets/csoai/councilof-ai-source/blob/main/source/scripts/land_mill_cards.py"
-    },
     {
      "label": "Supersession ledger",
      "url": "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl"
@@ -536,8 +528,8 @@
    "body": "The wrapped-asset parity ledger dated 2026-09-14 reads USDC.e on Arbitrum against the Arbitrum One ERC-20 gateway escrow on Ethereum. At Arbitrum block 504923416, totalSupply() on 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8 returned 48,316,267.900248. At Ethereum block 25972488, balanceOf the escrow 0xcEe284F754E854890e311e3280b767F80797180d on the canonical USDC contract returned 52,223,762.917301. The ledger records escrow_over_wrapped as 1.080873, meaning the escrow balance read higher than the wrapped supply at those two blocks. Each raw hex return value is stored with its sha256, and each block carries its hash and a finality label: finalized tag as reported by the provider, not independently proven final. The ledger's attests field says what this is: point-in-time reads at the pinned blocks, a ratio, not a rate, not a grade, not a reserve attestation, not a certificate. The /wrappers/ page renders the same ledger.",
    "artifacts": [
     {
-     "label": "Parity ledger 2026-09-14 as committed 03:13Z (site file since regenerated)",
-     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/9995fd586792f3e6c71041fe9732dd9e17a27236/public/interop/wrapped-asset-parity-2026-09-14.json"
+     "label": "Parity ledger 2026-09-14 (served copy; the 03:13Z commit it was first read from is not publicly hosted)",
+     "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
     },
     {
      "label": "Wrapper parity page",
@@ -554,8 +546,8 @@
    "body": "The same parity ledger refuses to collapse its pairs into one number, and uses four states. ESCROW_PARITY_READ means both reads succeeded, as for dai:optimism, where escrow_over_wrapped is 1.505694 at OP Mainnet block 156875715 and Ethereum block 25972488. UNCHECKABLE_NATIVE_ISSUANCE: for usdc:base the record notes that Circle mints USDC natively on Base, so no escrow exists; supply is read and no parity is claimed. INDEXED_CUSTODIAL: for wbtc:ethereum the reserve is held by custodians and nothing independent is readable from here, so the pair stays indexed. UNMEASURED: for usdt0:arbitrum the read failed with an empty eth_call result from 0x2E1dBfbf44d8855fDE5D5fD6c978a9b10bc27627, and the ledger records the error instead of guessing. A reader who sees a missing ratio should read the state before anything else. Missing because no escrow exists, missing because the reserve is off-chain, and missing because a read failed are three different facts. The /wrappers/ page shows how many pairs sit in each state.",
    "artifacts": [
     {
-     "label": "Parity ledger 2026-09-14 as committed 03:13Z (site file since regenerated)",
-     "url": "https://github.com/CSOAI-ORG/councilof-ai/blob/9995fd586792f3e6c71041fe9732dd9e17a27236/public/interop/wrapped-asset-parity-2026-09-14.json"
+     "label": "Parity ledger 2026-09-14 (served copy; the 03:13Z commit it was first read from is not publicly hosted)",
+     "url": "https://councilof.ai/interop/wrapped-asset-parity-2026-09-14.json"
     },
     {
      "label": "Wrapper parity page",

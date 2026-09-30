@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Renderers: csoai.evidence-event/0.1 -> OCSF 1.9 / OTel / SARIF 2.1.0 / in-toto v1 / ECS (HEC).
+"""Renderers: csoai.evidence-event/0.1 -> OCSF 1.9 / OTel / SARIF 2.1.0 / in-toto v1 / ECS (HEC) / W3C ACR v0.1.
 
 Each renderer changes shape only. Every one calls event.check_renderable() first, so an event that
 breaks the doctrine (for example UNMEASURED carrying a number) is refused, not rendered.

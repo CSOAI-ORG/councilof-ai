@@ -405,9 +405,8 @@ FOOTER = """<footer class="site-footer">
       <h4>Company</h4>
       <a href="https://csoai.org">csoai.org</a>
       <a href="https://huggingface.co/csoai">HuggingFace</a>
-      <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a>
+      GitHub <span title="not publicly reachable: the GitHub organisation is unavailable and the source mirror is private">(not publicly hosted)</span>
       <a href="/.well-known/did.json">DID</a>
-      <a href="https://x.com/csoai_org">X / Twitter</a>
     </div>
   </div>
   <div class="footer-bottom">

@@ -122,12 +122,14 @@ export const MEASURED_ON = {
   note: "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals " +
     "(public_count, measured_axes, quotable_axes) and are derived, never typed. " +
     "The measured canonical axes used the same fleet, same rows, same grader. " +
-    "Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval " +
-    "where n is honestly independent, and whether the lead is statistically separated (McNemar " +
-    "p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and " +
+    "Per-axis numbers show the top observed row — a separated leader only where separation reads " +
+    "SEPARATED — its Wilson interval where n is honestly independent, and whether the top row is " +
+    "statistically separated (McNemar p<0.05), a TIE or UNTESTED. fleet_mean and mean_harm show the " +
+    "fleet, not the top row. Separation test and " +
     "per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and " +
     "GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living " +
-    "board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. " +
+    "board; its separation is UNTESTED since 2026-09-29 (C-2026-0929-02; a row-level TIE before) — " +
+    "neither is a separated leader. " +
     "slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
   // ── living_stamp: PRESENTED AS UNVERIFIABLE, ON PURPOSE ──────────────────────
   // Until 2026-08-26 this block carried `signed: true` and a `sig_input` recipe and

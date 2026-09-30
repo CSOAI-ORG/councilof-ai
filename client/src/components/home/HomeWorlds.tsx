@@ -169,22 +169,22 @@ function OsNamedLinks({ id }: { id?: string }) {
 const OSS_CARDS = [
   {
     name: "inspect-receipts",
-    href: "https://github.com/CSOAI-ORG/inspect-receipts",
+    href: "https://pypi.org/project/inspect-signed-receipt/",
     what: "Ed25519 receipts for Inspect AI eval runs.",
   },
   {
     name: "claimguard",
-    href: "https://github.com/CSOAI-ORG/claimguard",
+    href: "https://pypi.org/project/claimguard/",
     what: "Claim vs signed-artifact integrity checker.",
   },
   {
     name: "corpus-watch",
-    href: "https://github.com/CSOAI-ORG/corpus-watch",
+    href: "/corpus-watch/status.json",
     what: "Regulatory drift hash-watcher (EU AI Act CELLAR / UK statute).",
   },
   {
     name: "signed-receipts",
-    href: "https://github.com/CSOAI-ORG/signed-receipts",
+    href: "/spec/signed-receipts",
     what: "Signed receipts. Inspect with inspect-signed-receipt.",
   },
 ] as const;
@@ -197,7 +197,7 @@ function OssCards() {
           Open tools
         </h2>
         <p className="mt-3 text-sm text-muted-foreground">
-          Public GitHub. Measurement, not certification. Not lifestyle MCPs.
+          Packages on PyPI and specs on this site (the GitHub organisation is unavailable). Measurement, not certification. Not lifestyle MCPs.
         </p>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
           {OSS_CARDS.map((c) => (

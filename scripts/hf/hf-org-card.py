@@ -63,7 +63,8 @@ LINKS = {
     "Council OS (the board, for people)": "https://councilof.ai/dashboard",
 }
 # A stale string counts only in a sentence with no negation: "never print 2410 measured" is a guardrail.
-STALE = [r"13 measured of 14", r"mint after final name", r"14-slot", r"14 slot", r"2410 measured", r"22·15·7"]
+STALE = [r"13 measured of 14", r"mint after final name", r"14-slot", r"14 slot", r"2410 measured", r"22·15·7",
+         r"22·22·0", r"22 axes measured", r"22 axis · 22 measured", r"A100 COLD", r"no axis mine on ZeroGPU", r"Hub cite = live GET only"]
 NEGATION = re.compile(r"\b(never|not|no|nothing|superseded|retired|earlier|history|was|were|old|stale)\b", re.I)
 FILLER_TAGS = ["council-of-ai", "measurement", "transparency", "ai-governance", "responsible-ai", "evaluation"]
 DATA_EXT = (".parquet", ".jsonl", ".csv")
@@ -288,6 +289,76 @@ def size_category(rows: int) -> str:
 
 
 # ── the 16-point rubric (memory: csoai-hf-card-v2) ────────────────────────────────────────
+
+# Lines an agent wrote for other agents, pasted onto public cards before the markers existed (found on ~111
+# csoai cards, 30 Sep 2026). They are instructions, not information, so --scrub removes them or reduces them to
+# the sentence a reader needs. Typed lids and typed MCP tool counts outside the markers are replaced with the
+# live values; the BibTeX DOI gets the same availability note the rest of the card carries.
+LEGACY_LINE_RULES = [
+    (re.compile(r"^\*\*SUPERSEDED:\*\* typed Hub triples .*Hub cite = live GET only\.\s*$"), None),
+    (re.compile(r"^- Hub cite: https://councilof\.ai/api/hub-cards — \*\*re-GET\*\*.*$"),
+     "- Hub cards (read live): https://councilof.ai/api/hub-cards"),
+    (re.compile(r"^Measurement, never certification\. Printer only — no axis mine on ZeroGPU\. A100 COLD\.\s*$"),
+     "Measurement, never certification."),
+    (re.compile(r"^Measurement, never certification\. No invent MEASURED\. Printer only\.\s*$"),
+     "Measurement, never certification."),
+]
+TYPED_LID = re.compile(r"^\*\*Lid:\*\* \d+ axes measured · .*$")
+TYPED_MCP_ROW = re.compile(r"^\| MCP endpoint — .*\| `POST https://councilof\.ai/mcp` \|$")
+BIB_DOI = re.compile(r"^(\s*)doi(\s*)= \{" + re.escape(DOI) + r"\},\s*$")
+
+
+def scrub_legacy(text: str, lid: str | None, mcp_n: int | None, as_of: str) -> tuple[str, list[str]]:
+    out, changes, lines = [], [], text.split("\n")
+    for i, line in enumerate(lines):
+        new = line
+        for rx, repl in LEGACY_LINE_RULES:
+            if rx.match(line):
+                new = repl
+                break
+        if new is line and lid and TYPED_LID.match(line):
+            new = f"**Lid:** {lid}"
+        if new is line and mcp_n is not None and TYPED_MCP_ROW.match(line):
+            new = f"| MCP endpoint — {mcp_n} tools, verified {as_of} | `POST {MCP}` |"
+        if new is line:
+            m = BIB_DOI.match(line)
+            nxt = lines[i + 1] if i + 1 < len(lines) else ""
+            if m and "unavailable" not in nxt:
+                out.append(line)
+                new = f"{m.group(1)}note{' ' * max(1, len(m.group(2)) - 1)}= {{DOI record unavailable since 29 Sep 2026 (Zenodo account blocked; appeal pending)}},"
+                changes.append("bibtex doi note")
+                out.append(new)
+                continue
+        if new is None:
+            changes.append("removed: " + line[:60])
+            continue
+        if new != line:
+            changes.append("replaced: " + line[:60])
+        out.append(new)
+    return "\n".join(out), changes
+
+
+def scrub(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") -> None:
+    """Download README.md, apply scrub_legacy, and (with --push) commit it against the revision read."""
+    from huggingface_hub import HfApi, CommitOperationAdd
+    api = HfApi()
+    info = api.repo_info(repo, repo_type=kind)
+    src = Path(api.hf_hub_download(repo, "README.md", repo_type=kind, revision=info.sha))
+    text = src.read_text()
+    mcp_n, why = mcp_tool_count()
+    as_of = now_iso()
+    new, changes = scrub_legacy(text, d.get("lid") if d.get("state") == "DERIVED" else None, mcp_n, as_of)
+    dest = out / "scrub" / repo.replace("/", "__") / "README.md"
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(new)
+    print(json.dumps({"repo": repo, "parent": info.sha, "changes": len(changes), "detail": changes[:12],
+                      "mcp_tools": mcp_n, "mcp_reason": why, "stale_after": stale_hits(new)}, ensure_ascii=False))
+    if push and new != text:
+        c = api.create_commit(repo, [CommitOperationAdd(path_in_repo="README.md", path_or_fileobj=str(dest))],
+                              repo_type=kind, parent_commit=info.sha,
+                              commit_message="card: remove agent directives, live lid and MCP tool count, DOI availability note (hf-org-card.py --scrub)")
+        print(json.dumps({"repo": repo, "commit": c.oid}))
+
 
 def stale_hits(body: str) -> list[str]:
     hits = []
@@ -599,7 +670,7 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
     if mcp_n is not None:
         lines.append(f"| MCP endpoint — {mcp_n} tools, verified {as_of} | `POST {MCP}` |")
     lines += [
-        "| MCP Registry | `io.github.CSOAI-ORG/gspc` — version not pinned here; the registry is the authority |",
+        "| MCP Registry | `ai.councilof/gspc` (and `ai.councilof/gspc-free`) — version not pinned here; the registry is the authority |",
         "| npm — MCP server | [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) — `npx -y csoai-gspc-mcp`. No version is pinned here: ask the registry for the current one rather than trusting a number written on a card. |",
         "| Python reader + card verifier | `pip install \"csoai-gspc[verify]\"` then `csoai-gspc check` — re-derives the board totals from the axis array and exits non-zero if they disagree |",
         f"| The board as a dated, citable snapshot | {SNAPSHOT_TEXT} |",
@@ -866,6 +937,7 @@ def main() -> int:
     ap.add_argument("--dataset-board", action="store_true", help="regenerate datasets/csoai/gspc-board (parquet only)")
     ap.add_argument("--hubcard", nargs="*", default=None, metavar="REPO", help="refresh the 16-point block (+ front matter, manifest) on these datasets")
     ap.add_argument("--space-hubcard", nargs="*", default=None, metavar="SPACE", help="refresh the 16-point block on these Spaces")
+    ap.add_argument("--scrub", nargs="*", default=None, metavar="REPO", help="remove legacy agent directives and typed lids/tool counts from these dataset cards")
     ap.add_argument("--no-spaces", action="store_true", help="skip the two Space READMEs")
     ap.add_argument("--out", default=str(Path(tempfile.gettempdir()) / "csoai-hf-org-card"), help="where derived files are written")
     args = ap.parse_args()
@@ -898,6 +970,8 @@ def main() -> int:
         dataset_board(d, args.push, out / "dataset-gspc-board")
     for repo in args.hubcard or []:
         hubcard(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out)
+    for repo in args.scrub or []:
+        scrub(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out)
     for repo in args.space_hubcard or []:
         hubcard(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out, kind="space")
     return 0 if d["state"] == "DERIVED" else 2

@@ -17,13 +17,6 @@ interface VerifyBadge {
 
 const BADGES: VerifyBadge[] = [
   {
-    label: 'Hugging Face · source snapshot',
-    href: 'https://huggingface.co/datasets/csoai/councilof-ai-source',
-    title: 'Dated source snapshot on Hugging Face; repository publication is separate from site deployment',
-    logo: '/images/badges/verify/huggingface.svg',
-    wide: true,
-  },
-  {
     label: 'Hugging Face · csoai',
     href: 'https://huggingface.co/csoai',
     title: 'CSOAI organisation on Hugging Face',
@@ -79,7 +72,7 @@ const BADGES: VerifyBadge[] = [
     label: 'Software Heritage · archived',
     href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai',
     title:
-      'A 2 September 2026 source snapshot is archived by Software Heritage (SWHID swh:1:ori:8725f4054f527b3abdd47868de7fac5c956069f0). This archived origin is separate from current site deployment.',
+      'Source snapshots of 2 and 15 September 2026 are archived by Software Heritage (SWHID swh:1:ori:8725f4054f527b3abdd47868de7fac5c956069f0). This archived origin is separate from current site deployment.',
     logo: '/images/badges/verify/software-heritage.svg',
   },
   {
