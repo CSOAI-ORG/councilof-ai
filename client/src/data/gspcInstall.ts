@@ -387,7 +387,7 @@ export const REGISTRIES: RegistryRow[] = [
   { name: "mcp.so", status: "listed", permissionless: true, where: "https://mcp.so/servers/csoai-gspc-measurement", note: "The public flagship page is live, Verified and Featured. Listing presence does not prove tool health or use." },
   { name: "awesome-mcp-servers", status: "listed", permissionless: true, where: "https://github.com/punkpeye/awesome-mcp-servers/pull/13360", note: "PR #13360 merged the entry. Later open PRs that repeat it are duplicates, not new distribution." },
   { name: "Glama", status: "listed", permissionless: true, where: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc", note: "The flagship connector is live and exposes the served tools. Directory ownership remains unverified until the account-issued claim token is published." },
-  { name: "PulseMCP", status: "listed", permissionless: true, where: "https://github.com/CSOAI-ORG/councilof-ai/pull/1452", note: "Merged evidence records the listing after sitemap verification. Do not submit it again." },
+  { name: "PulseMCP", status: "listed", permissionless: true, where: "PulseMCP listing (recorded by merged change #1452)", note: "Merged evidence records the listing after sitemap verification. Do not submit it again." },
   { name: "cursor.directory", status: "staged", permissionless: false, where: "cursor.directory/plugins/new", note: "Reviewed listing; auto-detects via a repo .mcp.json." },
   { name: "Docker MCP Catalog", status: "staged", permissionless: false, where: "docker/mcp-registry", note: "PR (server.yaml + tools.json + readme.md) with Docker-team review." },
 ];

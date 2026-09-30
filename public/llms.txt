@@ -108,7 +108,7 @@ Claim maintenance is the continuous, independent observation of the public claim
 - Register of every subject we maintain claims on (generated from the registries on disk, never hand-listed): GET https://councilof.ai/api/claims/register — read `totals` and `as_of` live; filter with `?subject=` or `?state=`. Never freeze a subject count or a claim count in this file.
 - Reference implementation anyone can run, including against us (MIT): https://councilof.ai/spec/claim-maintenance/v0.2/reference/claim-capture.mjs (same-site source copy) — captures a claim, hashes it, writes a conforming artifact, and REJECTS a tampered one.
 - Human page: https://councilof.ai/claim-maintenance/
-- Citable archival deposit with a persistent identifier we do not control: DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0. A DOI makes a document citable and permanent; it does not make it right.
+- Archival deposit, DOI 10.5281/zenodo.22901908 (all versions: 10.5281/zenodo.22901781), CC0: UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Cite the served document of record above until the record is restored. A DOI makes a document citable; it does not make it right.
 - States, and there are exactly four: CLAIM_CAPTURED · CLAIM_MEASURED · UNMEASURED · UNCHECKABLE. UNMEASURED and UNCHECKABLE are first-class and are published as prominently as the others.
 - What it is NOT: not fact-checking, not certification, not auditing, not reputation scoring, not adversarial journalism. No mark, badge, score, rank or index may be derived from any state. Nothing published asserts falsity about anyone. An observed change is never an allegation. A listing is not an endorsement and not an accusation.
 
@@ -324,7 +324,7 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 - npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
 - Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
-- Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104
+- Zenodo DOI (from live GET /api/gspc `doi`): 10.5281/zenodo.21991104 — UNAVAILABLE since 29 Sep 2026: Zenodo blocked the CSOAI account and every CSOAI record returns HTTP 410 (appeal pending; status at https://councilof.ai/interop/zenodo-status.json). Do not follow it as a working link.
 - Where we take part (standards bodies, registries, scholarly ids, regulator filings — each row with its evidence URL, date, what it proves and what it does not): https://councilof.ai/memberships · machine-readable: https://councilof.ai/interop/memberships.json. Participation is not endorsement, and a listing is not adoption. Do not count the rows; read them.
 
 Lid (quote live `totals.lid`): 23 axes measured · 14 model comparisons: 0 separated · 7 TIE · 7 UNTESTED · 9 fact runs · TIE is TIE · not a certificate.
@@ -373,14 +373,14 @@ board, whose totals stay GET https://councilof.ai/api/gspc. A superseded version
 ## Timestamp proofs (anchored is not the same claim as submitted)
 
 Derived at generation from https://councilof.ai/interop/ots/manifest.json (same bytes on disk at
-public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-30T10:12:48Z). An upgrade loop
+public/interop/ots/manifest.json, schema csoai.ots-manifest/0.4, artifact as_of 2026-09-30T11:16:27Z). An upgrade loop
 keeps advancing these, so read the manifest for a fresher count rather than quoting this line alone.
 
 - Detached OpenTimestamps proofs that actually deserialize: 652. The manifest is built by
   reading every .ots file in its scanned directories and keeping only those that parse — never from a
   list of files we intended to stamp.
-- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 646.
-- Still calendar-pending: 6. A calendar-pending proof is a submitted request, not
+- Of those, Bitcoin-attested (the proof bytes carry a BitcoinBlockHeaderAttestation): 651.
+- Still calendar-pending: 1. A calendar-pending proof is a submitted request, not
   evidence of a time. `submitted` is not `anchored`.
 - Proofs whose subject is not served beside them: 63 — an anchor a reader cannot check
   what was stamped against. Published as a count rather than hidden.

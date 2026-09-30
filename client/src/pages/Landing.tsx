@@ -434,8 +434,8 @@ export default function Landing() {
               <Link href="/watchdog-signup">
                 <span className="hover:text-foreground transition cursor-pointer">Careers</span>
               </Link>
-              <a href="https://huggingface.co/datasets/csoai/councilof-ai-source" title="Source mirror on Hugging Face. The GitHub org CSOAI-ORG is temporarily unavailable." target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
-                Source (HF mirror)
+              <a href="https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai" title="Archived source snapshot (Software Heritage, 15 Sep 2026). The GitHub organisation is unavailable and the Hugging Face source mirror has been private since 28 Sep 2026." target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
+                Source (archived snapshot)
               </a>
             </div>
             <p className="text-sm text-muted-foreground">

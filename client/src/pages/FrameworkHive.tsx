@@ -13,7 +13,7 @@ async function askSov(q: string): Promise<string> {
 }
 function daysTo(iso?: string): number | null { if (!iso) return null; const d = Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000); return d; }
 
-// Real, published open-source MCP tools per framework (github.com/CSOAI-ORG) — Layer 0 governed.
+// Real, published open-source MCP tools per framework (PyPI; the GitHub org is unavailable) — Layer 0 governed.
 const REAL_MCP: Record<string, string[]> = {
   "eu-ai-act": ["eu-ai-act-compliance-mcp", "csoai-governance-crosswalk-mcp"],
   "gdpr": ["gdpr-compliance-ai-mcp"],
@@ -138,7 +138,7 @@ function Detail({ f }: { f: HiveFramework }) {
             <div className="mt-3">
               <div className="mb-1.5 font-mono text-[10px] uppercase tracking-[1.5px] text-emerald-300/60">Governed MCP tools — open source, pip/npx install</div>
               <div className="flex flex-wrap gap-1.5">{(REAL_MCP[f.slug] || []).map((r) => (
-                <a key={r} href={"https://github.com/CSOAI-ORG/" + r} target="_blank" rel="noreferrer" className="rounded-md border border-emerald-400/25 bg-emerald-500/10 px-2 py-1 font-mono text-[11px] text-emerald-200 hover:bg-emerald-500/20">⎇ {r}</a>
+                <a key={r} href={"https://pypi.org/project/" + r + "/"} target="_blank" rel="noreferrer" className="rounded-md border border-emerald-400/25 bg-emerald-500/10 px-2 py-1 font-mono text-[11px] text-emerald-200 hover:bg-emerald-500/20">⎇ {r}</a>
               ))}</div>
             </div>
           )}

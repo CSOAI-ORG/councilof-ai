@@ -58,8 +58,9 @@ async function proofGet(request) {
           kind: "x402",
           per: "proof-bundle",
           instruction:
-            "One inclusion is free (?sha=). The full bundle is x402. Settle via the estate x402 receipt MCP, then retry with the x-payment header. Verify stays free.",
-          settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+            "One inclusion is free (?sha=). The full bundle is x402. Settle with any x402 client, then retry with the x-payment header. Verify stays free.",
+          settle_mcp: null,
+          settle_mcp_note: "The estate x402 receipt MCP is not publicly hosted while the GitHub organisation is unavailable. Any x402 client can settle against the challenge terms.",
         },
         free: { one_inclusion: "/api/proof?sha=<64-hex>" },
       },
