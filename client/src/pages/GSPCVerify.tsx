@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import BoardAttestation from "@/components/board/BoardAttestation";
+import { CARD_PARAM_MAX_BYTES, resolveCardParam } from "@/lib/cardParam";
 
 /**
  * /gspc-verify — verify published card bytes yourself.
@@ -60,6 +61,48 @@ export default function GSPCVerify() {
   const [seedNonce, setSeedNonce] = useState(0);
   const [tryBusy, setTryBusy] = useState(false);
   const [tryErr, setTryErr] = useState<string | null>(null);
+  const [autoVerify, setAutoVerify] = useState(false);
+  // ?card=<url>: the record a board row pointed at. Loaded unaltered and verified at once, so
+  // the reader never pastes JSON. Refusals and load failures are stated, never a silent pass.
+  const [linked, setLinked] = useState<
+    | { state: "loading" | "loaded"; href: string; bytes?: number; sha256?: string }
+    | { state: "refused" | "failed"; href: string; reason: string }
+    | null
+  >(null);
+
+  useEffect(() => {
+    const p = resolveCardParam(window.location.search, window.location.origin);
+    if (p.state === "none") return;
+    setMode("estate");
+    if (p.state === "refused") {
+      setLinked({ state: "refused", href: p.raw, reason: p.reason });
+      return;
+    }
+    const ac = new AbortController();
+    setLinked({ state: "loading", href: p.href });
+    (async () => {
+      try {
+        const r = await fetch(p.url, { signal: ac.signal, headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error(`GET ${p.href} → HTTP ${r.status}`);
+        const buf = await r.arrayBuffer();
+        if (buf.byteLength > CARD_PARAM_MAX_BYTES) throw new Error(`the record is ${buf.byteLength} bytes, over the ${CARD_PARAM_MAX_BYTES}-byte limit for a linked card`);
+        const raw = new TextDecoder().decode(buf);
+        let digest: string | undefined;
+        try {
+          const d = await crypto.subtle.digest("SHA-256", buf);
+          digest = [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
+        } catch { /* no WebCrypto: the verifier below says UNCHECKABLE itself */ }
+        setLinked({ state: "loaded", href: p.href, bytes: buf.byteLength, sha256: digest });
+        setAutoVerify(true);
+        setSeed(raw);
+        setSeedNonce((n) => n + 1);
+      } catch (e: any) {
+        if (ac.signal.aborted) return;
+        setLinked({ state: "failed", href: p.href, reason: String(e?.message ?? e) });
+      }
+    })();
+    return () => ac.abort();
+  }, []);
 
   const tryPublished = useCallback(async () => {
     setTryBusy(true);
@@ -69,6 +112,7 @@ export default function GSPCVerify() {
       const r = await fetch(ref.url, { headers: { accept: "application/json" } });
       if (!r.ok) throw new Error(`GET ${ref.url} → HTTP ${r.status}`);
       const raw = await r.text();
+      setAutoVerify(false);
       setSeed(raw);
       setSeedNonce((n) => n + 1);
     } catch (e: any) {
@@ -85,6 +129,7 @@ export default function GSPCVerify() {
       const r = await fetch(GOVERNANCE_RETRIEVE, { headers: { accept: "application/json" } });
       if (!r.ok) throw new Error(`GET ${GOVERNANCE_RETRIEVE} → HTTP ${r.status}`);
       const raw = await r.text();
+      setAutoVerify(false);
       setSeed(raw);
       setSeedNonce((n) => n + 1);
     } catch (e: any) {
@@ -95,7 +140,7 @@ export default function GSPCVerify() {
   }, []);
 
   useEffect(() => {
-    document.title = "Verify a signed card — client-side | CSOAI";
+    document.title = "Verify a signed card — client-side | Council of AI";
     setMetaDescription("Verify a Council of AI measurement card client-side: recompute its payload hash and Ed25519 signature in your browser against the published public key.");
   }, []);
 
@@ -258,13 +303,41 @@ export default function GSPCVerify() {
               Each loads one published card into the box, unaltered. Both are free.
             </span>
           </div>
+          {linked && (
+            <div
+              data-testid="linked-card"
+              data-state={linked.state}
+              role="status"
+              className={`mt-4 min-w-0 rounded-xl border p-4 text-[13px] leading-relaxed ${
+                linked.state === "refused" || linked.state === "failed"
+                  ? "border-amber-400/50 bg-amber-400/[0.08] text-amber-100"
+                  : "border-emerald-400/40 bg-emerald-500/[0.08] text-emerald-50"
+              }`}
+            >
+              <p className="font-semibold">
+                {linked.state === "loading" && "Loading the linked record…"}
+                {linked.state === "loaded" && "Linked record loaded unaltered and checked below."}
+                {linked.state === "refused" && "Linked record not loaded — nothing was checked."}
+                {linked.state === "failed" && "Linked record could not be loaded — nothing was checked."}
+              </p>
+              <p className="mt-1 break-all font-mono text-[12px]">{linked.href}</p>
+              {linked.state === "loaded" && (
+                <p className="mt-1 break-all font-mono text-[12px] text-emerald-100/80">
+                  {linked.bytes} bytes{linked.sha256 ? ` · sha256 ${linked.sha256}` : ""}
+                </p>
+              )}
+              {(linked.state === "refused" || linked.state === "failed") && (
+                <p className="mt-1">Reason: {linked.reason}. No VALID or INVALID result has been established. Paste still works.</p>
+              )}
+            </div>
+          )}
           {tryErr && (
             <p className="mt-2 text-[13px] text-amber-200/90" role="status">
               Could not load a published card — {tryErr}. Paste still works.
             </p>
           )}
           <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-            <RecordVerifyForm variant="dark" seed={seed} seedNonce={seedNonce} />
+            <RecordVerifyForm variant="dark" seed={seed} seedNonce={seedNonce} autoVerify={autoVerify} />
           </div>
         </section>
         )}

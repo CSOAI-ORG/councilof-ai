@@ -11,6 +11,7 @@ import {
   type LoadedSet,
 } from "@/data/axis-sets";
 import { GAP_BY_AXIS } from "./GSPCGapMap";
+import { verifyCardHref } from "@/lib/cardParam";
 
 /**
  * /board — one board a person can actually navigate.
@@ -305,6 +306,87 @@ function SetTab({
 
 // ────────────────────────────────────────────────────────────── the row detail
 
+/** A row's signed cards, newest first. Only the honest mappings in CARD_AXIS_ALIASES are
+ *  followed; a row with no mapping has no card and so no Verify link. */
+function rowCards(row: AxisRow, cardsByAxis: Record<string, CardRef[]>): CardRef[] {
+  return (CARD_AXIS_ALIASES[row.id] ?? [])
+    .flatMap((alias) => cardsByAxis[alias] ?? [])
+    .sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
+}
+
+const cardPath = (c: CardRef) => `/signed/cards/${c.card}.json`;
+
+/** Row → verifier, pre-filled: the newest signed card for this row, loaded and checked by
+ *  /gspc-verify/ without a paste. Rendered only when the row has a card. */
+function VerifyRowLink({ row, setId, card }: { row: AxisRow; setId: string; card: CardRef }) {
+  return (
+    <a
+      href={verifyCardHref(cardPath(card))}
+      onClick={(e) => e.stopPropagation()}
+      data-testid={`verify-${setId}-${row.id}`}
+      title={`Verify the newest signed record for this row (${card.card.slice(0, 12)}…, recorded ${card.ts})`}
+      className="inline-flex min-h-[44px] items-center rounded-md px-1 font-semibold text-emerald-800 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-950"
+    >
+      Verify
+    </a>
+  );
+}
+
+/** "Cite this": a block whose sha256 is over the exact bytes its URL serves. Read on demand
+ *  from GET /api/gspc?axis=<row>&format=cite; nothing in it is typed on this page. */
+function CiteBlock({ axis }: { axis: string }) {
+  const [state, setState] = useState<
+    { phase: "idle" | "loading" } | { phase: "ready"; block: any } | { phase: "error"; message: string }
+  >({ phase: "idle" });
+  const [copied, setCopied] = useState(false);
+  const load = () => {
+    if (state.phase !== "idle") return;
+    setState({ phase: "loading" });
+    fetch(`/api/gspc?axis=${encodeURIComponent(axis)}&format=cite`, { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((block) => {
+        if (!block || typeof block.sha256 !== "string" || typeof block.url !== "string") throw new Error("the cite block has no url or sha256");
+        setState({ phase: "ready", block });
+      })
+      .catch((e) => setState({ phase: "error", message: String(e?.message ?? e) }));
+  };
+  return (
+    <details
+      className="mt-3 rounded-lg border border-gray-300 bg-white p-3"
+      data-testid={`cite-${axis}`}
+      onToggle={(e) => { if ((e.currentTarget as HTMLDetailsElement).open) load(); }}
+    >
+      <summary className="flex min-h-[44px] cursor-pointer items-center text-sm font-bold text-gray-900">Cite this</summary>
+      {state.phase === "loading" && <p className="mt-2 text-sm text-gray-600">Reading the cite block…</p>}
+      {state.phase === "error" && (
+        <p className="mt-2 text-sm text-amber-900" role="status">
+          Cite block unavailable ({state.message}). Nothing is shown in its place.{" "}
+          <a className="underline" href={`/api/gspc?axis=${encodeURIComponent(axis)}&format=cite`}>Open it directly</a>.
+        </p>
+      )}
+      {state.phase === "ready" && (
+        <div className="mt-2 space-y-2 text-sm text-gray-800">
+          <pre className="whitespace-pre-wrap break-all rounded-md bg-gray-50 p-3 font-mono text-[12px] leading-relaxed text-gray-900">{state.block.text}</pre>
+          <button
+            type="button"
+            className="min-h-[44px] rounded-lg border border-gray-400 px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-100"
+            onClick={() => {
+              navigator.clipboard?.writeText(state.block.text).then(() => setCopied(true), () => setCopied(false));
+            }}
+          >
+            {copied ? "Copied" : "Copy citation"}
+          </button>
+          <p className="text-[12px] text-gray-700">
+            Check it: <code className="break-all">{state.block.check}</code> prints the same sha256. The
+            board is re-served on every deploy, so keep a copy of the bytes; a matching hash shows you
+            hold the cited bytes, not that the numbers are good.
+          </p>
+        </div>
+      )}
+    </details>
+  );
+}
+
 function RowDetail({
   row,
   setId,
@@ -319,9 +401,7 @@ function RowDetail({
   // same axis are followed; a row with no honest mapping gets NO card link
   // rather than a wrong one, because a link to somebody else's evidence is worse
   // than no link at all.
-  const cards = (CARD_AXIS_ALIASES[row.id] ?? [])
-    .flatMap((alias) => cardsByAxis[alias] ?? [])
-    .sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
+  const cards = rowCards(row, cardsByAxis);
   return (
     <div className="border-t border-gray-200 bg-gray-50 px-4 py-4 text-sm">
       <div className="grid gap-4 md:grid-cols-2">
@@ -425,12 +505,19 @@ function RowDetail({
               {cards.slice(0, 6).map((c) => (
                 <li key={c.card}>
                   <a
-                    href={`/signed/cards/${c.card}.json`}
+                    href={cardPath(c)}
                     data-testid={`card-${row.id}`}
                     className="inline-block rounded-md border border-emerald-300 bg-white px-2 py-1 font-mono text-[11px] text-emerald-800 hover:border-emerald-600"
                     title={`${c.axis} · recorded ${c.ts}`}
                   >
                     {c.card.slice(0, 12)}…
+                  </a>{" "}
+                  <a
+                    href={verifyCardHref(cardPath(c))}
+                    data-testid={`verify-card-${row.id}`}
+                    className="inline-flex min-h-[44px] items-center px-1 text-[12px] font-semibold text-emerald-800 underline"
+                  >
+                    Verify this
                   </a>
                 </li>
               ))}
@@ -446,6 +533,7 @@ function RowDetail({
             )}
           </div>
         )}
+        {setId === "board" && <CiteBlock axis={row.id} />}
       </div>
     </div>
   );
@@ -494,6 +582,12 @@ function SetTable({
                 </span>
               </div>
             </button>
+            {rowCards(r, cardsByAxis)[0] && (
+              <div className="border-t border-gray-100 px-4 py-1 text-sm">
+                <VerifyRowLink row={r} setId={setId} card={rowCards(r, cardsByAxis)[0]} />
+                <span className="text-xs text-gray-600"> the newest signed record for this row</span>
+              </div>
+            )}
             {open === r.id && <RowDetail row={r} setId={setId} cardsByAxis={cardsByAxis} />}
           </div>
         ))}
@@ -550,6 +644,12 @@ function SetTable({
                 </td>
                 <td className="px-4 py-2 text-emerald-700">
                   {open === r.id ? "close" : `open (${r.evidence.length})`}
+                  {rowCards(r, cardsByAxis)[0] && (
+                    <>
+                      {" · "}
+                      <VerifyRowLink row={r} setId={setId} card={rowCards(r, cardsByAxis)[0]} />
+                    </>
+                  )}
                 </td>
               </tr>
               {open === r.id && (

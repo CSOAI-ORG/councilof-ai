@@ -100,10 +100,13 @@ function TallyOptIn({ ok, variant }: { ok: boolean; variant: "light" | "dark" })
   );
 }
 
-export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict }: {
+export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, onVerdict, autoVerify = false }: {
   variant?: "light" | "dark";
-  /** Host-provided original text; editable, and never automatically verified. */
+  /** Host-provided original text; editable. Verified automatically only when autoVerify is set. */
   seed?: string;
+  /** Verify the seed as soon as it loads. Only for a record the reader asked for by URL
+   *  (/gspc-verify/?card=…); the seed is still the unaltered fetched bytes. */
+  autoVerify?: boolean;
   /** Allows the same host-provided record to be loaded again. */
   seedNonce?: number;
   /** Called only for a completed, current-input verdict, never a click. */
@@ -130,17 +133,20 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
       attempt.current += 1; verifier.current.invalidate();
       setText(seed); setVerdict(null); setBusy(false); setFailure(false);
       setNotice(seed.trim() ? "Record loaded. This text has not been checked." : "Ready for a record. Nothing has been checked.");
+      if (autoVerify && seed.trim()) void run(seed);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seed, seedNonce]);
 
-  const run = async () => {
-    if (busy || !text.trim()) return;
+  const run = async (input?: string) => {
+    const value0 = typeof input === "string" ? input : text;
+    if ((busy && typeof input !== "string") || !value0.trim()) return;
     const current = ++attempt.current;
     setBusy(true); setFailure(false); setVerdict(null);
     setNotice("Checking this record. An optional public-key cross-check may take up to three seconds.");
     let bound: { result: UseAwareVerdict; inputHash: string } | null;
     try {
-      bound = await verifier.current.run(text, async (value) => {
+      bound = await verifier.current.run(value0, async (value) => {
         const [signature, useStatus] = await Promise.all([
           verifyRecord(value),
           lookupRecordUseStatus(value),
@@ -185,7 +191,7 @@ export default function RecordVerifyForm({ variant = "dark", seed, seedNonce, on
         />
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        <button type="button" onClick={run} disabled={busy || !text.trim()}
+        <button type="button" onClick={() => void run()} disabled={busy || !text.trim()}
           className={`min-h-[44px] min-w-[44px] rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50 forced-colors:border forced-colors:border-[ButtonText] forced-colors:bg-[ButtonFace] forced-colors:text-[ButtonText] forced-colors:disabled:opacity-100 ${FOCUS} ${
             light ? "bg-emerald-700 text-white hover:bg-emerald-800" : "bg-emerald-400 text-[#03110b] hover:bg-emerald-300"
           }`}>{busy ? "Verifying…" : "Verify this record"}</button>
