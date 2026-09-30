@@ -12,6 +12,8 @@ Canon changes go through the gated staging-mirror land path only.
 | `owm-registry.json` | **The one schedule/registry.** Each stage lists the scheduled jobs that carry it, by their ids in `fleet/automation/JOBS.json` (deployed as `~/fleet/jobs_registry.json`). Each subject is a dependency-index row: claim → sources (surfaces) → fields compared. |
 | `owm.py` | One cycle (stdlib, Python 3.8+). It reads job evidence from the output-novelty reader (`~/fleet/output_novelty.json`, which tracks new content rather than mtime), re-reads every subject, then writes the snapshot, the event log, the heartbeat and the log. |
 | `test_owm.py` | `python3 -m unittest fleet/owm/test_owm.py` (stdlib, no network). |
+| `publish_candidate.py` | Fail-closed source publisher helper. It validates a fresh public snapshot and updates `public/owm/v0.1/latest.json` only for a semantic change or after the freshness interval. It performs no network, Git, signing or deploy action. |
+| `test_publish_candidate.py` | Publisher decision/validation tests: counts, host-path boundary, cadence suppression, freshness refresh, evidence change and exact-byte writes. |
 | `crontab.txt` | The Oracle block (`19,49 * * * *`: flock, disk-floor, nice, timeout 300). |
 | `jobs-yaml-entry.json` | The fleet-supervisor registration (`observe`). |
 | `install-oracle.sh` | An idempotent install. It backs up the crontab and `jobs.yaml` first. It adds the cron line only when `OWM_ENABLE=1`. |
