@@ -139,6 +139,8 @@ let ringRaf = 0;
 
 function place() {
   if (!ring || !ringTarget) return;
+  // The page moved on (a pane swapped, a lookup re-rendered): a ring around nothing is removed, not left behind.
+  if (!ringTarget.isConnected) return clearHighlight();
   const r = ringTarget.getBoundingClientRect();
   ring.style.transform = `translate(${Math.round(r.left - 6)}px, ${Math.round(r.top - 6)}px)`;
   ring.style.width = `${Math.round(r.width + 12)}px`;
@@ -223,6 +225,7 @@ export function undoLast(by = "you"): boolean {
 }
 
 function go(path: string) {
+  clearHighlight();
   const before = window.location.pathname + window.location.search;
   if (before === path) return false;
   wouterNavigate(path);

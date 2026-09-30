@@ -8,6 +8,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
 // Keeps the prerendered page on screen while the first route chunk loads (CLS 0.33 -> ~0; see file).
 import PrerenderedMainFallback from "./components/PrerenderedMainFallback";
+// Same for Council OS: keep the prerendered (or deep-link snapshot) workspace on screen while its chunks load.
+import DashboardPrerenderFallback from "./components/DashboardPrerenderFallback";
 const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -569,17 +571,7 @@ function AppShell() {
               <TooltipProvider>
                 <RouteHead />
                 <RouteAnnouncer />
-                <Suspense
-                  fallback={
-                    <div
-                      role="status"
-                      aria-label="Loading Council OS"
-                      className="flex min-h-svh items-center justify-center bg-background"
-                    >
-                      <SectionLoader />
-                    </div>
-                  }
-                >
+                <Suspense fallback={<DashboardPrerenderFallback />}>
                   <Dashboard />
                 </Suspense>
                 <Suspense fallback={null}><Toaster position="top-right" /></Suspense>
