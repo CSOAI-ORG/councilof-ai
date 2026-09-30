@@ -34,3 +34,11 @@ def test_roundtrip_detects_a_changed_location():
     evs = sarif_in.ingest(raw, read_at=T)
     evs[1]["declared"]["result"]["locations"][0]["physicalLocation"]["region"]["startLine"] = 5
     assert _triples(sarif_in.export_declared(evs)) != _triples(json.loads(raw))
+
+
+def test_real_skill_scanner_sarif_roundtrip():
+    """cisco-ai-skill-scanner 2.1.0, static analyzers, run on OUR OWN gspc skill (30 Sep 2026): one note-level finding."""
+    raw = open(os.path.join(HERE, "fixtures", "skill-scanner-2.1.0.our-gspc-skill.sarif"), "rb").read()
+    evs = sarif_in.ingest(raw, read_at=T)
+    assert [e["declared"]["result"]["ruleId"] for e in evs] == ["MANIFEST_MISSING_LICENSE"]
+    assert _triples(sarif_in.export_declared(evs)) == _triples(json.loads(raw))

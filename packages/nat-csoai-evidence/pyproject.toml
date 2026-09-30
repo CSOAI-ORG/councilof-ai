@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nat-csoai-evidence"
+version = "0.1.0"
+description = "NeMo Agent Toolkit evaluator: verify a CSOAI signed evidence batch offline and report each event's state (CONSISTENT / DIVERGENT / UNMEASURED ...), never a grade."
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+dependencies = ["nvidia-nat-core>=1.9", "nvidia-nat-eval>=1.9", "cryptography>=41"]
+
+[project.entry-points.'nat.components']
+nat_csoai_evidence = "nat_csoai_evidence.register"
+
+[tool.setuptools.packages.find]
+where = ["src"]

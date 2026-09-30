@@ -1,0 +1,814 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SAFE re-verification record (candidate profile safe-reverification/0.1-draft)",
+  "description": "One typed claim about an AI system, the evidence it depends on, the test that measured it, the negative control that shows the test could fail, the signed result, and the conditions under which the result must be re-tested. Candidate only: not an Open Secure AI Alliance schema, namespace or registry entry. Licence CC0-1.0.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "record_id",
+    "issuer",
+    "issued_at",
+    "finding",
+    "claim",
+    "dependencies",
+    "test",
+    "negative_control",
+    "result",
+    "watch",
+    "limits"
+  ],
+  "properties": {
+    "profile": {
+      "const": "safe-reverification/0.1-draft"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Issuer-scoped, never reused. A correction gets a new record_id and names this one in supersedes."
+    },
+    "issuer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Who makes this statement: a DID (did:web:...), or another resolvable identifier for the key that signs it."
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "supersedes": {
+      "type": "array",
+      "description": "Records this one corrects or replaces. The superseded bytes stay resolvable; nothing is rewritten in place.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "sha256",
+          "reason"
+        ],
+        "properties": {
+          "record_id": {
+            "type": "string"
+          },
+          "sha256": {
+            "$ref": "#/definitions/hex64"
+          },
+          "uri": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "summary"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "incident",
+            "near_miss",
+            "recommendation",
+            "public_claim",
+            "measurement"
+          ]
+        },
+        "finding_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A stable finding identifier if the exchange assigns one (see SAFE issue 35). Null when none exists yet."
+        },
+        "disclosure_tier": {
+          "enum": [
+            "confidential_alert",
+            "member_advisory",
+            "public_report",
+            "public"
+          ],
+          "description": "The SAFE disclosure tier this record may travel at. Records at confidential tiers carry digests, not content."
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "claim_type",
+        "statement",
+        "subject"
+      ],
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_type": {
+          "enum": [
+            "control_holds",
+            "behaviour_absent",
+            "behaviour_present",
+            "property_value",
+            "population_count",
+            "artifact_integrity"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One falsifiable sentence. If it cannot come out false, it is not a claim this profile carries."
+        },
+        "subject": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "identifier"
+          ],
+          "properties": {
+            "identifier": {
+              "type": "string",
+              "description": "Prefer an existing scheme: purl, CycloneDX bom-ref, SPDX id, a model or dataset repository revision, or an endpoint URL."
+            },
+            "scheme": {
+              "type": "string"
+            },
+            "otel": {
+              "$ref": "#/definitions/otel"
+            }
+          }
+        },
+        "scope": {
+          "type": "string",
+          "description": "What the claim covers and, explicitly, what it does not."
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "Every input whose change could change the result. A dependency that could not be pinned is listed with state UNPINNED or UNAVAILABLE, never omitted.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dep_id",
+          "kind",
+          "state"
+        ],
+        "properties": {
+          "dep_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "prompt",
+              "system_instructions",
+              "trace",
+              "tool",
+              "tool_definition",
+              "configuration",
+              "model",
+              "safeguard",
+              "policy",
+              "dataset",
+              "grader",
+              "extractor",
+              "runtime",
+              "external_service",
+              "agent_identity",
+              "workload_identity",
+              "credential_scope",
+              "approval",
+              "other"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "digest": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/definitions/digest"
+              }
+            ]
+          },
+          "uri": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "state": {
+            "enum": [
+              "PINNED",
+              "UNPINNED",
+              "UNAVAILABLE",
+              "NOT_APPLICABLE"
+            ],
+            "description": "PINNED = identified by digest or immutable revision. UNPINNED = named, but may change under the same name. UNAVAILABLE = could not be read; the record says so rather than guessing."
+          },
+          "otel": {
+            "$ref": "#/definitions/otel"
+          }
+        }
+      }
+    },
+    "test": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method_id",
+        "reproduction",
+        "procedure"
+      ],
+      "properties": {
+        "method_id": {
+          "type": "string"
+        },
+        "method_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "procedure": {
+          "type": "string",
+          "description": "A command, script URI or document a stranger can follow."
+        },
+        "procedure_digest": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/digest"
+            }
+          ]
+        },
+        "reproduction": {
+          "enum": [
+            "replay_of_original",
+            "re_execution",
+            "independent_reimplementation",
+            "not_reproducible"
+          ],
+          "description": "Replay reconstructs the original run from preserved evidence; re-execution runs the method again and may meet substituted dependencies (see SAFE PR 42)."
+        },
+        "substitutions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Dependencies that differed from the original run, by dep_id, with what replaced them."
+        },
+        "declared_failure_modes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "How this method can return a well-formed wrong answer or fail open (SAFE issues 4 and 10)."
+        },
+        "noise_floor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "negative_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "observed"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "designed_to_fail",
+            "observed_negatives",
+            "none"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "expected": {
+          "const": "FAIL"
+        },
+        "observed": {
+          "enum": [
+            "FAIL",
+            "PASS",
+            "NOT_RUN"
+          ],
+          "description": "FAIL means the control failed as designed, so the test can discriminate. PASS means the test accepted a case built to fail: the test is broken. NOT_RUN means discriminating power is unmeasured."
+        },
+        "negatives_observed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "denominator": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "measured_at",
+        "reason"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "PARTIAL",
+            "UNMEASURED",
+            "NOT_DISCRIMINATING"
+          ],
+          "description": "PASS and FAIL require a negative control that FAILED as designed. PARTIAL = part of the declared scope was read, and the record says which part. UNMEASURED = no measurement was made; never filled with an estimate."
+        },
+        "measured_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "read_state": {
+          "enum": [
+            "EXHAUSTED",
+            "PARTIAL",
+            "NOT_READ",
+            null
+          ]
+        },
+        "n": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "denominator": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Null when the population is not known. A partial read is never reported as a population total."
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/digest_ref"
+          }
+        }
+      }
+    },
+    "remediation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "NONE_REQUIRED",
+            "PROPOSED",
+            "APPLIED",
+            "VERIFIED_BY_RETEST",
+            "NOT_STARTED"
+          ]
+        },
+        "reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retest_record_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "VERIFIED_BY_RETEST requires the record_id of a later record whose result is PASS with a failed-as-designed negative control."
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "envelope",
+        "key_id",
+        "payload_sha256"
+      ],
+      "description": "Detached. The record is the payload; the envelope carries the signature. Checking it proves origin and integrity, not truth.",
+      "properties": {
+        "envelope": {
+          "enum": [
+            "cose_sign1_scitt_signed_statement",
+            "dsse_in_toto_statement_v1",
+            "csoai_signed_run_0_1",
+            "other"
+          ]
+        },
+        "key_id": {
+          "type": "string"
+        },
+        "payload_sha256": {
+          "$ref": "#/definitions/hex64"
+        },
+        "envelope_uri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "transparency_receipt_uri": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A SCITT Receipt (RFC 9943) if the statement was registered; null if not."
+        },
+        "timestamp": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "state"
+          ],
+          "properties": {
+            "kind": {
+              "enum": [
+                "opentimestamps",
+                "rfc3161",
+                "transparency_log",
+                "none"
+              ]
+            },
+            "state": {
+              "enum": [
+                "PENDING_CALENDAR_COMMITMENT",
+                "BITCOIN_ATTESTATION_VERIFIED",
+                "UPGRADE_AVAILABLE_NOT_STORED",
+                "TSA_TOKEN",
+                "LOG_INCLUDED",
+                "NONE"
+              ]
+            },
+            "proof_uri": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "watch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "triggers",
+        "retest_bound",
+        "state"
+      ],
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "dep_id",
+              "on"
+            ],
+            "properties": {
+              "dep_id": {
+                "type": "string"
+              },
+              "on": {
+                "enum": [
+                  "digest_change",
+                  "version_change",
+                  "becomes_unavailable",
+                  "advisory_published",
+                  "age_exceeds"
+                ]
+              },
+              "max_age": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "ISO 8601 duration, for age_exceeds."
+              }
+            }
+          }
+        },
+        "retest_bound": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "max_latency",
+            "max_attempts"
+          ],
+          "properties": {
+            "max_latency": {
+              "type": "string",
+              "description": "ISO 8601 duration from trigger to a new record."
+            },
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "on_exhausted": {
+              "enum": [
+                "MARK_STALE",
+                "MARK_UNMEASURED"
+              ],
+              "description": "What the published state becomes if the bound is exceeded. Never silently keep the old PASS."
+            }
+          }
+        },
+        "state": {
+          "enum": [
+            "CURRENT",
+            "RETEST_DUE",
+            "STALE",
+            "NOT_WATCHED"
+          ]
+        },
+        "last_checked_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "limits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "What this record does not establish. Required, because a signed record is read as more than it is."
+    }
+  },
+  "allOf": [
+    {
+      "description": "PASS and FAIL require a negative control that was run and failed as designed; otherwise the result is NOT_DISCRIMINATING or UNMEASURED.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "PASS",
+                  "FAIL"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "negative_control": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "designed_to_fail",
+                  "observed_negatives"
+                ]
+              },
+              "observed": {
+                "const": "FAIL"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "UNMEASURED carries no number and no measurement time.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "state": {
+                "const": "UNMEASURED"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "n": {
+                "type": "null"
+              },
+              "measured_at": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "A partial read is never a population total.",
+      "if": {
+        "properties": {
+          "claim": {
+            "properties": {
+              "claim_type": {
+                "const": "population_count"
+              }
+            }
+          },
+          "result": {
+            "properties": {
+              "read_state": {
+                "const": "PARTIAL"
+              }
+            },
+            "required": [
+              "read_state"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "PARTIAL",
+                  "UNMEASURED",
+                  "FAIL"
+                ]
+              },
+              "denominator": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "A remediation is verified only by a later record.",
+      "if": {
+        "properties": {
+          "remediation": {
+            "properties": {
+              "state": {
+                "const": "VERIFIED_BY_RETEST"
+              }
+            }
+          }
+        },
+        "required": [
+          "remediation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "remediation": {
+            "required": [
+              "retest_record_id"
+            ],
+            "properties": {
+              "retest_record_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "alg",
+        "value"
+      ],
+      "properties": {
+        "alg": {
+          "enum": [
+            "sha256",
+            "sha384",
+            "sha512",
+            "git-sha1",
+            "git-sha256"
+          ]
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40,128}$"
+        }
+      }
+    },
+    "digest_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "digest"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "uri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "digest": {
+          "$ref": "#/definitions/digest"
+        }
+      }
+    },
+    "otel": {
+      "type": "object",
+      "description": "OpenTelemetry GenAI semantic-convention attribute names and values that identify this item, e.g. gen_ai.request.model, gen_ai.response.model, gen_ai.agent.id, gen_ai.agent.version, gen_ai.tool.name, gen_ai.prompt.name, gen_ai.prompt.version, mcp.protocol.version. Names only as the conventions define them; most are Development stability.",
+      "propertyNames": {
+        "pattern": "^(gen_ai|mcp|server|url)\\.[a-z0-9_.]+$"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean"
+        ]
+      }
+    }
+  }
+}

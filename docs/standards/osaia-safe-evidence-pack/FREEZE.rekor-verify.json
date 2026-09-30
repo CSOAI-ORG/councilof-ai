@@ -1,0 +1,37 @@
+{
+ "overall": "VALID",
+ "checks": [
+  {
+   "check": "log_identity",
+   "verdict": "VALID",
+   "detail": "entry.logID binds the same SPKI key used for SET and checkpoint verification",
+   "log_id": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"
+  },
+  {
+   "check": "set",
+   "verdict": "VALID",
+   "detail": "ECDSA P-256/SHA-256 over JCS({body,integratedTime,logID,logIndex})",
+   "integratedTime": 1790762502
+  },
+  {
+   "check": "inclusion",
+   "verdict": "VALID",
+   "detail": "RFC6962 audit path: leaf@index 2894424054 of tree size 2894429617 reaches rootHash",
+   "leaf_sha256": "0a478d97eca7dfc4c06193c054586f79a9fb8d33d13b7945b1a9f98f33b18b28",
+   "rootHash": "7a2b15f14cb5ba66939f707c18ac63236995f53ab96ae1cfed4ca34e1b2aa982",
+   "treeSize": 2894429617
+  },
+  {
+   "check": "checkpoint",
+   "verdict": "VALID",
+   "detail": "note signed by 'rekor.sigstore.dev'; key hint matches; signed root == proof root",
+   "origin": "rekor.sigstore.dev - 1193050959916656506",
+   "checkpoint_size": 2894429617,
+   "size_matches_proof": true
+  }
+ ],
+ "scope": "timestamped existence of these exact entry bytes in the Rekor log — nothing more; never a certification",
+ "uuid": "108e9186e8c5677a0a478d97eca7dfc4c06193c054586f79a9fb8d33d13b7945b1a9f98f33b18b28",
+ "rekor": "https://rekor.sigstore.dev",
+ "expected_log_id": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d"
+}

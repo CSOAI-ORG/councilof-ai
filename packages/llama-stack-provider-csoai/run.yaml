@@ -1,0 +1,45 @@
+# llama stack run run.yaml   (from packages/llama-stack-provider-csoai; CSOAI_DID_JSON points at the pinned did.json)
+version: 2
+distro_name: csoai-evidence
+apis:
+- eval
+providers:
+  eval:
+  - provider_id: csoai
+    provider_type: remote::csoai
+    module: llama_stack_provider_csoai
+    config:
+      did_json: ${env.CSOAI_DID_JSON:=./fixtures/test-did.json}
+storage:
+  backends:
+    kv_default:
+      type: kv_sqlite
+      db_path: ${env.SQLITE_STORE_DIR:=./.tmp}/kvstore.db
+    sql_default:
+      type: sql_sqlite
+      db_path: ${env.SQLITE_STORE_DIR:=./.tmp}/sql_store.db
+  stores:
+    metadata:
+      namespace: registry
+      backend: kv_default
+    inference:
+      table_name: inference_store
+      backend: sql_default
+    conversations:
+      table_name: openai_conversations
+      backend: sql_default
+    prompts:
+      namespace: prompts
+      backend: kv_default
+    connectors:
+      namespace: connectors
+      backend: kv_default
+registered_resources:
+  models: []
+  shields: []
+  vector_dbs: []
+  datasets: []
+  scoring_fns: []
+  benchmarks: []
+server:
+  port: 8321
