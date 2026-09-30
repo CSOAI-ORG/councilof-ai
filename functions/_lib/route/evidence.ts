@@ -6,8 +6,8 @@
  * event_id = "sha256:" + sha256(RFC 8785 JCS of the record without event_id, signature, anchors),
  * byte-identical to packages/evidence-fabric/event.py compute_event_id.
  *
- * Decide-only records are UNSIGNED previews: signature null, state UNMEASURED, value null. No route
- * key exists yet (#route-evidence-1 is an owner decision); the board key never signs route volume.
+ * Decide-only records are UNSIGNED previews: signature null, state UNMEASURED, value null. Execution
+ * receipts (execute.ts) are signed under #route-attestation-1 (sign.ts); the board key never signs route volume.
  * No prompt or response bytes are stored: the task is carried as its sha256 only.
  */
 import type { CallerPolicy } from "./policy";
@@ -45,7 +45,7 @@ export function jcs(v: unknown): string {
 
 export async function sha256Hex(s: string | Uint8Array): Promise<string> {
   const bytes = typeof s === "string" ? new TextEncoder().encode(s) : s;
-  const d = await crypto.subtle.digest("SHA-256", bytes);
+  const d = await crypto.subtle.digest("SHA-256", bytes as BufferSource);
   return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
@@ -60,7 +60,7 @@ export async function computeEventId(ev: Record<string, unknown>): Promise<strin
 export const ROUTE_LIMITS = [
   "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
   "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
-  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Unsigned: a decide-only preview carries no signature and makes no signed statement; only execution receipts (POST /api/route/execute) are signed, under did:web:csoai.org#route-attestation-1.",
   "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
   "The task text is carried as its sha256 only; no prompt or response bytes are stored.",
 ];
@@ -123,6 +123,7 @@ export async function buildRouteRecord(inp: RecordInput): Promise<Record<string,
         uncheckable: inp.policy.uncheckable,
         confirm_destructive: inp.policy.confirm,
         caller_wallet: inp.policy.caller_wallet,
+        allow_divergent_effect_binding: inp.policy.allow_divergent_effect_binding,
       },
       objective: inp.objective,
       candidates_sha256: candSha,

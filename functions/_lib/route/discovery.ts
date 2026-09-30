@@ -128,6 +128,7 @@ export async function entryToCandidate(entry: Record<string, unknown>, listing: 
     model: null,
     region: "",
     endpoint,
+    tool: null,
     local: false,
     // The narrow reading: a directory record does not declare read-only, so the candidate is not read-only.
     read_only: false,
