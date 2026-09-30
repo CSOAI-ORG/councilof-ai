@@ -203,7 +203,7 @@ export default function ConnectHub() {
                           {c.door === "free" ? "free door" : "full door"}
                         </span>
                       </summary>
-                      <p className="mt-2 text-[13px] leading-snug text-muted-foreground">{c.where}</p>
+                      <p className="mt-2 text-[13px] leading-snug text-muted-foreground [overflow-wrap:anywhere]">{c.where}</p>
                       <Code label={c.platform} text={c.snippet} />
                       <p className="mt-2 text-[13px] leading-snug text-muted-foreground">
                         Vendor documentation: <A href={c.docs}>{new URL(c.docs).host}</A>
