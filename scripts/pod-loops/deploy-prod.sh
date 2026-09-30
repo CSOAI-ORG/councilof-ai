@@ -2,6 +2,15 @@
 # Full pipeline on the pod: build -> prerender -> gates -> wrangler pages deploy (councilof-ai, master).
 # GitHub is not in this loop. Run only after build-gates.sh has passed for the same ref.
 set -uo pipefail
+# ONE production writer across pods (30 Sep 2026). The locks below are per pod (/workspace/ci/*.lock are symlinks
+# into each pod's /root/ci-local/run), and three pods mount this volume; on 30 Sep the lanes pod and the build pod
+# uploaded production concurrently. deploy-preview.sh runs a COPY of this file with the one production branch flag
+# rewritten, so only the original still names it: that is the production path and it must pass the prod-writer
+# guard (/workspace/ci/prod-writer.pod vs this pod's RUNPOD_POD_ID). Missing guard or mismatch refuses (exit 66).
+# The pattern is split so the preview generator still finds exactly one production branch flag in this file.
+if grep -q -- "--branch=mast""er" "${BASH_SOURCE[0]}"; then
+  [ -x /workspace/ci/prod-writer-guard.sh ] && bash /workspace/ci/prod-writer-guard.sh || { echo "  prod-writer guard REFUSED (exit 66)"; exit 66; }
+fi
 # One deploy at a time, enforced by the kernel, not by pgrep (22 Sep 2026: two waiters launched 33 s apart and raced).
 exec 9>/workspace/ci/deploy.lock; flock -n 9 || { echo "another deploy holds /workspace/ci/deploy.lock; exiting"; exit 0; }
 export PATH=/workspace/tools/node/bin:$PATH
