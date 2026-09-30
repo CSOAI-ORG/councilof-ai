@@ -131,7 +131,22 @@ type ReactionIndex = {
     closest_single_signals?: Array<{ name: string; overlap_count: number; overlap: string[] }>;
     dimensions_not_seen_anywhere_in_snapshot?: string[];
   };
-  signals?: Array<{ reaction: string; layer_o_route?: string }>;
+  signals?: Array<{ reaction: string; layer_o_route?: string; counter_evidence_packet?: { compare_fields?: string[] } }>;
+  claim_ceiling?: {
+    rule?: string;
+    layer_o_route?: string;
+    state?: string;
+    source_signal_ids?: string[];
+    boundary?: string;
+  };
+  counter_engine?: {
+    schema?: string;
+    trigger?: string;
+    packet_count?: number;
+    compare_fields?: string[];
+    signal_ids?: string[];
+    rule?: string;
+  };
   layer_o_routing?: {
     counts?: Record<string, number>;
     meaning?: string;
@@ -490,6 +505,27 @@ node claim-capture.mjs --verify artifact.json`}</Code>
                       {route}: {count}
                     </span>
                   ))}
+                </div>
+              </div>
+            )}
+            {(reaction.claim_ceiling || reaction.counter_engine) && (
+              <div className="mt-6 grid gap-3 md:grid-cols-2">
+                <div className="rounded-lg border border-violet-200 bg-violet-50 px-4 py-4 text-sm leading-6 text-violet-950">
+                  <p className="font-semibold">Claim ceiling — Layer O policy runtime</p>
+                  <p className="mt-2">{reaction.claim_ceiling?.rule ?? "—"}</p>
+                  <p className="mt-2 text-violet-800">
+                    State: <span className="font-mono">{reaction.claim_ceiling?.state ?? "—"}</span> · route:{" "}
+                    <span className="font-mono">{reaction.claim_ceiling?.layer_o_route ?? "—"}</span>.{" "}
+                    {reaction.claim_ceiling?.boundary}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-950">
+                  <p className="font-semibold">Bounded counter-evidence packets</p>
+                  <p className="mt-2">
+                    Machine-readable packets in this snapshot: <strong>{reaction.counter_engine?.packet_count ?? "—"}</strong>.
+                    They compare only published artifacts: {(reaction.counter_engine?.compare_fields ?? []).join(" · ") || "—"}.
+                  </p>
+                  <p className="mt-2 text-amber-800">{reaction.counter_engine?.rule}</p>
                 </div>
               </div>
             )}

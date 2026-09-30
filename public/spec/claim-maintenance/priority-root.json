@@ -1,7 +1,7 @@
 {
   "category": "Claim Maintenance",
   "domain": "category-contribution-priority",
-  "leaf_count": 4,
+  "leaf_count": 5,
   "leaf_rule": "leaf = SHA256(0x00 || UTF8(public_path) || 0x00 || snapshot_sha256_bytes); leaves sorted lexicographically by public_path",
   "leaves": [
     {
@@ -27,6 +27,16 @@
     {
       "bytes": 6677,
       "full_stack_collision_count": 0,
+      "leaf_hash": "16e88647366ec07319f892d37bc57fbd7eb4ac32d95a27c0aa6972885ce03872",
+      "market_signal_count": 49,
+      "max_single_signal_overlap_fraction": "6/16",
+      "path": "/spec/claim-maintenance/priority-snapshots/2026-09-30-72d99df74032.json",
+      "reaction_sha256": "72d99df74032723599ca32ff7536cc676c09d3b200aeb5d44260727ef3787c9d",
+      "sha256": "593c7ac68726bcd54f6a7fb292bbbdaa713743651871516d655f170f63e3a4ab"
+    },
+    {
+      "bytes": 6677,
+      "full_stack_collision_count": 0,
       "leaf_hash": "bad2b1bb6ba2397961122a119f82c8a6f159669f5a58955ea8337f6621872c57",
       "market_signal_count": 44,
       "max_single_signal_overlap_fraction": "6/16",
@@ -45,7 +55,7 @@
       "sha256": "807abd6f4ae8275eb9e8680c6d956ebb7c7e826e31f6fc5fe2b7c51e7a0420dc"
     }
   ],
-  "merkle_root": "3d12bbb427d277f0db50cc8b115d53a9f86b75a766a37c49c3b39bb673c3a625",
+  "merkle_root": "48bcfd477fbe39177de3ca4f36ed83dbe43b7fb6f9237326725aa8983b57e4df",
   "not_evidence_of": [
     "trademark ownership",
     "exclusive rights in the words Claim Maintenance",

@@ -19,7 +19,7 @@ Fifteen free tools:
 - `verify_capsule` — Verify one measurement capsule.
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 - `claim_maintenance_watch` — Read the latest bounded Claim Maintenance reread/review summary.
-- `claim_maintenance_reaction` — Read the deterministic Claim Maintenance market/category reaction index.
+- `claim_maintenance_reaction` — Read the deterministic Claim Maintenance market/category reaction index, including Layer O routing, the claim-ceiling policy input, and a bounded machine-readable counter-evidence packet for every CATEGORY_COLLISION.
 - `claim_maintenance_priority_root` — Read the separate Claim Maintenance contribution-priority Merkle root.
 
 Four optional x402-metered evidence tools (payment is the explicit `x_payment` argument; an unpaid call

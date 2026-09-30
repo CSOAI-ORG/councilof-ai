@@ -22,6 +22,18 @@ RESPONSES = {
     "ADJACENT_RUNTIME_COMPLEMENT": "Treat as a Layer O runtime complement, not a Claim Maintenance substitute.",
     "CATEGORY_COLLISION": "Open a bounded category comparison immediately: definition, first publication, schema, correction semantics, dependency graph and public implementation.",
 }
+COUNTER_COMPARE_FIELDS = [
+    "category_definition",
+    "first_publication_record",
+    "machine_schema",
+    "correction_and_supersession_semantics",
+    "dependency_graph_semantics",
+    "runnable_public_implementation",
+]
+CLAIM_CEILING_RULE = (
+    "Never promote a claim or effect state beyond the strongest producing boundary supported by observed evidence. "
+    "Identity, authorization, payment, settlement, delivery, execution and acceptance remain distinct until each is evidenced."
+)
 LAYER_O_ROUTE_POLICY = {
     "IDENTITY_ATTESTATION": "Bind runtime/workload identity as an input to evidence, never as proof that an action was correct.",
     "STATUS_REVOCATION": "Use external status/revocation semantics to propagate supersession or withdrawal state without rewriting prior evidence.",
@@ -108,7 +120,7 @@ def build(source: dict) -> dict:
         route_hint = signal.get("layer_o_route_hint")
         if route_hint and route_hint != route:
             raise ValueError(f"{sid}: layer_o_route_hint {route_hint} != computed {route}")
-        rows.append({
+        row = {
             **signal,
             "reaction": reaction,
             "response": RESPONSES[reaction],
@@ -117,7 +129,23 @@ def build(source: dict) -> dict:
             "overlap_count": len(overlap),
             "overlap_fraction": f"{len(overlap)}/{len(dims)}",
             "unmatched_claim_maintenance_dimensions": [d for d in dims if d not in overlap],
-        })
+        }
+        if reaction == "CATEGORY_COLLISION":
+            row["counter_evidence_packet"] = {
+                "schema": "csoai.claim-maintenance-counter-evidence/0.1",
+                "purpose": "Bounded public-artifact comparison; not a legal-rights, misconduct, endorsement or equivalence finding.",
+                "compare_fields": COUNTER_COMPARE_FIELDS,
+                "external_source": signal.get("url"),
+                "csoai_priority_record": "/spec/claim-maintenance/priority.json",
+                "csoai_priority_snapshots": "/spec/claim-maintenance/priority-snapshots/index.json",
+                "csoai_priority_root": "/spec/claim-maintenance/priority-root.json",
+                "csoai_spec": "/spec/claim-maintenance/v0.2/",
+                "csoai_schema": "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+                "csoai_reference_implementation": "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+                "csoai_corrections": "/api/corrections",
+                "acceptance_rule": "Compare public artifacts field by field, preserve unknowns, and do not infer legal rights or intent from phrase use or technical overlap.",
+            }
+        rows.append(row)
 
     max_overlap = max((row["overlap_count"] for row in rows), default=0)
     closest = [
@@ -128,6 +156,7 @@ def build(source: dict) -> dict:
     route_counts = {}
     for row in rows:
         route_counts[row["layer_o_route"]] = route_counts.get(row["layer_o_route"], 0) + 1
+    collision_rows = [row for row in rows if row["reaction"] == "CATEGORY_COLLISION"]
 
     snapshot_date = str(source.get("observed_at") or "undated").split("T", 1)[0]
     ownership = {
@@ -166,9 +195,7 @@ def build(source: dict) -> dict:
             "name": "Claim Maintenance",
             "legal_ownership_claim": "NONE — the words have prior public uses; this index asserts contribution history and implementation scope, not trademark ownership.",
             "position": "CSOAI public-claim maintenance profile: independent third-party public-source observation + declared-versus-observed measurement + explicit failure states + supersession/corrections + signed/rooted/witnessed artifacts + dependent delivery.",
-            "direct_name_collision_count_in_snapshot": sum(
-                1 for row in rows if row["reaction"] == "CATEGORY_COLLISION"
-            ),
+            "direct_name_collision_count_in_snapshot": len(collision_rows),
             "direct_name_collision_limit": "Phrase or category collision does not establish technical equivalence, legal ownership, infringement, endorsement or trademark status.",
             "dimensions": dims,
             "dimension_count": len(dims),
@@ -186,6 +213,21 @@ def build(source: dict) -> dict:
         "priority_records": source.get("csoai_priority_records", []),
         "signals": rows,
         "reaction_policy": RESPONSES,
+        "claim_ceiling": {
+            "rule": CLAIM_CEILING_RULE,
+            "layer_o_route": "POLICY_RUNTIME",
+            "state": "POLICY_INPUT",
+            "source_signal_ids": [row["id"] for row in rows if "claim_ceiling" in row.get("capabilities", []) or "control_topology" in row.get("capabilities", [])],
+            "boundary": "A policy input constrains state promotion; it is not itself a measurement or finding.",
+        },
+        "counter_engine": {
+            "schema": "csoai.claim-maintenance-counter-engine/0.1",
+            "trigger": "CATEGORY_COLLISION",
+            "packet_count": len(collision_rows),
+            "compare_fields": COUNTER_COMPARE_FIELDS,
+            "signal_ids": [row["id"] for row in collision_rows],
+            "rule": "Emit a bounded public-artifact comparison packet for every category collision; preserve unknowns and keep legal-rights or intent conclusions outside this technical engine.",
+        },
         "layer_o_routing": {
             "counts": dict(sorted(route_counts.items())),
             "policy": LAYER_O_ROUTE_POLICY,

@@ -66,6 +66,34 @@
     "position": "CSOAI public-claim maintenance profile: independent third-party public-source observation + declared-versus-observed measurement + explicit failure states + supersession/corrections + signed/rooted/witnessed artifacts + dependent delivery.",
     "unmatched_in_adjacent_snapshot": []
   },
+  "claim_ceiling": {
+    "boundary": "A policy input constrains state promotion; it is not itself a measurement or finding.",
+    "layer_o_route": "POLICY_RUNTIME",
+    "rule": "Never promote a claim or effect state beyond the strongest producing boundary supported by observed evidence. Identity, authorization, payment, settlement, delivery, execution and acceptance remain distinct until each is evidenced.",
+    "source_signal_ids": [
+      "ietf-action-evidence-boundary-06",
+      "ietf-claim-boundaries-01"
+    ],
+    "state": "POLICY_INPUT"
+  },
+  "counter_engine": {
+    "compare_fields": [
+      "category_definition",
+      "first_publication_record",
+      "machine_schema",
+      "correction_and_supersession_semantics",
+      "dependency_graph_semantics",
+      "runnable_public_implementation"
+    ],
+    "packet_count": 2,
+    "rule": "Emit a bounded public-artifact comparison packet for every category collision; preserve unknowns and keep legal-rights or intent conclusions outside this technical engine.",
+    "schema": "csoai.claim-maintenance-counter-engine/0.1",
+    "signal_ids": [
+      "claimledger-vgcm-2026-07-20",
+      "getgen-product-claim-maintenance-2026-08"
+    ],
+    "trigger": "CATEGORY_COLLISION"
+  },
   "layer_o_routing": {
     "counts": {
       "ATTESTATION_ENVELOPE": 3,
@@ -782,6 +810,27 @@
         "human_commit_gate"
       ],
       "category_phrase_use": true,
+      "counter_evidence_packet": {
+        "acceptance_rule": "Compare public artifacts field by field, preserve unknowns, and do not infer legal rights or intent from phrase use or technical overlap.",
+        "compare_fields": [
+          "category_definition",
+          "first_publication_record",
+          "machine_schema",
+          "correction_and_supersession_semantics",
+          "dependency_graph_semantics",
+          "runnable_public_implementation"
+        ],
+        "csoai_corrections": "/api/corrections",
+        "csoai_priority_record": "/spec/claim-maintenance/priority.json",
+        "csoai_priority_root": "/spec/claim-maintenance/priority-root.json",
+        "csoai_priority_snapshots": "/spec/claim-maintenance/priority-snapshots/index.json",
+        "csoai_reference_implementation": "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+        "csoai_schema": "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+        "csoai_spec": "/spec/claim-maintenance/v0.2/",
+        "external_source": "https://neusym.ai/papers/ai/",
+        "purpose": "Bounded public-artifact comparison; not a legal-rights, misconduct, endorsement or equivalence finding.",
+        "schema": "csoai.claim-maintenance-counter-evidence/0.1"
+      },
       "id": "claimledger-vgcm-2026-07-20",
       "kind": "research",
       "layer_o_route": "EVIDENCE_INPUT",
@@ -1066,6 +1115,27 @@
         "evidence_change_review"
       ],
       "category_phrase_use": true,
+      "counter_evidence_packet": {
+        "acceptance_rule": "Compare public artifacts field by field, preserve unknowns, and do not infer legal rights or intent from phrase use or technical overlap.",
+        "compare_fields": [
+          "category_definition",
+          "first_publication_record",
+          "machine_schema",
+          "correction_and_supersession_semantics",
+          "dependency_graph_semantics",
+          "runnable_public_implementation"
+        ],
+        "csoai_corrections": "/api/corrections",
+        "csoai_priority_record": "/spec/claim-maintenance/priority.json",
+        "csoai_priority_root": "/spec/claim-maintenance/priority-root.json",
+        "csoai_priority_snapshots": "/spec/claim-maintenance/priority-snapshots/index.json",
+        "csoai_reference_implementation": "/spec/claim-maintenance/v0.2/reference/claim-capture.mjs",
+        "csoai_schema": "/spec/claim-maintenance/v0.2/schema/claim-artifact-v0.2.schema.json",
+        "csoai_spec": "/spec/claim-maintenance/v0.2/",
+        "external_source": "https://www.getgen.ai/post/10-compliance-monitoring-strategies-for-product-claims",
+        "purpose": "Bounded public-artifact comparison; not a legal-rights, misconduct, endorsement or equivalence finding.",
+        "schema": "csoai.claim-maintenance-counter-evidence/0.1"
+      },
       "id": "getgen-product-claim-maintenance-2026-08",
       "kind": "commercial",
       "layer_o_route": "EVIDENCE_INPUT",

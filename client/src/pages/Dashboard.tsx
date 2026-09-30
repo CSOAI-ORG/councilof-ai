@@ -70,6 +70,8 @@ interface ClaimMaintenanceReaction {
     direct_name_collision_count_in_snapshot?: number;
   };
   signals?: Array<{ reaction: string; layer_o_route?: string }>;
+  claim_ceiling?: { rule?: string; layer_o_route?: string; state?: string; boundary?: string };
+  counter_engine?: { packet_count?: number; compare_fields?: string[]; rule?: string };
   layer_o_routing?: { counts?: Record<string, number>; meaning?: string };
 }
 
@@ -379,12 +381,13 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
               {[
                 ["Observed change prompts", claimWatch?.observed_changes_count],
                 ["Review required", claimWatch?.review_required_claim_ids?.length],
                 ["Category signals", claimReaction?.signals?.length],
                 ["Layer O adapter lanes", claimReaction?.layer_o_routing?.counts ? Object.keys(claimReaction.layer_o_routing.counts).length : undefined],
+                ["Counter packets", claimReaction?.counter_engine?.packet_count],
                 ["Our dated corrections", corrections?.corrections?.length],
               ].map(([label, value]) => (
                 <div key={String(label)} className="rounded-xl border border-emerald-950/10 bg-white px-4 py-3">
@@ -402,6 +405,8 @@ export default function Dashboard() {
               <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority.json">priority record</a>
               <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority-witness.json">priority witness</a>
               <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority-snapshots/index.json">priority evolution</a>
+              <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority-root.json">priority Merkle root</a>
+              <a className="underline underline-offset-2" href="/spec/claim-maintenance/priority-root-witness.json">priority root witness</a>
               <span>
                 Closest single-system overlap: {claimReaction?.category?.max_single_signal_overlap_fraction ?? "—"} · full-stack equivalents in snapshot: {claimReaction?.category?.full_stack_collision_count ?? "—"}
               </span>
@@ -410,6 +415,8 @@ export default function Dashboard() {
               Category overlap is not legal ownership or equivalence. A correction records our own publication history.
               A source digest moving is a review trigger, not a claim that anyone is wrong. Layer O routing says where a
               primitive could be evaluated or ingested; it is not evidence that CSOAI adopted or measured that primitive.
+              Claim ceiling: {claimReaction?.claim_ceiling?.rule ?? "no policy input loaded"}. CATEGORY_COLLISION emits a bounded
+              comparison packet over public artifacts only; it does not decide legal rights, intent or misconduct.
             </p>
           </CardContent>
         </Card>

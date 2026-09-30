@@ -20,6 +20,11 @@ describe("Claim Maintenance counter engine wiring", () => {
     expect(dashboard).toContain("Category overlap is not legal ownership or equivalence");
     expect(dashboard).toContain("/spec/claim-maintenance/priority-snapshots/index.json");
     expect(dashboard).toContain("Layer O adapter lanes");
+    expect(dashboard).toContain("Counter packets");
+    expect(dashboard).toContain("Claim ceiling:");
+    expect(dashboard).toContain("CATEGORY_COLLISION emits a bounded");
+    expect(dashboard).toContain("/spec/claim-maintenance/priority-root.json");
+    expect(dashboard).toContain("/spec/claim-maintenance/priority-root-witness.json");
     expect(dashboard).toContain("it is not evidence that CSOAI adopted or measured that primitive");
     expect(dashboard).not.toMatch(/Observed change prompts["'][^\n]*\b32\b/);
     expect(dashboard).not.toMatch(/Our dated corrections["'][^\n]*\b80\b/);
@@ -33,6 +38,10 @@ describe("Claim Maintenance counter engine wiring", () => {
       'const WATCH_STATIC = "/spec/claim-maintenance/watch/latest.json"',
       "Latest maintenance run — what needs a human look",
       "Category reaction radar — what changed around us",
+      "Claim ceiling — Layer O policy runtime",
+      "Bounded counter-evidence packets",
+      "Priority Merkle root",
+      "Priority root witness",
     ]) expect(claimPage).toContain(s);
   });
 
