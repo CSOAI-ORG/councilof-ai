@@ -577,6 +577,39 @@ export const originOf = (normalised: string) => {
   return `${u.protocol}//${u.host}`;
 };
 
+/**
+ * Paths on councilof.ai renamed with a 308 after capsules were published about them. A capsule keys
+ * the URL it measured and stays as published; this map only lets the evidence read say where that
+ * path lives now, and lets a query on the CURRENT path find the capsules keyed to the former one.
+ * 30 Sep 2026: /api/eunomia-data (an internal codename) → /api/signed-data-feed.
+ */
+export const RENAMED_PATHS: Readonly<Record<string, string>> = {
+  "https://councilof.ai/api/eunomia-data": "https://councilof.ai/api/signed-data-feed",
+};
+const splitQuery = (u: string): [string, string] => {
+  const i = u.indexOf("?");
+  return i < 0 ? [u, ""] : [u.slice(0, i), u.slice(i)];
+};
+/** The current URL of a renamed endpoint (query kept), or null when the path was never renamed. */
+export function currentPathOf(normalised: string): string | null {
+  const [base, q] = splitQuery(normalised);
+  return RENAMED_PATHS[base] ? RENAMED_PATHS[base] + q : null;
+}
+/** The former URL of an endpoint that was renamed TO this path (query kept), or null. */
+export function formerPathOf(normalised: string): string | null {
+  const [base, q] = splitQuery(normalised);
+  const hit = Object.entries(RENAMED_PATHS).find(([, to]) => to === base);
+  return hit ? hit[0] + q : null;
+}
+
+async function capsulesFor(origin: string, v: RuleVersion, endpoint: string) {
+  const key = await sha256HexOf(endpoint);
+  const sf = await fetchStatic(origin, shardPath(v, key.slice(0, SHARD_HEX)));
+  if (sf.state !== "OK") return { key, capsules: [] as unknown[], entry: undefined as Json | undefined };
+  const entry = rec(rec(rec(sf.json)?.endpoints)?.[key]);
+  return { key, capsules: Array.isArray(entry?.capsules) ? (entry!.capsules as unknown[]) : [], entry };
+}
+
 export async function serverEvidence(origin: string, endpointUrl: unknown): Promise<Json> {
   const raw = typeof endpointUrl === "string" ? endpointUrl : "";
   const endpoint = normaliseEndpoint(raw);
@@ -599,7 +632,28 @@ export async function serverEvidence(origin: string, endpointUrl: unknown): Prom
     const list = rec(rec(osf.json)?.origins)?.[originKey];
     if (Array.isArray(list)) siblings = list.filter((u) => u !== endpoint);
   }
-  const capsules = Array.isArray(entry?.capsules) ? (entry!.capsules as unknown[]) : [];
+  // A sibling measured at a path since renamed is shown at its CURRENT path, with the rename stated.
+  const renamed: Json[] = [];
+  siblings = siblings.map((u) => {
+    const now = typeof u === "string" ? currentPathOf(u) : null;
+    if (!now) return u;
+    renamed.push({ current: now, measured_at: "the former path of this endpoint, which answers 308 to the current one" });
+    return now;
+  });
+  let capsules = Array.isArray(entry?.capsules) ? (entry!.capsules as unknown[]) : [];
+  let measuredAtFormerPath = false;
+  let byAdapter = entry?.by_adapter ?? {};
+  if (!capsules.length) {
+    const former = formerPathOf(endpoint);
+    if (former) {
+      const f = await capsulesFor(origin, v, former);
+      if (f.capsules.length) {
+        capsules = f.capsules;
+        byAdapter = f.entry?.by_adapter ?? {};
+        measuredAtFormerPath = true;
+      }
+    }
+  }
   return {
     doctrine: DOCTRINE,
     state: capsules.length ? "MEASURED" : "NOT_MEASURED",
@@ -610,9 +664,13 @@ export async function serverEvidence(origin: string, endpointUrl: unknown): Prom
     as_of: shard?.as_of ?? null,
     index_root: shard?.index_root ?? null,
     n_capsules: capsules.length,
-    by_adapter: entry?.by_adapter ?? {},
+    by_adapter: byAdapter,
     capsules,
+    ...(measuredAtFormerPath
+      ? { measured_at_former_path: true, former_path_note: "These capsules were measured before this endpoint was renamed; each keys the former path, which answers 308 here. The capsules are unchanged." }
+      : {}),
     other_endpoints_measured_at_this_origin: siblings,
+    ...(renamed.length ? { renamed_since_measured: renamed } : {}),
     note: capsules.length
       ? "Every published capsule about this endpoint, each with its batch root and an inclusion pointer (verify_capsule re-derives inclusion). States only: no verdict, score or ranking."
       : "No published capsule is keyed to this endpoint. NOT_MEASURED is not a finding about the endpoint — nothing here says it is clean or unclean.",

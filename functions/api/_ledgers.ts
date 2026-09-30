@@ -74,8 +74,8 @@ export const LEDGER_META: Record<string, { name: string; authority_for: string; 
     anchoring_own: "each dated file OTS-stamped", page: null, atom: hWatch as Atom,
   },
   "layer-o-presence": {
-    name: "Layer O presence", authority_for: "operational surfaces where our artifacts appear, with their states (rollup of the Layer O registry)",
-    producer: "the Layer O registry daily job (python3 -m layer_o daily)", signing: "unsigned; its event chain is hash-linked",
+    name: "Distribution presence", authority_for: "operational surfaces where our artifacts appear, with their states (rollup of the distribution-presence registry)",
+    producer: "the distribution-presence registry daily job", signing: "unsigned; its event chain is hash-linked",
     anchoring_own: "none of its own; its head is a leaf of the public root", page: null, atom: hLayerO as Atom,
   },
   "receipt-chain": {
@@ -209,7 +209,7 @@ export function ledgersBlock() {
         resolved: "claims_register (public/claims-register.json) holds OUR capability claims; claim-maintenance-register (GET /api/claims/register) holds claims OTHER organisations make about themselves. Never added, never substituted." },
     ],
     not_public: [
-      { name: "Layer O registry rows and contract fields", where: "the Layer O registry job host; its public view is the layer-o-presence rollup above", count: null },
+      { name: "Distribution-presence registry rows and contract fields", where: "the distribution-presence registry job host; its public view is the presence rollup above", count: null },
       { name: "SovSpace predictions and 3KB reaction records", where: "sandbox store; publication STAGED, never councilof.ai", count: null },
       { name: "outbound message log", where: "private; recipients are never published", count: null },
       { name: "deck-lang receipts", where: "lane stores; not served", count: null },

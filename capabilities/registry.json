@@ -84,12 +84,12 @@
       "payment": "free"
     },
     {
-      "id": "measured-badge",
+      "id": "card-status-link",
       "protocols": [
         "a2a"
       ],
-      "title": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "title": "Card status link",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
       "endpoint": null,
       "method": "POST",
       "lifecycle": "LIVE",
@@ -864,26 +864,26 @@
       "payment": "free"
     },
     {
-      "id": "api-eunomia-data",
+      "id": "api-signed-data-feed",
       "protocols": [
         "http"
       ],
-      "title": "Eunomia data",
+      "title": "Signed data feed",
       "description": "Signed derivative data feed: the signed streams already on the public root, assembled into one document per request. Carries the signals index, the first-fine watch feed, the root and the card index, each block with its own signature and key id and its as_of read from the file. States: each stream as signed, or UNCHECKABLE where its signature cannot be checked. Data only; verification is free and every stream is public at its own URL.",
-      "endpoint": "/api/eunomia-data",
+      "endpoint": "/api/signed-data-feed",
       "method": "GET",
       "lifecycle": "LIVE",
       "audience": "agent",
       "payment": "x402"
     },
     {
-      "id": "api-eunomia-data-post",
+      "id": "api-signed-data-feed-post",
       "protocols": [
         "http"
       ],
-      "title": "Eunomia data (POST)",
+      "title": "Signed data feed (POST)",
       "description": "Gold-402's gate POSTs {}. Query string still selects the paid tier; body is ignored.",
-      "endpoint": "/api/eunomia-data",
+      "endpoint": "/api/signed-data-feed",
       "method": "POST",
       "lifecycle": "LIVE",
       "audience": "both",

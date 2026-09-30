@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { POPULATIONS, POPULATION_IDS, otsStateFromBytes, pyDumpsSortedIndent1, claimRegistryCompact } from "../_population";
 import { onRequestGet as door, SKU } from "../_population_door";
-import { onRequestGet as eunomia } from "../eunomia-data";
+import { onRequestGet as eunomia } from "../signed-data-feed";
 import { onRequestGet as xrplReader } from "../xrpl";
 import { onRequestGet as manifest } from "../../.well-known/x402.json";
 import { onRequestGet as catalog } from "../x402";
@@ -299,7 +299,7 @@ describe("free preview — every reading is derived from the artifact bytes", ()
 describe("the 402 challenge", () => {
   it("is path-scoped, carries extensions.bazaar without queryParams, names the population and its as_of, and prices like the existing doors", async () => {
     stubDisk();
-    const ref = await (await call(eunomia, ctx("/api/eunomia-data?feed=1"))).json() as { accepts: Record<string, unknown>[] };
+    const ref = await (await call(eunomia, ctx("/api/signed-data-feed?feed=1"))).json() as { accepts: Record<string, unknown>[] };
     const refAccept = ref.accepts[0] as { amount: string; payTo: string; csoai_pricing: { normal_amount_atomic: string; pricing_basis: string } };
     for (const id of EXPECTED_IDS) {
       const r = await call(door, ctx(`/api/pop/${id}`));

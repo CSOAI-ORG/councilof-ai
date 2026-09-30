@@ -178,7 +178,10 @@ describe("measured_on.model is derived from the rows", () => {
     expect(f.models_in_rows).toBe(f.base_count + f.own_count + f.other_count);
     expect(m).toContain(`${f.models_in_rows}-model fleet`);
     expect(m).toContain(`${f.base_count} base models, compared`);
-    expect(m).toContain(`${f.own_count} CSOAI own fine-tunes, excluded before comparison and never counted in a comparison`);
+    expect(m).toContain(`${f.own_count} of our own models — prompt overlays on stock base models`);
+    expect(m).toContain("excluded before comparison and never counted in a comparison");
+    // C-2026-0930-11: they are overlays, not trained weights; the served sentence never calls them fine-tunes.
+    expect(m).not.toMatch(/fine-tune/i);
     for (const b of f.base_models as string[]) expect(m).toContain(b);
     if (f.other_count === 0) {
       expect(m).toContain("no other model is in the rows");
@@ -193,7 +196,7 @@ describe("measured_on.model is derived from the rows", () => {
   it("failing control: the retired typed text would be caught", () => {
     const typed = "19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models)";
     const f = ROWS_POWER.fleet as unknown as Record<string, any>;
-    expect(typed.includes(`${f.own_count} CSOAI own fine-tunes`)).toBe(false);
+    expect(typed.includes(`${f.own_count} of our own models`)).toBe(false);
     expect(/cross-lab|frontier/i.test(typed)).toBe(true);
   });
 });

@@ -157,7 +157,7 @@ const numOrNull = (v: unknown): number | null => (typeof v === "number" && Numbe
 export const SKILL_IDS = [
   "gspc-board",
   "east-west-crosswalk",
-  "measured-badge",
+  "card-status-link",
   "benchmark-quality-register",
   "article50-detect",
   "eu-ai-act-screen",
@@ -168,6 +168,13 @@ export const SKILL_IDS = [
 ] as const;
 type SkillId = (typeof SKILL_IDS)[number];
 const SKILL_ID_SET = new Set<string>(SKILL_IDS);
+/**
+ * Former skill ids a caller may still send. Not on the card and not in SKILL_IDS (the card and the
+ * router stay equal as sets); resolved to the current id before routing so an old integration keeps
+ * working. 30 Sep 2026: "measured-badge" → "card-status-link" — the doctrine has no mark, badge or
+ * grade, and the skill returns a card-bound state and a link, not a badge of approval.
+ */
+export const LEGACY_SKILL_IDS: Readonly<Record<string, SkillId>> = { "measured-badge": "card-status-link" };
 
 type SkillSelection = { skill: SkillId; input: Json };
 type CapabilityHelp = { kind: "CAPABILITY_HELP" };
@@ -394,7 +401,8 @@ function parseSkillSelection(message: Json): SkillSelection | CapabilityHelp | T
   const selector = record(part.data);
   if (!selector) return "Part.data must be an object containing {skill,input}";
   if (!exactKeys(selector, ["skill", "input"])) return "selector must contain exactly {skill,input}";
-  const skill = str(selector.skill);
+  const asked = str(selector.skill);
+  const skill = asked && Object.prototype.hasOwnProperty.call(LEGACY_SKILL_IDS, asked) ? LEGACY_SKILL_IDS[asked] : asked;
   if (!skill || !SKILL_ID_SET.has(skill)) return `unknown skill; choose one of: ${SKILL_IDS.join(", ")}`;
   const input = record(selector.input);
   if (!input) return "selector.input must be an object";
@@ -409,11 +417,11 @@ function validateSkillInput(selection: SkillSelection): string | null {
   if (["gspc-board", "east-west-crosswalk", "benchmark-quality-register", "x402-discovery", "estate-index"].includes(skill)) {
     return Object.keys(input).length === 0 ? null : `${skill} input must be an empty object`;
   }
-  if (skill === "measured-badge") {
-    if (!exactKeys(input, ["card", "subject"])) return "measured-badge input requires exactly card and subject";
-    if (!/^[0-9a-f]{64}$/i.test(str(input.card) ?? "")) return "measured-badge card must be a 64-hex signed-card hash";
+  if (skill === "card-status-link") {
+    if (!exactKeys(input, ["card", "subject"])) return "card-status-link input requires exactly card and subject";
+    if (!/^[0-9a-f]{64}$/i.test(str(input.card) ?? "")) return "card-status-link card must be a 64-hex signed-card hash";
     if (!/^[^\s/@]+\/[^\s@]+@[0-9a-f]{40}(?:[0-9a-f]{24})?$/i.test(str(input.subject) ?? "")) {
-      return "measured-badge subject must be owner/model@40-or-64-hex-immutable-revision";
+      return "card-status-link subject must be owner/model@40-or-64-hex-immutable-revision";
     }
     return null;
   }
@@ -608,7 +616,7 @@ async function invokeSkill(selection: SkillSelection, origin: string): Promise<{
     case "east-west-crosswalk":
       path = "/api/cross";
       break;
-    case "measured-badge": {
+    case "card-status-link": {
       const query = new URLSearchParams({
         format: "json",
         card: String(input.card),

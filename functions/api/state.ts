@@ -79,6 +79,7 @@ import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
 import { crosscheckBoardSnapshot } from "./_board_snapshot";
+import { axisCountLine } from "./_boardCounts";
 import { ledgersBlock } from "./_ledgers";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
@@ -137,13 +138,13 @@ const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_C, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
-const livePublicCount = `${liveAxisSlots} axis · ${liveMeasuredAxes} measured`;
+const livePublicCount = axisCountLine(liveAxisSlots, liveMeasuredAxes);
 const liveCountGrammar =
   liveUnmeasuredAxes === 0
-    ? `${liveAxisSlots} axis are on the board and every one carries a measurement — no ` +
+    ? `${liveAxisSlots} ${liveAxisSlots === 1 ? "axis is" : "axes are"} on the board and every one carries a measurement — no ` +
       `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
       `future slot is added with no run behind it, this line separates the two again on its own.`
-    : `${liveAxisSlots} axis are on the board; ${liveMeasuredAxes} of them carry a measurement and ` +
+    : `${liveAxisSlots} ${liveAxisSlots === 1 ? "axis is" : "axes are"} on the board; ${liveMeasuredAxes} of them carry a measurement and ` +
       `${liveUnmeasuredAxes} are declared slots with no run behind them. The larger number counts slots, ` +
       `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
       `so the gap is visible; it is not evidence of anything having been measured.`;
@@ -157,7 +158,7 @@ const liveByFamily = {
     axes: LIVE_AXES.filter((a) => a.family === "financial").length,
     measured: LIVE_AXES.filter((a) => a.family === "financial" && a.status === "MEASURED").length,
     note:
-      "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs. " +
+      "The 8 financial/domain axes (ADR-001), all MEASURED as deterministic-facts runs. " +
       "Measured is not scored. None has a leader, an accuracy or a separation determination.",
   },
 };

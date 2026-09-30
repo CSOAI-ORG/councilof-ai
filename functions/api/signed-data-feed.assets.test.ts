@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { onRequestGet as feed } from "./eunomia-data";
+import { onRequestGet as feed } from "./signed-data-feed";
 
 const ORIGIN = "https://councilof.ai";
 
@@ -32,7 +32,7 @@ function context(overrides: Record<string, unknown> = {}) {
     },
   };
   return {
-    request: new Request(ORIGIN + "/api/eunomia-data"),
+    request: new Request(ORIGIN + "/api/signed-data-feed"),
     env: { ASSETS: assets, ...overrides },
     params: {},
   } as never;
@@ -78,7 +78,7 @@ describe("EUNOMIA source reads use the deployment substrate", () => {
       },
     };
     const response = await feed({
-      request: new Request(ORIGIN + "/api/eunomia-data"),
+      request: new Request(ORIGIN + "/api/signed-data-feed"),
       env: { ASSETS: assets },
       params: {},
     } as never);

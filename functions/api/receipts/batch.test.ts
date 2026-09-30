@@ -3,7 +3,7 @@ import { onRequestGet as batch, assembleBatch, BATCH_CAP, parseIso } from "./bat
 import { onRequestGet as latest, handle as latestHandle } from "./latest";
 import { onRequestGet as ras } from "../request-attestation";
 import { onRequestGet as bundleRoute } from "../evidence-bundle";
-import { onRequestGet as feed } from "../eunomia-data";
+import { onRequestGet as feed } from "../signed-data-feed";
 import { onRequestGet as proof } from "../proof";
 import { ESTATE_PAY_TO } from "../_x402_config";
 import { SKUS } from "../_skus";
@@ -260,7 +260,7 @@ describe("bazaar readiness — every 402 route on master emits the same extensio
     const routes: [string, (c: never) => Promise<Response>][] = [
       ["/api/request-attestation?subject=qwen3", ras],
       ["/api/evidence-bundle?obligation=article-53&subject=gpt-4o&bundle=1", bundleRoute],
-      ["/api/eunomia-data?feed=1", feed],
+      ["/api/signed-data-feed?feed=1", feed],
       ["/api/proof?bundle=1", proof],
       [`/api/receipts/batch?${WINDOW}`, batch],
     ];

@@ -32,6 +32,7 @@
  * Doctrine: measurement, not certification. No grade, no rank, no score is rendered here.
  */
 import { onRequestGet as gspcGet } from "../api/gspc";
+import { axisCountLine } from "../api/_boardCounts";
 
 type Ctx = { request: Request; env: unknown; waitUntil: (p: Promise<unknown>) => void };
 export type BoardSource = (ctx: Ctx) => Promise<Response>;
@@ -137,7 +138,7 @@ const totalsLine = (b: Board) => {
   const other = b.axes.length - measured - unmeasured;
   const derived = `${b.axes.length} axes · ${measured} MEASURED · ${unmeasured} UNMEASURED` + (other ? ` · ${other} other` : "");
   if (!b.public_count) return `${derived} · totals.public_count: absent`;
-  const agrees = b.public_count === `${b.axes.length} axis · ${measured} measured`;
+  const agrees = b.public_count === axisCountLine(b.axes.length, measured);
   return `${derived} · totals.public_count: "${b.public_count}"${agrees ? "" : " — DISAGREES with the rows"}`;
 };
 

@@ -77,16 +77,16 @@
       ]
     },
     {
-      "id": "measured-badge",
-      "name": "Measured Badge",
-      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
+      "id": "card-status-link",
+      "name": "Card status link",
+      "description": "A global-board README link plus a card-bound status link: the state of one signed card for one exact subject, never a mark or a grade. The global board never becomes a model score. A model-specific result may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED. Former id measured-badge is still accepted.",
       "tags": [
         "measurement",
         "governance",
         "verification"
       ],
       "examples": [
-        "SendMessage with Part.data {\"skill\":\"measured-badge\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
+        "SendMessage with Part.data {\"skill\":\"card-status-link\",\"input\":{\"card\":\"<64-hex-signed-card-sha256>\",\"subject\":\"owner/model@<40-or-64-hex-revision>\"}}",
         "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
       ]
     },

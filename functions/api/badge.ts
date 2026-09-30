@@ -35,7 +35,8 @@
 // to /gspc-verify, where the number is recomputable from its rows.
 
 import { AXES_A } from "./_gspc_axes_a";
-import { currentBoardLid, publicLeaderCount } from "./gspc";
+import { currentBoardLid, publicLeaderCount, publicView } from "./gspc";
+import { axisCountLine } from "./_boardCounts";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES_C } from "./_gspc_axes_c";
@@ -74,21 +75,26 @@ const boardCounts = () => {
   const measured = m.length;                  // a slot with a real run behind it
   const quotable = AXES.length;               // every slot on the board, gap included
   const unmeasured = quotable - measured;
-  // "axis", never "axes" (owner display ruling), and character-for-character the
-  // grammar functions/api/gspc.ts serves as totals.public_count — so a README
+  // Character-for-character the grammar functions/api/gspc.ts serves as
+  // totals.public_count (one formatter, functions/api/_boardCounts.ts) — so a README
   // badge and GET /api/gspc can never drift apart by wording.
-  const publicCount = `${quotable} axis · ${measured} measured`;
+  const publicCount = axisCountLine(quotable, measured);
   // DERIVED, not typed. This was the literal 3 while the ruling string below claimed it
   // was "computed here from the same axis arrays". Same rule GET /api/gspc applies,
   // imported rather than restated, so the badge cannot drift from the board.
   const leaders = publicLeaderCount(AXES);
-  // A bare measured count without the leader clause is retired (A1).
-  const withLeaders = `${publicCount} · ${leaders} public leader scores`;
+  // A bare measured count without the comparison clause is retired (A1). Comparison wording
+  // (30 Sep 2026): the clause states how many model comparisons SEPARATED, from the same public
+  // view GET /api/gspc serves — never a count of "leaders", which reads as a ranking.
+  const cmp = publicView(AXES).filter((a) => a.kind === "model-comparison" && a.status === "MEASURED");
+  const separated = cmp.filter((a) => a.separation === "SEPARATED").length;
+  const comparisonClause = `${separated} of ${cmp.length} comparisons separated`;
+  const withLeaders = `${publicCount} · ${comparisonClause}`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested
     ? `${withLeaders}; jail floor untested`
     : withLeaders;
-  return { measured, quotable, unmeasured, publicCount, leaders, defaultMessage, lid: BOARD_LID };
+  return { measured, quotable, unmeasured, publicCount, leaders, comparisonClause, defaultMessage, lid: BOARD_LID };
 };
 
 const VERIFY_URL = "https://councilof.ai/gspc-verify";
@@ -358,7 +364,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         // endpoint. The previous wording claimed a derivation that never happened.
         unmeasured: board.unmeasured,
         ruling:
-          `${board.publicCount} · ${board.leaders} public leader scores — computed here from the same axis arrays GET /api/gspc ` +
+          `${board.publicCount} · ${board.comparisonClause} — computed here from the same axis arrays GET /api/gspc ` +
           `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_fin), under the same rule: ` +
           `axes counts slots, measured counts slots with a run. ${board.unmeasured} are ` +
           `declared slots with no run behind them and are never quoted as measured. ` +
