@@ -61,13 +61,12 @@ async function write(from) {
   const rel = `interop/gspc-board-byte-copy-${stamp}.json`;
   writeFileSync(join(ROOT, "public", rel), bytes);
   const hex = sha(bytes);
-  const pc = board?.totals?.public_count ?? "absent from the payload";
   const signed = board?.site_attestation?.sig ? "carries its site_attestation (verify it over these bytes)" : "carries no site_attestation";
   const block =
     `  - type: url\n` +
     `    value: "${SITE}/${rel}"\n` +
     `    description: "${MARK} as served ${fetched}: sha256 ${hex}, ${bytes.length} bytes. ` +
-    `Resolves now, unlike the DOIs above. public_count at that time: ${pc}; it ${signed}. ` +
+    `Resolves now, unlike the DOIs above. The copy ${signed}. ` +
     `A snapshot, not the live board (${SITE}/api/gspc), which may have moved on. Measurement, not certification."\n`;
   for (const f of CFFS) {
     const p = join(ROOT, f);
