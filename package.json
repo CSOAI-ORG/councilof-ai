@@ -9,6 +9,8 @@
     "guard:evidence-integrity": "node scripts/evidence-integrity-gate.mjs --selftest && node scripts/evidence-integrity-gate.mjs",
     "guard:ras-opportunity-evidence": "python3 scripts/ras_opportunity_evidence_guard.py --selftest && python3 scripts/ras_opportunity_evidence_guard.py",
     "guard:claim-maintenance": "python3 scripts/claim_maintenance_priority.py --check && python3 scripts/claim_maintenance_reaction.py --check && python3 scripts/claim_maintenance_priority_witness.py --check && python3 scripts/claim_maintenance_priority_root.py --check && python3 scripts/claim_maintenance_priority_root_witness.py --check && npx vitest run client/src/pages/ClaimMaintenance.test.ts client/src/pages/Dashboard.claim-maintenance.test.ts",
+    "verify:claim-maintenance-live": "python3 scripts/claim_maintenance_public_readback.py",
+    "release:claim-maintenance-finalize": "bash scripts/claim-maintenance-finalize.sh",
     "verify:ras-public": "python3 scripts/ras_public_readback.py",
     "guard:regulatory-inventory": "node scripts/regulatory-inventory-gate.mjs --selftest && node scripts/regulatory-inventory-gate.mjs",
     "guard:sitemap-truth": "node --test scripts/sitemap-withdrawal.node-test.mjs && node scripts/sitemap-truth-gate.mjs --selftest && node scripts/sitemap-truth-gate.mjs && node scripts/reach/entity-sitemap-gate.mjs --selftest && node scripts/reach/entity-sitemap-gate.mjs",
