@@ -284,6 +284,13 @@ function discover() {
     "/gspc-arena?view=benchmarks",
     "/gspc-arena?view=training",
     "/gspc-arena?view=arena", "/gspc-arena?view=globe", "/gspc-arena?view=towns",
+    // Council OS deep links (30 Sep 2026, lane council-os-watch): /dashboard/?tab=<pane> is one URL path
+    // with many panes, and the static host serves one /dashboard/index.html for all of them, so a deep
+    // link first painted the wrong pane and its largest element waited for three JS waves (LCP 3.5-4.8 s
+    // on a throttled phone). Each is snapshotted to _dashboard-tab/<pane>/index.html (see dashboardTabOut)
+    // and functions/_middleware.ts serves that snapshot for exactly /dashboard/?tab=<pane>.
+    "/dashboard/?tab=route", "/dashboard/?tab=board", "/dashboard/?tab=verify",
+    "/dashboard/?tab=connect", "/dashboard/?tab=corrections", "/dashboard/?tab=cards",
     // Dead homepage blog slugs already 308 to /blog/. Do not snapshot them —
     // prerendered HTML shadows the 308 and brand-gate rejects leftover
     // competitor GRC prices on choosing-ai-compliance-vendor.
@@ -487,6 +494,11 @@ try {
 // #888 only removed the MUST entry — the route still arrived via discovery.
 const FUNCTION_308 = new Set(["/pricing-legacy", "/.well-known/x402"]);
 const normRoute = (r) => r.split("?")[0].replace(/\/$/, "") || "/";
+/** /dashboard/?tab=<pane> -> _dashboard-tab/<pane>/index.html (served by functions/_middleware.ts); else null. */
+export function dashboardTabOut(route) {
+  const m = /^\/dashboard\/?\?tab=([a-z0-9-]{2,40})$/.exec(route);
+  return m ? `_dashboard-tab/${m[1]}/index.html` : null;
+}
 
 const discovered = discover();
 const skippedStatic = discovered.filter(publicOwns);
@@ -844,7 +856,9 @@ async function worker(id) {
         console.log(`SKIP ${String(rec.chars).padStart(6)}ch  ${rec.route}  no route — honest-404, nothing written`);
         continue;
       }
+      const tabSnap = dashboardTabOut(route);
       const out = route === "/" ? join(DIST, "index.html")
+                                : tabSnap ? join(DIST, tabSnap)
                                 : join(DIST, route.replace(/^\//, ""), "index.html");
       mkdirSync(dirname(out), { recursive: true });
       writeFileSync(out, html, "utf8");

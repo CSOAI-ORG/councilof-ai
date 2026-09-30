@@ -23,6 +23,7 @@ import { CLAUDE_CODE_CMD, CURSOR_JSON, FREE_DOOR, ONE_LINE, TOOLS } from "./Conn
 import { setMetaDescription } from "@/lib/utils";
 import CONNECT_MATRIX from "../../../distribution/connect/connect-matrix.json";
 import { CUSTOMER_CONFIGURED, FREE_MCP, HELM_REPO, PAID_MCP, PYPI, STACKS } from "@/data/stackInstall";
+import DocMeta from "@/components/docs/DocMeta";
 
 type ConnectClient = {
   id: string;
@@ -126,6 +127,7 @@ export default function ConnectHub() {
         <div className="section-shell relative py-10 sm:py-16">
           <p className="t-kicker ink-kicker">Connect · MCP · A2A · HTTP</p>
           <h1 className="t-band mt-3 max-w-3xl text-white">Connect an agent or a client.</h1>
+          <div className="max-w-3xl"><DocMeta updated="2026-09-30" slug="connect" /></div>
           <p className="t-lede mt-4 max-w-2xl ink-muted">
             Every door below reads the same published records the site shows: the live board, the signed
             cards, the corrections ledger. The free door needs no account and no key, and verification

@@ -82,13 +82,11 @@ export default function PageLoader({ message = "Loading..." }: PageLoaderProps) 
  * Inline loader for sections
  */
 export function SectionLoader({ className = "" }: { className?: string }) {
+  // CSS only (30 Sep 2026): App.tsx imports this loader eagerly, and the framer-motion spinner it
+  // used put ~120 kB of animation runtime into the main bundle of every page.
   return (
     <div className={`flex items-center justify-center p-8 ${className}`}>
-      <motion.div
-        animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full"
-      />
+      <div className="w-8 h-8 animate-spin rounded-full border-[3px] border-emerald-600 border-t-transparent motion-reduce:animate-none" />
     </div>
   );
 }
@@ -97,11 +95,5 @@ export function SectionLoader({ className = "" }: { className?: string }) {
  * Button loading state
  */
 export function ButtonLoader() {
-  return (
-    <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-      className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
-    />
-  );
+  return <div className="w-4 h-4 animate-spin rounded-full border-2 border-white border-t-transparent motion-reduce:animate-none" />;
 }
