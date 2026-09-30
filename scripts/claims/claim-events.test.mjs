@@ -11,11 +11,12 @@ import { spawnSync } from "node:child_process";
 import { generateKeyPairSync, sign as edSign, createHash } from "node:crypto";
 import { mkdtempSync, readFileSync, writeFileSync, existsSync, appendFileSync, copyFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join, resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { rederive, rederiveHeads } from "./claim-events-rederive.mjs";
 import { changedPages } from "./claim-events-changed-pages.mjs";
 
-const HERE = resolve(__dirname);
+const HERE = resolve(dirname(fileURLToPath(import.meta.url)));
 const ROOT = resolve(HERE, "../..");
 const EXPORT = join(HERE, "claim_events_export.py");
 const FIXTURE = join(HERE, "__fixtures__/claim-events/make_fixture.py");
