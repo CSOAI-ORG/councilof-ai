@@ -76,6 +76,52 @@
     },
     {
       "capabilities": [
+        "subject_digest_binding",
+        "attestation_bundle",
+        "digest_preimage_disclosure",
+        "base_record_immutability",
+        "selective_disclosure"
+      ],
+      "id": "aac-disclosure-envelope-00",
+      "kind": "standard",
+      "layer_o_route_hint": "ATTESTATION_ENVELOPE",
+      "name": "Disclosure Envelope Profile for Agent Action Capsules",
+      "overlap": [
+        "source_and_observation_binding",
+        "portable_signed_artifact",
+        "open_spec_schema_reference_impl"
+      ],
+      "published": "2026-09-26",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "url": "https://datatracker.ietf.org/doc/draft-mih-agent-disclosure-envelope/"
+    },
+    {
+      "capabilities": [
+        "attestation_bundle",
+        "citation_closure",
+        "missing_record_declaration",
+        "verified_disclosure_overlay",
+        "third_party_countersignature",
+        "portable_offline_report"
+      ],
+      "id": "aac-evidence-bundle-00",
+      "kind": "standard",
+      "layer_o_route_hint": "ATTESTATION_ENVELOPE",
+      "name": "AAC Evidence Bundle",
+      "overlap": [
+        "source_and_observation_binding",
+        "dependency_graph",
+        "portable_signed_artifact",
+        "open_spec_schema_reference_impl"
+      ],
+      "published": "2026-09-26",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "url": "https://datatracker.ietf.org/doc/draft-mih-zhang-agent-disclosure-bundle/"
+    },
+    {
+      "capabilities": [
         "run_reconstruction",
         "ground_truth_resolution",
         "expected_vs_observed_outcome",
@@ -129,6 +175,30 @@
       "published": "2026-09-08",
       "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
       "url": "https://arxiv.org/abs/2609.08481"
+    },
+    {
+      "capabilities": [
+        "verifiable_evidence_request",
+        "signed_refusal",
+        "absence_record",
+        "history_card",
+        "retention_commitment",
+        "request_response_digest_binding"
+      ],
+      "id": "agent-evidence-request-00",
+      "kind": "standard",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "name": "Interaction Model for Requesting Verifiable Evidence",
+      "overlap": [
+        "source_and_observation_binding",
+        "change_without_motive_inference",
+        "explicit_evidence_state",
+        "dependent_notification"
+      ],
+      "published": "2026-09-26",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "url": "https://datatracker.ietf.org/doc/draft-mih-agent-evidence-request/"
     },
     {
       "capabilities": [
@@ -419,6 +489,30 @@
     },
     {
       "capabilities": [
+        "control_topology",
+        "exact_action_binding",
+        "stable_replay_identity",
+        "atomic_authority_consumption",
+        "closed_effect_outcomes",
+        "authenticated_reconciliation"
+      ],
+      "id": "ietf-action-evidence-boundary-06",
+      "kind": "research",
+      "layer_o_route_hint": "POLICY_RUNTIME",
+      "name": "Action Evidence Boundary for Consequential Agent Effects \u2014 draft-schrock-action-evidence-boundary-06",
+      "overlap": [
+        "source_and_observation_binding",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state",
+        "dependency_graph"
+      ],
+      "published": "2026-09-24",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "url": "https://datatracker.ietf.org/doc/draft-schrock-action-evidence-boundary/"
+    },
+    {
+      "capabilities": [
         "agent_identity",
         "action_outcome_records",
         "rfc8785_hash_chain",
@@ -645,6 +739,29 @@
       "published": "2026-09-26",
       "reaction_hint": "INTEGRATION_CANDIDATE",
       "url": "https://datatracker.ietf.org/doc/html/draft-mih-scitt-agent-action-capsule-05"
+    },
+    {
+      "capabilities": [
+        "signed_continuity_statement",
+        "append_only_transparency_registration",
+        "checkpoint_consistency_proof",
+        "named_independent_witnesses",
+        "retention_expired_state"
+      ],
+      "id": "scitt-checkpointed-local-log-01",
+      "kind": "standard",
+      "layer_o_route_hint": "TRANSPARENCY_WITNESS",
+      "name": "Checkpointed Local Log (CLL) \u2014 draft-mih-scitt-checkpointed-local-log-01",
+      "overlap": [
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "supersession_and_correction_history"
+      ],
+      "published": "2026-09-26",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "url": "https://datatracker.ietf.org/doc/draft-mih-scitt-checkpointed-local-log/"
     },
     {
       "capabilities": [

@@ -68,15 +68,15 @@
   },
   "layer_o_routing": {
     "counts": {
-      "ATTESTATION_ENVELOPE": 1,
+      "ATTESTATION_ENVELOPE": 3,
       "DEPENDENCY_GRAPH": 1,
-      "EVIDENCE_INPUT": 29,
+      "EVIDENCE_INPUT": 30,
       "IDENTITY_ATTESTATION": 1,
       "OBSERVABILITY": 1,
-      "POLICY_RUNTIME": 4,
+      "POLICY_RUNTIME": 5,
       "PROTOCOL_ADAPTER": 3,
       "STATUS_REVOCATION": 1,
-      "TRANSPARENCY_WITNESS": 3
+      "TRANSPARENCY_WITNESS": 4
     },
     "meaning": "A deterministic adapter destination for each observed signal. Routing says where to evaluate or ingest a primitive; it is not an adoption, equivalence, endorsement, correctness, or measurement claim.",
     "policy": {
@@ -244,6 +244,93 @@
     },
     {
       "capabilities": [
+        "subject_digest_binding",
+        "attestation_bundle",
+        "digest_preimage_disclosure",
+        "base_record_immutability",
+        "selective_disclosure"
+      ],
+      "id": "aac-disclosure-envelope-00",
+      "kind": "standard",
+      "layer_o_route": "ATTESTATION_ENVELOPE",
+      "layer_o_route_hint": "ATTESTATION_ENVELOPE",
+      "layer_o_route_policy": "Wrap or translate portable evidence using a standard statement/predicate envelope without changing claim semantics.",
+      "name": "Disclosure Envelope Profile for Agent Action Capsules",
+      "overlap": [
+        "source_and_observation_binding",
+        "portable_signed_artifact",
+        "open_spec_schema_reference_impl"
+      ],
+      "overlap_count": 3,
+      "overlap_fraction": "3/16",
+      "published": "2026-09-26",
+      "reaction": "INTEGRATION_CANDIDATE",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "response": "Evaluate as an adapter or witness rail. Do not collapse its trust claim into Claim Maintenance.",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "dependency_graph",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state",
+        "supersession_and_correction_history",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger"
+      ],
+      "url": "https://datatracker.ietf.org/doc/draft-mih-agent-disclosure-envelope/"
+    },
+    {
+      "capabilities": [
+        "attestation_bundle",
+        "citation_closure",
+        "missing_record_declaration",
+        "verified_disclosure_overlay",
+        "third_party_countersignature",
+        "portable_offline_report"
+      ],
+      "id": "aac-evidence-bundle-00",
+      "kind": "standard",
+      "layer_o_route": "ATTESTATION_ENVELOPE",
+      "layer_o_route_hint": "ATTESTATION_ENVELOPE",
+      "layer_o_route_policy": "Wrap or translate portable evidence using a standard statement/predicate envelope without changing claim semantics.",
+      "name": "AAC Evidence Bundle",
+      "overlap": [
+        "source_and_observation_binding",
+        "dependency_graph",
+        "portable_signed_artifact",
+        "open_spec_schema_reference_impl"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-09-26",
+      "reaction": "INTEGRATION_CANDIDATE",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "response": "Evaluate as an adapter or witness rail. Do not collapse its trust claim into Claim Maintenance.",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state",
+        "supersession_and_correction_history",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger"
+      ],
+      "url": "https://datatracker.ietf.org/doc/draft-mih-zhang-agent-disclosure-bundle/"
+    },
+    {
+      "capabilities": [
         "run_reconstruction",
         "ground_truth_resolution",
         "expected_vs_observed_outcome",
@@ -361,6 +448,50 @@
         "open_spec_schema_reference_impl"
       ],
       "url": "https://arxiv.org/abs/2609.08481"
+    },
+    {
+      "capabilities": [
+        "verifiable_evidence_request",
+        "signed_refusal",
+        "absence_record",
+        "history_card",
+        "retention_commitment",
+        "request_response_digest_binding"
+      ],
+      "id": "agent-evidence-request-00",
+      "kind": "standard",
+      "layer_o_route": "EVIDENCE_INPUT",
+      "layer_o_route_hint": "EVIDENCE_INPUT",
+      "layer_o_route_policy": "Treat as a bounded public evidence source or market signal pending a more specific adapter.",
+      "name": "Interaction Model for Requesting Verifiable Evidence",
+      "overlap": [
+        "source_and_observation_binding",
+        "change_without_motive_inference",
+        "explicit_evidence_state",
+        "dependent_notification"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-09-26",
+      "reaction": "INTEGRATION_CANDIDATE",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "response": "Evaluate as an adapter or witness rail. Do not collapse its trust claim into Claim Maintenance.",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "scheduled_reread",
+        "dependency_graph",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://datatracker.ietf.org/doc/draft-mih-agent-evidence-request/"
     },
     {
       "capabilities": [
@@ -970,6 +1101,50 @@
     },
     {
       "capabilities": [
+        "control_topology",
+        "exact_action_binding",
+        "stable_replay_identity",
+        "atomic_authority_consumption",
+        "closed_effect_outcomes",
+        "authenticated_reconciliation"
+      ],
+      "id": "ietf-action-evidence-boundary-06",
+      "kind": "research",
+      "layer_o_route": "POLICY_RUNTIME",
+      "layer_o_route_hint": "POLICY_RUNTIME",
+      "layer_o_route_policy": "Apply as a pre/post-execution runtime guard in Layer O; keep policy decisions separate from Claim Maintenance states.",
+      "name": "Action Evidence Boundary for Consequential Agent Effects \u2014 draft-schrock-action-evidence-boundary-06",
+      "overlap": [
+        "source_and_observation_binding",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state",
+        "dependency_graph"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-09-24",
+      "reaction": "RESEARCH_VALIDATES_PRIMITIVES",
+      "reaction_hint": "RESEARCH_VALIDATES_PRIMITIVES",
+      "response": "Compare methods and cite useful primitives. Keep CSOAI measurements independently reproducible.",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "bounded_reverification",
+        "supersession_and_correction_history",
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://datatracker.ietf.org/doc/draft-schrock-action-evidence-boundary/"
+    },
+    {
+      "capabilities": [
         "agent_identity",
         "action_outcome_records",
         "rfc8785_hash_chain",
@@ -1424,6 +1599,49 @@
         "self_correction_ledger"
       ],
       "url": "https://datatracker.ietf.org/doc/html/draft-mih-scitt-agent-action-capsule-05"
+    },
+    {
+      "capabilities": [
+        "signed_continuity_statement",
+        "append_only_transparency_registration",
+        "checkpoint_consistency_proof",
+        "named_independent_witnesses",
+        "retention_expired_state"
+      ],
+      "id": "scitt-checkpointed-local-log-01",
+      "kind": "standard",
+      "layer_o_route": "TRANSPARENCY_WITNESS",
+      "layer_o_route_hint": "TRANSPARENCY_WITNESS",
+      "layer_o_route_policy": "Use as an independent registration/timestamp/witness rail; keep witnessing separate from measurement correctness.",
+      "name": "Checkpointed Local Log (CLL) \u2014 draft-mih-scitt-checkpointed-local-log-01",
+      "overlap": [
+        "portable_signed_artifact",
+        "merkle_or_root_aggregation",
+        "independent_timestamp_or_transparency_receipt",
+        "supersession_and_correction_history"
+      ],
+      "overlap_count": 4,
+      "overlap_fraction": "4/16",
+      "published": "2026-09-26",
+      "reaction": "INTEGRATION_CANDIDATE",
+      "reaction_hint": "INTEGRATION_CANDIDATE",
+      "response": "Evaluate as an adapter or witness rail. Do not collapse its trust claim into Claim Maintenance.",
+      "standing": "Individual Internet-Draft; work in progress; not IETF endorsement or standard.",
+      "unmatched_claim_maintenance_dimensions": [
+        "verbatim_public_claim_capture",
+        "independent_third_party_role",
+        "source_and_observation_binding",
+        "scheduled_reread",
+        "change_without_motive_inference",
+        "dependency_graph",
+        "bounded_reverification",
+        "declared_vs_observed_differential",
+        "explicit_evidence_state",
+        "dependent_notification",
+        "self_correction_ledger",
+        "open_spec_schema_reference_impl"
+      ],
+      "url": "https://datatracker.ietf.org/doc/draft-mih-scitt-checkpointed-local-log/"
     },
     {
       "capabilities": [
@@ -1989,6 +2207,6 @@
   "source_snapshot": {
     "claim_boundary": "Public-source research snapshot. Inclusion means adjacent relevance, not endorsement, adoption, equivalence, certification, legal ownership, trademark status, or a claim that a source implements CSOAI Claim Maintenance. The words 'claim maintenance' have prior public uses; this snapshot tracks both phrase collisions and technical overlap.",
     "path": "/spec/claim-maintenance/market-signals-2026-09-30.json",
-    "sha256": "340f471991fd06824af0c49542acbeb2dba624226dbf44e99cea20ab682a6854"
+    "sha256": "362fc09d0597b70c09593228e3bba3feb7c1e49a3cb853e015b633dce870c776"
   }
 }
