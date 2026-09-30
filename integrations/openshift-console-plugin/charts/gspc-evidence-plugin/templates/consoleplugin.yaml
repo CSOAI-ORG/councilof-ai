@@ -1,0 +1,24 @@
+{{- if .Values.consolePlugin.enabled }}
+# Cluster-scoped. Creating it needs cluster-admin; enabling it is a separate console-operator patch (README).
+apiVersion: console.openshift.io/v1
+kind: ConsolePlugin
+metadata:
+  name: {{ include "gspc.name" . }}
+  labels:
+{{ include "gspc.labels" . | indent 4 }}
+spec:
+  displayName: "GSPC evidence (Council of AI)"
+  i18n:
+    loadType: Preload
+  backend:
+    type: Service
+    service:
+      name: {{ include "gspc.name" . }}
+      namespace: {{ .Release.Namespace }}
+      port: {{ .Values.plugin.port }}
+      basePath: {{ .Values.plugin.basePath }}
+  contentSecurityPolicy:
+    - directive: ConnectSrc
+      values:
+{{ toYaml .Values.consolePlugin.connectSrc | indent 8 }}
+{{- end }}

@@ -182,6 +182,8 @@ export const PRIMARY_PATHS = new Set<string>([
   "/measurements/disclosure-completeness",
   // /verify-server — paste one endpoint URL, see every signed capsule about it (2026-09-26).
   "/verify-server",
+  // /panel — the embeddable GSPC evidence panel (2026-09-30).
+  "/panel",
   // /measurement-capsules — the human page over the capsule index: kinds, chain, anchors, how to verify (2026-09-26).
   "/measurement-capsules",
   // /research/cross-hardware-reproducibility — preprint + open dataset on item-level cross-runtime reproducibility (2026-09-27).

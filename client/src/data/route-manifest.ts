@@ -1548,6 +1548,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Article50 Pack"
  },
  {
+  "path": "/panel",
+  "comp": "Panel",
+  "title": "Panel"
+ },
+ {
   "path": "/pay",
   "comp": "PayEveryDoor",
   "title": "Pay Every Door"

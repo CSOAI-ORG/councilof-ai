@@ -1,0 +1,140 @@
+{
+ "schema": "csoai.fixture-manifest/0.1",
+ "origin": "https://councilof.ai",
+ "recorded_at": [
+  "2026-09-30T16:25:34Z",
+  "2026-09-30T17:00:23Z"
+ ],
+ "recorded_by": "curl / python urllib, user-agent gspc-panel-fixture-recorder/0.1, from the 4090 builder pod",
+ "rule": "fixture-that-invents-the-upstream: every body is the upstream's own bytes; a request the recording does not cover throws in test/replay.js",
+ "files": {
+  "a2ui-verify.jsonl": {
+   "request": "GET /api/a2ui/verify?card=94b88313...",
+   "sha256": "bec819fd96390d03dc657f807fe3ca29f1305f755b95d0c3d895ad65dc689fe7",
+   "bytes": 3093,
+   "verbatim": true
+  },
+  "agui-card.sse": {
+   "request": "POST /api/agui/run {messages:[{role:user,content:'94b88313...'}]}",
+   "sha256": "3260bb1caf80916e7e04c05db41eca6879c75d4370327364e78f415e86458331",
+   "bytes": 8318,
+   "verbatim": true
+  },
+  "agui-tandem.sse": {
+   "request": "POST /api/agui/run {messages:[{role:user,content:'https://tandem.ac/mcp'}]}",
+   "sha256": "58ca425dc682c5071befdd8b9af7fdff24f5932b540d23b36615a33a2017002a",
+   "bytes": 11175,
+   "verbatim": true
+  },
+  "ask-explain-tandem.sse": {
+   "request": "POST /api/agui/run content 'explain this evidence https://tandem.ac/mcp'",
+   "sha256": "961d271c5cd0613d6747561e955b1f065ba72156c98cbe3115eccefd837c9ef0",
+   "bytes": 11175,
+   "verbatim": true
+  },
+  "ask-safe-tandem.sse": {
+   "request": "POST /api/agui/run content 'is this MCP server safe to use? https://tandem.ac/mcp'",
+   "sha256": "c1e0efa5d98e3cab27f33239dec80b413db3c6c01a2fbd5b8f5ef766d4146972",
+   "bytes": 11175,
+   "verbatim": true
+  },
+  "ask-unrouted.sse": {
+   "request": "POST /api/agui/run content 'what is the weather in Paris'",
+   "sha256": "a3e23629cf9cc95f7203168b5424953ba200da44a128cc59b8a12ef31fd956f3",
+   "bytes": 2266,
+   "verbatim": true
+  },
+  "card-llama.json": {
+   "request": "GET /signed/cards/94b8831311c24df5e7d93e1f1dc989d24639bbe64abc4034a51d78a0306508e1.json",
+   "sha256": "ee853b9cc9dea2d99cff732d001825d44fc1e48a7044500664e2240d63ab54ed",
+   "bytes": 843,
+   "verbatim": true
+  },
+  "claims-events.jsonl": {
+   "request": "GET /api/claims/events",
+   "sha256": "a90c509de5433c862c4ecf8d20c77cedd6a97b70b317d5e19138a135ac15a933",
+   "bytes": 4632,
+   "verbatim": true
+  },
+  "claims-register.json": {
+   "request": "GET /api/claims/register",
+   "sha256": "beadf7001f83662c4d2bd5da5c0c733323163eff726497b7267a90ae9a47ac57",
+   "bytes": 43593,
+   "verbatim": true
+  },
+  "corrections.trimmed.json": {
+   "request": "GET /api/corrections",
+   "sha256": "6d463b8fb1f335a5a6b6e0e4bb20135eb3d4e835eaec4328743a43c90e18dc2a",
+   "bytes": 20615,
+   "verbatim": false,
+   "trimmed": "corrections[] cut to the entries that mention https://councilof.ai/mcp plus the first two; every kept entry and every top-level key byte-identical in content (re-serialised with indent=1). Nothing added or edited."
+  },
+  "gspc.json": {
+   "request": "GET /api/gspc",
+   "sha256": "cbd39f12e70e9094c9a5fdbd2f396f07f85ae1873930c7c182f322a7c815fb98",
+   "bytes": 121244,
+   "verbatim": true
+  },
+  "models-measured.json": {
+   "request": "GET /interop/models-measured.json",
+   "sha256": "983cbef01bb9b37fb09abe5bb8892de76cccc301f8d5074cc39e01e22194c16d",
+   "bytes": 59388,
+   "verbatim": true
+  },
+  "se-agentlookups.sse": {
+   "request": "POST /mcp/free tools/call server_evidence {endpoint_url: https://env.agentlookups.ai/mcp}",
+   "sha256": "0474d6b1f40434aed7aff739008b3f6d239d2596b53c63ca92d712461672bec2",
+   "bytes": 10279,
+   "verbatim": true
+  },
+  "se-own.sse": {
+   "request": "POST /mcp/free tools/call server_evidence {endpoint_url: https://councilof.ai/mcp}",
+   "sha256": "8dd7b91bb83a88c3535747920a6492dd0c5d004f84cb021d936ff90cb2c2652b",
+   "bytes": 46425,
+   "verbatim": true
+  },
+  "se-tandem.sse": {
+   "request": "POST /mcp/free tools/call server_evidence {endpoint_url: https://tandem.ac/mcp}",
+   "sha256": "06fe7a4e7fc99534b07dc2321e9cc3030e249adbdc295b8d8cf35647992fdcaa",
+   "bytes": 9697,
+   "verbatim": true
+  },
+  "se-unmeasured.sse": {
+   "request": "POST /mcp/free tools/call server_evidence {endpoint_url: https://councilof.ai/mcp/free}",
+   "sha256": "c5e9bb5a438f54c0063fee8a0182204516b70179891ec7fa5115738035805b6e",
+   "bytes": 5298,
+   "verbatim": true
+  },
+  "state.trimmed.json": {
+   "request": "GET /api/state",
+   "sha256": "58fc39bd6e56267907abc2667043704c63070e399dab16d4598c7415036f9d7b",
+   "bytes": 3578,
+   "verbatim": false,
+   "trimmed": "only ledgers.claim_maintenance kept, re-serialised with indent=1. Nothing added or edited."
+  },
+  "vc-card.sse": {
+   "request": "POST /mcp/free tools/call verify_card {card: 94b88313...}",
+   "sha256": "fb2ebb1d757e0cc79a9cfa7bd603eecdc498044bc7d52f58a7db0f4f53f4a4fb",
+   "bytes": 4340,
+   "verbatim": true
+  },
+  "vcap-agentlookups.sse": {
+   "request": "POST /mcp/free tools/call verify_capsule {capsule_json: first capsule of se-agentlookups}",
+   "sha256": "ac1b0882786f562bd5792ef05f701e690ac8fa55ed6b577bd7d8bbcf9151da83",
+   "bytes": 6496,
+   "verbatim": true
+  },
+  "vcap-own.sse": {
+   "request": "POST /mcp/free tools/call verify_capsule {capsule_json: first capsule of se-own}",
+   "sha256": "386998f8c476f353fc878f225673eef179f3627c466b4b33287ca7593ebd891a",
+   "bytes": 5839,
+   "verbatim": true
+  },
+  "vcap-tandem.sse": {
+   "request": "POST /mcp/free tools/call verify_capsule {capsule_json: first capsule of se-tandem}",
+   "sha256": "598cae12ff9daf2a2c9541d7fa32f7c3f203e3e004377df13fb8aad99b081dce",
+   "bytes": 6499,
+   "verbatim": true
+  }
+ }
+}
