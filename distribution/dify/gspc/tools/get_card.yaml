@@ -1,0 +1,22 @@
+identity:
+  name: get_card
+  author: csoai
+  label:
+    en_US: "One public-root card-v0 leaf"
+description:
+  human:
+    en_US: "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json."
+  llm: "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. States: VALID (fetched); NOT_IN_THIS_CORPUS (the id is in the signed card index, not the public root, so use verify_card on it); INVALID (in neither the live root nor the signed card index); UNCHECKABLE (a source could not be read). Not a GSPC measurement-card."
+parameters:
+  - name: sha256
+    type: string
+    required: true
+    label:
+      en_US: "sha256"
+    human_description:
+      en_US: "64-char hex payload SHA-256 of the card-v0 leaf."
+    llm_description: "64-char hex payload SHA-256 of the card-v0 leaf."
+    form: llm
+extra:
+  python:
+    source: tools/get_card.py

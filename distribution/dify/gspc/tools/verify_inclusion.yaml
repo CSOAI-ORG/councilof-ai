@@ -1,0 +1,22 @@
+identity:
+  name: verify_inclusion
+  author: csoai
+  label:
+    en_US: "Merkle inclusion check"
+description:
+  human:
+    en_US: "Check a sha256 against the live public-root merkle via GET /api/proof?sha=."
+  llm: "Check a sha256 against the live public-root merkle via GET /api/proof?sha=. Three states only: VALID (included), INVALID (not a leaf), UNCHECKABLE (proof endpoint unreachable). Does not claim Ed25519 unless sig_ed25519 is present and checked separately. Never a grade."
+parameters:
+  - name: sha256
+    type: string
+    required: true
+    label:
+      en_US: "sha256"
+    human_description:
+      en_US: "64-char hex digest to test for inclusion."
+    llm_description: "64-char hex digest to test for inclusion."
+    form: llm
+extra:
+  python:
+    source: tools/verify_inclusion.py

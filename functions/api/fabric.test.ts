@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
+import FABRIC_LOCK from "../mcp/tool-fleet.lock.json";
 import { onRequest as onMcpRequest } from "../mcp/[[path]]";
 import {
   buildFabricManifest,
@@ -381,7 +382,7 @@ describe("GET /api/fabric", () => {
       expect(externalFetch).not.toHaveBeenCalled();
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "RUNTIME_OBSERVED",
-        summary: expect.stringContaining("16 tool declarations"),
+        summary: expect.stringContaining(`${FABRIC_LOCK.fleet_size} tool declarations`),
         writes_board: false,
       });
     } finally {

@@ -76,6 +76,103 @@
         "additionalProperties": false
       },
       "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)" }
+    },
+    {
+      "name": "evidence_bundle",
+      "title": "Evidence bundle for one obligation (paid, x402; preview free)",
+      "annotations": {
+        "title": "Evidence bundle for one obligation (paid, x402; preview free)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "The wrapper's status fields. On PAYMENT_REQUIRED (isError:true) the route's x402 PaymentRequired object (x402Version, resource, accepts, extensions) is spread at the top level too, per the x402 MCP transport.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUIRED, DELIVERED, NOT_DEPLOYED, UNREACHABLE, UNREADABLE_RESPONSE, BAD_ARGUMENTS or HTTP_<code>"
+          },
+          "tool": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "http_status": {
+            "type": "integer"
+          },
+          "payment_presented": {
+            "type": "boolean"
+          },
+          "delivery_state": {
+            "type": "string"
+          },
+          "settlement_state": {
+            "type": "string"
+          },
+          "x402Version": {
+            "type": "integer"
+          },
+          "accepts": {
+            "type": "array"
+          },
+          "resource": {
+            "type": "object"
+          },
+          "deliverable": {},
+          "not_a_certification": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "description": "PAID (x402). An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present. Observations are relevant-to the obligation, never satisfied or not satisfied; zero relevant cards ships as an empty bundle, and the free preview says so first (preview=true here, or the free tool evidence_bundle_preview). Article 53 output is evidence for review, not a legal determination. Evidence for obligation work \u2014 not a conformity assessment, certification, audit opinion or compliance determination; grants no status. Measurement, not certification. Without x_payment the tool returns the 402 challenge, which is the only place terms appear. Verification of any card is free at https://councilof.ai/gspc-verify.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "obligation": {
+            "type": "string",
+            "enum": [
+              "article-50",
+              "article-53",
+              "dora",
+              "cra"
+            ],
+            "description": "article-50, article-53, dora or cra."
+          },
+          "subject": {
+            "type": "string",
+            "maxLength": 120,
+            "description": "Optional: a model id, vendor or instrument the cards must name."
+          },
+          "preview": {
+            "type": "boolean",
+            "description": "true = the free preview (relevant-card count and first cards); nothing is charged."
+          },
+          "x_payment": {
+            "type": "string",
+            "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge."
+          }
+        },
+        "required": [
+          "obligation"
+        ],
+        "additionalProperties": false
+      },
+      "csoai": {
+        "paid": true,
+        "rail": "x402",
+        "route": "/api/evidence-bundle",
+        "sku": "evidence_bundle",
+        "free_preview": "preview=true, or the free tool evidence_bundle_preview",
+        "deliverable": "OSCAL 1.1.0 assessment-results over already-signed cards (with inclusion proofs) plus one manifest card-v0, surface evidence.bundle",
+        "deployed_by": "live on councilof.ai (402 on ?obligation=article-53&bundle=1, read 2026-09-30)"
+      }
     }
   ]
 }

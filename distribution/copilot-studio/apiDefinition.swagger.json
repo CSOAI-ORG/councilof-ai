@@ -1,0 +1,55 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "GSPC",
+    "description": "GSPC: read the live measurement board, verify Ed25519-signed measurement cards and capsules, and list the already-signed cards relevant to one obligation. Measurement, not certification.",
+    "version": "1.4.3",
+    "contact": {
+      "name": "CSOAI Ltd",
+      "url": "https://councilof.ai",
+      "email": "nicholas@csoai.org"
+    }
+  },
+  "host": "councilof.ai",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/mcp/free": {
+      "post": {
+        "summary": "GSPC measurement records (free, read-only MCP)",
+        "description": "Streamable HTTP MCP server with 13 read-only tools. Tool definitions and annotations are read from tools/list at run time.",
+        "x-ms-agentic-protocol": "mcp-streamable-1.0",
+        "operationId": "InvokeGSPC",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {},
+  "security": [],
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://councilof.ai/connect/"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://councilof.ai/privacy/"
+    },
+    {
+      "propertyName": "Categories",
+      "propertyValue": "AI;Data"
+    }
+  ]
+}

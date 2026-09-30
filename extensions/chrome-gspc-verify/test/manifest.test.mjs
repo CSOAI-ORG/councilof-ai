@@ -4,7 +4,7 @@
  * compliance, the retracted council-size claim, or fault tolerance.
  */
 import { describe, it, expect } from "vitest";
-import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, lstatSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,8 +13,11 @@ const manifest = JSON.parse(readFileSync(path.join(EXT, "manifest.json"), "utf8"
 
 function walk(dir, out = []) {
   for (const f of readdirSync(dir)) {
+    if (f === "node_modules") continue;
     const p = path.join(dir, f);
-    if (statSync(p).isDirectory()) walk(p, out);
+    const stat = lstatSync(p);
+    if (stat.isSymbolicLink()) continue;
+    if (stat.isDirectory()) walk(p, out);
     else out.push(p);
   }
   return out;
@@ -33,6 +36,14 @@ describe("manifest", () => {
     for (const f of ["lib/cardVerify.mjs", "lib/gspcVerify.mjs", "lib/board.mjs", "lib/hub.mjs", "popup.js", "popup.css", "README.md"]) {
       expect(existsSync(path.join(EXT, f)), f).toBe(true);
     }
+    expect(manifest.icons).toEqual({
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png",
+    });
+    expect(manifest.action.default_icon).toEqual(manifest.icons);
+    for (const f of Object.values(manifest.icons)) expect(existsSync(path.join(EXT, f)), f).toBe(true);
   });
   it("asks for only the two hosts it reads and no broad permission", () => {
     expect(manifest.host_permissions.sort()).toEqual(["https://councilof.ai/*", "https://huggingface.co/*"]);

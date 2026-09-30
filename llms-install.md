@@ -80,13 +80,15 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
     "mcp_trust",
     "measurement_index",
     "verify_capsule",
-    "server_evidence"
+    "server_evidence",
+    "evidence_bundle_preview"
   ],
   "x402_metered": [
     "commission_card",
     "art50_marking_evidence",
     "rwa_evidence",
-    "receipts_batch"
+    "receipts_batch",
+    "evidence_bundle"
   ]
 }
 ```
@@ -94,7 +96,7 @@ payment. Its three possible verdict classes are `VALID`, `INVALID`, and
 
 ## Metered-call states
 
-The four metered tools use explicit x402 semantics:
+The x402-metered tools use explicit x402 semantics:
 
 1. A schema-valid call without `x_payment` requests a structured
    `PAYMENT_REQUIRED` challenge. Its `accepts[]` entries describe how a client may

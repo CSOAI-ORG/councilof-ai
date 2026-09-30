@@ -22,7 +22,8 @@ describe("/connect/claude", () => {
   it("points at /mcp/free, never at the door that carries the metered tools", () => {
     expect(FREE_DOOR).toBe("https://councilof.ai/mcp/free");
     expect(CLAUDE_CODE_CMD).toContain(FREE_DOOR);
-    for (const name of paidNames) expect(SRC).not.toContain(name);
+    // Whole identifiers only: the free evidence_bundle_preview contains the paid name evidence_bundle as a prefix.
+    for (const name of paidNames) expect(SRC).not.toMatch(new RegExp(`\\b${name}\\b(?!_)`));
     expect(SRC).not.toMatch(/x_payment|USDC|\bwallet\b/);
   });
 

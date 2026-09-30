@@ -31,8 +31,8 @@ describe("Docker MCP submission draft", () => {
     for (const name of [...free, ...paid]) {
       expect(readme, name).toContain(`\`${name}\``);
     }
-    expect(readme).toContain("Twelve free tools");
-    expect(readme).toContain("Four optional x402-metered evidence tools");
+    expect(readme).toContain("Thirteen free tools");
+    expect(readme).toContain("Five optional x402-metered evidence tools");
     expect(readme).toContain("A schema-valid unpaid call returns\n`PAYMENT_REQUIRED`");
     expect(readme).toContain("it is not settlement, delivery or revenue");
     expect(readme).toContain("No tool determines legal compliance or supplies legal advice");

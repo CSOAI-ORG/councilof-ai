@@ -1,0 +1,13 @@
+identity:
+  name: measurement_index
+  author: csoai
+  label:
+    en_US: "Measurement-capsule index"
+description:
+  human:
+    en_US: "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested."
+  llm: "Read the latest signed measurement-capsule index published at https://councilof.ai/measurement-capsules/latest.json: the index root over every capsule, each batch (adapter, kind, capsule count, measurement states, batch Merkle root, record sha256, record signature and OpenTimestamps state), the index's own board signature re-verified here against the pinned did:web:csoai.org#board-attestation-1 key, and the anchor states published beside it (OpenTimestamps, Rekor, XRPL) — PENDING is never called attested. States only: measurement, not endorsement; no verdict, score or ranking. NOT_PUBLISHED when no index is served; UNREACHABLE when the source could not be fetched."
+parameters: []
+extra:
+  python:
+    source: tools/measurement_index.py

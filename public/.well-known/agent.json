@@ -1,7 +1,7 @@
 {
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
@@ -204,6 +204,22 @@
       "examples": [
         "SendMessage with Part.data {\"skill\":\"server-evidence\",\"input\":{\"endpoint_url\":\"https://example.com/mcp\"}}"
       ]
+    },
+    {
+      "id": "evidence-bundle",
+      "name": "Evidence bundle preview: signed cards relevant to one obligation (free)",
+      "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it, read from GET /api/evidence-bundle. The same module as the free MCP tool evidence_bundle_preview. Relevant-to is never a determination: no answer says satisfied or not satisfied, and zero relevant cards is answered EMPTY. Article 53 output is evidence for review, not a legal determination. The assembled OSCAL bundle is the x402 MCP tool evidence_bundle on https://councilof.ai/mcp; this skill never charges. Not a conformity assessment, certification, audit opinion or compliance determination; grants no status.",
+      "tags": [
+        "evidence",
+        "oscal",
+        "eu-ai-act",
+        "dora",
+        "cra"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"evidence-bundle\",\"input\":{\"obligation\":\"article-50\"}}",
+        "SendMessage with Part.data {\"skill\":\"evidence-bundle\",\"input\":{\"obligation\":\"article-53\",\"subject\":\"gpt\"}}"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
@@ -218,7 +234,7 @@
   "signatures": [
     {
       "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
-      "signature": "-Vw48pD1wCKQ2Tb3cc6c95um_AScvzvtjRdUZFPjZhD8Prp_Vc6o6uptn0V8nzNfw-iDVPMInmfOeQYZF-p4Dw"
+      "signature": "cKYCT_kTHAKI7l8OBQyEzWfPpu3DDbW1DcCyIewRYRxnJMMTUaQOpUkjqqiM_l_ufr0BJJPkD7bAvevC5lENCQ"
     }
   ]
 }

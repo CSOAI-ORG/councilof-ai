@@ -118,6 +118,7 @@ async function oscal(ob: Obligation, subject: string, selected: { sha: string; w
           { name: "counsel_confirmed", value: String(ob.counsel_confirmed) },
           { name: "merkle_root", value: merkle_root || "" },
           { name: "determination", value: "NONE — observations only; the subject's auditor keeps the compliance call" },
+          ...(ob.review_note ? [{ name: "review_note", value: ob.review_note }] : []),
         ],
         remarks: ob.honesty || "Counsel-confirmed obligation anchor. Measurement, not certification.",
       },
@@ -202,7 +203,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     .sort((a, b) => a.sha.localeCompare(b.sha));
 
   const preview = {
-    obligation: { id: ob.id, control_id: ob.control_id, title: ob.title, obligation: ob.obligation, regulator: ob.regulator, counsel_confirmed: ob.counsel_confirmed, honesty: ob.honesty, existing_pack: ob.existing_pack ? `${origin}${ob.existing_pack}` : null },
+    obligation: { id: ob.id, control_id: ob.control_id, title: ob.title, obligation: ob.obligation, regulator: ob.regulator, counsel_confirmed: ob.counsel_confirmed, honesty: ob.honesty, ...(ob.review_note ? { review_note: ob.review_note } : {}), existing_pack: ob.existing_pack ? `${origin}${ob.existing_pack}` : null },
     subject: subject || null,
     relevant_signed_cards: selected.length,
     cards: selected.slice(0, 40).map(({ sha, l }) => ({ sha256: sha, surface: l.surface, subject: l.subject, as_of: l.as_of, url: `${origin}/cards/${sha.slice(0, 16)}.json` })),

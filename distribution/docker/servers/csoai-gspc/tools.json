@@ -48,6 +48,10 @@
     "description": "Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g."
   },
   {
+    "name": "evidence_bundle_preview",
+    "description": "For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle."
+  },
+  {
     "name": "commission_card",
     "description": "Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation."
   },
@@ -62,5 +66,9 @@
   {
     "name": "receipts_batch",
     "description": "A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256."
+  },
+  {
+    "name": "evidence_bundle",
+    "description": "An evidence bundle for ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject via https://councilof.ai/api/evidence-bundle: OSCAL 1.1.0 assessment-results assembled only from already-signed measurement cards (each with its card bytes and Merkle inclusion proof), plus one manifest card-v0, signed when the signing key is present."
   }
 ]
