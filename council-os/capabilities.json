@@ -1240,6 +1240,79 @@
       "source": "functions/api/challenge.ts"
     },
     {
+      "id": "api-claims-events",
+      "kind": "http",
+      "path": "/api/claims/events",
+      "method": "GET",
+      "name": "Claims events",
+      "description": "GET /api/claims/events — the claim-event feed: append-only, hash-chained JSONL.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/claims/events",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/claims/events/index.ts"
+    },
+    {
+      "id": "api-claims-events-head",
+      "kind": "http",
+      "path": "/api/claims/events/head",
+      "method": "GET",
+      "name": "Claims events head",
+      "description": "GET /api/claims/events/head — the signed daily head of the claim-event feed, with this door's own verification of it against the committed feed bytes.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [],
+      "surfaces": [],
+      "probe": {
+        "method": "GET",
+        "request": "/api/claims/events/head",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/claims/events/head.ts"
+    },
+    {
+      "id": "api-chat",
+      "kind": "http",
+      "path": "/api/chat",
+      "method": "GET",
+      "name": "Chat (descriptor)",
+      "description": "GET /api/chat: a descriptor, not a 404. It names the one grounded answerer (Ask the Council) and every skin it is served through (chat, MCP, A2A, AG-UI, A2UI), each with its method and address. POST /api/chat asks the question.",
+      "description_state": "DOCUMENTED",
+      "audience": "agent",
+      "lifecycle": "LIVE",
+      "payment": "free",
+      "schema_refs": [
+        "csoai.chat-skins/0.1"
+      ],
+      "surfaces": [
+        "openapi"
+      ],
+      "probe": {
+        "method": "GET",
+        "request": "/api/chat",
+        "expect_status": [
+          200
+        ],
+        "safe": true
+      },
+      "source": "functions/api/chat.ts"
+    },
+    {
       "id": "api-chat-post",
       "kind": "http",
       "path": "/api/chat",
