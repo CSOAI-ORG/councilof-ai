@@ -159,9 +159,10 @@ export default function DashboardFabricPane() {
             Missing adapters stay missing
           </p>
           <p className="mt-1 text-xs leading-relaxed text-slate-700">
-            A provider canary now exposes configuration and a separately
-            authenticated probe, but no live provider execution, A2A task
-            service, A2UI renderer or fix worker is inferred from a button.
+            A provider canary exposes configuration and a separately
+            authenticated probe. The A2UI projection is observed independently;
+            no live provider execution, A2A task service, or fix worker is
+            inferred from a button.
           </p>
         </article>
       </div>
