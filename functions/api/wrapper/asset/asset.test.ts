@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { onRequestGet as door, ASSET_DOORS, pairsFor, doorFor, PACK_SCHEMA } from "./[asset]";
+import { onRequestGet as door, ASSET_DOORS, pairsFor, doorFor, PACK_SCHEMA, READ_BUDGET_MS } from "./[asset]";
 import { onRequestGet as usdcRoute } from "./usdc";
-import { CHAINS } from "../../wrapper";
+import { CHAINS, WRAPPER_LID } from "../../wrapper";
 import { VERDICT_RE } from "../../rwa/evidence";
 import { wrapperAssetDescription } from "../../_x402_descriptions";
 import READINESS from "../../../../public/interop/stablecoin-universe-2026-09/readiness.json";
@@ -55,6 +55,35 @@ describe("/api/wrapper/asset/<asset> — registry", () => {
       expect(text).toMatch(/verification is free/i);
       expect(text.length).toBeLessThanOrEqual(500);
     }
+  });
+});
+
+describe("/api/wrapper/asset/<asset> — unpaid challenge latency (30 Sep 2026)", () => {
+  it("a chain read slower than the budget still answers 402 within the budget, states PENDING_READ, and carries the wrapper lid", async () => {
+    stub();
+    const inner = globalThis.fetch;
+    vi.stubGlobal("fetch", async (u: string | URL | Request, init?: RequestInit) => {
+      await new Promise((r) => setTimeout(r, READ_BUDGET_MS + 1500));
+      return inner(u, init);
+    });
+    const t0 = Date.now();
+    const r = await door(ctx("/api/wrapper/asset/usdc"));
+    const took = Date.now() - t0;
+    expect(r.status).toBe(402);
+    expect(took).toBeLessThan(READ_BUDGET_MS + 800);
+    const b = await r.json();
+    expect(b.csoai.states_at_challenge).toEqual({ PENDING_READ: pairsFor(doorFor("usdc")!).length });
+    expect(b.csoai.states_source).toMatch(/PENDING_READ/);
+    expect(b.csoai.states_source).toMatch(/never sent to the facilitator/);
+    expect(b.csoai.lid).toBe(WRAPPER_LID);
+    expect(b.csoai.lid).not.toMatch(/model fleets|leader/);
+  }, 10_000);
+
+  it("a read inside the budget is used as read (states from the chain, source fresh read)", async () => {
+    stub();
+    const b = await (await door(ctx("/api/wrapper/asset/usdc"))).json();
+    expect(b.csoai.states_source).toBe("fresh read");
+    expect(Object.keys(b.csoai.states_at_challenge)).not.toContain("PENDING_READ");
   });
 });
 
