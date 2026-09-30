@@ -1,0 +1,29 @@
+[
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": "/gspc-evidence",
+      "component": { "$codeRef": "GspcEvidencePage" }
+    }
+  },
+  {
+    "type": "console.navigation/href",
+    "properties": {
+      "id": "gspc-evidence",
+      "name": "%plugin__gspc-evidence-plugin~GSPC evidence%",
+      "href": "/gspc-evidence",
+      "perspective": "admin",
+      "section": "home"
+    }
+  },
+  {
+    "type": "console.navigation/href",
+    "properties": {
+      "id": "gspc-evidence-dev",
+      "name": "%plugin__gspc-evidence-plugin~GSPC evidence%",
+      "href": "/gspc-evidence",
+      "perspective": "dev"
+    }
+  }
+]

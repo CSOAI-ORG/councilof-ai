@@ -45,6 +45,20 @@ Local Ollama models are caller-owned `local_gpu` candidates (declared cost 0); t
 `/api/tags` and never sends them a prompt. `/v1/chat/completions`, `/route_execute` and `mode: "execute"` answer
 **501 NOT_ENABLED**.
 
+## Discovery source (ARD / ADS)
+
+`discover: {listing: "agntcy" | "councilof", max: 1..32}` adds candidates LISTED by an ARD listing: the AGNTCY Directory
+gateway (`https://ai-catalog.outshift.io/v1/agents`) or our own `https://councilof.ai/ard/v1/agents`
+(functions/_lib/route/discovery.ts). Listings are fixed; a caller cannot point the router at a URL. A discovered
+candidate carries its listing reference (`identifier`, `record_sha256`, `listing_state: LISTED`) and the directory's
+own metadata verbatim as the directory's claim. No rule reads that claim. A discovered candidate is measured only
+where our signed effect-binding census has its endpoint; otherwise it stays UNMEASURED. Only MCP server and A2A agent
+records are routable; skills and other kinds are counted and skipped. `DISCOVERY_OFF=1` disables the source. The edge
+MCP tool `route` does not expose `discover` (its input schema is unchanged).
+
+Live read, 30 Sep 2026 16:50Z: 3 pages / 300 entries read, 280 skipped (skills), 3 MCP candidates, all UNMEASURED
+(not in our census).
+
 ## Not built (owner decisions, spec §8)
 
 `route_execute`, executing `/v1/chat/completions`, x402 amounts, the route signing key (`#route-evidence-1`),

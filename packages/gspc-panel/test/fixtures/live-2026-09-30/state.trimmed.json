@@ -1,0 +1,101 @@
+{
+ "ledgers": {
+  "claim_maintenance": {
+   "scheduler": "ONE: scripts/claims/maintenance_due.py inside the daily claim-watch job (cron 50 7 * * *). The weekly 3090-pod loop (scripts/pod-loops/claim-watch-measure.sh) is retired.",
+   "schedule_rule": "For every LIVE registry in GET /api/claims/register: the read its own signed bytes name, and day 7, day 30 and day 90 after its created date. A passed date with no completed run reads DUE_NOT_RUN.",
+   "state": "PROBED",
+   "run_at": "2026-09-29T16:55:06Z",
+   "counts": {
+    "CHANGED_CONFIRMED": 1,
+    "FETCH_FAILED": 1,
+    "NOT_YET_DUE": 9
+   },
+   "checks": [
+    {
+     "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+     "check": "scheduled-read",
+     "due": "2026-09-28",
+     "outcome": "CHANGED_CONFIRMED"
+    },
+    {
+     "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+     "check": "day-7",
+     "due": "2026-09-29",
+     "outcome": "FETCH_FAILED"
+    },
+    {
+     "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+     "check": "scheduled-read",
+     "due": "2026-10-01",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+     "check": "day-7",
+     "due": "2026-10-02",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+     "check": "day-7",
+     "due": "2026-10-02",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+     "check": "day-30",
+     "due": "2026-10-22",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+     "check": "day-30",
+     "due": "2026-10-25",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+     "check": "day-30",
+     "due": "2026-10-25",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-ondo-chainlink-2026-09-22-rev2",
+     "check": "day-90",
+     "due": "2026-12-21",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-ai-assurance-and-settlement-2026-09-23-rev2",
+     "check": "day-90",
+     "due": "2026-12-24",
+     "outcome": "NOT_YET_DUE"
+    },
+    {
+     "registry_id": "claimreg-hiring-platforms-2026-09-24-rev2",
+     "check": "day-90",
+     "due": "2026-12-24",
+     "outcome": "NOT_YET_DUE"
+    }
+   ],
+   "outcomes_head_sha256": "69252bb8b005d38c03f2ddf09d8c9fcb0ce39a9facbbc87b28d06db0c85db409",
+   "failures_feed": "A CHANGED_CONFIRMED check writes a correction candidate (cand-<16 hex>-<run>-<claim>) for review; only a person promotes it into /api/corrections. A moved source is never an allegation.",
+   "source": "https://huggingface.co/datasets/csoai/councilof-ai-evidence/resolve/main/public/interop/claim-maintenance/latest.json",
+   "event_chain": {
+    "authority": "GET /api/claims/events",
+    "verify": "GET /api/claims/events/head",
+    "as_of": "2026-09-28T13:20:04Z",
+    "lines": 9,
+    "head_seq": 8,
+    "first_at": "2026-09-28T07:51:52Z",
+    "last_at": "2026-09-28T07:51:57Z",
+    "bytes_sha256": "a90c509de5433c862c4ecf8d20c77cedd6a97b70b317d5e19138a135ac15a933",
+    "subjects": 1,
+    "disclosed": 0,
+    "sealed": 1,
+    "verification_state_source": "GET /api/claims/events/head \u2192 verification.state",
+    "note": "Append-only hash-chained Claim Maintenance event history. It records observed/workflow states; it does not replace the executed schedule ledger, create a correction, or make a verdict about a subject."
+   }
+  }
+ }
+}

@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gspc.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "gspc.labels" . | indent 4 }}
+data:
+  nginx.conf: |
+    error_log /dev/stderr;
+    pid /tmp/nginx.pid;
+    events {}
+    http {
+      access_log /dev/stdout;
+      include /etc/nginx/mime.types;
+      default_type application/octet-stream;
+      client_body_temp_path /tmp/client_temp;
+      proxy_temp_path /tmp/proxy_temp;
+      fastcgi_temp_path /tmp/fastcgi_temp;
+      uwsgi_temp_path /tmp/uwsgi_temp;
+      scgi_temp_path /tmp/scgi_temp;
+      keepalive_timeout 65;
+    {{- if .Values.consolePlugin.enabled }}
+      server {
+        listen {{ .Values.plugin.port }} ssl;
+        listen [::]:{{ .Values.plugin.port }} ssl;
+        ssl_certificate /var/cert/tls.crt;
+        ssl_certificate_key /var/cert/tls.key;
+        root /usr/share/nginx/html;
+      }
+    {{- end }}
+      server {
+        listen {{ .Values.plugin.httpPort }};
+        listen [::]:{{ .Values.plugin.httpPort }};
+        root /usr/share/nginx/html/standalone;
+        add_header Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; connect-src https://councilof.ai; img-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'self'" always;
+        add_header X-Content-Type-Options nosniff always;
+        location = /healthz { return 200 "ok\n"; }
+        location / { try_files $uri $uri/ /index.html; }
+      }
+    }

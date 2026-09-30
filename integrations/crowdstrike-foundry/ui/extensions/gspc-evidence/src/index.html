@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSPC evidence</title>
+<link rel="stylesheet" href="app.css">
+<script type="module" src="gspc-panel.js"></script>
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<main>
+<form id="f" aria-label="Look up GSPC evidence">
+<label for="s">Subject: MCP server URL, agent card URL, model id, card id or claim id</label>
+<div class="row"><input id="s" autocomplete="off"><button type="submit">Read evidence</button></div>
+<p id="ctx" class="note" role="status"></p>
+</form>
+<gspc-evidence-panel id="panel"></gspc-evidence-panel>
+</main>
+</body>
+</html>

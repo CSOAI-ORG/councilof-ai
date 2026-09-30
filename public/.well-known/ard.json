@@ -1,29 +1,94 @@
 {
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Council of AI",
+    "identifier": "did:web:csoai.org",
+    "documentationUrl": "https://councilof.ai/layer0/"
+  },
   "entries": [
     {
       "@context": "https://agenticresourcediscovery.org/context/v1",
       "identifier": "urn:air:councilof.ai:server:gspc-mcp",
-      "displayName": "Council of AI — GSPC Measurement Tools",
+      "displayName": "Council of AI - GSPC Measurement Tools",
       "type": "application/mcp-server-card+json",
-      "url": "https://councilof.ai/.well-known/mcp/server.json",
-      "description": "MCP tools for reading the public GSPC measurement board and published evidence, including card signature and root-inclusion checks. Measurement, not certification.",
+      "url": "https://councilof.ai/.well-known/mcp/server-card.json",
+      "description": "Public GSPC measurement and evidence-verification tools over MCP. Measurement only; never certification.",
       "representativeQueries": [
         "Show the current public GSPC measurement board",
-        "Find a published measurement card and check its signature",
-        "Check whether a published card is included in a published root"
+        "Verify a published GSPC measurement card",
+        "Check whether a published card is included in a published root",
+        "Show current measurement-capsule evidence for an MCP server"
       ],
       "capabilities": [
         "board_totals",
-        "get_card",
+        "get_axis",
         "verify_card",
+        "list_cards",
         "get_root",
-        "verify_inclusion"
+        "get_card",
+        "verify_inclusion",
+        "x402_trust",
+        "mcp_trust",
+        "measurement_index",
+        "verify_capsule",
+        "server_evidence",
+        "evidence_bundle_preview",
+        "route",
+        "commission_card",
+        "art50_marking_evidence",
+        "rwa_evidence",
+        "receipts_batch",
+        "evidence_bundle"
       ],
       "tags": [
         "GSPC",
         "MCP",
         "AI governance measurement",
-        "evidence verification"
+        "evidence verification",
+        "provenance"
+      ]
+    },
+    {
+      "@context": "https://agenticresourcediscovery.org/context/v1",
+      "identifier": "urn:air:councilof.ai:agent:council-of-ai",
+      "displayName": "Council of AI A2A Agent",
+      "type": "application/a2a-agent-card+json",
+      "url": "https://councilof.ai/.well-known/agent-card.json",
+      "description": "Public A2A discovery card for Council of AI measurement and evidence workflows.",
+      "representativeQueries": [
+        "What Council of AI measurement skills are available?",
+        "Verify a published measurement artifact",
+        "Retrieve current public evidence state"
+      ],
+      "capabilities": [
+        "measurement-capsules",
+        "server-evidence"
+      ],
+      "tags": [
+        "A2A",
+        "measurement",
+        "evidence",
+        "provenance"
+      ]
+    },
+    {
+      "@context": "https://agenticresourcediscovery.org/context/v1",
+      "identifier": "urn:air:councilof.ai:registry:gspc-census",
+      "displayName": "Council of AI ARD registry (GSPC census)",
+      "type": "application/json",
+      "url": "https://councilof.ai/ard/v1/agents",
+      "description": "ARD registry API (GET /ard/v1/agents, POST /ard/v1/search, POST /ard/v1/explore) over the MCP servers and A2A agents our census catalogued. Each entry is LISTED and states its measurement; UNMEASURED stays UNMEASURED.",
+      "representativeQueries": [
+        "Find MCP servers whose public statements were measured",
+        "Which catalogued A2A agents publish signed cards?",
+        "List MCP servers the census could not measure"
+      ],
+      "tags": [
+        "ARD",
+        "registry",
+        "census",
+        "MCP",
+        "A2A"
       ]
     }
   ]

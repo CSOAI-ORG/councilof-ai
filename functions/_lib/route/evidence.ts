@@ -15,6 +15,12 @@ import { CEDAR_SCHEMA, FLOOR_CEDAR, renderCedar } from "./policy";
 import type { Decision } from "./decide";
 import type { CensusRead } from "./census";
 import type { Candidate, Objective, Task } from "./types";
+import type { DiscoveryRead } from "./discovery";
+
+export const DISCOVERY_LIMIT =
+  "Discovered candidates are LISTED by a directory, nothing more. The directory's own trust, verification, scan and usage " +
+  "metadata was read by no rule; a discovered candidate is measured only where our signed census has its endpoint.";
+
 
 export const EVENT_SCHEMA = "csoai.evidence-event/0.1";
 export const ROUTE_PROFILE = "csoai.route-evidence/0.1";
@@ -80,6 +86,7 @@ export type RecordInput = {
   decision: Decision;
   board: { state: string; source: string | null; board_separation: string | null };
   census?: CensusRead;
+  discovery?: DiscoveryRead;
   locator: string;
   readAt: string;
   declaredBy?: string;
@@ -132,6 +139,9 @@ export async function buildRouteRecord(inp: RecordInput): Promise<Record<string,
         ignored_fields: x.candidate.ignored_fields,
         measurements: x.measurement ? [x.measurement] : [],
         census: x.candidate.census,
+        ...(x.candidate.directory
+          ? { directory: { listing: x.candidate.directory.listing, identifier: x.candidate.directory.identifier, record_sha256: x.candidate.directory.record_sha256, listing_state: x.candidate.directory.listing_state, declared_by: x.candidate.directory.declared_by } }
+          : {}),
       })),
       permitted: d.permitted,
       chosen: d.chosen,
@@ -139,6 +149,7 @@ export async function buildRouteRecord(inp: RecordInput): Promise<Record<string,
       label: d.label,
       board: inp.board,
       ...(inp.census ? { census: inp.census } : {}),
+      ...(inp.discovery ? { discovery: inp.discovery } : {}),
       execution: {
         mode: "decide_only",
         status: "n/a",
@@ -156,7 +167,7 @@ export async function buildRouteRecord(inp: RecordInput): Promise<Record<string,
     state: "UNMEASURED",
     value: null,
     negative_control: { id: null, expected: null, got: "NOT_RUN" },
-    limits: [...ROUTE_LIMITS.slice(0, 4), censusLimit(inp.census), ...ROUTE_LIMITS.slice(4)],
+    limits: [...ROUTE_LIMITS.slice(0, 4), censusLimit(inp.census), ...ROUTE_LIMITS.slice(4), ...(inp.discovery ? [DISCOVERY_LIMIT] : [])],
     supersedes: null,
     signature: null,
     anchors: { ots: "none", rekor: { log_index: null, uuid: null } },

@@ -1,0 +1,16 @@
+{{- if .Values.standalone.configMap }}
+# The standalone page and the published panel bundle (councilof.ai/panel/gspc-panel.js, pinned by
+# scripts/vendor-panel.mjs), served by the stock nginx image. No build, no registry push.
+# Values are JSON strings so the bytes survive exactly (a block scalar would change the final newline).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "gspc.name" . }}-standalone
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "gspc.labels" . | indent 4 }}
+data:
+{{- range $f := list "index.html" "standalone.js" "standalone.css" "gspc-panel.js" }}
+  {{ $f }}: {{ $.Files.Get (printf "files/%s" $f) | toJson }}
+{{- end }}
+{{- end }}

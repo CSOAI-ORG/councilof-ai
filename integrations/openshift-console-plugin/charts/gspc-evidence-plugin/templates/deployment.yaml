@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "gspc.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "gspc.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.plugin.replicas }}
+  selector:
+    matchLabels:
+      app: {{ include "gspc.name" . }}
+  template:
+    metadata:
+      labels:
+{{ include "gspc.labels" . | indent 8 }}
+    spec:
+      securityContext:
+{{ toYaml .Values.plugin.podSecurityContext | indent 8 }}
+      containers:
+        - name: {{ include "gspc.name" . }}
+          image: {{ required "plugin.image is required" .Values.plugin.image }}
+          imagePullPolicy: {{ .Values.plugin.imagePullPolicy }}
+          command: ["nginx", "-g", "daemon off;"]
+          ports:
+          {{- if .Values.consolePlugin.enabled }}
+            - containerPort: {{ .Values.plugin.port }}
+              protocol: TCP
+          {{- end }}
+            - containerPort: {{ .Values.plugin.httpPort }}
+              protocol: TCP
+          readinessProbe:
+            httpGet: { path: /healthz, port: {{ .Values.plugin.httpPort }} }
+          securityContext:
+{{ toYaml .Values.plugin.containerSecurityContext | indent 12 }}
+          resources:
+{{ toYaml .Values.plugin.resources | indent 12 }}
+          volumeMounts:
+          {{- if .Values.consolePlugin.enabled }}
+            - name: plugin-serving-cert
+              readOnly: true
+              mountPath: /var/cert
+          {{- end }}
+            - name: nginx-conf
+              readOnly: true
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          {{- if .Values.standalone.configMap }}
+            - name: standalone
+              readOnly: true
+              mountPath: /usr/share/nginx/html/standalone
+          {{- end }}
+      volumes:
+      {{- if .Values.consolePlugin.enabled }}
+        - name: plugin-serving-cert
+          secret:
+            secretName: {{ include "gspc.name" . }}-cert
+            defaultMode: 420
+      {{- end }}
+        - name: nginx-conf
+          configMap:
+            name: {{ include "gspc.name" . }}
+            defaultMode: 420
+      {{- if .Values.standalone.configMap }}
+        - name: standalone
+          configMap:
+            name: {{ include "gspc.name" . }}-standalone
+            defaultMode: 420
+      {{- end }}
