@@ -95,9 +95,24 @@
       "id": "did:web:csoai.org#verifier",
       "type": "AttestationVerifier",
       "serviceEndpoint": "https://councilof.ai/gspc-verify/"
+    },
+    {
+      "id": "did:web:csoai.org#mcp",
+      "type": "ModelContextProtocol",
+      "serviceEndpoint": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "did:web:csoai.org#a2a",
+      "type": "Agent2Agent",
+      "serviceEndpoint": "https://councilof.ai/api/a2a"
+    },
+    {
+      "id": "did:web:csoai.org#agent-card",
+      "type": "AgentCard",
+      "serviceEndpoint": "https://councilof.ai/.well-known/agent-card.json"
     }
   ],
-  "_serviceNote": "The MCP measurement-server endpoint was removed 2026-08-19: its worker returned 404 and a DID document must not advertise dead services. It returns in the same commit that redeploys it.",
+  "_serviceNote": "Discovery pointers bind this did:web identity to the live verifier, MCP door, A2A interface and signed Agent Card. Availability remains an observed runtime fact; a service entry is not a health claim.",
   "_keyContinuity": {
     "note": "Two signing identities per KEY-CONTINUITY.md (binding estate note, 2026-08-16). #site-release-1 signs site deploys, release cards and agent cards (keystone-held). #estate-chain-1 signs fleet board chains and measurement cards (pod-held). Public verify surfaces label which key signed each artifact. Ed25519 today; ML-DSA-65 is roadmap, not present. #card-attestation-1 (added 2026-08-20) signs the mine's measurement-card generation (d4cb0eaa, Mac-held estate key) - the cards' actual signer, published so the 335-card chain verifies against the trust root.",
     "superseded": [

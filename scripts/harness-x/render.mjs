@@ -104,6 +104,11 @@ const regMeta = {
   "io.modelcontextprotocol.registry/publisher-provided": {
     "ai.councilof/doctrine": DOCTRINE,
     "ai.councilof/fleet": { free: free.map((t) => t.id), paid: paid.map((t) => t.id) },
+    "ai.councilof/identity_did": "did:web:csoai.org",
+    "ai.councilof/did_document": "https://csoai.org/.well-known/did.json",
+    "ai.councilof/agent_card": "https://councilof.ai/.well-known/agent-card.json",
+    "ai.councilof/did_service_id": "did:web:csoai.org#mcp",
+    "ai.councilof/a2a_service_id": "did:web:csoai.org#a2a",
     "ai.councilof/generator": "scripts/harness-x/render.mjs from council-os/distribution.json",
   },
 };
@@ -940,6 +945,15 @@ const WELL_KNOWN_GENERATOR =
   "mcp/gspc-server/server.json (version), functions/mcp/gspc-tools.json + paid-tools.json (tools, as tools/list serves them) " +
   "and docs/DOCTRINE.md (doctrine hash). Do not hand-edit; re-render.";
 const provider = { name: ID.publisher, url: ID.website, company_number: ID.company_number, jurisdiction: ID.jurisdiction };
+const DISCOVERY_IDENTITY = {
+  did: "did:web:csoai.org",
+  did_document: "https://csoai.org/.well-known/did.json",
+  did_document_mirror: `${ID.website}/.well-known/did.json`,
+  mcp_service_id: "did:web:csoai.org#mcp",
+  a2a_service_id: "did:web:csoai.org#a2a",
+  agent_card_service_id: "did:web:csoai.org#agent-card",
+  agent_card: `${ID.website}/.well-known/agent-card.json`,
+};
 emit("public/.well-known/mcp/server-card.json", j({
   schema_version: "2024-11-05",
   name: SERVER_NAME,
@@ -952,6 +966,7 @@ emit("public/.well-known/mcp/server-card.json", j({
     `MCP registry ${dist.registry_names.canonical} server ${REMOTE_VERSION} (${dist.registry_names.deprecated_alias} is its deprecated alias). ${TOOL_COUNTS}`,
   icon_url: ID.icon,
   provider,
+  identity: DISCOVERY_IDENTITY,
   transport: { type: "streamable-http", url: ID.door },
   endpoints: {
     mcp: {
@@ -998,7 +1013,14 @@ emit("public/.well-known/mcp/server-card.json", j({
   doi_status_url: "https://councilof.ai/interop/zenodo-status.json",
   doi_alternative: { url: "https://councilof.ai/methodology/", relation: "the live methodology page; not the deposit's bytes" },
   explicitly_not: ["certification", "accreditation", "conformity-assessment", "legal-determination", "enforcement"],
-  discovery: { well_known_mcp: `${ID.website}/.well-known/mcp.json`, agent_card: `${ID.website}/.well-known/agent-card.json` },
+  discovery: {
+    well_known_mcp: `${ID.website}/.well-known/mcp.json`,
+    agent_card: `${ID.website}/.well-known/agent-card.json`,
+    did: DISCOVERY_IDENTITY.did,
+    did_document: DISCOVERY_IDENTITY.did_document,
+    mcp_service_id: DISCOVERY_IDENTITY.mcp_service_id,
+    a2a_service_id: DISCOVERY_IDENTITY.a2a_service_id,
+  },
   doctrine: DOCTRINE,
   generated_by: WELL_KNOWN_GENERATOR,
 }));
@@ -1030,6 +1052,7 @@ emit("public/.well-known/mcp.json", j({
   catalogue: ID.door,
   gspc_board: ID.board,
   server_card: `${ID.website}/.well-known/mcp/server-card.json`,
+  identity: DISCOVERY_IDENTITY,
   measured: {
     total_tools: SERVED.length,
     free_tools: SERVED_FREE.length,

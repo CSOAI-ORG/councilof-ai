@@ -16,6 +16,15 @@
     "company_number": "16939677",
     "jurisdiction": "GB"
   },
+  "identity": {
+    "did": "did:web:csoai.org",
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "did_document_mirror": "https://councilof.ai/.well-known/did.json",
+    "mcp_service_id": "did:web:csoai.org#mcp",
+    "a2a_service_id": "did:web:csoai.org#a2a",
+    "agent_card_service_id": "did:web:csoai.org#agent-card",
+    "agent_card": "https://councilof.ai/.well-known/agent-card.json"
+  },
   "transport": {
     "type": "streamable-http",
     "url": "https://councilof.ai/mcp"
@@ -1756,7 +1765,11 @@
   ],
   "discovery": {
     "well_known_mcp": "https://councilof.ai/.well-known/mcp.json",
-    "agent_card": "https://councilof.ai/.well-known/agent-card.json"
+    "agent_card": "https://councilof.ai/.well-known/agent-card.json",
+    "did": "did:web:csoai.org",
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "mcp_service_id": "did:web:csoai.org#mcp",
+    "a2a_service_id": "did:web:csoai.org#a2a"
   },
   "doctrine": {
     "sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",

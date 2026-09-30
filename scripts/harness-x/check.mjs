@@ -344,6 +344,22 @@ assert a["state"]=="LIVE" and b["state"]=="ABSENT" and a["doctrine_sha256"]=="${
   rec("well-known-server-card", "stdio pin == npm package version", sc.endpoints.mcp.stdio.endsWith("@" + npmV) && mj.servers[0].stdio.endsWith("@" + npmV), sc.endpoints.mcp.stdio);
   rec("well-known-server-card", "mcp.json registry version == live; tools == locked",
     mj.servers[0].registry.version === WANT_VERSION && sameList(mj.measured.tools, EXPECT_TOOLS) && mj.measured.total_tools === EXPECT_TOOLS.length, mj.servers[0].registry.version);
+  const did = readJson("public/.well-known/did.json");
+  const agent = readJson("public/.well-known/agent-card.json");
+  const service = Object.fromEntries((did.service || []).map((s) => [s.id, s.serviceEndpoint]));
+  const agentKid = JSON.parse(Buffer.from(agent.signatures?.[0]?.protected || "", "base64url").toString("utf8") || "{}").kid;
+  const didKeys = new Set((did.verificationMethod || []).map((k) => k.id));
+  rec("discovery-identity", "signed Agent Card key is published by did:web", Boolean(agentKid) && didKeys.has(agentKid), agentKid || "missing kid");
+  rec("discovery-identity", "DID MCP/A2A/AgentCard services match public doors",
+    service["did:web:csoai.org#mcp"] === "https://councilof.ai/mcp" &&
+    service["did:web:csoai.org#a2a"] === agent.supportedInterfaces?.[0]?.url &&
+    service["did:web:csoai.org#agent-card"] === "https://councilof.ai/.well-known/agent-card.json",
+    JSON.stringify({ mcp: service["did:web:csoai.org#mcp"], a2a: service["did:web:csoai.org#a2a"], agent: service["did:web:csoai.org#agent-card"] }));
+  rec("discovery-identity", "MCP descriptors bind to the same DID and service ids",
+    sc.identity?.did === did.id && mj.identity?.did === did.id &&
+    sc.identity?.mcp_service_id === "did:web:csoai.org#mcp" && mj.identity?.mcp_service_id === "did:web:csoai.org#mcp" &&
+    sc.identity?.a2a_service_id === "did:web:csoai.org#a2a" && mj.identity?.a2a_service_id === "did:web:csoai.org#a2a",
+    did.id);
   // Stale fleet prose = any count word that is not the locked one ("eight free", "twelve tools" were
   // the old fleets). Derived from the lock, so a fleet change cannot turn the current count "stale".
   const W = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
