@@ -1,0 +1,133 @@
+{
+  "name": "ai.councilof/gspc",
+  "version": "1.4.3",
+  "schema_version": "1.1.0",
+  "description": "Dated AI measurements and signed evidence over MCP. Read-only tools: read the GSPC board and one axis, verify a signed measurement card or capsule, check Merkle inclusion, list published measurements about an endpoint, read census snapshots. Every answer carries its state (VALID, INVALID, UNCHECKABLE, UNMEASURED). Free verification; never certification.",
+  "authors": [
+    "Council of AI"
+  ],
+  "created_at": "2026-09-30T10:20:00Z",
+  "skills": [
+    {
+      "id": 71002,
+      "name": "ai_ml_engineering/model_evaluation/agent_evaluation"
+    },
+    {
+      "id": 71001,
+      "name": "ai_ml_engineering/model_evaluation/llm_evaluation"
+    }
+  ],
+  "domains": [
+    {
+      "id": 11107,
+      "name": "technology/artificial_intelligence/ai_agents"
+    },
+    {
+      "id": 405,
+      "name": "trust_and_safety/risk_management"
+    }
+  ],
+  "locators": [
+    {
+      "type": "url",
+      "urls": [
+        "https://councilof.ai/mcp/free"
+      ],
+      "annotations": {
+        "role": "MCP endpoint, free read-only tools"
+      }
+    },
+    {
+      "type": "url",
+      "urls": [
+        "https://councilof.ai/api/gspc"
+      ],
+      "annotations": {
+        "role": "GSPC board, live JSON (axes, measured axes, as_of)"
+      }
+    }
+  ],
+  "annotations": {
+    "doctrine": "https://councilof.ai/doctrine/",
+    "stance": "measurement, not certification; UNMEASURED is reported as UNMEASURED",
+    "derived_from": "proposals/ai.councilof.gspc.oasf.draft.json (AGNTCY lane, unedited), sha256:fdfaaadc6f2428e6"
+  },
+  "modules": [
+    {
+      "name": "integration/mcp",
+      "id": 202,
+      "data": {
+        "name": "ai.councilof/gspc",
+        "description": "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+        "connections": [
+          {
+            "type": "streamable-http",
+            "url": "https://councilof.ai/mcp/free"
+          }
+        ],
+        "mcp_data": {
+          "name": "ai.councilof/gspc",
+          "title": "Council of AI GSPC",
+          "description": "Dated AI measurements and signed evidence over MCP. Free verification; never certification.",
+          "version": "1.4.3",
+          "websiteUrl": "https://councilof.ai",
+          "remotes": [
+            {
+              "type": "streamable-http",
+              "url": "https://councilof.ai/mcp/free"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "core/evaluation",
+      "id": 102,
+      "annotations": {
+        "event_schema": "csoai.evidence-event/0.1",
+        "states": "CONSISTENT DIVERGENT PARTIAL UNMEASURED UNCHECKABLE NOT_DISCRIMINATING",
+        "not_a_grade": "No overall rating or score is given; each record states declared vs observed and its limits."
+      },
+      "data": {
+        "referred_evaluations": [
+          {
+            "created_at": "2026-09-30T10:20:00Z",
+            "publisher": {
+              "name": "CSOAI Ltd (Council of AI)",
+              "version": "evidence-fabric 0.1.0",
+              "url": "https://councilof.ai"
+            },
+            "datasets": [
+              {
+                "name": "GSPC board (signed, live)",
+                "url": "https://councilof.ai/api/gspc",
+                "version": "2026-09-30",
+                "metadata": [
+                  {
+                    "name": "signature",
+                    "value": "Ed25519 did:web:csoai.org#board-attestation-1"
+                  },
+                  {
+                    "name": "unmeasured_rule",
+                    "value": "UNMEASURED carries value null; never a number"
+                  }
+                ]
+              },
+              {
+                "name": "Corrections ledger (signed)",
+                "url": "https://councilof.ai/api/corrections",
+                "version": "2026-09-30",
+                "metadata": [
+                  {
+                    "name": "rule",
+                    "value": "a correction is a new record naming the replaced one by sha256"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
