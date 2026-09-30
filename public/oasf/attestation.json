@@ -1,0 +1,28 @@
+{
+  "payload": {
+    "schema": "csoai.oasf-record-attestation/0.1",
+    "key": "did:web:csoai.org#board-attestation-1",
+    "signed_at": "2026-09-30T17:06:59Z",
+    "digest_rule": "sha256 of the RFC 8785 (JCS) bytes of the record as served",
+    "doctrine_sha256": "845fc1d200eb9e867fc8d682750409d6725084bac632726187759f8fefdfbe0a",
+    "records": [
+      {
+        "path": "public/oasf/ai.councilof.gspc.oasf.json",
+        "name": "ai.councilof/gspc",
+        "version": "1.4.4",
+        "record_sha256": "f032f621e96dde774e52a89bf13b206ce98780624b171ac651e0a2c0590707c1"
+      },
+      {
+        "path": "public/oasf/ai.councilof.measurement-agent.oasf.json",
+        "name": "ai.councilof/measurement-agent",
+        "version": "1.4.0",
+        "record_sha256": "ea710c1227eb8c181f5fb843404df80af1619b4e8a5fa92a8e5343e30043d3ce"
+      }
+    ],
+    "statement": "Council of AI published these OASF records. Measurement, not certification."
+  },
+  "sig_ed25519": "3190dc1416d1a0ea8d9473ba771536f5e5267b3282492bc20351dadca0410f872172abe1abd5e0d27b64177a6b982f19be0de5abd5a5e45eaf08197eb9b8ce08",
+  "payload_sha256": "91d422dee17d1f6fe89bc054eecfd097abdfc8e40fe33bfe2efc992d7c4d939d",
+  "key": "did:web:csoai.org#board-attestation-1",
+  "signer_auth": "pod-token"
+}
