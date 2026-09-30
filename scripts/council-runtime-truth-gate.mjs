@@ -761,7 +761,6 @@ for (const route of [
   "/signup",
   "/welcome",
   "/system-status",
-  "/connect",
   "/sec-disclosure",
   "/sec-ai-disclosure",
   "/registry",
@@ -784,6 +783,13 @@ for (const route of [
     new RegExp(`<Route path=["']${escapeRegExp(route)}["'] component=\\{ContentReviewNotice\\} \\/>`),
   );
 }
+// /connect is the connector hub again (front-end audit 2026-09-30, land 39f3cfe00): it must render
+// ConnectHub, never the withdrawal notice it showed until then.
+assert.match(
+  appSource,
+  /<Route path=["']\/connect["'] component=\{ConnectHub\} \/>/,
+  "/connect must render the connector hub",
+);
 assert.match(
   appSource,
   /<Route path=["']\/press["'] component=\{PublicPress\} \/>/,

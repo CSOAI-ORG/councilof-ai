@@ -1,69 +1,45 @@
 /**
- * Home - the front door, shortened 2026-09-23.
+ * Home - the front door, rebuilt 2026-09-30 on the owner's review of the live page.
  *
- * THE MEASUREMENT THAT CAUSED THIS REWRITE. On 2026-09-23 this page rendered 27,743px tall at
- * 1280px and 47,757px at 390px - twenty-six and fifty-three screens. That is the mechanical
- * reason the owner could say the lower sections had "been the same for months": a band almost
- * nobody reaches is a band whose staleness nobody reports. Shortening the page is therefore not
- * cosmetic; it is what makes the lower material maintainable at all.
+ * WHAT THE OWNER FOUND (30 Sep): confusing, duplicated content; none of our images; the live
+ * board not on the page; the company line sitting mid-page; and the fleets tile ("14") read as
+ * a model count when we have measured far more models than that (the figure was
+ * totals.model_fleets, a count of model-comparison AXES).
  *
- * THE ORDER IS THE ARGUMENT, with a compact distribution evidence band before the board:
- *   1. HomeHero        - what we do, for whom, and what is measured right now, off the live board.
- *   2. HomeCredibility - the six things a stranger can check about us before trusting a number,
- *                        each with a live figure behind it.
- *   2a. MomentumStrip  - live, sourced, dated figures from GET /api/momentum (added 2026-09-27):
- *                        PyPI and Hugging Face downloads, capsules, census rows, the board, the
- *                        signed cards, the corrections ledger, tools and doors. Each links to its
- *                        source; a figure whose source fails is left out, never zeroed.
- *   2b. Where we take part - the featured memberships (Open Secure AI Alliance, C2PA, DIF) and one
- *                        chip per other body, from public/interop/memberships.json.
- *   2c. HomeProof      - anchors a stranger can open, third-party listings verified on the read,
- *                        and the latest dated public work.
- *   3. (HomeDistribution moved to /how-we-work on 2026-09-27: its artifact is the pod census that
- *      stopped refreshing on 24 Sep and printed "out of date" on the front door; the PyPI figure
- *      now comes from the daily record behind /api/momentum.)
- *   4. The board       - every row, every word, every number off GET /api/gspc at render time,
- *                        with the composer under it.
- *   5. HomeWeakScore   - one of our own low scores, verified in the reader's own browser.
- *   6. Participation   - the standards record, as text with evidence, never as a logo row.
- *   Then a six-card hand-off to the pages that hold everything else.
+ * THE ORDER IS THE ARGUMENT, and each figure is printed once:
+ *   1. HomeHero         - what we do, in one sentence, over one image. No figures.
+ *   2. LiveBoardGlance  - the live GSPC board: every axis with its state, the count line with its
+ *                         separation line, and the model count (derived from the signed cards by
+ *                         scripts/build-models-measured.mjs; list at /models-measured/).
+ *   3. HomeSteps        - how it works, which is also what makes it different: measure, sign,
+ *                         re-check, correct. Four sections, four of our own images, no figures.
+ *   4. HomeWaysIn       - Ask, Connect, Verify, and a line each for the buyer, the developer,
+ *                         the regulator and the agent.
+ *   5. Proof strip      - four live figures from GET /api/momentum, then "More numbers".
+ *   6. Company strip    - the accountable entity and "Who we are".
  *
- * WHAT WAS RETIRED FROM THIS PAGE AND WHERE IT WENT (align, do not delete). All eight bands
- * below were mounted ONLY here, so each would have been deleted by removal. They are now the
- * whole of /how-we-work (client/src/pages/HowWeWork.tsx), which makes the same live reads through
- * the same shared hooks: HomeStrengths, HomeMachineSurface, HomeReach, ToolStack, LivingStages,
- * HomeFilms, HomeEvidenceShowcase (reading) and HomeNavigator. HomeStrengths' six claims are not
- * lost from the front door either - HomeCredibility carries all six in summary and links to the
- * full argument.
+ * WHAT LEFT THE FRONT DOOR, AND WHERE IT WENT (align, do not delete): the full momentum band,
+ * HomeProof, HomeCredibility, HomeWeakScore, the separation explanation, the memberships and the
+ * participation record, and the "keep going" hand-off all moved to /about/#numbers
+ * (client/src/components/about/AboutNumbers.tsx). The composer and the talk panel stay on
+ * /dashboard, where "Ask" leads. Bands retired on 2026-09-23 remain on /how-we-work.
  *
- * ONE COUNT LINE, AND IT IS IN THE FIRST SCREEN. totals.public_count is printed once on this page
- * (ruling of 2026-09-16), in HomeHero; the table is mounted with showPublicCount={false}.
- *
- * MEASURED IS NOT SEPARATED, and the first screen now says so. The public count means a run
- * exists behind every declared slot. It does NOT mean the axes told models apart: across the
- * model-comparison axes the board's own totals report separated_leads, ties and
- * untested_separations, and HomeHero prints all three beside the count. That block reads the four
- * separation fields live or renders nothing - it never assumes a zero it did not read.
- *
- * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the verified-record
- * count from /api/state, the ledger count from /api/corrections, package counters from
- * /interop/distribution-latest.json, the timestamp split from the OpenTimestamps door's own free preview, and the participation count from the committed
- * memberships manifest. Each shows an em dash until it lands and says so in words if it never does.
+ * NO NUMBER ON THIS PAGE IS TYPED. Board figures come from GET /api/gspc, the model count from
+ * /interop/models-measured.json, the proof figures from GET /api/momentum. Each shows an em dash
+ * (or nothing) until it lands and says so in words if it never does.
  */
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "wouter";
-import MembershipStrip from "@/components/MembershipStrip";
-import HomeComposer from "@/components/home/HomeComposer";
-import TalkPanel from "@/components/talk/TalkPanel";
-import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeHero from "@/components/home/HomeHero";
-import HomeCredibility from "@/components/home/HomeCredibility";
+import LiveBoardGlance from "@/components/home/LiveBoardGlance";
+import HomeSteps from "@/components/home/HomeSteps";
+import HomeWaysIn from "@/components/home/HomeWaysIn";
 import MomentumStrip from "@/components/momentum/MomentumStrip";
-import HomeProof from "@/components/momentum/HomeProof";
-import HomeWeakScore from "@/components/home/HomeWeakScore";
-import { useCorrections, useEstateState, usePopulationDoors } from "@/components/home/useHomeReads";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
+
+/** The proof strip: the four figures a first-time visitor cares about. The rest are on /about/#numbers. */
+export const HOME_PROOF_IDS = ["signed_cards", "corrections", "mcp_tools", "hf_datasets"];
 
 /**
  * schema.org for the front door. Four nodes an answer engine can use without reading the page:
@@ -137,16 +113,6 @@ const HOME_LD = {
 };
 
 export default function HomeVerify() {
-  const [axis, setAxis] = useState<string | null>(null);
-
-  // One shared read per endpoint, consumed by several bands. See useHomeReads.
-  // The front door now makes THREE reads, not five: /root.json and /.well-known/x402.json were
-  // only ever needed by HomeStrengths and HomeMachineSurface, and both of those moved to
-  // /how-we-work, which makes the same reads through the same shared hooks.
-  const corrections = useCorrections();
-  const estate = useEstateState();
-  const doors = usePopulationDoors();
-
   useEffect(() => {
     document.title = "Council of AI — independent measurement of AI systems, signed and free to re-check";
     setMetaDescription(
@@ -159,202 +125,43 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
 
       <HomeHero />
-      <MomentumStrip />
+      <LiveBoardGlance />
+      <HomeSteps />
+      <HomeWaysIn />
 
-      {/* Where we take part - high on the page (owner, 2026-09-27). Featured memberships as cards,
-          every other body as one chip; the full record with what each entry does NOT prove stays in
-          the participation band further down and on /memberships. */}
-      <section
-        id="take-part"
-        aria-labelledby="take-part-h"
-        className="cv-auto surface-sunken section-y-sm border-t border-border"
-        data-testid="home-take-part"
-      >
-        <div className="section-shell">
-          <p className="t-kicker text-emerald-700 dark:text-emerald-300">Where we take part</p>
-          <h2 id="take-part-h" className="t-section mt-3 max-w-3xl text-foreground">
-            Members of the bodies writing the standards for secure AI, content provenance and digital identity.
-          </h2>
-          <MembershipStrip variant="featured" />
+      {/* Proof: four live figures a first-time visitor can open at the source. Everything else is
+          behind "More numbers", on /about/#numbers. The board's own figures are in the board band
+          above and are not repeated here. */}
+      <section aria-label="Live figures" className="surface-sunken border-t border-border" data-testid="home-proof-strip">
+        <div className="section-shell pb-10 pt-2 sm:pb-14">
+          <MomentumStrip variant="panel" title="The work, counted live at the source" ids={HOME_PROOF_IDS} />
+          <a
+            href="/about/#numbers"
+            className="inline-flex min-h-11 items-center text-base font-bold text-emerald-800 underline underline-offset-4 dark:text-emerald-300"
+            data-testid="home-more-numbers"
+          >
+            More numbers →
+          </a>
         </div>
       </section>
 
-      <HomeProof />
-
-      <HomeCredibility
-        state={estate}
-        corrections={corrections}
-        ots={doors["ots-proofs"]?.payload ?? null}
-      />
-
-      {/* The board: every row, every word, every number off GET /api/gspc at render time. */}
-      <section
-        id="board"
-        aria-labelledby="home-board-h"
-        className="cv-auto surface-base section-y scroll-mt-20 border-t border-border"
-      >
-        <div className="section-shell">
-          <HomeGspcTable heading="The living board" highlight={axis} onSelect={setAxis} showPublicCount={false} />
-
-          <div className="mt-16 rounded-3xl border border-border bg-card p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-9">
-            <h3 className="text-2xl font-black tracking-tight text-foreground">
-              Ask it a question, or paste a record.
-            </h3>
-            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-              Name an axis and the board jumps to it. Paste a signed record and it is checked right
-              here. Nothing leaves this device either way.
-            </p>
-            <HomeComposer onAskAxis={setAxis} />
-          </div>
-
-          {/* Ask in words: the same tools as POST /mcp, streamed over AG-UI from /api/agui/run.
-              Unlike the box above, this one does send the question to the site's tools. */}
-          <div className="mt-8 rounded-3xl border border-border bg-card p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-9" data-testid="home-talk">
-            <h3 id="home-talk-h" className="scroll-mt-24 text-2xl font-black tracking-tight text-foreground">
-              Or ask it in words.
-            </h3>
-            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
-              This box sends your question to the site&apos;s own tools and shows which tool answered, the record it cites and
-              the state it returned. The full workspace is on the{" "}
-              <Link href="/dashboard" className="font-semibold text-emerald-800 underline underline-offset-2 dark:text-emerald-300">
-                dashboard
-              </Link>
-              .
-            </p>
-            <TalkPanel labelledBy="home-talk-h" className="mt-5" />
+      {/* The accountable entity: always visible, never mid-flow (owner, 30 Sep 2026). */}
+      <section aria-label="Who runs Council of AI" className="surface-base border-t border-border" data-testid="home-company-strip">
+        <div className="section-shell flex flex-col gap-3 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground" data-testid="home-accountable-entity">
+            Council of AI is operated by CSOAI Ltd (UK Companies House 16939677), founded by Nicholas Templeman. We
+            measure; we do not certify, and verification is free.
+          </p>
+          <div className="flex flex-wrap gap-x-6 text-sm font-bold">
+            <Link href="/about/" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+              Who we are →
+            </Link>
+            <Link href="/how-we-work" className="inline-flex min-h-11 items-center text-emerald-800 underline underline-offset-4 dark:text-emerald-300">
+              How we work →
+            </Link>
           </div>
         </div>
       </section>
-
-      <HomeWeakScore />
-
-      {/*
-        Participation, with room to be read (owner, 2026-09-22). This was a single wrapping line
-        of badge pills; it is the standards and institutional record — 28 entries, each with its
-        own evidence, its own date and its own statement of what it does NOT prove — and it is
-        one of the few things about a measurement body that an outsider can check without
-        reading a single score. The grouped variant renders every row under its own heading.
-      */}
-      <section
-        id="participation"
-        aria-labelledby="participation-h"
-        className="cv-auto surface-sunken section-y border-t border-border"
-        data-testid="home-participation"
-      >
-        <div className="section-shell">
-          <p className="t-kicker text-emerald-700 dark:text-emerald-300">In the room, on the record</p>
-          {/* The band is labelled by ITS OWN heading. MembershipStrip renders a second heading
-              of its own ("Where we take part") as the list label; pointing aria-labelledby at
-              that one made a screen reader announce the section by the sub-label. */}
-          <h2 id="participation-h" className="t-band mt-4 max-w-3xl text-foreground">
-            The standards that will govern this are being written now. We are in those rooms.
-          </h2>
-          <p className="t-lede measure mt-5 text-muted-foreground">
-            Standards bodies, public registries, scholarly identifiers and filings on the public
-            record. Every entry below names what it proves, what it does not prove, and the
-            evidence you can open for yourself — because a membership logo with nothing behind it
-            is the exact thing this business exists to make unnecessary.
-          </p>
-        </div>
-        <MembershipStrip variant="home" />
-      </section>
-
-      <section className="cv-auto surface-base section-y border-t border-border">
-        <div className="section-shell">
-          <p className="t-kicker text-emerald-700 dark:text-emerald-300">Keep going</p>
-          <h2 className="t-band mt-4 max-w-3xl text-foreground">
-            That is the whole front door. Everything else is one click, not one scroll.
-          </h2>
-          <p className="t-lede measure mt-5 text-muted-foreground">
-            This page used to run to twenty-six screens on a desktop and fifty-three on a phone.
-            None of it was deleted to shorten it — the bands below the board now have pages of
-            their own, and the full archive is where it always was.
-          </p>
-          <ul className="mt-9 grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                href: "/how-we-work",
-                title: "How this works, in full",
-                body:
-                  "The method and who pays for it, the machine surface and every data door, the nine products, the films, and the answers on funding, limits and our own errors.",
-              },
-              {
-                href: "/gspc-verify",
-                title: "Check a record yourself",
-                body:
-                  "Paste a signed record and your own browser does the maths. Nothing leaves the device, no account, free forever.",
-              },
-              {
-                href: "/methodology",
-                title: "How a measurement is made",
-                body:
-                  "Frozen tests published before the run, graded by a rule rather than by another AI, with unparsed answers counted as incorrect.",
-              },
-              {
-                href: "/corrections/",
-                title: "What we got wrong",
-                body:
-                  "The public ledger: what was wrong, how it was caught, what changed, and the date. Signed records are superseded, never edited.",
-              },
-              {
-                href: "/claim-maintenance/",
-                title: "How a claim is kept current",
-                body:
-                  "The claim-maintenance specification we publish and follow: how a published claim is re-read, retired or corrected, with its DOI.",
-              },
-              {
-                href: "/traction/",
-                title: "Where this stands",
-                body:
-                  "Operating evidence, stated plainly: what runs today and what is still early. Downloads and founder-funded tests are never shown as customers.",
-              },
-              {
-                href: "/open-source/",
-                title: "Open source",
-                body:
-                  "What we publish as open source and under which licence, so the instruments can be run without us.",
-              },
-              {
-                href: "/memberships/",
-                title: "Where we take part",
-                body:
-                  "Every participation record with its evidence, and a plain statement of what each one does not prove. We hold no certification under any scheme.",
-              },
-              {
-                href: "/library",
-                title: "The library",
-                body:
-                  "Every page this estate has published, by subject and dated. Nothing is deleted when it is superseded.",
-              },
-            ].map((d) => {
-              const inner = (
-                <>
-                  <span className="block text-[16px] font-black leading-snug tracking-tight text-foreground">
-                    {d.title} <span aria-hidden="true">→</span>
-                  </span>
-                  <span className="mt-2 block text-[13.5px] leading-relaxed text-muted-foreground">{d.body}</span>
-                </>
-              );
-              const cls =
-                "block h-full rounded-2xl border border-border bg-card p-5 transition hover:border-emerald-600/40 hover:shadow-[0_18px_40px_-34px_rgba(4,18,12,.5)]";
-              return (
-                <li key={d.href}>
-                  {d.href.startsWith("/api/") ? (
-                    <a href={d.href} className={cls}>
-                      {inner}
-                    </a>
-                  ) : (
-                    <Link href={d.href} className={cls}>
-                      {inner}
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </section>
-
     </div>
   );
 }

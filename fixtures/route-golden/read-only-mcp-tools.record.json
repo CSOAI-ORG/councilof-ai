@@ -1,0 +1,180 @@
+{
+ "schema": "csoai.evidence-event/0.1",
+ "profile": "csoai.route-evidence/0.1",
+ "subject": {
+  "kind": "route",
+  "locator": "urn:gspc:route:00000000-0000-4000-8000-000000000001",
+  "declared_by": "caller:anon"
+ },
+ "claim": {
+  "text": "Route chosen for task sha256:f521329a2317e27f1482d6b64749b1a16d072704bdd80f1b99508d4f17a9ce64 under caller policy sha256:4af7c509fc31c65223fe91115d2ac4bd066cd620d7a8c52d5b9d74b7bc6d993c",
+  "source_url": null,
+  "source_sha256": null,
+  "read_at": "2026-09-30T12:00:00.000Z"
+ },
+ "method": {
+  "id": "gspc-route",
+  "version": "0.1.0",
+  "code_sha256": null,
+  "holder": "csoai"
+ },
+ "declared": {
+  "task": {
+   "sha256": "f521329a2317e27f1482d6b64749b1a16d072704bdd80f1b99508d4f17a9ce64",
+   "data_class": "public",
+   "needs_write": false,
+   "content_retained": false
+  },
+  "policy": {
+   "caller_sha256": "4af7c509fc31c65223fe91115d2ac4bd066cd620d7a8c52d5b9d74b7bc6d993c",
+   "floor_sha256": "764368cd4d88cc88b894dccf2cab6c6a5953bc7755a70340cdd263afc3d4bb1f",
+   "cedar_schema_sha256": "cbbfa0f5fc500234d9580de406681320ee313631883d3bc42754327057236f03",
+   "presets": [
+    "read-only"
+   ],
+   "rules": [
+    "caller:permit",
+    "caller:preset:read-only"
+   ],
+   "uncheckable": [],
+   "confirm_destructive": false,
+   "caller_wallet": false
+  },
+  "objective": {
+   "quality_axis": null,
+   "weights": {
+    "quality": 0,
+    "cost": 0,
+    "latency": 0
+   },
+   "tie_break": [
+    "cheapest_declared",
+    "local_first",
+    "lexical_id"
+   ]
+  },
+  "candidates_sha256": "583ba8274967fb78e3e59ed81c5e81d59904d68ada996dc1c1d2690a72105d43"
+ },
+ "observed": {
+  "considered": [
+   {
+    "id": "mcp:verify_card",
+    "kind": "mcp_tool",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:get_axis",
+    "kind": "mcp_tool",
+    "source": "caller_declared",
+    "permit": true,
+    "forbid_policy": null,
+    "forbids_matched": [],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:writer",
+    "kind": "mcp_tool",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "caller:preset:read-only",
+    "forbids_matched": [
+     "caller:preset:read-only"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   },
+   {
+    "id": "mcp:paid-reader",
+    "kind": "mcp_tool",
+    "source": "caller_declared",
+    "permit": false,
+    "forbid_policy": "floor:paid-needs-caller-wallet",
+    "forbids_matched": [
+     "floor:paid-needs-caller-wallet"
+    ],
+    "uncheckable": [],
+    "ignored_fields": [],
+    "measurements": [],
+    "census": {
+     "effect_binding": "UNMEASURED"
+    }
+   }
+  ],
+  "permitted": [
+   "mcp:verify_card",
+   "mcp:get_axis"
+  ],
+  "chosen": {
+   "id": "mcp:get_axis",
+   "choice_basis": "tie_break:cheapest_declared>local_first>lexical_id"
+  },
+  "separation": "UNTESTED",
+  "label": null,
+  "board": {
+   "state": "NOT_REQUESTED",
+   "source": null,
+   "board_separation": null
+  },
+  "execution": {
+   "mode": "decide_only",
+   "status": "n/a",
+   "provider_observed": null,
+   "model_observed": null,
+   "latency_ms": null,
+   "usage": null,
+   "cost_declared": null,
+   "receipt_schema": "csoai.route-receipt/0.1",
+   "receipt": null
+  },
+  "heal": [],
+  "payment": {
+   "x402": "none",
+   "tx": null,
+   "payer_is_self": false
+  }
+ },
+ "state": "UNMEASURED",
+ "value": null,
+ "negative_control": {
+  "id": null,
+  "expected": null,
+  "got": "NOT_RUN"
+ },
+ "limits": [
+  "Route decision only: it applies the caller's policy to published measurements; it is not a quality verdict on the chosen candidate.",
+  "Decide-only preview: nothing was executed, so provider and model served were not observed; state is UNMEASURED and value is null.",
+  "Unsigned: no route-evidence key exists yet; this record carries no signature and makes no signed statement.",
+  "Only the board's top two rows per axis carry numbers here; every other candidate is UNTESTED on the axis, never imputed.",
+  "Effect-binding census is not looked up by this version: every candidate carries UNMEASURED, so the floor's DIVERGENT rule cannot fire on live data yet.",
+  "The task text is carried as its sha256 only; no prompt or response bytes are stored."
+ ],
+ "supersedes": null,
+ "signature": null,
+ "anchors": {
+  "ots": "none",
+  "rekor": {
+   "log_index": null,
+   "uuid": null
+  }
+ },
+ "maintenance": null,
+ "event_id": "sha256:ea442f6808fe31d41f95b659d2a67be73046ffb2c9a19a2046454c79b2ce691a"
+}

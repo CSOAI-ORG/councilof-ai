@@ -1428,6 +1428,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Model Registry"
  },
  {
+  "path": "/models-measured",
+  "comp": "ModelsMeasured",
+  "title": "Models Measured"
+ },
+ {
   "path": "/motion-lab",
   "comp": "MotionLab",
   "title": "Motion Lab"

@@ -4,7 +4,7 @@
   "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
   "probe_host": "pod",
   "targets_file": "scripts/mcp-targets.json",
-  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by https://f7e10e8a.councilof-ai.pages.dev (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
+  "probe_scope": "PRE-DEPLOY STAND-IN: every https://councilof.ai/* target was answered by https://83671987.councilof-ai.pages.dev (this branch's build, served locally or as a Pages preview), NOT by the live door; see `contacted` on each such server. Re-run scripts/mcp-probe.mjs without --door-origin after the deploy and commit the live observation.",
   "honesty_contract": [
     "last_probed is written ONLY by a probe that returned. If nothing answered it is null. No code path synthesises it.",
     "tools_count is derived from the length of the probed tools array. A catalogue's asserted tool count is never used as tools_count.",
@@ -17,7 +17,7 @@
     "reachable_distinct_servers": 2,
     "unreachable_endpoints": 0,
     "catalogued_not_probed": 6,
-    "tools_probed": 36,
+    "tools_probed": 38,
     "tools_catalogued_not_probed": null,
     "external_catalogues_not_probed": [
       {
@@ -28,8 +28,8 @@
         "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
       }
     ],
-    "started": "2026-09-30T10:45:27.273Z",
-    "finished": "2026-09-30T10:45:28.903Z"
+    "started": "2026-09-30T10:57:56.701Z",
+    "finished": "2026-09-30T10:57:58.563Z"
   },
   "servers": [
     {
@@ -40,11 +40,11 @@
       "role": "primary",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-30T10:45:28.202Z",
+      "last_probed": "2026-09-30T10:57:57.886Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.3",
-      "tools_count": 18,
+      "tools_count": 19,
       "tools": [
         {
           "name": "board_totals",
@@ -126,6 +126,11 @@
           ]
         },
         {
+          "name": "route",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
+        },
+        {
           "name": "commission_card",
           "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
           "required_args": [
@@ -163,7 +168,7 @@
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.primary",
       "catalogue_source": null,
       "catalogue_claim": null,
-      "contacted": "https://f7e10e8a.councilof-ai.pages.dev/mcp",
+      "contacted": "https://83671987.councilof-ai.pages.dev/mcp",
       "stand_in_for": "https://councilof.ai/mcp"
     },
     {
@@ -174,7 +179,7 @@
       "role": "fallback",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-30T10:45:28.657Z",
+      "last_probed": "2026-09-30T10:57:58.426Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.3",
@@ -292,11 +297,11 @@
       "role": "alias",
       "alias_of": "csoai-gspc-mcp",
       "status": "reachable",
-      "last_probed": "2026-09-30T10:45:28.771Z",
+      "last_probed": "2026-09-30T10:57:58.524Z",
       "http_status": 200,
       "protocol_version": "2024-11-05",
       "server_version": "1.4.3",
-      "tools_count": 18,
+      "tools_count": 19,
       "tools": [
         {
           "name": "board_totals",
@@ -376,6 +381,11 @@
           "required_args": [
             "obligation"
           ]
+        },
+        {
+          "name": "route",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
         },
         {
           "name": "commission_card",
@@ -415,7 +425,7 @@
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
       "catalogue_claim": null,
-      "contacted": "https://f7e10e8a.councilof-ai.pages.dev/mcp",
+      "contacted": "https://83671987.councilof-ai.pages.dev/mcp",
       "stand_in_for": "https://councilof.ai/mcp"
     },
     {
@@ -426,11 +436,11 @@
       "role": "stdio",
       "alias_of": null,
       "status": "reachable",
-      "last_probed": "2026-09-30T10:45:28.902Z",
+      "last_probed": "2026-09-30T10:57:58.563Z",
       "http_status": null,
       "protocol_version": "2024-11-05",
       "server_version": "0.2.2",
-      "tools_count": 18,
+      "tools_count": 19,
       "tools": [
         {
           "name": "board_totals",
@@ -510,6 +520,11 @@
           "required_args": [
             "obligation"
           ]
+        },
+        {
+          "name": "route",
+          "description": "GSPC Route (free, decide-only). Applies YOUR policy and the fixed GSPC floor to a candidate set and returns the chosen candidate, the basis of the choice and an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). Candidates are the GSPC MCP tools by default, or ones you declare: your models, your local GPU, MCP tools, A2A agents, x402 resources. Policy is Cedar: presets read-only, local-only, eu-only, no-unmeasured, plus forbid_providers and allow_kinds; anything the router does not understand grants nothing. For the quality axis you name it reads the live board (https://councilof.ai/api/gspc). Routing is not ranking: a choice is called a separated leader only when the board separated that comparison; otherwise it is TIE or UNTESTED and your tie_break decides. A candidate the board holds no number for is UNTESTED, never 0. Sponsor, bid and placement fields are ignored. The task text is hashed, never stored. Nothing is executed, called or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+          "required_args": []
         },
         {
           "name": "commission_card",

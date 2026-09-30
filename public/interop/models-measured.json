@@ -1,0 +1,3020 @@
+{
+ "schema": "csoai.models-measured/0.1",
+ "what": "Distinct AI models with at least one signed, quotable measurement on a frozen bank, split by whose model it is.",
+ "headline": {
+  "third_party_models": 161,
+  "own_models_excluded": 48,
+  "own_unconfirmed": 3,
+  "third_party_with_admission_receipt": 45,
+  "label": "models measured on frozen banks (third-party models only; our own are listed separately and never counted in)"
+ },
+ "not_this": [
+  "Not totals.model_fleets on /api/gspc: that counts the model-comparison AXES (one fleet per axis), not models.",
+  "Not a ranking and not a certificate. A model on this list was measured; nothing here says it is good, safe or compliant.",
+  "Not the fact runs: deterministic-facts axes grade servers, endpoints and public records, which have no model."
+ ],
+ "identity_rule": "The identifier the card records, with only an 'ollama:'/'t4:' route prefix, an '@sha256:' digest and ':latest' removed. An Ollama tag (quantised build) and a Hugging Face repo are counted as different models even when they share a base.",
+ "name_policy": "A model id carrying an internal codename is shown as withheld-name-N, the policy of scripts/build-card-matrix.mjs; it is still counted in its own group, and the signed card keeps the real id.",
+ "own_model_rule": "scripts/build-own-model-disclosure.mjs R1 (sov*, clan*), R2 (council*) and its UNCONFIRMED_TAGS list, imported.",
+ "sources": {
+  "signed_card_index": {
+   "path": "/signed/card_index.json",
+   "cards_read": 335
+  },
+  "mill_cards_signed": {
+   "path": "/interop/mill-cards-signed/",
+   "files_read": 2833,
+   "cards_counted": 1183,
+   "cards_counted_with_admission_receipt": 262,
+   "cards_not_counted": {
+    "signature_not_valid": 0,
+    "not_measured": 557,
+    "not_quotable": 0,
+    "under_30": 0,
+    "unsigned": 36,
+    "withdrawn": 39,
+    "superseded": 1018
+   },
+   "rule": "Ed25519 signature verifies under the did:web:csoai.org key it names, id == sha256(canonical body), status MEASURED, quotable, n >= 30, not STAGED_UNSIGNED, not withdrawn, not superseded"
+  }
+ },
+ "inputs_sha256": "0ed59942b1c15c3a4cd88282b56b47067a8fa514fbf3381c0c113d11d7989fd2",
+ "models": [
+  {
+   "id": "clan-law-plain",
+   "name_published": true,
+   "kind": "own",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-law-plain:latest"
+   ]
+  },
+  {
+   "id": "clan-law-refusing",
+   "name_published": true,
+   "kind": "own",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-law-refusing:latest"
+   ]
+  },
+  {
+   "id": "sov-draw-compliance",
+   "name_published": true,
+   "kind": "own",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-draw-compliance:latest"
+   ]
+  },
+  {
+   "id": "withheld-name-1",
+   "name_published": false,
+   "kind": "own",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": []
+  },
+  {
+   "id": "withheld-name-2",
+   "name_published": false,
+   "kind": "own",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": []
+  },
+  {
+   "id": "withheld-name-3",
+   "name_published": false,
+   "kind": "own",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": []
+  },
+  {
+   "id": "sov-compliance-art5",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-compliance-art5:latest"
+   ]
+  },
+  {
+   "id": "sov-deepseek",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-deepseek:latest"
+   ]
+  },
+  {
+   "id": "sov-ethics-art5",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-ethics-art5:latest"
+   ]
+  },
+  {
+   "id": "sov-gemma",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-gemma:latest"
+   ]
+  },
+  {
+   "id": "sov-mistral",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-mistral:latest"
+   ]
+  },
+  {
+   "id": "sov-phi",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-phi:latest"
+   ]
+  },
+  {
+   "id": "sov-refusal-balanced",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-refusal-balanced:latest"
+   ]
+  },
+  {
+   "id": "sov-refusal-combo",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-refusal-combo:latest"
+   ]
+  },
+  {
+   "id": "sov-refusal-lora",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-refusal-lora:latest"
+   ]
+  },
+  {
+   "id": "sov-refusal-v2",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-refusal-v2:latest"
+   ]
+  },
+  {
+   "id": "sov6-abstraction-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-abstraction-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-aesthetics-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-aesthetics-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-agency-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-agency-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-creation-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-creation-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-destruction-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-destruction-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-embodiment-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-embodiment-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-ethics-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-ethics-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-identity-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-identity-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-logic-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-logic-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-preservation-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-preservation-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-relationality-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-relationality-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-synthesis-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-synthesis-v3-light:latest"
+   ]
+  },
+  {
+   "id": "sov6-temporality-v3-light",
+   "name_published": true,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov6-temporality-v3-light:latest"
+   ]
+  },
+  {
+   "id": "withheld-name-4",
+   "name_published": false,
+   "kind": "own",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": []
+  },
+  {
+   "id": "council-oowm",
+   "name_published": true,
+   "kind": "own",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "council-oowm:latest"
+   ]
+  },
+  {
+   "id": "council-safe",
+   "name_published": true,
+   "kind": "own",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "council-safe:latest"
+   ]
+  },
+  {
+   "id": "clan-csoai-plain",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-csoai-plain:latest"
+   ]
+  },
+  {
+   "id": "clan-csoai-precise",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-csoai-precise:latest"
+   ]
+  },
+  {
+   "id": "clan-csoai-refusing",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-csoai-refusing:latest"
+   ]
+  },
+  {
+   "id": "clan-defoneos-plain",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-defoneos-plain:latest"
+   ]
+  },
+  {
+   "id": "clan-defoneos-refusing",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-defoneos-refusing:latest"
+   ]
+  },
+  {
+   "id": "clan-law-cited",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-law-cited:latest"
+   ]
+  },
+  {
+   "id": "clan-meok-plain",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-meok-plain:latest"
+   ]
+  },
+  {
+   "id": "clan-meok-refusing",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-meok-refusing:latest"
+   ]
+  },
+  {
+   "id": "clan-meok-scoped",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-meok-scoped:latest"
+   ]
+  },
+  {
+   "id": "clan-redress-evidential",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-redress-evidential:latest"
+   ]
+  },
+  {
+   "id": "clan-redress-plain",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-redress-plain:latest"
+   ]
+  },
+  {
+   "id": "clan-redress-refusing",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-redress-refusing:latest"
+   ]
+  },
+  {
+   "id": "clan-sovereignty-plain",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-sovereignty-plain:latest"
+   ]
+  },
+  {
+   "id": "clan-sovereignty-refusing",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "clan-sovereignty-refusing:latest"
+   ]
+  },
+  {
+   "id": "sov-draw-cybersecurity",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-draw-cybersecurity:latest"
+   ]
+  },
+  {
+   "id": "sov-draw-sovereignty",
+   "name_published": true,
+   "kind": "own",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "sov-draw-sovereignty:latest"
+   ]
+  },
+  {
+   "id": "eat-unsloth-050b:2026-08-02",
+   "name_published": true,
+   "kind": "own_unconfirmed",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "eat-unsloth-050b:2026-08-02"
+   ]
+  },
+  {
+   "id": "qwen2.5-0.5b-mined",
+   "name_published": true,
+   "kind": "own_unconfirmed",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "qwen2.5-0.5b-mined:latest"
+   ]
+  },
+  {
+   "id": "muse-glimmer",
+   "name_published": true,
+   "kind": "own_unconfirmed",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "muse-glimmer:latest"
+   ]
+  },
+  {
+   "id": "qwen2.5:1.5b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 28,
+   "axes": 27,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:qwen2.5:1.5b@sha256:65ec06548149b04c096a120e4a6da9d4017ea809c91734ea5631e89f96ddc57b",
+    "qwen2.5:1.5b"
+   ]
+  },
+  {
+   "id": "llama3.2:3b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 24,
+   "axes": 23,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "llama3.2:3b",
+    "ollama:llama3.2:3b@sha256:a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+   ]
+  },
+  {
+   "id": "qwen2.5:0.5b-instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 21,
+   "axes": 20,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:qwen2.5:0.5b-instruct@sha256:a8b0c51577010a279d933d14c2a8ab4b268079d44c5c8830c0a93900f1827c67",
+    "qwen2.5:0.5b-instruct"
+   ]
+  },
+  {
+   "id": "qwen2.5:7b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 21,
+   "axes": 20,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+    "qwen2.5:7b"
+   ]
+  },
+  {
+   "id": "qwen3:4b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 21,
+   "axes": 20,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:qwen3:4b@sha256:359d7dd4bcdab3d86b87d73ac27966f4dbb9f5efdfcc75d34a8764a09474fae7",
+    "qwen3:4b"
+   ]
+  },
+  {
+   "id": "gemma3:12b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 19,
+   "axes": 18,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "gemma3:12b",
+    "ollama:gemma3:12b@sha256:f4031aab637d1ffa37b42570452ae0e4fad0314754d17ded67322e4b95836f8a"
+   ]
+  },
+  {
+   "id": "microsoft/Phi-4-mini-instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 15,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "microsoft/Phi-4-mini-instruct"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-R1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-R1"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V3.1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V3.1"
+   ]
+  },
+  {
+   "id": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "farbodtavakkoli/OTel-2.0-LLM-31B-IT"
+   ]
+  },
+  {
+   "id": "google/gemma-2-2b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "google/gemma-2-2b-it"
+   ]
+  },
+  {
+   "id": "IlyaGusev/saiga_llama3_8b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "IlyaGusev/saiga_llama3_8b"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-3.3-70B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "meta-llama/Llama-3.3-70B-Instruct"
+   ]
+  },
+  {
+   "id": "microsoft/Phi-3-mini-4k-instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "microsoft/Phi-3-mini-4k-instruct"
+   ]
+  },
+  {
+   "id": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
+   ]
+  },
+  {
+   "id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+   ]
+  },
+  {
+   "id": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "OBLITERATUS/Qwen3.8-27B-OBLITERATED"
+   ]
+  },
+  {
+   "id": "prism-ml/Ternary-Bonsai-27B-gguf",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "prism-ml/Ternary-Bonsai-27B-gguf"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-7B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2-7B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-0.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-1.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-1.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-3B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-3B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-72B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-72B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-7B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-7B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-3B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-3B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-4B-Thinking-2507",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-4B-Thinking-2507"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-Coder-Next",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-Coder-Next"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-Next-80B-A3B-Instruct"
+   ]
+  },
+  {
+   "id": "qwen3:8b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:qwen3:8b@sha256:500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41"
+   ]
+  },
+  {
+   "id": "swiss-ai/Apertus-8B-Instruct-2509",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "swiss-ai/Apertus-8B-Instruct-2509"
+   ]
+  },
+  {
+   "id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+   ]
+  },
+  {
+   "id": "XiaomiMiMo/MiMo-V2.5",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 13,
+   "axes": 13,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "XiaomiMiMo/MiMo-V2.5"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V3",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V3"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V3-0324",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V3-0324"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V3.2",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V3.2"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V4-Flash",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V4-Flash"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V4-Flash-0731"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V4-Pro",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V4-Pro"
+   ]
+  },
+  {
+   "id": "gemma3:4b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:gemma3:4b@sha256:a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a"
+   ]
+  },
+  {
+   "id": "InternScience/Agents-A1-4B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "InternScience/Agents-A1-4B"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-3.1-70B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "meta-llama/Llama-3.1-70B-Instruct"
+   ]
+  },
+  {
+   "id": "mistral:7b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "mistral:7b",
+    "ollama:mistral:7b@sha256:6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf"
+   ]
+  },
+  {
+   "id": "mistralai/Mistral-7B-Instruct-v0.1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "mistralai/Mistral-7B-Instruct-v0.1"
+   ]
+  },
+  {
+   "id": "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16"
+   ]
+  },
+  {
+   "id": "ornith-ai/Ornith-1.0-9B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "ornith-ai/Ornith-1.0-9B"
+   ]
+  },
+  {
+   "id": "ornith-ai/Ornith-1.5-9B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ornith-ai/Ornith-1.5-9B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-1.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2-1.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-0.5B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-0.5B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-1.7B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-1.7B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-30B-A3B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-30B-A3B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-30B-A3B-Instruct-2507"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-4B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-4B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-4B-Instruct-2507",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-4B-Instruct-2507"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-Coder-30B-A3B-Instruct"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-5.2",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 12,
+   "axes": 12,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "zai-org/GLM-5.2"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V4-Pro-0813",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V4-Pro-0813"
+   ]
+  },
+  {
+   "id": "google/gemma-2-9b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "google/gemma-2-9b-it"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-3.2-1B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "meta-llama/Llama-3.2-1B-Instruct"
+   ]
+  },
+  {
+   "id": "microsoft/phi-4",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "microsoft/phi-4"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-32B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-7B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-235B-A22B-Instruct-2507"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-8B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-8B"
+   ]
+  },
+  {
+   "id": "unsloth/Meta-Llama-3.1-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 11,
+   "axes": 11,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/Meta-Llama-3.1-8B-Instruct"
+   ]
+  },
+  {
+   "id": "llama3.1:8b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:llama3.1:8b@sha256:46e0c10c039e019119339687c3c1757cc81b9da49709a3b3924863ba87ca666e"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-3.1-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "meta-llama/Llama-3.1-8B-Instruct"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-3.2-3B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "meta-llama/Llama-3.2-3B-Instruct"
+   ]
+  },
+  {
+   "id": "NousResearch/Hermes-3-Llama-3.1-8B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "NousResearch/Hermes-3-Llama-3.1-8B"
+   ]
+  },
+  {
+   "id": "nvidia/Llama-3.1-Nemotron-Nano-8B-v1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "nvidia/Llama-3.1-Nemotron-Nano-8B-v1"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-0.6B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-0.6B"
+   ]
+  },
+  {
+   "id": "TrevorJS/gemma-4-31B-it-uncensored",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 10,
+   "axes": 10,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "TrevorJS/gemma-4-31B-it-uncensored"
+   ]
+  },
+  {
+   "id": "farbodtavakkoli/OTel-LLM-27B-IT",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "farbodtavakkoli/OTel-LLM-27B-IT"
+   ]
+  },
+  {
+   "id": "mistralai/Mistral-7B-Instruct-v0.2",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "mistralai/Mistral-7B-Instruct-v0.2"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-32B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-32B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-7B-Instruct-1M",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-7B-Instruct-1M"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-1.7B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-1.7B-Base"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-235B-A22B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-235B-A22B"
+   ]
+  },
+  {
+   "id": "unsloth/gemma-3-1b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 9,
+   "axes": 9,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/gemma-3-1b-it"
+   ]
+  },
+  {
+   "id": "google/gemma-3-1b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "google/gemma-3-1b-it"
+   ]
+  },
+  {
+   "id": "hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:hf.co/openbmb/MiniCPM5-2B-GGUF:Q8_0@sha256:c7e50c7ffebc34187452ed4946b57622e7a820bed89ef49a19c52c0b3a9698e0"
+   ]
+  },
+  {
+   "id": "meta-llama/Meta-Llama-3-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "meta-llama/Meta-Llama-3-8B-Instruct"
+   ]
+  },
+  {
+   "id": "NousResearch/Meta-Llama-3.1-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "NousResearch/Meta-Llama-3.1-8B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-7B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-7B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-14B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-14B-Base"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-8B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-8B-Base"
+   ]
+  },
+  {
+   "id": "qwen2.5:0.5b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "qwen2.5:0.5b"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-4.5-Air",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-4.5-Air"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-5.3",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 8,
+   "axes": 8,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-5.3"
+   ]
+  },
+  {
+   "id": "deepseek-r1:8b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed",
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "deepseek-r1:8b",
+    "ollama:deepseek-r1:8b@sha256:6995872bfe4c521a67b32da386cd21d5c6e819b6e0d62f79f64ec83be99f5763"
+   ]
+  },
+  {
+   "id": "google/gemma-3-4b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "google/gemma-3-4b-it"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-4B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-4B-Base"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3.5-122B-A10B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3.5-122B-A10B"
+   ]
+  },
+  {
+   "id": "unsloth/Qwen2.5-7B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 7,
+   "axes": 7,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/Qwen2.5-7B-Instruct"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-V3.2-Exp",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-V3.2-Exp"
+   ]
+  },
+  {
+   "id": "falcon3:7b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "falcon3:7b"
+   ]
+  },
+  {
+   "id": "moonshotai/Kimi-K2-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "moonshotai/Kimi-K2-Instruct"
+   ]
+  },
+  {
+   "id": "phi3.5:3.8b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "ollama:phi3.5:3.8b@sha256:61819fb370a3c1a9be6694869331e5f85f867a079e9271d66cb223acb81d04ba"
+   ]
+  },
+  {
+   "id": "phi4:14b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "phi4:14b"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-14B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-14B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-14B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-14B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-14B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-14B"
+   ]
+  },
+  {
+   "id": "qwen2.5:3b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "qwen2.5:3b"
+   ]
+  },
+  {
+   "id": "yentinglin/Llama-3-Taiwan-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 6,
+   "axes": 6,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "yentinglin/Llama-3-Taiwan-8B-Instruct"
+   ]
+  },
+  {
+   "id": "MiniMaxAI/MiniMax-M2.7",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 5,
+   "axes": 5,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "MiniMaxAI/MiniMax-M2.7"
+   ]
+  },
+  {
+   "id": "moonshotai/Kimi-Linear-48B-A3B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 5,
+   "axes": 5,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "moonshotai/Kimi-Linear-48B-A3B-Instruct"
+   ]
+  },
+  {
+   "id": "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 5,
+   "axes": 5,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "tokyotech-llm/Llama-3.1-Swallow-8B-Instruct-v0.5"
+   ]
+  },
+  {
+   "id": "unsloth/Qwen2.5-14B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 5,
+   "axes": 5,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/Qwen2.5-14B-Instruct"
+   ]
+  },
+  {
+   "id": "deepseek-ai/DeepSeek-R1-0528",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 4,
+   "axes": 4,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "deepseek-ai/DeepSeek-R1-0528"
+   ]
+  },
+  {
+   "id": "NousResearch/Meta-Llama-3-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 4,
+   "axes": 4,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "NousResearch/Meta-Llama-3-8B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-0.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 4,
+   "axes": 4,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2-0.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-7B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 4,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-7B"
+   ]
+  },
+  {
+   "id": "unsloth/Llama-3.1-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 4,
+   "axes": 4,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/Llama-3.1-8B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-0.5B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2-0.5B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-1.5B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-1.5B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-3B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-3B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Math-1.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Math-1.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-0.6B-Base",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-0.6B-Base"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3Guard-Gen-0.6B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3Guard-Gen-0.6B"
+   ]
+  },
+  {
+   "id": "SentientAGI/Dobby-Mini-Unhinged-Llama-3.1-8B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "SentientAGI/Dobby-Mini-Unhinged-Llama-3.1-8B"
+   ]
+  },
+  {
+   "id": "unsloth/Qwen2.5-Coder-7B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/Qwen2.5-Coder-7B-Instruct"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-5.1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 3,
+   "axes": 3,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-5.1"
+   ]
+  },
+  {
+   "id": "Efficient-Large-Model/gemma-2-2b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Efficient-Large-Model/gemma-2-2b-it"
+   ]
+  },
+  {
+   "id": "Goedel-LM/Goedel-Prover-V2-32B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Goedel-LM/Goedel-Prover-V2-32B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-14B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-14B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-32B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": true,
+   "recorded_as": [
+    "Qwen/Qwen3-32B"
+   ]
+  },
+  {
+   "id": "qwen3:0.6b",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "signed-card-index"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "qwen3:0.6b"
+   ]
+  },
+  {
+   "id": "TsinghuaC3I/Llama-3-8B-UltraMedical",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "TsinghuaC3I/Llama-3-8B-UltraMedical"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-5.3-Flash",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 2,
+   "axes": 2,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-5.3-Flash"
+   ]
+  },
+  {
+   "id": "DreamFast/gemma-3-12b-it-heretic-v2",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "DreamFast/gemma-3-12b-it-heretic-v2"
+   ]
+  },
+  {
+   "id": "empero-ai/Qwythos-9B-Claude-Mythos-5-1M",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "empero-ai/Qwythos-9B-Claude-Mythos-5-1M"
+   ]
+  },
+  {
+   "id": "Equall/Saul-7B-Instruct-v1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Equall/Saul-7B-Instruct-v1"
+   ]
+  },
+  {
+   "id": "fdtn-ai/Foundation-Sec-1.1-8B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "fdtn-ai/Foundation-Sec-1.1-8B-Instruct"
+   ]
+  },
+  {
+   "id": "google/gemma-2-27b-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "google/gemma-2-27b-it"
+   ]
+  },
+  {
+   "id": "google/medgemma-27b-text-it",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "google/medgemma-27b-text-it"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-2-13b-chat-hf",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "meta-llama/Llama-2-13b-chat-hf"
+   ]
+  },
+  {
+   "id": "meta-llama/Llama-Guard-3-8B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "meta-llama/Llama-Guard-3-8B"
+   ]
+  },
+  {
+   "id": "meta-llama/Meta-Llama-3-70B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "meta-llama/Meta-Llama-3-70B-Instruct"
+   ]
+  },
+  {
+   "id": "moonshotai/Kimi-K2-Instruct-0905",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "moonshotai/Kimi-K2-Instruct-0905"
+   ]
+  },
+  {
+   "id": "OBLITERATUS/gemma-4-E4B-it-OBLITERATED",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "OBLITERATUS/gemma-4-E4B-it-OBLITERATED"
+   ]
+  },
+  {
+   "id": "QCRI/Fanar-1-9B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "QCRI/Fanar-1-9B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen1.5-0.5B-Chat",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen1.5-0.5B-Chat"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-1.5B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2-1.5B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-72B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2-72B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2-7B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2-7B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-14B-Instruct-1M",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-14B-Instruct-1M"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-0.5B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Coder-1.5B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Coder-1.5B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen2.5-Math-1.5B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen2.5-Math-1.5B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3-Coder-480B-A35B-Instruct"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3.8-2.4T-A95B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3.8-2.4T-A95B"
+   ]
+  },
+  {
+   "id": "Qwen/Qwen3Guard-Gen-4B",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Qwen/Qwen3Guard-Gen-4B"
+   ]
+  },
+  {
+   "id": "swiss-ai/Apertus-70B-Instruct-2509",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "swiss-ai/Apertus-70B-Instruct-2509"
+   ]
+  },
+  {
+   "id": "t-tech/T-lite-it-2.1",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "t-tech/T-lite-it-2.1"
+   ]
+  },
+  {
+   "id": "unsloth/llama-3-8b-Instruct",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "unsloth/llama-3-8b-Instruct"
+   ]
+  },
+  {
+   "id": "Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "Vikhrmodels/Vikhr-Nemo-12B-Instruct-R-21-09-24"
+   ]
+  },
+  {
+   "id": "win10/EVE-27b-XENO-HAT-DeepSeek-V4-Flash",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "win10/EVE-27b-XENO-HAT-DeepSeek-V4-Flash"
+   ]
+  },
+  {
+   "id": "XiaomiMiMo/MiMo-V2.5-Pro",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "XiaomiMiMo/MiMo-V2.5-Pro"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-4.5",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-4.5"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-4.7",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-4.7"
+   ]
+  },
+  {
+   "id": "zai-org/GLM-5",
+   "name_published": true,
+   "kind": "third_party",
+   "cards": 1,
+   "axes": 1,
+   "sources": [
+    "mill-cards-signed"
+   ],
+   "admission_receipt": false,
+   "recorded_as": [
+    "zai-org/GLM-5"
+   ]
+  }
+ ]
+}

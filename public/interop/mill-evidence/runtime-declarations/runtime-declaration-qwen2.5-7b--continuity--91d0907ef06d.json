@@ -1,0 +1,428 @@
+{
+ "accuracy": 0.5152,
+ "axis": "continuity",
+ "baseline_runtime": {
+  "code_commit": "bdd8873344ff4b3b8b5b5ae01d91ec4b8843edd2",
+  "cpu_count": 4,
+  "cpu_model": null,
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "gpu-t4",
+  "docker_image": "gcr.io/kaggle-gpu-images/python@sha256:37c64f7dd9c54116ecd1bcc88817c5469b88387388fade02bfa8bf3fc647d461",
+  "environment_json_sha256": "45a24a35facbc4b9aa123b5a0f118ef321f9f655a133f92981b3dd1dbce914e9",
+  "finished_at": "2026-09-29T11:01:02Z",
+  "gpu": "0, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-0bf65b43-fb93-d789-cea4-d339997f8790\n1, Tesla T4, 15360 MiB, 580.159.04, 7.5, GPU-88255e7c-3355-fbee-b3b0-53041b9fc401",
+  "hardware": "GPU: 2x Tesla T4 (CUDA driver 13.0)",
+  "kernel": "nicktempleman/csoai-mill-kaggle-daily",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+  "provider": "kaggle",
+  "python": "3.12.13",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runs": [
+   {
+    "accuracy": 0.5152,
+    "bundle_sha256": "dec1fe3a4888e3999ecf53dd7b97b31b3882b6f56303e59d7f9af57fef34f2ae",
+    "counts": {
+     "attempted": 33,
+     "bank_items": 33,
+     "correct": 17,
+     "graded_n": 33,
+     "parse_errors_excluded": 0,
+     "transport_errors_excluded": 0,
+     "transport_ok": 33
+    },
+    "items_sha256": "3c0ee127bbcc2ab189b936d46529c7b8d95c8f31bdb7a782a49e5d8341282c65",
+    "run_id": "20260929T104454.558322Z-60028c7379"
+   }
+  ],
+  "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4",
+  "slice_id": "20260929T10-qwen2.5-7b",
+  "started_at": "2026-09-29T10:42:16Z",
+  "substrate": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4"
+ },
+ "counts": {
+  "attempted": 33,
+  "bank_items": 33,
+  "correct": 17,
+  "graded_n": 33,
+  "parse_errors_excluded": 0,
+  "transport_errors_excluded": 0,
+  "transport_ok": 33
+ },
+ "independence": {
+  "differs_on": "compute device and numeric path (rtx4090 vs gpu-t4); provider (runpod vs kaggle)",
+  "note": "declared from the kernels' own records; admission (admit_mill_cards.py) decides",
+  "shared": "code commit bdd8873344ff, ollama 0.34.4, decode settings, banks (allowlist pins, checked in-kernel), model manifest digest"
+ },
+ "instrument_sha256": "36cefbada79cb5943aef3a4386a93e2b2016eefd41d4b16a0c3afc856790c2cb",
+ "intake_bundle_sha256": "91d0907ef06da1cac14a948b5c5c05b421b7f43fdfaad1a5bd98614afbb6fe13",
+ "intake_state": "VERIFIED_QUARANTINE",
+ "items_sha256": "4bfbce3daf5252ae769a2fe3dc8e63abbb3e98e79d16e50ca40b8bcae5625871",
+ "n": 33,
+ "parity": {
+  "aggregate_equal": true,
+  "per_item_cross_hardware": {
+   "differing_items": [
+    {
+     "item_id": "item-000027-2e2611c270f7",
+     "kaggle_gpu_t4": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": "QUANTUM_VULNERABLE",
+      "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445"
+     },
+     "runpod_rtx4090": {
+      "done_reason": "stop",
+      "grade": false,
+      "parsed_label": "QUANTUM_SAFE",
+      "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c"
+     },
+     "sequence": 27
+    }
+   ],
+   "grade_equal": 33,
+   "n_items": 33,
+   "parsed_label_equal": 32,
+   "raw_output_equal": 32
+  }
+ },
+ "per_item_results": [
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000001-a712d3ea4465",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "318545465273df9011a1c4f2767c99592a6754abc8fc3282b5123d7b4b61815e",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 1
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000002-ee7917b89a18",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "937bf0307ac49da4af18ff1e34a6efa50881b82ce071b50b327a84875e6eb638",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 2
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000003-f2bbd919f014",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "b69233c7fad49e92f820df285d3ed0452992e5478d52cc78347e0dab179d2adb",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 3
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000004-7b7ace726c2e",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "3cd7939e1d99191bba35e52eeae9b19fdd62da9927a4cd952c3368246aad7faa",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 4
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000005-c1f0cfddd63b",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "f3f05ba734e5abf07216948e983d6365476cf84f93d2330a77410e49c61472f2",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 5
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000006-6d1fab9fb47e",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "631ef91f0607b9ff4c40e797f060d1575bd6df801b687e6a5e2ff44f028919bd",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 6
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000007-83055909387d",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "7d90370f42187467858d6dfb01d3976d913015c878163df7efc43615497d89c8",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 7
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000008-13351432f549",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "2f1be7b98e3eda312b6b687b1ecc905d485b51a00738e65c47c0641a678826f1",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 8
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000009-61af58b7ce6b",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "6d7c937d2073f5298713ddfd827fcb66f711154ae4150e05724b09fdfd28ae49",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 9
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000010-dd10bc15a27e",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "c0aa83ba5f6d0235bae00a6213fd3a7c8362408b6f086a9d6c66c735ecacc7bb",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 10
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000011-396558abfe3e",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "da7211bd8d7cd2a2b2af05bf528e711aa583294bc84daf0d96d7c1b998aed46b",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 11
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000012-0275de6cb8ad",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "26deafd0ad006135841f561f6f9a01c9a2a6034c5519d173b9ac73791619c96f",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 12
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000013-d434303ef573",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "b1de5e467b0c44914e36cbfbe5b4f2e63c719660aad1c2ba7a2f08c75f987dd0",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 13
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000014-42fc2a5c7c86",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "6262bcd5486ba918a841520efd8f52bd64850dbfb3c84f0d628432002191d365",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 14
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000015-975589781c89",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "85ae7ff9f2dcfa3f129aa6b54edfa3c52071ed66a4da137f20a409e963a69d82",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 15
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000016-8d441878f0f4",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "8c67b8d7fd366028391cc8ddcc5b5b6c80feb50741e6b368f5af56e2798aee30",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 16
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000017-b1f8459ea8a9",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "41c700ef14e4f250ec05b60ca349ec4288362a868d1d86507eaeec76e6603298",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 17
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000018-a0b18c51e489",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "38a9df2c1a4bc8590bffb16e321cdd82fed3d987ddd0dd9a3c56fc4ce0d1dc93",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 18
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000019-4d474b8a4351",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "463a178e7d353b8f0005aae603492917d99960f294d4a03f56b7633e57387af9",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 19
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000020-981c71d2f388",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "bd070055fa3fab7e0c0bfeb6ec450f0a7eb01ea2771afcfc449df07efb781664",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 20
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000021-4785cfa388ac",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "7444831fe0a3c468cf14fce0d53e5db8c04ba3756e91a728fcc6521858f39bf9",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 21
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000022-56b8e06cc4e3",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "8c31212b1a68ed3250b1ddacaba033e2842fc7a15e45535114c71df8ec413456",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 22
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000023-8eed5e09363b",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "4ccb7f60bab4e6d9576b14dd1359490562bfcd990e9d908e43cf1738e09ee117",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 23
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000024-ddeb95539cc7",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "eea34fdb36b5f68def753d2478c219fac8d975445a3d81acb0a09bd43db0c863",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 24
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000025-4e38fbf797e1",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "9eb612de7731af2fc241550540541a9db168a59378543e48580935917c96e666",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 25
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000026-636b17e14855",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "f2719fd6a1dc1f0cab9ed55a53c9890fe3ee6c975537f4321ca17587ab652d68",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 26
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000027-2e2611c270f7",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "f1a779e394714ed4ccc34ac9811b081969ff3b294ee761ac889078ae015ed41d",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 27
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000028-b7afc7707b71",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "4e4c600918462f702d9c4ac4073b4d1574d6ad8ac794f1c2794dfe555b832314",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 28
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000029-a55faba97b74",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "5664d7ff1794144ae3f2ce47102ac4c6348df5c111e29cfe130744d8cbe4f81e",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 29
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000030-311f6aa3f07c",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "58bf018d7b3605e2bef17e4e52ce3d84d86cd33c47234ba19e7f37a83b68be48",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 30
+  },
+  {
+   "done_reason": "stop",
+   "grade": true,
+   "item_id": "item-000031-efec8e6168af",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "65af9cf5f405e8a4ceb55f06234400ae1e491268cb76a7d612966d9b4d007450",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 31
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000032-198915ec13cb",
+   "parsed_label": "QUANTUM_VULNERABLE",
+   "prompt_sha256": "fbf4b763e788bd3da860c18366bcd1edee9b38357897cf5dba90e6c44c62eab1",
+   "raw_output_sha256": "51e8994d20431cba294b7d167730664b4c4e5b07e8c4d85cef9909b97db13445",
+   "sequence": 32
+  },
+  {
+   "done_reason": "stop",
+   "grade": false,
+   "item_id": "item-000033-7b2a21981e7d",
+   "parsed_label": "QUANTUM_SAFE",
+   "prompt_sha256": "1debcaec1fd8154db226b7673b100823026d16ee7e3309205211e0848c1cabda",
+   "raw_output_sha256": "541df42b8d5b8c6986feb5ea1088e27005344177944f7f5eb60dae46eebde49c",
+   "sequence": 33
+  }
+ ],
+ "per_item_results_sha256": "cc573826e93d90ad2b62337f2407ca250d8b84b9a5c30f251c74039dd062047f",
+ "produced_at": "2026-09-30T08:38:48Z",
+ "produced_by": "oracle-micro-2 ~/lanes/gspc-continuous/build_declarations.py (lane gspc-continuous-20260929)",
+ "run_id": "20260930T082748.787107Z-838e037859",
+ "runtime": {
+  "bank_sha256": "25dd6a72ac5ad661c33d74a72da54ab9ac7d282de9d388085de20161b1f90b20",
+  "code_commit": "bdd8873344ff4b3b8b5b5ae01d91ec4b8843edd2",
+  "cpu_count": 32,
+  "cpu_model": "AMD Ryzen 9 7950X 16-Core Processor",
+  "decode": {
+   "keyword_max_tokens": 1024,
+   "max_tokens": 128,
+   "seed": 0,
+   "temperature": 0
+  },
+  "device": "rtx4090",
+  "docker_image": "runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04",
+  "environment_json_sha256": "7d7cff2cadb86be93dbd189bdfa06c8d71c8558c6f81e2c6fef3aa624cfd634c",
+  "finished_at": "2026-09-30T08:30:48Z",
+  "gpu": "0, NVIDIA GeForce RTX 4090, 24564 MiB, 570.195.03, 8.9, GPU-001d94d1-0a24-f46e-9917-aeacf408c95f",
+  "hardware": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8)",
+  "kernel": "runpod-pod:4om8q6jhkrgkzj",
+  "ollama": "0.34.4",
+  "platform": "Linux-6.8.0-90-generic-x86_64-with-glibc2.35",
+  "provider": "runpod",
+  "python": "3.11.10",
+  "recorded_by": "the kernel itself (environment.json); nothing here is inferred",
+  "runtime_id": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.34.4",
+  "slice_id": "20260930T0827-qwen2.5-7b",
+  "started_at": "2026-09-30T08:27:29Z",
+  "substrate": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.34.4"
+ },
+ "schema": "csoai.mill-runtime-declaration/0.1",
+ "status": "SIDECAR - not inside the card: the intake contract pins the card body/run.json key sets exactly",
+ "subject": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e"
+}

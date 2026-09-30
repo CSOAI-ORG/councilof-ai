@@ -5,30 +5,30 @@
   "signer": "did:web:csoai.org#board-attestation-1 via POST /api/board-sign (pod caller token)",
   "not_a_grade": "The signature proves these bytes were signed by the board key; it does not prove any claim beyond what the capsules' own instruments measured.",
   "artifact": {
-   "path": "measurement-capsules/v0.2/self_parity/record.json",
-   "sha256": "57d697af67fc40fc4ce206aec5407e1e6873684ae7e4387cb3a06c125a700337",
+   "path": "measurement-capsules/v0.2/2026-09-30/self_parity/record.json",
+   "sha256": "df18985070be64a74df767b5356b76aa67f9277baa8c485ee3166de65369f51a",
    "schema": "csoai.measurement-capsule-batch/0.2",
-   "as_of": "2026-09-26T06:19:48Z"
+   "as_of": "2026-09-30T08:15:29Z"
   },
-  "merkle_root": "53d5c6b23a13c464546d31ab18abcf1fae3990961019fc2443748d62922acf3a",
-  "n_capsules": 138,
+  "merkle_root": "3d5d0faab68c43303c493b80f1e78b16cb9540dc9ed05bad82e8152b52f5a53d",
+  "n_capsules": 166,
   "states": {
-   "CONSISTENT": 37,
+   "CONSISTENT": 45,
    "INCONSISTENT": 8,
    "NOT_DECLARED": 1,
-   "NOT_LISTED": 55,
-   "UNCHECKABLE": 37
+   "NOT_LISTED": 64,
+   "UNCHECKABLE": 48
   },
-  "capsules_sha256": "dc703838bd4c5e9db443f23e54d972343d5c9fdcaf258397472194c5e8267c64",
+  "capsules_sha256": "9d40ada0c53bd3504c16da4142db26bcde8d40c325e9844f4b5bac93d2154b99",
   "adapter": "self_parity",
   "kind": "measurement.self_parity"
  },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "alg": "Ed25519",
-  "sig_ed25519": "576462f678f2ad26ad2fdd68e6f7d8ef204b82a3bda364e39da9413b75a096c995ef70db9aef5ccd35fa878ac5fc9c4a10a4f569117369defe6ec68205943e03",
-  "payload_sha256": "07de2c70ad4a1bcbcb4a73301a7d91460155c27e0313f366873da063ba04bfd5",
-  "signed_at": "2026-09-26T06:24:02.740Z"
+  "sig_ed25519": "6b7359320f1297d1ad1f1005d02252e994ce0d57171fc44074c59cf864ccee5f7396d90981a284dfb35574ebaa4683946c2a4322c295b65af9a38fe405895c06",
+  "payload_sha256": "32fe4e992cc9abaf3cb18deb2b4b659f76911bbd4dd51b0d11d4a841c268765d",
+  "signed_at": "2026-09-30T08:15:30.863Z"
  },
  "local_verification": {
   "result": "VERIFIES",

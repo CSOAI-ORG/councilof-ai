@@ -1,6 +1,6 @@
 # Council of AI GSPC (Layer 0)
 
-The `gspc` MCP server (https://councilof.ai/mcp, server 1.4.3) exposes 18 tools (13 free, 5 x402-metered).
+The `gspc` MCP server (https://councilof.ai/mcp, server 1.4.3) exposes 19 tools (14 free, 5 x402-metered).
 
 Free:
 - `board_totals` — Live GSPC board totals from https://councilof.ai/api/gspc.
@@ -16,6 +16,7 @@ Free:
 - `verify_capsule` — Verify one measurement capsule.
 - `server_evidence` — Trust per server, not totals: every published measurement capsule about ONE endpoint URL across all batches — MCP contract-parity dimensions (AUTH, PAYMENT, PROTOCOL, TOOLS, VERSION), A2A card-signature state, self-parity cells for CSOAI's own doors, and any later adapter (e.g.
 - `evidence_bundle_preview` — For ONE obligation (article-50, article-53 GPAI transparency, dora or cra) and an optional subject: the obligation record, its counsel-gate status and the already-signed measurement cards that are relevant to it (count plus the first cards, each with its verify link), read live from https://councilof.ai/api/evidence-bundle.
+- `route` — GSPC Route (free, decide-only).
 
 x402-metered:
 - `commission_card` — Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation.

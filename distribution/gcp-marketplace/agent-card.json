@@ -1,7 +1,7 @@
 {
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
@@ -220,6 +220,21 @@
         "SendMessage with Part.data {\"skill\":\"evidence-bundle\",\"input\":{\"obligation\":\"article-50\"}}",
         "SendMessage with Part.data {\"skill\":\"evidence-bundle\",\"input\":{\"obligation\":\"article-53\",\"subject\":\"gpt\"}}"
       ]
+    },
+    {
+      "id": "gspc-route",
+      "name": "GSPC Route: decide a path under your policy (free, decide-only)",
+      "description": "GSPC Route (free, decide-only): applies the caller's Cedar policy (presets read-only, local-only, eu-only, no-unmeasured; forbid_providers; allow_kinds) and the fixed GSPC floor to candidates the caller declares, or to the GSPC MCP tools, reads the live board for the named quality axis, and returns the chosen candidate with an unsigned route record (csoai.evidence-event/0.1, profile csoai.route-evidence/0.1). The same module as the free MCP tool route. Routing is not ranking: TIE and UNTESTED are stated as they are, and a caller tie_break decides an unseparated comparison. Nothing is executed or charged; mode execute answers NOT_ENABLED. Measurement, not certification.",
+      "tags": [
+        "routing",
+        "policy",
+        "cedar",
+        "evidence",
+        "decide-only"
+      ],
+      "examples": [
+        "SendMessage with Part.data {\"skill\":\"gspc-route\",\"input\":{\"task\":\"Summarise a public paragraph.\",\"objective\":{\"quality_axis\":\"governance\"},\"candidates\":[{\"id\":\"local:llama3.2-3b\",\"kind\":\"local_gpu\",\"model\":\"llama3.2:3b\",\"endpoint\":\"local:ollama/llama3.2:3b\",\"read_only\":true},{\"id\":\"local:mistral-7b\",\"kind\":\"local_gpu\",\"model\":\"mistral:7b\",\"endpoint\":\"local:ollama/mistral:7b\",\"read_only\":true}]}}"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
@@ -234,7 +249,7 @@
   "signatures": [
     {
       "protected": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDp3ZWI6Y3NvYWkub3JnI2NhcmQtYXR0ZXN0YXRpb24tMiIsInR5cCI6IkpPU0UifQ",
-      "signature": "cKYCT_kTHAKI7l8OBQyEzWfPpu3DDbW1DcCyIewRYRxnJMMTUaQOpUkjqqiM_l_ufr0BJJPkD7bAvevC5lENCQ"
+      "signature": "EEmnLz2PbJppVHOBXRpRC0lvKoWffwGjSwuRn8kbGLVSOdh4h3oVftHh40GOVWOnE3NICstoLwHDOjBKZZ-PDQ"
     }
   ]
 }

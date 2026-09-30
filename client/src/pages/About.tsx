@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import MomentumStrip from "@/components/momentum/MomentumStrip";
+import AboutNumbers from "@/components/about/AboutNumbers";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
 
@@ -184,14 +184,8 @@ export default function About() {
         </div>
       </div>
 
-      {/* Live, sourced figures (GET /api/momentum); each links to its source. */}
-      <div className="container max-w-5xl">
-        <MomentumStrip
-          variant="panel"
-          title="What the work adds up to, counted live"
-          ids={["pypi_csoai_all_time", "pypi_meok_all_time", "hf_downloads_30d_other", "hf_downloads_30d_self_read", "capsules", "census_rows", "signed_cards", "corrections", "board", "hf_datasets"]}
-        />
-      </div>
+      {/* The numbers, in full: everything that left the front door on 2026-09-30 (AboutNumbers). */}
+      <AboutNumbers />
 
       {/* The Problem We're Solving */}
       <div className="bg-white py-20">
