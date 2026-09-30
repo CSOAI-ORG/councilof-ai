@@ -15,8 +15,8 @@
  *                        PyPI and Hugging Face downloads, capsules, census rows, the board, the
  *                        signed cards, the corrections ledger, tools and doors. Each links to its
  *                        source; a figure whose source fails is left out, never zeroed.
- *   2b. Where we take part - the featured memberships (Open Secure AI Alliance, C2PA, DIF) and one
- *                        chip per other body, from public/interop/memberships.json.
+ *   2b. Where we take part - one featured membership band; it links to the complete
+ *                        evidence record at /memberships rather than rendering that catalogue twice.
  *   2c. HomeProof      - anchors a stranger can open, third-party listings verified on the read,
  *                        and the latest dated public work.
  *   3. (HomeDistribution moved to /how-we-work on 2026-09-27: its artifact is the pod census that
@@ -25,7 +25,7 @@
  *   4. The board       - every row, every word, every number off GET /api/gspc at render time,
  *                        with the composer under it.
  *   5. HomeWeakScore   - one of our own low scores, verified in the reader's own browser.
- *   6. Participation   - the standards record, as text with evidence, never as a logo row.
+ *   6. The full participation catalogue lives at /memberships; it is not duplicated below.
  *   Then a six-card hand-off to the pages that hold everything else.
  *
  * WHAT WAS RETIRED FROM THIS PAGE AND WHERE IT WENT (align, do not delete). All eight bands
@@ -228,36 +228,6 @@ export default function HomeVerify() {
 
       <HomeWeakScore />
 
-      {/*
-        Participation, with room to be read (owner, 2026-09-22). This was a single wrapping line
-        of badge pills; it is the standards and institutional record — 28 entries, each with its
-        own evidence, its own date and its own statement of what it does NOT prove — and it is
-        one of the few things about a measurement body that an outsider can check without
-        reading a single score. The grouped variant renders every row under its own heading.
-      */}
-      <section
-        id="participation"
-        aria-labelledby="participation-h"
-        className="surface-sunken section-y border-t border-border"
-        data-testid="home-participation"
-      >
-        <div className="section-shell">
-          <p className="t-kicker text-emerald-700 dark:text-emerald-300">In the room, on the record</p>
-          {/* The band is labelled by ITS OWN heading. MembershipStrip renders a second heading
-              of its own ("Where we take part") as the list label; pointing aria-labelledby at
-              that one made a screen reader announce the section by the sub-label. */}
-          <h2 id="participation-h" className="t-band mt-4 max-w-3xl text-foreground">
-            The standards that will govern this are being written now. We are in those rooms.
-          </h2>
-          <p className="t-lede measure mt-5 text-muted-foreground">
-            Standards bodies, public registries, scholarly identifiers and filings on the public
-            record. Every entry below names what it proves, what it does not prove, and the
-            evidence you can open for yourself — because a membership logo with nothing behind it
-            is the exact thing this business exists to make unnecessary.
-          </p>
-        </div>
-        <MembershipStrip variant="home" />
-      </section>
 
       <section className="surface-base section-y border-t border-border">
         <div className="section-shell">

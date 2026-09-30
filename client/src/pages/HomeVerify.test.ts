@@ -166,10 +166,11 @@ describe("owner rulings on the front door, 2026-09-22", () => {
     expect(footer).toContain("/api/footprint");
   });
 
-  it("gives participation a band of its own rather than a thin strip", () => {
-    expect(home).toContain('variant="home"');
-    expect(home).toContain('data-testid="home-participation"');
-    expect(home).not.toContain('variant="badges"');
+  it("shows participation once on the front door and hands the full record to /memberships", () => {
+    expect(home).toMatch(/variant="featured"/);
+    expect(home).not.toMatch(/variant="home"/);
+    expect(home).not.toMatch(/data-testid="home-participation"/);
+    expect(home).not.toMatch(/variant="badges"/);
   });
 
   it("leads with the credibility: signed evidence, corrections, anchoring, free re-checking", () => {
