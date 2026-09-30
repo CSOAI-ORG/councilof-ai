@@ -244,6 +244,18 @@ function stripPackageIdentifiers(node) {
 function publicJsonCodenameHit(rel, raw) {
   if (/^\/signed\//.test(rel)) return null;
   let scan = raw;
+  // Measurement-capsule shards embed each signed capsule verbatim as `capsule_json`: the bytes the
+  // capsule id and batch Merkle root commit to, including what a THIRD-PARTY endpoint advertised
+  // (30 Sep 2026: an MCP server's tool names "VENTURIGAS", "VENTURILIQ" tripped \bventuri on the
+  // 29 Sep index). Rewriting them would break the capsule id and falsify the observation, so they are
+  // evidence like /signed/. Everything else in the shard (doctrine, key_rule, …) is still scanned.
+  if (/^\/measurement-capsules\/.*\.json$/.test(rel)) {
+    try {
+      scan = JSON.stringify(JSON.parse(raw), (k, v) => (k === "capsule_json" && typeof v === "string" ? "" : v));
+    } catch {
+      /* unparseable shard: keep scanning the whole body */
+    }
+  }
   if (DISTRIBUTION_CATALOGUE.test(rel)) {
     try {
       return JSON.stringify(stripPackageIdentifiers(JSON.parse(raw))).match(PATH_BANNED);
@@ -383,6 +395,20 @@ if (SELFTEST) {
     // the corrected copy now in the tree
     ["/interop/hf-badges-index.json", { badges: [{ name: "CSOAI 23/33 council threshold", criteria: "Attested by 23 of 33 council agents (designed threshold)" }] }],
   ];
+  // Capsule shards: a third-party tool name inside the signed capsule bytes is evidence, not our
+  // codename; our own prose in the shard is still caught.
+  if (publicJsonCodenameHit("/measurement-capsules/v0.2/endpoints/13.json", JSON.stringify({
+    doctrine: "Measurement only.",
+    endpoints: { e: { capsules: [{ capsule_json: JSON.stringify({ observed: [["VENTURIGAS", "ab"], ["VENTURILIQ", "cd"]] }) }] } },
+  }))) {
+    console.error("\u2716 selftest: a third-party tool name inside capsule_json now fails public-json"); bad++;
+  }
+  if (!publicJsonCodenameHit("/measurement-capsules/v0.2/endpoints/13.json", JSON.stringify({
+    doctrine: "Sealed by the Venturi throat.",
+    endpoints: {},
+  }))) {
+    console.error("\u2716 selftest: capsule shard estate prose no longer catches venturi"); bad++;
+  }
   // Fleet locks quote third-party identity. The public-json sweep must not
   // treat a Kaggle surname as our Dorado product; estate prose still fails.
   if (publicJsonCodenameHit("/fleet/KAGGLE.lock.json", JSON.stringify({
