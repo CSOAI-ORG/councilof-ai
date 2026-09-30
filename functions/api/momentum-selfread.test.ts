@@ -23,6 +23,9 @@ const NOT_READS: Record<string, Record<string, string>> = {
   "functions/api/state.ts": {
     "csoai/gspc-boards": "prose in the not-measured list, telling a reader where the root mirror is; state.ts does not probe the Hub",
   },
+  "functions/api/_rulings_data.ts": {
+    "csoai/gspc-jail-goldbank": "an evidence uri (with its sha256) inside signed ruling R-2026-0929-04; the generated module is served as data and fetches nothing",
+  },
 };
 
 function walk(dir: string, out: string[] = []): string[] {
