@@ -1017,8 +1017,9 @@ export const V2_REQUIREMENT_FIELDS = [
  *     valid:false, "no bazaar discovery extension found", while the body carried the block.
  * What stays in the BODY only, and why: the v1 duplicates on each accept (maxAmountRequired,
  * resource, description, mimeType) and csoai_pricing, which are not v2 PaymentRequirements
- * fields; extensions["offer-receipt"] (signed offer JWS strings, ~600 B each, which pushed the
- * header to 8.6–8.9 KB before 2026-09-26); and the `csoai` sidecar. The header stays under
+ * fields; the offer-receipt extension's JSON schema (its signed offers DO travel in the header
+ * since 2026-09-30 — see headerOffers; before 2026-09-26 the whole block plus the sidecar pushed
+ * the header to 8.6–8.9 KB); and the `csoai` sidecar. The header stays under
  * PAYMENT_REQUIRED_HEADER_BUDGET on every door (functions/api/payment-required-header.test.ts).
  */
 export function headerPaymentRequired(
@@ -1037,13 +1038,36 @@ export function headerPaymentRequired(
     return out;
   };
   const ext = (paymentRequired.extensions ?? {}) as Record<string, unknown>;
+  const offers = headerOffers(paymentRequired);
+  const headerExt: Record<string, unknown> = {
+    ...(ext.bazaar ? { bazaar: ext.bazaar } : {}),
+    ...(offers ? { "offer-receipt": { info: { offers } } } : {}),
+  };
   return {
     x402Version: paymentRequired.x402Version,
     ...(paymentRequired.error !== undefined ? { error: paymentRequired.error } : {}),
     resource: { ...resource, mimeType: resource.mimeType ?? "application/json" },
     accepts: accepts.map(pick),
-    ...(ext.bazaar ? { extensions: { bazaar: ext.bazaar } } : {}),
+    ...(Object.keys(headerExt).length ? { extensions: headerExt } : {}),
   };
+}
+
+/**
+ * The signed offers (offer-receipt extension §4.1) a PaymentRequired carries, or null.
+ *
+ * Offer parity (30 Sep 2026): the PAYMENT-REQUIRED header is the canonical x402 v2 challenge, so a
+ * signed offer that rides only in the body is invisible to a protocol client. Captured on
+ * /api/eunomia-data?feed=1 at 2026-09-30T05:25:27Z: header 0 offers, body 1. The header now carries
+ * extensions["offer-receipt"].info.offers — the same array as the body, byte for byte — and leaves
+ * the extension's JSON schema (~500 B) on the body. When the offers would take a door's header past
+ * PAYMENT_REQUIRED_HEADER_BUDGET, paymentRequiredResponseSigned drops them from header AND body, so
+ * the two never disagree (functions/api/payment-required-header.test.ts).
+ */
+export function headerOffers(paymentRequired: Record<string, unknown>): unknown[] | null {
+  const ext = (paymentRequired.extensions ?? {}) as Record<string, unknown>;
+  const block = ext["offer-receipt"] as { info?: { offers?: unknown } } | undefined;
+  const offers = block?.info?.offers;
+  return Array.isArray(offers) && offers.length ? offers : null;
 }
 
 /** Former name, kept for callers written before 2026-09-27. Same function. */
@@ -1092,10 +1116,10 @@ export function paymentRequiredResponse(
  * paymentRequiredResponseSigned — THE call every metered door makes instead of
  * `paymentRequiredResponse`. It signs one offer per accepts[] entry (offer-receipt extension §4)
  * and then builds the same 402. The signed offers ride in the JSON body's
- * extensions["offer-receipt"]; the PAYMENT-REQUIRED header carries the v2 challenge plus
- * extensions.bazaar (headerPaymentRequired), not the offers. The offers used to be duplicated into
- * the header too, which is how it reached 8.6–8.9 KB — past the 4–8 KiB single-header limit of
- * common proxies.
+ * extensions["offer-receipt"], and the same offers ride in the PAYMENT-REQUIRED header's
+ * extensions["offer-receipt"].info.offers (headerPaymentRequired; parity since 2026-09-30). A door
+ * whose header would pass PAYMENT_REQUIRED_HEADER_BUDGET with its offers carries none in either
+ * place (withinHeaderBudget).
  *
  * It is the only asynchronous thing about emitting a 402, and it never fails the response: when
  * the key is absent or no accepts entry can be committed to, the 402 goes out exactly as before
@@ -1110,5 +1134,33 @@ export async function paymentRequiredResponseSigned(
     paymentRequired,
     (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim() || undefined,
   );
-  return paymentRequiredResponse(signed, extraHeaders);
+  return paymentRequiredResponse(withinHeaderBudget(signed), extraHeaders);
+}
+
+/**
+ * Offer parity, fail-closed: if carrying the signed offers would push the PAYMENT-REQUIRED header
+ * past PAYMENT_REQUIRED_HEADER_BUDGET, remove extensions["offer-receipt"] from the whole
+ * PaymentRequired (so header and body both carry none) and say why on the csoai sidecar. A
+ * body-only offer is the defect this prevents; an unsigned 402 that says so is not.
+ */
+export function withinHeaderBudget(paymentRequired: Record<string, unknown>): Record<string, unknown> {
+  if (!headerOffers(paymentRequired)) return paymentRequired;
+  if (encodePaymentRequiredHeader(paymentRequired).length < PAYMENT_REQUIRED_HEADER_BUDGET) return paymentRequired;
+  const { "offer-receipt": _dropped, ...rest } = (paymentRequired.extensions ?? {}) as Record<string, unknown>;
+  const csoai = (paymentRequired.csoai ?? {}) as Record<string, unknown>;
+  const note = (csoai.offer_receipt ?? {}) as Record<string, unknown>;
+  return {
+    ...paymentRequired,
+    extensions: rest,
+    csoai: {
+      ...csoai,
+      offer_receipt: {
+        ...note,
+        signed: false,
+        reason:
+          `the signed offer would take the PAYMENT-REQUIRED header past its ${PAYMENT_REQUIRED_HEADER_BUDGET}-byte budget, ` +
+          "so this 402 carries no offer in the header or the body (a body-only offer is invisible to a protocol client)",
+      },
+    },
+  };
 }
