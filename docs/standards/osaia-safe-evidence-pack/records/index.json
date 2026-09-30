@@ -1,0 +1,94 @@
+{
+  "generated_at": "2026-09-30T09:47:50Z",
+  "profile": "safe-reverification/0.1-draft",
+  "prototype": true,
+  "deployed": false,
+  "sources_read_at": {
+    "did.json": "2026-09-30T09:47:50Z",
+    "api_corrections": "2026-09-30T09:47:50Z",
+    "sr_interceptor.py": "2026-09-30T09:47:50Z",
+    "sr_conformance_vectors.json": "2026-09-30T09:47:50Z",
+    "sr_conformance_example-fail-results.json": "2026-09-30T09:47:50Z",
+    "parity_record.json": "2026-09-30T09:47:50Z",
+    "parity_record.v0.1.1.json": "2026-09-30T09:47:50Z",
+    "parity_record.v0.1.2.json": "2026-09-30T09:47:50Z",
+    "parity_record.v0.1.2.signed.json": "2026-09-30T09:47:50Z",
+    "dl_medicare_record.json": "2026-09-30T09:47:50Z",
+    "dl_medicare_record.signed.json": "2026-09-30T09:47:50Z",
+    "s1.html": "2026-09-30T09:47:50Z",
+    "capsules_index.json": "2026-09-30T09:47:50Z",
+    "capsules_index.signed.json": "2026-09-30T09:47:50Z"
+  },
+  "records": [
+    {
+      "file": "C-2026-0928-01.pre-fix.safe-rv.json",
+      "record_id": "csoai:safe-rv:C-2026-0928-01:pre-fix",
+      "state": "FAIL",
+      "negative_control": "FAIL",
+      "canonical_sha256": "d84c899abdf065315698ab52cf9558f28f0a3c3168e54d374a512847e65d0327"
+    },
+    {
+      "file": "C-2026-0928-01.post-fix.safe-rv.json",
+      "record_id": "csoai:safe-rv:C-2026-0928-01:post-fix",
+      "state": "PASS",
+      "negative_control": "FAIL",
+      "canonical_sha256": "5f3a6c1bb846e9ae408bfaae03cc4181ba15a1aab10b1dbfbdf5fe99a9ec5c8e"
+    },
+    {
+      "file": "C-2026-0928-02.pre-fix.safe-rv.json",
+      "record_id": "csoai:safe-rv:C-2026-0928-02:pre-fix",
+      "state": "FAIL",
+      "negative_control": "FAIL",
+      "canonical_sha256": "141a53b4c95a54261924b43db7cd2861389254ed0eb653cb41703b72458c9524"
+    },
+    {
+      "file": "C-2026-0928-02.post-fix.safe-rv.json",
+      "record_id": "csoai:safe-rv:C-2026-0928-02:post-fix",
+      "state": "PASS",
+      "negative_control": "FAIL",
+      "canonical_sha256": "b90a1a1cd61938308ffc1acc028b50a76dec5541f9ade45b8ba9830aac2280de"
+    },
+    {
+      "file": "corrections-ledger.integrity.safe-rv.json",
+      "record_id": "csoai:safe-rv:corrections-ledger:integrity",
+      "state": "PASS",
+      "negative_control": "FAIL",
+      "canonical_sha256": "820d730d4591ee16a5bdfc69bfe236bf1902008d25b67c141513593840497839"
+    },
+    {
+      "file": "corrections-ledger.timing.safe-rv.json",
+      "record_id": "csoai:safe-rv:corrections-ledger:time-to-correct",
+      "state": "FAIL",
+      "negative_control": "FAIL",
+      "canonical_sha256": "fb0528ea41b76c8c5689e33f4b4ed154188e028ddd4c479a669f086212bec470"
+    },
+    {
+      "file": "mcp-contract-parity.v0.1.2.safe-rv.json",
+      "record_id": "csoai:safe-rv:mcp-contract-parity:v0.1.2",
+      "state": "PASS",
+      "negative_control": "FAIL",
+      "canonical_sha256": "e39b8a41d1b1be7df14930bd859cb7415da66afc49032eccbed30548966b07a7"
+    },
+    {
+      "file": "disclosure-lag.incident-to-notification.safe-rv.json",
+      "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:incident_to_authority_notified",
+      "state": "PASS",
+      "negative_control": "FAIL",
+      "canonical_sha256": "3528babf009f5f507b11d31c81190a2b65e592ab3a548a8d11c9a57948eb680b"
+    },
+    {
+      "file": "disclosure-lag.activity-stopped.safe-rv.json",
+      "record_id": "csoai:safe-rv:disclosure-lag:2026-06-au-portal:activity_stopped",
+      "state": "UNMEASURED",
+      "negative_control": "NOT_RUN",
+      "canonical_sha256": "b64010b0a4c337b3be7a2370d8aab4c509c0cbf70274b6bc223a430d86a198b5"
+    },
+    {
+      "file": "measurement-capsules.index.safe-rv.json",
+      "record_id": "csoai:safe-rv:measurement-capsules:v0.2:index",
+      "state": "PARTIAL",
+      "negative_control": "FAIL",
+      "canonical_sha256": "8d70139398cb9688a7bf1cd0a6f4cfe3ec769bc25c1fecc01c7c2828e270e7b7"
+    }
+  ]
+}

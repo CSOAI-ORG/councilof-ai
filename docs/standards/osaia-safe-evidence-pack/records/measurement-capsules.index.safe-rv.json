@@ -1,0 +1,105 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:measurement-capsules:v0.2:index",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "13184 measurement capsules in 8 signed batches, one RFC 6962 root over all. States per batch are published; the capsules themselves are held until the owner approves publication."
+  },
+  "claim": {
+    "claim_id": "measurement-capsules/v0.2/index.json:signed",
+    "claim_type": "artifact_integrity",
+    "statement": "The capsule index is signed by the board key and its digest matches the served bytes.",
+    "subject": {
+      "identifier": "https://councilof.ai/measurement-capsules/v0.2/index.json",
+      "scheme": "url+sha256"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "index",
+      "kind": "dataset",
+      "name": "capsule index v0.2",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "ee3d921750d40456eb58ed24d2a9ba141d6fc1d16510ddd338166c4f5620b72a"
+      },
+      "uri": "https://councilof.ai/measurement-capsules/v0.2/index.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "UNPINNED"
+    },
+    {
+      "dep_id": "capsules",
+      "kind": "dataset",
+      "name": "13184 capsule bodies",
+      "version": null,
+      "digest": null,
+      "uri": null,
+      "observed_at": null,
+      "state": "UNAVAILABLE"
+    }
+  ],
+  "test": {
+    "method_id": "signed-run check",
+    "method_version": "csoai.signed-run/0.1",
+    "procedure": "for each batch: recompute every capsule_id and the batch Merkle root, check record sha256 and its board signature; then recompute index_root over the union of capsule ids; the index itself is signed (.signed.json) and OTS-stamped (.json.ots)",
+    "procedure_digest": null,
+    "reproduction": "independent_reimplementation",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Capsule ids and batch Merkle roots cannot be recomputed without the capsule bodies."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "Trailing byte, zeroed artifact digest, changed signature nibble.",
+    "negatives_observed": 3,
+    "denominator": 3
+  },
+  "result": {
+    "state": "PARTIAL",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "PARTIAL",
+    "n": 1,
+    "denominator": null,
+    "reason": "index signature verifies; the 13184 capsules it commits to are not public, so only the index, not its contents, was checked. private_until: owner approves publication."
+  },
+  "signature": {
+    "envelope": "csoai_signed_run_0_1",
+    "key_id": "did:web:csoai.org#board-attestation-1",
+    "payload_sha256": "9f60d6365a335128425570deca35a91e6e6ce929077a6e4baa56b0a982e13800",
+    "envelope_uri": "https://councilof.ai/measurement-capsules/v0.2/index.signed.json",
+    "transparency_receipt_uri": null,
+    "timestamp": {
+      "kind": "opentimestamps",
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_uri": null
+    }
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "index",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "Not a grade, ranking, admission or approval of anything. The capsules measure declared vs observed; this index only binds them together.",
+    "A verified signature shows these bytes were signed by the named key. It does not show the content is true."
+  ]
+}

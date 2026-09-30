@@ -1,0 +1,157 @@
+{
+  "profile": "safe-reverification/0.1-draft",
+  "record_id": "csoai:safe-rv:mcp-contract-parity:v0.1.2",
+  "issuer": "did:web:csoai.org",
+  "issued_at": "2026-09-30T09:47:50Z",
+  "supersedes": [
+    {
+      "record_id": "hf:csoai/mcp-contract-parity:record.v0.1.1.json",
+      "sha256": "9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8",
+      "uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.v0.1.1.json",
+      "reason": "reclassification 0.1.1 -> 0.1.2 (see correction.v0.1.2.evidence.json); bytes kept"
+    },
+    {
+      "record_id": "hf:csoai/mcp-contract-parity:record.json",
+      "sha256": "45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323",
+      "uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.json",
+      "reason": "first published 0.1; superseded by 0.1.1 then 0.1.2; bytes kept"
+    }
+  ],
+  "finding": {
+    "kind": "measurement",
+    "finding_ref": null,
+    "disclosure_tier": "public",
+    "summary": "Declared-vs-observed MCP contract parity, 25 Sep 2026 read: 2764 endpoints with at least one INCONSISTENT dimension in v0.1.2. AUTH INCONSISTENT by version: v0.1 23, v0.1.1 10, v0.1.2 5. Each correction is a new signed record; earlier ones are kept byte for byte."
+  },
+  "claim": {
+    "claim_id": "mcp-contract-parity:v0.1.2:supersession-chain",
+    "claim_type": "artifact_integrity",
+    "statement": "record.v0.1.2.json is signed by the board key and names v0.1.1 and v0.1 by sha256, and those bytes are still published.",
+    "subject": {
+      "identifier": "https://huggingface.co/datasets/csoai/mcp-contract-parity@557ca3376194917ddc42e2e8dc301e6503fa2c03",
+      "scheme": "huggingface-dataset-revision"
+    }
+  },
+  "dependencies": [
+    {
+      "dep_id": "v0.1.2",
+      "kind": "dataset",
+      "name": "record.v0.1.2.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "5a9bedff1b6facbd9e19a1db1282b37fb6cedd9bf6c7dd14aeeeff387eae77ed"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.v0.1.2.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "v0.1.1",
+      "kind": "dataset",
+      "name": "record.v0.1.1.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "9cd02be424bf608d41f40522e48188f5a9ef4d13c8de6e28023b20a941fd4ef8"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.v0.1.1.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "v0.1",
+      "kind": "dataset",
+      "name": "record.json",
+      "version": null,
+      "digest": {
+        "alg": "sha256",
+        "value": "45e3fd63fc98ad251a4f9fe5fdb705ed7fbc28321d5c205d10114a21730cc323"
+      },
+      "uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.json",
+      "observed_at": "2026-09-30T09:47:50Z",
+      "state": "PINNED"
+    },
+    {
+      "dep_id": "instrument",
+      "kind": "tool",
+      "name": "scripts/census/contract-parity.py 0.1.2 (commit e087664dd86c3b153ee81819cee260477e531511)",
+      "version": null,
+      "digest": null,
+      "uri": null,
+      "observed_at": null,
+      "state": "UNPINNED"
+    }
+  ],
+  "test": {
+    "method_id": "signed-run check + supersedes chain digests",
+    "method_version": "csoai.signed-run/0.1",
+    "procedure": "record.v0.1.2.signed.json: canonicalise payload (JSON, keys sorted, no whitespace, UTF-8); sha256 must equal signature.payload_sha256; payload.artifact.sha256 must equal sha256(record.v0.1.2.json); verify sig_ed25519 with #board-attestation-1 in https://csoai.org/.well-known/did.json",
+    "procedure_digest": null,
+    "reproduction": "independent_reimplementation",
+    "substitutions": [],
+    "declared_failure_modes": [
+      "Checks integrity and the chain only; it does not re-run the parity measurement."
+    ],
+    "noise_floor": null
+  },
+  "negative_control": {
+    "kind": "designed_to_fail",
+    "expected": "FAIL",
+    "observed": "FAIL",
+    "description": "Trailing byte on the record, zeroed artifact digest, changed signature nibble, and a trailing byte on the superseded v0.1.1.",
+    "negatives_observed": 4,
+    "denominator": 4
+  },
+  "result": {
+    "state": "PASS",
+    "measured_at": "2026-09-30T09:47:50Z",
+    "read_state": "EXHAUSTED",
+    "n": 3,
+    "denominator": 3,
+    "reason": "signature verifies; chain digests match the published v0.1.1 and v0.1 bytes.",
+    "evidence": [
+      {
+        "name": "record.v0.1.2.signed.json",
+        "uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.v0.1.2.signed.json",
+        "digest": {
+          "alg": "sha256",
+          "value": "e3cf8123c13ac9a6ddc494f93f8fbfcb2901c00f5fee5897e400e3cbbc46d096"
+        }
+      }
+    ]
+  },
+  "signature": {
+    "envelope": "csoai_signed_run_0_1",
+    "key_id": "did:web:csoai.org#board-attestation-1",
+    "payload_sha256": "54af1df09502faa849335d41a77a0f10ecaa48c109544f97bfc390fc0103a458",
+    "envelope_uri": "https://huggingface.co/datasets/csoai/mcp-contract-parity/resolve/557ca3376194917ddc42e2e8dc301e6503fa2c03/record.v0.1.2.signed.json",
+    "transparency_receipt_uri": null,
+    "timestamp": {
+      "kind": "opentimestamps",
+      "state": "PENDING_CALENDAR_COMMITMENT",
+      "proof_uri": null
+    }
+  },
+  "watch": {
+    "triggers": [
+      {
+        "dep_id": "v0.1.2",
+        "on": "digest_change"
+      }
+    ],
+    "retest_bound": {
+      "max_latency": "P7D",
+      "max_attempts": 3,
+      "on_exhausted": "MARK_STALE"
+    },
+    "state": "NOT_WATCHED",
+    "last_checked_at": "2026-09-30T09:47:50Z"
+  },
+  "limits": [
+    "runtime auth enforcement beyond the discovery boundary (initialize + tools/list); tools/call is never sent",
+    "backend behaviour, tool correctness, safety, or quality of any service or vendor",
+    "which surface is right: an INCONSISTENT row says two public statements disagree, not which one is true",
+    "A verified signature shows these bytes were signed by the named key. It does not show the content is true."
+  ]
+}
