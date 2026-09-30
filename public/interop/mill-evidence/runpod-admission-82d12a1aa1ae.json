@@ -1,0 +1,434 @@
+{
+  "admitted_at": "2026-09-30T08:38:44Z",
+  "authority": {
+    "admitted": true,
+    "by": "scripts/admit_mill_cards.py",
+    "rule": "intake + independent reproduction (same instrument/model/bank, same counts, same grade on every item) + sign_mill_cards signature; owner-approved 2026-09-26, item-level ruling 2026-09-26"
+  },
+  "card": {
+    "accuracy": 0.7188,
+    "axis": "openness",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "file": "signed-openness-2deaa235ed47.json",
+    "id": "2deaa235ed47a15941f015e9a5232e1d784cdb5387ec62888970f981a0e24e92",
+    "n": 32,
+    "run_id": "20260928T075427.085361Z-4c48d70360",
+    "subject": "ollama:hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0@sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff"
+  },
+  "instrument_guard": {
+    "bank_exposure": "PUBLIC_BANK",
+    "bank_id": "gspc-oss",
+    "bank_sha256": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec",
+    "canary_scan": "CLEAN",
+    "commitments_records": [
+      "bank-commitments-2026-09-26.json",
+      "bank-commitments-2026-09-27.json"
+    ],
+    "contamination_probe": "NOT_APPLICABLE: the bank carries no private canaries"
+  },
+  "intake": {
+    "bundle_sha256": "82d12a1aa1ae9ba21b889afec4f7e16d3a5dc1753f4a78953192e5ebf82d9f91",
+    "receipt_file": "runpod-verification-82d12a1aa1ae.json",
+    "receipt_sha256": "7450744932e27c03f809760e89f6ea1b4e5bd3880126d7244445940eee084555"
+  },
+  "item_evidence": {
+    "declared_by": "runtime-declaration-hf.co_ggml-org_MiMo-V2.6-Distill-Qwen-9B-GGUF-Q8_0--openness--c8f871c73d9f.json#b8404c07414c",
+    "per_item_cross_hardware": {
+      "differing_items": [],
+      "grade_equal": 32,
+      "n_items": 32,
+      "parsed_label_equal": 32,
+      "raw_output_equal": 32
+    },
+    "per_item_results": [
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000001-5096155e7eae",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "725d83b877198a6c47c6dc05fa8ebd24035f7a205c84d11b05b10af249145d87",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 1
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000002-fcd90ab930e4",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "06595369afc9cd7fdd0d64d5c2aaaedd0a866abf2b5e09a44f834a2a6e8f1fbc",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 2
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000003-ae34a954790f",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "04587e2ac1443c005309da00d2b9ee4f85ddcde266bf87cd9d94dfea6f2c0a09",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 3
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000004-db8f758c00eb",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "5d7bedcd2661bbd1c74eb4d5e7f5f666e70109d8050179e3219196eb9bc3d449",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 4
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000005-2854e023ea1b",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "5fcbfc5b03daa1bd6dfca9c7d58814e18a9e3522a124edcfe2204298d8c92fea",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 5
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000006-0120fa773b5a",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "7a4ecf12cd1cefec56b588b725064a5e1ea6fb0fc96845867ef31c32110d0f33",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 6
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000007-89fcf589eca3",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "f0fc48fef8ca0f2e657601c773df738b7f466e2539d288628f1f33841a1ec4c3",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 7
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000008-feaef65fa99e",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "e8a93a858e1adeb08cc316a9bdb80c6d86b3f4ca9758f3ce5d1b352b0b383284",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 8
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000009-e158d721766b",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "3b3d3cf45d38b965efe0583fee7e6ba963b0b37bd63130adab29b88953fc374e",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 9
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000010-c321bc5468e6",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "b6a02abbe92795c143db02c2d8045c83f5eaaf1fe43561cc2c4e9974b7eb56b7",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 10
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000011-e1dbdf8beccb",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "911da8e61c71ff7c60011ca5efd101aba348597f5412b466f26965f8ac897911",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 11
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000012-a4e394698fa7",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "9a36d2cd99a039455058f9ea8f3f61d5a3db6568730ec03892090366ab6f0308",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 12
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000013-1e1fce1bce4d",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "535a992268538fb892bf44ab66a977841586fbd35c4e3e864526891d239ff811",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 13
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000014-160d08801749",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "71e267354691c74c620f9bda9a7bc7dd7f72211a36492c8cb658edfc66ea2691",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 14
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000015-f29c2515e1f5",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "1f87126079006f68c1452288e5397c82ebb8c7a9905835068470a3c38a53d813",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 15
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000016-a0babc703dfb",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "4a54f57f9fcd933632f32f9d44f92489339267ecb7b8037a29cb5b883a5130f8",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 16
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000017-92ad94695367",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "cd61893b0d7c26611747400271c91af9259722a0e40b564af8627ba404006aed",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 17
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000018-44fe071cfda1",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "60343b7f7bd4221712147580b1f50a7bb506a2f198f2c3fd1167961379ccfd3b",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 18
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000019-99d633db535c",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "a8cc5ee891efdaf22064b7c86fc1650f68e671f9321a05bacf1b50eb4d32d74c",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 19
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000020-6417370c84f5",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "ff43dd339ca7b1584e6c70830933a82fbdee813dd2f84a0a80f4ddce2020aedf",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 20
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000021-4f5bcf078564",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "618acdbe3b53977d61fabcdffbd802465fa1b783a61f1291b9c0a6c2a1cf87e8",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 21
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000022-6ab110bc86b7",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "0f67179c4d30b73ad450491769a2e5113dd41ff7b362b95c94ad932bcd712a0d",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 22
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000023-112970eeb74a",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "1a70444a1018b445b0a37538e9313066b43fed8b77434af2e09bf90a82d876d0",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 23
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000024-8310e9747b60",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "e8d5c6e92af8a8505c9f34e26dda830553895866475bdef6a0a25ea1e6e929c6",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 24
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000025-bdc825c3fdf9",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "5a3a8485e60f12f2806554303c253ead7e2b5259439990a899843ee0daa20840",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 25
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000026-1cfb258c7df2",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "6038bcf1eecb197e829a3b7db73c002918539ee097214fcb47853ce9054d6a7a",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 26
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000027-e6ac39b0ed04",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "01e9bc81a73815693ee2cd7c87021d4339f7a7002467406c939000a5af108bda",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 27
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000028-29aff64e8c2b",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "f8cc8f18b2e0051304888d37490b952345b2fd9f939242808480e14a78dcfc17",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 28
+      },
+      {
+        "done_reason": "stop",
+        "grade": false,
+        "item_id": "item-000029-9c0b58f40ae7",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "1a32cdc806a31e91edb7612a14888c78f8ed4589cbc5a17761570e5c07227239",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 29
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000030-8d6ba1fc122e",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "7566576c377753e1631c9dd60b8ffde5c8e80338c5ff3364a434fbfbe0673d1c",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 30
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000031-aeb65b42df56",
+        "parsed_label": "PERMITTED",
+        "prompt_sha256": "7c921123ab89985f4024f508fa2637cb0d97a4133f69348e076e26247a17dea1",
+        "raw_output_sha256": "83824ff28dafc888808d5f42def724b7ee0dcdd3d0126ac71e7434af0013e99a",
+        "sequence": 31
+      },
+      {
+        "done_reason": "stop",
+        "grade": true,
+        "item_id": "item-000032-0f42d1a21055",
+        "parsed_label": "RESTRICTED",
+        "prompt_sha256": "eed383e4d4157651a59d55a724db42af8ef337acf9a2252c9afe91fe4d3dc107",
+        "raw_output_sha256": "d377c53e17e39a509e3bca9d5472044690ce4507289b8f789260ffa17e2701c9",
+        "sequence": 32
+      }
+    ],
+    "per_item_results_sha256": "536f2e3530bc5867e2a60a9c86fb4a4a9e0024c374201d7d3977f386ecfd7754"
+  },
+  "item_parity": {
+    "grade_differs": [],
+    "grade_equal": 32,
+    "n_items": 32,
+    "non_grade_differs": [],
+    "primary_items_from": "declared differing_items over the reproduction's per_item_results"
+  },
+  "matched": {
+    "accuracy": 0.7188,
+    "bank_sha256": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec",
+    "counts": {
+      "attempted": 32,
+      "bank_items": 32,
+      "correct": 23,
+      "graded_n": 32,
+      "parse_errors_excluded": 0,
+      "transport_errors_excluded": 0,
+      "transport_ok": 32
+    },
+    "instrument_sha256": "cbf6c2ca0551abfdd8b444e89022f64bb5402723a28496ebb7a81c3d39590508",
+    "model_manifest_digest": "sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff"
+  },
+  "primary_runtime": {
+    "declared_by": [
+      "runtime-declaration-hf.co_ggml-org_MiMo-V2.6-Distill-Qwen-9B-GGUF-Q8_0--openness--c8f871c73d9f.json#b8404c07414c"
+    ],
+    "runtime_id": "GPU: 2x Tesla T4 (CUDA driver 13.0) | Kaggle kernel nicktempleman/csoai-mill-kaggle-daily (private, Batch) | ollama 0.34.4"
+  },
+  "reproduction": {
+    "card_body": {
+      "accuracy": 0.7188,
+      "axis": "openness",
+      "brand": "Council of AI",
+      "compute_evidence": {
+        "bank_sha256": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec",
+        "instrument_sha256": "cbf6c2ca0551abfdd8b444e89022f64bb5402723a28496ebb7a81c3d39590508",
+        "items_sha256": "5e145bdb499355b267146cd552c928066f338106b70cc33cc7ca94962404a412",
+        "model_manifest_digest": "sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff",
+        "parse_errors_excluded": 0,
+        "run_id": "20260930T082201.606170Z-cc14c9122f",
+        "transport_errors_excluded": 0
+      },
+      "issuer": "CSOAI Ltd",
+      "kind": "gspc.measurement-card",
+      "model": "ollama:hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0@sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff",
+      "n": 32,
+      "public_framing": "Measurement, not certification. Empty is not zero.",
+      "status": "UNMEASURED",
+      "unmeasured": [
+        "unsigned compute output; admission and verification required"
+      ],
+      "verify": "https://councilof.ai/gspc-verify"
+    },
+    "declared_by": [
+      "runtime-declaration-hf.co_ggml-org_MiMo-V2.6-Distill-Qwen-9B-GGUF-Q8_0--openness--c8f871c73d9f.json#b8404c07414c"
+    ],
+    "receipt": {
+      "accuracy": 0.7188,
+      "authority": {
+        "admitted": false,
+        "anchored": false,
+        "hf_identity_claimed": false,
+        "published": false,
+        "signed": false
+      },
+      "axis": "openness",
+      "bank_sha256": "644dc6de897896a88e90b8954abfa08d49b0e774f6270f30a9bf28b0831179ec",
+      "bundle_sha256": "c8f871c73d9f5b4155a32c46e7371243a6c9cca289b856726b97e019d592025a",
+      "candidate_file": "candidate.json",
+      "counts": {
+        "attempted": 32,
+        "bank_items": 32,
+        "correct": 23,
+        "graded_n": 32,
+        "parse_errors_excluded": 0,
+        "transport_errors_excluded": 0,
+        "transport_ok": 32
+      },
+      "model_manifest_digest": "sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff",
+      "review": "human/GHA review required; this bundle is not mill input",
+      "run_id": "20260930T082201.606170Z-cc14c9122f",
+      "schema": "csoai.runpod-gspc-intake-verification/0.1",
+      "source_hashes": {
+        "bank_allowlist_sha256": "5f1a499b9224fe57c47d01d68a92632f37b3421061ef56bb1aaef56b6de6ad59",
+        "card_file_sha256": "c6026d2d1348bb055570a7add97354524aa82dad6aa5830c7de1633335835913",
+        "card_id": "a2db2922eaf1e9a235ef706f7e335ef1329121492dbe33862ba1583f79a401fe",
+        "card_sha256": "a9c9a299326f096768874cbf1b3e0aa00eafcc6d757cc1dfaffd07d8b4ef6f55",
+        "items_sha256": "5e145bdb499355b267146cd552c928066f338106b70cc33cc7ca94962404a412",
+        "run_sha256": "c213e573326281fe89b6f0d3562656b8b75767b549e911414026007c28cf6c5a"
+      },
+      "state": "VERIFIED_QUARANTINE",
+      "subject": "ollama:hf.co/ggml-org/MiMo-V2.6-Distill-Qwen-9B-GGUF:Q8_0@sha256:dbdd4bb7a97bae9e7cd9750e599aa1ac88996a4408dbe00f3e4d4e64c23685ff",
+      "verified_at": "2026-09-30T08:27:20.103927Z"
+    },
+    "run_id": "20260930T082201.606170Z-cc14c9122f",
+    "runtime_id": "GPU: 1x NVIDIA GeForce RTX 4090 (CUDA driver 12.8) | RunPod pod 4om8q6jhkrgkzj (runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04) | ollama 0.34.4"
+  },
+  "schema": "csoai.mill-admission/0.1",
+  "state": "ADMITTED"
+}
