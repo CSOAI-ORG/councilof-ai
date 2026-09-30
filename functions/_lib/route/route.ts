@@ -2,13 +2,15 @@
  * GSPC Route: one core, used by the free MCP tool `route`, the A2A skill `route` and the pod service
  * (services/gspc-router). Decide-only. It returns the chosen path and the UNSIGNED route record.
  *
- * Out of scope until the owner rules (spec §8): route_execute, executing /v1/chat/completions, x402
- * amounts, a route signing key, and caller-key passthrough. mode "execute" answers NOT_ENABLED (501).
+ * Execution is a separate door, POST /api/route/execute (execute.ts, owner ruling 2026-09-30, phases 1-4);
+ * this decide-only core never calls a target. mode "execute" here answers NOT_ENABLED (501).
  */
 import { isSeparated } from "../leaderLabel";
 import { buildCandidates } from "./candidates";
 import { applyCensus } from "./census";
-import { decide } from "./decide";
+import { decide, type Decision } from "./decide";
+import type { CensusRead } from "./census";
+import type { CallerPolicy } from "./policy";
 import { buildRouteRecord, sha256Hex } from "./evidence";
 import { callerPolicy, type PolicyContext } from "./policy";
 import {
@@ -17,6 +19,8 @@ import {
   TIE_BREAK_RULES,
   type BoardAxis,
   type BoardRead,
+  type Candidate,
+  type Task,
   type DataClass,
   type Objective,
   type TieBreakRule,
@@ -27,8 +31,9 @@ export const NOT_ENABLED = {
   http_status: 501,
   mode: "execute",
   note:
-    "Execute mode is not enabled. GSPC Route is decide-only until the owner rules on execution, " +
-    "caller-key passthrough, x402 amounts and the route signing key. Nothing was called and nothing was charged.",
+    "The route tool is decide-only. Execution is POST /api/route/execute: it runs verified read-only targets, " +
+    "answers paid first-party tools with their x402 challenge, hands anything needing your credentials back as a " +
+    "client-side plan, and signs a receipt. Nothing was called and nothing was charged here.",
 } as const;
 
 /** Every string the router itself writes into a response. Caller-supplied ids are echoed as given. */
@@ -105,12 +110,33 @@ function objectiveOf(raw: unknown, errors: string[]): Objective {
 
 export type RouteResult = Record<string, unknown> & { state: string };
 
+/** What execute.ts needs beyond the public result: the decision it must execute, never re-derive. */
+export type RouteInternals = {
+  candidates: Candidate[];
+  decision: Decision;
+  policy: CallerPolicy;
+  task: Task;
+  objective: Objective;
+  board: { state: string; source: string | null; board_separation: string | null };
+  census: CensusRead;
+  locator: string;
+  readAt: string;
+};
+
 export async function route(args: Record<string, unknown>, deps: RouteDeps): Promise<RouteResult> {
   if (args.mode !== undefined && args.mode !== "decide") {
     return args.mode === "execute"
       ? { ...NOT_ENABLED }
-      : { state: "BAD_ARGUMENTS", errors: ['mode must be "decide" (execute is not enabled)'] };
+      : { state: "BAD_ARGUMENTS", errors: ['mode must be "decide" (execution is POST /api/route/execute)'] };
   }
+  return (await routeCore(args, deps)).result;
+}
+
+/** The decide step shared by route (decide-only) and execute.ts. mode is not read here. */
+export async function routeCore(
+  args: Record<string, unknown>,
+  deps: RouteDeps,
+): Promise<{ result: RouteResult; internals: RouteInternals | null }> {
   const errors: string[] = [];
   const taskText = typeof args.task === "string" ? args.task : null;
   const taskShaIn = typeof args.task_sha256 === "string" ? args.task_sha256.toLowerCase() : null;
@@ -123,11 +149,16 @@ export async function route(args: Record<string, unknown>, deps: RouteDeps): Pro
   const objective = objectiveOf(args.objective, errors);
   const { candidates, errors: candErrors } = buildCandidates(args.candidates);
   errors.push(...candErrors);
-  if (errors.length) return { state: "BAD_ARGUMENTS", errors };
+  if (errors.length) return { result: { state: "BAD_ARGUMENTS", errors }, internals: null };
 
   const taskSha = taskShaIn ?? (await sha256Hex(taskText as string));
   const policy = callerPolicy(args.policy);
-  const ctx: PolicyContext = { confirm: policy.confirm, caller_wallet: policy.caller_wallet, data_class };
+  const ctx: PolicyContext = {
+    confirm: policy.confirm,
+    caller_wallet: policy.caller_wallet,
+    data_class,
+    allow_divergent_effect_binding: policy.allow_divergent_effect_binding,
+  };
 
   let board: BoardRead = { state: "NOT_REQUESTED", axis: null, source: null };
   if (objective.quality_axis) {
@@ -143,22 +174,36 @@ export async function route(args: Record<string, unknown>, deps: RouteDeps): Pro
   const decision = decide(candidates, policy, ctx, objective, board.axis);
   const readAt = (deps.now ?? (() => new Date()))().toISOString();
   const uuid = (deps.uuid ?? (() => crypto.randomUUID()))();
+  const task: Task = { sha256: taskSha, data_class, needs_write: args.needs_write === true, content_retained: false };
+  const boardSummary = {
+    state: board.state === "LIVE" && !board.axis ? "AXIS_NOT_ON_BOARD" : board.state,
+    source: board.source,
+    board_separation: board.axis?.separation ?? null,
+  };
+  const locator = `urn:gspc:route:${uuid}`;
   const record = await buildRouteRecord({
-    task: { sha256: taskSha, data_class, needs_write: args.needs_write === true, content_retained: false },
+    task,
     policy,
     objective,
     candidates,
     decision,
-    board: {
-      state: board.state === "LIVE" && !board.axis ? "AXIS_NOT_ON_BOARD" : board.state,
-      source: board.source,
-      board_separation: board.axis?.separation ?? null,
-    },
+    board: boardSummary,
     census,
-    locator: `urn:gspc:route:${uuid}`,
+    locator,
     readAt,
   });
-  return {
+  const internals: RouteInternals = {
+    candidates,
+    decision,
+    policy,
+    task,
+    objective,
+    board: boardSummary,
+    census,
+    locator,
+    readAt,
+  };
+  const result: RouteResult = {
     state: decision.chosen ? "ROUTED" : "NO_PERMITTED_CANDIDATE",
     mode: "decide_only",
     preview: true,
@@ -176,11 +221,12 @@ export async function route(args: Record<string, unknown>, deps: RouteDeps): Pro
       "Routing is not ranking: the caller's policy applied to published measurements. TIE and UNTESTED are " +
       "stated as they are. Unsigned decide-only preview; nothing was executed or charged.",
   };
+  return { result, internals };
 }
 
 /** The one-line summary MCP clients show first. Written only from router-controlled words. */
 export function routeSummary(r: RouteResult): string {
-  if (r.state === "NOT_ENABLED") return "NOT_ENABLED (501): execute mode is off; GSPC Route is decide-only.";
+  if (r.state === "NOT_ENABLED") return "NOT_ENABLED (501): the route tool is decide-only; execution is POST /api/route/execute.";
   if (r.state === "BAD_ARGUMENTS") return `BAD_ARGUMENTS: ${(r.errors as string[]).join("; ")}`;
   const chosen = r.chosen as { id: string; choice_basis: string } | null;
   const sep = String(r.separation);

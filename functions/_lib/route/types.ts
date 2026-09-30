@@ -21,6 +21,8 @@ export type Candidate = {
   model: string | null;
   region: string;
   endpoint: string | null;
+  /** The MCP tool this candidate names (fleet: its tool name; caller-declared: the `tool` field), else null. */
+  tool: string | null;
   local: boolean;
   read_only: boolean;
   destructive: boolean;
@@ -30,11 +32,21 @@ export type Candidate = {
   latency_declared_ms: number | null;
   source: "gspc_fleet" | "caller_declared";
   /** effect_binding only, until a census lookup ran; then also the run's raw outcome and why (census.ts). */
-  census: { effect_binding: CensusState; outcome?: string | null; basis?: string };
+  census: { effect_binding: CensusState; outcome?: string | null; basis?: string; tool?: ToolCensus };
   /** Non-empty => the candidate is UNCHECKABLE and is never permitted (fail closed). */
   uncheckable: string[];
   /** Commercial fields (sponsor, bid, ...) that were present and dropped before any rule saw them. */
   ignored_fields: string[];
+};
+
+/**
+ * The per-tool row of the census (schema 0.2) for a candidate that names a tool. listed_read_only is true
+ * only when the signed probe listed this tool in the server's read_only_tools; null when the index carries
+ * no per-tool data (schema 0.1) or the endpoint was not probed.
+ */
+export type ToolCensus = {
+  listed_read_only: boolean | null;
+  p2: "REJECTS" | "ACCEPTS_SILENTLY" | "INDETERMINATE" | "NOT_PROBED" | null;
 };
 
 export type Separation = "SEPARATED" | "TIE" | "UNTESTED";

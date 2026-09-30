@@ -26,6 +26,11 @@ export type PolicyContext = {
   confirm: boolean;
   caller_wallet: boolean;
   data_class: DataClass;
+  /**
+   * The ONE way past floor:effect-binding-divergent: the caller's policy says so in so many words
+   * (allow_divergent_effect_binding: true). Absent, wrong-typed or anything else => false.
+   */
+  allow_divergent_effect_binding?: boolean;
 };
 
 /** What the evaluator reads about a candidate, beyond the Candidate itself. */
@@ -64,6 +69,7 @@ action "route" appliesTo {
     "confirm": Bool,
     "caller_wallet": Bool,
     "data_class": String,
+    "allow_divergent_effect_binding": Bool,
   },
 };
 `;
@@ -74,8 +80,8 @@ export const FLOOR_RULES: Rule[] = [
     id: "floor:effect-binding-divergent",
     set: "floor",
     effect: "forbid",
-    cedar: `${HEAD("forbid")}\nwhen { resource.census_effect_binding == "DIVERGENT" };`,
-    when: (c) => c.census.effect_binding === "DIVERGENT",
+    cedar: `${HEAD("forbid")}\nwhen { resource.census_effect_binding == "DIVERGENT" && !context.allow_divergent_effect_binding };`,
+    when: (c, _f, ctx) => c.census.effect_binding === "DIVERGENT" && ctx.allow_divergent_effect_binding !== true,
   },
   {
     id: "floor:destructive-needs-confirm",
@@ -140,7 +146,14 @@ const PERMIT_ALL: Rule = {
   when: () => true,
 };
 
-const POLICY_KEYS = new Set(["presets", "forbid_providers", "allow_kinds", "confirm_destructive", "caller_wallet"]);
+const POLICY_KEYS = new Set([
+  "presets",
+  "forbid_providers",
+  "allow_kinds",
+  "confirm_destructive",
+  "caller_wallet",
+  "allow_divergent_effect_binding",
+]);
 
 export type CallerPolicy = {
   rules: Rule[];
@@ -149,6 +162,8 @@ export type CallerPolicy = {
   uncheckable: string[];
   confirm: boolean;
   caller_wallet: boolean;
+  /** true only when the caller wrote allow_divergent_effect_binding: true (and the policy is understood). */
+  allow_divergent_effect_binding: boolean;
 };
 
 /** Parse the caller's policy object. Never throws; every problem is an UNCHECKABLE element. */
@@ -160,7 +175,14 @@ export function callerPolicy(raw: unknown): CallerPolicy {
   let caller_wallet = false;
   const o = raw === undefined || raw === null ? {} : raw;
   if (typeof o !== "object" || Array.isArray(o)) {
-    return { rules: [], presets: [], uncheckable: ["policy is not an object"], confirm, caller_wallet };
+    return {
+      rules: [],
+      presets: [],
+      uncheckable: ["policy is not an object"],
+      confirm,
+      caller_wallet,
+      allow_divergent_effect_binding: false,
+    };
   }
   const p = o as Record<string, unknown>;
   for (const k of Object.keys(p).sort()) if (!POLICY_KEYS.has(k)) why.push(`unknown policy key "${k.slice(0, 40)}"`);
@@ -192,7 +214,7 @@ export function callerPolicy(raw: unknown): CallerPolicy {
   };
   const forbidProviders = tokenList("forbid_providers");
   const allowKinds = tokenList("allow_kinds", CANDIDATE_KINDS);
-  for (const k of ["confirm_destructive", "caller_wallet"] as const) {
+  for (const k of ["confirm_destructive", "caller_wallet", "allow_divergent_effect_binding"] as const) {
     if (p[k] !== undefined && typeof p[k] !== "boolean") why.push(`${k} must be true or false`);
   }
   confirm = p.confirm_destructive === true;
@@ -217,7 +239,9 @@ export function callerPolicy(raw: unknown): CallerPolicy {
     });
   // The rule that matters: a caller policy with ANY element not understood grants nothing.
   if (why.length === 0) rules.unshift(PERMIT_ALL);
-  return { rules, presets: [...presets].sort(), uncheckable: why, confirm, caller_wallet };
+  // An override of a floor rule is honoured only from a policy the router understood in full.
+  const allow_divergent_effect_binding = why.length === 0 && p.allow_divergent_effect_binding === true;
+  return { rules, presets: [...presets].sort(), uncheckable: why, confirm, caller_wallet, allow_divergent_effect_binding };
 }
 
 /** Cedar text of a rule list, each rule annotated with its id (what `cedar authorize` reports). */
