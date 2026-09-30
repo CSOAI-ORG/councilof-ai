@@ -106,7 +106,9 @@ export default function Panel() {
   useEffect(() => {
     document.title = TITLE;
     setMetaDescription(DESCRIPTION);
-    import(/* @vite-ignore */ "/panel/gspc-panel.js").then(
+    // A runtime URL, not a module Vite should bundle: the page loads the PUBLISHED bundle.
+    const bundle = "/panel/gspc-panel.js";
+    import(/* @vite-ignore */ bundle).then(
       () => setReady(true),
       () => setFailed(true),
     );
